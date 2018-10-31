@@ -33,7 +33,7 @@ if (isProd) {
   // In development: setup the dev server with watch and hot-reload,
   // and create a new renderer on bundle / index template update.
   readyPromise = require('./build/setup-dev-server')(
-    app,
+    server,
     templatePath,
     (bundle, options) => {
       renderer = createRenderer(bundle, options)
