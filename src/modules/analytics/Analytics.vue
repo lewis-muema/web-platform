@@ -1,11 +1,13 @@
 <template lang="html">
-  <div class="" id="admin_container">
+  <div class="" id="analytics_container">
       <div class="title">
           <h3 class="title__text">Analytics</h3>
       </div>
       <div class="section">
           <router-link class="section__link" to="/analytics/weekly">Weekly Report</router-link>
           <router-link class="section__link" to="/analytics/monthly">Monthly Report</router-link>
+      </div>
+      <div class="">
           <router-view></router-view>
       </div>
   </div>

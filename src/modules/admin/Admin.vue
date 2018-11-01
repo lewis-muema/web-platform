@@ -8,6 +8,8 @@
           <router-link class="section__link" to="/admin/department">Department</router-link>
           <router-link class="section__link" to="/admin/preferences">Preferences</router-link>
           <router-link class="section__link" to="/admin/api">API Key</router-link>
+      </div>
+      <div class="">
           <router-view></router-view>
       </div>
   </div>
