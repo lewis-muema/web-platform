@@ -30,6 +30,44 @@ export function createRouter () {
       },
       { path: '/transactions', component: () => import('../modules/transactions/Transactions.vue')},
       { path: '/admin', component: () => import('../modules/admin/Admin.vue'),
+        children: [
+            {
+              path: '/',
+              component: () => import('../modules/admin/components/Users.vue')
+            },
+            {
+              path: '/admin/users',
+              component: () => import('../modules/admin/components/Users.vue')
+            },
+            {
+              path: '/admin/department',
+              component: () => import('../modules/admin/components/Departments.vue')
+            },
+            {
+              path: '/admin/preferences',
+              component: () => import('../modules/admin/components/Preferences.vue')
+            },
+            {
+              path: '/admin/api',
+              component: () => import('../modules/admin/components/API.vue')
+            },
+        ]
+      },
+      { path: '/analytics', component: () => import('../modules/analytics/Analytics.vue'),
+        children: [
+            {
+              path: '/',
+              component: () => import('../modules/analytics/components/Weekly.vue')
+            },
+            {
+              path: '/analytics/weekly',
+              component: () => import('../modules/analytics/components/Weekly.vue')
+            },
+            {
+              path: '/analytics/monthly',
+              component: () => import('../modules/analytics/components/Monthly.vue')
+            },
+        ]
       },
       // { path: '/auth', component: () => import('../modules/auth/Auth.vue'),
       // },

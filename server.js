@@ -1,12 +1,14 @@
 const Vue = require('vue')
-const server = require('express')()
+const express = require('express')
+const favicon = require('serve-favicon')
+const compression = require('compression')
 const fs = require('fs')
 const path = require('path')
 const LRU = require('lru-cache')
 const resolve = file => path.resolve(__dirname, file)
 const isProd = process.env.NODE_ENV === 'production'
 const { createBundleRenderer } = require('vue-server-renderer')
-
+const app = express()
 
 function createRenderer (bundle, options) {
   // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
@@ -23,6 +25,17 @@ function createRenderer (bundle, options) {
   }))
 }
 
+const serve = (path, cache) => express.static(resolve(path), {
+  maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 30 : 0
+})
+
+
+app.use(compression({ threshold: 0 }))
+app.use(favicon('./public/logo_120.png'))
+app.use('/dist', serve('./dist', true))
+app.use('/public', serve('./public', true))
+app.use('/manifest.json', serve('./manifest.json', true))
+app.use('/service-worker.js', serve('./dist/service-worker.js'))
 
 let renderer
 let readyPromise
@@ -52,7 +65,7 @@ if (isProd) {
   // In development: setup the dev server with watch and hot-reload,
   // and create a new renderer on bundle / index template update.
   readyPromise = require('./build/setup-dev-server')(
-    server,
+    app,
     templatePath,
     (bundle, options) => {
       renderer = createRenderer(bundle, options)
@@ -94,12 +107,12 @@ function render (req, res) {
 
 // inside a server handler...
 
-server.get('*', isProd ? render : (req, res) => {
+app.get('*', isProd ? render : (req, res) => {
   readyPromise.then(() => render(req, res))
 })
 
 
 const port = process.env.PORT || 8080
-server.listen(port, () => {
+app.listen(port, () => {
   console.log(`server started at localhost:${port}`)
 })

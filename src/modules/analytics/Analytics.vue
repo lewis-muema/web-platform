@@ -1,28 +1,26 @@
 <template lang="html">
   <div class="" id="admin_container">
       <div class="title">
-          <h3 class="title__text">Admin Settings</h3>
+          <h3 class="title__text">Analytics</h3>
       </div>
       <div class="section">
-          <router-link class="section__link" to="/admin/users">Users</router-link>
-          <router-link class="section__link" to="/admin/department">Department</router-link>
-          <router-link class="section__link" to="/admin/preferences">Preferences</router-link>
-          <router-link class="section__link" to="/admin/api">API Key</router-link>
+          <router-link class="section__link" to="/analytics/weekly">Weekly Report</router-link>
+          <router-link class="section__link" to="/analytics/monthly">Monthly Report</router-link>
           <router-view></router-view>
       </div>
   </div>
 </template>
 
 <script>
-import admin_store from './_store';
+import analytics_store from './_store';
 import RegisterStoreModule from '../../mixins/registerStoreModule'
 
 export default {
-  name:'Admin',
+  name:'Analytics',
   mixins: [ RegisterStoreModule ],
   created() {
-    const STORE_KEY = '$_admin';
-    this.registerStoreModule(STORE_KEY, admin_store);
+    const STORE_KEY = '$_analytics';
+    this.registerStoreModule(STORE_KEY, analytics_store);
   },
   destroyed(){
       // TO DO:  destroy store?
