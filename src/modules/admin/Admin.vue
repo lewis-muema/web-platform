@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="" id="admin_container">
+  <div class="module-container" id="admin_container">
       <div class="title">
           <h3 class="title__text">Admin Settings</h3>
       </div>

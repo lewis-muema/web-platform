@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="" id="transactions_container">
+  <div class="container" id="transactions_container">
     <div class="title">
         <h3 class="title__text">Transactions</h3>
     </div>
@@ -7,7 +7,10 @@
         <router-link class="section__link" to="/transactions/order_history">Order History</router-link>
         <router-link class="section__link" to="/transactions/statement">Statement</router-link>
         <router-link class="section__link" to="/transactions/payments">Payments</router-link>
-        <router-view></router-view>
+
+    </div>
+    <div class="">
+      <router-view></router-view>
     </div>
   </div>
 </template>
