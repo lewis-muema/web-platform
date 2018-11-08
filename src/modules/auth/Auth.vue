@@ -6,14 +6,14 @@
 
 <script>
 import auth_store from './_store';
-import RegisterStoreModule from '../../mixins/registerStoreModule'
+import RegisterStoreModule from '../../mixins/register_store_module'
 
 export default {
   name:'Auth',
   mixins: [ RegisterStoreModule ],
   created() {
     const STORE_KEY = '$_auth';
-    this.registerStoreModule(STORE_KEY, auth_store);
+    this.register_store_module(STORE_KEY, auth_store);
   },
 }
 </script>

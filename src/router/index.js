@@ -28,7 +28,26 @@ export function createRouter () {
           // },
         ]
       },
-      { path: '/transactions', component: () => import('../modules/transactions/Transactions.vue')},
+      { path: '/transactions', component: () => import('../modules/transactions/Transactions.vue'),
+        children: [
+            {
+              path: '/',
+              component: () => import('../modules/transactions/_components/OrderHistory.vue')
+            },
+            {
+              path: '/transactions/order_history',
+              component: () => import('../modules/transactions/_components/OrderHistory.vue')
+            },
+            {
+              path: '/transactions/statement',
+              component: () => import('../modules/transactions/_components/Statement.vue')
+            },
+            {
+              path: '/transactions/payments',
+              component: () => import('../modules/transactions/_components/Payments.vue')
+            },
+        ]
+      },
       { path: '/admin', component: () => import('../modules/admin/Admin.vue'),
         children: [
             {

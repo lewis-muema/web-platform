@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="app">
-    Hello there, friend
+    Header Goes Here
     <router-view></router-view>
   </div>
 </template>

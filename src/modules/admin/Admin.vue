@@ -15,14 +15,14 @@
 
 <script>
 import admin_store from './_store';
-import RegisterStoreModule from '../../mixins/registerStoreModule'
+import RegisterStoreModule from '../../mixins/register_store_module'
 
 export default {
   name:'Admin',
   mixins: [ RegisterStoreModule ],
   created() {
     const STORE_KEY = '$_admin';
-    this.registerStoreModule(STORE_KEY, admin_store);
+    this.register_store_module(STORE_KEY, admin_store);
   },
   destroyed(){
       // TO DO:  destroy store?
