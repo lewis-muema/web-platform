@@ -13,14 +13,14 @@
 
 <script>
 import analytics_store from './_store';
-import RegisterStoreModule from '../../mixins/registerStoreModule'
+import RegisterStoreModule from '../../mixins/register_store_module'
 
 export default {
   name:'Analytics',
   mixins: [ RegisterStoreModule ],
   created() {
     const STORE_KEY = '$_analytics';
-    this.registerStoreModule(STORE_KEY, analytics_store);
+    this.register_store_module(STORE_KEY, analytics_store);
   },
   destroyed(){
       // TO DO:  destroy store?
