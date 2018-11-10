@@ -1,6 +1,5 @@
 <template>
   <div id="app" class="app">
-    Hello there, friend
     <router-view></router-view>
   </div>
 </template>
@@ -12,6 +11,9 @@ export default {
 </script>
 
 <style>
+.body{
+    margin: unset
+}
 .app {
   font-family: 'Helvetica Neue', Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;

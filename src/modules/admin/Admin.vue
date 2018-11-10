@@ -1,26 +1,32 @@
 <template lang="html">
-  <div class="" id="admin_container">
-      <div class="title">
-          <h3 class="title__text">Admin Settings</h3>
-      </div>
-      <div class="section">
-          <router-link class="section__link" to="/admin/users">Users</router-link>
-          <router-link class="section__link" to="/admin/department">Department</router-link>
-          <router-link class="section__link" to="/admin/preferences">Preferences</router-link>
-          <router-link class="section__link" to="/admin/api">API Key</router-link>
-      </div>
-      <div class="">
-          <router-view></router-view>
-      </div>
-  </div>
+    <div class="">
+        <header-main></header-main>
+        <div class="admin_container" id="admin_container">
+            <div class="title">
+                <h3 class="title__text">Admin Settings</h3>
+            </div>
+            <div class="section">
+                <router-link class="section__link" to="/admin/users">Users</router-link>
+                <router-link class="section__link" to="/admin/department">Department</router-link>
+                <router-link class="section__link" to="/admin/preferences">Preferences</router-link>
+                <router-link class="section__link" to="/admin/api">API Key</router-link>
+            </div>
+            <div class="">
+                <router-view></router-view>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <script>
 import admin_store from './_store';
 import RegisterStoreModule from '../../mixins/registerStoreModule'
+import HeaderMain from '../../components/Header.vue'
 
 export default {
-  name:'Admin',
+  name:'admin',
+  components : {HeaderMain},
   mixins: [ RegisterStoreModule ],
   created() {
     const STORE_KEY = '$_admin';
@@ -38,7 +44,7 @@ export default {
         padding-bottom: 0px;
         border-bottom: 1px solid #ccc;
         color: #999;
-        padding-top: 15px;
+        padding-top: 40px;
         margin-bottom: 30px;
     }
     .title__text{
@@ -61,5 +67,8 @@ export default {
     .router-link-active{
         font-weight: bold;
         border-bottom: 3px solid #1782c5;
+    }
+    .admin_container{
+        margin: 8px;
     }
 </style>
