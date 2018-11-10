@@ -8,11 +8,11 @@ export function createRouter () {
     mode: 'history',
     routes: [
       { path: '*', redirect: '/auth' },
-      { path: '/auth', component: () => import('../components/Auth.vue'),
+      { path: '/auth', component: () => import('../modules/auth/Auth.vue'),
         children: [
           {
             path: '/',
-            component: () => import('../components/SignIn.vue')
+            component: () => import('../modules/auth/components/SignIn.vue')
           },
           // {
           //   path: 'sign_up',

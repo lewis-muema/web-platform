@@ -12,15 +12,15 @@
                    <li><a>Hi Faith</a></li>
                    <li><a>Menu</a>
                        <ul>
-                           <li><a>New Delivery</a></li>
-                           <li><a>Payment</a></li>
-                           <li><a>Order History</a></li>
-                           <li><a>Free Deliveries</a></li>
-                           <li><a>Promotions</a></li>
-                           <li><a>Admin Settings</a></li>
-                           <li><a>Analytics</a></li>
-                           <li><a>Profile</a></li>
-                           <li><a>log Out</a></li>
+                           <li><router-link class="" to="/orders">New Delivery</router-link></li>
+                           <li><router-link class="" to="/transactions/payments">Payment</router-link></li>
+                           <li><router-link class="" to="/transactions/order_history">Order History</router-link></li>
+                           <li><router-link class="" to="/free_deliveries">Free Deliveries</router-link></li>
+                           <li><router-link class="" to="/payments">Promotions</router-link></li>
+                           <li><router-link class="" to="/admin">Admin Settings</router-link></li>
+                           <li><router-link class="" to="/analytics">Analytics</router-link></li>
+                           <li><router-link class="" to="/profile">Profile</router-link></li>
+                           <li><router-link class="" to="/auth/logout">Log Out</router-link></li>
                        </ul>
                    </li>
                </ul>
@@ -32,7 +32,7 @@
 
 <script>
 export default {
-    name : 'header-main'
+    name : 'main-header'
 }
 </script>
 
@@ -147,5 +147,13 @@ nav ul ul li a:hover {
 
 nav ul ul ul {
 	position: absolute; left: 100%; top:0;
+}
+nav ul li .router-link-active{
+    border-bottom:unset;
+    cursor: auto;
+}
+.header__menuitem--active{
+    font-weight: bold;
+    cursor: auto;
 }
 </style>
