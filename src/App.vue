@@ -10,13 +10,19 @@ export default {
 };
 </script>
 
-<style>
+<style lang="css">
 .body{
-    margin: unset
+    margin: 0;
 }
 .app {
   font-family: 'Helvetica Neue', Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #333;
+}
+.container
+{
+  width: 90%;
+  margin: 0px auto;
 }
 </style>

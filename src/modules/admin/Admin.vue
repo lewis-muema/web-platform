@@ -1,7 +1,7 @@
 <template lang="html">
     <div class="">
         <header-main></header-main>
-        <div class="admin_container" id="admin_container">
+        <div class="module-container" id="admin_container">
             <div class="title">
                 <h3 class="title__text">Admin Settings</h3>
             </div>
@@ -21,7 +21,7 @@
 
 <script>
 import admin_store from './_store';
-import RegisterStoreModule from '../../mixins/registerStoreModule'
+import RegisterStoreModule from '../../mixins/register_store_module'
 import HeaderMain from '../../components/Header.vue'
 
 export default {
@@ -30,7 +30,7 @@ export default {
   mixins: [ RegisterStoreModule ],
   created() {
     const STORE_KEY = '$_admin';
-    this.registerStoreModule(STORE_KEY, admin_store);
+    this.register_store_module(STORE_KEY, admin_store);
   },
   destroyed(){
       // TO DO:  destroy store?
@@ -44,7 +44,6 @@ export default {
         padding-bottom: 0px;
         border-bottom: 1px solid #ccc;
         color: #999;
-        padding-top: 40px;
         margin-bottom: 30px;
     }
     .title__text{
@@ -52,7 +51,7 @@ export default {
     }
     .section{
         padding-top: 20px;
-        margin-bottom: 50px;
+        margin-bottom: 20px;
         padding-bottom: 2px;
         border-bottom: 1px solid #1782c5;
     }
@@ -68,7 +67,7 @@ export default {
         font-weight: bold;
         border-bottom: 3px solid #1782c5;
     }
-    .admin_container{
+    .module-container{
         margin: 8px;
     }
 </style>

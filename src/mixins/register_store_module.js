@@ -1,6 +1,6 @@
 export default {
   methods: {
-    registerStoreModule (moduleName, storeModule)
+    register_store_module (moduleName, storeModule)
     {
       const store = this.$store;
 
