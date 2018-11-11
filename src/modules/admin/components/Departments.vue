@@ -22,25 +22,16 @@ export default {
       var el = "table_div";
       var data = [
           {
-              "Txn": "CASH-AC29TZ828-T4W",
-              "Date": "Computer Architecture",
-              "Method": "Computers",
-              "Description": "125.60",
-              "Amount": "24"
+              "Name": "CASH-AC29TZ828-T4W",
+              "Approver": "Computer Architecture",
           },
           {
-              "Txn": "CASH-AC29TZ828-T4W",
-              "Date": "Asp.Net 4 Blue Book",
-              "Method": "Programming",
-              "Description": "56.00",
-              "Amount": "24"
+              "Name": "CASH-AC29TZ828-T4W",
+              "Approver": "Asp.Net 4 Blue Book",
           },
           {
-              "Txn": "CASH-AC29TZ828-T4W",
-              "Date": "Popular Science",
-              "Method": "Science",
-              "Description": "210.40",
-              "Amount": "27"
+              "Name": "CASH-AC29TZ828-T4W",
+              "Approver": "Popular Science",
           }
       ];
       this.create_datatable(el, data,
@@ -49,12 +40,8 @@ export default {
         count: true,
         custom_col:[
           {
-            key: "Custom test",
-            render: '<a href="#" class="mdshow" onclick="#">Test Custom</a>'
-          },
-          {
-            key: "Custom test2",
-            render: '<a href="#" class="mdshow" onclick="#">Test Custom2</a>'
+            key: "Actions",
+            render: '<a href="" class="mdshow" onclick="">Edit</a> | <a href="" class="mdshow" onclick="">Delete</a>'
           },
         ],
         col_options: [

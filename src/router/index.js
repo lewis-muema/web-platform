@@ -56,7 +56,17 @@ export function createRouter () {
             },
             {
               path: '/admin/users',
-              component: () => import('../modules/admin/components/Users.vue')
+              component: () => import('../modules/admin/components/Users.vue'),
+              children: [
+                  {
+                      path: '/',
+                      component: () => import('../modules/admin/components/users/ListUsers.vue')
+                  },
+                  {
+                      path: '/admin/users/add_user',
+                      component: () => import('../modules/admin/components/users/AddUser.vue')
+                  }
+              ]
             },
             {
               path: '/admin/department',
