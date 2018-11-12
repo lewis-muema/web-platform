@@ -8,15 +8,15 @@ export function createRouter () {
     mode: 'history',
     routes: [
       { path: '*', redirect: '/auth' },
-      { path: '/auth', component: () => import('../components/Auth.vue'),
+      { path: '/auth', component: () => import('../modules/auth/Auth.vue'),
         children: [
           {
             path: '/',
-            component: () => import('../components/SignIn.vue')
+            component: () => import('../modules/auth/components/SignIn.vue')
           },
           {
             path: '/auth/sign_up',
-            component: () => import('../components/SignUp.vue')
+            component: () => import('../modules/auth/components/SignUp.vue')
           },
           // {
           //   path: 'sign_up',
@@ -60,7 +60,17 @@ export function createRouter () {
             },
             {
               path: '/admin/users',
-              component: () => import('../modules/admin/components/Users.vue')
+              component: () => import('../modules/admin/components/Users.vue'),
+              children: [
+                  {
+                      path: '/',
+                      component: () => import('../modules/admin/components/users/ListUsers.vue')
+                  },
+                  {
+                      path: '/admin/users/add_user',
+                      component: () => import('../modules/admin/components/users/AddUser.vue')
+                  }
+              ]
             },
             {
               path: '/admin/department',

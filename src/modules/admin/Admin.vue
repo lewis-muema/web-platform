@@ -1,24 +1,32 @@
 <template lang="html">
-  <div class="module-container" id="admin_container">
-      <div class="title">
-          <h3 class="title__text">Admin Settings</h3>
-      </div>
-      <div class="section">
-          <router-link class="section__link" to="/admin/users">Users</router-link>
-          <router-link class="section__link" to="/admin/department">Department</router-link>
-          <router-link class="section__link" to="/admin/preferences">Preferences</router-link>
-          <router-link class="section__link" to="/admin/api">API Key</router-link>
-          <router-view></router-view>
-      </div>
-  </div>
+    <div class="">
+        <main-header></main-header>
+        <div class="module-container" id="admin_container">
+            <div class="title">
+                <h3 class="title__text">Admin Settings</h3>
+            </div>
+            <div class="section">
+                <router-link class="section__link" to="/admin/users">Users</router-link>
+                <router-link class="section__link" to="/admin/department">Department</router-link>
+                <router-link class="section__link" to="/admin/preferences">Preferences</router-link>
+                <router-link class="section__link" to="/admin/api">API Key</router-link>
+            </div>
+            <div class="">
+                <router-view></router-view>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <script>
 import admin_store from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module'
+import MainHeader from '../../components/headers/MainHeader.vue'
 
 export default {
-  name:'Admin',
+  name:'admin',
+  components : {MainHeader},
   mixins: [ RegisterStoreModule ],
   created() {
     const STORE_KEY = '$_admin';
@@ -31,33 +39,8 @@ export default {
 </script>
 
 <style lang="css">
-    .title{
-        font-size: 22px;
-        padding-bottom: 0px;
-        border-bottom: 1px solid #ccc;
-        color: #999;
-        padding-top: 15px;
-        margin-bottom: 30px;
-    }
-    .title__text{
-        font-weight: 300;
-    }
-    .section{
-        padding-top: 20px;
-        margin-bottom: 50px;
-        padding-bottom: 2px;
-        border-bottom: 1px solid #1782c5;
-    }
-    .section__link{
-        color: #1782c5;
-        text-transform: uppercase;
-        font-size: 15px;
-        text-align: center;
-        padding: 2px 25px;
-        text-decoration: none;
-    }
-    .router-link-active{
-        font-weight: bold;
-        border-bottom: 3px solid #1782c5;
+    @import "../../styles/section_headers.css";
+    .module-container{
+        margin: 8px;
     }
 </style>

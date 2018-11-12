@@ -36,7 +36,7 @@
               <a class="sign-up-link" @click="">Forgot password?</a>
             </div>
             <div class="sign-up-v2-holder sign-in-sign-up sign-in-smaller">
-              Don't have an Account? <a class="sign-up-link" @click="">Sign Up</a>
+              Don't have an Account? <router-link class="sign-up-link" to="/auth/sign_up">Sign Up</router-link> 
             </div>
           </div>
       </div>
