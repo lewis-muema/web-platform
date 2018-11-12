@@ -15,8 +15,20 @@ export function createRouter () {
             component: () => import('../modules/auth/components/SignIn.vue')
           },
           {
+            path: '/auth/sign_in',
+            component: () => import('../modules/auth/components/SignIn.vue')
+          },
+          {
             path: '/auth/sign_up',
             component: () => import('../modules/auth/components/SignUp.vue')
+          },
+          {
+            path: '/auth/forgot_password',
+            component: () => import('../modules/auth/components/ForgotPassword.vue')
+          },
+          {
+            path: '/auth/reset_password',
+            component: () => import('../modules/auth/components/ResetPassword.vue')
           },
           // {
           //   path: 'sign_up',

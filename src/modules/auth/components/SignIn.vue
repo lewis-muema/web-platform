@@ -1,42 +1,42 @@
 <template lang="html">
-  <div id="log_in" class="log_item" >
+  <div id="log_in" class="log-item" >
 
-      <div class="sign-up-v2-outer">
+      <div class="sign-inner">
 
-          <div class="sign-up-v2-for-sendy">
+          <div class="sign-top">
             Log in to Sendy
           </div>
 
 
-          <div class="sign-up-v2-fb-button" @click="" id="sign-in-v2-logging-in-1">
-          <img src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
+          <div class="sign-button" @click="" id="sign-in-v2-logging-in-1">
+          <img  class="sign-buttom__img"src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
           </div>
-          <div class="sign-up-v2-or">
+          <div class="sign-text">
              or
           </div>
 
           <div>
 
 
-            <div class="sign-up-v2-holder dimen">
-            	<span id="log_in_warn" class="error" >   </span>
+            <div class="sign-holder dimen">
+            	<span id="log_in_warn" class="sign-holder__error" >   </span>
             </div>
-            <div class="sign-up-v2-holder dimen">
-              <input class="form-control" type="text" name="logins" id="logins" placeholder="Email or Phone Number" autocomplete="on">
-            </div>
-
-            <div class="sign-up-v2-holder dimen">
-              <input class="form-control" type="password" name="password" id="password" placeholder="Password">
+            <div class="sign-holder dimen">
+              <input class="sign-holder__input" type="text" name="logins" id="logins" placeholder="Email or Phone Number" autocomplete="on">
             </div>
 
-            <div class="sign-up-v2-holder">
-              <input class="form-control" type="submit" value="Log in" id="login" @click="">
+            <div class="sign-holder dimen">
+              <input class="sign-holder__input" type="password" name="password" id="password" placeholder="Password">
             </div>
-            <div class=" sign-up-v2-holder sign-in-forgot-pass sign-in-smaller">
-              <a class="sign-up-link" @click="">Forgot password?</a>
+
+            <div class="sign-holder">
+              <input class="sign-holder__input sign-holder__pointer" type="submit" value="Log in" id="login" @click="">
             </div>
-            <div class="sign-up-v2-holder sign-in-sign-up sign-in-smaller">
-              Don't have an Account? <router-link class="sign-up-link" to="/auth/sign_up">Sign Up</router-link> 
+            <div class=" sign-holder sign-forgot-pass sign-smaller">
+              <router-link class="sign-holder__link" to="/auth/forg">Forgot password?</router-link>
+            </div>
+            <div class="sign-holder sign-sign-up sign-smaller">
+              Don't have an Account? <router-link class="sign-holder__link" to="/auth/sign_up">Sign Up</router-link>
             </div>
           </div>
       </div>
@@ -51,12 +51,12 @@ export default {
 </script>
 
 <style lang="css">
-.log_item{
+.log-item{
 text-align: center;
 border: 0px solid #ccc;
 margin: 5px;
 }
-.sign-up-v2-outer{
+.sign-inner{
 max-width: 22rem;
 border: 1px solid #D8DFE6;
 border-radius: 4px;
@@ -64,14 +64,14 @@ margin: 2rem auto;
 padding: 2rem;
 font-family: "Helvetica Nueu", "Helvetica", "Arial", "sans-serif";
 }
-.sign-up-v2-for-sendy{
+.sign-top{
 font-size: 1.3rem;
 line-height: 1.7em;
 font-weight: 500;
 text-align: center;
 color: #666;
 }
-.sign-up-v2-fb-button{
+.sign-button{
 width: 91.9%;
 margin: 1em;
 background-color: #30487b;
@@ -84,7 +84,7 @@ border-radius: 5px;
 text-align: center;
 cursor: pointer;
 }
-.sign-up-v2-or{
+.sign-text{
 padding-top: 5px;
 padding-bottom: 5px;
 font-size: large;
@@ -92,11 +92,11 @@ margin-bottom: 10px;
 text-align: center;
 color: #666;
 }
-.sign-up-v2-holder{
+.sign-holder{
 margin: 1em;
 display: block;
 }
-.form-control {
+.sign-holder__input {
  display: block;
  width: 100%;
  height: 34px;
@@ -113,16 +113,16 @@ display: block;
  -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
-.sign-up-v2-holder input:not([type="checkbox"]) {
+.sign-holder input:not([type="checkbox"]) {
  width: 100%;
 }
-.sign-up-v2-holder .form-control {
+.sign-holder .sign-holder__input {
  -webkit-box-shadow: none;
  -moz-box-shadow: none;
  box-shadow: none;
  height: 30px;
 }
-.sign-up-v2-holder input[type="submit"] {
+.sign-holder input[type="submit"] {
  background-color: #1782c5;
  color: #fff;
  letter-spacing: 1.1px;
@@ -133,28 +133,27 @@ display: block;
  text-transform: uppercase;
  font-size: medium;
 }
-.sign-in-smaller {
+.sign-smaller {
  font-size: 14px;
  color: #999999;
 }
-.sign-in-forgot-pass, .sign-in-sign-up {
+.sign-forgot-pass, .sign-in-sign-up {
  text-align: center;
 }
-.sign-up-v2-fb-button img {
- width: 14px;
+.sign-buttom__img{
+ vertical-align: middle;
+ width:14px;
  padding-bottom: 3px;
  margin-right: 10px;
 }
-img {
- vertical-align: middle;
-}
-.forgot-pass-link{
+.sign-holder__link{
 color: #1782c5;
-}
-.sign-up-link{
-color: #1782c5;
+text-decoration: none;
 }
 .dimen{
 width: 83%;
+}
+.sign-holder__pointer{
+ cursor: pointer;
 }
 </style>
