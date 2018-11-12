@@ -13,10 +13,10 @@
                    <li><a>Menu</a>
                        <ul>
                            <li><router-link class="" to="/orders">New Delivery</router-link></li>
-                           <li><router-link class="" to="/transactions/payments">Payment</router-link></li>
+                           <li><router-link class="" to="/payment">Payment</router-link></li>
                            <li><router-link class="" to="/transactions/order_history">Order History</router-link></li>
                            <li><router-link class="" to="/free_deliveries">Free Deliveries</router-link></li>
-                           <li><router-link class="" to="/payments">Promotions</router-link></li>
+                           <li><router-link class="" to="/payment/promo">Promotions</router-link></li>
                            <li><router-link class="" to="/admin">Admin Settings</router-link></li>
                            <li><router-link class="" to="/analytics">Analytics</router-link></li>
                            <li><router-link class="" to="/profile">Profile</router-link></li>
