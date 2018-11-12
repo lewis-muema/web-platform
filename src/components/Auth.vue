@@ -1,12 +1,14 @@
 <template lang="html">
   <div class="" id="auth">
-    Testing one 2 one 2
+  <sign-in></sign-in>
   </div>
 </template>
 
 <script>
+import SignIn from './SignIn.vue';
 export default {
-    name:'Auth'
+    name:'Auth',
+    components: {SignIn}
 }
 </script>
 
