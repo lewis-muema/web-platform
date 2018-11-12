@@ -1,21 +1,74 @@
 <template lang="html">
-  <div class="" id="orders_container">
-  </div>
+    <div class="">
+        <main-header></main-header>
+        <div class="module-container" id="orders_container">
+            <div class="title">
+                <h3 class="title__text">Orders</h3>
+            </div>
+            <div class="">
+                <router-link class="section__link" to="/orders/rating">Rate Driver</router-link>
+            </div>
+            <div class="">
+                <router-view></router-view>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
-import order_store from './_store';
-import RegisterStoreModule from '../../mixins/register_store_module'
+    import order_store from './_store';
+    import RegisterStoreModule from '../../mixins/register_store_module';
+    import MainHeader from '../../components/headers/MainHeader.vue'
 
-export default {
-  name:'Orders',
-  mixins: [ RegisterStoreModule ],
-  created() {
-    const STORE_KEY = '$_orders';
-    this.register_store_module(STORE_KEY, order_store);
-  },
-}
+    export default {
+        name: 'Orders',
+        mixins: [RegisterStoreModule],
+        components: {MainHeader},
+        created() {
+            const STORE_KEY = '$_orders';
+            this.register_store_module(STORE_KEY, order_store);
+        },
+    }
 </script>
 
 <style lang="css">
+    @import "../../styles/section_headers.css";
+
+    .module-container {
+        margin: 8px;
+    }
+
+    .title {
+        font-size: 22px;
+        padding-bottom: 0px;
+        border-bottom: 1px solid #ccc;
+        color: #999;
+        padding-top: 15px;
+        margin-bottom: 30px;
+    }
+
+    .title__text {
+        font-weight: 300;
+    }
+
+    .section {
+        padding-top: 20px;
+        margin-bottom: 50px;
+        padding-bottom: 2px;
+        border-bottom: 1px solid #1782c5;
+    }
+
+    .section__link {
+        color: #1782c5;
+        text-transform: uppercase;
+        font-size: 15px;
+        text-align: center;
+        padding: 2px 25px;
+        text-decoration: none;
+    }
+
+    .router-link-active {
+        font-weight: bold;
+        border-bottom: 3px solid #1782c5;
+    }
 </style>

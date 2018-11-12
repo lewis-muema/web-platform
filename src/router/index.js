@@ -105,6 +105,16 @@ export function createRouter () {
       // { path: '/auth', component: () => import('../modules/auth/Auth.vue'),
       // },
       { path: '/orders', component: () => import('../modules/orders/Orders.vue'),
+          children: [
+              {
+                  path: '/orders/rating',
+                  component: () => import('../modules/orders/_components/rating/Rating.vue')
+              },
+              {
+                  path: '/orders/rating/submit_rating',
+                  component: () => import('../modules/orders/_components/rating/PostRating.vue')
+              },
+          ]
       },
     ]
   })
