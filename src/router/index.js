@@ -14,6 +14,10 @@ export function createRouter () {
             path: '/',
             component: () => import('../modules/auth/components/SignIn.vue')
           },
+          {
+            path: '/auth/sign_up',
+            component: () => import('../components/SignUp.vue')
+          },
           // {
           //   path: 'sign_up',
           //   component: () => import('./components/SignUp.vue')
