@@ -1,7 +1,6 @@
 <template lang="html">
   <div class="" id="auth_container">
       <external-header></external-header>
-    Testing one 5 one 5
     <router-view></router-view>
   </div>
 </template>
