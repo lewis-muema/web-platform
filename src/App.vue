@@ -1,6 +1,6 @@
 <template>
-  <div id="app" class="app">
-    <router-view></router-view>
+  <div id="app" class="box app">
+    <router-view class="box"></router-view>
   </div>
 </template>
 
@@ -11,9 +11,14 @@ export default {
 </script>
 
 <style lang="css">
+<<<<<<< Updated upstream
 @import './assets/fonts/font.css';
 .body{
+=======
+html, .body{
+>>>>>>> Stashed changes
     margin: 0;
+    height: 100%;
 }
 .app {
   font-family: 'Helvetica Neue', Helvetica, sans-serif;
@@ -25,5 +30,24 @@ export default {
 {
   width: 90%;
   margin: 0px auto;
+}
+.box
+{
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.box .header
+{
+  flex: 0 1 auto;
+}
+
+.box .content
+{
+  display: flex;
+  flex-flow: column;
+  flex: 1 1 auto;
+  overflow-y: auto;
 }
 </style>

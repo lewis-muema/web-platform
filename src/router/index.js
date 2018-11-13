@@ -134,9 +134,8 @@ export function createRouter () {
             },
         ]
       },
-      // { path: '/auth', component: () => import('../modules/auth/Auth.vue'),
-      // },
       { path: '/orders', component: () => import('../modules/orders/Orders.vue'),
+<<<<<<< Updated upstream
           children: [
               {
                   path: '/orders/rating',
@@ -147,6 +146,14 @@ export function createRouter () {
                   component: () => import('../modules/orders/_components/rating/PostRating.vue')
               },
           ]
+=======
+      children: [
+          {
+            path: '/',
+            component: () => import('../modules/orders/Orders.vue')
+          },
+        ]
+>>>>>>> Stashed changes
       },
     ]
   })

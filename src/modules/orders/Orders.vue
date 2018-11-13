@@ -1,4 +1,5 @@
 <template lang="html">
+<<<<<<< Updated upstream
     <div class="">
         <main-header></main-header>
         <div class="module-container" id="orders_container">
@@ -29,6 +30,32 @@
             this.register_store_module(STORE_KEY, order_store);
         },
     }
+=======
+  <div class="">
+    <main-header></main-header>
+
+    <div class="container-small box" id="orders_container">
+      <map-component/>
+    </div>
+  </div>
+</template>
+
+<script>
+import order_store from './_store';
+import RegisterStoreModule from '../../mixins/register_store_module';
+import MainHeader from '../../components/headers/MainHeader.vue';
+import MapComponent from './_components/MapComponent.vue';
+
+export default {
+  name:'Orders',
+  components : {MainHeader,MapComponent},
+  mixins: [ RegisterStoreModule ],
+  created() {
+    const STORE_KEY = '$_orders';
+    this.register_store_module(STORE_KEY, order_store);
+  },
+}
+>>>>>>> Stashed changes
 </script>
 
 <style lang="css">
