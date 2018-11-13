@@ -5,7 +5,7 @@
             <div class="title">
                 <h3 class="title__text">Orders</h3>
             </div>
-            <div class="">
+            <div class="section">
                 <router-link class="section__link" to="/orders/rating">Rate Driver</router-link>
             </div>
             <div class="">
@@ -19,7 +19,6 @@
     import order_store from './_store';
     import RegisterStoreModule from '../../mixins/register_store_module';
     import MainHeader from '../../components/headers/MainHeader.vue'
-
     export default {
         name: 'Orders',
         mixins: [RegisterStoreModule],

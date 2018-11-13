@@ -1,146 +1,102 @@
 <template lang="html">
-    <div class="rating_container">
-        <div class="image_container">
-            <img src="../../../../../public/evans.png"/>
-        </div>
-        <div class="rider_content">
-            <div class="rate-rider-please">
-
+    <span>
+        <span v-if="getStep === 3">
+            <post-rate-component v-if="getPostRatingComponent === 0"></post-rate-component>
+            <post-rate-component-business v-if="getPostRatingComponent === 1"></post-rate-component-business>
+        </span>
+        <span v-else>
+            <div class="container">
+          		<div class="rate-rider-middle">
+          			<div id="rateriderreuse">
+                        <rate-driver-component v-if="getStep === 1"></rate-driver-component>
+                        <comments-component v-if="getStep === 2"></comments-component>
+                    </div>
+                </div>
             </div>
+        </span>
+        <div class="container-fluid">
+            <div class="rate-rider-footer" >
 
-            <div class="rate-rider-star">
+                <div class="rate-rider-external1" >
+                    <a href="https://www.facebook.com/SENDY-843869815628934/" target="_blank" >
+                        <img src="https://s3-eu-west-1.amazonaws.com/sendy-promo-images/emails/fb_icon.png"  alt="Facebook" >
+                    </a>
 
+                    <a href="https://twitter.com/sendymobile" target="_blank" >
+                        <img src="https://s3-eu-west-1.amazonaws.com/sendy-promo-images/emails/twiitter_icon.png"  alt="Twitter" >
+                    </a>
+
+                    <a href="https://www.linkedin.com/company/sendy-limited" target="_blank" >
+                        <img src="https://s3-eu-west-1.amazonaws.com/sendy-promo-images/emails/linkedin_icon.png"  alt="LinkedIn" style=" ">
+                    </a>
+                </div>
+
+                <div class="rate-rider-address1">
+                &copy; {{current_year}} <a href="https://sendyit.com/" >Sendy Ltd</a> Marsabit Plaza - 3rd Floor, Kilimani, Ngong Road, Nairobi.
+                </div>
             </div>
-
-            <div class="rate-rider-desc">
-
-            </div>
         </div>
-        <div class="menu">
-            <p class="button">
-                <a class="button__element"> rate </a>
-                <br> <br>
-            </p>
-        </div>
-        <div class="rating_stars">
-            <p class="rating_button">
-                <a class="rating_button__element"> rate </a>
-            </p>
-            <star-rating v-bind:increment="1"
-                         v-bind:max-rating="5"
-                         inactive-color="#d8d8d8"
-                         active-color="#1782c5"
-                         v-bind:star-size="30">
-            </star-rating>
-
-        </div>
-    </div>
+    </span>
 </template>
 
 <script>
-    import StarRating from 'vue-star-rating';
-
+    import RateDriver from './components/RateDriver.vue';
+    import CommentsComponent from './components/Comments.vue';
+    import PostRateComponent from './components/PostRate.vue';
+    import PostRateComponentBusiness from './components/PostRateBusiness.vue';
+    import getYear from 'date-fns/get_year';
+    import {mapGetters} from 'vuex';
     export default {
-        name: "Rating",
-        components: {
-            StarRating
-        }
+        components:{CommentsComponent,PostRateComponent,PostRateComponentBusiness,RateDriver},
+        created(){
+            this.$store.commit('updateScore', window.score);
+            this.$store.commit('updateBaseUrl', window.base_url);
+            this.$store.commit('updatePackageID', window.package_id);
+            this.$store.commit('updateUserEmail', window.user_email);
+            this.$store.commit('updateRiderImage', window.rider_image);
+            this.$store.commit('updateDriverBaseImage', window.driver_image_base);
+            this.$store.commit('updateDriverName', window.driver_name);
+            this.$store.commit('updateImagesBaseUrl', window.images_base_url);
+            this.setPostRatingComponent();
 
+        },
+        mounted(){
+            this.landOnRatingPage();
+        },
+        computed :{
+            ...mapGetters(
+                [
+                    'getStep','getPostRatingComponent', 'getImagesBaseUrl'
+                ]
+            ),
+            current_year(){
+                let today = new Date();
+                return getYear(today);
+            },
+            wrapper_background(){
+                let uri = 'url('+this.getImagesBaseUrl+'rating/waves_bg.png)';
+                return {'background-image' : uri}
+            }
+
+        },
+        methods : {
+            getRandomNo(max){
+                return Math.floor(Math.random() * Math.floor(max));
+            },
+            setPostRatingComponent(){
+                let component = this.getRandomNo(2);
+                this.$store.commit('updatePostRatingComponent', component);
+            },
+            landOnRatingPage(){
+                window.ga('send', {
+                    hitType: 'pageview',
+                    page: location.pathname,
+                    title: "View Page - Rating Page - Web Platform"
+                });
+            }
+        }
     }
 </script>
 
 <style lang="css">
-    @import "../../../../styles/datatable.css";
-
-    body {
-        font-family: 'Raleway', sans-serif;
-    }
-
-    img{
-        height: 100%;
-    }
-    .rating_container {
-        background-color: #f8f8f8;
-        margin-top: 30px;
-        padding: 10px;
-        height: auto;
-    }
-    .rider_content{
-        display: inline-block !important;
-    }
-    .rating_button {
-
-    }
-
-    .image_container {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        overflow: hidden;
-    }
-
-    .rating_stars {
-        /*display: none;*/
-        background-color: white;
-        padding: 8px;
-        width: 28%;
-        align-content: center;
-    }
-
-    .button {
-        float: left;
-    }
-
-    .rating_button__element {
-        text-transform: uppercase;
-        display: inline-block !important;
-        padding: 5px 20px;
-        margin-bottom: 0;
-        font-size: 14px;
-        font-weight: normal;
-        line-height: 1.42857143;
-        text-align: center;
-        float: right !important;
-        white-space: nowrap;
-        vertical-align: middle;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        background-image: none;
-        border-radius: 3px;
-        color: #fff;
-        background-color: #1782C5;
-        border-color: #357ebd;
-        text-decoration: none;
-    }
-
-    .button__element {
-        text-transform: uppercase;
-        display: inline-block;
-        padding: 5px 50px;
-        margin-bottom: 0;
-        font-size: 14px;
-        font-weight: normal;
-        line-height: 1.42857143;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: middle;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        background-image: none;
-        border-radius: 3px;
-        color: #fff;
-        background-color: #1782C5;
-        border-color: #357ebd;
-        text-decoration: none;
-    }
-
-    .menu {
-        display: flow-root;
-    }
 </style>
