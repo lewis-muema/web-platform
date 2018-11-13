@@ -10,15 +10,16 @@
   padding: 8px;
   line-height: 18px;
   border-bottom: 1px solid #ccd3d9;
-  /* font-size: 13px; */
+  color: #595d62;
+  font-size: 15px;
 }
-.datatable th
-{
+.datatable th {
   background: #eaedef;
   color: #64727a;
   font-weight: 500;
   border-bottom: 1px solid #ccd3d9;
   padding: 8px;
+  text-align: left;
 }
 .datatable td + td, .datatable th + th {
     border-left: 1px solid #ccd3d9;
