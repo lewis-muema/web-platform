@@ -27,7 +27,7 @@ export default {
   text-transform: uppercase;
   font-size: 15px;
   text-align: center;
-  padding: 2px 25px;
+  padding: 2px;
   text-decoration: none;
   flex: 1;
 }

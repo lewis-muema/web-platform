@@ -134,10 +134,16 @@ export function createRouter () {
             },
         ]
       },
-      // { path: '/auth', component: () => import('../modules/auth/Auth.vue'),
-      // },
       { path: '/orders', component: () => import('../modules/orders/Orders.vue'),
           children: [
+              {
+                path: '/',
+                component: () => import('../modules/orders/Orders.vue')
+              },
+              {
+                path: '/orders/tracking',
+                component: () => import('../modules/orders/_components/tracking/Tracking.vue')
+              },
               {
                   path: '/orders/rating',
                   component: () => import('../modules/orders/_components/rating/Rating.vue')
