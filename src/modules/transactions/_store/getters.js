@@ -1,5 +1,6 @@
-const test = state => state.number;
+
+const getOrderHistoryOrders = state => state.order_history_orders;
 
 export default {
-  test,
-}
+    getOrderHistoryOrders
+};
