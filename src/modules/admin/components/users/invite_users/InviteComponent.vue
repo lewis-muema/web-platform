@@ -179,6 +179,21 @@ export default {
 </script>
 
 <style lang="css">
+.waves-effect {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    vertical-align: middle;
+    z-index: 1;
+    -webkit-transition: .3s ease-out;
+    transition: .3s ease-out;
+}
 .submit
 {
   margin-top: 40px;
@@ -191,7 +206,7 @@ export default {
 .inp>.column-flex
 {
   align-items: flex-start;
-  margin-right: 5px auto;
+  margin-right: 5px;
 }
 
 .alright
