@@ -114,6 +114,26 @@ export function createRouter () {
             },
         ]
       },
+      { path: '/payment', component: () => import('../modules/payment/Payment.vue'),
+        children: [
+            {
+              path: '/',
+              component: () => import('../modules/payment/_components/MpesaComponent.vue')
+            },
+            {
+              path: 'mpesa',
+              component: () => import('../modules/payment/_components/MpesaComponent.vue')
+            },
+            {
+              path: 'card',
+              component: () => import('../modules/payment/_components/CardComponent.vue')
+            },
+            {
+              path: 'promo',
+              component: () => import('../modules/payment/_components/PromoComponent.vue')
+            },
+        ]
+      },
       // { path: '/auth', component: () => import('../modules/auth/Auth.vue'),
       // },
       { path: '/orders', component: () => import('../modules/orders/Orders.vue'),
