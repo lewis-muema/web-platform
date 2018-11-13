@@ -19,9 +19,13 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import trans_store from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module'
 import MainHeader from '../../components/headers/MainHeader.vue'
+import Element from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(Element)
 
 export default {
   name:'Transactions',
