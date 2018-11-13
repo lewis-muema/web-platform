@@ -11,12 +11,8 @@ export default {
 </script>
 
 <style lang="css">
-<<<<<<< Updated upstream
 @import './assets/fonts/font.css';
-.body{
-=======
 html, .body{
->>>>>>> Stashed changes
     margin: 0;
     height: 100%;
 }

@@ -1,36 +1,4 @@
 <template lang="html">
-<<<<<<< Updated upstream
-    <div class="">
-        <main-header></main-header>
-        <div class="module-container" id="orders_container">
-            <div class="title">
-                <h3 class="title__text">Orders</h3>
-            </div>
-            <div class="">
-                <router-link class="section__link" to="/orders/rating">Rate Driver</router-link>
-            </div>
-            <div class="">
-                <router-view></router-view>
-            </div>
-        </div>
-    </div>
-</template>
-
-<script>
-    import order_store from './_store';
-    import RegisterStoreModule from '../../mixins/register_store_module';
-    import MainHeader from '../../components/headers/MainHeader.vue'
-
-    export default {
-        name: 'Orders',
-        mixins: [RegisterStoreModule],
-        components: {MainHeader},
-        created() {
-            const STORE_KEY = '$_orders';
-            this.register_store_module(STORE_KEY, order_store);
-        },
-    }
-=======
   <div class="">
     <main-header></main-header>
 
@@ -55,7 +23,6 @@ export default {
     this.register_store_module(STORE_KEY, order_store);
   },
 }
->>>>>>> Stashed changes
 </script>
 
 <style lang="css">
