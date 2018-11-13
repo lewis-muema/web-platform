@@ -6,16 +6,16 @@
           </div>
           <div class="order_details_desc">
               <div class="order_details_price">
-                    KES 250 
+                    KES 250
               </div>
               <div class="order_details_desc_item">
-                    Kilometers : 1kms 
+                    Kilometers : 1kms
               </div>
               <div class="order_details_desc_item">
-                    Duration : 
+                    Duration :
               </div>
               <div class="order_details_desc_item">
-                    Date : 
+                    Date :
               </div>
               <div class="order_details_desc_item">
                     <img src="https://apptest.sendyit.com/biz/style3/comp/maroon_button.png" class="order_details_desc_image">
@@ -23,7 +23,7 @@
               <div class="order_details_desc_item">
                     <img src="https://apptest.sendyit.com/biz/style3/comp/blue_button.png" class="order_details_desc_image">
               </div>
-              
+
           </div>
       </div>
       <div class="rider_details_wrap">
@@ -32,12 +32,12 @@
           </div>
           <div class="rider_details_items">
               <div class="rider_details_item">
-                  Rider name : Phil Samoei 
+                  Rider name : Phil Samoei
               </div>
               <div class="rider_details_item">
-                  Number plate : KMCH 
+                  Number plate : {{order_details.order_no}}
               </div>
-              
+
           </div>
 
       </div>
@@ -45,14 +45,28 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
     name:'order-details',
     data() {
         return {
-          order_id:''
+          order_id:'',
+          order_details:'',
         }
     },
+    methods:{
+        ...mapGetters({
+          getOrderDetails:'$_transactions/getOrderHistoryOrderDetails',
+        }),
+    },
+    computed:{
+
+    },
     mounted(){
+        this.order_details = this.getOrderDetails(this.order_id);
+    },
+    created(){
         this.order_id  = this.$route.params.id;
     }
 }
@@ -91,7 +105,7 @@ export default {
         font-size: 25px;
         margin-bottom:10px;
     }
-    
+
     .rider_details_wrap {
         width: 50%;
         float: right;
