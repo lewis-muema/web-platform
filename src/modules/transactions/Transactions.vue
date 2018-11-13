@@ -32,8 +32,9 @@ export default {
   mixins: [ RegisterStoreModule ],
   components : {MainHeader},
   created() {
-    const STORE_KEY = '$_transactions';
-    this.register_store_module(STORE_KEY, trans_store);
+    this.$store.registerModule('$_transactions', trans_store);
+    // const STORE_KEY = '$_transactions';
+    // this.register_store_module(STORE_KEY, trans_store);
   },
 }
 </script>
