@@ -41,6 +41,6 @@ export default {
 <style lang="css">
     @import "../../styles/section_headers.css";
     .module-container{
-        margin: 8px;
+        margin: 8px 100px;
     }
 </style>
