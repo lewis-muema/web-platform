@@ -22,8 +22,9 @@ export default {
   components : {MainHeader, AccountBalance, OrderCost, PaymentBody},
   mixins: [ RegisterStoreModule ],
   created() {
-    const STORE_KEY = '$_payment';
-    this.register_store_module(STORE_KEY, payment_store);
+    this.$store.registerModule('$_payment', payment_store);
+    // const STORE_KEY = '$_payment';
+    // this.register_store_module(STORE_KEY, payment_store);
   },
   computed: {
     currentPageHeader: function() {
@@ -36,7 +37,7 @@ export default {
 <style lang="css">
 .container-small
 {
-  width: 35%;
+  width: 45%;
   margin: 5% auto;
 }
 .payment--header{

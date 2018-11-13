@@ -4,6 +4,7 @@
 
     <div class="container-small box" id="orders_container">
       <map-component/>
+      <router-view/>
     </div>
   </div>
 </template>
@@ -19,8 +20,9 @@ export default {
   components : {MainHeader,MapComponent},
   mixins: [ RegisterStoreModule ],
   created() {
-    const STORE_KEY = '$_orders';
-    this.register_store_module(STORE_KEY, order_store);
+    this.$store.registerModule('$_orders', order_store);
+    // const STORE_KEY = '$_orders';
+    // this.register_store_module(STORE_KEY, order_store);
   },
 }
 </script>

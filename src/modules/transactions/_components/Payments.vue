@@ -7,10 +7,17 @@
 </template>
 
 <script>
-import DatatableMixin from '../../../mixins/datatable_mixin.js'
+import DatatableMixin from '../../../mixins/datatable_mixin.js';
+import { mapGetters } from 'vuex';
+import store from '../_store';
+
 export default {
   name:'Payments',
   mixins: [ DatatableMixin ],
+  computed: {
+    ...mapGetters({
+    }),
+  },
   mounted() {
     var el = "table_div";
     var data = [

@@ -141,6 +141,10 @@ export function createRouter () {
                 component: () => import('../modules/orders/Orders.vue')
               },
               {
+                path: '/orders/tracking',
+                component: () => import('../modules/orders/_components/tracking/Tracking.vue')
+              },
+              {
                   path: '/orders/rating',
                   component: () => import('../modules/orders/_components/rating/Rating.vue')
               },
