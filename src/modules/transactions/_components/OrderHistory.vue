@@ -2,9 +2,12 @@
   <div class="" id="order_hist_container">
      <el-table
       :data="tableData"
-      style="width: 100%">
+      style="width: 100%"
+      @expand-change="handleRowExpand"
+      >
       <el-table-column type="expand">
         <template slot-scope="props">
+          <router-view></router-view>
         </template>
       </el-table-column>
       <el-table-column
@@ -16,17 +19,12 @@
         prop="name">
       </el-table-column>
   </el-table>
-  
-  <order-details :order={}></order-details>
  
   </div>
 </template>
 
 <script>
 export default {
-      components: {
-      //  'order-details':() =>  import('./OrderDetails.vue')
-      },
       data() {
         return {
           tableData: [{
@@ -79,6 +77,16 @@ export default {
           address: 'No. 189, Grove St, Los Angeles',
           zip: 'CA 90036'
         }]
+        }
+      },
+      methods:{
+        handleRowExpand(row, expanded) {
+          if(expanded.length > 0){
+              console.log('handling row expand');
+              //trigger router action here
+              this.$router.push('/transactions/order_history/details');
+          }
+        
         }
       }
     }
