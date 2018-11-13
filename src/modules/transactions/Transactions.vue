@@ -29,7 +29,7 @@ Vue.use(Element)
 
 export default {
   name:'Transactions',
-  mixins: [ RegisterStoreModule ],
+  // mixins: [ RegisterStoreModule ],
   components : {MainHeader},
   created() {
     this.$store.registerModule('$_transactions', trans_store);
