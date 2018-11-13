@@ -28,6 +28,7 @@ export default {
       data() {
         return {
           tableData: [{
+          id: '1',  
           date: '2016-05-03',
           name: 'Tom',
           state: 'California',
@@ -35,6 +36,7 @@ export default {
           address: 'No. 189, Grove St, Los Angeles',
           zip: 'CA 90036'
         }, {
+          id: '2',  
           date: '2016-05-02',
           name: 'Tom',
           state: 'California',
@@ -42,6 +44,7 @@ export default {
           address: 'No. 189, Grove St, Los Angeles',
           zip: 'CA 90036'
         }, {
+          id: '3',  
           date: '2016-05-04',
           name: 'Tom',
           state: 'California',
@@ -49,6 +52,7 @@ export default {
           address: 'No. 189, Grove St, Los Angeles',
           zip: 'CA 90036'
         }, {
+          id: '4',  
           date: '2016-05-01',
           name: 'Tom',
           state: 'California',
@@ -56,6 +60,7 @@ export default {
           address: 'No. 189, Grove St, Los Angeles',
           zip: 'CA 90036'
         }, {
+          id: '5',  
           date: '2016-05-08',
           name: 'Tom',
           state: 'California',
@@ -63,6 +68,7 @@ export default {
           address: 'No. 189, Grove St, Los Angeles',
           zip: 'CA 90036'
         }, {
+          id: '6',  
           date: '2016-05-06',
           name: 'Tom',
           state: 'California',
@@ -70,6 +76,7 @@ export default {
           address: 'No. 189, Grove St, Los Angeles',
           zip: 'CA 90036'
         }, {
+          id: '7',  
           date: '2016-05-07',
           name: 'Tom',
           state: 'California',
@@ -81,13 +88,17 @@ export default {
       },
       methods:{
         handleRowExpand(row, expanded) {
+          console.log(row);
+
           if(expanded.length > 0){
               console.log('handling row expand');
               //trigger router action here
-              this.$router.push('/transactions/order_history/details');
+              this.$router.push({name:'order-details', params: {id : row.id}});
           }
         
         }
+
+        
       }
     }
 </script>

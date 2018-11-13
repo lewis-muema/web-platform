@@ -56,6 +56,7 @@ export function createRouter () {
               children: [
                 {
                   path: 'details/:id',
+                  name:'order-details',
                   component: () => import('../modules/transactions/_components/OrderDetails.vue')
                 },
               ]
