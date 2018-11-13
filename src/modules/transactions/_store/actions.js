@@ -13,7 +13,7 @@ export default {
             axios.post(path+"complete_orders", payload)
               .then(response => {
                 if (response.data.status == true) {
-                   commit(setOrderHistoryOrders);
+                   commit('setOrderHistoryOrders',response.data.values);
                    resolve(response.data);
                 }
                 else {
