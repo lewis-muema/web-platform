@@ -52,19 +52,21 @@ export default {
     data() {
         return {
           order_id:'',
-          order_details:'',
         }
     },
     methods:{
-        ...mapGetters({
-          getOrderDetails:'$_transactions/getOrderHistoryOrderDetails',
-        }),
-    },
-    computed:{
 
     },
+    computed:{
+        ...mapGetters({
+          getOrderDetails:'$_transactions/getOrderHistoryOrders',
+        }),
+        order_details (){
+            return this.getOrderDetails.find( order => order.order_no ===  this.$route.params.id);
+        }
+    },
     mounted(){
-        this.order_details = this.getOrderDetails(this.order_id);
+
     },
     created(){
         this.order_id  = this.$route.params.id;
