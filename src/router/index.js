@@ -145,7 +145,8 @@ export function createRouter () {
           children: [
               {
                 path: '/',
-                component: () => import('../modules/orders/Orders.vue')
+                component: () => import('../modules/orders/_components/order_placement/Home.vue'),
+                alias: '/orders/home'
               },
               {
                 path: '/orders/tracking',
