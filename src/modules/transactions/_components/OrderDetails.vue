@@ -18,11 +18,11 @@
                     Date :{{order_details.order_date}}
               </div>
               <div class="order_details_desc_item">
-                    <img src="https://apptest.sendyit.com/biz/style3/comp/maroon_button.png" class="order_details_desc_image">
+                    <img src="../../../assets/img/maroon_button.png" class="order_details_desc_image">
                     {{order_details.full_order_details.values.from_name}}
               </div>
               <div class="order_details_desc_item">
-                    <img src="https://apptest.sendyit.com/biz/style3/comp/blue_button.png" class="order_details_desc_image">
+                    <img src="../../../assets/img/blue_button.png" class="order_details_desc_image">
                     {{order_details.full_order_details.values.to_name }}
               </div>
 
@@ -39,7 +39,34 @@
               <div class="rider_details_item">
                   Number plate : {{order_details.rider_details.number_plate }}
               </div>
-        </div>
+              <div class="rider_details_item rating" v-html="renderRiderRating(order_details.rider_details.rating)">
+              </div>
+          </div>
+
+          <div class="rider_details_actions">
+              <div class="rider_details_actions_completed" v-if="order_details.pending_delivery.delivery_status !== 3">
+                <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn" type="primary">TRACK</el-button>
+                </div>
+                <!-- <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">FAVORITE</el-button>
+                </div>
+                <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">SCHEDULE</el-button>
+                </div> -->
+              </div>
+              <div class="rider_details_actions_ongoing" v-else>
+                <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">RATE</el-button>
+                </div>
+                <!-- <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">FAVORITE</el-button>
+                </div>
+                <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">SCHEDULE</el-button>
+                </div> -->
+              </div>
+          </div>
         </div>
   </div>
 </template>
@@ -59,7 +86,20 @@ export default {
             let google_key = "AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc";
 
             return "https://maps.googleapis.com/maps/api/staticmap?path=color:100x1782C5|weight:5|"+from_cordinates+"|"+to_cordinates+"&size=257x257&markers=color:red%7Clabel:P%7C"+from_cordinates+"&markers=color:blue%7Clabel:D%7C "+to_cordinates+ "&key="+google_key;
+        },
+        renderRiderRating(rating) {
+            let rating_template ='';
+            for(let i =0 ; i < 5; i++){
+                if(i < rating){
+                    rating_template += '<span class="fa fa-star rating_checked"></span>';
+                } else {
+                    rating_template += '<span class="fa fa-star"></span>'
+                }
+            }
+            return rating_template;
         }
+
+
     },
     computed:{
         ...mapGetters({
@@ -79,6 +119,8 @@ export default {
 </script>
 
 <style lang="css">
+    @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+
     .order_details_wrap {
         width: 50%;
         border-right: 1px solid #ccc;
@@ -136,5 +178,22 @@ export default {
     }
     .rider_details_item {
         margin-top: 10px;
+    }
+    .rider_details_item .rating{
+       font-size:20px;
+    }
+    
+    .rating_checked {
+        color: #1782c5;
+    }
+    .rider_details_actions {
+        width: 100%;
+        display: block;
+        float: left;
+        margin-left: 30%;
+        margin-top: 10px;
+    }
+    .rider_details_action {
+        display: inline-block
     }
 </style>
