@@ -12,6 +12,7 @@ export default {
 
 <style lang="css">
 @import './assets/fonts/font.css';
+@import './styles/overide.css';
 html, .body{
     margin: 0;
     height: 100%;
