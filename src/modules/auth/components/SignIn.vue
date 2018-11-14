@@ -22,15 +22,15 @@
             	<span id="log_in_warn" class="sign-holder__error" >   </span>
             </div>
             <div class="sign-holder dimen">
-              <input class="sign-holder__input" type="text" name="email" v-model="email" placeholder="Email or Phone Number" autocomplete="on">
+              <input class="form-control" type="text" name="email" v-model="email" placeholder="Email or Phone Number" autocomplete="on">
             </div>
 
             <div class="sign-holder dimen">
-              <input class="sign-holder__input" type="password" name="password" v-model="password" placeholder="Password">
+              <input class="form-control" type="password" name="password" v-model="password" placeholder="Password">
             </div>
 
             <div class="sign-holder">
-              <input class="sign-holder__input sign-holder__pointer" type="submit" value="Log in" id="login" v-on:click="sign_in" >
+              <input class="btn-submit" type="submit" value="Log in" id="login" v-on:click="sign_in" >
             </div>
             <div class=" sign-holder sign-forgot-pass sign-smaller">
               <router-link class="sign-holder__link" to="/auth/forgot_password">Forgot password?</router-link>
@@ -121,23 +121,6 @@ color: #666;
 margin: 1em;
 display: block;
 }
-.sign-holder__input {
- display: block;
- width: 100%;
- height: 34px;
- padding: 6px 12px;
- font-size: 14px;
- line-height: 1.42857143;
- color: #555;
- background-color: #fff;
- background-image: none;
- border: 1px solid #ccc;
- border-radius: 4px;
- -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
- box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
- -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
- transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-}
 .sign-holder input:not([type="checkbox"]) {
  width: 100%;
 }
@@ -146,17 +129,6 @@ display: block;
  -moz-box-shadow: none;
  box-shadow: none;
  height: 30px;
-}
-.sign-holder input[type="submit"] {
- background-color: #1782c5;
- color: #fff;
- letter-spacing: 1.1px;
- font-weight: inherit;
- padding: 6px;
- height: 42px;
- border: 1px solid #1782c5;
- text-transform: uppercase;
- font-size: medium;
 }
 .sign-smaller {
  font-size: 14px;
