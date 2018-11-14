@@ -1,7 +1,7 @@
 <template lang="html">
     <span>
         <div class="container-image">
-            <div id="rate-rider-imager" style="background: white url('<?php echo $rider_image;?>');width:100px;height:100px;background-size:cover; -moz-border-radius: 70px;  -webkit-border-radius: 70px;border-radius: 70px;background-position-x:center;margin:0px auto" :style="driver_background">
+            <div id="rate-rider-imager" style="background: white url('placeholder.png');width:100px;height:100px;background-size:cover; -moz-border-radius: 70px;  -webkit-border-radius: 70px;border-radius: 70px;background-position-x:center;margin:0px auto" :style="driver_background">
             </div>
         </div>
 
@@ -11,17 +11,26 @@
             </div>
 
             <div class="rate-rider-star">
-                <form action="" method="post" v-on:submit.prevent="submitRating()">
+                 <div class="rider_details_rating">
+                <div class="block">
+                    <el-rate
+                            v-model="orderRating"
+                            :colors="['#99A9BF', '#f57f20', '#1b7fc3']">
+                    </el-rate>
+                     <el-button class="rider_details_rate_btn" @click="renderRiderRating"> RATE </el-button>
+                </div>
+              </div>
+                <!--<form action="" method="post" v-on:submit.prevent="submitRating()">-->
 
-                    <div id="stars" >
-                        <input id="stars1" name="value1" v-model="rated_score">
+                    <!--<div id="stars" >-->
+                        <!--<input id="stars1" name="value1" v-model="rated_score">-->
 
-                    </div>
-                    <div class="submit-stars">
-                            <!-- <a id="submitit">Submit</a> -->
-                        <input type="submit" value="Submit" >
-                    </div>
-                </form>
+                    <!--</div>-->
+                    <!--<div class="submit-stars">-->
+                            <!--&lt;!&ndash; <a id="submitit">Submit</a> &ndash;&gt;-->
+                        <!--<input type="submit" value="Submit" >-->
+                    <!--</div>-->
+                <!--</form>-->
 
 
             </div>
@@ -60,9 +69,9 @@
                 return {background : "white "+uri}
             }
         },
-        data(){
+        data() {
             return {
-                rated_score :0.5
+                show_rating:false,
             }
         },
         methods :{
@@ -72,41 +81,46 @@
                     updateScore: '$_rating/updateScore'
                 }
             ),
-            submitRating(){
-                this.rated_score = $('#stars1').val();
-                if(this.rated_score < 1){
-                    this.rated_score = 1;
+            renderRiderRating(rating) {
+                let rating_template ='';
+                for(let i =0 ; i < 5; i++){
+                    if(i < rating){
+                        rating_template += '<span class="fa fa-star rating_checked"></span>';
+                    } else {
+                        rating_template += '<span class="fa fa-star"></span>'
+                    }
                 }
-                this.postRating();
-                this.moveNext();
-                this.submitScore();
-            },
-            postRating(){
-                let self = this;
-                let url = this.getBaseUrl+'Rate/insertRate';
-                let data = {"score":this.rated_score, "user_email":this.getUserEmail, "package_id":this.getPackageID};
-                axios.post(url,data)
-                    .then(function (response) {
-                        console.log(response.data);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            },
-            moveNext(){
-                // if(this.rated_score == 5){
-                //     this.$store.commit('updateStep', 3);
-                // }
-                // else{
-                this.updateStep (2);
-                // }
-            },
-            submitScore(){
-                this.updateScore (this.rated_score);
+                return rating_template;
             }
         }
     }
 </script>
 
 <style lang="css">
+    .rate-rider-please {
+        font: 400 20px/26px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        margin: 2em;
+        color: #826D6D;
+        text-align: center;
+    }
+    .rate-rider-star {
+        display: inline-block;
+        text-align: center !important;
+        /*margin:0 auto !important;*/
+        margin-left: 38%;
+        font-size: 14px;
+        line-height: 1.42857143;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .rate-rider-desc {
+        font: 200 14px/26px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        margin: 2em;
+        text-align: center;
+        color: #595d62 !important;
+    }
+    .rider_details_rating {
+        margin-top: 10px;
+        padding: 20px 20px 20px 20px;
+         background: #fff !important;
+    }
 </style>
