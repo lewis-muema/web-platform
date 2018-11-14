@@ -3,7 +3,6 @@ import getters from './getters';
 import mutations from './mutations';
 
 const state = {
-  number: 12,
 };
 
 export default {

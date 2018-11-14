@@ -2,9 +2,12 @@
   <div class="">
     <main-header></main-header>
 
-    <div class="container-small box" id="orders_container">
+    <div class="box" id="orders_container">
       <map-component/>
-      <router-view/>
+      <ongoing-component/>
+      <transition name="fade" mode="out-in">
+        <router-view/>
+      </transition>
     </div>
   </div>
 </template>
@@ -14,10 +17,11 @@ import order_store from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
+import OngoingComponent from './_components/OngoingComponent.vue';
 
 export default {
   name:'Orders',
-  components : {MainHeader,MapComponent},
+  components : {MainHeader,MapComponent,OngoingComponent},
   mixins: [ RegisterStoreModule ],
   created() {
     this.$store.registerModule('$_orders', order_store);
@@ -66,5 +70,16 @@ export default {
     .router-link-active {
         font-weight: bold;
         border-bottom: 3px solid #1782c5;
+    }
+    .fade-enter-active,
+    .fade-leave-active {
+      transition-duration: 0.3s;
+      transition-property: opacity;
+      transition-timing-function: ease;
+    }
+
+    .fade-enter,
+    .fade-leave-active {
+      opacity: 0
     }
 </style>
