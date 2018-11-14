@@ -52,7 +52,14 @@ export function createRouter () {
             },
             {
               path: '/transactions/order_history',
-              component: () => import('../modules/transactions/_components/OrderHistory.vue')
+              component:() => import('../modules/transactions/_components/OrderHistory.vue'),
+              children: [
+                {
+                  path: 'details/:id',
+                  name:'order-details',
+                  component: () => import('../modules/transactions/_components/OrderDetails.vue')
+                },
+              ]
             },
             {
               path: '/transactions/statement',
