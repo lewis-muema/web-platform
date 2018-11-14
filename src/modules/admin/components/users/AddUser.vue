@@ -1,20 +1,10 @@
 <template lang="html">
-    <div class="">
-        <div class="admin_invite_outer" v-if = ' 1== 1'>
-           <invite-component></invite-component>
-         </div>
-         <div class="admin_invite_outer" v-else-if = 'this.getViewState == 2'>
-           <link-component></link-component>
-         </div>
-         <div class="admin_invite_outer" v-else-if = 'this.getViewState == 3'>
-           <many-component></many-component>
-         </div>
-         <div class="admin_invite_outer" v-else-if = 'this.getViewState == 4'>
-           <end-component></end-component>
-         </div>
-         <div class="admin_invite_outer" v-else-if = 'this.getViewState == 5'>
-           <link-show-component></link-show-component>
-         </div>
+    <div class="admin_invite_outer">
+           <invite-component v-if="this.getState === 1"></invite-component>
+           <link-component v-if="this.getState === 2"></link-component>
+           <many-component v-if="this.getState === 3"></many-component>
+           <end-component v-if="this.getState === 4"></end-component>
+           <link-show-component v-if="this.getState === 5"></link-show-component>
     </div>
 </template>
 
@@ -31,10 +21,9 @@ export default {
     components: {InviteComponent,ManyComponent,LinkComponent,EndComponent,LinkShowComponent},
     computed: {
        ...mapGetters(
-         [
-           'getBizName',
-           'getViewState'
-         ]
+           {
+               getState: '$_admin/getViewState'
+           }
        )
      },
      mounted() {
@@ -44,12 +33,7 @@ export default {
       },
 }
 </script>
-<style scoped">
-    @import "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/css/materialize.min.css";
-
-</style>
 <style lang="css">
-@import "https://fonts.googleapis.com/icon?family=Material+Icons";
 .cancel-btn
 {
   background-color: transparent;

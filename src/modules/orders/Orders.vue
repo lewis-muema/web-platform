@@ -1,10 +1,17 @@
 <template lang="html">
-  <div class="">
-    <main-header></main-header>
-
-    <div class="container-small box" id="orders_container">
-      <map-component/>
-      <router-view/>
+    <div class="">
+        <main-header></main-header>
+        <div class="module-container" id="orders_container">
+            <div class="title">
+                <h3 class="title__text">Orders</h3>
+            </div>
+            <div class="section">
+                <router-link class="section__link" to="/orders/rating">Rate Driver</router-link>
+            </div>
+            <div class="">
+                <router-view></router-view>
+            </div>
+        </div>
     </div>
   </div>
 </template>
