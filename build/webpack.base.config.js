@@ -14,6 +14,8 @@ const env = process.env.NODE_ENV === 'testing'
   : process.env.NODE_ENV === 'production' ? require('../configs/prod.env')
   : require('../configs/dev.env')
 
+//server side
+ process.env._ENV = env;
 
 module.exports = {
   devtool: isProd

@@ -220,7 +220,7 @@
         text-transform: uppercase !important;
     }
 
-    input:not([type]), input[type=text]:not(.browser-default){
+    /* input:not([type]), input[type=text]:not(.browser-default){
         background-color: transparent;
         border: none;
         border-bottom: 1px solid #9e9e9e;
@@ -239,7 +239,7 @@
         transition: border .3s, -webkit-box-shadow .3s;
         transition: box-shadow .3s, border .3s;
         transition: box-shadow .3s, border .3s, -webkit-box-shadow .3s;
-    }
+    } */
     .inpDept {
         position: relative;
         cursor: pointer;

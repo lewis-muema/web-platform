@@ -74,10 +74,9 @@ mounted() {
 }
 </script>
 
-<style lang="css">
-/* @import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons';
-@import '~vuetify/dist/vuetify.min.css'; */
-@import "../../../../assets/styles/datatable.css";
+<style lang="css" scoped>
+@import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons';
+/* @import "../../../../assets/styles/datatable.css"; */
 
 .button{
     float:right;
