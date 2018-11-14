@@ -59,6 +59,11 @@ export default {
 
           if(expanded.length > 0){
               console.log('handling row expand');
+              if(expanded.length > 1){
+                //now we have more than one open
+                //therefore close one
+                	document.getElementsByClassName('el-table__expand-icon--expanded')[0].click()
+				      }
               //trigger router action here
               this.$router.push({name:'order-details', params: {id : row.order_no}});
           }
