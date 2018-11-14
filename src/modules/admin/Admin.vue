@@ -39,7 +39,7 @@ export default {
 </script>
 
 <style lang="css">
-    @import "../../styles/section_headers.css";
+    @import "../../assets/styles/section_headers.css";
     .module-container{
         margin: 8px 100px;
     }
