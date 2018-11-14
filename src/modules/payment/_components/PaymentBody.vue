@@ -17,18 +17,6 @@ export default {
 </script>
 
 <style lang="css">
-.paymentbody--input-control
-{
-  height: 42px;
-  width: 100%;
-  font-size: 14px;
-  line-height: 1.42857143;
-  color: #555;
-  padding: 6px 12px;
-  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
 .paymentbody--input
 {
   display: flex;

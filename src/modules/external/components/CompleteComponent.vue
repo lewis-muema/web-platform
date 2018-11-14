@@ -30,12 +30,12 @@ export default {
   name: 'complete-component',
   computed: {
     ...mapGetters(
-      [
-        'getBaseUrl',
-        'getBizName',
-        'getBizEmail',
-        'getPerEmail'
-      ]
+      {
+        // 'getBaseUrl',
+        // 'getBizName',
+        // 'getBizEmail',
+        // 'getPerEmail'
+      }
     )
   }
 }
