@@ -17,26 +17,33 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
 
 export default {
   name: 'link-show-component',
   computed: {
-    ...mapGetters(
-      [
-        'getInviteLink',
-        'getBizName'
-      ]
-    )
+      ...mapGetters(
+          {
+              getState: '$_admin/getViewState',
+              getBizName: '$_admin/getBizName',
+              getInviteLink: '$_admin/getInviteLink'
+          }
+      )
   },
   methods: {
+      ...mapMutations(
+          {
+              updateViewState: '$_admin/setViewState'
+          }
+      ),
     copy_link: function() {
       var copyText = document.getElementById("in_link");
       copyText.select();
       document.execCommand("Copy")
     },
     back: function() {
-      this.$store.commit('updateViewState', 2)
+        this.updateViewState(2);
+        // this.$store.commit('updateViewState', 2)
     }
   }
 }

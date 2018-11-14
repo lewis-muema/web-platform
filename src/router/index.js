@@ -154,11 +154,7 @@ export function createRouter () {
               {
                   path: '/orders/rating',
                   component: () => import('../modules/orders/_components/rating/Rating.vue')
-              },
-              {
-                  path: '/orders/rating/submit_rating',
-                  component: () => import('../modules/orders/_components/rating/PostRating.vue')
-              },
+              }
           ]
       },
       { path: '/profile', component: () => import('../modules/Profile/Profile.vue'),
