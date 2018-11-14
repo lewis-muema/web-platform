@@ -22,18 +22,18 @@
             	<span id="log_in_warn" class="sign-holder__error" >   </span>
             </div>
             <div class="sign-holder dimen">
-              <input class="sign-holder__input" type="text" name="logins" id="logins" placeholder="Email or Phone Number" autocomplete="on">
+              <input class="sign-holder__input" type="text" name="email" v-model="email" placeholder="Email or Phone Number" autocomplete="on">
             </div>
 
             <div class="sign-holder dimen">
-              <input class="sign-holder__input" type="password" name="password" id="password" placeholder="Password">
+              <input class="sign-holder__input" type="password" name="password" v-model="password" placeholder="Password">
             </div>
 
             <div class="sign-holder">
-              <input class="sign-holder__input sign-holder__pointer" type="submit" value="Log in" id="login" @click="">
+              <input class="sign-holder__input sign-holder__pointer" type="submit" value="Log in" id="login" v-on:click="sign_in" >
             </div>
             <div class=" sign-holder sign-forgot-pass sign-smaller">
-              <router-link class="sign-holder__link" to="/auth/forg">Forgot password?</router-link>
+              <router-link class="sign-holder__link" to="/auth/forgot_password">Forgot password?</router-link>
             </div>
             <div class="sign-holder sign-sign-up sign-smaller">
               Don't have an Account? <router-link class="sign-holder__link" to="/auth/sign_up">Sign Up</router-link>
@@ -45,8 +45,34 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 export default {
-    name: 'SignIn'
+    name: 'SignIn',
+    data() {
+      return {
+        email: '',
+        password: ''
+      }
+    },
+    methods:{
+       ...mapActions({
+          requestSignIn :'$_auth/requestSignIn',
+      }),
+      sign_in: function ()
+      {
+        let payload = {
+           "email":"faithshop@gmail.com",
+           "password":"qwerty"
+        };
+        this.requestSignIn(payload).then(response => {
+           console.log("Sign In response")
+           console.log(response);
+        }, error => {
+            console.error("Check Internet Connection")
+            console.log(error);
+        });
+      },
+  },
 }
 </script>
 

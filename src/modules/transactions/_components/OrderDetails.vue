@@ -18,11 +18,11 @@
                     Date :{{order_details.order_date}}
               </div>
               <div class="order_details_desc_item">
-                    <img src="https://apptest.sendyit.com/biz/style3/comp/maroon_button.png" class="order_details_desc_image">
+                    <img src="../../../assets/img/maroon_button.png" class="order_details_desc_image">
                     {{order_details.full_order_details.values.from_name}}
               </div>
               <div class="order_details_desc_item">
-                    <img src="https://apptest.sendyit.com/biz/style3/comp/blue_button.png" class="order_details_desc_image">
+                    <img src="../../../assets/img/blue_button.png" class="order_details_desc_image">
                     {{order_details.full_order_details.values.to_name }}
               </div>
 
@@ -39,7 +39,65 @@
               <div class="rider_details_item">
                   Number plate : {{order_details.rider_details.number_plate }}
               </div>
-        </div>
+              <div class="rider_details_item rating" v-html="renderRiderRating(order_details.rider_details.rating)">
+              </div>
+          </div>
+
+          <div class="rider_details_actions">
+              <div class="rider_details_actions_completed" v-if="order_details.pending_delivery.delivery_status !== 3">
+                <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn" type="primary">TRACK</el-button>
+                </div>
+                <!-- <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">FAVORITE</el-button>
+                </div>
+                <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">SCHEDULE</el-button>
+                </div> -->
+                <div class="rider_details_action">
+                    <el-dropdown>
+                    <el-button type="primary">
+                        <i class="el-icon-more el-icon--center"></i>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>Print Receipt</el-dropdown-item>
+                        <el-dropdown-item>Delivery Docs</el-dropdown-item>
+                    </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+              </div>
+              <div class="rider_details_actions_ongoing" v-else>
+                <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn" type="primary" @click="activateRating">RATE</el-button>
+                </div>
+                <!-- <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">FAVORITE</el-button>
+                </div>
+                <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">SCHEDULE</el-button>
+                </div> -->
+                <div class="rider_details_action">
+                    <el-dropdown>
+                    <el-button type="primary">
+                        <i class="el-icon-more el-icon--center"></i>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>Print Receipt</el-dropdown-item>
+                        <el-dropdown-item>Delivery Docs</el-dropdown-item>
+                    </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+              </div>
+              <div class="rider_details_rating" v-if="show_rating">
+                <div class="block">
+                    <el-rate
+                        v-model="orderRating"
+                        :colors="['#99A9BF', '#f57f20', '#1b7fc3']">
+                    </el-rate>
+                     <el-button class="rider_details_rate_btn" @click="rateOrder"> RATE </el-button>
+                </div>
+              </div>
+          </div>
         </div>
   </div>
 </template>
@@ -52,6 +110,7 @@ export default {
     data() {
         return {
           order_id:'',
+          show_rating:false,
         }
     },
     methods:{
@@ -59,7 +118,27 @@ export default {
             let google_key = "AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc";
 
             return "https://maps.googleapis.com/maps/api/staticmap?path=color:100x1782C5|weight:5|"+from_cordinates+"|"+to_cordinates+"&size=257x257&markers=color:red%7Clabel:P%7C"+from_cordinates+"&markers=color:blue%7Clabel:D%7C "+to_cordinates+ "&key="+google_key;
+        },
+        renderRiderRating(rating) {
+            let rating_template ='';
+            for(let i =0 ; i < 5; i++){
+                if(i < rating){
+                    rating_template += '<span class="fa fa-star rating_checked"></span>';
+                } else {
+                    rating_template += '<span class="fa fa-star"></span>'
+                }
+            }
+            return rating_template;
+        },
+        activateRating() {
+            this.show_rating = true;
+        },
+        rateOrder() {
+            this.show_rating = false;
         }
+        
+
+
     },
     computed:{
         ...mapGetters({
@@ -79,6 +158,8 @@ export default {
 </script>
 
 <style lang="css">
+    @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+
     .order_details_wrap {
         width: 50%;
         border-right: 1px solid #ccc;
@@ -137,4 +218,35 @@ export default {
     .rider_details_item {
         margin-top: 10px;
     }
+    .rider_details_item .rating{
+       font-size:20px;
+    }
+    
+    .rating_checked {
+        color: #1782c5;
+    }
+    .rider_details_actions {
+        width: 100%;
+        display: block;
+        float: left;
+        margin-left: 30%;
+        margin-top: 10px;
+    }
+    .rider_details_action {
+        display: inline-block
+    }
+    .rider_details_rating {
+        margin-top: 10px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        padding-left: 20px;
+        background: #f4f4f4;
+    }
+    .rider_details_rating .el-rate {
+        display: inline-block;
+    }
+    .el-rate__icon {
+        font-size: 30px;
+    }
+    
 </style>
