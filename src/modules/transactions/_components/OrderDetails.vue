@@ -39,6 +39,8 @@
               <div class="rider_details_item">
                   Number plate : {{order_details.rider_details.number_plate }}
               </div>
+              <div class="rider_details_item rating" v-html="renderRiderRating(order_details.rider_details.rating)">
+              </div>
         </div>
         </div>
   </div>
@@ -59,7 +61,20 @@ export default {
             let google_key = "AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc";
 
             return "https://maps.googleapis.com/maps/api/staticmap?path=color:100x1782C5|weight:5|"+from_cordinates+"|"+to_cordinates+"&size=257x257&markers=color:red%7Clabel:P%7C"+from_cordinates+"&markers=color:blue%7Clabel:D%7C "+to_cordinates+ "&key="+google_key;
+        },
+        renderRiderRating(rating) {
+            let rating_template ='';
+            for(let i =0 ; i < 5; i++){
+                if(i < rating){
+                    rating_template += '<span class="fa fa-star rating_checked"></span>';
+                } else {
+                    rating_template += '<span class="fa fa-star"></span>'
+                }
+            }
+            return rating_template;
         }
+
+
     },
     computed:{
         ...mapGetters({
@@ -79,6 +94,8 @@ export default {
 </script>
 
 <style lang="css">
+    @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+
     .order_details_wrap {
         width: 50%;
         border-right: 1px solid #ccc;
@@ -136,5 +153,12 @@ export default {
     }
     .rider_details_item {
         margin-top: 10px;
+    }
+    .rider_details_item .rating{
+       font-size:20px;
+    }
+    
+    .rating_checked {
+        color: #1782c5;
     }
 </style>
