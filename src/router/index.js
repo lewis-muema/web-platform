@@ -161,6 +161,10 @@ export function createRouter () {
               },
           ]
       },
+      { path: '/profile', component: () => import('../modules/Profile/Profile.vue'),
+      },
+      { path: '/external', component: () => import('../modules/external/External.vue'),
+      },
     ]
   })
 }
