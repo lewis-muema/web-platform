@@ -18,11 +18,11 @@
                     Date :{{order_details.order_date}}
               </div>
               <div class="order_details_desc_item">
-                    <img src="https://apptest.sendyit.com/biz/style3/comp/maroon_button.png" class="order_details_desc_image">
+                    <img src="../../../assets/img/maroon_button.png" class="order_details_desc_image">
                     {{order_details.full_order_details.values.from_name}}
               </div>
               <div class="order_details_desc_item">
-                    <img src="https://apptest.sendyit.com/biz/style3/comp/blue_button.png" class="order_details_desc_image">
+                    <img src="../../../assets/img/blue_button.png" class="order_details_desc_image">
                     {{order_details.full_order_details.values.to_name }}
               </div>
 
