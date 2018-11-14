@@ -56,7 +56,7 @@ export default {
 </script>
 
 <style lang="css">
-    @import "../../../../assets/styles/datatable.css";
+    @import "../../../assets/styles/datatable.css";
     .button{
         float:right;
     }
