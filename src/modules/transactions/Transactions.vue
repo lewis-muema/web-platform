@@ -23,9 +23,9 @@ import Vue from 'vue'
 import trans_store from './_store';
 import MainHeader from '../../components/headers/MainHeader.vue'
 // import RegisterStoreModule from '../../mixins/register_store_module'
-import Element from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-Vue.use(Element)
+// import Element from 'element-ui'
+// import 'element-ui/lib/theme-chalk/index.css'
+// Vue.use(Element)
 
 export default {
   name:'Transactions',
@@ -38,5 +38,5 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../styles/section_headers.css";
+@import "../../assets/styles/section_headers.css";
 </style>

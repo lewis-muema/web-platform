@@ -1,5 +1,5 @@
 module.exports = {
-  NODE_ENV: '"testing"',
+  // NODE_ENV: '"testing"',
   ENVIRONMENT: '"testing"',
   DEBUG_MODE : true,
   NODE_PARTNER_API: '"https://privateapitest.sendyit.com/v1/"',

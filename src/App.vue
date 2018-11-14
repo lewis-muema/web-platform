@@ -11,14 +11,14 @@ export default {
 </script>
 
 <style lang="css">
-@import './assets/fonts/font.css';
-@import './styles/overide.css';
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,500,700');
+@import './assets/styles/overide.css';
 html, .body{
     margin: 0;
     height: 100%;
 }
 .app {
-  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-family: 'Rubik', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #333;

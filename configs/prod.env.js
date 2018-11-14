@@ -1,5 +1,5 @@
 module.exports = {
-  NODE_ENV: '"production"',
+  // NODE_ENV: '"production"',
   ENVIRONMENT: '"production"',
   DEBUG_MODE : false,
   NODE_PARTNER_API: '"https://privateapi.sendyit.com/v1/"',
