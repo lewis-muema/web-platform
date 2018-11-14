@@ -60,10 +60,9 @@ export default {
       }),
       sign_in: function ()
       {
-        let payload = {
-           "email":"faithshop@gmail.com",
-           "password":"qwerty"
-        };
+        let payload = {};
+        payload.email = this.email;
+        payload.password = this.password;
         this.requestSignIn(payload).then(response => {
            console.log("Sign In response")
            console.log(response);
