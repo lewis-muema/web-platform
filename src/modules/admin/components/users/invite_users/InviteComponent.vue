@@ -67,7 +67,8 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import {mapGetters, mapMutations} from 'vuex';
+    import $ from 'jquery'
 
     export default {
         name: 'invite-component',
@@ -89,16 +90,25 @@
         },
         computed: {
             ...mapGetters(
-                [
-                    'getBizName',
-                    'getViewState',
-                    'getDepartments',
-                    'getAdds',
-                    'getInvites'
-                ]
-            )
+                {
+                    getDepartment: '$_admin/getDepartment',
+                    getViewState: '$_admin/getViewState',
+                    getBizName: '$_admin/getBizName',
+                    getAdds: '$_admin/getAdds',
+                    getInvites: '$_admin/getInvites',
+                }
+            ),
         },
         methods: {
+            ...mapMutations(
+                {
+                    updateViewState: '$_admin/setViewState',
+                    updateInvites: '$_admin/updateInvites',
+                    updateDepartments: '$_admin/updateDepartments',
+                    postInvites: '$_admin/postInvites',
+                    updateAdds: '$_admin/updateAdds',
+                }
+            ),
             populate: function () {
                 var set = this.getInvites
 
@@ -108,10 +118,11 @@
                 }
             },
             get_link: function () {
-                this.$store.commit('updateViewState', 2)
+                this.updateViewState(2);
             },
             invite_many: function () {
-                this.$store.commit('updateViewState', 3)
+                this.updateViewState(3);
+                // this.$store.commit('updateViewState', 3)
             },
             init_select: function () {
                 var depts = []
@@ -132,7 +143,7 @@
             },
             add_another: function () {
                 $(".inp:eq(1)").clone().attr("id", "set" + (this.getAdds)).appendTo(".inv-inputs")
-                this.$store.commit('updateAdds', 1)
+                this.updateAdds(1)
                 // console.log($("#set1").find("input[name='email']").val())
             },
             postInvites: function () {
@@ -141,7 +152,7 @@
                 for (var x = 0; x < number; x++) {
                     console.log()
                     if (this.checkEmpty($("#set" + x).find("input[name='email']").val())) {
-                        this.$store.commit('updateAdds', 2)
+                        this.updateAdds(2)
                     }
                     else {
                         data[x] = new Array($("#set" + x).find("input[name='email']").val(), $("#set" + x).find("input[name='name']").val(), $("#set" + x).find("select[name='dept']").val())
@@ -150,12 +161,12 @@
 
                 if (this.getAdds < 1) {
                     this.valid('Please enter at least one valid email address')
-                    this.$store.commit('newAdds', 3)
+                    this.newAdds(3)
                 }
                 else {
-                    this.$store.commit('updateInvites', data)
+                    this.updateInvites(data)
                     this.$store.dispatch('postInvites').then(function () {
-                        this.$store.commit('updateViewState', 4)
+                        this.updateViewState(4)
                     }.bind(this))
 
                 }
@@ -228,6 +239,27 @@
         transition: border .3s, -webkit-box-shadow .3s;
         transition: box-shadow .3s, border .3s;
         transition: box-shadow .3s, border .3s, -webkit-box-shadow .3s;
+    }
+    .inpDept {
+        position: relative;
+        cursor: pointer;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #9e9e9e;
+        outline: none;
+        height: 3rem;
+        line-height: 3rem;
+        width: 100%;
+        font-size: 16px;
+        margin: 0 0 8px 0;
+        padding: 0;
+        display: block;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        z-index: 1;
+        border-radius: 0;
     }
     a {
         color: #039be5;

@@ -55,10 +55,19 @@
     export default {
         name: 'PostRate',
         computed : {
+            // ...mapGetters(
+            //     [
+            //         'getStep', 'getScore', 'getImagesBaseUrl','getBaseUrl'
+            //     ]
+            // ),
             ...mapGetters(
-                [
-                    'getStep', 'getScore', 'getImagesBaseUrl','getBaseUrl'
-                ]
+                {
+                    getStep: '$_rating/getStep',
+                    getScore: '$_rating/getScore',
+                    getImagesBaseUrl: '$_rating/getImagesBaseUrl',
+                    getBaseUrl: '$_rating/getBaseUrl'
+
+                }
             ),
             wrapper_background(){
                 let uri = 'url('+this.getImagesBaseUrl+'rating/waves_bg.png)';

@@ -34,14 +34,26 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapGetters, mapMutations} from 'vuex';
+    import axios from 'axios';
+    import $ from 'jquery'
     export default {
         name:'RateDriver',
         computed : {
+            // ...mapGetters(
+            //     [
+            //         'getDriverName','getRiderImage', 'getBaseUrl', 'getUserEmail', 'getPackageID'
+            //     ]
+            // ),
             ...mapGetters(
-                [
-                    'getDriverName','getRiderImage', 'getBaseUrl', 'getUserEmail', 'getPackageID'
-                ]
+                {
+                    getDriverName: '$_rating/getDriverName',
+                    getRiderImage: '$_rating/getRiderImage',
+                    getBaseUrl: '$_rating/getBaseUrl',
+                    getUserEmail: '$_rating/getUserEmail',
+                    getPackageID: '$_rating/getPackageID',
+
+                }
             ),
             driver_background(){
                 let uri = 'url('+this.getRiderImage+')';
@@ -54,6 +66,12 @@
             }
         },
         methods :{
+            ...mapMutations(
+                {
+                    updateStep: '$_rating/updateStep',
+                    updateScore: '$_rating/updateScore'
+                }
+            ),
             submitRating(){
                 this.rated_score = $('#stars1').val();
                 if(this.rated_score < 1){
@@ -80,11 +98,11 @@
                 //     this.$store.commit('updateStep', 3);
                 // }
                 // else{
-                this.$store.commit('updateStep', 2);
+                this.updateStep (2);
                 // }
             },
             submitScore(){
-                this.$store.commit('updateScore', this.rated_score);
+                this.updateScore (this.rated_score);
             }
         }
     }

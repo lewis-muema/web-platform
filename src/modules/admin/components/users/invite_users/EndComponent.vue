@@ -16,25 +16,34 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
 
 export default {
   name: 'end-component',
   methods:
   {
+      ...mapMutations(
+          {
+              updateViewState: '$_admin/setViewState',
+              updateInvites: '$_admin/updateInvites',
+              updateAddedStatus: '$_admin/updateAddedStatus',
+              newAdds: '$_admin/newAdds',
+          }
+      ),
     back_btn: function() {
-      this.$store.commit('updateViewState', 1)
-      this.$store.commit('updateInvites', [])
-      this.$store.commit('updateAddedStatus', '')
-      this.$store.commit('newAdds', 3)
+      this.updateViewState(1)
+      this.updateInvites ([])
+      this.updateAddedStatus ('')
+      this.newAdds (3)
     }
   },
   computed: {
-    ...mapGetters(
-      [
-        'getBaseUrl'
-      ]
-    )
+      ...mapGetters(
+          {
+              getBaseUrl: '$_admin/getBaseUrl',
+
+          }
+      ),
   },
 }
 </script>

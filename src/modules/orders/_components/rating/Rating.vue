@@ -1,15 +1,15 @@
 <template lang="html">
     <span>
         <span v-if="getStep === 3">
-            <post-rate-component v-if="getPostRatingComponent === 0"></post-rate-component>
-            <post-rate-component-business v-if="getPostRatingComponent === 1"></post-rate-component-business>
+            <PostRateComponent v-if="getPostRatingComponent == 0"></PostRateComponent>
+            <PostRateComponentBusiness v-if="getPostRatingComponent == 1"></PostRateComponentBusiness>
         </span>
         <span v-else>
             <div class="container">
           		<div class="rate-rider-middle">
           			<div id="rateriderreuse">
-                        <rate-driver-component v-if="getStep === 1"></rate-driver-component>
-                        <comments-component v-if="getStep === 2"></comments-component>
+                        <RateDriver v-if="getStep == 1"></RateDriver>
+                        <CommentsComponent v-if="getStep == 2"></CommentsComponent>
                     </div>
                 </div>
             </div>
@@ -45,18 +45,24 @@
     import PostRateComponent from './components/PostRate.vue';
     import PostRateComponentBusiness from './components/PostRateBusiness.vue';
     import getYear from 'date-fns/get_year';
-    import {mapGetters} from 'vuex';
+    import {mapGetters, mapMutations} from 'vuex';
+    import rating_store from './_store';
+    import RegisterStoreModule from '../../../../mixins/register_store_module';
     export default {
+        name:'rating',
+        mixins: [ RegisterStoreModule ],
         components:{CommentsComponent,PostRateComponent,PostRateComponentBusiness,RateDriver},
         created(){
-            this.$store.commit('updateScore', window.score);
-            this.$store.commit('updateBaseUrl', window.base_url);
-            this.$store.commit('updatePackageID', window.package_id);
-            this.$store.commit('updateUserEmail', window.user_email);
-            this.$store.commit('updateRiderImage', window.rider_image);
-            this.$store.commit('updateDriverBaseImage', window.driver_image_base);
-            this.$store.commit('updateDriverName', window.driver_name);
-            this.$store.commit('updateImagesBaseUrl', window.images_base_url);
+            const STORE_KEY = '$_rating';
+            this.$store.registerModule(STORE_KEY, rating_store);
+            this.updateScore (window.score);
+            this.updateBaseUrl (window.base_url);
+            this.updatePackageID (window.package_id);
+            this.updateUserEmail (window.user_email);
+            this.updateRiderImage (window.rider_image);
+            this.updateDriverBaseImage (window.driver_image_base);
+            this.updateDriverName (window.driver_name);
+            this.updateImagesBaseUrl (window.images_base_url);
             this.setPostRatingComponent();
 
         },
@@ -65,9 +71,12 @@
         },
         computed :{
             ...mapGetters(
-                [
-                    'getStep','getPostRatingComponent', 'getImagesBaseUrl'
-                ]
+                {
+                    getState: '$_rating/getViewState',
+                    getStep: '$_rating/getStep',
+                    getPostRatingComponent: '$_rating/getPostRatingComponent',
+                    getImagesBaseUrl: '$_rating/getImagesBaseUrl'
+                }
             ),
             current_year(){
                 let today = new Date();
@@ -80,12 +89,26 @@
 
         },
         methods : {
+            ...mapMutations(
+                {
+                    updateViewState: '$_rating/setViewState',
+                    updateScore: '$_rating/updateScore',
+                    updateBaseUrl: '$_rating/updateBaseUrl',
+                    updateImagesBaseUrl: '$_rating/updateImagesBaseUrl',
+                    updateDriverName: '$_rating/updateDriverName',
+                    updateDriverBaseImage: '$_rating/updateDriverBaseImage',
+                    updateRiderImage: '$_rating/updateRiderImage',
+                    updateUserEmail: '$_rating/updateUserEmail',
+                    updatePackageID: '$_rating/updatePackageID',
+                    updatePostRatingComponent: '$_rating/updatePostRatingComponent',
+                }
+            ),
             getRandomNo(max){
                 return Math.floor(Math.random() * Math.floor(max));
             },
             setPostRatingComponent(){
                 let component = this.getRandomNo(2);
-                this.$store.commit('updatePostRatingComponent', component);
+                this.updatePostRatingComponent(component);
             },
             landOnRatingPage(){
                 window.ga('send', {

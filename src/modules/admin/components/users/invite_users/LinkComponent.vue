@@ -25,8 +25,9 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
 import axios from 'axios'
+import $ from 'jquery'
 
 export default {
   name: 'link-component',
@@ -35,18 +36,25 @@ export default {
     this.init_select()
   },
   computed: {
-    ...mapGetters(
-      [
-        'getBizName',
-        'getViewState',
-        'getDepartments',
-        'getBaseUrl'
-      ]
-    )
+      ...mapGetters(
+          {
+              getState: '$_admin/getViewState',
+              getDepartments: '$_admin/getDepartments',
+              getBaseUrl: '$_admin/getBaseUrl',
+              getBizName: '$_admin/getBizName'
+          }
+      )
   },
   methods: {
+      ...mapMutations(
+          {
+              updateViewState: '$_admin/setViewState',
+              updateInviteLink: '$_admin/updateInviteLink'
+          }
+      ),
     get_inv: function (){
-      this.$store.commit('updateViewState', 1)
+        this.updateViewState(1);
+      // this.$store.commit('updateViewState', 1)
     },
     init_select: function (){
       var depts = JSON.parse(this.getDepartments)
@@ -65,13 +73,15 @@ export default {
 
       axios.post(url, {"dept_id":dept_id})
         .then(response => {
-          this.$store.commit('updateInviteLink', response.data)
+            this.updateInviteLink(response.data);
+          // this.$store.commit('updateInviteLink', response.data)
         })
         .catch(e => {
           console.dir(e)
         })
         .then(() => {
-          this.$store.commit('updateViewState', 5)
+            this.updateViewState(5);
+          // this.$store.commit('updateViewState', 5)
         })
     }
   }

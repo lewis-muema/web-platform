@@ -3,6 +3,16 @@ import getters from './getters';
 import mutations from './mutations';
 
 const state = {
+    cop_id: 0,
+    base_url: '',
+    view_state: 1,
+    biz_name: '',
+    departments: '',
+    adds: 3,
+    invite_link: '',
+    invites:{
+    },
+    added_status: ''
 };
 
 export default {

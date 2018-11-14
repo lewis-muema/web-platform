@@ -30,7 +30,7 @@ export default {
   mixins: [ RegisterStoreModule ],
   created() {
     const STORE_KEY = '$_admin';
-    this.register_store_module(STORE_KEY, admin_store);
+    this.$store.registerModule(STORE_KEY, admin_store);
   },
   destroyed(){
       // TO DO:  destroy store?

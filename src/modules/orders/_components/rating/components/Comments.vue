@@ -173,14 +173,29 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapGetters, mapMutations} from 'vuex';
+    import axios from 'axios';
     export default {
         name:'Comments',
         computed : {
+            // ...mapGetters(
+            //     [
+            //         'getStep', 'getScore', 'getBaseUrl', 'getDriverName','getRiderImage', 'getBaseUrl', 'getUserEmail', 'getPackageID'
+            //     ]
+            // ),
             ...mapGetters(
-                [
-                    'getStep', 'getScore', 'getBaseUrl', 'getDriverName','getRiderImage', 'getBaseUrl', 'getUserEmail', 'getPackageID'
-                ]
+                {
+                    getStep: '$_rating/getStep',
+                    getStep: '$_rating/getStep',
+                    getScore: '$_rating/getScore',
+                    getImagesBaseUrl: '$_rating/getImagesBaseUrl',
+                    getBaseUrl: '$_rating/getBaseUrl',
+                    getDriverName: '$_rating/getDriverName',
+                    getRiderImage: '$_rating/getDriverName',
+                    getUserEmail: '$_rating/getUserEmail',
+                    getPackageID: '$_rating/getPackageID'
+
+                }
             ),
             cards_background(){
                 return this.getBaseUrl+'image/sendy_blue_card.png';
@@ -202,6 +217,11 @@
             }
         },
         methods : {
+            ...mapMutations(
+                {
+                    updateStep: '$_admin/updateStep',
+                }
+            ),
             getCommentsTitle(){
                 if(this.getScore <= 2){
                     return 'Ooh no! What did we mess up on?';
@@ -234,7 +254,7 @@
                     });
             },
             moveNext(){
-                this.$store.commit('updateStep', 3);
+                this.updateStep (3);
             },
             closeFancyBox(){
                 parent.$.fancybox.close();
