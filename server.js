@@ -104,7 +104,7 @@ function render (req, res) {
     }
   })
 }
-
+// console.log(process.env._ENV)
 // inside a server handler...
 
 app.get('*', isProd ? render : (req, res) => {
