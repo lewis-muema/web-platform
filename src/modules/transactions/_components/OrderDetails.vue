@@ -54,10 +54,21 @@
                 <div class="rider_details_action">
                         <el-button class="rider_details_action_btn">SCHEDULE</el-button>
                 </div> -->
+                <div class="rider_details_action">
+                    <el-dropdown>
+                    <el-button type="primary">
+                        <i class="el-icon-more el-icon--center"></i>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>Print Receipt</el-dropdown-item>
+                        <el-dropdown-item>Delivery Docs</el-dropdown-item>
+                    </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
               </div>
               <div class="rider_details_actions_ongoing" v-else>
                 <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">RATE</el-button>
+                        <el-button class="rider_details_action_btn" type="primary" @click="activateRating">RATE</el-button>
                 </div>
                 <!-- <div class="rider_details_action">
                         <el-button class="rider_details_action_btn">FAVORITE</el-button>
@@ -65,6 +76,26 @@
                 <div class="rider_details_action">
                         <el-button class="rider_details_action_btn">SCHEDULE</el-button>
                 </div> -->
+                <div class="rider_details_action">
+                    <el-dropdown>
+                    <el-button type="primary">
+                        <i class="el-icon-more el-icon--center"></i>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>Print Receipt</el-dropdown-item>
+                        <el-dropdown-item>Delivery Docs</el-dropdown-item>
+                    </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+              </div>
+              <div class="rider_details_rating" v-if="show_rating">
+                <div class="block">
+                    <el-rate
+                        v-model="orderRating"
+                        :colors="['#99A9BF', '#f57f20', '#1b7fc3']">
+                    </el-rate>
+                     <el-button class="rider_details_rate_btn" @click="rateOrder"> RATE </el-button>
+                </div>
               </div>
           </div>
         </div>
@@ -79,6 +110,7 @@ export default {
     data() {
         return {
           order_id:'',
+          show_rating:false,
         }
     },
     methods:{
@@ -97,7 +129,14 @@ export default {
                 }
             }
             return rating_template;
+        },
+        activateRating() {
+            this.show_rating = true;
+        },
+        rateOrder() {
+            this.show_rating = false;
         }
+        
 
 
     },
@@ -196,4 +235,18 @@ export default {
     .rider_details_action {
         display: inline-block
     }
+    .rider_details_rating {
+        margin-top: 10px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        padding-left: 20px;
+        background: #f4f4f4;
+    }
+    .rider_details_rating .el-rate {
+        display: inline-block;
+    }
+    .el-rate__icon {
+        font-size: 30px;
+    }
+    
 </style>
