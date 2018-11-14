@@ -3,6 +3,7 @@ import getters from './getters';
 import mutations from './mutations';
 
 const state = {
+    order_history_orders : [],
 };
 
 export default {

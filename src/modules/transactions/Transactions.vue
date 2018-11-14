@@ -19,17 +19,20 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import trans_store from './_store';
-import RegisterStoreModule from '../../mixins/register_store_module'
 import MainHeader from '../../components/headers/MainHeader.vue'
+// import RegisterStoreModule from '../../mixins/register_store_module'
+import Element from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(Element)
 
 export default {
   name:'Transactions',
-  mixins: [ RegisterStoreModule ],
+  //mixins: [ RegisterStoreModule ],
   components : {MainHeader},
   created() {
-    const STORE_KEY = '$_transactions';
-    this.register_store_module(STORE_KEY, trans_store);
+    this.$store.registerModule('$_transactions', trans_store);
   },
 }
 </script>
