@@ -2,45 +2,45 @@
   <div class="" id="order_details_container">
       <div class="order_details_wrap">
           <div class="order_details_map">
-              <Img src="https://maps.googleapis.com/maps/api/staticmap?path=color:100x1782C5|weight:5|-1.3001097,36.772822099999985|-1.300035,36.772876&size=257x257&markers=color:red%7Clabel:P%7C-1.3001097,36.772822099999985&markers=color:blue%7Clabel:D%7C-1.300035,36.772876&key=AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc"/>
+              <Img :src="createStaticMapUrl(order_details.full_order_details.values.from, order_details.full_order_details.values.to)"/>
           </div>
           <div class="order_details_desc">
               <div class="order_details_price">
-                    KES 250
+                    KES {{order_details.order_cost}}
               </div>
               <div class="order_details_desc_item">
-                    Kilometers : 1kms
+                    Kilometers : {{order_details.full_order_details.values.distance_read}} KMs
               </div>
               <div class="order_details_desc_item">
-                    Duration :
+                    Duration : {{order_details.full_order_details.values.duration_read}}
               </div>
               <div class="order_details_desc_item">
-                    Date :
+                    Date :{{order_details.order_date}}
               </div>
               <div class="order_details_desc_item">
                     <img src="https://apptest.sendyit.com/biz/style3/comp/maroon_button.png" class="order_details_desc_image">
+                    {{order_details.full_order_details.values.from_name}}
               </div>
               <div class="order_details_desc_item">
                     <img src="https://apptest.sendyit.com/biz/style3/comp/blue_button.png" class="order_details_desc_image">
+                    {{order_details.full_order_details.values.to_name }}
               </div>
 
           </div>
       </div>
       <div class="rider_details_wrap">
           <div class="rider_details_image">
-              <img src="https://s3-eu-west-1.amazonaws.com/sendy-partner-docs/photo/1532011239303img_20180719_163637_174.jpg">
+              <img :src="order_details.rider_details.photo_base+'photo/'+order_details.rider_details.photo"/>
           </div>
           <div class="rider_details_items">
               <div class="rider_details_item">
-                  Rider name : Phil Samoei
+                  Rider name : {{order_details.rider_details.name }}
               </div>
               <div class="rider_details_item">
-                  Number plate : {{order_details.order_no}}
+                  Number plate : {{order_details.rider_details.number_plate }}
               </div>
-
-          </div>
-
-      </div>
+        </div>
+        </div>
   </div>
 </template>
 
@@ -55,7 +55,11 @@ export default {
         }
     },
     methods:{
+        createStaticMapUrl(from_cordinates, to_cordinates) {
+            let google_key = "AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc";
 
+            return "https://maps.googleapis.com/maps/api/staticmap?path=color:100x1782C5|weight:5|"+from_cordinates+"|"+to_cordinates+"&size=257x257&markers=color:red%7Clabel:P%7C"+from_cordinates+"&markers=color:blue%7Clabel:D%7C "+to_cordinates+ "&key="+google_key;
+        }
     },
     computed:{
         ...mapGetters({
@@ -97,7 +101,7 @@ export default {
         margin-top: 10px;
     }
     .order_details_desc_image {
-        width: 20px;
+        width: 13px;
         height: auto;
         margin-top: 10px;
     }
