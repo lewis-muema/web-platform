@@ -173,6 +173,10 @@ export default {
 .row-defined{
   flex-direction: row;
   display: flex;
+  width: 120%;
+}
+.row{
+  width: 120%
 }
 
 
