@@ -52,7 +52,14 @@ export function createRouter () {
             },
             {
               path: '/transactions/order_history',
-              component: () => import('../modules/transactions/_components/OrderHistory.vue')
+              component:() => import('../modules/transactions/_components/OrderHistory.vue'),
+              children: [
+                {
+                  path: 'details/:id',
+                  name:'order-details',
+                  component: () => import('../modules/transactions/_components/OrderDetails.vue')
+                },
+              ]
             },
             {
               path: '/transactions/statement',
@@ -148,12 +155,12 @@ export function createRouter () {
               {
                   path: '/orders/rating',
                   component: () => import('../modules/orders/_components/rating/Rating.vue')
-              },
-              {
-                  path: '/orders/rating/submit_rating',
-                  component: () => import('../modules/orders/_components/rating/PostRating.vue')
-              },
+              }
           ]
+      },
+      { path: '/profile', component: () => import('../modules/Profile/Profile.vue'),
+      },
+      { path: '/external', component: () => import('../modules/external/External.vue'),
       },
     ]
   })

@@ -32,6 +32,9 @@ export default {
   {
     title : "Payments Test",
     count: true,
+    child_row: {
+      on_click: expand
+    }
     custom_col:[
       {
         key: "Custom test",
@@ -94,6 +97,9 @@ export default {
 
         for (var i = 0; i < data.length; i++) {
           tr = table.insertRow(-1);
+          if("child_row" in options){
+            tr.onclick = "expand("+i+")";
+          }
           var custom_count = 0
           for (var j = 0; j < col.length; j++) {
             var tabCell = tr.insertCell(-1);

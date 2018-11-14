@@ -12,7 +12,7 @@ export default {
 </script>
 
 <style lang="css">
-    .nput[type=text]:not(.browser-default){
+    .input[type=text]:not(.browser-default){
         background-color: transparent;
         border: none;
         border-bottom: 1px solid #9e9e9e;
