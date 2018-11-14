@@ -2,7 +2,7 @@
   <div class="" id="order_details_container">
       <div class="order_details_wrap">
           <div class="order_details_map">
-              <Img :src="createStaticMapUrl()"/>
+              <Img :src="createStaticMapUrl(order_details.full_order_details.values.from, order_details.full_order_details.values.to)"/>
           </div>
           <div class="order_details_desc">
               <div class="order_details_price">
@@ -55,8 +55,8 @@ export default {
         }
     },
     methods:{
-        createStaticMapUrl() {
-            return "https://maps.googleapis.com/maps/api/staticmap?path=&markers=color:red%7Clabel:P%7C-1.3001097,36.772822099999985&markers=color:blue%7Clabel:D%7C -1.300035,36.772876&key=AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc;
+        createStaticMapUrl(from_cordinates, to_cordinates) {
+            return "https://maps.googleapis.com/maps/api/staticmap?path=color:100x1782C5|weight:5|"+from_cordinates+"|"+to_cordinates+"&size=257x257&markers=color:red%7Clabel:P%7C"+from_cordinates+"&markers=color:blue%7Clabel:D%7C "+to_cordinates+ "&key=AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc";
         }
     },
     computed:{
