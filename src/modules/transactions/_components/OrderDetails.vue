@@ -41,7 +41,32 @@
               </div>
               <div class="rider_details_item rating" v-html="renderRiderRating(order_details.rider_details.rating)">
               </div>
-        </div>
+          </div>
+
+          <div class="rider_details_actions">
+              <div class="rider_details_actions_completed" v-if="order_details.pending_delivery.delivery_status !== 3">
+                <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn" type="primary">TRACK</el-button>
+                </div>
+                <!-- <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">FAVORITE</el-button>
+                </div>
+                <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">SCHEDULE</el-button>
+                </div> -->
+              </div>
+              <div class="rider_details_actions_ongoing" v-else>
+                <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">RATE</el-button>
+                </div>
+                <!-- <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">FAVORITE</el-button>
+                </div>
+                <div class="rider_details_action">
+                        <el-button class="rider_details_action_btn">SCHEDULE</el-button>
+                </div> -->
+              </div>
+          </div>
         </div>
   </div>
 </template>
@@ -160,5 +185,15 @@ export default {
     
     .rating_checked {
         color: #1782c5;
+    }
+    .rider_details_actions {
+        width: 100%;
+        display: block;
+        float: left;
+        margin-left: 30%;
+        margin-top: 10px;
+    }
+    .rider_details_action {
+        display: inline-block
     }
 </style>
