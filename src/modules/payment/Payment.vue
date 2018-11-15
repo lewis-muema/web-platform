@@ -37,7 +37,7 @@ export default {
 <style lang="css">
 .container-small
 {
-  width: 45%;
+  width: 30vw;
   margin: 5% auto;
 }
 .payment--header{
