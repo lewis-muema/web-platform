@@ -22,17 +22,26 @@
     <td valign="top">
 
     <p>
-      <input type="text" name="name" id="name" value="" class="my-profile__input" />
+      <label class="input-descript">
+        <span>Name</span>
+      </label>
+      <input type="text" name="name" id="name" value="" class="form-control" />
     </p>
     <p>
-      <input type="text" name="email" id="email" value="" class="my-profile__input" />
+      <label class="input-descript">
+        <span>Email</span>
+      </label>
+      <input type="text" name="email" id="email" value="" class="form-control" />
     </p>
-    <p class="my-profile__phone_input">
-      <input type="text" name="phone" id="phone" value="" class="my-profile__input" />
+    <p>
+      <label class="input-descript">
+        <span>Phone</span>
+      </label>
+      <input type="text" name="phone" id="phone" value="" class="form-control" />
     </p>
     <p>
       <br />
-      <input type="submit" class="my-profile__btn" id="save_personal" value="Save Personal Info" />
+      <input type="submit" class="btn-submit" id="save_personal" value="Save Personal Info" />
     </p>
 
 
@@ -161,6 +170,14 @@ export default {
   background-image: none;
   border: 1px solid transparent;
   text-transform: uppercase;
+}
+.input-descript{
+  margin: 0 0 .25rem;
+ display: block;
+ font-size: 1rem;
+ line-height: 1.5rem;
+ font-weight: 400!important;
+ margin-bottom: .5rem!important;
 }
 
 </style>
