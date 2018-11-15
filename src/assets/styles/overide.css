@@ -164,3 +164,6 @@ button span {
   background-color: #4098ce !important;
   color: #fff !important;
 }
+.el-table th>.cell {
+  font-weight: normal;
+}
