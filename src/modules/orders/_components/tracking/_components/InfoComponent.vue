@@ -233,7 +233,7 @@ export default {
 .infobar--actions-text
 {
   font-size: 10px;
-  font-weight: bold;
+  font-weight: 400;
   padding-top: 4px;
 }
 .carets
