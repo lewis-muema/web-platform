@@ -34,3 +34,9 @@ html, .body{
   flex: 1 1 auto;
   overflow-y: auto;
 }
+.sendy-blue{
+    color: #1782c5;
+}
+.sendy-orange{
+    color: #f52f20;
+}

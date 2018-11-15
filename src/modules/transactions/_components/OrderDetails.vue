@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="" id="order_details_container">
-      <div class="order_details_wrap">
+      <div class="order-details-wrapper">
           <div class="order_details_map">
               <Img :src="createStaticMapUrl(order_details.full_order_details.values.from, order_details.full_order_details.values.to)"/>
           </div>
@@ -8,7 +8,7 @@
               <div class="order_details_price">
                     KES {{order_details.order_cost}}
               </div>
-            
+
               <div class="order_details_desc_item">
                     Kilometers : {{order_details.full_order_details.values.distance_read}} KMs
               </div>
@@ -86,10 +86,10 @@
                     </div>
                 </div>
             </div>
-             
+
           </div>
 
-          
+
         </div>
   </div>
 </template>
@@ -139,7 +139,7 @@ export default {
         trackOrder() {
 
         }
-        
+
 
     },
     computed:{
@@ -161,4 +161,10 @@ export default {
 
 <style lang="css">
     @import '../../../assets/styles/order_details.css';
+    .order-details-wrapper{
+        width: 50%;
+        display: inline-block;
+        border-right: 1px solid #b7b8ba;
+        padding-right: 20px;
+    }
 </style>
