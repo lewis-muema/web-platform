@@ -14,9 +14,9 @@
 
  <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="47%"><div class="my-profile__main__header__2">Personal Information</div></td>
-    <td width="6%">&nbsp;</td>
-    <td width="47%"><div class="my-profile__main__header__2">Account Information</div></td>
+    <td width="40%"><div class="my-profile__main__header__2">Personal Information</div></td>
+    <td width="10%">&nbsp;</td>
+    <td width="40%"><div class="my-profile__main__header__2">Account Information</div></td>
   </tr>
    <tr>
     <td valign="top">
@@ -25,19 +25,19 @@
       <label class="input-descript">
         <span>Name</span>
       </label>
-      <input type="text" name="name" id="name" value="" class="form-control" />
+      <input type="text" name="name" id="name" value="" class="form-control dimen" />
     </p>
     <p>
       <label class="input-descript">
         <span>Email</span>
       </label>
-      <input type="text" name="email" id="email" value="" class="form-control" />
+      <input type="text" name="email" id="email" value="" class="form-control dimen" />
     </p>
     <p>
       <label class="input-descript">
         <span>Phone</span>
       </label>
-      <input type="text" name="phone" id="phone" value="" class="form-control" />
+      <input type="text" name="phone" id="phone" value="" class="form-control dimen" />
     </p>
     <p>
       <br />
@@ -51,14 +51,23 @@
 
      <form action="" method="post">
     <p>
-      <input name="old_pass" type="password" placeholder="Old password" class="my-profile__input" />
+      <label class="input-descript">
+        <span>Old Password</span>
+      </label>
+      <input name="old_pass" type="password" placeholder="Enter Old Password" class="form-control dimen" />
     </p>
 
      <p>
-    <input type="password" name="new_pass" placeholder="New password"   class="my-profile__input" />
+       <label class="input-descript">
+         <span>New Password</span>
+       </label>
+    <input type="password" name="new_pass" placeholder="Enter New Password"   class="form-control dimen" />
     </p>
      <p>
-    <input type="password" name="con_pass"  placeholder="Confirm new password" class="my-profile__input" />
+       <label class="input-descript">
+         <span>Confirm Password</span>
+       </label>
+          <input type="password" name="con_pass"  placeholder="Confirm new password" class="form-control dimen" />
     </p>
      <p><br /> <input type="submit" class="my-profile__btn" value="Save New Password"  /></p>
      </form>
@@ -179,5 +188,17 @@ export default {
  font-weight: 400!important;
  margin-bottom: .5rem!important;
 }
+.dimen{
+  width: 65% !important;
+}
+.input-descript{
+  margin: 0 0 .25rem;
+ display: block;
+ font-size: 1rem;
+ line-height: 1.5rem;
+ font-weight: 400!important;
+ margin-bottom: .5rem!important;
+}
+
 
 </style>
