@@ -33,7 +33,7 @@
         </div>
         <div class="side-flex submit">
             <div class="column-flex pad-flex alleft">
-                <div><a v-on:click="add_another" class="add-anchor"><i class="el-icon-circle-plus-outline"></i>&nbsp;Add
+                <div class="addUser--link"><a v-on:click="add_another" class="add-anchor"><i class="el-icon-circle-plus-outline"></i>&nbsp;Add
                     another</a> <span> or </span> <a v-on:click="invite_many" class="add-anchor" href="#">add many
                     at once</a></div>
             </div>
@@ -47,7 +47,7 @@
 
         <div class="side-flex">
             <div class="column-flex pad-flex inv-link">
-                <div class="flex"><a v-on:click="get_link" class="add-anchor"><i
+                <div class="flex"><a v-on:click="get_link" class="add-anchor inviteMany--anchor"><i
                         class="el-icon-share"></i><span>&nbsp;Get an invite link to share</span></a>
                 </div>
             </div>
@@ -203,8 +203,15 @@
 
 <style lang="css">
 
-    .addUser--select{
+    .addUser--select {
         width: 100%;
+    }
+    .addUser--submit{
+        margin-right: 6.5%;
+    }
+
+    .btn-submit {
+        font-size: 14px;
     }
 
     a {
@@ -269,9 +276,14 @@
     .add-anchor {
         display: flex;
         align-items: center;
+        /*margin-left: 1.7%;*/
     }
-    .addUser--submit{
+    .inviteMany--anchor{
+        margin-left: 1.7% !important;
+    }
 
+    .addUser--link {
+        margin-left: 1.7%;
     }
 
     .add-anchor:hover {
@@ -279,7 +291,6 @@
         border-bottom: 1.5px solid !important;
         margin-bottom: -2px !important;
     }
-
     .plus-icon {
         font-size: 20px !important;
         padding-right: 3px;
