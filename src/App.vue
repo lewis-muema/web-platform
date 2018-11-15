@@ -47,6 +47,8 @@ html, .body{
   flex-flow: column;
   flex: 1 1 auto;
   overflow-y: auto;
+  padding: 0;
+  margin: 0;
 }
 .input-control
 {

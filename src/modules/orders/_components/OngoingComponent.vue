@@ -6,7 +6,7 @@
     <transition name="fade">
       <div class="ongoing--column" v-if="show">
         <template>
-          <div class="ongoing--card">
+          <div class="ongoing--card" @click="track()">
             <div class="ongoing--card-location">
               <div class="ongoing--card-padded">
                 From : <span></span>
@@ -42,7 +42,10 @@ export default {
     }),
     toggle_ongoing: function() {
       this.toggle()
-    }
+    },
+    track: function() {
+      this.$router.push('/orders/tracking')
+    },
   },
   computed : {
     ...mapGetters({
