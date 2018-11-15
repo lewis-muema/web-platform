@@ -35,7 +35,7 @@ export default {
 .content
 {
   display: flex;
-  padding: 30px;
+  /* padding: 30px; */
   flex-direction: row !important;
 }
 .column
