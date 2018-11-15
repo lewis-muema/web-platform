@@ -58,7 +58,7 @@ export default {
 
 <style lang="css">
     .content{
-        margin-top: 2em;
+        /* margin-top: 2em; */
     }
     .content--bold, .table__item--bold{
         font-weight: 400;
