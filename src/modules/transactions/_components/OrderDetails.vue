@@ -40,65 +40,54 @@
               <div class="rider_details_item">
                   Number plate : {{order_details.rider_details.number_plate }}
               </div>
-              <div class="rider_details_item rating" v-html="renderRiderRating(order_details.rider_details.rating)">
+              <div class="rider_details_actions">
+                <div class="rider_details_actions_completed" v-if="order_details.pending_delivery.delivery_status !== 3">
+                    <div class="rider_details_action">
+                        <button class="button-primary rider_details_action_btn" type="button" @click="trackOrder">TRACK</button>
+                    </div>
+                    <div class="rider_details_action">
+                        <el-dropdown>
+                        <button type="button" class="button-primary">
+                            <i class="el-icon-more el-icon--center"></i>
+                        </button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>Print Receipt</el-dropdown-item>
+                            <el-dropdown-item>Delivery Docs</el-dropdown-item>
+                        </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                </div>
+                <div class="rider_details_actions_ongoing" v-else>
+                    <div class="rider_details_action">
+                        <button class="button-primary rider_details_action_btn" type="button" @click="activateRating">RATE</button>
+                    </div>
+                    <div class="rider_details_action">
+                        <el-dropdown>
+                        <button type="button" class="button-primary">
+                            <i class="el-icon-more el-icon--center"></i>
+                        </button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>Print Receipt</el-dropdown-item>
+                            <el-dropdown-item>Delivery Docs</el-dropdown-item>
+                        </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                </div>
+                <div class="rider_details_rating" v-if="show_rating">
+                    <div class="block">
+                        <el-rate
+                            v-model="orderRating"
+                            :colors="['#99A9BF', '#f57f20', '#1b7fc3']">
+                        </el-rate>
+                        <el-button class="rider_details_rate_btn" @click="rateOrder"> RATE </el-button>
+                    </div>
+                </div>
+            </div>
+              <div class="rider_details_item" v-html="renderRiderRating(order_details.rider_details.rating)">
               </div>
           </div>
 
-          <div class="rider_details_actions">
-              <div class="rider_details_actions_completed" v-if="order_details.pending_delivery.delivery_status !== 3">
-                <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn" type="primary">TRACK</el-button>
-                </div>
-                <!-- <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">FAVORITE</el-button>
-                </div>
-                <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">SCHEDULE</el-button>
-                </div> -->
-                <div class="rider_details_action">
-                    <el-dropdown>
-                    <el-button type="primary">
-                        <i class="el-icon-more el-icon--center"></i>
-                    </el-button>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>Print Receipt</el-dropdown-item>
-                        <el-dropdown-item>Delivery Docs</el-dropdown-item>
-                    </el-dropdown-menu>
-                    </el-dropdown>
-                </div>
-              </div>
-              <div class="rider_details_actions_ongoing" v-else>
-                <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn" type="primary" @click="activateRating">RATE</el-button>
-                </div>
-                <!-- <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">FAVORITE</el-button>
-                </div>
-                <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">SCHEDULE</el-button>
-                </div> -->
-                <div class="rider_details_action">
-                    <el-dropdown>
-                    <el-button type="primary">
-                        <i class="el-icon-more el-icon--center"></i>
-                    </el-button>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>Print Receipt</el-dropdown-item>
-                        <el-dropdown-item>Delivery Docs</el-dropdown-item>
-                    </el-dropdown-menu>
-                    </el-dropdown>
-                </div>
-              </div>
-              <div class="rider_details_rating" v-if="show_rating">
-                <div class="block">
-                    <el-rate
-                        v-model="orderRating"
-                        :colors="['#99A9BF', '#f57f20', '#1b7fc3']">
-                    </el-rate>
-                     <el-button class="rider_details_rate_btn" @click="rateOrder"> RATE </el-button>
-                </div>
-              </div>
-          </div>
+          
         </div>
   </div>
 </template>
@@ -199,8 +188,10 @@ export default {
         padding-left: 20px;
     }
     .rider_details_image {
-        display: inline-block;
-        width: 30%;
+            display: inline-block;
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
         float: left;
     }
     .rider_details_image img {
@@ -225,10 +216,8 @@ export default {
         color: #1782c5;
     }
     .rider_details_actions {
-        width: 100%;
         display: block;
         float: left;
-        margin-left: 30%;
         margin-top: 10px;
     }
     .rider_details_action {

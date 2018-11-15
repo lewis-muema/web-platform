@@ -143,3 +143,22 @@ button span {
     color: #333!important;
     border: none!important;
 }
+
+
+/* element table css overiden */
+.el-table--border {
+  border-radius: 10px;
+}
+.el-table--striped .el-table__body tr.el-table__row--striped td {
+  background: #fdfdfd !important;
+}
+.el-table--enable-row-hover .el-table__body tr:hover>td {
+  background-color: #f6f6f6 !important;
+}
+.el-table, .el-table__expanded-cell {
+  background-color: #f9f9f9 !important;
+}
+.el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover {
+  background-color: #4098ce !important;
+  color: #fff !important;
+}

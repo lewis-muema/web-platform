@@ -3,6 +3,8 @@
      <el-table
       :data="tableData"
       style="width: 100%"
+      border="true"
+      stripe="true"
       @expand-change="handleRowExpand"
       >
       <template slot="empty">

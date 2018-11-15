@@ -3,9 +3,6 @@
         <main-header></main-header>
 
         <div class="container" id="transactions_container">
-          <div class="title">
-              <h3 class="title__text">Transactions</h3>
-          </div>
           <div class="section">
               <router-link class="section__link" to="/transactions/order_history">Order History</router-link>
               <router-link class="section__link" to="/transactions/statement">Statement</router-link>
