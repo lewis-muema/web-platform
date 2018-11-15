@@ -19,7 +19,10 @@
 import Vue from 'vue'
 import trans_store from './_store';
 import MainHeader from '../../components/headers/MainHeader.vue'
-// import RegisterStoreModule from '../../mixins/register_store_module'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faStar } from '@fortawesome/free-solid-svg-icons'
+library.add(faStar)
+
 // import Element from 'element-ui'
 // import 'element-ui/lib/theme-chalk/index.css'
 // Vue.use(Element)
