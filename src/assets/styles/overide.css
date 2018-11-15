@@ -1,25 +1,29 @@
-.el-button--primary {
-    color: #fff;
-    background-color: #1b7fc3 !important;
-    border-color: #1b7fc3 !important;
+button > * {
+  position: relative;
 }
 
-.el-button--primary:focus, .el-button--primary:hover {
-    background: #fff !important;
-    border-color: #1782c5 !important;
-    color: #1782c5 !important;
+button span {
+  display: block;
+  padding: 12px 24px;
 }
+
 
 .button-primary {
-  color: #fff;
-  background-color: #1b7fc3 !important;
-  border-color: #1b7fc3 !important;
+  color: #ecf0f1;
+  background-color: #1782c5;
+  border-color: #1b7fc3;
+  cursor: pointer;
+  position: relative;
+  display: block;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+  transition: background-color .3s;
 }
 
 .button-primary:focus, .button-primary:hover {
-  background: #fff !important;
-  border-color: #1782c5 !important;
-  color: #1782c5 !important;
+  background: rgba(23, 130, 197, .8);
+  border-color: rgba(23, 130, 197, .8);
+  color: #ecf0f1;
 }
 
 .form-control {

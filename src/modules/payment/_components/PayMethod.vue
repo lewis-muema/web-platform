@@ -25,7 +25,7 @@ export default {
 {
   color: #555;
   text-transform: uppercase;
-  font-size: 15px;
+  font-size: 16px;
   text-align: center;
   padding: 2px;
   text-decoration: none;
@@ -33,7 +33,8 @@ export default {
 }
 .paymethod--link.router-link-active
 {
-  font-weight: bold;
+  color: #1782c5;
+  font-weight: normal;
   border-bottom: 3px solid #1782c5;
 }
 </style>
