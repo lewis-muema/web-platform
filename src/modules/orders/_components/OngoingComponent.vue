@@ -1,26 +1,26 @@
 <template lang="html">
-  <div class="ongoing--outer">
+  <div class="ongoing--outer" v-if="!this.loading">
     <div class="ongoing--count" @click="toggle_ongoing()">
-      You have <span>x </span> ongoing orders
+      You have <span>{{num_ongoing}}</span> ongoing orders
     </div>
     <transition name="fade">
       <div class="ongoing--column" v-if="show">
-        <template>
-          <div class="ongoing--card">
+        <template v-for="(order, index) in this.get_orders">
+          <div class="ongoing--card" @click="track(order.order_no)">
             <div class="ongoing--card-location">
               <div class="ongoing--card-padded">
-                From : <span></span>
+                From : <span>{{order.from_name}}</span>
               </div>
               <div class="">
-                To : <span></span>
+                To : <span>{{order.to_name}}</span>
               </div>
             </div>
             <div class="ongoing--card-status">
               <div class="">
-                status here
+                {{getStatus(order)}}
               </div>
               <div class="">
-                time here
+                {{order.date_time}}
               </div>
             </div>
           </div>
@@ -36,18 +36,72 @@ import { mapMutations } from 'vuex'
 
 export default {
   name: 'ongoing-component',
+  data: function() {
+    return {
+      loading: true
+    }
+  },
   methods: {
     ...mapMutations({
       toggle : '$_orders/toggle_ongoing'
     }),
     toggle_ongoing: function() {
       this.toggle()
-    }
+    },
+    track: function(order) {
+      this.$router.push({ path: `/orders/tracking/${order}` })
+    },
+    getStatus: function(order) {
+      if (this.loading == false) {
+        switch(order.delivery_status) {
+            case 3:
+            {
+              return 'Delivered'
+              break;
+            }
+            case 2:
+            {
+              return 'In Transit'
+              break;
+            }
+            default:
+            {
+              switch (order.confirm_status) {
+                case 1:
+                {
+                  return 'Confirmed'
+                  break;
+                }
+                default:
+                {
+                  return 'Pending'
+                  break;
+                }
+              }
+            }
+        }
+      }
+      else {
+        return "";
+      }
+    },
   },
   computed : {
     ...mapGetters({
+      get_orders: '$_orders/get_ongoing_orders',
       show : '$_orders/show_ongoing'
     }),
+    num_ongoing: function () {
+      return this.get_orders.length
+    },
+  },
+  mounted() {
+    this.loading = true
+    var that = this
+    this.$store.dispatch('$_orders/fetch_ongoing_orders')
+    .then(response => {
+      that.loading = false
+    })
   }
 }
 </script>
@@ -59,6 +113,8 @@ export default {
   margin-top: 10px;
   right: 10px;
   min-width: 250px;
+  max-height: 55%;
+  overflow-x: scroll;
 }
 .ongoing--count
 {

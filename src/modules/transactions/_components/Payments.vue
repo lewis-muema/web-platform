@@ -1,70 +1,65 @@
 <template lang="html">
   <div class="" id="payments_container">
-    <div class="" id="table_div">
-
-    </div>
+    <el-table
+     :data="get_payments"
+     style="width: 100%"
+     >
+     <template slot="empty">
+           {{empty_payments_state}}
+     </template>
+     <el-table-column
+       label="Reciept Number"
+       prop="Txn"
+        width="180"
+       >
+     </el-table-column>
+     <el-table-column
+       label="Date"
+       prop="Date">
+     </el-table-column>
+     <el-table-column
+       label="Method"
+       prop="Method"
+       >
+     </el-table-column>
+     <el-table-column
+       label="Description"
+       prop="Description"
+       >
+     </el-table-column>
+     <el-table-column
+       label="Amount"
+       prop="Amount"
+       >
+     </el-table-column>
+   </el-table>
   </div>
 </template>
 
 <script>
-import DatatableMixin from '../../../mixins/datatable_mixin.js';
 import { mapGetters } from 'vuex';
-import store from '../_store';
 
 export default {
   name:'Payments',
-  mixins: [ DatatableMixin ],
+  data: function () {
+    return {
+      empty_payments_state:"Fetching Payments"
+    }
+  },
   computed: {
     ...mapGetters({
+      get_payments:'$_transactions/get_payments'
     }),
   },
-  mounted() {
-    var el = "table_div";
-    var data = [
-        {
-            "Txn": "CASH-AC29TZ828-T4W",
-            "Date": "Computer Architecture",
-            "Method": "Computers",
-            "Description": "125.60",
-            "Amount": "24"
-        },
-        {
-            "Txn": "CASH-AC29TZ828-T4W",
-            "Date": "Asp.Net 4 Blue Book",
-            "Method": "Programming",
-            "Description": "56.00",
-            "Amount": "24"
-        },
-        {
-            "Txn": "CASH-AC29TZ828-T4W",
-            "Date": "Popular Science",
-            "Method": "Science",
-            "Description": "210.40",
-            "Amount": "27"
-        }
-    ];
-    this.create_datatable(el, data,
-    {
-      title : "Payments Test",
-      count: true,
-      custom_col:[
-        {
-          key: "Custom test",
-          render: '<a href="#" class="mdshow" onclick="#">Test Custom</a>'
-        },
-        {
-          key: "Custom test2",
-          render: '<a href="#" class="mdshow" onclick="#">Test Custom2</a>'
-        },
-      ],
-      col_options: [
-        {
-          option:'',
-          target:''
-        },
-      ],
-    });
+  methods: {
+    handleRowExpand(row, expanded) {
+      console.log(row);
+      if(expanded.length > 0){
+          console.log('handling row expand');
+      }
+
   },
+  }
 }
 </script>
 

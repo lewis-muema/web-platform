@@ -8,6 +8,11 @@ const toggle_ongoing = (state) => {
 
 };
 
+const set_ongoing_orders = (state, payload) => {
+  state.ongoing_orders = payload;
+};
+
 export default {
   toggle_ongoing,
+  set_ongoing_orders,
 };
