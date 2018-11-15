@@ -5,7 +5,7 @@
     </div>
     <div class="payinfo">
       <div class="payinfo--icon">
-        <img src="https://cdn0.iconfinder.com/data/icons/shopping-and-ecommerce-1/38/Shopping_icons_1_Converted-09-512.png" alt="">
+        <font-awesome-icon icon="wallet" />
       </div>
       <div class="payinfo--balance">
         Balance <span class="payinfo--balance-el">250</span>Ksh
@@ -31,7 +31,6 @@ export default {
   flex: 2;
   align-items: center;
   font-size: 16px;
-  color: #333;
 }
 .payinfo
 {
