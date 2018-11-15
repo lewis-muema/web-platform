@@ -24,7 +24,7 @@ export default {
 .paymethod--link
 {
   color: #555;
-  text-transform: uppercase;
+  text-transform: capitalize;
   font-size: 16px;
   text-align: center;
   padding: 2px;
