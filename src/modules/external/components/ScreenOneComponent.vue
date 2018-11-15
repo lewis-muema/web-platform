@@ -4,29 +4,35 @@
       Join the {{getBizName}} business account on Sendy
     </div>
     <div class="form-inputs">
-      <div class="row-defined">
-        <div class="input-field">
-          <input id="first_name" class="input-classy2" placeholder="First Name" type="text" v-model="f_name" @focus="setCurrentStep(1)">
-        </div>
-        <div class="input-field">
-          <input id="last_name" placeholder="Last Name" class="input-classy2" type="text" v-model="l_name" @focus="setCurrentStep(1)">
+      <div class="row">
+        <div class="input-field2">
+          <label class="input-descript">
+            <span>Name</span>
+          </label>
+          <input id="first_name" class="form-control" placeholder="John Doe" type="text" v-model="f_name" @focus="setCurrentStep(1)">
         </div>
       </div>
       <div class="row">
         <div class="input-field2">
-          <input class="input-classy" placeholder="Email" id="email" type="email" v-model="email" @focus="setCurrentStep(2)">
+          <label class="input-descript">
+            <span>Email Address</span>
+          </label>
+          <input class="form-control" placeholder="you@email.com" id="email" type="email" v-model="email" @focus="setCurrentStep(2)">
         </div>
       </div>
       <div class="row">
         <div class="input-field2">
-          <input class="input-classy" placeholder="Phone Number" id="phone" type="text" v-model="phone" @focus="setCurrentStep(3)">
+          <label class="input-descript">
+            <span>Phone Number</span>
+          </label>
+          <input class="form-control" placeholder="07XXXXXXX" id="phone" type="text" v-model="phone" @focus="setCurrentStep(3)">
         </div>
       </div>
     </div>
     <div class="divide"></div>
     <div class="form-submits">
       <a class="waves-effect">Back</a>
-      <button v-on:click="next_view" class="btn waves-effect waves-light blue" name="next" id="nextBtn">Next
+      <button v-on:click="next_view" class="btn-submit" style="width:30% !important;" name="next" id="nextBtn">Next
       </button>
     </div>
   </div>
@@ -106,8 +112,23 @@ export default {
 </script>
 
 <style lang="css">
+.form-header{
+  word-wrap: break-word;
+  line-height: 38px !important;
+  letter-spacing: 0;
+  font-size: 28px !important;
+  font-weight: 300 !important;
+  margin-bottom: 2rem;
+  font-family: Slack-Lato,appleLogo,sans-serif;
+  margin: 0 0 1rem;
+  display: block;
+  -webkit-margin-after: 0.67em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  max-width: 600px;
+}
 .input-field{
-  width: 29%;
+  width: 50%;
   left: auto;
   right: auto;
   padding: 0 .75rem;
@@ -118,7 +139,7 @@ export default {
 
 }
 .input-field2{
-  width: 76%;
+  width: 50% !important;
   left: auto;
   right: auto;
   padding: 0 .75rem;
@@ -176,7 +197,15 @@ export default {
   width: 120%;
 }
 .row{
-  width: 120%
+  width: 100%
+}
+.input-descript{
+  margin: 0 0 .25rem;
+ display: block;
+ font-size: 1rem;
+ line-height: 1.5rem;
+ font-weight: 400!important;
+ margin-bottom: .5rem!important;
 }
 
 

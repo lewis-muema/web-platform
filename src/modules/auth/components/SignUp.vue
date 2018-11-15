@@ -139,7 +139,7 @@ export default {
   color: #555454;
 }
 .sign-holder__smaller {
-    font-size: 14px;
+    font-size: 13px;
     color: #999999;
 }
 </style>

@@ -54,6 +54,11 @@
     -webkit-box-shadow: none;
     box-shadow: none;
 }
+.form-control:focus {
+  border-color: #1782c5;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
 .btn-submit{
   background-color: #1782c5;
   border-radius: 4px;
