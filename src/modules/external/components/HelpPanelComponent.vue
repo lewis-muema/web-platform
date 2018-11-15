@@ -52,5 +52,6 @@ export default {
   margin: .5rem 0 1rem 0;
   border-radius: 2px;
   background-color: #fff;
+  border: 1px solid #D8DFF0;
 }
 </style>

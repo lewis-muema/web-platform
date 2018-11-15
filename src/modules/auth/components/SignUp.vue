@@ -17,18 +17,18 @@
   <div>
 
     <div class="sign-holder dimen">
-      <input class="sign-holder__input" type="text" name="contact1" id="u_contact1" placeholder="Your Name" value="">
+      <input class="form-control" type="text" name="contact1" id="u_contact1" placeholder="Your Name" value="">
     </div>
 
     <div class="sign-holder dimen">
-      <input class="sign-holder__input" type="email" name="u_email" id="email" placeholder="Your Email" value="">
+      <input class="form-control" type="email" name="u_email" id="email" placeholder="Your Email" value="">
     </div>
     <div class="sign-holder dimen">
-      <input class="sign-holder__input" type="tel" name="u_phone" id="phone_num" value="">
+      <input class="form-control" type="tel" placeholder="Phone Number" name="u_phone" id="phone_num" value="">
     </div>
     <div class="sign-holder dimen" id="outer_u_pass">
   <span >
-        <input class="sign-holder__input" type="password" name="u_pass" id="u_pass" placeholder="Password">
+        <input class="form-control" type="password" name="u_pass" id="u_pass" placeholder="Password">
   </span>
     </div>
 
@@ -39,7 +39,7 @@
       </span>
     </div>
     <div class="sign-holder">
-      <input class="sign-holder__submit" type="submit" value="Sign Up" id="signup" onclick="" >
+      <input class="btn-submit" type="submit" value="Sign Up" id="signup" onclick="" >
     </div>
 
     <div class=" sign-holder sign-forgot-pass sign-smaller">
@@ -80,6 +80,10 @@ export default {
  font-weight: 500;
  text-align: center;
  color: #666;
+ padding-top: 5px;
+ padding-bottom: 5px;
+ font-size: large;
+ margin-bottom: 10px;
 }
 .sign-button{
  width: 91.9%;
@@ -94,55 +98,18 @@ export default {
  text-align: center;
  cursor: pointer;
 }
-.sign-text{
- padding-top: 5px;
- padding-bottom: 5px;
- font-size: large;
- margin-bottom: 10px;
- text-align: center;
- color: #666;
-}
 .sign-holder{
  margin: 1em;
  display: block;
 }
-.sign-holder__input {
-   display: block;
-   width: 100%;
-   height: 34px;
-   padding: 6px 12px;
-   font-size: 14px;
-   line-height: 1.42857143;
-   color: #555;
-   background-color: #fff;
-   background-image: none;
-   border: 1px solid #ccc;
-   border-radius: 4px;
-   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-   -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
- }
  .sign-holder input:not([type="checkbox"]) {
    width: 100%;
 }
-.sign-holder .sign-holder__input {
+.sign-holder .form-control{
    -webkit-box-shadow: none;
    -moz-box-shadow: none;
    box-shadow: none;
    height: 30px;
-}
-.sign-holder__submit{
-   background-color: #1782c5;
-   color: #fff;
-   letter-spacing: 1.1px;
-   font-weight: inherit;
-   padding: 6px;
-   height: 42px;
-   border: 1px solid #1782c5;
-   text-transform: uppercase;
-   font-size: medium;
-   cursor: pointer;
 }
 .sign-smaller {
    font-size: 14px;
@@ -172,7 +139,7 @@ export default {
   color: #555454;
 }
 .sign-holder__smaller {
-    font-size: 14px;
+    font-size: 13px;
     color: #999999;
 }
 </style>

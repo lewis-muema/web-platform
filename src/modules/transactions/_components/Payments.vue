@@ -69,5 +69,5 @@ export default {
 </script>
 
 <style lang="css">
-  @import "../../../styles/datatable.css";
+  @import "../../../assets/styles/datatable.css";
 </style>

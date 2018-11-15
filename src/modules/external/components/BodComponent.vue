@@ -35,7 +35,7 @@ export default {
 .content
 {
   display: flex;
-  padding: 30px;
+  /* padding: 30px; */
   flex-direction: row !important;
 }
 .column
@@ -68,7 +68,7 @@ export default {
   flex-direction: column;
   display: flex;
   -webkit-box-direction: normal;
-  padding-top: 55px;
+  padding-top: 30px;
 
 }
 .user-invite-body{

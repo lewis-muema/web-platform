@@ -3,9 +3,6 @@
         <main-header></main-header>
 
         <div class="container" id="transactions_container">
-          <div class="title">
-              <h3 class="title__text">Transactions</h3>
-          </div>
           <div class="section">
               <router-link class="section__link" to="/transactions/order_history">Order History</router-link>
               <router-link class="section__link" to="/transactions/statement">Statement</router-link>
@@ -23,9 +20,9 @@ import Vue from 'vue'
 import trans_store from './_store';
 import MainHeader from '../../components/headers/MainHeader.vue'
 // import RegisterStoreModule from '../../mixins/register_store_module'
-import Element from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-Vue.use(Element)
+// import Element from 'element-ui'
+// import 'element-ui/lib/theme-chalk/index.css'
+// Vue.use(Element)
 
 export default {
   name:'Transactions',
@@ -38,5 +35,5 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../styles/section_headers.css";
+@import "../../assets/styles/section_headers.css";
 </style>

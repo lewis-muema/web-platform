@@ -8,8 +8,8 @@
         The invites have been sent successfully. They will show up on your users page when they accept the invite.
       </div>
       <div class="end-btn">
-        <a v-on:click="back_btn" class="waves-effect waves-light btn blue">Back</a>
-        <a v-bind:href="this.getBaseUrl + 'coporate/user/'" class="waves-effect waves-light btn blue">Return to Users</a>
+        <a v-on:click="back_btn" class="btn-submit btn-cancel">Back</a>
+        <a v-bind:href="this.getBaseUrl + 'coporate/user/'" class="btn-cancel">Return to Users</a>
       </div>
     </div>
   </div>

@@ -83,7 +83,7 @@ export default {
     user-select: none;
     background-image: none;
     border: 1px solid transparent;
-    border-radius: 3px;
+    border-radius: 4px;
     cursor: pointer;
 }
 .btn-primary {

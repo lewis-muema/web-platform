@@ -5,7 +5,17 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
+process.env.NODE_ENV = process.env.DOCKER_ENV || 'production';
+
 const isProd = process.env.NODE_ENV === 'production'
+
+const env = process.env.NODE_ENV === 'testing'
+  ?  require('../configs/test.env')
+  : process.env.NODE_ENV === 'production' ? require('../configs/prod.env')
+  : require('../configs/dev.env')
+
+//server side
+ process.env._ENV = env;
 
 module.exports = {
   devtool: isProd
@@ -69,6 +79,9 @@ module.exports = {
   mode: process.env.NODE_ENV || 'production',
   plugins: isProd
     ? [
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': env
+        }),
         new webpack.optimize.ModuleConcatenationPlugin(),
         new ExtractTextPlugin({
           filename: 'common.[chunkhash].css',
@@ -77,6 +90,9 @@ module.exports = {
         new VueLoaderPlugin()
       ]
     : [
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': env
+        }),
         new FriendlyErrorsPlugin(),
         new VueLoaderPlugin()
       ]

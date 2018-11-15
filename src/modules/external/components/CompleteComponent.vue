@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="complete-continue">
-      <a class="waves-effect waves-light btn-large blue mid" :href="this.getBaseUrl">Continue to App</a>
+      <a class="btn-submit mid" :href="this.getBaseUrl">Continue to App</a>
     </div>
   </div>
 </template>
@@ -30,12 +30,14 @@ export default {
   name: 'complete-component',
   computed: {
     ...mapGetters(
-      [
-        'getBaseUrl',
-        'getBizName',
-        'getBizEmail',
-        'getPerEmail'
-      ]
+      {
+         getBizName:'$_external/getBizName',
+         getBizEmail:'$_external/getBizEmail'
+        // 'getBaseUrl',
+        // 'getBizName',
+        // 'getBizEmail',
+        // 'getPerEmail'
+      }
     )
   }
 }
@@ -50,7 +52,7 @@ export default {
 {
   font-size: 28px;
   text-align: center;
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 30px;
 }
 .complete-contents
@@ -68,9 +70,12 @@ export default {
   margin-top: 5%;
   padding-top: 5%;
   border-top: 1px solid #c2c3c4;
+  align-items: center;
+  justify-content: center;
 }
 .mid
 {
-  margin: 0 auto;
+  text-align: center;
+  height: 20px;
 }
 </style>

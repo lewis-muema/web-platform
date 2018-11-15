@@ -13,5 +13,8 @@ export default {
   getBizName(state){
               return state.biz_name;
         },
+  getBizEmail(state){
+                    return state.biz_email;
+              },
 
 };

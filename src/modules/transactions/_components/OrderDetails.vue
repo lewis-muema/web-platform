@@ -8,6 +8,7 @@
               <div class="order_details_price">
                     KES {{order_details.order_cost}}
               </div>
+            
               <div class="order_details_desc_item">
                     Kilometers : {{order_details.full_order_details.values.distance_read}} KMs
               </div>
@@ -39,34 +40,54 @@
               <div class="rider_details_item">
                   Number plate : {{order_details.rider_details.number_plate }}
               </div>
-              <div class="rider_details_item rating" v-html="renderRiderRating(order_details.rider_details.rating)">
+              <div class="rider_details_actions">
+                <div class="rider_details_actions_completed" v-if="order_details.pending_delivery.delivery_status !== 3">
+                    <div class="rider_details_action">
+                        <button class="button-primary rider_details_action_btn" type="button" @click="trackOrder">TRACK</button>
+                    </div>
+                    <div class="rider_details_action">
+                        <el-dropdown>
+                        <button type="button" class="button-primary">
+                            <i class="el-icon-more el-icon--center"></i>
+                        </button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>Print Receipt</el-dropdown-item>
+                            <el-dropdown-item>Delivery Docs</el-dropdown-item>
+                        </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                </div>
+                <div class="rider_details_actions_ongoing" v-else>
+                    <div class="rider_details_action">
+                        <button class="button-primary rider_details_action_btn" type="button" @click="activateRating">RATE</button>
+                    </div>
+                    <div class="rider_details_action">
+                        <el-dropdown>
+                        <button type="button" class="button-primary">
+                            <i class="el-icon-more el-icon--center"></i>
+                        </button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>Print Receipt</el-dropdown-item>
+                            <el-dropdown-item>Delivery Docs</el-dropdown-item>
+                        </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                </div>
+                <div class="rider_details_rating" v-if="show_rating">
+                    <div class="block">
+                        <el-rate
+                            v-model="orderRating"
+                            :colors="['#99A9BF', '#f57f20', '#1b7fc3']">
+                        </el-rate>
+                        <el-button class="rider_details_rate_btn" @click="rateOrder"> RATE </el-button>
+                    </div>
+                </div>
+            </div>
+              <div class="rider_details_item" v-html="renderRiderRating(order_details.rider_details.rating)">
               </div>
           </div>
 
-          <div class="rider_details_actions">
-              <div class="rider_details_actions_completed" v-if="order_details.pending_delivery.delivery_status !== 3">
-                <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn" type="primary">TRACK</el-button>
-                </div>
-                <!-- <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">FAVORITE</el-button>
-                </div>
-                <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">SCHEDULE</el-button>
-                </div> -->
-              </div>
-              <div class="rider_details_actions_ongoing" v-else>
-                <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">RATE</el-button>
-                </div>
-                <!-- <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">FAVORITE</el-button>
-                </div>
-                <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">SCHEDULE</el-button>
-                </div> -->
-              </div>
-          </div>
+          
         </div>
   </div>
 </template>
@@ -79,6 +100,7 @@ export default {
     data() {
         return {
           order_id:'',
+          show_rating:false,
         }
     },
     methods:{
@@ -97,7 +119,14 @@ export default {
                 }
             }
             return rating_template;
+        },
+        activateRating() {
+            this.show_rating = true;
+        },
+        rateOrder() {
+            this.show_rating = false;
         }
+        
 
 
     },
@@ -119,8 +148,6 @@ export default {
 </script>
 
 <style lang="css">
-    @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
-
     .order_details_wrap {
         width: 50%;
         border-right: 1px solid #ccc;
@@ -161,8 +188,10 @@ export default {
         padding-left: 20px;
     }
     .rider_details_image {
-        display: inline-block;
-        width: 30%;
+            display: inline-block;
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
         float: left;
     }
     .rider_details_image img {
@@ -187,13 +216,25 @@ export default {
         color: #1782c5;
     }
     .rider_details_actions {
-        width: 100%;
         display: block;
         float: left;
-        margin-left: 30%;
         margin-top: 10px;
     }
     .rider_details_action {
         display: inline-block
     }
+    .rider_details_rating {
+        margin-top: 10px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        padding-left: 20px;
+        background: #f4f4f4;
+    }
+    .rider_details_rating .el-rate {
+        display: inline-block;
+    }
+    .el-rate__icon {
+        font-size: 30px;
+    }
+    
 </style>

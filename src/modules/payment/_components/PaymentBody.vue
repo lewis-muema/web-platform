@@ -17,23 +17,18 @@ export default {
 </script>
 
 <style lang="css">
-.paymentbody--input-control
-{
-  height: 42px;
-  width: 100%;
-  font-size: 14px;
-  line-height: 1.42857143;
-  color: #555;
-  padding: 6px 12px;
-  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
+.paymentbody {
+  margin-top: 50px;
 }
-.paymentbody--input
+.paymentbody--input-wrap
 {
   display: flex;
   min-height: 4rem;
   margin: .5em;
+}
+.paymentbody--input {
+    height: 45px;
+    margin-top: 20px;
 }
 .paymentbody--input-spaced
 {
@@ -41,13 +36,11 @@ export default {
 }
 .paymentbody--input-button
 {
-  cursor: pointer;
-  height: 42px;
-  width: 100%;
-  color: #fff;
+  margin-top: 20px;
   text-transform: uppercase;
   font-size: medium;
   letter-spacing: 1.1px;
-  background-color: #1782c5;
+  width: 100%;
+  height: 45px;
 }
 </style>
