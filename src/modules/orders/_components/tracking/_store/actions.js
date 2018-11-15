@@ -7,6 +7,7 @@ const get_tracking_data = function({commit}, payload)
     axios.post(path, {"order_no": "AC31Q5345-IMV"})
     .then(response => {
       commit('set_tracking_data', response.data)
+      resolve(response.data);
     })
     .catch(e => {
         reject(e);
