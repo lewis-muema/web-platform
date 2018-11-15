@@ -22,16 +22,17 @@
               {{this.tracking_data.marketing_message}}
             </div>
           </div>
-          <div class="infobar--terms">
-            <a class="" href="https://sendyit.com/terms" target="_blank">Sendy Terms and Conditions</a>
-          </div>
         </div>
         <div class="infobar--content infobar--item infobar--order infobar--item-bordered">
           <div class="">
-            Order Number : {{this.tracking_data.order_no}}
+            <div class="">
+              Order Number : {{this.tracking_data.order_no}}
+            </div>
           </div>
           <div class="">
-            Cost : KES {{this.tracking_data.amount}}
+            <div class="">
+              Cost : KES {{this.tracking_data.amount}}
+            </div>
           </div>
         </div>
         <div class="infobar--content infobar--item infobar--locations infobar--item-bordered">
@@ -224,9 +225,8 @@ export default {
 {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
-  flex: 4;
 }
 .infobar--driver a
 {
