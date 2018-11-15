@@ -2,7 +2,7 @@
   <div class="" id="order_details_container">
       <div class="order-details-wrapper">
           <div class="order_details_map">
-              <Img :src="createStaticMapUrl(order_details.full_order_details.values.from, order_details.full_order_details.values.to)"/>
+              <Img :src="createStaticMapUrl(order_details.path)"/>
           </div>
           <div class="order_details_desc">
               <div class="order_details_price">
@@ -10,43 +10,43 @@
               </div>
 
               <div class="order_details_desc_item">
-                    Kilometers : {{order_details.full_order_details.values.distance_read}} KMs
+                    Kilometers : {{order_details.order_details.distance}} KMs
               </div>
               <div class="order_details_desc_item">
-                    Duration : {{order_details.full_order_details.values.duration_read}}
+                    Duration : {{order_details.order_details.duration}}
               </div>
               <div class="order_details_desc_item">
                     Date :{{order_details.order_date | moment }}
               </div>
               <div class="order_details_desc_item">
                     <img src="../../../assets/img/maroon_button.png" class="order_details_desc_image">
-                    {{order_details.full_order_details.values.from_name}}
+                    {{getOrderToName(order_details.path)}}
               </div>
               <div class="order_details_desc_item">
                     <img src="../../../assets/img/blue_button.png" class="order_details_desc_image">
-                    {{order_details.full_order_details.values.to_name }}
+                    {{getOrderFromName(order_details.path)}}
               </div>
 
           </div>
       </div>
       <div class="rider_details_wrap">
           <div class="rider_details_image">
-              <img :src="order_details.rider_details.photo_base+'photo/'+order_details.rider_details.photo"/>
+              <img :src="order_details.rider.rider_photo"/>
           </div>
           <div class="rider_details_items">
               <div class="rider_details_item">
-                  Rider name : {{order_details.rider_details.name }}
+                  Rider name : {{order_details.rider.rider_name }}
               </div>
               <div class="rider_details_item">
-                  Number plate : {{order_details.rider_details.number_plate }}
+                  Number plate : {{order_details.rider.number_plate }}
               </div>
               <div class="rider_details_item">
-                  <font-awesome-icon icon="star" class="rating_checked" v-for="index in order_details.rider_details.rating" :key="index"/>
-                  <font-awesome-icon icon="star" class="" v-for="index in (5-order_details.rider_details.rating)" :key="index"/>
+                  <font-awesome-icon icon="star" class="rating_checked" v-for="index in order_details.rider.rider_rating" :key="index"/>
+                  <font-awesome-icon icon="star" class="" v-for="index in (5-order_details.rider.rider_rating)" :key="index"/>
               </div>
 
               <div class="rider_details_actions">
-                <div class="rider_details_actions_completed" v-if="order_details.pending_delivery.delivery_status !== 3">
+                <div class="rider_details_actions_completed" v-if="order_details.order_details.delivery_status !== 3">
                     <div class="rider_details_action">
                         <button class="button-primary rider_details_action_btn" type="button" @click="trackOrder">TRACK</button>
                     </div>
@@ -116,11 +116,21 @@ export default {
         moment: function () {
           return moment();
         },
-        createStaticMapUrl(from_cordinates, to_cordinates) {
+        createStaticMapUrl(path) {
+            //TODO:get google_key from configs
             let google_key = "AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc";
-
+            let from_cordinates = path[0]['coordinates'];
+            let to_cordinates = path[path.length-1]['coordinates'];
             return "https://maps.googleapis.com/maps/api/staticmap?path=color:100x1782C5|weight:5|"+from_cordinates+"|"+to_cordinates+"&size=257x257&markers=color:red%7Clabel:P%7C"+from_cordinates+"&markers=color:blue%7Clabel:D%7C "+to_cordinates+ "&key="+google_key;
         },
+        getOrderFromName(path) {
+          return path[0].name;
+        },
+        getOrderToName(path) {
+          let path_length = path.length;
+          return path[path_length-1].name;
+        },
+
         activateRating() {
             this.show_rating = true;
         },

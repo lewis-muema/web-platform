@@ -1,0 +1,136 @@
+.header{
+    top: 0px;
+    color: #fff;
+    background-color: #1782C5;
+    z-index: 999;
+    outline: none;
+    /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); */
+    width: 100%;
+    margin: 0px auto;
+    height: 68px;
+    display: flex;
+}
+.header--item{
+    display: flex;
+    flex: 1;
+}
+.header--item__left, .header--item__right{
+    display: flex;
+}
+.header--item__left{
+
+}
+.header--item__right{
+    margin-right: 5em;
+}
+.logo{
+    height: 50px;
+    display: inline-flex;
+    align-self: center;
+    margin-left: 5em;
+}
+
+nav ul ul {
+	display: none;
+}
+
+nav ul li:hover > ul {
+	display: block;
+}
+
+nav ul {
+	list-style: none;
+    margin: unset;
+}
+nav ul:after {
+	content: ""; clear: both; display: block;
+}
+
+nav ul li {
+	float: left;
+}
+nav ul li:hover {
+	background: #144e64;
+}
+nav ul li:hover ul{
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+
+    font-size: 14px;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+nav ul li:hover a {
+	color: #fff;
+}
+
+nav ul li a {
+    display: block; 
+    padding: 1.5em 40px;
+    color: #fff; text-decoration: none;
+}
+
+nav ul ul {
+	background: #fff;
+    border-radius: 0px;
+    padding: 0;
+	position: absolute;
+    z-index: 100;
+}
+nav ul ul li {
+	float: none;
+    position: relative;
+}
+nav ul ul li:last-child{
+    border-top: 1px solid #f5f5f5;
+    border-bottom: 1px solid #f5f5f5;
+}
+nav ul ul li a {
+	padding: 6px 30px;
+    cursor: pointer;
+    color: #555 !important;
+}
+nav ul ul li a:hover {
+	background: #1782c5;
+    color: #fff !important;
+}
+
+nav ul ul ul {
+	position: absolute; left: 100%; top:0;
+}
+nav ul li .router-link-active{
+    border-bottom: unset;
+    cursor: auto;
+    font-weight: 400;
+    color: #144e64 !important;
+
+}
+.header__menuitem--active{
+    font-weight: normal;
+    color:#1782c5;
+    cursor: auto;
+}
+.nav--menu-dropdown-wrap {
+    float: right;
+    width: 160px;
+}
+.nav--menu-dropdown-title {
+    color:#fff !important;
+    font-size: 16px !important;
+}
+.nav--menu-inactive {
+    cursor: default;
+}
+.nav--menu-inactive:hover, .nav--menu-inactive:focus  {
+    background: #1782c5 !important;
+}
