@@ -14,6 +14,7 @@
   color: #fff;
   background-color: #1b7fc3 !important;
   border-color: #1b7fc3 !important;
+  border-radius: 4px;
 }
 
 .button-primary:focus, .button-primary:hover {
