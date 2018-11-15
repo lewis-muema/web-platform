@@ -135,9 +135,11 @@ export default {
         },
         rateOrder() {
             this.show_rating = false;
+        },
+        trackOrder() {
+
         }
         
-
 
     },
     computed:{
