@@ -103,20 +103,20 @@ export default {
           return path[path_length-1].name;
         },
         getRowKey(row){
-          return row.order_no;
+          return row.order_id;
         },
         expandTableRow(row, event, column){
-          this.expand_id = row.order_no;
+          this.expand_id = row.order_id;
           this.expand_keys = []
-          this.expand_keys.push(row.order_no)
-          this.$router.push({name:'order-details', params: {id : row.order_no}});
+          this.expand_keys.push(row.order_id)
+          this.$router.push({name:'order-details', params: {id : row.order_id}});
         },
         handleRowExpand(row, expanded) {
           
-          this.expand_id = row.order_no;
+          this.expand_id = row.order_id;
           this.expand_keys = []
-          this.expand_keys.push(row.order_no)
-          this.$router.push({name:'order-details', params: {id : row.order_no}});
+          this.expand_keys.push(row.order_id)
+          this.$router.push({name:'order-details', params: {id : row.order_id}});
 
           // console.log('row expansion');
 

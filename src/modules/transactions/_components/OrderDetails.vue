@@ -148,7 +148,7 @@ export default {
           getOrderDetails:'$_transactions/getOrderHistoryOrders',
         }),
         order_details (){
-            return this.getOrderDetails.find( order => order.order_no ===  this.$route.params.id);
+            return this.getOrderDetails.find( order => order.order_id ===  this.$route.params.id);
         }
     },
     mounted(){
