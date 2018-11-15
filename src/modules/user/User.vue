@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <template lang="html">
   <div class="" id="user_container">
       <external-header></external-header>
@@ -22,3 +23,18 @@ export default {
 
 <style lang="css">
 </style>
+=======
+<template>
+    
+</template>
+
+<script>
+    export default {
+        name: "User"
+    }
+</script>
+
+<style scoped>
+
+</style>
+>>>>>>> fdc2cb05de3e90cc97ae8e085010f722aa1fd5de

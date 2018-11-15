@@ -6,12 +6,13 @@ html, .body{
   font-family: 'Rubik', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #333;
+  color: #555;
 }
 .container
 {
   width: 90%;
   margin: 0px auto;
+  padding-top: 60px;
 }
 .box
 {
@@ -32,4 +33,10 @@ html, .body{
   flex-flow: column;
   flex: 1 1 auto;
   overflow-y: auto;
+}
+.sendy-blue{
+    color: #1782c5;
+}
+.sendy-orange{
+    color: #f52f20;
 }
