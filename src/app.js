@@ -8,13 +8,10 @@ import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(Element)
 
-
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUserSecret, faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
-library.add(faUserSecret, faWallet)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+
+
 
 
 // console.log(process.env.NODE_ENV)

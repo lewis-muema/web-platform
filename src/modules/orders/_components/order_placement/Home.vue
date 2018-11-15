@@ -4,12 +4,14 @@
       <div class="homeview--form homeview--row">
         <div class="homeview--input-bundler">
           <no-ssr placeholder="">
-              <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/orders/orange_button.png" alt="" class="homeview--input-bundler__img">
+
+              <font-awesome-icon icon="circle" size="xs" class="sendy-blue homeview--row__font-awesome" width="10px" class="homeview--input-bundler__img" />
+              <!-- <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/orders/orange_button.png" alt="" > -->
               <gmap-autocomplete placeholder="Pickup Location" :select-first-on-enter="true" class="input-control homeview--input-bundler__input"></gmap-autocomplete>
           </no-ssr>
         </div>
         <!-- <transition name="slide-fade"> -->
-          <div class="homeview--input-bundler homeview--input-bundler__waypoints" v-if="this.get_waypoints > 1">
+          <div class="homeview--input-bundler homeview--input-bundler__waypoints" v-if="this.get_waypoints > 1 && this.show_destinations == false">
             <a href="#" class="homeview--stops">{{this.get_waypoints - 1}} stops</a>
           </div>
         <!-- </transition> -->
@@ -18,7 +20,9 @@
             <div class="homeview--destinations">
               <div class="homeview--input-bundler">
                 <no-ssr placeholder="">
-                    <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/orders/blue_button.png" alt="" class="homeview--input-bundler__img">
+                    <!-- <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/orders/blue_button.png" alt="" class="homeview--input-bundler__img"> -->
+                    <font-awesome-icon icon="map-marker-alt" size="xs" class="sendy-blue homeview--row__font-awesome" width="10px" class="homeview--input-bundler__img" />
+
                     <gmap-autocomplete placeholder="Enter Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input"></gmap-autocomplete>
                 </no-ssr>
               </div>
@@ -31,10 +35,45 @@
         <!-- </transition-group> -->
 
       </div>
-      <div class="homeview--row">
+      <div class="homeview--row homeview--row__more-destinations">
+           <font-awesome-icon icon="plus" size="xs" class="sendy-blue homeview--row__font-awesome" width="10px" />
         <a href="#" class="homeview--add" @click="add_waypoint()">Add Destination</a>
       </div>
-    </div>
+      <div class="">
+          <div class="home-view--seperator">
+          </div>
+          <div class="home-view-vendor-classes">
+              <div class="home-view-vendor-classes--title">
+                  What size of load do you want delivered?
+              </div>
+              <div class="home-view-vendor-classes--body">
+                  <div class="home-view-vendor-classes--icons">
+                      <div class="home-view-vendor-classes-icons-item">
+                         <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/vendor_size/small.svg" alt="" class="home-view-vendor-classes-icons-item--img">
+                      </div>
+                      <div class="home-view-vendor-classes-icons-item">
+                          <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/vendor_size/medium.svg" alt="" class="home-view-vendor-classes-icons-item--img">
+                      </div>
+                      <div class="home-view-vendor-classes-icons-item">
+                          <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/vendor_size/large.svg" alt="" class="home-view-vendor-classes-icons-item--img">
+                      </div>
+                  </div>
+                  <div class="home-view-vendor-classes--label">
+                      <div class="home-view-vendor-classes-label-item">
+                          small
+                      </div>
+                      <div class="home-view-vendor-classes-label-item">
+                          medium
+                      </div>
+                      <div class="home-view-vendor-classes-label-item">
+                          large
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
     <!-- <vendor-view/> -->
   </div>
 </template>
@@ -45,6 +84,9 @@ import { mapGetters } from 'vuex';
 import { mapMutations } from 'vuex';
 import home_store from './_store';
 import VendorComponent from './_components/VendorComponent.vue'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faPlus, faMapMarkerAlt, faCircle } from '@fortawesome/free-solid-svg-icons'
+library.add(faPlus)
 
 export default {
   name: 'home',
@@ -140,6 +182,15 @@ export default {
 .homeview--row
 {
   padding: 10px 20px;
+  font-size: 13px;
+}
+.homeview--row__more-destinations{
+    padding-left: 5px;
+    margin-top: -10px;
+}
+.homeview--row__font-awesome{
+    padding-right: 10px;
+    font-size: 13px;
 }
 .homeview--add
 {
@@ -177,4 +228,45 @@ export default {
 {
   transition: transform 1s;
 }
+
+
+/*
+vendor classes
+*/
+.home-view--seperator{
+    border-top: 1px solid #6663;
+    margin-left: -20px;
+    margin-right: -20px;
+}
+.home-view-vendor-classes{
+
+}
+.home-view-vendor-classes--title{
+    text-align: center;
+    font-weight: normal;
+    padding: 20px;
+}
+.home-view-vendor-classes--body{
+
+}
+.home-view-vendor-classes--icons, .home-view-vendor-classes--label, .home-view-vendor-classes-icons-item, .home-view-vendor-classes-label-item{
+    display: flex;
+}
+.home-view-vendor-classes-icons-item, .home-view-vendor-classes-label-item{
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+.home-view-vendor-classes--icons{
+
+}
+.home-view-vendor-classes--label{
+    padding: 5px 0px;
+}
+.home-view-vendor-classes-icons-item--img{
+    width: 30px;
+    max-height: 30px;
+}
+
+/* price */
 </style>
