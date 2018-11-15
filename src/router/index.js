@@ -149,7 +149,7 @@ export function createRouter () {
                 alias: '/orders/home'
               },
               {
-                path: '/orders/tracking',
+                path: '/orders/tracking/:order_no',
                 component: () => import('../modules/orders/_components/tracking/Tracking.vue')
               },
               {
