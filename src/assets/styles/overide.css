@@ -149,7 +149,7 @@ button span {
 
 /* element table css overiden */
 .el-table--border {
-  border-radius: 10px;
+  border-radius: 5px;
 }
 .el-table--striped .el-table__body tr.el-table__row--striped td {
   background: #fdfdfd !important;
