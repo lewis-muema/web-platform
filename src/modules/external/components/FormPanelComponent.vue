@@ -49,6 +49,7 @@ export default {
   padding: 24px 0 6px;
   padding-right: 15%;
   padding-bottom: 40px;
+  padding-top: 0px;
 }
 
 .divide

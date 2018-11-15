@@ -6,7 +6,10 @@
     <div class="form-inputs">
       <div class="row">
         <div class="input-field2">
-          <input id="perEmail" class="input-classy" type="email" placeholder="Personal Email"  v-model="per_email" @focus="setCurrentStep(1)" >
+          <label class="input-descript">
+            <span>Personal Email</span>
+          </label>
+          <input id="perEmail" class="form-control" type="email" placeholder="you@email.com"  v-model="per_email" @focus="setCurrentStep(1)" >
 
         </div>
       </div>
@@ -14,8 +17,7 @@
     <div class="divide"></div>
     <div class="form-submits">
       <a v-on:click="last_view" class="waves-effect waves-teal btn-flat">Back</a>
-      <button v-on:click="next_view" class="btn waves-effect waves-light blue" name="next" id="nextBtn">Next
-        <i class="material-icons right">send</i>
+      <button v-on:click="next_view" class="btn-submit" style="width:30% !important;" name="next" id="nextBtn">Next
       </button>
     </div>
   </div>
@@ -57,6 +59,21 @@ export default {
 </script>
 
 <style lang="css">
+.form-header{
+  word-wrap: break-word;
+  line-height: 38px !important;
+  letter-spacing: 0;
+  font-size: 28px !important;
+  font-weight: 300 !important;
+  margin-bottom: 2rem;
+  font-family: Slack-Lato,appleLogo,sans-serif;
+  margin: 0 0 1rem;
+  display: block;
+  -webkit-margin-after: 0.67em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  max-width: 600px;
+}
 .input-field2{
   width: 76%;
   left: auto;
@@ -79,5 +96,13 @@ export default {
   font-size: 16px;
   margin: 0 0 8px 0;
   padding: 0;
+}
+.input-descript{
+  margin: 0 0 .25rem;
+ display: block;
+ font-size: 1rem;
+ line-height: 1.5rem;
+ font-weight: 400!important;
+ margin-bottom: .5rem!important;
 }
 </style>
