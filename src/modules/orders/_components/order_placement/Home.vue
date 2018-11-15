@@ -2,38 +2,40 @@
   <div class="homeview--outer">
     <div class="homeview--inner">
       <div class="homeview--form homeview--row">
-        <div class="homeview--input">
+        <div class="homeview--input-bundler">
           <no-ssr placeholder="">
-            <gmap-autocomplete placeholder="Enter Pickup Location" :select-first-on-enter="true" class="input-control"></gmap-autocomplete>
+              <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/orders/orange_button.png" alt="" class="homeview--input-bundler__img">
+              <gmap-autocomplete placeholder="Pickup Location" :select-first-on-enter="true" class="input-control homeview--input-bundler__input"></gmap-autocomplete>
           </no-ssr>
         </div>
-        <transition name="slide-fade">
-          <div class="homeview--input" v-if="this.get_waypoints > 1">
+        <!-- <transition name="slide-fade"> -->
+          <div class="homeview--input-bundler homeview--input-bundler__waypoints" v-if="this.get_waypoints > 1">
             <a href="#" class="homeview--stops">{{this.get_waypoints - 1}} stops</a>
           </div>
-        </transition>
-        <transition-group name="slide-fade" tag="div" v-on:enter="enter">
+        <!-- </transition> -->
+        <!-- <transition-group name="slide-fade" tag="div" v-on:enter="enter"> -->
           <div v-for="n in this.get_waypoints" :key="n" v-if="show_destination(n)" v-bind:data-index="n">
             <div class="homeview--destinations">
-              <div class="homeview--input">
+              <div class="homeview--input-bundler">
                 <no-ssr placeholder="">
-                  <gmap-autocomplete placeholder="Enter Destination Location" :select-first-on-enter="true" class="input-control"></gmap-autocomplete>
+                    <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/orders/blue_button.png" alt="" class="homeview--input-bundler__img">
+                    <gmap-autocomplete placeholder="Enter Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input"></gmap-autocomplete>
                 </no-ssr>
               </div>
-              <div class="homeview--input row">
+              <!-- <div class="homeview--input row">
                 <input type="text" name="" value="" placeholder="Recipient Name" class="input-control">
                 <input type="text" name="" value="" placeholder="Phone Number" class="input-control">
-              </div>
+              </div> -->
             </div>
           </div>
-        </transition-group>
+        <!-- </transition-group> -->
 
       </div>
       <div class="homeview--row">
         <a href="#" class="homeview--add" @click="add_waypoint()">Add Destination</a>
       </div>
     </div>
-    <vendor-view/>
+    <!-- <vendor-view/> -->
   </div>
 </template>
 
@@ -99,16 +101,34 @@ export default {
 .homeview--inner
 {
   padding: 20px;
-  box-shadow: inset 0px -10px 10px -10px rgba(0,0,0,0.75)
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
 }
 .homeview--form
 {
-  border-left: 3px solid #ccc;
+  /* border-left: 3px solid #ccc; */
 }
-.homeview--input
+.homeview--input-bundler
 {
-  padding-bottom: 10px;
-  width: 100%;
+  padding-bottom: 15px;
+  /* width: 100%; */
+  display: flex;
+}
+.homeview--input-bundler__img, .homeview--input-bundler__input{
+     display: flex;
+}
+.homeview--input-bundler__img{
+    max-width: 10px;
+    height: 10px;
+    position: relative;
+    top: 15px;
+    left: -15px;
+}
+.homeview--input-bundler__input{
+
+}
+.homeview--input-bundler__waypoints{
+    margin-top: -10px;
+    padding-left: 10px;
 }
 .homeview--stops
 {
@@ -134,8 +154,8 @@ export default {
 }
 .homeview--destinations
 {
-  padding: 10px;
-  background-color: #efefef;
+  /* padding: 10px; */
+  /* background-color: #efefef; */
 }
 .slide-fade-enter-active {
   transition: all .8s ease;
