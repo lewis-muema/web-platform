@@ -2,11 +2,11 @@
   <div class="inv-container">
     <div class="show-out">
       <div class="show-txt">
-        <label for="inv_link">Invite link for {{this.getBizName}}</label>
-        <input readonly :value="this.getInviteLink" id="in_link" type="text" class="">
+        <label class="inviteUser--text">Invite link for {{this.getBizName}}</label>
+        <input readonly :value="this.getInviteLink" id="in_link" type="text" class="form-control">
       </div>
-      <div class="show-btn">
-        <a v-on:click="copy_link" class="waves-effect waves-light btn blue">Copy to clipboard</a>
+      <div class="inviteUser--button">
+        <a v-on:click="copy_link" class="btn-submit">Copy to clipboard</a>
         <a v-on:click="back" class="waves-effect waves-teal btn-flat">Back</a>
       </div>
     </div>
@@ -50,15 +50,17 @@ export default {
 </script>
 
 <style lang="css">
-.show-btn
-{
-  display: flex;
-  align-items: flex-end;
-  flex-direction: row;
-  justify-content: space-between;
-  flex: 1;
-  justify-content: space-around;
-  padding: 8px 10px 8px 10px;
+.inviteUser--text{
+    padding: 0 0 15px;
+    color: #9e9e9e;
+    font-size: 14px;
+}
+.btn-submit{
+    padding: 10px !important;
+}
+.inviteUser--button{
+    margin-top: 35px;
+    margin-left: 20px;
 }
 .show-txt
 {
@@ -74,7 +76,9 @@ export default {
 }
 .show-in
 {
+  font-size: 14px !important;
   padding: 0px 40px;
   text-align: center;
+  color: #9e9e9e !important;
 }
 </style>

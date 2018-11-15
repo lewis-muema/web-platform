@@ -6,60 +6,49 @@
                     <span id="show_error"></span>
                 </div>
                 <div class="side-flex inp" id="set0">
-                    <div class="column-flex pad-flex">
-                        <input type="text" name="email" value="" placeholder="Email">
-                    </div>
-                    <div class="column-flex pad-flex">
-                        <input type="text" name="name" value="" placeholder="Full Name (Optional)">
-                    </div>
-                    <div class="column-flex pad-flex">
-                        <select class='inpDept' name="dept">
-                        </select>
-                    </div>
-                </div>
-                <div class="side-flex inp" id="set1">
-                    <div class="column-flex pad-flex">
-                        <input type="text" name="email" value="" placeholder="Email">
-                    </div>
-                    <div class="column-flex pad-flex">
-                        <input type="text" name="name" value="" placeholder="Full Name (Optional)">
-                    </div>
-                    <div class="column-flex pad-flex">
-                        <select class='inpDept' name="dept">
-                        </select>
-                    </div>
-                </div>
-                <div class="side-flex inp" id="set2">
-                    <div class="column-flex pad-flex">
-                        <input type="text" name="email" value="" placeholder="Email">
-                    </div>
-                    <div class="column-flex pad-flex">
-                        <input type="text" name="name" value="" placeholder="Full Name (Optional)">
-                    </div>
-                    <div class="column-flex pad-flex">
-                        <select class='inpDept' name="dept">
-                        </select>
-                    </div>
+                    <input class="form-control" type="text" name="email" value="" placeholder="name@example.com">
+                    <input class="form-control" type="text" name="name" value="" placeholder="Full Name (Optional)">
+                    <el-select class="addUser--select" v-model="value" placeholder="Select">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
                 </div>
             </div>
-            <div class="side-flex submit">
-                <div class="column-flex pad-flex alleft">
-                    <div><a v-on:click="add_another" class="add-anchor"><i class="material-icons plus-icon">add_circle_outline</i>Add
-                        another</a> <span> or </span> <a v-on:click="invite_many" class="add-anchor" href="#">add many
-                        at once</a></div>
-                </div>
-                <div class="column-flex pad-flex alright">
-                    <button v-on:click="postInvites" class="btn waves-effect waves-light blue" type="submit"
-                            name="action">Send Invites
-                        <i class="material-icons right">send</i>
-                    </button>
-                </div>
+            <div class="side-flex inp" id="set1">
+                <input class="form-control" type="text" name="email" value="" placeholder="name@example.com">
+                <input class="form-control" type="text" name="name" value="" placeholder="Full Name (Optional)">
+                <el-select class="addUser--select" v-model="value" placeholder="Select">
+                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
             </div>
+            <div class="side-flex inp" id="set2">
+                <input class="form-control" type="text" name="email" value="" placeholder="name@example.com">
+                <input class="form-control" type="text" name="name" value="" placeholder="Full Name (Optional)">
+                <el-select class="addUser--select" v-model="value" placeholder="Select">
+                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
+            </div>
+        </div>
+        <div class="side-flex submit">
+            <div class="column-flex pad-flex alleft">
+                <div class="addUser--link"><a v-on:click="add_another" class="add-anchor"><i class="el-icon-circle-plus-outline"></i>&nbsp;Add
+                    another</a> <span> or </span> <a v-on:click="invite_many" class="add-anchor" href="#">add many
+                    at once</a></div>
+            </div>
+            <div class="addUser--submit">
+                <button v-on:click="postInvites" class="btn-submit" type="submit"
+                        name="action">Send Invites
+                    <i class="el-icon-caret-right"></i>
+                </button>
+            </div>
+        </div>
 
-            <div class="side-flex">
-                <div class="column-flex pad-flex inv-link">
-                    <div class="flex"><a v-on:click="get_link" class="add-anchor"><i class="material-icons plus-icon">link</i><span>Get an invite link to share</span></a>
-                    </div>
+        <div class="side-flex">
+            <div class="column-flex pad-flex inv-link">
+                <div class="flex"><a v-on:click="get_link" class="add-anchor inviteMany--anchor"><i
+                        class="el-icon-share"></i><span>&nbsp;Get an invite link to share</span></a>
                 </div>
             </div>
         </div>
@@ -73,6 +62,27 @@
     export default {
         name: 'invite-component',
         components: {},
+        data() {
+            return {
+                options: [{
+                    value: 'Option1',
+                    label: 'Option1'
+                }, {
+                    value: 'Option2',
+                    label: 'Option2'
+                }, {
+                    value: 'Option3',
+                    label: 'Option3'
+                }, {
+                    value: 'Option4',
+                    label: 'Option4'
+                }, {
+                    value: 'Option5',
+                    label: 'Option5'
+                }],
+                value: ''
+            }
+        },
         mounted() {
             this.init_select()
             $('.error').hide();
@@ -192,85 +202,30 @@
 </script>
 
 <style lang="css">
-    .waves-effect {
-        position: relative;
-        cursor: pointer;
-        display: inline-block;
-        overflow: hidden;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-        vertical-align: middle;
-        z-index: 1;
-        -webkit-transition: .3s ease-out;
-        transition: .3s ease-out;
-        text-decoration: none;
-        color: #fff;
-        text-align: center;
-        letter-spacing: .5px;
-        font-size: 14px;
-        outline: 0;
-        border: none;
-        border-radius: 2px;
-        height: 36px;
-        line-height: 36px;
-        padding: 0 16px;
-        text-transform: uppercase !important;
+
+    .addUser--select {
+        width: 100%;
+    }
+    .addUser--submit{
+        margin-right: 6.5%;
     }
 
-    /* input:not([type]), input[type=text]:not(.browser-default){
-        background-color: transparent;
-        border: none;
-        border-bottom: 1px solid #9e9e9e;
-        border-radius: 0;
-        outline: none;
-        height: 3rem;
-        width: 100%;
-        font-size: 16px;
-        margin: 0 0 8px 0;
-        padding: 0;
-        -webkit-box-shadow: none;
-        box-shadow: none;
-        -webkit-box-sizing: content-box;
-        box-sizing: content-box;
-        -webkit-transition: border .3s, -webkit-box-shadow .3s;
-        transition: border .3s, -webkit-box-shadow .3s;
-        transition: box-shadow .3s, border .3s;
-        transition: box-shadow .3s, border .3s, -webkit-box-shadow .3s;
-    } */
-    .inpDept {
-        position: relative;
-        cursor: pointer;
-        background-color: transparent;
-        border: none;
-        border-bottom: 1px solid #9e9e9e;
-        outline: none;
-        height: 3rem;
-        line-height: 3rem;
-        width: 100%;
-        font-size: 16px;
-        margin: 0 0 8px 0;
-        padding: 0;
-        display: block;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        z-index: 1;
-        border-radius: 0;
+    .btn-submit {
+        font-size: 14px;
     }
+
     a {
         color: #039be5;
         text-decoration: none;
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
     }
+
     i.right {
         float: right;
         margin: 5px 0 5px 15px;
     }
+
     .submit {
         margin-top: 40px;
         padding: 20px;
@@ -321,6 +276,14 @@
     .add-anchor {
         display: flex;
         align-items: center;
+        /*margin-left: 1.7%;*/
+    }
+    .inviteMany--anchor{
+        margin-left: 1.7% !important;
+    }
+
+    .addUser--link {
+        margin-left: 1.7%;
     }
 
     .add-anchor:hover {
@@ -328,7 +291,6 @@
         border-bottom: 1.5px solid !important;
         margin-bottom: -2px !important;
     }
-
     .plus-icon {
         font-size: 20px !important;
         padding-right: 3px;
