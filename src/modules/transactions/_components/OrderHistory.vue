@@ -26,7 +26,11 @@
       <el-table-column
         label="Date"
         prop="order_date">
+        <template slot-scope="props">
+          {{tableData[props.$index]['date_created'] | moment }}
+        </template>
       </el-table-column>
+      
       <el-table-column
         label="User"
         prop="full_order_details.values.user_id"
@@ -59,6 +63,7 @@
 </template>
 
 <script>
+const moment = require('moment');
 import { mapActions, mapGetters } from 'vuex'
 export default {
       data() {
@@ -68,18 +73,22 @@ export default {
           expand_keys:[],
         }
       },
+      filters: {
+        moment: function (date) {
+          return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+        }
+      },
       methods:{
          ...mapActions([
             '$_transactions/requestOrderHistoryOrders',
         ]),
+        moment: function () {
+          return moment();
+        },
         getRowKey(row){
           return row.order_no;
         },
         expandTableRow(row, event, column){
-          console.log(row);
-          console.log(event);
-          console.log(column);
-
           this.expand_id = row.order_no;
           this.expand_keys = []
           this.expand_keys.push(row.order_no)
@@ -87,17 +96,22 @@ export default {
         },
         handleRowExpand(row, expanded) {
           
-          console.log('row expansion');
+          this.expand_id = row.order_no;
+          this.expand_keys = []
+          this.expand_keys.push(row.order_no)
+          this.$router.push({name:'order-details', params: {id : row.order_no}});
 
-          console.log(row);
-          console.log(expanded);
+          // console.log('row expansion');
 
-          if(expanded.length > 0){
-              console.log('handling row expand');
-              document.getElementsByClassName('el-table__expand-icon--expanded')[0].click()
-				      //trigger router action here
-              this.$router.push({name:'order-details', params: {id : row.order_no}});
-          }
+          // console.log(row);
+          // console.log(expanded);
+
+          // if(expanded.length > 0){
+          //     console.log('handling row expand');
+          //     document.getElementsByClassName('el-table__expand-icon--expanded')[0].click()
+				  //     //trigger router action here
+          //     this.$router.push({name:'order-details', params: {id : row.order_no}});
+          // }
 
       },
     },

@@ -16,7 +16,7 @@
                     Duration : {{order_details.full_order_details.values.duration_read}}
               </div>
               <div class="order_details_desc_item">
-                    Date :{{order_details.order_date}}
+                    Date :{{order_details.order_date | moment }}
               </div>
               <div class="order_details_desc_item">
                     <img src="../../../assets/img/maroon_button.png" class="order_details_desc_image">
@@ -94,7 +94,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-
+const moment = require('moment');
 export default {
     name:'order-details',
     data() {
@@ -103,7 +103,15 @@ export default {
           show_rating:false,
         }
     },
+    filters: {
+        moment: function (date) {
+            return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+        }
+    },
     methods:{
+        moment: function () {
+          return moment();
+        },
         createStaticMapUrl(from_cordinates, to_cordinates) {
             let google_key = "AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc";
 
