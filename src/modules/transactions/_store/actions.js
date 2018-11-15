@@ -3,6 +3,7 @@ import axios from 'axios'
 
 //TO DO: Get endpoint from configs
 const path = "https://apitest.sendyit.com/parcel/api/v11/"
+const url = "https://privateapitest.sendyit.com/v1/"
 
 
 export default {
@@ -10,10 +11,10 @@ export default {
     requestOrderHistoryOrders({commit}, payload)
     {
         return new Promise((resolve, reject) => {
-            axios.post(path+"complete_orders", payload)
+            axios.post(url+"order_history/", payload)
               .then(response => {
                 if (response.data.status == true) {
-                   commit('setOrderHistoryOrders',response.data.values);
+                   commit('setOrderHistoryOrders',response.data.data);
                    resolve(response.data);
                 }
                 else {

@@ -23,10 +23,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
 library.add(faStar)
 
-// import Element from 'element-ui'
-// import 'element-ui/lib/theme-chalk/index.css'
-// Vue.use(Element)
-
 export default {
   name:'Transactions',
   //mixins: [ RegisterStoreModule ],

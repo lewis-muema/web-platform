@@ -164,6 +164,9 @@ button span {
   background-color: #4098ce !important;
   color: #fff !important;
 }
+.el-dropdown-menu__item:focus a, .el-dropdown-menu__item:not(.is-disabled):hover a {
+  color: #fff !important;
+}
 .el-table th>.cell {
   font-weight: normal;
 }

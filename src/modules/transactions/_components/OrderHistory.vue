@@ -34,7 +34,7 @@
       
       <el-table-column
         label="User"
-        prop="full_order_details.values.user_id"
+        prop="user_details.name"
         width="120"
         >
       </el-table-column>
@@ -46,17 +46,26 @@
       </el-table-column>
       <el-table-column
         label="Deliveries"
-        prop="full_order_details.values.way_points"
+        prop="path"
         width="120"
         >
+        <template slot-scope="scope">
+          {{tableData[scope.$index]['path'].length-1}}
+        </template>
       </el-table-column>
       <el-table-column
         label="From"
-        prop="from_name">
+        prop="path">
+        <template slot-scope="scope">
+          {{ getOrderFromName(tableData[scope.$index]['path']) }}
+        </template>
       </el-table-column>
       <el-table-column
         label="To"
-        prop="to_name">
+        prop="path">
+         <template slot-scope="scope">
+          {{ getOrderToName(tableData[scope.$index]['path']) }}
+        </template>
       </el-table-column>
   </el-table>
 
@@ -86,21 +95,28 @@ export default {
         moment: function () {
           return moment();
         },
+        getOrderFromName(path) {
+          return path[0].name;
+        },
+        getOrderToName(path) {
+          let path_length = path.length;
+          return path[path_length-1].name;
+        },
         getRowKey(row){
-          return row.order_no;
+          return row.order_id;
         },
         expandTableRow(row, event, column){
-          this.expand_id = row.order_no;
+          this.expand_id = row.order_id;
           this.expand_keys = []
-          this.expand_keys.push(row.order_no)
-          this.$router.push({name:'order-details', params: {id : row.order_no}});
+          this.expand_keys.push(row.order_id)
+          this.$router.push({name:'order-details', params: {id : row.order_id}});
         },
         handleRowExpand(row, expanded) {
           
-          this.expand_id = row.order_no;
+          this.expand_id = row.order_id;
           this.expand_keys = []
-          this.expand_keys.push(row.order_no)
-          this.$router.push({name:'order-details', params: {id : row.order_no}});
+          this.expand_keys.push(row.order_id)
+          this.$router.push({name:'order-details', params: {id : row.order_id}});
 
           // console.log('row expansion');
 
@@ -122,15 +138,12 @@ export default {
       }),
      },
       mounted(){
-          //To Do: Get this from session
+          //TODO: Get this from session
+          //TODO: also create payload depending on session
+
           let payload = {
-              "values": {
-                  "email": "faithshop@gmail.com",
-                  "phone": "0778987789",
-                  "cop_id": "669",
-                  "min_order": "1",
-                  "max_order": "10"
-              }
+            "cop_id": 669,
+            "user_type":2
           }
           // this.requestOrderHistoryOrders(payload);
           this.$store.dispatch("$_transactions/requestOrderHistoryOrders", payload).then(response => {
