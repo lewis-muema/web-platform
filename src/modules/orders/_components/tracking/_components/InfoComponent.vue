@@ -1,92 +1,91 @@
 <template lang="html">
-  <div class="infobar--outer" v-if="this.loading == false">
-    <div class="infobar--content infobar--content-padded">
-      <div class="infobar--photo infobar--content infobar--item infobar--item-bordered">
-        <img class="rimg" :src="this.tracking_data.rider.rider_photo">
-      </div>
-      <div class="infobar--content infobar--item infobar--driver infobar--item-bordered" >
-        <div class="infobar--driver-details" v-if="this.tracking_data.confirm_status > 0">
-          <div class="">
-            {{this.tracking_data.rider.rider_name}}
-          </div>
-          <div class="">
-            {{this.tracking_data.rider.vehicle_name}}
-          </div>
+  <transition name="fade" mode="out-in">
+    <div class="infobar--outer" v-if="this.loading == false">
+      <div class="infobar--content infobar--content-padded">
+        <div class="infobar--photo infobar--content infobar--item infobar--item-bordered">
+          <img class="rimg" :src="this.tracking_data.rider.rider_photo">
         </div>
-        <div class="infobar--driver-details" v-else>
-          <div class="">
-            {{this.tracking_data.description_head}}
+        <div class="infobar--content infobar--item infobar--driver infobar--item-bordered" >
+          <div class="infobar--driver-details" v-if="this.tracking_data.confirm_status > 0">
+            <div class="">
+              {{this.tracking_data.rider.rider_name}}
+            </div>
+            <div class="">
+              {{this.tracking_data.rider.vehicle_name}}
+            </div>
           </div>
-          <div class="">
-            {{this.tracking_data.marketing_message}}
+          <div class="infobar--driver-details" v-else>
+            <div class="">
+              {{this.tracking_data.description_head}}
+            </div>
+            <div class="">
+              {{this.tracking_data.marketing_message}}
+            </div>
           </div>
-        </div>
-        <div class="infobar--terms">
-          <a class="" href="https://sendyit.com/terms" target="_blank">Sendy Terms and Conditions</a>
-        </div>
-      </div>
-      <div class="infobar--content infobar--item infobar--order infobar--item-bordered">
-        <div class="">
-          Order Number : {{this.tracking_data.order_no}}
-        </div>
-        <div class="">
-          Cost : KES {{this.tracking_data.amount}}
-        </div>
-      </div>
-      <div class="infobar--content infobar--item infobar--locations infobar--item-bordered">
-        <div class="infobar--content infobar--item infobar--item-start">
-          <div class="">
-            <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/maroon_button.png" alt="Pickup" align="center"> <span class="">	Pickup : {{this.tracking_data.path[0].name}}</span>
-          </div>
-          <div class="">
-            <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/blue_button.png" alt="Drop Off" align="center"> <span class=""> Destination : {{this.tracking_data.path[this.tracking_data.path.length - 1].name}}</span>
+          <div class="infobar--terms">
+            <a class="" href="https://sendyit.com/terms" target="_blank">Sendy Terms and Conditions</a>
           </div>
         </div>
-      </div>
-      <div class="infobar--content infobar--item infobar--status infobar--item-bordered">
-        <div class="">
-          Status: {{getStatus}}
+        <div class="infobar--content infobar--item infobar--order infobar--item-bordered">
+          <div class="">
+            Order Number : {{this.tracking_data.order_no}}
+          </div>
+          <div class="">
+            Cost : KES {{this.tracking_data.amount}}
+          </div>
         </div>
-        <div class="">
-          <span class="" v-if = "this.tracking_data.delivery_status < 2">
-            Estimated Arrival: <span class=""></span>
-          </span>
-          <span class="" v-else>
-            Estimated Delivery: <span class=""></span>
-          </span>
+        <div class="infobar--content infobar--item infobar--locations infobar--item-bordered">
+          <div class="infobar--content infobar--item infobar--item-start">
+            <div class="">
+              <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/maroon_button.png" alt="Pickup" align="center"> <span class="">	Pickup : {{this.tracking_data.path[0].name}}</span>
+            </div>
+            <div class="">
+              <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/blue_button.png" alt="Drop Off" align="center"> <span class=""> Destination : {{this.tracking_data.path[this.tracking_data.path.length - 1].name}}</span>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="infobar--content infobar--item infobar--actions">
-        <div @click="place()">
+        <div class="infobar--content infobar--item infobar--status infobar--item-bordered">
+          <div class="">
+            Status: {{getStatus}}
+          </div>
+          <div class="">
+            <span class="" v-if = "this.tracking_data.delivery_status < 2">
+              Estimated Arrival: <span class=""></span>
+            </span>
+            <span class="" v-else>
+              Estimated Delivery: <span class=""></span>
+            </span>
+          </div>
+        </div>
+        <div class="infobar--content infobar--item infobar--actions">
+          <div @click="place()">
+            <div>
+              <a href="#"  class="" ><img class="" src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/tracking/free_delivery.png"></a>
+            </div>
+            <div class="infobar--actions-text">
+              Free delivery
+            </div>
+          </div>
           <div>
-            <a href="#"  class="" ><img class="" src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/tracking/free_delivery.png"></a>
+            <div>
+              <a href="#"><img class="" src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/tracking/share_delivery.png"></a>
+            </div>
+            <div class="infobar--actions-text">
+              Share Status
+            </div>
           </div>
-          <div class="infobar--actions-text">
-            Free delivery
-          </div>
-        </div>
-        <div>
           <div>
-            <a href="#"><img class="" src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/tracking/share_delivery.png"></a>
-          </div>
-          <div class="infobar--actions-text">
-            Share Status
-          </div>
-        </div>
-        <div>
-          <div>
-             <a href="#"><img class="" src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/tracking/cancel_order.png"></a>
-          </div>
-          <div class="infobar--actions-text">
-            Cancel Order
+            <div>
+               <a href="#"><img class="" src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/tracking/cancel_order.png"></a>
+            </div>
+            <div class="infobar--actions-text">
+              Cancel Order
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="" v-else>
-
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -97,6 +96,7 @@ export default {
   data: function() {
     return {
       loading: true,
+      order_number: ''
     }
   },
   methods: {
@@ -141,17 +141,41 @@ export default {
       else {
         return "";
       }
-
     },
   },
   mounted() {
     this.loading = true
     var that = this
-    this.$store.dispatch('$_orders/$_tracking/get_tracking_data')
+    this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": this.$route.params.order_no})
     .then(response => {
       that.loading = false
     })
+  },
+  created () {
+    this.order_number = this.$route.params.order_no;
+  },
+  watch: {
+    '$route.params.order_no': function(from, to) {
+      this.order_number = from
+      this.loading = true
+      var that = this
+      this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": from})
+      .then(response => {
+        that.loading = false
+      })
+    }
   }
+  // watch: {
+  //   this.$route.params.order_no: function (val) {
+  //     this.order_number = val
+      // this.loading = true
+      // var that = this
+      // this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": this.$route.params.order_no})
+      // .then(response => {
+      //   that.loading = false
+      // })
+  //   },
+  // }
 }
 </script>
 
@@ -240,5 +264,16 @@ export default {
 {
   width: 10px;
   margin-right: 4px;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition-duration: 0.3s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0
 }
 </style>

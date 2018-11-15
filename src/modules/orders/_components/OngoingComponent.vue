@@ -6,7 +6,7 @@
     <transition name="fade">
       <div class="ongoing--column" v-if="show">
         <template v-for="(order, index) in this.get_orders">
-          <div class="ongoing--card" @click="track()">
+          <div class="ongoing--card" @click="track(order.order_no)">
             <div class="ongoing--card-location">
               <div class="ongoing--card-padded">
                 From : <span>{{order.from_name}}</span>
@@ -48,8 +48,8 @@ export default {
     toggle_ongoing: function() {
       this.toggle()
     },
-    track: function() {
-      this.$router.push('/orders/tracking')
+    track: function(order) {
+      this.$router.push({ path: `/orders/tracking/${order}` })
     },
     getStatus: function(order) {
       if (this.loading == false) {
