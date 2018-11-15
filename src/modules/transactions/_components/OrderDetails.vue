@@ -40,7 +40,9 @@
               <div class="rider_details_item">
                   Number plate : {{order_details.rider_details.number_plate }}
               </div>
-              <div class="rider_details_item" v-html="renderRiderRating(order_details.rider_details.rating)">
+              <div class="rider_details_item">
+                  <font-awesome-icon icon="star" class="rating_checked" v-for="index in order_details.rider_details.rating" :key="index"/>
+                  <font-awesome-icon icon="star" class="" v-for="index in (5-order_details.rider_details.rating)" :key="index"/>
               </div>
 
               <div class="rider_details_actions">
@@ -107,7 +109,7 @@ export default {
     },
     filters: {
         moment: function (date) {
-            return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+            return moment(date).format('MMM Do YYYY, h:mm a');
         }
     },
     methods:{
@@ -118,17 +120,6 @@ export default {
             let google_key = "AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc";
 
             return "https://maps.googleapis.com/maps/api/staticmap?path=color:100x1782C5|weight:5|"+from_cordinates+"|"+to_cordinates+"&size=257x257&markers=color:red%7Clabel:P%7C"+from_cordinates+"&markers=color:blue%7Clabel:D%7C "+to_cordinates+ "&key="+google_key;
-        },
-        renderRiderRating(rating) {
-            let rating_template ='';
-            for(let i =0 ; i < 5; i++){
-                if(i < rating){
-                    rating_template += '<span class="fa fa-star rating_checked"></span>';
-                } else {
-                    rating_template += '<span class="fa fa-star"></span>'
-                }
-            }
-            return rating_template;
         },
         activateRating() {
             this.show_rating = true;

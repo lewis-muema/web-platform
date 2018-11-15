@@ -51,26 +51,6 @@ export default {
         font-weight: 300;
     }
 
-    .section {
-        padding-top: 20px;
-        margin-bottom: 50px;
-        padding-bottom: 2px;
-        border-bottom: 1px solid #1782c5;
-    }
-
-    .section__link {
-        color: #1782c5;
-        text-transform: uppercase;
-        font-size: 15px;
-        text-align: center;
-        padding: 2px 25px;
-        text-decoration: none;
-    }
-
-    .router-link-active {
-        font-weight: bold;
-        border-bottom: 3px solid #1782c5;
-    }
     .fade-enter-active,
     .fade-leave-active {
       transition-duration: 0.3s;

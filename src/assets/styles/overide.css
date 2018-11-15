@@ -165,3 +165,9 @@ button span {
   background-color: #4098ce !important;
   color: #fff !important;
 }
+<<<<<<< HEAD
+=======
+.el-table th>.cell {
+  font-weight: normal;
+}
+>>>>>>> 951171a3da59b9bc4608351be675d627fd9d8caa

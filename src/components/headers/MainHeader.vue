@@ -115,8 +115,9 @@ nav ul li:hover a {
 }
 
 nav ul li a {
-	display: block; padding: 25px 40px;
-	color: #fff; text-decoration: none;
+    display: block; 
+    padding: 1.5em 40px;
+    color: #fff; text-decoration: none;
 }
 
 nav ul ul {
