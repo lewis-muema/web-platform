@@ -8,6 +8,7 @@
       :row-key="getRowKey"
       :expand-row-keys="expand_keys"
       @row-click="expandTableRow"
+      @expand-change="handleRowExpand"
       >
       <template slot="empty">
             {{empty_orders_state}}
@@ -27,7 +28,7 @@
         label="Date"
         prop="order_date">
         <template slot-scope="props">
-          {{tableData[props.$index]['date_created'] | moment }}
+          {{tableData[props.$index]['order_date'] | moment }}
         </template>
       </el-table-column>
       
@@ -75,7 +76,7 @@ export default {
       },
       filters: {
         moment: function (date) {
-          return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+          return moment(date).format('MMM Do YYYY, h:mm a');
         }
       },
       methods:{
