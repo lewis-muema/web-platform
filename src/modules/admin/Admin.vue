@@ -2,9 +2,9 @@
     <div class="">
         <main-header></main-header>
         <div class="module-container" id="admin_container">
-            <div class="title">
-                <h3 class="title__text">Admin Settings</h3>
-            </div>
+            <!--<div class="title">-->
+                <!--<h3 class="title__text">Admin Settings</h3>-->
+            <!--</div>-->
             <div class="section">
                 <router-link class="section__link" to="/admin/users">Users</router-link>
                 <router-link class="section__link" to="/admin/department">Department</router-link>
@@ -41,6 +41,6 @@ export default {
 <style lang="css">
     @import "../../assets/styles/section_headers.css";
     .module-container{
-        margin: 8px 100px;
+        margin: 8px 100px 8px 100px !important;
     }
 </style>
