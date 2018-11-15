@@ -41,5 +41,6 @@ export default {
   font-size: medium;
   letter-spacing: 1.1px;
   width: 100%;
+  height: 45px;
 }
 </style>
