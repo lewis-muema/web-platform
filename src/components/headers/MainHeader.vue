@@ -10,7 +10,8 @@
                <ul>
                    <li><a>Helpline: 0709 779 779</a></li>
                    <li><a>Hi Faith</a></li>
-                   <li><a>Menu</a>
+                   <li class="nav--menu-dropdown">
+                       <a>Menu</a>
                        <ul>
                            <li><router-link class="" to="/orders">New Delivery</router-link></li>
                            <li><router-link class="" to="/payment">Payment</router-link></li>
@@ -43,7 +44,7 @@ export default {
     background-color: #1782C5;
     z-index: 999;
     outline: none;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); */
     width: 100%;
     margin: 0px auto;
     height: 68px;
@@ -89,7 +90,7 @@ nav ul li {
 	float: left;
 }
 nav ul li:hover {
-	background: #144E64;
+	background: #144e64;
 }
 nav ul li:hover ul{
     background-color: #fff;
@@ -127,21 +128,19 @@ nav ul ul {
 }
 nav ul ul li {
 	float: none;
-
     position: relative;
 }
 nav ul ul li:last-child{
-    border-top: 1px solid #6b727c;
-    border-bottom: 1px solid #575f6a;
+    border-top: 1px solid #f5f5f5;
+    border-bottom: 1px solid #f5f5f5;
 }
 nav ul ul li a {
 	padding: 6px 30px;
-	color: #333 !important;
     cursor: pointer;
-
+    color: #555 !important;
 }
 nav ul ul li a:hover {
-	background: #144E64;
+	background: #1782c5;
     color: #fff !important;
 }
 
@@ -149,11 +148,19 @@ nav ul ul ul {
 	position: absolute; left: 100%; top:0;
 }
 nav ul li .router-link-active{
-    border-bottom:unset;
+    border-bottom: unset;
     cursor: auto;
+    font-weight: 400;
+    color: #144e64 !important;
+
 }
 .header__menuitem--active{
-    font-weight: bold;
+    font-weight: normal;
+    color:#1782c5;
     cursor: auto;
+}
+.nav--menu-dropdown {
+    float: right;
+    width: 160px;
 }
 </style>

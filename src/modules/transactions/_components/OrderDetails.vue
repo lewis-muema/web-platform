@@ -16,7 +16,7 @@
                     Duration : {{order_details.full_order_details.values.duration_read}}
               </div>
               <div class="order_details_desc_item">
-                    Date :{{order_details.order_date}}
+                    Date :{{order_details.order_date | moment }}
               </div>
               <div class="order_details_desc_item">
                     <img src="../../../assets/img/maroon_button.png" class="order_details_desc_image">
@@ -40,72 +40,63 @@
               <div class="rider_details_item">
                   Number plate : {{order_details.rider_details.number_plate }}
               </div>
-              <div class="rider_details_item rating" v-html="renderRiderRating(order_details.rider_details.rating)">
+              <div class="rider_details_item" v-html="renderRiderRating(order_details.rider_details.rating)">
               </div>
+
+              <div class="rider_details_actions">
+                <div class="rider_details_actions_completed" v-if="order_details.pending_delivery.delivery_status !== 3">
+                    <div class="rider_details_action">
+                        <button class="button-primary rider_details_action_btn" type="button" @click="trackOrder">TRACK</button>
+                    </div>
+                    <div class="rider_details_action">
+                        <el-dropdown>
+                        <button type="button" class="button-primary">
+                            <i class="el-icon-more el-icon--center"></i>
+                        </button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>Print Receipt</el-dropdown-item>
+                            <el-dropdown-item>Delivery Docs</el-dropdown-item>
+                        </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                </div>
+                <div class="rider_details_actions_ongoing" v-else>
+                    <div class="rider_details_action">
+                        <button class="button-primary rider_details_action_btn" type="button" @click="activateRating">RATE</button>
+                    </div>
+                    <div class="rider_details_action">
+                        <el-dropdown>
+                        <button type="button" class="button-primary">
+                            <i class="el-icon-more el-icon--center"></i>
+                        </button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>Print Receipt</el-dropdown-item>
+                            <el-dropdown-item>Delivery Docs</el-dropdown-item>
+                        </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                </div>
+                <div class="rider_details_rating" v-if="show_rating">
+                    <div class="block">
+                        <el-rate
+                            v-model="orderRating"
+                            :colors="['#99A9BF', '#f57f20', '#1b7fc3']">
+                        </el-rate>
+                        <el-button class="rider_details_rate_btn" @click="rateOrder"> RATE </el-button>
+                    </div>
+                </div>
+            </div>
+             
           </div>
 
-          <div class="rider_details_actions">
-              <div class="rider_details_actions_completed" v-if="order_details.pending_delivery.delivery_status !== 3">
-                <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn" type="primary">TRACK</el-button>
-                </div>
-                <!-- <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">FAVORITE</el-button>
-                </div>
-                <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">SCHEDULE</el-button>
-                </div> -->
-                <div class="rider_details_action">
-                    <el-dropdown>
-                    <el-button type="primary">
-                        <i class="el-icon-more el-icon--center"></i>
-                    </el-button>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>Print Receipt</el-dropdown-item>
-                        <el-dropdown-item>Delivery Docs</el-dropdown-item>
-                    </el-dropdown-menu>
-                    </el-dropdown>
-                </div>
-              </div>
-              <div class="rider_details_actions_ongoing" v-else>
-                <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn" type="primary" @click="activateRating">RATE</el-button>
-                </div>
-                <!-- <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">FAVORITE</el-button>
-                </div>
-                <div class="rider_details_action">
-                        <el-button class="rider_details_action_btn">SCHEDULE</el-button>
-                </div> -->
-                <div class="rider_details_action">
-                    <el-dropdown>
-                    <el-button type="primary">
-                        <i class="el-icon-more el-icon--center"></i>
-                    </el-button>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>Print Receipt</el-dropdown-item>
-                        <el-dropdown-item>Delivery Docs</el-dropdown-item>
-                    </el-dropdown-menu>
-                    </el-dropdown>
-                </div>
-              </div>
-              <div class="rider_details_rating" v-if="show_rating">
-                <div class="block">
-                    <el-rate
-                        v-model="orderRating"
-                        :colors="['#99A9BF', '#f57f20', '#1b7fc3']">
-                    </el-rate>
-                     <el-button class="rider_details_rate_btn" @click="rateOrder"> RATE </el-button>
-                </div>
-              </div>
-          </div>
+          
         </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-
+const moment = require('moment');
 export default {
     name:'order-details',
     data() {
@@ -114,7 +105,15 @@ export default {
           show_rating:false,
         }
     },
+    filters: {
+        moment: function (date) {
+            return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+        }
+    },
     methods:{
+        moment: function () {
+          return moment();
+        },
         createStaticMapUrl(from_cordinates, to_cordinates) {
             let google_key = "AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc";
 
@@ -136,9 +135,11 @@ export default {
         },
         rateOrder() {
             this.show_rating = false;
+        },
+        trackOrder() {
+
         }
         
-
 
     },
     computed:{
@@ -159,93 +160,5 @@ export default {
 </script>
 
 <style lang="css">
-    .order_details_wrap {
-        width: 50%;
-        border-right: 1px solid #ccc;
-        min-height: 257px;
-        float: left;
-        display: inline-block;
-    }
-    .order_details_map {
-        width: 50%;
-        display: inline-block;
-        float: left;
-    }
-    .order_details_desc {
-        display: inline-block;
-        width: 50%;
-        padding-left: 20px;
-        font-size: 15px;
-    }
-    .order_details_desc_item {
-        margin-top: 10px;
-    }
-    .order_details_desc_image {
-        width: 13px;
-        height: auto;
-        margin-top: 10px;
-    }
-    .order_details_price {
-        margin-top: 10px;
-        font-weight: 500;
-        font-size: 25px;
-        margin-bottom:10px;
-    }
-
-    .rider_details_wrap {
-        width: 50%;
-        float: right;
-        display: inline-block;
-        padding-left: 20px;
-    }
-    .rider_details_image {
-        display: inline-block;
-        width: 30%;
-        float: left;
-    }
-    .rider_details_image img {
-        width: 100%;
-        height: auto;
-    }
-    .rider_details_items {
-        width: 70%;
-        display: inline-block;
-        float: right;
-        font-size: 15px;
-        padding-left: 10px;
-    }
-    .rider_details_item {
-        margin-top: 10px;
-    }
-    .rider_details_item .rating{
-       font-size:20px;
-    }
-    
-    .rating_checked {
-        color: #1782c5;
-    }
-    .rider_details_actions {
-        width: 100%;
-        display: block;
-        float: left;
-        margin-left: 30%;
-        margin-top: 10px;
-    }
-    .rider_details_action {
-        display: inline-block
-    }
-    .rider_details_rating {
-        margin-top: 10px;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        padding-left: 20px;
-        background: #f4f4f4;
-    }
-    .rider_details_rating .el-rate {
-        display: inline-block;
-    }
-    .el-rate__icon {
-        font-size: 30px;
-    }
-    
+    @import '../../../assets/styles/order_details.css';
 </style>

@@ -3,7 +3,11 @@
      <el-table
       :data="tableData"
       style="width: 100%"
-      @expand-change="handleRowExpand"
+      :border="true"
+      :stripe="true"
+      :row-key="getRowKey"
+      :expand-row-keys="expand_keys"
+      @row-click="expandTableRow"
       >
       <template slot="empty">
             {{empty_orders_state}}
@@ -22,7 +26,11 @@
       <el-table-column
         label="Date"
         prop="order_date">
+        <template slot-scope="props">
+          {{tableData[props.$index]['date_created'] | moment }}
+        </template>
       </el-table-column>
+      
       <el-table-column
         label="User"
         prop="full_order_details.values.user_id"
@@ -55,30 +63,55 @@
 </template>
 
 <script>
+const moment = require('moment');
 import { mapActions, mapGetters } from 'vuex'
 export default {
       data() {
         return {
-          empty_orders_state:"Fetching Order History"
+          empty_orders_state:"Fetching Order History",
+          expand_id: 0,
+          expand_keys:[],
+        }
+      },
+      filters: {
+        moment: function (date) {
+          return moment(date).format('MMMM Do YYYY, h:mm:ss a');
         }
       },
       methods:{
          ...mapActions([
             '$_transactions/requestOrderHistoryOrders',
         ]),
+        moment: function () {
+          return moment();
+        },
+        getRowKey(row){
+          return row.order_no;
+        },
+        expandTableRow(row, event, column){
+          this.expand_id = row.order_no;
+          this.expand_keys = []
+          this.expand_keys.push(row.order_no)
+          this.$router.push({name:'order-details', params: {id : row.order_no}});
+        },
         handleRowExpand(row, expanded) {
-          console.log(row);
+          
+          this.expand_id = row.order_no;
+          this.expand_keys = []
+          this.expand_keys.push(row.order_no)
+          this.$router.push({name:'order-details', params: {id : row.order_no}});
 
-          if(expanded.length > 0){
-              console.log('handling row expand');
-              if(expanded.length > 1){
-                //now we have more than one open
-                //therefore close one
-                	document.getElementsByClassName('el-table__expand-icon--expanded')[0].click()
-				      }
-              //trigger router action here
-              this.$router.push({name:'order-details', params: {id : row.order_no}});
-          }
+          // console.log('row expansion');
+
+          // console.log(row);
+          // console.log(expanded);
+
+          // if(expanded.length > 0){
+          //     console.log('handling row expand');
+          //     document.getElementsByClassName('el-table__expand-icon--expanded')[0].click()
+				  //     //trigger router action here
+          //     this.$router.push({name:'order-details', params: {id : row.order_no}});
+          // }
 
       },
     },
