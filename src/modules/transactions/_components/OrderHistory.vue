@@ -28,7 +28,7 @@
         label="Date"
         prop="order_date">
         <template slot-scope="props">
-          {{tableData[props.$index]['date_created'] | moment }}
+          {{tableData[props.$index]['order_date'] | moment }}
         </template>
       </el-table-column>
       

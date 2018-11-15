@@ -109,7 +109,7 @@ export default {
     },
     filters: {
         moment: function (date) {
-            return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+            return moment(date).format('MMM Do YYYY, h:mm a');
         }
     },
     methods:{
