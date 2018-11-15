@@ -13,7 +13,7 @@
           </div> -->
           </div>
           <div class="sign-holder dimen">
-            <input class="sign-holder__input" type="text" name="credentials" id="forgot_cred" placeholder="Email or Phone Number">
+            <input class="form-control" type="text" name="credentials" id="forgot_cred" placeholder="Email or Phone Number">
           </div>
            <!-- <div id="extra_email_f" class="hidden">
               <div  class="sign-up-v2-holder ">
@@ -27,7 +27,7 @@
 	         </div>
           </div> -->
           <div class="sign-holder">
-            <input class="sign-holder__input" type="submit" value="Reset Password" id="reset" @click="" >
+            <input class="btn-submit" type="submit" value="Reset Password" id="reset" @click="" >
           </div>
           <div class=" sign-holder ">
             <router-link class="sign-holder__link" to="/auth/sign_in">Sign In</router-link>
@@ -67,23 +67,6 @@ color: #666;
 .sign-holder{
 margin: 1em;
 display: block;
-}
-.sign-holder__input {
- display: block;
- width: 100%;
- height: 34px;
- padding: 6px 12px;
- font-size: 14px;
- line-height: 1.42857143;
- color: #555;
- background-color: #fff;
- background-image: none;
- border: 1px solid #ccc;
- border-radius: 4px;
- -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
- box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
- -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
- transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 .sign-holder input:not([type="checkbox"]) {
  width: 100%;

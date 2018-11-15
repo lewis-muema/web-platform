@@ -16,6 +16,9 @@ import MainHeader from '../../components/headers/MainHeader.vue'
 import AccountBalance from './_components/AccountBalance.vue'
 import OrderCost from './_components/OrderCost.vue'
 import PaymentBody from './_components/PaymentBody.vue'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faWallet } from '@fortawesome/free-solid-svg-icons'
+library.add(faWallet)
 
 export default {
   name:'Payment',
@@ -37,11 +40,12 @@ export default {
 <style lang="css">
 .container-small
 {
-  width: 45%;
+  width: 30vw;
   margin: 5% auto;
 }
 .payment--header{
   display: flex;
   justify-content: space-between;
 }
+
 </style>

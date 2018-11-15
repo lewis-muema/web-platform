@@ -8,6 +8,7 @@
               <div class="order_details_price">
                     KES {{order_details.order_cost}}
               </div>
+            
               <div class="order_details_desc_item">
                     Kilometers : {{order_details.full_order_details.values.distance_read}} KMs
               </div>
@@ -158,8 +159,6 @@ export default {
 </script>
 
 <style lang="css">
-    @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
-
     .order_details_wrap {
         width: 50%;
         border-right: 1px solid #ccc;

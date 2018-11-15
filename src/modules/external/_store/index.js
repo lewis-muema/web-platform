@@ -6,6 +6,7 @@ const state = {
     view_state : 1,
     view_step: 0,
     biz_name: 'Clinton Merchants',
+    biz_email: 'clintonmerchants@gmail.com',
     help_panel(biz_name){
   return{
     1:{
