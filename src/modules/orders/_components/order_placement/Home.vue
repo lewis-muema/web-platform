@@ -177,8 +177,4 @@ export default {
 {
   transition: transform 1s;
 }
-.input-control
-{
-  height: 35px;
-}
 </style>
