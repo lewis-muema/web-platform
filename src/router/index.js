@@ -162,6 +162,8 @@ export function createRouter () {
       },
       { path: '/external', component: () => import('../modules/external/External.vue'),
       },
+      { path: '/user/free-deliveries', component: () => import('../modules/user/_components/FreeDeliveries.vue'),
+      },
     ]
   })
 }
