@@ -8,8 +8,8 @@
         <div class="header--item__right">
             <nav>
                <ul>
-                   <li><a>Helpline: 0709 779 779</a></li>
-                   <li><a>Hi Faith</a></li>
+                   <li class="nav--menu-inactive"><a>Helpline: 0709 779 779</a></li>
+                   <li class="nav--menu-inactive"><a>Hi Faith</a></li>
                    <li class="nav--menu-dropdown">
                        <a>Menu</a>
                        <ul>
@@ -163,5 +163,8 @@ nav ul li .router-link-active{
 .nav--menu-dropdown {
     float: right;
     width: 160px;
+}
+.nav--menu-inactive:hover, .nav--menu-inactive:focus  {
+    background: #1782c5 !important;
 }
 </style>

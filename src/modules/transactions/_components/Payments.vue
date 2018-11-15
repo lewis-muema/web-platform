@@ -3,6 +3,8 @@
     <el-table
      :data="get_payments"
      style="width: 100%"
+     :border="true"
+      :stripe="true"
      >
      <template slot="empty">
            {{empty_payments_state}}
