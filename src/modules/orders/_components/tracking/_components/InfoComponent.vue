@@ -38,10 +38,10 @@
         <div class="infobar--content infobar--item infobar--locations infobar--item-bordered">
           <div class="infobar--content infobar--item infobar--item-start">
             <div class="">
-              <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/maroon_button.png" alt="Pickup" align="center"> <span class="">	Pickup : {{this.tracking_data.path[0].name}}</span>
+              <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/maroon_button.png" alt="Pickup" align="center"> <span class="">	From : {{this.tracking_data.path[0].name}}</span>
             </div>
             <div class="">
-              <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/blue_button.png" alt="Drop Off" align="center"> <span class=""> Destination : {{this.tracking_data.path[this.tracking_data.path.length - 1].name}}</span>
+              <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/blue_button.png" alt="Drop Off" align="center"> <span class=""> To : {{this.tracking_data.path[this.tracking_data.path.length - 1].name}}</span>
             </div>
           </div>
         </div>
@@ -227,6 +227,7 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  flex: 1;
 }
 .infobar--driver a
 {

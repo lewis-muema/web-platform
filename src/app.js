@@ -4,6 +4,9 @@ import { createRouter } from './router'
 import { createStore } from './store'
 import { sync } from 'vuex-router-sync'
 
+import moment from 'moment'
+Vue.prototype.moment = moment
+
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(Element)
