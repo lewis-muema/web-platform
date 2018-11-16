@@ -3,8 +3,8 @@
 
      <div class="section--filter-wrap">
         <div class="section--filter-input-wrap">
-            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="From Date"/>
-            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="To Date"/>
+            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="From"/>
+            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="To"/>
         </div>
         <div class="section--filter-action-wrap">
           <button type="button" class="button-primary section--filter-action">Search</button>
@@ -21,8 +21,6 @@
      <template slot="empty">
        {{empty_statement_state}}
      </template>
-     <el-table-column type="index">
-     </el-table-column>
      <el-table-column
        label="Txn"
        prop="Txn"

@@ -27,4 +27,21 @@ export default {
         })
     },
 
+    requestCopUsers({commit}, payload)
+    {
+        return new Promise((resolve, reject) => {
+            axios.post(url+"/cop_users", payload)
+            .then(response => {
+                if(response.data.status == true){
+                    commit('setCopUsers', response.data.data);
+                    resolve(response.data);
+                } else {
+                    reject(response.data)
+                }
+            }).catch(e => {
+                reject(e);
+            })
+        })
+    }
+
 };

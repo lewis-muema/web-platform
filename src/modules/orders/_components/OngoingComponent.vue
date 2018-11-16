@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="ongoing--outer" v-if="!this.loading">
     <div class="ongoing--count" @click="toggle_ongoing()">
-      You have <span>{{num_ongoing}}</span> ongoing orders
+      <span>{{num_ongoing}}</span> ongoing orders
     </div>
     <transition name="fade">
       <div class="ongoing--column" v-if="show">
@@ -20,7 +20,8 @@
                 {{getStatus(order)}}
               </div>
               <div class="">
-                {{order.date_time}}
+
+                {{moment(order.date_time).format('MMMM Do, hh:mm:ss')}}
               </div>
             </div>
           </div>
@@ -121,20 +122,20 @@ export default {
   background-color: rgba(255,255,255,0.5);
   color: #1782c5;
   padding: 5px;
+  font-size: 13px;
   cursor: pointer;
   border: 1px solid #1782c5;
 }
 .ongoing--card
 {
   font-size: 13px;
-  margin-top: 10px;
+  margin-top: 15px;
   border: 1px solid #1782c5;
 }
 .ongoing--card-location
 {
   padding: 10px;
   background-color: #fff;
-  border-bottom: 1px solid #ccc;
 }
 .ongoing--card-status
 {
