@@ -5,23 +5,23 @@
         <label class="input-descript">
           <span>Name</span>
         </label>
-        <input type="text" name="name" id="name" :value="getName"  class="form-control profile1-dimen" />
+        <input type="text" name="user_name"  v-model="user_name"  class="form-control profile1-dimen" />
       </p>
       <p style="margin-bottom: 20px;">
         <label class="input-descript">
           <span>Email</span>
         </label>
-        <input type="text" name="email" id="email" :value="getEmail"  class="form-control profile1-dimen" />
+        <input type="text" name="user_email"   v-model="user_email" class="form-control profile1-dimen" />
       </p>
       <p style="margin-bottom: 20px;">
         <label class="input-descript">
           <span>Phone Number</span>
         </label>
-        <input type="text" name="phone" id="phone"  class="form-control profile1-dimen" />
+        <input type="text" name="user_phone" id="phone" v-model="user_phone"  class="form-control profile1-dimen" />
       </p>
       <p>
         <br />
-        <input type="submit" class="button-primary btn-content" id="save_personal" value="Save" />
+        <input type="submit" class="button-primary btn-content" id="save_personal" v-on:click="save_personal" value="Save" />
       </p>
 
     </div>
@@ -29,24 +29,64 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters,mapActions} from 'vuex'
 export default {
   name: 'PersonalInfo',
   data() {
     return {
-      name: '',
-      email: ''
+      // user_id: '',
+      cop_id:'0' ,
+      user_id:1,
+      user_name: '',
+      user_email:'',
+      user_phone: ''
     }
   },
-  computed: {
-    ...mapGetters(
-      {
-         getName:'$_profile/getName',
-         getEmail:'$_profile/getEmail'
+  methods:{
+     ...mapActions({
+        requestPersonalInfo :'$_user/requestPersonalInfo',
+    }),
+    save_personal: function ()
+    { if (this.cop_id > 0) {
+        console.log("Cop user found");
+        let payload = {};
 
-      }
-    )
-  }
+        payload.cop_user_id = this.cop_user_id;
+        payload.user_name = this.user_name;
+        payload.user_email = this.user_email;
+        payload.user_phone = this.user_phone;
+        this.requestPersonalInfo(payload).then(response => {
+           console.log("Personal Cop User Information Updated successfully")
+           console.log(response);
+        }, error => {
+            console.error("Check Internet Connection")
+            console.log(error);
+        });
+    }
+    else if(this.cop_id == 0) {
+       console.log("Peer Account Found");
+       let payload = {};
+
+       payload.user_id = this.cop_user_id;
+       payload.user_name = this.user_name;
+       payload.user_email = this.user_email;
+       payload.user_phone = this.user_phone;
+       this.requestPersonalInfo(payload).then(response => {
+          console.log("Personal Peer Information Updated successfully")
+          console.log(response);
+       }, error => {
+           console.error("Check Internet Connection")
+           console.log(error);
+       });
+    }
+     else{
+
+         console.log("Session expired");
+         this.$router.push( '/auth' );
+     }
+
+    },
+},
 }
 </script>
 
