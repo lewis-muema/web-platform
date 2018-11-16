@@ -1,7 +1,7 @@
 .title{
     font-size: 22px;
     padding-bottom: 0px;
-    
+
     border-bottom: 1px solid #ebeef5;
     color: #999;
     margin-bottom: 30px;
@@ -11,20 +11,26 @@
 }
 .section{
     padding-top: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     padding-bottom: 2px;
-   
-    border-bottom: 1px solid #ebeef5;
+    border-bottom: 0px solid #ebeef5 !important;
 }
+
+
 .section__link{
-    color: #555;
-    text-transform: capitalize !important;
-    font-size: 16px;
-    text-align: center;
-    padding: 2px 25px;
-    text-decoration: none;
+  color: #606266 !important;
+  text-transform: capitalize !important;
+  font-size: 16px;
+  text-align: center;
+  padding: 10px 25px;
+  text-decoration: none;
+}
+
+.section__link:hover {
+    color: #1782c5 !important;
 }
 .router-link-active{
-    font-weight: normal !important;
-    border-bottom: 3px solid #1782c5;
+  font-weight: normal !important;
+  border-bottom: 3px solid #1782c5;
+  color: #1782c5 !important;
 }

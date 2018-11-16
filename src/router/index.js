@@ -75,6 +75,7 @@ export function createRouter () {
                   },
                   {
                       path: '/admin/users/add_user',
+                      name:'adminAddUser',
                       component: () => import('../modules/admin/components/users/AddUser.vue')
                   }
               ]
