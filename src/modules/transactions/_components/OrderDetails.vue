@@ -141,7 +141,7 @@ export default {
             let google_key = "AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc";
             let from_cordinates = path[0]['coordinates'];
             let to_cordinates = path[path.length-1]['coordinates'];
-            return "https://maps.googleapis.com/maps/api/staticmap?path=color:100x1782C5|weight:5|"+from_cordinates+"|"+to_cordinates+"&size=257x257&markers=color:red%7Clabel:P%7C"+from_cordinates+"&markers=color:blue%7Clabel:D%7C "+to_cordinates+ "&key="+google_key;
+            return "https://maps.googleapis.com/maps/api/staticmap?path=color:0x2c82c5|weight:5|"+from_cordinates+"|"+to_cordinates+"&size=257x257&markers=color:0xF17F3A%7Clabel:P%7C"+from_cordinates+"&markers=color:0x2c82c5%7Clabel:D%7C "+to_cordinates+ "&key="+google_key;
         },
         getOrderFromName(path) {
           return path[0].name;
