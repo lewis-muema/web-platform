@@ -7,6 +7,9 @@ import { sync } from 'vuex-router-sync'
 import moment from 'moment'
 Vue.prototype.moment = moment
 
+import mqtt from 'mqtt'
+Vue.prototype.mqtt = mqtt
+
 import Element from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/en'
 import 'element-ui/lib/theme-chalk/index.css'

@@ -2,9 +2,9 @@
     <div class="">
         <main-header></main-header>
         <div class="module-container" id="analytics_container">
-            <div class="title">
+            <!-- <div class="title">
                 <h3 class="title__text">Analytics</h3>
-            </div>
+            </div> -->
             <div class="section">
                 <router-link class="section__link" to="/analytics/weekly">Weekly Report</router-link>
                 <router-link class="section__link" to="/analytics/monthly">Monthly Report</router-link>
