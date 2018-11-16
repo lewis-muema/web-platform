@@ -198,6 +198,12 @@ button span {
   border-color: #285e8e;
 }
 
+.amount--table-format {
+  text-align: right !important;
+}
+.amount--table-format .cell {
+  text-align: right !important;
+}
 
 
 /* element table css overiden */

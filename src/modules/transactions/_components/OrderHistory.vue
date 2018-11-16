@@ -58,7 +58,7 @@
         prop="order_cost"
         width="120"
         :formatter="formatAmount"
-        class="align-right"
+        class-name="amount--table-format"
         >
       </el-table-column>
       <el-table-column
@@ -142,11 +142,18 @@ export default {
           return moment();
         },
         getOrderFromName(path) {
-          return path[0].name;
+          let name = path[0].name;
+          let splitted_name = name.split(",", 2);
+          return splitted_name[0];
+
+
         },
         getOrderToName(path) {
           let path_length = path.length;
-          return path[path_length-1].name;
+          let name = path[path_length-1].name;
+          let splitted_name = name.split(",", 2);
+          return splitted_name[0];
+          
         },
         getRowKey(row){
           return row.order_id;
@@ -196,4 +203,5 @@ export default {
 </script>
 
 <style lang="css">
+  
 </style>
