@@ -5,7 +5,7 @@
     </div>
     <div class="payinfo">
       <div class="payinfo--icon">
-        <font-awesome-icon icon="wallet" />
+        <!-- <font-awesome-icon icon="wallet" /> -->
       </div>
       <div class="payinfo--balance">
         Balance <span class="payinfo--balance-el">250</span>Ksh

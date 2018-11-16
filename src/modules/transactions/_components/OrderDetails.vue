@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="" id="order_details_container">
+  <div class="" id="order_details_container" v-if="order_details">
       <div class="order-details-wrapper">
           <div class="order_details_map">
               <Img :src="createStaticMapUrl(order_details.path)"/>
@@ -10,11 +10,13 @@
               </div>
 
               <div class="order_details_desc_item">
-                    Kilometers : {{order_details.order_details.distance}} KMs
+                    Distance : {{order_details.order_details.distance}} KMs
               </div>
-              <div class="order_details_desc_item">
+              <!-- TODO: add this in later with the duration the order took -->
+              <!-- <div class="order_details_desc_item">
                     Duration : {{order_details.order_details.duration}}
-              </div>
+              </div>-->
+
               <div class="order_details_desc_item">
                     Date :{{order_details.order_date | moment }}
               </div>
@@ -35,22 +37,29 @@
           </div>
           <div class="rider_details_items">
               <div class="rider_details_item">
-                  Rider name : {{order_details.rider.rider_name }}
+                  {{order_details.rider.rider_name }}
               </div>
               <div class="rider_details_item">
-                  Number plate : {{order_details.rider.number_plate }}
+                  {{order_details.rider.number_plate }}
               </div>
               <div class="rider_details_item">
-                  <font-awesome-icon icon="star" class="rating_checked" v-for="index in order_details.rider.rider_rating" :key="index"/>
-                  <font-awesome-icon icon="star" class="" v-for="index in (5-order_details.rider.rider_rating)" :key="index"/>
+                  <font-awesome-icon icon="star" class="rating_checked" v-for="index in order_details.rider.rider_rating+1" :key="index"/>
+                  <font-awesome-icon icon="star" class="rating_unchecked" v-for="index in (5-order_details.rider.rider_rating)" :key="index"/>
               </div>
 
               <div class="rider_details_actions">
                 <div class="rider_details_actions_completed" v-if="order_details.order_details.delivery_status !== 3">
                     <div class="rider_details_action">
-                        <button class="button-primary rider_details_action_btn" type="button" @click="trackOrder">TRACK</button>
+                        <button class="button-primary rider_details_action_btn" type="button" @click="trackOrder">Track</button>
                     </div>
                     <div class="rider_details_action">
+                        <button class="button-primary rider_details_action_btn" type="button" @click="printReceipt">Print Receipt</button>
+                    </div>
+                    <div class="rider_details_action">
+                        <button class="button-primary rider_details_action_btn" type="button" @click="deliveryDocs">Delivery Docs</button>
+                    </div>
+                    
+                    <!-- <div class="rider_details_action">
                         <el-dropdown>
                         <button type="button" class="button-primary">
                             <i class="el-icon-more el-icon--center"></i>
@@ -60,11 +69,31 @@
                             <el-dropdown-item>Delivery Docs</el-dropdown-item>
                         </el-dropdown-menu>
                         </el-dropdown>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="rider_details_actions_ongoing" v-else>
                     <div class="rider_details_action">
-                        <button class="button-primary rider_details_action_btn" type="button" @click="activateRating">RATE</button>
+                        <button class="button-primary rider_details_action_btn" type="button" @click="printReceipt">Print Receipt</button>
+                    </div>
+                    <div class="rider_details_action">
+                        <button class="button-primary rider_details_action_btn" type="button" @click="deliveryDocs">Delivery Docs</button>
+                    </div>
+
+                    <!-- <div class="rider_details_action">
+                        <el-popover
+                        placement="bottom"
+                        trigger="click">
+                       <div class="rider_details_rating">
+                            <el-rate
+                                v-model="orderRating"
+                                :colors="['#99A9BF', '#f57f20', '#1b7fc3']">
+                            </el-rate>
+                            <button class="button-primary--naked rate--action-btn" @click="rateOrder"> RATE </button>
+                        </div>
+                        <button class="button-primary rider_details_action_btn" type="button" slot="reference">RATE</button>
+                            
+                        </el-popover>
+
                     </div>
                     <div class="rider_details_action">
                         <el-dropdown>
@@ -76,16 +105,7 @@
                             <el-dropdown-item>Delivery Docs</el-dropdown-item>
                         </el-dropdown-menu>
                         </el-dropdown>
-                    </div>
-                </div>
-                <div class="rider_details_rating" v-if="show_rating">
-                    <div class="block">
-                        <el-rate
-                            v-model="orderRating"
-                            :colors="['#99A9BF', '#f57f20', '#1b7fc3']">
-                        </el-rate>
-                        <el-button class="rider_details_rate_btn" @click="rateOrder"> RATE </el-button>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -165,7 +185,15 @@ export default {
     .order-details-wrapper{
         width: 50%;
         display: inline-block;
-        border-right: 1px solid #b7b8ba;
+        border-right: 1px solid #f0f0f0;
         padding-right: 20px;
+    }
+    .rating-star {
+        background:transparent !important;
+        color:inherit;
+    }
+    .rate--action-btn {
+        display: inline-block;
+        margin-left: 30px;
     }
 </style>

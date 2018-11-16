@@ -20,11 +20,33 @@ button span {
   transition: background-color .3s;
   padding-left: 20px;
   padding-right: 20px;
+  font-size: 14px;
 }
 
 .button-primary:focus, .button-primary:hover {
-  background: rgba(23, 130, 197, .8);
-  border-color: rgba(23, 130, 197, .8);
+  background: #285e8e;
+  border-color: #285e8e;
+  color: #ecf0f1;
+}
+
+.button-primary--naked {
+  color: #1782c5;
+  background-color: #fff;
+  border-color: #f6f6f6;
+  cursor: pointer;
+  position: relative;
+  display: block;
+  border-radius: 4px;
+  height: 40px;
+  transition: background-color .3s;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 14px;
+}
+
+.button-primary--naked:focus, .button-primary--naked:hover {
+  background: #285e8e;
+  border-color: #285e8e;
   color: #ecf0f1;
 }
 
@@ -145,8 +167,8 @@ button span {
   font-size: 14px;
 }
 .btn-submit:focus, .btn-submit:hover {
-  background: rgba(23, 130, 197, .8);
-  border-color: rgba(23, 130, 197, .8);
+  background: #285e8e;
+  border-color: #285e8e;
   color: #ecf0f1;
 }
 
@@ -172,8 +194,8 @@ button span {
 
 .btn-cancel:focus, .btn-cancel:hover {
   background: #fff;
-  border-color: rgba(23, 130, 197, .8);
-  color: rgba(23, 130, 197, .8);
+  background: #285e8e;
+  border-color: #285e8e;
 }
 
 

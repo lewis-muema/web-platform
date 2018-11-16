@@ -43,3 +43,9 @@ html, .body{
 .sendy-orange{
     color: #f52f20;
 }
+.align-left {
+  float: left !important;
+}
+.align-right {
+  float: right !important;
+}

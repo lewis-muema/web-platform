@@ -7,8 +7,8 @@
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
             </el-select>
-            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="From Date"/>
-            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="To Date"/>
+            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="From"/>
+            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="To"/>
         </div>
         <div class="section--filter-action-wrap">
           <button type="button" class="button-primary section--filter-action">Search</button>

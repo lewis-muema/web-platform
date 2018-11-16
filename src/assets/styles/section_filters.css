@@ -18,6 +18,7 @@
 .section--filter-input {
     margin-right: 20px;
     width: 30% !important;
+    float: left;
 }
 .section--filter-action-wrap {
     float:right;
