@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const toggle_ongoing = (state) => {
   if (state.ongoing_show == 0) {
     state.ongoing_show = 1;
@@ -21,6 +23,13 @@ const set_polylines = (state, payload) => {
 };
 
 const set_vendor_markers = (state, payload) => {
+
+  if('busy' in payload){
+    if(payload.busy == true){
+      return
+    }
+  }
+
   var id = payload.rider_id
   var value= {
     position: {
@@ -30,7 +39,7 @@ const set_vendor_markers = (state, payload) => {
     vendor_type: payload.vendor_type
   }
 
-  state.map.vendors[id] = value;
+  Vue.set(state.map.vendors, id, value)
 };
 
 export default {
