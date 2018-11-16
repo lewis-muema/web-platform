@@ -20,9 +20,23 @@ const set_polylines = (state, payload) => {
   state.map.polylines.push(payload);
 };
 
+const set_vendor_markers = (state, payload) => {
+  var id = payload.rider_id
+  var value= {
+    position: {
+      lat: payload.lat,
+      lng: payload.lng
+    },
+    vendor_type: payload.vendor_type
+  }
+
+  state.map.vendors[id] = value;
+};
+
 export default {
   toggle_ongoing,
   set_ongoing_orders,
   set_markers,
-  set_polylines
+  set_polylines,
+  set_vendor_markers
 };

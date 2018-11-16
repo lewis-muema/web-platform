@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="ongoing--outer" v-if="!this.loading">
     <div class="ongoing--count" @click="toggle_ongoing()">
-      You have <span>{{num_ongoing}}</span> ongoing orders
+      <span>{{num_ongoing}}</span> ongoing orders
     </div>
     <transition name="fade">
       <div class="ongoing--column" v-if="show">
