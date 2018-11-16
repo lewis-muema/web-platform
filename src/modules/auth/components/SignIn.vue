@@ -22,11 +22,11 @@
             	<span id="log_in_warn" class="sign-holder__error" >   </span>
             </div>
             <div class="sign-holder dimen">
-              <input class="form-control" type="text" name="email" v-model="email" placeholder="Email or Phone Number" autocomplete="on">
+              <input class="input-control form" type="text" name="email" v-model="email" placeholder="Email or Phone Number" autocomplete="on">
             </div>
 
             <div class="sign-holder dimen">
-              <input class="form-control" type="password" name="password" v-model="password" placeholder="Password">
+              <input class="input-control form" type="password" name="password" v-model="password" placeholder="Password">
             </div>
 
             <div class="sign-holder">
@@ -152,5 +152,9 @@ width: 83%;
 }
 .sign-holder__pointer{
  cursor: pointer;
+}
+.form{
+  height:42px!important;
+  width: 140%!important;
 }
 </style>
