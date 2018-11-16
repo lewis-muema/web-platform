@@ -80,10 +80,8 @@
   /* font-weight: bold !important; */
   font-weight: 500 !important;
   border-bottom: none!important;
-
-
   background-color: #4186c2;
-  color: #fff;
+  color: #fff !important;
 
   /* background-color: red; */
 }

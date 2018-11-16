@@ -30,7 +30,7 @@
             </div>
 
             <div class="sign-holder">
-              <input class="btn-submit" type="submit" value="Log in" id="login" v-on:click="sign_in" >
+              <input class="button-primary" type="submit" value="Log in" id="login" v-on:click="sign_in" >
             </div>
             <div class=" sign-holder sign-forgot-pass sign-smaller">
               <router-link class="sign-holder__link" to="/auth/forgot_password">Forgot password?</router-link>

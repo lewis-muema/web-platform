@@ -44,7 +44,7 @@ export default {
 <style lang="css">
 .iframe
 {
-  min-height: 100vh;
+  min-height: 116vh;
 }
 .dashboard{
     height: auto;

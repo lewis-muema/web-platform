@@ -5,23 +5,29 @@
         <label class="input-descript">
           <span>Old Password</span>
         </label>
-        <input name="old_pass" type="password"  class="form-control profile-dimen" />
+        <input name="old_password" type="password" v-model="old_password" class="form-control profile-dimen" />
       </p>
       <p style="margin-bottom: 20px;">
         <label class="input-descript">
           <span>New Password</span>
         </label>
-     <input type="password" name="new_pass"  class="form-control profile-dimen" />
+     <input type="password" name="new_password" v-model="new_password" class="form-control profile-dimen" />
       </p>
       <p style="margin-bottom: 20px;">
         <label class="input-descript">
           <span>Confirm Password</span>
         </label>
-        <input type="password" name="con_pass"   class="form-control profile-dimen" />
+        <input type="password" name="confirm_password" v-model="confirm_password"  class="form-control profile-dimen" />
       </p>
+         <p class="change-password-error">
+           {{message}}
+         </p>
+         <p class="change-password-success">
+           {{message}}
+         </p>
       <p>
         <br />
-        <input type="submit" class="button-primary btn-content" value="Update"  /></p>
+        <input type="submit" class="button-primary btn-content" v-on:click="update_password" value="Update"  /></p>
       </p>
 
     </div>
@@ -29,8 +35,76 @@
 </template>
 
 <script>
+ import {mapGetters,mapActions} from 'vuex'
 export default {
-  name: 'ChangePassword'
+  name: 'ChangePassword',
+  data() {
+    return {
+      // user_id: '',
+      cop_user_id: 1,
+      old_password: '',
+      new_password:'',
+      confirm_password: '',
+      message:''
+    }
+  },
+  methods:{
+     ...mapActions({
+        requestChangePassword :'$_user/requestChangePassword',
+    }),
+    update_password: function ()
+    {
+      if(this.new_password!== this.confirm_password){
+         console.log("Passwords Don't Match");
+         this.message = "Passwords don't match";
+      }
+      else{
+          console.log("Password match");
+      if (this.cop_id > 0 ) {
+        console.log("Cop user found");
+
+        let payload = {};
+        // payload.user_id = this.user_id;
+        payload.cop_user_id = this.cop_user_id;
+        payload.old_password = this.old_password;
+        payload.new_password = this.new_password;
+        payload.confirm_password = this.confirm_password;
+        this.requestChangePassword(payload).then(response => {
+           console.log("Cop User Password Updated successfully")
+           console.log(response);
+        }, error => {
+            console.error("Check Internet Connection")
+            console.log(error);
+        });
+
+      }
+      else if (this.cop_id < 0) {
+        console.log("Peer user found");
+
+        let payload = {};
+        // payload.user_id = this.user_id;
+        payload.user_id = this.user_id;
+        payload.old_password = this.old_password;
+        payload.new_password = this.new_password;
+        payload.confirm_password = this.confirm_password;
+        this.requestChangePassword(payload).then(response => {
+           console.log("Password Updated successfully")
+           console.log(response);
+        }, error => {
+            console.error("Check Internet Connection")
+            console.log(error);
+        });
+
+      }
+      else {
+             console.log("Session expired");
+             this.$router.push( '/auth' );
+       }
+
+     }
+
+    },
+},
 }
 </script>
 
@@ -172,5 +246,8 @@ export default {
   -webkit-box-direction: normal;
   padding-top: 3px ! important;
 
+}
+.change-password-error{
+  height: 0px;
 }
 </style>
