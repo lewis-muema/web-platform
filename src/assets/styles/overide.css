@@ -354,3 +354,12 @@ span.el-pagination__jump {
     color: #606266 !important;
     
 }
+
+.el-date-table td.today span {
+  color: #2c82c5 !important;
+  font-weight: 700;
+}
+
+.el-date-picker__header-label.active, .el-date-picker__header-label:hover {
+  color: #2c82c5 !important;
+}
