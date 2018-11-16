@@ -1,35 +1,27 @@
 <template lang="html">
   <div class="new-card2">
-    <!-- <div class="panel-card" style="width:27%;background-color:white;">
-      <div class="my-profile__menu">
-        Personal Information
-      </div>
-      <div class="">
-        Change Password
-      </div>
-    </div> -->
     <div class="help-card" style="width:400px;margin-left:30%;margin-top:30px;">
-      <p style="margin-bottom: 0px;">
+      <p style="margin-bottom: 20px;">
         <label class="input-descript">
           <span>Name</span>
         </label>
-        <input type="text" name="name" id="name" :value="getName"  class="form-control dimen" />
+        <input type="text" name="name" id="name" :value="getName"  class="form-control profile1-dimen" />
       </p>
-      <p style="margin-bottom: 0px;">
+      <p style="margin-bottom: 20px;">
         <label class="input-descript">
           <span>Email</span>
         </label>
-        <input type="text" name="email" id="email" :value="getEmail"  class="form-control dimen" />
+        <input type="text" name="email" id="email" :value="getEmail"  class="form-control profile1-dimen" />
       </p>
-      <p style="margin-bottom: 0px;">
+      <p style="margin-bottom: 20px;">
         <label class="input-descript">
           <span>Phone Number</span>
         </label>
-        <input type="text" name="phone" id="phone"  class="form-control dimen" />
+        <input type="text" name="phone" id="phone"  class="form-control profile1-dimen" />
       </p>
       <p>
         <br />
-        <input type="submit" class="button-primary btn-content" id="save_personal" value="Save Personal Info" />
+        <input type="submit" class="button-primary btn-content" id="save_personal" value="Save" />
       </p>
 
     </div>
@@ -148,8 +140,8 @@ export default {
  font-weight: 400!important;
  margin-bottom: .5rem!important;
 }
-.dimen{
-  width: 65% !important;
+.profile1-dimen{
+  width: 90% !important;
 }
 .input-descript{
   margin: 0 0 .25rem;
@@ -161,7 +153,7 @@ export default {
 }
 .btn-content{
   height: 40px;
-  width: 65%;
+  width: 35%;
   font-size: medium;
   text-transform: uppercase;
   letter-spacing: 1.1px;

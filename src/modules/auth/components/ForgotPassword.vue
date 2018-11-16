@@ -13,7 +13,7 @@
           </div> -->
           </div>
           <div class="sign-holder dimen">
-            <input class="input-control form" type="text" name="credentials" id="forgot_cred" placeholder="Email or Phone Number">
+            <input class="input-control forgot-form" type="text" name="credentials" id="forgot_cred" placeholder="Email or Phone Number">
           </div>
            <!-- <div id="extra_email_f" class="hidden">
               <div  class="sign-up-v2-holder ">
@@ -95,8 +95,8 @@ width: 83%;
 color: #1782c5;
 text-decoration:none;
 }
-.form{
+.forgot-form{
   height:42px!important;
-  width: 140%!important;
+  width: 110%!important;
 }
 </style>

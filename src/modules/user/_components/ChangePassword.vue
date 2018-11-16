@@ -1,27 +1,27 @@
 <template lang="html">
   <div class="new-card2">
     <div class="help-card" style="width:400px;margin-left:30%;margin-top:30px;">
-      <p style="margin-bottom: 0px;">
+      <p style="margin-bottom: 20px;">
         <label class="input-descript">
           <span>Old Password</span>
         </label>
-        <input name="old_pass" type="password" placeholder="Enter Old Password" class="form-control dimen" />
+        <input name="old_pass" type="password"  class="form-control profile-dimen" />
       </p>
-      <p style="margin-bottom: 0px;">
+      <p style="margin-bottom: 20px;">
         <label class="input-descript">
           <span>New Password</span>
         </label>
-     <input type="password" name="new_pass" placeholder="Enter New Password"   class="form-control dimen" />
+     <input type="password" name="new_pass"  class="form-control profile-dimen" />
       </p>
-      <p style="margin-bottom: 0px;">
+      <p style="margin-bottom: 20px;">
         <label class="input-descript">
           <span>Confirm Password</span>
         </label>
-        <input type="password" name="con_pass"  placeholder="Confirm new password" class="form-control dimen" />
+        <input type="password" name="con_pass"   class="form-control profile-dimen" />
       </p>
       <p>
         <br />
-        <input type="submit" class="button-primary btn-content" value="Save New Password"  /></p>
+        <input type="submit" class="button-primary btn-content" value="Update"  /></p>
       </p>
 
     </div>
@@ -124,8 +124,8 @@ export default {
  font-weight: 400!important;
  margin-bottom: .5rem!important;
 }
-.dimen{
-  width: 65% !important;
+.profile-dimen{
+  width: 90% !important;
 }
 .input-descript{
   margin: 0 0 .25rem;
@@ -137,7 +137,7 @@ export default {
 }
 .btn-content{
   height: 40px;
-  width: 65%;
+  width: 35%;
   font-size: medium;
   text-transform: uppercase;
   letter-spacing: 1.1px;
