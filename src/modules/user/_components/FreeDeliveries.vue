@@ -1,7 +1,9 @@
 <template lang="html">
     <div class="">
-        <main-header></main-header>
-        <div class="module-container">
+        <div class="free-delivery-container">
+            <div class="section">
+                <router-link class="section__link" to="/user/free-deliveries">Free delivery</router-link>
+            </div>
             <div class="free-deliveries--background">
                 <div class="free-delivery--intro">
                     <div class="free-delivery--title1">GET FREE DELIVERIES</div>
@@ -27,9 +29,9 @@
                 <div class="free-delivery--stats">
                     <div class="free-delivery--title1">REFERRAL STATS</div>
                     <div class="stats">
-                        <span>Credits earned</span>
-                        <span>Friends referred</span>
-                        <span>Friends joined</span>
+                        <span> 35 <br> Credits earned</span>
+                        <span> 15 <br> Friends referred</span>
+                        <span> 5 <br> Friends joined</span>
                     </div>
                 </div>
             </div>
@@ -38,41 +40,35 @@
 </template>
 
 <script>
-    import MainHeader from '../../../components/headers/MainHeader.vue'
 
     export default {
         name: "FreeDeliveries",
-        components: {MainHeader},
     }
 </script>
 
 <style lang="css">
-    @import "../../../assets/styles/section_headers.css";
 
-    .module-container {
+    .free-delivery-container {
         margin: 0 100px 8px 100px !important;
+        padding-top: 60px;
     }
 
     .free-deliveries--background {
         width: 100%;
         height: 270px;
-        background-color: #E4E7ED;
+        background-color: #fff;
     }
 
     .free-deliveries--inner {
         width: 50%;
-        /*height: 230px;*/
-        margin-top: 90px;
+        margin-top: 0;
         height: 230px;
-        background-color: white;
-        /*margin-top: 60px;*/
+        background-color: transparent;
         margin-left: 18%;
         position: absolute;
-        border: 1px solid #C0C4CC;
     }
 
     .show-txt {
-        display: flex;
         flex-direction: column;
         flex: 3;
         width: 75%;
@@ -84,6 +80,7 @@
 
     .btn-submit {
         padding: 11px !important;
+        width: 200px !important;
     }
 
     .free-delivery--button {
@@ -94,14 +91,18 @@
 
     .free-delivery--title1 {
         color: #333;
-        font-size: 14px;
+        font-size: 15px;
         padding-top: 15px;
     }
     .free-delivery--text {
-        color: #333;
         font-size: 14px;
-        /*padding: 15px;*/
+        padding-top: 15px;
+        line-height: 1.6;
         text-align: center;
+        font-family: 'Rubik', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: #555;
     }
 
     .free-delivery--social {
@@ -116,7 +117,7 @@
     .free-delivery--stats {
         margin: 34px;
         height: 80px;
-        margin-top: 380px;
+        margin-top: 210px;
         text-align: center;
         width: 50%;
         background-color: white;
@@ -132,7 +133,7 @@
     }
 
     .tweet-button {
-        margin-right: 393px !important;
+        margin-right: 0px !important;
     }
 
     div.stats {
