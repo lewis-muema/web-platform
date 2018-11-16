@@ -39,7 +39,7 @@
       </span>
     </div>
     <div class="sign-holder">
-      <input class="btn-submit" type="submit" value="Sign Up" id="signup" onclick="" >
+      <input class="button-primary" type="submit" value="Sign Up" id="signup" onclick="" >
     </div>
 
     <div class=" sign-holder sign-forgot-pass sign-smaller">
