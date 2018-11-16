@@ -35,4 +35,6 @@ export default {
 
 <style lang="css">
 @import "../../assets/styles/section_headers.css";
+@import "../../assets/styles/section_filters.css";
+@import "../../assets/styles/section_pagination.css";
 </style>

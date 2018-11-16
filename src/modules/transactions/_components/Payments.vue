@@ -1,10 +1,24 @@
 <template lang="html">
+
   <div class="" id="payments_container">
+    <div class="table--header">
+        <div class="table--header-filter-wrap">
+            <el-select class="table--header-filter-input" v-model="value" placeholder="Users">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+            </el-select>
+            <el-input class="input-control table--header-filter-input" type="date" name="name" value="" placeholder="From Date"/>
+            <el-input class="input-control table--header-filter-input" type="date" name="name" value="" placeholder="To Date"/>
+        </div>
+        <div class="table--header-action-wrap">
+
+        </div>
+    </div>
     <el-table
      :data="get_payments"
      style="width: 100%"
      :border="true"
-      :stripe="true"
+     :stripe="true"
      >
      <template slot="empty">
            {{empty_payments_state}}

@@ -1,5 +1,20 @@
 <template lang="html">
   <div class="" id="order_hist_container">
+    
+    <div class="section--filter-wrap">
+        <div class="section--filter-input-wrap">
+            <el-select class="section--filter-input" v-model="value" placeholder="Users">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+            </el-select>
+            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="From Date"/>
+            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="To Date"/>
+        </div>
+        <div class="section--filter-action-wrap">
+          <button type="button" class="button-primary section--filter-action">Search</button>
+        </div>
+    </div>
+
      <el-table
       :data="tableData"
       style="width: 100%"
@@ -69,6 +84,20 @@
       </el-table-column>
   </el-table>
 
+  <div class="section--pagination-wrap" v-if="tableData.length >= pagination_limit">
+        <el-pagination
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData.length"
+            :page-size="pagination_limit"
+            :current-page.sync="pagination_page"
+            @current-change="changePage"
+            :page-sizes="[10, 20, 50, 100]"
+            @size-change="changeSize"
+            class="section--pagination-item"
+            >
+        </el-pagination>
+    </div>
+  
   </div>
 </template>
 
@@ -81,6 +110,9 @@ export default {
           empty_orders_state:"Fetching Order History",
           expand_id: 0,
           expand_keys:[],
+          pagination_limit:5,
+          pagination_page:1,
+
         }
       },
       filters: {
@@ -89,6 +121,17 @@ export default {
         }
       },
       methods:{
+        changeSize(val) {
+            this.pagination_page = 1;
+            this.pagination_limit = val;
+        },
+        changePage() {
+            console.log('Page changed to', this.pagination_page);
+            let from = (this.pagination_page - 1) * this.pagination_limit;
+            let to = this.pagination_page * this.pagination_limit;
+            let paginated_drivers = this.searched_drivers.slice(from, to);
+            console.log(from, to, paginated_drivers);
+        },
          ...mapActions([
             '$_transactions/requestOrderHistoryOrders',
         ]),
