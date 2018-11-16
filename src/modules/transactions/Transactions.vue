@@ -4,7 +4,7 @@
 
         <div class="container" id="transactions_container">
           <div class="section">
-              <router-link class="section__link" to="/transactions/order_history">Order History</router-link>
+              <router-link class="section__link" to="/transactions/order_history">Orders</router-link>
               <router-link class="section__link" to="/transactions/statement">Statement</router-link>
               <router-link class="section__link" to="/transactions/payments">Payments</router-link>
           </div>

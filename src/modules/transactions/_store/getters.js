@@ -10,4 +10,7 @@ export default {
     get_statement(state){
       return state.statement
     },
+    getCopUsers(state) {
+      return state.cop_users;
+    }
 };

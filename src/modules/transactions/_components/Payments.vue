@@ -3,13 +3,15 @@
   <div class="" id="payments_container">
         <div class="section--filter-wrap">
         <div class="section--filter-input-wrap">
-            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="From Date"/>
-            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="To Date"/>
+            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="From"/>
+            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="To"/>
+            
+            <button type="button" class="button-primary section--filter-action align-left">Search</button>
+  
         </div>
         <div class="section--filter-action-wrap">
-          <button type="button" class="button-primary section--filter-action">New Payment</button>
+          <button type="button" class="button-primary section--filter-action">Pay</button>
           
-          <button type="button" class="button-primary section--filter-action">Search</button>
         </div>
     </div>
 
