@@ -1,5 +1,6 @@
 <template lang="html">
     <div class="">
+        <main-header></main-header>
         <div class="free-delivery-container">
             <div class="section">
                 <router-link class="section__link" to="/user/free-deliveries">Free delivery</router-link>
@@ -8,30 +9,47 @@
                 <div class="free-delivery--intro">
                     <div class="free-delivery--title1">GET FREE DELIVERIES</div>
                     <div class="free-delivery--text">
-                        Every time you invite a friend, they will receive a free delivery up to KES 500. Once they
-                        complete their first order, you will automatically get a similar free delivery credit into your
-                        account.
-                    </div>
+                        <p>Send a friend a free delivery and you will get one too, up to KES 500. <a href="">More
+                            details</a></p>
+                        <p class="free-text--hidden">Every time you invite a friend, they will receive a free delivery up to KES 500. Once they
+                            complete their first order, you will automatically get a similar free delivery credit into your
+                            account.</p>
+                        <p>Share the link below or use code 39HNBP</p></div>
                 </div>
                 <div class="free-deliveries--inner">
                     <div class="show-txt">
-                        <input readonly :value="this.getInviteLink" type="text" class="input-control">
+                        <input readonly :value="this.getInviteLink" type="text" class="my_field_section delivery-link">
+                        <div class="deliver--copy-link">
+                            <div class="share_img1">
+                                <font-awesome-icon icon="star"/>
+                            </div>
+                            <div class="custom_copy"> Copy</div>
+                        </div>
                     </div>
-                    <div class="free-delivery--button">
-                        <a v-on:click="copy_link" class="btn-submit">Copy</a>
-                    </div>
-                    <div class="free-delivery--social">
-                        <a v-on:click="copy_link" class="btn-submit mail-button">Mail</a>
-                        <a v-on:click="copy_link" class="btn-submit share-button">Share</a>
-                        <a v-on:click="copy_link" class="btn-submit tweet-button">Tweet</a>
+                    <div style="display: table" class="free-delivery--social">
+                        <div style="display: table-cell" class="">
+                            <div style="display: inline-block" class="custom_mail">Mail</div>
+                            <div class="share_img"></div>
+                        </div>
+                        <div style="display: table-cell" class="">
+                            <div style="display: inline-block" class="custom_fb">Share</div>
+                            <div class="share_img3"></div>
+                        </div>
+                        <div style="display: inline-block" class="">
+                            <div class="custom_tw">Tweet</div>
+                            <div class="share_img2"></div>
+                        </div>
                     </div>
                 </div>
+                <div class="separing-line">
+                    <hr/>
+                </div>
                 <div class="free-delivery--stats">
-                    <div class="free-delivery--title1">REFERRAL STATS</div>
+                    <div class="free-delivery--text">Referral Stats</div>
                     <div class="stats">
-                        <span> 35 <br> Credits earned</span>
-                        <span> 15 <br> Friends referred</span>
-                        <span> 5 <br> Friends joined</span>
+                        <span> 6600 <br> Credits earned</span>
+                        <span> 1 <br> Friends referred</span>
+                        <span> 1 <br> Friends joined</span>
                     </div>
                 </div>
             </div>
@@ -40,19 +58,35 @@
 </template>
 
 <script>
+    import MainHeader from '../../../components/headers/MainHeader.vue'
 
     export default {
         name: "FreeDeliveries",
+        components: {MainHeader},
+        data() {
+            return {
+                show_more:false,
+            }
+        },
+        methods: {
+            myFilter: function(){
+                this.isActive = !this.isActive;
+                // some code to filter users
+            }
+        }
     }
 </script>
 
 <style lang="css">
+    @import "../../../assets/styles/section_headers.css";
 
     .free-delivery-container {
         margin: 0 100px 8px 100px !important;
         padding-top: 60px;
     }
-
+    .free-text--hidden{
+        display: none;
+    }
     .free-deliveries--background {
         width: 100%;
         height: 270px;
@@ -60,22 +94,27 @@
     }
 
     .free-deliveries--inner {
-        width: 50%;
-        margin-top: 0;
+        width: 1000px;
+        margin-top: 20px;
         height: 230px;
         background-color: transparent;
         margin-left: 18%;
         position: absolute;
     }
 
+    .separing-line {
+        color: #dcdfe6;
+        margin-top: 200px;
+    }
+
     .show-txt {
-        flex-direction: column;
-        flex: 3;
-        width: 75%;
-        margin-top: 10%;
-        margin-left: 5%;
-        margin-right: 5%;
-        display: inline-block;
+        width: 100%;
+        margin: 0px auto;
+        height: 65px;
+        display: table;
+        box-sizing: border-box;
+        text-align: center;
+        color: #595d62 !important;
     }
 
     .btn-submit {
@@ -94,6 +133,124 @@
         font-size: 15px;
         padding-top: 15px;
     }
+
+    .share_img {
+        float: left;
+        background-color: #CCC;
+        background-image: url('../../../../src/assets/img/white_social/email_50.png');
+        width: 20px;
+        height: 20px;
+        padding: 12px;
+        display: inline-block;
+        border-bottom-left-radius: 5px;
+        border-top-left-radius: 5px;
+        background-position: center;
+        background-size: 30px;
+        background-repeat: no-repeat;
+    }
+
+    .share_img1 {
+        float: left;
+        background-color: #CCC;
+        background-image: url('../../../../src/assets/img/white_social/link_50.png');
+        width: 20px;
+        height: 20px;
+        padding: 12px;
+        display: inline-block;
+        background-position: center;
+        background-size: 30px;
+        background-repeat: no-repeat;
+    }
+
+    .custom_mail {
+        color: #FFF;
+        background-color: #666;
+        padding: 12px;
+        margin-right: 30px;
+        text-align: center;
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+        width: 149px;
+        height: 20px;
+        display: inline-block;
+        margin-left: 0;
+    }
+
+    .share_img2 {
+        float: left;
+        background-color: rgba(0, 172, 237, 0.77);
+        background-image: url('../../../../src/assets/img/white_social/twitter_50.png');
+        width: 20px;
+        height: 20px;
+        padding: 12px;
+        display: inline-block;
+        border-bottom-left-radius: 5px;
+        border-top-left-radius: 5px;
+        background-position: center;
+        background-size: 30px;
+        background-repeat: no-repeat;
+    }
+
+    .custom_fb {
+        color: #FFF;
+        background-color: #3B5998;
+        padding: 12px;
+        text-align: center;
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+        width: 149px;
+        height: 20px;
+        margin-right: 30px;
+        display: inline-block;
+        margin-left: 0;
+    }
+
+    .share_img3 {
+        float: left;
+        background-color: rgba(59, 89, 152, 0.77);
+        background-image: url('../../../../src/assets/img/white_social/facebook_50.png');
+        width: 20px;
+        height: 20px;
+        padding: 12px;
+        display: inline-block;
+        border-bottom-left-radius: 5px;
+        border-top-left-radius: 5px;
+        background-position: center;
+        background-size: 30px;
+        background-repeat: no-repeat;
+    }
+
+    .custom_tw {
+        color: #FFF;
+        background-color: #00aced;
+        padding: 12px;
+        text-align: center;
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+        width: 149px;
+        height: 20px;
+        margin-right: 0px;
+        display: inline-block;
+        margin-left: 0;
+    }
+
+    .custom_copy {
+        display: inline-block;
+        width: 149px;
+        color: #FFF;
+        background-color: #666;
+        padding: 12px;
+        text-align: center;
+        height: 20px;
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+        float: left;
+    }
+
+    .delivery-link {
+        display: table-cell;
+    }
+
     .free-delivery--text {
         font-size: 14px;
         padding-top: 15px;
@@ -105,11 +262,18 @@
         color: #555;
     }
 
+    .my_field_section {
+        width: 470px;
+        float: left;
+        padding: 11px;
+        height: 20px;
+        border-bottom-left-radius: 5px;
+        border-top-left-radius: 5px;
+        border: 1px solid #CCC;
+    }
+
     .free-delivery--social {
         height: 80px;
-        /*background-color: antiquewhite;*/
-        margin: 10%;
-        margin-left: 5%;
         margin-top: 5%;
         margin-bottom: 10px;
     }
@@ -117,7 +281,7 @@
     .free-delivery--stats {
         margin: 34px;
         height: 80px;
-        margin-top: 210px;
+        margin-top: 0px;
         text-align: center;
         width: 50%;
         background-color: white;
@@ -126,18 +290,23 @@
     }
 
     .free-delivery--intro {
-        height: 80px;
+        height: 120px;
         text-align: center;
         width: 58%;
         margin-left: 21%;
     }
 
+    .deliver--copy-link {
+        display: table-cell;
+        float: left;
+    }
+
     .tweet-button {
-        margin-right: 0px !important;
+        /*margin-right: 0px !important;*/
     }
 
     div.stats {
-        padding-top: 40px;
+        padding-top: 25px;
         display: table;
         width: 100%;
     }
