@@ -46,17 +46,28 @@ export default {
     ...mapMutations(
       {
         setViewState:'$_external/setViewState',
+        updatePassPlain:'$_external/updatePassPlain',
+        updateViewStep:'$_external/updateViewStep'
       }
     ),
     next_view: function ()
-    {
-      this.setViewState(4);
+    {  if (this.password !== this.cpassword) {
+        console.log("Password does not match!")
+
+      }
+      else {
+        this.updatePassPlain(this.cpassword);
+        this.setViewState(4);
+        this.updateViewStep(0);
+
+      }
     },
     last_view: function(){
       this.setViewState(2);
+      this.updateViewStep(0);
     },
-    setCurrentStep: function (num){
-        this.$store.commit('updateViewStep', num);
+    setCurrentStep: function (step){
+        this.updateViewStep(step);
     }
   },
   computed : {

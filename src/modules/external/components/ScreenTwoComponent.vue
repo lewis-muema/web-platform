@@ -17,7 +17,7 @@
     <div class="divide"></div>
     <div class="form-submits">
       <a v-on:click="last_view" class="waves-effect waves-teal btn-flat">Back</a>
-      <button v-on:click="next_view" class="btn-submit" style="width:30% !important;" name="next" id="nextBtn">Next
+      <button v-on:click="next_view" class="btn-submit" style="width:30% !important;" name="next" id="nextBtn" v-bind:disabled="!this.is_valid">Next
       </button>
     </div>
   </div>
@@ -37,18 +37,21 @@ export default {
     ...mapMutations(
       {
         setViewState:'$_external/setViewState',
+        updateViewStep:'$_external/updateViewStep',
+        updatePerEmail:'$_external/updatePerEmail'
       }
     ),
     next_view: function ()
-    {
+    { this.updatePerEmail(this.per_email);
+      this.updateViewStep(0);
       this.setViewState(3);
     },
     last_view: function(){
         this.setViewState(1);
     },
-    setCurrentStep: function (num){
-        this.$store.commit('updateViewStep', num);
-    },
+    setCurrentStep: function (step){
+        this.updateViewStep(step);
+    }
   },
   computed : {
     is_valid : function() {

@@ -9,7 +9,7 @@
           <label class="input-descript">
             <span>Name</span>
           </label>
-          <input id="first_name" class="form-control" placeholder="John Doe" type="text" v-model="f_name" @focus="setCurrentStep(1)">
+          <input id="first_name" class="form-control" placeholder="John Doe" type="text" v-model="name" @focus="setCurrentStep(1)">
         </div>
       </div>
       <div class="row">
@@ -32,7 +32,7 @@
     <div class="divide"></div>
     <div class="form-submits">
       <a class="waves-effect">Back</a>
-      <button v-on:click="next_view" class="btn-submit" style="width:30% !important;" name="next" id="nextBtn">Next
+      <button v-on:click="next_view" class="btn-submit" style="width:30% !important;" name="next" id="nextBtn" v-bind:disabled="!this.is_valid">Next
       </button>
     </div>
   </div>
@@ -45,8 +45,7 @@ export default {
   name: 'screen-one-component',
   data: function () {
     return {
-      f_name:"",
-      l_name:"",
+      name:"",
       phone:"",
       email : ""
     }
@@ -55,12 +54,19 @@ export default {
     ...mapMutations(
       {
         setViewState:'$_external/setViewState',
-        updateViewStep:'$_external/updateViewStep'
+        updateViewStep:'$_external/updateViewStep',
+        updateName:'$_external/updateName',
+        updatePhone: '$_external/updatePhone',
+        updateBizEmail :'$_external/updateBizEmail'
       }
     ),
     next_view: function ()
     {
       this.setViewState(2);
+      this.updateName(this.name);
+      this.updatePhone(this.phone);
+      this.updateBizEmail(this.email);
+      this.updateViewStep(0);
     },
     setCurrentStep: function (step){
         this.updateViewStep(step);
@@ -69,14 +75,14 @@ export default {
   },
   computed : {
       ...mapGetters({
-          // 'getType',
-          // 'getBizEmail',
+          getType : '$_external/getType',
+          getBizEmail : '$_external/getBizEmail',
           getBizName:'$_external/getBizName',
-          // 'getName'
+          getName : '$_external/getName'
         }
       ),
     is_valid : function() {
-      return this.f_name != '' && this.l_name !='' && this.phone != '' && this.email !='';
+      return this.f_name != '' && this.phone != '' && this.email !='';
     },
     is_type : function() {
       if (this.getType == 0) {
@@ -88,25 +94,25 @@ export default {
     }
   },
   mounted(){
-    if (this.getType == 0) {
-      var that = this
-      setTimeout(function(){
-        let name = that.getBizName
-        let pers = that.getName
-        var res = pers.split(" ")
-        $('#email').val(that.getBizEmail);
-        that.email = that.getBizEmail
-        $("#emailabel").addClass("active");
-
-        $('#first_name').val(res[0]);
-        that.f_name = res[0]
-        $("#fnamelabel").addClass("active");
-
-        $('#last_name').val(res[1]);
-        that.l_name = res[1]
-        $("#lnamelabel").addClass("active");
-      }, 100);
-    }
+    // if (this.getType == 0) {
+    //   var that = this
+    //   setTimeout(function(){
+    //     let name = that.getBizName
+    //     let pers = that.getName
+    //     var res = pers.split(" ")
+    //     $('#email').val(that.getBizEmail);
+    //     that.email = that.getBizEmail
+    //     $("#emailabel").addClass("active");
+    //
+    //     $('#first_name').val(res[0]);
+    //     that.f_name = res[0]
+    //     $("#fnamelabel").addClass("active");
+    //
+    //     $('#last_name').val(res[1]);
+    //     that.l_name = res[1]
+    //     $("#lnamelabel").addClass("active");
+    //   }, 100);
+    // }
   }
 }
 </script>
@@ -207,6 +213,7 @@ export default {
  font-weight: 400!important;
  margin-bottom: .5rem!important;
 }
+
 
 
 </style>
