@@ -74,16 +74,16 @@
             this.$store.dispatch("$_admin/requestKeysList", payload).then(response => {
                 console.log("Got some data, now lets show something in this component")
                 console.log(response);
-                this.empty_payments_state = "Users List Not Found";
+                this.empty_payments_state = "Keys List Not Found";
             }, error => {
                 console.error("Got nothing from server. Prompt user to check internet connection and try again")
                 console.log(error);
-                this.empty_payments_state = "Users List Failed to Fetch";
+                this.empty_payments_state = "Keys List Failed to Fetch";
             });
         },
         data: function () {
             return {
-                empty_payments_state: "Fetching API Credetials",
+                empty_payments_state: "Fetching API Credentials",
                 pagination_limit: 5,
                 pagination_page: 1,
                 button_name: "",

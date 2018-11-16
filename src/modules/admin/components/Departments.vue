@@ -55,7 +55,7 @@
 </template>
 
 <script>
-    import {mapActions, mapGetters} from 'vuex'
+    import {mapGetters} from 'vuex'
 
     export default {
         name: "Departments",
@@ -69,11 +69,11 @@
             this.$store.dispatch("$_admin/requestDepartmentsList", payload).then(response => {
                 console.log("Got some data, now lets show something in this component")
                 console.log(response);
-                this.empty_orders_state = "Users List Not Found";
+                this.empty_orders_state = "Departments List Not Found";
             }, error => {
                 console.error("Got nothing from server. Prompt user to check internet connection and try again")
                 console.log(error);
-                this.empty_orders_state = "Users List Failed to Fetch";
+                this.empty_orders_state = "Departments List Failed to Fetch";
             });
         },
         data: function () {
