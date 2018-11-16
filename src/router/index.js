@@ -30,18 +30,6 @@ export function createRouter () {
             path: '/auth/reset_password',
             component: () => import('../modules/auth/components/ResetPassword.vue')
           },
-          // {
-          //   path: 'sign_up',
-          //   component: () => import('./components/SignUp.vue')
-          // },
-          // {
-          //   path: 'forgot_password',
-          //   component: () => import('./components/ForgotPassword.vue')
-          // },
-          // {
-          //   path: 'reset_password',
-          //   component: () => import('./components/ResetPassword.vue')
-          // },
         ]
       },
       { path: '/transactions', component: () => import('../modules/transactions/Transactions.vue'),
@@ -158,32 +146,43 @@ export function createRouter () {
               }
           ]
       },
-      { path: '/profile', component: () => import('../modules/Profile/Profile.vue'),
-          children: [
-              {
-                path: '/',
-                component: () => import('../modules/profile/_components/PersonalInfo.vue')
-              },
-              {
-                path: 'personal_information',
-                component: () => import('../modules/profile/_components/PersonalInfo.vue')
-              },
-              {
-                path: 'change_password',
-                component: () => import('../modules/profile/_components/ChangePassword.vue')
-              },
-
-          ]
-      },
       { path: '/user', component: () => import('../modules/user/User.vue'),
           children: [
               {
                 path: '/',
-                component: () => import('../modules/user/_components/Profile.vue')
+                component: () => import('../modules/user/_components/Profile.vue'),
+                     children: [
+                      {
+                        path: '/',
+                        component: () => import('../modules/user/_components/PersonalInfo.vue')
+                      },
+                      {
+                        path: 'profile/personal_information',
+                        component: () => import('../modules/user/_components/PersonalInfo.vue')
+                      },
+                      {
+                        path: 'profile/change_password',
+                        component: () => import('../modules/user/_components/ChangePassword.vue')
+                      },
+                    ]
               },
               {
                 path: 'profile',
-                component: () => import('../modules/user/_components/Profile.vue')
+                component: () => import('../modules/user/_components/Profile.vue'),
+                    children: [
+                     {
+                       path: '/',
+                       component: () => import('../modules/user/_components/PersonalInfo.vue')
+                     },
+                     {
+                       path: 'personal_information',
+                       component: () => import('../modules/user/_components/PersonalInfo.vue')
+                     },
+                     {
+                       path: 'change_password',
+                       component: () => import('../modules/user/_components/ChangePassword.vue')
+                     },
+                   ]
               },
               {
                 path: 'free_deliveries',
