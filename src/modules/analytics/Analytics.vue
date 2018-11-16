@@ -42,4 +42,10 @@ export default {
     {
       background-color: #F9FBFC;
     }
+    .module-container
+    {
+      width: 90%;
+      margin: 0px auto;
+      padding-top: 60px;
+    }
 </style>
