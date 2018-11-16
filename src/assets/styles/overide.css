@@ -110,7 +110,7 @@ button span {
   background-size: 15px 15px;
   border-width: 4px;
   border: 1px solid #dcdfe6;
-  
+
 }
 
 .input-radio:after{ border-radius: 50%; }
@@ -215,7 +215,7 @@ button span {
 .el-pagination button, .el-pagination span:not([class*=suffix]) {
   height: 40px !important;
   color: #555 !important;
-  
+
 }
 .el-pagination__total {
   font-size: 14px !important;
@@ -320,4 +320,9 @@ span.el-pagination__jump {
 
 .el-pagination .btn-next .el-icon, .el-pagination .btn-prev .el-icon {
   font-size: 16px !important;
+}
+
+.el-table thead {
+    color: #606266 !important;
+    
 }
