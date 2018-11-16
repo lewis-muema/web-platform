@@ -39,8 +39,10 @@
     border-radius: 5px;
     height: 2.5em;
     margin: 20px 0;
+    cursor: pointer;
+    border: 2px solid transparent;
 }
-.home-view-vendor-types--item:hover, .home-view-vendor-types--item:active{
+.home-view-vendor-types--item:hover, .home-view-vendor-types--item:active, .home-view-vendor-types--item__active{
     border: 2px solid #1782c5;
 }
 
@@ -64,6 +66,7 @@
 }
 .home-view-vendor-types-item__image{
     height: 30px;
+    min-width: 30px;
 }
 .home-view-vendor-types-item--cost-wrapper_time{
     font-size: x-small;
