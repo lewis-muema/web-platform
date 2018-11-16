@@ -57,6 +57,8 @@
         label="Amount"
         prop="order_cost"
         width="120"
+        :formatter="formatAmount"
+        class="align-right"
         >
       </el-table-column>
       <el-table-column
@@ -118,7 +120,8 @@ export default {
       filters: {
         moment: function (date) {
           return moment(date).format('MMM Do YYYY, h:mm a');
-        }
+        },
+
       },
       methods:{
         changeSize(val) {
@@ -160,21 +163,11 @@ export default {
           this.expand_keys = []
           this.expand_keys.push(row.order_id)
           this.$router.push({name:'order-details', params: {id : row.order_id}});
-
-          // console.log('row expansion');
-
-          // console.log(row);
-          // console.log(expanded);
-
-          // if(expanded.length > 0){
-          //     console.log('handling row expand');
-          //     document.getElementsByClassName('el-table__expand-icon--expanded')[0].click()
-				  //     //trigger router action here
-          //     this.$router.push({name:'order-details', params: {id : row.order_no}});
-          // }
-
       },
-    },
+      formatAmount(row, column, cellValue) {
+        return (row.order_cost).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+      },
+    },  
     computed:{
         ...mapGetters({
           tableData:'$_transactions/getOrderHistoryOrders',
