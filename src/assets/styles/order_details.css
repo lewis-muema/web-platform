@@ -63,6 +63,9 @@
 .rating_checked {
     color: #1782c5;
 }
+.rating_unchecked {
+    color: #555;
+}
 .rider_details_actions {
     display: block;
     float: left;
@@ -72,10 +75,8 @@
     display: inline-block
 }
 .rider_details_rating {
-    margin-top: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-left: 20px;
+    margin-top: 5px !important;
+    padding: 5px !important;
     background: #f4f4f4;
 }
 .rider_details_rating .el-rate {
