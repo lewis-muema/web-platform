@@ -17,18 +17,18 @@
   <div>
 
     <div class="sign-holder dimen">
-      <input class="form-control" type="text" name="contact1" id="u_contact1" placeholder="Your Name" value="">
+      <input class="input-control form" type="text" name="contact1" id="u_contact1" placeholder="Your Name" value="">
     </div>
 
     <div class="sign-holder dimen">
-      <input class="form-control" type="email" name="u_email" id="email" placeholder="Your Email" value="">
+      <input class="input-control form" type="email" name="u_email" id="email" placeholder="Your Email" value="">
     </div>
     <div class="sign-holder dimen">
-      <input class="form-control" type="tel" placeholder="Phone Number" name="u_phone" id="phone_num" value="">
+      <input class="input-control form" type="tel" placeholder="Phone Number" name="u_phone" id="phone_num" value="">
     </div>
     <div class="sign-holder dimen" id="outer_u_pass">
   <span >
-        <input class="form-control" type="password" name="u_pass" id="u_pass" placeholder="Password">
+        <input class="input-control form" type="password" name="u_pass" id="u_pass" placeholder="Password">
   </span>
     </div>
 
@@ -141,5 +141,9 @@ export default {
 .sign-holder__smaller {
     font-size: 13px;
     color: #999999;
+}
+.form{
+  height:42px!important;
+  width: 140%!important;
 }
 </style>

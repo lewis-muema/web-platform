@@ -8,7 +8,7 @@
                 <div class="side-flex inp" id="set0">
                     <input class="form-control" type="text" name="email" value="" placeholder="name@example.com">
                     <input class="form-control" type="text" name="name" value="" placeholder="Full Name (Optional)">
-                    <el-select class="addUser--select" v-model="value" placeholder="Select">
+                    <el-select class="addUser--select" v-model="value" placeholder="Department">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
@@ -17,7 +17,7 @@
             <div class="side-flex inp" id="set1">
                 <input class="form-control" type="text" name="email" value="" placeholder="name@example.com">
                 <input class="form-control" type="text" name="name" value="" placeholder="Full Name (Optional)">
-                <el-select class="addUser--select" v-model="value" placeholder="Select">
+                <el-select class="addUser--select" v-model="value" placeholder="Department">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
@@ -25,7 +25,7 @@
             <div class="side-flex inp" id="set2">
                 <input class="form-control" type="text" name="email" value="" placeholder="name@example.com">
                 <input class="form-control" type="text" name="name" value="" placeholder="Full Name (Optional)">
-                <el-select class="addUser--select" v-model="value" placeholder="Select">
+                <el-select class="addUser--select" v-model="value" placeholder="Department">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
@@ -40,7 +40,6 @@
             <div class="addUser--submit">
                 <button v-on:click="postInvites" class="btn-submit" type="submit"
                         name="action">Send Invites
-                    <i class="el-icon-caret-right"></i>
                 </button>
             </div>
         </div>

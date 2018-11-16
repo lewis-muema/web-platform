@@ -87,6 +87,7 @@ export function createRouter () {
                   },
                   {
                       path: '/admin/users/add_user',
+                      name:'adminAddUser',
                       component: () => import('../modules/admin/components/users/AddUser.vue')
                   }
               ]
@@ -159,6 +160,38 @@ export function createRouter () {
           ]
       },
       { path: '/profile', component: () => import('../modules/Profile/Profile.vue'),
+          children: [
+              {
+                path: '/',
+                component: () => import('../modules/profile/_components/PersonalInfo.vue')
+              },
+              {
+                path: 'personal_information',
+                component: () => import('../modules/profile/_components/PersonalInfo.vue')
+              },
+              {
+                path: 'change_password',
+                component: () => import('../modules/profile/_components/ChangePassword.vue')
+              },
+
+          ]
+      },
+      { path: '/user', component: () => import('../modules/user/User.vue'),
+          children: [
+              {
+                path: '/',
+                component: () => import('../modules/user/_components/Profile.vue')
+              },
+              {
+                path: 'profile',
+                component: () => import('../modules/user/_components/Profile.vue')
+              },
+              {
+                path: 'free_deliveries',
+                component: () => import('../modules/user/_components/FreeDeliveries.vue')
+              },
+
+          ]
       },
       { path: '/external', component: () => import('../modules/external/External.vue'),
       },

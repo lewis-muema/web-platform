@@ -4,7 +4,7 @@
             <form class="col s12">
                 <div class="row textarea--row">
                     <div class="input-field col s12 inviteMany--textarea">
-                        <textarea id="email_area" class="inviteMany--textareabox" autofocus></textarea>
+                        <textarea id="email_area" class="inviteMany--textareabox"></textarea>
                         <label class="active inviteMany--text">Enter multiple email addresses separated by a
                             comma</label>
                     </div>
@@ -19,7 +19,6 @@
                 <div class="column-flex">
                     <button v-on:click="inv_many" class="btn-submit" type="submit" name="action">
                         Add Invitees
-                        <i class="el-icon-caret-right"></i>
                     </button>
                 </div>
             </div>
@@ -94,10 +93,12 @@
         box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2) !important;
         color: #333 !important;
         border: none !important;
+        width: 200px!important;
     }
 
     .btn-submit {
         font-size: 14px !important;
+        width: 200px!important;
     }
 
     .inviteMany--textarea {
@@ -110,9 +111,10 @@
         border: 1px solid #dcdfe6 !important;
         border-radius: 4px !important;
     }
-    .inviteMany--textareabox:focus {
-        border-color: #1782c5 !important;
+    .inviteMany--textareabox:focus{
+        border: 1px solid #1782c5 !important;
         -webkit-box-shadow: none !important;
+        outline:none;
         box-shadow: none !important;
     }
     .textarea--row{
@@ -128,4 +130,5 @@
         top: 0;
         z-index: -1;
     }
+
 </style>

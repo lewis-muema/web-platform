@@ -11,15 +11,14 @@
 }
 .section{
     padding-top: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     padding-bottom: 2px;
-   
     border-bottom: 1px solid #ebeef5;
 }
 .section__link{
-    color: #555;
+    color: #555 !important;
     text-transform: capitalize !important;
-    font-size: 16px;
+    font-size: 18px;
     text-align: center;
     padding: 2px 25px;
     text-decoration: none;
