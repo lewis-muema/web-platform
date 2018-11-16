@@ -15,7 +15,7 @@
     </div>
 
      <el-table
-      :data="tableData"
+      :data="order_history_data"
       style="width: 100%"
       :border="true"
       :stripe="true"
@@ -125,6 +125,8 @@ export default {
             "from_date":"",
             "to_date":""
           },
+          filteredData: [],
+          filterState: false,
         }
       },
       filters: {
@@ -134,23 +136,48 @@ export default {
       },
       methods:{
         filterTableData() {
+            //reset filter
+            this.filterState  = false;
+
             let user = this.filterData.user;
             let from_date = this.filterData.from_date;
             let to_date = this.filterTableData.to_date;
+            this.filteredData = this.order_history_data;
 
+             
+             console.log(this.filteredData);
+             console.log(to_date);
+             
             //check if both are filled
             if(user !== '' && from_date !== '' && to_date !== ''){
               console.log('performing a user and date filter');
+              console.log(from_date);
+              console.log(to_date);
+              from_date = moment(from_date);
+              to_date = moment(to_date);
 
+              console.log(from_date);
+              let vm = this;
+
+              this.filteredData = this.filteredData.filter(function (order) {
+                  return order.user_details.id ==  user  && moment(order.order_date).isSameOrAfter(from_date) && moment(order.order_date).isSameOrBefore(to_date);
+              });
+               this.filterState = true;
 
             } else if(user !== ''){
               //user filter
               console.log('performing a user filter');
+              console.log(user);
 
+              this.filteredData = this.filteredData.filter( order => order.user_details.id ==  user);
+              this.filterState = true;
+        
 
             } else {
               //date filter
               console.log('performing a date filter');
+              return moment(order.order_date).isSameOrAfter(from_date) && moment(order.order_date).isSameOrBefore(to_date);
+              this.filterState = true;
 
             }
       },
@@ -212,7 +239,16 @@ export default {
           cop_users:'$_transactions/getCopUsers',
       }),
       inactive_filter() {
+        if(this.filterData.user == '' && (this.filterData.from_date == '' || this.filterData.to_date == '')){
+          this.filterState = false;
+        }
         return this.filterData.user == '' && (this.filterData.from_date == '' || this.filterData.to_date == '');
+      },
+      order_history_data() {
+        if(this.filterState == true){
+          return this.filteredData;
+        }
+       return this.tableData;
       }
      },
       mounted(){
