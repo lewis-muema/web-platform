@@ -22,7 +22,7 @@ const state = {
     polylines: [{
 
     }],
-    vendors: []
+    vendors: {}
   },
   ongoing_show :0,
 };
