@@ -363,3 +363,21 @@ span.el-pagination__jump {
 .el-date-picker__header-label.active, .el-date-picker__header-label:hover {
   color: #2c82c5 !important;
 }
+
+.el-picker-panel {
+  color: #2c82c5 !important;
+  border: 1px solid #e4e7ed;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  background: #fff;
+  border-radius: 4px;
+  line-height: 30px;
+  margin: 5px 0;
+  font-family: 'Rubik', sans-serif !important;
+}
+.el-date-table td span {
+  color: #555;
+}
+
+.el-date-table td.next-month, .el-date-table td.prev-month .el-date-table td span  {
+  color: #f1f1f1 !important;
+}

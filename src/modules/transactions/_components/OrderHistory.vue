@@ -94,7 +94,7 @@
   <div class="section--pagination-wrap">
         <el-pagination
             layout="total, sizes, prev, pager, next, jumper"
-            :total="tableData.length"
+            :total="order_history_data.length"
             :page-size="pagination_limit"
             :current-page.sync="pagination_page"
             @current-change="changePage"
@@ -176,7 +176,9 @@ export default {
             } else {
               //date filter
               console.log('performing a date filter');
-              return moment(order.order_date).isSameOrAfter(from_date) && moment(order.order_date).isSameOrBefore(to_date);
+               this.filteredData = this.filteredData.filter(function (order) {
+                return moment(order.order_date).isSameOrAfter(from_date) && moment(order.order_date).isSameOrBefore(to_date);
+               });
               this.filterState = true;
 
             }

@@ -2,12 +2,12 @@
 
   <div class="" id="payments_container">
         <div class="section--filter-wrap">
-        <div class="section--filter-input-wrap">
-            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="From"/>
-            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="To"/>
-            
-            <button type="button" class="button-primary section--filter-action align-left">Search</button>
-  
+          <div class="section--filter-input-wrap">
+              <el-date-picker class="section--filter-input" type="date" name="from_date" v-model="filterData.from_date" placeholder="From"/>
+              <el-date-picker class="section--filter-input" type="date" name="to_date" v-model="filterData.to_date" placeholder="To"/>
+              
+              <button type="button" :class="inactive_filter?'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'">Search</button>
+    
         </div>
         <div class="section--filter-action-wrap">
           <button type="button" class="button-primary section--filter-action">Pay</button>
@@ -16,7 +16,7 @@
     </div>
 
     <el-table
-     :data="tableData"
+     :data="payment_data"
      style="width: 100%"
      :border="true"
      :stripe="true"
@@ -54,7 +54,7 @@
      <div class="section--pagination-wrap">
         <el-pagination
             layout="total, sizes, prev, pager, next, jumper"
-            :total="tableData.length"
+            :total="payment_data.length"
             :page-size="pagination_limit"
             :current-page.sync="pagination_page"
             @current-change="changePage"
@@ -70,8 +70,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name:'Payments',
   data: function () {
@@ -79,14 +78,34 @@ export default {
       empty_payments_state:"Fetching Payments",
       pagination_limit:5,
       pagination_page:1,
+      filterState: false,
+      filterData: {
+        "from_date": "",
+        "to_date": ""
+      },
+      filteredPaymentData:[]
     }
   },
-  computed: {
-    ...mapGetters({
-      tableData:'$_transactions/get_payments'
-    }),
+  mounted(){
+      //TODO: Get this from session
+      //TODO: also create payload depending on session
+
+      let payment_payload = {
+        "cop_id": 669,
+        "user_type": 2
+      }
+      this.$store.dispatch("$_transactions/requestPayments", payment_payload).then(response => {
+          console.log(response);
+          this.empty_orders_state = "Payments Not Found";
+      }, error => {
+          console.log(error);
+          this.empty_orders_state = "Payments Failed to Fetch";
+      });
   },
   methods: {
+    ...mapActions([
+            '$_transactions/requestPayments',
+     ]),
     changeSize(val) {
         this.pagination_page = 1;
         this.pagination_limit = val;
@@ -98,10 +117,27 @@ export default {
         let paginated_drivers = this.searched_drivers.slice(from, to);
         console.log(from, to, paginated_drivers);
     },
-  }
+    
+  },
+  computed: {
+    ...mapGetters({
+      paymentData:'$_transactions/getPayments'
+    }),
+    payment_data() {
+      if(this.filterState == true){
+        return this.filteredPaymentData;
+      }
+      return this.paymentData;
+    },
+    inactive_filter() {
+      if(this.filterData.from_date == '' && this.filterData.to_date == ''){
+        this.filterState = false;
+      }
+      return this.filterData.from_date == '' && this.filterData.to_date == '';
+    }
+  },
 }
 </script>
 
 <style lang="css">
-  @import "../../../assets/styles/datatable.css";
 </style>

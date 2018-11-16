@@ -13,7 +13,7 @@
 
 
     <el-table
-     :data="tableData"
+     :data="statement_data"
      style="width: 100%"
      :border="true"
      :stripe="true"
@@ -56,7 +56,7 @@
     <div class="section--pagination-wrap">
         <el-pagination
             layout="total, sizes, prev, pager, next, jumper"
-            :total="tableData.length"
+            :total="statement_data.length"
             :page-size="pagination_limit"
             :current-page.sync="pagination_page"
             @current-change="changePage"
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name:'Statement',
@@ -79,9 +79,26 @@ export default {
       empty_statement_state:"Fetching Statement",
       pagination_limit:10,
       pagination_page:1,
+      filterState: false,
+      
     }
   },
+  mounted(){ 
+      let statement_payload = {
+        "cop_id": 669
+      }
+      this.$store.dispatch("$_transactions/requestStatement", statement_payload).then(response => {
+          console.log(response);
+          this.empty_statement_state = "Statement Not Found";
+      }, error => {
+          console.log(error);
+          this.empty_statement_state = "Statement Failed to Fetch";
+      });
+  },
   methods:{
+       ...mapActions([
+            '$_transactions/requestStatement',
+     ]),
      changeSize(val) {
           this.pagination_page = 1;
           this.pagination_limit = val;
@@ -93,11 +110,15 @@ export default {
           let paginated_drivers = this.searched_drivers.slice(from, to);
           console.log(from, to, paginated_drivers);
       },
+
   },
   computed: {
     ...mapGetters({
-      tableData:'$_transactions/get_statement'
+      statementData:'$_transactions/getStatement'
     }),
+    statement_data() {
+      return this.statementData;
+    }
   },
 }
 </script>
