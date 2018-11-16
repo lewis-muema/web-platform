@@ -5,7 +5,8 @@ import mutations from './mutations';
 const state = {
   ongoing_orders: {},
   map: {
-    markers: [{
+    markers: [
+      {
         position: {
           lat: -1.3005695,
           lng: 36.778638
@@ -19,8 +20,9 @@ const state = {
       }
     ],
     polylines: [{
-      
-    }]
+
+    }],
+    vendors: []
   },
   ongoing_show :0,
 };
