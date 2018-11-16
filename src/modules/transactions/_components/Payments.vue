@@ -1,21 +1,19 @@
 <template lang="html">
 
   <div class="" id="payments_container">
-    <div class="table--header">
-        <div class="table--header-filter-wrap">
-            <el-select class="table--header-filter-input" v-model="value" placeholder="Users">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-            </el-select>
-            <el-input class="input-control table--header-filter-input" type="date" name="name" value="" placeholder="From Date"/>
-            <el-input class="input-control table--header-filter-input" type="date" name="name" value="" placeholder="To Date"/>
+        <div class="section--filter-wrap">
+        <div class="section--filter-input-wrap">
+            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="From Date"/>
+            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="To Date"/>
         </div>
-        <div class="table--header-action-wrap">
-
+        <div class="section--filter-action-wrap">
+          <button type="button" class="button-primary section--filter-action">Search</button>
+          <button type="button" class="button-primary section--filter-action">New Payment</button>
         </div>
     </div>
+
     <el-table
-     :data="get_payments"
+     :data="tableData"
      style="width: 100%"
      :border="true"
      :stripe="true"
@@ -49,6 +47,22 @@
        >
      </el-table-column>
    </el-table>
+
+     <div class="section--pagination-wrap">
+        <el-pagination
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData.length"
+            :page-size="pagination_limit"
+            :current-page.sync="pagination_page"
+            @current-change="changePage"
+            :page-sizes="[10, 20, 50, 100]"
+            @size-change="changeSize"
+            class="section--pagination-item"
+            >
+        </el-pagination>
+    </div>
+
+
   </div>
 </template>
 
@@ -59,22 +73,28 @@ export default {
   name:'Payments',
   data: function () {
     return {
-      empty_payments_state:"Fetching Payments"
+      empty_payments_state:"Fetching Payments",
+      pagination_limit:5,
+      pagination_page:1,
     }
   },
   computed: {
     ...mapGetters({
-      get_payments:'$_transactions/get_payments'
+      tableData:'$_transactions/get_payments'
     }),
   },
   methods: {
-    handleRowExpand(row, expanded) {
-      console.log(row);
-      if(expanded.length > 0){
-          console.log('handling row expand');
-      }
-
-  },
+    changeSize(val) {
+        this.pagination_page = 1;
+        this.pagination_limit = val;
+    },
+    changePage() {
+        console.log('Page changed to', this.pagination_page);
+        let from = (this.pagination_page - 1) * this.pagination_limit;
+        let to = this.pagination_page * this.pagination_limit;
+        let paginated_drivers = this.searched_drivers.slice(from, to);
+        console.log(from, to, paginated_drivers);
+    },
   }
 }
 </script>

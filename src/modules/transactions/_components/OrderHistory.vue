@@ -84,7 +84,7 @@
       </el-table-column>
   </el-table>
 
-  <div class="section--pagination-wrap" v-if="tableData.length >= pagination_limit">
+  <div class="section--pagination-wrap">
         <el-pagination
             layout="total, sizes, prev, pager, next, jumper"
             :total="tableData.length"
