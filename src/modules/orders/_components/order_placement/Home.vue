@@ -50,8 +50,8 @@ import { mapMutations } from 'vuex';
 import home_store from './_store';
 import VendorComponent from './_components/VendorComponent.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlus, faMapMarkerAlt, faCircle } from '@fortawesome/free-solid-svg-icons'
-library.add(faPlus,faMapMarkerAlt,faCircle)
+import { faPlus, faMapMarkerAlt, faCircle, faClock, faPen, faDollarSign } from '@fortawesome/free-solid-svg-icons'
+library.add(faPlus,faMapMarkerAlt,faCircle,faClock,faPen,faDollarSign)
 
 export default {
   name: 'home',
@@ -97,103 +97,5 @@ export default {
 </script>
 
 <style lang="css">
-.homeview--outer
-{
-  position: absolute;
-  margin-top: 10px;
-  left: 10px;
-  background-color: #fff;
-  width: 400px;
-}
-.homeview--inner
-{
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
-}
-.homeview--form
-{
-  /* border-left: 3px solid #ccc; */
-}
-.homeview--input-bundler
-{
-  padding-bottom: 15px;
-  /* width: 100%; */
-  display: flex;
-}
-.homeview--input-bundler__img, .homeview--input-bundler__input{
-     display: flex;
-}
-.homeview--input-bundler__img{
-    max-width: 10px;
-    height: 10px;
-    position: relative;
-    top: 15px;
-    left: -15px;
-}
-.homeview--input-bundler__input{
-
-}
-.homeview--input-bundler__waypoints{
-    margin-top: -10px;
-    padding-left: 10px;
-}
-.homeview--stops
-{
-  text-decoration: none;
-  color: #1782c5;
-  font-size: 13px;
-  padding-top: 10px;
-}
-.homeview--row
-{
-  padding: 10px 20px;
-  font-size: 13px;
-}
-.homeview--row__more-destinations{
-    padding-left: 5px;
-    margin-top: -15px;
-    margin-bottom: 10px;
-}
-.homeview--row__font-awesome{
-    padding-right: 10px;
-    font-size: 13px;
-}
-.homeview--add
-{
-  text-decoration: none;
-  color: #1782c5;
-  font-size: 13px;
-}
-.row
-{
-  display: flex;
-  flex-direction: row;
-}
-.homeview--destinations
-{
-  /* padding: 10px; */
-  /* background-color: #efefef; */
-}
-.slide-fade-enter-active {
-  transition: all .8s ease;
-}
-.slide-fade-leave-active {
-  transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-.slide-fade-enter
-{
-  transform: translateX(20px);
-  opacity: 0;
-}
-.slide-fade-leave-to
-{
-  opacity: 0;
-  transform: translateY(-10px);
-}
-.slide-fade-move
-{
-  transition: transform 1s;
-}
-
-
+@import "../../../../assets/styles/orders_order_placement.css";
 </style>
