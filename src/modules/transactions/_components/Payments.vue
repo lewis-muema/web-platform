@@ -7,8 +7,9 @@
             <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="To Date"/>
         </div>
         <div class="section--filter-action-wrap">
-          <button type="button" class="button-primary section--filter-action">Search</button>
           <button type="button" class="button-primary section--filter-action">New Payment</button>
+          
+          <button type="button" class="button-primary section--filter-action">Search</button>
         </div>
     </div>
 

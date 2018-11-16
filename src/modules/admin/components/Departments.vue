@@ -1,57 +1,102 @@
 <template lang="html">
     <div class="departments_container" id="departments_container">
-    <div class="menu">
-        <p class="button">
-            <a class="button__element"> Add Department </a>
-            <br> <br>
-        </p>
+            <div class="section--filter-wrap">
+        <div class="section--filter-input-wrap">
+        </div>
+        <div class="section--filter-action-wrap">
+          <button class="button-primary section--filter-action" @click="addDepartment">Add Department</button>
+        </div>
     </div>
-      <div class="" id="table_div">
 
-      </div>
+     <el-table
+      :data="tableData"
+      style="width: 100%"
+      :border="true"
+      :stripe="true"
+      >
+      <template slot="empty">
+            {{empty_orders_state}}
+      </template>
+      <el-table-column type="index">
+      </el-table-column>
+      <el-table-column
+        label="Name"
+        prop="name"
+         width="180"
+        >
+      </el-table-column>
+      <el-table-column
+        label="Approver"
+        prop="approver">
+      </el-table-column>
+      <el-table-column
+        label="Action">
+        <template slot-scope="scope">
+          <a>Edit</a>
+        </template>
+      </el-table-column>
+      
+  </el-table>
+
+  <div class="section--pagination-wrap">
+    <el-pagination
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData.length"
+        :page-size="pagination_limit"
+        :current-page.sync="pagination_page"
+        @current-change="changePage"
+        :page-sizes="[10, 20, 50, 100]"
+        @size-change="changeSize"
+        class="section--pagination-item"
+        >
+    </el-pagination>
+</div>
     </div>
 </template>
 
 <script>
-import DatatableMixin from '../../../mixins/datatable_mixin.js'
-
 export default {
     name : "Departments",
-    mixins: [ DatatableMixin ],
     mounted() {
-      var el = "table_div";
-      var data = [
-          {
-              "Name": "CASH-AC29TZ828-T4W",
-              "Approver": "Computer Architecture",
-          },
-          {
-              "Name": "CASH-AC29TZ828-T4W",
-              "Approver": "Asp.Net 4 Blue Book",
-          },
-          {
-              "Name": "CASH-AC29TZ828-T4W",
-              "Approver": "Popular Science",
-          }
-      ];
-      this.create_datatable(el, data,
-      {
-        title : "Departments",
-        count: true,
-        custom_col:[
-          {
-            key: "Actions",
-            render: '<a href="" class="mdshow" onclick="">Edit</a> | <a href="" class="mdshow" onclick="">Delete</a>'
-          },
-        ],
-        col_options: [
-          {
-            option:'',
-            target:''
-          },
-        ],
-      });
     },
+    data:function( ){
+        return {
+            empty_orders_state:'Fetching Departments',
+            pagination_limit:5,
+            pagination_page:1,
+        
+            tableData:[
+                {
+                    "name": "CASH-AC29TZ828-T4W",
+                    "approver": "Computer Architecture",
+                },
+                {
+                    "name": "CASH-AC29TZ828-T4W",
+                    "approver": "Asp.Net 4 Blue Book",
+                },
+                {
+                    "name": "CASH-AC29TZ828-T4W",
+                    "approver": "Popular Science",
+                }
+            ]
+        }
+    },
+    methods: {
+      addDepartment() {
+        //TODO:route to add department  
+      },  
+      changeSize(val) {
+        this.pagination_page = 1;
+        this.pagination_limit = val;
+      },
+      changePage() {
+          console.log('Page changed to', this.pagination_page);
+          let from = (this.pagination_page - 1) * this.pagination_limit;
+          let to = this.pagination_page * this.pagination_limit;
+          let paginated_drivers = this.searched_drivers.slice(from, to);
+          console.log(from, to, paginated_drivers);
+      },
+    }
 }
 </script>
 

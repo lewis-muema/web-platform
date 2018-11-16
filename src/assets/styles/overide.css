@@ -191,6 +191,9 @@ button span {
 .el-table, .el-table__expanded-cell {
   background-color: #f9f9f9 !important;
 }
+.el-table__row a {
+  color:#1782c5 !important;
+}
 .el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover {
   background-color: #4098ce !important;
   color: #fff !important;

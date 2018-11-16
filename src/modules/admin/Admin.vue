@@ -1,7 +1,7 @@
 <template lang="html">
     <div class="">
         <main-header></main-header>
-        <div class="admin-container" id="admin_container">
+        <div class="container admin-container" id="admin_container">
             <!--<div class="title">-->
                 <!--<h3 class="title__text">Admin Settings</h3>-->
             <!--</div>-->
@@ -40,6 +40,9 @@ export default {
 
 <style lang="css">
     @import "../../assets/styles/section_headers.css";
+    @import "../../assets/styles/section_filters.css";
+    @import "../../assets/styles/section_pagination.css";
+    
     .admin-container{
         margin: 0 100px 8px 100px !important;
         padding-top: 60px;
