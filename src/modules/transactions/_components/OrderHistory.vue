@@ -1,5 +1,20 @@
 <template lang="html">
   <div class="" id="order_hist_container">
+    
+    <div class="section--filter-wrap">
+        <div class="section--filter-input-wrap">
+            <el-select class="section--filter-input" v-model="value" placeholder="Users">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+            </el-select>
+            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="From Date"/>
+            <el-date-picker class="section--filter-input" type="date" name="name" value="" placeholder="To Date"/>
+        </div>
+        <div class="section--filter-action-wrap">
+          <button type="button" class="button-primary section--filter-action">Search</button>
+        </div>
+    </div>
+
      <el-table
       :data="tableData"
       style="width: 100%"
@@ -8,6 +23,7 @@
       :row-key="getRowKey"
       :expand-row-keys="expand_keys"
       @row-click="expandTableRow"
+      @expand-change="handleRowExpand"
       >
       <template slot="empty">
             {{empty_orders_state}}
@@ -27,13 +43,13 @@
         label="Date"
         prop="order_date">
         <template slot-scope="props">
-          {{tableData[props.$index]['date_created'] | moment }}
+          {{tableData[props.$index]['order_date'] | moment }}
         </template>
       </el-table-column>
       
       <el-table-column
         label="User"
-        prop="full_order_details.values.user_id"
+        prop="user_details.name"
         width="120"
         >
       </el-table-column>
@@ -45,20 +61,43 @@
       </el-table-column>
       <el-table-column
         label="Deliveries"
-        prop="full_order_details.values.way_points"
+        prop="path"
         width="120"
         >
+        <template slot-scope="scope">
+          {{tableData[scope.$index]['path'].length-1}}
+        </template>
       </el-table-column>
       <el-table-column
         label="From"
-        prop="from_name">
+        prop="path">
+        <template slot-scope="scope">
+          {{ getOrderFromName(tableData[scope.$index]['path']) }}
+        </template>
       </el-table-column>
       <el-table-column
         label="To"
-        prop="to_name">
+        prop="path">
+         <template slot-scope="scope">
+          {{ getOrderToName(tableData[scope.$index]['path']) }}
+        </template>
       </el-table-column>
   </el-table>
 
+  <div class="section--pagination-wrap">
+        <el-pagination
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData.length"
+            :page-size="pagination_limit"
+            :current-page.sync="pagination_page"
+            @current-change="changePage"
+            :page-sizes="[10, 20, 50, 100]"
+            @size-change="changeSize"
+            class="section--pagination-item"
+            >
+        </el-pagination>
+    </div>
+  
   </div>
 </template>
 
@@ -71,35 +110,56 @@ export default {
           empty_orders_state:"Fetching Order History",
           expand_id: 0,
           expand_keys:[],
+          pagination_limit:5,
+          pagination_page:1,
+
         }
       },
       filters: {
         moment: function (date) {
-          return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+          return moment(date).format('MMM Do YYYY, h:mm a');
         }
       },
       methods:{
+        changeSize(val) {
+            this.pagination_page = 1;
+            this.pagination_limit = val;
+        },
+        changePage() {
+            console.log('Page changed to', this.pagination_page);
+            let from = (this.pagination_page - 1) * this.pagination_limit;
+            let to = this.pagination_page * this.pagination_limit;
+            let paginated_drivers = this.searched_drivers.slice(from, to);
+            console.log(from, to, paginated_drivers);
+        },
          ...mapActions([
             '$_transactions/requestOrderHistoryOrders',
         ]),
         moment: function () {
           return moment();
         },
+        getOrderFromName(path) {
+          return path[0].name;
+        },
+        getOrderToName(path) {
+          let path_length = path.length;
+          return path[path_length-1].name;
+        },
         getRowKey(row){
-          return row.order_no;
+          return row.order_id;
         },
         expandTableRow(row, event, column){
-          this.expand_id = row.order_no;
+          this.expand_id = row.order_id;
           this.expand_keys = []
-          this.expand_keys.push(row.order_no)
-          this.$router.push({name:'order-details', params: {id : row.order_no}});
+          this.expand_keys.push(row.order_id)
+          this.$router.push({name:'order-details', params: {id : row.order_id}});
         },
         handleRowExpand(row, expanded) {
           
-          this.expand_id = row.order_no;
+          this.expand_id = row.order_id;
           this.expand_keys = []
-          this.expand_keys.push(row.order_no)
-          this.$router.push({name:'order-details', params: {id : row.order_no}});
+          this.expand_keys.push(row.order_id)
+          this.$router.push({name:'order-details', params: {id : row.order_id}});
 
           // console.log('row expansion');
 
@@ -121,15 +181,12 @@ export default {
       }),
      },
       mounted(){
-          //To Do: Get this from session
+          //TODO: Get this from session
+          //TODO: also create payload depending on session
+
           let payload = {
-              "values": {
-                  "email": "faithshop@gmail.com",
-                  "phone": "0778987789",
-                  "cop_id": "669",
-                  "min_order": "1",
-                  "max_order": "10"
-              }
+            "cop_id": 669,
+            "user_type":2
           }
           // this.requestOrderHistoryOrders(payload);
           this.$store.dispatch("$_transactions/requestOrderHistoryOrders", payload).then(response => {

@@ -1,7 +1,8 @@
 .title{
     font-size: 22px;
     padding-bottom: 0px;
-    border-bottom: 1px solid #ccc;
+    
+    border-bottom: 1px solid #ebeef5;
     color: #999;
     margin-bottom: 30px;
 }
@@ -10,14 +11,14 @@
 }
 .section{
     padding-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     padding-bottom: 2px;
-    border-bottom: 1px solid #1782c5;
+    border-bottom: 1px solid #ebeef5;
 }
 .section__link{
-    color: #1782c5;
+    color: #555 !important;
     text-transform: capitalize !important;
-    font-size: 15px;
+    font-size: 18px;
     text-align: center;
     padding: 2px 25px;
     text-decoration: none;

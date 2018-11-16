@@ -57,10 +57,10 @@ export default {
     margin-top: 5px !important;
     margin-bottom: 15px !important;
     margin-left: 0px;
-    margin-right: 0px;
     width: 300px;
     height: 30px;
     font-size: 13px;
+    margin-right: 27%;
 }
 .form__input {
     padding: 5px;
@@ -70,6 +70,7 @@ export default {
     background-image: none;
     border: 1px solid #ccc;
     border-radius: 4px;
+
 }
 .btn {
     display: inline-block;
@@ -83,12 +84,18 @@ export default {
     user-select: none;
     background-image: none;
     border: 1px solid transparent;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
 }
 .btn-primary {
     color: #fff;
     background-color: #1782C5;
     border-color: #357ebd;
+    margin-right: 27%;
+}
+.form__input:focus {
+  border-color: #1782c5;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 </style>

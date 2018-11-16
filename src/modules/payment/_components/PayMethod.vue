@@ -18,7 +18,7 @@ export default {
   margin: 40px 0px 20px 0px;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #ebeef5;
   margin-bottom: 20px;
 }
 .paymethod--link

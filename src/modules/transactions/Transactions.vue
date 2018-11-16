@@ -19,10 +19,9 @@
 import Vue from 'vue'
 import trans_store from './_store';
 import MainHeader from '../../components/headers/MainHeader.vue'
-// import RegisterStoreModule from '../../mixins/register_store_module'
-// import Element from 'element-ui'
-// import 'element-ui/lib/theme-chalk/index.css'
-// Vue.use(Element)
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faStar } from '@fortawesome/free-solid-svg-icons'
+library.add(faStar)
 
 export default {
   name:'Transactions',
@@ -36,4 +35,6 @@ export default {
 
 <style lang="css">
 @import "../../assets/styles/section_headers.css";
+@import "../../assets/styles/section_filters.css";
+@import "../../assets/styles/section_pagination.css";
 </style>
