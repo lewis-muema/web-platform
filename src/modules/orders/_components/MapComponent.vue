@@ -39,10 +39,6 @@ export default {
 
       var image = document.createElement("img");
       image.crossOrigin = "anonymous"
-      if (vendor_type == 12)
-      {
-        vendor_type = 1
-      }
       image.src = 'https://images.sendyit.com/web_platform/vendor_type/top/' + vendor_type + '.svg';
       const imageLoadPromise = new Promise(resolve => {
         image.onload = resolve
@@ -53,7 +49,7 @@ export default {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
       ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate((rotation - 90) * Math.PI / 180);
+      ctx.rotate((rotation) * Math.PI / 180);
       ctx.drawImage(image, -canvas.width / 2, -canvas.height / 2);
 
       var rotated = canvas.toDataURL();
