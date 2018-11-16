@@ -27,15 +27,15 @@
                         </div>
                     </div>
                     <div style="display: table" class="free-delivery--social">
-                        <div style="display: table-cell" class="">
+                        <div class="free-display">
                             <div style="display: inline-block" class="custom_mail">Mail</div>
                             <div class="share_img"></div>
                         </div>
-                        <div style="display: table-cell" class="">
+                        <div class="free-display">
                             <div style="display: inline-block" class="custom_fb">Share</div>
                             <div class="share_img3"></div>
                         </div>
-                        <div style="display: inline-block" class="">
+                        <div class="free-display">
                             <div class="custom_tw">Tweet</div>
                             <div class="share_img2"></div>
                         </div>
@@ -87,6 +87,9 @@
     .free-text--hidden{
         display: none;
     }
+    .free-display{
+        display: table-cell
+    }
     .free-deliveries--background {
         width: 100%;
         height: 270px;
@@ -104,7 +107,7 @@
 
     .separing-line {
         color: #dcdfe6;
-        margin-top: 200px;
+        margin-top: 180px;
     }
 
     .show-txt {
@@ -274,8 +277,8 @@
 
     .free-delivery--social {
         height: 80px;
-        margin-top: 5%;
         margin-bottom: 10px;
+        margin-top: 20px
     }
 
     .free-delivery--stats {
