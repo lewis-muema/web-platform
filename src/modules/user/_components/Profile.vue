@@ -1,7 +1,7 @@
 <template>
   <div class="" id="auth_container">
       <!-- <main-header></main-header> -->
-      <div class="container">
+      <div class="profile-container">
         <div class="new-card" style="margin-top:5%;margin-left:20%;border-right:5px solid #1782C5;height:400px;">
           <a class="my-profile__adj">
               <router-link class="profile--link" to="/user/profile/personal_information">Personal Information</router-link>
@@ -57,7 +57,7 @@
   padding-top: 3px ! important;
 
 }
-.container{
+.profile-container{
   display: flex;
 }
 .profile--link
