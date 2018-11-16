@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="home-view-vendor-types" v-if="active_vendor_price_data != '' ">
-                    <div class="home-view-vendor-types--item" v-for="j in active_vendor_price_data">
+                    <div class="home-view-vendor-types--item" v-for="j in active_vendor_price_data" :key="j.order_no">
                         <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
                             <div class="home-view-vendor-types-item--vendor-wrapper__img">
                                 <img class="home-view-vendor-types-item__image" :src="getVendorIcon(j.vendor_id)" alt="">
@@ -108,7 +108,7 @@ export default {
             this.set_active_package_class(name);
         },
         getVendorIcon(id){
-            return "https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/vendor_type/side/"+id+".svg";
+            return "https://images.sendyit.com/web_platform/vendor_type/side/"+id+".svg";
         }
     }
 }
