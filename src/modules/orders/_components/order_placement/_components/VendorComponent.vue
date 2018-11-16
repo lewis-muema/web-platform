@@ -1,97 +1,139 @@
 <template lang="html">
-  <div class="vendorview--inner">
     <div class="">
-      <div class="vendorview--title">
-        What size load do you want delivered?
-      </div>
-      <div class="vendorview--size-selector">
-        <div class="vendorview--size-option active" v-for="n in 3">
-          <img src="https://cdn3.iconfinder.com/data/icons/box-and-shipping-supplies-icons/456/Box_Crate_With_Contents-512.png" alt="" class="vendorview--size-img">
-          <div class="">Small</div>
+        <div class="home-view--seperator">
+        </div>
+        <div class="home-view-vendor-classes">
+            <!-- <div class="home-view-vendor-classes--title">
+                What size of load do you want delivered?
+            </div> -->
+            <div class="home-view-vendor-classes--body">
+                <div class="">
+                    <!-- <div class="home-view-vendor-classes--icons">
+                        <div class="home-view-vendor-classes-icons-item">
+                           <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/vendor_size/small.svg" alt="" class="home-view-vendor-classes-icons-item--img">
+                        </div>
+                        <div class="home-view-vendor-classes-icons-item">
+                            <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/vendor_size/medium.svg" alt="" class="home-view-vendor-classes-icons-item--img">
+                        </div>
+                        <div class="home-view-vendor-classes-icons-item">
+                            <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/vendor_size/large.svg" alt="" class="home-view-vendor-classes-icons-item--img">
+                        </div>
+                    </div> -->
+                    <div class="home-view-vendor-classes--label">
+                        <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in get_price_request_object.economy_price_tiers" :key="index" @click="setActivePackageClass(index)" @click="setActivePackageClass(index)">
+                            {{index}}
+                        </div>
+                        <!-- <div class="home-view-vendor-classes-label-item">
+                            medium
+                        </div>
+                        <div class="home-view-vendor-classes-label-item">
+                            large
+                        </div> -->
+                    </div>
+                </div>
+                <div class="home-view-vendor-types" v-if="active_vendor_price_data != '' ">
+                    <div class="home-view-vendor-types--item" v-for="vendor in active_vendor_price_data" :key="vendor.vendor_name">
+                        {{vendor.vendor_name}}
+                    </div>
+                </div>
+                <!-- <div class="">
+                    <div class="">
+                        choose payment
+                    </div>
+                    <div class="">
+                        add note
+                    </div>
+                    <div class="">
+                        schedule
+                    </div>
+                </div> -->
+            </div>
+
         </div>
       </div>
-    </div>
-    <div class="">
-      <div class="vendor--option" v-for="n in 3">
-        <div class="">
-          <img src="https://d2gg9evh47fn9z.cloudfront.net/800px_COLOURBOX30644467.jpg" alt="" class="vendor--option-icon">
-        </div>
-        <div class="">
-          3 Tonne Truck
-        </div>
-        <div class="">
-          1234 <span>KES</span>
-        </div>
-        <div class="">
-          Info
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 export default {
+    data () {
+        return {
+            active_package_class : ""
+        }
+    },
+    computed :{
+        ...mapGetters({
+          get_price_request_object : '$_orders/$_home/get_price_request_object',
+          get_active_package_class : '$_orders/$_home/get_active_package_class'
+        }),
+        active_vendor_price_data (){
+            if(this.get_active_package_class != ""){
+                return this.get_price_request_object.economy_price_tiers[this.get_active_package_class];
+            }
+            return "";
+        },
+    },
+    methods:{
+        ...mapMutations({
+          set_active_package_class : '$_orders/$_home/set_active_package_class'
+        }),
+        setActivePackageClass(name){
+            this.set_active_package_class(name);
+            console.log('name',name)
+        },
+    }
 }
 </script>
 
-<style lang="css">
-.vendorview--inner
-{
-  padding: 20px;
-}
-.vendorview--title
-{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-.vendorview--size-selector
-{
-  display: flex;
-  justify-content: space-between;
-  padding: 20px 0px;
-}
-.vendorview--size-img
-{
-  width: 40px;
-}
-.vendorview--size-option
-{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  cursor: pointer;
-}
-.vendor--option
-{
-  display: flex;
-  margin: 10px 0px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 20px;
-  cursor: pointer;
-  justify-content: space-between;
-  transition: border .5s ease-in-out;
-  cursor: pointer;
-}
-.vendor--option-icon
-{
-  width: 40px;
-  height: 20px;
-}
-.vendor--option:hover, .vendor--option-active
-{
-  transition: border .5s ease-in-out;
-  border: 3px solid #1782c5;
-}
-.vendorview--size-option.active
-{
-  transform: scale(1.4,1.4);
-  color: #1782c5;
-}
+<style lang="css" scoped>
+    .home-view--seperator{
+        border-top: 1px solid #6663;
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+    .home-view-vendor-classes{
+
+    }
+    .home-view-vendor-classes--title{
+        text-align: center;
+        font-weight: normal;
+        padding: 20px;
+    }
+    .home-view-vendor-classes--body{
+
+    }
+    .home-view-vendor-classes--icons, .home-view-vendor-classes--label, .home-view-vendor-classes-icons-item, .home-view-vendor-classes-label-item{
+        display: flex;
+    }
+    .home-view-vendor-classes-icons-item, .home-view-vendor-classes-label-item{
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+    }
+    .home-view-vendor-classes--icons{
+
+    }
+    .home-view-vendor-classes--label{
+        padding: 5px 0px;
+    }
+    .home-view-vendor-classes-icons-item--img{
+        width: 30px;
+        max-height: 30px;
+    }
+    .home-view-vendor-classes-label-item{
+        text-transform: uppercase;
+        font-size: smaller;
+    }
+    .home-view-vendor-classes-label-item, .home-view-vendor-classes-icons-item--img{
+        cursor: pointer;
+    }
+    .home-view-vendor-types--item{
+        border-radius: 5px;
+        height: 2.5em;
+        margin: 20px 0;
+    }
+    .home-view-vendor-types--item:hover, .home-view-vendor-types--item:active{
+        border: 2px solid #1782c5;
+    }
+
 </style>
