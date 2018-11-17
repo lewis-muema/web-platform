@@ -9,7 +9,12 @@ let entryUrl = null;
 function guard(to, from, next){
   return new Promise((resolve, reject) => {
       // //check store
-    if ("user_id" in store.state.session) {
+       console.log('router-message-session', store.state.session);
+      //TODO: change this to use the user id and check for null as well
+      //TODO: make sure this is checking the store well
+    let session = store.state.session;
+
+    if (session) {
       if (entryUrl) {
         const url = entryUrl;
         entryUrl = null;
@@ -18,6 +23,8 @@ function guard(to, from, next){
         resolve(next()); // all is fine
       }
     } else {
+      console.log('router-message', 'user not logged in');
+
       resolve(next('/auth/sign_in'));
       //TODO:ssr vue
       //check cookies 

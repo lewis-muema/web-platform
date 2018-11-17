@@ -80,6 +80,9 @@ export default {
           "endpoint":"sign_in/"
         }
         this.requestSignIn(full_payload).then(response => {
+           
+           console.log(response);
+
            if(response.status == true){
              //set cookie
              //commit everything to the store
