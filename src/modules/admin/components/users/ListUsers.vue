@@ -73,7 +73,7 @@
             <el-table-column
                     label="Action">
                 <template slot-scope="scope">
-                    <a>Edit User</a>
+                    <a @click="edit_user">Edit User</a>
                 </template>
             </el-table-column>
 
@@ -209,6 +209,9 @@
             ...mapActions([
                 '$_admin/requestUsersList',
             ]),
+             edit_user() {
+                this.$router.push('/admin/users/edit_user');
+            },
 
         }
     }

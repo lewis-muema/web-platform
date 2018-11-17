@@ -77,7 +77,11 @@ export function createRouter () {
                       path: '/admin/users/add_user',
                       name:'adminAddUser',
                       component: () => import('../modules/admin/components/users/AddUser.vue')
-                  }
+                  },
+                  {
+                      path: '/admin/users/edit_user',
+                      component: () => import('../modules/admin/components/users/EditUser.vue')
+                  },
               ]
             },
             {
@@ -180,7 +184,7 @@ export function createRouter () {
 
           ]
       },
-      { path: '/external', component: () => import('../modules/external/External.vue'),
+      { path: '/external/onboard/:token', component: () => import('../modules/external/External.vue'),
       },
       { path: '/user/free-deliveries', component: () => import('../modules/user/_components/FreeDeliveries.vue'),
       },
