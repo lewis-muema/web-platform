@@ -80,8 +80,6 @@ export default {
           "endpoint":"sign_in/"
         }
         this.requestSignIn(full_payload).then(response => {
-           console.log("Sign In successfull!")
-           console.log(response);
            if(response.status == true){
              //set cookie
              //commit everything to the store
@@ -92,11 +90,13 @@ export default {
              this.setCookie(session_data);
              this.$store.commit('setSession', session_data);
 
-             this.$router.push( '/orders' );
+             this.$router.push('/orders');
         
            } else {
              //failed to login 
              //show some sort of error
+              console.warn('login failed');
+              
            }
            
         }, error => {
