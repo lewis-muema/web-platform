@@ -58,7 +58,7 @@
      <div class="section--pagination-wrap">
         <el-pagination
             layout="total, sizes, prev, pager, next, jumper"
-            :total="payment_data.length"
+            :total="paymentData.length"
             :page-size="pagination_limit"
             :current-page.sync="pagination_page"
             @current-change="changePage"
@@ -120,8 +120,7 @@ export default {
         console.log('Page changed to', this.pagination_page);
         let from = (this.pagination_page - 1) * this.pagination_limit;
         let to = this.pagination_page * this.pagination_limit;
-        let paginated_drivers = this.searched_drivers.slice(from, to);
-        console.log(from, to, paginated_drivers);
+        this.paymentData.slice(from, to);
     },
     filterPaymentData(){
        //reset filter
@@ -150,10 +149,13 @@ export default {
       paymentData:'$_transactions/getPayments'
     }),
     payment_data() {
+      let from = (this.pagination_page - 1) * this.pagination_limit;
+      let to = this.pagination_page * this.pagination_limit;
+      
       if(this.filterState == true){
-        return this.filteredPaymentData;
+        return this.filteredPaymentData.slice(from, to);
       }
-      return this.paymentData;
+      return this.paymentData.slice(from, slice);
     },
     active_filter() {
       if(this.filterData.from_date !== '' && this.filterData.to_date !== ''){

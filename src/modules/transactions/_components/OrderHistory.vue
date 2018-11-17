@@ -42,7 +42,7 @@
         label="Date"
         prop="order_date">
         <template slot-scope="props">
-          {{tableData[props.$index]['order_date'] | moment }}
+          {{ order_history_data[props.$index]['order_date'] | moment }}
         </template>
       </el-table-column>
       
@@ -66,21 +66,21 @@
         width="120"
         >
         <template slot-scope="scope">
-          {{tableData[scope.$index]['path'].length-1}}
+          {{order_history_data[scope.$index]['path'].length-1}}
         </template>
       </el-table-column>
       <el-table-column
         label="From"
         prop="path">
         <template slot-scope="scope">
-          {{ getOrderFromName(tableData[scope.$index]['path']) }}
+          {{ getOrderFromName(order_history_data[scope.$index]['path']) }}
         </template>
       </el-table-column>
       <el-table-column
         label="To"
         prop="path">
          <template slot-scope="scope">
-          {{ getOrderToName(tableData[scope.$index]['path']) }}
+          {{ getOrderToName(order_history_data[scope.$index]['path']) }}
         </template>
       </el-table-column>
   </el-table>
@@ -88,11 +88,11 @@
   <div class="section--pagination-wrap">
         <el-pagination
             layout="total, sizes, prev, pager, next, jumper"
-            :total="order_history_data.length"
+            :total="orderHistoryData.length"
             :page-size="pagination_limit"
             :current-page.sync="pagination_page"
             @current-change="changePage"
-            :page-sizes="[10, 20, 50, 100]"
+            :page-sizes="[5,10, 20, 50, 100]"
             @size-change="changeSize"
             class="section--pagination-item"
             >
@@ -112,7 +112,7 @@ export default {
           empty_users_state: "Fetching Cop Users",
           expand_id: 0,
           expand_keys:[],
-          pagination_limit:5,
+          pagination_limit:10,
           pagination_page:1,
           filterData : {
             "user":"",
@@ -188,8 +188,7 @@ export default {
             console.log('Page changed to', this.pagination_page);
             let from = (this.pagination_page - 1) * this.pagination_limit;
             let to = this.pagination_page * this.pagination_limit;
-            let paginated_drivers = this.searched_drivers.slice(from, to);
-            console.log(from, to, paginated_drivers);
+            this.orderHistoryData.slice(from, to);
         },
          ...mapActions([
             '$_transactions/requestOrderHistoryOrders',
@@ -236,7 +235,7 @@ export default {
     },  
     computed:{
         ...mapGetters({
-          tableData:'$_transactions/getOrderHistoryOrders',
+          orderHistoryData:'$_transactions/getOrderHistoryOrders',
           cop_users:'$_transactions/getCopUsers',
       }),
       inactive_filter() {
@@ -246,10 +245,13 @@ export default {
         return this.filterData.user == '' && (this.filterData.from_date == '' || this.filterData.to_date == '');
       },
       order_history_data() {
+        let from = (this.pagination_page - 1) * this.pagination_limit;
+        let to = this.pagination_page * this.pagination_limit;
+                
         if(this.filterState == true){
-          return this.filteredData;
+          return this.filteredData.slice(from, to);
         }
-       return this.tableData;
+       return this.orderHistoryData.slice(from, to);
       }
      },
       mounted(){

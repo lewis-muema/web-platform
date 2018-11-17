@@ -172,10 +172,13 @@ export default {
       return this.filterData.from_date !== '' && this.filterData.to_date !== '';
     },
     statement_data() {
+      let from = (this.pagination_page - 1) * this.pagination_limit;
+      let to = this.pagination_page * this.pagination_limit;
+      
       if(this.filterState == true){
-        return this.filteredStatementData;
+        return this.filteredStatementData.slice(from, to);
       }
-      return this.statementData;
+      return this.statementData.slice(from, to);
     }
   },
 }

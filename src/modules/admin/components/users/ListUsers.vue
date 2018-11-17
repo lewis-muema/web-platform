@@ -30,6 +30,11 @@
                 {{empty_orders_state}}
             </template>
             <el-table-column
+                    label=""
+                    type="index"
+            >
+            </el-table-column>
+            <el-table-column
                     label="Name"
                     prop="name"
                     width="200"
@@ -110,7 +115,7 @@
             //TODO: also create payload depending on session
 
             let user_payload = {
-                "cop_id": 669
+                "cop_id": 1083
             }
             this.$store.dispatch("$_admin/requestUsersList", user_payload).then(response => {
                 console.log(response);
@@ -121,7 +126,7 @@
             });
 
             let department_payload = {
-                "cop_id": 669
+                "cop_id": 1083
             }
             this.$store.dispatch("$_admin/requestDepartmentsList", department_payload).then(response => {
                 console.log(response);
