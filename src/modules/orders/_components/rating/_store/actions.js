@@ -11,37 +11,41 @@ export default {
     requestRatingStatus({commit}, payload)
     {
         return new Promise((resolve, reject) => {
-            axios.post(url+"Rate/insertRate/", payload)
-                .then(response => {
-                    if (response.data.status === true) {
-                        commit('setRatingStatus',response.data.data);
-                        resolve(response.data);
-                    }
-                    else {
-                        reject(response.data);
-                    }
-                })
-                .catch(e => {
-                    reject(e);
-                })
+            payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+                console.log('in store dispatch to global store')
+                console.log(response)
+                if (response.data.status == true) {
+                    commit('setRatingStatus',response.data.data);
+                    resolve(response.data);
+                }
+                else {
+                    reject(response.data);
+                }
+            }, error => {
+                reject(error);
+                console.log('failed to dispatch to global store')
+            });
+
         })
     },
     requestUpdateRating({commit}, payload)
     {
         return new Promise((resolve, reject) => {
-            axios.post(url+"Rate/updateRate/", payload)
-                .then(response => {
-                    if (response.data.status === true) {
-                        commit('setRatingUpdate',response.data.data);
-                        resolve(response.data);
-                    }
-                    else {
-                        reject(response.data);
-                    }
-                })
-                .catch(e => {
-                    reject(e);
-                })
+            payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+                console.log('in store dispatch to global store')
+                console.log(response)
+                if (response.data.status == true) {
+                    commit('setRatingUpdate',response.data.data);
+                    resolve(response.data);
+                }
+                else {
+                    reject(response.data);
+                }
+            }, error => {
+                reject(error);
+                console.log('failed to dispatch to global store')
+            });
+
         })
     },
 
