@@ -6,11 +6,10 @@
           <div class="admin-edit-details">
             Edit User Details
           </div>
-
           <div>
 
             <div class="edit-holder edit-dimen">
-              <input class="input-control edit-form" type="text"  style="margin-top: 14%;"name="name" :value="userDetails.name" :v-model="userDetails.name" placeholder="Name" autocomplete="off">
+              <input class="input-control edit-form" type="text"  style="margin-top: 14%;"name="name"  :v-model="userDetails.name" placeholder="Name" autocomplete="off">
             </div>
 
             <div class="edit-holder edit-dimen">
@@ -22,7 +21,7 @@
             </div>
 
             <div class="edit-holder">
-            <el-select class="addUser--select edit-select" v-model="userDetails.department" placeholder="Department">
+            <el-select class="addUser--select edit-select" v-model="userDetails.department_name" placeholder="Department">
                 <el-option v-for="depart in departments" :key="depart.dept_value" :label="depart.label" :value="depart.dept_value">
                 </el-option>
             </el-select>
@@ -36,7 +35,7 @@
           </div>
 
           <div class="edit-holder">
-          <el-select class="addUser--select edit-select" v-model="type_value" placeholder="User Type">
+          <el-select class="addUser--select edit-select" v-model="userDetails.type" placeholder="User Type">
               <el-option v-for="type in types" :key="type.type_value" :label="type.type_name" :value="type.type_value">
               </el-option>
           </el-select>
