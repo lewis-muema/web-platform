@@ -16,12 +16,9 @@
             <template slot="empty">
                 {{empty_departments_state}}
             </template>
-            <el-table-column type="index">
-            </el-table-column>
             <el-table-column
                     label="Name"
                     prop="department_name"
-                    width="250"
             >
             </el-table-column>
             <el-table-column
@@ -29,9 +26,10 @@
                     prop="department_admin">
             </el-table-column>
             <el-table-column
-                    label="Action">
+                    label="Action"
+            >
                 <template slot-scope="scope">
-                    <a>Edit</a>
+                    <a @click="edit_department">Edit</a>
                 </template>
             </el-table-column>
 
@@ -62,17 +60,19 @@
             //TODO: Get this from session
             //TODO: also create payload depending on session
 
-            let payload = {
+            let deptsList_payload = {
                 "cop_id": 1083
             }
-            this.$store.dispatch("$_admin/requestDepartmentsList", payload).then(response => {
-                console.log("Got some data, now lets show something in this component")
+            let users_full_payload = {
+                "values" : deptsList_payload,
+                "vm":this,
+                "app":"NODE_PRIVATE_API",
+                "endpoint":"cop_departments/"
+            }
+            this.$store.dispatch("$_admin/requestDepartmentsList", users_full_payload).then(response => {
                 console.log(response);
-                this.empty_orders_state = "Departments List Not Found";
             }, error => {
-                console.error("Got nothing from server. Prompt user to check internet connection and try again")
                 console.log(error);
-                this.empty_orders_state = "Departments List Failed to Fetch";
             });
         },
         data: function () {
@@ -96,6 +96,10 @@
         methods: {
             addDepartment() {
                 //TODO:route to add department
+                this.$router.push('/admin/department/add_department');
+            },
+            edit_department() {
+                this.$router.push('/admin/department/edit_department');
             },
             changeSize(val) {
                 this.pagination_page = 1;
@@ -106,7 +110,7 @@
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
                 this.fetchedDepartmentsData.slice(from, to);
-            },
+            }
         }
     }
 </script>

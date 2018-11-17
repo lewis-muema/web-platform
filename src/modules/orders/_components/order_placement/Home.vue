@@ -43,7 +43,7 @@ import home_store from './_store';
 import VendorComponent from './_components/VendorComponent.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faPlus, faMapMarkerAlt, faCircle, faClock, faPen, faDollarSign, faTimes, faMobileAlt,faStar } from '@fortawesome/free-solid-svg-icons'
-library.add(faPlus,faMapMarkerAlt,faCircle,faClock,faPen,faDollarSign,faMobileAlt, faStar)
+library.add(faPlus,faMapMarkerAlt,faCircle,faClock,faPen,faDollarSign,faTimes,faMobileAlt, faStar)
 
 export default {
   name: 'home',

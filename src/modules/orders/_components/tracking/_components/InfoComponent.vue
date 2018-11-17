@@ -26,12 +26,12 @@
         <div class="infobar--content infobar--item infobar--order infobar--item-bordered">
           <div class="">
             <div class="">
-              Order Number : {{this.tracking_data.order_no}}
+              Cost : KES {{this.tracking_data.amount}}
             </div>
           </div>
           <div class="">
             <div class="">
-              Cost : KES {{this.tracking_data.amount}}
+              Order Number : {{this.tracking_data.order_no}}
             </div>
           </div>
         </div>
@@ -166,17 +166,6 @@ export default {
       })
     }
   }
-  // watch: {
-  //   this.$route.params.order_no: function (val) {
-  //     this.order_number = val
-      // this.loading = true
-      // var that = this
-      // this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": this.$route.params.order_no})
-      // .then(response => {
-      //   that.loading = false
-      // })
-  //   },
-  // }
 }
 </script>
 
@@ -239,15 +228,15 @@ export default {
 {
   flex-direction: row;
   padding: 0 1rem;
-  text-transform: uppercase;
+  text-transform: capitalize;
   justify-content: space-around;
 }
 .infobar--actions img
 {
   display: block;
   text-align: center;
-  width: 52px;
-  height: 52px;
+  width: 30px;
+  height: 30px;
   margin: 0 auto;
 }
 .infobar--terms
@@ -257,9 +246,9 @@ export default {
 }
 .infobar--actions-text
 {
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 400;
-  padding-top: 4px;
+  padding-top: 11px;
 }
 .carets
 {

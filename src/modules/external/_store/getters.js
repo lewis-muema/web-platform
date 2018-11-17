@@ -37,6 +37,27 @@ export default {
    getName(state){
                     return state.name;
 
-                   }
+                  },
+   getDeptId(state){
+                    return state.dept_id;
+
+                  },
+
+    getCopId(state){
+                    return state.cop_id;
+
+                  },
+    getCopUserId(state){
+                    return state.cop_user_id;
+
+                  },
+    getPhone(state){
+                      return state.phone;
+
+                  },
+    getPass(state){
+                        return state.password_plain;
+
+                  }
 
 };

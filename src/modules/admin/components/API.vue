@@ -17,8 +17,6 @@
             <template slot="empty">
                 {{empty_payments_state}}
             </template>
-            <el-table-column type="index">
-            </el-table-column>
 
             <el-table-column
                     label="Username"
@@ -68,17 +66,19 @@
             //TODO: Get this from session
             //TODO: also create payload depending on session
 
-            let payload = {
-                "cop_id": 1083
+            let apikey_payload = {
+                "cop_id": 669
             }
-            this.$store.dispatch("$_admin/requestKeysList", payload).then(response => {
-                console.log("Got some data, now lets show something in this component")
+            let apikey_full_payload = {
+                "values" : apikey_payload,
+                "vm":this,
+                "app":"NODE_PRIVATE_API",
+                "endpoint":"get_api/"
+            }
+            this.$store.dispatch("$_admin/requestKeysList", apikey_full_payload).then(response => {
                 console.log(response);
-                this.empty_payments_state = "Keys List Not Found";
             }, error => {
-                console.error("Got nothing from server. Prompt user to check internet connection and try again")
                 console.log(error);
-                this.empty_payments_state = "Keys List Failed to Fetch";
             });
         },
         data: function () {
@@ -87,25 +87,6 @@
                 pagination_limit: 5,
                 pagination_page: 1,
                 button_name: "",
-                tableData: [
-                    {
-                        "username": "faithshop",
-                        "api_key": "zcHUVkH9GtxZmrUyZ6HY",
-                        "created": "Oct 30, 2018",
-                        "api_status": "Activated",
-                        "account_status": "Activated",
-                        "key_enviroment": "Live",
-                    },
-                    {
-                        "username": "faithshop",
-                        "api_key": "ALVvNhD8d7PVcnadsRSV",
-                        "created": "Oct 30, 2018",
-                        "api_status": "Activated",
-                        "account_status": "Activated",
-                        "key_enviroment": "Sandbox",
-                    },
-                ]
-
             }
         },
         computed: {
