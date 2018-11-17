@@ -110,7 +110,7 @@
             //TODO: also create payload depending on session
 
             let user_payload = {
-                "cop_id": 669
+                "cop_id": 1083
             }
             this.$store.dispatch("$_admin/requestUsersList", user_payload).then(response => {
                 console.log(response);
@@ -121,7 +121,7 @@
             });
 
             let department_payload = {
-                "cop_id": 669
+                "cop_id": 1083
             }
             this.$store.dispatch("$_admin/requestDepartmentsList", department_payload).then(response => {
                 console.log(response);

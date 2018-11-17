@@ -7,15 +7,14 @@
                 <button class="button-primary section--filter-action" @click="addDepartment">Add Department</button>
             </div>
         </div>
-        <!--{{fetchedData}}-->
         <el-table
-                :data="fetchedData"
+                :data="departments_data"
                 style="width: 100%"
                 :border="true"
                 :stripe="true"
         >
             <template slot="empty">
-                {{empty_orders_state}}
+                {{empty_departments_state}}
             </template>
             <el-table-column
                     label="Name"
@@ -39,7 +38,7 @@
         <div class="section--pagination-wrap">
             <el-pagination
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="fetchedData.length"
+                    :total="fetchedDepartmentsData.length"
                     :page-size="pagination_limit"
                     :current-page.sync="pagination_page"
                     @current-change="changePage"
@@ -76,30 +75,21 @@
         },
         data: function () {
             return {
-                empty_orders_state: 'Fetching Departments',
-                pagination_limit: 5,
+                empty_departmens_state: 'Fetching Departments',
+                pagination_limit: 10,
                 pagination_page: 1,
-
-                tableData: [
-                    {
-                        "name": "CASH-AC29TZ828-T4W",
-                        "approver": "Computer Architecture",
-                    },
-                    {
-                        "name": "CASH-AC29TZ828-T4W",
-                        "approver": "Asp.Net 4 Blue Book",
-                    },
-                    {
-                        "name": "CASH-AC29TZ828-T4W",
-                        "approver": "Popular Science",
-                    }
-                ]
             }
         },
         computed: {
             ...mapGetters({
-                fetchedData: '$_admin/getDepartmentsList',
+                fetchedDepartmentsData: '$_admin/getDepartmentsList',
             }),
+            departments_data() {
+                let from = (this.pagination_page - 1) * this.pagination_limit;
+                let to = this.pagination_page * this.pagination_limit;
+                return this.fetchedDepartmentsData.slice(from, to);
+            }
+
         },
         methods: {
             addDepartment() {
@@ -113,8 +103,7 @@
                 console.log('Page changed to', this.pagination_page);
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
-                let paginated_drivers = this.searched_drivers.slice(from, to);
-                console.log(from, to, paginated_drivers);
+                this.fetchedDepartmentsData.slice(from, to);
             },
         }
     }
