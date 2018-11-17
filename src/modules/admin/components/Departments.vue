@@ -17,8 +17,6 @@
             <template slot="empty">
                 {{empty_orders_state}}
             </template>
-            <el-table-column type="index">
-            </el-table-column>
             <el-table-column
                     label="Name"
                     prop="department_name"

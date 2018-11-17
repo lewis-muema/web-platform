@@ -9,7 +9,7 @@
                 <router-link class="section__link" to="/admin/users">Users</router-link>
                 <router-link class="section__link" to="/admin/department">Department</router-link>
                 <router-link class="section__link" to="/admin/preferences">Preferences</router-link>
-                <router-link class="section__link" to="/admin/api">API Key</router-link>
+                <router-link class="section__link" to="/admin/api">API</router-link>
             </div>
             <div class="">
                 <router-view></router-view>
@@ -42,10 +42,5 @@ export default {
     @import "../../assets/styles/section_headers.css";
     @import "../../assets/styles/section_filters.css";
     @import "../../assets/styles/section_pagination.css";
-    
-    .admin-container{
-        margin: 0 100px 8px 100px !important;
-        padding-top: 60px;
-        /*margin-top: 0px !important;*/
-    }
+
 </style>

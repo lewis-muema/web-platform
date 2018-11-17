@@ -31,12 +31,6 @@
             </template>
             <el-table-column
                     label="Name"
-                    prop="cop_user_id"
-                    width="200"
-            >
-            </el-table-column>
-            <el-table-column
-                    label="Name"
                     prop="name"
                     width="200"
             >
@@ -50,7 +44,7 @@
             <el-table-column
                     label="Email"
                     prop="email"
-                    width="220"
+                    width="250"
             >
             </el-table-column>
             <el-table-column

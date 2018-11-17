@@ -1,6 +1,5 @@
 <template lang="html">
     <div class="">
-        <main-header></main-header>
         <div class="free-delivery-container">
             <div class="section">
                 <router-link class="section__link" to="/user/free-deliveries">Free delivery</router-link>
@@ -31,7 +30,7 @@
                             <div style="display: inline-block" class="custom_mail">Mail</div>
                             <div class="share_img"></div>
                         </div>
-                        <div class="free-display">
+                        <div class=  "free-display">
                             <div style="display: inline-block" class="custom_fb">Share</div>
                             <div class="share_img3"></div>
                         </div>
@@ -58,11 +57,8 @@
 </template>
 
 <script>
-    import MainHeader from '../../../components/headers/MainHeader.vue'
-
     export default {
         name: "FreeDeliveries",
-        components: {MainHeader},
         data() {
             return {
                 show_more:false,
@@ -78,8 +74,6 @@
 </script>
 
 <style lang="css">
-    @import "../../../assets/styles/section_headers.css";
-
     .free-delivery-container {
         margin: 0 100px 8px 100px !important;
         padding-top: 60px;
@@ -140,7 +134,7 @@
     .share_img {
         float: left;
         background-color: #CCC;
-        background-image: url('../../../../src/assets/img/white_social/email_50.png');
+        background-image: url(https://images.sendyit.com/web_platform/social/white_social/email_50.png);
         width: 20px;
         height: 20px;
         padding: 12px;
@@ -155,7 +149,7 @@
     .share_img1 {
         float: left;
         background-color: #CCC;
-        background-image: url('../../../../src/assets/img/white_social/link_50.png');
+        background-image: url(https://images.sendyit.com/web_platform/social/white_social/link_50.png);
         width: 20px;
         height: 20px;
         padding: 12px;
@@ -182,7 +176,7 @@
     .share_img2 {
         float: left;
         background-color: rgba(0, 172, 237, 0.77);
-        background-image: url('../../../../src/assets/img/white_social/twitter_50.png');
+        background-image: url(https://images.sendyit.com/web_platform/social/white_social/twitter_50.png);
         width: 20px;
         height: 20px;
         padding: 12px;
@@ -211,7 +205,7 @@
     .share_img3 {
         float: left;
         background-color: rgba(59, 89, 152, 0.77);
-        background-image: url('../../../../src/assets/img/white_social/facebook_50.png');
+        background-image: url(https://images.sendyit.com/web_platform/social/white_social/facebook_50.png);
         width: 20px;
         height: 20px;
         padding: 12px;

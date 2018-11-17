@@ -15,7 +15,8 @@
                 <div class="submit-stars">
                   <el-rate v-model="rated_score" :colors="['#99A9BF', '#F57f20', '#1782C5']">
                   </el-rate>
-                  <button class="rate-rider-primary" @click="rateOrder"> RATE </button>
+                    <textarea v-model="rating_comment" class="rate-comment--textareabox"></textarea>
+                  <button class="rate-rider-primary" @click="rateOrder"> SUBMIT </button>
                 </div>
             </div>
 
@@ -47,7 +48,15 @@
         data() {
             return {
                 rated_score: 1,
-                show_rating: false
+                show_rating: false,
+                rating_comment: "Share your experience with us.",
+                timeliness: false,
+                payment: false,
+                directions: false,
+                cleanliness: false,
+                politeness: false,
+                pricing: false,
+                app: false
             }
         },
         methods: {
@@ -62,6 +71,7 @@
                 this.postRating();
                 this.moveNext();
                 this.submitScore();
+                this.updateComment();
             },
             postRating() {
                 let payload = {
@@ -76,13 +86,34 @@
                 });
             },
             moveNext() {
-                this.updateStep(2);
+                this.updateStep(3);
             },
             submitScore() {
                 this.updateScore(this.rated_score);
             },
+            updateComment() {
+                let payload = {
+                    "score":this.getScore,
+                    "user_email":this.getUserEmail,
+                    "package_id":this.getPackageID,
+                    "timeliness":this.timeliness,
+                    "payment":this.payment,
+                    "directions":this.directions,
+                    "cleanliness":this.cleanliness,
+                    "politeness":this.politeness,
+                    "pricing":this.pricing,
+                    "app":this.app,
+                    "comment":this.rating_comment
+                }
+                this.$store.dispatch("$_rating/requestUpdateRating", payload).then(response => {
+                    console.log(response);
+                }, error => {
+                    console.log(error);
+                });
+            },
             ...mapActions([
                 '$_rating/requestRatingStatus',
+                '$_rating/requestUpdateRating',
             ]),
         }
     }
@@ -116,12 +147,12 @@
     }
     .rate-rider-primary {
         margin: 0 auto;
-        margin-top: 40px !important;
         color: #ecf0f1;
         background-color: #1782c5;
         border-color: #1b7fc3;
         cursor: pointer;
         position: relative;
+        margin-top: 10px !important;
         display: block;
         border-radius: 4px;
         height: 40px;
@@ -138,5 +169,22 @@
     }
     .submit-stars{
         text-align: center;
+    }
+    .rate-comment--textareabox {
+        height: 50px!important;
+        border: 1px solid #dcdfe6 !important;
+        border-radius: 4px !important;
+        text-align: center !important;
+        margin-top: 40px!important;
+        padding: 10px;
+        font-size: 14px;
+        color: #999999;
+        width: 200px !important;
+    }
+    .rate-comment--textareabox:focus{
+        border: 1px solid #1782c5 !important;
+        -webkit-box-shadow: none !important;
+        outline:none;
+        box-shadow: none !important;
     }
 </style>

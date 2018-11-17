@@ -9,7 +9,7 @@
           		<div class="rate-rider-middle">
           			<div id="rateriderreuse">
                         <RateDriver v-if="getStep == 1"></RateDriver>
-                        <CommentsComponent v-if="getStep == 2"></CommentsComponent>
+                        <!--<CommentsComponent v-if="getStep == 2"></CommentsComponent>-->
                     </div>
                 </div>
             </div>
