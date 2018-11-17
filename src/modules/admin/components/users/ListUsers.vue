@@ -1,11 +1,21 @@
 <template lang="html">
     <div>
         <div class="section--filter-wrap">
-            <div class="section--filter-input-wrap">
-                <input class="input-control section--filter-input" type="text" name="name" value="" placeholder="Name">
+            <!--<div class="section&#45;&#45;filter-input-wrap">-->
+                <!--<input class="input-control section&#45;&#45;filter-input" type="text" name="name" value="" placeholder="Name">-->
 
+                <!--<el-select class="section&#45;&#45;filter-input" v-model="value" placeholder="All Departments">-->
+                    <!--<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">-->
+                    <!--</el-option>-->
+                <!--</el-select>-->
+            <!--</div>-->
+            <div class="section--filter-input-wrap">
+                <el-select class="section--filter-input" v-model="filterData.user" placeholder="Users">
+                    <el-option v-for="user in users_list" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
+                    </el-option>
+                </el-select>
                 <el-select class="section--filter-input" v-model="value" placeholder="All Departments">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                    <el-option v-for="dept in depts" :key="dept.value" :label="dept.label" :value="dept.value">
                     </el-option>
                 </el-select>
             </div>
@@ -15,6 +25,7 @@
 
             </div>
         </div>
+        {{filterData}}
         <el-table
                 :data="fetchedData"
                 style="width: 100%"
@@ -124,6 +135,12 @@
                 empty_payments_state: "Fetching Users",
                 pagination_limit: 5,
                 pagination_page: 1,
+                filterData : {
+                    "name":"",
+                    "department_name":""
+                },
+                filteredData: [],
+                filterState: false,
                 tableData: [
                     {
                         "name": "CASH-AC29TZ828-T4W",
@@ -160,6 +177,18 @@
             ...mapGetters({
                 fetchedData: '$_admin/getUsersList',
             }),
+            inactive_filter() {
+                if(this.filterData.name === '' && (this.filterData.department_name === '')){
+                    this.filterState = false;
+                }
+                return this.filterData.name === '' && (this.filterData.department_name === '');
+            },
+            cop_users_data() {
+                if(this.filterState === true){
+                    return this.filteredData;
+                }
+                return this.fetchedData;
+            }
         },
 
         methods: {
@@ -205,6 +234,45 @@
                     }
                 }
                 return resp;
+            },
+            filterTableData() {
+                //reset filter
+                this.filterState  = false;
+
+                let user = this.filterData.name;
+                let department = this.filterData.department_name;
+                this.filteredData = this.cop_users_data;
+
+
+                console.log(this.filteredData);
+                //check if both are filled
+                if(user !== '' && department !== ''){
+                    console.log('performing a user and departments filter');
+                    console.log(user);
+                    console.log(department);
+
+                    let vm = this;
+                    this.filteredData = this.filteredData.filter(function (order) {
+                        return order.user_details.name ===  name  && order.user_details.department_name === department_name;
+                    });
+                    this.filterState = true;
+
+                } else if(user !== ''){
+                    //user filter
+                    console.log('performing a user filter');
+                    console.log(user);
+
+                    this.filteredData = this.filteredData.filter( order => order.user_details.id ===  user);
+                    this.filterState = true;
+
+
+                } else {
+                    //date filter
+                    console.log('performing a department filter');
+                    this.filterState = true;
+                    return moment(order.order_date).isSameOrAfter(from_date) && moment(order.order_date).isSameOrBefore(to_date);
+
+                }
             },
             ...mapActions([
                 '$_admin/requestUsersList',
