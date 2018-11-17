@@ -10,7 +10,7 @@ export default {
     setPayments(state, payments) {
         state.payments = payments;
     },
-    setStament(state, statement) {
+    setStatement(state, statement) {
         state.statement = statement;
     }
 };

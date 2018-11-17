@@ -10,7 +10,7 @@
             <el-date-picker class="section--filter-input" type="date" name="to_date" value="" placeholder="To" v-model="filterData.to_date"/>
         </div>
         <div class="section--filter-action-wrap">
-          <button type="button" :class="inactive_filter ? 'button-primary section--filter-action-inactive':'button-primary section--filter-action'"  @click="filterTableData">SEARCH</button>
+          <button type="button" :class="inactive_filter ? 'button-primary section--filter-action-inactive':'button-primary section--filter-action'"  @click="filterTableData">Search</button>
         </div>
     </div>
 
@@ -49,12 +49,6 @@
       <el-table-column
         label="User"
         prop="user_details.name"
-        width="120"
-        >
-      </el-table-column>
-      <el-table-column
-        label="User"
-        prop="user_details.id"
         width="120"
         >
       </el-table-column>
@@ -182,6 +176,9 @@ export default {
               this.filterState = true;
 
             }
+
+             this.empty_orders_state = "Order History Not Found";
+          
       },
         changeSize(val) {
             this.pagination_page = 1;
@@ -232,7 +229,9 @@ export default {
           this.$router.push({name:'order-details', params: {id : row.order_id}});
       },
       formatAmount(row, column, cellValue) {
-        return (row.order_cost).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+         let value = (row.order_cost).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+         value = value.split(".");
+         return value[0];
       },
     },  
     computed:{

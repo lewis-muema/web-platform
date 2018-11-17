@@ -43,16 +43,9 @@ export default {
             })
         })
     },
-    requestPayments({commit, payload}){
+    requestPayments({commit}, payload){
         return new Promise((resolve, reject) => {
-            let axiosConfig = {
-                headers: {
-                    'Content-Type': 'application/json;charset=UTF-8',
-                    "Access-Control-Allow-Origin": "*",
-                }
-            };
-
-            axios.post(url+"payments/", payload, axiosConfig)
+            axios.post(url+"payments/", payload)
             .then(response => {
                 if(response.data.status == true){
                     commit('setPayments', response.data.data);
@@ -65,16 +58,9 @@ export default {
             })
         })
     },
-    requestStatement({commit, payload}){
+    requestStatement({commit}, payload){
         return new Promise((resolve, reject) => {
-            let axiosConfig = {
-                headers: {
-                    'Content-Type': 'application/json;charset=UTF-8',
-                    "Access-Control-Allow-Origin": "*",
-                }
-            };
-
-            axios.post(url+"statement/", payload, axiosConfig)
+            axios.post(url+"statement/", payload)
             .then(response => {
                 if(response.data.status == true){
                     commit('setStatement', response.data.data);

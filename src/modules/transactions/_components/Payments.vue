@@ -6,7 +6,7 @@
               <el-date-picker class="section--filter-input" type="date" name="from_date" v-model="filterData.from_date" placeholder="From"/>
               <el-date-picker class="section--filter-input" type="date" name="to_date" v-model="filterData.to_date" placeholder="To"/>
               
-              <button type="button" :class="inactive_filter?'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'">Search</button>
+              <button type="button" @click="filterPaymentData":class="active_filter?'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'">Search</button>
     
         </div>
         <div class="section--filter-action-wrap">
@@ -14,7 +14,7 @@
           
         </div>
     </div>
-
+  
     <el-table
      :data="payment_data"
      style="width: 100%"
@@ -26,27 +26,31 @@
      </template>
      <el-table-column
        label="Reciept Number"
-       prop="Txn"
+       prop="txn"
         width="180"
        >
      </el-table-column>
      <el-table-column
        label="Date"
-       prop="Date">
+       prop="date_time"
+       :formatter="formatDate"
+       >
      </el-table-column>
      <el-table-column
        label="Method"
-       prop="Method"
+       prop="pay_method_name"
        >
      </el-table-column>
      <el-table-column
        label="Description"
-       prop="Description"
+       prop="description"
        >
      </el-table-column>
      <el-table-column
        label="Amount"
-       prop="Amount"
+       prop="amount"
+       :formatter="formatAmount"
+       class-name="amount--table-format"
        >
      </el-table-column>
    </el-table>
@@ -70,7 +74,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex';
+const moment = require('moment');
+
 export default {
   name:'Payments',
   data: function () {
@@ -117,7 +123,27 @@ export default {
         let paginated_drivers = this.searched_drivers.slice(from, to);
         console.log(from, to, paginated_drivers);
     },
-    
+    filterPaymentData(){
+       //reset filter
+        this.filterState  = false;
+
+        let from_date = this.filterData.from_date;
+        let to_date = this.filterData.to_date;
+        this.filteredPaymentData = this.payment_data;
+        this.filteredPaymentData = this.filteredPaymentData.filter(function (payment) {
+          return moment(payment.date_time).isSameOrAfter(from_date) && moment(payment.date_time).isSameOrBefore(to_date);
+        });
+        this.filterState = true;
+        this.empty_orders_state = "Payments Not Found";
+    },
+    formatDate(row, column, cellValue) {
+        return moment(row.date_time).format('MMM Do YYYY, h:mm a');
+    },
+    formatAmount(row, column, cellValue) {
+        let value = (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+        value = value.split(".");
+        return value[0];
+     },
   },
   computed: {
     ...mapGetters({
@@ -129,11 +155,11 @@ export default {
       }
       return this.paymentData;
     },
-    inactive_filter() {
-      if(this.filterData.from_date == '' && this.filterData.to_date == ''){
+    active_filter() {
+      if(this.filterData.from_date !== '' && this.filterData.to_date !== ''){
         this.filterState = false;
       }
-      return this.filterData.from_date == '' && this.filterData.to_date == '';
+      return this.filterData.from_date !== '' && this.filterData.to_date !== '';
     }
   },
 }
