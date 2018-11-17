@@ -52,9 +52,14 @@ const connect_mqtt = function({commit}, payload)
 
   client.subscribe('partner_app_positions/#', { qos: 0 })
 
+  var i = 0;
+  var interval = setInterval(function(){ i = i % 5 + 1} , 1000);
+
   client.on('message', function (topic, message, packet) {
-    var vendor = JSON.parse(message.toString());
-    commit('set_vendor_markers', vendor)
+    if ( i == 1) {
+      var vendor = JSON.parse(message.toString());
+      commit('set_vendor_markers', vendor)
+    }
   })
 }
 
