@@ -51,7 +51,7 @@
             </el-table-column>
         </el-table>
 
-        <div class="content">
+        <div class="api--help-content">
             <p><span class="content--bold">Ready to start using the Sendy API?</span> Head over to the <a
                     href="http://docs.sendypublicapi.apiary.io/#" target="_blank">developer site</a>&nbsp;for complete
                 documentation.</p>
@@ -161,5 +161,11 @@
 </script>
 
 <style lang="css">
-
+    .api--help-content {
+        font-size: 14px;
+        margin-top: 20px;
+    }
+    .api--help-content a {
+        color: #2c82c5 !important;
+    }
 </style>
