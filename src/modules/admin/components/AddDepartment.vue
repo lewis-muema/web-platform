@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="sign-holder">
-                    <input class="button-primary" type="submit" value="ADD DEPARTMENT" v-on:click="add_department" >
+                    <input class="button-primary" type="submit" value="Add Department" v-on:click="add_department" >
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
             return {
                 empty_departmens_state: 'Adding Department',
                 cop_id: 285,
-                department_name: "department_nameggggg",
+                department_name: "department_name",
                 cop_user_id: 12
             }
         },
@@ -53,25 +53,26 @@
             }),
             add_department: function ()
             {
-                let payload = {};
-                payload.cop_id = this.cop_id;
-                payload.cop_user_id = this.cop_user_id;
-                payload.department_name = this.department_name;
-                this.addNewDepartment(payload).then(response => {
-                    console.log("Department Added!")
+                let newDept_payload = {
+                    "cop_id": this.cop_id,
+                    "department_name": this.department_name,
+                    "cop_user_id": this.cop_user_id
+                }
+
+                let full_payload = {
+                    "values" : newDept_payload,
+                    "vm":this,
+                    "app":"NODE_PRIVATE_API",
+                    "endpoint":"cop_departments_update"
+                }
+                this.$store.dispatch("$_admin/addNewDepartment", full_payload).then(response => {
+                    console.log("added");
                     console.log(response);
                 }, error => {
-                    console.error("Check Internet Connection")
                     console.log(error);
                 });
             },
         },
-        // computed: {
-        //     ...mapGetters({
-        //         fetchedDepartmentsData: '$_admin/getDepartmentsList',
-        //     }),
-        //
-        // },
 
     }
 </script>

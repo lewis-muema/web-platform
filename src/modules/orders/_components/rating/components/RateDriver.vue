@@ -74,12 +74,18 @@
                 this.updateComment();
             },
             postRating() {
-                let payload = {
+                let rating_status_payload = {
                     "score": this.rated_score,
                     "user_email": this.getUserEmail,
                     "package_id": this.getPackageID
                 }
-                this.$store.dispatch("$_rating/requestRatingStatus", payload).then(response => {
+                let rating_status_full_payload = {
+                    "values" : rating_status_payload,
+                    "vm":this,
+                    "app":"NODE_PRIVATE_API",
+                    "endpoint":"Rate/insertRate/"
+                }
+                this.$store.dispatch("$_rating/requestRatingStatus", rating_status_full_payload).then(response => {
                     console.log(response);
                 }, error => {
                     console.log(error);
@@ -92,24 +98,31 @@
                 this.updateScore(this.rated_score);
             },
             updateComment() {
-                let payload = {
+                let rating_payload = {
                     "score":this.getScore,
-                    "user_email":this.getUserEmail,
-                    "package_id":this.getPackageID,
-                    "timeliness":this.timeliness,
-                    "payment":this.payment,
-                    "directions":this.directions,
-                    "cleanliness":this.cleanliness,
-                    "politeness":this.politeness,
-                    "pricing":this.pricing,
-                    "app":this.app,
-                    "comment":this.rating_comment
+                        "user_email":this.getUserEmail,
+                        "package_id":this.getPackageID,
+                        "timeliness":this.timeliness,
+                        "payment":this.payment,
+                        "directions":this.directions,
+                        "cleanliness":this.cleanliness,
+                        "politeness":this.politeness,
+                        "pricing":this.pricing,
+                        "app":this.app,
+                        "comment":this.rating_comment
                 }
-                this.$store.dispatch("$_rating/requestUpdateRating", payload).then(response => {
+                let rating_full_payload = {
+                    "values" : rating_payload,
+                    "vm":this,
+                    "app":"NODE_PRIVATE_API",
+                    "endpoint":"Rate/updateRate/"
+                }
+                this.$store.dispatch("$_rating/requestUpdateRating", rating_full_payload).then(response => {
                     console.log(response);
                 }, error => {
                     console.log(error);
                 });
+
             },
             ...mapActions([
                 '$_rating/requestRatingStatus',

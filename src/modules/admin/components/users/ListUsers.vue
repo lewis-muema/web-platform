@@ -108,30 +108,35 @@
         mounted() {
             //TODO: Get this from session
             //TODO: also create payload depending on session
-
-            let user_payload = {
+            let usersList_payload = {
                 "cop_id": 1083
             }
-            this.$store.dispatch("$_admin/requestUsersList", user_payload).then(response => {
+            let users_full_payload = {
+                "values" : usersList_payload,
+                "vm":this,
+                "app":"NODE_PRIVATE_API",
+                "endpoint":"cop_users/"
+            }
+            this.$store.dispatch("$_admin/requestUsersList", users_full_payload).then(response => {
                 console.log(response);
-                this.empty_payments_state = "Users List Not Found";
             }, error => {
                 console.log(error);
-                this.empty_payments_state = "Users List Failed to Fetch";
             });
 
-            let department_payload = {
+            let deptsList_payload = {
                 "cop_id": 1083
             }
-            this.$store.dispatch("$_admin/requestDepartmentsList", department_payload).then(response => {
+            let depts_full_payload = {
+                "values" : deptsList_payload,
+                "vm":this,
+                "app":"NODE_PRIVATE_API",
+                "endpoint":"cop_departments/"
+            }
+            this.$store.dispatch("$_admin/requestDepartmentsList", depts_full_payload).then(response => {
                 console.log(response);
-                this.empty_departments_state = "Departments List Not Found";
             }, error => {
                 console.log(error);
-                this.empty_departments_state = "Departments List Failed to Fetch";
             });
-
-
 
         },
         data: function () {
