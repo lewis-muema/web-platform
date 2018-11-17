@@ -104,6 +104,8 @@
 
 <script>
 const moment = require('moment');
+const env = process.env.NODE_ENV;
+
 import { mapActions, mapGetters } from 'vuex'
 export default {
       data() {
@@ -254,16 +256,19 @@ export default {
        return this.orderHistoryData.slice(from, to);
       }
      },
-      mounted(){
-          //TODO: Get this from session
-          //TODO: also create payload depending on session
-
+     mounted(){
           let orders_payload = {
             "cop_id": 669,
             "user_type":2
           }
+          let full_payload = {
+            "values" : orders_payload,
+            "vm":this,
+            "app":"NODE_PRIVATE_API",
+            "endpoint":"order_history/"
+          }
           // this.requestOrderHistoryOrders(payload);
-          this.$store.dispatch("$_transactions/requestOrderHistoryOrders", orders_payload).then(response => {
+          this.$store.dispatch("$_transactions/requestOrderHistoryOrders", full_payload).then(response => {
              console.log("Got some data, now lets show something in this component")
              console.log(response);
              this.empty_orders_state = "Order History Not Found";
