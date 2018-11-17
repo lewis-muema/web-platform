@@ -9,9 +9,6 @@
 import user_store from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module'
 import MainHeader from '../../components/headers/MainHeader.vue'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faStar } from '@fortawesome/free-solid-svg-icons'
-library.add(faStar)
 export default {
   name:'User',
   mixins: [ RegisterStoreModule ],

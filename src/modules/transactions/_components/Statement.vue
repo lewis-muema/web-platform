@@ -62,11 +62,11 @@
     <div class="section--pagination-wrap">
         <el-pagination
             layout="total, sizes, prev, pager, next, jumper"
-            :total="statement_data.length"
+            :total="statementData.length"
             :page-size="pagination_limit"
             :current-page.sync="pagination_page"
             @current-change="changePage"
-            :page-sizes="[10, 20, 50, 100]"
+            :page-sizes="[5,10, 20, 50, 100]"
             @size-change="changeSize"
             class="section--pagination-item"
             >
@@ -119,8 +119,7 @@ export default {
           console.log('Page changed to', this.pagination_page);
           let from = (this.pagination_page - 1) * this.pagination_limit;
           let to = this.pagination_page * this.pagination_limit;
-          let paginated_drivers = this.searched_drivers.slice(from, to);
-          console.log(from, to, paginated_drivers);
+          this.statementData.slice(from, to);
       },
       formatDate(row, column, cellValue) {
         return moment(row.date_time).format('MMM Do YYYY, h:mm a');
@@ -151,6 +150,7 @@ export default {
       filterStatementData() {
             //reset filter
             this.filterState  = false;
+            this.empty_statement_state = "Searching Payments";
 
             let from_date = this.filterData.from_date;
             let to_date = this.filterData.to_date;
@@ -172,10 +172,13 @@ export default {
       return this.filterData.from_date !== '' && this.filterData.to_date !== '';
     },
     statement_data() {
+      let from = (this.pagination_page - 1) * this.pagination_limit;
+      let to = this.pagination_page * this.pagination_limit;
+      
       if(this.filterState == true){
-        return this.filteredStatementData;
+        return this.filteredStatementData.slice(from, to);
       }
-      return this.statementData;
+      return this.statementData.slice(from, to);
     }
   },
 }

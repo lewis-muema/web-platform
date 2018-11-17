@@ -21,5 +21,14 @@ export default {
         },
     updatePassPlain(state, val){
           state.password_plain= val;
+        },
+    updateDeptID(state, n) {
+          state.dept_id = n
+        },
+    updateCopID(state, n) {
+          state.cop_id = n
+        },
+    updateCopUserID(state, n) {
+          state.cop_user_id = n
         }
 };
