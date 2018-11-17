@@ -6,37 +6,36 @@
           <div class="admin-edit-details">
             Edit User Details
           </div>
-
           <div>
 
             <div class="edit-holder edit-dimen">
-              <input class="input-control edit-form" type="text" style="margin-top: 14%;"name="name" v-model="name" placeholder="Name" autocomplete="on">
+              <input class="input-control edit-form" type="text"  style="margin-top: 14%;"name="name"  :v-model="userDetails.name" placeholder="Name" autocomplete="off">
             </div>
 
             <div class="edit-holder edit-dimen">
-              <input class="input-control edit-form" type="text" name="email" v-model="email" placeholder="Email">
+              <input class="input-control edit-form" type="text" name="email" v-model="userDetails.email" placeholder="Email">
             </div>
 
             <div class="edit-holder edit-dimen">
-              <input class="input-control edit-form" type="text" name="phone" v-model="phone" placeholder="Phone">
+              <input class="input-control edit-form" type="text" name="phone" v-model="userDetails.phone" placeholder="Phone">
             </div>
 
             <div class="edit-holder">
-            <el-select class="addUser--select edit-select" v-model="dept_value" placeholder="Department">
+            <el-select class="addUser--select edit-select" v-model="userDetails.department_name" placeholder="Department">
                 <el-option v-for="depart in departments" :key="depart.dept_value" :label="depart.label" :value="depart.dept_value">
                 </el-option>
             </el-select>
            </div>
 
            <div class="edit-holder">
-           <el-select class="addUser--select edit-select" v-model="status_value" placeholder="Status">
+           <el-select class="addUser--select edit-select" v-model="userDetails.status" placeholder="Status">
                <el-option v-for="status in statuses" :key="status.status_value" :label="status.status_name" :value="status.status_value">
                </el-option>
            </el-select>
           </div>
 
           <div class="edit-holder">
-          <el-select class="addUser--select edit-select" v-model="type_value" placeholder="User Type">
+          <el-select class="addUser--select edit-select" v-model="userDetails.type" placeholder="User Type">
               <el-option v-for="type in types" :key="type.type_value" :label="type.type_name" :value="type.type_value">
               </el-option>
           </el-select>
@@ -53,7 +52,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions,mapGetters} from 'vuex'
 export default {
   name:'EditUser',
   data() {
@@ -84,8 +83,22 @@ export default {
           }],
           dept_value: '',
           status_value: '',
-          type_value: ''
+          type_value: '',
+          userDetails: {}
+
+
         }
+  },
+  mounted(){
+    let cop_user_id = this.$route.params.id;
+
+    this.userDetails = this.userData.filter(user => user.cop_user_id == cop_user_id)[0];
+
+  },
+  computed : {
+      ...mapGetters({
+          userData: '$_admin/getUsersList',
+        }),
   },
 
   methods:{
