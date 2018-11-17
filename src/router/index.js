@@ -152,28 +152,16 @@ export function createRouter () {
               {
                 path: '/',
                 component: () => import('../modules/user/_components/Profile.vue'),
-                     children: [
-                      {
-                        path: '/',
-                        component: () => import('../modules/user/_components/PersonalInfo.vue')
-                      },
-                      {
-                        path: 'profile/personal_information',
-                        component: () => import('../modules/user/_components/PersonalInfo.vue')
-                      },
-                      {
-                        path: 'profile/change_password',
-                        component: () => import('../modules/user/_components/ChangePassword.vue')
-                      },
-                    ]
+                redirect:'/user/profile/personal_information'
               },
               {
-                path: 'profile',
+                path: '/user/profile',
                 component: () => import('../modules/user/_components/Profile.vue'),
                     children: [
                      {
                        path: '/',
-                       component: () => import('../modules/user/_components/PersonalInfo.vue')
+                       component: () => import('../modules/user/_components/PersonalInfo.vue'),
+                       alias : 'personal_information'
                      },
                      {
                        path: 'personal_information',
@@ -186,7 +174,7 @@ export function createRouter () {
                    ]
               },
               {
-                path: 'free_deliveries',
+                path: '/user/free_deliveries',
                 component: () => import('../modules/user/_components/FreeDeliveries.vue')
               },
 

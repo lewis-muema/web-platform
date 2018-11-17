@@ -21,7 +21,7 @@
                             <el-dropdown-item><router-link  to="/payment/promo">Promotions</router-link></el-dropdown-item>
                             <el-dropdown-item><router-link  to="/admin">Admin Settings</router-link></el-dropdown-item>
                             <el-dropdown-item><router-link  to="/analytics">Analytics</router-link></el-dropdown-item>
-                            <el-dropdown-item><router-link  to="/profile">Profile</router-link></el-dropdown-item>
+                            <el-dropdown-item><router-link  to="/user/profile/personal_information">Profile</router-link></el-dropdown-item>
                             <el-dropdown-item class="last-child"><router-link to="/auth/logout">Log Out</router-link></el-dropdown-item>
                         </el-dropdown-menu>
                         </el-dropdown>

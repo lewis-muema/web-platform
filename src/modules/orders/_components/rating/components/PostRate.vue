@@ -77,13 +77,13 @@
         },
         methods : {
             NewDelivery(){
-                window.ga('send', {
-                    hitType: 'event',
-                    eventCategory: 'Form',
-                    eventAction: 'click',
-                    eventLabel: "New delivery - vendors | Rating Page | Web Platform"
-                });
-                window.location = this.getBaseUrl;
+                // window.ga('send', {
+                //     hitType: 'event',
+                //     eventCategory: 'Form',
+                //     eventAction: 'click',
+                //     eventLabel: "New delivery - vendors | Rating Page | Web Platform"
+                // });
+                // window.location = this.getBaseUrl;
             }
         }
     }

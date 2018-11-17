@@ -3,7 +3,7 @@
         <div class="preferences__item">
             <div class="card">
                 <div class="card__image">
-                    <img src="https://app.sendyit.com/biz/image/grey_strip1.png" class="image"><span class="card__image--title">Branch</span>
+                    <span class="card__image--title">Branch</span>
                 </div>
                 <div class="card__content">
                     <p class="card__paragraph">Group your staff and orders into branches and view reporting at branch level.</p>
@@ -19,10 +19,10 @@
         <div class="preferences__item">
             <div class="card">
                 <div class="card__image">
-                    <img src="https://app.sendyit.com/biz/image/grey_strip1.png" class="image"><span class="card__image--title">Branch</span>
+                    <span class="card__image--title card__image--bg">Ecommerce orders</span>
                 </div>
                 <div class="card__content">
-                    <p class="card__paragraph">Group your staff and orders into branches and view reporting at branch level.</p>
+                    <p class="card__paragraph">Make bulk orders with smart routing and zoning for maximum efficiency.</p>
                 </div>
                 <div class="card__action">
                 <label class="switch">
@@ -35,10 +35,10 @@
         <div class="preferences__item">
             <div class="card">
                 <div class="card__image">
-                    <img src="https://app.sendyit.com/biz/image/grey_strip1.png" class="image"><span class="card__image--title">Branch</span>
+                    <span class="card__image--title card__image--bg">Order history details</span>
                 </div>
                 <div class="card__content">
-                    <p class="card__paragraph">Group your staff and orders into branches and view reporting at branch level.</p>
+                    <p class="card__paragraph">View the little extra details that you care about in your order history report.</p>
                 </div>
                 <div class="card__action">
                 <label class="switch">
@@ -51,10 +51,58 @@
         <div class="preferences__item">
             <div class="card">
                 <div class="card__image">
-                    <img src="https://app.sendyit.com/biz/image/grey_strip1.png" class="image"><span class="card__image--title">Branch</span>
+                    <span class="card__image--title">Order breakdown</span>
                 </div>
                 <div class="card__content">
-                    <p class="card__paragraph">Group your staff and orders into branches and view reporting at branch level.</p>
+                    <p class="card__paragraph">Pick through your bulked orders and see how much each costs you.</p>
+                </div>
+                <div class="card__action">
+                <label class="switch">
+                  <input type="checkbox">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+        </div>
+        <div class="preferences__item">
+            <div class="card">
+                <div class="card__image">
+                    <span class="card__image--title">Insurance</span>
+                </div>
+                <div class="card__content">
+                    <p class="card__paragraph">A third party flexible and affordable extra insurance for your orders with the power to choose your desired cover limit per order.</p>
+                </div>
+                <div class="card__action">
+                <label class="switch">
+                  <input type="checkbox">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+        </div>
+        <div class="preferences__item">
+            <div class="card">
+                <div class="card__image">
+                    <span class="card__image--title">SMS Password change</span>
+                </div>
+                <div class="card__content">
+                    <p class="card__paragraph">Receive a password change link via sms.</p>
+                </div>
+                <div class="card__action">
+                <label class="switch">
+                  <input type="checkbox">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+        </div>
+        <div class="preferences__item">
+            <div class="card">
+                <div class="card__image">
+                    <span class="card__image--title">Delivery picture</span>
+                </div>
+                <div class="card__content">
+                    <p class="card__paragraph">Request your driver to take a delivery picture at the destination</p>
                 </div>
                 <div class="card__action">
                 <label class="switch">
@@ -78,22 +126,24 @@ export default {
         display: flex;
         flex-wrap: wrap;
         flex-basis: auto;
-        justify-content: space-evenly;
+        justify-content: space-between;
+        margin-right: 60px;
     }
     .preferences__item{
-        width: 28%;
+        width: 30%;
         align-content: space-around;
-        padding-bottom: 2rem;
+        padding-bottom: 1rem;
     }
     .card{
         position: relative;
-        margin: 0.5rem 0 1rem 0;
+        margin: 20px 0 1rem 0;
         background-color: #fff;
         transition: box-shadow .25s;
         border-radius: 2px;
         /* box-shadow: 1px 1px 0 0 rgba(0,0,0,0.16), 1px 1px 0 0 rgba(0,0,0,0.12); */
         box-shadow: none;
         border-left: 1px solid rgba(94, 94, 99, 0.11);
+        border-top: 1px solid rgba(94, 94, 99, 0.11);
         border-right: 1px solid rgba(94, 94, 99, 0.11);
         border-bottom: 1px solid rgba(94, 94, 99, 0.11);
         /* border: 1px solid #626263; */
@@ -101,6 +151,9 @@ export default {
     }
     .card__paragraph{
         font-size: 14px;
+        font-family: 'Rubik', sans-serif;
+        color: #606266;
+        font-weight: 300;
     }
     .image{
         display: block;
@@ -119,18 +172,23 @@ export default {
     }
     .card__image--title{
         font-size: 18px;
-        font-weight: 500;
         text-transform: uppercase;
-        color: rgba(51, 51, 51, 0.7);
         position: absolute;
         bottom: 0;
         left: 0;
         padding: 20px;
+        color: #606266 !important;
+        text-transform: capitalize !important;
+        text-align: center;
+        text-decoration: none;
+        font-family: 'Rubik', sans-serif;
+
     }
     .card__content{
         padding: 20px;
         border-radius: 0 0 2px 2px;
-        max-height: 83px;
+        /* max-height: 83px; */
+        max-height: 45px;
         color: #9e9e9e;
     }
     .card__action{

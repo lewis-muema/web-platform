@@ -6,5 +6,11 @@ export default {
     },
     setCopUsers(state, users) {
         state.cop_users = users;
+    },
+    setPayments(state, payments) {
+        state.payments = payments;
+    },
+    setStatement(state, statement) {
+        state.statement = statement;
     }
 };

@@ -36,7 +36,8 @@ const set_vendor_markers = (state, payload) => {
       lat: payload.lat,
       lng: payload.lng
     },
-    vendor_type: payload.vendor_type
+    vendor_type: payload.vendor_type,
+    rotation: payload.bearing
   }
 
   Vue.set(state.map.vendors, id, value)
