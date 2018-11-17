@@ -10,7 +10,7 @@
                     <el-option v-for="dept in deptData" :key="dept.department_id" :label="dept.department_name" :value="dept.department_id">
                     </el-option>
                 </el-select>
-                
+
                 <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'" @click="filterUserTableData">Search</button>
 
             </div>
@@ -76,7 +76,7 @@
             <el-table-column
                     label="Action">
                 <template slot-scope="scope">
-                    <a @click="edit_user">Edit User</a>
+                    <el-button type="text" @click="edit_user(user_data[scope.$index]['cop_user_id'])">Edit User</el-button>
                 </template>
             </el-table-column>
 
@@ -101,7 +101,7 @@
 </template>
 
 <script>
-    import {mapActions, mapGetters} from 'vuex'
+    import {mapActions, mapGetters,mapMutations} from 'vuex'
 
     export default {
         name: "ListUsers",
@@ -157,7 +157,7 @@
             user_data(){
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
-                
+
                 if(this.filterState == true){
                     return this.filteredUserData.slice(from, to);
                 }
@@ -220,10 +220,10 @@
 
                 let user_id = this.filterData.user;
                 let department = this.filterData.department;
-                
+
                 console.log(user_id);
                 console.log(department);
-                
+
                 this.filteredUserData = this.userData;
 
 
@@ -252,16 +252,26 @@
 
                     this.filteredUserData = this.filteredUserData.filter( user => user.department_id ==  department);
                     this.filterState = true;
-                  
+
                 }
             },
             ...mapActions([
                 '$_admin/requestUsersList',
                 '$_admin/requestDepartmentsList',
-                
+
             ]),
-             edit_user() {
-                this.$router.push('/admin/users/edit_user');
+            ...mapMutations(
+              {
+                updateCopUserId:'$_admin/updateCopUserId',
+                updateUserName:'$_admin/updateUserName',
+                updateUserEmail:'$_admin/updateUserEmail',
+                updateUserPhone: '$_admin/updateUserPhone',
+                updateType: '$_admin/updateType'
+              }
+            ),
+             edit_user(cop_user_id) {
+                let cop_user_details = cop_user_id;
+                this.$router.push('/admin/users/edit_user/'+cop_user_id);
             },
 
         }
