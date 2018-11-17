@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import {mapGetters,mapMutations} from 'vuex'
+import {mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
   name: 'screen-three-component',
   data: function () {
@@ -50,6 +50,9 @@ export default {
         updateViewStep:'$_external/updateViewStep'
       }
     ),
+    ...mapActions({
+       requestInvitation :'$_external/requestInvitation',
+   }),
     next_view: function ()
     {  if (this.password !== this.cpassword) {
         console.log("Password does not match!")
@@ -57,8 +60,27 @@ export default {
       }
       else {
         this.updatePassPlain(this.cpassword);
-        this.setViewState(4);
-        this.updateViewStep(0);
+        let payload = {};
+        payload.pass = this.cpassword;
+        payload.name = this.getName;
+        payload.biz_email = this.getBizEmail ;
+        payload.personal_email = this.getPerEmail ;
+        payload.phone = this.getPhone ;
+        payload.type = this.getType ;
+        payload.dept_id = this.getDeptId;
+        payload.cop_id = this.getCopId;
+        payload.cop_user_id = this.getCopUserId ;
+        this.requestInvitation(payload).then(response => {
+           console.log("Invitation successfull!")
+           console.log(response);
+           this.setViewState(4);
+           this.updateViewStep(0);
+        }, error => {
+            console.error("Check Internet Connection")
+            console.log(error);
+        });
+        // this.setViewState(4);
+        // this.updateViewStep(0);
 
       }
     },
@@ -73,7 +95,17 @@ export default {
   computed : {
     is_valid : function() {
       return this.password != '' && this.cpassword !='' && this.password === this.cpassword;
-    }
+    },
+    ...mapGetters({
+        getName : '$_external/getName',
+        getBizEmail : '$_external/getBizEmail',
+        getPerEmail:'$_external/getPerEmail',
+        getPhone : '$_external/getPhone',
+        getType : '$_external/getType',
+        getDeptId : '$_external/getDeptId',
+        getCopId : '$_external/getCopId',
+        getCopUserId : '$_external/getCopUserId'
+      })
   }
 }
 </script>

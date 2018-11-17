@@ -13,6 +13,9 @@ const state = {
     phone :'',
     name :'',
     type:'',
+    dept_id:'',
+    cop_id:'',
+    cop_user_id:'',
     password_plain:'',
     help_panel(biz_name){
   return{
