@@ -62,7 +62,7 @@
             :page-size="pagination_limit"
             :current-page.sync="pagination_page"
             @current-change="changePage"
-            :page-sizes="[10, 20, 50, 100]"
+            :page-sizes="[5,10, 20, 50, 100]"
             @size-change="changeSize"
             class="section--pagination-item"
             >
@@ -82,7 +82,7 @@ export default {
   data: function () {
     return {
       empty_payments_state:"Fetching Payments",
-      pagination_limit:5,
+      pagination_limit:10,
       pagination_page:1,
       filterState: false,
       filterData: {
@@ -155,7 +155,7 @@ export default {
       if(this.filterState == true){
         return this.filteredPaymentData.slice(from, to);
       }
-      return this.paymentData.slice(from, slice);
+      return this.paymentData.slice(from, to);
     },
     active_filter() {
       if(this.filterData.from_date !== '' && this.filterData.to_date !== ''){
