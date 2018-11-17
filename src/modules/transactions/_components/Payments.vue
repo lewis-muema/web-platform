@@ -125,6 +125,7 @@ export default {
     filterPaymentData(){
        //reset filter
         this.filterState  = false;
+        this.empty_payments_state = "Searching Payments";
 
         let from_date = this.filterData.from_date;
         let to_date = this.filterData.to_date;

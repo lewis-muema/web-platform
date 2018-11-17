@@ -132,6 +132,7 @@ export default {
         filterTableData() {
             //reset filter
             this.filterState  = false;
+            this.empty_orders_state = "Searching Orders";
 
             let user = this.filterData.user;
             let from_date = this.filterData.from_date;
