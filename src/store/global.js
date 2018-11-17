@@ -1,12 +1,21 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import VuexPersist from 'vuex-persist'
 Vue.use(Vuex)
-
 
 import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';
+const plugins = []
+
+if (process.browser) {
+  const vuexPersist = new VuexPersist({
+    key: '_sendyWeb',
+    storage: window.localStorage
+  })
+  plugins.push(vuexPersist.plugin);
+  
+}
 
 const state = {
   session: {},
@@ -19,4 +28,5 @@ export default {
   actions,
   getters,
   mutations,
+  plugins:plugins
 };

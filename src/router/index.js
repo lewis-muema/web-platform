@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store/global'
-
-Vue.use(Router)
+Vue.use(Router);
 
 let entryUrl = null;
 
@@ -13,8 +12,7 @@ function guard(to, from, next){
       //TODO: change this to use the user id and check for null as well
       //TODO: make sure this is checking the store well
       //TODO: we now literally have no guard , the door is just wide open
-    let session = store.state.session;
-
+    
     if (true) {
       if (entryUrl) {
         const url = entryUrl;
