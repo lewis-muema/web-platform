@@ -235,8 +235,8 @@ export default {
 {
   display: block;
   text-align: center;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   margin: 0 auto;
 }
 .infobar--terms
@@ -246,9 +246,9 @@ export default {
 }
 .infobar--actions-text
 {
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 400;
-  padding-top: 4px;
+  padding-top: 11px;
 }
 .carets
 {
