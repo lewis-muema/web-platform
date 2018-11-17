@@ -445,3 +445,7 @@ span.el-pagination__jump {
   font-weight: normal !important;
 }
 *:focus {outline:none}
+
+.el-checkbox{ font-weight: normal !important;}
+
+.el-checkbox__label{font-size:13px!important;}
