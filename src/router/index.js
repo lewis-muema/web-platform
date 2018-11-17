@@ -140,7 +140,7 @@ export function createRouter () {
                       component: () => import('../modules/admin/components/users/AddUser.vue')
                   },
                   {
-                      path: '/admin/users/edit_user',
+                      path: '/admin/users/edit_user/:id',
                       component: () => import('../modules/admin/components/users/EditUser.vue')
                   },
               ]
