@@ -39,5 +39,14 @@ export default {
     },
     updateAddedStatus(state , n){
         state.added_status = n
+    },
+    setUsersList(state, users){
+        state.users_list = users;
+    },
+    setDepartmentsList(state, departments){
+        state.departments_list = departments;
+    },
+    setKeysList(state, keys){
+        state.keys_list = keys;
     }
 };

@@ -137,7 +137,7 @@ nav ul li .router-link-active{
     cursor: pointer;
 }
 .nav--menu-dropdown-list {
-    top: 60px !important;
+    top: 57px !important;
     width: 158px;
     left: calc(90% - 98px) !important;
     color: #555;

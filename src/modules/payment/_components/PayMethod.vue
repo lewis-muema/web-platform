@@ -18,18 +18,21 @@ export default {
   margin: 40px 0px 20px 0px;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #ebeef5;
+  /* border-bottom: 1px solid #ebeef5; */
   margin-bottom: 20px;
 }
 .paymethod--link
 {
   color: #555;
   text-transform: capitalize;
-  font-size: 16px;
+  font-size: 16px !important;
   text-align: center;
-  padding: 2px;
+  padding: 10px 25px;
   text-decoration: none;
   flex: 1;
+}
+.paymethod--link:hover , .paymethod--link:focus {
+    color: #1782c5 !important;
 }
 .paymethod--link.router-link-active
 {

@@ -32,11 +32,9 @@ export default {
     ...mapGetters(
       {
          getBizName:'$_external/getBizName',
-         getBizEmail:'$_external/getBizEmail'
-        // 'getBaseUrl',
-        // 'getBizName',
-        // 'getBizEmail',
-        // 'getPerEmail'
+         getBizEmail:'$_external/getBizEmail',
+         getBaseUrl:'$_external/getBaseUrl',
+         getPerEmail:'$_external/getPerEmail'
       }
     )
   }
@@ -76,6 +74,6 @@ export default {
 .mid
 {
   text-align: center;
-  height: 20px;
+  height: 40px;
 }
 </style>

@@ -10,21 +10,21 @@
   <p style="font-size:17px;"> Enter new password </p>
   <p style="color:#F90; height:20px;" id="pass_change_info"></p>
   <div style=" margin:0px auto; ">
-  <form method="post" action="" class="form">
+  <form method="post" action="" class="reset-form">
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
 
   <tr>
     <td align="center">
-    <input class="form__input form__longyy"  placeholder="New Password" type="password" id="forgot_email" name="new_pass" /></td>
+    <input class="form__input form__longyy"  placeholder="New Password" type="password" v-model="new_password" name="new_password" /></td>
   </tr>
   <tr>
     <td align="center">
-    <input class="form__input form__longyy"  placeholder="Confirm New Password" type="password" id="forgot_email" name="con_pass" />
+    <input class="form__input form__longyy"  placeholder="Confirm New Password" type="password" v-model="confirm_password"  name="confirm password" />
     </td>
   </tr>
 
   <tr>
-    <td align="center"><input type="submit" class="btn btn-primary" style="  font-size:14px;  width:310px; margin-top:10px;" value="Change Password"  /></td>
+    <td align="center"><input type="submit" class="btn btn-primary" style="  font-size:14px;  width:310px; margin-top:10px;" value="Change Password" v-on:click="reset_pass" /></td>
   </tr>
 </table>
 
@@ -42,7 +42,34 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 export default {
+  data() {
+    return {
+      message: '',
+      new_password: '',
+      confirm_password: ''
+    }
+  },
+  methods:{
+     ...mapActions({
+        requestResetPassword :'$_auth/requestResetPassword',
+    }),
+    reset_pass: function ()
+    {
+      let payload = {};
+      payload.new_password = this.new_password;
+      payload.confirm_password = this.confirm_password;
+      this.requestResetPassword(payload).then(response => {
+         console.log("Password Reset successfull")
+         console.log(response);
+      }, error => {
+          console.error("Check Internet Connection")
+          this.message ='Login failed';
+          console.log(error);
+      });
+    },
+},
 }
 </script>
 
@@ -97,5 +124,8 @@ export default {
   border-color: #1782c5;
   -webkit-box-shadow: none;
   box-shadow: none;
+}
+.reset-form{
+  margin-left: 23%;
 }
 </style>
