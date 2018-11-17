@@ -20,13 +20,13 @@
                         </div>
                     </div> -->
                     <div class="home-view-vendor-classes--label">
-                        <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in get_price_request_object.economy_price_tiers" :key="index" @click="setActivePackageClass(index)" @click="setActivePackageClass(index)">
-                            {{index}}
+                        <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in get_price_request_object.economy_price_tiers" :key="index" @click="setActivePackageClass(index)">
+                            <a class="section__link" :class="get_current_active_package__class(index)">{{index}}</a>
                         </div>
                     </div>
                 </div>
                 <div class="home-view-vendor-types" v-if="active_vendor_price_data != '' ">
-                    <div class="home-view-vendor-types--item" v-for="j in active_vendor_price_data">
+                    <div  v-for="j in active_vendor_price_data" :key="j.order_no" @click="set_active_vendor_name(j.vendor_name)" class="home-view-vendor-types--item" :class="get_current_active_vendor_type_class(j.vendor_name)" >
                         <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
                             <div class="home-view-vendor-types-item--vendor-wrapper__img">
                                 <img class="home-view-vendor-types-item__image" :src="getVendorIcon(j.vendor_id)" alt="">
@@ -53,45 +53,25 @@
 
         </div>
         <div class="" v-if="get_active_package_class != '' ">
-            <div class="home-view--seperator">
-            </div>
-            <div class="home-view-actions">
-                <div class="home-view-actions--items">
-                    <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-actions--items__img" width="10px"  />
-                    <span class="home-view-actions--items__span">Choose Payment</span>
-                </div>
-                <div class="home-view-actions--items">
-                    <font-awesome-icon icon="pen" size="xs" class="home-view-actions--items__img" width="10px"  />
-                    <span class="home-view-actions--items__span">Add Note</span>
-                </div>
-                <div class="home-view-actions--items">
-                    <font-awesome-icon icon="clock" size="xs" class="home-view-actions--items__img" width="10px"  />
-                    <span class="home-view-actions--items__span">Schedule</span>
-                </div>
-            </div>
-            <div class="home-view--seperator">
-            </div>
-            <div class="home-view-place-order">
-                <div class="">
-                    <button type="button" class="button-primary home-view--place-order" name="button">Place Order</button>
-                </div>
-            </div>
+            <order-options></order-options>
         </div>
       </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import OrderOptions from './OrderOptions.vue'
 export default {
+    components:{OrderOptions},
     data () {
         return {
-            active_package_class : "",
         }
     },
     computed :{
         ...mapGetters({
           get_price_request_object : '$_orders/$_home/get_price_request_object',
-          get_active_package_class : '$_orders/$_home/get_active_package_class'
+          get_active_package_class : '$_orders/$_home/get_active_package_class',
+          get_active_vendor_name : '$_orders/$_home/get_active_vendor_name'
         }),
         active_vendor_price_data: function (){
             if(this.get_active_package_class != ""){
@@ -102,13 +82,24 @@ export default {
     },
     methods:{
         ...mapMutations({
-          set_active_package_class : '$_orders/$_home/set_active_package_class'
+          set_active_package_class : '$_orders/$_home/set_active_package_class',
+          set_active_vendor_name : '$_orders/$_home/set_active_vendor_name'
         }),
         setActivePackageClass(name){
             this.set_active_package_class(name);
         },
         getVendorIcon(id){
-            return "https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/vendor_type/side/"+id+".svg";
+            return "https://images.sendyit.com/web_platform/vendor_type/side/"+id+".svg";
+        },
+        get_current_active_package__class(name){
+            return{
+                'router-link-active' : name == this.get_active_package_class
+            }
+        },
+        get_current_active_vendor_type_class(name){
+            return {
+                'home-view-vendor-types--item__active' : name == this.get_active_vendor_name
+            }
         }
     }
 }
