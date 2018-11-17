@@ -20,13 +20,15 @@ button span {
   transition: background-color .3s;
   padding-left: 20px;
   padding-right: 20px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .button-primary:focus, .button-primary:hover {
   background: #285e8e;
   border-color: #285e8e;
   color: #ecf0f1;
+  cursor: pointer;
+
 }
 
 .button-primary--naked {
@@ -41,7 +43,7 @@ button span {
   transition: background-color .3s;
   padding-left: 20px;
   padding-right: 20px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .button-primary--naked:focus, .button-primary--naked:hover {
@@ -68,7 +70,7 @@ button span {
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
     width: 100%;
     position: relative;
-    font-size: 14px;
+    font-size: 13px;
     margin-right: 30px;
 
 }
@@ -96,7 +98,7 @@ button span {
   transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   width: 100%;
   position: relative;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .input-control:focus {
@@ -105,6 +107,26 @@ button span {
   box-shadow: none;
 }
 
+.textarea-control {
+    -webkit-appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    outline: 0;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    width: 100%;
+    position: relative;
+    font-size: 13px;
+}
+.textarea-control:focus,.textarea-control:hover, .textarea-control:active{
+    border: 1px solid #1782c5;
+}
 .input-checkbox , .input-radio {
   height: 20px;
   width: 20px;
@@ -164,7 +186,7 @@ button span {
   transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   width: 100%;
   position: relative;
-  font-size: 14px;
+  font-size: 13px;
 }
 .btn-submit:focus, .btn-submit:hover {
   background: #285e8e;
@@ -189,7 +211,7 @@ button span {
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
     width: 100%;
     position: relative;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .btn-cancel:focus, .btn-cancel:hover {
@@ -223,7 +245,7 @@ button span {
   color:#1782c5 !important;
 }
 .el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover {
-  background-color: #4098ce !important;
+  background-color: #1782C5 !important;
   color: #fff !important;
 }
 .el-dropdown-menu__item:focus a, .el-dropdown-menu__item:not(.is-disabled):hover a {
@@ -269,7 +291,7 @@ button span {
   transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   width: 100%;
   position: relative;
-  font-size: 14px;
+  font-size: 13px;
 }
 .el-pagination__sizes .el-input .el-input__inner:hover , .el-pagination__sizes .el-input .el-input__inner:focus {
   border-color: #1782c5;
@@ -292,7 +314,7 @@ button span {
   transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   width: 100%;
   position: relative;
-  font-size: 14px;
+  font-size: 13px;
 }
 .el-pagination__editor.el-input:hover , .el-pagination__editor.el-input:focus {
   border-color: #1782c5;
@@ -361,5 +383,65 @@ span.el-pagination__jump {
 }
 
 .el-date-picker__header-label.active, .el-date-picker__header-label:hover {
-  color: #2c82c5 !important;
+  color: #555 !important;
+  font-size: 15px !important;
+    font-weight: normal !important;
 }
+
+.el-picker-panel {
+  color: #2c82c5 !important;
+  border: 1px solid #e4e7ed;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  background: #fff;
+  border-radius: 4px;
+  line-height: 30px;
+  margin: 5px 0;
+  font-family: 'Rubik', sans-serif !important;
+}
+.el-date-table td span {
+  color: #555;
+}
+
+.el-date-table td.next-month, .el-date-table td.prev-month .el-date-table td span  {
+  color: #f1f1f1 !important;
+}
+.el-date-table td.current:not(.disabled) span {
+  color: #fff;
+  background-color: #2c82c5 !important;
+}
+
+.el-table {   color: #555 !important;
+              font-size: 13px !important;   }
+
+.el-table .cell { line-height: 20px !important;}
+
+.el-table td, .el-table th { padding: 10px 0 !important;}
+
+.el-pagination__total { font-size: 13px !important; }
+
+.el-date-picker {    width: 270px !important;
+}
+
+.el-date-picker table {
+    table-layout: fixed;
+    width: 244px !important;
+}
+
+.el-date-table td div {
+    height: 0px !important;}
+
+.el-table--border td,.el-table th.is-leaf{
+   border-bottom:1px solid #dcdfe6 !important;
+}
+
+.el-table--border td, .el-table--border th, .el-table--border th{
+  border-right:1px solid #dcdfe6 !important;
+}
+
+.el-table--border, .el-table--group { border:1px solid #dcdfe6 !important;}
+
+.el-date-picker__header-label {
+  font-size: 15px !important;
+  font-weight: normal !important;
+}
+*:focus {outline:none}

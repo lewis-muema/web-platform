@@ -10,15 +10,18 @@ const getStep = state => state.step;
 const getDriverName = state => state.driver_name;
 const getImagesBaseUrl = state => state.images_base_url;
 const getPostRatingComponent = state => state.post_rating_component;
+const getPostRatingComponentBusiness = state => state.post_rating_component_business;
 export default {
     getScore,
     getPackageID,
     getBaseUrl,
+    getViewState,
     getRiderImage,
     getDriverBaseImage,
     getUserEmail,
     getStep,
     getDriverName,
     getImagesBaseUrl,
-    getPostRatingComponent
+    getPostRatingComponent,
+    getPostRatingComponentBusiness
 };
