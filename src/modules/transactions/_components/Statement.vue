@@ -62,7 +62,7 @@
     <div class="section--pagination-wrap">
         <el-pagination
             layout="total, sizes, prev, pager, next, jumper"
-            :total="statementData.length"
+            :total="statement_total"
             :page-size="pagination_limit"
             :current-page.sync="pagination_page"
             @current-change="changePage"
@@ -97,8 +97,9 @@ export default {
   },
   mounted(){
       let session_data = this.$store.getters.Session;
-      let payment_payload = {
-        "cop_id": session_data.cop_id,
+      let statement_payload = {
+        "cop_id":669,
+        "user_type":2
       }
 
       let full_payload = {
@@ -223,10 +224,16 @@ export default {
       let from = (this.pagination_page - 1) * this.pagination_limit;
       let to = this.pagination_page * this.pagination_limit;
 
-      if(this.filterState == true){
-        return this.filteredStatementData.slice(from, to);
-      }
+      // if(this.filterState == true){
+      //   return this.filteredStatementData.slice(from, to);
+      // }
       return this.statementData.slice(from, to);
+    },
+    statement_total() {
+      // if(this.filterState == true){
+      //   return this.filteredData.length;
+      // }
+     return this.statementData.length;
     }
   },
 }
