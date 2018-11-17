@@ -44,13 +44,17 @@ export default {
   },
   methods: {
     ...mapMutations({
-      toggle : '$_orders/toggle_ongoing'
+      toggle : '$_orders/toggle_ongoing',
+      change_page : '$_orders/set_page',
+      hide_markers: '$_orders/hide_markers'
     }),
     toggle_ongoing: function() {
       this.toggle()
     },
     track: function(order) {
+      this.hide_markers()
       this.$router.push({ path: `/orders/tracking/${order}` })
+      this.change_page(1)
     },
     getStatus: function(order) {
       if (this.loading == false) {
@@ -130,7 +134,8 @@ export default {
 {
   font-size: 13px;
   margin-top: 15px;
-  border: 1px solid #1782c5;
+  border: 1px solid #1782C5;
+  cursor: pointer;
 }
 .ongoing--card-location
 {

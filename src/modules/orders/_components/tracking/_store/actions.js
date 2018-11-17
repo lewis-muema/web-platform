@@ -7,6 +7,7 @@ const get_tracking_data = function({commit}, payload)
     axios.post(path, payload)
     .then(response => {
       commit('set_tracking_data', response.data)
+      commit('$_orders/set_polyline',response.data.polyline, {root: true})
       resolve(response.data);
     })
     .catch(e => {

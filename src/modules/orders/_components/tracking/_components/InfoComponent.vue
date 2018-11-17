@@ -166,17 +166,6 @@ export default {
       })
     }
   }
-  // watch: {
-  //   this.$route.params.order_no: function (val) {
-  //     this.order_number = val
-      // this.loading = true
-      // var that = this
-      // this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": this.$route.params.order_no})
-      // .then(response => {
-      //   that.loading = false
-      // })
-  //   },
-  // }
 }
 </script>
 
