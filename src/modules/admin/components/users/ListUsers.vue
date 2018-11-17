@@ -2,18 +2,14 @@
     <div>
         <div class="section--filter-wrap">
             <div class="section--filter-input-wrap">
-                <!--<el-select class="section&#45;&#45;filter-input" v-model="filterData.user" placeholder="Users">-->
-                    <!--<el-option v-for="user in userData" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">-->
-                    <!--</el-option>-->
-                <!--</el-select>-->
+                <el-select class="section--filter-input" v-model="filterData.user" placeholder="Users">
+                    <el-option v-for="user in userData" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
+                    </el-option>
+                </el-select>
                 <el-select class="section--filter-input"  v-model="filterData.department" placeholder="All Departments">
                     <el-option v-for="dept in deptData" :key="dept.department_id" :label="dept.department_name" :value="dept.department_id">
                     </el-option>
                 </el-select>
-                <el-input class="section--filter-input" v-model="search_users"  placeholder="Users">
-
-                </el-input>
-                
                 <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'" @click="filterUserTableData">Search</button>
 
             </div>
@@ -79,7 +75,7 @@
             <el-table-column
                     label="Action">
                 <template slot-scope="scope">
-                    <a @click="edit_user">Edit User</a>
+                    <el-button type="text" @click="edit_user(user_data[scope.$index]['cop_user_id'])">Edit User</el-button>
                 </template>
             </el-table-column>
 
@@ -104,7 +100,7 @@
 </template>
 
 <script>
-    import {mapActions, mapGetters} from 'vuex'
+    import {mapActions, mapGetters,mapMutations} from 'vuex'
 
     export default {
         name: "ListUsers",
@@ -166,7 +162,7 @@
             user_data(){
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
-                
+
                 if(this.filterState == true){
                     return this.filteredUserData.slice(from, to);
                 }
@@ -267,10 +263,20 @@
             ...mapActions([
                 '$_admin/requestUsersList',
                 '$_admin/requestDepartmentsList',
-                
+
             ]),
-            edit_user() {
-                this.$router.push('/admin/users/edit_user');
+            ...mapMutations(
+              {
+                updateCopUserId:'$_admin/updateCopUserId',
+                updateUserName:'$_admin/updateUserName',
+                updateUserEmail:'$_admin/updateUserEmail',
+                updateUserPhone: '$_admin/updateUserPhone',
+                updateType: '$_admin/updateType'
+              }
+            ),
+             edit_user(cop_user_id) {
+                let cop_user_details = cop_user_id;
+                this.$router.push('/admin/users/edit_user/'+cop_user_id);
             },
 
         }
