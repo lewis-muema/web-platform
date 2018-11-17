@@ -19,7 +19,21 @@ const set_ongoing_orders = (state, payload) => {
 };
 
 const set_markers = (state, payload) => {
-  state.map.markers.push(payload);
+  payload.forEach(function (value, i) {
+
+    var icon = 'destination'
+    if (i == 0) {
+      icon = 'pickup'
+    }
+    var marker = {
+      position: {
+        lat: Number(value.coordinates.split(',')[0]),
+        lng: Number(value.coordinates.split(',')[1])
+      },
+      icon: icon
+    }
+    state.map.markers.push(marker);
+  })
 };
 
 const set_polyline = (state, payload) => {
@@ -52,7 +66,7 @@ const set_vendor_markers = (state, payload) => {
   Vue.set(state.map.vendors, id, value)
 };
 
-const hide_markers = (state, payload) => {
+const hide_vendors = (state, payload) => {
   for (var key in state.map.vendors) {
     if (!state.map.vendors.hasOwnProperty(key)) continue;
     var obj = state.map.vendors[key];
@@ -61,6 +75,14 @@ const hide_markers = (state, payload) => {
   }
 };
 
+const remove_markers = (state) => {
+  state.map.markers = []
+}
+
+const remove_polyline = (state) => {
+  state.map.polyline.path = ""
+}
+
 export default {
   set_page,
   toggle_ongoing,
@@ -68,5 +90,7 @@ export default {
   set_markers,
   set_polyline,
   set_vendor_markers,
-  hide_markers
+  hide_vendors,
+  remove_markers,
+  remove_polyline
 };

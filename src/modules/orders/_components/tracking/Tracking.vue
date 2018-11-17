@@ -14,7 +14,7 @@ export default {
   mixins: [ RegisterStoreModule ],
   methods :{
     ...mapMutations({
-      hide_markers: '$_orders/hide_markers',
+      hide_vendors: '$_orders/hide_vendors',
       change_page : '$_orders/set_page'
     })
   },
@@ -23,7 +23,7 @@ export default {
   },
   mounted() {
     this.change_page(1)
-    this.hide_markers()
+    this.hide_vendors()
   }
 }
 </script>
