@@ -48,5 +48,20 @@ export default {
     },
     setKeysList(state, keys){
         state.keys_list = keys;
+    },
+    updateCopUserId(state , n){
+        state.cop_user_id = n
+    },
+    updateUserName(state , n){
+        state.user_name = n
+    },
+    updateUserEmail(state , n){
+        state.user_email = n
+    },
+    updateUserPhone(state , n){
+        state.user_phone = n
+    },
+    updateType(state , n){
+        state.type = n
     }
 };

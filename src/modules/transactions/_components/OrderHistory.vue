@@ -104,6 +104,7 @@
 
 <script>
 const moment = require('moment');
+
 import { mapActions, mapGetters } from 'vuex'
 export default {
       data() {
@@ -254,16 +255,20 @@ export default {
        return this.orderHistoryData.slice(from, to);
       }
      },
-      mounted(){
-          //TODO: Get this from session
-          //TODO: also create payload depending on session
-
+     mounted(){
+          let session_data = this.$store.getters.Session;
           let orders_payload = {
-            "cop_id": 669,
-            "user_type":2
+            "cop_id": session_data.cop_id,
+            "user_type":session_data.user_type
+          }
+          let full_payload = {
+            "values" : orders_payload,
+            "vm":this,
+            "app":"NODE_PRIVATE_API",
+            "endpoint":"order_history"
           }
           // this.requestOrderHistoryOrders(payload);
-          this.$store.dispatch("$_transactions/requestOrderHistoryOrders", orders_payload).then(response => {
+          this.$store.dispatch("$_transactions/requestOrderHistoryOrders", full_payload).then(response => {
              console.log("Got some data, now lets show something in this component")
              console.log(response);
              this.empty_orders_state = "Order History Not Found";
@@ -276,9 +281,16 @@ export default {
 
 
           let users_payload = {
-            "cop_id": 669
+            "cop_id": session_data.cop_id
           }
-          this.$store.dispatch("$_transactions/requestCopUsers", users_payload).then(response => {
+          
+          let full_users_payload = {
+            "values" : users_payload,
+            "vm":this,
+            "app":"NODE_PRIVATE_API",
+            "endpoint":"cop_users"
+          }
+          this.$store.dispatch("$_transactions/requestCopUsers", full_users_payload).then(response => {
              console.log("Got some data, now lets show something in this component")
              console.log(response);
              this.empty_users_state = "Cop Users Not Found";
