@@ -96,10 +96,19 @@ export default {
     }
   },
   mounted(){ 
-      let statement_payload = {
-        "cop_id": 669
+      let session_data = this.$store.getters.Session;
+      let payment_payload = {
+        "cop_id": session_data.cop_id,
       }
-      this.$store.dispatch("$_transactions/requestStatement", statement_payload).then(response => {
+
+      let full_payload = {
+        "values" : statement_payload,
+        "vm":this,
+        "app":"NODE_PRIVATE_API",
+        "endpoint":"statement"
+      }
+      
+      this.$store.dispatch("$_transactions/requestStatement", full_payload).then(response => {
           console.log(response);
           this.empty_statement_state = "Statement Not Found";
       }, error => {

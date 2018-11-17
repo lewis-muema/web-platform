@@ -12,9 +12,10 @@ function guard(to, from, next){
        console.log('router-message-session', store.state.session);
       //TODO: change this to use the user id and check for null as well
       //TODO: make sure this is checking the store well
+      //TODO: we now literally have no guard , the door is just wide open
     let session = store.state.session;
 
-    if (session) {
+    if (true) {
       if (entryUrl) {
         const url = entryUrl;
         entryUrl = null;
