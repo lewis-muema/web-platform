@@ -110,10 +110,10 @@ export default {
       }
       this.$store.dispatch("$_transactions/requestPayments", full_payload).then(response => {
           console.log(response);
-          this.empty_orders_state = "Payments Not Found";
+          this.empty_payments_state = "Payments Not Found";
       }, error => {
           console.log(error);
-          this.empty_orders_state = "Payments Failed to Fetch";
+          this.empty_payments_state = "Payments Failed to Fetch";
       });
   },
   methods: {
