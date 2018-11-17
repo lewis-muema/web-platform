@@ -35,9 +35,9 @@
                                 {{j.vendor_name}}
                             </div>
                         </div>
-                        <div class="home-view-vendor-types-item">
+                        <!-- <div class="home-view-vendor-types-item">
 
-                        </div>
+                        </div> -->
                         <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper">
                             <div class="home-view-vendor-types-item--cost-wrapper__cost">
                                 KSh {{j.cost}}

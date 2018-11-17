@@ -5,7 +5,7 @@
         <div class="home-view-actions">
             <div class="home-view-actions--items" :class="get_current_active_order_option_class('payment')" @click="do_set_active_order_option('payment')">
                 <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-actions--items__img" width="10px"  />
-                <span class="home-view-actions--items__span">Choose Payment</span>
+                <span class="home-view-actions--items__span" >Choose Payment</span>
             </div>
             <div class="home-view-actions--items" :class="get_current_active_order_option_class('note')" @click="do_set_active_order_option('note')">
                 <font-awesome-icon icon="pen" size="xs" class="home-view-actions--items__img" width="10px"  />
@@ -30,39 +30,42 @@
 
                 <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                     <div class="home-view-notes-wrapper--item__option">
-                        <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" />
+                        <!-- <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
                             Payment on delivery
                         </div>
                     </div>
                     <div class="home-view-notes-wrapper--item__value">
-                        <input type="checkbox" name="" value="">
+                        <!-- <input type="checkbox" name="" value=""> -->
+                        <el-radio v-model="payment_method" label="1"></el-radio>
                     </div>
                 </div>
                 <div class="home-view--seperator home-view--seperator__mini">
                 </div>
                 <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                     <div class="home-view-notes-wrapper--item__option">
-                        <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" />
+                        <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
                             Mpesa
                         </div>
                     </div>
                     <div class="home-view-notes-wrapper--item__value">
-                        <input type="checkbox" name="" value="">
+                        <!-- <input type="checkbox" name="" value=""> -->
+                        <el-radio v-model="payment_method" label="2"></el-radio>
                     </div>
                 </div>
                 <div class="home-view--seperator home-view--seperator__mini">
                 </div>
                 <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                     <div class="home-view-notes-wrapper--item__option">
-                        <font-awesome-icon icon="star" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" />
+                        <!-- <font-awesome-icon icon="star" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
                             Enter a promo code
                         </div>
                     </div>
                     <div class="home-view-notes-wrapper--item__value">
-                        <input type="checkbox" name="" value="">
+                        <el-radio v-model="payment_method" label="3"></el-radio>
+                        <!-- <input type="checkbox" name="" value=""> -->
                     </div>
                 </div>
                 <div class="home-view--seperator">
@@ -78,7 +81,7 @@
 
             </div>
             <div class="">
-                <textarea name="name" rows="5" class="textarea-control"></textarea>
+                <textarea name="name" rows="5" class="textarea-control" v-model="order_notes"></textarea>
             </div>
             <div class="">
 
@@ -89,7 +92,14 @@
 
             </div>
             <div class="">
-                 <!-- <date-picker v-model="schedule_time" type="datetime" lang="en" format="MM-DD-YYYY [at] HH:mm" :time-picker-options="{ start: '05:00', step: '01:00', end: '21:00' }" confirm></date-picker> -->
+                <div class="block">
+                  <!-- <span class="demonstration">Date</span> -->
+                  <el-date-picker class="home-view-actions__element-date"
+                    v-model="schedule_time"
+                    type="datetime"
+                    placeholder="Select date and time">
+                  </el-date-picker>
+                </div>
             </div>
             <div class="">
 
@@ -104,29 +114,42 @@
 </template>
 
 <script>
-// import DatePicker from 'vue2-datepicker'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import NoSSR from 'vue-no-ssr';
+
 export default {
     name:'order-options',
     components:{
-        // DatePicker
+        'no-ssr': NoSSR,
+
     },
     data () {
         return {
-            schedule_time:'',
-            shortcuts: [
-            {
-              text: 'Today',
-              onClick: () => {
-                this.time3 = [ new Date(), new Date() ]
-              }
-            }
-          ],
-          timePickerOptions:{
-            start: '00:00',
-            step: '00:30',
-            end: '23:30'
-          }
+            pickerOptions1: {
+              shortcuts: [{
+                text: 'Today',
+                onClick(picker) {
+                  picker.$emit('pick', new Date());
+                }
+              }, {
+                text: 'Yesterday',
+                onClick(picker) {
+                  const date = new Date();
+                  date.setTime(date.getTime() - 3600 * 1000 * 24);
+                  picker.$emit('pick', date);
+                }
+              }, {
+                text: 'A week ago',
+                onClick(picker) {
+                  const date = new Date();
+                  date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                  picker.$emit('pick', date);
+                }
+              }]
+            },
+            schedule_time: '',
+            order_notes: '',
+            payment_method:''
         }
     },
     computed :{
@@ -184,6 +207,8 @@ export default {
     flex: 1;
     display: flex;
     align-self: flex-end;
+    flex-direction: row-reverse;
+    justify-content: center;
 }
 .home-view-notes-wrapper--item__balance{
     margin-bottom: 20px;
@@ -194,6 +219,15 @@ export default {
 }
 .home-view-notes-wrapper--item__option-svg{
     margin-right: 10px;
+}
+.home-view-actions__element-date{
+    width: 100% !important;
+}
+.el-date-picker{
+    left: 48px;
+}
+.home-view-notes-wrapper--item__value .el-radio__label{
+    display: none !important;
 }
 
 

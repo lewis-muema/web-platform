@@ -69,17 +69,15 @@ export default {
       }
     },
     date_format: function( date ) {
-     if (this.moment(date).isBefore()) {
-       date = this.moment().add(15, 'm');
-     }
       var from_now = this.moment( date ).fromNow();
 
       return this.moment( date ).calendar( null, {
+          lastWeek: 'MMMM Do, hh:mm a',
           sameDay:  '[Today] hh:mm a',
           nextDay:  '[Tomorrow] hh:mm a',
           nextWeek: 'dddd',
           sameElse: function () {
-              return "[" + from_now + "]";
+              return "MMMM Do, hh:mm a";
           }
       });
     },

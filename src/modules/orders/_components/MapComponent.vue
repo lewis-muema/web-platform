@@ -2,7 +2,7 @@
   <div class="content">
     <no-ssr placeholder="">
       <GmapMap :center="{lat:-1.3084143, lng:36.7658132}" :zoom="13" map-type-id="roadmap" class="content" :options="mapOptions" ref="map">
-        <gmap-marker v-for="m in markers" :position="get_position(m.position)" v-if="mapLoaded"></gmap-marker>
+        <gmap-marker v-for="m in markers" :position="get_position(m.position)" v-if="mapLoaded" :icon="path_icon(m.icon)"></gmap-marker>
         <gmap-polyline v-if="typeof polyline == 'object' && this.mapLoaded" :path="decode_path(polyline.path)" ref="polyline" :options="polyline.options">
         <gmap-marker v-for="v in vendors" :position="v.position" :key="index" :ref="`marker${index}`" :icon="draw_rotated(v.vendor_type,v.rotation)" :visible="v.visible"></gmap-marker>
       </GmapMap>
@@ -32,6 +32,20 @@ export default {
     }
   },
   methods: {
+    path_icon: function(icon) {
+      if (icon == 'pickup') {
+        return {
+          url: require('../../../assets/img/pickup_plceholder.png'),
+          scaledSize: new google.maps.Size(40, 55),
+        }
+      }
+      else {
+        return {
+          url: require('../../../assets/img/dest_plceholder.png'),
+          scaledSize: new google.maps.Size(40, 55),
+        }
+      }
+    },
     draw_rotated: function(vendor_type, rotation) {
       var canvas = document.createElement('canvas');
       canvas.setAttribute("id", "rot_canvas");
@@ -76,6 +90,17 @@ export default {
       vendors: '$_orders/get_vendors',
       polyline: '$_orders/get_polyline'
     }),
+  },
+  watch: {
+     markers(markers) {
+       if (this.mapLoaded) {
+         const bounds = new google.maps.LatLngBounds()
+         for (let m of this.markers) {
+           bounds.extend(m.position)
+         }
+         this.$refs.map.$mapObject.fitBounds(bounds);
+       }
+     }
   },
   mounted() {
     this.$gmapApiPromiseLazy().then(() => {

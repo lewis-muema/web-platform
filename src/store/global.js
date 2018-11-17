@@ -4,32 +4,19 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 
-const global_store = new Vuex.Store({
-  modules: {
-    $_global: {
-      namespaced: true,
+import actions from './actions';
+import getters from './getters';
+import mutations from './mutations';
 
-      // module assets
-      state: {
+const state = {
+  session: {},
+  ENV:{}
+};
 
-          session_data:{},
-      },
-      getters: {
-          getSessionData: state => {
-            return state.session_data;
-        },
-         // -> getters['$_global/getSessionData']
-      },
-      actions: {
-        //
-      },
-      mutations: {
-          setSessionData (state,data) {
-            state.session_data = data
-          }
-      }
-    }
-  }
-})
-
-export default global_store
+export default {
+  namespaced: true,
+  state,
+  actions,
+  getters,
+  mutations,
+};
