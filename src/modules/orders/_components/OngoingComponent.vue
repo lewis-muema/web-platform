@@ -125,12 +125,15 @@ export default {
   font-size: 13px;
   cursor: pointer;
   border: 1px solid #1782c5;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .ongoing--card
 {
-  font-size: 13px;
+  font-size: 14px;
   margin-top: 15px;
   border: 1px solid #1782c5;
+  border-radius: 5px;
 }
 .ongoing--card-location
 {
