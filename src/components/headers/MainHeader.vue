@@ -17,9 +17,9 @@
                             <el-dropdown-item><router-link  to="/orders">New Delivery</router-link></el-dropdown-item>
                             <el-dropdown-item><router-link  to="/payment">Payment</router-link></el-dropdown-item>
                             <el-dropdown-item><router-link  to="/transactions/order_history">Order History</router-link></el-dropdown-item>
-                            <el-dropdown-item><router-link  to="/free_deliveries">Free Deliveries</router-link></el-dropdown-item>
+                            <el-dropdown-item><router-link  to="/user/free_deliveries">Free Deliveries</router-link></el-dropdown-item>
                             <el-dropdown-item><router-link  to="/payment/promo">Promotions</router-link></el-dropdown-item>
-                            <el-dropdown-item><router-link  to="/admin">Admin Settings</router-link></el-dropdown-item>
+                            <el-dropdown-item><router-link  to="/admin/users">Admin Settings</router-link></el-dropdown-item>
                             <el-dropdown-item><router-link  to="/analytics">Analytics</router-link></el-dropdown-item>
                             <el-dropdown-item><router-link  to="/user/profile/personal_information">Profile</router-link></el-dropdown-item>
                             <el-dropdown-item class="last-child"><router-link to="/auth/logout">Log Out</router-link></el-dropdown-item>
