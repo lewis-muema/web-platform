@@ -58,15 +58,50 @@ export default {
        ...mapActions({
           requestSignIn :'$_auth/requestSignIn',
       }),
+      setCookie: function(value) {
+          let json_string_value = JSON.stringify(value);
+          let expires = "";
+          let days = 4;
+          var date = new Date();
+          date.setTime(date.getTime() + (days*24*60*60*1000));
+          expires = "; expires=" + date.toUTCString();
+
+          document.cookie = "_sessionSnack" + "=" + (json_string_value || "")  + expires + "; path=/";
+      },
       sign_in: function ()
       {
-        let payload = {};
-        payload.email = this.email;
-        payload.password = this.password;
-        this.requestSignIn(payload).then(response => {
-           console.log("Sign In successfull!")
+        let values = {};
+        values.email = this.email;
+        values.password = this.password;
+        let full_payload = {
+          "values" : values,
+          "vm":this,
+          "app":"NODE_PRIVATE_API",
+          "endpoint":"sign_in/"
+        }
+        this.requestSignIn(full_payload).then(response => {
+           
            console.log(response);
-           this.$router.push( '/orders' );
+
+           if(response.status == true){
+             //set cookie
+             //commit everything to the store
+             //redirect to orders
+             let session_data = response.data;
+             console.log('session_data', session_data);
+
+             this.setCookie(session_data);
+             this.$store.commit('setSession', session_data);
+
+             this.$router.push('/orders');
+        
+           } else {
+             //failed to login 
+             //show some sort of error
+              console.warn('login failed');
+              
+           }
+           
         }, error => {
             console.error("Check Internet Connection")
             console.log(error);

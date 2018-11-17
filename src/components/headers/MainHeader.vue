@@ -22,7 +22,7 @@
                             <el-dropdown-item><router-link  to="/admin/users">Admin Settings</router-link></el-dropdown-item>
                             <el-dropdown-item><router-link  to="/analytics">Analytics</router-link></el-dropdown-item>
                             <el-dropdown-item><router-link  to="/user/profile/personal_information">Profile</router-link></el-dropdown-item>
-                            <el-dropdown-item class="last-child"><router-link to="/auth/logout">Log Out</router-link></el-dropdown-item>
+                            <el-dropdown-item class="menu--last-child"><span @click="logOut()">Log Out</span></el-dropdown-item>
                         </el-dropdown-menu>
                         </el-dropdown>
                 </li>
@@ -34,8 +34,20 @@
 </template>
 
 <script>
+import {mapGetters} from 'Vuex'
 export default {
-    name : 'main-header'
+    name : 'main-header',
+    methods : {
+        logOut(){
+            console.log('attempt to log out');
+            this.$store.commit('setSession', {});
+            this.eraseCookie('_sessionSnack');
+            this.$router.push({name:'sign_in'});
+        },
+        eraseCookie(name){
+            document.cookie = name+'=; Max-Age=-99999999;'; 
+        }
+    }
 }
 </script>
 

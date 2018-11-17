@@ -151,7 +151,7 @@ nav ul li .router-link-active{
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-.nav--menu-dropdown-list .last-child{
+.nav--menu-dropdown-list .menu--last-child{
     border-top: 1px solid #f5f5f5;
 }
 .nav--menu-inactive {
