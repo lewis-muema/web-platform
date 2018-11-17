@@ -15,7 +15,7 @@
             <div class="homeview--destinations">
               <div class="homeview--input-bundler">
                 <no-ssr placeholder="">
-                    <font-awesome-icon icon="map-marker-alt" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px" />
+                    <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px"  />
                     <gmap-autocomplete placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" :class="initial_destination_css(n)"></gmap-autocomplete>
                     <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right " width="10px"  @click="remove_location(n)" v-show="n > 1"/>
                 </no-ssr>
