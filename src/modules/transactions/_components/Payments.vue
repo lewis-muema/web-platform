@@ -96,11 +96,19 @@ export default {
       //TODO: Get this from session
       //TODO: also create payload depending on session
 
+      let session_data = this.$store.getters.Session;
       let payment_payload = {
-        "cop_id": 669,
-        "user_type": 2
+        "cop_id": session_data.cop_id,
+        "user_type":session_data.user_type
       }
-      this.$store.dispatch("$_transactions/requestPayments", payment_payload).then(response => {
+
+      let full_payload = {
+        "values" : payment_payload,
+        "vm":this,
+        "app":"NODE_PRIVATE_API",
+        "endpoint":"payments"
+      }
+      this.$store.dispatch("$_transactions/requestPayments", full_payload).then(response => {
           console.log(response);
           this.empty_orders_state = "Payments Not Found";
       }, error => {
