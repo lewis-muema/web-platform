@@ -222,10 +222,9 @@ export default {
           this.$router.push({name:'order-details', params: {id : row.order_id}});
         },
         handleRowExpand(row, expanded) {
-          
-          this.expand_id = row.order_id;
-          this.expand_keys = []
-          this.expand_keys.push(row.order_id)
+          // this.expand_id = row.order_id;
+          // this.expand_keys = []
+          // this.expand_keys.push(row.order_id)
           this.$router.push({name:'order-details', params: {id : row.order_id}});
       },
       formatAmount(row, column, cellValue) {
