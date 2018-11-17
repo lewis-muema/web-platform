@@ -27,7 +27,7 @@
         </div>
         {{filterData}}
         <el-table
-                :data="fetchedData"
+                :data="user_data"
                 style="width: 100%"
                 :border="true"
                 :stripe="true"
@@ -135,59 +135,20 @@
                 empty_payments_state: "Fetching Users",
                 pagination_limit: 5,
                 pagination_page: 1,
-                filterData : {
-                    "name":"",
-                    "department_name":""
-                },
-                filteredData: [],
-                filterState: false,
-                tableData: [
-                    {
-                        "name": "CASH-AC29TZ828-T4W",
-                        "phone": "Computer Architecture",
-                        "email": "Computers",
-                        "department": "125.60",
-                        "type": "24",
-                        "status": "24",
-                        "branch": "24"
-                    },
-                    {
-                        "name": "CASH-AC29TZ828-T4W",
-                        "phone": "Asp.Net 4 Blue Book",
-                        "email": "Programming",
-                        "department": "56.00",
-                        "type": "24",
-                        "status": "24",
-                        "branch": "24"
-                    },
-                    {
-                        "name": "CASH-AC29TZ828-T4W",
-                        "phone": "Popular Science",
-                        "email": "Science",
-                        "department": "210.40",
-                        "type": "27",
-                        "status": "27",
-                        "branch": "27"
-                    }
-                ]
+                filteredUserData:[],
+                filterState:false
 
             }
         },
         computed: {
             ...mapGetters({
-                fetchedData: '$_admin/getUsersList',
+                userData: '$_admin/getUsersList',
             }),
-            inactive_filter() {
-                if(this.filterData.name === '' && (this.filterData.department_name === '')){
-                    this.filterState = false;
+            user_data(){
+                if(this.filterState == true){
+                    return this.filteredUserData;
                 }
-                return this.filterData.name === '' && (this.filterData.department_name === '');
-            },
-            cop_users_data() {
-                if(this.filterState === true){
-                    return this.filteredData;
-                }
-                return this.fetchedData;
+                return this.userData;
             }
         },
 
@@ -208,8 +169,8 @@
             },
             get_user_type: function (index) {
                 let resp = '';
-                if (this.fetchedData.length > 0) {
-                    resp = this.fetchedData[index].type;
+                if (this.user_data.length > 0) {
+                    resp = this.user_data[index].type;
                     if (resp === 1) {
                         resp = "Admin"
                     }
@@ -221,8 +182,8 @@
             },
             get_user_status: function (index) {
                 let resp = '';
-                if (this.fetchedData.length > 0) {
-                    resp = this.fetchedData[index].status;
+                if (this.user_data.length > 0) {
+                    resp = this.user_data[index].status;
                     if (resp === 1) {
                         resp = "Active"
                     }
