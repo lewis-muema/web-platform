@@ -22,7 +22,7 @@
 
 .home-view-vendor-classes--label{
     padding: 5px 0px;
-    margin-top: 10px;
+    margin-top: 5px;
 }
 .home-view-vendor-classes-icons-item--img{
     width: 30px;
@@ -36,17 +36,19 @@
     cursor: pointer;
 }
 .home-view-vendor-types--item{
-    border-radius: 5px;
-    height: 2.5em;
-    margin: 20px 0;
-    cursor: pointer;
-    border: 2px solid transparent;
-    padding-top: 10px;
-    padding-bottom: 10px;
+  border-radius: 5px;
+  height: 2.5em;
+  margin: 13px 0;
+  cursor: pointer;
+  border: 2px solid transparent;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  background-color: #80808017;
 
 }
 .home-view-vendor-types--item:hover, .home-view-vendor-types--item:active, .home-view-vendor-types--item__active{
     border: 2px solid #1782c5;
+    background-color: #fff;
 }
 
 .home-view-vendor-types--item, .home-view-vendor-types-item, .home-view-vendor-types-item--cost-wrapper, .home-view-vendor-types-item--vendor-wrapper{
@@ -61,6 +63,7 @@
 }
 .home-view-vendor-types-item--cost-wrapper{
     flex-direction: column;
+    padding-right: 10px;
 }
 .home-view-vendor-types-item--vendor-wrapper{
     flex-direction: row;
@@ -81,10 +84,11 @@
     padding-top: 5px;
 }
 .home-view-vendor-types-item--vendor-wrapper__img{
-    padding: 2px;
+    padding: 0px 30px 0px 27px;
 }
 .home-view-vendor-types-item--vendor-wrapper__vendor{
     padding-left: 5px;
+    font-size: 14px;
 }
 
 
@@ -101,7 +105,7 @@
     flex: 1;
 }
 .home-view-place-order{
-    margin: 20px 0;
+    margin: 20px 0px 0px 0px;
 }
 .home-view--place-order{
     width: 100%;
