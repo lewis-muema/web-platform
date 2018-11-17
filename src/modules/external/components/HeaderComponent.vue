@@ -1,12 +1,6 @@
 <template lang="html">
   <div class="user-invite-header">
-    <div class="container">
-      <div class="row head">
-        <div class="user-invite-logo">
-          <a href="https://sendyit.com/"><img class="header-logo" src='https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/logo/Sendy_logo_3.png' alt="Sendy Logo"></a>
-        </div>
-      </div>
-    </div>
+    <external-header></external-header>
     <div class="progress">
       <div class="determinate" :style="this.progress_width"></div>
   </div>
@@ -15,10 +9,11 @@
 
 <script>
 import {mapGetters} from 'vuex'
+import ExternalHeader from '../../../components/headers/ExternalHeader.vue'
 
 export default {
   name: 'header-component',
-  components: {},
+  components: {ExternalHeader},
   data: function (){
     return{
       styleObject: {
@@ -42,18 +37,18 @@ export default {
 </script>
 
 <style lang="css">
-.user-invite-header
+/* .user-invite-header
 {
   margin: 10px auto;
   width: 100%;
-}
+} */
 .header-logo
 {
   max-height: 50px;
 }
 .determinate
 {
-  background-color: #1782c5 !important;
+  background-color: orange !important;
   position: absolute;
   top: 0;
   left: 0;
@@ -68,9 +63,9 @@ export default {
   height: 4px;
   display: block;
   width: 100%;
-  background-color: #acece6;
+  background-color: #fff !important;
   border-radius: 2px;
-  margin: .5rem 0 1rem 0;
+  margin: 0 0 1rem 0;
   overflow: hidden;
 }
 /* .progress.determinate{

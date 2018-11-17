@@ -1,35 +1,33 @@
 <template lang="html">
   <div class="new-card2">
-    <!-- <div class="panel-card" style="width:27%;background-color:white;">
-      <div class="my-profile__menu">
-        Personal Information
-      </div>
-      <div class="">
-        Change Password
-      </div>
-    </div> -->
     <div class="help-card" style="width:400px;margin-left:30%;margin-top:30px;">
-      <p style="margin-bottom: 0px;">
+      <p style="margin-bottom: 20px;">
         <label class="input-descript">
-          <span>Name</span>
+          <span>Old Password</span>
         </label>
-        <input type="text" name="name" id="name" :value="getName"  class="form-control dimen" />
+        <input name="old_password" type="password" v-model="old_password" class="form-control profile-dimen" />
       </p>
-      <p style="margin-bottom: 0px;">
+      <p style="margin-bottom: 20px;">
         <label class="input-descript">
-          <span>Email</span>
+          <span>New Password</span>
         </label>
-        <input type="text" name="email" id="email" :value="getEmail"  class="form-control dimen" />
+     <input type="password" name="new_password" v-model="new_password" class="form-control profile-dimen" />
       </p>
-      <p style="margin-bottom: 0px;">
+      <p style="margin-bottom: 20px;">
         <label class="input-descript">
-          <span>Phone Number</span>
+          <span>Confirm Password</span>
         </label>
-        <input type="text" name="phone" id="phone"  class="form-control dimen" />
+        <input type="password" name="confirm_password" v-model="confirm_password"  class="form-control profile-dimen" />
       </p>
+         <p class="change-password-error">
+           {{message}}
+         </p>
+         <p class="change-password-success">
+           {{message}}
+         </p>
       <p>
         <br />
-        <input type="submit" class="button-primary btn-content" id="save_personal" value="Save Personal Info" />
+        <input type="submit" class="button-primary btn-content" v-on:click="update_password" value="Update"  /></p>
       </p>
 
     </div>
@@ -37,24 +35,76 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+ import {mapGetters,mapActions} from 'vuex'
 export default {
-  name: 'PersonalInfo',
+  name: 'ChangePassword',
   data() {
     return {
-      name: '',
-      email: ''
+      // user_id: '',
+      cop_user_id: 1,
+      old_password: '',
+      new_password:'',
+      confirm_password: '',
+      message:''
     }
   },
-  computed: {
-    ...mapGetters(
-      {
-         getName:'$_profile/getName',
-         getEmail:'$_profile/getEmail'
+  methods:{
+     ...mapActions({
+        requestChangePassword :'$_user/requestChangePassword',
+    }),
+    update_password: function ()
+    {
+      if(this.new_password!== this.confirm_password){
+         console.log("Passwords Don't Match");
+         this.message = "Passwords don't match";
+      }
+      else{
+          console.log("Password match");
+      if (this.cop_id > 0 ) {
+        console.log("Cop user found");
+
+        let payload = {};
+        // payload.user_id = this.user_id;
+        payload.cop_user_id = this.cop_user_id;
+        payload.old_password = this.old_password;
+        payload.new_password = this.new_password;
+        payload.confirm_password = this.confirm_password;
+        this.requestChangePassword(payload).then(response => {
+           console.log("Cop User Password Updated successfully")
+           console.log(response);
+        }, error => {
+            console.error("Check Internet Connection")
+            console.log(error);
+        });
 
       }
-    )
-  }
+      else if (this.cop_id < 0) {
+        console.log("Peer user found");
+
+        let payload = {};
+        // payload.user_id = this.user_id;
+        payload.user_id = this.user_id;
+        payload.old_password = this.old_password;
+        payload.new_password = this.new_password;
+        payload.confirm_password = this.confirm_password;
+        this.requestChangePassword(payload).then(response => {
+           console.log("Password Updated successfully")
+           console.log(response);
+        }, error => {
+            console.error("Check Internet Connection")
+            console.log(error);
+        });
+
+      }
+      else {
+             console.log("Session expired");
+             this.$router.push( '/auth' );
+       }
+
+     }
+
+    },
+},
 }
 </script>
 
@@ -148,8 +198,8 @@ export default {
  font-weight: 400!important;
  margin-bottom: .5rem!important;
 }
-.dimen{
-  width: 65% !important;
+.profile-dimen{
+  width: 90% !important;
 }
 .input-descript{
   margin: 0 0 .25rem;
@@ -161,7 +211,7 @@ export default {
 }
 .btn-content{
   height: 40px;
-  width: 65%;
+  width: 35%;
   font-size: medium;
   text-transform: uppercase;
   letter-spacing: 1.1px;
@@ -197,5 +247,7 @@ export default {
   padding-top: 3px ! important;
 
 }
-
+.change-password-error{
+  height: 0px;
+}
 </style>

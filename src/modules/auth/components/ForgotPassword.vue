@@ -13,7 +13,7 @@
           </div> -->
           </div>
           <div class="sign-holder dimen">
-            <input class="input-control form" type="text" name="credentials" id="forgot_cred" placeholder="Email or Phone Number">
+            <input class="input-control forgot-form" type="text" name="forgot_cred" v-model="forgot_cred" placeholder="Email or Phone Number">
           </div>
            <!-- <div id="extra_email_f" class="hidden">
               <div  class="sign-up-v2-holder ">
@@ -27,7 +27,7 @@
 	         </div>
           </div> -->
           <div class="sign-holder">
-            <input class="btn-submit" type="submit" value="Reset Password" id="reset" @click="" >
+            <input class="button-primary" type="submit" value="Reset Password" v-on:click="request_pass" >
           </div>
           <div class=" sign-holder ">
             <router-link class="sign-holder__link" to="/auth/sign_in">Sign In</router-link>
@@ -38,10 +38,33 @@
 </div>
 </template>
 
-<script>
-export default {
-}
-</script>
+      <script>
+      import {mapActions} from 'vuex'
+      export default {
+        data() {
+          return {
+            forgot_cred: ''
+          }
+        },
+        methods:{
+           ...mapActions({
+              requestForgotPassword :'$_auth/requestForgotPassword',
+          }),
+          request_pass: function ()
+          {
+            let payload = {};
+            payload.forgot_cred = this.forgot_cred;
+            this.requestForgotPassword(payload).then(response => {
+               console.log("Password Reset successfull")
+               console.log(response);
+            }, error => {
+                console.error("Check Internet Connection")
+                console.log(error);
+            });
+          },
+      },
+      }
+      </script>
 
 <style lang="css">
 .log-item{
@@ -95,8 +118,8 @@ width: 83%;
 color: #1782c5;
 text-decoration:none;
 }
-.form{
+.forgot-form{
   height:42px!important;
-  width: 140%!important;
+  width: 110%!important;
 }
 </style>

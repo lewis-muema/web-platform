@@ -8,6 +8,9 @@ const getAdds = state => state.adds;
 const getInviteLink = state => state.invite_link;
 const getInvites = state => state.invites;
 const getAddedStatus = state => state.added_status;
+const getUsersList = state => state.users_list;
+const getKeysList = state => state.keys_list;
+const getDepartmentsList = state => state.departments_list;
 export default {
     getViewState,
     getCopID,
@@ -17,5 +20,8 @@ export default {
     getAdds,
     getInviteLink,
     getInvites,
-    getAddedStatus
+    getAddedStatus,
+    getUsersList,
+    getKeysList,
+    getDepartmentsList
 };

@@ -3,10 +3,17 @@ import getters from './getters';
 import mutations from './mutations';
 
 const state = {
+    base_url :'https://sendyit.com',
     view_state : 1,
     view_step: 0,
+    name :'',
+    personal_email :'',
     biz_name: 'Clinton Merchants',
-    biz_email: 'clintonmerchants@gmail.com',
+    biz_email: '',
+    phone :'',
+    name :'',
+    type:'',
+    password_plain:'',
     help_panel(biz_name){
   return{
     1:{

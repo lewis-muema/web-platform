@@ -8,7 +8,7 @@
           </div>
 
 
-          <div class="sign-button" @click="" id="sign-in-v2-logging-in-1">
+          <div class="sign-in-button" @click="" id="sign-in-v2-logging-in-1">
           <img  class="sign-buttom__img"src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
           </div>
           <div class="sign-text">
@@ -22,15 +22,15 @@
             	<span id="log_in_warn" class="sign-holder__error" >   </span>
             </div>
             <div class="sign-holder dimen">
-              <input class="input-control form" type="text" name="email" v-model="email" placeholder="Email or Phone Number" autocomplete="on">
+              <input class="input-control sign-form" type="text" name="email" v-model="email" placeholder="Email or Phone Number" autocomplete="on">
             </div>
 
             <div class="sign-holder dimen">
-              <input class="input-control form" type="password" name="password" v-model="password" placeholder="Password">
+              <input class="input-control sign-form" type="password" name="password" v-model="password" placeholder="Password">
             </div>
 
             <div class="sign-holder">
-              <input class="btn-submit" type="submit" value="Log in" id="login" v-on:click="sign_in" >
+              <input class="button-primary" type="submit" value="Log in" id="login" v-on:click="sign_in" >
             </div>
             <div class=" sign-holder sign-forgot-pass sign-smaller">
               <router-link class="sign-holder__link" to="/auth/forgot_password">Forgot password?</router-link>
@@ -64,8 +64,9 @@ export default {
         payload.email = this.email;
         payload.password = this.password;
         this.requestSignIn(payload).then(response => {
-           console.log("Sign In response")
+           console.log("Sign In successfull!")
            console.log(response);
+           this.$router.push( '/orders' );
         }, error => {
             console.error("Check Internet Connection")
             console.log(error);
@@ -96,8 +97,8 @@ font-weight: 500;
 text-align: center;
 color: #666;
 }
-.sign-button{
-width: 91.9%;
+.sign-in-button{
+width: 90%;
 margin: 1em;
 background-color: #30487b;
 color: #fff;
@@ -153,8 +154,8 @@ width: 83%;
 .sign-holder__pointer{
  cursor: pointer;
 }
-.form{
+.sign-form{
   height:42px!important;
-  width: 140%!important;
+  width: 110%!important;
 }
 </style>

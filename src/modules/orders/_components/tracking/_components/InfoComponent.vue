@@ -22,25 +22,26 @@
               {{this.tracking_data.marketing_message}}
             </div>
           </div>
-          <div class="infobar--terms">
-            <a class="" href="https://sendyit.com/terms" target="_blank">Sendy Terms and Conditions</a>
-          </div>
         </div>
         <div class="infobar--content infobar--item infobar--order infobar--item-bordered">
           <div class="">
-            Order Number : {{this.tracking_data.order_no}}
+            <div class="">
+              Order Number : {{this.tracking_data.order_no}}
+            </div>
           </div>
           <div class="">
-            Cost : KES {{this.tracking_data.amount}}
+            <div class="">
+              Cost : KES {{this.tracking_data.amount}}
+            </div>
           </div>
         </div>
         <div class="infobar--content infobar--item infobar--locations infobar--item-bordered">
           <div class="infobar--content infobar--item infobar--item-start">
             <div class="">
-              <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/maroon_button.png" alt="Pickup" align="center"> <span class="">	Pickup : {{this.tracking_data.path[0].name}}</span>
+              <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/maroon_button.png" alt="Pickup" align="center"> <span class="">	From : {{this.tracking_data.path[0].name}}</span>
             </div>
             <div class="">
-              <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/blue_button.png" alt="Drop Off" align="center"> <span class=""> Destination : {{this.tracking_data.path[this.tracking_data.path.length - 1].name}}</span>
+              <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/blue_button.png" alt="Drop Off" align="center"> <span class=""> To : {{this.tracking_data.path[this.tracking_data.path.length - 1].name}}</span>
             </div>
           </div>
         </div>
@@ -224,9 +225,9 @@ export default {
 {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
-  flex: 4;
+  flex: 1;
 }
 .infobar--driver a
 {

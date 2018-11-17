@@ -3,6 +3,9 @@ import getters from './getters';
 import mutations from './mutations';
 
 const state = {
+    keys_list : [],
+    users_list : [],
+    departments_list : [],
     cop_id: 0,
     base_url: '',
     view_state: 1,

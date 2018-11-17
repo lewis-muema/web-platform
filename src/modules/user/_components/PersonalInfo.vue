@@ -1,27 +1,27 @@
 <template lang="html">
   <div class="new-card2">
     <div class="help-card" style="width:400px;margin-left:30%;margin-top:30px;">
-      <p style="margin-bottom: 0px;">
+      <p style="margin-bottom: 20px;">
         <label class="input-descript">
-          <span>Old Password</span>
+          <span>Name</span>
         </label>
-        <input name="old_pass" type="password" placeholder="Enter Old Password" class="form-control dimen" />
+        <input type="text" name="user_name"  v-model="user_name"  class="form-control profile1-dimen" />
       </p>
-      <p style="margin-bottom: 0px;">
+      <p style="margin-bottom: 20px;">
         <label class="input-descript">
-          <span>New Password</span>
+          <span>Email</span>
         </label>
-     <input type="password" name="new_pass" placeholder="Enter New Password"   class="form-control dimen" />
+        <input type="text" name="user_email"   v-model="user_email" class="form-control profile1-dimen" />
       </p>
-      <p style="margin-bottom: 0px;">
+      <p style="margin-bottom: 20px;">
         <label class="input-descript">
-          <span>Confirm Password</span>
+          <span>Phone Number</span>
         </label>
-        <input type="password" name="con_pass"  placeholder="Confirm new password" class="form-control dimen" />
+        <input type="text" name="user_phone" id="phone" v-model="user_phone"  class="form-control profile1-dimen" />
       </p>
       <p>
         <br />
-        <input type="submit" class="button-primary btn-content" value="Save New Password"  /></p>
+        <input type="submit" class="button-primary btn-content" id="save_personal" v-on:click="save_personal" value="Save" />
       </p>
 
     </div>
@@ -29,8 +29,64 @@
 </template>
 
 <script>
+import {mapGetters,mapActions} from 'vuex'
 export default {
-  name: 'ChangePassword'
+  name: 'PersonalInfo',
+  data() {
+    return {
+      // user_id: '',
+      cop_id:'0' ,
+      user_id:1,
+      user_name: '',
+      user_email:'',
+      user_phone: ''
+    }
+  },
+  methods:{
+     ...mapActions({
+        requestPersonalInfo :'$_user/requestPersonalInfo',
+    }),
+    save_personal: function ()
+    { if (this.cop_id > 0) {
+        console.log("Cop user found");
+        let payload = {};
+
+        payload.cop_user_id = this.cop_user_id;
+        payload.user_name = this.user_name;
+        payload.user_email = this.user_email;
+        payload.user_phone = this.user_phone;
+        this.requestPersonalInfo(payload).then(response => {
+           console.log("Personal Cop User Information Updated successfully")
+           console.log(response);
+        }, error => {
+            console.error("Check Internet Connection")
+            console.log(error);
+        });
+    }
+    else if(this.cop_id == 0) {
+       console.log("Peer Account Found");
+       let payload = {};
+
+       payload.user_id = this.cop_user_id;
+       payload.user_name = this.user_name;
+       payload.user_email = this.user_email;
+       payload.user_phone = this.user_phone;
+       this.requestPersonalInfo(payload).then(response => {
+          console.log("Personal Peer Information Updated successfully")
+          console.log(response);
+       }, error => {
+           console.error("Check Internet Connection")
+           console.log(error);
+       });
+    }
+     else{
+
+         console.log("Session expired");
+         this.$router.push( '/auth' );
+     }
+
+    },
+},
 }
 </script>
 
@@ -124,8 +180,8 @@ export default {
  font-weight: 400!important;
  margin-bottom: .5rem!important;
 }
-.dimen{
-  width: 65% !important;
+.profile1-dimen{
+  width: 90% !important;
 }
 .input-descript{
   margin: 0 0 .25rem;
@@ -137,7 +193,7 @@ export default {
 }
 .btn-content{
   height: 40px;
-  width: 65%;
+  width: 35%;
   font-size: medium;
   text-transform: uppercase;
   letter-spacing: 1.1px;
@@ -173,4 +229,5 @@ export default {
   padding-top: 3px ! important;
 
 }
+
 </style>
