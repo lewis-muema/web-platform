@@ -93,11 +93,13 @@ export default {
   },
   watch: {
      markers(markers) {
-       const bounds = new google.maps.LatLngBounds()
-       for (let m of this.markers) {
-         bounds.extend(m.position)
+       if (this.mapLoaded) {
+         const bounds = new google.maps.LatLngBounds()
+         for (let m of this.markers) {
+           bounds.extend(m.position)
+         }
+         this.$refs.map.$mapObject.fitBounds(bounds);
        }
-       this.$refs.map.$mapObject.fitBounds(bounds);
      }
   },
   mounted() {
