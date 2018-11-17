@@ -2,14 +2,17 @@
     <div>
         <div class="section--filter-wrap">
             <div class="section--filter-input-wrap">
-                <el-select class="section--filter-input" v-model="filterData.user" placeholder="Users">
-                    <el-option v-for="user in userData" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
-                    </el-option>
-                </el-select>
+                <!--<el-select class="section&#45;&#45;filter-input" v-model="filterData.user" placeholder="Users">-->
+                    <!--<el-option v-for="user in userData" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">-->
+                    <!--</el-option>-->
+                <!--</el-select>-->
                 <el-select class="section--filter-input"  v-model="filterData.department" placeholder="All Departments">
                     <el-option v-for="dept in deptData" :key="dept.department_id" :label="dept.department_name" :value="dept.department_id">
                     </el-option>
                 </el-select>
+                <el-input class="section--filter-input" v-model="search_users"  placeholder="Users">
+
+                </el-input>
                 
                 <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'" @click="filterUserTableData">Search</button>
 
@@ -147,6 +150,7 @@
                 pagination_page: 1,
                 filteredUserData:[],
                 filterState:false,
+                search_users: '',
                 filterData:{
                     "user": "",
                     "department":""
@@ -225,10 +229,10 @@
 
                 let user_id = this.filterData.user;
                 let department = this.filterData.department;
-                
+
                 console.log(user_id);
                 console.log(department);
-                
+
                 this.filteredUserData = this.userData;
 
 
@@ -257,7 +261,7 @@
 
                     this.filteredUserData = this.filteredUserData.filter( user => user.department_id ==  department);
                     this.filterState = true;
-                  
+
                 }
             },
             ...mapActions([

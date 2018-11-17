@@ -6,7 +6,7 @@
         </div>
         <div class="admin-edit-inner">
             <div class="admin-edit-details">
-                Add Department Department
+                Add Department
             </div>
 
             <div>
