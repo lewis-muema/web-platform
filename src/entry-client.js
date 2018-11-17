@@ -8,8 +8,8 @@ const { app, router, store } = createApp()
 
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyDTsp-JumEjWjNNPjPuH5qJEWdFjtQvTsU',
-    libraries: 'places', // required if using the Autocomplete plugin
+    libraries: ['places','geometry'],
+    key: 'AIzaSyDTsp-JumEjWjNNPjPuH5qJEWdFjtQvTsU'
   },
 })
 

@@ -19,6 +19,10 @@ export default {
   created() {
     this.$store.registerModule('$_external', external_store);
   },
+  mounted(){
+    let token = this.$route.params.token;
+    console.log('token',token);
+  }
 }
 </script>
 
