@@ -24,8 +24,11 @@ const set_order_locations = (state, val) => {
 const set_active_vendor_name = (state, val) => {
   state.active_vendor_name=val;
 };
+const set_active_order_option = (state, val) => {
+  state.active_order_option=val;
+};
 
 
 export default {
-  add_waypoint,set_price_request_object,set_active_package_class, set_max_way_points,set_order_locations,remove_waypoint,set_active_vendor_name
+  add_waypoint,set_price_request_object,set_active_package_class, set_max_way_points,set_order_locations,remove_waypoint,set_active_vendor_name,set_active_order_option
 };

@@ -42,8 +42,8 @@ import { mapMutations } from 'vuex';
 import home_store from './_store';
 import VendorComponent from './_components/VendorComponent.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlus, faMapMarkerAlt, faCircle, faClock, faPen, faDollarSign, faTimes } from '@fortawesome/free-solid-svg-icons'
-library.add(faPlus,faMapMarkerAlt,faCircle,faClock,faPen,faDollarSign,faTimes)
+import { faPlus, faMapMarkerAlt, faCircle, faClock, faPen, faDollarSign, faTimes, faMobileAlt,faStar } from '@fortawesome/free-solid-svg-icons'
+library.add(faPlus,faMapMarkerAlt,faCircle,faClock,faPen,faDollarSign,faMobileAlt, faStar)
 
 export default {
   name: 'home',

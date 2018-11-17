@@ -53,36 +53,16 @@
 
         </div>
         <div class="" v-if="get_active_package_class != '' ">
-            <div class="home-view--seperator">
-            </div>
-            <div class="home-view-actions">
-                <div class="home-view-actions--items">
-                    <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-actions--items__img" width="10px"  />
-                    <span class="home-view-actions--items__span">Choose Payment</span>
-                </div>
-                <div class="home-view-actions--items">
-                    <font-awesome-icon icon="pen" size="xs" class="home-view-actions--items__img" width="10px"  />
-                    <span class="home-view-actions--items__span">Add Note</span>
-                </div>
-                <div class="home-view-actions--items">
-                    <font-awesome-icon icon="clock" size="xs" class="home-view-actions--items__img" width="10px"  />
-                    <span class="home-view-actions--items__span">Schedule</span>
-                </div>
-            </div>
-            <div class="home-view--seperator">
-            </div>
-            <div class="home-view-place-order">
-                <div class="">
-                    <button type="button" class="button-primary home-view--place-order" name="button">Place Order</button>
-                </div>
-            </div>
+            <order-options></order-options>
         </div>
       </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import OrderOptions from './OrderOptions.vue'
 export default {
+    components:{OrderOptions},
     data () {
         return {
         }

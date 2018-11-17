@@ -41,6 +41,9 @@
     margin: 20px 0;
     cursor: pointer;
     border: 2px solid transparent;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
 }
 .home-view-vendor-types--item:hover, .home-view-vendor-types--item:active, .home-view-vendor-types--item__active{
     border: 2px solid #1782c5;
