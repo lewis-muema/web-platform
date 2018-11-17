@@ -17,7 +17,8 @@ Vue.use(Element , { locale })
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
-// console.log(process.env.NODE_ENV)
+
+
 export function createApp () {
   // create router and store instances
   const router = createRouter()
