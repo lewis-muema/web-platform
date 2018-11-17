@@ -50,7 +50,7 @@
             <el-table-column
                     label="Department"
                     prop="department_name"
-                    width="180"
+                    width="200"
             >
             </el-table-column>
             <el-table-column
@@ -260,7 +260,7 @@
                 '$_admin/requestDepartmentsList',
                 
             ]),
-             edit_user() {
+            edit_user() {
                 this.$router.push('/admin/users/edit_user');
             },
 

@@ -149,6 +149,14 @@ export function createRouter () {
               component: () => import('../modules/admin/components/Departments.vue')
             },
             {
+              path: '/admin/department/add_department',
+              component: () => import('../modules/admin/components/AddDepartment.vue')
+            },
+            {
+              path: '/admin/department/edit_department',
+              component: () => import('../modules/admin/components/EditDepartment.vue')
+            },
+            {
               path: '/admin/preferences',
               component: () => import('../modules/admin/components/Preferences.vue')
             },
@@ -249,7 +257,7 @@ export function createRouter () {
           ]
       },
       { path: '/external/onboard/:token', component: () => import('../modules/external/External.vue'),
-      },
+      }
     ]
   })
 }

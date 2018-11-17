@@ -143,7 +143,7 @@
     }
 
     .rate-rider-star {
-        padding: 50px;
+        padding: 20px;
     }
     .rate-rider-primary {
         margin: 0 auto;
