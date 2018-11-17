@@ -9,4 +9,5 @@ export default {
     get_active_order_option: (state) => state.active_order_option,
     get_schedule_time: (state) => state.schedule_time,
     get_order_notes: (state) => state.order_notes,
+    get_order_path: (state) => state.order_path,
 };

@@ -34,4 +34,10 @@ export default {
     set_order_notes(state, val) {
       state.order_notes=val;
     },
+    set_order_path(state, val) {
+      state.order_path.splice(val.index,0,val.path);
+    },
+    unset_order_path(state, index) {
+      state.order_path.splice(index,1);
+    },
 };
