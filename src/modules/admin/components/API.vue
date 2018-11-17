@@ -17,8 +17,6 @@
             <template slot="empty">
                 {{empty_payments_state}}
             </template>
-            <el-table-column type="index">
-            </el-table-column>
 
             <el-table-column
                     label="Username"
@@ -51,7 +49,7 @@
             </el-table-column>
         </el-table>
 
-        <div class="content">
+        <div class="api--help-content">
             <p><span class="content--bold">Ready to start using the Sendy API?</span> Head over to the <a
                     href="http://docs.sendypublicapi.apiary.io/#" target="_blank">developer site</a>&nbsp;for complete
                 documentation.</p>
@@ -69,7 +67,7 @@
             //TODO: also create payload depending on session
 
             let payload = {
-                "cop_id": 1083
+                "cop_id": 669
             }
             this.$store.dispatch("$_admin/requestKeysList", payload).then(response => {
                 console.log("Got some data, now lets show something in this component")
@@ -87,25 +85,6 @@
                 pagination_limit: 5,
                 pagination_page: 1,
                 button_name: "",
-                tableData: [
-                    {
-                        "username": "faithshop",
-                        "api_key": "zcHUVkH9GtxZmrUyZ6HY",
-                        "created": "Oct 30, 2018",
-                        "api_status": "Activated",
-                        "account_status": "Activated",
-                        "key_enviroment": "Live",
-                    },
-                    {
-                        "username": "faithshop",
-                        "api_key": "ALVvNhD8d7PVcnadsRSV",
-                        "created": "Oct 30, 2018",
-                        "api_status": "Activated",
-                        "account_status": "Activated",
-                        "key_enviroment": "Sandbox",
-                    },
-                ]
-
             }
         },
         computed: {
@@ -161,5 +140,11 @@
 </script>
 
 <style lang="css">
-
+    .api--help-content {
+        font-size: 14px;
+        margin-top: 20px;
+    }
+    .api--help-content a {
+        color: #2c82c5 !important;
+    }
 </style>

@@ -2,21 +2,26 @@
     <div>
         <div class="section--filter-wrap">
             <div class="section--filter-input-wrap">
-                <input class="input-control section--filter-input" type="text" name="name" value="" placeholder="Name">
-
-                <el-select class="section--filter-input" v-model="value" placeholder="All Departments">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                <el-select class="section--filter-input" v-model="filterData.user" placeholder="Users">
+                    <el-option v-for="user in userData" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
                     </el-option>
                 </el-select>
+                <el-select class="section--filter-input"  v-model="filterData.department" placeholder="All Departments">
+                    <el-option v-for="dept in deptData" :key="dept.department_id" :label="dept.department_name" :value="dept.department_id">
+                    </el-option>
+                </el-select>
+                
+                <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'" @click="filterUserTableData">Search</button>
+
             </div>
             <div class="section--filter-action-wrap">
                 <button class="button-primary section--filter-action" @click="addUser">Add User</button>
-                <button type="button" class="button-primary section--filter-action">Search</button>
-
             </div>
         </div>
+        <!-- {{deptData}}
+        {{user_data}} -->
         <el-table
-                :data="fetchedData"
+                :data="user_data"
                 style="width: 100%"
                 :border="true"
                 :stripe="true"
@@ -24,8 +29,6 @@
             <template slot="empty">
                 {{empty_orders_state}}
             </template>
-            <el-table-column type="index">
-            </el-table-column>
             <el-table-column
                     label="Name"
                     prop="name"
@@ -41,7 +44,7 @@
             <el-table-column
                     label="Email"
                     prop="email"
-                    width="220"
+                    width="250"
             >
             </el-table-column>
             <el-table-column
@@ -82,7 +85,7 @@
         <div class="section--pagination-wrap">
             <el-pagination
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="fetchedData.length"
+                    :total="userData.length"
                     :page-size="pagination_limit"
                     :current-page.sync="pagination_page"
                     @current-change="changePage"
@@ -106,63 +109,67 @@
             //TODO: Get this from session
             //TODO: also create payload depending on session
 
-            let payload = {
+            let user_payload = {
                 "cop_id": 1083
             }
-            this.$store.dispatch("$_admin/requestUsersList", payload).then(response => {
-                console.log("Got some data, now lets show something in this component")
+            this.$store.dispatch("$_admin/requestUsersList", user_payload).then(response => {
                 console.log(response);
                 this.empty_payments_state = "Users List Not Found";
             }, error => {
-                console.error("Got nothing from server. Prompt user to check internet connection and try again")
                 console.log(error);
                 this.empty_payments_state = "Users List Failed to Fetch";
             });
+
+            let department_payload = {
+                "cop_id": 1083
+            }
+            this.$store.dispatch("$_admin/requestDepartmentsList", department_payload).then(response => {
+                console.log(response);
+                this.empty_departments_state = "Departments List Not Found";
+            }, error => {
+                console.log(error);
+                this.empty_departments_state = "Departments List Failed to Fetch";
+            });
+
+
+
         },
         data: function () {
             return {
                 empty_payments_state: "Fetching Users",
-                pagination_limit: 5,
+                empty_departments_state: "Fetching Departments",
+                pagination_limit: 10,
                 pagination_page: 1,
-                tableData: [
-                    {
-                        "name": "CASH-AC29TZ828-T4W",
-                        "phone": "Computer Architecture",
-                        "email": "Computers",
-                        "department": "125.60",
-                        "type": "24",
-                        "status": "24",
-                        "branch": "24"
-                    },
-                    {
-                        "name": "CASH-AC29TZ828-T4W",
-                        "phone": "Asp.Net 4 Blue Book",
-                        "email": "Programming",
-                        "department": "56.00",
-                        "type": "24",
-                        "status": "24",
-                        "branch": "24"
-                    },
-                    {
-                        "name": "CASH-AC29TZ828-T4W",
-                        "phone": "Popular Science",
-                        "email": "Science",
-                        "department": "210.40",
-                        "type": "27",
-                        "status": "27",
-                        "branch": "27"
-                    }
-                ]
+                filteredUserData:[],
+                filterState:false,
+                filterData:{
+                    "user": "",
+                    "department":""
+                }
 
             }
         },
         computed: {
             ...mapGetters({
-                fetchedData: '$_admin/getUsersList',
+                userData: '$_admin/getUsersList',
+                deptData: '$_admin/getDepartmentsList'
             }),
+            user_data(){
+                let from = (this.pagination_page - 1) * this.pagination_limit;
+                let to = this.pagination_page * this.pagination_limit;
+                
+                if(this.filterState == true){
+                    return this.filteredUserData.slice(from, to);
+                }
+                return this.userData.slice(from, to);
+            },
+            active_filter() {
+                return this.filterData.user !== "" || this.filterData.department !== "";
+            }
         },
 
         methods: {
+
             addUser() {
                 this.$router.push({name: 'adminAddUser'});
             },
@@ -174,13 +181,14 @@
                 console.log('Page changed to', this.pagination_page);
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
-                let paginated_drivers = this.searched_drivers.slice(from, to);
-                console.log(from, to, paginated_drivers);
+                let user_data = this.userData.slice(from, to);
+                console.log(from, to, user_data);
+
             },
             get_user_type: function (index) {
                 let resp = '';
-                if (this.fetchedData.length > 0) {
-                    resp = this.fetchedData[index].type;
+                if (this.user_data.length > 0) {
+                    resp = this.user_data[index].type;
                     if (resp === 1) {
                         resp = "Admin"
                     }
@@ -192,8 +200,8 @@
             },
             get_user_status: function (index) {
                 let resp = '';
-                if (this.fetchedData.length > 0) {
-                    resp = this.fetchedData[index].status;
+                if (this.user_data.length > 0) {
+                    resp = this.user_data[index].status;
                     if (resp === 1) {
                         resp = "Active"
                     }
@@ -206,8 +214,51 @@
                 }
                 return resp;
             },
+            filterUserTableData() {
+                //reset filter
+                this.filterState  = false;
+
+                let user_id = this.filterData.user;
+                let department = this.filterData.department;
+                
+                console.log(user_id);
+                console.log(department);
+                
+                this.filteredUserData = this.userData;
+
+
+                console.log(this.filteredUserData);
+                //check if both are filled
+                if(user_id !== '' && department !== ''){
+                    console.log('performing a user and departments filter');
+                    let vm = this;
+                    this.filteredUserData = this.filteredUserData.filter(function (user) {
+                        return user.cop_user_id ==  user_id  && user.department_id == department;
+                    });
+                    this.filterState = true;
+
+                } else if(user_id !== ''){
+                    //user filter
+                    console.log('performing a user filter');
+                    console.log(user_id);
+
+                    this.filteredUserData = this.filteredUserData.filter( user => user.cop_user_id ==  user_id);
+                    this.filterState = true;
+
+
+                } else {
+                    //department filter
+                    console.log('performing a department filter');
+
+                    this.filteredUserData = this.filteredUserData.filter( user => user.department_id ==  department);
+                    this.filterState = true;
+                  
+                }
+            },
             ...mapActions([
                 '$_admin/requestUsersList',
+                '$_admin/requestDepartmentsList',
+                
             ]),
 
         }
