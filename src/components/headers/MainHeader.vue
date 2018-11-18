@@ -19,7 +19,7 @@
                             <!--<li><a  @click="linkRoute('/user/free_deliveries')">Free Deliveries</a></li>-->
                             <!--<li><a  @click="linkRoute('/payment/promo')">Promotions</a></li>-->
                             <li v-if="admin_user"><a  @click="linkRoute('/admin/users')">Settings</a></li>
-                            <li v-if="admin_user"><a  @click="linkRoute('/analytics')">Analytics</a></li>
+                            <li v-if="admin_user"><a  @click="linkRoute('/analytics/weekly')">Analytics</a></li>
                             <li><a  @click="linkRoute('/user/profile/personal_information')">Profile</a></li>
                             <li class="menu--last-child"><a @click="logOut" class="menu--last-child-link">Log Out</a></li>
                        </ul>
