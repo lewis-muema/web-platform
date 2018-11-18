@@ -109,6 +109,11 @@
 .homeview--row__font-awesome.homeview--input-bundler__img-right{
     /* padding-right: 0px;
     margin-right: -10px; */
+    visibility: hidden;
+
+}
+..homeview--row__font-awesome.homeview--input-bundler__img-right:hover{
+    visibility: visible;
 }
 .homeview--input-bundler__destination-input{
     margin-right: -20px;

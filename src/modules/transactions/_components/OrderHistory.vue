@@ -302,10 +302,21 @@ export default {
      },
      mounted(){
           let session_data = this.$store.getters.getSession;
+          
+          let orders_payload =  {};
 
-          let orders_payload = {
-            "cop_id": session_data.cop_id,
-            "user_type":session_data.user_type  == "biz" ? 2 : 1
+          if(session_data.default == 'biz'){
+            orders_payload = {
+              "cop_id": session_data['biz']['cop_id'],
+              "user_type":session_data['biz']['user_type'],
+              "user_id":session_data['biz']['user_id'],
+              
+            }
+          } else {
+            //create peer payload
+            orders_payload = {
+              "user_id": session_data[session_data.default]['user_id'],
+             }
           }
           let full_payload = {
             "values" : orders_payload,
