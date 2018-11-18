@@ -40,10 +40,10 @@
                         </div> -->
                         <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper">
                             <div class="home-view-vendor-types-item--cost-wrapper__cost">
-                                KSh {{j.cost}}
+                                Ksh {{formatNumeral(j.cost)}}
                             </div>
                             <div class="home-view-vendor-types-item--cost-wrapper_time">
-                                9.26pm
+                                {{transformDate(j.eta)}}
                             </div>
                         </div>
                     </div>
@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import numeral from 'numeral';
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import OrderOptions from './OrderOptions.vue'
 export default {
@@ -100,7 +101,13 @@ export default {
             return {
                 'home-view-vendor-types--item__active' : name == this.get_active_vendor_name
             }
-        }
+        },
+        transformDate(eta){
+            return this.moment().add(eta, 'seconds').format("h.mm a");
+        },
+        formatNumeral(num){
+            return numeral(num).format('0,0');
+        },
     }
 }
 </script>

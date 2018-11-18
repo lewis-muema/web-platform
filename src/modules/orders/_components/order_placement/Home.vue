@@ -199,6 +199,9 @@ export default {
             console.log(error);
         });
     },
+    completeOrder(){
+
+    },
     scroll_to_bottom(){
         let container = this.$el.querySelector("#homeview-form");
         container.scrollTop = container.scrollHeight;
