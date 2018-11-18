@@ -10,21 +10,19 @@
                <ul>
                    <li class="nav--menu-inactive"><a>  0709 779 779</a></li>
                    <li class="nav--menu-inactive"><a>Hi Faith</a></li>
-                   <li class="nav--menu-dropdown-wrap">
-                        <el-dropdown class="nav--menu-dropdown-title">
-                        <span>  Menu</span>
-                        <el-dropdown-menu slot="dropdown" class="nav--menu-dropdown-list">
-                            <el-dropdown-item><router-link  to="/orders">New Delivery</router-link></el-dropdown-item>
-                            <el-dropdown-item><router-link  to="/payment">Payment</router-link></el-dropdown-item>
-                            <el-dropdown-item><router-link  to="/transactions/order_history">Order History</router-link></el-dropdown-item>
-                            <el-dropdown-item><router-link  to="/user/free_deliveries">Free Deliveries</router-link></el-dropdown-item>
-                            <el-dropdown-item><router-link  to="/payment/promo">Promotions</router-link></el-dropdown-item>
-                            <el-dropdown-item><router-link  to="/admin/users">Admin Settings</router-link></el-dropdown-item>
-                            <el-dropdown-item><router-link  to="/analytics">Analytics</router-link></el-dropdown-item>
-                            <el-dropdown-item><router-link  to="/user/profile/personal_information">Profile</router-link></el-dropdown-item>
-                            <el-dropdown-item class="menu--last-child"><span @click="logOut()">Log Out</span></el-dropdown-item>
-                        </el-dropdown-menu>
-                        </el-dropdown>
+                    <li class="nav--menu-dropdown">
+                       <a>Menu</a>
+                       <ul class="nav--menu-dropdown-list">
+                            <li><a  @click="linkRoute('/orders')">New Delivery</a></li>
+                            <li><a  @click="linkRoute('/payment')">Payment</a></li>
+                            <li><a  @click="linkRoute('/transactions/order_history')">Order History</a></li>
+                            <li><a  @click="linkRoute('/user/free_deliveries')">Free Deliveries</a></li>
+                            <li><a  @click="linkRoute('/payment/promo')">Promotions</a></li>
+                            <li><a  @click="linkRoute('/admin/users')">Admin Settings</a></li>
+                            <li><a  @click="linkRoute('/analytics')">Analytics</a></li>
+                            <li><a  @click="linkRoute('/user/profile/personal_information')">Profile</a></li>
+                            <li class="menu--last-child"><a @click="logOut">Log Out</a></li>
+                       </ul>
                 </li>
                </ul>
               </nav>
@@ -45,7 +43,11 @@ export default {
             this.$router.push({name:'sign_in'});
         },
         eraseCookie(name){
-            document.cookie = name+'=; Max-Age=-99999999;';
+            document.cookie = name+'=; Max-Age=-99999999;'; 
+        },
+        linkRoute(route){
+            console.log('attempt route'+route);
+            this.$router.push(route);
         }
     }
 }
