@@ -3,10 +3,16 @@
 
       <div class="admin-edit-inner">
 
-          <div class="admin-edit-details">
-            Edit User Details
+         <div class="">
+
+           <i class="el-icon-caret-left edit-back" v-on:click="one_step_back" ></i>
+
+         </div>
+
+          <div class="admin-edit2-details">
+            Edit User
           </div>
-          <div>
+          <div class="edit-position">
 
             <div class="edit-holder edit-dimen">
               <input class="input-control edit-form" type="text"  style="margin-top: 14%;"name="name"  :v-model="userDetails.name" placeholder="Name" autocomplete="off">
@@ -42,7 +48,7 @@
          </div>
 
             <div class="sign-holder">
-              <input class="button-primary" type="submit" value="Update Details" id="UpdateEdit" v-on:click="update_edit" >
+              <input class="button-primary" type="submit" value="Update" id="UpdateEdit" v-on:click="update_edit" >
             </div>
           </div>
       </div>
@@ -124,6 +130,10 @@ export default {
           console.log(error);
       });
     },
+    one_step_back:function()
+    {
+      this.$router.push('/admin/users/');
+    }
 },
 
 }
@@ -142,14 +152,16 @@ margin: 5px;
   font-family: 'Rubik', sans-serif;
   display: flex;
 }
-.admin-edit-details{
+.admin-edit2-details{
 font-size: 1.3rem;
 line-height: 1.7em;
 font-weight: 400;
 text-align: center;
 color: #666;
-margin-right: 20%;
-margin-top: 4%;
+/* margin-right: 20%; */
+margin-top: 18%!important;
+margin-left: 100px;
+margin-right: 60px;
 }
 .edit-holder{
 margin: 1em;
@@ -167,5 +179,17 @@ width: 83%;
 .edit-select{
   height:42px!important;
   width: 155%!important;
+}
+.edit-back{
+  width: 40px;
+  border-radius: 20px;
+  transition: .3s;
+  box-shadow: 0 0 6px rgba(0,0,0,.12);
+  line-height: 40px !important;
+  cursor: pointer;
+}
+.edit-position{
+  border-left: 2px solid rgb(23, 130, 197);
+  padding-left: 80px;
 }
 </style>
