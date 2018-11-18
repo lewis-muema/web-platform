@@ -114,7 +114,7 @@
                 "values" : usersList_payload,
                 "vm":this,
                 "app":"NODE_PRIVATE_API",
-                "endpoint":"cop_users/"
+                "endpoint":"cop_users"
             }
             this.$store.dispatch("$_admin/requestUsersList", users_full_payload).then(response => {
                 console.log(response);

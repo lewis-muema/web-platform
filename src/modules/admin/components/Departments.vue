@@ -23,7 +23,7 @@
             >
             </el-table-column>
             <el-table-column
-                    label="Approver"
+                    label="Admin"
                     prop="department_admin">
             </el-table-column>
             <el-table-column
@@ -68,7 +68,7 @@
                 "values" : deptsList_payload,
                 "vm":this,
                 "app":"NODE_PRIVATE_API",
-                "endpoint":"cop_departments/"
+                "endpoint":"cop_departments"
             }
             this.$store.dispatch("$_admin/requestDepartmentsList", users_full_payload).then(response => {
                 console.log(response);

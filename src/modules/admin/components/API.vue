@@ -74,7 +74,7 @@
                 "values" : apikey_payload,
                 "vm":this,
                 "app":"NODE_PRIVATE_API",
-                "endpoint":"get_api/"
+                "endpoint":"get_api"
             }
             this.$store.dispatch("$_admin/requestKeysList", apikey_full_payload).then(response => {
                 console.log(response);
@@ -108,7 +108,7 @@
                     "values" : newKey_payload,
                     "vm":this,
                     "app":"NODE_PRIVATE_API",
-                    "endpoint":"generate_api/"
+                    "endpoint":"generate_api"
                 }
                 // console.log(newKeyFull_payload)
 

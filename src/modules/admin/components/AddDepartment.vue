@@ -5,21 +5,28 @@
             <span id="show_error"></span>
         </div>
         <div class="admin-edit-inner">
-            <div class="admin-edit-details">
-                <a v-on:click="go_back">
-                    <div class="add-back-arrow">Back</div>
-                </a>
+            <div class="">
+
+                <i class="el-icon-caret-left edit-back" v-on:click="go_back" ></i>
+
+            </div>
+            <div class="dept-edit-details">
                 Add Department
             </div>
 
-            <div>
+            <div class="edit-position-dept">
                 <div class="edit-holder edit-dimen">
-                    <input class="input-control add-dept" type="text" v-model="department_name" placeholder="Department">
+                    <input class="input-control add-dept" type="text" v-model="department_name" placeholder="Name">
                 </div>
 
-                <div class="edit-holder edit-dimen">
-                    <input class="input-control add-dept" type="text" v-model="department_admin" placeholder="Admin" >
-                </div>
+                <el-select class="section--filter-input edit-holder add-dept" v-model="filterData.user" placeholder="Admin">
+                    <el-option v-for="user in userData" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
+                    </el-option>
+                </el-select>
+
+                <!--<div class="edit-holder edit-dimen">-->
+                    <!--<input class="input-control add-dept" type="text" v-model="department_admin" placeholder="Admin" >-->
+                <!--</div>-->
 
                 <div class="sign-holder">
                     <input class="button-primary" type="submit" value="Add" v-on:click="add_department" >
@@ -36,20 +43,38 @@
     export default {
         name:'AddDepartment',
         mounted() {
-
+            let usersList_payload = {
+                "cop_id": 1083
+            }
+            let users_full_payload = {
+                "values" : usersList_payload,
+                "vm":this,
+                "app":"NODE_PRIVATE_API",
+                "endpoint":"cop_users"
+            }
+            this.$store.dispatch("$_admin/requestUsersList", users_full_payload).then(response => {
+                console.log(response);
+            }, error => {
+                console.log(error);
+            });
         },
         data() {
             return {
                 empty_departmens_state: 'Adding Department',
-                cop_id,
-                department_name,
-                department_admin,
-                cop_user_id
+                filterData:{
+                    "user": ""
+                }
             }
+        },
+        computed: {
+            ...mapGetters({
+                userData: '$_admin/getUsersList'
+            }),
         },
         methods:{
             ...mapActions({
                 addNewDepartment :'$_admin/addNewDepartment',
+                requestUsersList :'$_admin/requestUsersList',
             }),
             add_department: function ()
             {
@@ -93,14 +118,17 @@
         font-family: 'Rubik', sans-serif;
         display: flex;
     }
-    .admin-edit-details{
+    .dept-edit-details{
         font-size: 1.3rem;
         line-height: 1.7em;
         font-weight: 400;
         text-align: center;
         color: #666;
-        margin-right: 20%;
-        margin-top: 4%;
+        /* margin-right: 20%; */
+        margin-top: 8%!important;
+        margin-left: 100px;
+        margin-right: 60px;
+        margin-top: 8%!important;
     }
     .edit-holder{
         margin: 1em;
@@ -125,5 +153,9 @@
     add-back-arrow{
         position: relative !important;
         margin-left: -115px !important;
+    }
+    .edit-position-dept{
+        border-left: 2px solid rgb(23, 130, 197);
+        padding-left: 80px;
     }
 </style>

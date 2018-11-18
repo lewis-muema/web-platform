@@ -2,19 +2,24 @@
     <div id="log_in" class="admin-edit-item">
 
         <div class="admin-edit-inner">
-            <div class="admin-edit-details">
+            <div class="">
+
+                <i class="el-icon-caret-left edit-back" v-on:click="go_back" ></i>
+
+            </div>
+            <div class="dept-edit-details">
                 Edit Department Details
             </div>
-            <div>
+            <div class="edit-position-dept">
                 <div class="edit-holder edit-dimen">
                     <input readonly class="input-control edit-dept" type="text" name="department" v-model="deptDetails.department_name"
-                           placeholder="Department">
+                           placeholder="Name">
                 </div>
 
-                <div class="edit-holder edit-dimen">
-                    <input class="input-control edit-dept" type="text" name="admin" v-model="deptDetails.department_admin"
-                           placeholder="Admin">
-                </div>
+                <el-select class="section--filter-input edit-holder add-dept" v-model="filterData.user" placeholder="Admin">
+                    <el-option v-for="user in userData" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
+                    </el-option>
+                </el-select>
 
                 <div class="sign-holder">
                     <input class="button-primary" type="submit" value="Update" id="update_department"
@@ -32,6 +37,22 @@
 
     export default {
         name: 'EditDepartment',
+        mounted() {
+            let usersList_payload = {
+                "cop_id": 1083
+            }
+            let users_full_payload = {
+                "values" : usersList_payload,
+                "vm":this,
+                "app":"NODE_PRIVATE_API",
+                "endpoint":"cop_users"
+            }
+            this.$store.dispatch("$_admin/requestUsersList", users_full_payload).then(response => {
+                console.log(response);
+            }, error => {
+                console.log(error);
+            });
+        },
         data() {
             return {
                 department: '',
@@ -40,6 +61,9 @@
                 status_value: '',
                 type_value: '',
                 deptDetails: {},
+                filterData:{
+                    "user": ""
+                }
             }
         },
         mounted() {
@@ -51,12 +75,15 @@
         computed: {
             ...mapGetters({
                 deptData: '$_admin/getDepartmentsList',
+                userData: '$_admin/getUsersList'
+
             }),
         },
 
         methods: {
             ...mapActions({
                 editAdminDepartment: '$_admin/editAdminDepartment',
+                requestUsersList :'$_admin/requestUsersList',
             }),
             update_department: function () {
                 let editDept_payload = {
@@ -69,7 +96,7 @@
                     "values": editDept_payload,
                     "vm": this,
                     "app": "NODE_PRIVATE_API",
-                    "endpoint": "cop_departments_update/"
+                    "endpoint": "cop_departments_update"
                 }
                 this.$store.dispatch("$_admin/editAdminDepartment", editDept_full_payload).then(response => {
                     console.log(response);
@@ -78,6 +105,9 @@
                     console.log(error);
                 });
             },
+            go_back:function () {
+                this.$router.push('/admin/department');
+            }
         },
 
     }
@@ -98,14 +128,16 @@
         display: flex;
     }
 
-    .admin-edit-details {
+    .dept-edit-details {
         font-size: 1.3rem;
         line-height: 1.7em;
         font-weight: 400;
         text-align: center;
         color: #666;
-        margin-right: 20%;
-        margin-top: 4%;
+        /* margin-right: 20%; */
+        margin-top: 8%!important;
+        margin-left: 100px;
+        margin-right: 60px;
     }
 
     .edit-holder {
@@ -121,7 +153,10 @@
         height:42px!important;
         width: 300%!important;
     }
-
+    .edit-position-dept{
+        border-left: 2px solid rgb(23, 130, 197);
+        padding-left: 80px;
+    }
     .edit-select {
         height: 42px !important;
         width: 155% !important;
