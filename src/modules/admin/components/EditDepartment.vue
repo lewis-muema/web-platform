@@ -7,12 +7,13 @@
                 <i class="el-icon-caret-left edit-back" v-on:click="go_back" ></i>
 
             </div>
+            <!--{{deptDetails}}-->
             <div class="dept-edit-details">
                 Edit Department Details
             </div>
             <div class="edit-position-dept">
                 <div class="edit-holder edit-dimen">
-                    <input readonly class="input-control edit-dept" type="text" name="department" v-model="deptDetails.department_name"
+                    <input class="input-control edit-dept" type="text" name="department" v-model="deptDetails.department_name"
                            placeholder="Name">
                 </div>
 
@@ -20,6 +21,10 @@
                     <el-option v-for="user in userData" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
                     </el-option>
                 </el-select>
+                <div class="edit-holder edit-dimen hide--dept_id">
+                    <input class="input-control edit-dept" type="text" name="department_id" v-model="deptDetails.department_id"
+                           placeholder="Dept_id">
+                </div>
 
                 <div class="sign-holder">
                     <input class="button-primary" type="submit" value="Update" id="update_department"
@@ -38,8 +43,15 @@
     export default {
         name: 'EditDepartment',
         mounted() {
+            let session = this.$store.getters.getSession;
+            let cop_id = 0;
+            if(session.default == 'biz'){
+                cop_id = session[session.default]['cop_id'];
+            }
+
+            console.log("getting session")
             let usersList_payload = {
-                "cop_id": 1083
+                "cop_id": cop_id,
             }
             let users_full_payload = {
                 "values" : usersList_payload,
@@ -56,7 +68,7 @@
         data() {
             return {
                 department: '',
-                approver: '',
+                admin: '',
                 dept_value: '',
                 status_value: '',
                 type_value: '',
@@ -68,7 +80,6 @@
         },
         mounted() {
             let cop_user_id = this.$route.params.id;
-
             this.deptDetails = this.deptData.filter(dept => dept.cop_user_id == cop_user_id)[0];
 
         },
@@ -87,9 +98,9 @@
             }),
             update_department: function () {
                 let editDept_payload = {
-                    "cop_id": this.deptDetails.department_id ,
+                    "department_id": this.deptDetails.department_id ,
                     "department_name": this.deptDetails.department_name ,
-                    "cop_user_id": this.deptDetails.cop_user_id
+                    "cop_user_id": this.filterData.user
                 }
                 console.log(editDept_payload)
                 let editDept_full_payload = {
@@ -101,6 +112,7 @@
                 this.$store.dispatch("$_admin/editAdminDepartment", editDept_full_payload).then(response => {
                     console.log(response);
                     console.log("updated");
+                    // this.$router.push('/admin/department');
                 }, error => {
                     console.log(error);
                 });
@@ -160,5 +172,8 @@
     .edit-select {
         height: 42px !important;
         width: 155% !important;
+    }
+    .hide--dept_id{
+        display: none !important;
     }
 </style>
