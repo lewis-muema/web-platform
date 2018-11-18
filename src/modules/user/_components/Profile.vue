@@ -80,7 +80,7 @@
   /* font-weight: bold !important; */
   font-weight: 500 !important;
   border-bottom: none!important;
-  background-color: #4186c2;
+  background-color: #1782C5;;
   color: #fff !important;
 
   /* background-color: red; */

@@ -41,7 +41,6 @@ export default {
   data() {
     return {
       // user_id: '',
-      cop_user_id: 1,
       old_password: '',
       new_password:'',
       confirm_password: '',
@@ -60,46 +59,89 @@ export default {
       }
       else{
           console.log("Password match");
-      if (this.cop_id > 0 ) {
+      if (this.session_data.cop_id> 0 ) {
         console.log("Cop user found");
 
-        let payload = {};
+        let values = {};
         // payload.user_id = this.user_id;
-        payload.cop_user_id = this.cop_user_id;
-        payload.old_password = this.old_password;
-        payload.new_password = this.new_password;
-        payload.confirm_password = this.confirm_password;
-        this.requestChangePassword(payload).then(response => {
-           console.log("Cop User Password Updated successfully")
-           console.log(response);
+        values.cop_user_id = this.session_data.cop_user_id;
+        values.old_password = this.old_password;
+        values.new_password = this.new_password;
+        values.confirm_password = this.confirm_password;
+
+        let full_payload = {
+          "values" : values,
+          "vm":this,
+          "app":"NODE_PRIVATE_API",
+          "endpoint":"update_user"
+        }
+        // this.requestChangePassword(payload).then(response => {
+        //    console.log("Cop User Password Updated successfully")
+        //    console.log(response);
+        // }, error => {
+        //     console.error("Check Internet Connection")
+        //     console.log(error);
+        // });
+        this.requestChangePassword(full_payload).then(response => {
+          if(response.status == true){
+
+            console.log("Cop User Password Updated successfully")
+            console.log(response);
+            }
+          else {
+             console.warn('Cop user password Update Failed');
+
+          }
         }, error => {
             console.error("Check Internet Connection")
             console.log(error);
         });
 
       }
-      else if (this.cop_id < 0) {
+      else if (this.session_data.cop_id < 0) {
         console.log("Peer user found");
 
-        let payload = {};
+        let values= {};
         // payload.user_id = this.user_id;
-        payload.user_id = this.user_id;
-        payload.old_password = this.old_password;
-        payload.new_password = this.new_password;
-        payload.confirm_password = this.confirm_password;
-        this.requestChangePassword(payload).then(response => {
-           console.log("Password Updated successfully")
-           console.log(response);
+        values.user_id = this.session_data.user_id;
+        values.old_password = this.old_password;
+        values.new_password = this.new_password;
+        values.confirm_password = this.confirm_password;
+
+        let full_payload = {
+          "values" : values,
+          "vm":this,
+          "app":"NODE_PRIVATE_API",
+          "endpoint":"update_user"
+        }
+
+        // this.requestChangePassword(payload).then(response => {
+        //    console.log("Password Updated successfully")
+        //    console.log(response);
+        // }, error => {
+        //     console.error("Check Internet Connection")
+        //     console.log(error);
+        // });
+        this.requestChangePassword(full_payload).then(response => {
+          if(response.status == true){
+
+            console.log("Personal Peer Information Updated successfully")
+            console.log(response);
+            }
+          else {
+             console.warn('Peer details Update Failed');
+
+          }
         }, error => {
             console.error("Check Internet Connection")
             console.log(error);
         });
+     }
+      else{
 
+          console.log("Session expired");
+          this.$router.push( '/auth' );
       }
-      else {
-             console.log("Session expired");
-             this.$router.push( '/auth' );
-       }
 
      }
 
