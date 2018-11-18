@@ -14,7 +14,7 @@
                        <a class="nav--menu-dropdown-link">Menu</a>
                        <ul class="nav--menu-dropdown-list">
                             <li><a  @click="linkRoute('/orders')">New Delivery</a></li>
-                            <li><a  @click="linkRoute('/payment')">Payment</a></li>
+                            <li><a  @click="linkRoute('/payment/mpesa')">Payment</a></li>
                             <li><a  @click="linkRoute('/transactions/order_history')">Orders</a></li>
                             <!--<li><a  @click="linkRoute('/user/free_deliveries')">Free Deliveries</a></li>-->
                             <!--<li><a  @click="linkRoute('/payment/promo')">Promotions</a></li>-->
