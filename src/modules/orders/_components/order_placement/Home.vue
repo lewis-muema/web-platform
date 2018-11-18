@@ -35,6 +35,9 @@
            <font-awesome-icon icon="plus" size="xs" class="sendy-blue homeview--row__font-awesome" width="10px" />
         <a href="#" class="homeview--add" @click="newDestination()">Add</a>
       </div> -->
+      <div class="orders-loading-container" v-loading="loading" v-if="loading">
+
+      </div>
       <div v-if="get_order_path.length > 1">
           <vendor-view ></vendor-view>
       </div>
@@ -59,6 +62,7 @@ export default {
       show_destinations: false,
        map_options:{componentRestrictions: {country: ['ke', 'tz', 'ug', 'rw', 'bi']}},
        locations:[],
+       loading:false,
 
     }
   },
@@ -72,6 +76,8 @@ export default {
       get_max_destinations : '$_orders/$_home/get_max_destinations',
       get_order_path : '$_orders/$_home/get_order_path',
       get_extra_destinations : '$_orders/$_home/get_extra_destinations',
+      get_order_notes : '$_orders/$_home/get_order_notes',
+      get_price_request_object : '$_orders/$_home/get_price_request_object:',
     }),
   },
   methods: {
@@ -146,15 +152,28 @@ export default {
     },
     createPriceRequestObject(){
         let obj = {"path":this.get_order_path};
+        let acc = {};
+        let session = this.$store.getters.getSession;
+        if('default' in session){
+            acc = session[session.default];
+        }
+        else{
+            acc.user_email = 'faithshop@gmail.com';
+            acc.client_mode = 0;
+            acc.cop_id = 0;
+            acc.name = 'Missing session';
+            acc.phone = '0778987789';
+            acc.user_phone = '0778987789';
+        }
         let infor = {
-          "email": "ian@sendy.co.ke",
-          "client_mode": "0",
-          "cop_id": 0,
-          "name": "Evanson",
-          "phone": "0700177140",
-          "date_time": "2018-11-18 22:07:07",
+          "email": acc.user_email,
+          "client_mode": 'cop_id' in acc ? acc.cop_id : 0,
+          "cop_id": 'cop_id' in acc ? acc.cop_id : 0,
+          "name": acc.user_name,
+          "phone": acc.user_phone,
+          "date_time": this.moment().format('YYYY-MM-DD HH:mm:ss'),
           "schedule_status": false,
-          "schedule_time": "2018-11-18 22:07:13",
+          "schedule_time": this.moment().format('YYYY-MM-DD HH:mm:ss'),
           "vendor_type": 1,
           "group_id": 1,
           "client_type": "corporate",
@@ -180,16 +199,16 @@ export default {
           "app":"PRIVATE_API",
           "endpoint":"pricing_multiple"
         };
-
+        this.loading = true;
         this.requestPriceQuote(payload).then(response => {
-
+            this.loading = false;
            console.log(response);
 
            if(response.status == true){
 
 
            } else {
-
+               this.doNotification(2,"Price request failed", "Price request failed. Please try again")
               console.warn('login failed');
 
            }
@@ -197,10 +216,63 @@ export default {
         }, error => {
             console.error("Check Internet Connection")
             console.log(error);
+            this.doNotification(3,"Price request failed", "Price request failed. Please check your internet connection and try again.");
+            this.loading = false;
         });
+    },
+    getCompleteOrderObject(){
+        let acc = {};
+        if('default' in session){
+            acc = session[session.default];
+        }
+        else{
+            acc.user_email = 'faithshop@gmail.com';
+            acc.client_mode = 0;
+            acc.cop_id = 0;
+            acc.name = 'Missing session';
+            acc.phone = '0778987789';
+            acc.user_phone = '0778987789';
+        }
+        let payload = {
+          "note": this.get_order_notes,
+          "trans_no": "none",
+          "user_email": "faithshop@gmail.com",
+          "user_phone": "0778987789",
+          "no_charge_status": false,
+          "insurance_amount": 10,
+          "cash_status": false,
+          "note_status": false,
+          "last_digit": "none",
+          "insurance_id": 1,
+          "platform": "corporate",
+          "card_token": "card_token",
+          "customer_token": "customer_token",
+          "insurance_status": true,
+          "close_rider_id": 0,
+          "amount": 80,
+          "schedule_status": false,
+          "destination_paid_status": false,
+          "delivery_points": 1,
+          "sendy_coupon": "0",
+          "payment_mode": 0,
+          "schedule_time": this.moment().format('YYYY-MM-DD HH:mm:ss'),
+          "tier_tag": "express_tier",
+          "cop_id": 669,
+          "carrier_type": 2,
+          "isreturn": false,
+          "vendor_type": 21,
+          "rider_phone": "AC315W562-G85",
+          "type": "postpaid"
+      };
+      payload = {"values":payload};
     },
     completeOrder(){
 
+    },
+    doNotification(level,title, message){
+        this.$store.commit('setNotificationStatus', true);
+        let notification = {"title":title, "level":level, "message":message};
+        this.$store.commit('setNotification', notification);
     },
     scroll_to_bottom(){
         let container = this.$el.querySelector("#homeview-form");

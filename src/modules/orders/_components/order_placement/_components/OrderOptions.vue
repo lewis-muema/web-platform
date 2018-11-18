@@ -30,7 +30,7 @@
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="star" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
-                          Your balance is Ksh 2,000.
+                          Your balance is Ksh {{getRB()}}.
                         </div>
                     </div>
 
@@ -41,7 +41,7 @@
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
-                            <el-checkbox v-model="payment_method_1" label="Payment on delivery"></el-radio>
+                            <el-radio v-model="payment_method_1" label="Payment on delivery"></el-radio>
                         </div>
                     </div>
                     <div class="home-view-notes-wrapper--item__value">
@@ -55,7 +55,7 @@
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
-                            <el-checkbox v-model="payment_method_2" label="M-Pesa"></el-radio>
+                            <el-radio v-model="payment_method_2" label="M-Pesa"></el-radio>
                         </div>
                     </div>
                     <div class="home-view-notes-wrapper--item__value">
@@ -69,7 +69,7 @@
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="star" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
-                            Redeem promo code
+                            <el-radio v-model="payment_method_3" label="Redeem promo code"></el-radio>
                         </div>
                     </div>
 
@@ -114,7 +114,7 @@
         </div>
         <div class="home-view-place-order">
             <div class="">
-                <button type="button" class="button-primary home-view--place-order" name="button">Place Order</button>
+                <button type="button" class="button-primary home-view--place-order" name="button" @click="placeOrder()">Place Order</button>
             </div>
         </div>
     </div>
@@ -123,6 +123,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import NoSSR from 'vue-no-ssr';
+import numeral from 'numeral';
 
 export default {
     name:'order-options',
@@ -162,6 +163,7 @@ export default {
     computed :{
         ...mapGetters({
           get_active_order_option : '$_orders/$_home/get_active_order_option',
+          getRunningBalance : '$_orders/$_home/get_active_order_option',
 
         }),
 
@@ -178,6 +180,12 @@ export default {
             return{
                 'sendy-blue' : name == this.get_active_order_option
             }
+        },
+        getRB(){
+            return numeral(this.getRunningBalance).format('0,0');
+        },
+        placeOrder(){
+
         },
     }
 }
