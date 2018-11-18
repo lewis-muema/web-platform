@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from '../store/global'
-
-Vue.use(Router)
+import store from '../store/global';
+Vue.use(Router);
 
 let entryUrl = null;
 
@@ -13,9 +12,14 @@ function guard(to, from, next){
       //TODO: change this to use the user id and check for null as well
       //TODO: make sure this is checking the store well
       //TODO: we now literally have no guard , the door is just wide open
-    let session = store.state.session;
+      if (process.browser) {
+        console.log(window.localStorage.getItem('_sendyWeb'));
+        console.log(window.localStorage.getItem('_sendyWeb').session);
+        store.state.session = window.localStorage.getItem('_sendyWeb').session;
+      }
 
-    if (true) {
+      
+      if (true) {
       if (entryUrl) {
         const url = entryUrl;
         entryUrl = null;
@@ -92,7 +96,7 @@ export function createRouter () {
       },
       { path: '/transactions', 
         component: () => import('../modules/transactions/Transactions.vue'),
-        beforeEnter: guard,
+        beforeRouteEnter: guard,
         children: [
             {
               path: '/',
@@ -120,7 +124,7 @@ export function createRouter () {
         ]
       },
       { path: '/admin', component: () => import('../modules/admin/Admin.vue'),
-        beforeEnter: guard,
+        beforeRouteEnter: guard,
         children: [
             {
               path: '/',
@@ -168,7 +172,7 @@ export function createRouter () {
         ]
       },
       { path: '/analytics', component: () => import('../modules/analytics/Analytics.vue'),
-        beforeEnter: guard,
+      beforeRouteEnter: guard,
         children: [
             {
               path: '/',
@@ -185,7 +189,7 @@ export function createRouter () {
         ]
       },
       { path: '/payment', component: () => import('../modules/payment/Payment.vue'),
-        beforeEnter: guard, 
+      beforeRouteEnter: guard, 
         children: [
             {
               path: '/',
@@ -206,7 +210,7 @@ export function createRouter () {
         ]
       },
       { path: '/orders', component: () => import('../modules/orders/Orders.vue'),
-        beforeEnter: guard,
+      beforeRouteEnter: guard,
           children: [
               {
                 path: '/',
@@ -224,7 +228,7 @@ export function createRouter () {
           ]
       },
       { path: '/user', component: () => import('../modules/user/User.vue'),
-        beforeEnter: guard,
+      beforeRouteEnter: guard,
           children: [
               {
                 path: '/',

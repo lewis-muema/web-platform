@@ -15,7 +15,7 @@
             </div>
 
             <div class="edit-position-dept">
-                <div class="edit-holder edit-dimen">
+                <div class="edit-holder dept-edit-dimen">
                     <input class="input-control add-dept" type="text" v-model="department_name" placeholder="Name">
                 </div>
 
@@ -135,7 +135,7 @@
         display: block;
     }
 
-    .edit-dimen{
+    .dept-edit-dimen{
         width: 100% !important;
     }
 

@@ -95,11 +95,10 @@ export default {
 
     }
   },
-  mounted(){
-      let session_data = this.$store.getters.Session;
+  mounted(){ 
+      let session_data = this.$store.getters.getSession;
       let statement_payload = {
-        "cop_id":669,
-        "user_type":2
+        "cop_id": session_data.cop_id,
       }
 
       let full_payload = {
