@@ -10,6 +10,12 @@ Vue.prototype.moment = moment
 import Element from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/en'
 import 'element-ui/lib/theme-chalk/index.css'
+import VueLocalStorage from 'vue-localstorage'
+
+Vue.use(VueLocalStorage, {
+  name: 'ls',
+  bind: true //created computed members from your variable declarations
+})
 
 Vue.use(Element , { locale })
 

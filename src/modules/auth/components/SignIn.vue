@@ -90,8 +90,9 @@ export default {
              let session_data = response.data;
              console.log('session_data', session_data);
 
-             this.setCookie(session_data);
+             //this.setCookie(session_data);
              this.$store.commit('setSession', session_data);
+             //this.$ls.set('_sessionLocalSnack', session_data);
 
              this.$router.push('/orders');
         
