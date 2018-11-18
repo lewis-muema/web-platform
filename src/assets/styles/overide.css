@@ -28,7 +28,22 @@ button span {
   border-color: #285e8e;
   color: #ecf0f1;
   cursor: pointer;
+}
 
+.button--primary-inactive {
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    cursor: not-allowed;
+    background: rgba(44, 130, 197, .7);
+    position: relative;
+    display: block;
+    border-radius: 4px;
+    height: 40px;
+    transition: background-color .3s;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: #fff;
+ 
 }
 
 .button-primary--naked {

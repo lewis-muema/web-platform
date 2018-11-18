@@ -83,7 +83,7 @@
                     "values" : rating_status_payload,
                     "vm":this,
                     "app":"NODE_PRIVATE_API",
-                    "endpoint":"Rate/insertRate/"
+                    "endpoint":"Rate/insertRate"
                 }
                 this.$store.dispatch("$_rating/requestRatingStatus", rating_status_full_payload).then(response => {
                     console.log(response);
@@ -115,7 +115,7 @@
                     "values" : rating_payload,
                     "vm":this,
                     "app":"NODE_PRIVATE_API",
-                    "endpoint":"Rate/updateRate/"
+                    "endpoint":"Rate/updateRate"
                 }
                 this.$store.dispatch("$_rating/requestUpdateRating", rating_full_payload).then(response => {
                     console.log(response);

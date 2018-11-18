@@ -96,7 +96,7 @@ export default {
       //TODO: Get this from session
       //TODO: also create payload depending on session
 
-      let session_data = this.$store.getters.Session;
+      let session_data = this.$store.getters.getSession;
       let payment_payload = {
         "cop_id": 669,
         "user_type":2

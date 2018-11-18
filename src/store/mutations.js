@@ -4,5 +4,8 @@ export default {
     },
     setSession(state, session) {
         state.session = session;
+    },
+    setRunningBalance(state, running_balance) {
+        state.running_balance = running_balance;
     }
 };
