@@ -27,7 +27,7 @@ export default {
   text-transform: capitalize;
   font-size: 16px !important;
   text-align: center;
-  padding: 10px 25px;
+  padding: 10px 10px;
   text-decoration: none;
   flex: 1;
 }

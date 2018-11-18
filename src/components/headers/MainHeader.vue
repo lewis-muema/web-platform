@@ -11,7 +11,7 @@
                    <li class="nav--menu-inactive"><a>  0709 779 779</a></li>
                    <li class="nav--menu-inactive"><a>Hi {{logged_user}}</a></li>
                     <li class="nav--menu-dropdown">
-                       <a>Menu</a>
+                       <a class="nav--menu-dropdown-link">Menu</a>
                        <ul class="nav--menu-dropdown-list">
                             <li><a  @click="linkRoute('/orders')">New Delivery</a></li>
                             <li><a  @click="linkRoute('/payment')">Payment</a></li>
@@ -21,7 +21,7 @@
                             <li v-if="admin_user"><a  @click="linkRoute('/admin/users')">Settings</a></li>
                             <li v-if="admin_user"><a  @click="linkRoute('/analytics')">Analytics</a></li>
                             <li><a  @click="linkRoute('/user/profile/personal_information')">Profile</a></li>
-                            <li class="menu--last-child"><a @click="logOut">Log Out</a></li>
+                            <li class="menu--last-child"><a @click="logOut" class="menu--last-child-link">Log Out</a></li>
                        </ul>
                 </li>
                </ul>
@@ -64,7 +64,7 @@ export default {
             this.$router.push({name:'sign_in'});
         },
         eraseCookie(name){
-            document.cookie = name+'=; Max-Age=-99999999;'; 
+            document.cookie = name+'=; Max-Age=-99999999;';
         },
         linkRoute(route){
             console.log('attempt route'+route);

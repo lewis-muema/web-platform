@@ -8,15 +8,67 @@
         <!-- <font-awesome-icon icon="wallet" /> -->
       </div>
       <div class="payinfo--balance">
-        Balance <span class="payinfo--balance-el">250</span>Ksh
+        Balance <span class="payinfo--balance-el">{{running_balance}}</span>Ksh
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
-  name: 'account-balance'
+  name: 'account-balance',
+  mounted() {
+    this.requestRunningBalance(); 
+  },
+  methods:{
+    ...mapActions([
+      '$_payment/requestRunningBalance',
+    ]),
+    requestRunningBalance(){
+      //this will request from the api and update the store
+      let session = this.$store.getters.getSession;
+
+      let running_balance_payload = {
+        values:{
+          cop_id: session.biz.cop_id,
+          user_phone: session[session.default]['user_phone']
+        }
+      }
+
+       let payload  = {
+          "values" : running_balance_payload,
+          "vm":this,
+          "app":"PRIVATE_API",
+          "endpoint":"running_balance"
+        }
+
+        this.$store.dispatch("$_payment/requestRunningBalance", payload).then(response => {
+          console.log(response);
+
+          if(response.status == 200){
+            this.$store.commit('setRunningBalance', response.data.running_balance);
+          }
+          console.log(response);
+           //commit  to the global store here
+
+        }, error => {
+          console.log(error);
+
+        });
+
+
+
+    }
+  },
+  computed: {
+    //this just gets what is on the store
+    running_balance(){
+      return this.$store.getters.getRunningBalance;
+    }
+  }
+  
 }
 </script>
 
