@@ -10,7 +10,6 @@
                     <el-option v-for="dept in deptData" :key="dept.department_id" :label="dept.department_name" :value="dept.department_id">
                     </el-option>
                 </el-select>
-
                 <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'" @click="filterUserTableData">Search</button>
 
             </div>
@@ -115,7 +114,7 @@
                 "values" : usersList_payload,
                 "vm":this,
                 "app":"NODE_PRIVATE_API",
-                "endpoint":"cop_users/"
+                "endpoint":"cop_users"
             }
             this.$store.dispatch("$_admin/requestUsersList", users_full_payload).then(response => {
                 console.log(response);
@@ -147,6 +146,7 @@
                 pagination_page: 1,
                 filteredUserData:[],
                 filterState:false,
+                search_users: '',
                 filterData:{
                     "user": "",
                     "department":""
