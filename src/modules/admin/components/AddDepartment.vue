@@ -13,7 +13,7 @@
             <div class="dept-edit-details">
                 Add Department
             </div>
-
+<!--{{filterData}}-->
             <div class="edit-position-dept">
                 <div class="edit-holder dept-edit-dimen">
                     <input class="input-control add-dept" type="text" v-model="department_name" placeholder="Name">
@@ -23,11 +23,6 @@
                     <el-option v-for="user in userData" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
                     </el-option>
                 </el-select>
-
-                <!--<div class="edit-holder edit-dimen">-->
-                    <!--<input class="input-control add-dept" type="text" v-model="department_admin" placeholder="Admin" >-->
-                <!--</div>-->
-
                 <div class="sign-holder">
                     <input class="button-primary" type="submit" value="Add" v-on:click="add_department" >
                 </div>
@@ -43,11 +38,21 @@
     export default {
         name:'AddDepartment',
         mounted() {
-            let usersList_payload = {
-                "cop_id": 1083
+            // let session_data = this.$store.getters.getSession;
+            // let usersList_payload = {
+            //     "cop_id": session_data.cop_id,
+            // }
+            let session = this.$store.getters.getSession;
+            let cop_id = 0;
+            if(session.default == 'biz'){
+                cop_id = session[session.default]['cop_id'];
+            }
+            let payload = {
+                "cop_id": cop_id
+
             }
             let users_full_payload = {
-                "values" : usersList_payload,
+                "values" : payload,
                 "vm":this,
                 "app":"NODE_PRIVATE_API",
                 "endpoint":"cop_users"
@@ -78,21 +83,28 @@
             }),
             add_department: function ()
             {
-                let newDept_payload = {
-                    "cop_id": this.cop_id,
-                    "department_name": this.department_name,
-                    "cop_user_id": this.cop_user_id
+                let session = this.$store.getters.getSession;
+                let cop_id = 0;
+                if(session.default == 'biz'){
+                    cop_id = session[session.default]['cop_id'];
                 }
+                let newDept_payload = {
+                    "cop_id": cop_id,
+                    "department_name": this.department_name,
+                    "cop_user_id": this.filterData.user
+                }
+
                 console.log(newDept_payload)
                 let full_payload = {
                     "values" : newDept_payload,
                     "vm":this,
                     "app":"NODE_PRIVATE_API",
-                    "endpoint":"cop_departments_update"
+                    "endpoint":"cop_departments_add"
                 }
                 this.$store.dispatch("$_admin/addNewDepartment", full_payload).then(response => {
                     console.log("added");
                     console.log(response);
+                    // this.$router.push('/admin/department');
                 }, error => {
                     console.log(error);
                 });

@@ -75,10 +75,12 @@ export default {
                 console.log('in store dispatch to global store')
                 console.log(response)
                 if (response.data.status == true) {
+                    console.log('key generated')
                     commit('setKeysList',response.data.data);
                     resolve(response.data);
                 }
                 else {
+                    console.log('key NOT generated')
                     reject(response.data);
                 }
             }, error => {
