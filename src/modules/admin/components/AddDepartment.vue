@@ -11,15 +11,11 @@
 
             <div>
                 <div class="edit-holder edit-dimen">
-                    <input class="input-control edit-form" type="text" v-model="cop_id" placeholder="cop_id">
+                    <input class="input-control add-dept" type="text" v-model="department_name" placeholder="Department">
                 </div>
 
                 <div class="edit-holder edit-dimen">
-                    <input class="input-control edit-form" type="text" v-model="department_name" placeholder="department_name">
-                </div>
-
-                <div class="edit-holder edit-dimen">
-                    <input class="input-control edit-form" type="text" v-model="cop_user_id" placeholder="cop_user_id">
+                    <input class="input-control add-dept" type="text" v-model="department_admin" placeholder="Admin" >
                 </div>
 
                 <div class="sign-holder">
@@ -43,7 +39,8 @@
             return {
                 empty_departmens_state: 'Adding Department',
                 cop_id: 285,
-                department_name: "department_name",
+                department_name: "Tech Department",
+                department_admin: "Jane Doe",
                 cop_user_id: 12
             }
         },
@@ -58,7 +55,7 @@
                     "department_name": this.department_name,
                     "cop_user_id": this.cop_user_id
                 }
-
+                console.log(newDept_payload)
                 let full_payload = {
                     "values" : newDept_payload,
                     "vm":this,
@@ -105,12 +102,12 @@
     }
 
     .edit-dimen{
-        width: 83%;
+        width: 100% !important;
     }
 
-    .edit-form{
+    .add-dept{
         height:42px!important;
-        width: 160%!important;
+        width: 300%!important;
     }
     .edit-select{
         height:42px!important;

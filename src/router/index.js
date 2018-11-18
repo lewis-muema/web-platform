@@ -154,7 +154,7 @@ export function createRouter () {
               component: () => import('../modules/admin/components/AddDepartment.vue')
             },
             {
-              path: '/admin/department/edit_department',
+              path: '/admin/department/edit_department/:id',
               component: () => import('../modules/admin/components/EditDepartment.vue')
             },
             {

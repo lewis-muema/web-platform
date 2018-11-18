@@ -7,6 +7,7 @@
                 <button class="button-primary section--filter-action" @click="addDepartment">Add Department</button>
             </div>
         </div>
+        <!--{{departments_data}}-->
         <el-table
                 :data="departments_data"
                 style="width: 100%"
@@ -29,7 +30,7 @@
                     label="Action"
             >
                 <template slot-scope="scope">
-                    <a @click="edit_department">Edit</a>
+                    <a @click="edit_department(departments_data[scope.$index]['cop_user_id'])">Edit</a>
                 </template>
             </el-table-column>
 
@@ -98,9 +99,6 @@
                 //TODO:route to add department
                 this.$router.push('/admin/department/add_department');
             },
-            edit_department() {
-                this.$router.push('/admin/department/edit_department');
-            },
             changeSize(val) {
                 this.pagination_page = 1;
                 this.pagination_limit = val;
@@ -110,7 +108,11 @@
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
                 this.fetchedDepartmentsData.slice(from, to);
-            }
+            },
+            edit_department(cop_user_id) {
+                let cop_user_details = cop_user_id;
+                this.$router.push('/admin/department/edit_department/'+cop_user_id);
+            },
         }
     }
 </script>

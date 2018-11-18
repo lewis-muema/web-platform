@@ -5,7 +5,8 @@
             </div>
             <div class="section--filter-action-wrap">
 
-                <button type="button" class="button-primary section--filter-action">{{button_name}}</button>
+                <button v-if="registered" type="button" class="button-primary section--filter-action">Update API Key</button>
+                <button v-if="!registered" type="button" class="button-primary section--filter-action" v-on:click="generateAPIKey">Generate API Key</button>
             </div>
         </div>
         <el-table
@@ -67,7 +68,7 @@
             //TODO: also create payload depending on session
 
             let apikey_payload = {
-                "cop_id": 669
+                "cop_id": 1083
             }
             let apikey_full_payload = {
                 "values" : apikey_payload,
@@ -83,6 +84,7 @@
         },
         data: function () {
             return {
+                registered: false,
                 empty_payments_state: "Fetching API Credentials",
                 pagination_limit: 5,
                 pagination_page: 1,
@@ -96,6 +98,26 @@
         },
         methods: {
             updateApiKey() {
+            },
+            generateAPIKey() {
+                let newKey_payload = {
+                    "cop_id": 1083
+                }
+                //console.log(newKey_payload)
+                let newKeyFull_payload = {
+                    "values" : newKey_payload,
+                    "vm":this,
+                    "app":"NODE_PRIVATE_API",
+                    "endpoint":"generate_api/"
+                }
+                // console.log(newKeyFull_payload)
+
+                this.$store.dispatch("$_admin/generateAPIKey", newKeyFull_payload).then(response => {
+                    console.log("generated");
+                    console.log(response);
+                }, error => {
+                    console.log(error);
+                });
             },
             changeSize(val) {
                 this.pagination_page = 1;
@@ -127,11 +149,13 @@
                     resp = this.fetchedData[index].api_status;
                     if (resp === 1) {
                         resp = "Registered"
-                        this.button_name = "Update API Key"
+                        this.registered =  true
+                        // this.button_name = "Update API Key"
                     }
                     else {
                         resp = "Not Registered"
-                        this.button_name = "Generate API Key"
+                        this.registered =  false
+                        // this.button_name = "Generate API Key"
                     }
                 }
                 return resp;

@@ -1,23 +1,24 @@
 <template lang="html">
-    <div id="log_in" class="admin-edit-item" >
+    <div id="log_in" class="admin-edit-item">
 
         <div class="admin-edit-inner">
-
             <div class="admin-edit-details">
                 Edit Department Details
             </div>
-
             <div>
                 <div class="edit-holder edit-dimen">
-                    <input class="input-control edit-form" type="text" name="email" v-model="department" placeholder="Department">
+                    <input readonly class="input-control edit-dept" type="text" name="department" v-model="deptDetails.department_name"
+                           placeholder="Department">
                 </div>
 
                 <div class="edit-holder edit-dimen">
-                    <input class="input-control edit-form" type="text" name="phone" v-model="approver" placeholder="Approver">
+                    <input class="input-control edit-dept" type="text" name="admin" v-model="deptDetails.department_admin"
+                           placeholder="Admin">
                 </div>
 
                 <div class="sign-holder">
-                    <input class="button-primary" type="submit" value="Update Details" v-on:click="update_department" >
+                    <input class="button-primary" type="submit" value="Update Details" id="update_department"
+                           v-on:click="update_department">
                 </div>
             </div>
         </div>
@@ -27,64 +28,53 @@
 </template>
 
 <script>
-    import {mapActions} from 'vuex'
+    import {mapActions, mapGetters} from 'vuex'
+
     export default {
-        name:'EditDepartment',
+        name: 'EditDepartment',
         data() {
             return {
-                departments: [{
-                    dept_value: '1',
-                    label: 'Department1'
-                }, {
-                    dept_value: '2',
-                    label: 'Department2'
-                }, {
-                    dept_value: '3',
-                    label: 'Department3'
-                }],
-                statuses: [{
-                    status_value: '1',
-                    status_name: 'Active'
-                }, {
-                    status_value: '2',
-                    status_name: 'Deactivate'
-                }],
-                types: [{
-                    type_value: '1',
-                    type_name: 'User'
-                }, {
-                    type_value: '2',
-                    type_name: 'Admin'
-                }],
+                department: '',
+                approver: '',
                 dept_value: '',
                 status_value: '',
-                type_value: ''
+                type_value: '',
+                deptDetails: {},
             }
         },
+        mounted() {
+            let cop_user_id = this.$route.params.id;
 
-        methods:{
-            ...mapActions({
-                requestEditUserAdmin :'$_admin/requestEditUserAdmin',
+            this.deptDetails = this.deptData.filter(dept => dept.cop_user_id == cop_user_id)[0];
+
+        },
+        computed: {
+            ...mapGetters({
+                deptData: '$_admin/getDepartmentsList',
             }),
-            update_department: function ()
-            {
-                // "cop_id" : 285,
-                // "department_name" : "department_nameggggg",
-                // "cop_user_id":12
-                let payload = {};
-                payload.cop_user_id = '';
-                payload.user_name = '';
-                payload.user_email = '';
-                payload.user_phone = '';
-                payload.department_id = this.dept_value;
-                payload.user_type = this.type_value;
-                payload.email = '';
-                payload.status = this.status_value;
-                this.requestEditUserAdmin(payload).then(response => {
-                    console.log("User Details Updated!")
+        },
+
+        methods: {
+            ...mapActions({
+                editAdminDepartment: '$_admin/editAdminDepartment',
+            }),
+            update_department: function () {
+                let editDept_payload = {
+                    "cop_id": this.deptDetails.department_id ,
+                    "department_name": this.deptDetails.department_name ,
+                    "cop_user_id": this.deptDetails.cop_user_id
+                }
+                console.log(editDept_payload)
+                let editDept_full_payload = {
+                    "values": editDept_payload,
+                    "vm": this,
+                    "app": "NODE_PRIVATE_API",
+                    "endpoint": "cop_departments_update/"
+                }
+                this.$store.dispatch("$_admin/editAdminDepartment", editDept_full_payload).then(response => {
                     console.log(response);
+                    console.log("updated");
                 }, error => {
-                    console.error("Check Internet Connection")
                     console.log(error);
                 });
             },
@@ -94,19 +84,21 @@
 </script>
 
 <style lang="css">
-    .admin-edit-item{
+    .admin-edit-item {
         text-align: center;
         border: 0px solid #ccc;
         margin: 5px;
     }
-    .admin-edit-inner{
+
+    .admin-edit-inner {
         max-width: 60rem;
         border-radius: 4px;
         padding: 2rem;
         font-family: 'Rubik', sans-serif;
         display: flex;
     }
-    .admin-edit-details{
+
+    .admin-edit-details {
         font-size: 1.3rem;
         line-height: 1.7em;
         font-weight: 400;
@@ -115,21 +107,23 @@
         margin-right: 20%;
         margin-top: 4%;
     }
-    .edit-holder{
+
+    .edit-holder {
         margin: 1em;
         display: block;
     }
 
-    .edit-dimen{
+    .edit-dimen {
         width: 83%;
     }
 
-    .edit-form{
+    .edit-dept{
         height:42px!important;
-        width: 160%!important;
+        width: 300%!important;
     }
-    .edit-select{
-        height:42px!important;
-        width: 155%!important;
+
+    .edit-select {
+        height: 42px !important;
+        width: 155% !important;
     }
 </style>
