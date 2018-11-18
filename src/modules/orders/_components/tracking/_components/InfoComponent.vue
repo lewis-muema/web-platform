@@ -26,58 +26,49 @@
         <div class="infobar--content infobar--item infobar--order infobar--item-bordered">
           <div class="">
             <div class="">
-              Cost : KES {{this.tracking_data.amount}}
+               KES {{this.tracking_data.amount}}
             </div>
           </div>
           <div class="">
             <div class="">
-              Order Number : {{this.tracking_data.order_no}}
+               {{this.tracking_data.order_no}}
             </div>
           </div>
         </div>
-        <div class="infobar--content infobar--item infobar--locations infobar--item-bordered">
-          <div class="infobar--content infobar--item infobar--item-start">
-            <div class="">
-              <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/maroon_button.png" alt="Pickup" align="center"> <span class="">	From : {{this.tracking_data.path[0].name}}</span>
-            </div>
-            <div class="">
-              <img class="carets" src="https://apptest.sendyit.com/biz/style3/comp/blue_button.png" alt="Drop Off" align="center"> <span class=""> To : {{this.tracking_data.path[this.tracking_data.path.length - 1].name}}</span>
-            </div>
-          </div>
-        </div>
+
         <div class="infobar--content infobar--item infobar--status infobar--item-bordered">
           <div class="">
-            Status: {{getStatus}}
+             {{getStatus}}
           </div>
           <div class="">
             <span class="" v-if = "this.tracking_data.delivery_status < 2">
-              Estimated Arrival: <span class=""></span>
+              Estimated Arrival: <span class=""> 9:00 am</span>
             </span>
             <span class="" v-else>
-              Estimated Delivery: <span class=""></span>
+              Estimated Delivery: <span class=""> 9:00 am</span>
             </span>
           </div>
         </div>
         <div class="infobar--content infobar--item infobar--actions">
           <div @click="place()">
-            <div>
-              <a href="#"  class="" ><img class="" src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/tracking/free_delivery.png"></a>
+            <div class="infobar--actions-icon">
+              <i class="el-icon-sold-out"></i>
             </div>
             <div class="infobar--actions-text">
               Free delivery
             </div>
           </div>
           <div>
-            <div>
-              <a href="#"><img class="" src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/tracking/share_delivery.png"></a>
+            <div class="infobar--actions-icon">
+              <i class="el-icon-share"></i>
             </div>
             <div class="infobar--actions-text">
               Share Status
             </div>
           </div>
           <div>
-            <div>
-               <a href="#"><img class="" src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/tracking/cancel_order.png"></a>
+            <div class="infobar--actions-icon">
+               <i class="el-icon-circle-close-outline"></i>
             </div>
             <div class="infobar--actions-text">
               Cancel Order
@@ -178,10 +169,11 @@ export default {
   width: 98%;
   margin: 0 1%;
   background-color: #fff;
-  color: #1782c5;
+  color: #555;
   font-size: 13px;
   min-height: 90px;
-  box-shadow: 5px 5px 10px 1px rgba(184, 184, 196, 0.36);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+  border-radius: 3px;
 }
 .infobar--content
 {
@@ -230,6 +222,7 @@ export default {
   padding: 0 1rem;
   text-transform: capitalize;
   justify-content: space-around;
+  text-align: center;
 }
 .infobar--actions img
 {
@@ -239,6 +232,13 @@ export default {
   height: 30px;
   margin: 0 auto;
 }
+.infobar--actions div:hover{
+
+cursor: pointer;
+color:#1782C5;
+
+}
+
 .infobar--terms
 {
   display: flex;
@@ -250,6 +250,14 @@ export default {
   font-weight: 400;
   padding-top: 11px;
 }
+
+.infobar--actions-icon
+{
+  font-size: 23px;
+  margin-bottom: -10px;
+
+}
+
 .carets
 {
   width: 10px;
