@@ -35,8 +35,6 @@ export default {
   data() {
     return {
       // user_id: '',
-      cop_id:'0' ,
-      user_id:1,
       user_name: '',
       user_email:'',
       user_phone: ''
@@ -47,33 +45,63 @@ export default {
         requestPersonalInfo :'$_user/requestPersonalInfo',
     }),
     save_personal: function ()
-    { if (this.cop_id > 0) {
+    { if (this.session_data.cop_id > 0) {
         console.log("Cop user found");
-        let payload = {};
+        let values = {};
 
-        payload.cop_user_id = this.cop_user_id;
-        payload.user_name = this.user_name;
-        payload.user_email = this.user_email;
-        payload.user_phone = this.user_phone;
-        this.requestPersonalInfo(payload).then(response => {
-           console.log("Personal Cop User Information Updated successfully")
-           console.log(response);
+        values.cop_user_id = this.session_data.cop_user_id;
+        values.user_name = this.user_name;
+        values.user_email = this.user_email;
+        values.user_phone = this.user_phone;
+
+        let full_payload = {
+          "values" : values,
+          "vm":this,
+          "app":"NODE_PRIVATE_API",
+          "endpoint":"update_user"
+        }
+
+        this.requestPersonalInfo(full_payload).then(response => {
+          if(response.status == true){
+
+            console.log("Personal Cop User Information Updated successfully")
+            console.log(response);
+            }
+          else {
+             console.warn('Cop user details Update Failed');
+
+          }
         }, error => {
             console.error("Check Internet Connection")
             console.log(error);
         });
     }
-    else if(this.cop_id == 0) {
+    else if(this.session_data.cop_id == 0) {
        console.log("Peer Account Found");
-       let payload = {};
+       let values = {};
 
-       payload.user_id = this.cop_user_id;
-       payload.user_name = this.user_name;
-       payload.user_email = this.user_email;
-       payload.user_phone = this.user_phone;
-       this.requestPersonalInfo(payload).then(response => {
-          console.log("Personal Peer Information Updated successfully")
-          console.log(response);
+       values.user_id = this.session_data.user_id;
+       values.user_name = this.user_name;
+       values.user_email = this.user_email;
+       values.user_phone = this.user_phone;
+
+       let full_payload = {
+         "values" : values,
+         "vm":this,
+         "app":"NODE_PRIVATE_API",
+         "endpoint":"update_user"
+       }
+
+       this.requestPersonalInfo(full_payload).then(response => {
+         if(response.status == true){
+
+           console.log("Personal Peer Information Updated successfully")
+           console.log(response);
+           }
+         else {
+            console.warn('Peer details Update Failed');
+
+         }
        }, error => {
            console.error("Check Internet Connection")
            console.log(error);

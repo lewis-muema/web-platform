@@ -1,13 +1,13 @@
-<template>
+<template lang="html">
   <div class="" id="auth_container">
-      <!-- <main-header></main-header> -->
-      <div class="profile-container">
+      <main-header></main-header>
+      <div class="container">
         <div class="new-card" style="margin-top:5%;margin-left:20%;border-right:5px solid #1782C5;height:400px;">
           <a class="my-profile__adj">
-              <router-link class="profile--link" to="/user/profile/personal_information">Personal Information</router-link>
+              <router-link class="profile--link" to="/profile/personal_information">Personal Information</router-link>
           </a>
           <div class="my-profile__adj">
-              <router-link class="profile--link" to="/user/profile/change_password">Change Password</router-link>
+              <router-link class="profile--link" to="/profile/change_password">Change Password</router-link>
           </div>
         </div>
 
@@ -16,19 +16,36 @@
   </div>
 </div>
   </div>
-
 </template>
 
 <script>
-  // import MainHeader from '../../../components/headers/MainHeader.vue'
+import profile_store from './_store';
+import RegisterStoreModule from '../../mixins/register_store_module'
+import MainHeader from '../../components/headers/MainHeader.vue'
 
-    export default {
-        name: "Profile",
-        // components : {MainHeader},
-    }
+export default {
+  name:'Profile',
+  mixins: [ RegisterStoreModule ],
+  components : {MainHeader},
+  created() {
+    const STORE_KEY = '$_profile';
+    this.$store.registerModule(STORE_KEY, profile_store);
+  },
+}
 </script>
 
-<style lang="css"scoped>
+<style lang="css" scoped>
+/* .profile-menu{
+  -webkit-box-flex: 2;
+  flex: 2;
+  padding-right: 40px;
+  -webkit-box-orient: vertical;
+  flex-direction: column;
+  display: flex;
+  -webkit-box-direction: normal;
+  margin-left: 0%;
+  margin-top: 15%;
+} */
 .my-profile__adj{
   font-size: 22px;
   padding-bottom: 0px;
@@ -57,7 +74,7 @@
   padding-top: 3px ! important;
 
 }
-.profile-container{
+.container{
   display: flex;
 }
 .profile--link
@@ -80,10 +97,15 @@
   /* font-weight: bold !important; */
   font-weight: 500 !important;
   border-bottom: none!important;
-  background-color: #1782C5;;
-  color: #fff !important;
+
+
+  background-color: #4186c2;
+  color: #fff;
 
   /* background-color: red; */
 }
+/* .new-card .my-profile__adj .router-link-active{
+  background-color: red !important;
+} */
 
 </style>
