@@ -59,15 +59,18 @@ export default {
       }
       else{
           console.log("Password match");
-      if (this.session_data.cop_id> 0 ) {
+      let session = this.$store.getters.getSession;
+
+      if (session['biz']['cop_id'] >0 ) {
         console.log("Cop user found");
 
-        let values = {};
-        // payload.user_id = this.user_id;
-        values.cop_user_id = this.session_data.cop_user_id;
-        values.old_password = this.old_password;
-        values.new_password = this.new_password;
-        values.confirm_password = this.confirm_password;
+        let values = {
+          "cop_user_id": session[session.default]['user_id'],
+          "old_password": this.old_password,
+          "new_password": this.new_password,
+          "password": this.confirm_password,
+        };
+
 
         let full_payload = {
           "values" : values,
@@ -75,13 +78,7 @@ export default {
           "app":"NODE_PRIVATE_API",
           "endpoint":"update_user"
         }
-        // this.requestChangePassword(payload).then(response => {
-        //    console.log("Cop User Password Updated successfully")
-        //    console.log(response);
-        // }, error => {
-        //     console.error("Check Internet Connection")
-        //     console.log(error);
-        // });
+
         this.requestChangePassword(full_payload).then(response => {
           if(response.status == true){
 
@@ -98,15 +95,15 @@ export default {
         });
 
       }
-      else if (this.session_data.cop_id < 0) {
+      else if (session['peer']['user_id'] > 0) {
         console.log("Peer user found");
 
-        let values= {};
-        // payload.user_id = this.user_id;
-        values.user_id = this.session_data.user_id;
-        values.old_password = this.old_password;
-        values.new_password = this.new_password;
-        values.confirm_password = this.confirm_password;
+        let values = {
+          "user_id": session[session.default]['user_id'],
+          "old_password": this.old_password,
+          "password": this.new_password,
+          "password": this.confirm_password,
+        };
 
         let full_payload = {
           "values" : values,
@@ -115,13 +112,6 @@ export default {
           "endpoint":"update_user"
         }
 
-        // this.requestChangePassword(payload).then(response => {
-        //    console.log("Password Updated successfully")
-        //    console.log(response);
-        // }, error => {
-        //     console.error("Check Internet Connection")
-        //     console.log(error);
-        // });
         this.requestChangePassword(full_payload).then(response => {
           if(response.status == true){
 

@@ -9,7 +9,7 @@ const url = "https://privateapitest.sendyit.com/v1/"
 export default {
 
     requestOrderHistoryOrders({commit}, payload)
-    {   
+    {
 
         return new Promise((resolve, reject) => {
             payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
@@ -53,7 +53,7 @@ export default {
             payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
                 console.log('in store dispatch to global store')
                 if (response.data.status == true) {
-                    commit('setOrderHistoryOrders',response.data.data);
+                    commit('setPayments',response.data.data);
                     resolve(response.data);
                  }
                  else {
@@ -71,7 +71,7 @@ export default {
             payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
                 console.log('in store dispatch to global store')
                 if (response.data.status == true) {
-                    commit('setOrderHistoryOrders',response.data.data);
+                    commit('setStatement',response.data.data);
                     resolve(response.data);
                  }
                  else {

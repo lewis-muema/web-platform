@@ -97,9 +97,20 @@ export default {
       //TODO: also create payload depending on session
 
       let session_data = this.$store.getters.getSession;
-      let payment_payload = {
-        "cop_id": 669,
-        "user_type":2
+      let payment_payload = {};
+
+      if(session_data.default == 'biz'){
+        payment_payload = {
+          "cop_id": session_data['biz']['cop_id'],
+          "user_type":session_data['biz']['user_type'],
+          "user_id":session_data['biz']['user_id'],
+
+        }
+      } else {
+        //create peer payload
+        payment_payload = {
+          "user_id": session_data[session_data.default]['user_id'],
+         }
       }
 
       let full_payload = {
@@ -132,23 +143,41 @@ export default {
     },
     filterPaymentData(){
        //reset filter
+       let session_data = this.$store.getters.getSession;
         this.filterState  = false;
         this.empty_payments_state = "Searching Payments";
 
         let from_date = this.filterData.from_date;
         let to_date = this.filterData.to_date;
 
-        let payload = {
-          "cop_id": 669,
-          "user_type":2,
-          "from":from_date,
-          "to":to_date
-        };
-
         from_date = moment(from_date).format('YYYY-MM-DD');
         to_date = moment(to_date).format('YYYY-MM-DD');
 
+        let payload = {};
+        if(session_data.default == 'biz'){
+          payload = {
+            "cop_id": session_data['biz']['cop_id'],
+            "user_type":session_data['biz']['user_type'],
+            "from":from_date,
+            "to":to_date
+
+          }
+        } else {
+          //create peer payload
+          payload = {
+            "user_id": session_data[session_data.default]['user_id'],
+            "from":from_date,
+            "to":to_date
+           }
+        }
+
+
         this.requestPayments(payload);
+
+        this.filteredPaymentData = this.paymentData;
+
+        console.log(to_date);
+        this.filterState  = true;
 
         // this.filteredPaymentData = this.payment_data;
         // this.filteredPaymentData = this.filteredPaymentData.filter(function (payment) {

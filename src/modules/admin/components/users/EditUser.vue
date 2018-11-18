@@ -15,7 +15,7 @@
           <div class="edit-position">
 
             <div class="edit-holder edit-dimen">
-              <input class="input-control edit-form" type="text"  style="margin-top: 14%;"name="name"  :v-model="userDetails.name" placeholder="Name" autocomplete="off">
+              <input class="input-control edit-form" type="text"  style="margin-top: 14%;"name="name"  v-model="userDetails.name" placeholder="Name" autocomplete="off">
             </div>
 
             <div class="edit-holder edit-dimen">
@@ -27,15 +27,15 @@
             </div>
 
             <div class="edit-holder">
-            <el-select class="addUser--select edit-select" v-model="userDetails.department_name" placeholder="Department">
-                <el-option v-for="depart in departments" :key="depart.dept_value" :label="depart.label" :value="depart.dept_value">
+            <el-select class="addUser--select edit-select" v-model="userDetails.department_id" placeholder="Department">
+                <el-option v-for="depart in departments" :key="depart.department_id" :label="depart.department_name" :value="depart.department_id">
                 </el-option>
             </el-select>
            </div>
 
            <div class="edit-holder">
            <el-select class="addUser--select edit-select" v-model="userDetails.status" placeholder="Status">
-               <el-option v-for="status in statuses" :key="status.status_value" :label="status.status_name" :value="status.status_value">
+               <el-option v-for="status in statuses" :key="status.status" :label="status.status_label" :value="status.status">
                </el-option>
            </el-select>
           </div>
@@ -63,22 +63,22 @@ export default {
   name:'EditUser',
   data() {
       return {
-          departments: [{
-              dept_value: '1',
-              label: 'Department1'
-          }, {
-             dept_value: '2',
-             label: 'Department2'
-          }, {
-             dept_value: '3',
-            label: 'Department3'
-          }],
+          // departments: [{
+          //     dept_value: '1',
+          //     label: 'Department1'
+          // }, {
+          //    dept_value: '2',
+          //    label: 'Department2'
+          // }, {
+          //    dept_value: '3',
+          //   label: 'Department3'
+          // }],
           statuses: [{
-              status_value: '1',
-              status_name: 'Active'
+              status: '1',
+              status_label :'Active'
           }, {
-            status_value: '2',
-            status_name: 'Deactivate'
+             status: '2',
+             status_label: 'Deactivated'
           }],
           types: [{
               type_value: '1',
@@ -87,9 +87,6 @@ export default {
             type_value: '2',
             type_name: 'Admin'
           }],
-          dept_value: '',
-          status_value: '',
-          type_value: '',
           userDetails: {}
 
 
@@ -97,13 +94,21 @@ export default {
   },
   mounted(){
     let cop_user_id = this.$route.params.id;
-
+    // let raw_user_details = this.userData.filter(user => user.cop_user_id == cop_user_id)[0];
+    // if(raw_user_details.status == '1'){
+    //   raw_user_details['status_label'] = 'Active';
+    // }
+    // else{
+    //   raw_user_details['status_label'] = 'Deactivated';
+    // }
     this.userDetails = this.userData.filter(user => user.cop_user_id == cop_user_id)[0];
+    console.log(userDetails);
 
   },
   computed : {
       ...mapGetters({
           userData: '$_admin/getUsersList',
+          departments: '$_admin/getDepartmentsList'
         }),
   },
 
@@ -114,14 +119,14 @@ export default {
     update_edit: function ()
     {
       let payload = {};
-        payload.cop_user_id = '';
-        payload.user_name = '';
-        payload.user_email = '';
-        payload.user_phone = '';
-        payload.department_id = this.dept_value;
-        payload.user_type = this.type_value;
-        payload.email = '';
-        payload.status = this.status_value;
+        payload.cop_user_id =this.userDetails.cop_user_id;
+        payload.user_name = this.userDetails.name;
+        // payload.user_email = this.userDetails.email;
+        payload.user_phone = this.userDetails.phone;
+        payload.department_id = this.userDetails.department_id;
+        payload.user_type = this.userDetails.type;
+        payload.user_email = this.userDetails.email;
+        payload.status = this.userDetails.status;
       this.requestEditUserAdmin(payload).then(response => {
          console.log("User Details Updated!")
          console.log(response);
