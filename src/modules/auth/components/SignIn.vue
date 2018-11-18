@@ -80,7 +80,7 @@ export default {
           "endpoint":"sign_in/"
         }
         this.requestSignIn(full_payload).then(response => {
-           
+
            console.log(response);
 
            if(response.status == true){
@@ -95,14 +95,20 @@ export default {
              //this.$ls.set('_sessionLocalSnack', session_data);
 
              this.$router.push('/orders');
-        
+
            } else {
-             //failed to login 
+             //failed to login
              //show some sort of error
+             this.$store.commit('setNotificationStatus', true);
               console.warn('login failed');
-              
+
+              let message = "Login Failed";
+              let level = 2;
+              let notification = {"title":"Login", "level":level, "message":message};
+              this.$store.commit('setNotification', notification);
+
            }
-           
+
         }, error => {
             console.error("Check Internet Connection")
             console.log(error);

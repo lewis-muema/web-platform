@@ -40,20 +40,28 @@ export default {
       user_phone: ''
     }
   },
+  mounted (){
+
+      let session = this.$store.getters.getSession;
+      this.user_name =session[session.default]['user_name'];
+      this.user_email =session[session.default]['user_email'];
+      this.user_phone =session[session.default]['user_phone'];
+  },
   methods:{
      ...mapActions({
         requestPersonalInfo :'$_user/requestPersonalInfo',
     }),
     save_personal: function ()
     {  let session = this.$store.getters.getSession;
+       console.log(session);
 
        if (session.default == 'biz') {
         console.log("Cop user found");
         let values = {
           "cop_user_id": session[session.default]['user_id'],
-          "user_name": session[session.default]['user_name'],
-          "user_email": session[session.default]['user_email'],
-          "user_phone": session[session.default]['user_phone'],
+          "user_name": this.user_name,
+          "user_email": this.user_email,
+          "user_phone": this.user_phone
         };
 
         let full_payload = {

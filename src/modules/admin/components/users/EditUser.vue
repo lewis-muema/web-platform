@@ -94,14 +94,14 @@ export default {
   },
   mounted(){
     let cop_user_id = this.$route.params.id;
-    let raw_user_details = this.userData.filter(user => user.cop_user_id == cop_user_id)[0];
-    if(raw_user_details.status == '1'){
-      raw_user_details['status_label'] = 'Active';
-    }
-    else{
-      raw_user_details['status_label'] = 'Deactivated';
-    }
-    this.userDetails = raw_user_details;
+    // let raw_user_details = this.userData.filter(user => user.cop_user_id == cop_user_id)[0];
+    // if(raw_user_details.status == '1'){
+    //   raw_user_details['status_label'] = 'Active';
+    // }
+    // else{
+    //   raw_user_details['status_label'] = 'Deactivated';
+    // }
+    this.userDetails = this.userData.filter(user => user.cop_user_id == cop_user_id)[0];
     console.log(userDetails);
 
   },

@@ -61,14 +61,14 @@ export default {
           console.log("Password match");
       let session = this.$store.getters.getSession;
 
-      if (sesssion['biz']['cop_id'] >0 ) {
+      if (session['biz']['cop_id'] >0 ) {
         console.log("Cop user found");
 
         let values = {
           "cop_user_id": session[session.default]['user_id'],
           "old_password": this.old_password,
           "new_password": this.new_password,
-          "confirm_password": this.confirm_password,
+          "password": this.confirm_password,
         };
 
 
@@ -78,13 +78,7 @@ export default {
           "app":"NODE_PRIVATE_API",
           "endpoint":"update_user"
         }
-        // this.requestChangePassword(payload).then(response => {
-        //    console.log("Cop User Password Updated successfully")
-        //    console.log(response);
-        // }, error => {
-        //     console.error("Check Internet Connection")
-        //     console.log(error);
-        // });
+
         this.requestChangePassword(full_payload).then(response => {
           if(response.status == true){
 
@@ -101,14 +95,14 @@ export default {
         });
 
       }
-      else if (sesssion['biz']['cop_id'] < 0) {
+      else if (session['peer']['user_id'] > 0) {
         console.log("Peer user found");
 
         let values = {
           "user_id": session[session.default]['user_id'],
           "old_password": this.old_password,
-          "new_password": this.new_password,
-          "confirm_password": this.confirm_password,
+          "password": this.new_password,
+          "password": this.confirm_password,
         };
 
         let full_payload = {
@@ -118,13 +112,6 @@ export default {
           "endpoint":"update_user"
         }
 
-        // this.requestChangePassword(payload).then(response => {
-        //    console.log("Password Updated successfully")
-        //    console.log(response);
-        // }, error => {
-        //     console.error("Check Internet Connection")
-        //     console.log(error);
-        // });
         this.requestChangePassword(full_payload).then(response => {
           if(response.status == true){
 
