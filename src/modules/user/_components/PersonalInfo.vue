@@ -45,14 +45,16 @@ export default {
         requestPersonalInfo :'$_user/requestPersonalInfo',
     }),
     save_personal: function ()
-    { if (this.session_data.cop_id > 0) {
-        console.log("Cop user found");
-        let values = {};
+    {  let session = this.$store.getters.getSession;
 
-        values.cop_user_id = this.session_data.cop_user_id;
-        values.user_name = this.user_name;
-        values.user_email = this.user_email;
-        values.user_phone = this.user_phone;
+       if (session.default == 'biz') {
+        console.log("Cop user found");
+        let values = {
+          "cop_user_id": session[session.default]['user_id'],
+          "user_name": session[session.default]['user_name'],
+          "user_email": session[session.default]['user_email'],
+          "user_phone": session[session.default]['user_phone'],
+        };
 
         let full_payload = {
           "values" : values,
@@ -76,14 +78,14 @@ export default {
             console.log(error);
         });
     }
-    else if(this.session_data.cop_id == 0) {
+    else if(session.default == 'peer') {
        console.log("Peer Account Found");
-       let values = {};
-
-       values.user_id = this.session_data.user_id;
-       values.user_name = this.user_name;
-       values.user_email = this.user_email;
-       values.user_phone = this.user_phone;
+       let values = {
+         "user_id": session[session.default]['user_id'],
+         "user_name": session[session.default]['user_name'],
+         "user_email": session[session.default]['user_email'],
+         "user_phone": session[session.default]['user_phone'],
+       };
 
        let full_payload = {
          "values" : values,
