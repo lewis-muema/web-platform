@@ -7,6 +7,7 @@
                 <button class="button-primary section--filter-action" @click="addDepartment">Add Department</button>
             </div>
         </div>
+        <!--{{departments_data}}-->
         <el-table
                 :data="departments_data"
                 style="width: 100%"
@@ -22,14 +23,14 @@
             >
             </el-table-column>
             <el-table-column
-                    label="Approver"
+                    label="Admin"
                     prop="department_admin">
             </el-table-column>
             <el-table-column
                     label="Action"
             >
                 <template slot-scope="scope">
-                    <a @click="edit_department">Edit</a>
+                    <a @click="edit_department(departments_data[scope.$index]['cop_user_id'])">Edit</a>
                 </template>
             </el-table-column>
 
@@ -67,7 +68,7 @@
                 "values" : deptsList_payload,
                 "vm":this,
                 "app":"NODE_PRIVATE_API",
-                "endpoint":"cop_departments/"
+                "endpoint":"cop_departments"
             }
             this.$store.dispatch("$_admin/requestDepartmentsList", users_full_payload).then(response => {
                 console.log(response);
@@ -98,9 +99,6 @@
                 //TODO:route to add department
                 this.$router.push('/admin/department/add_department');
             },
-            edit_department() {
-                this.$router.push('/admin/department/edit_department');
-            },
             changeSize(val) {
                 this.pagination_page = 1;
                 this.pagination_limit = val;
@@ -110,7 +108,11 @@
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
                 this.fetchedDepartmentsData.slice(from, to);
-            }
+            },
+            edit_department(cop_user_id) {
+                let cop_user_details = cop_user_id;
+                this.$router.push('/admin/department/edit_department/'+cop_user_id);
+            },
         }
     }
 </script>
