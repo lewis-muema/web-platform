@@ -31,11 +31,13 @@
         </div>
 
       </div>
-      <div class="homeview--row homeview--row__more-destinations" v-if="get_max_way_points > get_waypoints">
+      <!-- <div class="homeview--row homeview--row__more-destinations">
            <font-awesome-icon icon="plus" size="xs" class="sendy-blue homeview--row__font-awesome" width="10px" />
         <a href="#" class="homeview--add" @click="newDestination()">Add</a>
+      </div> -->
+      <div v-if="get_order_path.length > 1">
+          <vendor-view ></vendor-view>
       </div>
-      <vendor-view></vendor-view>
       </div>
 
   </div>
@@ -43,8 +45,7 @@
 
 <script>
 import NoSSR from 'vue-no-ssr';
-import { mapGetters } from 'vuex';
-import { mapMutations } from 'vuex';
+import { mapGetters,mapMutations,mapActions } from 'vuex';
 import home_store from './_store';
 import VendorComponent from './_components/VendorComponent.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -83,6 +84,9 @@ export default {
       // add_waypoint : '$_orders/$_home/add_waypoint',
       // remove_waypoint : '$_orders/$_home/remove_waypoint'
     }),
+    ...mapActions({
+        requestPriceQuote: '$_orders/$_home/requestPriceQuote',
+    }),
     clearLocation(index){
         if(index == 0){
             //set pickup cleared
@@ -116,6 +120,9 @@ export default {
         };
         this.setMarker(place.geometry.location.lat(),place.geometry.location.lng(),index );
         this.set_order_path(path_payload);
+        if(this.get_order_path.length > 1){
+            this.doPriceRequest();
+        }
     },
     setMarker(lat,lng, index){
         let mark = {
@@ -133,6 +140,64 @@ export default {
     },
     newDestination(){
 
+    },
+    getOrderDetailsFromSessionData(){
+
+    },
+    createPriceRequestObject(){
+        let obj = {"path":this.get_order_path};
+        let infor = {
+          "email": "ian@sendy.co.ke",
+          "client_mode": "0",
+          "cop_id": 0,
+          "name": "Evanson",
+          "phone": "0700177140",
+          "date_time": "2018-11-18 22:07:07",
+          "schedule_status": false,
+          "schedule_time": "2018-11-18 22:07:13",
+          "vendor_type": 1,
+          "group_id": 1,
+          "client_type": "corporate",
+          "rider_dist": 0,
+          "no_charge_status": false,
+          "is_re_request": false,
+          "rider_phone": "",
+          "insurance": "0",
+          "type": "coordinates",
+          "promotion_status": false,
+          "destination_paid_status": false
+        }
+        let json_decoded_path = JSON.stringify(obj);
+        infor.path = json_decoded_path;
+        let final_obj = {"values":infor};
+        console.log('infor'.infor);
+        return final_obj;
+    },
+    doPriceRequest(){
+        let payload = {
+          "values" : this.createPriceRequestObject(),
+          "vm":this,
+          "app":"PRIVATE_API",
+          "endpoint":"pricing_multiple"
+        };
+
+        this.requestPriceQuote(payload).then(response => {
+
+           console.log(response);
+
+           if(response.status == true){
+
+
+           } else {
+
+              console.warn('login failed');
+
+           }
+
+        }, error => {
+            console.error("Check Internet Connection")
+            console.log(error);
+        });
     },
     scroll_to_bottom(){
         let container = this.$el.querySelector("#homeview-form");
