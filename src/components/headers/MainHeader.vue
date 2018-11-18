@@ -63,6 +63,12 @@ export default {
       this.eraseCookie("_sessionSnack");
       this.$router.push({ name: "sign_in" });
     },
+    data: function () {
+        return {
+            admin_user: false,
+            logged_user: "Friend"
+        }
+    },
     eraseCookie(name) {
       document.cookie = name + "=; Max-Age=-99999999;";
     },
