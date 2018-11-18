@@ -1,11 +1,4 @@
 export default {
-    add_waypoint(state) {
-      state.waypoints++
-    },
-    // TO DO: replace with locations
-    remove_waypoint(state) {
-      state.waypoints--
-    },
     set_price_request_object(state, val){
       state.price_request_object=val;
     },
@@ -14,12 +7,8 @@ export default {
       state.active_package_class=val;
     },
 
-    set_max_way_points(state, val){
-      state.max_way_points=val;
-    },
-
-    set_order_locations(state, val) {
-      state.order_locations=val;
+    set_max_destinations(state, val){
+      state.max_destinations=val;
     },
 
     set_active_vendor_name(state, val){
@@ -33,5 +22,14 @@ export default {
     },
     set_order_notes(state, val) {
       state.order_notes=val;
+    },
+    set_order_path(state, val) {
+      state.order_path.splice(val.index,0,val.path);
+    },
+    unset_order_path(state, index) {
+      state.order_path.splice(index,1);
+    },
+    set_extra_destinations(state, val) {
+      state.extra_destinations = val;
     },
 };
