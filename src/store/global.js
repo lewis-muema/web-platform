@@ -19,7 +19,8 @@ if (process.browser) {
 
 const state = {
   session: {},
-  ENV:{}
+  ENV:{},
+  running_balance: 0
 };
 
 export default {
