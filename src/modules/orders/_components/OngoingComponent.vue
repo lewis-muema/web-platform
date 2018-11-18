@@ -2,7 +2,7 @@
   <div class="ongoing--outer" v-if="!this.loading">
     <div class="ongoing--count" @click="toggle_ongoing()">
       <span>{{num_ongoing}} ongoing orders</span>
-      <font-awesome-icon icon="caret-up" :class="classObject" width="15px" />
+      <font-awesome-icon icon="chevron-up" :class="classObject" width="15px" />
     </div>
     <transition name="fade">
       <div class="ongoing--column" v-if="show">
@@ -10,17 +10,17 @@
           <div class="ongoing--card" @click="track(order.order_no)" :class="{ active: active_card(order.order_no) }">
             <div class="ongoing--card-location">
               <div class="ongoing--card-padded">
-                From : <span>{{order.from_name}}</span>
+                <span>{{order.from_name}}</span>
               </div>
               <div class="">
-                To : <span>{{order.to_name}}</span>
+                <span>{{order.to_name}}</span>
               </div>
             </div>
             <div class="ongoing--card-status">
               <div class="">
                 {{getStatus(order)}}
               </div>
-              <div class="">
+              <div class=""><i class="el-icon-time"></i>
                 {{date_format(order.date_time)}}
               </div>
             </div>
@@ -35,8 +35,8 @@
 import { mapGetters } from 'vuex';
 import { mapMutations } from 'vuex'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCaretUp } from '@fortawesome/free-solid-svg-icons'
-library.add(faCaretUp)
+import { faChevronUp } from '@fortawesome/free-solid-svg-icons'
+library.add(faChevronUp)
 
 
 export default {
@@ -72,12 +72,12 @@ export default {
       var from_now = this.moment( date ).fromNow();
 
       return this.moment( date ).calendar( null, {
-          lastWeek: 'MMMM Do, hh:mm a',
+          lastWeek: 'MMM-D hh:mm a',
           sameDay:  '[Today] hh:mm a',
           nextDay:  '[Tomorrow] hh:mm a',
-          nextWeek: 'dddd',
+          nextWeek: 'ddd',
           sameElse: function () {
-              return "MMMM Do, hh:mm a";
+              return "MMM D, hh:mm a";
           }
       });
     },
@@ -155,22 +155,27 @@ export default {
 }
 .ongoing--count
 {
-  display: flex;
-  justify-content: space-between;
-  background-color: rgba(255,255,255,0.5);
-  color: #1782c5;
-  padding: 5px;
-  font-size: 13px;
-  cursor: pointer;
-  border: 1px solid #1782c5;
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    color: #1782c5;
+    padding: 9px 18px 9px 60px;
+    font-size: 13px;
+    cursor: pointer;
+    border: 0px solid #1782c5;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+    /* text-align: center; */
 }
 .ongoing--card
 {
   font-size: 13px;
-  margin-top: 15px;
-  border: 1px solid #1782C5;
-  cursor: pointer;
-  transition: all .5s ease-in-out;
+    margin-top: 15px;
+    border: 0px solid #1782C5;
+    cursor: pointer;
+    transition: all .5s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+    border-radius: 2px !important;
 }
 .ongoing--card:hover,.ongoing--card.active
 {
@@ -178,17 +183,21 @@ export default {
 }
 .ongoing--card-location
 {
-  padding: 10px;
-  background-color: #fff;
+    padding: 25px 25px 11px 25px;
+    background-color: #fff;
+    border-radius: 3px 3px 0px 0px;
+    font-size: 13px;
+    line-height: 17px;
 }
 .ongoing--card-status
 {
   display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  background-color: #1782c5;
-  color: #fff;
-  transition: all .5s ease-in-out;
+justify-content: space-between;
+padding: 14px;
+background-color: #1782c5;
+color: #fff;
+transition: all .5s ease-in-out;
+border-radius: 0px 0px 3px 3px;
 }
 .ongoing--card:hover .ongoing--card-status, .ongoing--card.active .ongoing--card-status
 {
