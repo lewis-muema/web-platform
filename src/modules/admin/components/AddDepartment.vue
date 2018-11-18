@@ -6,6 +6,9 @@
         </div>
         <div class="admin-edit-inner">
             <div class="admin-edit-details">
+                <a v-on:click="go_back">
+                    <div class="add-back-arrow">Back</div>
+                </a>
                 Add Department
             </div>
 
@@ -19,7 +22,7 @@
                 </div>
 
                 <div class="sign-holder">
-                    <input class="button-primary" type="submit" value="Add Department" v-on:click="add_department" >
+                    <input class="button-primary" type="submit" value="Add" v-on:click="add_department" >
                 </div>
             </div>
         </div>
@@ -38,10 +41,10 @@
         data() {
             return {
                 empty_departmens_state: 'Adding Department',
-                cop_id: 285,
-                department_name: "Tech Department",
-                department_admin: "Jane Doe",
-                cop_user_id: 12
+                cop_id,
+                department_name,
+                department_admin,
+                cop_user_id
             }
         },
         methods:{
@@ -69,6 +72,9 @@
                     console.log(error);
                 });
             },
+            go_back:function () {
+                this.$router.push('/admin/department');
+            }
         },
 
     }
@@ -115,5 +121,9 @@
     }
     .error {
         justify-content: center;
+    }
+    add-back-arrow{
+        position: relative !important;
+        margin-left: -115px !important;
     }
 </style>

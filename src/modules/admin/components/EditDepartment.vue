@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="sign-holder">
-                    <input class="button-primary" type="submit" value="Update Details" id="update_department"
+                    <input class="button-primary" type="submit" value="Update" id="update_department"
                            v-on:click="update_department">
                 </div>
             </div>
