@@ -32,48 +32,103 @@
 </template>
 
 <script>
-import {mapGetters} from 'Vuex'
+import { mapGetters } from "Vuex";
 export default {
-    name : 'main-header',
-    mounted(){
-        let session = this.$store.getters.getSession;
-        let cop_id = 0;
-        if(session.default == 'biz'){
-            cop_id = session[session.default]['cop_id'];
-            this.admin_user = true
-            this.logged_user = session[session.default]['cop_name']
-        }
-        else {
-            let user_id = 0;
-            user_id = session[session.default]['user_id'];
-            this.admin_user = false
-            this.logged_user = session[session.default]['user_name']
-        }
-    },
-    data: function () {
-        return {
-            admin_user: false,
-            logged_user: ""
-        }
-    },
-    methods : {
-        logOut(){
-            console.log('attempt to log out');
-            this.$store.commit('setSession', {});
-            this.eraseCookie('_sessionSnack');
-            this.$router.push({name:'sign_in'});
-        },
-        eraseCookie(name){
-            document.cookie = name+'=; Max-Age=-99999999;';
-        },
-        linkRoute(route){
-            console.log('attempt route'+route);
-            this.$router.push(route);
-        }
+  name: "main-header",
+  data: function() {
+    return {
+      admin_user: false,
+      logged_user: ""
+    };
+  },
+  mounted() {
+    let session = this.$store.getters.getSession;
+    let cop_id = 0;
+
+    if (session.default == "biz") {
+      cop_id = session[session.default]["cop_id"];
+      this.admin_user = true;
+      this.logged_user = session[session.default]["cop_name"];
+    } else {
+      let user_id = 0;
+      user_id = session[session.default]["user_id"];
+      this.admin_user = false;
+      this.logged_user = session[session.default]["user_name"];
     }
-}
+  },
+  methods: {
+    logOut() {
+      console.log("attempt to log out");
+      this.$store.commit("setSession", {});
+      this.eraseCookie("_sessionSnack");
+      this.$router.push({ name: "sign_in" });
+    },
+    eraseCookie(name) {
+      document.cookie = name + "=; Max-Age=-99999999;";
+    },
+    linkRoute(route) {
+      console.log("attempt route" + route);
+      this.$router.push(route);
+    },
+    showNotification() {
+      console.log("somebody is trying to show a notification");
+
+      let notification = this.$store.getters.getNotification;
+
+      console.log(notification);
+      if (notification.level == 1) {
+        //success
+        this.$notify({
+          type: "success",
+          title: notification.title,
+          message: notification.message,
+          offset: 20
+        });
+      } else if (notification.level == 2) {
+        //warning
+        this.$notify({
+          title: notification.title,
+          message: notification.message,
+          type: "warning",
+          offset: 20
+        });
+      } else if (notification.level == 3) {
+        //error
+        title: notification.title,
+          this.$notify({
+            type: "error",
+            message: notification.message,
+            offset: 20
+          });
+      } else {
+        //default
+        this.$notify({
+          title: notification.title,
+          message: notification.message
+        });
+        offset: 20;
+        //reset notification status
+      }
+      this.$store.commit("setNotificationStatus", false);
+    }
+  },
+  computed: {
+    notification_status() {
+      return this.$store.getters.getNotificationStatus;
+    }
+  },
+  watch: {
+    notification_status(val, oldVal) {
+      console.log(val);
+
+      if (val == true) {
+        this.showNotification();
+      }
+    }
+  }
+};
 </script>
 
 <style lang="css">
-    @import '../../assets/styles/internal_header.css';
+@import "../../assets/styles/internal_header.css";
 </style>
