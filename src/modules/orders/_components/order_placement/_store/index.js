@@ -11,7 +11,8 @@ const state = {
   max_destinations: 9,
   order_path:[],
   schedule_time:'',
-  order_notes:''
+  order_notes:'',
+  extra_destinations:0
 }
 
 export default {

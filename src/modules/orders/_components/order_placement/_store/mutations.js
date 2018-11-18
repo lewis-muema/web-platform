@@ -29,4 +29,7 @@ export default {
     unset_order_path(state, index) {
       state.order_path.splice(index,1);
     },
+    set_extra_destinations(state, val) {
+      state.extra_destinations = val;
+    },
 };
