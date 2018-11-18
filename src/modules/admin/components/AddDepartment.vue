@@ -33,10 +33,6 @@
     export default {
         name:'AddDepartment',
         mounted() {
-            // let session_data = this.$store.getters.getSession;
-            // let usersList_payload = {
-            //     "cop_id": session_data.cop_id,
-            // }
             let session = this.$store.getters.getSession;
             let cop_id = 0;
             if(session.default == 'biz'){
@@ -89,19 +85,32 @@
                     "cop_user_id": this.filterData.user
                 }
 
-                console.log(newDept_payload)
+                // console.log(newDept_payload)
                 let full_payload = {
                     "values" : newDept_payload,
                     "vm":this,
                     "app":"NODE_PRIVATE_API",
                     "endpoint":"cop_departments_add"
                 }
+                this.$store.commit('setNotificationStatus', true); //activate notification
+                let level = 0; //this will show the white one
                 this.$store.dispatch("$_admin/addNewDepartment", full_payload).then(response => {
                     console.log("added");
                     console.log(response);
+                    let message = response.data.msg;
+                    if(response.data.status == false){
+                        level = 2; //warning //use 3 to show the red one
+                    } else {
+                        level = 1; //success
+                    }
+                    let notification = {"title":"Add Department", "level":level, "message":message}; //notification object
+                    this.$store.commit('setNotification', notification);
                     // this.$router.push('/admin/department');
                 }, error => {
                     console.log(error);
+                    level = 2;
+                    let notification = {"title":"Edit Department", "level":level, "message":"An error occurred."}; //notification object
+                    this.$store.commit('setNotification', notification);
                 });
             },
             go_back:function () {
