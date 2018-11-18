@@ -8,20 +8,20 @@
         <div class="header--item__right">
             <nav>
                <ul>
-                   <li class="nav--menu-inactive"><a>  0709 779 779</a></li>
+                   <li class="nav--menu-inactive"><a>0709 779 779</a></li>
                    <li class="nav--menu-inactive"><a>Hi Faith</a></li>
                     <li class="nav--menu-dropdown">
-                       <a>Menu</a>
+                       <a class="nav--menu-dropdown-link">Menu</a>
                        <ul class="nav--menu-dropdown-list">
                             <li><a  @click="linkRoute('/orders')">New Delivery</a></li>
                             <li><a  @click="linkRoute('/payment')">Payment</a></li>
-                            <li><a  @click="linkRoute('/transactions/order_history')">Order History</a></li>
-                            <li><a  @click="linkRoute('/user/free_deliveries')">Free Deliveries</a></li>
-                            <li><a  @click="linkRoute('/payment/promo')">Promotions</a></li>
-                            <li><a  @click="linkRoute('/admin/users')">Admin Settings</a></li>
-                            <li><a  @click="linkRoute('/analytics')">Analytics</a></li>
+                            <li><a  @click="linkRoute('/transactions/order_history')">Orders</a></li>
+                            <li style="display:none;"><a  @click="linkRoute('/user/free_deliveries')">Free Deliveries</a></li>
+                            <li style="display:none;"><a  @click="linkRoute('/payment/promo')">Promotions</a></li>
+                            <li><a  @click="linkRoute('/admin/users')">Settings</a></li>
+                            <li><a  @click="linkRoute('/analytics/weekly')">Analytics</a></li>
                             <li><a  @click="linkRoute('/user/profile/personal_information')">Profile</a></li>
-                            <li class="menu--last-child"><a @click="logOut">Log Out</a></li>
+                            <li class="menu--last-child"><a @click="logOut" class="menu--last-child-link">Log Out</a></li>
                        </ul>
                 </li>
                </ul>
@@ -43,7 +43,7 @@ export default {
             this.$router.push({name:'sign_in'});
         },
         eraseCookie(name){
-            document.cookie = name+'=; Max-Age=-99999999;'; 
+            document.cookie = name+'=; Max-Age=-99999999;';
         },
         linkRoute(route){
             console.log('attempt route'+route);
