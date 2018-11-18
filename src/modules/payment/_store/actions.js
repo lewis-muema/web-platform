@@ -54,14 +54,7 @@ export default {
         return new Promise((resolve, reject) => {
             payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
                 console.log('in store dispatch to global store')
-                if(response.data.status == true){
-                    //not sure if we need to  commit anything
-
-                    resolve(response.data);
-
-                 } else {
-                     reject(response.data);
-                 }
+                resolve(response);
              }, error => {
                 reject(error);
                 console.log('failed to dispatch to global store')
@@ -72,21 +65,11 @@ export default {
     requestRunningBalance({commit}, payload) {
         return new Promise((resolve, reject) => {
             payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
-                console.log('in store dispatch to global store')
-                if(response.data.status == true){
-                    //commit the value to the store
-                    
-
-                    resolve(response.data);
-
-                 } else {
-                     reject(response.data);
-                 }
-             }, error => {
+                resolve(response);
+            }, error => {
                 reject(error);
                 console.log('failed to dispatch to global store')
              });
-
         })
     }
 

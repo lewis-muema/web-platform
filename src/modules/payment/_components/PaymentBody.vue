@@ -37,8 +37,8 @@ export default {
 .paymentbody--input-button
 {
   margin-top: 20px;
-  text-transform: uppercase;
-  font-size: medium;
+  text-transform: capitalize;
+  font-size: 14px;
   letter-spacing: 1.1px;
   width: 100%;
   height: 45px;
