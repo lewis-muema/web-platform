@@ -123,3 +123,7 @@
 .homeview--input-bundler__destination-short-input{
     margin-right: unset;
 }
+
+.home-view-notes-wrapper {
+    margin-bottom: 22px;
+}

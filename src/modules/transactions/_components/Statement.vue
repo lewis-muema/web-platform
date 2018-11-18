@@ -202,11 +202,11 @@ export default {
           this.$store.dispatch("$_transactions/requestStatement", full_payload).then(response => {
              console.log("Got some data, now lets show something in this component")
              console.log(response);
-             this.empty_orders_state = "Order Statement Not Found";
+             this.empty_statement_state = "Order Statement Not Found";
           }, error => {
               console.error("Got nothing from server. Prompt user to check internet connection and try again")
               console.log(error);
-              this.empty_orders_state = "Order Statement Failed to Fetch";
+              this.empty_statement_state = "Order Statement Failed to Fetch";
           });
       }
 

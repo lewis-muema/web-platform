@@ -4,15 +4,17 @@
         </div>
         <div class="home-view-actions">
             <div class="home-view-actions--items" :class="get_current_active_order_option_class('payment')" @click="do_set_active_order_option('payment')">
-                <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-actions--items__img" width="10px"  />
-                <span class="home-view-actions--items__span" >Choose Payment</span>
+                <i class="el-icon-goods"></i>
+                <span class="home-view-actions--items__span" >Payment</span>
             </div>
             <div class="home-view-actions--items" :class="get_current_active_order_option_class('note')" @click="do_set_active_order_option('note')">
-                <font-awesome-icon icon="pen" size="xs" class="home-view-actions--items__img" width="10px"  />
-                <span class="home-view-actions--items__span">Add Note</span>
+
+                <i class="el-icon-edit-outline"></i>
+                <span class="home-view-actions--items__span">Note</span>
             </div>
             <div class="home-view-actions--items" :class="get_current_active_order_option_class('schedule')" @click="do_set_active_order_option('schedule')">
-                <font-awesome-icon icon="clock" size="xs" class="home-view-actions--items__img" width="10px"  />
+
+                <i class="el-icon-time"></i>
                 <span class="home-view-actions--items__span">Schedule</span>
             </div>
         </div>
@@ -23,21 +25,28 @@
 
             </div>
             <div class="home-view-notes-wrapper">
-                <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__balance">
-                    Your balance is Ksh 2,000.
-                </div>
 
+                <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
+                    <div class="home-view-notes-wrapper--item__option">
+                        <!-- <font-awesome-icon icon="star" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
+                        <div class="home-view-notes-wrapper--item__option-div">
+                          Your balance is Ksh 2,000.
+                        </div>
+                    </div>
+
+                </div>
+                <div class="home-view--seperator home-view--seperator__mini"></div>
 
                 <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
-                            Payment on delivery
+                            <el-checkbox v-model="payment_method_1" label="Payment on delivery"></el-radio>
                         </div>
                     </div>
                     <div class="home-view-notes-wrapper--item__value">
                         <!-- <input type="checkbox" name="" value=""> -->
-                        <el-radio v-model="payment_method" label="1"></el-radio>
+
                     </div>
                 </div>
                 <div class="home-view--seperator home-view--seperator__mini">
@@ -46,12 +55,12 @@
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
-                            Mpesa
+                            <el-checkbox v-model="payment_method_2" label="M-Pesa"></el-radio>
                         </div>
                     </div>
                     <div class="home-view-notes-wrapper--item__value">
                         <!-- <input type="checkbox" name="" value=""> -->
-                        <el-radio v-model="payment_method" label="2"></el-radio>
+
                     </div>
                 </div>
                 <div class="home-view--seperator home-view--seperator__mini">
@@ -60,16 +69,14 @@
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="star" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
-                            Enter a promo code
+                            Redeem promo code
                         </div>
                     </div>
-                    <div class="home-view-notes-wrapper--item__value">
-                        <el-radio v-model="payment_method" label="3"></el-radio>
-                        <!-- <input type="checkbox" name="" value=""> -->
-                    </div>
+
                 </div>
-                <div class="home-view--seperator">
-                </div>
+
+            </div>
+            <div class="home-view--seperator">
             </div>
             <div class="">
 
@@ -178,7 +185,7 @@ export default {
 
 <style lang="css">
 .home-view-actions--note{
-    margin-top: 20px;
+    margin-top: 15px;
 }
 .home-view-actions--items:hover{
     color: #1782c5;
@@ -186,13 +193,17 @@ export default {
 .home-view-notes-wrapper--item,.home-view-notes-wrapper--item__option-div,.home-view-notes-wrapper--item__option-svg, .home-view-notes-wrapper--item__option{
     display: flex;
 }
-.class="home-view-notes-wrapper--item__option-div"{
-    padding-left: 10px;
+.home-view-notes-wrapper--item__option-div{
+    padding-left: 29px;
+    color: #555555ba;
 }
 .home-view-notes-wrapper--item__row{
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
+  align-items: center;
+justify-content: space-between;
+margin-bottom: 8px;
+margin-top: -11px;
+font-size: 13px;
+padding-left: 29px;
 }
 .home-view-notes-wrapper--item{
 
@@ -209,13 +220,16 @@ export default {
     align-self: flex-end;
     flex-direction: row-reverse;
     justify-content: center;
+    padding-right: 40px;
 }
 .home-view-notes-wrapper--item__balance{
-    margin-bottom: 20px;
+  margin-bottom: 14px;
+  font-size: 14px;
 }
 .home-view--seperator__mini{
-    margin-left: unset !important;
-    margin-right: unset !important;
+  margin-left: 30px !important;
+  margin-right: 30px !important;
+  border-top: 1px solid #66666614 !important;
 }
 .home-view-notes-wrapper--item__option-svg{
     margin-right: 10px;

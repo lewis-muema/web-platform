@@ -5,16 +5,16 @@
           <div class="section--filter-input-wrap">
               <el-date-picker class="section--filter-input" type="date" name="from_date" v-model="filterData.from_date" placeholder="From"/>
               <el-date-picker class="section--filter-input" type="date" name="to_date" v-model="filterData.to_date" placeholder="To"/>
-              
+
               <button type="button" @click="filterPaymentData":class="active_filter?'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'">Search</button>
-    
+
         </div>
         <div class="section--filter-action-wrap">
           <button type="button" class="button-primary section--filter-action">Pay</button>
-          
+
         </div>
     </div>
-  
+
     <el-table
      :data="payment_data"
      style="width: 100%"
@@ -58,7 +58,7 @@
      <div class="section--pagination-wrap">
         <el-pagination
             layout="total, sizes, prev, pager, next, jumper"
-            :total="paymentData.length"
+            :total="payment_total"
             :page-size="pagination_limit"
             :current-page.sync="pagination_page"
             @current-change="changePage"
@@ -98,8 +98,8 @@ export default {
 
       let session_data = this.$store.getters.getSession;
       let payment_payload = {
-        "cop_id": session_data.cop_id,
-        "user_type":session_data.user_type
+        "cop_id": 669,
+        "user_type":2
       }
 
       let full_payload = {
@@ -110,10 +110,10 @@ export default {
       }
       this.$store.dispatch("$_transactions/requestPayments", full_payload).then(response => {
           console.log(response);
-          this.empty_orders_state = "Payments Not Found";
+          this.empty_payments_state = "Payments Not Found";
       }, error => {
           console.log(error);
-          this.empty_orders_state = "Payments Failed to Fetch";
+          this.empty_payments_state = "Payments Failed to Fetch";
       });
   },
   methods: {
@@ -137,18 +137,50 @@ export default {
 
         let from_date = this.filterData.from_date;
         let to_date = this.filterData.to_date;
-        this.filteredPaymentData = this.payment_data;
-        this.filteredPaymentData = this.filteredPaymentData.filter(function (payment) {
-          return moment(payment.date_time).isSameOrAfter(from_date) && moment(payment.date_time).isSameOrBefore(to_date);
-        });
-        this.filterState = true;
-        this.empty_orders_state = "Payments Not Found";
+
+        let payload = {
+          "cop_id": 669,
+          "user_type":2,
+          "from":from_date,
+          "to":to_date
+        };
+
+        from_date = moment(from_date).format('YYYY-MM-DD');
+        to_date = moment(to_date).format('YYYY-MM-DD');
+
+        this.requestPayments(payload);
+
+        // this.filteredPaymentData = this.payment_data;
+        // this.filteredPaymentData = this.filteredPaymentData.filter(function (payment) {
+        //   return moment(payment.date_time).isSameOrAfter(from_date) && moment(payment.date_time).isSameOrBefore(to_date);
+        // });
+        // this.filterState = true;
+        // this.empty_orders_state = "Payments Not Found";
     },
+
+    requestPayments(payload){
+        let full_payload = {
+          "values" : payload,
+          "vm":this,
+          "app":"NODE_PRIVATE_API",
+          "endpoint":"payments"
+        }
+        this.$store.dispatch("$_transactions/requestPayments", full_payload).then(response => {
+           console.log("Got some data, now lets show something in this component")
+           console.log(response);
+           this.empty_payments_state = "Payment Statement Not Found";
+        }, error => {
+            console.error("Got nothing from server. Prompt user to check internet connection and try again")
+            console.log(error);
+            this.empty_payments_state = "Payment Statement Failed to Fetch";
+        });
+    },
+
     formatDate(row, column, cellValue) {
         return moment(row.date_time).format('MMM Do YYYY, h:mm a');
     },
     formatAmount(row, column, cellValue) {
-        let value = (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+        let value = (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         value = value.split(".");
         return value[0];
      },
@@ -160,10 +192,10 @@ export default {
     payment_data() {
       let from = (this.pagination_page - 1) * this.pagination_limit;
       let to = this.pagination_page * this.pagination_limit;
-      
-      if(this.filterState == true){
-        return this.filteredPaymentData.slice(from, to);
-      }
+
+      // if(this.filterState == true){
+      //   return this.filteredPaymentData.slice(from, to);
+      // }
       return this.paymentData.slice(from, to);
     },
     active_filter() {
@@ -171,7 +203,14 @@ export default {
         this.filterState = false;
       }
       return this.filterData.from_date !== '' && this.filterData.to_date !== '';
+    },
+    payment_total() {
+      // if(this.filterState == true){
+      //   return this.filteredData.length;
+      // }
+     return this.paymentData.length;
     }
+
   },
 }
 </script>
