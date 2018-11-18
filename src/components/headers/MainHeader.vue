@@ -53,7 +53,7 @@ export default {
     data: function () {
         return {
             admin_user: false,
-            logged_user: ""
+            logged_user: "Friend"
         }
     },
     methods : {
