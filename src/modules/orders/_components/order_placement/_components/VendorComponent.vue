@@ -20,7 +20,7 @@
                         </div>
                     </div> -->
                     <div class="home-view-vendor-classes--label">
-                        <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in get_price_request_object.economy_price_tiers" :key="index" @click="setActivePackageClass(index)">
+                        <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in get_price_request_object.economy_price_tiers" :key="index" @click="setActivePackageClass(index)" v-if="vendor_class.length > 0">
                             <a class="section__link" :class="get_current_active_package__class(index)">{{index}}</a>
                         </div>
                     </div>
