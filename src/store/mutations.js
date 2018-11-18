@@ -11,7 +11,7 @@ export default {
     setNotification(state, notification) {
         state.notification = notification;
     },
-    setNotificationState(state, notification_status) {
+    setNotificationStatus(state, notification_status) {
         state.notification_status = notification_status;
     }
 };

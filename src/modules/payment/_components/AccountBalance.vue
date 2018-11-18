@@ -15,103 +15,96 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: 'account-balance',
+  name: "account-balance",
   mounted() {
-    this.requestRunningBalance(); 
+    this.requestRB();
   },
-  methods:{
-    ...mapActions([
-      '$_payment/requestRunningBalance',
-    ]),
-    requestRunningBalance(){
+  methods: {
+    ...mapActions(["$_payment/requestRunningBalance"]),
+    requestRB() {
       //this will request from the api and update the store
       let session = this.$store.getters.getSession;
 
       let running_balance_payload = {
-        values:{
+        values: {
           cop_id: session.biz.cop_id,
-          user_phone: session[session.default]['user_phone']
+          user_phone: session[session.default]["user_phone"]
         }
-      }
+      };
 
-       let payload  = {
-          "values" : running_balance_payload,
-          "vm":this,
-          "app":"PRIVATE_API",
-          "endpoint":"running_balance"
-        }
+      let payload = {
+        values: running_balance_payload,
+        vm: this,
+        app: "PRIVATE_API",
+        endpoint: "running_balance"
+      };
 
-        this.$store.dispatch("$_payment/requestRunningBalance", payload).then(response => {
-          if(response.status == 200){
-            console.log('commit running balance to the global store');
-
-            this.$store.commit('setRunningBalance', response.data.running_balance);
+      this.$store.dispatch("$_payment/requestRunningBalance", payload).then(
+        response => {
+          if (response.length > 0) {
+            response = response[0];
+          }
+          if (response.status == 200) {
+            console.log("commit running balance to the global store");
+            this.$store.commit(
+              "setRunningBalance",
+              response.data.running_balance
+            );
           }
           console.log(response);
-           //commit  to the global store here
-
-        }, error => {
+          //commit  to the global store here
+        },
+        error => {
           console.log(error);
-
-        });
-
-
-
+        }
+      );
     }
   },
   computed: {
     //this just gets what is on the store
-    running_balance(){
+    running_balance() {
       return this.$store.getters.getRunningBalance;
     }
   }
-  
-}
+};
 </script>
 
 <style lang="css">
-.payinfo
-{
+.payinfo {
   display: flex;
 }
-.paytitle
-{
+.paytitle {
   display: flex;
   flex: 2;
   align-items: center;
   font-size: 16px;
 }
-.payinfo
-{
+.payinfo {
   display: flex;
   justify-content: space-between;
   flex: 1;
   color: rgb(85, 85, 85);
   font-size: 14px;
 }
-.payinfo--icon
-{
+.payinfo--icon {
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 1;
 }
-.payinfo--icon img
-{
+.payinfo--icon img {
   width: 25px;
 }
-.payinfo--balance
-{
+.payinfo--balance {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   flex: 2;
 }
-.payinfo--balance-el
-{
+.payinfo--balance-el {
   padding: 0px 5px;
 }
 </style>

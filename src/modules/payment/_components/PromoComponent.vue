@@ -4,7 +4,7 @@
       <input type="text" name="sendy_coupon" v-model="promocode_payment_data.sendy_coupon" placeholder="Promo Code" class="input-control paymentbody--input">
     </div>
     <div class="paymentbody--input-wrap">
-      <button type="button" name="button" :class="valid_payment? 'button-primary paymentbody--input-button':'paymentbody--input-button button--primary-inactive'" @click="requestPromoCodePayment">Redeem</button>
+      <button type="button" name="button" :class="valid_payment? 'button-primary paymentbody--input-button':'paymentbody--input-button button--primary-inactive'" @click="requestPromoPayment">Redeem</button>
     </div>
   </div>
 </template>
@@ -29,7 +29,7 @@ export default {
      ...mapActions([
       '$_payment/requestPromoCodePayment',
     ]),
-    requestPromoCodePayment() {
+    requestPromoPayment() {
         let session = this.$store.getters.getSession;
         let cop_id = 0;
         if(session.default == 'biz'){
@@ -54,15 +54,20 @@ export default {
         console.log('promocode redeem request');
 
         this.$store.dispatch("$_payment/requestPromoCodePayment", full_payload).then(response => {
-          this.$store.commit('setNotificationState', true);
+          
+          console.log(response);
+          
+          if(response.length > 0){
+            response = response[0];
+          }
+
+          this.$store.commit('setNotificationStatus', true);
           let level = 0;
-          let messsage = "";
+          let messsage = response.data.msg;
           if(response.data.status == false){
             level = 2;
-            messsage = response.data.msg
           } else {
             level = 1;
-            messsage = response.data.msg
           }
           let notification = {"title":"redeem promocode", "level":level, "messsage":messsage};
           this.$store.commit('setNotification', notification);

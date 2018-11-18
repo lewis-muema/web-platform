@@ -32,78 +32,83 @@
 </template>
 
 <script>
-import {mapGetters} from 'Vuex'
+import { mapGetters } from "Vuex";
 export default {
-    name : 'main-header',
-    methods : {
-        logOut(){
-            console.log('attempt to log out');
-            this.$store.commit('setSession', {});
-            this.eraseCookie('_sessionSnack');
-            this.$router.push({name:'sign_in'});
-        },
-        eraseCookie(name){
-            document.cookie = name+'=; Max-Age=-99999999;';
-        },
-        linkRoute(route){
-            console.log('attempt route'+route);
-            this.$router.push(route);
-        },
-        showNotification(){
-            console.log('somebody is trying to show a notification');
-
-            let notification = this.$store.getters.getNotification;
-            if(notification.level == 1) {
-                //success
-                this.$notify.success({
-                    title: notification.title,
-                    message: notification.message,
-                    offset: 20
-                });
-            } else if (notification.level == 2) {
-                //warning
-                this.$notify.warning({
-                    title: notification.title,
-                    message: notification.message,
-                    offset: 20
-                });
-            } else if (notification.level == 3) {
-                //error
-                this.$notify.error({
-                    title: notification.title,
-                    message: notification.message,
-                    offset: 20
-                });
-            } else {
-                //default
-                this.$notify({
-                    title: notification.title,
-                    message: notification.message,
-                    offset:20
-                });
-                
-            }
-            //reset notification status
-            this.$store.commit('setNotificationStatus', false);
-        }
+  name: "main-header",
+  methods: {
+    logOut() {
+      console.log("attempt to log out");
+      this.$store.commit("setSession", {});
+      this.eraseCookie("_sessionSnack");
+      this.$router.push({ name: "sign_in" });
     },
-    computed: {
-       notification_status() {
-           return this.$store.notification_status;
-       }
+    eraseCookie(name) {
+      document.cookie = name + "=; Max-Age=-99999999;";
     },
-    watch: {
-        notification_status(val, oldVal) {
-          console.log(val);
+    linkRoute(route) {
+      console.log("attempt route" + route);
+      this.$router.push(route);
+    },
+    showNotification() {
+      console.log("somebody is trying to show a notification");
 
-          if(val == true){
-              this.showNotification();
-          }
-        }
+      let notification = this.$store.getters.getNotification;
+
+      console.log(notification);
+
+      if (notification.level == 1) {
+        //success
+        this.$notify({
+          type: "success",
+          title: notification.title,
+          message: notification.message,
+          offset: 20
+        });
+      } else if (notification.level == 2) {
+        //warning
+        this.$notify({
+          type: "warning",
+          title: notification.title,
+          message: notification.message,
+          offset: 20
+        });
+      } else if (notification.level == 3) {
+        //error
+        this.$notify({
+          type: "error",
+          title: notification.title,
+          message: notification.message,
+          offset: 20
+        });
+      } else {
+        //default
+        this.$notify({
+          title: notification.title,
+          message: notification.message,
+          offset: 20
+        });
+      }
+      //reset notification status
+      this.$store.commit("setNotificationStatus", false);
     }
-}
+  },
+  computed: {
+    notification_status() {
+      return this.$store.getters.getNotificationStatus;
+    }
+  },
+  watch: {
+    notification_status(val, oldVal) {
+      console.log(val);
+
+      if (val == true) {
+        this.showNotification();
+      }
+    }
+  }
+};
 </script>
 
 <style lang="css">
-    @import '../../assets/styles/internal_header.css';
+@import "../../assets/styles/internal_header.css";
 </style>
