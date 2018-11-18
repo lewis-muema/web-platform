@@ -117,10 +117,23 @@
                     "app":"NODE_PRIVATE_API",
                     "endpoint":"Rate/updateRate"
                 }
+                this.$store.commit('setNotificationStatus', true); //activate notification
+                let level = 0; //this will show the white one
                 this.$store.dispatch("$_rating/requestUpdateRating", rating_full_payload).then(response => {
                     console.log(response);
+                    let message = response.data.msg;
+                    if(response.data.status == false){
+                        level = 2; //warning //use 3 to show the red one
+                    } else {
+                        level = 1; //success
+                    }
+                    let notification = {"title":"Rating", "level":level, "message":message}; //notification object
+                    this.$store.commit('setNotification', notification);
                 }, error => {
                     console.log(error);
+                    level = 2;
+                    let notification = {"title":"Rating", "level":level, "message":message}; //notification object
+                    this.$store.commit('setNotification', notification);
                 });
 
             },

@@ -112,12 +112,25 @@
                     "app": "NODE_PRIVATE_API",
                     "endpoint": "cop_departments_update"
                 }
+                this.$store.commit('setNotificationStatus', true); //activate notification
+                let level = 0; //this will show the white one
                 this.$store.dispatch("$_admin/editAdminDepartment", editDept_full_payload).then(response => {
                     console.log(response);
                     console.log("updated");
+                    let message = response.data.msg;
+                    if(response.data.status == false){
+                        level = 2; //warning //use 3 to show the red one
+                    } else {
+                        level = 1; //success
+                    }
+                    let notification = {"title":"Edit Department", "level":level, "message":message}; //notification object
+                    this.$store.commit('setNotification', notification);
                     // this.$router.push('/admin/department');
                 }, error => {
                     console.log(error);
+                    level = 2;
+                    let notification = {"title":"Edit Department", "level":level, "message":"An error occurred."}; //notification object
+                    this.$store.commit('setNotification', notification);
                 });
             },
             go_back: function () {
