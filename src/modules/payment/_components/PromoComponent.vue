@@ -10,10 +10,14 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   data() {
-    promocode_payment_data : {
-      sendy_coupon:""
+    return {
+      promocode_payment_data : {
+        sendy_coupon:""
+      }
     }
   },
   computed: {
@@ -26,12 +30,17 @@ export default {
       '$_payment/requestPromoCodePayment',
     ]),
     requestPromoCodePayment() {
+        let session = this.$store.getters.getSession;
+        let cop_id = 0;
+        if(session.default == 'biz'){
+          cop_id = session[session.default]['cop_id'];
+        }
         let payload = {
-          "user_email": session.user_email,
-          "user_phone": session.phone,
+          "user_email": session[session.default]['user_email'],
+          "user_phone": session[session.default]['user_phone'],
           "sendy_coupon": this.promocode_payment_data.sendy_coupon,
-          "cop_id": session.cop_id,
-          "client_type": session.user_type  == 'biz'?  2 : 1 //TODO: this might cause a bug so use user_type_id
+          "cop_id": cop_id,
+          "client_type": session.default
         }
 
         let full_payload = {
