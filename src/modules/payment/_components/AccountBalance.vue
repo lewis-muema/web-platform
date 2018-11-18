@@ -45,9 +45,9 @@ export default {
         }
 
         this.$store.dispatch("$_payment/requestRunningBalance", payload).then(response => {
-          console.log(response);
-
           if(response.status == 200){
+            console.log('commit running balance to the global store');
+
             this.$store.commit('setRunningBalance', response.data.running_balance);
           }
           console.log(response);

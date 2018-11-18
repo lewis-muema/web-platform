@@ -48,6 +48,57 @@ export default {
         linkRoute(route){
             console.log('attempt route'+route);
             this.$router.push(route);
+        },
+        showNotification(){
+            console.log('somebody is trying to show a notification');
+
+            let notification = this.$store.getters.getNotification;
+            if(notification.level == 1) {
+                //success
+                this.$notify.success({
+                    title: notification.title,
+                    message: notification.message,
+                    offset: 20
+                });
+            } else if (notification.level == 2) {
+                //warning
+                this.$notify.warning({
+                    title: notification.title,
+                    message: notification.message,
+                    offset: 20
+                });
+            } else if (notification.level == 3) {
+                //error
+                this.$notify.error({
+                    title: notification.title,
+                    message: notification.message,
+                    offset: 20
+                });
+            } else {
+                //default
+                this.$notify({
+                    title: notification.title,
+                    message: notification.message,
+                    offset:20
+                });
+                
+            }
+            //reset notification status
+            this.$store.commit('setNotificationStatus', false);
+        }
+    },
+    computed: {
+       notification_status() {
+           return this.$store.notification_status;
+       }
+    },
+    watch: {
+        notification_status(val, oldVal) {
+          console.log(val);
+
+          if(val == true){
+              this.showNotification();
+          }
         }
     }
 }
