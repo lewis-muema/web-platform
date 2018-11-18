@@ -23,94 +23,94 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   data() {
     return {
-      card_payment_data : {
-        "month":"",
-        "year":"",
-        "cvc":"",
-        "card_no":"",
-        "amount":"",
-        "is_save":true
+      card_payment_data: {
+        month: "",
+        year: "",
+        cvc: "",
+        card_no: "",
+        amount: "",
+        is_save: true
       },
       payment_state: "Attempting Payment"
-    }
+    };
   },
   computed: {
     valid_payment() {
-      return (this.card_payment_data.month !== '' && this.card_payment_data.year !== '' && this.card_payment_data.month !== '' && this.card_payment_data.cvv  !== '') ;
-     }
+      return (
+        this.card_payment_data.month !== "" &&
+        this.card_payment_data.year !== "" &&
+        this.card_payment_data.month !== "" &&
+        this.card_payment_data.cvv !== ""
+      );
+    }
   },
   methods: {
-    ...mapActions([
-      '$_payment/requestCardPayment',
-    ]),
+    ...mapActions(["$_payment/requestCardPayment"]),
     requestCardPayment() {
-        
-        //sort encryption
+      //sort encryption
 
       let card_payload = {
-          "BambaMID":7 , //this should be encrypted
-          "command":"ChargeCard",
-          "Amount": this.card_payment_data.amount,
-          "expryMonth": this.card_payment_data.month,
-          "expryYear": this.card_payment_data.year,
-          "Cardnumber": this.card_payment_data.card_no,
-          "CardCvv": this.card_payment_data.cvv,
-          "is_save": this.card_payment_data.is_save,
-          "cop_id": session.cop_id,
-          "user_id": session.user_id
-        }
+        BambaMID: 7, //this should be encrypted
+        command: "ChargeCard",
+        Amount: this.card_payment_data.amount,
+        expryMonth: this.card_payment_data.month,
+        expryYear: this.card_payment_data.year,
+        Cardnumber: this.card_payment_data.card_no,
+        CardCvv: this.card_payment_data.cvv,
+        is_save: this.card_payment_data.is_save,
+        cop_id: session.cop_id,
+        user_id: session.user_id
+      };
 
-        let full_payload = {
-          "values" : card_payload,
-          "vm":this,
-          "app":"BACKEND_CUSTOMERS_APP",
-          "endpoint":"cardapi"
-        }
-        this.$store.dispatch("$_payment/requestCardPayment", full_payload).then(response => {
+      let full_payload = {
+        values: card_payload,
+        vm: this,
+        app: "BACKEND_CUSTOMERS_APP",
+        endpoint: "cardapi"
+      };
+      this.$store.dispatch("$_payment/requestCardPayment", full_payload).then(
+        response => {
           this.payment_state = "Payment Success";
-        }, error => {
+        },
+        error => {
           this.payment_state = "Payment Failed";
-        });
+        }
+      );
     }
   }
-}
+};
 </script>
 
 <style lang="css">
-.paymentbody--input-small
-{
+.paymentbody--input-small {
   min-height: 2rem;
 }
-.paymentbody .input-control-small
-{
+.paymentbody .input-control-small {
   width: 30%;
 }
-.paymentbody .input-control-big
-{
+.paymentbody .input-control-big {
   width: 60%;
 }
-.paymentbody--input-checkbox
-{
+.paymentbody--input-checkbox {
   margin-right: 10px;
 }
 
 .savecard--desc-wrap {
-    margin-top: 30px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-bottom: -35px;
+  margin-top: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: -35px;
 }
 .savecard--desc-title {
-    margin-left: 10px;
-    font-size: 14px;
-    margin-top: 5px;
-    height: auto;
-    line-height: 15px;
+  margin-left: 10px;
+  font-size: 14px;
+  margin-top: 5px;
+  height: auto;
+  line-height: 15px;
 }
-
 </style>

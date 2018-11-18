@@ -103,201 +103,217 @@
 </template>
 
 <script>
-const moment = require('moment');
+const moment = require("moment");
 
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from "vuex";
 export default {
-      data() {
-        return {
-          empty_orders_state:"Fetching Order History",
-          empty_users_state: "Fetching Cop Users",
-          expand_id: 0,
-          expand_keys:[],
-          pagination_limit:10,
-          pagination_page:1,
-          filterData : {
-            "user":"",
-            "from_date":"",
-            "to_date":""
-          },
-          filteredData: [],
-          filterState: false,
-        }
+  data() {
+    return {
+      empty_orders_state: "Fetching Order History",
+      empty_users_state: "Fetching Cop Users",
+      expand_id: 0,
+      expand_keys: [],
+      pagination_limit: 10,
+      pagination_page: 1,
+      filterData: {
+        user: "",
+        from_date: "",
+        to_date: ""
       },
-      filters: {
-        moment: function (date) {
-          return moment(date).format('MMM Do YYYY, h:mm a');
-        },
-      },
-      methods:{
-         filterTableData() {
-            //reset filter
-            this.filterState  = false;
-            this.empty_orders_state = "Searching Orders";
+      filteredData: [],
+      filterState: false
+    };
+  },
+  filters: {
+    moment: function(date) {
+      return moment(date).format("MMM Do YYYY, h:mm a");
+    }
+  },
+  methods: {
+    filterTableData() {
+      //reset filter
+      this.filterState = false;
+      this.empty_orders_state = "Searching Orders";
 
-            let user = this.filterData.user;
-            let from_date = this.filterData.from_date;
-            let to_date = this.filterData.to_date;
+      let user = this.filterData.user;
+      let from_date = this.filterData.from_date;
+      let to_date = this.filterData.to_date;
 
-            from_date = moment(from_date).format('YYYY-MM-DD');
-            to_date = moment(to_date).format('YYYY-MM-DD');
+      from_date = moment(from_date).format("YYYY-MM-DD");
+      to_date = moment(to_date).format("YYYY-MM-DD");
 
-            //we need to Fetch
-            //we use actions
-            //we are passing an updated payload
-            //the updated payload
-            //will have dates
-            let payload = {
-              "cop_id": 669,
-              "user_type":2,
-              "from":from_date,
-              "to":to_date
-            };
+      //we need to Fetch
+      //we use actions
+      //we are passing an updated payload
+      //the updated payload
+      //will have dates
+      let payload = {
+        cop_id: 669,
+        user_type: 2,
+        from: from_date,
+        to: to_date
+      };
 
-            this.requestOrderHistory(payload);
+      this.requestOrderHistory(payload);
 
+      this.filteredData = this.orderHistoryData;
 
-            this.filteredData = this.orderHistoryData;
+      console.log(this.filteredData);
+      console.log(to_date);
 
+      //check if both are filled
+      if (user !== "" && from_date !== "" && to_date !== "") {
+        console.log("performing a user and date filter");
+        console.log(from_date);
+        console.log(to_date);
+        from_date = moment(from_date);
+        to_date = moment(to_date);
 
-             console.log(this.filteredData);
-             console.log(to_date);
+        console.log(from_date);
+        let vm = this;
 
-            //check if both are filled
-            if(user !== '' && from_date !== '' && to_date !== ''){
-              console.log('performing a user and date filter');
-              console.log(from_date);
-              console.log(to_date);
-              from_date = moment(from_date);
-              to_date = moment(to_date);
+        this.filteredData = this.filteredData.filter(function(order) {
+          console.log(order);
+          return order.user_details.id == user;
+        });
+        this.filterState = true;
+      } else if (user !== "") {
+        //user filter
+        console.log("performing a user filter");
+        console.log(user);
 
-              console.log(from_date);
-              let vm = this;
+        this.filteredData = this.filteredData.filter(
+          order => order.user_details.id == user
+        );
+        this.filterState = true;
+      } else {
+        //date filter
+        // console.log('performing a date filter');
+        //  this.filteredData = this.filteredData.filter(function (order) {
+        //   return moment(order.order_date).isSameOrAfter(from_date) && moment(order.order_date).isSameOrBefore(to_date);
+        //  });
 
-              this.filteredData = this.filteredData.filter(function (order) {
-                 console.log(order);
-                  return order.user_details.id ==  user;
-              });
-               this.filterState = true;
-
-            } else if(user !== ''){
-              //user filter
-              console.log('performing a user filter');
-              console.log(user);
-
-              this.filteredData = this.filteredData.filter( order => order.user_details.id ==  user);
-              this.filterState = true;
-
-
-            } else {
-              //date filter
-              // console.log('performing a date filter');
-              //  this.filteredData = this.filteredData.filter(function (order) {
-              //   return moment(order.order_date).isSameOrAfter(from_date) && moment(order.order_date).isSameOrBefore(to_date);
-              //  });
-
-              this.filterState = true;
-
-            }
-
-             this.empty_orders_state = "Order History Not Found";
-
-      },
-        changeSize(val) {
-            this.pagination_page = 1;
-            this.pagination_limit = val;
-        },
-        changePage() {
-            console.log('Page changed to', this.pagination_page);
-            let from = (this.pagination_page - 1) * this.pagination_limit;
-            let to = this.pagination_page * this.pagination_limit;
-            this.orderHistoryData.slice(from, to);
-        },
-         ...mapActions([
-            '$_transactions/requestOrderHistoryOrders',
-            '$_transactions/requestCopUsers'
-        ]),
-        moment: function () {
-          return moment();
-        },
-        getOrderFromName(path) {
-          let name = path[0].name;
-          let splitted_name = name.split(",", 2);
-          return splitted_name[0];
-
-
-        },
-        getOrderToName(path) {
-          let path_length = path.length;
-          let name = path[path_length-1].name;
-          let splitted_name = name.split(",", 2);
-          return splitted_name[0];
-
-        },
-        getRowKey(row){
-          return row.order_id;
-        },
-        expandTableRow(row, event, column){
-          this.expand_id = row.order_id;
-          this.expand_keys = []
-          this.expand_keys.push(row.order_id)
-          this.$router.push({name:'order-details', params: {id : row.order_id}});
-        },
-        handleRowExpand(row, expanded) {
-          this.expand_id = row.order_id;
-          this.expand_keys = []
-          this.expand_keys.push(row.order_id)
-          this.$router.push({name:'order-details', params: {id : row.order_id}});
-      },
-      formatAmount(row, column, cellValue) {
-         let value = (row.order_cost).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-         value = value.split(".");
-         return value[0];
-      },
-      requestOrderHistory(payload){
-          let full_payload = {
-            "values" : payload,
-            "vm":this,
-            "app":"NODE_PRIVATE_API",
-            "endpoint":"order_history"
-          }
-          this.$store.dispatch("$_transactions/requestOrderHistoryOrders", full_payload).then(response => {
-             console.log("Got some data, now lets show something in this component")
-             console.log(response);
-             this.empty_orders_state = "Order History Not Found";
-          }, error => {
-              console.error("Got nothing from server. Prompt user to check internet connection and try again")
-              console.log(error);
-              this.empty_orders_state = "Order History Failed to Fetch";
-          });
+        this.filterState = true;
       }
-    },
-    computed:{
-        ...mapGetters({
-          orderHistoryData:'$_transactions/getOrderHistoryOrders',
-          cop_users:'$_transactions/getCopUsers',
-      }),
-      inactive_filter() {
-        if(this.filterData.user == '' && (this.filterData.from_date == '' || this.filterData.to_date == '')){
-          this.filterState = false;
-        }
-        return this.filterData.user == '' && (this.filterData.from_date == '' || this.filterData.to_date == '');
-      },
-      order_history_data() {
-        let from = (this.pagination_page - 1) * this.pagination_limit;
-        let to = this.pagination_page * this.pagination_limit;
 
-        // if(this.filterState == true){
-        //   return this.filteredData.slice(from, to);
-        // }
-       return this.orderHistoryData.slice(from, to);
-     },
-     order_history_total() {
-       // if(this.filterState == true){
-       //   return this.filteredData.length;
-       // }
+      this.empty_orders_state = "Order History Not Found";
+    },
+    changeSize(val) {
+      this.pagination_page = 1;
+      this.pagination_limit = val;
+    },
+    changePage() {
+      console.log("Page changed to", this.pagination_page);
+      let from = (this.pagination_page - 1) * this.pagination_limit;
+      let to = this.pagination_page * this.pagination_limit;
+      this.orderHistoryData.slice(from, to);
+    },
+    ...mapActions([
+      "$_transactions/requestOrderHistoryOrders",
+      "$_transactions/requestCopUsers"
+    ]),
+    moment: function() {
+      return moment();
+    },
+    getOrderFromName(path) {
+      let name = path[0].name;
+      let splitted_name = name.split(",", 2);
+      return splitted_name[0];
+    },
+    getOrderToName(path) {
+      let path_length = path.length;
+      let name = path[path_length - 1].name;
+      let splitted_name = name.split(",", 2);
+      return splitted_name[0];
+    },
+    getRowKey(row) {
+      return row.order_id;
+    },
+    expandTableRow(row, event, column) {
+      this.expand_id = row.order_id;
+      this.expand_keys = [];
+      this.expand_keys.push(row.order_id);
+      this.$router.push({
+        name: "order-details",
+        params: { id: row.order_id }
+      });
+    },
+    handleRowExpand(row, expanded) {
+      this.expand_id = row.order_id;
+      this.expand_keys = [];
+      this.expand_keys.push(row.order_id);
+      this.$router.push({
+        name: "order-details",
+        params: { id: row.order_id }
+      });
+    },
+    formatAmount(row, column, cellValue) {
+      let value = row.order_cost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+      value = value.split(".");
+      return value[0];
+    },
+    requestOrderHistory(payload) {
+      let full_payload = {
+        values: payload,
+        vm: this,
+        app: "NODE_PRIVATE_API",
+        endpoint: "order_history"
+      };
+      this.$store
+        .dispatch("$_transactions/requestOrderHistoryOrders", full_payload)
+        .then(
+          response => {
+            console.log(
+              "Got some data, now lets show something in this component"
+            );
+            console.log(response);
+            this.empty_orders_state = "Order History Not Found";
+          },
+          error => {
+            console.error(
+              "Got nothing from server. Prompt user to check internet connection and try again"
+            );
+            console.log(error);
+            this.empty_orders_state = "Order History Failed to Fetch";
+          }
+        );
+    }
+  },
+  computed: {
+    ...mapGetters({
+      orderHistoryData: "$_transactions/getOrderHistoryOrders",
+      cop_users: "$_transactions/getCopUsers"
+    }),
+    inactive_filter() {
+      if (
+        this.filterData.user == "" &&
+        (this.filterData.from_date == "" || this.filterData.to_date == "")
+      ) {
+        this.filterState = false;
+      }
+      return (
+        this.filterData.user == "" &&
+        (this.filterData.from_date == "" || this.filterData.to_date == "")
+      );
+    },
+    order_history_data() {
+      let from = (this.pagination_page - 1) * this.pagination_limit;
+      let to = this.pagination_page * this.pagination_limit;
+
+      // if(this.filterState == true){
+      //   return this.filteredData.slice(from, to);
+      // }
+      return this.orderHistoryData.slice(from, to);
+    },
+    order_history_total() {
+      // if(this.filterState == true){
+      //   return this.filteredData.length;
+      // }
       return this.orderHistoryData.length;
-     }
+    }
+  },
+  mounted() {
+    let session_data = this.$store.getters.getSession;
 
      },
      mounted(){
@@ -335,6 +351,9 @@ export default {
               this.empty_orders_state = "Order History Failed to Fetch";
           });
 
+    let users_payload = {
+      cop_id: session_data.cop_id
+    };
 
 
           let users_payload = {
@@ -361,5 +380,4 @@ export default {
 </script>
 
 <style lang="css">
-
 </style>
