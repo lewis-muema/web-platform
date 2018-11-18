@@ -302,7 +302,7 @@ export default {
      },
      mounted(){
           let session_data = this.$store.getters.getSession;
-          
+
           let orders_payload = {
             "cop_id": session_data.cop_id,
             "user_type":session_data.user_type  == "biz" ? 2 : 1
