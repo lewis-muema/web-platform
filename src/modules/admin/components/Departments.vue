@@ -58,11 +58,10 @@
     export default {
         name: "Departments",
         mounted() {
-            //TODO: Get this from session
-            //TODO: also create payload depending on session
-
+            let session_data = this.$store.getters.getSession;
+            // console.log("getting session")
             let deptsList_payload = {
-                "cop_id": 1083
+                "cop_id": session_data.cop_id,
             }
             let users_full_payload = {
                 "values" : deptsList_payload,

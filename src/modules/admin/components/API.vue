@@ -5,10 +5,11 @@
             </div>
             <div class="section--filter-action-wrap">
 
-                <button v-if="registered" type="button" class="button-primary section--filter-action">Update API Key</button>
+                <button v-if="registered" type="button" class="button-primary section--filter-action" v-on:click="updateApiKey">Update API Key</button>
                 <button v-if="!registered" type="button" class="button-primary section--filter-action" v-on:click="generateAPIKey">Generate API Key</button>
             </div>
         </div>
+        <!--{{fetchedData}}-->
         <el-table
                 :data="fetchedData"
                 style="width: 100%"
@@ -22,7 +23,6 @@
             <el-table-column
                     label="Username"
                     prop="api_username"
-                    width="180"
             >
             </el-table-column>
             <el-table-column
@@ -64,18 +64,23 @@
     export default {
         name: "API",
         mounted() {
-            //TODO: Get this from session
-            //TODO: also create payload depending on session
 
-            let apikey_payload = {
-                "cop_id": 1083
+            let session = this.$store.getters.getSession;
+            let cop_id = 0;
+            if(session.default == 'biz'){
+                cop_id = session[session.default]['cop_id'];
             }
+            let apikey_payload = {
+                "cop_id": cop_id,
+            }
+            console.log(apikey_payload)
             let apikey_full_payload = {
                 "values" : apikey_payload,
                 "vm":this,
                 "app":"NODE_PRIVATE_API",
                 "endpoint":"get_api"
             }
+            console.log(apikey_payload)
             this.$store.dispatch("$_admin/requestKeysList", apikey_full_payload).then(response => {
                 console.log(response);
             }, error => {
@@ -98,10 +103,39 @@
         },
         methods: {
             updateApiKey() {
+
+                let session = this.$store.getters.getSession;
+                let cop_id = 0;
+                if(session.default == 'biz'){
+                    cop_id = session[session.default]['cop_id'];
+                }
+                let newKey_payload = {
+                    "cop_id": cop_id,
+                }
+                //console.log(newKey_payload)
+                let newKeyFull_payload = {
+                    "values" : newKey_payload,
+                    "vm":this,
+                    "app":"NODE_PRIVATE_API",
+                    "endpoint":"generate_api"
+                }
+                // console.log(newKeyFull_payload)
+
+                this.$store.dispatch("$_admin/generateAPIKey", newKeyFull_payload).then(response => {
+                    console.log("updated");
+                    console.log(response);
+                }, error => {
+                    console.log(error);
+                });
             },
             generateAPIKey() {
+                let session = this.$store.getters.getSession;
+                let cop_id = 0;
+                if(session.default == 'biz'){
+                    cop_id = session[session.default]['cop_id'];
+                }
                 let newKey_payload = {
-                    "cop_id": 1083
+                    "cop_id": cop_id,
                 }
                 //console.log(newKey_payload)
                 let newKeyFull_payload = {
@@ -116,6 +150,7 @@
                     console.log("generated");
                     console.log(response);
                 }, error => {
+                    console.log("NOT generated");
                     console.log(error);
                 });
             },

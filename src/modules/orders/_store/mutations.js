@@ -83,6 +83,12 @@ const remove_polyline = (state) => {
   state.map.polyline.path = ""
 }
 
+const set_location_marker = (state,payload) => {
+    state.map.markers.splice(payload.index,0,payload.marker);
+}
+const unset_location_marker = (state,index) => {
+    state.map.markers.splice(index,1);
+}
 export default {
   set_page,
   toggle_ongoing,
@@ -92,5 +98,7 @@ export default {
   set_vendor_markers,
   hide_vendors,
   remove_markers,
-  remove_polyline
+  remove_polyline,
+  set_location_marker,
+  unset_location_marker
 };

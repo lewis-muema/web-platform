@@ -17,7 +17,7 @@
     </div>
 
     <div class="paymentbody--input-wrap">
-      <button type="button" name="button" class="valid_payment ? 'button-primary paymentbody--input-button':'paymentbody--input-button button--primary-inactive'">Pay</button>
+      <button type="button" name="button" :class="valid_payment ? 'button-primary paymentbody--input-button':'paymentbody--input-button button--primary-inactive'" @click="requestCardPayment">Pay</button>
     </div>
   </div>
 </template>
