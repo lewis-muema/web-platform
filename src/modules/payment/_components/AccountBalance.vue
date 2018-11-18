@@ -66,7 +66,12 @@ export default {
   computed: {
     //this just gets what is on the store
     running_balance() {
-      return this.$store.getters.getRunningBalance;
+      //format the amount
+      let value = this.$store.getters.getRunningBalance
+        .toFixed(2)
+        .replace(/\d(?=(\d{3})+\.)/g, "$&,");
+      value = value.split(".");
+      return value[0];
     }
   }
 };
