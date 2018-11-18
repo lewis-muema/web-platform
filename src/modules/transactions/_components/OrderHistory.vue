@@ -302,7 +302,7 @@ export default {
      },
      mounted(){
           let session_data = this.$store.getters.getSession;
-          
+
           let orders_payload =  {};
 
           if(session_data.default == 'biz'){
@@ -310,7 +310,7 @@ export default {
               "cop_id": session_data['biz']['cop_id'],
               "user_type":session_data['biz']['user_type'],
               "user_id":session_data['biz']['user_id'],
-              
+
             }
           } else {
             //create peer payload
@@ -340,7 +340,7 @@ export default {
           let users_payload = {
             "cop_id": session_data.cop_id
           }
-          
+
           let full_users_payload = {
             "values" : users_payload,
             "vm":this,
