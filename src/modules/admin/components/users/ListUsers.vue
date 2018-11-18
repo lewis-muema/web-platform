@@ -105,13 +105,17 @@
     export default {
         name: "ListUsers",
         mounted() {
-            //TODO: Get this from session
-            //TODO: also create payload depending on session
-            let usersList_payload = {
-                "cop_id": 1083
+            let session = this.$store.getters.getSession;
+            let cop_id = 0;
+            if(session.default == 'biz'){
+                cop_id = session[session.default]['cop_id'];
+            }
+            let payload = {
+                "cop_id": cop_id
+
             }
             let users_full_payload = {
-                "values" : usersList_payload,
+                "values" : payload,
                 "vm":this,
                 "app":"NODE_PRIVATE_API",
                 "endpoint":"cop_users"
@@ -122,11 +126,9 @@
                 console.log(error);
             });
 
-            let deptsList_payload = {
-                "cop_id": 1083
-            }
+
             let depts_full_payload = {
-                "values" : deptsList_payload,
+                "values" : payload,
                 "vm":this,
                 "app":"NODE_PRIVATE_API",
                 "endpoint":"cop_departments/"

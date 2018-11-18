@@ -20,7 +20,9 @@ if (process.browser) {
 const state = {
   session: {},
   ENV:{},
-  running_balance: 0
+  running_balance: 0,
+  notification: {},
+  notification_status: false
 };
 
 export default {
