@@ -12,9 +12,10 @@ function guard(to, from, next){
        console.log('router-message-session', store.state.session);
       //TODO: change this to use the user id and check for null as well
       //TODO: make sure this is checking the store well
+      //TODO: we now literally have no guard , the door is just wide open
     let session = store.state.session;
 
-    if (session) {
+    if (true) {
       if (entryUrl) {
         const url = entryUrl;
         entryUrl = null;
@@ -139,7 +140,7 @@ export function createRouter () {
                       component: () => import('../modules/admin/components/users/AddUser.vue')
                   },
                   {
-                      path: '/admin/users/edit_user',
+                      path: '/admin/users/edit_user/:id',
                       component: () => import('../modules/admin/components/users/EditUser.vue')
                   },
               ]
@@ -147,6 +148,14 @@ export function createRouter () {
             {
               path: '/admin/department',
               component: () => import('../modules/admin/components/Departments.vue')
+            },
+            {
+              path: '/admin/department/add_department',
+              component: () => import('../modules/admin/components/AddDepartment.vue')
+            },
+            {
+              path: '/admin/department/edit_department',
+              component: () => import('../modules/admin/components/EditDepartment.vue')
             },
             {
               path: '/admin/preferences',
@@ -249,7 +258,7 @@ export function createRouter () {
           ]
       },
       { path: '/external/onboard/:token', component: () => import('../modules/external/External.vue'),
-      },
+      }
     ]
   })
 }

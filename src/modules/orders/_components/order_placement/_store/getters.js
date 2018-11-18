@@ -1,6 +1,5 @@
 
 export default {
-    get_waypoints: (state) => state.waypoints,
     get_price_request_object: (state) => state.price_request_object,
     get_active_package_class: (state) => state.active_package_class,
     get_max_way_points: (state) => state.max_way_points,

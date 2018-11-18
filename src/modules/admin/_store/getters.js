@@ -11,6 +11,11 @@ const getAddedStatus = state => state.added_status;
 const getUsersList = state => state.users_list;
 const getKeysList = state => state.keys_list;
 const getDepartmentsList = state => state.departments_list;
+const getCopUserId = state => state.cop_user_id;
+const getUserName = state => state.user_name;
+const getUserEmail = state => state.user_email;
+const getUserPhone = state => state.user_phone;
+
 export default {
     getViewState,
     getCopID,
@@ -23,5 +28,9 @@ export default {
     getAddedStatus,
     getUsersList,
     getKeysList,
-    getDepartmentsList
+    getDepartmentsList,
+    getCopUserId,
+    getUserName,
+    getUserEmail,
+    getUserPhone
 };

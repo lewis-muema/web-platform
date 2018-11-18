@@ -79,7 +79,7 @@
                         <button class="button-primary rider_details_action_btn" type="button" @click="deliveryDocs">Delivery Docs</button>
                     </div>
 
-                    <!-- <div class="rider_details_action">
+                    <div class="rider_details_action">
                         <el-popover
                         placement="bottom"
                         trigger="click">
@@ -91,7 +91,7 @@
                             <button class="button-primary--naked rate--action-btn" @click="rateOrder"> RATE </button>
                         </div>
                         <button class="button-primary rider_details_action_btn" type="button" slot="reference">RATE</button>
-                            
+
                         </el-popover>
 
                     </div>

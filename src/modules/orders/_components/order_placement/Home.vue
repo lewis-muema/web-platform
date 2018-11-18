@@ -7,7 +7,7 @@
           <no-ssr placeholder="">
 
               <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-orange" width="10px"  />
-              <gmap-autocomplete :select-first-on-enter="true"  @place_changed="setLocation($event, 0)" :options="map_options" placeholder="Pickup" class="input-control homeview--input-bundler__input"></gmap-autocomplete>
+              <gmap-autocomplete placeholder="Pickup" :select-first-on-enter="true" class="input-control homeview--input-bundler__input"></gmap-autocomplete>
           </no-ssr>
         </div>
 
@@ -15,8 +15,8 @@
             <div class="homeview--destinations">
               <div class="homeview--input-bundler">
                 <no-ssr placeholder="">
-                    <font-awesome-icon icon="map-marker-alt" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px" />
-                    <gmap-autocomplete placeholder="Destination" :select-first-on-enter="true" @place_changed="setLocation($event, n)" :options="map_options" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" :class="initial_destination_css(n)"></gmap-autocomplete>
+                    <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px"  />
+                    <gmap-autocomplete placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" :class="initial_destination_css(n)"></gmap-autocomplete>
                     <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right " width="10px"  @click="remove_location(n)" v-show="n > 1"/>
                 </no-ssr>
               </div>
@@ -50,7 +50,6 @@ export default {
   data: function() {
     return {
       show_destinations: false,
-      map_options:{componentRestrictions: {country: ['ke', 'tz', 'ug', 'rw', 'bi']}},
     }
   },
   components: {
@@ -67,11 +66,7 @@ export default {
   methods: {
     ...mapMutations({
       add_waypoint : '$_orders/$_home/add_waypoint',
-      remove_waypoint : '$_orders/$_home/remove_waypoint',
-      set_location_marker : '$_orders/set_location_marker',
-      unset_location_marker : '$_orders/unset_location_marker',
-      set_order_path: '$_orders/$_home/set_order_path',
-      unset_order_path: '$_orders/$_home/unset_order_path',
+      remove_waypoint : '$_orders/$_home/remove_waypoint'
     }),
     new_destination: function() {
       this.add_waypoint();
@@ -104,55 +99,7 @@ export default {
         return {
             'homeview--input-bundler__destination-short-input': n == 1
         }
-    },
-    clearLocation(index){
-        this.unset_location_marker(index);
-        this.unset_order_path(index);
-    },
-    setLocation(place,index){
-        // TO Do reset marker on store when leaving the route
-        if (!place) return
-        let path_obj = {
-            "name":place.name,
-            "coordinates": ''+place.geometry.location.lat()+','+place.geometry.location.lng()+'',
-            "waypoint_details_status":true,
-            "type":"coordinates",
-            "more":{
-                "Estate": "",
-                "FlatName": "",
-                "place_idcustom": place.place_id,
-                "Label": "",
-                "HouseDoor": "",
-                "Other description": "",
-                "Typed": "",
-                "Vicinity": "Not Indicated",
-                "Address": "Not Indicated"
-             }
-        };
-        let path_payload = {
-            "index":index,
-            "path":path_obj
-        };
-
-        this.setMarker(place.geometry.location.lat(),place.geometry.location.lng(),index );
-        this.set_order_path(path_payload);
-
-    },
-    setMarker(lat,lng, index){
-
-        let mark = {
-            "position":{"lat":lat, "lng":lng, "icon":"destination"}
-        };
-        if(index == 0){
-            mark.icon = "pickup";
-            console.log('in pickup');
-        }
-        let marker_payload = {
-            "index":index,
-            "marker":mark
-        }
-        this.set_location_marker(marker_payload);
-    },
+    }
   },
 
   created() {
