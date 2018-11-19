@@ -2,10 +2,11 @@ import axios from 'axios'
 import mqtt from 'mqtt'
 const path = "https://privateapitest.sendyit.com/v1/ongoing_deliveries"
 
-const fetch_ongoing_orders = function({commit}, payload)
+const fetch_ongoing_orders = function({state, commit, rootState}, payload)
 {
+  var session = rootState.session
   return new Promise((resolve, reject) => {
-    axios.post(path, {"phone":"0778987789"})
+    axios.post(path, {"phone":""+session[session.default]["user_phone"]+""})
     .then(response => {
       commit('set_ongoing_orders', response.data)
       resolve(response.data);
