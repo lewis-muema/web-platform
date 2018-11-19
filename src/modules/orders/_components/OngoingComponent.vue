@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="ongoing--outer" v-if="!this.loading">
+  <div class="ongoing--outer" v-if="!this.loading && this.get_orders.length > 0">
     <div class="ongoing--count" @click="toggle_ongoing()">
       <span>{{num_ongoing}} ongoing orders</span>
       <font-awesome-icon icon="chevron-up" :class="classObject" width="15px" />
