@@ -36,9 +36,8 @@
         <a href="#" class="homeview--add" @click="newDestination()">Add</a>
       </div> -->
       <div class="orders-loading-container" v-loading="loading" v-if="loading">
-
       </div>
-      <div v-if="get_order_path.length > 1">
+      <div v-if="get_order_path.length > 1 && !loading">
           <vendor-view ></vendor-view>
       </div>
       </div>
@@ -78,6 +77,10 @@ export default {
       get_extra_destinations : '$_orders/$_home/get_extra_destinations',
       get_order_notes : '$_orders/$_home/get_order_notes',
       get_price_request_object : '$_orders/$_home/get_price_request_object:',
+      get_active_package_class : '$_orders/$_home/get_active_package_class',
+      get_active_vendor_name : '$_orders/$_home/get_active_vendor_name',
+      get_pickup_filled : '$_orders/$_home/get_pickup_filled',
+      get_map_markers : '$_orders/get_markers'
     }),
   },
   methods: {
@@ -87,6 +90,7 @@ export default {
       set_order_path: '$_orders/$_home/set_order_path',
       unset_order_path: '$_orders/$_home/unset_order_path',
       set_extra_destinations: '$_orders/$_home/set_extra_destinations',
+      setPickupFilled: '$_orders/$_home/set_pickup_filled',
       // add_waypoint : '$_orders/$_home/add_waypoint',
       // remove_waypoint : '$_orders/$_home/remove_waypoint'
     }),
@@ -95,10 +99,11 @@ export default {
     }),
     clearLocation(index){
         if(index == 0){
-            //set pickup cleared
+            this.setPickupFilled(false);
         }
         this.unset_location_marker(index);
         this.unset_order_path(index);
+        this.deleteLocationInModel(index);
     },
     setLocation(place,index){
         // TO Do reset marker on store when leaving the route
@@ -126,9 +131,19 @@ export default {
         };
         this.setMarker(place.geometry.location.lat(),place.geometry.location.lng(),index );
         this.set_order_path(path_payload);
-        if(this.get_order_path.length > 1){
+        this.setLocationInModel(index,place.name);
+        if(index == 0){
+            this.setPickupFilled(true);
+        }
+        if(this.get_order_path.length > 1 && this.get_pickup_filled == true){
             this.doPriceRequest();
         }
+    },
+    setLocationInModel(index, name){
+        this.locations.splice(index,0,name);
+    },
+    deleteLocationInModel(index){
+        this.locations.splice(index,1);
     },
     setMarker(lat,lng, index){
         let mark = {
@@ -147,9 +162,7 @@ export default {
     newDestination(){
 
     },
-    getOrderDetailsFromSessionData(){
 
-    },
     createPriceRequestObject(){
         let obj = {"path":this.get_order_path};
         let acc = {};
@@ -209,7 +222,7 @@ export default {
 
            } else {
                this.doNotification(2,"Price request failed", "Price request failed. Please try again")
-              console.warn('login failed');
+              console.warn('Price request failed');
 
            }
 
@@ -220,55 +233,7 @@ export default {
             this.loading = false;
         });
     },
-    getCompleteOrderObject(){
-        let acc = {};
-        if('default' in session){
-            acc = session[session.default];
-        }
-        else{
-            acc.user_email = 'faithshop@gmail.com';
-            acc.client_mode = 0;
-            acc.cop_id = 0;
-            acc.name = 'Missing session';
-            acc.phone = '0778987789';
-            acc.user_phone = '0778987789';
-        }
-        let payload = {
-          "note": this.get_order_notes,
-          "trans_no": "none",
-          "user_email": "faithshop@gmail.com",
-          "user_phone": "0778987789",
-          "no_charge_status": false,
-          "insurance_amount": 10,
-          "cash_status": false,
-          "note_status": false,
-          "last_digit": "none",
-          "insurance_id": 1,
-          "platform": "corporate",
-          "card_token": "card_token",
-          "customer_token": "customer_token",
-          "insurance_status": true,
-          "close_rider_id": 0,
-          "amount": 80,
-          "schedule_status": false,
-          "destination_paid_status": false,
-          "delivery_points": 1,
-          "sendy_coupon": "0",
-          "payment_mode": 0,
-          "schedule_time": this.moment().format('YYYY-MM-DD HH:mm:ss'),
-          "tier_tag": "express_tier",
-          "cop_id": 669,
-          "carrier_type": 2,
-          "isreturn": false,
-          "vendor_type": 21,
-          "rider_phone": "AC315W562-G85",
-          "type": "postpaid"
-      };
-      payload = {"values":payload};
-    },
-    completeOrder(){
 
-    },
     doNotification(level,title, message){
         this.$store.commit('setNotificationStatus', true);
         let notification = {"title":title, "level":level, "message":message};
@@ -282,12 +247,21 @@ export default {
         return {
             'homeview--input-bundler__destination-short-input': false
         }
-    }
+    },
   },
 
   created() {
     this.$store.registerModule(['$_orders','$_home'], home_store);
   },
+  beforeRouteLeave (to, from, next) {
+    if(to.name == 'tracking'){
+        if(this.get_map_markers.length > 0){
+            for(let i=0; i< this.get_map_markers.length; i++){
+                this.unset_location_marker(i);
+            }
+        }
+    }
+    },
 
   watch:{
       // get_order_path: function (val) {

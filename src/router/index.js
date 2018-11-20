@@ -22,14 +22,14 @@ function getSessionCookie()   {
         var c = ca[i];
         while (c.charAt(0)==' ') c = c.substring(1,c.length);
         if (c.indexOf(nameEQ) == 0){
-          
+
         } return c.substring(nameEQ.length,c.length);
     }
     return null;
 }
 
 function guard(to, from, next){
-  
+
   return new Promise((resolve, reject) => {
      let session = store.state.session;
 
@@ -37,9 +37,9 @@ function guard(to, from, next){
       console.log(session);
 
       console.log(isEmpty(session));
-      
+
       if(isEmpty(session)){
-        
+
         console.log('empty session here');
 
         if (process.browser) {
@@ -50,17 +50,17 @@ function guard(to, from, next){
             if(_sessionSnack !== null && _sessionSnack !== ''){
               session = JSON.parse(_sessionSnack);
               store.state.session = session;
-            } 
+            }
         }
       }
       if (isEmpty(session) == false) {
-        
+
         console.log('session now updated');
         resolve(next());
       } else {
       console.log('router-message', 'user not logged in');
       resolve(next('/auth/sign_in'));
- 
+
     }
   })
 }
@@ -99,7 +99,7 @@ export function createRouter () {
           },
         ]
       },
-      { path: '/transactions', 
+      { path: '/transactions',
         component: () => import('../modules/transactions/Transactions.vue'),
         beforeEnter: guard,
         children: [
@@ -115,14 +115,14 @@ export function createRouter () {
                   path: 'details/:id',
                   name:'order-details',
                   component: () => import('../modules/transactions/_components/OrderDetails.vue'),
-        
+
                 },
               ]
             },
             {
               path: '/transactions/statement',
               component: () => import('../modules/transactions/_components/Statement.vue'),
-        
+
             },
             {
               path: '/transactions/payments',
@@ -196,7 +196,7 @@ export function createRouter () {
         ]
       },
       { path: '/payment', component: () => import('../modules/payment/Payment.vue'),
-      beforeEnter: guard, 
+      beforeEnter: guard,
         children: [
             {
               path: '/',
@@ -226,7 +226,8 @@ export function createRouter () {
               },
               {
                 path: '/orders/tracking/:order_no',
-                component: () => import('../modules/orders/_components/tracking/Tracking.vue')
+                component: () => import('../modules/orders/_components/tracking/Tracking.vue'),
+                name: 'tracking',
               },
               {
                   path: '/orders/rating',
@@ -272,7 +273,7 @@ export function createRouter () {
       }
     ]
   });
- 
+
 
   return router;
 

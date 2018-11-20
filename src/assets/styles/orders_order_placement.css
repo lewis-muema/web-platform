@@ -133,5 +133,9 @@
     margin-bottom: 22px;
 }
 .orders-loading-container{
-    height: 2rem;
+    height: 1rem;
+    margin-bottom: 10px;
+}
+.orders-loading-container--completion{
+    margin-bottom: 0px;
 }

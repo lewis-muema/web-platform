@@ -9,4 +9,5 @@ export default {
     get_order_path: (state) => state.order_path,
     get_max_destinations: (state) => state.max_destinations,
     get_extra_destinations: (state) => state.extra_destinations,
+    get_pickup_filled: (state) => state.pickup_filled,
 };

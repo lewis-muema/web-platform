@@ -12,7 +12,8 @@ const state = {
   order_path:[],
   schedule_time:'',
   order_notes:'',
-  extra_destinations:0
+  extra_destinations:0,
+  pickup_filled:false,
 }
 
 export default {
