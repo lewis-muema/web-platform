@@ -204,7 +204,11 @@ export default {
 }
 .infobar--photo img
 {
-  width: 52px;
+  margin-top: -29px;
+height: 72px;
+width: auto !important;
+margin-bottom: -29px;
+border-radius: 9px;
 }
 .infobar--driver-details
 {

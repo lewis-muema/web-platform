@@ -155,7 +155,7 @@ export default {
 }
 .ongoing--count
 {
-    display: flex;
+  display: flex;
     justify-content: space-between;
     background-color: #fff;
     color: #1782c5;
@@ -164,8 +164,10 @@ export default {
     cursor: pointer;
     border: 0px solid #1782c5;
     border-radius: 2px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+    box-shadow: 0 3px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
     /* text-align: center; */
+    /* background-color: red; */
+    width: 250px;
 }
 .ongoing--card
 {

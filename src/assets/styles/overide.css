@@ -43,6 +43,7 @@ button span {
   padding-left: 20px;
   padding-right: 20px;
   color: #fff;
+  border: 1px solid #69a6d8;
 }
 
 .button-primary--naked {
