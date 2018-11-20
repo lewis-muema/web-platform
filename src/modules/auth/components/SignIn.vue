@@ -58,6 +58,9 @@ export default {
     ...mapActions({
       requestSignIn: "$_auth/requestSignIn"
     }),
+    eraseCookie(name) {
+      document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    },
     setCookie: function(value) {
       let json_string_value = JSON.stringify(value);
       let expires = "";
@@ -74,6 +77,10 @@ export default {
         "; path=/";
     },
     sign_in: function() {
+      //erase cookie on login just incase
+      
+      this.eraseCookie('_sessionSnack');
+
       let values = {};
       values.email = this.email;
       values.password = this.password;

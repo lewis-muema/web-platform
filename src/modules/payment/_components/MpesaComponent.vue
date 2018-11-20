@@ -21,15 +21,26 @@ export default {
   data() {
     return {
       mpesa_payment_data: {
-        amount: "",
-        phone_number: ""
+        amount: '',
+        phone_number: 0,
       },
       payment_state: "Mpesa Payment Not Initiated"
     };
   },
+  mounted() {
+	  this.prepareMpesaPayment();
+  },
   methods: {
     ...mapActions(["$_payment/requestMpesaPayment"]),
-    requestMpesaPayment() {
+	prepareMpesaPayment() {
+		let session = this.$store.getters.getSession;
+		let user_phone = session[session.default]['user_phone'];
+		console.log(user_phone);
+		this.mpesa_payment_data.phone_number = user_phone;
+		//pass amount here
+
+	},
+	requestMpesaPayment() {
       console.log("requesting mpesa payment");
       let session = this.$store.getters.getSession;
       let referenceNumber = "SENDY";
