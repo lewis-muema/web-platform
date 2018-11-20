@@ -32,4 +32,7 @@ export default {
     set_extra_destinations(state, val) {
       state.extra_destinations = val;
     },
+    set_pickup_filled(state, val) {
+      state.pickup_filled = val;
+    },
 };
