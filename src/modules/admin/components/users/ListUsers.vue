@@ -61,6 +61,7 @@
                     <a @click="edit_user(user_data[scope.$index]['cop_user_id'])">Edit User</a>
                 </template>
             </el-table-column>
+        </el-table>
         <div class="section--pagination-wrap">
             <el-pagination
                     layout="total, sizes, prev, pager, next, jumper"
