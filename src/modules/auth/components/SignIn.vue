@@ -118,7 +118,7 @@ export default {
           console.log(error);
         }
       );
-    }
+    },
     doNotification(level,title, message){
         this.$store.commit('setNotificationStatus', true);
         let notification = {"title":title, "level":level, "message":message};
