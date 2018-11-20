@@ -132,3 +132,10 @@
 .home-view-notes-wrapper {
     margin-bottom: 22px;
 }
+.orders-loading-container{
+    height: 1rem;
+    margin-bottom: 10px;
+}
+.orders-loading-container--completion{
+    margin-bottom: 0px;
+}
