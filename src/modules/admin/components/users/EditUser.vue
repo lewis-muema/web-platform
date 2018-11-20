@@ -125,9 +125,8 @@
                     "app": "NODE_PRIVATE_API",
                     "endpoint": "update_user"
                 }
-                this.$store.commit('setNotificationStatus', true); //activate notification
                 this.$store.dispatch("$_admin/editAdminUser", editUser_full_payload).then(response => {
-                    return;
+                    // return;
                     console.log("updated");
 
                     let level = 1; //success
@@ -135,8 +134,9 @@
 
                     let notification = {"title": "Edit User", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
 
-                    vm.one_step_back()
+                    // vm.one_step_back()
 
                 }, error => {
                     console.log(error);
@@ -144,8 +144,9 @@
                     this.message = "Something went wrong.";
                     let notification = {"title": "Edit User Error!", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
 
-                    vm.one_step_back()
+                    // vm.one_step_back()
 
                 });
             },

@@ -72,13 +72,13 @@
                     "app": "NODE_PRIVATE_API",
                     "endpoint": "cop_departments_add"
                 }
-                this.$store.commit('setNotificationStatus', true); //activate notification
                 this.$store.dispatch("$_admin/addNewDepartment", full_payload).then(response => {
                     console.log("department added");
                     console.log(response);
                     let level = 1; //success
                     let notification = {"title": "Add Department", "level": level, "message": message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
                     // this.$router.push('/admin/department');
                 }, error => {
                     console.log("department NOT added");
@@ -86,6 +86,8 @@
                     let level = 2;
                     let notification = {"title": "Add Department", "level": level, "message": "An error occurred."}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
                 });
             },
             go_back: function () {
