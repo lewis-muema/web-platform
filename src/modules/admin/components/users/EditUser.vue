@@ -117,15 +117,18 @@
                 this.$store.commit('setNotificationStatus', true); //activate notification
                 let level = 0; //this will show the white one
                 this.$store.dispatch("$_admin/editAdminUser", editUser_full_payload).then(response => {
-                    console.log(response);
+                    console.log(response.data.status);
+                    return;
                     console.log("updated");
-                    let message = response.data.msg;
+                    // let message = response.data.msg;
                     if (response.data.status == false) {
                         level = 3; //warning //use 3 to show the red one
                         this.message = "An error occurred while saving."
                     } else {
                         level = 1; //success
-                        this.message = "Edit Successful!"
+                        this.message = "Edit Successful!",
+                        this.$router.push('/admin/users');
+
 
                     }
                     let notification = {"title": "Edit User", "level": level, "message": this.message}; //notification object

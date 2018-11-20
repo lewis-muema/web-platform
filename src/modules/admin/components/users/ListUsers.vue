@@ -2,14 +2,13 @@
     <div>
         <div class="section--filter-wrap">
             <div class="section--filter-input-wrap">
-                <el-select class="section--filter-input" v-model="filterData.user" placeholder="Users">
-                    <el-option v-for="user in userData" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
-                    </el-option>
-                </el-select>
+                <el-input class="section--filter-input" v-model="filterData.user" placeholder="Users"></el-input>
+
                 <el-select class="section--filter-input"  v-model="filterData.department" placeholder="All Departments">
                     <el-option v-for="dept in deptData" :key="dept.department_id" :label="dept.department_name" :value="dept.department_id">
                     </el-option>
                 </el-select>
+
                 <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'" @click="filterUserTableData">Search</button>
 
             </div>
@@ -17,9 +16,6 @@
                 <button class="button-primary section--filter-action" @click="addUser">Add User</button>
             </div>
         </div>
-        <!-- {{deptData}}
-        {{user_data}} -->
-        <!--{{user_data}}-->
         <el-table
                 :data="user_data"
                 style="width: 100%"
@@ -225,7 +221,6 @@
             filterUserTableData() {
                 //reset filter
                 this.filterState  = false;
-
                 let user_id = this.filterData.user;
                 let department = this.filterData.department;
 
@@ -241,7 +236,7 @@
                     console.log('performing a user and departments filter');
                     let vm = this;
                     this.filteredUserData = this.filteredUserData.filter(function (user) {
-                        return user.cop_user_id ==  user_id  && user.department_id == department;
+                        return user.name.toLowerCase() ==  user_id.toLowerCase()  && user.department_id == department;
                     });
                     this.filterState = true;
 
@@ -250,7 +245,7 @@
                     console.log('performing a user filter');
                     console.log(user_id);
 
-                    this.filteredUserData = this.filteredUserData.filter( user => user.cop_user_id ==  user_id);
+                    this.filteredUserData = this.filteredUserData.filter( user => user.name.toLowerCase() ==  user_id.toLowerCase());
                     this.filterState = true;
 
 
