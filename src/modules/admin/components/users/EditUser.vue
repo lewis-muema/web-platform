@@ -78,6 +78,8 @@
         mounted() {
             let cop_user_id = this.$route.params.id;
             this.userDetails = this.userData.filter(user => user.cop_user_id == cop_user_id)[0];
+            console.log('length of object')
+           console.log(Object.keys(this.userDetails).length);
 
         },
         computed: {
@@ -126,9 +128,9 @@
                         this.message = "An error occurred while saving."
                     } else {
                         level = 1; //success
-                        this.message = "Edit Successful!",
-                        this.$router.push('/admin/users');
-
+                        this.message = "Edit Successful!";
+                        // this.$router.push('/admin/users');
+                        this.one_step_back()
 
                     }
                     let notification = {"title": "Edit User", "level": level, "message": this.message}; //notification object

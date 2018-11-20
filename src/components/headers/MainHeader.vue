@@ -62,6 +62,13 @@ export default {
       this.$store.commit("setSession", {});
       this.eraseCookie("_sessionSnack");
       this.$router.push({ name: "sign_in" });
+      try{
+          //clear orders to avoid marker persistance
+          this.$store.unregisterModule('$_orders');
+      }
+      catch(er){
+          // orders was not registered
+      }
     },
     data: function () {
         return {
@@ -87,13 +94,13 @@ export default {
           var c = ca[i];
           while (c.charAt(0)==' ') c = c.substring(1,c.length);
           if (c.indexOf(nameEQ) == 0){
-            
-          } 
+
+          }
           return c.substring(nameEQ.length,c.length);
       }
       return null;
     },
-    
+
     linkRoute(route) {
       console.log("attempt route" + route);
       this.$router.push(route);

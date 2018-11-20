@@ -7,7 +7,6 @@
                 <i class="el-icon-caret-left edit-back" v-on:click="go_back"></i>
 
             </div>
-            <!--{{deptDetails}}-->
             <div class="admin-edit2-details position--details">
                 Edit Department Details
             </div>
