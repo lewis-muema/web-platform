@@ -102,6 +102,7 @@
                 editAdminUser: '$_admin/editAdminUser',
             }),
             update_edit: function () {
+                let vm = this;
                 let payload = {};
                 payload.cop_user_id = this.userDetails.cop_user_id;
                 payload.user_name = this.userDetails.name;
@@ -137,19 +138,22 @@
                     } else {
                         level = 1; //success
                         this.message = "Edit Successful!";
-                        // this.$router.push('/admin/users');
-                        this.one_step_back()
 
                     }
                     let notification = {"title": "Edit User", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
-                    this.$router.push('/admin/users');
+
+                    vm.one_step_back()
+
                 }, error => {
                     console.log(error);
                     level = 3;
                     this.message = "Something went wrong.";
                     let notification = {"title": "Edit User Error!", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
+
+                    vm.one_step_back()
+
                 });
             },
             one_step_back: function () {

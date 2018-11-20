@@ -15,7 +15,7 @@ export default {
   components : {ExternalHeader},
   created() {
     const STORE_KEY = '$_auth';
-    this.$store.registerModule(STORE_KEY, auth_store);
+    this.$store.registerModule('$_auth', auth_store);
   },
 }
 </script>
