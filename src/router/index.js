@@ -14,54 +14,6 @@ function isEmpty(obj) {
   return true;
 }
 
-
-function guard(to, from, next){
-  return new Promise((resolve, reject) => {
-      // //check store
-       console.log('router-message-session', store.state.session);
-      //TODO: change this to use the user id and check for null as well
-      //TODO: make sure this is checking the store well
-      //TODO: we now literally have no guard , the door is just wide open
-      console.log(isEmpty(store.state.session));
-
-      if(isEmpty(store.state.session)){
-        if (process.browser) {
-          console.log(window.localStorage.getItem('_sendyWeb'));
-          console.log(window.localStorage.getItem('_sendyWeb').session);
-          store.state.session = window.localStorage.getItem('_sendyWeb').session;
-        }
-      }
-      if (isEmpty(store.state.session) == false) {
-        if (entryUrl) {
-          const url = entryUrl;
-          entryUrl = null;
-          resolve(next(url)); // goto stored url
-        } else {
-          resolve(next()); // all is fine
-        }
-      } else {
-      console.log('router-message', 'user not logged in');
-
-      resolve(next('/auth/sign_in'));
-      //TODO:ssr vue
-      //check cookies
-      // let _sessionSnack = getSessionCookie();
-      // if(_sessionSnack == null){
-      //   entryUrl = to.path; // store entry url before redirect
-      //   resolve(next('/auth/sign_in'));
-      // } else {
-      //   //update the store session
-      //   //pass it as an object
-      //   store.commit('setSession', JSON.parse(_sessionSnack));
-      // }
-
-
-    }
-  })
-}
-
-
-
 function getSessionCookie()   {
 
   var nameEQ = "_sessionSnack" + "=";
@@ -142,10 +94,6 @@ export function createRouter () {
           {
             path: '/auth/sign_up',
             component: () => import('../modules/auth/components/SignUp.vue')
-          },
-          {
-            path: '/auth/sign_up_verification',
-            component: () => import('../modules/auth/components/SignUpVerification.vue')
           },
           {
             path: '/auth/forgot_password',
@@ -327,21 +275,7 @@ export function createRouter () {
 
           ]
       },
-      { path: '/external/onboard/', component: () => import('../modules/external/External.vue'),
-                  children: [
-                   {
-                     path: '/',
-                     component: () => import('../modules/external/External.vue'),
-                   },
-                   {
-                     path: 'link/:token',
-                     component: () => import('../modules/external/External.vue')
-                   },
-                   {
-                     path: 'email/:token',
-                     component: () => import('../modules/external/External.vue')
-                   },
-                 ]
+      { path: '/external/onboard/:token', component: () => import('../modules/external/External.vue'),
       }
     ]
   });
