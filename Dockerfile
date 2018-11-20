@@ -21,5 +21,5 @@ ARG DOCKER_ENV
 # Bundle app source
 COPY . .
 
-EXPOSE 5699
+EXPOSE 8080
 CMD [ "npm", "start" ]
