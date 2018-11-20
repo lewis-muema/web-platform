@@ -2,14 +2,15 @@ export default {
     getSession(state){
         
         let session  = state.session;
-        if(isEmpty(session) == true){
-            //try and get from the cookie
-            session = getSessionCookie();
-            if(session !== null && session !== ''){
-                state.session = JSON.parse(session);
+        if (process.browser) {
+            if(isEmpty(session) == true){
+                //try and get from the cookie
+                session = getSessionCookie();
+                if(session !== null && session !== ''){
+                    state.session = JSON.parse(session);
+                }
             }
         }
-
         return state.session;
 
     },
