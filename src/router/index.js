@@ -14,56 +14,10 @@ function isEmpty(obj) {
   return true;
 }
 
-function guard(to, from, next){
-  return new Promise((resolve, reject) => {
-      // //check store
-       console.log('router-message-session', store.state.session);
-      //TODO: change this to use the user id and check for null as well
-      //TODO: make sure this is checking the store well
-      //TODO: we now literally have no guard , the door is just wide open
-      console.log(isEmpty(store.state.session));
-      
-      if(isEmpty(store.state.session)){
-        if (process.browser) {
-          console.log(window.localStorage.getItem('_sendyWeb'));
-          console.log(window.localStorage.getItem('_sendyWeb').session);
-          store.state.session = window.localStorage.getItem('_sendyWeb').session;
-        }
-      }
-      if (isEmpty(store.state.session) == false) {
-        if (entryUrl) {
-          const url = entryUrl;
-          entryUrl = null;
-          resolve(next(url)); // goto stored url
-        } else {
-          resolve(next()); // all is fine
-        }
-      } else {
-      console.log('router-message', 'user not logged in');
-
-      resolve(next('/auth/sign_in'));
-      //TODO:ssr vue
-      //check cookies 
-      // let _sessionSnack = getSessionCookie();
-      // if(_sessionSnack == null){
-      //   entryUrl = to.path; // store entry url before redirect
-      //   resolve(next('/auth/sign_in'));
-      // } else {
-      //   //update the store session
-      //   //pass it as an object
-      //   store.commit('setSession', JSON.parse(_sessionSnack));
-      // } 
-      
-
-    }
-  })
-}
-
-
 function getSessionCookie()   {
 
   var nameEQ = "_sessionSnack" + "=";
-    var ca = doc.cookie.split(';');
+    var ca = document.cookie.split(';');
     for(var i=0;i < ca.length;i++) {
         var c = ca[i];
         while (c.charAt(0)==' ') c = c.substring(1,c.length);
@@ -74,9 +28,49 @@ function getSessionCookie()   {
     return null;
 }
 
+function guard(to, from, next){
+  
+  return new Promise((resolve, reject) => {
+     let session = store.state.session;
+
+      console.log('the guard is executing');
+      console.log(session);
+
+      console.log(isEmpty(session));
+      
+      if(isEmpty(session)){
+        
+        console.log('empty session here');
+
+        if (process.browser) {
+          //read cookies here
+          let _sessionSnack = getSessionCookie();
+            console.log(_sessionSnack);
+
+            if(_sessionSnack !== null && _sessionSnack !== ''){
+              session = JSON.parse(_sessionSnack);
+              store.state.session = session;
+            } 
+        }
+      }
+      if (isEmpty(session) == false) {
+        
+        console.log('session now updated');
+        resolve(next());
+      } else {
+      console.log('router-message', 'user not logged in');
+      resolve(next('/auth/sign_in'));
+ 
+    }
+  })
+}
+
+
+
+
 
 export function createRouter () {
-  return new Router({
+  const router =  new Router({
     mode: 'history',
     routes: [
       { path: '*', redirect: '/auth' },
@@ -107,11 +101,11 @@ export function createRouter () {
       },
       { path: '/transactions', 
         component: () => import('../modules/transactions/Transactions.vue'),
-        beforeRouteEnter: guard,
+        beforeEnter: guard,
         children: [
             {
               path: '/',
-              component: () => import('../modules/transactions/_components/OrderHistory.vue')
+              component: () => import('../modules/transactions/_components/OrderHistory.vue'),
             },
             {
               path: '/transactions/order_history',
@@ -120,22 +114,24 @@ export function createRouter () {
                 {
                   path: 'details/:id',
                   name:'order-details',
-                  component: () => import('../modules/transactions/_components/OrderDetails.vue')
+                  component: () => import('../modules/transactions/_components/OrderDetails.vue'),
+        
                 },
               ]
             },
             {
               path: '/transactions/statement',
-              component: () => import('../modules/transactions/_components/Statement.vue')
+              component: () => import('../modules/transactions/_components/Statement.vue'),
+        
             },
             {
               path: '/transactions/payments',
-              component: () => import('../modules/transactions/_components/Payments.vue')
+              component: () => import('../modules/transactions/_components/Payments.vue'),
             },
         ]
       },
       { path: '/admin', component: () => import('../modules/admin/Admin.vue'),
-        beforeRouteEnter: guard,
+        beforeEnter: guard,
         children: [
             {
               path: '/',
@@ -183,7 +179,7 @@ export function createRouter () {
         ]
       },
       { path: '/analytics', component: () => import('../modules/analytics/Analytics.vue'),
-      beforeRouteEnter: guard,
+      beforeEnter: guard,
         children: [
             {
               path: '/',
@@ -200,7 +196,7 @@ export function createRouter () {
         ]
       },
       { path: '/payment', component: () => import('../modules/payment/Payment.vue'),
-      beforeRouteEnter: guard, 
+      beforeEnter: guard, 
         children: [
             {
               path: '/',
@@ -221,7 +217,7 @@ export function createRouter () {
         ]
       },
       { path: '/orders', component: () => import('../modules/orders/Orders.vue'),
-      beforeRouteEnter: guard,
+      beforeEnter: guard,
           children: [
               {
                 path: '/',
@@ -239,7 +235,7 @@ export function createRouter () {
           ]
       },
       { path: '/user', component: () => import('../modules/user/User.vue'),
-      beforeRouteEnter: guard,
+      beforeEnter: guard,
           children: [
               {
                 path: '/',
@@ -275,5 +271,10 @@ export function createRouter () {
       { path: '/external/onboard/:token', component: () => import('../modules/external/External.vue'),
       }
     ]
-  })
+  });
+ 
+
+  return router;
+
+
 }
