@@ -80,10 +80,10 @@
             let cop_user_id = this.$route.params.id;
             this.userDetails = this.userData.filter(user => user.cop_user_id == cop_user_id)[0];
 
-            if(this.userDetails !== undefined){
+            if (this.userDetails !== undefined) {
                 this.available = true;
             }
-            else{
+            else {
                 this.available = false;
                 this.one_step_back();
                 console.log("back to users' table")
@@ -126,20 +126,13 @@
                     "endpoint": "update_user"
                 }
                 this.$store.commit('setNotificationStatus', true); //activate notification
-                let level = 0; //this will show the white one
                 this.$store.dispatch("$_admin/editAdminUser", editUser_full_payload).then(response => {
-                    console.log(response.data.status);
                     return;
                     console.log("updated");
-                    // let message = response.data.msg;
-                    if (response.data.status == false) {
-                        level = 3; //warning //use 3 to show the red one
-                        this.message = "An error occurred while saving."
-                    } else {
-                        level = 1; //success
-                        this.message = "Edit Successful!";
 
-                    }
+                    let level = 1; //success
+                    this.message = "Edit Successful!";
+
                     let notification = {"title": "Edit User", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
 
@@ -147,7 +140,7 @@
 
                 }, error => {
                     console.log(error);
-                    level = 3;
+                    let level = 3;
                     this.message = "Something went wrong.";
                     let notification = {"title": "Edit User Error!", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
