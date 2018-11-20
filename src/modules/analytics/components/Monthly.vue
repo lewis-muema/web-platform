@@ -37,6 +37,11 @@ export default {
 
           return iframeUrl
         }
+      },
+      computed: {
+        getSession () {
+          return this.$store.getters.getSession
+        }
       }
 }
 </script>
