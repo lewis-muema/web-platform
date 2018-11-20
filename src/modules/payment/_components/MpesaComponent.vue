@@ -32,17 +32,17 @@ export default {
     requestMpesaPayment() {
       console.log("requesting mpesa payment");
       let session = this.$store.getters.getSession;
-      let refrenceNumber = "SENDY";
+      let referenceNumber = "SENDY";
       let cop_id = 0;
       let user_id = 0;
       let user_email = "";
       if (session.default == "biz") {
-        refrenceNumber += session.biz.cop_id;
+        referenceNumber += session.biz.cop_id;
         cop_id = session.biz.cop_id;
         user_id = session.biz.user_id;
         user_email = session.biz.user_email;
       } else {
-        refrenceNumber = session.peer.user_phone;
+        referenceNumber = session.peer.user_phone;
         user_id = session.peer.user_id;
         user_email = session.peer.user_email;
       }
@@ -51,12 +51,15 @@ export default {
       let mpesa_payload = {
         amount: this.mpesa_payment_data.amount,
         sourceMobile: this.mpesa_payment_data.phone_number,
-        refrenceNumber: refrenceNumber,
+        referenceNumber: referenceNumber,
         user_id: user_id,
         cop_id: cop_id,
         phone: this.mpesa_payment_data.phone_number, //confirm about this later
         email: user_email
-      };
+	  };
+	  
+	  console.log(mpesa_payload);
+
       //TODO: implement the discount bundles if needed
 
       let full_payload = {

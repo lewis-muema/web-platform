@@ -31,5 +31,5 @@ export default {
   actions,
   getters,
   mutations,
-  plugins:plugins
+  plugins: plugins
 };
