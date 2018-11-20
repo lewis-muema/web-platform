@@ -22,82 +22,26 @@
                 :stripe="true"
         >
             <template slot="empty">
-                {{empty_orders_state}}
+                {{empty_departments_state}}
             </template>
             <el-table-column
                     label="Name"
-                    prop="name"
-            >
-            </el-table-column>
-            <el-table-column
-                    label="Phone"
-                    prop="phone"
-            >
-            </el-table-column>
-
-            <el-table-column
-                    label="Email"
-                    prop="email"
-            >
-            </el-table-column>
-            <el-table-column
-                    label="Department"
                     prop="department_name"
             >
             </el-table-column>
             <el-table-column
-                    label="Type"
-            >
-                <template slot-scope="scope">
-                    <span>{{ get_user_type(scope.$index) }}</span>
-                </template>
+                    label="Admin"
+                    prop="department_admin">
             </el-table-column>
             <el-table-column
-                    label="Status"
+                    label="Action"
             >
                 <template slot-scope="scope">
-                    <span>{{ get_user_status(scope.$index) }}</span>
-                </template>
-            </el-table-column>
-            <!--<el-table-column-->
-            <!--label="Branch"-->
-            <!--prop="branch">-->
-            <!--</el-table-column>-->
-            <el-table-column
-                    label="Action">
-                <template slot-scope="scope">
-                    <el-button type="text" @click="edit_user(user_data[scope.$index]['cop_user_id'])">Edit User</el-button>
+                    <a @click="edit_department(departments_data[scope.$index]['cop_user_id'])">Edit</a>
                 </template>
             </el-table-column>
 
         </el-table>
-        <!--<el-table-->
-                <!--:data="departments_data"-->
-                <!--style="width: 100%"-->
-                <!--:border="true"-->
-                <!--:stripe="true"-->
-        <!--&gt;-->
-            <!--<template slot="empty">-->
-                <!--{{empty_departments_state}}-->
-            <!--</template>-->
-            <!--<el-table-column-->
-                    <!--label="Name"-->
-                    <!--prop="department_name"-->
-            <!--&gt;-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                    <!--label="Admin"-->
-                    <!--prop="department_admin">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                    <!--label="Action"-->
-            <!--&gt;-->
-                <!--<template slot-scope="scope">-->
-                    <!--<a @click="edit_department(departments_data[scope.$index]['cop_user_id'])">Edit</a>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
-
-        <!--</el-table>-->
 
         <div class="section--pagination-wrap">
             <el-pagination
