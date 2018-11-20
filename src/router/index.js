@@ -50,7 +50,7 @@ function guard(to, from, next){
             if(_sessionSnack !== null && _sessionSnack !== ''){
               session = JSON.parse(_sessionSnack);
               store.state.session = session;
-            } 
+            }
             if (isEmpty(session) == true) {
               console.log('router-message', 'user not logged in');
                resolve(next('/auth/sign_in'));
@@ -58,12 +58,12 @@ function guard(to, from, next){
               console.log('session is updated');
               resolve(next());
             }
-            
+
 
         } else {
           resolve(next())
-        } 
-        
+        }
+
       } else {
         console.log('session is okay');
         resolve(next());

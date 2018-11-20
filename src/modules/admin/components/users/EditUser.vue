@@ -1,5 +1,5 @@
 <template lang="html">
-    <div id="log_in" class="admin-edit-item">
+    <div v-if="available" id="log_in" class="admin-edit-item">
 
         <div class="admin-edit-inner">
 
@@ -72,12 +72,22 @@
         data() {
             return {
                 userDetails: {},
-                message: ""
+                message: "",
+                available: false
             }
         },
         mounted() {
             let cop_user_id = this.$route.params.id;
             this.userDetails = this.userData.filter(user => user.cop_user_id == cop_user_id)[0];
+
+            if(this.userDetails !== undefined){
+                this.available = true;
+            }
+            else{
+                this.available = false;
+                this.one_step_back();
+                console.log("back to users' table")
+            }
 
         },
         computed: {
@@ -126,9 +136,9 @@
                         this.message = "An error occurred while saving."
                     } else {
                         level = 1; //success
-                        this.message = "Edit Successful!",
-                        this.$router.push('/admin/users');
-
+                        this.message = "Edit Successful!";
+                        // this.$router.push('/admin/users');
+                        this.one_step_back()
 
                     }
                     let notification = {"title": "Edit User", "level": level, "message": this.message}; //notification object
