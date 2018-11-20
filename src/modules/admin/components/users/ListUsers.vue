@@ -37,7 +37,8 @@
             </el-table-column>
             <el-table-column
                     label="Email"
-                    prop="email">
+                    prop="email"
+                    width="250">
             </el-table-column>
             <el-table-column
                     label="Department"
