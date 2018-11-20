@@ -17,29 +17,29 @@
   <div>
 
     <div class="sign-holder dimen">
-      <input class="input-control sign-up-form" type="text" name="contact1" id="u_contact1" placeholder="Your Name" value="">
+      <input class="input-control sign-up-form" type="text" name="name" v-model="name" placeholder="Your Name" value="">
     </div>
 
     <div class="sign-holder dimen">
-      <input class="input-control sign-up-form" type="email" name="u_email" id="email" placeholder="Your Email" value="">
+      <input class="input-control sign-up-form" type="email" name="email" v-model="email" placeholder="Your Email" value="">
     </div>
     <div class="sign-holder dimen">
-      <input class="input-control sign-up-form" type="tel" placeholder="Phone Number" name="u_phone" id="phone_num" value="">
+      <input class="input-control sign-up-form" type="tel" placeholder="Phone Number" name="phone" v-model="phone" value="">
     </div>
     <div class="sign-holder dimen" id="outer_u_pass">
   <span >
-        <input class="input-control sign-up-form" type="password" name="u_pass" id="u_pass" placeholder="Password">
+        <input class="input-control sign-up-form" type="password" name="password" v-model="password" placeholder="Password">
   </span>
     </div>
 
     <div class="sign-holder" style="text-align:center;">
-      <input  type="checkbox" checked name="u_terms" id="u_terms" class="hiddeny">
+      <input  type="checkbox" checked name="u_terms" v-model="u_terms" class="hiddeny">
       <span class="sign-holder__smaller">
           By creating a Sendy account you’re agreeing to the <a class=" sign-holder__grey" href="https://sendyit.com/terms/show">terms and conditions</a>
       </span>
     </div>
     <div class="sign-holder">
-      <input class="button-primary" type="submit" value="Sign Up" id="signup" onclick="" >
+      <input class="button-primary" type="submit" value="Sign Up" id="signup" v-on:click="sign_up" >
     </div>
 
     <div class=" sign-holder sign-forgot-pass sign-smaller">
@@ -56,7 +56,74 @@
 </template>
 
 <script>
+import {mapMutations,mapActions} from 'vuex'
+
 export default {
+  name: "SignUp",
+  data() {
+    return {
+      name: "",
+      phone: "",
+      email: "",
+      password: "",
+      u_terms:"true"
+    };
+  },
+  methods: {
+    ...mapMutations(
+      {
+        setPassword:'$_auth/setPassword',
+        setPhone:'$_auth/setPhone',
+        setEmail:'$_auth/setEmail',
+        setName:'$_auth/setName'
+      }
+    ),
+    ...mapActions({
+       requestSignUpCheck :'$_auth/requestSignUpCheck',
+   }),
+   sign_up: function() {
+     if(this.u_terms == true) {
+
+       let values = {};
+       values.phone = this.phone;
+       values.email = this.email;
+       let full_payload = {
+         values: values,
+         vm: this,
+         app: "NODE_PRIVATE_API",
+         endpoint: "sign_up_check"
+       };
+       this.requestSignUpCheck(full_payload).then(
+         response => {
+           console.log(response);
+           if (response.length > 0) {
+             response = response[0];
+           }
+           if (response.status == true) {
+             console.log(response);
+             this.setName(this.name);
+             this.setEmail(this.email);
+             this.setPhone(this.phone);
+             this.setPassword(this.password);
+             this.$router.push("/auth/sign_up_verification");
+           } else {
+
+             console.warn("Sign Up Failed");
+           }
+         },
+         error => {
+           console.error("Check Internet Connection");
+           console.log(error);
+         }
+       );
+     }
+     else {
+            console.log("Agree Terms and Condition")
+     }
+
+   }
+  },
+
 }
 </script>
 

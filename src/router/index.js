@@ -22,7 +22,7 @@ function guard(to, from, next){
       //TODO: make sure this is checking the store well
       //TODO: we now literally have no guard , the door is just wide open
       console.log(isEmpty(store.state.session));
-      
+
       if(isEmpty(store.state.session)){
         if (process.browser) {
           console.log(window.localStorage.getItem('_sendyWeb'));
@@ -43,7 +43,7 @@ function guard(to, from, next){
 
       resolve(next('/auth/sign_in'));
       //TODO:ssr vue
-      //check cookies 
+      //check cookies
       // let _sessionSnack = getSessionCookie();
       // if(_sessionSnack == null){
       //   entryUrl = to.path; // store entry url before redirect
@@ -52,8 +52,8 @@ function guard(to, from, next){
       //   //update the store session
       //   //pass it as an object
       //   store.commit('setSession', JSON.parse(_sessionSnack));
-      // } 
-      
+      // }
+
 
     }
   })
@@ -68,7 +68,7 @@ function getSessionCookie()   {
         var c = ca[i];
         while (c.charAt(0)==' ') c = c.substring(1,c.length);
         if (c.indexOf(nameEQ) == 0){
-          
+
         } return c.substring(nameEQ.length,c.length);
     }
     return null;
@@ -96,6 +96,10 @@ export function createRouter () {
             component: () => import('../modules/auth/components/SignUp.vue')
           },
           {
+            path: '/auth/sign_up_verification',
+            component: () => import('../modules/auth/components/SignUpVerification.vue')
+          },
+          {
             path: '/auth/forgot_password',
             component: () => import('../modules/auth/components/ForgotPassword.vue')
           },
@@ -105,7 +109,7 @@ export function createRouter () {
           },
         ]
       },
-      { path: '/transactions', 
+      { path: '/transactions',
         component: () => import('../modules/transactions/Transactions.vue'),
         beforeRouteEnter: guard,
         children: [
@@ -200,7 +204,7 @@ export function createRouter () {
         ]
       },
       { path: '/payment', component: () => import('../modules/payment/Payment.vue'),
-      beforeRouteEnter: guard, 
+      beforeRouteEnter: guard,
         children: [
             {
               path: '/',
@@ -272,7 +276,21 @@ export function createRouter () {
 
           ]
       },
-      { path: '/external/onboard/:token', component: () => import('../modules/external/External.vue'),
+      { path: '/external/onboard/', component: () => import('../modules/external/External.vue'),
+                  children: [
+                   {
+                     path: '/',
+                     component: () => import('../modules/external/External.vue'),
+                   },
+                   {
+                     path: 'link/:token',
+                     component: () => import('../modules/external/External.vue')
+                   },
+                   {
+                     path: 'email/:token',
+                     component: () => import('../modules/external/External.vue')
+                   },
+                 ]
       }
     ]
   })
