@@ -106,7 +106,7 @@ export default {
     this.$gmapApiPromiseLazy().then(() => {
       this.mapLoaded = true
     })
-    this.$store.dispatch('$_orders/connect_mqtt')
+    // this.$store.dispatch('$_orders/connect_mqtt')
   }
 }
 </script>

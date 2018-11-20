@@ -25,8 +25,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="home-view-vendor-types" v-if="active_vendor_price_data != '' ">
-                    <div  v-for="j in active_vendor_price_data" :key="j.order_no" @click="set_active_vendor_name(j.vendor_name)" class="home-view-vendor-types--item" :class="get_current_active_vendor_type_class(j.vendor_name)" >
+                <div class="home-view-vendor-types" v-if="active_price_tier_data != '' ">
+                    <div  v-for="j in active_price_tier_data" :key="j.order_no" @click="set_active_vendor_name(j.vendor_name)" class="home-view-vendor-types--item" :class="get_current_active_vendor_type_class(j.vendor_name)" >
                         <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
                             <div class="home-view-vendor-types-item--vendor-wrapper__img">
                                 <img class="home-view-vendor-types-item__image" :src="getVendorIcon(j.vendor_id)" alt="">
@@ -40,10 +40,10 @@
                         </div> -->
                         <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper">
                             <div class="home-view-vendor-types-item--cost-wrapper__cost">
-                                KSh {{j.cost}}
+                                Ksh {{formatNumeral(j.cost)}}
                             </div>
                             <div class="home-view-vendor-types-item--cost-wrapper_time">
-                                9.26pm
+                                {{transformDate(j.eta)}}
                             </div>
                         </div>
                     </div>
@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import numeral from 'numeral';
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import OrderOptions from './OrderOptions.vue'
 export default {
@@ -73,7 +74,7 @@ export default {
           get_active_package_class : '$_orders/$_home/get_active_package_class',
           get_active_vendor_name : '$_orders/$_home/get_active_vendor_name'
         }),
-        active_vendor_price_data: function (){
+        active_price_tier_data: function (){
             if(this.get_active_package_class != ""){
                 return this.get_price_request_object.economy_price_tiers[this.get_active_package_class];
             }
@@ -100,7 +101,13 @@ export default {
             return {
                 'home-view-vendor-types--item__active' : name == this.get_active_vendor_name
             }
-        }
+        },
+        transformDate(eta){
+            return this.moment().add(eta, 'seconds').format("h.mm a");
+        },
+        formatNumeral(num){
+            return numeral(num).format('0,0');
+        },
     }
 }
 </script>

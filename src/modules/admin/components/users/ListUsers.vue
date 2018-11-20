@@ -236,7 +236,7 @@
                     console.log('performing a user and departments filter');
                     let vm = this;
                     this.filteredUserData = this.filteredUserData.filter(function (user) {
-                        return user.name.toLowerCase() ==  user_id.toLowerCase()  && user.department_id == department;
+                        return user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0  && user.department_id == department;
                     });
                     this.filterState = true;
 
@@ -245,7 +245,10 @@
                     console.log('performing a user filter');
                     console.log(user_id);
 
-                    this.filteredUserData = this.filteredUserData.filter( user => user.name.toLowerCase() ==  user_id.toLowerCase());
+                    let vm = this;
+                    this.filteredUserData = this.filteredUserData.filter(function (user) {
+                        return user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0;
+                    });
                     this.filterState = true;
 
 
