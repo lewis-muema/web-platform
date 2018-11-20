@@ -109,7 +109,7 @@
                 }, error => {
                     console.log(error);
                     level = 2;
-                    let notification = {"title":"Edit Department", "level":level, "message":"An error occurred."}; //notification object
+                    let notification = {"title":"Add Department", "level":level, "message":"An error occurred."}; //notification object
                     this.$store.commit('setNotification', notification);
                 });
             },
