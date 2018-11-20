@@ -18,7 +18,7 @@
                            placeholder="Name">
                 </div>
                 <div class="edit-holder">
-                    <el-select class="addUser--select edit-select" v-model="filterData.user" placeholder="Admin">
+                    <el-select class="addUser--select edit-select" v-model="deptDetails.cop_user_id" placeholder="Admin">
                         <el-option v-for="user in userData" :key="user.cop_user_id" :label="user.name"
                                    :value="user.cop_user_id">
                         </el-option>
@@ -46,27 +46,27 @@
     export default {
         name: 'EditDepartment',
         mounted() {
-            let session = this.$store.getters.getSession;
-            let cop_id = 0;
-            if (session.default == 'biz') {
-                cop_id = session[session.default]['cop_id'];
-            }
-
-            console.log("getting session")
-            let usersList_payload = {
-                "cop_id": cop_id,
-            }
-            let users_full_payload = {
-                "values": usersList_payload,
-                "vm": this,
-                "app": "NODE_PRIVATE_API",
-                "endpoint": "cop_users"
-            }
-            this.$store.dispatch("$_admin/requestUsersList", users_full_payload).then(response => {
-                console.log(response);
-            }, error => {
-                console.log(error);
-            });
+            // let session = this.$store.getters.getSession;
+            // let cop_id = 0;
+            // if (session.default == 'biz') {
+            //     cop_id = session[session.default]['cop_id'];
+            // }
+            //
+            // console.log("getting session")
+            // let usersList_payload = {
+            //     "cop_id": cop_id,
+            // }
+            // let users_full_payload = {
+            //     "values": usersList_payload,
+            //     "vm": this,
+            //     "app": "NODE_PRIVATE_API",
+            //     "endpoint": "cop_users"
+            // }
+            // this.$store.dispatch("$_admin/requestUsersList", users_full_payload).then(response => {
+            //     console.log(response);
+            // }, error => {
+            //     console.log(error);
+            // });
         },
         data() {
             return {
@@ -75,16 +75,14 @@
                 dept_value: '',
                 status_value: '',
                 type_value: '',
+                message: "",
                 deptDetails: {},
-                filterData: {
-                    "user": ""
-                }
+                userDetails: {}
             }
         },
         mounted() {
             let cop_user_id = this.$route.params.id;
             this.deptDetails = this.deptData.filter(dept => dept.cop_user_id == cop_user_id)[0];
-
         },
         computed: {
             ...mapGetters({
@@ -96,14 +94,13 @@
 
         methods: {
             ...mapActions({
-                editAdminDepartment: '$_admin/editAdminDepartment',
-                requestUsersList: '$_admin/requestUsersList',
+                editAdminDepartment: '$_admin/editAdminDepartment'
             }),
             update_department: function () {
                 let editDept_payload = {
                     "department_id": this.deptDetails.department_id,
                     "department_name": this.deptDetails.department_name,
-                    "cop_user_id": this.filterData.user
+                    "cop_user_id": this.deptDetails.cop_user_id
                 }
                 console.log(editDept_payload)
                 let editDept_full_payload = {
@@ -119,17 +116,20 @@
                     console.log("updated");
                     let message = response.data.msg;
                     if(response.data.status == false){
-                        level = 2; //warning //use 3 to show the red one
+                        level = 3; //warning //use 3 to show the red one
+                        this.message = "Something went wrong."
                     } else {
                         level = 1; //success
+                        this.message = "edit Successful!"
                     }
-                    let notification = {"title":"Edit Department", "level":level, "message":message}; //notification object
+                    let notification = {"title":"Edit Department", "level":level, "message":this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     // this.$router.push('/admin/department');
                 }, error => {
                     console.log(error);
                     level = 2;
-                    let notification = {"title":"Edit Department", "level":level, "message":"An error occurred."}; //notification object
+                    this.message = "Something went wrong."
+                    let notification = {"title":"Edit Department", "level":level, "message":this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                 });
             },

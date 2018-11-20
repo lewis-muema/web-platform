@@ -8,7 +8,7 @@
             <div class="section">
                 <router-link class="section__link" to="/admin/users">Users</router-link>
                 <router-link class="section__link" to="/admin/department">Department</router-link>
-                <router-link class="section__link" to="/admin/preferences">Preferences</router-link>
+                <!--<router-link class="section__link" to="/admin/preferences">Preferences</router-link>-->
                 <router-link class="section__link" to="/admin/api">API</router-link>
             </div>
             <div class="">
