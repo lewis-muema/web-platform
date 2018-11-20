@@ -7,7 +7,7 @@
           <no-ssr placeholder="">
               <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img .homeview--input-bundler__destination-input sendy-orange" width="10px"  />
               <gmap-autocomplete @place_changed="setLocation($event, 0)" :options="map_options"  v-model="locations[0]" placeholder="Pickup" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"></gmap-autocomplete>
-              <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right " width="10px"  @click="clearLocation(0)"/>
+              <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup     " width="10px"  @click="clearLocation(0)" />
           </no-ssr>
         </div>
         <div class="homeview--destinations">
@@ -15,7 +15,7 @@
               <no-ssr placeholder="">
                   <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px"  />
                   <gmap-autocomplete  @place_changed="setLocation($event, 1)" :options="map_options"  v-model="locations[1]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
-                  <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right " width="10px"  @click="clearLocation(1)"/>
+                  <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup " width="10px"  @click="clearLocation(1)"/>
               </no-ssr>
             </div>
         </div>
@@ -23,19 +23,21 @@
           <div class="homeview--input-bundler">
             <no-ssr placeholder="">
                 <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px"  />
-                <gmap-autocomplete  @place_changed="setLocation($event, n+2)" :options="map_options"  v-model="locations[2]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
-                <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right " width="10px"  @click="remove_location(n+2)"/>
+                <gmap-autocomplete  @place_changed="setLocation($event, n+2)" :options="map_options"  v-model="locations[n+2]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
+                <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right " width="10px"  @click="removeExtraDestinationWrapper(n+2)"/>
             </no-ssr>
           </div>
 
         </div>
 
       </div>
-      <!-- <div class="homeview--row homeview--row__more-destinations">
+      <div class="homeview--row homeview--row__more-destinations" v-if="allow_add_destination">
            <font-awesome-icon icon="plus" size="xs" class="sendy-blue homeview--row__font-awesome" width="10px" />
-        <a href="#" class="homeview--add" @click="newDestination()">Add</a>
-      </div> -->
-      <div v-if="get_order_path.length > 1">
+        <a href="#" class="homeview--add" @click="addExtraDestination()">Add</a>
+      </div>
+      <div class="orders-loading-container" v-loading="loading" v-if="loading">
+      </div>
+      <div v-if="get_order_path.length > 1 && !loading">
           <vendor-view ></vendor-view>
       </div>
       </div>
@@ -59,6 +61,7 @@ export default {
       show_destinations: false,
        map_options:{componentRestrictions: {country: ['ke', 'tz', 'ug', 'rw', 'bi']}},
        locations:[],
+       loading:false,
 
     }
   },
@@ -72,7 +75,16 @@ export default {
       get_max_destinations : '$_orders/$_home/get_max_destinations',
       get_order_path : '$_orders/$_home/get_order_path',
       get_extra_destinations : '$_orders/$_home/get_extra_destinations',
+      get_order_notes : '$_orders/$_home/get_order_notes',
+      get_price_request_object : '$_orders/$_home/get_price_request_object',
+      get_active_package_class : '$_orders/$_home/get_active_package_class',
+      get_active_vendor_name : '$_orders/$_home/get_active_vendor_name',
+      get_pickup_filled : '$_orders/$_home/get_pickup_filled',
+      get_map_markers : '$_orders/get_markers'
     }),
+    allow_add_destination(){
+        return !this.loading && ((this.get_order_path.length-1) <= this.get_max_destinations) && (this.get_order_path.length>1) && (this.get_extra_destinations <= this.get_order_path.length-2 );
+    }
   },
   methods: {
     ...mapMutations({
@@ -80,19 +92,28 @@ export default {
       unset_location_marker : '$_orders/unset_location_marker',
       set_order_path: '$_orders/$_home/set_order_path',
       unset_order_path: '$_orders/$_home/unset_order_path',
-      set_extra_destinations: '$_orders/$_home/set_extra_destinations',
-      // add_waypoint : '$_orders/$_home/add_waypoint',
-      // remove_waypoint : '$_orders/$_home/remove_waypoint'
+      setPickupFilled: '$_orders/$_home/set_pickup_filled',
+      addExtraDestination : '$_orders/$_home/add_extra_destination',
+      removeExtraDestination : '$_orders/$_home/remove_extra_destination'
     }),
     ...mapActions({
         requestPriceQuote: '$_orders/$_home/requestPriceQuote',
     }),
+    removeExtraDestinationWrapper(index){
+        this.removeExtraDestination();
+        this.clearLocation(index);
+    },
+    addExtraDestinationWrapper(){
+        let next_index = this.get_order_path.length;
+        this.clearLocation(next_index);
+    },
     clearLocation(index){
         if(index == 0){
-            //set pickup cleared
+            this.setPickupFilled(false);
         }
         this.unset_location_marker(index);
         this.unset_order_path(index);
+        this.deleteLocationInModel(index);
     },
     setLocation(place,index){
         // TO Do reset marker on store when leaving the route
@@ -108,7 +129,7 @@ export default {
                 "place_idcustom": place.place_id,
                 "Label": "",
                 "HouseDoor": "",
-                "Other description": "",
+                "Otherdescription": "",
                 "Typed": "",
                 "Vicinity": "Not Indicated",
                 "Address": "Not Indicated"
@@ -117,12 +138,23 @@ export default {
         let path_payload = {
             "index":index,
             "path":path_obj
-        };
+        }
+        this.clearLocation(index);
         this.setMarker(place.geometry.location.lat(),place.geometry.location.lng(),index );
         this.set_order_path(path_payload);
-        if(this.get_order_path.length > 1){
+        this.setLocationInModel(index,place.name);
+        if(index == 0){
+            this.setPickupFilled(true);
+        }
+        if(this.get_order_path.length > 1 && this.get_pickup_filled == true){
             this.doPriceRequest();
         }
+    },
+    setLocationInModel(index, name){
+        this.locations.splice(index,0,name);
+    },
+    deleteLocationInModel(index){
+        this.locations.splice(index,1);
     },
     setMarker(lat,lng, index){
         let mark = {
@@ -138,34 +170,35 @@ export default {
         }
         this.set_location_marker(marker_payload);
     },
-    newDestination(){
 
-    },
-    getOrderDetailsFromSessionData(){
-
-    },
     createPriceRequestObject(){
         let obj = {"path":this.get_order_path};
+        let acc = {};
+        let session = this.$store.getters.getSession;
+        if('default' in session){
+            acc = session[session.default];
+        }
         let infor = {
-          "email": "ian@sendy.co.ke",
-          "client_mode": "0",
-          "cop_id": 0,
-          "name": "Evanson",
-          "phone": "0700177140",
-          "date_time": "2018-11-18 22:07:07",
+          "email": acc.user_email,
+          "client_mode": 'cop_id' in acc ? acc.cop_id : 0,
+          "cop_id": 'cop_id' in acc ? acc.cop_id : 0,
+          "name": acc.user_name,
+          "phone": acc.user_phone,
+          "date_time": this.moment().format('YYYY-MM-DD HH:mm:ss'),
           "schedule_status": false,
-          "schedule_time": "2018-11-18 22:07:13",
+          "schedule_time": this.moment().format('YYYY-MM-DD HH:mm:ss'),
           "vendor_type": 1,
           "group_id": 1,
           "client_type": "corporate",
           "rider_dist": 0,
           "no_charge_status": false,
           "is_re_request": false,
-          "rider_phone": "",
+          "rider_phone": "0709779779",
           "insurance": "0",
           "type": "coordinates",
           "promotion_status": false,
-          "destination_paid_status": false
+          "destination_paid_status": false,
+          "is_edit": false
         }
         let json_decoded_path = JSON.stringify(obj);
         infor.path = json_decoded_path;
@@ -180,24 +213,32 @@ export default {
           "app":"PRIVATE_API",
           "endpoint":"pricing_multiple"
         };
-
+        this.loading = true;
         this.requestPriceQuote(payload).then(response => {
-
+            this.loading = false;
            console.log(response);
 
            if(response.status == true){
-
+               // this.newDestination();
 
            } else {
-
-              console.warn('login failed');
+               this.doNotification(2,"Price request failed", "Price request failed. Please try again")
+              console.warn('Price request failed');
 
            }
 
         }, error => {
             console.error("Check Internet Connection")
             console.log(error);
+            this.doNotification(3,"Price request failed", "Price request failed. Please check your internet connection and try again.");
+            this.loading = false;
         });
+    },
+
+    doNotification(level,title, message){
+        this.$store.commit('setNotificationStatus', true);
+        let notification = {"title":title, "level":level, "message":message};
+        this.$store.commit('setNotification', notification);
     },
     scroll_to_bottom(){
         let container = this.$el.querySelector("#homeview-form");
@@ -207,12 +248,24 @@ export default {
         return {
             'homeview--input-bundler__destination-short-input': false
         }
-    }
+    },
   },
 
   created() {
     this.$store.registerModule(['$_orders','$_home'], home_store);
   },
+  beforeRouteLeave (to, from, next) {
+    if(to.name == 'tracking'){
+        if(this.get_map_markers.length > 0){
+            for(let i=0; i< this.get_map_markers.length; i++){
+                this.unset_location_marker(i);
+                this.unset_order_path(i);
+                this.deleteLocationInModel(i);
+            }
+        }
+    }
+    next();
+},
 
   watch:{
       // get_order_path: function (val) {
