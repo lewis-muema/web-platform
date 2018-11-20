@@ -1,6 +1,6 @@
 export default {
     getSession(state){
-        
+
         let session  = state.session;
         if (process.browser) {
             if(isEmpty(session) == true){
@@ -33,7 +33,7 @@ function getSessionCookie()   {
           var c = ca[i];
           while (c.charAt(0)==' ') c = c.substring(1,c.length);
           if (c.indexOf(nameEQ) == 0){
-            
+
           } return c.substring(nameEQ.length,c.length);
       }
       return null;
@@ -44,7 +44,6 @@ function getSessionCookie()   {
         if(obj.hasOwnProperty(prop))
             return false;
     }
-  
+
     return true;
   }
-  
