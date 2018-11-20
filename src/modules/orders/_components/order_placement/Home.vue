@@ -76,7 +76,7 @@ export default {
       get_order_path : '$_orders/$_home/get_order_path',
       get_extra_destinations : '$_orders/$_home/get_extra_destinations',
       get_order_notes : '$_orders/$_home/get_order_notes',
-      get_price_request_object : '$_orders/$_home/get_price_request_object:',
+      get_price_request_object : '$_orders/$_home/get_price_request_object',
       get_active_package_class : '$_orders/$_home/get_active_package_class',
       get_active_vendor_name : '$_orders/$_home/get_active_vendor_name',
       get_pickup_filled : '$_orders/$_home/get_pickup_filled',
@@ -119,7 +119,7 @@ export default {
                 "place_idcustom": place.place_id,
                 "Label": "",
                 "HouseDoor": "",
-                "Other description": "",
+                "Otherdescription": "",
                 "Typed": "",
                 "Vicinity": "Not Indicated",
                 "Address": "Not Indicated"
@@ -170,14 +170,6 @@ export default {
         if('default' in session){
             acc = session[session.default];
         }
-        else{
-            acc.user_email = 'faithshop@gmail.com';
-            acc.client_mode = 0;
-            acc.cop_id = 0;
-            acc.name = 'Missing session';
-            acc.phone = '0778987789';
-            acc.user_phone = '0778987789';
-        }
         let infor = {
           "email": acc.user_email,
           "client_mode": 'cop_id' in acc ? acc.cop_id : 0,
@@ -193,11 +185,12 @@ export default {
           "rider_dist": 0,
           "no_charge_status": false,
           "is_re_request": false,
-          "rider_phone": "",
+          "rider_phone": "0709779779",
           "insurance": "0",
           "type": "coordinates",
           "promotion_status": false,
-          "destination_paid_status": false
+          "destination_paid_status": false,
+          "is_edit": false
         }
         let json_decoded_path = JSON.stringify(obj);
         infor.path = json_decoded_path;
@@ -258,10 +251,13 @@ export default {
         if(this.get_map_markers.length > 0){
             for(let i=0; i< this.get_map_markers.length; i++){
                 this.unset_location_marker(i);
+                this.unset_order_path(i);
+                this.deleteLocationInModel(i);
             }
         }
     }
-    },
+    next();
+},
 
   watch:{
       // get_order_path: function (val) {

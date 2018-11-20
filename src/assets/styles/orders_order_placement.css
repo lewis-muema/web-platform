@@ -112,7 +112,7 @@
     visibility: hidden;
 
 }
-..homeview--row__font-awesome.homeview--input-bundler__img-right:hover{
+.homeview--row__font-awesome.homeview--input-bundler__img-right:hover{
     visibility: visible;
 }
 .homeview--input-bundler__destination-input{

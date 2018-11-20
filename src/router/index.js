@@ -44,25 +44,31 @@ function guard(to, from, next){
 
         if (process.browser) {
           //read cookies here
-          let _sessionSnack = getSessionCookie();
+            let _sessionSnack = getSessionCookie();
             console.log(_sessionSnack);
 
             if(_sessionSnack !== null && _sessionSnack !== ''){
               session = JSON.parse(_sessionSnack);
               store.state.session = session;
             }
+            if (isEmpty(session) == true) {
+              console.log('router-message', 'user not logged in');
+               resolve(next('/auth/sign_in'));
+            } else {
+              console.log('session is updated');
+              resolve(next());
+            }
+
+
+        } else {
+          resolve(next())
         }
-      }
-      if (isEmpty(session) == false) {
 
-        console.log('session now updated');
-        resolve(next());
       } else {
-      console.log('router-message', 'user not logged in');
-      resolve(next('/auth/sign_in'));
-
-    }
-  })
+        console.log('session is okay');
+        resolve(next());
+      }
+    })
 }
 
 

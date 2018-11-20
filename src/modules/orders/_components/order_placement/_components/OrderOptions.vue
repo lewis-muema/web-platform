@@ -36,21 +36,22 @@
 
                 </div>
                 <div class="home-view--seperator home-view--seperator__mini"></div>
+                <span v-if="allowCash != true">
+                    <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
+                        <div class="home-view-notes-wrapper--item__option">
+                            <!-- <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
+                            <div class="home-view-notes-wrapper--item__option-div">
+                                <el-radio v-model="payment_method" label="3">Payment on delivery</el-radio>
+                            </div>
+                        </div>
+                        <div class="home-view-notes-wrapper--item__value">
+                            <!-- <input type="checkbox" name="" value=""> -->
 
-                <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
-                    <div class="home-view-notes-wrapper--item__option">
-                        <!-- <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
-                        <div class="home-view-notes-wrapper--item__option-div">
-                            <el-radio v-model="payment_method" label="3">Payment on delivery</el-radio>
                         </div>
                     </div>
-                    <div class="home-view-notes-wrapper--item__value">
-                        <!-- <input type="checkbox" name="" value=""> -->
-
+                    <div class="home-view--seperator home-view--seperator__mini">
                     </div>
-                </div>
-                <div class="home-view--seperator home-view--seperator__mini">
-                </div>
+                </span>
                 <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
@@ -165,6 +166,7 @@ export default {
             cash_status : false,
             card_token : '',
             customer_token : '',
+            payment_type : "prepay"
         }
     },
     computed :{
@@ -179,24 +181,27 @@ export default {
         }),
         active_price_tier_data: function (){
             if(this.get_active_package_class != ""){
-                return this.get_price_request_object.economy_price_tiers[this.get_active_package_class];
+                return this.get_price_request_object.economy_price_tiers.find(
+                    pack => pack.tier_group === this.get_active_package_class
+                )
             }
             return "";
         },
         active_vendor_price_data: function (){
-            if(this.get_active_package_class != ""){
-                return this.get_price_request_object.economy_price_tiers[this.get_active_package_class].find(
-                    vendor => vendor.vendor_name === this.get_active_vendor_name
-                );
-            }
-            return {};
+            return this.active_price_tier_data.price_tiers.find(
+                vendor => vendor.vendor_name === this.get_active_vendor_name
+            )
+
         },
         order_cost:function(){
             if('cost' in this.active_vendor_price_data){
                 return this.active_vendor_price_data.cost-this.active_vendor_price_data.discountAmount;
             }
             return 0;
-        }
+        },
+        allowCash(){
+            return this.get_price_request_object.payment_option == 2 || this.getRB() <= 0;
+        },
 
     },
     methods:{
@@ -219,45 +224,61 @@ export default {
         getRB(){
             return numeral(this.getRunningBalance).format('0,0');
         },
-        checkPaymentDetails(){
+        checkAllowPrePaid(){
             if(this.get_price_request_object.payment_option == 1){
-                if(this.payment_method == ''){
-                    this.doNotification('2','Payment method', "The payment method has not been set, please set and try again.");
+                // if(this.active_vendor_price_data.cost )
+                if(this.getRB() < 0){
+                    if(Math.abs(this.order_cost) <= Math.abs(this.getRB()) )
+                    return true;
                 }
-                else{
-                    if(this.payment_method == 1){
-                        this.handleMpesaPayments();
-                    }
-                    else if(this.payment_method == 2){
-                        this.handleCardPayments();
-                    }
-                    else if( this.payment_method == 3){
-                        this.handleCashPayments();
-                    }
-                    else if( this.payment_method == 5){
-                        this.handlePromoCodePayments();
-                    }
-                }
+                return false;
             }
-            else{
+            return true;
+        },
+        checkPaymentDetails(){
+            if(this.get_active_vendor_name == ''){
+                this.doNotification('2','Select a vehicle type', "The vehicle type not been set, please set and try again.");
+                return false;
+            }
+            if(this.checkAllowPrePaid() == true){
+                // TO Do charge when prepaid accounts specify the method
                 this.handlePostPaidPayments();
             }
+            else{
+                console.log('not passed checks for checkAllowPrePaid')
+                if(this.payment_method == 1){
+                    this.handleMpesaPayments();
+                }
+                else if(this.payment_method == 2){
+                    this.handleCardPayments();
+                }
+                else if( this.payment_method == 3){
+                    this.handleCashPayments();
+                }
+                else if( this.payment_method == 5){
+                    this.handlePromoCodePayments();
+                }
+            }
+            return true;
         },
         handleMpesaPayments(){
-            this.saveInfoToStore();
+
         },
         handlePromoCodePayments(){
-            this.saveInfoToStore();
+
+        },
+        handleCardPayments(){
+
         },
         handleCashPayments(){
-            if(this.getRunningBalance <= 0){
+            console.log('allowed cash payment')
+            if(this.getRB() <= 0){
                 this.doCompleteOrder();
             }
         },
-        handleCardPayments(){
-            this.saveInfoToStore();
-        },
         handlePostPaidPayments(){
+            console.log('allowed post pay payment')
+            this.payment_type = 'postpay';
             this.doCompleteOrder();
         },
         doCompleteOrder(){
@@ -275,8 +296,8 @@ export default {
                if(response.status == true){
                    this.setPickupFilled(false);
                    let order_no = this.get_price_request_object.order_no;
-                   this.$store.unregisterModule(['$_orders','$_home']);
                    this.$router.push({ name: 'tracking', params: { order_no: order_no }})
+                   // this.$store.unregisterModule(['$_orders','$_home']);
 
 
                } else {
@@ -297,14 +318,6 @@ export default {
             let session = this.$store.getters.getSession;
             if('default' in session){
                 acc = session[session.default];
-            }
-            else{
-                acc.user_email = 'faithshop@gmail.com';
-                acc.client_mode = 0;
-                acc.cop_id = 0;
-                acc.name = 'Missing session';
-                acc.phone = '0778987789';
-                acc.user_phone = '0778987789';
             }
             let payload = {
               "note": this.order_notes,
@@ -327,7 +340,7 @@ export default {
               "destination_paid_status": false,
               "delivery_points": this.get_order_path.length-1,
               "sendy_coupon": "0",
-              "payment_mode": 0,
+              "payment_mode": this.payment_method,
               "schedule_time": this.moment(this.schedule_time,'YYYY-MM-DD HH:mm:ss Z').format('YYYY-MM-DD HH:mm:ss'),
               "tier_tag": this.active_vendor_price_data.tier_tag,
               "cop_id": 'cop_id' in acc ? acc.cop_id : 0,
@@ -335,7 +348,7 @@ export default {
               "isreturn": false,
               "vendor_type": this.active_vendor_price_data.vendor_id,
               "rider_phone": this.get_price_request_object.order_no,
-              "type": "postpaid"
+              "type": this.payment_type
           };
           payload = {"values":payload};
           return payload;
@@ -350,6 +363,21 @@ export default {
 
         },
         refreshRunningBalance(){
+            let session = this.$store.getters.getSession;
+
+            let running_balance_payload = {
+              values: {
+                cop_id: 'cop_id' in session[session.default] ? session[session.default]["cop_id"] : 0,
+                user_phone: session[session.default]["user_phone"]
+              }
+            };
+
+            let payload = {
+              values: running_balance_payload,
+              vm: this,
+              app: "PRIVATE_API",
+              endpoint: "running_balance"
+            };
             this.$store.dispatch("$_payment/requestRunningBalance", payload).then(
                 response => {
                   if (response.length > 0) {
