@@ -45,7 +45,12 @@ export default {
     },
     computed :{
         payment_loading_title() {
-            return "Sorry, Safaricom cannot be reached. Instead, please pay to Pay Bill no. 848450 with Account Number SENDY1269."
+            let session  = this.$store.getters.getSession;
+            let account_no = session[session.default]['user_phone'];
+            if(session.default == 'biz'){
+                account_no = "SENDY"+session.biz.cop_id;
+            }
+            return "Sorry, Safaricom cannot be reached. Instead, please pay to Pay Bill no. 848450 with Account Number."+ account_no;
         },
         
         

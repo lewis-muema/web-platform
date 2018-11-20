@@ -13,6 +13,10 @@
             <div class="">
               {{this.tracking_data.rider.vehicle_name}}
             </div>
+            <div class="">
+              {{this.tracking_data.rider.number_plate}}
+            </div>
+            
           </div>
           <div class="infobar--driver-details" v-else>
             <div class="">

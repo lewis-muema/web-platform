@@ -248,9 +248,13 @@ export default {
       });
     },
     formatAmount(row, column, cellValue) {
-      let value = row.order_cost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
-      value = value.split(".");
-      return value[0];
+      if(typeof row.order_cost != 'undefined'){
+        let value = row.order_cost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+        value = value.split(".");
+        return value[0];
+      } else {
+        return "";
+      }
     },
     requestOrderHistory(payload) {
       let full_payload = {

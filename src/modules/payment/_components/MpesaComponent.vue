@@ -245,9 +245,6 @@ export default {
     valid_phone: function() {
       return this.validatePhone(this.mpesa_payment_data.phone_number);
     },
-    payment_loading_content() {
-        return "Sorry, Safaricom cannot be reached. Instead, please pay to Pay Bill no. 848450 with Account Number SENDY1269."
-    },
   }
 };
 </script>
