@@ -5,7 +5,7 @@ export default {
     let url = state.ENV[payload.app];
     //add api key - if request is going to the backend
     if(payload.app == 'BACKEND_CUSTOMERS_APP'){
-      payload.endpoint += '?apikey='+state.ENV['BACKEND_API_KEY'];
+      payload.endpoint = payload.endpoint + '?apikey='+state.ENV['BACKEND_API_KEY'];
     }
 
     return new Promise((resolve, reject) => {
