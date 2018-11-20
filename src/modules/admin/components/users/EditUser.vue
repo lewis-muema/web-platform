@@ -1,5 +1,5 @@
 <template lang="html">
-    <div id="log_in" class="admin-edit-item">
+    <div v-if="available" id="log_in" class="admin-edit-item">
 
         <div class="admin-edit-inner">
 
@@ -72,14 +72,22 @@
         data() {
             return {
                 userDetails: {},
-                message: ""
+                message: "",
+                available: false
             }
         },
         mounted() {
             let cop_user_id = this.$route.params.id;
             this.userDetails = this.userData.filter(user => user.cop_user_id == cop_user_id)[0];
-            console.log('length of object')
-           console.log(Object.keys(this.userDetails).length);
+
+            if(this.userDetails !== undefined){
+                this.available = true;
+            }
+            else{
+                this.available = false;
+                this.one_step_back();
+                console.log("back to users' table")
+            }
 
         },
         computed: {
