@@ -19,6 +19,7 @@
         </div>
         <!-- {{deptData}}
         {{user_data}} -->
+        <!--{{user_data}}-->
         <el-table
                 :data="user_data"
                 style="width: 100%"
@@ -131,7 +132,7 @@
                 "values" : payload,
                 "vm":this,
                 "app":"NODE_PRIVATE_API",
-                "endpoint":"cop_departments/"
+                "endpoint":"cop_departments"
             }
             this.$store.dispatch("$_admin/requestDepartmentsList", depts_full_payload).then(response => {
                 console.log(response);
@@ -288,38 +289,4 @@
 <style lang="css" scoped>
     @import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons';
     /* @import "../../../../assets/styles/datatable.css"; */
-
-    .button {
-        float: right;
-    }
-
-    .button__element {
-        text-transform: uppercase;
-        display: inline-block;
-        padding: 10px 30px;
-        margin-bottom: 0;
-        font-size: 14px;
-        font-weight: normal;
-        line-height: 1.42857143;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: middle;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        background-image: none;
-        border: 1px solid transparent;
-        border-radius: 3px;
-        color: #fff;
-        background-color: #1782C5;
-        border-color: #357ebd;
-        text-decoration: none;
-    }
-
-    .menu {
-        display: flow-root;
-    }
-
 </style>

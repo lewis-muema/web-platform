@@ -7,7 +7,6 @@
                 <button class="button-primary section--filter-action" @click="addDepartment">Add Department</button>
             </div>
         </div>
-        <!--{{departments_data}}-->
         <el-table
                 :data="departments_data"
                 style="width: 100%"
@@ -58,13 +57,17 @@
     export default {
         name: "Departments",
         mounted() {
-            let session_data = this.$store.getters.getSession;
-            // console.log("getting session")
-            let deptsList_payload = {
-                "cop_id": session_data.cop_id,
+            let session = this.$store.getters.getSession;
+            let cop_id = 0;
+            if(session.default == 'biz'){
+                cop_id = session[session.default]['cop_id'];
+            }
+            let payload = {
+                "cop_id": cop_id
+
             }
             let users_full_payload = {
-                "values" : deptsList_payload,
+                "values" : payload,
                 "vm":this,
                 "app":"NODE_PRIVATE_API",
                 "endpoint":"cop_departments"
@@ -77,7 +80,8 @@
         },
         data: function () {
             return {
-                empty_departmens_state: 'Fetching Departments',
+                fetchedDepartmentsData:[],
+                empty_departments_state: 'Fetching Departments',
                 pagination_limit: 10,
                 pagination_page: 1,
             }
