@@ -9,7 +9,7 @@ export default {
             //commit('setOrderHistoryOrders',response.data.data);
             //check the reponse if true make another request to the backend to store the data
 
-            let session = this.$store.getters.getSession;
+            let session = payload.vm.$store.getters.getSession;
             let reference = "";
             let card_trans_id = "";
 
