@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapGetters } from "Vuex";
+import { mapGetters } from 'vuex';
 export default {
   name: "main-header",
   data: function() {
