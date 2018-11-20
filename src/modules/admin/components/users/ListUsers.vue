@@ -72,7 +72,7 @@
             <el-table-column
                     label="Action">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="edit_user(user_data[scope.$index]['cop_user_id'])">Edit User</el-button>
+                    <a @click="edit_user(user_data[scope.$index]['cop_user_id'])">Edit User</a>
                 </template>
             </el-table-column>
 
