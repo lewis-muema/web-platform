@@ -14,7 +14,7 @@ function isEmpty(obj) {
   return true;
 }
 
-<<<<<<< HEAD
+
 function guard(to, from, next){
   return new Promise((resolve, reject) => {
       // //check store
@@ -61,8 +61,7 @@ function guard(to, from, next){
 }
 
 
-=======
->>>>>>> 7dcf4d5a706a25729a533c7b05d72c53778f692e
+
 function getSessionCookie()   {
 
   var nameEQ = "_sessionSnack" + "=";
