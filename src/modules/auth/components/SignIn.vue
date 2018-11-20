@@ -78,7 +78,7 @@ export default {
     },
     sign_in: function() {
       //erase cookie on login just incase
-      
+
       this.eraseCookie('_sessionSnack');
 
       let values = {};
@@ -109,6 +109,7 @@ export default {
           } else {
             //failed to login
             //show some sort of error
+            this.doNotification(2,"Login failed", "Login failed. Please try again")
             console.warn("login failed");
           }
         },
@@ -118,6 +119,11 @@ export default {
         }
       );
     }
+    doNotification(level,title, message){
+        this.$store.commit('setNotificationStatus', true);
+        let notification = {"title":title, "level":level, "message":message};
+        this.$store.commit('setNotification', notification);
+    },
   }
 };
 </script>
