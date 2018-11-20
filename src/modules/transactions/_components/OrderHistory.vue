@@ -2,9 +2,10 @@
   <div class="" id="order_hist_container">
     <div class="section--filter-wrap">
         <div class="section--filter-input-wrap">
-            <el-select class="section--filter-input" v-model="filterData.user" placeholder="Users" :v-if="session_data.default == 'biz'">
+            <el-select class="section--filter-input" v-model="filterData.user" placeholder="Users" v-if="session_data.default=='biz'">
                 <el-option v-for="user in cop_users" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
                 </el-option>
+                <!-- {{this.session.default}} -->
             </el-select>
             <el-date-picker class="section--filter-input" type="date" name="from_date" value="" placeholder="From" v-model="filterData.from_date"/>
             <el-date-picker class="section--filter-input" type="date" name="to_date" value="" placeholder="To" v-model="filterData.to_date"/>
@@ -47,6 +48,8 @@
       </el-table-column>
 
       <el-table-column
+        v-if="session_data.default=='biz'"
+         key="1"
         label="User"
         prop="user_details.name"
         width="120"
