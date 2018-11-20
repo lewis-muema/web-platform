@@ -2,7 +2,7 @@
     <div>
         <div class="section--filter-wrap">
             <div class="section--filter-input-wrap">
-                <el-input class="section--filter-input" v-model="filterData.user" placeholder="Users"></el-input>
+                <el-input class="section--filter-input" v-model="filterData.user" placeholder="Search users"></el-input>
 
                 <el-select class="section--filter-input"  v-model="filterData.department" placeholder="All Departments">
                     <el-option v-for="dept in deptData" :key="dept.department_id" :label="dept.department_name" :value="dept.department_id">
@@ -28,30 +28,26 @@
             <el-table-column
                     label="Name"
                     prop="name"
-                    width="200"
             >
             </el-table-column>
             <el-table-column
                     label="Phone"
                     prop="phone"
-                    width="200">
+                    >
             </el-table-column>
 
             <el-table-column
                     label="Email"
                     prop="email"
-                    width="250"
             >
             </el-table-column>
             <el-table-column
                     label="Department"
                     prop="department_name"
-                    width="200"
             >
             </el-table-column>
             <el-table-column
                     label="Type"
-                    width="120"
             >
                 <template slot-scope="scope">
                     <span>{{ get_user_type(scope.$index) }}</span>
@@ -59,7 +55,6 @@
             </el-table-column>
             <el-table-column
                     label="Status"
-                    width="120"
             >
                 <template slot-scope="scope">
                     <span>{{ get_user_status(scope.$index) }}</span>
