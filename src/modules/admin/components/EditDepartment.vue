@@ -95,16 +95,15 @@
                     "app": "NODE_PRIVATE_API",
                     "endpoint": "cop_departments_update"
                 }
-                this.$store.commit('setNotificationStatus', true); //activate notification
-                // let level = 0; //this will show the white one
                 this.$store.dispatch("$_admin/editAdminDepartment", editDept_full_payload).then(response => {
                     console.log(response);
                     console.log("updated");
-                    let message = response.data.msg;
                     let level = 1; //success
                     this.message = "edit Successful!"
                     let notification = {"title": "Edit Department", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
                     // this.$router.push('/admin/department');
                 }, error => {
                     console.log(error);
@@ -112,6 +111,8 @@
                     this.message = "Something went wrong."
                     let notification = {"title": "Edit Department", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
                 });
             },
             go_back: function () {
