@@ -177,6 +177,7 @@ export default {
           get_active_package_class : '$_orders/$_home/get_active_package_class',
           get_active_vendor_name : '$_orders/$_home/get_active_vendor_name',
           get_order_path : '$_orders/$_home/get_order_path',
+          get_pickup_filled : '$_orders/$_home/get_pickup_filled',
 
         }),
         active_price_tier_data: function (){
@@ -200,7 +201,7 @@ export default {
             return 0;
         },
         allowCash(){
-            return this.get_price_request_object.payment_option == 2 || this.getRB() <= 0;
+            return (this.get_price_request_object.payment_option == 2 || this.getRB() <= 0);
         },
 
     },
@@ -228,7 +229,7 @@ export default {
             if(this.get_price_request_object.payment_option == 1){
                 // if(this.active_vendor_price_data.cost )
                 if(this.getRB() < 0){
-                    if(Math.abs(this.order_cost) <= Math.abs(this.getRB()) )
+                    // if(Math.abs(this.order_cost) <= Math.abs(this.getRB()) )
                     return true;
                 }
                 return false;
@@ -246,6 +247,10 @@ export default {
             }
             else{
                 console.log('not passed checks for checkAllowPrePaid')
+                if(this.payment_method == ''){
+                    this.doNotification('2','Choose a payment method', "Please select a payment method and try again.");
+                    return false;
+                }
                 if(this.payment_method == 1){
                     this.handleMpesaPayments();
                 }
@@ -272,9 +277,9 @@ export default {
         },
         handleCashPayments(){
             console.log('allowed cash payment')
-            if(this.getRB() <= 0){
+            // if(this.getRB() <= 0){
                 this.doCompleteOrder();
-            }
+            // }
         },
         handlePostPaidPayments(){
             console.log('allowed post pay payment')
