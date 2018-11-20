@@ -1,0 +1,52 @@
+.section--filter-wrap {
+  margin-bottom: 8px;
+  background: #fff;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  border: none;
+  display: block;
+  position: relative;
+  width: 100%;
+  float: left;
+}
+
+.section--filter-input-wrap {
+    width: 70%;
+    display: inline-block;
+    float: left;
+}
+.section--filter-input {
+    margin-right: 20px;
+    width: 30% !important;
+    float: left;
+}
+.section--filter-action-wrap {
+    float:right;
+    text-align: right;
+    width: 30%;
+    display: inline-block;
+}
+.section--filter-action{
+    float: right;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    margin-left: 30px;
+}
+.section--filter-action-inactive {
+    float: right;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    margin-left: 30px;
+    cursor: not-allowed;
+    background: rgba(44, 130, 197, .7);
+}
+
+.section--filter-action-inactive:hover ,
+.section--filter-action-inactive:focus  {
+    float: right;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    margin-left: 30px;
+    cursor: not-allowed;
+    background: rgba(44, 130, 197, .7);
+}

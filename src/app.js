@@ -4,6 +4,27 @@ import { createRouter } from './router'
 import { createStore } from './store'
 import { sync } from 'vuex-router-sync'
 
+import moment from 'moment'
+Vue.prototype.moment = moment
+
+import Element from 'element-ui'
+import locale from 'element-ui/lib/locale/lang/en'
+import 'element-ui/lib/theme-chalk/index.css'
+import VueLocalStorage from 'vue-localstorage'
+
+Vue.use(VueLocalStorage, {
+  name: 'ls',
+  bind: true //created computed members from your variable declarations
+})
+
+Vue.use(Element , { locale })
+
+
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+Vue.component('font-awesome-icon', FontAwesomeIcon)
+
+
+
 export function createApp () {
   // create router and store instances
   const router = createRouter()

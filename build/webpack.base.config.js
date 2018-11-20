@@ -1,10 +1,21 @@
 const path = require('path')
 const webpack = require('webpack')
+const vueConfig = require('./vue-loader.config')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const { VueLoaderPlugin } = require('vue-loader')
+
+process.env.NODE_ENV = process.env.DOCKER_ENV || 'production';
 
 const isProd = process.env.NODE_ENV === 'production'
+
+const env = process.env.NODE_ENV === 'testing'
+  ?  require('../configs/test.env')
+  : process.env.NODE_ENV === 'production' ? require('../configs/prod.env')
+  : require('../configs/dev.env')
+
+//server side
+ process.env._ENV = env;
 
 module.exports = {
   devtool: isProd
@@ -26,11 +37,7 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: {
-          compilerOptions: {
-            preserveWhitespace: false
-          }
-        }
+        options: vueConfig
       },
       {
         test: /\.js$/,
@@ -46,19 +53,22 @@ module.exports = {
         }
       },
       {
-        test: /\.styl(us)?$/,
+        test: /\.css$/,
         use: isProd
           ? ExtractTextPlugin.extract({
-              use: [
-                {
-                  loader: 'css-loader',
-                  options: { minimize: true }
-                },
-                'stylus-loader'
-              ],
+              use: 'css-loader?minimize',
               fallback: 'vue-style-loader'
             })
-          : ['vue-style-loader', 'css-loader', 'stylus-loader']
+          : ['vue-style-loader', 'css-loader']
+      },
+      {
+        test: /\.(ttf|eot|woff|woff2)$/,
+        use: {
+          loader: "file-loader",
+          options: {
+            name: "fonts/[name].[ext]",
+          },
+        },
       },
     ]
   },
@@ -66,19 +76,24 @@ module.exports = {
     maxEntrypointSize: 300000,
     hints: isProd ? 'warning' : false
   },
+  mode: process.env.NODE_ENV || 'production',
   plugins: isProd
     ? [
-        new VueLoaderPlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-          compress: { warnings: false }
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': env
         }),
         new webpack.optimize.ModuleConcatenationPlugin(),
         new ExtractTextPlugin({
-          filename: 'common.[chunkhash].css'
-        })
+          filename: 'common.[chunkhash].css',
+          allChunks: true
+        }),
+        new VueLoaderPlugin()
       ]
     : [
-        new VueLoaderPlugin(),
-        new FriendlyErrorsPlugin()
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': env
+        }),
+        new FriendlyErrorsPlugin(),
+        new VueLoaderPlugin()
       ]
 }

@@ -1,0 +1,37 @@
+.title{
+    font-size: 22px;
+    padding-bottom: 0px;
+
+    border-bottom: 1px solid #ebeef5;
+    color: #999;
+    margin-bottom: 30px;
+}
+.title__text{
+    font-weight: 300;
+}
+.section{
+    padding-top: 20px;
+    margin-bottom: 22px;
+    padding-bottom: 2px;
+    border-bottom: 0px solid #ebeef5 !important;
+}
+
+
+.section__link{
+  color: #555 !important;
+  text-transform: capitalize !important;
+  font-size: 14px;
+  text-align: center;
+  padding: 10px 25px;
+  text-decoration: none;
+}
+
+.section__link:hover {
+    color: #1782c5 !important;
+}
+.router-link-active{
+  font-weight: normal !important;
+  border-bottom: 3px solid #1782c5;
+  color: #1782c5 !important;
+  margin-bottom: -3px;
+}
