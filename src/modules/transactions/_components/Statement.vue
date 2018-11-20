@@ -95,10 +95,23 @@ export default {
 
     }
   },
-  mounted(){ 
+  mounted(){
       let session_data = this.$store.getters.getSession;
-      let statement_payload = {
-        "cop_id": session_data.cop_id,
+
+      let statement_payload = {};
+
+      if(session_data.default == 'biz'){
+        statement_payload = {
+          "cop_id": session_data['biz']['cop_id'],
+          "user_type":session_data['biz']['user_type'],
+          "user_id":session_data['biz']['user_id'],
+
+        }
+      } else {
+        //create peer payload
+        statement_payload = {
+          "user_id": session_data[session_data.default]['user_id'],
+         }
       }
 
       let full_payload = {
@@ -158,24 +171,44 @@ export default {
       },
       filterStatementData() {
             //reset filter
+            let session_data = this.$store.getters.getSession;
+
             this.filterState  = false;
             this.empty_statement_state = "Searching Payments";
 
             let from_date = this.filterData.from_date;
             let to_date = this.filterData.to_date;
 
-            let payload = {
-              "cop_id": 669,
-              "user_type":2,
-              "from":from_date,
-              "to":to_date
-            };
-
-
             from_date = moment(from_date).format('YYYY-MM-DD');
             to_date = moment(to_date).format('YYYY-MM-DD');
 
+            let payload = {};
+            if(session_data.default == 'biz'){
+              payload = {
+                "cop_id": session_data['biz']['cop_id'],
+                "user_type":session_data['biz']['user_type'],
+                "from":from_date,
+                "to":to_date
+
+              }
+            } else {
+              //create peer payload
+              payload = {
+                "user_id": session_data[session_data.default]['user_id'],
+                "from":from_date,
+                "to":to_date
+               }
+            }
+
+
+
             this.requestStatement(payload);
+            // console.log(this.statementData);
+
+            this.filteredStatementData = this.statementData;
+
+            console.log(to_date);
+            this.filterState  = true;
 
             // this.filteredStatementData = this.statement_data;
             //
@@ -202,11 +235,11 @@ export default {
           this.$store.dispatch("$_transactions/requestStatement", full_payload).then(response => {
              console.log("Got some data, now lets show something in this component")
              console.log(response);
-             this.empty_statement_state = "Order Statement Not Found";
+             this.empty_statement_state = "Statement Not Found";
           }, error => {
               console.error("Got nothing from server. Prompt user to check internet connection and try again")
               console.log(error);
-              this.empty_statement_state = "Order Statement Failed to Fetch";
+              this.empty_statement_state = "Statement Failed to Fetch";
           });
       }
 

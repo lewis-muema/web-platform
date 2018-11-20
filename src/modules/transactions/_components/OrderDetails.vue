@@ -117,83 +117,90 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
-const moment = require('moment');
+import { mapActions, mapGetters } from "vuex";
+const moment = require("moment");
 export default {
-    name:'order-details',
-    data() {
-        return {
-          order_id:'',
-          show_rating:false,
-        }
-    },
-    filters: {
-        moment: function (date) {
-            return moment(date).format('MMM Do YYYY, h:mm a');
-        }
-    },
-    methods:{
-        moment: function () {
-          return moment();
-        },
-        createStaticMapUrl(path) {
-            //TODO:get google_key from configs
-            let google_key = "AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc";
-            let from_cordinates = path[0]['coordinates'];
-            let to_cordinates = path[path.length-1]['coordinates'];
-            return "https://maps.googleapis.com/maps/api/staticmap?path=color:0x2c82c5|weight:5|"+from_cordinates+"|"+to_cordinates+"&size=257x257&markers=color:0xF17F3A%7Clabel:P%7C"+from_cordinates+"&markers=color:0x2c82c5%7Clabel:D%7C "+to_cordinates+ "&key="+google_key;
-        },
-        getOrderFromName(path) {
-          return path[0].name;
-        },
-        getOrderToName(path) {
-          let path_length = path.length;
-          return path[path_length-1].name;
-        },
-
-        activateRating() {
-            this.show_rating = true;
-        },
-        rateOrder() {
-            this.show_rating = false;
-        },
-        trackOrder() {
-
-        }
-
-
-    },
-    computed:{
-        ...mapGetters({
-          getOrderDetails:'$_transactions/getOrderHistoryOrders',
-        }),
-        order_details (){
-            return this.getOrderDetails.find( order => order.order_id ===  this.$route.params.id);
-        }
-    },
-    mounted(){
-
-    },
-    created(){
-        this.order_id  = this.$route.params.id;
+  name: "order-details",
+  data() {
+    return {
+      order_id: "",
+      show_rating: false
+    };
+  },
+  filters: {
+    moment: function(date) {
+      return moment(date).format("MMM Do YYYY, h:mm a");
     }
-}
+  },
+  methods: {
+    moment: function() {
+      return moment();
+    },
+    createStaticMapUrl(path) {
+      //TODO:get google_key from configs
+      let google_key = "AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc";
+      let from_cordinates = path[0]["coordinates"];
+      let to_cordinates = path[path.length - 1]["coordinates"];
+      return (
+        "https://maps.googleapis.com/maps/api/staticmap?path=color:0x2c82c5|weight:5|" +
+        from_cordinates +
+        "|" +
+        to_cordinates +
+        "&size=257x257&markers=color:0xF17F3A%7Clabel:P%7C" +
+        from_cordinates +
+        "&markers=color:0x2c82c5%7Clabel:D%7C " +
+        to_cordinates +
+        "&key=" +
+        google_key
+      );
+    },
+    getOrderFromName(path) {
+      return path[0].name;
+    },
+    getOrderToName(path) {
+      let path_length = path.length;
+      return path[path_length - 1].name;
+    },
+
+    activateRating() {
+      this.show_rating = true;
+    },
+    rateOrder() {
+      this.show_rating = false;
+    },
+    trackOrder() {}
+  },
+  computed: {
+    ...mapGetters({
+      getOrderDetails: "$_transactions/getOrderHistoryOrders"
+    }),
+    order_details() {
+      return this.getOrderDetails.find(
+        order => order.order_id === this.$route.params.id
+      );
+    }
+  },
+  mounted() {},
+  created() {
+    this.order_id = this.$route.params.id;
+  }
+};
 </script>
 
 <style lang="css">
-    @import '../../../assets/styles/order_details.css';
-    .order-details-wrapper{
-        width: 50%;
-        display: inline-block;
-        border-right: 1px solid #f0f0f0;
-        padding-right: 20px;
-    }
-    .rating-star {
-        background:transparent !important;
-        color:inherit;
-    }
-    .rate--action-btn {
-        display: inline-block;
-        margin-left: 30px;
-    }
+@import "../../../assets/styles/order_details.css";
+.order-details-wrapper {
+  width: 50%;
+  display: inline-block;
+  border-right: 1px solid #f0f0f0;
+  padding-right: 20px;
+}
+.rating-star {
+  background: transparent !important;
+  color: inherit;
+}
+.rate--action-btn {
+  display: inline-block;
+  margin-left: 30px;
+}
 </style>

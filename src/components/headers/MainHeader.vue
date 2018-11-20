@@ -14,12 +14,12 @@
                        <a class="nav--menu-dropdown-link">Menu</a>
                        <ul class="nav--menu-dropdown-list">
                             <li><a  @click="linkRoute('/orders')">New Delivery</a></li>
-                            <li><a  @click="linkRoute('/payment')">Payment</a></li>
+                            <li><a  @click="linkRoute('/payment/mpesa')">Payment</a></li>
                             <li><a  @click="linkRoute('/transactions/order_history')">Orders</a></li>
                             <!--<li><a  @click="linkRoute('/user/free_deliveries')">Free Deliveries</a></li>-->
                             <!--<li><a  @click="linkRoute('/payment/promo')">Promotions</a></li>-->
                             <li v-if="admin_user"><a  @click="linkRoute('/admin/users')">Settings</a></li>
-                            <li v-if="admin_user"><a  @click="linkRoute('/analytics')">Analytics</a></li>
+                            <li v-if="admin_user"><a  @click="linkRoute('/analytics/weekly')">Analytics</a></li>
                             <li><a  @click="linkRoute('/user/profile/personal_information')">Profile</a></li>
                             <li class="menu--last-child"><a @click="logOut" class="menu--last-child-link">Log Out</a></li>
                        </ul>
@@ -62,6 +62,12 @@ export default {
       this.$store.commit("setSession", {});
       this.eraseCookie("_sessionSnack");
       this.$router.push({ name: "sign_in" });
+    },
+    data: function () {
+        return {
+            admin_user: false,
+            logged_user: "Friend"
+        }
     },
     eraseCookie(name) {
       document.cookie = name + "=; Max-Age=-99999999;";

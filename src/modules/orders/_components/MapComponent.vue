@@ -93,7 +93,7 @@ export default {
   },
   watch: {
      markers(markers) {
-       if (this.mapLoaded) {
+       if (this.mapLoaded && markers.length > 0) {
          const bounds = new google.maps.LatLngBounds()
          for (let m of this.markers) {
            bounds.extend(m.position)
