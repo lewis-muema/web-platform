@@ -1,5 +1,5 @@
 <template lang="html">
-    <div id="log_in" class="admin-edit-item">
+    <div v-if="available" id="log_in" class="admin-edit-item">
 
         <div class="admin-edit-inner">
             <div class="">
@@ -7,7 +7,6 @@
                 <i class="el-icon-caret-left edit-back" v-on:click="go_back"></i>
 
             </div>
-            <!--{{deptDetails}}-->
             <div class="admin-edit2-details position--details">
                 Edit Department Details
             </div>
@@ -51,12 +50,23 @@
         data() {
             return {
                 message: "",
-                deptDetails: {}
+                available: false,
+                deptDetails: {},
+                userDetails: {}
             }
         },
         mounted() {
             let cop_user_id = this.$route.params.id;
             this.deptDetails = this.deptData.filter(dept => dept.cop_user_id == cop_user_id)[0];
+
+            if(this.deptDetails !== undefined){
+                this.available = true;
+            }
+            else{
+                this.available = false;
+                this.go_back();
+                console.log("back to users' table")
+            }
         },
         computed: {
             ...mapGetters({

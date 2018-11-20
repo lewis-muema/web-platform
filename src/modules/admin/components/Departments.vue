@@ -3,13 +3,13 @@
         <div class="section--filter-wrap">
             <div class="section--filter-input-wrap">
 
-                <el-select class="section--filter-input" v-model="filterData.department" placeholder="All Departments">
-                    <el-option v-for="dept in fetchedDepartmentsData" :key="dept.department_name"
-                               :label="dept.department_name" :value="dept.department_id">
-                    </el-option>
-                </el-select>
+                <!--<el-select class="section&#45;&#45;filter-input" v-model="filterData.department" placeholder="All Departments">-->
+                    <!--<el-option v-for="dept in fetchedDepartmentsData" :key="dept.department_name"-->
+                               <!--:label="dept.department_name" :value="dept.department_id">-->
+                    <!--</el-option>-->
+                <!--</el-select>-->
 
-                <el-input class="section--filter-input" v-model="filterData.user" placeholder="Users"></el-input>
+                <el-input class="section--filter-input" v-model="filterData.department" placeholder="Search Department"></el-input>
 
                 <button type="button"
                         :class="active_filter ? 'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'"
@@ -157,31 +157,14 @@
 
                 console.log(this.filteredUserData);
                 //check if both are filled
-                if (user_id !== '' && department !== '') {
-                    console.log('performing a user and departments filter');
-                    let vm = this;
-                    this.filteredUserData = this.filteredUserData.filter(function (user) {
-                        return user.department_admin.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0 && user.department_id == department;
-                    });
-                    this.filterState = true;
-
-                } else if (user_id !== '') {
-                    //user filter
-                    console.log('performing a user filter');
-                    console.log(user_id);
-
-                    let vm = this;
-                    this.filteredUserData = this.filteredUserData.filter(function (user) {
-                        return user.department_admin.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0;
-                    });
-                    this.filterState = true;
-
-
-                } else {
+                if (department !== '') {
                     //department filter
                     console.log('performing a department filter');
 
-                    this.filteredUserData = this.filteredUserData.filter(user => user.department_id == department);
+                    let vm = this;
+                    this.filteredUserData = this.filteredUserData.filter(function (user) {
+                        return user.department_name.toLowerCase().indexOf(vm.filterData.department.toLowerCase()) >= 0;
+                    });
                     this.filterState = true;
 
                 }
