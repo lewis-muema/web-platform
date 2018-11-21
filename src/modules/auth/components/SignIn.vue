@@ -58,8 +58,7 @@ export default {
       password: "",
 
       message:'',
-      login_text:'Login'
-
+      login_text:'Login',
       session_cookie: null
 
     };
