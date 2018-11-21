@@ -210,15 +210,18 @@ export function createRouter () {
             },
             {
               path: 'mpesa',
-              component: () => import('../modules/payment/_components/MpesaComponent.vue')
+              component: () => import('../modules/payment/_components/MpesaComponent.vue'),
+              name:'mpesa_payment'
             },
             {
               path: 'card',
-              component: () => import('../modules/payment/_components/CardComponent.vue')
+              component: () => import('../modules/payment/_components/CardComponent.vue'),
+              name:'card_payment'
             },
             {
               path: 'promo',
-              component: () => import('../modules/payment/_components/PromoComponent.vue')
+              component: () => import('../modules/payment/_components/PromoComponent.vue'),
+              name:'promo_payment'
             },
         ]
       },
@@ -228,7 +231,8 @@ export function createRouter () {
               {
                 path: '/',
                 component: () => import('../modules/orders/_components/order_placement/Home.vue'),
-                alias: '/orders/home'
+                alias: '/orders/home',
+                name: 'order_placement'
               },
               {
                 path: '/orders/tracking/:order_no',

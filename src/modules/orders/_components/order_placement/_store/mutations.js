@@ -23,11 +23,20 @@ export default {
     set_order_notes(state, val) {
       state.order_notes=val;
     },
+    set_payment_method(state, val) {
+      state.payment_method=val;
+    },
     set_order_path(state, val) {
       state.order_path.splice(val.index,0,val.path);
     },
+    set_location_name(state, val) {
+      state.location_names.splice(val.index,0,val.name);
+    },
     unset_order_path(state, index) {
       state.order_path.splice(index,1);
+    },
+    unset_location_name(state, index) {
+      state.location_names.splice(index,1);
     },
     add_extra_destination(state) {
       state.extra_destinations++;
