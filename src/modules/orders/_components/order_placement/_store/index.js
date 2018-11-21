@@ -10,10 +10,12 @@ const state = {
   price_request_object:{},
   max_destinations: 9,
   order_path:[],
+  location_names:[],
   schedule_time:'',
   order_notes:'',
   extra_destinations:0,
   pickup_filled:false,
+  payment_method:'',
 }
 
 export default {

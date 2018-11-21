@@ -28,6 +28,12 @@ export default {
     // const STORE_KEY = '$_orders';
     // this.register_store_module(STORE_KEY, order_store);
   },
+  watch :{
+    $route (to, from){
+      this.$store.commit('$_orders/remove_polyline',[])
+      this.$store.commit('$_orders/remove_markers',[])
+    }
+  }
 }
 </script>
 
