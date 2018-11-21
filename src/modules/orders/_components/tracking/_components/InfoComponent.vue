@@ -11,12 +11,10 @@
               {{this.tracking_data.rider.rider_name}}
             </div>
             <div class="">
-              {{this.tracking_data.rider.vehicle_name}}
-            </div>
-            <div class="">
-              {{this.tracking_data.rider.number_plate}}
+              {{this.tracking_data.rider.vehicle_name}} {{this.tracking_data.rider.number_plate}}
             </div>
             
+
           </div>
           <div class="infobar--driver-details" v-else>
             <div class="">
@@ -46,10 +44,10 @@
           </div>
           <div class="">
             <span class="" v-if = "this.tracking_data.delivery_status < 2">
-              Estimated Arrival: <span class=""> 9:00 am</span>
+              Estimated Arrival: <span class=""> {{this.tracking_data.eta}} </span>
             </span>
             <span class="" v-else>
-              Estimated Delivery: <span class=""> 9:00 am</span>
+              Estimated Delivery: <span class=""> {{this.tracking_data.etd}} </span>
             </span>
           </div>
         </div>

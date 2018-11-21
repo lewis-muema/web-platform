@@ -5,19 +5,17 @@
                 <div class="row textarea--row">
                     <div class="input-field col s12 inviteMany--textarea">
                         <textarea id="email_area" class="inviteMany--textareabox"></textarea>
-                        <label class="active inviteMany--text">Enter multiple email addresses separated by a
-                            comma</label>
+                        <div class="active inviteMany--text">Enter multiple email addresses separated by a
+                            comma</div>
                     </div>
                 </div>
             </form>
-            <div class="side-flex many-flex">
+            <div class="side-flex many-flex many-action-buttons">
                 <div class="column-flex space-right">
-                    <button v-on:click="get_inv" class="btn-submit btn-cancel" type="submit"
-                            name="action">Cancel
-                    </button>
+                    <a v-on:click="get_inv" class="show-link-justify">Cancel</a>
                 </div>
                 <div class="column-flex">
-                    <button v-on:click="inv_many" class="btn-submit" type="submit" name="action">
+                    <button v-on:click="inv_many" class="button-primary" type="submit" name="action">
                         Add Invitees
                     </button>
                 </div>
@@ -80,7 +78,8 @@
 
     .inviteMany--text {
         font-size: 14px;
-        color: #9e9e9e;
+        color: #555;
+        margin-top: 20px;
     }
 
     .many--row {
@@ -104,12 +103,14 @@
     .inviteMany--textarea {
         width: 100% !important;
         height: 120px!important;
+        margin-top: 0rem !important;
     }
     .inviteMany--textareabox {
         width: 100% !important;
         height: 120px!important;
         border: 1px solid #dcdfe6 !important;
         border-radius: 4px !important;
+        margin-top: 1.3rem !important;
     }
     .inviteMany--textareabox:focus{
         border: 1px solid #1782c5 !important;
@@ -129,6 +130,9 @@
         position: absolute;
         top: 0;
         z-index: -1;
+    }
+    .many-action-buttons {
+        float: right !important;
     }
 
 </style>

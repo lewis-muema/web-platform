@@ -60,7 +60,7 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import {mapGetters, mapActions} from 'vuex'
 
     export default {
         name: "Departments",
@@ -104,6 +104,9 @@
             ...mapGetters({
                 fetchedDepartmentsData: '$_admin/getDepartmentsList',
                 userData: '$_admin/getUsersList',
+            }),
+            ...mapActions({
+                requestDepartmentsList: '$_admin/requestDepartmentsList'
             }),
             departments_data() {
                 let from = (this.pagination_page - 1) * this.pagination_limit;

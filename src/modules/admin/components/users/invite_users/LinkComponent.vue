@@ -20,8 +20,8 @@
                 </el-select>
             </div>
             <div class="side-flex mid-btn">
-                <button v-on:click="get_link" class="btn-submit" type="submit" name="action">Create Link</button>
-                <button v-on:click="get_inv" class="btn-submit btn-cancel" type="submit" name="action">Cancel</button>
+                <a v-on:click="get_inv">Cancel</a>
+                <button v-on:click="get_link" class="button-primary" type="submit" name="action">Create Link</button>
             </div>
         </div>
         <div class="side-flex side-desc">
@@ -60,7 +60,7 @@
             }
         },
         mounted() {
-            this.init_select()
+            // this.init_select()
         },
         computed: {
             ...mapGetters(
@@ -149,5 +149,8 @@
         margin-top: 50px;
         font-size: 14px !important;
         color: #9e9e9e !important;
+    }
+    .many--link{
+        margin-top: -1rem !important;
     }
 </style>

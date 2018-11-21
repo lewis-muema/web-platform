@@ -59,7 +59,7 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import {mapGetters, mapActions} from 'vuex'
 
     export default {
         name: "API",
@@ -101,6 +101,9 @@
             }),
         },
         methods: {
+            ...mapActions({
+                requestKeysList: '$_admin/requestKeysList'
+            }),
             updateApiKey() {
 
                 let session = this.$store.getters.getSession;
@@ -153,8 +156,6 @@
                     "endpoint":"generate_api"
                 }
                 // console.log(newKeyFull_payload)
-                this.$store.commit('setNotificationStatus', true); //activate notification
-                // let level = 0; //this will show the white one
                 this.$store.dispatch("$_admin/generateAPIKey", newKeyFull_payload).then(response => {
                     console.log("generated");
                     console.log(response);
@@ -162,6 +163,8 @@
                     this.message = "Key Generated!"
                     let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
                 }, error => {
                     console.log("NOT generated");
                     console.log(error);
@@ -169,6 +172,8 @@
                     this.message = "Something went wrong."
                     let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
                 });
             },
             changeSize(val) {
