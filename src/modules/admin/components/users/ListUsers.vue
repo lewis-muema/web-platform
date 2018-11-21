@@ -143,6 +143,9 @@
                 userData: '$_admin/getUsersList',
                 deptData: '$_admin/getDepartmentsList'
             }),
+            ...mapActions({
+                requestUsersList: '$_admin/requestUsersList'
+            }),
             user_data(){
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
