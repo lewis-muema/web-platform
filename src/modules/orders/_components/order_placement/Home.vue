@@ -250,7 +250,10 @@ export default {
         }
     },
   },
-
+  mounted() {
+    this.$store.commit('$_orders/remove_polyline',[])
+    this.$store.commit('$_orders/remove_markers',[])
+  },
   created() {
     this.$store.registerModule(['$_orders','$_home'], home_store);
   },

@@ -24,6 +24,12 @@ export default {
   mounted() {
     this.change_page(1)
     this.hide_vendors()
+  },
+  watch :{
+    $route (to, from){
+      this.$store.commit('$_orders/remove_polyline',[])
+      this.$store.commit('$_orders/remove_markers',[])
+    }
   }
 }
 </script>
