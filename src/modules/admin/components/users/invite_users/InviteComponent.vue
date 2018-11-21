@@ -33,7 +33,7 @@
 
         <div class="side-flex add-user-submit">
             <div class="column-flex pad-flex inv-link">
-                <div class="flex"><a v-on:click="get_link" class="add-anchor inviteMany--anchor"><i
+                <div class="flex"><a v-on:click="getInviteLink" class="add-anchor inviteMany--anchor"><i
                         class="el-icon-share"></i><span>&nbsp;Get an invite link to share</span></a>
                 </div>
             </div>
@@ -90,11 +90,12 @@
                     updateInvites: '$_admin/updateInvites',
                     updateDepartmentsList: '$_admin/updateDepartmentsList',
                     postInvites: '$_admin/postInvites',
-                    updateAdds: '$_admin/updateAdds',
+                    updateBizName: '$_admin/updateBizName',
                 }
             ),
             ...mapActions({
-                inviteNewUsers: '$_admin/inviteNewUsers'
+                inviteNewUsers: '$_admin/inviteNewUsers',
+                createInviteLink: '$_admin/createInviteLink'
             }),
             get_link: function () {
                 this.updateViewState(5);
@@ -156,6 +157,46 @@
             addElement: function () {
                 this.elements.push({value: ''});
             },
+            getInviteLink: function () {
+                let session = this.$store.getters.getSession;
+                let cop_id = 0;
+                let bizName = "";
+                if (session.default == 'biz') {
+                    cop_id = session[session.default]['cop_id'];
+                    bizName = session[session.default]['cop_name'];
+                }
+                let payload = {
+                    "cop_id": cop_id
+                }
+
+                console.log(payload)
+
+                let full_payload = {
+                    "values": payload,
+                    "vm": this,
+                    "app": "NODE_PRIVATE_API",
+                    "endpoint": "inv_link"
+                }
+                this.$store.dispatch("$_admin/createInviteLink", full_payload).then(response => {
+                    console.log("link created");
+                    console.log(response);
+                    let level = 1; //success
+                    let notification = {"title": "Invite Link", "level": level, "message": "Link created!"}; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+                    // this.commit('updateBizName', biz_name)
+                    this.updateViewState(5);
+                }, error => {
+                    console.log("link NOT created");
+                    console.log(error);
+                    let level = 2;
+                    let notification = {"title": "Invite Link", "level": level, "message": "An error occurred."}; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
+                });
+
+            }
 
         }
     }

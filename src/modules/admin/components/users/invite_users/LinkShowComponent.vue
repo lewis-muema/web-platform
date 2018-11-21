@@ -7,7 +7,6 @@
             </div>
             <div class="inviteUser--button">
                 <button v-on:click="copy_link" class="button-primary">Copy to clipboard</button>
-                <!--<a v-on:click="back" class="">Back</a>-->
             </div>
             <div class="inviteUser--button show-button-justify">
                 <a v-on:click="back" class="show-link-justify">BACK</a>
@@ -20,7 +19,7 @@
 </template>
 
 <script>
-    import {mapGetters, mapMutations} from 'vuex'
+    import {mapGetters, mapMutations, mapActions} from 'vuex'
 
     export default {
         name: 'link-show-component',
@@ -36,11 +35,11 @@
         methods: {
             ...mapMutations(
                 {
-                    updateViewState: '$_admin/setViewState'
+                    updateViewState: '$_admin/updateViewState'
                 }
             ),
             copy_link: function () {
-                var copyText = document.getElementById("in_link");
+                let copyText = document.getElementById("in_link");
                 copyText.select();
                 document.execCommand("Copy")
             },
