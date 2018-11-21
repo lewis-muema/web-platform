@@ -13,6 +13,10 @@
             <div class="">
               {{this.tracking_data.rider.vehicle_name}} - {{this.tracking_data.rider.number_plate}}
             </div>
+            <div class="">
+              {{this.tracking_data.rider.number_plate}}
+            </div>
+            
           </div>
           <div class="infobar--driver-details" v-else>
             <div class="">
@@ -200,7 +204,11 @@ export default {
 }
 .infobar--photo img
 {
-  width: 52px;
+  margin-top: -29px;
+height: 72px;
+width: auto !important;
+margin-bottom: -29px;
+border-radius: 9px;
 }
 .infobar--driver-details
 {

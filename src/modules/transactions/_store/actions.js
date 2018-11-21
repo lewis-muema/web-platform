@@ -14,6 +14,9 @@ export default {
         return new Promise((resolve, reject) => {
             payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
                 console.log('in store dispatch to global store')
+                if(response.length > 1){
+                    response = response[0];    
+                }
                 if (response.data.status == true) {
                     commit('setOrderHistoryOrders',response.data.data);
                     resolve(response.data);
@@ -34,8 +37,11 @@ export default {
         return new Promise((resolve, reject) => {
             payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
                 console.log('in store dispatch to global store')
+                if(response.length > 1){
+                    response = response[0];    
+                }
                 if (response.data.status == true) {
-                    commit('setOrderHistoryOrders',response.data.data);
+                    commit('setCopUsers',response.data.data);
                     resolve(response.data);
                  }
                  else {

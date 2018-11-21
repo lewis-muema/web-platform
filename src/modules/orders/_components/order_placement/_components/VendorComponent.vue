@@ -20,13 +20,13 @@
                         </div>
                     </div> -->
                     <div class="home-view-vendor-classes--label">
-                        <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in get_price_request_object.economy_price_tiers" :key="index" @click="setActivePackageClass(index)" v-if="vendor_class.length > 0">
-                            <a class="section__link" :class="get_current_active_package__class(index)">{{index}}</a>
+                        <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in get_price_request_object.economy_price_tiers" :key="index" @click="setActivePackageClass(vendor_class.tier_group)" v-if="vendor_class.price_tiers.length > 0">
+                            <a class="section__link" :class="get_current_active_package__class(vendor_class.tier_group)">{{vendor_class.tier_group}}</a>
                         </div>
                     </div>
                 </div>
                 <div class="home-view-vendor-types" v-if="active_price_tier_data != '' ">
-                    <div  v-for="j in active_price_tier_data" :key="j.order_no" @click="set_active_vendor_name(j.vendor_name)" class="home-view-vendor-types--item" :class="get_current_active_vendor_type_class(j.vendor_name)" >
+                    <div  v-for="j in active_price_tier_data.price_tiers" :key="j.order_no" @click="set_active_vendor_name(j.vendor_name)" class="home-view-vendor-types--item" :class="get_current_active_vendor_type_class(j.vendor_name)" >
                         <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
                             <div class="home-view-vendor-types-item--vendor-wrapper__img">
                                 <img class="home-view-vendor-types-item__image" :src="getVendorIcon(j.vendor_id)" alt="">
@@ -76,7 +76,9 @@ export default {
         }),
         active_price_tier_data: function (){
             if(this.get_active_package_class != ""){
-                return this.get_price_request_object.economy_price_tiers[this.get_active_package_class];
+                return this.get_price_request_object.economy_price_tiers.find(
+                    pack => pack.tier_group === this.get_active_package_class
+                )
             }
             return "";
         },

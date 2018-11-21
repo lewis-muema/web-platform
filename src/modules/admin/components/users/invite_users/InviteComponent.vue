@@ -113,7 +113,7 @@
                 {
                     updateViewState: '$_admin/setViewState',
                     updateInvites: '$_admin/updateInvites',
-                    updateDepartments: '$_admin/updateDepartments',
+                    updateDepartmentsList: '$_admin/updateDepartmentsList',
                     postInvites: '$_admin/postInvites',
                     updateAdds: '$_admin/updateAdds',
                 }

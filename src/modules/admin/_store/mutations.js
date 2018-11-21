@@ -16,9 +16,6 @@ export default {
     updateBizName(state, n) {
         state.biz_name = n
     },
-    updateDepartments(state, n) {
-        state.departments = n
-    },
     updateAdds(state, n) {
         if (n === 1) {
             state.adds ++
@@ -40,13 +37,13 @@ export default {
     updateAddedStatus(state , n){
         state.added_status = n
     },
-    setUsersList(state, users){
+    updateUsersList(state, users){
         state.users_list = users;
     },
-    setDepartmentsList(state, departments){
+    updateDepartmentsList(state, departments){
         state.departments_list = departments;
     },
-    setKeysList(state, keys){
+    updateKeysList(state, keys){
         state.keys_list = keys;
     },
     updateCopUserId(state , n){

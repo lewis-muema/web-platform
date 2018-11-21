@@ -8,7 +8,7 @@
         <div class="header--item__right">
             <nav>
                <ul>
-                   <li class="nav--menu-inactive"><a>  0709 779 779</a></li>
+                   <li class="nav--menu-inactive"><a> Helpline : 0709 779 779</a></li>
                    <li class="nav--menu-inactive"><a>Hi {{logged_user}}</a></li>
                     <li class="nav--menu-dropdown">
                        <a class="nav--menu-dropdown-link">Menu</a>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
 export default {
   name: "main-header",
   data: function() {
@@ -62,6 +62,13 @@ export default {
       this.$store.commit("setSession", {});
       this.eraseCookie("_sessionSnack");
       this.$router.push({ name: "sign_in" });
+      try{
+          //clear orders to avoid marker persistance
+          this.$store.unregisterModule('$_orders');
+      }
+      catch(er){
+          // orders was not registered
+      }
     },
     data: function () {
         return {
@@ -130,12 +137,17 @@ export default {
           });
       } else {
         //default
-        this.$notify({
+        //check to make sure that either title or message is set
+        //reset notification status
+
+        if(notification.title !== '' || notification.message !== ''){
+          this.$notify({
           title: notification.title,
           message: notification.message
-        });
-        offset: 20;
-        //reset notification status
+          });
+          offset: 20;
+
+        }
       }
       this.$store.commit("setNotificationStatus", false);
     }

@@ -29,8 +29,11 @@ export default {
     unset_order_path(state, index) {
       state.order_path.splice(index,1);
     },
-    set_extra_destinations(state, val) {
-      state.extra_destinations = val;
+    add_extra_destination(state) {
+      state.extra_destinations++;
+    },
+    remove_extra_destination(state) {
+      state.extra_destinations--;
     },
     set_pickup_filled(state, val) {
       state.pickup_filled = val;
