@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="screen-one">
-    <div class="form-header">
+    <div class="onboarding-user-header">
       Join the {{getBizName}} business account on Sendy
     </div>
     <div class="form-inputs">
@@ -118,7 +118,7 @@ export default {
 </script>
 
 <style lang="css">
-.form-header{
+.onboarding-user-header{
   word-wrap: break-word;
   line-height: 38px !important;
   letter-spacing: 0;

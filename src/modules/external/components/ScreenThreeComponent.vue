@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="screen-three">
-    <div class="form-header">
+    <div class="onboarding-user-header">
       Set a Password
     </div>
     <div class="form-inputs">
@@ -111,7 +111,7 @@ export default {
 </script>
 
 <style lang="css">
-.form-header{
+.onboarding-user-header{
   word-wrap: break-word;
   line-height: 38px !important;
   letter-spacing: 0;

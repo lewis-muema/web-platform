@@ -35,7 +35,7 @@ export default {
             payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
                 console.log('in store dispatch to global store')
                 if (response.data.status == true) {
-                    commit('setOrderHistoryOrders',response.data.data);
+                    commit('setCopUsers',response.data.data);
                     resolve(response.data);
                  }
                  else {

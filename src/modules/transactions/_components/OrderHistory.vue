@@ -3,7 +3,8 @@
     <div class="section--filter-wrap">
         <div class="section--filter-input-wrap">
             <el-select class="section--filter-input" v-model="filterData.user" placeholder="Users" v-if="session_data.default=='biz'">
-                <el-option v-for="user in cop_users" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
+                <el-option  label="All Users" value="-1"></el-option>
+                <el-option v-for="user in copUsers" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
                 </el-option>
                 <!-- {{this.session.default}} -->
             </el-select>
@@ -11,7 +12,7 @@
             <el-date-picker class="section--filter-input" type="date" name="to_date" value="" placeholder="To" v-model="filterData.to_date"/>
         </div>
         <div class="section--filter-action-wrap">
-          <button type="button" :class="inactive_filter ? 'button-primary section--filter-action-inactive':'button-primary section--filter-action'"  @click="filterTableData">Search</button>
+          <button type="button" :class="inactive_filter ? 'button-primary section--filter-action-inactive':'button-primary section--filter-action'" name="order_history_text" v-model="order_history_text" @click="filterTableData">{{this.order_history_text}}</button>
         </div>
     </div>
 
@@ -118,6 +119,7 @@ export default {
       expand_keys: [],
       pagination_limit: 10,
       pagination_page: 1,
+      order_history_text:'Search',
       filterData: {
         user: "",
         from_date: "",
@@ -151,12 +153,12 @@ export default {
       //the updated payload
       //will have dates
       let payload = {
-        cop_id: 669,
-        user_type: 2,
+        cop_id:this.session_data.biz.cop_id,
+        user_type:this.session_data.biz.user_type,
         from: from_date,
         to: to_date
       };
-
+      this.order_history_text='Searching...';
       this.requestOrderHistory(payload);
 
       this.filteredData = this.orderHistoryData;
@@ -269,6 +271,7 @@ export default {
             console.log(
               "Got some data, now lets show something in this component"
             );
+            this.order_history_text='Search';
             console.log(response);
             this.empty_orders_state = "Order History Not Found";
           },
@@ -276,13 +279,14 @@ export default {
             console.error(
               "Got nothing from server. Prompt user to check internet connection and try again"
             );
+            this.order_history_text='Search';
             console.log(error);
             this.empty_orders_state = "Order History Failed to Fetch";
           }
         );
     },
     requestCopUsers() {
-      let cop_id = 0;
+      // let cop_id = 0;
       let users_payload = {
         cop_id: this.session_data.biz.cop_id
       };
@@ -316,7 +320,7 @@ export default {
   computed: {
     ...mapGetters({
       orderHistoryData: "$_transactions/getOrderHistoryOrders",
-      cop_users: "$_transactions/getCopUsers"
+      copUsers: "$_transactions/getCopUsers"
     }),
     session_data() {
       return this.$store.getters.getSession;

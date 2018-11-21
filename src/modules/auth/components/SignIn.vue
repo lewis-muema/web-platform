@@ -8,12 +8,16 @@
           </div>
 
 
-          <div class="sign-in-button" @click="" id="sign-in-v2-logging-in-1">
+          <!-- <div class="sign-in-button" @click="" id="sign-in-v2-logging-in-1">
           <img  class="sign-buttom__img"src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
           </div>
           <div class="sign-text">
              or
-          </div>
+          </div> -->
+
+          <p class="sign-in-error">
+            {{message}}
+          </p>
 
           <div>
 
@@ -30,7 +34,7 @@
             </div>
 
             <div class="sign-holder">
-              <input class="button-primary" type="submit" value="Log in" id="login" v-on:click="sign_in" >
+              <input class="button-primary" type="submit" name="login_text" v-model="login_text" v-on:click="sign_in" >
             </div>
             <div class=" sign-holder sign-forgot-pass sign-smaller">
               <router-link class="sign-holder__link" to="/auth/forgot_password">Forgot password?</router-link>
@@ -51,7 +55,9 @@ export default {
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      message:'',
+      login_text:'Login'
     };
   },
   methods: {
@@ -78,7 +84,7 @@ export default {
     },
     sign_in: function() {
       //erase cookie on login just incase
-
+      this.login_text ='Login ...';
       this.eraseCookie('_sessionSnack');
 
       let values = {};
@@ -109,20 +115,25 @@ export default {
           } else {
             //failed to login
             //show some sort of error
-            this.doNotification(2,"Login failed", "Login failed. Please try again")
+            this.login_text ='Login';
+            this.message = response.data.reason;
+            this.doNotification(2,"Login failed", "Login failed. Please try again");
             console.warn("login failed");
           }
         },
         error => {
+          this.login_text ='Login';
+          this.message = "Check Internet Connection";
           console.error("Check Internet Connection");
           console.log(error);
         }
       );
     },
     doNotification(level,title, message){
-        this.$store.commit('setNotificationStatus', true);
         let notification = {"title":title, "level":level, "message":message};
         this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
+
     },
   }
 };
@@ -210,5 +221,9 @@ export default {
 .sign-form {
   height: 42px !important;
   width: 110% !important;
+}
+.sign-in-error{
+  color: #e08445;
+  font-family: 'Rubik', sans-serif;
 }
 </style>
