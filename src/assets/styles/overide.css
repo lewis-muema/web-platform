@@ -494,11 +494,11 @@ span.el-pagination__jump {
   outline: none;
 }
 
-.el-checkbox {
+.el-checkbox, .el-radio {
   font-weight: normal !important;
 }
 
-.el-checkbox__label {
+.el-checkbox__label, .el-radio__label {
   font-size: 13px !important;
 }
 
@@ -516,4 +516,13 @@ span.el-pagination__jump {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #555 !important;
+}
+
+.el-radio__input.is-checked+.el-radio__label {
+    color: #1782C5 !important;
+}
+
+.el-radio__input.is-checked .el-radio__inner {
+    border-color: #1782C5 !important;
+    background: #1782C5 !important;
 }
