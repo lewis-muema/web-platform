@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="sign-holder">
-                    <input class="button-primary" type="submit" value="Update" id="UpdateEdit" v-on:click="update_edit">
+                    <button class="button-primary" type="submit" id="UpdateEdit" v-on:click="update_edit">Update</button>
                 </div>
             </div>
         </div>

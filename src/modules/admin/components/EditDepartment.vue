@@ -31,8 +31,8 @@
                 </div> -->
 
                 <div class="sign-holder">
-                    <input class="button-primary" type="submit" value="Update" id="update_department"
-                           v-on:click="update_department">
+                    <button class="button-primary" type="submit" id="update_department"
+                            v-on:click="update_department">Update</button>
                 </div>
             </div>
         </div>
