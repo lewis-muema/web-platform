@@ -38,14 +38,6 @@ export default {
 </script>
 
 <style lang="css">
-.container-small
-{
-  width: 30vw;
-  margin: 5% auto;
-}
-.payment--header{
-  display: flex;
-  justify-content: space-between;
-}
+@import '../../assets/styles/payment.css';
 
 </style>

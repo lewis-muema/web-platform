@@ -9,7 +9,7 @@ export default {
             //commit('setOrderHistoryOrders',response.data.data);
             //check the reponse if true make another request to the backend to store the data
 
-            let session = this.$store.getters.getSession;
+            let session = payload.vm.$store.getters.getSession;
             let reference = "";
             let card_trans_id = "";
 
@@ -63,6 +63,9 @@ export default {
     return new Promise((resolve, reject) => {
       payload.vm.$store.dispatch("requestAxiosPost", payload).then(
         response => {
+          commit("setMpesaLoadingStatus", true);
+          commit("setMpesaFailStatus", false);
+          commit("setMpesaSuccessStatus", false);
           resolve(response);
         },
         error => {
@@ -72,6 +75,31 @@ export default {
       );
     });
   },
+  terminateMpesaPaymentRequest({commit}, payload) {
+    return new Promise((resolve, reject) => {
+      commit("setMpesaLoadingStatus", false);
+      commit("setMpesaFailStatus", true);
+      commit("setMpesaSuccessStatus", false);
+      resolve(true);
+    });
+  },
+  completeMpesaPaymentRequest({commit}, payload) {
+    return new Promise((resolve, reject) => {
+      commit("setMpesaLoadingStatus", false);
+      commit("setMpesaSuccessStatus", true);
+      commit("setMpesaFailStatus", false);
+      resolve(true);
+    });
+  },
+  resetMpesaPaymentRequest({commit}, payload) {
+    return new Promise((resolve, reject) => {
+      commit("setMpesaLoadingStatus", false);
+      commit("setMpesaFailStatus", false);
+      commit("setMpesaSuccessStatus", false);
+      resolve(true);
+    });
+  },
+
   requestRunningBalance({ commit }, payload) {
     return new Promise((resolve, reject) => {
       payload.vm.$store.dispatch("requestAxiosPost", payload).then(

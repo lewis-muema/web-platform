@@ -16,6 +16,7 @@
                 <button class="button-primary section--filter-action" @click="addUser">Add User</button>
             </div>
         </div>
+
         <el-table
                 :data="user_data"
                 style="width: 100%"
@@ -32,47 +33,36 @@
             </el-table-column>
             <el-table-column
                     label="Phone"
-                    prop="phone"
-                    >
+                    prop="phone">
             </el-table-column>
-
             <el-table-column
                     label="Email"
                     prop="email"
-            >
+                    width="250">
             </el-table-column>
             <el-table-column
                     label="Department"
-                    prop="department_name"
-            >
+                    prop="department_name">
             </el-table-column>
             <el-table-column
-                    label="Type"
-            >
+                    label="Type">
                 <template slot-scope="scope">
-                    <span>{{ get_user_type(scope.$index) }}</span>
+                <span>{{ get_user_type(scope.$index) }}</span>
                 </template>
             </el-table-column>
             <el-table-column
-                    label="Status"
-            >
+                    label="Status">
                 <template slot-scope="scope">
                     <span>{{ get_user_status(scope.$index) }}</span>
                 </template>
             </el-table-column>
-            <!--<el-table-column-->
-            <!--label="Branch"-->
-            <!--prop="branch">-->
-            <!--</el-table-column>-->
             <el-table-column
                     label="Action">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="edit_user(user_data[scope.$index]['cop_user_id'])">Edit User</el-button>
+                    <a @click="edit_user(user_data[scope.$index]['cop_user_id'])">Edit User</a>
                 </template>
             </el-table-column>
-
         </el-table>
-
         <div class="section--pagination-wrap">
             <el-pagination
                     layout="total, sizes, prev, pager, next, jumper"

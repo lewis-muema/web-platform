@@ -2,9 +2,10 @@
   <div class="" id="order_hist_container">
     <div class="section--filter-wrap">
         <div class="section--filter-input-wrap">
-            <el-select class="section--filter-input" v-model="filterData.user" placeholder="Users" :v-if="session_data.default == 'biz'">
+            <el-select class="section--filter-input" v-model="filterData.user" placeholder="Users" v-if="session_data.default=='biz'">
                 <el-option v-for="user in cop_users" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
                 </el-option>
+                <!-- {{this.session.default}} -->
             </el-select>
             <el-date-picker class="section--filter-input" type="date" name="from_date" value="" placeholder="From" v-model="filterData.from_date"/>
             <el-date-picker class="section--filter-input" type="date" name="to_date" value="" placeholder="To" v-model="filterData.to_date"/>
@@ -23,6 +24,7 @@
       :expand-row-keys="expand_keys"
       @row-click="expandTableRow"
       @expand-change="handleRowExpand"
+      v-loading='loading'
       >
       <template slot="empty">
             {{empty_orders_state}}
@@ -47,6 +49,8 @@
       </el-table-column>
 
       <el-table-column
+        v-if="session_data.default=='biz'"
+         key="1"
         label="User"
         prop="user_details.name"
         width="120"
@@ -121,7 +125,8 @@ export default {
         to_date: ""
       },
       filteredData: [],
-      filterState: false
+      filterState: false,
+      loading:false,
     };
   },
   filters: {
@@ -131,6 +136,8 @@ export default {
   },
   methods: {
     filterTableData() {
+      this.loading = true;
+
       //reset filter
       this.filterState = false;
       this.empty_orders_state = "Searching Orders";
@@ -142,61 +149,47 @@ export default {
       from_date = moment(from_date).format("YYYY-MM-DD");
       to_date = moment(to_date).format("YYYY-MM-DD");
 
-      //we need to Fetch
-      //we use actions
-      //we are passing an updated payload
-      //the updated payload
-      //will have dates
-      let payload = {
-        cop_id: 669,
-        user_type: 2,
-        from: from_date,
-        to: to_date
-      };
+      let session = this.$store.getters.getSession;
+      
+      let cop_id = 0;
+      let payload =  {};
 
-      this.requestOrderHistory(payload);
+      if(session.default =='biz'){
+        let cop_id = session.biz.cop_id;
+        let user_id = session.biz.user_id;
+        let user_type = session.biz.user_type;
 
-      this.filteredData = this.orderHistoryData;
+        payload = {
+          cop_id: cop_id,
+          user_type: user_type,
+          from: from_date,
+          to: to_date
+        };
+        
+        if(user != '' && user != null){
+          payload = {
+            cop_id: cop_id,
+            user_id: user_id,
+            from: from_date,
+            to: to_date
+          };
+        }
 
-      console.log(this.filteredData);
-      console.log(to_date);
-
-      //check if both are filled
-      if (user !== "" && from_date !== "" && to_date !== "") {
-        console.log("performing a user and date filter");
-        console.log(from_date);
-        console.log(to_date);
-        from_date = moment(from_date);
-        to_date = moment(to_date);
-
-        console.log(from_date);
-        let vm = this;
-
-        this.filteredData = this.filteredData.filter(function(order) {
-          console.log(order);
-          return order.user_details.id == user;
-        });
-        this.filterState = true;
-      } else if (user !== "") {
-        //user filter
-        console.log("performing a user filter");
-        console.log(user);
-
-        this.filteredData = this.filteredData.filter(
-          order => order.user_details.id == user
-        );
-        this.filterState = true;
       } else {
-        //date filter
-        // console.log('performing a date filter');
-        //  this.filteredData = this.filteredData.filter(function (order) {
-        //   return moment(order.order_date).isSameOrAfter(from_date) && moment(order.order_date).isSameOrBefore(to_date);
-        //  });
-
-        this.filterState = true;
+        let user_id = session[session.default]['user_id'];
+        
+        payload = {
+          user_id: user_id,
+          from: from_date,
+          to: to_date
+        };
+        
+        
       }
-
-      this.empty_orders_state = "Order History Not Found";
+      
+      this.requestOrderHistory(payload);
+      this.loading = false;
+      
     },
     changeSize(val) {
       this.pagination_page = 1;
@@ -248,9 +241,13 @@ export default {
       });
     },
     formatAmount(row, column, cellValue) {
-      let value = row.order_cost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
-      value = value.split(".");
-      return value[0];
+      if(typeof row.order_cost != 'undefined'){
+        let value = row.order_cost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+        value = value.split(".");
+        return value[0];
+      } else {
+        return "";
+      }
     },
     requestOrderHistory(payload) {
       let full_payload = {
@@ -333,16 +330,9 @@ export default {
     order_history_data() {
       let from = (this.pagination_page - 1) * this.pagination_limit;
       let to = this.pagination_page * this.pagination_limit;
-
-      // if(this.filterState == true){
-      //   return this.filteredData.slice(from, to);
-      // }
       return this.orderHistoryData.slice(from, to);
     },
     order_history_total() {
-      // if(this.filterState == true){
-      //   return this.filteredData.length;
-      // }
       return this.orderHistoryData.length;
     }
   },

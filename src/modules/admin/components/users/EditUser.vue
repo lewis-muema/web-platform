@@ -80,10 +80,10 @@
             let cop_user_id = this.$route.params.id;
             this.userDetails = this.userData.filter(user => user.cop_user_id == cop_user_id)[0];
 
-            if(this.userDetails !== undefined){
+            if (this.userDetails !== undefined) {
                 this.available = true;
             }
-            else{
+            else {
                 this.available = false;
                 this.one_step_back();
                 console.log("back to users' table")
@@ -102,6 +102,7 @@
                 editAdminUser: '$_admin/editAdminUser',
             }),
             update_edit: function () {
+                let vm = this;
                 let payload = {};
                 payload.cop_user_id = this.userDetails.cop_user_id;
                 payload.user_name = this.userDetails.name;
@@ -124,32 +125,29 @@
                     "app": "NODE_PRIVATE_API",
                     "endpoint": "update_user"
                 }
-                this.$store.commit('setNotificationStatus', true); //activate notification
-                let level = 0; //this will show the white one
                 this.$store.dispatch("$_admin/editAdminUser", editUser_full_payload).then(response => {
-                    console.log(response.data.status);
-                    return;
+                    // return;
                     console.log("updated");
-                    // let message = response.data.msg;
-                    if (response.data.status == false) {
-                        level = 3; //warning //use 3 to show the red one
-                        this.message = "An error occurred while saving."
-                    } else {
-                        level = 1; //success
-                        this.message = "Edit Successful!";
-                        // this.$router.push('/admin/users');
-                        this.one_step_back()
 
-                    }
+                    let level = 1; //success
+                    this.message = "Edit Successful!";
+
                     let notification = {"title": "Edit User", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
-                    this.$router.push('/admin/users');
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
+                    // vm.one_step_back()
+
                 }, error => {
                     console.log(error);
-                    level = 3;
+                    let level = 3;
                     this.message = "Something went wrong.";
                     let notification = {"title": "Edit User Error!", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
+                    // vm.one_step_back()
+
                 });
             },
             one_step_back: function () {
