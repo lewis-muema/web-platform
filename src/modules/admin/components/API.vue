@@ -5,8 +5,8 @@
             </div>
             <div class="section--filter-action-wrap">
 
-                <button v-if="registered" type="button" class="button-primary section--filter-action" v-on:click="updateApiKey">Update API Key</button>
-                <button v-if="!registered" type="button" class="button-primary section--filter-action" v-on:click="generateAPIKey">Generate API Key</button>
+                <button v-if="registered" type="button" class="button-primary section--filter-action" name="update_api_text" v-model="update_api_text" v-on:click="updateApiKey">{{this.update_api_text}}</button>
+                <button v-if="!registered" type="button" class="button-primary section--filter-action"name="generate_api_text" v-model="generate_api_text" v-on:click="generateAPIKey" >{{this.generate_api_text}}</button>
             </div>
         </div>
         <!--{{fetchedData}}-->
@@ -92,6 +92,8 @@
                 empty_payments_state: "Fetching API Credentials",
                 pagination_limit: 5,
                 pagination_page: 1,
+                update_api_text:'Update API Key',
+                generate_api_text:'Generate API Key',
                 button_name: "",
             }
         },
@@ -108,6 +110,7 @@
 
                 let session = this.$store.getters.getSession;
                 let cop_id = 0;
+                this.update_api_text ='Updating..';
                 if(session.default == 'biz'){
                     cop_id = session[session.default]['cop_id'];
                 }
@@ -126,12 +129,14 @@
                 // let level = 0; //this will show the white one
                 this.$store.dispatch("$_admin/generateAPIKey", newKeyFull_payload).then(response => {
                     console.log("updated");
+                    this.update_api_text ='Update API Key';
                     console.log(response);
                     let level = 1; //success
                     this.message = "Key Updated!"
                     let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                 }, error => {
+                  this.update_api_text ='Update API Key';
                     console.log(error);
                     let level = 2;
                     this.message = "Something went wrong."
@@ -141,6 +146,7 @@
             },
             generateAPIKey() {
                 let session = this.$store.getters.getSession;
+                this.generate_api_text ='Generating..';
                 let cop_id = 0;
                 if(session.default == 'biz'){
                     cop_id = session[session.default]['cop_id'];
@@ -159,14 +165,10 @@
                 this.$store.dispatch("$_admin/generateAPIKey", newKeyFull_payload).then(response => {
                     console.log("generated");
                     console.log(response);
-                    level = 1; //success
-                    this.message = "Key Generated!"
-                    let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
-                    this.$store.commit('setNotification', notification);
-                    this.$store.commit('setNotificationStatus', true); //activate notification
-
+                    this.generate_api_text ='Generate API Key'
                 }, error => {
                     console.log("NOT generated");
+                    this.generate_api_text ='Generate API Key'
                     console.log(error);
                     let level = 2;
                     this.message = "Something went wrong."
