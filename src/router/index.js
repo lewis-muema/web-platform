@@ -22,8 +22,8 @@ function getSessionCookie()   {
         var c = ca[i];
         while (c.charAt(0)==' ') c = c.substring(1,c.length);
         if (c.indexOf(nameEQ) == 0){
-
-        } return c.substring(nameEQ.length,c.length);
+        } 
+        return c.substring(nameEQ.length,c.length);
     }
     return null;
 }
@@ -47,10 +47,11 @@ function guard(to, from, next){
             let _sessionSnack = getSessionCookie();
             console.log(_sessionSnack);
 
-            if(_sessionSnack !== null && _sessionSnack !== ''){
-              session = JSON.parse(_sessionSnack);
-              store.state.session = session;
-            }
+            //if(_sessionSnack !== null && _sessionSnack !== ''){
+            //update session with whatever is on the cookies
+            //}
+            session = JSON.parse(_sessionSnack);
+            store.state.session = session;
             if (isEmpty(session) == true) {
               console.log('router-message', 'user not logged in');
                resolve(next('/auth/sign_in'));
@@ -58,7 +59,6 @@ function guard(to, from, next){
               console.log('session is updated');
               resolve(next());
             }
-
 
         } else {
           resolve(next())

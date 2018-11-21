@@ -2,7 +2,7 @@
     <div class="header">
         <div class="header--item">
             <div class="header--item__left">
-                <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png" alt="logo" class="logo">
+                <img src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png" alt="logo" class="logo">
             </div>
         </div>
         <div class="header--item__right">
