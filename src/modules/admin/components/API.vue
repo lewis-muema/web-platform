@@ -59,7 +59,7 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import {mapGetters, mapActions} from 'vuex'
 
     export default {
         name: "API",
@@ -101,6 +101,9 @@
             }),
         },
         methods: {
+            ...mapActions({
+                requestKeysList: '$_admin/requestKeysList'
+            }),
             updateApiKey() {
 
                 let session = this.$store.getters.getSession;

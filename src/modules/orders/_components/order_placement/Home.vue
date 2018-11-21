@@ -74,6 +74,7 @@ export default {
       // get_waypoints : '$_orders/$_home/get_waypoints',
       get_max_destinations : '$_orders/$_home/get_max_destinations',
       get_order_path : '$_orders/$_home/get_order_path',
+      get_location_names : '$_orders/$_home/get_location_names',
       get_extra_destinations : '$_orders/$_home/get_extra_destinations',
       get_order_notes : '$_orders/$_home/get_order_notes',
       get_price_request_object : '$_orders/$_home/get_price_request_object',
@@ -91,7 +92,9 @@ export default {
       set_location_marker : '$_orders/set_location_marker',
       unset_location_marker : '$_orders/unset_location_marker',
       set_order_path: '$_orders/$_home/set_order_path',
+      set_location_name: '$_orders/$_home/set_location_name',
       unset_order_path: '$_orders/$_home/unset_order_path',
+      unset_location_name: '$_orders/$_home/unset_location_name',
       setPickupFilled: '$_orders/$_home/set_pickup_filled',
       addExtraDestination : '$_orders/$_home/add_extra_destination',
       removeExtraDestination : '$_orders/$_home/remove_extra_destination'
@@ -114,6 +117,7 @@ export default {
         this.unset_location_marker(index);
         this.unset_order_path(index);
         this.deleteLocationInModel(index);
+        this.unset_location_name(index);
     },
     setLocation(place,index){
         // TO Do reset marker on store when leaving the route
@@ -139,10 +143,15 @@ export default {
             "index":index,
             "path":path_obj
         }
+        let location_name_payload = {
+            "index":index,
+            "name":place.name
+        }
         this.clearLocation(index);
         this.setMarker(place.geometry.location.lat(),place.geometry.location.lng(),index );
         this.set_order_path(path_payload);
-        this.setLocationInModel(index,place.name);
+        this.setLocationInModel(index,);
+        this.set_location_name(location_name_payload);
         if(index == 0){
             this.setPickupFilled(true);
         }
@@ -240,19 +249,32 @@ export default {
         let notification = {"title":title, "level":level, "message":message};
         this.$store.commit('setNotification', notification);
     },
-    scroll_to_bottom(){
-        let container = this.$el.querySelector("#homeview-form");
-        container.scrollTop = container.scrollHeight;
-    },
+    // scroll_to_bottom(){
+    //     let container = this.$el.querySelector("#homeview-form");
+    //     container.scrollTop = container.scrollHeight;
+    // },
     initial_destination_css(n){
         return {
             'homeview--input-bundler__destination-short-input': false
         }
     },
-  },
+    initializeOrderPlacementHome(){
+        console.log('in initializeOrderPlacementHome');
+        if(this.get_location_names.length > 0){
+            this.locations = this.get_location_names;
+        }
+        console.log('out initializeOrderPlacementHome');
 
+    }
+  },
+  mounted() {
+    this.$store.commit('$_orders/remove_polyline',[])
+    this.$store.commit('$_orders/remove_markers',[])
+  },
   created() {
     this.$store.registerModule(['$_orders','$_home'], home_store);
+    this.initializeOrderPlacementHome();
+    console.log('in created');
   },
   beforeRouteLeave (to, from, next) {
     if(to.name == 'tracking'){
@@ -261,6 +283,7 @@ export default {
                 this.unset_location_marker(i);
                 this.unset_order_path(i);
                 this.deleteLocationInModel(i);
+                this.unset_location_name(i);
             }
         }
     }

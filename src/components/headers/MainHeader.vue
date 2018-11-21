@@ -2,7 +2,7 @@
     <div class="header">
         <div class="header--item">
             <div class="header--item__left">
-                <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png" alt="logo" class="logo">
+                <img src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png" alt="logo" class="logo">
             </div>
         </div>
         <div class="header--item__right">
@@ -139,14 +139,14 @@ export default {
         //default
         //check to make sure that either title or message is set
         //reset notification status
-    
+
         if(notification.title !== '' || notification.message !== ''){
           this.$notify({
           title: notification.title,
           message: notification.message
           });
           offset: 20;
-        
+
         }
       }
       this.$store.commit("setNotificationStatus", false);

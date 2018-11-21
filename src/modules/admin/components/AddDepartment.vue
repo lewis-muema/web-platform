@@ -22,7 +22,7 @@
                     </el-select>
                 </div>
                 <div class="sign-holder">
-                    <input class="button-primary" type="submit" value="Add" v-on:click="add_department">
+                    <button class="button-primary" type="submit" v-on:click="add_department">Add</button>
                 </div>
             </div>
         </div>
