@@ -50,7 +50,7 @@
               <div class="rider_details_actions">
                 <div class="rider_details_actions_completed" v-if="order_details.order_details.delivery_status !== 3">
                     <div class="rider_details_action">
-                        <button class="button-primary rider_details_action_btn" type="button" @click="trackOrder">Track</button>
+                        <button class="button-primary rider_details_action_btn" type="button" @click="trackOrder(order_details.order_no)">Track</button>
                     </div>
                     <div class="rider_details_action">
                         <button class="button-primary rider_details_action_btn" type="button" @click="printReceipt">Print Receipt</button>
@@ -78,8 +78,9 @@
                     <div class="rider_details_action">
                         <button class="button-primary rider_details_action_btn" type="button" @click="deliveryDocs">Delivery Docs</button>
                     </div>
-
-                    <div class="rider_details_action">
+                    
+                    <!-- //TODO:  unhide this when it starts being used  -->
+                    <!-- <div class="rider_details_action">
                         <el-popover
                         placement="bottom"
                         trigger="click">
@@ -168,7 +169,16 @@ export default {
     rateOrder() {
       this.show_rating = false;
     },
-    trackOrder() {}
+    trackOrder(order_no) {
+        console.log(order_no);
+        this.$router.push({name:'tracking', params: {order_no:order_no}});
+    },
+    printReceipt() {
+
+    },
+    deliveryDocs() {
+
+    }
   },
   computed: {
     ...mapGetters({
