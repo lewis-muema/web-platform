@@ -55,9 +55,6 @@ export default {
       this.admin_user = false;
       this.logged_user = session[session.default]["user_name"];
     }
-    EventBus.$on("global-notification", notification => {
-      console.log("global-notification", notification);
-    });
   },
   methods: {
     logOut() {
