@@ -139,14 +139,14 @@ export default {
         //default
         //check to make sure that either title or message is set
         //reset notification status
-    
+
         if(notification.title !== '' || notification.message !== ''){
           this.$notify({
           title: notification.title,
           message: notification.message
           });
           offset: 20;
-        
+
         }
       }
       this.$store.commit("setNotificationStatus", false);
