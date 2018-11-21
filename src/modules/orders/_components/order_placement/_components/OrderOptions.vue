@@ -30,7 +30,7 @@
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="star" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
-                          Your balance is Ksh {{getRB()}}.
+                          Your balance is KES {{getRB()}}.
                         </div>
                     </div>
 
@@ -137,28 +137,28 @@ export default {
     },
     data () {
         return {
-            pickerOptions1: {
-              shortcuts: [{
-                text: 'Today',
-                onClick(picker) {
-                  picker.$emit('pick', new Date());
-                }
-              }, {
-                text: 'Yesterday',
-                onClick(picker) {
-                  const date = new Date();
-                  date.setTime(date.getTime() - 3600 * 1000 * 24);
-                  picker.$emit('pick', date);
-                }
-              }, {
-                text: 'A week ago',
-                onClick(picker) {
-                  const date = new Date();
-                  date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-                  picker.$emit('pick', date);
-                }
-              }]
-            },
+            // pickerOptions1: {
+            //   shortcuts: [{
+            //     text: 'Today',
+            //     onClick(picker) {
+            //       picker.$emit('pick', new Date());
+            //     }
+            //   }, {
+            //     text: 'Yesterday',
+            //     onClick(picker) {
+            //       const date = new Date();
+            //       date.setTime(date.getTime() - 3600 * 1000 * 24);
+            //       picker.$emit('pick', date);
+            //     }
+            //   }, {
+            //     text: 'A week ago',
+            //     onClick(picker) {
+            //       const date = new Date();
+            //       date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+            //       picker.$emit('pick', date);
+            //     }
+            //   }]
+            // },
             schedule_time: this.moment(),
             order_notes: '',
             payment_method:'',
@@ -178,6 +178,9 @@ export default {
           get_active_vendor_name : '$_orders/$_home/get_active_vendor_name',
           get_order_path : '$_orders/$_home/get_order_path',
           get_pickup_filled : '$_orders/$_home/get_pickup_filled',
+          get_payment_method : '$_orders/$_home/get_payment_method',
+          get_order_notes : '$_orders/$_home/get_order_notes',
+          get_schedule_time : '$_orders/$_home/get_schedule_time',
 
         }),
         active_price_tier_data: function (){
@@ -209,9 +212,14 @@ export default {
         ...mapMutations({
           set_active_order_option : '$_orders/$_home/set_active_order_option',
           setPickupFilled: '$_orders/$_home/set_pickup_filled',
+          setPaymentMethod: '$_orders/$_home/set_payment_method',
+          setScheduleTime: '$_orders/$_home/set_schedule_time',
+          setOrderNotes: '$_orders/$_home/set_order_notes',
+          unsetMap : '$_orders/unsetMap'
         }),
         ...mapActions({
             requestOrderCompletion: '$_orders/$_home/requestOrderCompletion',
+            requestRunningBalanceFromAPI: '$_payment/requestRunningBalance',
         }),
         do_set_active_order_option(name){
             (this.get_active_order_option != name) ? this.set_active_order_option(name)  : this.set_active_order_option('');
@@ -241,24 +249,22 @@ export default {
                 this.doNotification('2','Select a vehicle type', "The vehicle type not been set, please set and try again.");
                 return false;
             }
-            if(this.checkAllowPrePaid() == true){
-                // TO Do charge when prepaid accounts specify the method
-                this.handlePostPaidPayments();
-            }
-            else{
-                console.log('not passed checks for checkAllowPrePaid')
-                if(this.payment_method == ''){
+            if(this.payment_method == ''){
+                if(this.checkAllowPrePaid() == true){
+                    this.handlePostPaidPayments();
+                }
+                else{
                     this.doNotification('2','Choose a payment method', "Please select a payment method and try again.");
                     return false;
                 }
+            }
+            else{
+                this.saveInfoToStore();
                 if(this.payment_method == 1){
                     this.handleMpesaPayments();
                 }
                 else if(this.payment_method == 2){
                     this.handleCardPayments();
-                }
-                else if( this.payment_method == 3){
-                    this.handleCashPayments();
                 }
                 else if( this.payment_method == 5){
                     this.handlePromoCodePayments();
@@ -267,13 +273,16 @@ export default {
             return true;
         },
         handleMpesaPayments(){
-
+            console.log('taking you to mpesa');
+            this.$router.push({ name: "mpesa_payment" });
         },
         handlePromoCodePayments(){
-
+            console.log('taking you to promo');
+            this.$router.push({ name: "promo_payment" });
         },
         handleCardPayments(){
-
+            console.log('taking you to card');
+             this.$router.push({ name: "card_payment" });
         },
         handleCashPayments(){
             console.log('allowed cash payment')
@@ -332,7 +341,7 @@ export default {
               "no_charge_status": false,
               "insurance_amount": 10,
               "cash_status": this.cash_status,
-              "note_status": this.order_notes.length > 0 ? true : false,
+              "note_status": (typeof this.order_notes == 'undefined') ? false : this.order_notes.length > 0 ? true:false,
               "last_digit": "none",
               "insurance_id": 1,
               "platform": "corporate",
@@ -365,7 +374,15 @@ export default {
         },
         saveInfoToStore(){
             // save locations, notes & payment option
+            this.setScheduleTime(this.schedule_time);
+            this.setPaymentMethod(this.payment_method);
+            this.setOrderNotes(this.order_notes);
 
+        },
+        retrieveFromStore(){
+            this.schedule_time = this.get_schedule_time;
+            this.payment_method = this.get_payment_method;
+            this.order_notes = this.get_order_notes;
         },
         refreshRunningBalance(){
             let session = this.$store.getters.getSession;
@@ -383,7 +400,7 @@ export default {
               app: "PRIVATE_API",
               endpoint: "running_balance"
             };
-            this.$store.dispatch("$_payment/requestRunningBalance", payload).then(
+            this.requestRunningBalanceFromAPI(payload).then(
                 response => {
                   if (response.length > 0) {
                     response = response[0];
@@ -399,13 +416,24 @@ export default {
                   //commit  to the global store here
                 },
                 error => {
-                  console.log(error);
+                  console.log('error  in store dispatch',error);
                 }
               );
+        },
+        initializeOrderPlacement(){
+            if(this.get_schedule_time != ''){
+                console.log('old session *')
+                this.retrieveFromStore();
+            }
+            else{
+                this.unsetMap();
+                console.log('new session *')
+            }
         }
     },
     created(){
         this.$store.registerModule('$_payment', payment_store);
+        this.initializeOrderPlacement();
         this.refreshRunningBalance();
     }
 }

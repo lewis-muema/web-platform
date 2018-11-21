@@ -5,7 +5,7 @@
       <font-awesome-icon icon="chevron-up" :class="classObject" width="15px" />
     </div>
     <transition name="fade">
-      <div class="ongoing--column" v-if="show">
+      <div class="ongoing--column" v-if="this.showing">
         <template v-for="(order, index) in this.get_orders">
           <div class="ongoing--card" @click="track(order.order_no)" :class="{ active: active_card(order.order_no) }">
             <div class="ongoing--card-location">
@@ -44,16 +44,21 @@ export default {
   data: function() {
     return {
       loading: true,
+      showing: 1
     }
   },
   methods: {
     ...mapMutations({
-      toggle : '$_orders/toggle_ongoing',
       change_page : '$_orders/set_page',
       hide_vendors: '$_orders/hide_vendors'
     }),
     toggle_ongoing: function() {
-      this.toggle()
+      if (this.showing) {
+        this.showing = 0
+      }
+      else {
+        this.showing = 1
+      }
     },
     track: function(order) {
       this.hide_vendors()
@@ -128,7 +133,7 @@ export default {
       return {
         'sendy-blue': true,
         'rotate-transform': true,
-        'rotate': this.show == 0
+        'rotate': this.showing == 0
       }
     },
   },
@@ -155,7 +160,7 @@ export default {
 }
 .ongoing--count
 {
-    display: flex;
+  display: flex;
     justify-content: space-between;
     background-color: #fff;
     color: #1782c5;
@@ -164,8 +169,10 @@ export default {
     cursor: pointer;
     border: 0px solid #1782c5;
     border-radius: 2px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+    box-shadow: 0 3px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
     /* text-align: center; */
+    /* background-color: red; */
+    width: 250px;
 }
 .ongoing--card
 {

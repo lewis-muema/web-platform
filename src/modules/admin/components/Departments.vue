@@ -3,12 +3,6 @@
         <div class="section--filter-wrap">
             <div class="section--filter-input-wrap">
 
-                <!--<el-select class="section&#45;&#45;filter-input" v-model="filterData.department" placeholder="All Departments">-->
-                    <!--<el-option v-for="dept in fetchedDepartmentsData" :key="dept.department_name"-->
-                               <!--:label="dept.department_name" :value="dept.department_id">-->
-                    <!--</el-option>-->
-                <!--</el-select>-->
-
                 <el-input class="section--filter-input" v-model="filterData.department" placeholder="Search Department"></el-input>
 
                 <button type="button"
@@ -66,7 +60,7 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import {mapGetters, mapActions} from 'vuex'
 
     export default {
         name: "Departments",
@@ -110,6 +104,9 @@
             ...mapGetters({
                 fetchedDepartmentsData: '$_admin/getDepartmentsList',
                 userData: '$_admin/getUsersList',
+            }),
+            ...mapActions({
+                requestDepartmentsList: '$_admin/requestDepartmentsList'
             }),
             departments_data() {
                 let from = (this.pagination_page - 1) * this.pagination_limit;

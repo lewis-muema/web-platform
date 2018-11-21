@@ -1,7 +1,9 @@
 <template lang="html">
   <div class="">
     <main-header></main-header>
-
+    <div class="tracking-back-button">
+        <i class="el-icon-caret-left edit-back" v-on:click="go_back()"></i>
+    </div>
     <div class="container-small" id="payment_container">
       <component v-bind:is="currentPageHeader" class="payment--header"></component>
       <payment-body/>
@@ -33,19 +35,17 @@ export default {
     currentPageHeader: function() {
       return 'account-balance';
     }
-  }
+ },
+ methods:{
+     go_back(){
+         this.$router.go(-1);
+     }
+ },
+
 }
 </script>
 
 <style lang="css">
-.container-small
-{
-  width: 30vw;
-  margin: 5% auto;
-}
-.payment--header{
-  display: flex;
-  justify-content: space-between;
-}
+@import '../../assets/styles/payment.css';
 
 </style>

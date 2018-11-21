@@ -15,6 +15,7 @@
     "element-ui": "^2.4.9",
     "express": "^4.16.4",
     "fs": "0.0.1-security",
+    "google-libphonenumber": "^3.1.15",
     "jquery": "^3.3.1",
     "jsonwebtoken": "^8.3.0",
     "lru-cache": "^4.1.3",

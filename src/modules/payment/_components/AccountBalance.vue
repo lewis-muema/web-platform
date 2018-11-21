@@ -27,10 +27,13 @@ export default {
     requestRB() {
       //this will request from the api and update the store
       let session = this.$store.getters.getSession;
-
+      let cop_id = 0;
+      if(session.default == 'biz'){
+        cop_id = session.biz.cop_id;
+      }
       let running_balance_payload = {
         values: {
-          cop_id: session.biz.cop_id,
+          cop_id: cop_id,
           user_phone: session[session.default]["user_phone"]
         }
       };

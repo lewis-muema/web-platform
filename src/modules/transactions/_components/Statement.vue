@@ -265,10 +265,11 @@ export default {
       return this.statementData.slice(from, to);
     },
     statement_total() {
-      // if(this.filterState == true){
-      //   return this.filteredData.length;
-      // }
-     return this.statementData.length;
+      if(this.statementDate != null){
+        return this.statementData.length;
+      } else {
+        return 0;
+      }
     }
   },
 }

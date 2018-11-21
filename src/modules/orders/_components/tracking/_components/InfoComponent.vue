@@ -11,7 +11,7 @@
               {{this.tracking_data.rider.rider_name}}
             </div>
             <div class="">
-              {{this.tracking_data.rider.vehicle_name}}
+              {{this.tracking_data.rider.vehicle_name}} - {{this.tracking_data.rider.number_plate}}
             </div>
           </div>
           <div class="infobar--driver-details" v-else>
@@ -42,15 +42,27 @@
           </div>
           <div class="">
             <span class="" v-if = "this.tracking_data.delivery_status < 2">
-              Estimated Arrival: <span class=""> 9:00 am</span>
+              Estimated Arrival: <span class=""> {{this.tracking_data.eta}} </span>
             </span>
             <span class="" v-else>
-              Estimated Delivery: <span class=""> 9:00 am</span>
+              Estimated Delivery: <span class=""> {{this.tracking_data.etd}} </span>
             </span>
           </div>
         </div>
         <div class="infobar--content infobar--item infobar--actions">
-          <div @click="place()">
+          <transition name="fade" mode="out-in">
+            <div class="infobar--action-slide" v-if="this.cancel_popup">
+              <div class="action--slide-text">
+                Are you sure you want to cancel this order?
+              </div>
+              <div class="action--slide-desc">
+                <button type="button" name="button" class="action--slide-button" @click="cancel_order()">Yes</button>
+                <button type="button" name="button" class="action--slide-button" @click="drop_cancel()">No</button>
+              </div>
+              <div class="actions--caret"></div>
+            </div>
+          </transition>
+          <div @click="place()" v-if="false">
             <div class="infobar--actions-icon">
               <i class="el-icon-sold-out"></i>
             </div>
@@ -58,7 +70,7 @@
               Free delivery
             </div>
           </div>
-          <div>
+          <div v-if="false">
             <div class="infobar--actions-icon">
               <i class="el-icon-share"></i>
             </div>
@@ -66,7 +78,7 @@
               Share Status
             </div>
           </div>
-          <div>
+          <div @click="cancel_popup = 1">
             <div class="infobar--actions-icon">
                <i class="el-icon-circle-close-outline"></i>
             </div>
@@ -88,12 +100,29 @@ export default {
   data: function() {
     return {
       loading: true,
-      order_number: ''
+      order_number: '',
+      cancel_popup: 0
     }
   },
   methods: {
     place: function () {
       this.$router.push('/orders')
+    },
+    cancel_order: function () {
+      var payload = {
+        "order_no": this.tracking_data.order_no,
+        "cancel_reason_id" : 4,
+        "reason_description" : 'I placed the wrong locations',
+        "client_type" : this.$store.getters.getSession.default
+      }
+      this.$store.dispatch('$_orders/$_tracking/cancel_order', payload)
+      .then(response => {
+        drop_cancel();
+        place();
+      })
+    },
+    drop_cancel: function () {
+      this.cancel_popup = 0
     }
   },
   computed: {
@@ -200,7 +229,11 @@ export default {
 }
 .infobar--photo img
 {
-  width: 52px;
+  margin-top: -29px;
+  height: 72px;
+  width: auto !important;
+  margin-bottom: -29px;
+  border-radius: 9px;
 }
 .infobar--driver-details
 {
@@ -223,6 +256,7 @@ export default {
   text-transform: capitalize;
   justify-content: space-around;
   text-align: center;
+  position: relative;
 }
 .infobar--actions img
 {
@@ -232,13 +266,35 @@ export default {
   height: 30px;
   margin: 0 auto;
 }
-.infobar--actions div:hover{
-
-cursor: pointer;
-color:#1782C5;
-
+.infobar--actions div:hover
+{
+  cursor: pointer;
+  color:#1782C5;
 }
-
+.infobar--action-slide
+{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #74696942;
+  position: absolute;
+  background-color: #fff;
+  top: -120px;
+  width: 100%;
+}
+.actions--caret
+{
+  width: 20px;
+  height: 20px;
+  z-index: 50;
+  background-color: #fff;
+  position: absolute;
+  bottom: -11px;
+  border-bottom: 1px solid #74696942;
+  border-right: 1px solid #74696942;
+  transform: rotate(45deg);
+}
 .infobar--terms
 {
   display: flex;
@@ -250,7 +306,35 @@ color:#1782C5;
   font-weight: 400;
   padding-top: 11px;
 }
-
+.action--slide-text
+{
+  padding: 10px 0px;
+  line-height: 1.5;
+  text-transform: none;
+}
+.action--slide-text:hover
+{
+  color: #333;
+  cursor: auto;
+}
+.action--slide-desc
+{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.action--slide-button
+{
+  margin: 0px 10px 10px 10px;
+  text-transform: capitalize;
+  font-size: 14px;
+  letter-spacing: 1.1px;
+  background-color: #1782c5;
+  color: #fff;
+  width: 100%;
+  height: 30px;
+  cursor: pointer;
+}
 .infobar--actions-icon
 {
   font-size: 23px;
