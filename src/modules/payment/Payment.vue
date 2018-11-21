@@ -46,22 +46,6 @@ export default {
 </script>
 
 <style lang="css">
-.container-small
-{
-  width: 30vw;
-  margin: 5% auto;
-}
-.payment--header{
-  display: flex;
-  justify-content: space-between;
-}
-.payment-back-button{
-    position: absolute;
-    top: 100px;
-    left: 40px;
-}
-.payment-back-button.edit-back{
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.48)
-}
+@import '../../assets/styles/payment.css';
 
 </style>

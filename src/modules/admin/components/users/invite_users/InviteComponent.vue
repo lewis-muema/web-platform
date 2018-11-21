@@ -1,50 +1,37 @@
 <template lang="html">
     <div class="">
-        <div class="inv-container">
+        <div class="inv-container inv-justify">
             <div class="inv-inputs">
-                <div class="side-flex error">
-                    <span id="show_error"></span>
-                </div>
-                <div class="side-flex inp" id="set0">
-                    <input class="form-control" type="text" name="email" value="" placeholder="name@example.com">
-                    <input class="form-control" type="text" name="name" value="" placeholder="Full Name (Optional)">
-                    <el-select class="addUser--select" v-model="value" placeholder="Department">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                <!--<div class="side-flex error">-->
+                <div v-for="element in elements" class="side-flex inp">
+                    <input class="form-control" type="text" v-model="element.email" name="email"
+                           placeholder="name@example.com">
+                    <input class="form-control" type="text" v-model="element.name" name="name"
+                           placeholder="Full Name (Optional)">
+                    <el-select class="addUser--select" v-model="element.department" placeholder="Department">
+                        <el-option v-for="department in departments" :key="department.department_id"
+                                   :label="department.department_name" :value="department.department_id">
                         </el-option>
                     </el-select>
                 </div>
-            </div>
-            <div class="side-flex inp" id="set1">
-                <input class="form-control" type="text" name="email" value="" placeholder="name@example.com">
-                <input class="form-control" type="text" name="name" value="" placeholder="Full Name (Optional)">
-                <el-select class="addUser--select" v-model="value" placeholder="Department">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option>
-                </el-select>
-            </div>
-            <div class="side-flex inp" id="set2">
-                <input class="form-control" type="text" name="email" value="" placeholder="name@example.com">
-                <input class="form-control" type="text" name="name" value="" placeholder="Full Name (Optional)">
-                <el-select class="addUser--select" v-model="value" placeholder="Department">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option>
-                </el-select>
+
             </div>
         </div>
-        <div class="side-flex submit">
+        <div class="side-flex add-user-submit">
             <div class="column-flex pad-flex alleft">
-                <div class="addUser--link"><a v-on:click="add_another" class="add-anchor"><i class="el-icon-circle-plus-outline"></i>&nbsp;Add
+                <div class="addUser--link"><a v-on:click="addElement" class="add-anchor"><i
+                        class="el-icon-circle-plus-outline"></i>&nbsp;Add
                     another</a> <span> or </span> <a v-on:click="invite_many" class="add-anchor" href="#">add many
                     at once</a></div>
             </div>
             <div class="addUser--submit">
-                <button v-on:click="postInvites" class="btn-submit" type="submit"
+                <button v-on:click="postInvites" class="button-primary" type="submit"
                         name="action">Send Invites
                 </button>
             </div>
         </div>
 
-        <div class="side-flex">
+        <div class="side-flex add-user-submit">
             <div class="column-flex pad-flex inv-link">
                 <div class="flex"><a v-on:click="get_link" class="add-anchor inviteMany--anchor"><i
                         class="el-icon-share"></i><span>&nbsp;Get an invite link to share</span></a>
@@ -55,52 +42,40 @@
 </template>
 
 <script>
-    import {mapGetters, mapMutations} from 'vuex';
-    import $ from 'jquery'
+    import {mapGetters, mapMutations, mapActions} from 'vuex';
 
     export default {
         name: 'invite-component',
         components: {},
         data() {
             return {
-                options: [{
-                    value: 'Option1',
-                    label: 'Option1'
-                }, {
-                    value: 'Option2',
-                    label: 'Option2'
-                }, {
-                    value: 'Option3',
-                    label: 'Option3'
-                }, {
-                    value: 'Option4',
-                    label: 'Option4'
-                }, {
-                    value: 'Option5',
-                    label: 'Option5'
-                }],
-                value: ''
+                value: '',
+                elements: [
+                    {
+                        "email": "",
+                        "name": "",
+                        "department": ""
+                    },
+                    {
+                        "email": "",
+                        "name": "",
+                        "department": ""
+                    },
+                    {
+                        "email": "",
+                        "name": "",
+                        "department": ""
+                    }
+                ],
+                invitees: []
             }
         },
         mounted() {
-            this.init_select()
-            $('.error').hide();
-
-            let number = this.getAdds
-            if (number > 3) {
-                for (var i = 3; i < number; i++) {
-                    $(".inp:eq(1)").clone().attr("id", "set" + i).appendTo(".inv-inputs")
-                }
-                this.populate()
-            }
-            else if (number == 3 && this.getInvites != null) {
-                this.populate()
-            }
         },
         computed: {
             ...mapGetters(
                 {
-                    getDepartment: '$_admin/getDepartment',
+                    departments: '$_admin/getDepartmentsList',
                     getViewState: '$_admin/getViewState',
                     getBizName: '$_admin/getBizName',
                     getAdds: '$_admin/getAdds',
@@ -113,89 +88,75 @@
                 {
                     updateViewState: '$_admin/setViewState',
                     updateInvites: '$_admin/updateInvites',
-                    updateDepartments: '$_admin/updateDepartments',
+                    updateDepartmentsList: '$_admin/updateDepartmentsList',
                     postInvites: '$_admin/postInvites',
                     updateAdds: '$_admin/updateAdds',
                 }
             ),
-            populate: function () {
-                var set = this.getInvites
-
-                for (var i = 0; i < set.length; i++) {
-                    $("#set" + i).find("input[name='email']").val(set[i][0])
-                    $("#set" + i).find("input[name='name']").val(set[i][1])
-                }
-            },
+            ...mapActions({
+                inviteNewUsers: '$_admin/inviteNewUsers'
+            }),
             get_link: function () {
-                this.updateViewState(2);
+                this.updateViewState(5);
             },
             invite_many: function () {
                 this.updateViewState(3);
-                // this.$store.commit('updateViewState', 3)
-            },
-            init_select: function () {
-                var depts = []
-                if (this.getDepartments != null) {
-                    depts = this.getDepartments
-                    var optionsAsString = "";
-                    for (var i = 0; i < depts.length; i++) {
-                        optionsAsString += "<option value='" + depts[i]['department_id'] + "'>" + depts[i]['department_name'] + "</option>";
-                    }
-                    $("select[class='inpDept']").find('option').remove().end().append($(optionsAsString));
-                    $('select').formSelect();
-                }
-                else {
-                    var optionsAsString = "<option value=0 disabled>Default Department</option>";
-                    $("select[class='inpDept']").find('option').remove().end().append($(optionsAsString));
-                    $('select').formSelect();
-                }
-            },
-            add_another: function () {
-                $(".inp:eq(1)").clone().attr("id", "set" + (this.getAdds)).appendTo(".inv-inputs")
-                this.updateAdds(1)
-                // console.log($("#set1").find("input[name='email']").val())
             },
             postInvites: function () {
-                let number = this.getAdds
-                var data = new Array();
-                for (var x = 0; x < number; x++) {
-                    console.log()
-                    if (this.checkEmpty($("#set" + x).find("input[name='email']").val())) {
-                        this.updateAdds(2)
-                    }
-                    else {
-                        data[x] = new Array($("#set" + x).find("input[name='email']").val(), $("#set" + x).find("input[name='name']").val(), $("#set" + x).find("select[name='dept']").val())
-                    }
+                let session = this.$store.getters.getSession;
+                let cop_id = 0;
+                if (session.default == 'biz') {
+                    cop_id = session[session.default]['cop_id'];
                 }
 
-                if (this.getAdds < 1) {
-                    this.valid('Please enter at least one valid email address')
-                    this.newAdds(3)
-                }
-                else {
-                    this.updateInvites(data)
-                    this.$store.dispatch('postInvites').then(function () {
-                        this.updateViewState(4)
-                    }.bind(this))
 
+                for (let i=0, iLen=this.elements.length; i<iLen; i++) {
+                    let email = this.elements[i].email;
+                    let name = this.elements[i].name;
+                    let department = this.elements[i].department;
+
+                    this.invitees.push({
+                        "cop_id": cop_id,
+                        "email": email,
+                        "phone": "0712000000",
+                        "password": "qwerty",
+                        "name": name,
+                        "department_id": department
+                    });
                 }
+                // console.log(this.invitees);
+
+                let full_payload = {
+                    "values": this.invitees,
+                    "vm": this,
+                    "app": "NODE_PRIVATE_API",
+                    "endpoint": "invite_user"
+                }
+                this.$store.dispatch("$_admin/inviteNewUsers", full_payload).then(response => {
+                    console.log("invitations sent");
+                    console.log(response);
+                    let level = 1; //success
+                    let notification = {"title": "Invite Users", "level": level, "message": "Invitations sent!"}; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+                }, error => {
+                    console.log("invitations NOT sent");
+                    console.log(error);
+                    let level = 2;
+                    let notification = {
+                        "title": "Something went wrong",
+                        "level": level,
+                        "message": "Invitations not sent."
+                    }; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
+                });
             },
-            checkEmpty: function (val) {
-                if (val == "") {
-                    return true;
-                }
-                else {
-                    return false;
-                }
+            addElement: function () {
+                this.elements.push({value: ''});
             },
-            valid: function (string) {
-                $('#show_error').text(string)
-                $('.error').show("fast")
-                setTimeout(function () {
-                    $('.error').hide("slow")
-                }, 5000);
 
-            }
         }
     }
 </script>
@@ -205,7 +166,8 @@
     .addUser--select {
         width: 100%;
     }
-    .addUser--submit{
+
+    .addUser--submit {
         margin-right: 6.5%;
     }
 
@@ -225,9 +187,10 @@
         margin: 5px 0 5px 15px;
     }
 
-    .submit {
-        margin-top: 40px;
+    .add-user-submit {
+        /*margin-top: 40px;*/
         padding: 20px;
+        margin: 30px !important;
     }
 
     .error {
@@ -277,7 +240,8 @@
         align-items: center;
         /*margin-left: 1.7%;*/
     }
-    .inviteMany--anchor{
+
+    .inviteMany--anchor {
         margin-left: 1.7% !important;
     }
 
@@ -290,6 +254,7 @@
         border-bottom: 1.5px solid !important;
         margin-bottom: -2px !important;
     }
+
     .plus-icon {
         font-size: 20px !important;
         padding-right: 3px;
@@ -297,6 +262,10 @@
 
     .select-wrapper {
         width: 100%;
+    }
+
+    .inv-justify {
+        margin-top: -1.29rem !important;
     }
 
     .inv-inputs {

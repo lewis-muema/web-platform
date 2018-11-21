@@ -2,14 +2,13 @@
     <div>
         <div class="section--filter-wrap">
             <div class="section--filter-input-wrap">
-                <el-select class="section--filter-input" v-model="filterData.user" placeholder="Users">
-                    <el-option v-for="user in userData" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
-                    </el-option>
-                </el-select>
+                <el-input class="section--filter-input" v-model="filterData.user" placeholder="Search users"></el-input>
+
                 <el-select class="section--filter-input"  v-model="filterData.department" placeholder="All Departments">
                     <el-option v-for="dept in deptData" :key="dept.department_id" :label="dept.department_name" :value="dept.department_id">
                     </el-option>
                 </el-select>
+
                 <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'" @click="filterUserTableData">Search</button>
 
             </div>
@@ -17,8 +16,7 @@
                 <button class="button-primary section--filter-action" @click="addUser">Add User</button>
             </div>
         </div>
-        <!-- {{deptData}}
-        {{user_data}} -->
+
         <el-table
                 :data="user_data"
                 style="width: 100%"
@@ -31,56 +29,40 @@
             <el-table-column
                     label="Name"
                     prop="name"
-                    width="200"
             >
             </el-table-column>
             <el-table-column
                     label="Phone"
-                    prop="phone"
-                    width="200">
+                    prop="phone">
             </el-table-column>
-
             <el-table-column
                     label="Email"
                     prop="email"
-                    width="250"
-            >
+                    width="250">
             </el-table-column>
             <el-table-column
                     label="Department"
-                    prop="department_name"
-                    width="200"
-            >
+                    prop="department_name">
             </el-table-column>
             <el-table-column
-                    label="Type"
-                    width="120"
-            >
+                    label="Type">
                 <template slot-scope="scope">
-                    <span>{{ get_user_type(scope.$index) }}</span>
+                <span>{{ get_user_type(scope.$index) }}</span>
                 </template>
             </el-table-column>
             <el-table-column
-                    label="Status"
-                    width="120"
-            >
+                    label="Status">
                 <template slot-scope="scope">
                     <span>{{ get_user_status(scope.$index) }}</span>
                 </template>
             </el-table-column>
-            <!--<el-table-column-->
-            <!--label="Branch"-->
-            <!--prop="branch">-->
-            <!--</el-table-column>-->
             <el-table-column
                     label="Action">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="edit_user(user_data[scope.$index]['cop_user_id'])">Edit User</el-button>
+                    <a @click="edit_user(user_data[scope.$index]['cop_user_id'])">Edit User</a>
                 </template>
             </el-table-column>
-
         </el-table>
-
         <div class="section--pagination-wrap">
             <el-pagination
                     layout="total, sizes, prev, pager, next, jumper"
@@ -131,7 +113,7 @@
                 "values" : payload,
                 "vm":this,
                 "app":"NODE_PRIVATE_API",
-                "endpoint":"cop_departments/"
+                "endpoint":"cop_departments"
             }
             this.$store.dispatch("$_admin/requestDepartmentsList", depts_full_payload).then(response => {
                 console.log(response);
@@ -160,6 +142,9 @@
             ...mapGetters({
                 userData: '$_admin/getUsersList',
                 deptData: '$_admin/getDepartmentsList'
+            }),
+            ...mapActions({
+                requestUsersList: '$_admin/requestUsersList'
             }),
             user_data(){
                 let from = (this.pagination_page - 1) * this.pagination_limit;
@@ -224,7 +209,6 @@
             filterUserTableData() {
                 //reset filter
                 this.filterState  = false;
-
                 let user_id = this.filterData.user;
                 let department = this.filterData.department;
 
@@ -240,7 +224,7 @@
                     console.log('performing a user and departments filter');
                     let vm = this;
                     this.filteredUserData = this.filteredUserData.filter(function (user) {
-                        return user.cop_user_id ==  user_id  && user.department_id == department;
+                        return user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0  && user.department_id == department;
                     });
                     this.filterState = true;
 
@@ -249,7 +233,10 @@
                     console.log('performing a user filter');
                     console.log(user_id);
 
-                    this.filteredUserData = this.filteredUserData.filter( user => user.cop_user_id ==  user_id);
+                    let vm = this;
+                    this.filteredUserData = this.filteredUserData.filter(function (user) {
+                        return user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0;
+                    });
                     this.filterState = true;
 
 
@@ -288,38 +275,4 @@
 <style lang="css" scoped>
     @import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons';
     /* @import "../../../../assets/styles/datatable.css"; */
-
-    .button {
-        float: right;
-    }
-
-    .button__element {
-        text-transform: uppercase;
-        display: inline-block;
-        padding: 10px 30px;
-        margin-bottom: 0;
-        font-size: 14px;
-        font-weight: normal;
-        line-height: 1.42857143;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: middle;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        background-image: none;
-        border: 1px solid transparent;
-        border-radius: 3px;
-        color: #fff;
-        background-color: #1782C5;
-        border-color: #357ebd;
-        text-decoration: none;
-    }
-
-    .menu {
-        display: flow-root;
-    }
-
 </style>

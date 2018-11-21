@@ -59,7 +59,7 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import {mapGetters, mapActions} from 'vuex'
 
     export default {
         name: "API",
@@ -70,17 +70,16 @@
             if(session.default == 'biz'){
                 cop_id = session[session.default]['cop_id'];
             }
-            let apikey_payload = {
+            let payload = {
                 "cop_id": cop_id,
             }
-            console.log(apikey_payload)
+            console.log(payload)
             let apikey_full_payload = {
-                "values" : apikey_payload,
+                "values" : payload,
                 "vm":this,
                 "app":"NODE_PRIVATE_API",
                 "endpoint":"get_api"
             }
-            console.log(apikey_payload)
             this.$store.dispatch("$_admin/requestKeysList", apikey_full_payload).then(response => {
                 console.log(response);
             }, error => {
@@ -102,6 +101,9 @@
             }),
         },
         methods: {
+            ...mapActions({
+                requestKeysList: '$_admin/requestKeysList'
+            }),
             updateApiKey() {
 
                 let session = this.$store.getters.getSession;
@@ -120,12 +122,21 @@
                     "endpoint":"generate_api"
                 }
                 // console.log(newKeyFull_payload)
-
+                this.$store.commit('setNotificationStatus', true); //activate notification
+                // let level = 0; //this will show the white one
                 this.$store.dispatch("$_admin/generateAPIKey", newKeyFull_payload).then(response => {
                     console.log("updated");
                     console.log(response);
+                    let level = 1; //success
+                    this.message = "Key Updated!"
+                    let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
+                    this.$store.commit('setNotification', notification);
                 }, error => {
                     console.log(error);
+                    let level = 2;
+                    this.message = "Something went wrong."
+                    let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
+                    this.$store.commit('setNotification', notification);
                 });
             },
             generateAPIKey() {
@@ -145,13 +156,24 @@
                     "endpoint":"generate_api"
                 }
                 // console.log(newKeyFull_payload)
-
                 this.$store.dispatch("$_admin/generateAPIKey", newKeyFull_payload).then(response => {
                     console.log("generated");
                     console.log(response);
+                    level = 1; //success
+                    this.message = "Key Generated!"
+                    let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
                 }, error => {
                     console.log("NOT generated");
                     console.log(error);
+                    let level = 2;
+                    this.message = "Something went wrong."
+                    let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
                 });
             },
             changeSize(val) {
@@ -162,8 +184,7 @@
                 console.log('Page changed to', this.pagination_page);
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
-                let paginated_drivers = this.searched_drivers.slice(from, to);
-                console.log(from, to, paginated_drivers);
+                this.fetchedData.slice(from, to);
             },
             get_account_status: function (index) {
                 let resp = '';

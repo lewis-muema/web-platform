@@ -15,7 +15,7 @@ export default {
                 console.log('in store dispatch to global store')
                 console.log(response)
                 if (response.data.status == true) {
-                    commit('setUsersList',response.data.data);
+                    commit('updateUsersList',response.data.data);
                     resolve(response.data);
                 }
                 else {
@@ -35,7 +35,7 @@ export default {
                 console.log('in store dispatch to global store')
                 console.log(response)
                 if (response.data.status == true) {
-                    commit('setDepartmentsList',response.data.data);
+                    commit('updateDepartmentsList',response.data.data);
                     resolve(response.data);
                 }
                 else {
@@ -55,7 +55,7 @@ export default {
                 console.log('in store dispatch to global store')
                 console.log(response)
                 if (response.data.status == true) {
-                    commit('setKeysList',response.data.data);
+                    commit('updateKeysList',response.data.data);
                     resolve(response.data);
                 }
                 else {
@@ -76,11 +76,11 @@ export default {
                 console.log(response)
                 if (response.data.status == true) {
                     console.log('key generated')
-                    commit('setKeysList',response.data.data);
+                    commit('updateKeysList',response.data.data);
                     resolve(response.data);
                 }
                 else {
-                    console.log('key NOT generated')
+                    console.log('Failed')
                     reject(response.data);
                 }
             }, error => {
@@ -97,7 +97,7 @@ export default {
                 console.log('in store dispatch to global store')
                 console.log(response)
                 if (response.data.status == true) {
-                    commit('setDepartmentsList',response.data.data);
+                    commit('updateDepartmentsList',response.data.data);
                     resolve(response.data);
                 }
                 else {
@@ -117,7 +117,7 @@ export default {
                 console.log('in store dispatch to global store')
                 console.log(response)
                 if (response.data.status == true) {
-                    commit('setDepartmentsList',response.data.data);
+                    commit('updateDepartmentsList',response.data.data);
                     resolve(response.data);
                 }
                 else {
@@ -130,24 +130,46 @@ export default {
 
         })
     },
-    requestEditUserAdmin(context, payload)
+    editAdminUser({commit}, payload)
    {
-     console.log('payload',payload);
-     console.log('context',context);
-     return new Promise((resolve, reject) => {
-         axios.post(url+"update_user", payload)
-           .then(response => {
-             if (response.data.status == true) {
-                resolve(response.data);
-             }
-             else {
-                 reject(response.data);
-             }
-           })
-           .catch(e => {
-               reject(e);
-           })
-     })
+       return new Promise((resolve, reject) => {
+           payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+               console.log('in store dispatch to global store')
+               console.log(response)
+               if (response.data.status == true) {
+                   commit('updateUsersList',response.data.data);
+                   resolve(response.data);
+               }
+               else {
+                   reject(response.data);
+               }
+           }, error => {
+               reject(error);
+               console.log('failed to dispatch to global store')
+           });
+
+       })
+   },
+
+    inviteNewUsers({commit}, payload)
+   {
+       return new Promise((resolve, reject) => {
+           payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+               console.log('in store dispatch to global store')
+               console.log(response)
+               if (response.data.status == true) {
+                   commit('updateUsersList',response.data.data);
+                   resolve(response.data);
+               }
+               else {
+                   reject(response.data);
+               }
+           }, error => {
+               reject(error);
+               console.log('failed to dispatch to global store')
+           });
+
+       })
    },
 
 };

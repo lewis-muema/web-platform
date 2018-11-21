@@ -10,7 +10,7 @@ RUN mkdir /opt/sendy/
 COPY . /opt/sendy/
 WORKDIR /opt/sendy/
 
-RUN npm install && npm run build && npm run start
+RUN npm install && npm run build 
 
 #RUN npm install -g npm
 # If you are building your code for production
@@ -21,5 +21,5 @@ ARG DOCKER_ENV
 # Bundle app source
 COPY . .
 
-EXPOSE 5699
+EXPOSE 8080
 CMD [ "npm", "start" ]
