@@ -112,7 +112,7 @@ export default {
         this.clearLocation(index);
     },
     addExtraDestinationWrapper(){
-        let next_index = this.get_order_path.length;
+        let next_index = Array.isArray(this.get_order_path)? this.get_order_path.length : 0;
         this.clearLocation(next_index-1);
     },
     checkChangeEvents(evt, index){
@@ -170,7 +170,7 @@ export default {
 
     },
     attemptPriceRequest(){
-        if(this.get_order_path.length > 1 && this.get_pickup_filled == true){
+        if(Array.isArray(this.get_order_path) && this.get_order_path.length > 1 && this.get_pickup_filled == true){
             this.doPriceRequest();
         }
     },
