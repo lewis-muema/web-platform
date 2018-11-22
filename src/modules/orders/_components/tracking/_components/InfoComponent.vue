@@ -171,6 +171,7 @@ export default {
   },
   mounted() {
     this.loading = true
+    this.$store.commit('$_orders/$_tracking/set_tracked_order', this.$route.params.order_no)
     var that = this
     this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": this.$route.params.order_no})
     .then(response => {
@@ -184,6 +185,7 @@ export default {
     '$route.params.order_no': function(from, to) {
       this.order_number = from
       this.loading = true
+      this.$store.commit('$_orders/$_tracking/set_tracked_order', from)
       var that = this
       this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": from})
       .then(response => {
@@ -279,14 +281,15 @@ export default {
 .infobar--action-slide
 {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #74696942;
-  position: absolute;
-  background-color: #fff;
-  top: -120px;
-  width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #74696929;
+    position: absolute;
+    background-color: #fff;
+    top: -120px;
+    width: 100%;
+    border-radius: 3px;
 }
 .actions--caret
 {
@@ -331,14 +334,16 @@ export default {
 .action--slide-button
 {
   margin: 0px 10px 10px 10px;
-  text-transform: capitalize;
-  font-size: 14px;
-  letter-spacing: 1.1px;
-  background-color: #1782c5;
-  color: #fff;
-  width: 100%;
-  height: 30px;
-  cursor: pointer;
+    text-transform: capitalize;
+    font-size: 14px;
+    letter-spacing: 1.1px;
+    background-color: #1782c5;
+    color: #fff;
+    width: 100%;
+    height: 30px;
+    cursor: pointer;
+    border: 0px solid;
+    border-radius: 2px;
 }
 .infobar--actions-icon
 {
