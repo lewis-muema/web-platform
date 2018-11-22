@@ -37,6 +37,13 @@ export default {
 
           return iframeUrl
         }
+      },
+      computed : {
+        account: function() {
+          if (typeof this.$store.getters.getSession.biz != undefined) {
+            return "SENDY"+this.$store.getters.getSession.biz.cop_id
+          }
+        }
       }
 }
 </script>

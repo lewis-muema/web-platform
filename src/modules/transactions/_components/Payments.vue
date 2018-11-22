@@ -6,11 +6,11 @@
               <el-date-picker class="section--filter-input" type="date" name="from_date" v-model="filterData.from_date" placeholder="From"/>
               <el-date-picker class="section--filter-input" type="date" name="to_date" v-model="filterData.to_date" placeholder="To"/>
 
-              <button type="button" @click="filterPaymentData":class="active_filter?'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'">Search</button>
+              <button type="button" @click="filterPaymentData":class="active_filter?'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'" name="order_payments_text" v-model="order_payments_text">{{this.order_payments_text}}</button>
 
         </div>
         <div class="section--filter-action-wrap">
-          <button type="button" class="button-primary section--filter-action">Pay</button>
+          <button type="button" class="button-primary section--filter-action" @click="take_to_payment">Pay</button>
 
         </div>
     </div>
@@ -84,6 +84,7 @@ export default {
       empty_payments_state:"Fetching Payments",
       pagination_limit:10,
       pagination_page:1,
+      order_payments_text:'Search',
       filterState: false,
       filterData: {
         "from_date": "",
@@ -131,6 +132,9 @@ export default {
     ...mapActions([
             '$_transactions/requestPayments',
      ]),
+     take_to_payment() {
+        this.$router.push('/payment');
+    },
     changeSize(val) {
         this.pagination_page = 1;
         this.pagination_limit = val;
@@ -171,7 +175,7 @@ export default {
            }
         }
 
-
+        this.order_payments_text='Searching..';
         this.requestPayments(payload);
 
         this.filteredPaymentData = this.paymentData;
@@ -195,11 +199,13 @@ export default {
           "endpoint":"payments"
         }
         this.$store.dispatch("$_transactions/requestPayments", full_payload).then(response => {
-           console.log("Got some data, now lets show something in this component")
+           console.log("Got some data, now lets show something in this component");
+           this.order_payments_text='Search';
            console.log(response);
            this.empty_payments_state = "Payment Statement Not Found";
         }, error => {
-            console.error("Got nothing from server. Prompt user to check internet connection and try again")
+            console.error("Got nothing from server. Prompt user to check internet connection and try again");
+            this.order_payments_text='Search';
             console.log(error);
             this.empty_payments_state = "Payment Statement Failed to Fetch";
         });

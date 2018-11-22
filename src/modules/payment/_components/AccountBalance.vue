@@ -8,7 +8,7 @@
         <!-- <font-awesome-icon icon="wallet" /> -->
       </div>
       <div class="payinfo--balance">
-        Balance <span class="payinfo--balance-el">{{running_balance}}</span>Ksh
+        Balance <span class="payinfo--balance-el">{{running_balance}}</span>Kes
       </div>
     </div>
   </div>
