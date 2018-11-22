@@ -171,6 +171,7 @@ export default {
   },
   mounted() {
     this.loading = true
+    this.$store.commit('$_orders/$_tracking/set_tracked_order', this.$route.params.order_no)
     var that = this
     this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": this.$route.params.order_no})
     .then(response => {
@@ -184,6 +185,7 @@ export default {
     '$route.params.order_no': function(from, to) {
       this.order_number = from
       this.loading = true
+      this.$store.commit('$_orders/$_tracking/set_tracked_order', from)
       var that = this
       this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": from})
       .then(response => {

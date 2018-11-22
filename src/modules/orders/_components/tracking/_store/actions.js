@@ -1,6 +1,4 @@
-import axios from 'axios'
-
-const get_tracking_data = function({commit, dispatch}, data)
+const get_tracking_data = function({commit, dispatch, state}, data)
 {
   var payload = {
     "app":"NODE_PRIVATE_API",
@@ -11,12 +9,14 @@ const get_tracking_data = function({commit, dispatch}, data)
   return new Promise((resolve, reject) => {
     dispatch("requestAxiosPost", payload, { root: true })
     .then(response => {
-      commit('set_tracking_data', response.data)
-      commit('$_orders/set_polyline',response.data.polyline, {root: true})
-      commit('$_orders/set_markers',response.data.path, {root: true})
-      setTimeout(function() {
-        dispatch("get_tracking_data", data)
-      }, 5000);
+      if (state.tracked_order == data.order_no) {
+        commit('set_tracking_data', response.data)
+        commit('$_orders/set_polyline',response.data.polyline, {root: true})
+        commit('$_orders/set_markers',response.data.path, {root: true})
+        setTimeout(function() {
+          dispatch("get_tracking_data", data)
+        }, 5000);
+      }
       resolve();
     }, error => {
       reject(error);
@@ -36,8 +36,6 @@ const cancel_order = function({commit}, data)
   return new Promise((resolve, reject) => {
     dispatch("requestAxiosPost", payload, { root: true })
     .then(response => {
-      commit('$_orders/remove_polyline',[], {root: true})
-      commit('$_orders/remove_markers',[], {root: true})
       resolve(response.data);
     }, error => {
       reject(error);
