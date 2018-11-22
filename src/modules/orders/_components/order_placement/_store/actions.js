@@ -1,12 +1,11 @@
 
-
 export default {
-    requestPriceQuote({commit}, payload)
+    requestPriceQuote({commit,dispatch,rootGetters}, payload)
    {
      console.log('payload',payload);
 
      return new Promise((resolve, reject) => {
-       payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+       dispatch("requestAxiosPost", payload, { root: true }).then(response => {
            console.log('in store dispatch to global store')
            if (response.data.status == true) {
                let price_request_object = response.data.values;
@@ -24,12 +23,12 @@ export default {
    })
   },
 
-      requestOrderCompletion({commit}, payload)
+      requestOrderCompletion({commit,dispatch,rootGetters}, payload)
      {
        console.log('payload',payload);
 
        return new Promise((resolve, reject) => {
-         payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+         dispatch("requestAxiosPost", payload, { root: true }).then(response => {
              console.log('in store dispatch to global store')
              if (response.data.status == true) {
                  resolve(response.data);

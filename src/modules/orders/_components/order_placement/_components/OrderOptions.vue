@@ -128,6 +128,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 import NoSSR from 'vue-no-ssr';
 import numeral from 'numeral';
 import payment_store from '../../../../payment/_store';
+import order_store from '../../../_store';
 
 export default {
     name:'order-options',
@@ -298,7 +299,6 @@ export default {
         doCompleteOrder(){
             let payload = {
               "values" : this.getCompleteOrderObject(),
-              "vm":this,
               "app":"PRIVATE_API",
               "endpoint":"pay"
             };
@@ -396,7 +396,6 @@ export default {
 
             let payload = {
               values: running_balance_payload,
-              vm: this,
               app: "PRIVATE_API",
               endpoint: "running_balance"
             };
@@ -433,6 +432,7 @@ export default {
     },
     created(){
         this.$store.registerModule('$_payment', payment_store);
+        this.$store.registerModule('$_orders', order_store);
         this.initializeOrderPlacement();
         this.refreshRunningBalance();
     }

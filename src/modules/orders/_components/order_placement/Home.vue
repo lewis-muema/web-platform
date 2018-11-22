@@ -84,7 +84,8 @@ export default {
       get_map_markers : '$_orders/get_markers'
     }),
     allow_add_destination(){
-        return !this.loading && ((this.get_order_path.length-1) <= this.get_max_destinations) && (this.get_order_path.length>1) && (this.get_extra_destinations <= this.get_order_path.length-2 );
+
+        return !this.loading && Array.isArray(this.get_order_path) && ((this.get_order_path.length-1) <= this.get_max_destinations) && (this.get_order_path.length>1) && (this.get_extra_destinations <= this.get_order_path.length-2 );
     }
   },
   methods: {
@@ -218,7 +219,6 @@ export default {
     doPriceRequest(){
         let payload = {
           "values" : this.createPriceRequestObject(),
-          "vm":this,
           "app":"PRIVATE_API",
           "endpoint":"pricing_multiple"
         };
@@ -260,9 +260,12 @@ export default {
     },
     initializeOrderPlacementHome(){
         console.log('in initializeOrderPlacementHome');
-        if(this.get_location_names.length > 0){
-            this.locations = this.get_location_names;
+        if(Array.isArray(this.get_location_names)){
+            if(this.get_location_names.length > 0){
+                this.locations = this.get_location_names;
+            }
         }
+
         console.log('out initializeOrderPlacementHome');
 
     }
