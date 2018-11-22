@@ -57,7 +57,7 @@
               </div>
               <div class="action--slide-desc">
                 <button type="button" name="button" class="action--slide-button" @click="cancel_order()">Yes</button>
-                <button type="button" name="button" class="action--slide-button" @click="drop_cancel()">No</button>
+                <button type="button" name="button" class="action--slide-button" @click="cancel_toggle()">No</button>
               </div>
               <div class="actions--caret"></div>
             </div>
@@ -78,7 +78,7 @@
               Share Status
             </div>
           </div>
-          <div @click="cancel_popup = 1">
+          <div @click="cancel_toggle()">
             <div class="infobar--actions-icon">
                <i class="el-icon-circle-close-outline"></i>
             </div>
@@ -105,6 +105,14 @@ export default {
     }
   },
   methods: {
+    cancel_toggle: function () {
+      if (this.cancel_popup == 1) {
+        this.cancel_popup = 0
+      }
+      else {
+        this.cancel_popup = 1
+      }
+    },
     place: function () {
       this.$router.push('/orders')
     },
@@ -117,13 +125,10 @@ export default {
       }
       this.$store.dispatch('$_orders/$_tracking/cancel_order', payload)
       .then(response => {
-        drop_cancel();
+        cancel_toggle();
         place();
       })
     },
-    drop_cancel: function () {
-      this.cancel_popup = 0
-    }
   },
   computed: {
     ...mapGetters({

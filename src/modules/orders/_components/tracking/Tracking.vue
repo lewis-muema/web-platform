@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <a class="" @click="$router.go(-1)"><font-awesome-icon icon="arrow-left" width="15px" /></a>
+    <a class="back--button" @click="$router.push('/orders')"><font-awesome-icon icon="arrow-left" width="15px" /></a>
     <info-window/>
   </div>
 </template>
@@ -25,7 +25,11 @@ export default {
     })
   },
   created() {
-    this.$store.registerModule(['$_orders','$_tracking'], tracking_store);
+    const STORE_PARENT = "$_orders";
+    const STORE_KEY = "$_tracking";
+    if (!this.$store.state[STORE_PARENT][STORE_KEY]) {
+      this.$store.registerModule([STORE_PARENT,STORE_KEY], tracking_store);
+    }
   },
   mounted() {
     this.change_page(1)
@@ -43,8 +47,16 @@ export default {
 <style lang="css">
 .back--button
 {
-  position: fixed;
-  left: 10px;
+  position: absolute;
   top: 80px;
+  left: 10px;
+  border: 1px solid;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 15px;
+  font-size: larger;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
 }
 </style>

@@ -272,7 +272,11 @@ export default {
     this.$store.commit('$_orders/remove_markers',[])
   },
   created() {
-    this.$store.registerModule(['$_orders','$_home'], home_store);
+    const STORE_PARENT = "$_orders";
+    const STORE_KEY = "$_home";
+    if (!this.$store.state[STORE_PARENT][STORE_KEY]) {
+      this.$store.registerModule([STORE_PARENT,STORE_KEY], home_store);
+    }
     this.initializeOrderPlacementHome();
     console.log('in created');
   },
