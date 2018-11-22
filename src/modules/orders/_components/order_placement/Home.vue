@@ -19,12 +19,12 @@
               </no-ssr>
             </div>
         </div>
-        <div class="homeview--destinations"  v-for="n in get_extra_destinations" :key="n+2" v-bind:data-index="n+2">
+        <div class="homeview--destinations"  v-for="n in get_extra_destinations" :key="n+1" v-bind:data-index="n+1">
           <div class="homeview--input-bundler">
             <no-ssr placeholder="">
                 <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px"  />
-                <gmap-autocomplete  @place_changed="setLocation($event, n+2)" :options="map_options"  v-model="locations[n+2]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
-                <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right " width="10px"  @click="removeExtraDestinationWrapper(n+2)"/>
+                <gmap-autocomplete  @place_changed="setLocation($event, n+1)" :options="map_options"  v-model="locations[n+1]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
+                <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right " width="10px"  @click="removeExtraDestinationWrapper(n+1)"/>
             </no-ssr>
           </div>
 
@@ -37,7 +37,7 @@
       </div>
       <div class="orders-loading-container" v-loading="loading" v-if="loading">
       </div>
-      <div v-if="get_order_path.length > 1 && !loading">
+      <div v-if="Array.isArray(get_order_path) && get_order_path.length > 1 && !loading">
           <vendor-view ></vendor-view>
       </div>
       </div>
@@ -109,7 +109,7 @@ export default {
     },
     addExtraDestinationWrapper(){
         let next_index = this.get_order_path.length;
-        this.clearLocation(next_index);
+        this.clearLocation(next_index-1);
     },
     clearLocation(index){
         if(index == 0){
@@ -285,12 +285,14 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     if(to.name == 'tracking'){
-        if(this.get_map_markers.length > 0){
-            for(let i=0; i< this.get_map_markers.length; i++){
-                this.unset_location_marker(i);
-                this.unset_order_path(i);
-                this.deleteLocationInModel(i);
-                this.unset_location_name(i);
+        if(Array.isArray(this.get_map_markers)){
+            if(this.get_map_markers.length > 0){
+                for(let i=0; i< this.get_map_markers.length; i++){
+                    this.unset_location_marker(i);
+                    this.unset_order_path(i);
+                    this.deleteLocationInModel(i);
+                    this.unset_location_name(i);
+                }
             }
         }
     }
@@ -298,12 +300,7 @@ export default {
 },
 
   watch:{
-      // get_order_path: function (val) {
-         // if(val.length  > 1 ){
-         //     let more_slots = this.get_max_destinations - val.length
-         //     this.set_extra_destinations(val.length )
-         // }
-       // },
+
   }
 }
 </script>
