@@ -71,7 +71,7 @@ export default {
       email: "",
       password: "",
       u_terms:"",
-      sign_up_text:"Sign In",
+      sign_up_text:"Sign Up",
       message:""
     };
   },
