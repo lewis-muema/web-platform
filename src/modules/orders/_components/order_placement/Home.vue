@@ -122,10 +122,11 @@ export default {
         this.unset_order_path(index);
         this.deleteLocationInModel(index);
         this.unset_location_name(index);
+        this.attemptPriceRequest();
     },
     setLocation(place,index){
         // TO Do reset marker on store when leaving the route
-        if (!place) return
+        if (!place){ console.log('not a place', index);return;}
         let path_obj = {
             "name":place.name,
             "coordinates": ''+place.geometry.location.lat()+','+place.geometry.location.lng()+'',
@@ -154,11 +155,15 @@ export default {
         this.clearLocation(index);
         this.setMarker(place.geometry.location.lat(),place.geometry.location.lng(),index );
         this.set_order_path(path_payload);
-        this.setLocationInModel(index,);
+        this.setLocationInModel(index,place.name);
         this.set_location_name(location_name_payload);
         if(index == 0){
             this.setPickupFilled(true);
         }
+        this.attemptPriceRequest();
+
+    },
+    attemptPriceRequest(){
         if(this.get_order_path.length > 1 && this.get_pickup_filled == true){
             this.doPriceRequest();
         }
