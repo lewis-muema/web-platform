@@ -11,6 +11,9 @@ export default {
                let price_request_object = response.data.values;
                console.log('price_request_object',price_request_object);
                commit('set_price_request_object',price_request_object);
+               commit('$_orders/set_polyline',response.data.values.polyline[0], {root: true});
+               console.log('set_polyline',response.data.values.polyline[0]);
+
                resolve(response.data);
             }
             else {

@@ -92,13 +92,16 @@ export default {
     ...mapMutations({
       set_location_marker : '$_orders/set_location_marker',
       unset_location_marker : '$_orders/unset_location_marker',
+      set_polyline: '$_orders/set_polyline',
+      unset_polyline: '$_orders/remove_polyline',
       set_order_path: '$_orders/$_home/set_order_path',
-      set_location_name: '$_orders/$_home/set_location_name',
       unset_order_path: '$_orders/$_home/unset_order_path',
+      set_location_name: '$_orders/$_home/set_location_name',
       unset_location_name: '$_orders/$_home/unset_location_name',
       setPickupFilled: '$_orders/$_home/set_pickup_filled',
       addExtraDestination : '$_orders/$_home/add_extra_destination',
       removeExtraDestination : '$_orders/$_home/remove_extra_destination'
+
     }),
     ...mapActions({
         requestPriceQuote: '$_orders/$_home/requestPriceQuote',
@@ -265,14 +268,14 @@ export default {
                 this.locations = this.get_location_names;
             }
         }
-
         console.log('out initializeOrderPlacementHome');
-
+    },
+    removePolyline(){
+        this.unset_polyline([]);
     }
   },
   mounted() {
-    this.$store.commit('$_orders/remove_polyline',[])
-    this.$store.commit('$_orders/remove_markers',[])
+
   },
   created() {
     const STORE_PARENT = "$_orders";
