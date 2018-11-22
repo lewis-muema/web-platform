@@ -33,7 +33,6 @@
 <script>
     import {mapGetters, mapMutations} from 'vuex'
     import axios from 'axios'
-    import $ from 'jquery'
 
     export default {
         name: 'link-component',
@@ -83,34 +82,23 @@
                 this.updateViewState(1);
                 // this.$store.commit('updateViewState', 1)
             },
-            init_select: function () {
-                var depts = JSON.parse(this.getDepartments)
-
-                // var optionsAsString = "<option value=\"\" disabled selected>Department (Optional)</option>";
-                var optionsAsString = "";
-                for (var i = 0; i < depts.length; i++) {
-                    optionsAsString += "<option value='" + depts[i]['department_id'] + "'>" + depts[i]['department_name'] + "</option>";
-                }
-                $("select[class='inpDept']").find('option').remove().end().append($(optionsAsString));
-                $('select').formSelect();
-            },
-            get_link: function () {
-                var url = this.getBaseUrl + 'coporate/inv_link'
-                var dept_id = $("#dept").val()
-
-                axios.post(url, {"dept_id": dept_id})
-                    .then(response => {
-                        this.updateInviteLink(response.data);
-                        // this.$store.commit('updateInviteLink', response.data)
-                    })
-                    .catch(e => {
-                        console.dir(e)
-                    })
-                    .then(() => {
-                        this.updateViewState(5);
-                        // this.$store.commit('updateViewState', 5)
-                    })
-            }
+            // get_link: function () {
+            //     var url = this.getBaseUrl + 'coporate/inv_link'
+            //     var dept_id = $("#dept").val()
+            //
+            //     axios.post(url, {"dept_id": dept_id})
+            //         .then(response => {
+            //             this.updateInviteLink(response.data);
+            //             // this.$store.commit('updateInviteLink', response.data)
+            //         })
+            //         .catch(e => {
+            //             console.dir(e)
+            //         })
+            //         .then(() => {
+            //             this.updateViewState(5);
+            //             // this.$store.commit('updateViewState', 5)
+            //         })
+            // }
         }
     }
 </script>
