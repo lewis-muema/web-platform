@@ -24,7 +24,7 @@ const get_tracking_data = function({
 					})
 					setTimeout(function() {
 						dispatch("get_tracking_data", data)
-					}, 50000);
+					}, 600000);
 				}
 				resolve();
 			}, error => {
