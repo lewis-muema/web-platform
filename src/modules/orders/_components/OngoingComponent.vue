@@ -156,7 +156,7 @@ export default {
   right: 10px;
   min-width: 250px;
   max-height: 55%;
-  overflow-x: scroll;
+  overflow-x: hidden;
 }
 .ongoing--count
 {

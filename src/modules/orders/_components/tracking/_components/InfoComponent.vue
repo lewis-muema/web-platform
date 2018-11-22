@@ -279,14 +279,15 @@ export default {
 .infobar--action-slide
 {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #74696942;
-  position: absolute;
-  background-color: #fff;
-  top: -120px;
-  width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #74696929;
+    position: absolute;
+    background-color: #fff;
+    top: -120px;
+    width: 100%;
+    border-radius: 3px;
 }
 .actions--caret
 {
@@ -331,14 +332,16 @@ export default {
 .action--slide-button
 {
   margin: 0px 10px 10px 10px;
-  text-transform: capitalize;
-  font-size: 14px;
-  letter-spacing: 1.1px;
-  background-color: #1782c5;
-  color: #fff;
-  width: 100%;
-  height: 30px;
-  cursor: pointer;
+    text-transform: capitalize;
+    font-size: 14px;
+    letter-spacing: 1.1px;
+    background-color: #1782c5;
+    color: #fff;
+    width: 100%;
+    height: 30px;
+    cursor: pointer;
+    border: 0px solid;
+    border-radius: 2px;
 }
 .infobar--actions-icon
 {
