@@ -115,7 +115,7 @@ export default {
     },
     sign_in: function() {
       //erase cookie on login just incase
-      this.login_text ='Login ...';
+      this.login_text ='Logging in ...';
       this.eraseCookie('_sessionSnack');
 
       let values = {};
