@@ -35,7 +35,7 @@
                     </div>
 
                 </div>
-                <div class="home-view--seperator home-view--seperator__mini"></div>
+
                 <span v-if="allowCash != true">
                     <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                         <div class="home-view-notes-wrapper--item__option">
@@ -49,9 +49,34 @@
 
                         </div>
                     </div>
-                    <div class="home-view--seperator home-view--seperator__mini">
-                    </div>
+
                 </span>
+                <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
+                    <div class="home-view-notes-wrapper--item__option">
+                        <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
+                        <div class="home-view-notes-wrapper--item__option-div">
+
+                          <div class="home-view-notes-wrapper--item__link">  +  &nbsp;&nbsp; Add New card </div>
+                        </div>
+                    </div>
+                    <div class="home-view-notes-wrapper--item__value">
+                        <!-- <input type="checkbox" name="" value=""> -->
+
+                    </div>
+                </div>
+                <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
+                    <div class="home-view-notes-wrapper--item__option">
+                        <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
+                        <div class="home-view-notes-wrapper--item__option-div">
+                            <el-radio v-model="payment_method" label="2a"> **** **** **** 1234 </el-radio>
+                        </div>
+                    </div>
+                    <div class="home-view-notes-wrapper--item__value">
+                        <!-- <input type="checkbox" name="" value=""> -->
+
+                    </div>
+                </div>
+
                 <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
@@ -64,13 +89,12 @@
 
                     </div>
                 </div>
-                <div class="home-view--seperator home-view--seperator__mini">
-                </div>
+
                 <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="star" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
-                            <el-radio v-model="payment_method" label="5">Redeem promo code</el-radio>
+                          <div class="home-view-notes-wrapper--item__link">  Redeem promo code </div>
                         </div>
                     </div>
 
@@ -440,6 +464,12 @@ export default {
 .home-view-notes-wrapper--item__option-div{
     padding-left: 29px;
     color: #555555ba;
+}
+
+.home-view-notes-wrapper--item__link:hover{
+color:#1782C5;
+cursor: pointer;
+
 }
 .home-view-notes-wrapper--item__row{
     align-items: center;
