@@ -6,7 +6,7 @@
         <div class="homeview--input-bundler">
           <no-ssr placeholder="">
               <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img .homeview--input-bundler__destination-input sendy-orange" width="10px"  />
-              <gmap-autocomplete @place_changed="setLocation($event, 0)" :options="map_options"  v-model="locations[0]" placeholder="Pickup" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"></gmap-autocomplete>
+              <gmap-autocomplete @place_changed="setLocation($event, 0)" @keyup="checkChangeEvents($event, 0)" @change="checkChangeEvents($event, 0)" :options="map_options"  v-model="locations[0]" placeholder="Pickup" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"></gmap-autocomplete>
               <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup     " width="10px"  @click="clearLocation(0)" />
           </no-ssr>
         </div>
@@ -14,7 +14,7 @@
             <div class="homeview--input-bundler">
               <no-ssr placeholder="">
                   <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px"  />
-                  <gmap-autocomplete  @place_changed="setLocation($event, 1)" :options="map_options"  v-model="locations[1]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
+                  <gmap-autocomplete  @place_changed="setLocation($event, 1)"  @keyup="checkChangeEvents($event, 1)" @change="checkChangeEvents($event, 1)" :options="map_options"  v-model="locations[1]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
                   <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup " width="10px"  @click="clearLocation(1)"/>
               </no-ssr>
             </div>
@@ -23,7 +23,7 @@
           <div class="homeview--input-bundler">
             <no-ssr placeholder="">
                 <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px"  />
-                <gmap-autocomplete  @place_changed="setLocation($event, n+1)" :options="map_options"  v-model="locations[n+1]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
+                <gmap-autocomplete  @place_changed="setLocation($event, n+1)"  @keyup="checkChangeEvents($event, n=1)" @change="checkChangeEvents($event, n+1)" :options="map_options"  v-model="locations[n+1]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
                 <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right " width="10px"  @click="removeExtraDestinationWrapper(n+1)"/>
             </no-ssr>
           </div>
@@ -33,7 +33,7 @@
       </div>
       <div class="homeview--row homeview--row__more-destinations" v-if="allow_add_destination">
            <font-awesome-icon icon="plus" size="xs" class="sendy-blue homeview--row__font-awesome" width="10px" />
-        <a href="#" class="homeview--add" @click="addExtraDestination()">Add</a>
+        <a href="#" class="homeview--add" @click="addExtraDestination()">Add Destination</a>
       </div>
       <div class="orders-loading-container" v-loading="loading" v-if="loading">
       </div>
@@ -100,7 +100,8 @@ export default {
       unset_location_name: '$_orders/$_home/unset_location_name',
       setPickupFilled: '$_orders/$_home/set_pickup_filled',
       addExtraDestination : '$_orders/$_home/add_extra_destination',
-      removeExtraDestination : '$_orders/$_home/remove_extra_destination'
+      removeExtraDestination : '$_orders/$_home/remove_extra_destination',
+      set_active_package_class : '$_orders/$_home/set_active_package_class',
 
     }),
     ...mapActions({
@@ -113,6 +114,11 @@ export default {
     addExtraDestinationWrapper(){
         let next_index = this.get_order_path.length;
         this.clearLocation(next_index-1);
+    },
+    checkChangeEvents(evt, index){
+        console.log('index', index);
+        console.log('evt', evt);
+        // TO DO research implementation of native input events
     },
     clearLocation(index){
         if(index == 0){
@@ -236,7 +242,7 @@ export default {
            console.log(response);
 
            if(response.status == true){
-               // this.newDestination();
+               this.setDefaultPackageClass();
 
            } else {
                this.doNotification(2,"Price request failed", "Price request failed. Please try again")
@@ -256,6 +262,16 @@ export default {
         this.$store.commit('setNotificationStatus', true);
         let notification = {"title":title, "level":level, "message":message};
         this.$store.commit('setNotification', notification);
+    },
+    setDefaultPackageClass(){
+        let session = this.$store.getters.getSession;
+        if(session.hasOwnProperty('first_time')){
+            if(session.first_time != true){
+                if(this.get_active_package_class == ''){
+                    this.set_active_package_class(this.get_price_request_object.economy_price_tiers[0]["tier_group"]);
+                }
+            }
+        }
     },
     // scroll_to_bottom(){
     //     let container = this.$el.querySelector("#homeview-form");

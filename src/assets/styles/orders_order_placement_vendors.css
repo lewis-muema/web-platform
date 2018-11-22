@@ -9,7 +9,8 @@
 .home-view-vendor-classes--title{
     text-align: center;
     font-weight: normal;
-    padding: 20px;
+    padding: 20px 20px 0px 20px;
+    font-size: 14px;
 }
 .home-view-vendor-classes--icons, .home-view-vendor-classes--label, .home-view-vendor-classes-icons-item, .home-view-vendor-classes-label-item{
     display: flex;
