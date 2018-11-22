@@ -26,7 +26,7 @@
             </div>
             <div class="addUser--submit">
                 <button v-on:click="postInvites" class="button-primary" type="submit"
-                        name="action">Send Invites
+                        name="action">{{button}}
                 </button>
             </div>
         </div>
@@ -50,6 +50,7 @@
         data() {
             return {
                 value: '',
+                button: "Send Invites",
                 elements: [
                     {
                         "email": "",
@@ -60,12 +61,12 @@
                         "email": "",
                         "name": "",
                         "department": ""
-                    },
-                    {
-                        "email": "",
-                        "name": "",
-                        "department": ""
                     }
+                    // {
+                    //     "email": "",
+                    //     "name": "",
+                    //     "department": ""
+                    // }
                 ],
                 invitees: []
             }
@@ -104,6 +105,7 @@
                 this.updateViewState(3);
             },
             postInvites: function () {
+                this.button = "Sending...";
                 let session = this.$store.getters.getSession;
                 let cop_id = 0;
                 if (session.default == 'biz') {
@@ -125,15 +127,18 @@
                         "department_id": department
                     });
                 }
-                // console.log(this.invitees);
-
+                let payload = this.invitees;
+                // let payload = JSON.stringify(this.invitees);
+                console.log(payload);
+                // return;
                 let full_payload = {
-                    "values": this.invitees,
+                    "values": payload,
                     "vm": this,
                     "app": "NODE_PRIVATE_API",
                     "endpoint": "invite_user"
                 }
                 this.$store.dispatch("$_admin/inviteNewUsers", full_payload).then(response => {
+                    this.button = "Send Invites";
                     console.log("invitations sent");
                     console.log(response);
                     let level = 1; //success
@@ -141,6 +146,7 @@
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
                 }, error => {
+                    this.button = "Send Invites";
                     console.log("invitations NOT sent");
                     console.log(error);
                     let level = 3;
@@ -163,7 +169,7 @@
                 let bizName = "";
                 if (session.default == 'biz') {
                     cop_id = session[session.default]['cop_id'];
-                    bizName = session[session.default]['cop_name'];
+                    cop_id = cop_id.toString()
                 }
                 let payload = {
                     "cop_id": cop_id
@@ -178,6 +184,7 @@
                 }
                 this.$store.dispatch("$_admin/createInviteLink", full_payload).then(response => {
                     console.log("link created");
+                    this.updateViewState(5);
                     console.log(response);
                     // return;
                     let level = 1; //success
@@ -185,7 +192,6 @@
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
                     // this.commit('updateBizName', biz_name)
-                    this.updateViewState(5);
                 }, error => {
                     console.log("link NOT created");
                     console.log(error);

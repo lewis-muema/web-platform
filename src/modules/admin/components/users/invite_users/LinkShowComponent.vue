@@ -2,11 +2,11 @@
     <div class="inv-container">
         <div class="show-out">
             <div class="show-txt">
-                <label class="inviteUser--text">Invite link for {{this.getBizName}}</label>
+                <label class="inviteUser--text">Invite link for {{bizName}}</label>
                 <input readonly :value="this.getInviteLink" id="in_link" type="text" class="form-control show--input">
             </div>
             <div class="inviteUser--button">
-                <button v-on:click="copy_link" class="button-primary">Copy to clipboard</button>
+                <button v-on:click="copy_link" class="button-primary">{{button}}</button>
             </div>
             <div class="inviteUser--button show-button-justify">
                 <a v-on:click="back" class="show-link-justify">BACK</a>
@@ -23,6 +23,19 @@
 
     export default {
         name: 'link-show-component',
+        data() {
+            return {
+                button: "Copy to clipboard",
+                bizName: ""
+            }
+        },
+        mounted() {
+            let session = this.$store.getters.getSession;
+            if (session.default == 'biz') {
+                this.bizName = session[session.default]['cop_name'];
+            }
+        },
+
         computed: {
             ...mapGetters(
                 {
@@ -38,10 +51,12 @@
                     updateViewState: '$_admin/updateViewState'
                 }
             ),
+
             copy_link: function () {
                 let copyText = document.getElementById("in_link");
                 copyText.select();
                 document.execCommand("Copy")
+                this.button = "Copied"
             },
             back: function () {
                 this.updateViewState(1);
