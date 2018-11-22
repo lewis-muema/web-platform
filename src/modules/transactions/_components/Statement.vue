@@ -265,7 +265,7 @@ export default {
       return this.statementData.slice(from, to);
     },
     statement_total() {
-      if(this.statementDate != null){
+      if(this.statementData != null){
         return this.statementData.length;
       } else {
         return 0;

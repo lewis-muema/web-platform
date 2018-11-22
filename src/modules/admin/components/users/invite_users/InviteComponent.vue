@@ -26,14 +26,14 @@
             </div>
             <div class="addUser--submit">
                 <button v-on:click="postInvites" class="button-primary" type="submit"
-                        name="action">Send Invites
+                        name="action">{{button}}
                 </button>
             </div>
         </div>
 
         <div class="side-flex add-user-submit">
             <div class="column-flex pad-flex inv-link">
-                <div class="flex"><a v-on:click="get_link" class="add-anchor inviteMany--anchor"><i
+                <div class="flex"><a v-on:click="getInviteLink" class="add-anchor inviteMany--anchor"><i
                         class="el-icon-share"></i><span>&nbsp;Get an invite link to share</span></a>
                 </div>
             </div>
@@ -50,6 +50,7 @@
         data() {
             return {
                 value: '',
+                button: "Send Invites",
                 elements: [
                     {
                         "email": "",
@@ -60,12 +61,12 @@
                         "email": "",
                         "name": "",
                         "department": ""
-                    },
-                    {
-                        "email": "",
-                        "name": "",
-                        "department": ""
                     }
+                    // {
+                    //     "email": "",
+                    //     "name": "",
+                    //     "department": ""
+                    // }
                 ],
                 invitees: []
             }
@@ -90,11 +91,12 @@
                     updateInvites: '$_admin/updateInvites',
                     updateDepartmentsList: '$_admin/updateDepartmentsList',
                     postInvites: '$_admin/postInvites',
-                    updateAdds: '$_admin/updateAdds',
+                    updateBizName: '$_admin/updateBizName',
                 }
             ),
             ...mapActions({
-                inviteNewUsers: '$_admin/inviteNewUsers'
+                inviteNewUsers: '$_admin/inviteNewUsers',
+                createInviteLink: '$_admin/createInviteLink'
             }),
             get_link: function () {
                 this.updateViewState(5);
@@ -103,6 +105,7 @@
                 this.updateViewState(3);
             },
             postInvites: function () {
+                this.button = "Sending...";
                 let session = this.$store.getters.getSession;
                 let cop_id = 0;
                 if (session.default == 'biz') {
@@ -124,15 +127,18 @@
                         "department_id": department
                     });
                 }
-                // console.log(this.invitees);
-
+                let payload = this.invitees;
+                // let payload = JSON.stringify(this.invitees);
+                console.log(payload);
+                // return;
                 let full_payload = {
-                    "values": this.invitees,
+                    "values": payload,
                     "vm": this,
                     "app": "NODE_PRIVATE_API",
                     "endpoint": "invite_user"
                 }
                 this.$store.dispatch("$_admin/inviteNewUsers", full_payload).then(response => {
+                    this.button = "Send Invites";
                     console.log("invitations sent");
                     console.log(response);
                     let level = 1; //success
@@ -140,11 +146,12 @@
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
                 }, error => {
+                    this.button = "Send Invites";
                     console.log("invitations NOT sent");
                     console.log(error);
-                    let level = 2;
+                    let level = 3;
                     let notification = {
-                        "title": "Something went wrong",
+                        "title": "Invite Users",
                         "level": level,
                         "message": "Invitations not sent."
                     }; //notification object
@@ -156,6 +163,46 @@
             addElement: function () {
                 this.elements.push({value: ''});
             },
+            getInviteLink: function () {
+                let session = this.$store.getters.getSession;
+                let cop_id = 0;
+                let bizName = "";
+                if (session.default == 'biz') {
+                    cop_id = session[session.default]['cop_id'];
+                    cop_id = cop_id.toString()
+                }
+                let payload = {
+                    "cop_id": cop_id
+                }
+
+                console.log(payload)
+                let full_payload = {
+                    "values": payload,
+                    "vm": this,
+                    "app": "NODE_PRIVATE_API",
+                    "endpoint": "create_invite"
+                }
+                this.$store.dispatch("$_admin/createInviteLink", full_payload).then(response => {
+                    console.log("link created");
+                    this.updateViewState(5);
+                    console.log(response);
+                    // return;
+                    let level = 1; //success
+                    let notification = {"title": "Invite Link", "level": level, "message": "Link created!"}; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+                    // this.commit('updateBizName', biz_name)
+                }, error => {
+                    console.log("link NOT created");
+                    console.log(error);
+                    let level = 2;
+                    let notification = {"title": "Invite Link", "level": level, "message": "An error occurred."}; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
+                });
+
+            }
 
         }
     }

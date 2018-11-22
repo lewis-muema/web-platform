@@ -35,7 +35,7 @@
                     </div>
 
                 </div>
-                <div class="home-view--seperator home-view--seperator__mini"></div>
+
                 <span v-if="allowCash != true">
                     <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                         <div class="home-view-notes-wrapper--item__option">
@@ -49,9 +49,34 @@
 
                         </div>
                     </div>
-                    <div class="home-view--seperator home-view--seperator__mini">
-                    </div>
+
                 </span>
+                <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
+                    <div class="home-view-notes-wrapper--item__option">
+                        <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
+                        <div class="home-view-notes-wrapper--item__option-div">
+
+                          <div class="home-view-notes-wrapper--item__link">  +  &nbsp;&nbsp; Add New card </div>
+                        </div>
+                    </div>
+                    <div class="home-view-notes-wrapper--item__value">
+                        <!-- <input type="checkbox" name="" value=""> -->
+
+                    </div>
+                </div>
+                <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
+                    <div class="home-view-notes-wrapper--item__option">
+                        <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
+                        <div class="home-view-notes-wrapper--item__option-div">
+                            <el-radio v-model="payment_method" label="2a"> **** **** **** 1234 </el-radio>
+                        </div>
+                    </div>
+                    <div class="home-view-notes-wrapper--item__value">
+                        <!-- <input type="checkbox" name="" value=""> -->
+
+                    </div>
+                </div>
+
                 <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
@@ -64,13 +89,12 @@
 
                     </div>
                 </div>
-                <div class="home-view--seperator home-view--seperator__mini">
-                </div>
+
                 <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="star" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
-                            <el-radio v-model="payment_method" label="5">Redeem promo code</el-radio>
+                          <div class="home-view-notes-wrapper--item__link">  Redeem promo code </div>
                         </div>
                     </div>
 
@@ -128,6 +152,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 import NoSSR from 'vue-no-ssr';
 import numeral from 'numeral';
 import payment_store from '../../../../payment/_store';
+import order_store from '../../../_store';
 
 export default {
     name:'order-options',
@@ -137,28 +162,6 @@ export default {
     },
     data () {
         return {
-            // pickerOptions1: {
-            //   shortcuts: [{
-            //     text: 'Today',
-            //     onClick(picker) {
-            //       picker.$emit('pick', new Date());
-            //     }
-            //   }, {
-            //     text: 'Yesterday',
-            //     onClick(picker) {
-            //       const date = new Date();
-            //       date.setTime(date.getTime() - 3600 * 1000 * 24);
-            //       picker.$emit('pick', date);
-            //     }
-            //   }, {
-            //     text: 'A week ago',
-            //     onClick(picker) {
-            //       const date = new Date();
-            //       date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-            //       picker.$emit('pick', date);
-            //     }
-            //   }]
-            // },
             schedule_time: this.moment(),
             order_notes: '',
             payment_method:'',
@@ -235,9 +238,7 @@ export default {
         },
         checkAllowPrePaid(){
             if(this.get_price_request_object.payment_option == 1){
-                // if(this.active_vendor_price_data.cost )
-                if(this.getRB() < 0){
-                    // if(Math.abs(this.order_cost) <= Math.abs(this.getRB()) )
+                if(this.getRunningBalance <= 0){
                     return true;
                 }
                 return false;
@@ -246,14 +247,17 @@ export default {
         },
         checkPaymentDetails(){
             if(this.get_active_vendor_name == ''){
+                console.log('The vehicle type not been set');
                 this.doNotification('2','Select a vehicle type', "The vehicle type not been set, please set and try again.");
                 return false;
             }
-            if(this.payment_method == ''){
+            if(this.payment_method == '' || this.payment_method == 3){
                 if(this.checkAllowPrePaid() == true){
+                    console.log('might allow pre paid');
                     this.handlePostPaidPayments();
                 }
                 else{
+                    console.log('notification : Choose a payment method');
                     this.doNotification('2','Choose a payment method', "Please select a payment method and try again.");
                     return false;
                 }
@@ -268,6 +272,9 @@ export default {
                 }
                 else if( this.payment_method == 5){
                     this.handlePromoCodePayments();
+                }
+                else{
+                    console.log('not handled payment method', this.payment_method);
                 }
             }
             return true;
@@ -296,9 +303,9 @@ export default {
             this.doCompleteOrder();
         },
         doCompleteOrder(){
+            console.log('in doCompleteOrder');
             let payload = {
               "values" : this.getCompleteOrderObject(),
-              "vm":this,
               "app":"PRIVATE_API",
               "endpoint":"pay"
             };
@@ -396,7 +403,6 @@ export default {
 
             let payload = {
               values: running_balance_payload,
-              vm: this,
               app: "PRIVATE_API",
               endpoint: "running_balance"
             };
@@ -432,7 +438,13 @@ export default {
         }
     },
     created(){
-        this.$store.registerModule('$_payment', payment_store);
+
+        if (!this.$store.state['$_payment']) {
+            this.$store.registerModule('$_payment', payment_store);
+        }
+        if (!this.$store.state['$_orders']) {
+            this.$store.registerModule('$_orders', order_store);
+        }
         this.initializeOrderPlacement();
         this.refreshRunningBalance();
     }
@@ -453,13 +465,19 @@ export default {
     padding-left: 29px;
     color: #555555ba;
 }
+
+.home-view-notes-wrapper--item__link:hover{
+color:#1782C5;
+cursor: pointer;
+
+}
 .home-view-notes-wrapper--item__row{
-  align-items: center;
-justify-content: space-between;
-margin-bottom: 8px;
-margin-top: -11px;
-font-size: 13px;
-padding-left: 29px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    margin-top: -11px;
+    font-size: 13px;
+    padding-left: 29px;
 }
 .home-view-notes-wrapper--item{
 

@@ -8,7 +8,7 @@ const state = {
     view_step: 0,
     name :'',
     personal_email :'',
-    biz_name: 'Clinton Merchants',
+    biz_name: '',
     biz_email: '',
     phone :'',
     name :'',
@@ -17,6 +17,7 @@ const state = {
     cop_id:'',
     cop_user_id:'',
     password_plain:'',
+    invite_type:'',
     help_panel(biz_name){
   return{
     1:{

@@ -150,6 +150,27 @@ export default {
 
        })
    },
+   //
+   //  inviteNewUsers({commit}, payload)
+   // {
+   //     return new Promise((resolve, reject) => {
+   //         payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+   //             console.log('in store dispatch to global store')
+   //             console.log(response)
+   //             if (response.data.status == true) {
+   //                 commit('updateUsersList',response.data.data);
+   //                 resolve(response.data);
+   //             }
+   //             else {
+   //                 reject(response.data);
+   //             }
+   //         }, error => {
+   //             reject(error);
+   //             console.log('failed to dispatch to global store')
+   //         });
+   //
+   //     })
+   // },
 
     inviteNewUsers({commit}, payload)
    {
@@ -159,6 +180,27 @@ export default {
                console.log(response)
                if (response.data.status == true) {
                    commit('updateUsersList',response.data.data);
+                   resolve(response.data);
+               }
+               else {
+                   reject(response.data);
+               }
+           }, error => {
+               reject(error);
+               console.log('failed to dispatch to global store')
+           });
+
+       })
+   },
+
+    createInviteLink({commit}, payload)
+   {
+       return new Promise((resolve, reject) => {
+           payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+               console.log('in store dispatch to global store')
+               console.log(response)
+               if (response.data.status == true) {
+                   commit('updateInviteLink',response.data.data);
                    resolve(response.data);
                }
                else {

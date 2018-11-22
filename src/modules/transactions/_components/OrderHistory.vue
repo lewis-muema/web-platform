@@ -158,7 +158,7 @@ export default {
 
       if(session.default =='biz'){
         let cop_id = session.biz.cop_id;
-        let user_id = session.biz.user_id;
+        let user_id = this.filterData.user;
         let user_type = session.biz.user_type;
 
         payload = {
@@ -186,9 +186,8 @@ export default {
           to: to_date
         };
 
-
       }
-
+      this.order_history_text='Searching ...';
       this.requestOrderHistory(payload);
       this.loading = false;
 

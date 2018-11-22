@@ -53,7 +53,7 @@ export default {
     }),
     save_personal: function ()
     {  let session = this.$store.getters.getSession;
-       console.log(session);
+       console.log('session',session[session.default]['user_id']);
 
        if (session.default == 'biz') {
         console.log("Cop user found");
