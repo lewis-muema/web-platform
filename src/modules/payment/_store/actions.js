@@ -100,9 +100,9 @@ export default {
     });
   },
 
-  requestRunningBalance({ commit }, payload) {
+  requestRunningBalance({ commit,dispatch,rootGetters }, payload) {
     return new Promise((resolve, reject) => {
-      payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+      dispatch("requestAxiosPost", payload, { root: true }).then(
         response => {
           resolve(response);
         },
