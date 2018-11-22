@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <a class="" @click="$router.go(-1)"><font-awesome-icon icon="arrow-left" width="15px" /></a>
+    <a class="back--button" @click="$router.go(-1)"><font-awesome-icon icon="arrow-left" width="15px" /></a>
     <info-window/>
   </div>
 </template>
@@ -43,8 +43,13 @@ export default {
 <style lang="css">
 .back--button
 {
-  position: fixed;
-  left: 10px;
+  position: absolute;
   top: 80px;
+  left: 10px;
+  border: 1px solid;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 15px;
+  font-size: larger;
 }
 </style>
