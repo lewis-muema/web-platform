@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="user-invite-outer">
     <header-component></header-component>
-    <bod-component></bod-component>
+    <bod-component v-if="this.received_response == true"></bod-component>
   </div>
 </template>
 
@@ -14,6 +14,11 @@ import HeaderComponent from './components/HeaderComponent.vue'
 import BodComponent from './components/BodComponent.vue'
 
 export default {
+  data(){
+    return {
+      received_response : false,
+    }
+  },
   name:'External',
   mixins: [ RegisterStoreModule ],
   components: {HeaderComponent,BodComponent},
@@ -21,24 +26,43 @@ export default {
     this.$store.registerModule('$_external', external_store);
   },
   mounted(){
-    let token = this.$route.params.token;
-    console.log('token',token);
     this.check_validity();
   },
   methods:{
     ...mapActions({
        requestTokenValidation :'$_external/requestTokenValidation',
    }),
+   ...mapMutations(
+     {
+       updateCopID:'$_external/updateCopID',
+       updateBizName:'$_external/updateBizName',
+       updateDeptID:'$_external/updateDeptID',
+       updatePerEmail:'$_external/updatePerEmail',
+       updateName:'$_external/updateName',
+       updateInviteType:'$_external/updateInviteType'
+     }
+   ),
     check_validity: function() {
       console.log("Checked");
-      // console.log(this.$route.params.token);
+      let type = '';
+      let content = this.$route.params.content;
+      let tag = this.$route.params.tag;
+
+        if (this.$route.params.type == 'link') {
+          type = 1;
+        }
+        else if (this.$route.params.type == 'email') {
+          type = 0;
+        }
         let values = {};
-        values.token = this.$route.params.token;
+        values.type = type;
+        values.content = content;
+        values.tag = tag;
         let full_payload = {
           values: values,
           vm: this,
           app: "NODE_PRIVATE_API",
-          endpoint: ""
+          endpoint: "onboard_details"
         };
         this.requestTokenValidation(full_payload).then(
           response => {
@@ -46,13 +70,25 @@ export default {
             if (response.length > 0) {
               response = response[0];
             }
+
             if (response.status == true) {
+                // if (response.data.department_id == "null") {
+                //     response.data.department_id = 1;
+                // }
               console.log(response);
-              console.log("Valid Token")
-              this.$router.push("");
+              console.log("Valid Token");
+              this.updateCopID(response.data.cop_id);
+              this.updateBizName(response.data.cop_name);
+              this.updateDeptID(response.data.department_id);
+              this.updatePerEmail(response.data.email);
+              this.updateName(response.data.name);
+              this.updateInviteType(type);
+              this.received_response = true;
+              // this.$router.push("");
             } else {
 
               console.warn("Invalid Token");
+              this.$router.push("/auth");
             }
           },
           error => {

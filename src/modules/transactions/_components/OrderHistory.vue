@@ -186,7 +186,6 @@ export default {
           to: to_date
         };
 
-
       }
       this.order_history_text='Searching ...';
       this.requestOrderHistory(payload);

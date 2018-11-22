@@ -19,7 +19,7 @@
             {{message}}
           </p>
 
-          <div>
+          <div v-on:keyup.enter="sign_in">
 
 
             <div class="sign-holder dimen">
