@@ -432,9 +432,12 @@ export default {
         }
     },
     created(){
-        this.$store.registerModule('$_payment', payment_store);
-        this.initializeOrderPlacement();
-        this.refreshRunningBalance();
+      const STORE_KEY = '$_payment';
+      if (!this.$store.state[STORE_KEY]) {
+        this.$store.registerModule(STORE_KEY, payment_store);
+      }
+      this.initializeOrderPlacement();
+      this.refreshRunningBalance();
     }
 }
 </script>

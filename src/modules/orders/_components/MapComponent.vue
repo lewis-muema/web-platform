@@ -99,6 +99,7 @@ export default {
            bounds.extend(m.position)
          }
          this.$refs.map.$mapObject.fitBounds(bounds);
+         this.$refs.map.$mapObject.setZoom(this.$refs.map.$mapObject.zoom - 1);
        }
      }
   },

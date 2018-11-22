@@ -2,18 +2,28 @@ import axios from 'axios'
 import mqtt from 'mqtt'
 const path = "https://privateapitest.sendyit.com/v1/ongoing_deliveries"
 
-const fetch_ongoing_orders = function({state, commit, rootState}, payload)
+const fetch_ongoing_orders = function({state, commit, dispatch, rootState})
 {
   var session = rootState.session
+  var data = {"phone":""+session[session.default]["user_phone"]+""}
+  var payload = {
+    "app":"NODE_PRIVATE_API",
+    "endpoint":"ongoing_deliveries",
+    "values":data
+  }
+
   return new Promise((resolve, reject) => {
-    axios.post(path, {"phone":""+session[session.default]["user_phone"]+""})
+    dispatch("requestAxiosPost", payload, { root: true })
     .then(response => {
       commit('set_ongoing_orders', response.data)
+      setTimeout(function() {
+        dispatch("fetch_ongoing_orders")
+      }, 5000);
       resolve(response.data);
-    })
-    .catch(e => {
-        reject(e);
-    })
+    }, error => {
+      reject(error);
+      console.log('failed to dispatch to global store')
+    });
   })
 }
 
