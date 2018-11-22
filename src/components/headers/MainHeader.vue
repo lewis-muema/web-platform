@@ -71,15 +71,16 @@ export default {
         // orders was not registered
       }
     },
-    data: function() {
-      return {
-        admin_user: false,
-        logged_user: "Friend"
-      };
-    },
 
     eraseCookie(name) {
-      document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      console.log("erase Cookie", name);
+      document.cookie =
+        name +
+        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=" +
+        this.$store.getters.getENV.domain +
+        ";";
+      document.cookie =
+        name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=localhost";
     },
     isEmpty(obj) {
       for (var prop in obj) {
@@ -103,65 +104,6 @@ export default {
     linkRoute(route) {
       console.log("attempt route" + route);
       this.$router.push(route);
-    },
-    showNotification() {
-      console.log("somebody is trying to show a notification");
-
-      let notification = this.$store.getters.getNotification;
-
-      console.log(notification);
-      if (notification.level == 1) {
-        //success
-        this.$notify({
-          type: "success",
-          title: notification.title,
-          message: notification.message,
-          offset: 20
-        });
-      } else if (notification.level == 2) {
-        //warning
-        this.$notify({
-          title: notification.title,
-          message: notification.message,
-          type: "warning",
-          offset: 20
-        });
-      } else if (notification.level == 3) {
-        //error
-        title: notification.title,
-          this.$notify({
-            type: "error",
-            message: notification.message,
-            offset: 20
-          });
-      } else {
-        //default
-        //check to make sure that either title or message is set
-        //reset notification status
-
-        if (notification.title !== "" || notification.message !== "") {
-          this.$notify({
-            title: notification.title,
-            message: notification.message
-          });
-          offset: 20;
-        }
-      }
-      this.$store.commit("setNotificationStatus", false);
-    }
-  },
-  computed: {
-    notification_status() {
-      return this.$store.getters.getNotificationStatus;
-    }
-  },
-  watch: {
-    notification_status(val, oldVal) {
-      console.log(val);
-
-      if (val == true) {
-        this.showNotification();
-      }
     }
   }
 };

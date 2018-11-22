@@ -52,61 +52,8 @@
                     <div class="rider_details_action">
                         <button class="button-primary rider_details_action_btn" type="button" @click="trackOrder(order_details.order_no)">Track</button>
                     </div>
-                    <div class="rider_details_action">
-                        <button class="button-primary rider_details_action_btn" type="button" @click="printReceipt">Print Receipt</button>
-                    </div>
-                    <div class="rider_details_action">
-                        <button class="button-primary rider_details_action_btn" type="button" @click="deliveryDocs">Delivery Docs</button>
-                    </div>
-                    
-                    <!-- <div class="rider_details_action">
-                        <el-dropdown>
-                        <button type="button" class="button-primary">
-                            <i class="el-icon-more el-icon--center"></i>
-                        </button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>Print Receipt</el-dropdown-item>
-                            <el-dropdown-item>Delivery Docs</el-dropdown-item>
-                        </el-dropdown-menu>
-                        </el-dropdown>
-                    </div> -->
                 </div>
                 <div class="rider_details_actions_ongoing" v-else>
-                    <div class="rider_details_action">
-                        <button class="button-primary rider_details_action_btn" type="button" @click="printReceipt">Print Receipt</button>
-                    </div>
-                    <div class="rider_details_action">
-                        <button class="button-primary rider_details_action_btn" type="button" @click="deliveryDocs">Delivery Docs</button>
-                    </div>
-                    
-                    <!-- //TODO:  unhide this when it starts being used  -->
-                    <!-- <div class="rider_details_action">
-                        <el-popover
-                        placement="bottom"
-                        trigger="click">
-                       <div class="rider_details_rating">
-                            <el-rate
-                                v-model="orderRating"
-                                :colors="['#99A9BF', '#f57f20', '#1b7fc3']">
-                            </el-rate>
-                            <button class="button-primary--naked rate--action-btn" @click="rateOrder"> RATE </button>
-                        </div>
-                        <button class="button-primary rider_details_action_btn" type="button" slot="reference">RATE</button>
-
-                        </el-popover>
-
-                    </div>
-                    <div class="rider_details_action">
-                        <el-dropdown>
-                        <button type="button" class="button-primary">
-                            <i class="el-icon-more el-icon--center"></i>
-                        </button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>Print Receipt</el-dropdown-item>
-                            <el-dropdown-item>Delivery Docs</el-dropdown-item>
-                        </el-dropdown-menu>
-                        </el-dropdown>
-                    </div> -->
                 </div>
             </div>
 
@@ -170,15 +117,11 @@ export default {
       this.show_rating = false;
     },
     trackOrder(order_no) {
-        console.log(order_no);
-        this.$router.push({name:'tracking', params: {order_no:order_no}});
+      console.log(order_no);
+      this.$router.push({ name: "tracking", params: { order_no: order_no } });
     },
-    printReceipt() {
-
-    },
-    deliveryDocs() {
-
-    }
+    printReceipt() {},
+    deliveryDocs() {}
   },
   computed: {
     ...mapGetters({
