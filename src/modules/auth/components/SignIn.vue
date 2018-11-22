@@ -8,12 +8,16 @@
           </div>
 
 
-          <div class="sign-in-button" @click="" id="sign-in-v2-logging-in-1">
+          <!-- <div class="sign-in-button" @click="" id="sign-in-v2-logging-in-1">
           <img  class="sign-buttom__img"src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
           </div>
           <div class="sign-text">
              or
-          </div>
+          </div> -->
+
+          <p class="sign-in-error">
+            {{message}}
+          </p>
 
           <div>
 
@@ -30,7 +34,7 @@
             </div>
 
             <div class="sign-holder">
-              <input class="button-primary" type="submit" value="Log in" id="login" v-on:click="sign_in" >
+              <input class="button-primary" type="submit" name="login_text" v-model="login_text" v-on:click="sign_in" >
             </div>
             <div class=" sign-holder sign-forgot-pass sign-smaller">
               <router-link class="sign-holder__link" to="/auth/forgot_password">Forgot password?</router-link>
@@ -51,34 +55,67 @@ export default {
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+
+      message:'',
+      login_text:'Login',
+      session_cookie: null
+
     };
   },
   methods: {
     ...mapActions({
-      requestSignIn: "$_auth/requestSignIn"
+      authSignIn: "$_auth/requestSignIn"
     }),
     eraseCookie(name) {
-      document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    },
+    getCookie: function() {
+      var nameEQ = "_sessionSnack" + "=";
+      var ca = document.cookie.split(";");
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == " ") c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) {
+        }
+        this.session_cookie = c.substring(nameEQ.length, c.length);
+        return c.substring(nameEQ.length, c.length);
+      }
+      this.session_cookie = null;
+      return null;
     },
     setCookie: function(value) {
-      let json_string_value = JSON.stringify(value);
-      let expires = "";
-      let days = 4;
-      var date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = "; expires=" + date.toUTCString();
+      console.log("setting cookie", value);
+      return new Promise((resolve, reject) => {
+        let json_string_value = JSON.stringify(value);
+        let expires = "";
+        let days = 4;
+        var date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        expires = "; expires=" + date.toUTCString();
 
-      document.cookie =
-        "_sessionSnack" +
-        "=" +
-        (json_string_value || "") +
-        expires +
-        "; path=/";
+        document.cookie =
+          "_sessionSnack" +
+          "=" +
+          (json_string_value || "") +
+          expires +
+          "; path=/";
+
+        //do a while to check if the cookie has been set
+        //resolve when set
+        this.getCookie();
+        console.log("session_cookie", this.session_cookie);
+
+        while (this.session_cookie == null) {
+          console.log("cookie is still", this.session_cookie);
+          setTimeout(this.getCookie, 1000);
+        }
+        resolve(true);
+      });
     },
     sign_in: function() {
       //erase cookie on login just incase
-
+      this.login_text ='Login ...';
       this.eraseCookie('_sessionSnack');
 
       let values = {};
@@ -90,39 +127,47 @@ export default {
         app: "NODE_PRIVATE_API",
         endpoint: "sign_in/"
       };
-      this.requestSignIn(full_payload).then(
+      let that = this;
+
+      this.authSignIn(full_payload).then(
         response => {
-          console.log(response);
-          if (response.length > 0) {
-            response = response[0];
-          }
           if (response.status == true) {
             //set cookie
             //commit everything to the store
             //redirect to orders
             let session_data = response.data;
-            console.log("session_data", session_data);
 
-            this.setCookie(session_data);
-            this.$store.commit("setSession", session_data);
-            this.$router.push("/orders");
+            that.setCookie(session_data).then(res => {
+              console.log("sessionSnack Now", this.getCookie());
+
+              that.$store.commit("setSession", session_data);
+              that.$router.push("/orders");
+            });
           } else {
             //failed to login
             //show some sort of error
-            this.doNotification(2,"Login failed", "Login failed. Please try again")
+            this.login_text ='Login';
+            this.message = response.data.reason;
+            this.doNotification(2,"Login failed", "Login failed. Please try again");
             console.warn("login failed");
+            that.$store.dispatch("show_notification", notification, {
+              root: true
+            });
           }
         },
         error => {
+          this.login_text ='Login';
+          this.message = "Check Internet Connection";
           console.error("Check Internet Connection");
           console.log(error);
         }
       );
     },
     doNotification(level,title, message){
-        this.$store.commit('setNotificationStatus', true);
         let notification = {"title":title, "level":level, "message":message};
         this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
+
     },
   }
 };
@@ -210,5 +255,9 @@ export default {
 .sign-form {
   height: 42px !important;
   width: 110% !important;
+}
+.sign-in-error{
+  color: #e08445;
+  font-family: 'Rubik', sans-serif;
 }
 </style>

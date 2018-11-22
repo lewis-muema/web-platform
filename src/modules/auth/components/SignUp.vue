@@ -7,12 +7,16 @@
     Sign up for Sendy
   </div>
 
-  <div class="sign-button" onclick="" id="sign-in-v2-logging-in-1">
+  <!-- <div class="sign-button" onclick="" id="sign-in-v2-logging-in-1">
   <img class="sign-buttom__img" src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
   </div>
   <div class="sign-text">
      or
-  </div>
+  </div> -->
+
+  <p class="sign-up-error">
+    {{message}}
+  </p>
 
   <div>
 
@@ -33,13 +37,13 @@
     </div>
 
     <div class="sign-holder" style="text-align:center;">
-      <input  type="checkbox" checked name="u_terms" v-model="u_terms" class="hiddeny">
+      <input  type="checkbox" name="u_terms" v-model="u_terms" class="hiddeny">
       <span class="sign-holder__smaller">
           By creating a Sendy account you’re agreeing to the <a class=" sign-holder__grey" href="https://sendyit.com/terms/show">terms and conditions</a>
       </span>
     </div>
     <div class="sign-holder">
-      <input class="button-primary" type="submit" value="Sign Up" id="signup" v-on:click="sign_up" >
+      <input class="button-primary" type="submit" name="sign_up_text" v-model="sign_up_text" id="signup" v-on:click="sign_up" >
     </div>
 
     <div class=" sign-holder sign-forgot-pass sign-smaller">
@@ -66,7 +70,9 @@ export default {
       phone: "",
       email: "",
       password: "",
-      u_terms:"true"
+      u_terms:"",
+      sign_up_text:"Sign Up",
+      message:""
     };
   },
   methods: {
@@ -108,6 +114,7 @@ export default {
              this.$router.push("/auth/sign_up_verification");
            } else {
 
+             this.message = response.data.reason;
              console.warn("Sign Up Failed");
            }
          },
@@ -118,6 +125,7 @@ export default {
        );
      }
      else {
+            this.message = 'Agree to Terms and Conditions';
             console.log("Agree Terms and Condition")
      }
 
@@ -212,5 +220,9 @@ export default {
 .sign-up-form{
   height:42px!important;
   width: 110%!important;
+}
+.sign-up-error{
+  color: #e08445;
+  font-family: 'Rubik', sans-serif;
 }
 </style>

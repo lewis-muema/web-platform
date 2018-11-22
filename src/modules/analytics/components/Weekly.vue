@@ -21,7 +21,6 @@ export default {
       },
       methods: {
         showBoard: function() {
-
           var METABASE_SITE_URL = "https://metabase.sendyit.com";
           var METABASE_SECRET_KEY = "baddc28e2149d570c8967cd8c6589e13d7356cd6a1c71e50f07d5f08d6b3bdc6";
 
@@ -36,6 +35,13 @@ export default {
           var iframeUrl = METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=false&titled=false";
 
           return iframeUrl
+        }
+      },
+      computed : {
+        account: function() {
+          if (typeof this.$store.getters.getSession.biz != undefined) {
+            return "SENDY"+this.$store.getters.getSession.biz.cop_id
+          }
         }
       }
 }
