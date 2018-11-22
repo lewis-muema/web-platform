@@ -283,7 +283,7 @@ export function createRouter () {
 
           ]
       },
-      { path: '/external/onboard/:token', component: () => import('../modules/external/External.vue'),
+      { path: '/external/onboard/:type/:content/:tag', component: () => import('../modules/external/External.vue'),
       }
     ]
   });
