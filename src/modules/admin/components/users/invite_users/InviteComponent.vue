@@ -175,7 +175,7 @@
                     "values": payload,
                     "vm": this,
                     "app": "NODE_PRIVATE_API",
-                    "endpoint": "inv_link"
+                    "endpoint": "create_invite"
                 }
                 this.$store.dispatch("$_admin/createInviteLink", full_payload).then(response => {
                     console.log("link created");
