@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <a class="back--button" @click="javascript:history.go(-1)"><font-awesome-icon icon="arrow-left" width="15px" /></a>
+    <a class="back--button" @click="$router.push('/orders')"><font-awesome-icon icon="arrow-left" width="15px" /></a>
     <info-window/>
   </div>
 </template>
