@@ -71,7 +71,9 @@ export default {
       console.log("erase Cookie", name);
       document.cookie =
         name +
-        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=webapptest.sendyit.com;";
+        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=" +
+        this.$store.getters.getENV.domain +
+        ";";
       document.cookie =
         name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=localhost";
     },
