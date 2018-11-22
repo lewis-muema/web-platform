@@ -31,12 +31,15 @@ export default {
   },
   mounted() {},
   methods: {
-    ...mapActions(["$_payment/terminateMpesaPaymentRequest"]),
+    ...mapActions([
+      "$_payment/terminateMpesaPaymentRequest",
+      "$_payment/terminateCardPaymentRequest"
+    ]),
     cancelPaymentRequest() {
       let payload = {};
       if (this.pay_method == "mpesa") {
         this.$store
-          .dispatch("$_payment/terminateCardPaymentRequest", payload)
+          .dispatch("$_payment/terminateMpesaPaymentRequest", payload)
           .then(
             response => {
               console.log(response);
@@ -47,7 +50,7 @@ export default {
           );
       } else {
         this.$store
-          .dispatch("$_payment/terminateMpesaPaymentRequest", payload)
+          .dispatch("$_payment/terminateCardPaymentRequest", payload)
           .then(
             response => {
               console.log(response);
