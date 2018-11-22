@@ -143,9 +143,9 @@
                 }, error => {
                     console.log("invitations NOT sent");
                     console.log(error);
-                    let level = 2;
+                    let level = 3;
                     let notification = {
-                        "title": "Something went wrong",
+                        "title": "Invite Users",
                         "level": level,
                         "message": "Invitations not sent."
                     }; //notification object
@@ -170,7 +170,6 @@
                 }
 
                 console.log(payload)
-
                 let full_payload = {
                     "values": payload,
                     "vm": this,
@@ -180,6 +179,7 @@
                 this.$store.dispatch("$_admin/createInviteLink", full_payload).then(response => {
                     console.log("link created");
                     console.log(response);
+                    // return;
                     let level = 1; //success
                     let notification = {"title": "Invite Link", "level": level, "message": "Link created!"}; //notification object
                     this.$store.commit('setNotification', notification);
