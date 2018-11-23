@@ -68,7 +68,14 @@ export default {
       authSignIn: "$_auth/requestSignIn"
     }),
     eraseCookie(name) {
-      document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      console.log("erase Cookie", name);
+      document.cookie =
+        name +
+        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=" +
+        this.$store.getters.getENV.domain +
+        ";";
+      document.cookie =
+        name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=localhost";
     },
     getCookie: function() {
       var nameEQ = "_sessionSnack" + "=";
@@ -131,6 +138,11 @@ export default {
 
       this.authSignIn(full_payload).then(
         response => {
+          console.log(response);
+          //check when response is dual
+          if (response.length > 0) {
+            response = response[0];
+          }
           if (response.status == true) {
             //set cookie
             //commit everything to the store
