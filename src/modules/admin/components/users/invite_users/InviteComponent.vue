@@ -2,7 +2,6 @@
     <div class="">
         <div class="inv-container inv-justify">
             <div class="inv-inputs">
-                <!--<div class="side-flex error">-->
                 <div v-for="element in elements" class="side-flex inp">
                     <input class="form-control" type="text" v-model="element.email" name="email"
                            placeholder="name@example.com">
@@ -61,17 +60,27 @@
                         "email": "",
                         "name": "",
                         "department": ""
+                    },
+                    {
+                        "email": "",
+                        "name": "",
+                        "department": ""
                     }
-                    // {
-                    //     "email": "",
-                    //     "name": "",
-                    //     "department": ""
-                    // }
                 ],
                 invitees: []
             }
         },
         mounted() {
+            let number = this.getAdds
+            if (number > 3) {
+                for (let i = 3; i < number; i++) {
+                    this.elements.push({value: ''});
+                }
+                this.populate()
+            }
+            else if (number == 3 && this.getInvites!= null) {
+                this.populate()
+            }
         },
         computed: {
             ...mapGetters(
@@ -98,6 +107,12 @@
                 inviteNewUsers: '$_admin/inviteNewUsers',
                 createInviteLink: '$_admin/createInviteLink'
             }),
+            populate: function (){
+                let set = this.getInvites
+                for (let i = 0; i < set.length; i++) {
+                    this.elements[i].email = set[i][0];
+                }
+            },
             get_link: function () {
                 this.updateViewState(5);
             },
@@ -111,8 +126,6 @@
                 if (session.default == 'biz') {
                     cop_id = session[session.default]['cop_id'];
                 }
-
-
                 for (let i=0, iLen=this.elements.length; i<iLen; i++) {
                     let email = this.elements[i].email;
                     let name = this.elements[i].name;
@@ -128,9 +141,7 @@
                     });
                 }
                 let payload = this.invitees;
-                // let payload = JSON.stringify(this.invitees);
                 console.log(payload);
-                // return;
                 let full_payload = {
                     "values": payload,
                     "vm": this,
@@ -166,7 +177,6 @@
             getInviteLink: function () {
                 let session = this.$store.getters.getSession;
                 let cop_id = 0;
-                let bizName = "";
                 if (session.default == 'biz') {
                     cop_id = session[session.default]['cop_id'];
                     cop_id = cop_id.toString()
@@ -186,12 +196,10 @@
                     console.log("link created");
                     this.updateViewState(5);
                     console.log(response);
-                    // return;
                     let level = 1; //success
                     let notification = {"title": "Invite Link", "level": level, "message": "Link created!"}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
-                    // this.commit('updateBizName', biz_name)
                 }, error => {
                     console.log("link NOT created");
                     console.log(error);
