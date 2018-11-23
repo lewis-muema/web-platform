@@ -48,7 +48,7 @@
 
                 <div class="edit-holder">
                     <el-select class="addUser--select edit-select" v-model="userDetails.type" placeholder="User Type">
-                        <el-option v-for="type in types" :key="type.type_value" :label="type.type_name"
+                        <el-option v-for="type in types" :key="type.type" :label="type.type_name"
                                    :value="type.type_value">
                         </el-option>
                     </el-select>
@@ -73,7 +73,22 @@
             return {
                 userDetails: {},
                 message: "",
-                available: false
+                available: false,
+                statuses: [{
+                      status: 1,
+                      status_label: 'Active'
+                    }, {
+                      status: 2,
+                      status_label: 'Deactivate'
+                    }],
+                types: [{
+                      type: 1,
+                      type_name: 'Normal'
+                      }, {
+                     type: 2,
+                     type_name: 'Admin'
+                    }],
+
             }
         },
         mounted() {
