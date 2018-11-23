@@ -16,6 +16,9 @@ export default {
     updateBizEmail(state, val){
           state.biz_email= val;
         },
+    updateBizName(state, val){
+           state.biz_name= val;
+        },
     updatePerEmail(state, val){
           state.personal_email= val;
         },
@@ -30,5 +33,8 @@ export default {
         },
     updateCopUserID(state, n) {
           state.cop_user_id = n
-        }
+        },
+    updateInviteType(state, n) {
+          state.invite_type = n
+      }
 };

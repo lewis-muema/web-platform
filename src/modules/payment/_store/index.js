@@ -1,11 +1,14 @@
-import actions from './actions';
-import getters from './getters';
-import mutations from './mutations';
+import actions from "./actions";
+import getters from "./getters";
+import mutations from "./mutations";
 
 const state = {
-    mpesa_loading_status: false,
-    mpesa_fail_status: false,
-    mpesa_success_status: false
+  mpesa_loading_status: false,
+  mpesa_fail_status: false,
+  mpesa_success_status: false,
+  card_loading_status: false,
+  card_fail_status: false,
+  card_success_status: false
 };
 
 export default {
@@ -13,5 +16,5 @@ export default {
   state,
   actions,
   getters,
-  mutations,
+  mutations
 };
