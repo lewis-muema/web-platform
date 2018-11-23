@@ -1,8 +1,8 @@
 <template lang="html">
   
   <payment_loading v-if="show_loading"></payment_loading>
-  <payment_mpesa_success v-else-if="show_mpesa_success"></payment_mpesa_success>
-  <payment_mpesa_fail v-else-if="show_mpesa_fail"></payment_mpesa_fail>
+  <payment_success v-else-if="show_mpesa_success"></payment_success>
+  <payment_fail v-else-if="show_mpesa_fail"></payment_fail>
   
   <div class="paymentbody--form" v-else>
     <div class="paymentbody--input-wrap">
@@ -21,12 +21,12 @@
 const phoneUtil = require("google-libphonenumber").PhoneNumberUtil.getInstance();
 import { mapActions, mapGetters } from "vuex";
 import payment_loading from "./LoadingComponent.vue";
-import payment_mpesa_success from "./SuccessComponent.vue";
-import payment_mpesa_fail from "./FailComponent.vue";
+import payment_success from "./SuccessComponent.vue";
+import payment_fail from "./FailComponent.vue";
 
 export default {
   name: "mpesa-component",
-  components: { payment_loading, payment_mpesa_success,payment_mpesa_fail },
+  components: { payment_loading, payment_success, payment_fail },
   data() {
     return {
       mpesa_payment_data: {
@@ -106,22 +106,21 @@ export default {
       //poll the dispatch
       for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
         //wait 10 seconds
-         let that = this;
-         (function (poll_count) {
-          setTimeout(function () {
+        let that = this;
+        (function(poll_count) {
+          setTimeout(function() {
             let res = that.runMpesaPaymentPoll(old_rb, payload);
-            if(res){
+            if (res) {
               poll_count = poll_limit;
               return true;
             }
-          }, 10000*poll_count);
+          }, 10000 * poll_count);
         })(poll_count);
       }
-      
+
       //loop did not resolve in anything
       //so trigger fail
       //this.$store.dispatch("$_payment/terminateMpesaPaymentRequest", {});
-
     },
     runMpesaPaymentPoll(old_rb, payload) {
       this.$store.dispatch("$_payment/requestRunningBalance", payload).then(
@@ -218,19 +217,19 @@ export default {
     }
   },
   computed: {
-   ...mapGetters({
-        mpesa_fail_status: "$_payment/getMpesaFailStatus",
-        mpesa_loading_status: "$_payment/getMpesaLoadingStatus",
-        mpesa_success_status: "$_payment/getMpesaSuccessStatus",
+    ...mapGetters({
+      mpesa_fail_status: "$_payment/getMpesaFailStatus",
+      mpesa_loading_status: "$_payment/getMpesaLoadingStatus",
+      mpesa_success_status: "$_payment/getMpesaSuccessStatus"
     }),
     show_loading() {
-        return this.mpesa_loading_status;
+      return this.mpesa_loading_status;
     },
     show_mpesa_success() {
-        return this.mpesa_success_status;
+      return this.mpesa_success_status;
     },
     show_mpesa_fail() {
-        return this.mpesa_fail_status;
+      return this.mpesa_fail_status;
     },
     valid_payment() {
       //validate amount
@@ -244,7 +243,7 @@ export default {
     },
     valid_phone: function() {
       return this.validatePhone(this.mpesa_payment_data.phone_number);
-    },
+    }
   }
 };
 </script>

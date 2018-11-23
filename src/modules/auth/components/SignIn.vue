@@ -19,7 +19,7 @@
             {{message}}
           </p>
 
-          <div>
+          <div v-on:keyup.enter="sign_in">
 
 
             <div class="sign-holder dimen">
@@ -36,9 +36,9 @@
             <div class="sign-holder">
               <input class="button-primary" type="submit" name="login_text" v-model="login_text" v-on:click="sign_in" >
             </div>
-            <div class=" sign-holder sign-forgot-pass sign-smaller">
+            <!-- <div class=" sign-holder sign-forgot-pass sign-smaller">
               <router-link class="sign-holder__link" to="/auth/forgot_password">Forgot password?</router-link>
-            </div>
+            </div> -->
             <div class="sign-holder sign-sign-up sign-smaller">
               Don't have an Account? <router-link class="sign-holder__link" to="/auth/sign_up">Sign Up</router-link>
             </div>
@@ -68,7 +68,14 @@ export default {
       authSignIn: "$_auth/requestSignIn"
     }),
     eraseCookie(name) {
-      document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      console.log("erase Cookie", name);
+      document.cookie =
+        name +
+        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=" +
+        this.$store.getters.getENV.domain +
+        ";";
+      document.cookie =
+        name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=localhost";
     },
     getCookie: function() {
       var nameEQ = "_sessionSnack" + "=";
@@ -115,7 +122,7 @@ export default {
     },
     sign_in: function() {
       //erase cookie on login just incase
-      this.login_text ='Login ...';
+      this.login_text ='Logging in ...';
       this.eraseCookie('_sessionSnack');
 
       let values = {};
@@ -131,6 +138,11 @@ export default {
 
       this.authSignIn(full_payload).then(
         response => {
+          console.log(response);
+          //check when response is dual
+          if (response.length > 0) {
+            response = response[0];
+          }
           if (response.status == true) {
             //set cookie
             //commit everything to the store

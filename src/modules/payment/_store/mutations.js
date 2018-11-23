@@ -1,11 +1,20 @@
 export default {
-    setMpesaFailStatus(state, status) {
-        state.mpesa_fail_status = status;
-    },
-    setMpesaSuccessStatus(state, status) {
-        state.mpesa_success_status = status;
-    },
-    setMpesaLoadingStatus(state, status) {
-        state.mpesa_loading_status = status;
-    },
+  setMpesaFailStatus(state, status) {
+    state.mpesa_fail_status = status;
+  },
+  setMpesaSuccessStatus(state, status) {
+    state.mpesa_success_status = status;
+  },
+  setMpesaLoadingStatus(state, status) {
+    state.mpesa_loading_status = status;
+  },
+  setCardFailStatus(state, status) {
+    state.card_fail_status = status;
+  },
+  setCardSuccessStatus(state, status) {
+    state.card_success_status = status;
+  },
+  setCardLoadingStatus(state, status) {
+    state.card_loading_status = status;
+  }
 };

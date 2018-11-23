@@ -120,7 +120,7 @@ export default {
       expand_keys: [],
       pagination_limit: 10,
       pagination_page: 1,
-      order_history_text:'Search',
+      order_history_text: "Search",
       filterData: {
         user: "",
         from_date: "",
@@ -128,7 +128,7 @@ export default {
       },
       filteredData: [],
       filterState: false,
-      loading:false,
+      loading: false
     };
   },
   filters: {
@@ -154,11 +154,11 @@ export default {
       let session = this.$store.getters.getSession;
 
       let cop_id = 0;
-      let payload =  {};
+      let payload = {};
 
-      if(session.default =='biz'){
+      if (session.default == "biz") {
         let cop_id = session.biz.cop_id;
-        let user_id = session.biz.user_id;
+        let user_id = this.filterData.user;
         let user_type = session.biz.user_type;
 
         payload = {
@@ -168,7 +168,7 @@ export default {
           to: to_date
         };
 
-        if(user != '' && user != null){
+        if (user != "" && user != null) {
           payload = {
             cop_id: cop_id,
             user_id: user_id,
@@ -176,22 +176,18 @@ export default {
             to: to_date
           };
         }
-
       } else {
-        let user_id = session[session.default]['user_id'];
+        let user_id = session[session.default]["user_id"];
 
         payload = {
           user_id: user_id,
           from: from_date,
           to: to_date
         };
-
-
       }
-
+      this.order_history_text = "Searching ...";
       this.requestOrderHistory(payload);
       this.loading = false;
-
     },
     changeSize(val) {
       this.pagination_page = 1;
@@ -225,26 +221,40 @@ export default {
       return row.order_id;
     },
     expandTableRow(row, event, column) {
-      this.expand_id = row.order_id;
-      this.expand_keys = [];
-      this.expand_keys.push(row.order_id);
-      this.$router.push({
-        name: "order-details",
-        params: { id: row.order_id }
-      });
+      //check if expand keys contains the same order_id
+      //if so do not push the key again
+      if (this.expand_keys.includes(row.order_id)) {
+        this.expand_keys = [];
+      } else {
+        this.expand_id = row.order_id;
+        this.expand_keys = [];
+        this.expand_keys.push(row.order_id);
+        this.$router.push({
+          name: "order-details",
+          params: { id: row.order_id }
+        });
+      }
     },
     handleRowExpand(row, expanded) {
-      this.expand_id = row.order_id;
-      this.expand_keys = [];
-      this.expand_keys.push(row.order_id);
-      this.$router.push({
-        name: "order-details",
-        params: { id: row.order_id }
-      });
+      //check if expand keys contains the same order_id
+      //if so do not push the key again
+      if (this.expand_keys.includes(row.order_id)) {
+        this.expand_keys = [];
+      } else {
+        this.expand_id = row.order_id;
+        this.expand_keys = [];
+        this.expand_keys.push(row.order_id);
+        this.$router.push({
+          name: "order-details",
+          params: { id: row.order_id }
+        });
+      }
     },
     formatAmount(row, column, cellValue) {
-      if(typeof row.order_cost != 'undefined'){
-        let value = row.order_cost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+      if (typeof row.order_cost != "undefined") {
+        let value = row.order_cost
+          .toFixed(2)
+          .replace(/\d(?=(\d{3})+\.)/g, "$&,");
         value = value.split(".");
         return value[0];
       } else {
@@ -265,7 +275,7 @@ export default {
             console.log(
               "Got some data, now lets show something in this component"
             );
-            this.order_history_text='Search';
+            this.order_history_text = "Search";
             console.log(response);
             this.empty_orders_state = "Order History Not Found";
           },
@@ -273,7 +283,7 @@ export default {
             console.error(
               "Got nothing from server. Prompt user to check internet connection and try again"
             );
-            this.order_history_text='Search';
+            this.order_history_text = "Search";
             console.log(error);
             this.empty_orders_state = "Order History Failed to Fetch";
           }

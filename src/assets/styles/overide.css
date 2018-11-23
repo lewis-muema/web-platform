@@ -435,8 +435,9 @@ span.el-pagination__jump {
   color: #f1f1f1 !important;
 }
 .el-date-table td.current:not(.disabled) span {
-  color: #fff;
+  color: #fff !important;
   background-color: #2c82c5 !important;
+  font-weight: normal !important;
 }
 
 .el-table {
@@ -494,11 +495,13 @@ span.el-pagination__jump {
   outline: none;
 }
 
-.el-checkbox, .el-radio {
+.el-checkbox,
+.el-radio {
   font-weight: normal !important;
 }
 
-.el-checkbox__label, .el-radio__label {
+.el-checkbox__label,
+.el-radio__label {
   font-size: 13px !important;
 }
 
@@ -518,11 +521,32 @@ span.el-pagination__jump {
   color: #555 !important;
 }
 
-.el-radio__input.is-checked+.el-radio__label {
-    color: #1782C5 !important;
+.el-radio__input.is-checked + .el-radio__label {
+  color: #1782c5 !important;
 }
 
 .el-radio__input.is-checked .el-radio__inner {
-    border-color: #1782C5 !important;
-    background: #1782C5 !important;
+  border-color: #1782c5 !important;
+  background: #1782c5 !important;
+}
+
+.el-input-group--append .el-input__inner,
+.el-input-group__prepend {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  height: 45px !important;
+}
+
+.el-input-group__append,
+.el-input-group__prepend {
+  background-color: #fff !important;
+  color: #555 !important;
+  vertical-align: middle;
+  display: table-cell;
+  position: relative;
+  border: 1px solid #dcdfe6 !important;
+  border-radius: 4px;
+  padding: 0 14px !important;
+  width: 1px;
+  white-space: nowrap;
 }
