@@ -1,4 +1,4 @@
-import CryptoJS from "crypto-js"
+import CryptoJS from "crypto-js";
 
 /*
 Usage
@@ -17,21 +17,30 @@ Usage
 
 class Mcrypt {
   constructor() {
-    this.iv = CryptoJS.enc.Base64.parse('RjhDNEFCN0FBM0JDNTkxNA==');
-    this.key = CryptoJS.enc.Utf8.parse('DAEB1667DCC64C84');
+    this.iv = CryptoJS.enc.Base64.parse("RjhDNEFCN0FBM0JDNTkxNA==");
+    this.key = CryptoJS.enc.Utf8.parse("DAEB1667DCC64C84");
   }
 
   decrypt(ciphertext) {
-    var encrypted_hex = this.hexToBase64(ciphertext)
-    var plaintext = CryptoJS.AES.decrypt(encrypted_hex, this.key, { iv: this.iv, padding: CryptoJS.pad.ZeroPadding })
+    var encrypted_hex = this.hexToBase64(ciphertext);
+    var plaintext = CryptoJS.AES.decrypt(encrypted_hex, this.key, {
+      iv: this.iv,
+      padding: CryptoJS.pad.ZeroPadding
+    });
     console.log(CryptoJS.enc.Utf8.stringify(plaintext));
+    return CryptoJS.enc.Utf8.stringify(plaintext);
   }
 
   hexToBase64(hexstring) {
-    return btoa(hexstring.match(/\w{2}/g).map(function(a) {
-        return String.fromCharCode(parseInt(a, 16));
-    }).join(""));
+    return btoa(
+      hexstring
+        .match(/\w{2}/g)
+        .map(function(a) {
+          return String.fromCharCode(parseInt(a, 16));
+        })
+        .join("")
+    );
   }
 }
 
-export default new Mcrypt;
+export default new Mcrypt();

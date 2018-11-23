@@ -109,7 +109,7 @@ export default {
         let that = this;
         (function(poll_count) {
           setTimeout(function() {
-            let res = that.runMpesaPaymentPoll(old_rb, payload);
+            let res = that.compareRunningBalance(old_rb, payload);
             if (res) {
               poll_count = poll_limit;
               return true;
@@ -122,7 +122,7 @@ export default {
       //so trigger fail
       //this.$store.dispatch("$_payment/terminateMpesaPaymentRequest", {});
     },
-    runMpesaPaymentPoll(old_rb, payload) {
+    compareRunningBalance(old_rb, payload) {
       this.$store.dispatch("$_payment/requestRunningBalance", payload).then(
         response => {
           console.log(response);
