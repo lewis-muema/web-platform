@@ -235,6 +235,7 @@ export default {
             requestOrderCompletion: '$_orders/$_home/requestOrderCompletion',
             requestRunningBalanceFromAPI: '$_payment/requestRunningBalance',
             requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
+            requestCardPaymentAction: '$_payment/requestCardPayment',
             completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
             terminateMpesaPaymentRequest: '$_payment/terminateMpesaPaymentRequest',
             requestSavedCards: '$_orders/$_home/requestSavedCards',
@@ -305,7 +306,7 @@ export default {
         },
         handleCardPayments(){
             console.log('taking you to card');
-             this.$router.push({ name: "card_payment" });
+             this.$router.push({ name: "card_payment",query:{action:"add"}});
         },
         handleCashPayments(){
             console.log('allowed cash payment')
@@ -314,7 +315,7 @@ export default {
             // }
         },
         takeMeToAddNewCard(){
-            this.$router.push({ name: "add_card_payment" });
+            this.$router.push({ name: "card_payment",query:{action:"add"} });
         },
         handlePostPaidPayments(){
             console.log('allowed post pay payment')
@@ -511,16 +512,19 @@ export default {
               if (response.status == 200) {
                 this.requestMpesaPaymentPoll();
               }
-              this.doNotification('2','Payment failed', "Could not reach mpesa, please try again.");
-              this.payment_state = 0;
-              this.loading = false;
-              console.log('mpesa payment failed');
+              else{
+                  this.doNotification('2','Payment failed', "Could not reach mpesa, please try again.");
+                  this.payment_state = 0;
+                  this.loading = false;
+                  console.log('mpesa payment failed 0');
+              }
+
             },
             error => {
               this.doNotification('2','Payment failed', "Could not reach mpesa, please try again.");
               this.payment_state = 0;
               this.loading = false;
-              console.log('mpesa payment failed');
+              console.log('mpesa payment failed 1');
             }
           );
         },
@@ -556,21 +560,24 @@ export default {
              (function (poll_count) {
               setTimeout(function () {
                 let res = that.checkRunningBalance(old_rb, payload);
+                console.log('poll count', poll_count);
                 if(res){
                   poll_count = poll_limit;
                   that.payment_state = 0;
                   that.loading = false;
                   that.doNotification('1','Payment successful', "M-Pesa payment was successful.");
+                  that.doCompleteOrder();
                   return true;
+                }
+                if(poll_count == 5){
+                    that.doNotification('2','Payment failed', "Please select your preferred payment method and try again.");
+                    that.payment_state = 0;
+                    that.loading = false;
+                    console.log('after for loop')
                 }
               }, 10000*poll_count);
             })(poll_count);
-            // if(poll_count == 5){
-            //     this.doNotification('2','Payment failed', "Could not reach mpesa, please tryn again.");
-            //     this.payment_state = 0;
-            //     this.loading = false;
-            //     console.log('after for loop')
-            // }
+
           }
 
 
@@ -668,6 +675,177 @@ export default {
             }
           );
         },
+
+        // handleCardPayment() {
+        //   //sort encryption
+        //   let session = this.$store.getters.getSession;
+        //
+        //   console.log("requesting card payment");
+        //   console.log("request-session", session);
+        //   let user_id = 0;
+        //   let cop_id = 0;
+        //   let user_name = "";
+        //   let user_email = "";
+        //   let user_phone = "";
+        //
+        //   if (session.default == "biz") {
+        //     cop_id = session.biz.cop_id;
+        //     user_id = session.biz.user_id;
+        //     user_name = session.biz.user_name;
+        //     user_email = session.biz.user_email;
+        //     user_phone = session.biz.user_phone;
+        //   } else {
+        //     cop_id = session.peer.cop_id;
+        //     user_id = session.peer.user_id;
+        //     user_name = session.peer.user_name;
+        //     user_email = session.peer.user_email;
+        //     user_phone = session.peer.user_phone;
+        //   }
+        //
+        //   let card_payload = {
+        //     amount: this.card_payment_data.amount,
+        //     exp_month: this.card_expiry_month,
+        //     exp_year: this.card_expiry_year,
+        //     card_no: this.card_payment_data.card_no,
+        //     cvv: this.card_payment_data.cvv,
+        //     is_save: this.card_payment_data.is_save,
+        //     cop_id: cop_id,
+        //     user_id: user_id,
+        //     user_email: user_email,
+        //     user_phone: user_phone,
+        //     user_name: user_name
+        //   };
+        //
+        //   let full_payload = {
+        //     values: card_payload,
+        //     vm: this,
+        //     app: "PRIVATE_API",
+        //     endpoint: "card_payment"
+        //   };
+        //   this.$store.dispatch("$_payment/requestCardPayment", full_payload).then(
+        //     response => {
+        //       console.log(response);
+        //       let that = this;
+        //
+        //       if (response.data.status == false) {
+        //         this.payment_state = "Payment Failed";
+        //         let notification = {
+        //           title: "card payment failed",
+        //           level: 2,
+        //           message: response.data.message
+        //         };
+        //         that.$store.dispatch("show_notification", notification, {
+        //           root: true
+        //         });
+        //       } else {
+        //         let notification = {
+        //           title: "card payment sucess",
+        //           level: 1,
+        //           message: "card payment was processed successfully"
+        //         };
+        //         this.payment_state = "Payment Success";
+        //         that.$store.dispatch("show_notification", notification, {
+        //           root: true
+        //         });
+        //
+        //         let card_trans_id = response.data.values.card_trans_id;
+        //         this.completeCardPayment(card_trans_id);
+        //         //complete payment here
+        //       }
+        //     },
+        //     error => {
+        //       console.log(error);
+        //       this.payment_state = "Payment Failed";
+        //     }
+        //   );
+        // },
+        // completeCardPayment(card_trans_id) {
+        //   let session = this.$store.getters.getSession;
+        //   let user_id = 0;
+        //   let cop_id = 0;
+        //   let user_name = "";
+        //   let user_email = "";
+        //   let user_phone = "";
+        //
+        //   if (session.default == "biz") {
+        //     cop_id = session.biz.cop_id;
+        //     user_id = session.biz.user_id;
+        //     user_name = session.biz.user_name;
+        //     user_email = session.biz.user_email;
+        //     user_phone = session.biz.user_phone;
+        //   } else {
+        //     cop_id = session.peer.cop_id;
+        //     user_id = session.peer.user_id;
+        //     user_name = session.peer.user_name;
+        //     user_email = session.peer.user_email;
+        //     user_phone = session.peer.user_phone;
+        //   }
+        //
+        //   let payload = {
+        //     amount: this.card_payment_data.amount,
+        //     pay_method: 2,
+        //     ref_no: "VISA-" + Math.round(+new Date() / 1000),
+        //     client_id: cop_id,
+        //     account_no: "SENDY" + cop_id,
+        //     phone: user_phone,
+        //     email: user_email,
+        //     name: user_name,
+        //     bill_Ref_Number: user_phone,
+        //     card_trans_id: card_trans_id
+        //   };
+        //
+        //   let full_payload = {
+        //     vm: payload.vm,
+        //     values: payload,
+        //     app: "PRIVATE_API",
+        //     endpoint: "payment"
+        //   };
+        //
+        //   this.$store.dispatch("$_payment/completeCardPayment", full_payload).then(
+        //     response => {
+        //       console.log(response);
+        //
+        //       if (response.data.status == true) {
+        //         //this will request the new running balance and update the store
+        //         let notification = {
+        //           title: "card payment complete",
+        //           level: 1,
+        //           message: "card payment successfull"
+        //         };
+        //         that.$store.dispatch("show_notification", notification, {
+        //           root: true
+        //         });
+        //
+        //         let that = this;
+        //         let payload = {
+        //           values: running_balance_payload,
+        //           vm: this,
+        //           app: "PRIVATE_API",
+        //           endpoint: "running_balance"
+        //         };
+        //
+        //         this.$store
+        //           .dispatch("$_payment/requestRunningBalance", payload)
+        //           .then(response => {
+        //             console.log("running balance response", response);
+        //           });
+        //       } else {
+        //         let notification = {
+        //           title: "card payment failed",
+        //           level: 3,
+        //           message: "card payment failed to complete"
+        //         };
+        //         that.$store.dispatch("show_notification", notification, {
+        //           root: true
+        //         });
+        //       }
+        //     },
+        //     error => {
+        //       console.log(error);
+        //       this.payment_state = "Payment Failed";
+        //     }
+        //   );
+        // },
         /* end card */
     },
     created(){
