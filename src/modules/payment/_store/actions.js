@@ -1,7 +1,9 @@
 export default {
-  requestPromoCodePayment({ commit }, payload) {
+  requestPromoCodePayment({ dispatch, commit, getters, rootGetters }, payload) {
     return new Promise((resolve, reject) => {
-      payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+      dispatch("requestAxiosPost", payload, {
+        root: true
+      }).then(
         response => {
           console.log("in store dispatch to global store");
           resolve(response);
@@ -13,12 +15,14 @@ export default {
       );
     });
   },
-  requestCardPayment({ commit }, payload) {
+  requestCardPayment({ dispatch, commit, getters, rootGetters }, payload) {
     console.log("set loading status before dispatch");
     commit("setCardLoadingStatus", true);
 
     return new Promise((resolve, reject) => {
-      payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+      dispatch("requestAxiosPost", payload, {
+        root: true
+      }).then(
         response => {
           commit("setCardLoadingStatus", false);
           resolve(response);
@@ -32,7 +36,10 @@ export default {
       );
     });
   },
-  terminateCardPaymentRequest({ commit }, payload) {
+  terminateCardPaymentRequest(
+    { dispatch, commit, getters, rootGetters },
+    payload
+  ) {
     return new Promise((resolve, reject) => {
       commit("setCardLoadingStatus", false);
       commit("setCardFailStatus", true);
@@ -40,15 +47,28 @@ export default {
       resolve(true);
     });
   },
-  completeCardPaymentRequest({ commit }, payload) {
+  completeCardPaymentRequest(
+    { dispatch, commit, getters, rootGetters },
+    payload
+  ) {
     return new Promise((resolve, reject) => {
-      commit("setCardLoadingStatus", false);
-      commit("setCardSuccessStatus", true);
-      commit("setCardFailStatus", false);
+      dispatch("requestAxiosPost", payload, {
+        root: true
+      }).then(
+        response => {
+          console.log("in store dispatch to global store");
+          resolve(response);
+        },
+        error => {
+          reject(error);
+          console.log("failed to dispatch to global store");
+        }
+      );
+
       resolve(true);
     });
   },
-  resetCardPaymentRequest({ commit }, payload) {
+  resetCardPaymentRequest({ dispatch, commit, getters, rootGetters }, payload) {
     return new Promise((resolve, reject) => {
       commit("setCardLoadingStatus", false);
       commit("setCardFailStatus", false);
@@ -57,9 +77,9 @@ export default {
     });
   },
 
-  requestMpesaPayment({ commit }, payload) {
+  requestMpesaPayment({ dispatch, commit, getters, rootGetters }, payload) {
     return new Promise((resolve, reject) => {
-      payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+      dispatch("requestAxiosPost", payload, { root: true }).then(
         response => {
           commit("setMpesaLoadingStatus", true);
           commit("setMpesaFailStatus", false);
@@ -73,7 +93,10 @@ export default {
       );
     });
   },
-  terminateMpesaPaymentRequest({ commit }, payload) {
+  terminateMpesaPaymentRequest(
+    { dispatch, commit, getters, rootGetters },
+    payload
+  ) {
     return new Promise((resolve, reject) => {
       commit("setMpesaLoadingStatus", false);
       commit("setMpesaFailStatus", true);
@@ -81,7 +104,10 @@ export default {
       resolve(true);
     });
   },
-  completeMpesaPaymentRequest({ commit }, payload) {
+  completeMpesaPaymentRequest(
+    { dispatch, commit, getters, rootGetters },
+    payload
+  ) {
     return new Promise((resolve, reject) => {
       commit("setMpesaLoadingStatus", false);
       commit("setMpesaSuccessStatus", true);
@@ -89,7 +115,10 @@ export default {
       resolve(true);
     });
   },
-  resetMpesaPaymentRequest({ commit }, payload) {
+  resetMpesaPaymentRequest(
+    { dispatch, commit, getters, rootGetters },
+    payload
+  ) {
     return new Promise((resolve, reject) => {
       commit("setMpesaLoadingStatus", false);
       commit("setMpesaFailStatus", false);
@@ -98,7 +127,7 @@ export default {
     });
   },
 
-  requestRunningBalance({ commit,dispatch,rootGetters }, payload) {
+  requestRunningBalance({ dispatch, commit, getters, rootGetters }, payload) {
     return new Promise((resolve, reject) => {
       dispatch("requestAxiosPost", payload, { root: true }).then(
         response => {

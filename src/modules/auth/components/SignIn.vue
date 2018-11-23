@@ -57,10 +57,9 @@ export default {
       email: "",
       password: "",
 
-      message:'',
-      login_text:'Login',
+      message: "",
+      login_text: "Login",
       session_cookie: null
-
     };
   },
   methods: {
@@ -122,8 +121,8 @@ export default {
     },
     sign_in: function() {
       //erase cookie on login just incase
-      this.login_text ='Logging in ...';
-      this.eraseCookie('_sessionSnack');
+      this.login_text = "Logging in ...";
+      this.eraseCookie("_sessionSnack");
 
       let values = {};
       values.email = this.email;
@@ -158,29 +157,29 @@ export default {
           } else {
             //failed to login
             //show some sort of error
-            this.login_text ='Login';
+            this.login_text = "Login";
             this.message = response.data.reason;
-            this.doNotification(2,"Login failed", "Login failed. Please try again");
+            this.doNotification(
+              2,
+              "Login failed",
+              "Login failed. Please try again"
+            );
             console.warn("login failed");
-            that.$store.dispatch("show_notification", notification, {
-              root: true
-            });
           }
         },
         error => {
-          this.login_text ='Login';
+          this.login_text = "Login";
           this.message = "Check Internet Connection";
           console.error("Check Internet Connection");
           console.log(error);
         }
       );
     },
-    doNotification(level,title, message){
-        let notification = {"title":title, "level":level, "message":message};
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true);
-
-    },
+    doNotification(level, title, message) {
+      let notification = { title: title, level: level, message: message };
+      this.$store.commit("setNotification", notification);
+      this.$store.commit("setNotificationStatus", true);
+    }
   }
 };
 </script>
@@ -268,8 +267,8 @@ export default {
   height: 42px !important;
   width: 110% !important;
 }
-.sign-in-error{
+.sign-in-error {
   color: #e08445;
-  font-family: 'Rubik', sans-serif;
+  font-family: "Rubik", sans-serif;
 }
 </style>
