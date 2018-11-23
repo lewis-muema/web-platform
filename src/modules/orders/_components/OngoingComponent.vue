@@ -140,7 +140,7 @@ export default {
   mounted() {
     this.loading = true
     var that = this
-    this.$store.dispatch('$_orders/fetch_ongoing_orders')
+    // this.$store.dispatch('$_orders/fetch_ongoing_orders')
     .then(response => {
       that.loading = false
     })

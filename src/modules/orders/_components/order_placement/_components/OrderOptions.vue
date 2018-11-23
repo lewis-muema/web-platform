@@ -56,7 +56,7 @@
                         <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
 
-                          <div class="home-view-notes-wrapper--item__link">  +  &nbsp;&nbsp; Add New card </div>
+                          <div class="home-view-notes-wrapper--item__link" @click="takeMeToAddNewCard()">  +  &nbsp;&nbsp; Add New card </div>
                         </div>
                     </div>
                     <div class="home-view-notes-wrapper--item__value">
@@ -64,18 +64,23 @@
 
                     </div>
                 </div>
-                <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
-                    <div class="home-view-notes-wrapper--item__option">
-                        <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
-                        <div class="home-view-notes-wrapper--item__option-div">
-                            <el-radio v-model="payment_method" label="2a"> **** **** **** 1234 </el-radio>
+                <div class="" v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0">
+                    <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" v-for="card in get_saved_cards">
+                        <div class="home-view-notes-wrapper--item__option">
+                            <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
+                            <div class="home-view-notes-wrapper--item__option-div" >
+                                <el-radio v-model="payment_method" label="2a"> **** **** **** {{card.last4}} </el-radio>
+                            </div>
+                        </div>
+
+                        <div class="home-view-notes-wrapper--item__value">
+                            <!-- <input type="checkbox" name="" value=""> -->
+
                         </div>
                     </div>
-                    <div class="home-view-notes-wrapper--item__value">
-                        <!-- <input type="checkbox" name="" value=""> -->
 
-                    </div>
                 </div>
+
 
                 <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                     <div class="home-view-notes-wrapper--item__option">
@@ -94,7 +99,7 @@
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="star" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
-                          <div class="home-view-notes-wrapper--item__link">  Redeem promo code </div>
+                          <div class="home-view-notes-wrapper--item__link" @click="handlePromoCodePayments()">  Redeem promo code </div>
                         </div>
                     </div>
 
@@ -140,8 +145,11 @@
         <div class="home-view-place-order">
             <div v-if="loading" v-loading="loading" class="orders-loading-container orders-loading-container--completion" >
             </div>
-            <div v-else>
+            <div v-if="!loading && payment_state == 0">
                 <button type="button" class="button-primary home-view--place-order" name="button" @click="checkPaymentDetails()">Place Order</button>
+            </div>
+            <div class="home-view-place-order--mpesa-cancel" v-if="loading && payment_state == 1">
+                <button type="button" class="button-primary home-view--place-order" name="button" @click="cancelMpesaPaymentRequest()">Cancel Payment</button>
             </div>
         </div>
     </div>
@@ -153,7 +161,7 @@ import NoSSR from 'vue-no-ssr';
 import numeral from 'numeral';
 import payment_store from '../../../../payment/_store';
 import order_store from '../../../_store';
-
+// import * from '../js/MpesaActions'
 export default {
     name:'order-options',
     components:{
@@ -169,7 +177,8 @@ export default {
             cash_status : false,
             card_token : '',
             customer_token : '',
-            payment_type : "prepay"
+            payment_type : "prepay",
+            payment_state : 0,// 0- initial 1- loading 2- success 3- cancelled
         }
     },
     computed :{
@@ -184,6 +193,8 @@ export default {
           get_payment_method : '$_orders/$_home/get_payment_method',
           get_order_notes : '$_orders/$_home/get_order_notes',
           get_schedule_time : '$_orders/$_home/get_schedule_time',
+          get_saved_cards : '$_orders/$_home/get_saved_cards',
+          get_stripe_user_id : '$_orders/$_home/get_stripe_user_id',
 
         }),
         active_price_tier_data: function (){
@@ -218,11 +229,15 @@ export default {
           setPaymentMethod: '$_orders/$_home/set_payment_method',
           setScheduleTime: '$_orders/$_home/set_schedule_time',
           setOrderNotes: '$_orders/$_home/set_order_notes',
-          unsetMap : '$_orders/unsetMap'
+          unsetMap : '$_orders/unsetMap',
         }),
         ...mapActions({
             requestOrderCompletion: '$_orders/$_home/requestOrderCompletion',
             requestRunningBalanceFromAPI: '$_payment/requestRunningBalance',
+            requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
+            completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
+            terminateMpesaPaymentRequest: '$_payment/terminateMpesaPaymentRequest',
+            requestSavedCards: '$_orders/$_home/requestSavedCards',
         }),
         do_set_active_order_option(name){
             (this.get_active_order_option != name) ? this.set_active_order_option(name)  : this.set_active_order_option('');
@@ -280,8 +295,9 @@ export default {
             return true;
         },
         handleMpesaPayments(){
-            console.log('taking you to mpesa');
-            this.$router.push({ name: "mpesa_payment" });
+            console.log('attempting mpesa');
+            this.requestMpesaPayment();
+
         },
         handlePromoCodePayments(){
             console.log('taking you to promo');
@@ -296,6 +312,9 @@ export default {
             // if(this.getRB() <= 0){
                 this.doCompleteOrder();
             // }
+        },
+        takeMeToAddNewCard(){
+            this.$router.push({ name: "add_card_payment" });
         },
         handlePostPaidPayments(){
             console.log('allowed post pay payment')
@@ -435,18 +454,233 @@ export default {
                 this.unsetMap();
                 console.log('new session *')
             }
-        }
+        },
+
+
+
+        /* start mpesa */
+
+        requestMpesaPayment() {
+          console.log("requesting mpesa payment");
+          let session = this.$store.getters.getSession;
+          let referenceNumber = "SENDY";
+          let cop_id = 0;
+          let user_id = 0;
+          let user_email = "";
+          let user_phone = "";
+          if (session.default == "biz") {
+            referenceNumber += session.biz.cop_id;
+            cop_id = session.biz.cop_id;
+            user_id = session.biz.user_id;
+            user_email = session.biz.user_email;
+            user_phone = session.biz.user_phone;
+          } else {
+            referenceNumber = session.peer.user_phone;
+            user_id = session.peer.user_id;
+            user_email = session.peer.user_email;
+            user_phone = session.peer.user_phone;
+          }
+
+          let mpesa_payload = {
+            // amount: this.order_cost,
+            amount: 10,
+            sourceMobile: user_phone,
+            referenceNumber: referenceNumber,
+            user_id: user_id,
+            cop_id: cop_id,
+            phone: user_phone,
+            email: user_email
+          };
+
+          console.log(mpesa_payload);
+
+          let full_payload = {
+            values: mpesa_payload,
+            app: "NODE_PRIVATE_API",
+            endpoint: "initiate_mpesa"
+          };
+
+          console.log(mpesa_payload);
+
+          this.payment_state = 1;
+          this.loading = true;
+
+          this.requestMpesaPaymentAction(full_payload).then(
+            response => {
+              console.log(response);
+              if (response.status == 200) {
+                this.requestMpesaPaymentPoll();
+              }
+              this.doNotification('2','Payment failed', "Could not reach mpesa, please try again.");
+              this.payment_state = 0;
+              this.loading = false;
+              console.log('mpesa payment failed');
+            },
+            error => {
+              this.doNotification('2','Payment failed', "Could not reach mpesa, please try again.");
+              this.payment_state = 0;
+              this.loading = false;
+              console.log('mpesa payment failed');
+            }
+          );
+        },
+
+        requestMpesaPaymentPoll() {
+          console.log("mpesa payment poll initiated");
+          let session = this.$store.getters.getSession;
+          let cop_id = 0;
+          if (session.default == "biz") {
+            cop_id = session.biz.cop_id;
+          }
+          let old_rb = this.$store.getters.getRunningBalance;
+          let requested_amount = this.order_cost;
+
+          let running_balance_payload = {
+            values: {
+              cop_id: cop_id,
+              user_phone: session[session.default]["user_phone"]
+            }
+          };
+
+          let payload = {
+            values: running_balance_payload,
+            app: "PRIVATE_API",
+            endpoint: "running_balance"
+          };
+
+          let poll_limit = 6; //10secs * 6  = 60sec = 1min
+          //poll the dispatch
+          for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
+            //wait 10 seconds
+             let that = this;
+             (function (poll_count) {
+              setTimeout(function () {
+                let res = that.checkRunningBalance(old_rb, payload);
+                if(res){
+                  poll_count = poll_limit;
+                  that.payment_state = 0;
+                  that.loading = false;
+                  that.doNotification('1','Payment successful', "M-Pesa payment was successful.");
+                  return true;
+                }
+              }, 10000*poll_count);
+            })(poll_count);
+            // if(poll_count == 5){
+            //     this.doNotification('2','Payment failed', "Could not reach mpesa, please tryn again.");
+            //     this.payment_state = 0;
+            //     this.loading = false;
+            //     console.log('after for loop')
+            // }
+          }
+
+
+        },
+
+        checkRunningBalance(old_rb, payload) {
+          this.requestRunningBalanceFromAPI(payload).then(
+            response => {
+              console.log(response);
+              if (response.length > 0) {
+                response = response[0];
+              }
+              if (response.status == 200) {
+                //check if rb has changed
+                let new_rb = response.data.running_balance;
+                console.log(old_rb);
+                console.log(new_rb);
+
+                if (new_rb < old_rb) {
+                  //running balance updated
+                  //terminate poll
+                  //update global running balance
+                  this.completeMpesaPaymentRequest({});
+                  this.$store.commit(
+                    "setRunningBalance",
+                    response.data.running_balance
+                  );
+                  return true;
+                }
+              }
+              //commit  to the global store here
+              return false;
+            },
+            error => {
+              console.log(error);
+              return false;
+            }
+          );
+        },
+
+        cancelMpesaPaymentRequest() {
+            this.payment_state = 0;
+            this.loading = 0;
+            this.doNotification('2','M-Pesa Payment cancelled', "M-Pesa payment has been cancelled, please try again.");
+            return;
+        },
+
+        /* End mpesa */
+
+
+        /* start card */
+
+        getUserCards() {
+            console.log("requesting mpesa payment");
+            let session = this.$store.getters.getSession;
+            let cop_id = 0;
+            let user_id = 0;
+            if (session.default == "biz") {
+              cop_id = session.biz.cop_id;
+              user_id = session.biz.user_id;
+            } else {
+              cop_id = 0;
+              user_id = session.peer.user_id;
+            }
+
+            let card_payload = {
+              user_id: "0",
+              cop_id: "1083",
+              // user_id: user_id,
+              // cop_id: cop_id,
+            };
+
+            console.log(card_payload);
+
+            let full_payload = {
+              values: card_payload,
+              app: "PRIVATE_API",
+              endpoint: "get_card"
+            };
+
+          this.requestSavedCards(full_payload).then(
+            response => {
+              console.log(response);
+              if (response.length > 0) {
+                response = response[0];
+              }
+              if (response.status == 200) {
+
+              }
+
+            },
+            error => {
+              console.log(error);
+              return false;
+            }
+          );
+        },
+        /* end card */
     },
     created(){
-
-        if (!this.$store.state['$_payment']) {
+        // console.log('store breaking ',this.$store.state)
+        //if (!this.$store.state['$_payment']) {
             this.$store.registerModule('$_payment', payment_store);
-        }
-        if (!this.$store.state['$_orders']) {
+        //}
+        // if (!this.$store.state['$_orders']) {
             this.$store.registerModule('$_orders', order_store);
-        }
+        // }
         this.initializeOrderPlacement();
         this.refreshRunningBalance();
+        this.getUserCards();
     }
 }
 </script>
@@ -516,6 +750,9 @@ cursor: pointer;
 }
 .home-view-notes-wrapper--item__value .el-radio__label{
     display: none !important;
+}
+.home-view-place-order--mpesa-cancel{
+    margin-top: 20px;
 }
 
 

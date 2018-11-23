@@ -1,7 +1,7 @@
 export default {
-  requestCardPayment({ commit }, payload) {
+  requestCardPayment({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
-      payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+      dispatch("requestAxiosPost", payload, {root:true}).then(
         response => {
           console.log("in store dispatch to global store");
           if (response.data.status == true) {
@@ -45,9 +45,9 @@ export default {
       );
     });
   },
-  requestPromoCodePayment({ commit }, payload) {
+  requestPromoCodePayment({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
-      payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+      dispatch("requestAxiosPost", payload, {root:true}).then(
         response => {
           console.log("in store dispatch to global store");
           resolve(response);
@@ -59,9 +59,9 @@ export default {
       );
     });
   },
-  requestMpesaPayment({ commit }, payload) {
+  requestMpesaPayment({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
-      payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+      dispatch("requestAxiosPost", payload, {root:true}).then(
         response => {
           commit("setMpesaLoadingStatus", true);
           commit("setMpesaFailStatus", false);
@@ -112,5 +112,5 @@ export default {
         }
       );
     });
-  }
+},
 };

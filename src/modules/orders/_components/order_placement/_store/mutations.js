@@ -47,4 +47,10 @@ export default {
     set_pickup_filled(state, val) {
       state.pickup_filled = val;
     },
+    set_saved_cards(state, val) {
+      state.saved_cards = val;
+    },
+    set_stripe_user_id(state, val) {
+      state.stripe_user_id = val;
+    },
 };
