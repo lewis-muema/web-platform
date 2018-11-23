@@ -126,7 +126,6 @@
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 
-                    // this.$router.push('/admin/department');
                 }, error => {
                     console.log(error);
                     let level = 2;

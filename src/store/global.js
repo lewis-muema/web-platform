@@ -1,25 +1,15 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import VuexPersist from 'vuex-persist'
-Vue.use(Vuex)
+import Vue from "vue";
+import Vuex from "vuex";
+Vue.use(Vuex);
 
-import actions from './actions';
-import getters from './getters';
-import mutations from './mutations';
-const plugins = []
-
-if (process.browser) {
-  const vuexPersist = new VuexPersist({
-    key: '_sendyWeb',
-    storage: window.localStorage
-  })
-  plugins.push(vuexPersist.plugin);
-  
-}
+import actions from "./actions";
+import getters from "./getters";
+import mutations from "./mutations";
+const plugins = [];
 
 const state = {
   session: {},
-  ENV:{},
+  ENV: {},
   running_balance: 0,
   notification: {},
   notification_status: false
