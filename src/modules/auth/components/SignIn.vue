@@ -36,9 +36,9 @@
             <div class="sign-holder">
               <input class="button-primary" type="submit" name="login_text" v-model="login_text" v-on:click="sign_in" >
             </div>
-            <div class=" sign-holder sign-forgot-pass sign-smaller">
+            <!-- <div class=" sign-holder sign-forgot-pass sign-smaller">
               <router-link class="sign-holder__link" to="/auth/forgot_password">Forgot password?</router-link>
-            </div>
+            </div> -->
             <div class="sign-holder sign-sign-up sign-smaller">
               Don't have an Account? <router-link class="sign-holder__link" to="/auth/sign_up">Sign Up</router-link>
             </div>

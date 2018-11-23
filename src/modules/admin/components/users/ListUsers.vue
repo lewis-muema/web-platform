@@ -104,6 +104,7 @@
             }
             this.$store.dispatch("$_admin/requestUsersList", users_full_payload).then(response => {
                 console.log(response);
+                this.empty_orders_state = "Users Not Found";
             }, error => {
                 console.log(error);
             });
@@ -119,6 +120,7 @@
                 console.log(response);
             }, error => {
                 console.log(error);
+                this.empty_orders_state = "Users Failed to Fetch";
             });
 
         },
