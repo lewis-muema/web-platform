@@ -34,14 +34,13 @@ const get_tracking_data = function({
 	})
 }
 
-const cancel_order = function({
-	commit
-}, data) {
-	var payload = {
-		"app": "PRIVATE_API",
-		"endpoint": "cancel_order",
-		"values": data
-	}
+const cancel_order = function({commit, dispatch}, data)
+{
+  var payload = {
+    "app":"PRIVATE_API",
+    "endpoint":"cancel_order",
+    "values":data
+  }
 
 	return new Promise((resolve, reject) => {
 		dispatch("requestAxiosPost", payload, {
