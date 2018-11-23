@@ -17,37 +17,60 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
-    name: 'payment_loading',
-    data() {
-        return {
-            loading: true
-        }
-    },
-    mounted() {
-    },
-    methods:{
-       ...mapActions(["$_payment/terminateMpesaPaymentRequest"]),
-       cancelPaymentRequest() {
-        let payload = {};
-        this.$store.dispatch("$_payment/terminateMpesaPaymentRequest", payload).then(
-        response => {
-          console.log(response);
-        },
-        error => {
-          console.log(error);
-        });
-       }
-    },
-    computed :{
-        payment_loading_title() {
-            return "Please follow the M-Pesa instructions on your phone screen"
-        },
-        
-        
-    },
-}
+  name: "payment_loading",
+  props: {
+    pay_method: {
+      type: String,
+      default: "mpesa"
+    }
+  },
+  data() {
+    return {
+      loading: true
+    };
+  },
+  mounted() {},
+  methods: {
+    ...mapActions([
+      "$_payment/resetMpesaPaymentRequest",
+      "$_payment/resetCardPaymentRequest"
+    ]),
+    cancelPaymentRequest() {
+      let payload = {};
+      if (this.pay_method == "mpesa") {
+        this.$store
+          .dispatch("$_payment/resetMpesaPaymentRequest", payload)
+          .then(
+            response => {
+              console.log(response);
+            },
+            error => {
+              console.log(error);
+            }
+          );
+      } else {
+        this.$store.dispatch("$_payment/resetCardPaymentRequest", payload).then(
+          response => {
+            console.log(response);
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      }
+    }
+  },
+  computed: {
+    payment_loading_title() {
+      if (this.pay_method == "mpesa") {
+        return "Please follow the M-Pesa instructions on your phone screen";
+      } else if (this.pay_method == "card") {
+        return "Processing your card operation";
+      }
+    }
+  }
+};
 </script>
 
 <style lang="css">
-    
 </style>

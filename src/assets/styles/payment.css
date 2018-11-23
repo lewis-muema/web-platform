@@ -1,23 +1,21 @@
-
-.container-small
-{
+.container-small {
   width: 30vw;
   margin: 5% auto;
 }
-.payment--header{
+.payment--header {
   display: flex;
   justify-content: space-between;
 }
 
 .payment--loading-title {
-    font-size: 14px;
-    text-align: center;
-    margin-top: 10px;
-    line-height: 34px;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+  line-height: 34px;
 }
 .payment--loading-content {
-    height: 200px;
-    background: #3b8a87;
+  height: 200px;
+  background: #3b8a87;
 }
 .paymemt--mpesa-loader-actions {
   margin-left: 25px;
@@ -73,4 +71,48 @@
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
+}
+
+.payment--cvv-info-wrap {
+  position: absolute;
+  width: 20vw;
+  left: 10vw;
+  top: 0;
+}
+.paymentbody--input-small {
+  min-height: 2rem;
+}
+.paymentbody .input-control-small {
+  width: 30%;
+  position: relative;
+}
+.paymentbody .input-control-big {
+  width: 60%;
+}
+.paymentbody--input-checkbox {
+  margin-right: 10px;
+}
+
+.savecard--desc-wrap {
+  margin-top: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: -35px;
+}
+.savecard--desc-title {
+  margin-left: 10px;
+  font-size: 14px;
+  margin-top: 5px;
+  height: auto;
+  line-height: 15px;
+}
+.sendy_payments_form_cvv_title {
+  font-size: 14px;
+}
+.sendy_payments_form_cvv_description {
+  font-size: 14px;
+  margin-top: 20px;
+}
+.sendy_payments_form_cvv_body img {
+  width: 200px;
 }
