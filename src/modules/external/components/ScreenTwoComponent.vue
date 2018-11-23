@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="screen-two">
-    <div class="form-header">
+    <div class="onboarding-user-header">
       Connect your personal Sendy account
     </div>
     <div class="form-inputs">
@@ -62,7 +62,7 @@ export default {
 </script>
 
 <style lang="css">
-.form-header{
+.onboarding-user-header{
   word-wrap: break-word;
   line-height: 38px !important;
   letter-spacing: 0;

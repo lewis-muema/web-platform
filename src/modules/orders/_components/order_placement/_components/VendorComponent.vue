@@ -3,12 +3,12 @@
         <div class="home-view--seperator">
         </div>
         <div class="home-view-vendor-classes">
-            <!-- <div class="home-view-vendor-classes--title">
+            <div class="home-view-vendor-classes--title" v-if="first_time">
                 What size of load do you want delivered?
-            </div> -->
+            </div>
             <div class="home-view-vendor-classes--body">
                 <div class="">
-                    <!-- <div class="home-view-vendor-classes--icons">
+                    <!-- <div class="home-view-vendor-classes--icons" v-if="first_time">
                         <div class="home-view-vendor-classes-icons-item">
                            <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/vendor_size/small.svg" alt="" class="home-view-vendor-classes-icons-item--img">
                         </div>
@@ -66,6 +66,7 @@ export default {
     components:{OrderOptions},
     data () {
         return {
+            first_time : false
         }
     },
     computed :{
@@ -110,6 +111,17 @@ export default {
         formatNumeral(num){
             return numeral(num).format('0,0');
         },
+        setFirstTimeUser(){
+            let session = this.$store.getters.getSession;
+            if(session.hasOwnProperty('first_time')){
+                if(session.first_time != false){
+                    this.first_time = true
+                }
+            }
+        },
+    },
+    created(){
+        this.setFirstTimeUser();
     }
 }
 </script>

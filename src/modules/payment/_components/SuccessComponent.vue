@@ -18,37 +18,34 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
-    name: 'payment_mpesa_success',
-    data() {
-        return {
-            loading: true
-        }
-    },
-    mounted() {
-    },
-    methods:{
-       ...mapActions(["$_payment/resetMpesaPaymentRequest"]),
-       backToPaymentRequest() {
-        let payload = {};
-        this.$store.dispatch("$_payment/resetMpesaPaymentRequest", payload).then(
+  name: "payment_success",
+  data() {
+    return {
+      loading: true
+    };
+  },
+  mounted() {},
+  methods: {
+    ...mapActions(["$_payment/resetMpesaPaymentRequest"]),
+    backToPaymentRequest() {
+      let payload = {};
+      this.$store.dispatch("$_payment/resetMpesaPaymentRequest", payload).then(
         response => {
           console.log(response);
         },
         error => {
           console.log(error);
-        });
-       }
-    },
-    computed :{
-        payment_loading_title() {
-            return "Your payment was successful"
-        },
-        
-        
-    },
-}
+        }
+      );
+    }
+  },
+  computed: {
+    payment_loading_title() {
+      return "Your payment was successful";
+    }
+  }
+};
 </script>
 
 <style lang="css">
-    
 </style>

@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="screen-three">
-    <div class="form-header">
+    <div class="onboarding-user-header">
       Set a Password
     </div>
     <div class="form-inputs">
@@ -70,17 +70,34 @@ export default {
         payload.dept_id = this.getDeptId;
         payload.cop_id = this.getCopId;
         payload.cop_user_id = this.getCopUserId ;
-        this.requestInvitation(payload).then(response => {
-           console.log("Invitation successfull!")
-           console.log(response);
-           this.setViewState(4);
-           this.updateViewStep(0);
+
+        let full_payload = {
+          values: payload,
+          vm: this,
+          app: "NODE_PRIVATE_API",
+          endpoint: ""
+        };
+
+        this.requestInvitation(full_payload).then(response => {
+          
+             if (response.length > 0) {
+               response = response[0];
+             }
+
+             if (response.status == true) {
+                console.log(response);
+                this.setViewState(4);
+                this.updateViewStep(0);
+
+             } else {
+
+               console.warn("Onboarding Failed");
+               this.$router.push("/auth");
+             }
         }, error => {
             console.error("Check Internet Connection")
             console.log(error);
         });
-        // this.setViewState(4);
-        // this.updateViewStep(0);
 
       }
     },
@@ -111,7 +128,7 @@ export default {
 </script>
 
 <style lang="css">
-.form-header{
+.onboarding-user-header{
   word-wrap: break-word;
   line-height: 38px !important;
   letter-spacing: 0;

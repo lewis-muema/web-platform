@@ -3,7 +3,8 @@
     <div class="section--filter-wrap">
         <div class="section--filter-input-wrap">
             <el-select class="section--filter-input" v-model="filterData.user" placeholder="Users" v-if="session_data.default=='biz'">
-                <el-option v-for="user in cop_users" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
+                <el-option  label="All Users" value="-1"></el-option>
+                <el-option v-for="user in copUsers" :key="user.cop_user_id" :label="user.name" :value="user.cop_user_id">
                 </el-option>
                 <!-- {{this.session.default}} -->
             </el-select>
@@ -11,7 +12,7 @@
             <el-date-picker class="section--filter-input" type="date" name="to_date" value="" placeholder="To" v-model="filterData.to_date"/>
         </div>
         <div class="section--filter-action-wrap">
-          <button type="button" :class="inactive_filter ? 'button-primary section--filter-action-inactive':'button-primary section--filter-action'"  @click="filterTableData">Search</button>
+          <button type="button" :class="inactive_filter ? 'button-primary section--filter-action-inactive':'button-primary section--filter-action'" name="order_history_text" v-model="order_history_text" @click="filterTableData">{{this.order_history_text}}</button>
         </div>
     </div>
 
@@ -119,6 +120,7 @@ export default {
       expand_keys: [],
       pagination_limit: 10,
       pagination_page: 1,
+      order_history_text: "Search",
       filterData: {
         user: "",
         from_date: "",
@@ -126,7 +128,7 @@ export default {
       },
       filteredData: [],
       filterState: false,
-      loading:false,
+      loading: false
     };
   },
   filters: {
@@ -150,13 +152,13 @@ export default {
       to_date = moment(to_date).format("YYYY-MM-DD");
 
       let session = this.$store.getters.getSession;
-      
-      let cop_id = 0;
-      let payload =  {};
 
-      if(session.default =='biz'){
+      let cop_id = 0;
+      let payload = {};
+
+      if (session.default == "biz") {
         let cop_id = session.biz.cop_id;
-        let user_id = session.biz.user_id;
+        let user_id = this.filterData.user;
         let user_type = session.biz.user_type;
 
         payload = {
@@ -165,8 +167,8 @@ export default {
           from: from_date,
           to: to_date
         };
-        
-        if(user != '' && user != null){
+
+        if (user != "" && user != null) {
           payload = {
             cop_id: cop_id,
             user_id: user_id,
@@ -174,22 +176,18 @@ export default {
             to: to_date
           };
         }
-
       } else {
-        let user_id = session[session.default]['user_id'];
-        
+        let user_id = session[session.default]["user_id"];
+
         payload = {
           user_id: user_id,
           from: from_date,
           to: to_date
         };
-        
-        
       }
-      
+      this.order_history_text = "Searching ...";
       this.requestOrderHistory(payload);
       this.loading = false;
-      
     },
     changeSize(val) {
       this.pagination_page = 1;
@@ -223,26 +221,40 @@ export default {
       return row.order_id;
     },
     expandTableRow(row, event, column) {
-      this.expand_id = row.order_id;
-      this.expand_keys = [];
-      this.expand_keys.push(row.order_id);
-      this.$router.push({
-        name: "order-details",
-        params: { id: row.order_id }
-      });
+      //check if expand keys contains the same order_id
+      //if so do not push the key again
+      if (this.expand_keys.includes(row.order_id)) {
+        this.expand_keys = [];
+      } else {
+        this.expand_id = row.order_id;
+        this.expand_keys = [];
+        this.expand_keys.push(row.order_id);
+        this.$router.push({
+          name: "order-details",
+          params: { id: row.order_id }
+        });
+      }
     },
     handleRowExpand(row, expanded) {
-      this.expand_id = row.order_id;
-      this.expand_keys = [];
-      this.expand_keys.push(row.order_id);
-      this.$router.push({
-        name: "order-details",
-        params: { id: row.order_id }
-      });
+      //check if expand keys contains the same order_id
+      //if so do not push the key again
+      if (this.expand_keys.includes(row.order_id)) {
+        this.expand_keys = [];
+      } else {
+        this.expand_id = row.order_id;
+        this.expand_keys = [];
+        this.expand_keys.push(row.order_id);
+        this.$router.push({
+          name: "order-details",
+          params: { id: row.order_id }
+        });
+      }
     },
     formatAmount(row, column, cellValue) {
-      if(typeof row.order_cost != 'undefined'){
-        let value = row.order_cost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+      if (typeof row.order_cost != "undefined") {
+        let value = row.order_cost
+          .toFixed(2)
+          .replace(/\d(?=(\d{3})+\.)/g, "$&,");
         value = value.split(".");
         return value[0];
       } else {
@@ -263,6 +275,7 @@ export default {
             console.log(
               "Got some data, now lets show something in this component"
             );
+            this.order_history_text = "Search";
             console.log(response);
             this.empty_orders_state = "Order History Not Found";
           },
@@ -270,13 +283,14 @@ export default {
             console.error(
               "Got nothing from server. Prompt user to check internet connection and try again"
             );
+            this.order_history_text = "Search";
             console.log(error);
             this.empty_orders_state = "Order History Failed to Fetch";
           }
         );
     },
     requestCopUsers() {
-      let cop_id = 0;
+      // let cop_id = 0;
       let users_payload = {
         cop_id: this.session_data.biz.cop_id
       };
@@ -310,7 +324,7 @@ export default {
   computed: {
     ...mapGetters({
       orderHistoryData: "$_transactions/getOrderHistoryOrders",
-      cop_users: "$_transactions/getCopUsers"
+      copUsers: "$_transactions/getCopUsers"
     }),
     session_data() {
       return this.$store.getters.getSession;

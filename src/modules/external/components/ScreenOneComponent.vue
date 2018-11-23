@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="screen-one">
-    <div class="form-header">
+    <div class="onboarding-user-header">
       Join the {{getBizName}} business account on Sendy
     </div>
     <div class="form-inputs">
@@ -9,7 +9,7 @@
           <label class="input-descript">
             <span>Name</span>
           </label>
-          <input id="first_name" class="form-control" placeholder="John Doe" type="text" v-model="name" @focus="setCurrentStep(1)">
+          <input class="form-control" placeholder="John Doe" type="text" name="name" v-model="name" @focus="setCurrentStep(1)">
         </div>
       </div>
       <div class="row">
@@ -17,7 +17,7 @@
           <label class="input-descript">
             <span>Email Address</span>
           </label>
-          <input class="form-control" placeholder="you@email.com" id="email" type="email" v-model="email" @focus="setCurrentStep(2)">
+          <input class="form-control" placeholder="you@email.com" name="email" type="email" v-model="email" @focus="setCurrentStep(2)">
         </div>
       </div>
       <div class="row">
@@ -25,7 +25,7 @@
           <label class="input-descript">
             <span>Phone Number</span>
           </label>
-          <input class="form-control" placeholder="07XXXXXXX" id="phone" type="text" v-model="phone" @focus="setCurrentStep(3)">
+          <input class="form-control" placeholder="07XXXXXXX" name="phone" type="text" v-model="phone" @focus="setCurrentStep(3)">
         </div>
       </div>
     </div>
@@ -45,10 +45,15 @@ export default {
   name: 'screen-one-component',
   data: function () {
     return {
-      name:"",
-      phone:"",
-      email : ""
+      name:'',
+      phone:'',
+      email : ''
     }
+  },
+  mounted(){
+
+      this.name = this.getName;
+      this.email = this.getPerEmail;
   },
   methods: {
     ...mapMutations(
@@ -78,6 +83,7 @@ export default {
           getType : '$_external/getType',
           getBizEmail : '$_external/getBizEmail',
           getBizName:'$_external/getBizName',
+          getPerEmail:'$_external/getPerEmail',
           getName : '$_external/getName'
         }
       ),
@@ -92,33 +98,12 @@ export default {
         return false
       }
     }
-  },
-  mounted(){
-    // if (this.getType == 0) {
-    //   var that = this
-    //   setTimeout(function(){
-    //     let name = that.getBizName
-    //     let pers = that.getName
-    //     var res = pers.split(" ")
-    //     $('#email').val(that.getBizEmail);
-    //     that.email = that.getBizEmail
-    //     $("#emailabel").addClass("active");
-    //
-    //     $('#first_name').val(res[0]);
-    //     that.f_name = res[0]
-    //     $("#fnamelabel").addClass("active");
-    //
-    //     $('#last_name').val(res[1]);
-    //     that.l_name = res[1]
-    //     $("#lnamelabel").addClass("active");
-    //   }, 100);
-    // }
   }
 }
 </script>
 
 <style lang="css">
-.form-header{
+.onboarding-user-header{
   word-wrap: break-word;
   line-height: 38px !important;
   letter-spacing: 0;

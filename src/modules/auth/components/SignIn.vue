@@ -8,14 +8,18 @@
           </div>
 
 
-          <div class="sign-in-button" @click="" id="sign-in-v2-logging-in-1">
+          <!-- <div class="sign-in-button" @click="" id="sign-in-v2-logging-in-1">
           <img  class="sign-buttom__img"src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
           </div>
           <div class="sign-text">
              or
-          </div>
+          </div> -->
 
-          <div>
+          <p class="sign-in-error">
+            {{message}}
+          </p>
+
+          <div v-on:keyup.enter="sign_in">
 
 
             <div class="sign-holder dimen">
@@ -30,7 +34,7 @@
             </div>
 
             <div class="sign-holder">
-              <input class="button-primary" value="Log in" type="button" id="login" @click="sign_in"></input>
+              <input class="button-primary" type="submit" name="login_text" v-model="login_text" v-on:click="sign_in" >
             </div>
             <div class=" sign-holder sign-forgot-pass sign-smaller">
               <router-link class="sign-holder__link" to="/auth/forgot_password">Forgot password?</router-link>
@@ -52,7 +56,11 @@ export default {
     return {
       email: "",
       password: "",
+
+      message:'',
+      login_text:'Login',
       session_cookie: null
+
     };
   },
   methods: {
@@ -60,7 +68,14 @@ export default {
       authSignIn: "$_auth/requestSignIn"
     }),
     eraseCookie(name) {
-      document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      console.log("erase Cookie", name);
+      document.cookie =
+        name +
+        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=" +
+        this.$store.getters.getENV.domain +
+        ";";
+      document.cookie =
+        name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=localhost";
     },
     getCookie: function() {
       var nameEQ = "_sessionSnack" + "=";
@@ -106,8 +121,9 @@ export default {
       });
     },
     sign_in: function() {
-      console.log("clicking sign in");
-      this.eraseCookie("_sessionSnack");
+      //erase cookie on login just incase
+      this.login_text ='Logging in ...';
+      this.eraseCookie('_sessionSnack');
 
       let values = {};
       values.email = this.email;
@@ -122,6 +138,11 @@ export default {
 
       this.authSignIn(full_payload).then(
         response => {
+          console.log(response);
+          //check when response is dual
+          if (response.length > 0) {
+            response = response[0];
+          }
           if (response.status == true) {
             //set cookie
             //commit everything to the store
@@ -137,11 +158,9 @@ export default {
           } else {
             //failed to login
             //show some sort of error
-            let notification = {
-              title: "Login failed",
-              level: 2,
-              message: "Login failed. Please try again"
-            };
+            this.login_text ='Login';
+            this.message = response.data.reason;
+            this.doNotification(2,"Login failed", "Login failed. Please try again");
             console.warn("login failed");
             that.$store.dispatch("show_notification", notification, {
               root: true
@@ -149,11 +168,19 @@ export default {
           }
         },
         error => {
+          this.login_text ='Login';
+          this.message = "Check Internet Connection";
           console.error("Check Internet Connection");
           console.log(error);
         }
       );
-    }
+    },
+    doNotification(level,title, message){
+        let notification = {"title":title, "level":level, "message":message};
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
+
+    },
   }
 };
 </script>
@@ -240,5 +267,9 @@ export default {
 .sign-form {
   height: 42px !important;
   width: 110% !important;
+}
+.sign-in-error{
+  color: #e08445;
+  font-family: 'Rubik', sans-serif;
 }
 </style>

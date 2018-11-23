@@ -7,7 +7,7 @@
             <el-date-picker class="section--filter-input" type="date" v-model="filterData.to_date" name="to_date" placeholder="To"/>
         </div>
         <div class="section--filter-action-wrap">
-          <button type="button" :class="valid_filter ? 'button-primary section--filter-action':  'button-primary section--filter-action-inactive'" @click="filterStatementData"> Search </button>
+          <button type="button" :class="valid_filter ? 'button-primary section--filter-action':  'button-primary section--filter-action-inactive'" name="order_statement_text" v-model="order_statement_text" @click="filterStatementData">{{this.order_statement_text}}</button>
         </div>
     </div>
 
@@ -86,6 +86,7 @@ export default {
       empty_statement_state:"Fetching Statement",
       pagination_limit:10,
       pagination_page:1,
+      order_statement_text:'Search',
       filterState: false,
       filterData: {
         "from_date":"",
@@ -201,7 +202,7 @@ export default {
             }
 
 
-
+            this.order_statement_text='Searching...';
             this.requestStatement(payload);
             // console.log(this.statementData);
 
@@ -235,10 +236,12 @@ export default {
           this.$store.dispatch("$_transactions/requestStatement", full_payload).then(response => {
              console.log("Got some data, now lets show something in this component")
              console.log(response);
+             this.order_statement_text='Search';
              this.empty_statement_state = "Statement Not Found";
           }, error => {
               console.error("Got nothing from server. Prompt user to check internet connection and try again")
               console.log(error);
+              this.order_statement_text='Search';
               this.empty_statement_state = "Statement Failed to Fetch";
           });
       }
@@ -262,7 +265,7 @@ export default {
       return this.statementData.slice(from, to);
     },
     statement_total() {
-      if(this.statementDate != null){
+      if(this.statementData != null){
         return this.statementData.length;
       } else {
         return 0;

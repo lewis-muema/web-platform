@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style lang="css">
-.form-header
+.onboarding-user-header
 {
   font-size: 28px;
   color: #333;
