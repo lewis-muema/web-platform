@@ -128,9 +128,7 @@
                     });
                 }
                 let payload = this.invitees;
-                // let payload = JSON.stringify(this.invitees);
                 console.log(payload);
-                // return;
                 let full_payload = {
                     "values": payload,
                     "vm": this,
@@ -166,7 +164,6 @@
             getInviteLink: function () {
                 let session = this.$store.getters.getSession;
                 let cop_id = 0;
-                let bizName = "";
                 if (session.default == 'biz') {
                     cop_id = session[session.default]['cop_id'];
                     cop_id = cop_id.toString()

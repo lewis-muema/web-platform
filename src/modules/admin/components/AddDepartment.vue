@@ -38,7 +38,7 @@
         },
         data() {
             return {
-                empty_departmens_state: 'Adding Department',
+                empty_departments_state: 'Adding Department',
                 filterData: {
                     "user": ""
                 }
@@ -76,10 +76,9 @@
                     console.log("department added");
                     console.log(response);
                     let level = 1; //success
-                    let notification = {"title": "Add Department", "level": level, "message": message}; //notification object
+                    let notification = {"title": "Add Department", "level": level, "message": "Department Added!"}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
-                    // this.$router.push('/admin/department');
                 }, error => {
                     console.log("department NOT added");
                     console.log(error);
