@@ -133,7 +133,7 @@ export default {
             '$_transactions/requestPayments',
      ]),
      take_to_payment() {
-        this.$router.push('/payment');
+        this.$router.push('/payment/mpesa');
     },
     changeSize(val) {
         this.pagination_page = 1;

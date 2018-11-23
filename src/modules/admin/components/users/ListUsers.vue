@@ -182,11 +182,13 @@
                 if (this.user_data.length > 0) {
                     resp = this.user_data[index].type;
                     if (resp === 1) {
-                        resp = "Admin"
-                    }
-                    else {
                         resp = "Normal"
                     }
+                    else if (resp === 2) {
+
+                      resp = "Admin"
+                    }
+
                 }
                 return resp;
             },
