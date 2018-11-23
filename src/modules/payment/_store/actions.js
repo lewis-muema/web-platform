@@ -1,15 +1,9 @@
 export default {
-<<<<<<< HEAD
-  requestCardPayment({ commit, dispatch }, payload) {
-    return new Promise((resolve, reject) => {
-      dispatch("requestAxiosPost", payload, {root:true}).then(
-=======
   requestPromoCodePayment({ dispatch, commit, getters, rootGetters }, payload) {
     return new Promise((resolve, reject) => {
       dispatch("requestAxiosPost", payload, {
         root: true
       }).then(
->>>>>>> 0eebc75db6c644d0a4bc1ae8a738a368860cfd4e
         response => {
           console.log("in store dispatch to global store");
           resolve(response);
@@ -21,11 +15,6 @@ export default {
       );
     });
   },
-<<<<<<< HEAD
-  requestPromoCodePayment({ commit, dispatch }, payload) {
-    return new Promise((resolve, reject) => {
-      dispatch("requestAxiosPost", payload, {root:true}).then(
-=======
   requestCardPayment({ dispatch, commit, getters, rootGetters }, payload) {
     console.log("set loading status before dispatch");
     commit("setCardLoadingStatus", true);
@@ -55,7 +44,6 @@ export default {
       dispatch("requestAxiosPost", payload, {
         root: true
       }).then(
->>>>>>> 0eebc75db6c644d0a4bc1ae8a738a368860cfd4e
         response => {
           console.log("in store dispatch to global store");
           resolve(response);
@@ -147,5 +135,5 @@ export default {
         }
       );
     });
-},
+  }
 };
