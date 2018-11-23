@@ -1,11 +1,6 @@
 <template lang="html">
-  <payment_loading v-if="card_loading_status" pay_method = "card"></payment_loading>
-  <add_card v-else-if="card_add_status"></add_card>
+  <payment_loading v-if="card_loading_status" pay_method = "add_card"></payment_loading>
   <div class="paymentbody--form" v-else>
-    <div class="paymentbody--input-wrap">
-        <input type="number" name="card_payment_amount" v-model="card_payment_data.amount" placeholder="Amount" class="input-control paymentbody--input">
-    </div>
-
     <div class="paymentbody--input-wrap">
         <input type="text" name="card_payment_card_no" @change="creditCardMask()" @keyup="creditCardMask()" v-model="card_payment_data.card_no" placeholder="Card Number" class="input-control paymentbody--input">
     </div>
@@ -35,13 +30,9 @@
         </div>       
     </div>
     
-    <div class="paymentbody--input-wrap savecard--desc-wrap">
-        <input type="checkbox" name="card_payment_save" v-model="card_payment_data.is_save" class="input-checkbox paymentbody--input-checkbox">
-        <div class="savecard--desc-title">Save your card details for easier payment in future</div>
-    </div>
-
+ 
     <div class="paymentbody--input-wrap">
-        <button type="button" name="button" :class="valid_payment ? 'button-primary paymentbody--input-button':'paymentbody--input-button button--primary-inactive'" @click="handleCardPayment">Pay</button>
+        <button type="button" name="button" :class="valid_card ? 'button-primary paymentbody--input-button':'paymentbody--input-button button--primary-inactive'" @click="handleAddCard">Add Card</button>
     </div>
 
    
@@ -54,35 +45,31 @@ import { mapActions, mapGetters } from "vuex";
 import payment_loading from "./LoadingComponent.vue";
 import payment_success from "./SuccessComponent.vue";
 import payment_fail from "./FailComponent.vue";
-import add_card from "./AddCard.vue";
 
 export default {
-  name: "card-component",
-  components: { payment_loading, payment_success, payment_fail, add_card },
+  name: "add_card",
+  components: { payment_loading, payment_success, payment_fail },
   data() {
     return {
       card_payment_data: {
         card_expiry: "",
         cvv: "",
-        card_no: "",
-        amount: "",
-        is_save: true
+        card_no: ""
       },
-      payment_state: "Attempting Payment",
+      payment_state: "Adding a new card",
       show_cvv: false
     };
   },
-  mounted() {},
   computed: {
     ...mapGetters({
-      card_fail_status: "$_payment/getCardFailStatus",
-      card_loading_status: "$_payment/getCardLoadingStatus",
-      card_success_status: "$_payment/getCardSuccessStatus"
+      card_loading_status: "$_payment/getCardLoadingStatus"
     }),
-    valid_payment() {
+    show_loading() {
+      return this.card_loading_status;
+    },
+    valid_card() {
       return (
         this.card_payment_data.card_expiry !== "" &&
-        this.card_payment_data.amount !== "" &&
         this.card_payment_data.card_no !== "" &&
         this.card_payment_data.cvv !== ""
       );
@@ -102,16 +89,6 @@ export default {
       if (exp.length == 5) {
         return exp.slice(3);
       }
-    },
-    card_add_status() {
-      if (typeof this.$route.query.action !== "undefined") {
-        let action = this.$route.query.action;
-        if (action == "add") {
-          return true;
-        }
-      } else {
-        return false;
-      }
     }
   },
   methods: {
@@ -122,14 +99,12 @@ export default {
         this.show_cvv = true;
       }
     },
-    ...mapActions(["$_payment/requestCardPayment"]),
+    ...mapActions(["$_payment/requestAddNewCard"]),
 
-    handleCardPayment() {
+    handleAddCard() {
       //sort encryption
       let session = this.$store.getters.getSession;
 
-      console.log("requesting card payment");
-      console.log("request-session", session);
       let user_id = 0;
       let cop_id = 0;
       let user_name = "";
@@ -151,34 +126,27 @@ export default {
       }
 
       let card_payload = {
-        amount: this.card_payment_data.amount,
+        stripe_user_id: "",
         exp_month: this.card_expiry_month,
         exp_year: this.card_expiry_year,
         card_no: this.card_payment_data.card_no,
-        cvv: this.card_payment_data.cvv,
-        is_save: this.card_payment_data.is_save,
-        cop_id: cop_id,
-        user_id: user_id,
-        user_email: user_email,
-        user_phone: user_phone,
-        user_name: user_name
+        cvc: this.card_payment_data.cvv
       };
 
       let full_payload = {
         values: card_payload,
         vm: this,
         app: "PRIVATE_API",
-        endpoint: "card_payment"
+        endpoint: "add_card"
       };
-      this.$store.dispatch("$_payment/requestCardPayment", full_payload).then(
+      this.$store.dispatch("$_payment/requestAddNewCard", full_payload).then(
         response => {
           console.log(response);
           let that = this;
 
           if (response.data.status == false) {
-            this.payment_state = "Payment Failed";
             let notification = {
-              title: "card payment failed",
+              title: "Add Card Failed",
               level: 2,
               message: response.data.message
             };
@@ -187,23 +155,26 @@ export default {
             });
           } else {
             let notification = {
-              title: "card payment sucess",
+              title: "Add Card Success",
               level: 1,
-              message: "card payment was processed successfully"
+              message: "card was added successfully"
             };
             this.payment_state = "Payment Success";
             that.$store.dispatch("show_notification", notification, {
               root: true
             });
-
-            let card_trans_id = response.data.values.card_trans_id;
-            this.completeCardPayment(card_trans_id);
-            //complete payment here
           }
         },
         error => {
           console.log(error);
-          this.payment_state = "Payment Failed";
+          let notification = {
+            title: "Add Card Failed",
+            level: 2,
+            message: "something went wrong while adding new card"
+          };
+          that.$store.dispatch("show_notification", notification, {
+            root: true
+          });
         }
       );
     },

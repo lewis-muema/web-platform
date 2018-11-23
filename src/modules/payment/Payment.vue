@@ -12,41 +12,39 @@
 </template>
 
 <script>
-import payment_store from './_store';
-import RegisterStoreModule from '../../mixins/register_store_module'
-import MainHeader from '../../components/headers/MainHeader.vue'
-import AccountBalance from './_components/AccountBalance.vue'
-import OrderCost from './_components/OrderCost.vue'
-import PaymentBody from './_components/PaymentBody.vue'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faWallet } from '@fortawesome/free-solid-svg-icons'
-library.add(faWallet)
+import payment_store from "./_store";
+import RegisterStoreModule from "../../mixins/register_store_module";
+import MainHeader from "../../components/headers/MainHeader.vue";
+import AccountBalance from "./_components/AccountBalance.vue";
+import OrderCost from "./_components/OrderCost.vue";
+import PaymentBody from "./_components/PaymentBody.vue";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faWallet } from "@fortawesome/free-solid-svg-icons";
+library.add(faWallet);
 
 export default {
-  name:'Payment',
-  components : {MainHeader, AccountBalance, OrderCost, PaymentBody},
-  mixins: [ RegisterStoreModule ],
+  name: "Payment",
+  components: { MainHeader, AccountBalance, OrderCost, PaymentBody },
+  mixins: [RegisterStoreModule],
   created() {
-    const STORE_KEY = '$_payment';
-    if (!this.$store.state[STORE_KEY]) {
-      this.$store.registerModule(STORE_KEY, payment_store);
-    }
+    const STORE_KEY = "$_payment";
+    // if (!this.$store.state[STORE_KEY]) {
+    this.$store.registerModule(STORE_KEY, payment_store);
+    // }
   },
   computed: {
     currentPageHeader: function() {
-      return 'account-balance';
+      return "account-balance";
     }
- },
- methods:{
-     go_back(){
-         this.$router.go(-1);
-     }
- },
-
-}
+  },
+  methods: {
+    go_back() {
+      this.$router.go(-1);
+    }
+  }
+};
 </script>
 
 <style lang="css">
-@import '../../assets/styles/payment.css';
-
+@import "../../assets/styles/payment.css";
 </style>

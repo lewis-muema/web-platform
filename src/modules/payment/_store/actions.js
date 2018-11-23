@@ -36,17 +36,6 @@ export default {
       );
     });
   },
-  terminateCardPaymentRequest(
-    { dispatch, commit, getters, rootGetters },
-    payload
-  ) {
-    return new Promise((resolve, reject) => {
-      commit("setCardLoadingStatus", false);
-      commit("setCardFailStatus", true);
-      commit("setCardSuccessStatus", false);
-      resolve(true);
-    });
-  },
   completeCardPaymentRequest(
     { dispatch, commit, getters, rootGetters },
     payload
@@ -104,10 +93,7 @@ export default {
       resolve(true);
     });
   },
-  completeMpesaPaymentRequest(
-    { dispatch, commit, getters, rootGetters },
-    payload
-  ) {
+  completeMpesaPaymentRequest({ commit }, payload) {
     return new Promise((resolve, reject) => {
       commit("setMpesaLoadingStatus", false);
       commit("setMpesaSuccessStatus", true);
@@ -115,10 +101,7 @@ export default {
       resolve(true);
     });
   },
-  resetMpesaPaymentRequest(
-    { dispatch, commit, getters, rootGetters },
-    payload
-  ) {
+  resetMpesaPaymentRequest({ commit }, payload) {
     return new Promise((resolve, reject) => {
       commit("setMpesaLoadingStatus", false);
       commit("setMpesaFailStatus", false);
@@ -127,10 +110,32 @@ export default {
     });
   },
 
-  requestRunningBalance({ dispatch, commit, getters, rootGetters }, payload) {
+  requestRunningBalance({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch("requestAxiosPost", payload, { root: true }).then(
         response => {
+          if (response.status == 200) {
+            let rb = response.data.running_balance;
+            dispatch("updateRunningBalance", rb, { root: true });
+          }
+          resolve(response);
+        },
+        error => {
+          reject(error);
+          console.log("failed to dispatch to global store");
+        }
+      );
+    });
+  },
+  requestAddNewCard({ dispatch, commit }, payload) {
+    commit("setCardLoadingStatus", true);
+
+    return new Promise((resolve, reject) => {
+      dispatch("requestAxiosPost", payload, {
+        root: true
+      }).then(
+        response => {
+          commit("setCardLoadingStatus", false);
           resolve(response);
         },
         error => {

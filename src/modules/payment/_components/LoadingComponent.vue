@@ -67,7 +67,7 @@ export default {
       if (this.pay_method == "mpesa") {
         return "Please follow the M-Pesa instructions on your phone screen";
       } else if (this.pay_method == "card") {
-        return "Processing your card payment";
+        return "Processing your card operation";
       }
     }
   }
