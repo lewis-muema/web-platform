@@ -25,7 +25,7 @@ const get_tracking_data = function({commit, dispatch, state}, data)
   })
 }
 
-const cancel_order = function({commit}, data)
+const cancel_order = function({commit, dispatch}, data)
 {
   var payload = {
     "app":"PRIVATE_API",
