@@ -110,7 +110,6 @@
             populate: function (){
                 let set = this.getInvites
                 for (let i = 0; i < set.length; i++) {
-                    // $("#set"+i).find("input[name='email']").val(set[i][0])
                     this.elements[i].email = set[i][0];
                 }
             },
@@ -197,12 +196,10 @@
                     console.log("link created");
                     this.updateViewState(5);
                     console.log(response);
-                    // return;
                     let level = 1; //success
                     let notification = {"title": "Invite Link", "level": level, "message": "Link created!"}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
-                    // this.commit('updateBizName', biz_name)
                 }, error => {
                     console.log("link NOT created");
                     console.log(error);
