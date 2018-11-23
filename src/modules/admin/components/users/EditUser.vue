@@ -49,7 +49,7 @@
                 <div class="edit-holder">
                     <el-select class="addUser--select edit-select" v-model="userDetails.type" placeholder="User Type">
                         <el-option v-for="type in types" :key="type.type" :label="type.type_name"
-                                   :value="type.type_value">
+                                   :value="type.type">
                         </el-option>
                     </el-select>
                 </div>

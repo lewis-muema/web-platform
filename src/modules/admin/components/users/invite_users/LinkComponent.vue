@@ -65,7 +65,7 @@
             ...mapGetters(
                 {
                     getState: '$_admin/getViewState',
-                    getDepartments: '$_admin/getDepartments',
+                    getDepartmentsList: '$_admin/getDepartmentsList',
                     getBaseUrl: '$_admin/getBaseUrl',
                     getBizName: '$_admin/getBizName'
                 }
