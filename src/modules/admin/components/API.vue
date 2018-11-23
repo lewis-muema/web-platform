@@ -122,8 +122,6 @@
                     "app":"NODE_PRIVATE_API",
                     "endpoint":"generate_api"
                 }
-                this.$store.commit('setNotificationStatus', true); //activate notification
-                // let level = 0; //this will show the white one
                 this.$store.dispatch("$_admin/generateAPIKey", newKeyFull_payload).then(response => {
                     console.log("updated");
                     this.update_api_text ='Update API Key';
@@ -132,6 +130,8 @@
                     this.message = "Key Updated!"
                     let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
                 }, error => {
                   this.update_api_text ='Update API Key';
                     console.log(error);
@@ -139,6 +139,8 @@
                     this.message = "Something went wrong."
                     let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
                 });
             },
             generateAPIKey() {
