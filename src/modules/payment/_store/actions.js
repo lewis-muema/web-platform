@@ -82,17 +82,7 @@ export default {
       );
     });
   },
-  terminateMpesaPaymentRequest(
-    { dispatch, commit, getters, rootGetters },
-    payload
-  ) {
-    return new Promise((resolve, reject) => {
-      commit("setMpesaLoadingStatus", false);
-      commit("setMpesaFailStatus", true);
-      commit("setMpesaSuccessStatus", false);
-      resolve(true);
-    });
-  },
+
   completeMpesaPaymentRequest({ commit }, payload) {
     return new Promise((resolve, reject) => {
       commit("setMpesaLoadingStatus", false);
@@ -139,6 +129,7 @@ export default {
           resolve(response);
         },
         error => {
+          commit("setCardLoadingStatus", false);
           reject(error);
           console.log("failed to dispatch to global store");
         }
