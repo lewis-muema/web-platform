@@ -82,8 +82,9 @@
                 "endpoint": "cop_departments"
             }
             this.$store.dispatch("$_admin/requestDepartmentsList", users_full_payload).then(response => {
-                console.log(response);
                 console.log('departments data here')
+                console.log(response);
+
             }, error => {
                 console.log(error);
                 console.log('departments data not here')
@@ -104,6 +105,12 @@
                 }
             }
         },
+        watch: {
+            // // whenever question changes, this function will run
+            // deptData: function () {
+            //     this.requestDepartmentsList
+            // }
+        },
         computed: {
             ...mapGetters({
                 deptData: '$_admin/getDepartmentsList',
@@ -115,10 +122,17 @@
             departments_data() {
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
-                // if (this.filterState == true) {
-                //     return this.filteredUserData.slice(from, to);
-                // }
+                if (this.filterState == true) {
+                    if(Array.isArray(this.filteredUserData)){
+                        return this.filteredUserData.slice(from, to);
+                    }
+                    return [];
+
+                }
+                if(Array.isArray(this.deptData)){
                     return this.deptData.slice(from, to);
+                }
+                return [];
             },
 
             active_filter() {
@@ -156,9 +170,7 @@
                 console.log(user_id);
                 console.log(department);
 
-                this.filteredUserData = this.deptData;
-
-
+                this.filteredUserData = this.deptData
                 console.log(this.filteredUserData);
                 //check if both are filled
                 if (department !== '') {

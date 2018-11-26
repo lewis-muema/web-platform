@@ -205,12 +205,10 @@
                     if (resp === 1) {
                         resp = "Registered"
                         this.registered =  true
-                        // this.button_name = "Update API Key"
                     }
                     else {
                         resp = "Not Registered"
                         this.registered =  false
-                        // this.button_name = "Generate API Key"
                     }
                 }
                 return resp;
