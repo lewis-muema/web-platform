@@ -68,13 +68,23 @@ export default {
     }),
     eraseCookie(name) {
       console.log("erase Cookie", name);
+      console.log("erase Cookie", name);
+      var domain = this.$store.getters.getENV.domain || document.domain;
+      var path = "/";
+
       document.cookie =
         name +
-        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=" +
-        this.$store.getters.getENV.domain +
-        ";";
+        "=; expires=" +
+        +"Thu, 01 Jan 1970 00:00:00 GMT" +
+        "; domain=" +
+        domain +
+        "; path=" +
+        path;
+
       document.cookie =
-        name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=localhost";
+        name +
+        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=localhost; path=" +
+        path;
     },
     getCookie: function() {
       var nameEQ = "_sessionSnack" + "=";
@@ -123,6 +133,7 @@ export default {
       //erase cookie on login just incase
       this.login_text = "Logging in ...";
       this.eraseCookie("_sessionSnack");
+      // return;
 
       let values = {};
       values.email = this.email;
