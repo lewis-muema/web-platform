@@ -135,6 +135,8 @@ export default {
         cvc: this.add_card_payment_data.cvv
       };
 
+      card_payload = Mcrypt.encrypt(card_payload);
+
       let full_payload = {
         values: card_payload,
         vm: this,
