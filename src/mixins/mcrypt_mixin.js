@@ -8,11 +8,15 @@ Usage
 
   `mixins: [ Mcrypt ],`
 
-2.Call function `decrypt` from the `Mcrypt` class passing the
+2. Decryption
+  Call function `decrypt` from the `Mcrypt` class passing the encrypted string as a variable
   Declaration `Mcrypt.decrypt('ae71c0c78f8af50e38d6cfff31d28477');
 
+3. Encryption
+  Call function `encrypt` from the `Mcrypt` class passing the plaintext string as a vairable
+  Declaration `Mcrypt.encrypt('This is text');
+
   TBD : Make keys more private
-        Encryption function
 */
 
 class Mcrypt {
@@ -27,7 +31,6 @@ class Mcrypt {
       iv: this.iv,
       padding: CryptoJS.pad.ZeroPadding
     });
-    console.log(CryptoJS.enc.Utf8.stringify(plaintext));
     return CryptoJS.enc.Utf8.stringify(plaintext);
   }
 
@@ -40,6 +43,23 @@ class Mcrypt {
         })
         .join("")
     );
+  }
+  base64ToHex(str) {
+    for (var i = 0, bin = atob(str.replace(/[ \r\n]+$/, "")), hex = []; i < bin.length; ++i) {
+      var tmp = bin.charCodeAt(i).toString(16);
+      if (tmp.length === 1) tmp = "0" + tmp;
+      hex[hex.length] = tmp;
+    }
+    return hex.join("");
+  }
+
+  encrypt(plaintext) {
+    var encrypted = CryptoJS.AES.encrypt(plaintext, this.key, {
+      iv: this.iv,
+      padding: CryptoJS.pad.ZeroPadding
+    });
+
+    return this.base64ToHex(encrypted.toString());
   }
 }
 
