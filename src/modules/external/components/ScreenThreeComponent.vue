@@ -64,7 +64,7 @@ export default {
         this.updatePassPlain(this.cpassword);
         if (this.getType == 0) {
           let cop_id = this.getCopId;
-          let user_id = this.getCopUserId ;
+          // let user_id = this.getCopUserId ;
           let pass = this.cpassword;
           let name = this.getName;
           let biz_email = this.getBizEmail ;
@@ -77,7 +77,6 @@ export default {
 
           payload = {
             cop_id :cop_id,
-            user_id:user_id,
             password : pass,
             name : name,
             biz_email : biz_email,
@@ -97,7 +96,7 @@ export default {
           let phone = this.getPhone ;
           let type = this.getType ;
           let dept_id = this.getDeptId;
-          let cop_user_id = this.getCopUserId ;
+          // let cop_user_id = this.getCopUserId ;
 
 
           payload = {
@@ -109,7 +108,7 @@ export default {
             phone : phone,
             type : type,
             dept_id : dept_id,
-            cop_user_id : cop_user_id
+            // cop_user_id : cop_user_id
         };
       }
 
