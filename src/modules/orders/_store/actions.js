@@ -16,9 +16,6 @@ const fetch_ongoing_orders = function({state, commit, dispatch, rootState})
     dispatch("requestAxiosPost", payload, { root: true })
     .then(response => {
       commit('set_ongoing_orders', response.data)
-      setTimeout(function() {
-        dispatch("fetch_ongoing_orders")
-      }, 5000);
       resolve(response.data);
     }, error => {
       reject(error);

@@ -36,7 +36,7 @@
 
                 </div>
 
-                <span v-if="allowCash != true">
+                <span v-if="allowCash == true">
                     <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                         <div class="home-view-notes-wrapper--item__option">
                             <!-- <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
@@ -56,7 +56,7 @@
                         <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                         <div class="home-view-notes-wrapper--item__option-div">
 
-                          <div class="home-view-notes-wrapper--item__link">  +  &nbsp;&nbsp; Add New card </div>
+                          <div class="home-view-notes-wrapper--item__link" @click="takeMeToAddNewCard()">  +  &nbsp;&nbsp; Add New card </div>
                         </div>
                     </div>
                     <div class="home-view-notes-wrapper--item__value">
@@ -64,18 +64,23 @@
 
                     </div>
                 </div>
-                <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
-                    <div class="home-view-notes-wrapper--item__option">
-                        <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
-                        <div class="home-view-notes-wrapper--item__option-div">
-                            <el-radio v-model="payment_method" label="2a"> **** **** **** 1234 </el-radio>
+                <div class="" v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0">
+                    <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" v-for="card in get_saved_cards">
+                        <div class="home-view-notes-wrapper--item__option">
+                            <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
+                            <div class="home-view-notes-wrapper--item__option-div" >
+                                <el-radio v-model="payment_method" :label="getCardValue(card.last4)"> **** **** **** {{card.last4}} </el-radio>
+                            </div>
+                        </div>
+
+                        <div class="home-view-notes-wrapper--item__value">
+                            <!-- <input type="checkbox" name="" value=""> -->
+
                         </div>
                     </div>
-                    <div class="home-view-notes-wrapper--item__value">
-                        <!-- <input type="checkbox" name="" value=""> -->
 
-                    </div>
                 </div>
+
 
                 <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                     <div class="home-view-notes-wrapper--item__option">
@@ -88,16 +93,6 @@
                         <!-- <input type="checkbox" name="" value=""> -->
 
                     </div>
-                </div>
-
-                <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
-                    <div class="home-view-notes-wrapper--item__option">
-                        <!-- <font-awesome-icon icon="star" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
-                        <div class="home-view-notes-wrapper--item__option-div">
-                          <div class="home-view-notes-wrapper--item__link">  Redeem promo code </div>
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
@@ -140,8 +135,11 @@
         <div class="home-view-place-order">
             <div v-if="loading" v-loading="loading" class="orders-loading-container orders-loading-container--completion" >
             </div>
-            <div v-else>
+            <div v-if="!loading && payment_state == 0">
                 <button type="button" class="button-primary home-view--place-order" name="button" @click="checkPaymentDetails()">Place Order</button>
+            </div>
+            <div class="home-view-place-order--mpesa-cancel" v-if="loading && payment_state == 1">
+                <button type="button" class="button-primary home-view--place-order" name="button" @click="cancelMpesaPaymentRequest()">Cancel Payment</button>
             </div>
         </div>
     </div>
@@ -153,7 +151,7 @@ import NoSSR from 'vue-no-ssr';
 import numeral from 'numeral';
 import payment_store from '../../../../payment/_store';
 import order_store from '../../../_store';
-
+// import * from '../js/MpesaActions'
 export default {
     name:'order-options',
     components:{
@@ -169,7 +167,8 @@ export default {
             cash_status : false,
             card_token : '',
             customer_token : '',
-            payment_type : "prepay"
+            payment_type : "prepay",
+            payment_state : 0,// 0- initial 1- loading 2- success 3- cancelled
         }
     },
     computed :{
@@ -184,6 +183,8 @@ export default {
           get_payment_method : '$_orders/$_home/get_payment_method',
           get_order_notes : '$_orders/$_home/get_order_notes',
           get_schedule_time : '$_orders/$_home/get_schedule_time',
+          get_saved_cards : '$_orders/$_home/get_saved_cards',
+          get_stripe_user_id : '$_orders/$_home/get_stripe_user_id',
 
         }),
         active_price_tier_data: function (){
@@ -218,11 +219,16 @@ export default {
           setPaymentMethod: '$_orders/$_home/set_payment_method',
           setScheduleTime: '$_orders/$_home/set_schedule_time',
           setOrderNotes: '$_orders/$_home/set_order_notes',
-          unsetMap : '$_orders/unsetMap'
+          unsetMap : '$_orders/unsetMap',
         }),
         ...mapActions({
             requestOrderCompletion: '$_orders/$_home/requestOrderCompletion',
             requestRunningBalanceFromAPI: '$_payment/requestRunningBalance',
+            requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
+            requestCardPaymentAction: '$_payment/requestCardPayment',
+            completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
+            terminateMpesaPaymentRequest: '$_payment/terminateMpesaPaymentRequest',
+            requestSavedCards: '$_orders/$_home/requestSavedCards',
         }),
         do_set_active_order_option(name){
             (this.get_active_order_option != name) ? this.set_active_order_option(name)  : this.set_active_order_option('');
@@ -267,11 +273,16 @@ export default {
                 if(this.payment_method == 1){
                     this.handleMpesaPayments();
                 }
-                else if(this.payment_method == 2){
-                    this.handleCardPayments();
-                }
+
                 else if( this.payment_method == 5){
                     this.handlePromoCodePayments();
+                }
+                else if(this.payment_method.startsWith('2_') ){
+                    console.log('sliced',this.payment_method.slice(2));
+                    let card =  this.get_saved_cards.find(
+                        card_details => card_details.last4 === this.payment_method.slice(2)
+                    )
+                    this.handleCardPayments(card);
                 }
                 else{
                     console.log('not handled payment method', this.payment_method);
@@ -280,22 +291,22 @@ export default {
             return true;
         },
         handleMpesaPayments(){
-            console.log('taking you to mpesa');
-            this.$router.push({ name: "mpesa_payment" });
+            console.log('attempting mpesa');
+            this.requestMpesaPayment();
+
         },
         handlePromoCodePayments(){
             console.log('taking you to promo');
             this.$router.push({ name: "promo_payment" });
-        },
-        handleCardPayments(){
-            console.log('taking you to card');
-             this.$router.push({ name: "card_payment" });
         },
         handleCashPayments(){
             console.log('allowed cash payment')
             // if(this.getRB() <= 0){
                 this.doCompleteOrder();
             // }
+        },
+        takeMeToAddNewCard(){
+            this.$router.push({ name: "card_payment",query:{action:"add"} });
         },
         handlePostPaidPayments(){
             console.log('allowed post pay payment')
@@ -313,12 +324,19 @@ export default {
             this.requestOrderCompletion(payload).then(response => {
                 this.loading = false;
                console.log(response);
+               if (response.length > 0) {
+                 response = response[0];
+               }
 
                if(response.status == true){
                    this.setPickupFilled(false);
                    let order_no = this.get_price_request_object.order_no;
+                   // let to_location = (window.location.origin + '/orders/track/'+ order_no);
+                   // console.log('to_location',to_location);
+                   // window.location.href = to_location;
                    this.$router.push({ name: 'tracking', params: { order_no: order_no }})
                    // this.$store.unregisterModule(['$_orders','$_home']);
+                   // this.$store.unregisterModule(['$_orders']);
 
 
                } else {
@@ -361,7 +379,7 @@ export default {
               "destination_paid_status": false,
               "delivery_points": this.get_order_path.length-1,
               "sendy_coupon": "0",
-              "payment_mode": this.payment_method,
+              "payment_mode": this.payment_method.startsWith('2')? 2 : this.payment_method == '' ? 0: this.payment_method,
               "schedule_time": this.moment(this.schedule_time,'YYYY-MM-DD HH:mm:ss Z').format('YYYY-MM-DD HH:mm:ss'),
               "tier_tag": this.active_vendor_price_data.tier_tag,
               "cop_id": 'cop_id' in acc ? acc.cop_id : 0,
@@ -435,18 +453,371 @@ export default {
                 this.unsetMap();
                 console.log('new session *')
             }
-        }
+        },
+        getCardValue(last4digits){
+            return '2_'+last4digits;
+        },
+
+
+
+        /* start mpesa */
+
+        requestMpesaPayment() {
+          console.log("requesting mpesa payment");
+          let session = this.$store.getters.getSession;
+          let referenceNumber = "SENDY";
+          let cop_id = 0;
+          let user_id = 0;
+          let user_email = "";
+          let user_phone = "";
+          if (session.default == "biz") {
+            referenceNumber += session.biz.cop_id;
+            cop_id = session.biz.cop_id;
+            user_id = session.biz.user_id;
+            user_email = session.biz.user_email;
+            user_phone = session.biz.user_phone;
+          } else {
+            referenceNumber = session.peer.user_phone;
+            user_id = session.peer.user_id;
+            user_email = session.peer.user_email;
+            user_phone = session.peer.user_phone;
+          }
+
+          let mpesa_payload = {
+            amount: this.order_cost,
+            // amount: 10,
+            sourceMobile: user_phone,
+            referenceNumber: referenceNumber,
+            user_id: user_id,
+            cop_id: cop_id,
+            phone: user_phone,
+            email: user_email
+          };
+
+          console.log(mpesa_payload);
+
+          let full_payload = {
+            values: mpesa_payload,
+            app: "NODE_PRIVATE_API",
+            endpoint: "initiate_mpesa"
+          };
+
+          console.log(mpesa_payload);
+
+          this.payment_state = 1;
+          this.loading = true;
+
+          this.requestMpesaPaymentAction(full_payload).then(
+            response => {
+              if (response.length > 0) {
+                  response = response[0];
+              }
+              console.log(response);
+              if (response.status == 200) {
+                this.requestMpesaPaymentPoll();
+              }
+              else{
+                  this.doNotification('2','Payment failed', "Could not reach mpesa, please try again.");
+                  this.payment_state = 0;
+                  this.loading = false;
+                  console.log('mpesa payment failed 0');
+              }
+
+            },
+            error => {
+              this.doNotification('2','Payment failed', "Could not reach mpesa, please try again.");
+              this.payment_state = 0;
+              this.loading = false;
+              console.log('mpesa payment failed 1');
+            }
+          );
+        },
+
+        requestMpesaPaymentPoll() {
+          console.log("mpesa payment poll initiated");
+          let session = this.$store.getters.getSession;
+          let cop_id = 0;
+          if (session.default == "biz") {
+            cop_id = session.biz.cop_id;
+          }
+          let old_rb = this.$store.getters.getRunningBalance;
+          let requested_amount = this.order_cost;
+
+          let running_balance_payload = {
+            values: {
+              cop_id: cop_id,
+              user_phone: session[session.default]["user_phone"]
+            }
+          };
+
+          let payload = {
+            values: running_balance_payload,
+            app: "PRIVATE_API",
+            endpoint: "running_balance"
+          };
+
+          let poll_limit = 6; //10secs * 6  = 60sec = 1min
+          //poll the dispatch
+          for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
+            //wait 10 seconds
+             let that = this;
+             (function (poll_count) {
+              setTimeout(function () {
+                let res = that.checkRunningBalance(old_rb, payload);
+                console.log('poll count', poll_count);
+                if(res){
+                  poll_count = poll_limit;
+                  that.payment_state = 0;
+                  that.loading = false;
+                  that.doNotification('1','Payment successful', "M-Pesa payment was successful.");
+                  that.doCompleteOrder();
+                  return true;
+                }
+                if(poll_count == 5){
+                    that.doNotification('2','Payment failed', "Please select your preferred payment method and try again.");
+                    that.payment_state = 0;
+                    that.loading = false;
+                    console.log('after for loop')
+                }
+              }, 10000*poll_count);
+            })(poll_count);
+
+          }
+
+
+        },
+
+        checkRunningBalance(old_rb, payload) {
+          this.requestRunningBalanceFromAPI(payload).then(
+            response => {
+              console.log(response);
+              if (response.length > 0) {
+                response = response[0];
+              }
+              if (response.status == 200) {
+                //check if rb has changed
+                let new_rb = response.data.running_balance;
+                console.log(old_rb);
+                console.log(new_rb);
+
+                if (new_rb < old_rb) {
+                  //running balance updated
+                  //terminate poll
+                  //update global running balance
+                  this.completeMpesaPaymentRequest({});
+                  this.$store.commit(
+                    "setRunningBalance",
+                    response.data.running_balance
+                  );
+                  return true;
+                }
+              }
+              //commit  to the global store here
+              return false;
+            },
+            error => {
+              console.log(error);
+              return false;
+            }
+          );
+        },
+
+        cancelMpesaPaymentRequest() {
+            this.payment_state = 0;
+            this.loading = 0;
+            this.doNotification('2','M-Pesa Payment cancelled', "M-Pesa payment has been cancelled, please try again.");
+            return;
+        },
+
+        /* End mpesa */
+
+
+        /* start card */
+
+        getUserCards() {
+            console.log("requesting mpesa payment");
+            let session = this.$store.getters.getSession;
+            let cop_id = 0;
+            let user_id = 0;
+            if (session.default == "biz") {
+              cop_id = session.biz.cop_id;
+              user_id = session.biz.user_id;
+            } else {
+              cop_id = 0;
+              user_id = session.peer.user_id;
+            }
+
+            let card_payload = {
+              user_id: "0",
+              cop_id: "1083",
+              // user_id: user_id,
+              // cop_id: cop_id,
+            };
+
+            console.log(card_payload);
+
+            let full_payload = {
+              values: card_payload,
+              app: "PRIVATE_API",
+              endpoint: "get_card"
+            };
+
+          this.requestSavedCards(full_payload).then(
+            response => {
+              console.log(response);
+              if (response.length > 0) {
+                response = response[0];
+              }
+              if (response.status == 200) {
+
+              }
+
+            },
+            error => {
+              console.log(error);
+              return false;
+            }
+          );
+        },
+
+        handleCardPayments(card) {
+
+          let card_payload = {
+            amount: 10,
+            // amount: this.order_cost,
+            last4: card.last4,
+            stripe_user_id: this.get_stripe_user_id
+          };
+
+          let full_payload = {
+            values: card_payload,
+            app: "PRIVATE_API",
+            endpoint: "charge_customer_card"
+          };
+          this.$store.dispatch("$_payment/requestCardPayment", full_payload).then(
+            response => {
+              console.log(response);
+              if (response.length > 0) {
+                response = response[0];
+              }
+              let that = this;
+
+              if (response.data.status == false) {
+                  this.doNotification('2','Card Payment Failed', "Card payment failed, please try again.");
+                  this.payment_state = 0;
+                  this.loading = 0;
+
+              } else {
+
+                let card_trans_id = response.data.values.card_trans_id;
+                this.completeCardPayment(card_trans_id);
+                //complete payment here
+              }
+            },
+            error => {
+              console.log(error);
+              this.doNotification('2','Card Payment Failed', "Card payment failed, please try again.");
+              this.payment_state = 0;
+              this.loading = 0;
+            }
+          );
+        },
+        completeCardPayment(card_trans_id) {
+          let session = this.$store.getters.getSession;
+          let user_id = 0;
+          let cop_id = 0;
+          let user_name = "";
+          let user_email = "";
+          let user_phone = "";
+
+          if (session.default == "biz") {
+            cop_id = session.biz.cop_id;
+            user_id = session.biz.user_id;
+            user_name = session.biz.user_name;
+            user_email = session.biz.user_email;
+            user_phone = session.biz.user_phone;
+          } else {
+            cop_id = session.peer.cop_id;
+            user_id = session.peer.user_id;
+            user_name = session.peer.user_name;
+            user_email = session.peer.user_email;
+            user_phone = session.peer.user_phone;
+          }
+
+          let payload = {
+            amount: this.order_cost,
+            // amount: 100,
+            pay_method: 2,
+            ref_no: "VISA-" + Math.round(+new Date() / 1000),
+            client_id: cop_id,
+            account_no: "SENDY" + cop_id,
+            phone: user_phone,
+            email: user_email,
+            name: user_name,
+            bill_Ref_Number: user_phone,
+            card_trans_id: card_trans_id
+          };
+
+          let full_payload = {
+            values: payload,
+            app: "PRIVATE_API",
+            endpoint: "payment"
+          };
+
+          this.$store.dispatch("$_payment/completeCardPayment", full_payload).then(
+            response => {
+              console.log(response);
+              if (response.length > 0) {
+                response = response[0];
+              }
+              let self = this;
+              if (response.data.status == true) {
+                //this will request the new running balance and update the store
+
+                this.doNotification('1','Successful Payment', "Card payment has been completed successfully.");
+
+                let payload = {
+                  values: running_balance_payload,
+                  app: "PRIVATE_API",
+                  endpoint: "running_balance"
+                };
+
+                this.$store
+                  .dispatch("$_payment/requestRunningBalance", payload)
+                  .then(response => {
+                    console.log("running balance response", response);
+                    this.payment_state = 0;
+                    this.loading = 0;
+                    self.doCompleteOrder();
+                  });
+              } else {
+                  this.payment_state = 0;
+                  this.loading = 0;
+                this.doNotification('3','Card Payment Failed', "Card payment failed to complete.");
+
+              }
+            },
+            error => {
+              console.log(error);
+              this.doNotification('3','Card Payment Failed', "Card payment failed to complete.");
+              this.payment_state = 0;
+              this.loading = 0;
+            }
+          );
+        },
+        /* end card */
     },
     created(){
-
-        if (!this.$store.state['$_payment']) {
+        // console.log('store breaking ',this.$store.state)
+        //if (!this.$store.state['$_payment']) {
             this.$store.registerModule('$_payment', payment_store);
-        }
-        if (!this.$store.state['$_orders']) {
+        //}
+        // if (!this.$store.state['$_orders']) {
             this.$store.registerModule('$_orders', order_store);
-        }
+        // }
         this.initializeOrderPlacement();
         this.refreshRunningBalance();
+        this.getUserCards();
     }
 }
 </script>
@@ -516,6 +887,9 @@ cursor: pointer;
 }
 .home-view-notes-wrapper--item__value .el-radio__label{
     display: none !important;
+}
+.home-view-place-order--mpesa-cancel{
+    margin-top: 20px;
 }
 
 
