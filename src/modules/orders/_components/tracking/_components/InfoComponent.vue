@@ -62,7 +62,7 @@
               <div class="actions--caret"></div>
             </div>
           </transition>
-          <div @click="place()" v-if="false">
+          <div v-if="false">
             <div class="infobar--actions-icon">
               <i class="el-icon-sold-out"></i>
             </div>
@@ -94,6 +94,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+// import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 
 export default {
   name: 'info-window',

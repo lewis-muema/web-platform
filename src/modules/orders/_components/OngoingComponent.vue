@@ -91,7 +91,6 @@ export default {
       this.$store.dispatch('$_orders/fetch_ongoing_orders')
       .then(response => {
         if (["order_placement", "tracking"].includes(that.$router.currentRoute.name)) {
-          console.log(that.$router.currentRoute.name)
           setTimeout(function() {
             that.poll()
           }, 5000);
