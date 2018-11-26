@@ -39,7 +39,8 @@ export default {
        updateDeptID:'$_external/updateDeptID',
        updatePerEmail:'$_external/updatePerEmail',
        updateName:'$_external/updateName',
-       updateInviteType:'$_external/updateInviteType'
+       updateInviteType:'$_external/updateInviteType',
+       updateCopUserID:'$_external/updateCopUserID'
      }
    ),
     check_validity: function() {
@@ -72,16 +73,21 @@ export default {
             }
 
             if (response.status == true) {
-                // if (response.data.department_id == "null") {
-                //     response.data.department_id = 1;
-                // }
+
+              let dept_id = 1;
+              if (response.data.department_id) {
+
+                  dept_id = response.data.department_id ;
+              }
+
               console.log(response);
               console.log("Valid Token");
               this.updateCopID(response.data.cop_id);
               this.updateBizName(response.data.cop_name);
-              this.updateDeptID(response.data.department_id);
+              this.updateDeptID(dept_id);
               this.updatePerEmail(response.data.email);
               this.updateName(response.data.name);
+              this.updateCopUserID(response.data.cop_user_id);
               this.updateInviteType(type);
               this.received_response = true;
               // this.$router.push("");
