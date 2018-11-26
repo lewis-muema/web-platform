@@ -70,6 +70,7 @@ export default {
       } catch (er) {
         // orders was not registered
       }
+      location.reload();
     },
 
     eraseCookie(name) {
