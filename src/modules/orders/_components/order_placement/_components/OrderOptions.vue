@@ -36,7 +36,7 @@
 
                 </div>
 
-                <span v-if="allowCash != true">
+                <span v-if="allowCash == true">
                     <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                         <div class="home-view-notes-wrapper--item__option">
                             <!-- <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
@@ -93,16 +93,6 @@
                         <!-- <input type="checkbox" name="" value=""> -->
 
                     </div>
-                </div>
-
-                <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
-                    <div class="home-view-notes-wrapper--item__option">
-                        <!-- <font-awesome-icon icon="star" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
-                        <div class="home-view-notes-wrapper--item__option-div">
-                          <div class="home-view-notes-wrapper--item__link" @click="handlePromoCodePayments()">  Redeem promo code </div>
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
@@ -334,12 +324,19 @@ export default {
             this.requestOrderCompletion(payload).then(response => {
                 this.loading = false;
                console.log(response);
+               if (response.length > 0) {
+                 response = response[0];
+               }
 
                if(response.status == true){
                    this.setPickupFilled(false);
                    let order_no = this.get_price_request_object.order_no;
+                   // let to_location = (window.location.origin + '/orders/track/'+ order_no);
+                   // console.log('to_location',to_location);
+                   // window.location.href = to_location;
                    this.$router.push({ name: 'tracking', params: { order_no: order_no }})
                    // this.$store.unregisterModule(['$_orders','$_home']);
+                   // this.$store.unregisterModule(['$_orders']);
 
 
                } else {
@@ -382,7 +379,7 @@ export default {
               "destination_paid_status": false,
               "delivery_points": this.get_order_path.length-1,
               "sendy_coupon": "0",
-              "payment_mode": this.payment_method,
+              "payment_mode": this.payment_method.startsWith('2')? 2 : this.payment_method == '' ? 0: this.payment_method,
               "schedule_time": this.moment(this.schedule_time,'YYYY-MM-DD HH:mm:ss Z').format('YYYY-MM-DD HH:mm:ss'),
               "tier_tag": this.active_vendor_price_data.tier_tag,
               "cop_id": 'cop_id' in acc ? acc.cop_id : 0,
@@ -487,8 +484,8 @@ export default {
           }
 
           let mpesa_payload = {
-            // amount: this.order_cost,
-            amount: 10,
+            amount: this.order_cost,
+            // amount: 10,
             sourceMobile: user_phone,
             referenceNumber: referenceNumber,
             user_id: user_id,
@@ -512,6 +509,9 @@ export default {
 
           this.requestMpesaPaymentAction(full_payload).then(
             response => {
+              if (response.length > 0) {
+                  response = response[0];
+              }
               console.log(response);
               if (response.status == 200) {
                 this.requestMpesaPaymentPoll();
@@ -697,6 +697,9 @@ export default {
           this.$store.dispatch("$_payment/requestCardPayment", full_payload).then(
             response => {
               console.log(response);
+              if (response.length > 0) {
+                response = response[0];
+              }
               let that = this;
 
               if (response.data.status == false) {
@@ -743,6 +746,7 @@ export default {
 
           let payload = {
             amount: this.order_cost,
+            // amount: 100,
             pay_method: 2,
             ref_no: "VISA-" + Math.round(+new Date() / 1000),
             client_id: cop_id,
@@ -763,6 +767,9 @@ export default {
           this.$store.dispatch("$_payment/completeCardPayment", full_payload).then(
             response => {
               console.log(response);
+              if (response.length > 0) {
+                response = response[0];
+              }
               let self = this;
               if (response.data.status == true) {
                 //this will request the new running balance and update the store
