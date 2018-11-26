@@ -1,4 +1,3 @@
-
 const getViewState = state => state.view_state;
 const getDepartments = state => state.departments;
 const getCopID = state => state.cop_id;

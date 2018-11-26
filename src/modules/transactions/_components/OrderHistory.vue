@@ -168,7 +168,7 @@ export default {
           to: to_date
         };
 
-        if (user != "" && user != null) {
+        if (user != "" && user != null && user != 0) {
           payload = {
             cop_id: cop_id,
             user_id: user_id,

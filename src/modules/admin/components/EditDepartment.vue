@@ -24,15 +24,10 @@
                         </el-option>
                     </el-select>
                 </div>
-                <!-- <div class="edit-holder edit-dimen dept--id-storetemp">
-                    <input class="input-control edit-dept" type="text" name="department_id"
-                           v-model="deptDetails.department_id"
-                           placeholder="Dept_id">
-                </div> -->
-
                 <div class="sign-holder">
                     <button class="button-primary" type="submit" id="update_department"
-                            v-on:click="update_department">Update</button>
+                            v-on:click="update_department">Update
+                    </button>
                 </div>
             </div>
         </div>
@@ -68,6 +63,26 @@
                 this.go_back();
                 console.log("back to users' table")
             }
+            let session = this.$store.getters.getSession;
+            let cop_id = 0;
+            if (session.default == 'biz') {
+                cop_id = session[session.default]['cop_id'];
+            }
+            let payload = {
+                "cop_id": cop_id
+
+            }
+            let users_full_payload = {
+                "values": payload,
+                "vm": this,
+                "app": "NODE_PRIVATE_API",
+                "endpoint": "cop_users"
+            }
+            this.$store.dispatch("$_admin/requestUsersList", users_full_payload).then(response => {
+                console.log(response);
+            }, error => {
+                console.log(error);
+            });
         },
         computed: {
             ...mapGetters({
@@ -79,18 +94,17 @@
 
         methods: {
             ...mapActions({
-                editAdminDepartment: '$_admin/editAdminDepartment'
+                editAdminDepartment: '$_admin/editAdminDepartment',
+                requestUsersList: '$_admin/requestUsersList'
             }),
             update_department: function () {
                 let payload = {}
-                    payload.department_id = this.deptDetails.department_id;
-                    payload.department_name = this.deptDetails.department_name;
-                    payload.cop_user_id = this.deptDetails.cop_user_id;
-                    payload.department_admin= this.deptDetails.department_admin;
-
-                console.log('payload',payload);
+                payload.department_id = this.deptDetails.department_id;
+                payload.department_name = this.deptDetails.department_name;
+                payload.cop_user_id = this.deptDetails.cop_user_id;
+                console.log('payload', payload);
                 let editDept_full_payload = {
-                    "values":payload,
+                    "values": payload,
                     "vm": this,
                     "app": "NODE_PRIVATE_API",
                     "endpoint": "cop_departments_update"
@@ -104,7 +118,6 @@
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 
-                    // this.$router.push('/admin/department');
                 }, error => {
                     console.log(error);
                     let level = 2;

@@ -70,17 +70,27 @@ export default {
       } catch (er) {
         // orders was not registered
       }
+      location.reload();
     },
 
     eraseCookie(name) {
       console.log("erase Cookie", name);
+      var domain = this.$store.getters.getENV.domain || document.domain;
+      var path = "/";
+
       document.cookie =
         name +
-        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=" +
-        this.$store.getters.getENV.domain +
-        ";";
+        "=; expires=" +
+        +"Thu, 01 Jan 1970 00:00:00 GMT" +
+        "; domain=" +
+        domain +
+        "; path=" +
+        path;
+
       document.cookie =
-        name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=localhost";
+        name +
+        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=localhost; path=" +
+        path;
     },
     isEmpty(obj) {
       for (var prop in obj) {

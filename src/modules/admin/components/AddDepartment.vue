@@ -35,6 +35,26 @@
     export default {
         name: 'AddDepartment',
         mounted() {
+            let session = this.$store.getters.getSession;
+            let cop_id = 0;
+            if(session.default == 'biz'){
+                cop_id = session[session.default]['cop_id'];
+            }
+            let payload = {
+                "cop_id": cop_id
+
+            }
+            let users_full_payload = {
+                "values" : payload,
+                "vm":this,
+                "app":"NODE_PRIVATE_API",
+                "endpoint":"cop_users"
+            }
+            this.$store.dispatch("$_admin/requestUsersList", users_full_payload).then(response => {
+                console.log(response);
+            }, error => {
+                console.log(error);
+            });
         },
         data() {
             return {
@@ -46,7 +66,8 @@
         },
         computed: {
             ...mapGetters({
-                userData: '$_admin/getUsersList'
+                userData: '$_admin/getUsersList',
+                requestUsersList: '$_admin/requestUsersList'
             }),
         },
         methods: {
@@ -65,7 +86,6 @@
                     "cop_user_id": this.filterData.user
                 }
 
-                console.log(newDept_payload)
                 let full_payload = {
                     "values": newDept_payload,
                     "vm": this,
