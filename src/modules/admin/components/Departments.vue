@@ -87,7 +87,6 @@
 
             }, error => {
                 console.log(error);
-                console.log('departments data not here')
 
             });
         },
@@ -104,12 +103,6 @@
                     "department": ""
                 }
             }
-        },
-        watch: {
-            // // whenever question changes, this function will run
-            // deptData: function () {
-            //     this.requestDepartmentsList
-            // }
         },
         computed: {
             ...mapGetters({
@@ -166,9 +159,6 @@
                 this.filterState = false;
                 let user_id = this.filterData.user;
                 let department = this.filterData.department;
-
-                console.log(user_id);
-                console.log(department);
 
                 this.filteredUserData = this.deptData
                 console.log(this.filteredUserData);
