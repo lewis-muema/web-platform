@@ -12,4 +12,6 @@ export default {
     get_extra_destinations: (state) => state.extra_destinations,
     get_pickup_filled: (state) => state.pickup_filled,
     get_payment_method: (state) => state.payment_method,
+    get_saved_cards: (state) => state.saved_cards,
+    get_stripe_user_id: (state) => state.stripe_user_id,
 };
