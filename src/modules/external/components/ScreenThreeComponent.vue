@@ -59,27 +59,71 @@ export default {
 
       }
       else {
-        this.updatePassPlain(this.cpassword);
+
         let payload = {};
-        payload.pass = this.cpassword;
-        payload.name = this.getName;
-        payload.biz_email = this.getBizEmail ;
-        payload.personal_email = this.getPerEmail ;
-        payload.phone = this.getPhone ;
-        payload.type = this.getType ;
-        payload.dept_id = this.getDeptId;
-        payload.cop_id = this.getCopId;
-        payload.cop_user_id = this.getCopUserId ;
+        this.updatePassPlain(this.cpassword);
+        if (this.getType == 0) {
+          let cop_id = this.getCopId;
+          let user_id = this.getCopUserId ;
+          let pass = this.cpassword;
+          let name = this.getName;
+          let biz_email = this.getBizEmail ;
+          let personal_email = this.getPerEmail ;
+          let phone = this.getPhone ;
+          let type = this.getType ;
+          let dept_id = this.getDeptId;
+          let cop_user_id = this.getCopUserId ;
+
+
+          payload = {
+            cop_id :cop_id,
+            user_id:user_id,
+            password : pass,
+            name : name,
+            biz_email : biz_email,
+            personal_email : personal_email,
+            phone : phone,
+            type : type,
+            dept_id : dept_id,
+            cop_user_id : cop_user_id
+          };
+        } else if (this.getType == 1) {
+
+          let cop_id = this.getCopId;
+          let pass = this.cpassword;
+          let name = this.getName;
+          let biz_email = this.getBizEmail ;
+          let personal_email = this.getPerEmail ;
+          let phone = this.getPhone ;
+          let type = this.getType ;
+          let dept_id = this.getDeptId;
+          let cop_user_id = this.getCopUserId ;
+
+
+          payload = {
+            cop_id :cop_id,
+            password : pass,
+            name : name,
+            biz_email : biz_email,
+            personal_email : personal_email,
+            phone : phone,
+            type : type,
+            dept_id : dept_id,
+            cop_user_id : cop_user_id
+        };
+      }
+
+        // this.updatePassPlain(this.cpassword);
 
         let full_payload = {
           values: payload,
           vm: this,
           app: "NODE_PRIVATE_API",
-          endpoint: ""
+          endpoint: "onboard_user"
         };
 
         this.requestInvitation(full_payload).then(response => {
-          
+
              if (response.length > 0) {
                response = response[0];
              }
@@ -100,7 +144,7 @@ export default {
         });
 
       }
-    },
+  },
     last_view: function(){
       this.setViewState(2);
       this.updateViewStep(0);
