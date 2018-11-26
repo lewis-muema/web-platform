@@ -28,7 +28,7 @@ export default {
       //this will request from the api and update the store
       let session = this.$store.getters.getSession;
       let cop_id = 0;
-      if(session.default == 'biz'){
+      if (session.default == "biz") {
         cop_id = session.biz.cop_id;
       }
       let running_balance_payload = {
@@ -52,10 +52,6 @@ export default {
           }
           if (response.status == 200) {
             console.log("commit running balance to the global store");
-            this.$store.commit(
-              "setRunningBalance",
-              response.data.running_balance
-            );
           }
           console.log(response);
           //commit  to the global store here
@@ -70,11 +66,14 @@ export default {
     //this just gets what is on the store
     running_balance() {
       //format the amount
-      let value = this.$store.getters.getRunningBalance
-        .toFixed(2)
-        .replace(/\d(?=(\d{3})+\.)/g, "$&,");
-      value = value.split(".");
-      return value[0];
+      let value = this.$store.getters.getRunningBalance;
+      if (value !== null || value !== "") {
+        let val = value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+        val = val.split(".");
+        return val[0];
+      } else {
+        return value;
+      }
     }
   }
 };

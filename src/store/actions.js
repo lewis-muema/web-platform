@@ -25,5 +25,9 @@ export default {
     commit("setNotification", payload);
     commit("setNotificationStatus", true);
     return true;
+  },
+  updateRunningBalance({ commit }, rb) {
+    commit("setRunningBalance", rb);
+    return true;
   }
 };
