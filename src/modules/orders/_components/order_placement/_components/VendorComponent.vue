@@ -53,7 +53,7 @@
 
         </div>
         <div class="" v-if="get_active_package_class != '' ">
-            <order-options></order-options>
+            <order-options v-on:destroyOrderOptions="destroyVendorComponent()"></order-options>
         </div>
       </div>
 </template>
@@ -119,6 +119,12 @@ export default {
                 }
             }
         },
+        destroyVendorComponent(){
+            console.log('in destroyVendorComponent');
+            this.set_active_vendor_name('');
+            this.$emit('vendorComponentDestroyed');
+            this.$destroy();
+        }
     },
     created(){
         this.setFirstTimeUser();
