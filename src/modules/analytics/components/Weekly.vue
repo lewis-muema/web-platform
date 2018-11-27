@@ -1,5 +1,5 @@
 <template lang="html">
-    <div class="dashboard">
+    <div class="dashboard" v-if="!this.loading">
        <iframe class="iframe"
          v-bind:src="this.showBoard()"
          frameborder="0"
@@ -16,6 +16,7 @@ export default {
     name:"Weekly",
     data: function() {
         return {
+          loading: true,
           resource: 17
         }
       },
@@ -27,7 +28,7 @@ export default {
           var payload = {
             resource: { dashboard: parseInt("100015".substring(4)) },
             params: {
-              "acc_no": "SENDY"+1083
+              "acc_no": this.account
             }
           };
           var token = jwt.sign(payload, METABASE_SECRET_KEY);
@@ -43,6 +44,9 @@ export default {
             return "SENDY"+this.$store.getters.getSession.biz.cop_id
           }
         }
+      },
+      mounted() {
+        this.loading = false
       }
 }
 </script>
