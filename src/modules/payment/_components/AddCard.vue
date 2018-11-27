@@ -127,12 +127,20 @@ export default {
         user_phone = session.peer.user_phone;
       }
 
+      user_name = user_name.split(" ");
+      let user_fname = user_name[0];
+      let user_lname = user_name[user_name.length - 1];
       let card_payload = {
-        stripe_user_id: "",
         exp_month: this.card_expiry_month,
         exp_year: this.card_expiry_year,
         card_no: this.add_card_payment_data.card_no,
-        cvc: this.add_card_payment_data.cvv
+        cvc: this.add_card_payment_data.cvv,
+        user_email: user_email,
+        cop_id: cop_id,
+        user_id: user_id,
+        user_phone: user_phone,
+        user_lname: user_name.split(" ")[1],
+        user_fname: user_name.split(" ")[0]
       };
 
       card_payload = Mcrypt.encrypt(card_payload);
