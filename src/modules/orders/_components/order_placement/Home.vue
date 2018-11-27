@@ -38,7 +38,7 @@
       <div class="orders-loading-container" v-loading="loading" v-if="loading">
       </div>
       <div v-if="Array.isArray(get_order_path) && get_order_path.length > 1 && !loading">
-          <vendor-view ></vendor-view>
+          <vendor-view v-on:vendorComponentDestroyed="destroyOrderPlacement()"></vendor-view>
       </div>
       </div>
 
@@ -48,7 +48,9 @@
 <script>
 import NoSSR from 'vue-no-ssr';
 import { mapGetters,mapMutations,mapActions } from 'vuex';
-import home_store from './_store';
+import order_placement_store from './_store';
+import orders_module_store from '../../_store';
+import payments_module_store from '../../../payment/_store';
 import VendorComponent from './_components/VendorComponent.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faPlus, faMapMarkerAlt, faCircle, faClock, faPen, faDollarSign, faTimes, faMobileAlt,faStar } from '@fortawesome/free-solid-svg-icons'
@@ -128,7 +130,7 @@ export default {
         // TO DO research implementation of native input events
     },
     clearLocation(index){
-        this.resetLocation();
+        this.resetLocation(index);
         this.attemptPriceRequest();
     },
     resetLocation(index){
@@ -298,55 +300,48 @@ export default {
             'homeview--input-bundler__destination-short-input': false
         }
     },
-    initializeOrderPlacementHome(){
-        console.log('in initializeOrderPlacementHome');
-        if(Array.isArray(this.get_location_names)){
-            if(this.get_location_names.length > 0){
-                this.locations = this.get_location_names;
-            }
-        }
-        console.log('out initializeOrderPlacementHome');
-    },
+    
     removePolyline(){
         this.unset_polyline([]);
+    },
+    destroyOrderPlacement(){
+        this.clearLocationNamesModel();
+        this.setPickupFilled(false);
+        try{
+            this.$store.unregisterModule(['$_orders','$_home']);
+        }
+        catch(er){
+            console.log('failed to unregisterModule $_orders $_home on order placement home', er);
+        }
+
+
+        try{
+            this.$store.unregisterModule('$_payment');
+        }
+        catch(er){
+            console.log('failed to unregisterModule $_orders $_home on order placement home', er);
+        }
+
+        this.clear_order_path();
+        this.remove_markers();
+        this.remove_polyline();
+        this.clear_location_names_state();
+        this.clear_price_request_object();
+        this.setPickupFilled(false);
+        this.clear_extra_destinations();
+        this.$destroy();
     }
   },
   mounted() {
 
   },
   created() {
-    const STORE_PARENT = "$_orders";
-    const STORE_KEY = "$_home";
-    // if (!this.$store.state[STORE_PARENT][STORE_KEY]) {
-      this.$store.registerModule([STORE_PARENT,STORE_KEY], home_store);
-    // }
-    this.initializeOrderPlacementHome();
-    console.log('in created');
+      this.$store.registerModule(['$_orders','$_home'], order_placement_store);
+      this.$store.registerModule('$_payment', payments_module_store);
   },
-  beforeRouteLeave (to, from, next) {
-    if(to.name == 'tracking'){
-        this.clear_order_path();
-        this.remove_markers();
-        this.remove_polyline();
-        this.clear_location_names_state();
-        this.clearLocationNamesModel();
-        this.clear_price_request_object();
-        this.setPickupFilled = false;
-        this.clear_extra_destinations;
-        this.resetState;
-    //     if(Array.isArray(this.get_map_markers)){
-    //         if(this.get_map_markers.length > 0){
-    //             for(let i=0; i< this.get_map_markers.length; i++){
-    //                 this.unset_location_marker(i);
-    //                 this.unset_order_path(i);
-    //                 this.deleteLocationInModel(i);
-    //                 this.unset_location_name(i);
-    //             }
-    //         }
-    //     }
-    }
-    next();
-},
+  destroyed () {
+      this.destroyOrderPlacement();
+  },
 
   watch:{
 
