@@ -137,6 +137,8 @@ export default {
 
       card_payload = Mcrypt.encrypt(card_payload);
 
+      console.log(card_payload);
+
       let full_payload = {
         values: card_payload,
         vm: this,

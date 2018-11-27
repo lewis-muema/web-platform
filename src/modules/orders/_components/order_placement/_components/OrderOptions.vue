@@ -153,7 +153,7 @@ import payment_store from "../../../../payment/_store";
 import order_store from "../../../_store";
 import home_store from "../_store";
 // import * from '../js/MpesaActions'
-import Mcrypt from "../../../mixins/mcrypt_mixin.js";
+import Mcrypt from "../../../../../mixins/mcrypt_mixin.js";
 
 export default {
   name: "order-options",
@@ -709,7 +709,7 @@ export default {
             response = response[0];
           }
           //decrypt response here
-          response = Mcrypt.decrypt(response);
+          response = JSON.parse(Mcrypt.decrypt(response));
           console.log(response);
 
           if (response.status == true) {
@@ -758,7 +758,7 @@ export default {
             response = response[0];
           }
           //decrypt response.data here
-          response.data = Mcrypt.decrypt.data;
+          response.data = JSON.parse(Mcrypt.decrypt(response.data));
           let that = this;
 
           if (response.data.status == false) {
