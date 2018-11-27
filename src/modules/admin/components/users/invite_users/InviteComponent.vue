@@ -153,7 +153,7 @@
                     console.log("invitations sent");
                     console.log(response);
                     let level = 1; //success
-                    let notification = {"title": "Invite Users", "level": level, "message": "Invitations sent!"}; //notification object
+                    let notification = {"title": "", "level": level, "message": "Invitations sent!"}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
                 }, error => {
@@ -162,9 +162,9 @@
                     console.log(error);
                     let level = 3;
                     let notification = {
-                        "title": "Invite Users",
+                        "title": "",
                         "level": level,
-                        "message": "Invitations not sent."
+                        "message": "Something went wrong."
                     }; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification

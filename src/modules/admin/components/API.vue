@@ -128,16 +128,16 @@
                     console.log(response);
                     let level = 1; //success
                     this.message = "Key Updated!"
-                    let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
+                    let notification = {"title":"", "level":level, "message":this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 
                 }, error => {
                   this.update_api_text ='Update API Key';
                     console.log(error);
-                    let level = 2;
+                    let level = 3;
                     this.message = "Something went wrong."
-                    let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
+                    let notification = {"title":"", "level":level, "message":this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 
@@ -163,13 +163,18 @@
                     console.log("generated");
                     console.log(response);
                     this.generate_api_text ='Generate API Key'
+                    let level = 1; //success
+                    this.message = "Key Generated!"
+                    let notification = {"title":"", "level":level, "message":this.message}; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
                 }, error => {
                     console.log("NOT generated");
                     this.generate_api_text ='Generate API Key'
                     console.log(error);
-                    let level = 2;
+                    let level = 3;
                     this.message = "Something went wrong."
-                    let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
+                    let notification = {"title":"", "level":level, "message":this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 

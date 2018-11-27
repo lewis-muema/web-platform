@@ -20,20 +20,19 @@
                 <input type="password" name="confirm_password" v-model="confirm_password"
                        class="form-control profile-dimen"/>
             </p>
-            <p class="change-password-error">
-                {{message}}
-            </p>
-            <p class="change-password-success">
-                {{message}}
-            </p>
+            <!--<p class="change-password-error">-->
+                <!--{{message}}-->
+            <!--</p>-->
+            <!--<p class="change-password-success">-->
+                <!--{{message}}-->
+            <!--</p>-->
             <p>
                 <br/>
                 <input type="submit" class="button-primary btn-content" v-on:click="update_password" value="Update"/>
             </p>
-            </p>
 
         </div>
-
+    </div>
 </template>
 
 <script>
