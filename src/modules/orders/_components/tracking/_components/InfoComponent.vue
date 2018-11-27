@@ -98,6 +98,7 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'info-window',
+  // mixins: [Mcrypt],
   data: function() {
     return {
       loading: true,
@@ -106,6 +107,10 @@ export default {
     }
   },
   methods: {
+    // test_mcrypt: function (test_str) {
+    //   console.log(Mcrypt.encrypt(test_str));
+    //   // console.log(JSON.parse(Mcrypt.decrypt(test_str)));
+    // },
     cancel_toggle: function () {
       if (this.cancel_popup == 1) {
         this.cancel_popup = 0
