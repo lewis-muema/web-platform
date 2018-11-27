@@ -274,7 +274,7 @@ export default {
  color: #e08445;
 }
 .sign-up-phone-error{
- margin-right: 42%;
+ margin-right: 25%;
  font-size: 13px;
  font-family: 'Rubik', sans-serif;
  color: #e08445;
