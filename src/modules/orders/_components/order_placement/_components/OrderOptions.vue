@@ -136,7 +136,7 @@
             <div v-if="loading" v-loading="loading" class="orders-loading-container orders-loading-container--completion" >
             </div>
             <div v-if="!loading && payment_state == 0">
-                <button type="button" class="button-primary home-view--place-order" name="button" @click="checkPaymentDetails()">Place Order</button>
+                <button type="button" class="button-primary home-view--place-order" name="button" @click="checkPaymentDetails()">{{place_order_text}}</button>
             </div>
             <div class="home-view-place-order--mpesa-cancel" v-if="loading && payment_state == 1">
                 <button type="button" class="button-primary home-view--place-order" name="button" @click="cancelMpesaPaymentRequest()">Cancel Payment</button>
@@ -171,6 +171,7 @@ export default {
             payment_type : "prepay",
             payment_state : 0,// 0- initial 1- loading 2- success 3- cancelled
             should_destroy : false,
+            is_scheduled:false
         }
     },
     computed :{
@@ -212,6 +213,14 @@ export default {
         allowCash(){
             return (this.get_price_request_object.payment_option == 2 || this.getRB() <= 0);
         },
+        place_order_text(){
+            let text = 'Confirm ';
+            if(this.is_scheduled == true){
+                text = 'Schedule ';
+            }
+            return text + this.get_active_vendor_name+ ' Order';
+
+        }
 
     },
     methods:{

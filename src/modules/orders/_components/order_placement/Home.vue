@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="homeview--outer">
     <div class="homeview--inner">
-     <div class="homeview--form__header">
+     <!-- <div class="homeview--form__header">
          New Delivery
-     </div>
+     </div> -->
       <div class="homeview--form homeview--row homeview--form__scrollable" id="homeview-form">
         <div class="homeview--input-bundler">
           <no-ssr placeholder="">
