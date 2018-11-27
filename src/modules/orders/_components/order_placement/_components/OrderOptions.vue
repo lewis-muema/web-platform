@@ -151,6 +151,7 @@ import NoSSR from 'vue-no-ssr';
 import numeral from 'numeral';
 import payment_store from '../../../../payment/_store';
 import order_store from '../../../_store';
+import home_store from '../_store';
 // import * from '../js/MpesaActions'
 export default {
     name:'order-options',
@@ -169,6 +170,7 @@ export default {
             customer_token : '',
             payment_type : "prepay",
             payment_state : 0,// 0- initial 1- loading 2- success 3- cancelled
+            should_destroy : false,
         }
     },
     computed :{
@@ -214,21 +216,28 @@ export default {
     },
     methods:{
         ...mapMutations({
+            remove_polyline : '$_orders/remove_polyline',
+            remove_markers : '$_orders/remove_markers',
+            unsetMap : '$_orders/unsetMap',
           set_active_order_option : '$_orders/$_home/set_active_order_option',
           setPickupFilled: '$_orders/$_home/set_pickup_filled',
           setPaymentMethod: '$_orders/$_home/set_payment_method',
           setScheduleTime: '$_orders/$_home/set_schedule_time',
           setOrderNotes: '$_orders/$_home/set_order_notes',
-          unsetMap : '$_orders/unsetMap',
+          clear_order_path : '$_orders/$_home/clear_order_path',
+          clear_location_names_state : '$_orders/$_home/clear_location_names',
+          clear_price_request_object : '$_orders/$_home/clear_price_request_object',
+          clear_extra_destinations : '$_orders/$_home/clear_extra_destination',
         }),
         ...mapActions({
-            requestOrderCompletion: '$_orders/$_home/requestOrderCompletion',
             requestRunningBalanceFromAPI: '$_payment/requestRunningBalance',
             requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
             requestCardPaymentAction: '$_payment/requestCardPayment',
             completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
             terminateMpesaPaymentRequest: '$_payment/terminateMpesaPaymentRequest',
+            requestOrderCompletion: '$_orders/$_home/requestOrderCompletion',
             requestSavedCards: '$_orders/$_home/requestSavedCards',
+
         }),
         do_set_active_order_option(name){
             (this.get_active_order_option != name) ? this.set_active_order_option(name)  : this.set_active_order_option('');
@@ -331,13 +340,8 @@ export default {
                if(response.status == true){
                    this.setPickupFilled(false);
                    let order_no = this.get_price_request_object.order_no;
-                   // let to_location = (window.location.origin + '/orders/track/'+ order_no);
-                   // console.log('to_location',to_location);
-                   // window.location.href = to_location;
+                   this.should_destroy = true;
                    this.$router.push({ name: 'tracking', params: { order_no: order_no }})
-                   // this.$store.unregisterModule(['$_orders','$_home']);
-                   // this.$store.unregisterModule(['$_orders']);
-
 
                } else {
                    this.doNotification(2,"Order completion failed", "Price request failed. Please try again")
@@ -601,9 +605,6 @@ export default {
                 console.log(new_rb);
 
                 if (new_rb < old_rb) {
-                  //running balance updated
-                  //terminate poll
-                  //update global running balance
                   this.completeMpesaPaymentRequest({});
                   this.$store.commit(
                     "setRunningBalance",
@@ -648,10 +649,10 @@ export default {
             }
 
             let card_payload = {
-              user_id: "0",
-              cop_id: "1083",
-              // user_id: user_id,
-              // cop_id: cop_id,
+              // user_id: "0",
+              // cop_id: "1083",
+              user_id: user_id,
+              cop_id: cop_id,
             };
 
             console.log(card_payload);
@@ -808,17 +809,17 @@ export default {
         /* end card */
     },
     created(){
-        // console.log('store breaking ',this.$store.state)
-        //if (!this.$store.state['$_payment']) {
-            this.$store.registerModule('$_payment', payment_store);
-        //}
-        // if (!this.$store.state['$_orders']) {
-            this.$store.registerModule('$_orders', order_store);
-        // }
+
         this.initializeOrderPlacement();
         this.refreshRunningBalance();
         this.getUserCards();
-    }
+    },
+    destroyed () {
+      console.log('in destroyed 2')
+      if(this.should_destroy == true){
+          this.$emit('destroyOrderOptions');
+      }
+    },
 }
 </script>
 
