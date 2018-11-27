@@ -55,9 +55,11 @@ import payment_loading from "./LoadingComponent.vue";
 import payment_success from "./SuccessComponent.vue";
 import payment_fail from "./FailComponent.vue";
 import add_card from "./AddCard.vue";
+import Mcrypt from "../../../mixins/mcrypt_mixin.js";
 
 export default {
   name: "card-component",
+  mixins: [Mcrypt],
   components: { payment_loading, payment_success, payment_fail, add_card },
   data() {
     return {
@@ -164,6 +166,8 @@ export default {
         user_name: user_name
       };
 
+      card_payload = Mcrypt.encrypt(card_payload);
+
       let full_payload = {
         values: card_payload,
         vm: this,
@@ -172,6 +176,7 @@ export default {
       };
       this.$store.dispatch("$_payment/requestCardPayment", full_payload).then(
         response => {
+          response.data = Mcrypt.decrypt(response.data);
           console.log(response);
           let that = this;
 
