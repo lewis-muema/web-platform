@@ -39,10 +39,10 @@
       </div>
       <div class="orders-loading-container" v-loading="loading" v-if="loading">
       </div>
-      <div v-if="Array.isArray(get_order_path) && get_order_path.length > 1 && !loading">
+      <div v-if="show_vendor_view && !loading">
           <vendor-view v-on:vendorComponentDestroyed="destroyOrderPlacement()"></vendor-view>
       </div>
-      <div v-if="get_order_path.length < 1 && !loading" class="home-view--seperator home-view--form__seperator">
+      <div v-if="!show_vendor_view && !loading" class="home-view--seperator home-view--form__seperator">
           <button type="button" class="button--primary-inactive home-view--place-order" >Confirm Order</button>
       </div>
       </div>
@@ -93,6 +93,9 @@ export default {
     allow_add_destination(){
 
         return !this.loading && Array.isArray(this.get_order_path) && ((this.get_order_path.length-1) <= this.get_max_destinations) && (this.get_order_path.length>1) && (this.get_extra_destinations <= this.get_order_path.length-2 );
+    },
+    show_vendor_view(){
+        return Array.isArray(this.get_order_path) && this.get_order_path.length > 1;
     }
   },
   methods: {
@@ -109,6 +112,7 @@ export default {
       addExtraDestination : '$_orders/$_home/add_extra_destination',
       removeExtraDestination : '$_orders/$_home/remove_extra_destination',
       set_active_package_class : '$_orders/$_home/set_active_package_class',
+      set_active_vendor_name : '$_orders/$_home/set_active_vendor_name',
       remove_markers : '$_orders/remove_markers',
       remove_polyline : '$_orders/remove_polyline',
       clear_order_path : '$_orders/$_home/clear_order_path',
@@ -287,14 +291,22 @@ export default {
         this.$store.commit('setNotification', notification);
     },
     setDefaultPackageClass(){
-        let session = this.$store.getters.getSession;
-        if(session.hasOwnProperty('first_time')){
-            if(session.first_time != true){
-                if(this.get_active_package_class == ''){
-                    this.set_active_package_class(this.get_price_request_object.economy_price_tiers[0]["tier_group"]);
-                }
+        try{
+            if(this.get_active_package_class == ''){
+                let default_package_class = this.get_price_request_object.economy_price_tiers[0]["tier_group"];
+                console.log('default_package_class');
+                this.set_active_package_class(default_package_class);
+            }
+            if(this.get_active_vendor_name == ''){
+                let default_vendor = this.get_price_request_object.economy_price_tiers[0]['price_tiers'][0]['vendor_name'];
+                console.log('default_vendor', default_vendor)
+                this.set_active_vendor_name(default_vendor);
             }
         }
+        catch(er){
+            console.log(er);
+        }
+
     },
     // scroll_to_bottom(){
     //     let container = this.$el.querySelector("#homeview-form");

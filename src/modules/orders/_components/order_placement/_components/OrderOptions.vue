@@ -1,7 +1,7 @@
 <template lang="html">
     <div class="">
-        <div class="home-view--seperator">
-        </div>
+        <!-- <div class="home-view--seperator">
+        </div> -->
         <div class="home-view-actions">
             <div class="home-view-actions--items" :class="get_current_active_order_option_class('payment')" @click="do_set_active_order_option('payment')">
                 <i class="el-icon-goods"></i>
@@ -18,8 +18,8 @@
                 <span class="home-view-actions--items__span">Schedule</span>
             </div>
         </div>
-        <div class="home-view--seperator">
-        </div>
+        <!-- <div class="home-view--seperator">
+        </div> -->
         <div class="home-view-actions--note" v-if="get_active_order_option == 'payment'">
             <div class="">
 
@@ -108,7 +108,7 @@
 
             </div>
             <div class="">
-                <textarea name="name" rows="5" class="textarea-control" v-model="order_notes"></textarea>
+                <textarea name="name" rows="5" class="textarea-control" v-model="order_notes" placeholder="Additional delivery instructions"></textarea>
             </div>
             <div class="">
 
