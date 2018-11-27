@@ -3,14 +3,18 @@
     <div class="onboarding-user-header">
       Connect your personal Sendy account
     </div>
+    <p class="onboard-error">
+      {{message}}
+    </p>
     <div class="form-inputs">
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
             <span>Personal Email</span>
           </label>
-          <input id="perEmail" class="form-control" type="email" placeholder="you@email.com"  v-model="per_email" @focus="setCurrentStep(1)" >
-
+          <input  class="form-control" type="email" v-validate="'required|email'" name="email" placeholder="you@email.com"  v-model="per_email" @focus="setCurrentStep(1)" >
+          <br>
+          <span class="onboarding-email-error">{{ errors.first('email') }}</span>
         </div>
       </div>
     </div>
@@ -30,7 +34,8 @@ export default {
   name: 'screen-two-component',
   data: function () {
     return {
-      per_email : ""
+      per_email : "",
+      message : ""
     }
   },
   methods: {
@@ -42,9 +47,24 @@ export default {
       }
     ),
     next_view: function ()
-    { this.updatePerEmail(this.per_email);
-      this.updateViewStep(0);
-      this.setViewState(3);
+    {
+      let email_valid = true
+      for (var i = 0; i < this.errors.items.length; i++) {
+      if (this.errors.items[i].field == 'email') {
+        email_valid = false
+        break
+       }
+      }
+
+      if (email_valid == true) {
+        this.updatePerEmail(this.per_email);
+        this.updateViewStep(0);
+        this.setViewState(3);
+      }
+      else {
+        this.message = 'Provide valid Email ';
+      }
+
     },
     last_view: function(){
         this.setViewState(1);
