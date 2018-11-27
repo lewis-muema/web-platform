@@ -41,15 +41,16 @@
   height: 2.5em;
   margin: 13px 0;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 2px solid #555;
   padding-top: 4px;
   padding-bottom: 4px;
-  background-color: #80808017;
+  background-color: transparent;
 
 }
 .home-view-vendor-types--item:hover, .home-view-vendor-types--item:active, .home-view-vendor-types--item__active{
     border: 2px solid #1782c5;
     background-color: #fff;
+    color:1782c5;
 }
 
 .home-view-vendor-types--item, .home-view-vendor-types-item, .home-view-vendor-types-item--cost-wrapper, .home-view-vendor-types-item--vendor-wrapper{

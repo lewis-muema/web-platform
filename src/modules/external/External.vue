@@ -6,12 +6,35 @@
 </template>
 
 <script>
-// import Vue from 'vue'
+import Vue from "vue"
 import {mapGetters,mapMutations,mapActions} from 'vuex'
 import external_store from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module'
 import HeaderComponent from './components/HeaderComponent.vue'
 import BodComponent from './components/BodComponent.vue'
+import VeeValidate from 'vee-validate';
+import { Validator } from 'vee-validate';
+import VueTelInput from 'vue-tel-input'
+
+Vue.use(VueTelInput)
+Vue.use(VeeValidate);
+
+Validator.extend('check_phone', {
+       getMessage: field => `The phone number not valid`,
+       validate: value => {
+         const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+         var validity = false
+         try {
+
+           var number = phoneUtil.parse(value);
+           validity = (phoneUtil.isValidNumber(number));
+         } catch (e) {
+           console.log(e)
+           validity = false
+         }
+         return validity;
+       }
+   });
 
 export default {
   data(){

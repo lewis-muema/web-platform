@@ -136,3 +136,41 @@
 .orders-loading-container--completion{
     margin-bottom: 0px;
 }
+.homeview--form__header{
+    color: #555;
+    text-transform: uppercase;
+    font-size: 10.2px;
+    margin-bottom: 10px;
+}
+.homeview--form__header-lower{
+    margin-top: 20px;
+    margin-bottom: -10px;
+}
+.home-view--form__seperator{
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 30px 20px 10px 40px;
+}
+.home-view--seperator__vendors{
+    margin: unset;
+}
+.home-view-vendor-classes-menu--img, .home-view-vendor-classes-menu--span{
+    flex: 1;
+}
+.home-view-vendor-classes-menu--span{
+
+}
+.home-view-vendor-classes-menu--img{
+    max-width: 20px;
+    position: relative;
+    left: -35px;
+    bottom: -15px;
+}
+.home-view-vendor-classes-menu{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-basis: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
