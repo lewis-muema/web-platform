@@ -1,12 +1,14 @@
 <template lang="html">
   <div class="homeview--outer">
     <div class="homeview--inner">
-
+     <!-- <div class="homeview--form__header">
+         New Delivery
+     </div> -->
       <div class="homeview--form homeview--row homeview--form__scrollable" id="homeview-form">
         <div class="homeview--input-bundler">
           <no-ssr placeholder="">
               <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img .homeview--input-bundler__destination-input sendy-orange" width="10px"  />
-              <gmap-autocomplete @place_changed="setLocation($event, 0)" @keyup="checkChangeEvents($event, 0)" @change="checkChangeEvents($event, 0)" :options="map_options"  v-model="locations[0]" placeholder="Pickup" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"></gmap-autocomplete>
+              <gmap-autocomplete @place_changed="setLocation($event, 0)" @keyup="checkChangeEvents($event, 0)" @change="checkChangeEvents($event, 0)" :options="map_options"  v-model="locations[0]" placeholder="Enter a pickup location" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"></gmap-autocomplete>
               <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup     " width="10px"  @click="clearLocation(0)" />
           </no-ssr>
         </div>
@@ -14,7 +16,7 @@
             <div class="homeview--input-bundler">
               <no-ssr placeholder="">
                   <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px"  />
-                  <gmap-autocomplete  @place_changed="setLocation($event, 1)"  @keyup="checkChangeEvents($event, 1)" @change="checkChangeEvents($event, 1)" :options="map_options"  v-model="locations[1]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
+                  <gmap-autocomplete  @place_changed="setLocation($event, 1)"  @keyup="checkChangeEvents($event, 1)" @change="checkChangeEvents($event, 1)" :options="map_options"  v-model="locations[1]" placeholder="Enter a destination location" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
                   <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup " width="10px"  @click="clearLocation(1)"/>
               </no-ssr>
             </div>
@@ -23,7 +25,7 @@
           <div class="homeview--input-bundler">
             <no-ssr placeholder="">
                 <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px"  />
-                <gmap-autocomplete  @place_changed="setLocation($event, n+1)"  @keyup="checkChangeEvents($event, n=1)" @change="checkChangeEvents($event, n+1)" :options="map_options"  v-model="locations[n+1]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
+                <gmap-autocomplete  @place_changed="setLocation($event, n+1)"  @keyup="checkChangeEvents($event, n=1)" @change="checkChangeEvents($event, n+1)" :options="map_options"  v-model="locations[n+1]" placeholder="Enter a destination location" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
                 <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right " width="10px"  @click="removeExtraDestinationWrapper(n+1)"/>
             </no-ssr>
           </div>
@@ -37,8 +39,11 @@
       </div>
       <div class="orders-loading-container" v-loading="loading" v-if="loading">
       </div>
-      <div v-if="Array.isArray(get_order_path) && get_order_path.length > 1 && !loading">
+      <div v-if="show_vendor_view && !loading">
           <vendor-view v-on:vendorComponentDestroyed="destroyOrderPlacement()"></vendor-view>
+      </div>
+      <div v-if="!show_vendor_view && !loading" class="home-view--seperator home-view--form__seperator">
+          <button type="button" class="button--primary-inactive home-view--place-order" >Confirm Order</button>
       </div>
       </div>
 
@@ -88,6 +93,9 @@ export default {
     allow_add_destination(){
 
         return !this.loading && Array.isArray(this.get_order_path) && ((this.get_order_path.length-1) <= this.get_max_destinations) && (this.get_order_path.length>1) && (this.get_extra_destinations <= this.get_order_path.length-2 );
+    },
+    show_vendor_view(){
+        return Array.isArray(this.get_order_path) && this.get_order_path.length > 1;
     }
   },
   methods: {
@@ -104,6 +112,7 @@ export default {
       addExtraDestination : '$_orders/$_home/add_extra_destination',
       removeExtraDestination : '$_orders/$_home/remove_extra_destination',
       set_active_package_class : '$_orders/$_home/set_active_package_class',
+      set_active_vendor_name : '$_orders/$_home/set_active_vendor_name',
       remove_markers : '$_orders/remove_markers',
       remove_polyline : '$_orders/remove_polyline',
       clear_order_path : '$_orders/$_home/clear_order_path',
@@ -282,14 +291,22 @@ export default {
         this.$store.commit('setNotification', notification);
     },
     setDefaultPackageClass(){
-        let session = this.$store.getters.getSession;
-        if(session.hasOwnProperty('first_time')){
-            if(session.first_time != true){
-                if(this.get_active_package_class == ''){
-                    this.set_active_package_class(this.get_price_request_object.economy_price_tiers[0]["tier_group"]);
-                }
+        try{
+            if(this.get_active_package_class == ''){
+                let default_package_class = this.get_price_request_object.economy_price_tiers[0]["tier_group"];
+                console.log('default_package_class');
+                this.set_active_package_class(default_package_class);
+            }
+            if(this.get_active_vendor_name == ''){
+                let default_vendor = this.get_price_request_object.economy_price_tiers[0]['price_tiers'][0]['vendor_name'];
+                console.log('default_vendor', default_vendor)
+                this.set_active_vendor_name(default_vendor);
             }
         }
+        catch(er){
+            console.log(er);
+        }
+
     },
     // scroll_to_bottom(){
     //     let container = this.$el.querySelector("#homeview-form");
@@ -300,7 +317,7 @@ export default {
             'homeview--input-bundler__destination-short-input': false
         }
     },
-    
+
     removePolyline(){
         this.unset_polyline([]);
     },

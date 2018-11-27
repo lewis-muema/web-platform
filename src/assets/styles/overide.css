@@ -34,7 +34,8 @@ button span {
   font-size: 13px;
   letter-spacing: 0.01em;
   cursor: not-allowed;
-  background: rgba(44, 130, 197, 0.7);
+  /* background: rgba(44, 130, 197, 0.7); */
+  background: rgba(0,0,0,0.50);
   position: relative;
   display: block;
   border-radius: 4px;
@@ -44,8 +45,8 @@ button span {
   padding-right: 20px;
   color: #fff;
   border: 1px solid #69a6d8;
+  border: 1px solid rgba(0,0,0,0.50);
 }
-
 .button-primary--naked {
   color: #1782c5;
   background-color: #fff;

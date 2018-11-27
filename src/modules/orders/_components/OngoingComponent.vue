@@ -151,7 +151,7 @@ export default {
   },
   mounted() {
     this.loading = true
-    this.poll()
+    // this.poll()
   }
 }
 </script>

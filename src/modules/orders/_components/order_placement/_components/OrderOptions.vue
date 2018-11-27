@@ -1,7 +1,7 @@
 <template lang="html">
     <div class="">
-        <div class="home-view--seperator">
-        </div>
+        <!-- <div class="home-view--seperator">
+        </div> -->
         <div class="home-view-actions">
             <div class="home-view-actions--items" :class="get_current_active_order_option_class('payment')" @click="do_set_active_order_option('payment')">
                 <i class="el-icon-goods"></i>
@@ -18,8 +18,8 @@
                 <span class="home-view-actions--items__span">Schedule</span>
             </div>
         </div>
-        <div class="home-view--seperator">
-        </div>
+        <!-- <div class="home-view--seperator">
+        </div> -->
         <div class="home-view-actions--note" v-if="get_active_order_option == 'payment'">
             <div class="">
 
@@ -108,7 +108,7 @@
 
             </div>
             <div class="">
-                <textarea name="name" rows="5" class="textarea-control" v-model="order_notes"></textarea>
+                <textarea name="name" rows="5" class="textarea-control" v-model="order_notes" placeholder="Additional delivery instructions"></textarea>
             </div>
             <div class="">
 
@@ -136,7 +136,7 @@
             <div v-if="loading" v-loading="loading" class="orders-loading-container orders-loading-container--completion" >
             </div>
             <div v-if="!loading && payment_state == 0">
-                <button type="button" class="button-primary home-view--place-order" name="button" @click="checkPaymentDetails()">Place Order</button>
+                <button type="button" class="button-primary home-view--place-order" name="button" @click="checkPaymentDetails()">{{place_order_text}}</button>
             </div>
             <div class="home-view-place-order--mpesa-cancel" v-if="loading && payment_state == 1">
                 <button type="button" class="button-primary home-view--place-order" name="button" @click="cancelMpesaPaymentRequest()">Cancel Payment</button>
@@ -172,7 +172,8 @@ export default {
       customer_token: "",
       payment_type: "prepay",
       payment_state: 0, // 0- initial 1- loading 2- success 3- cancelled
-      should_destroy: false
+      should_destroy: false,
+      is_scheduled:false
     };
   },
   computed: {
@@ -216,7 +217,15 @@ export default {
       return (
         this.get_price_request_object.payment_option == 2 || this.getRB() <= 0
       );
-    }
+      },
+     place_order_text(){
+          let text = 'Confirm ';
+          if(this.is_scheduled == true){
+              text = 'Schedule ';
+          }
+          return text + this.get_active_vendor_name+ ' Order';
+
+      }
   },
   methods: {
     ...mapMutations({
