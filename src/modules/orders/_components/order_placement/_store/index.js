@@ -11,11 +11,13 @@ const state = {
   max_destinations: 9,
   order_path:[],
   location_names:[],
+  saved_cards:[],
   schedule_time:'',
   order_notes:'',
   extra_destinations:0,
   pickup_filled:false,
   payment_method:'',
+  stripe_user_id:'',
 }
 
 export default {

@@ -86,7 +86,6 @@
                     "cop_user_id": this.filterData.user
                 }
 
-                console.log(newDept_payload)
                 let full_payload = {
                     "values": newDept_payload,
                     "vm": this,
