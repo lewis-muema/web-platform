@@ -649,10 +649,10 @@ export default {
             }
 
             let card_payload = {
-              // user_id: "0",
-              // cop_id: "1083",
-              user_id: user_id,
-              cop_id: cop_id,
+              user_id: "0",
+              cop_id: "1083",
+              // user_id: user_id,
+              // cop_id: cop_id,
             };
 
             console.log(card_payload);

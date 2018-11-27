@@ -1,12 +1,14 @@
 <template lang="html">
   <div class="homeview--outer">
     <div class="homeview--inner">
-
+     <div class="homeview--form__header">
+         New Delivery
+     </div>
       <div class="homeview--form homeview--row homeview--form__scrollable" id="homeview-form">
         <div class="homeview--input-bundler">
           <no-ssr placeholder="">
               <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img .homeview--input-bundler__destination-input sendy-orange" width="10px"  />
-              <gmap-autocomplete @place_changed="setLocation($event, 0)" @keyup="checkChangeEvents($event, 0)" @change="checkChangeEvents($event, 0)" :options="map_options"  v-model="locations[0]" placeholder="Pickup" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"></gmap-autocomplete>
+              <gmap-autocomplete @place_changed="setLocation($event, 0)" @keyup="checkChangeEvents($event, 0)" @change="checkChangeEvents($event, 0)" :options="map_options"  v-model="locations[0]" placeholder="Enter a pickup location" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"></gmap-autocomplete>
               <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup     " width="10px"  @click="clearLocation(0)" />
           </no-ssr>
         </div>
@@ -14,7 +16,7 @@
             <div class="homeview--input-bundler">
               <no-ssr placeholder="">
                   <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px"  />
-                  <gmap-autocomplete  @place_changed="setLocation($event, 1)"  @keyup="checkChangeEvents($event, 1)" @change="checkChangeEvents($event, 1)" :options="map_options"  v-model="locations[1]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
+                  <gmap-autocomplete  @place_changed="setLocation($event, 1)"  @keyup="checkChangeEvents($event, 1)" @change="checkChangeEvents($event, 1)" :options="map_options"  v-model="locations[1]" placeholder="Enter a destination location" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
                   <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup " width="10px"  @click="clearLocation(1)"/>
               </no-ssr>
             </div>
@@ -23,7 +25,7 @@
           <div class="homeview--input-bundler">
             <no-ssr placeholder="">
                 <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px"  />
-                <gmap-autocomplete  @place_changed="setLocation($event, n+1)"  @keyup="checkChangeEvents($event, n=1)" @change="checkChangeEvents($event, n+1)" :options="map_options"  v-model="locations[n+1]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
+                <gmap-autocomplete  @place_changed="setLocation($event, n+1)"  @keyup="checkChangeEvents($event, n=1)" @change="checkChangeEvents($event, n+1)" :options="map_options"  v-model="locations[n+1]" placeholder="Enter a destination location" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
                 <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right " width="10px"  @click="removeExtraDestinationWrapper(n+1)"/>
             </no-ssr>
           </div>
@@ -39,6 +41,9 @@
       </div>
       <div v-if="Array.isArray(get_order_path) && get_order_path.length > 1 && !loading">
           <vendor-view v-on:vendorComponentDestroyed="destroyOrderPlacement()"></vendor-view>
+      </div>
+      <div v-if="get_order_path.length < 1 && !loading" class="home-view--seperator home-view--form__seperator">
+          <button type="button" class="button--primary-inactive home-view--place-order" >Confirm Order</button>
       </div>
       </div>
 
@@ -300,7 +305,7 @@ export default {
             'homeview--input-bundler__destination-short-input': false
         }
     },
-    
+
     removePolyline(){
         this.unset_polyline([]);
     },
