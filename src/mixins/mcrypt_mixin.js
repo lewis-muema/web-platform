@@ -54,7 +54,8 @@ class Mcrypt {
   }
 
   encrypt(plaintext) {
-    var encrypted = CryptoJS.AES.encrypt(plaintext, this.key, {
+    var text = JSON.stringify(plaintext)
+    var encrypted = CryptoJS.AES.encrypt(text, this.key, {
       iv: this.iv,
       padding: CryptoJS.pad.ZeroPadding
     });
