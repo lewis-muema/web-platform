@@ -12,6 +12,7 @@ export default {
 
     //check if payload is a string here and change the content type
 
+    payload.values = JSON.stringify(payload.values);
     if (
       /^[\],:{}\s]*$/.test(
         payload.values
