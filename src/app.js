@@ -37,7 +37,8 @@ import {
   Loading,
   MessageBox,
   Message,
-  Notification
+  Notification,
+  Popover,
 } from "element-ui";
 
 Vue.use(Pagination);
@@ -58,6 +59,7 @@ Vue.use(TimeSelect);
 Vue.use(TimePicker);
 Vue.use(Icon);
 Vue.use(Rate);
+Vue.use(Popover);
 Vue.use(Loading.directive);
 
 Vue.prototype.$loading = Loading.service;
