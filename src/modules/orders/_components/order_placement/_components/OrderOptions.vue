@@ -35,22 +35,6 @@
                     </div>
 
                 </div>
-
-                <span v-if="allowCash == true">
-                    <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
-                        <div class="home-view-notes-wrapper--item__option">
-                            <!-- <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
-                            <div class="home-view-notes-wrapper--item__option-div">
-                                <el-radio v-model="payment_method" label="3">Payment on delivery</el-radio>
-                            </div>
-                        </div>
-                        <div class="home-view-notes-wrapper--item__value">
-                            <!-- <input type="checkbox" name="" value=""> -->
-
-                        </div>
-                    </div>
-
-                </span>
                 <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
@@ -94,6 +78,22 @@
 
                     </div>
                 </div>
+
+                <span v-if="allowCash == true">
+                    <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
+                        <div class="home-view-notes-wrapper--item__option">
+                            <!-- <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
+                            <div class="home-view-notes-wrapper--item__option-div">
+                                <el-radio v-model="payment_method" label="3">Payment on delivery</el-radio>
+                            </div>
+                        </div>
+                        <div class="home-view-notes-wrapper--item__value">
+                            <!-- <input type="checkbox" name="" value=""> -->
+
+                        </div>
+                    </div>
+
+                </span>
 
             </div>
             <div class="home-view--seperator">
@@ -173,7 +173,7 @@ export default {
       payment_type: "prepay",
       payment_state: 0, // 0- initial 1- loading 2- success 3- cancelled
       should_destroy: false,
-      is_scheduled:false
+      is_scheduled: false
     };
   },
   computed: {
@@ -217,15 +217,14 @@ export default {
       return (
         this.get_price_request_object.payment_option == 2 || this.getRB() <= 0
       );
-      },
-     place_order_text(){
-          let text = 'Confirm ';
-          if(this.is_scheduled == true){
-              text = 'Schedule ';
-          }
-          return text + this.get_active_vendor_name+ ' Order';
-
+    },
+    place_order_text() {
+      let text = "Confirm ";
+      if (this.is_scheduled == true) {
+        text = "Schedule ";
       }
+      return text + this.get_active_vendor_name + " Order";
+    }
   },
   methods: {
     ...mapMutations({
@@ -240,7 +239,9 @@ export default {
       clear_order_path: "$_orders/$_home/clear_order_path",
       clear_location_names_state: "$_orders/$_home/clear_location_names",
       clear_price_request_object: "$_orders/$_home/clear_price_request_object",
-      clear_extra_destinations: "$_orders/$_home/clear_extra_destination"
+      clear_extra_destinations: "$_orders/$_home/clear_extra_destination",
+      setSavedCards: "$_orders/$_home/set_saved_cards",
+      setStripeUserId: "$_orders/$_home/set_stripe_user_id"
     }),
     ...mapActions({
       requestRunningBalanceFromAPI: "$_payment/requestRunningBalance",
@@ -597,7 +598,7 @@ export default {
       };
 
       let payload = {
-        values: running_balance_payload,
+        params: running_balance_payload,
         app: "PRIVATE_API",
         endpoint: "running_balance"
       };
@@ -653,10 +654,6 @@ export default {
 
             if (new_rb < old_rb) {
               this.completeMpesaPaymentRequest({});
-              this.$store.commit(
-                "setRunningBalance",
-                response.data.running_balance
-              );
               return true;
             }
           }
@@ -714,23 +711,22 @@ export default {
 
       this.requestSavedCards(full_payload).then(
         response => {
-          if (response.length > 0) {
-            response = response[0];
-          }
+          console.log("requesting saved cards");
+          console.log("get_card_response", response);
           //decrypt response here
           response = JSON.parse(Mcrypt.decrypt(response));
+
+          console.log("get_card_response again", response);
+
           console.log(response);
 
           if (response.status == true) {
             //commit to global store here
-            this.$store.commit(
-              "$_orders/$_home/set_saved_cards",
-              response.cards
-            );
-            this.$store.commit(
-              "$_orders/$_home/set_stripe_user_id",
-              response.stripe_user_id
-            );
+            console.log("commit cards response to the global store");
+            console.log(response);
+
+            this.setSavedCards(response.cards);
+            this.setStripeUserId(response.stripe_user_id);
           } else {
             console.log("failed to get saved cards");
           }
