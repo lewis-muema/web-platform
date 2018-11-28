@@ -1,5 +1,6 @@
 .idea*
 src/dist/
+dist/
 .DS_Store
 node_modules/
 npm-debug.log*
@@ -8,3 +9,4 @@ yarn-error.log*
 test/unit/coverage
 test/e2e/reports
 selenium-debug.log
+*.DS_Store
