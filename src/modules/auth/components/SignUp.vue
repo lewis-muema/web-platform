@@ -7,7 +7,12 @@
     Sign up for Sendy
   </div>
 
-
+  <!-- <div class="sign-button" onclick="" id="sign-in-v2-logging-in-1">
+  <img class="sign-buttom__img" src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
+  </div>
+  <div class="sign-text">
+     or
+  </div> -->
 
   <p class="sign-up-error">
     {{message}}
@@ -35,7 +40,7 @@
     <div class="sign-holder dimen" id="outer_u_pass">
   <span >
         <input class="input-control sign-up-form" type="password" name="password" v-model="password" placeholder="Password">
-  </span
+  </span>
     </div>
 
     <div class="sign-holder" style="text-align:center;">
@@ -149,18 +154,8 @@ export default {
       }
         else{
               this.message = 'Provide valid Email ';
-              this.doNotification(
-                2,
-                "Sign Up failed",
-                "Provide valid Email"
-              );
         }
 
-   },
-   doNotification(level, title, message) {
-     let notification = { title: title, level: level, message: message };
-     this.$store.commit("setNotification", notification);
-     this.$store.commit("setNotificationStatus", true);
    }
   },
   computed : {
