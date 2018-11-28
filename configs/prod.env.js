@@ -3,7 +3,8 @@ module.exports = {
   DEBUG_MODE: false,
   NODE_PRIVATE_API: '"https://privateapi.sendyit.com/v1/"',
   PRIVATE_API: '"https://api.sendyit.com/parcel/api/v11/"',
-  BACKEND_CUSTOMERS_APP: '"https://prod.sendyit.com/customers/"'
+  BACKEND_CUSTOMERS_APP: '"https://prod.sendyit.com/customers/"',
+  DOMAIN: '"webapp.sendyit.com"'
 
   //TODO: change this back to prod
   //
