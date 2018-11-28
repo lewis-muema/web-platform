@@ -24,7 +24,7 @@
   </tr>
 
   <tr>
-    <td align="center"><input type="submit" class="btn btn-primary" style="  font-size:14px;  width:310px; margin-top:10px;" value="Change Password" v-on:click="reset_pass" /></td>
+    <td align="center"><input type="submit" class="btn btn-primary" style="font-size:14px;  width:310px; margin-top:10px;" value="Change Password" v-on:click="reset_pass" /></td>
   </tr>
 </table>
 
@@ -51,10 +51,50 @@ export default {
       confirm_password: ''
     }
   },
+  mounted(){
+    this.check_content();
+  },
   methods:{
      ...mapActions({
         requestResetPassword :'$_auth/requestResetPassword',
     }),
+    check_content: function() {
+      console.log("Checked");
+      let content = this.$route.params.content;
+        console.log('Check content',content);
+
+        let values = {};
+        values.content = content;
+        let full_payload = {
+          values: values,
+          vm: this,
+          app: "NODE_PRIVATE_API",
+          endpoint: ""
+        };
+        this.requestResetPassword(full_payload).then(
+          response => {
+            console.log(response);
+            if (response.length > 0) {
+              response = response[0];
+            }
+
+            if (response.status == true) {
+
+              console.log(response);
+              console.log("Valid Token");
+
+            } else {
+
+              console.warn("Invalid Token");
+              // this.$router.push("/auth");
+            }
+          },
+          error => {
+            console.error("Check Internet Connection");
+            console.log(error);
+          }
+        );
+    },
     reset_pass: function ()
     {
       let payload = {};
