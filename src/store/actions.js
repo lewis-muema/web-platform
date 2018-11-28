@@ -11,8 +11,12 @@ export default {
     let config = {};
 
     //check if payload is a string here and change the content type
-
-    payload.values = JSON.stringify(payload.values);
+    if ("params" in payload) {
+      payload.values = JSON.stringify(payload.params);
+    } else {
+      //assume we used values
+      payload.values = JSON.stringify(payload.values);
+    }
     if (
       /^[\],:{}\s]*$/.test(
         payload.values

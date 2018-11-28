@@ -173,7 +173,7 @@ export default {
       payment_type: "prepay",
       payment_state: 0, // 0- initial 1- loading 2- success 3- cancelled
       should_destroy: false,
-      is_scheduled:false
+      is_scheduled: false
     };
   },
   computed: {
@@ -217,15 +217,14 @@ export default {
       return (
         this.get_price_request_object.payment_option == 2 || this.getRB() <= 0
       );
-      },
-     place_order_text(){
-          let text = 'Confirm ';
-          if(this.is_scheduled == true){
-              text = 'Schedule ';
-          }
-          return text + this.get_active_vendor_name+ ' Order';
-
+    },
+    place_order_text() {
+      let text = "Confirm ";
+      if (this.is_scheduled == true) {
+        text = "Schedule ";
       }
+      return text + this.get_active_vendor_name + " Order";
+    }
   },
   methods: {
     ...mapMutations({
@@ -599,7 +598,7 @@ export default {
       };
 
       let payload = {
-        values: running_balance_payload,
+        params: running_balance_payload,
         app: "PRIVATE_API",
         endpoint: "running_balance"
       };
@@ -655,10 +654,6 @@ export default {
 
             if (new_rb < old_rb) {
               this.completeMpesaPaymentRequest({});
-              this.$store.commit(
-                "setRunningBalance",
-                response.data.running_balance
-              );
               return true;
             }
           }
