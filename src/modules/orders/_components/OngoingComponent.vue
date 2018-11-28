@@ -93,7 +93,7 @@ export default {
         if (["order_placement", "tracking"].includes(that.$router.currentRoute.name)) {
           setTimeout(function() {
             that.poll()
-          }, 5000);
+          }, 20000);
         }
         that.loading = false
       })
