@@ -40,7 +40,7 @@
     <div class="sign-holder dimen" id="outer_u_pass">
   <span >
         <input class="input-control sign-up-form" type="password" name="password" v-model="password" placeholder="Password">
-  </span
+  </span>
     </div>
 
     <div class="sign-holder" style="text-align:center;">

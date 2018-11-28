@@ -5,7 +5,7 @@
 </template>
 
 <script>
-const ENV = process.env.NODE_ENV;
+const ENV = process.env.CONFIGS_ENV;
 export default {
   name: "app",
   created() {

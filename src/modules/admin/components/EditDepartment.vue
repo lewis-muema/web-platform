@@ -113,8 +113,8 @@
                     console.log(response);
                     console.log("updated");
                     let level = 1; //success
-                    this.message = "edit Successful!"
-                    let notification = {"title": "Edit Department", "level": level, "message": this.message}; //notification object
+                    this.message = "Edit Successful!"
+                    let notification = {"title": "", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 
@@ -122,7 +122,7 @@
                     console.log(error);
                     let level = 2;
                     this.message = "Something went wrong."
-                    let notification = {"title": "Edit Department", "level": level, "message": this.message}; //notification object
+                    let notification = {"title": "", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 
