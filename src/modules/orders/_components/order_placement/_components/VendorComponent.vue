@@ -2,26 +2,18 @@
     <div class="">
         <div class="home-view--seperator">
         </div>
+        <div class="homeview--form__header homeview--form__header-lower">
+            Load Size And Delivery Type
+        </div>
         <div class="home-view-vendor-classes">
             <div class="home-view-vendor-classes--title" v-if="first_time">
                 What size of load do you want delivered?
             </div>
             <div class="home-view-vendor-classes--body">
                 <div class="">
-                    <!-- <div class="home-view-vendor-classes--icons" v-if="first_time">
-                        <div class="home-view-vendor-classes-icons-item">
-                           <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/vendor_size/small.svg" alt="" class="home-view-vendor-classes-icons-item--img">
-                        </div>
-                        <div class="home-view-vendor-classes-icons-item">
-                            <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/vendor_size/medium.svg" alt="" class="home-view-vendor-classes-icons-item--img">
-                        </div>
-                        <div class="home-view-vendor-classes-icons-item">
-                            <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/vendor_size/large.svg" alt="" class="home-view-vendor-classes-icons-item--img">
-                        </div>
-                    </div> -->
                     <div class="home-view-vendor-classes--label">
                         <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in get_price_request_object.economy_price_tiers" :key="index" @click="setActivePackageClass(vendor_class.tier_group)" v-if="vendor_class.price_tiers.length > 0">
-                            <a class="section__link" :class="get_current_active_package__class(vendor_class.tier_group)">{{vendor_class.tier_group}}</a>
+                            <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_package__class(vendor_class.tier_group)"><img :src="getPackageIcon(vendor_class.tier_group)" class="home-view-vendor-classes-menu--img" alt="vendor_class.tier_group"> <span class="home-view-vendor-classes-menu--span">{{vendor_class.tier_group}}</span></a>
                         </div>
                     </div>
                 </div>
@@ -43,7 +35,7 @@
                                 Ksh {{formatNumeral(j.cost)}}
                             </div>
                             <div class="home-view-vendor-types-item--cost-wrapper_time">
-                                {{transformDate(j.eta)}}
+                                Delivery by {{transformDate(j.eta)}}
                             </div>
                         </div>
                     </div>
@@ -53,7 +45,7 @@
 
         </div>
         <div class="" v-if="get_active_package_class != '' ">
-            <order-options></order-options>
+            <order-options v-on:destroyOrderOptions="destroyVendorComponent()"></order-options>
         </div>
       </div>
 </template>
@@ -95,6 +87,9 @@ export default {
         getVendorIcon(id){
             return "https://images.sendyit.com/web_platform/vendor_type/side/"+id+".svg";
         },
+        getPackageIcon(name){
+            return "https://images.sendyit.com/web_platform/vendor_size/"+name+".svg"
+        },
         get_current_active_package__class(name){
             return{
                 'router-link-active' : name == this.get_active_package_class
@@ -106,7 +101,7 @@ export default {
             }
         },
         transformDate(eta){
-            return this.moment().add(eta, 'seconds').format("h.mm a");
+            return this.moment().add(eta, 'seconds').format("HH.mm");
         },
         formatNumeral(num){
             return numeral(num).format('0,0');
@@ -119,6 +114,12 @@ export default {
                 }
             }
         },
+        destroyVendorComponent(){
+            console.log('in destroyVendorComponent');
+            this.set_active_vendor_name('');
+            this.$emit('vendorComponentDestroyed');
+            this.$destroy();
+        }
     },
     created(){
         this.setFirstTimeUser();

@@ -35,10 +35,30 @@
     export default {
         name: 'AddDepartment',
         mounted() {
+            let session = this.$store.getters.getSession;
+            let cop_id = 0;
+            if(session.default == 'biz'){
+                cop_id = session[session.default]['cop_id'];
+            }
+            let payload = {
+                "cop_id": cop_id
+
+            }
+            let users_full_payload = {
+                "values" : payload,
+                "vm":this,
+                "app":"NODE_PRIVATE_API",
+                "endpoint":"cop_users"
+            }
+            this.$store.dispatch("$_admin/requestUsersList", users_full_payload).then(response => {
+                console.log(response);
+            }, error => {
+                console.log(error);
+            });
         },
         data() {
             return {
-                empty_departmens_state: 'Adding Department',
+                empty_departments_state: 'Adding Department',
                 filterData: {
                     "user": ""
                 }
@@ -46,7 +66,8 @@
         },
         computed: {
             ...mapGetters({
-                userData: '$_admin/getUsersList'
+                userData: '$_admin/getUsersList',
+                requestUsersList: '$_admin/requestUsersList'
             }),
         },
         methods: {
@@ -65,7 +86,6 @@
                     "cop_user_id": this.filterData.user
                 }
 
-                console.log(newDept_payload)
                 let full_payload = {
                     "values": newDept_payload,
                     "vm": this,
@@ -76,15 +96,14 @@
                     console.log("department added");
                     console.log(response);
                     let level = 1; //success
-                    let notification = {"title": "Add Department", "level": level, "message": message}; //notification object
+                    let notification = {"title": "", "level": level, "message": "Department Added!"}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
-                    // this.$router.push('/admin/department');
                 }, error => {
                     console.log("department NOT added");
                     console.log(error);
                     let level = 2;
-                    let notification = {"title": "Add Department", "level": level, "message": "An error occurred."}; //notification object
+                    let notification = {"title": "", "level": level, "message": "Something went wrong."}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 

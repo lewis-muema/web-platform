@@ -46,7 +46,7 @@
         <div class="section--pagination-wrap">
             <el-pagination
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="fetchedDepartmentsData.length"
+                    :total="deptData.length"
                     :page-size="pagination_limit"
                     :current-page.sync="pagination_page"
                     @current-change="changePage"
@@ -65,6 +65,7 @@
     export default {
         name: "Departments",
         mounted() {
+
             let session = this.$store.getters.getSession;
             let cop_id = 0;
             if (session.default == 'biz') {
@@ -81,9 +82,12 @@
                 "endpoint": "cop_departments"
             }
             this.$store.dispatch("$_admin/requestDepartmentsList", users_full_payload).then(response => {
+                console.log('departments data here')
                 console.log(response);
+
             }, error => {
                 console.log(error);
+
             });
         },
         data: function () {
@@ -102,7 +106,7 @@
         },
         computed: {
             ...mapGetters({
-                fetchedDepartmentsData: '$_admin/getDepartmentsList',
+                deptData: '$_admin/getDepartmentsList',
                 userData: '$_admin/getUsersList',
             }),
             ...mapActions({
@@ -112,10 +116,18 @@
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
                 if (this.filterState == true) {
-                    return this.filteredUserData.slice(from, to);
+                    if(Array.isArray(this.filteredUserData)){
+                        return this.filteredUserData.slice(from, to);
+                    }
+                    return [];
+
                 }
-                return this.fetchedDepartmentsData.slice(from, to);
+                if(Array.isArray(this.deptData)){
+                    return this.deptData.slice(from, to);
+                }
+                return [];
             },
+
             active_filter() {
                 return this.filterData.user !== "" || this.filterData.department !== "";
             }
@@ -134,7 +146,9 @@
                 console.log('Page changed to', this.pagination_page);
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
-                this.fetchedDepartmentsData.slice(from, to);
+                let departments_data = this.deptData.slice(from, to);
+                console.log(from, to, departments_data);
+
             },
             edit_department(cop_user_id) {
                 let cop_user_details = cop_user_id;
@@ -146,12 +160,7 @@
                 let user_id = this.filterData.user;
                 let department = this.filterData.department;
 
-                console.log(user_id);
-                console.log(department);
-
-                this.filteredUserData = this.fetchedDepartmentsData;
-
-
+                this.filteredUserData = this.deptData
                 console.log(this.filteredUserData);
                 //check if both are filled
                 if (department !== '') {

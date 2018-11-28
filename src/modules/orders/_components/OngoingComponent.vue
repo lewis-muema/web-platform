@@ -86,6 +86,18 @@ export default {
           }
       });
     },
+    poll: function () {
+      var that = this
+      this.$store.dispatch('$_orders/fetch_ongoing_orders')
+      .then(response => {
+        if (["order_placement", "tracking"].includes(that.$router.currentRoute.name)) {
+          setTimeout(function() {
+            that.poll()
+          }, 5000);
+        }
+        that.loading = false
+      })
+    },
     getStatus: function(order) {
       if (this.loading == false) {
         switch(order.delivery_status) {
@@ -139,11 +151,7 @@ export default {
   },
   mounted() {
     this.loading = true
-    var that = this
-    this.$store.dispatch('$_orders/fetch_ongoing_orders')
-    .then(response => {
-      that.loading = false
-    })
+    // this.poll()
   }
 }
 </script>

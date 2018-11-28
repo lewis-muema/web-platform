@@ -65,7 +65,7 @@
             ...mapGetters(
                 {
                     getState: '$_admin/getViewState',
-                    getDepartments: '$_admin/getDepartments',
+                    getDepartmentsList: '$_admin/getDepartmentsList',
                     getBaseUrl: '$_admin/getBaseUrl',
                     getBizName: '$_admin/getBizName'
                 }
@@ -80,25 +80,7 @@
             ),
             get_inv: function () {
                 this.updateViewState(1);
-                // this.$store.commit('updateViewState', 1)
-            },
-            // get_link: function () {
-            //     var url = this.getBaseUrl + 'coporate/inv_link'
-            //     var dept_id = $("#dept").val()
-            //
-            //     axios.post(url, {"dept_id": dept_id})
-            //         .then(response => {
-            //             this.updateInviteLink(response.data);
-            //             // this.$store.commit('updateInviteLink', response.data)
-            //         })
-            //         .catch(e => {
-            //             console.dir(e)
-            //         })
-            //         .then(() => {
-            //             this.updateViewState(5);
-            //             // this.$store.commit('updateViewState', 5)
-            //         })
-            // }
+            }
         }
     }
 </script>

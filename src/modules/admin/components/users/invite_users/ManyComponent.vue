@@ -4,7 +4,7 @@
             <form class="col s12">
                 <div class="row textarea--row">
                     <div class="input-field col s12 inviteMany--textarea">
-                        <textarea id="email_area" class="inviteMany--textareabox"></textarea>
+                        <textarea id="email_area" v-model="emailSet" class="inviteMany--textareabox"></textarea>
                         <div class="active inviteMany--text">Enter multiple email addresses separated by a
                             comma</div>
                     </div>
@@ -25,12 +25,16 @@
 </template>
 
 <script>
-    import $ from 'jquery';
     import {mapGetters, mapMutations} from 'vuex';
 
     export default {
         name: 'many-component',
         components: {},
+        data() {
+            return {
+                emailSet: ''
+            }
+        },
         computed: {
             ...mapGetters(
                 {
@@ -48,24 +52,18 @@
             ),
             get_inv: function () {
                 this.updateViewState(1);
-                // this.$store.commit('updateViewState', 1)
             },
             inv_many: function () {
-                var set = $("#email_area").val()
-                var emails = set.split(",")
-
+                let set = this.emailSet
+                let emails = set.split(",")
                 let number = emails.length
-                var data = new Array();
-                for (var x = 0; x < number; x++) {
-                    // var name = (emails[x].split("@"))[0]
-                    // var name_try = name.charAt(0).toUpperCase() + name.slice(1);
+                let data = new Array();
+                for (let x = 0; x < number; x++) {
                     data[x] = new Array(emails[x], '', '')
-                    // console.log(name_try)
                 }
                 this.newAdds(number)
                 this.updateInvites(data)
                 this.updateViewState(1);
-                // this.$store.commit('updateViewState', 1)
             }
         }
     }
@@ -108,6 +106,9 @@
     .inviteMany--textareabox {
         width: 100% !important;
         height: 120px!important;
+        font-family: 'Rubik', sans-serif !important;
+        font-size: 14px !important;
+        color: #555 !important;
         border: 1px solid #dcdfe6 !important;
         border-radius: 4px !important;
         margin-top: 1.3rem !important;

@@ -6,12 +6,35 @@
 </template>
 
 <script>
-// import Vue from 'vue'
+import Vue from "vue"
 import {mapGetters,mapMutations,mapActions} from 'vuex'
 import external_store from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module'
 import HeaderComponent from './components/HeaderComponent.vue'
 import BodComponent from './components/BodComponent.vue'
+import VeeValidate from 'vee-validate';
+import { Validator } from 'vee-validate';
+import VueTelInput from 'vue-tel-input'
+
+Vue.use(VueTelInput)
+Vue.use(VeeValidate);
+
+Validator.extend('check_phone', {
+       getMessage: field => `The phone number not valid`,
+       validate: value => {
+         const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+         var validity = false
+         try {
+
+           var number = phoneUtil.parse(value);
+           validity = (phoneUtil.isValidNumber(number));
+         } catch (e) {
+           console.log(e)
+           validity = false
+         }
+         return validity;
+       }
+   });
 
 export default {
   data(){
@@ -39,7 +62,8 @@ export default {
        updateDeptID:'$_external/updateDeptID',
        updatePerEmail:'$_external/updatePerEmail',
        updateName:'$_external/updateName',
-       updateInviteType:'$_external/updateInviteType'
+       updateInviteType:'$_external/updateInviteType',
+       updateCopUserID:'$_external/updateCopUserID'
      }
    ),
     check_validity: function() {
@@ -72,16 +96,21 @@ export default {
             }
 
             if (response.status == true) {
-                // if (response.data.department_id == "null") {
-                //     response.data.department_id = 1;
-                // }
+
+              let dept_id = 1;
+              if (response.data.department_id) {
+
+                  dept_id = response.data.department_id ;
+              }
+
               console.log(response);
               console.log("Valid Token");
               this.updateCopID(response.data.cop_id);
               this.updateBizName(response.data.cop_name);
-              this.updateDeptID(response.data.department_id);
+              this.updateDeptID(dept_id);
               this.updatePerEmail(response.data.email);
               this.updateName(response.data.name);
+              this.updateCopUserID(response.data.cop_user_id);
               this.updateInviteType(type);
               this.received_response = true;
               // this.$router.push("");

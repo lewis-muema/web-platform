@@ -149,11 +149,18 @@
             user_data(){
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
+                if (this.filterState == true) {
+                    if(Array.isArray(this.filteredUserData)){
+                        return this.filteredUserData.slice(from, to);
+                    }
+                    return [];
 
-                if(this.filterState == true){
-                    return this.filteredUserData.slice(from, to);
                 }
-                return this.userData.slice(from, to);
+                if(Array.isArray(this.userData)){
+                    return this.userData.slice(from, to);
+                }
+                return [];
+
             },
             active_filter() {
                 return this.filterData.user !== "" || this.filterData.department !== "";
@@ -182,11 +189,13 @@
                 if (this.user_data.length > 0) {
                     resp = this.user_data[index].type;
                     if (resp === 1) {
-                        resp = "Admin"
-                    }
-                    else {
                         resp = "Normal"
                     }
+                    else if (resp === 2) {
+
+                      resp = "Admin"
+                    }
+
                 }
                 return resp;
             },
@@ -249,11 +258,6 @@
 
                 }
             },
-            ...mapActions([
-                '$_admin/requestUsersList',
-                '$_admin/requestDepartmentsList',
-
-            ]),
             ...mapMutations(
               {
                 updateCopUserId:'$_admin/updateCopUserId',

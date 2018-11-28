@@ -1,12 +1,14 @@
 <template lang="html">
   <div class="homeview--outer">
     <div class="homeview--inner">
-
+     <!-- <div class="homeview--form__header">
+         New Delivery
+     </div> -->
       <div class="homeview--form homeview--row homeview--form__scrollable" id="homeview-form">
         <div class="homeview--input-bundler">
           <no-ssr placeholder="">
               <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img .homeview--input-bundler__destination-input sendy-orange" width="10px"  />
-              <gmap-autocomplete @place_changed="setLocation($event, 0)" @keyup="checkChangeEvents($event, 0)" @change="checkChangeEvents($event, 0)" :options="map_options"  v-model="locations[0]" placeholder="Pickup" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"></gmap-autocomplete>
+              <gmap-autocomplete @place_changed="setLocation($event, 0)" @keyup="checkChangeEvents($event, 0)" @change="checkChangeEvents($event, 0)" :options="map_options"  v-model="locations[0]" placeholder="Enter a pickup location" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"></gmap-autocomplete>
               <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup     " width="10px"  @click="clearLocation(0)" />
           </no-ssr>
         </div>
@@ -14,7 +16,7 @@
             <div class="homeview--input-bundler">
               <no-ssr placeholder="">
                   <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px"  />
-                  <gmap-autocomplete  @place_changed="setLocation($event, 1)"  @keyup="checkChangeEvents($event, 1)" @change="checkChangeEvents($event, 1)" :options="map_options"  v-model="locations[1]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
+                  <gmap-autocomplete  @place_changed="setLocation($event, 1)"  @keyup="checkChangeEvents($event, 1)" @change="checkChangeEvents($event, 1)" :options="map_options"  v-model="locations[1]" placeholder="Enter a destination location" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
                   <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup " width="10px"  @click="clearLocation(1)"/>
               </no-ssr>
             </div>
@@ -23,7 +25,7 @@
           <div class="homeview--input-bundler">
             <no-ssr placeholder="">
                 <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue" width="10px"  />
-                <gmap-autocomplete  @place_changed="setLocation($event, n+1)"  @keyup="checkChangeEvents($event, n=1)" @change="checkChangeEvents($event, n+1)" :options="map_options"  v-model="locations[n+1]" placeholder="Destination" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
+                <gmap-autocomplete  @place_changed="setLocation($event, n+1)"  @keyup="checkChangeEvents($event, n=1)" @change="checkChangeEvents($event, n+1)" :options="map_options"  v-model="locations[n+1]" placeholder="Enter a destination location" :select-first-on-enter="true" class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input" ></gmap-autocomplete>
                 <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right " width="10px"  @click="removeExtraDestinationWrapper(n+1)"/>
             </no-ssr>
           </div>
@@ -37,8 +39,11 @@
       </div>
       <div class="orders-loading-container" v-loading="loading" v-if="loading">
       </div>
-      <div v-if="Array.isArray(get_order_path) && get_order_path.length > 1 && !loading">
-          <vendor-view ></vendor-view>
+      <div v-if="show_vendor_view && !loading">
+          <vendor-view v-on:vendorComponentDestroyed="destroyOrderPlacement()"></vendor-view>
+      </div>
+      <div v-if="!show_vendor_view && !loading" class="home-view--seperator home-view--form__seperator">
+          <button type="button" class="button--primary-inactive home-view--place-order" >Confirm Order</button>
       </div>
       </div>
 
@@ -48,7 +53,9 @@
 <script>
 import NoSSR from 'vue-no-ssr';
 import { mapGetters,mapMutations,mapActions } from 'vuex';
-import home_store from './_store';
+import order_placement_store from './_store';
+import orders_module_store from '../../_store';
+import payments_module_store from '../../../payment/_store';
 import VendorComponent from './_components/VendorComponent.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faPlus, faMapMarkerAlt, faCircle, faClock, faPen, faDollarSign, faTimes, faMobileAlt,faStar } from '@fortawesome/free-solid-svg-icons'
@@ -86,6 +93,9 @@ export default {
     allow_add_destination(){
 
         return !this.loading && Array.isArray(this.get_order_path) && ((this.get_order_path.length-1) <= this.get_max_destinations) && (this.get_order_path.length>1) && (this.get_extra_destinations <= this.get_order_path.length-2 );
+    },
+    show_vendor_view(){
+        return Array.isArray(this.get_order_path) && this.get_order_path.length > 1;
     }
   },
   methods: {
@@ -102,6 +112,14 @@ export default {
       addExtraDestination : '$_orders/$_home/add_extra_destination',
       removeExtraDestination : '$_orders/$_home/remove_extra_destination',
       set_active_package_class : '$_orders/$_home/set_active_package_class',
+      set_active_vendor_name : '$_orders/$_home/set_active_vendor_name',
+      remove_markers : '$_orders/remove_markers',
+      remove_polyline : '$_orders/remove_polyline',
+      clear_order_path : '$_orders/$_home/clear_order_path',
+      clear_location_names_state : '$_orders/$_home/clear_location_names',
+      clear_price_request_object : '$_orders/$_home/clear_price_request_object',
+      clear_extra_destinations : '$_orders/$_home/clear_extra_destination',
+      resetState : '$_orders/$_home/resetState',
 
     }),
     ...mapActions({
@@ -121,6 +139,10 @@ export default {
         // TO DO research implementation of native input events
     },
     clearLocation(index){
+        this.resetLocation(index);
+        this.attemptPriceRequest();
+    },
+    resetLocation(index){
         if(index == 0){
             this.setPickupFilled(false);
         }
@@ -128,7 +150,6 @@ export default {
         this.unset_order_path(index);
         this.deleteLocationInModel(index);
         this.unset_location_name(index);
-        this.attemptPriceRequest();
     },
     setLocation(place,index){
         // TO Do reset marker on store when leaving the route
@@ -158,7 +179,7 @@ export default {
             "index":index,
             "name":place.name
         }
-        this.clearLocation(index);
+        this.resetLocation(index);
         this.setMarker(place.geometry.location.lat(),place.geometry.location.lng(),index );
         this.set_order_path(path_payload);
         this.setLocationInModel(index,place.name);
@@ -170,7 +191,7 @@ export default {
 
     },
     attemptPriceRequest(){
-        if(Array.isArray(this.get_order_path) && this.get_order_path.length > 1 && this.get_pickup_filled == true){
+        if(Array.isArray(this.locations) && this.locations.length > 1 && this.get_pickup_filled == true){
             this.doPriceRequest();
         }
     },
@@ -180,6 +201,9 @@ export default {
     deleteLocationInModel(index){
         this.locations.splice(index,1);
     },
+    clearLocationNamesModel(){
+        this.locations = [];
+    },
     setMarker(lat,lng, index){
         let mark = {
             "position":{"lat":lat, "lng":lng, "icon":"destination"}
@@ -187,6 +211,9 @@ export default {
         if(index == 0){
             mark.icon = "pickup";
             console.log('in pickup');
+        }
+        else{
+            console.log('index', index);
         }
         let marker_payload = {
             "index":index,
@@ -264,14 +291,22 @@ export default {
         this.$store.commit('setNotification', notification);
     },
     setDefaultPackageClass(){
-        let session = this.$store.getters.getSession;
-        if(session.hasOwnProperty('first_time')){
-            if(session.first_time != true){
-                if(this.get_active_package_class == ''){
-                    this.set_active_package_class(this.get_price_request_object.economy_price_tiers[0]["tier_group"]);
-                }
+        try{
+            if(this.get_active_package_class == ''){
+                let default_package_class = this.get_price_request_object.economy_price_tiers[0]["tier_group"];
+                console.log('default_package_class');
+                this.set_active_package_class(default_package_class);
+            }
+            if(this.get_active_vendor_name == ''){
+                let default_vendor = this.get_price_request_object.economy_price_tiers[0]['price_tiers'][0]['vendor_name'];
+                console.log('default_vendor', default_vendor)
+                this.set_active_vendor_name(default_vendor);
             }
         }
+        catch(er){
+            console.log(er);
+        }
+
     },
     // scroll_to_bottom(){
     //     let container = this.$el.querySelector("#homeview-form");
@@ -282,46 +317,48 @@ export default {
             'homeview--input-bundler__destination-short-input': false
         }
     },
-    initializeOrderPlacementHome(){
-        console.log('in initializeOrderPlacementHome');
-        if(Array.isArray(this.get_location_names)){
-            if(this.get_location_names.length > 0){
-                this.locations = this.get_location_names;
-            }
-        }
-        console.log('out initializeOrderPlacementHome');
-    },
+
     removePolyline(){
         this.unset_polyline([]);
+    },
+    destroyOrderPlacement(){
+        this.clearLocationNamesModel();
+        this.setPickupFilled(false);
+        try{
+            this.$store.unregisterModule(['$_orders','$_home']);
+        }
+        catch(er){
+            console.log('failed to unregisterModule $_orders $_home on order placement home', er);
+        }
+
+
+        try{
+            this.$store.unregisterModule('$_payment');
+        }
+        catch(er){
+            console.log('failed to unregisterModule $_orders $_home on order placement home', er);
+        }
+
+        this.clear_order_path();
+        this.remove_markers();
+        this.remove_polyline();
+        this.clear_location_names_state();
+        this.clear_price_request_object();
+        this.setPickupFilled(false);
+        this.clear_extra_destinations();
+        this.$destroy();
     }
   },
   mounted() {
 
   },
   created() {
-    const STORE_PARENT = "$_orders";
-    const STORE_KEY = "$_home";
-    if (!this.$store.state[STORE_PARENT][STORE_KEY]) {
-      this.$store.registerModule([STORE_PARENT,STORE_KEY], home_store);
-    }
-    this.initializeOrderPlacementHome();
-    console.log('in created');
+      this.$store.registerModule(['$_orders','$_home'], order_placement_store);
+      this.$store.registerModule('$_payment', payments_module_store);
   },
-  beforeRouteLeave (to, from, next) {
-    if(to.name == 'tracking'){
-        if(Array.isArray(this.get_map_markers)){
-            if(this.get_map_markers.length > 0){
-                for(let i=0; i< this.get_map_markers.length; i++){
-                    this.unset_location_marker(i);
-                    this.unset_order_path(i);
-                    this.deleteLocationInModel(i);
-                    this.unset_location_name(i);
-                }
-            }
-        }
-    }
-    next();
-},
+  destroyed () {
+      this.destroyOrderPlacement();
+  },
 
   watch:{
 

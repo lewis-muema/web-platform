@@ -9,7 +9,6 @@
                 <button v-if="!registered" type="button" class="button-primary section--filter-action"name="generate_api_text" v-model="generate_api_text" v-on:click="generateAPIKey" >{{this.generate_api_text}}</button>
             </div>
         </div>
-        <!--{{fetchedData}}-->
         <el-table
                 :data="fetchedData"
                 style="width: 100%"
@@ -117,31 +116,31 @@
                 let newKey_payload = {
                     "cop_id": cop_id,
                 }
-                //console.log(newKey_payload)
                 let newKeyFull_payload = {
                     "values" : newKey_payload,
                     "vm":this,
                     "app":"NODE_PRIVATE_API",
                     "endpoint":"generate_api"
                 }
-                // console.log(newKeyFull_payload)
-                this.$store.commit('setNotificationStatus', true); //activate notification
-                // let level = 0; //this will show the white one
                 this.$store.dispatch("$_admin/generateAPIKey", newKeyFull_payload).then(response => {
                     console.log("updated");
                     this.update_api_text ='Update API Key';
                     console.log(response);
                     let level = 1; //success
                     this.message = "Key Updated!"
-                    let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
+                    let notification = {"title":"", "level":level, "message":this.message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
                 }, error => {
                   this.update_api_text ='Update API Key';
                     console.log(error);
-                    let level = 2;
+                    let level = 3;
                     this.message = "Something went wrong."
-                    let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
+                    let notification = {"title":"", "level":level, "message":this.message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
                 });
             },
             generateAPIKey() {
@@ -154,25 +153,28 @@
                 let newKey_payload = {
                     "cop_id": cop_id,
                 }
-                //console.log(newKey_payload)
                 let newKeyFull_payload = {
                     "values" : newKey_payload,
                     "vm":this,
                     "app":"NODE_PRIVATE_API",
                     "endpoint":"generate_api"
                 }
-                // console.log(newKeyFull_payload)
                 this.$store.dispatch("$_admin/generateAPIKey", newKeyFull_payload).then(response => {
                     console.log("generated");
                     console.log(response);
                     this.generate_api_text ='Generate API Key'
+                    let level = 1; //success
+                    this.message = "Key Generated!"
+                    let notification = {"title":"", "level":level, "message":this.message}; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
                 }, error => {
                     console.log("NOT generated");
                     this.generate_api_text ='Generate API Key'
                     console.log(error);
-                    let level = 2;
+                    let level = 3;
                     this.message = "Something went wrong."
-                    let notification = {"title":"API Key", "level":level, "message":this.message}; //notification object
+                    let notification = {"title":"", "level":level, "message":this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 
@@ -208,12 +210,10 @@
                     if (resp === 1) {
                         resp = "Registered"
                         this.registered =  true
-                        // this.button_name = "Update API Key"
                     }
                     else {
                         resp = "Not Registered"
                         this.registered =  false
-                        // this.button_name = "Generate API Key"
                     }
                 }
                 return resp;

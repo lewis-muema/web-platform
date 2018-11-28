@@ -1,7 +1,9 @@
 export default {
-  requestPromoCodePayment({ commit }, payload) {
+  requestPromoCodePayment({ dispatch, commit, getters, rootGetters }, payload) {
     return new Promise((resolve, reject) => {
-      payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+      dispatch("requestAxiosPost", payload, {
+        root: true
+      }).then(
         response => {
           console.log("in store dispatch to global store");
           resolve(response);
@@ -13,12 +15,14 @@ export default {
       );
     });
   },
-  requestCardPayment({ commit }, payload) {
+  requestCardPayment({ dispatch, commit, getters, rootGetters }, payload) {
     console.log("set loading status before dispatch");
     commit("setCardLoadingStatus", true);
 
     return new Promise((resolve, reject) => {
-      payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+      dispatch("requestAxiosPost", payload, {
+        root: true
+      }).then(
         response => {
           commit("setCardLoadingStatus", false);
           resolve(response);
@@ -32,23 +36,28 @@ export default {
       );
     });
   },
-  terminateCardPaymentRequest({ commit }, payload) {
+  completeCardPaymentRequest(
+    { dispatch, commit, getters, rootGetters },
+    payload
+  ) {
     return new Promise((resolve, reject) => {
-      commit("setCardLoadingStatus", false);
-      commit("setCardFailStatus", true);
-      commit("setCardSuccessStatus", false);
+      dispatch("requestAxiosPost", payload, {
+        root: true
+      }).then(
+        response => {
+          console.log("in store dispatch to global store");
+          resolve(response);
+        },
+        error => {
+          reject(error);
+          console.log("failed to dispatch to global store");
+        }
+      );
+
       resolve(true);
     });
   },
-  completeCardPaymentRequest({ commit }, payload) {
-    return new Promise((resolve, reject) => {
-      commit("setCardLoadingStatus", false);
-      commit("setCardSuccessStatus", true);
-      commit("setCardFailStatus", false);
-      resolve(true);
-    });
-  },
-  resetCardPaymentRequest({ commit }, payload) {
+  resetCardPaymentRequest({ dispatch, commit, getters, rootGetters }, payload) {
     return new Promise((resolve, reject) => {
       commit("setCardLoadingStatus", false);
       commit("setCardFailStatus", false);
@@ -57,9 +66,9 @@ export default {
     });
   },
 
-  requestMpesaPayment({ commit }, payload) {
+  requestMpesaPayment({ dispatch, commit, getters, rootGetters }, payload) {
     return new Promise((resolve, reject) => {
-      payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+      dispatch("requestAxiosPost", payload, { root: true }).then(
         response => {
           commit("setMpesaLoadingStatus", true);
           commit("setMpesaFailStatus", false);
@@ -73,14 +82,7 @@ export default {
       );
     });
   },
-  terminateMpesaPaymentRequest({ commit }, payload) {
-    return new Promise((resolve, reject) => {
-      commit("setMpesaLoadingStatus", false);
-      commit("setMpesaFailStatus", true);
-      commit("setMpesaSuccessStatus", false);
-      resolve(true);
-    });
-  },
+
   completeMpesaPaymentRequest({ commit }, payload) {
     return new Promise((resolve, reject) => {
       commit("setMpesaLoadingStatus", false);
@@ -98,13 +100,45 @@ export default {
     });
   },
 
-  requestRunningBalance({ commit,dispatch,rootGetters }, payload) {
+  terminateMpesaPaymentRequest({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      commit("setMpesaLoadingStatus", false);
+      commit("setMpesaFailStatus", true);
+      commit("setMpesaSuccessStatus", false);
+      resolve(true);
+    });
+  },
+
+  requestRunningBalance({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch("requestAxiosPost", payload, { root: true }).then(
         response => {
+          if (response.status == 200) {
+            let rb = response.data.running_balance;
+            dispatch("updateRunningBalance", rb, { root: true });
+          }
           resolve(response);
         },
         error => {
+          reject(error);
+          console.log("failed to dispatch to global store");
+        }
+      );
+    });
+  },
+  requestAddNewCard({ dispatch, commit }, payload) {
+    commit("setCardLoadingStatus", true);
+
+    return new Promise((resolve, reject) => {
+      dispatch("requestAxiosPost", payload, {
+        root: true
+      }).then(
+        response => {
+          commit("setCardLoadingStatus", false);
+          resolve(response);
+        },
+        error => {
+          commit("setCardLoadingStatus", false);
           reject(error);
           console.log("failed to dispatch to global store");
         }

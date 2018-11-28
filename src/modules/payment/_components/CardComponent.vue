@@ -1,5 +1,6 @@
 <template lang="html">
   <payment_loading v-if="card_loading_status" pay_method = "card"></payment_loading>
+  <add_card v-else-if="card_add_status"></add_card>
   <div class="paymentbody--form" v-else>
     <div class="paymentbody--input-wrap">
         <input type="number" name="card_payment_amount" v-model="card_payment_data.amount" placeholder="Amount" class="input-control paymentbody--input">
@@ -40,7 +41,7 @@
     </div>
 
     <div class="paymentbody--input-wrap">
-        <button type="button" name="button" :class="valid_payment ? 'button-primary paymentbody--input-button':'paymentbody--input-button button--primary-inactive'" @click="requestCardPayment">Pay</button>
+        <button type="button" name="button" :class="valid_payment ? 'button-primary paymentbody--input-button':'paymentbody--input-button button--primary-inactive'" @click="handleCardPayment">Pay</button>
     </div>
 
    
@@ -53,10 +54,13 @@ import { mapActions, mapGetters } from "vuex";
 import payment_loading from "./LoadingComponent.vue";
 import payment_success from "./SuccessComponent.vue";
 import payment_fail from "./FailComponent.vue";
+import add_card from "./AddCard.vue";
+import Mcrypt from "../../../mixins/mcrypt_mixin.js";
 
 export default {
   name: "card-component",
-  components: { payment_loading, payment_success, payment_fail },
+  mixins: [Mcrypt],
+  components: { payment_loading, payment_success, payment_fail, add_card },
   data() {
     return {
       card_payment_data: {
@@ -70,21 +74,13 @@ export default {
       show_cvv: false
     };
   },
+  mounted() {},
   computed: {
     ...mapGetters({
       card_fail_status: "$_payment/getCardFailStatus",
       card_loading_status: "$_payment/getCardLoadingStatus",
       card_success_status: "$_payment/getCardSuccessStatus"
     }),
-    show_loading() {
-      return this.mpesa_loading_status;
-    },
-    show_mpesa_success() {
-      return this.mpesa_success_status;
-    },
-    show_mpesa_fail() {
-      return this.mpesa_fail_status;
-    },
     valid_payment() {
       return (
         this.card_payment_data.card_expiry !== "" &&
@@ -108,6 +104,16 @@ export default {
       if (exp.length == 5) {
         return exp.slice(3);
       }
+    },
+    card_add_status() {
+      if (typeof this.$route.query.action !== "undefined") {
+        let action = this.$route.query.action;
+        if (action == "add") {
+          return true;
+        }
+      } else {
+        return false;
+      }
     }
   },
   methods: {
@@ -119,7 +125,8 @@ export default {
       }
     },
     ...mapActions(["$_payment/requestCardPayment"]),
-    requestCardPayment() {
+
+    handleCardPayment() {
       //sort encryption
       let session = this.$store.getters.getSession;
 
@@ -127,12 +134,22 @@ export default {
       console.log("request-session", session);
       let user_id = 0;
       let cop_id = 0;
+      let user_name = "";
+      let user_email = "";
+      let user_phone = "";
+
       if (session.default == "biz") {
         cop_id = session.biz.cop_id;
         user_id = session.biz.user_id;
+        user_name = session.biz.user_name;
+        user_email = session.biz.user_email;
+        user_phone = session.biz.user_phone;
       } else {
         cop_id = session.peer.cop_id;
         user_id = session.peer.user_id;
+        user_name = session.peer.user_name;
+        user_email = session.peer.user_email;
+        user_phone = session.peer.user_phone;
       }
 
       let card_payload = {
@@ -143,8 +160,13 @@ export default {
         cvv: this.card_payment_data.cvv,
         is_save: this.card_payment_data.is_save,
         cop_id: cop_id,
-        user_id: user_id
+        user_id: user_id,
+        user_email: user_email,
+        user_phone: user_phone,
+        user_name: user_name
       };
+
+      card_payload = Mcrypt.encrypt(card_payload);
 
       let full_payload = {
         values: card_payload,
@@ -154,9 +176,8 @@ export default {
       };
       this.$store.dispatch("$_payment/requestCardPayment", full_payload).then(
         response => {
+          response.data = Mcrypt.decrypt(response.data);
           console.log(response);
-          //if payment is succcess
-          //fetch new running_balance
           let that = this;
 
           if (response.data.status == false) {
@@ -180,6 +201,75 @@ export default {
               root: true
             });
 
+            let card_trans_id = response.data.values.card_trans_id;
+            this.completeCardPayment(card_trans_id);
+            //complete payment here
+          }
+        },
+        error => {
+          console.log(error);
+          this.payment_state = "Payment Failed";
+        }
+      );
+    },
+    completeCardPayment(card_trans_id) {
+      let session = this.$store.getters.getSession;
+      let user_id = 0;
+      let cop_id = 0;
+      let user_name = "";
+      let user_email = "";
+      let user_phone = "";
+
+      if (session.default == "biz") {
+        cop_id = session.biz.cop_id;
+        user_id = session.biz.user_id;
+        user_name = session.biz.user_name;
+        user_email = session.biz.user_email;
+        user_phone = session.biz.user_phone;
+      } else {
+        cop_id = session.peer.cop_id;
+        user_id = session.peer.user_id;
+        user_name = session.peer.user_name;
+        user_email = session.peer.user_email;
+        user_phone = session.peer.user_phone;
+      }
+
+      let payload = {
+        amount: this.card_payment_data.amount,
+        pay_method: 2,
+        ref_no: "VISA-" + Math.round(+new Date() / 1000),
+        client_id: cop_id,
+        account_no: "SENDY" + cop_id,
+        phone: user_phone,
+        email: user_email,
+        name: user_name,
+        bill_Ref_Number: user_phone,
+        card_trans_id: card_trans_id
+      };
+
+      let full_payload = {
+        vm: payload.vm,
+        values: payload,
+        app: "PRIVATE_API",
+        endpoint: "payment"
+      };
+
+      this.$store.dispatch("$_payment/completeCardPayment", full_payload).then(
+        response => {
+          console.log(response);
+
+          if (response.data.status == true) {
+            //this will request the new running balance and update the store
+            let notification = {
+              title: "card payment complete",
+              level: 1,
+              message: "card payment successfull"
+            };
+            that.$store.dispatch("show_notification", notification, {
+              root: true
+            });
+
+            let that = this;
             let payload = {
               values: running_balance_payload,
               vm: this,
@@ -192,6 +282,15 @@ export default {
               .then(response => {
                 console.log("running balance response", response);
               });
+          } else {
+            let notification = {
+              title: "card payment failed",
+              level: 3,
+              message: "card payment failed to complete"
+            };
+            that.$store.dispatch("show_notification", notification, {
+              root: true
+            });
           }
         },
         error => {
@@ -220,47 +319,4 @@ export default {
 };
 </script>
 <style lang="css">
-.payment--cvv-info-wrap {
-  position: absolute;
-  width: 20vw;
-  left: 10vw;
-  top: 0;
-}
-.paymentbody--input-small {
-  min-height: 2rem;
-}
-.paymentbody .input-control-small {
-  width: 30%;
-  position: relative;
-}
-.paymentbody .input-control-big {
-  width: 60%;
-}
-.paymentbody--input-checkbox {
-  margin-right: 10px;
-}
-
-.savecard--desc-wrap {
-  margin-top: 30px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  margin-bottom: -35px;
-}
-.savecard--desc-title {
-  margin-left: 10px;
-  font-size: 14px;
-  margin-top: 5px;
-  height: auto;
-  line-height: 15px;
-}
-.sendy_payments_form_cvv_title {
-  font-size: 14px;
-}
-.sendy_payments_form_cvv_description {
-  font-size: 14px;
-  margin-top: 20px;
-}
-.sendy_payments_form_cvv_body img {
-  width: 200px;
-}
 </style>

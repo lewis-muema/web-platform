@@ -22,7 +22,7 @@ export default {
                 },
 
   getType(state){
-                  return state.type;
+                  return state.invite_type;
 
                 },
 

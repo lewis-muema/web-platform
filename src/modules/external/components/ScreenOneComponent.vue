@@ -3,6 +3,11 @@
     <div class="onboarding-user-header">
       Join the {{getBizName}} business account on Sendy
     </div>
+
+    <p class="onboard-error">
+      {{message}}
+    </p>
+
     <div class="form-inputs">
       <div class="row">
         <div class="input-field2">
@@ -17,7 +22,9 @@
           <label class="input-descript">
             <span>Email Address</span>
           </label>
-          <input class="form-control" placeholder="you@email.com" name="email" type="email" v-model="email" @focus="setCurrentStep(2)">
+          <input class="form-control" placeholder="you@email.com" data-vv-validate-on="blur"  v-validate="'required|email'" name="email" type="email" v-model="email" @focus="setCurrentStep(2)">
+          <br>
+          <span class="onboarding-email-error">{{ errors.first('email') }}</span>
         </div>
       </div>
       <div class="row">
@@ -25,7 +32,12 @@
           <label class="input-descript">
             <span>Phone Number</span>
           </label>
-          <input class="form-control" placeholder="07XXXXXXX" name="phone" type="text" v-model="phone" @focus="setCurrentStep(3)">
+          <!-- <input class="form-control" v-validate="'required|check_phone'" data-vv-validate-on="blur" placeholder="07XXXXXXX" name="phone" value="" type="text" v-model="phone" @focus="setCurrentStep(3)">
+          <span v-show="errors.has('phone')">{{ errors.first('phone') }}</span> -->
+          <vue-tel-input class="form-control" v-model="phone" name="phone" value="" @onBlur="validate_phone" @focus="setCurrentStep(3)" v-validate="'required|check_phone'" data-vv-validate-on="blur"
+                   :preferredCountries="['ke', 'ug', 'tz']">
+          </vue-tel-input>
+          <span v-show="errors.has('phone')" class="sign-up-phone-error">{{ errors.first('phone') }}</span>
         </div>
       </div>
     </div>
@@ -47,7 +59,8 @@ export default {
     return {
       name:'',
       phone:'',
-      email : ''
+      email : '',
+      message : ''
     }
   },
   mounted(){
@@ -56,6 +69,9 @@ export default {
       this.email = this.getPerEmail;
   },
   methods: {
+    validate_phone(){
+      this.$validator.validate();
+    },
     ...mapMutations(
       {
         setViewState:'$_external/setViewState',
@@ -67,11 +83,30 @@ export default {
     ),
     next_view: function ()
     {
-      this.setViewState(2);
-      this.updateName(this.name);
-      this.updatePhone(this.phone);
-      this.updateBizEmail(this.email);
-      this.updateViewStep(0);
+      let phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+      let phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+      let email_valid = true
+      for (var i = 0; i < this.errors.items.length; i++) {
+        if (this.errors.items[i].field == 'email') {
+          email_valid = false
+          break
+        }
+      }
+
+      if (phone_valid == true && email_valid == true) {
+
+        this.setViewState(2);
+        this.updateName(this.name);
+        this.updatePhone(this.phone);
+        this.updateBizEmail(this.email);
+        this.updateViewStep(0);
+
+      }
+      else {
+
+          this.message = 'Provide valid Email ';
+      }
+
     },
     setCurrentStep: function (step){
         this.updateViewStep(step);
@@ -103,6 +138,16 @@ export default {
 </script>
 
 <style lang="css">
+
+@import '../../../../node_modules/vue-tel-input/dist/vue-tel-input.css';
+
+.form-inputs > div:nth-child(3) > div > div > div > ul {
+    z-index: 9;
+    width: 354px;
+    margin-top: 9px;
+    margin-left: -15px;
+}
+
 .onboarding-user-header{
   word-wrap: break-word;
   line-height: 38px !important;
@@ -197,6 +242,16 @@ export default {
  line-height: 1.5rem;
  font-weight: 400!important;
  margin-bottom: .5rem!important;
+}
+.onboarding-email-error{
+  margin-right: 45%;
+  font-size: 13px;
+  font-family: 'Rubik', sans-serif;
+  color: #e08445;
+}
+.onboard-error{
+  color: #e08445;
+  font-family: 'Rubik', sans-serif;
 }
 
 

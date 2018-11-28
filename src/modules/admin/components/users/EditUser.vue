@@ -48,8 +48,8 @@
 
                 <div class="edit-holder">
                     <el-select class="addUser--select edit-select" v-model="userDetails.type" placeholder="User Type">
-                        <el-option v-for="type in types" :key="type.type_value" :label="type.type_name"
-                                   :value="type.type_value">
+                        <el-option v-for="type in types" :key="type.type" :label="type.type_name"
+                                   :value="type.type">
                         </el-option>
                     </el-select>
                 </div>
@@ -73,7 +73,22 @@
             return {
                 userDetails: {},
                 message: "",
-                available: false
+                available: false,
+                statuses: [{
+                      status: 1,
+                      status_label: 'Active'
+                    }, {
+                      status: 2,
+                      status_label: 'Deactivate'
+                    }],
+                types: [{
+                      type: 1,
+                      type_name: 'Normal'
+                      }, {
+                     type: 2,
+                     type_name: 'Admin'
+                    }],
+
             }
         },
         mounted() {
@@ -132,7 +147,7 @@
                     let level = 1; //success
                     this.message = "Edit Successful!";
 
-                    let notification = {"title": "Edit User", "level": level, "message": this.message}; //notification object
+                    let notification = {"title": "", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 
@@ -142,7 +157,7 @@
                     console.log(error);
                     let level = 3;
                     this.message = "Something went wrong.";
-                    let notification = {"title": "Edit User Error!", "level": level, "message": this.message}; //notification object
+                    let notification = {"title": "", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 
