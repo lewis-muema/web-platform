@@ -1,0 +1,87 @@
+.order_details_wrap {
+    width: 50%;
+    display: inline-block;
+    border-right: 1px solid #b7b8ba;
+    padding-right: 20px;
+}
+.order_details_map {
+    width: 50%;
+    display: inline-block;
+    float: left;
+}
+.order_details_desc {
+    display: inline-block;
+    width: 50%;
+    padding-left: 20px;
+    font-size: 14px;
+}
+.order_details_desc_item {
+    margin-top: 10px;
+}
+.order_details_desc_image {
+    width: 13px;
+    height: auto;
+    margin-top: 10px;
+}
+.order_details_price {
+    margin-top: 10px;
+    font-size: 25px;
+    margin-bottom:10px;
+}
+
+.rider_details_wrap {
+    width: 50%;
+    float: right;
+    display: inline-block;
+    padding-left: 20px;
+}
+.rider_details_image {
+        display: inline-block;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    float: left;
+}
+.rider_details_image img {
+    width: 100%;
+    height: auto;
+}
+.rider_details_items {
+    width: 70%;
+    display: inline-block;
+    float: right;
+    font-size: 15px;
+    padding-left: 10px;
+}
+.rider_details_item {
+    margin-top: 10px;
+}
+.rider_details_item .rating{
+   font-size:20px;
+}
+
+.rating_checked {
+    color: #1782c5;
+}
+.rating_unchecked {
+    color: #555;
+}
+.rider_details_actions {
+    display: block;
+    float: left;
+    margin-top: 10px;
+}
+.rider_details_action {
+    display: inline-block
+}
+.rider_details_rating {
+    margin-top: 5px !important;
+    padding: 5px !important;
+    background: #f4f4f4;
+}
+.rider_details_rating .el-rate {
+    display: inline-block;
+}
+.el-rate__icon {
+    font-size: 30px;
+}
