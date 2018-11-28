@@ -41,7 +41,12 @@ export default {
     this.prepareMpesaPayment();
   },
   methods: {
-    ...mapActions(["$_payment/requestMpesaPayment"]),
+    ...mapActions({
+      _requestMpesaPayment: "$_payment/requestMpesaPayment",
+      _requestRunningBalance: "$_payment/requestRunningBalance",
+      _completeMpesaPaymentRequest: "$_payment/completeMpesaPaymentRequest",
+      _terminateMpesaPaymentRequest: "$_payment/terminateMpesaPaymentRequest"
+    }),
     prepareMpesaPayment() {
       let session = this.$store.getters.getSession;
       let user_phone = session[session.default]["user_phone"];
@@ -78,6 +83,7 @@ export default {
         return false;
       }
     },
+
     requestMpesaPaymentPoll() {
       console.log("mpesa payment poll initiated");
       let session = this.$store.getters.getSession;
@@ -86,7 +92,7 @@ export default {
         cop_id = session.biz.cop_id;
       }
       let old_rb = this.$store.getters.getRunningBalance;
-      let requested_amount = this.mpesa_payment_data.amount;
+      let requested_amount = this.order_cost;
 
       let running_balance_payload = {
         values: {
@@ -96,8 +102,7 @@ export default {
       };
 
       let payload = {
-        values: running_balance_payload,
-        vm: this,
+        params: running_balance_payload,
         app: "PRIVATE_API",
         endpoint: "running_balance"
       };
@@ -109,21 +114,41 @@ export default {
         let that = this;
         (function(poll_count) {
           setTimeout(function() {
-            let res = that.compareRunningBalance(old_rb, payload);
+            let res = that.checkRunningBalance(old_rb, payload);
+            console.log("poll count", poll_count);
             if (res) {
               poll_count = poll_limit;
+              // let notification = {
+              //   level: 1,
+              //   title: "Payment successful",
+              //   message: "M-Pesa payment was successful."
+              // };
+              // that.$store.dispatch("show_notification", notification, {
+              //   root: true
+              // });
+              that._completeMpesaPaymentRequest({});
               return true;
+            }
+            if (poll_count == 5) {
+              // let notification = {
+              //   level: 2,
+              //   title: "Payment failed",
+              //   message:
+              //     "Please select your preferred payment method and try again."
+              // };
+              // that.$store.dispatch("show_notification", notification, {
+              //   root: true
+              // });
+              that._terminateMpesaPaymentRequest({});
+              console.log("after for loop");
             }
           }, 10000 * poll_count);
         })(poll_count);
       }
-
-      //loop did not resolve in anything
-      //so trigger fail
-      //this.$store.dispatch("$_payment/terminateMpesaPaymentRequest", {});
     },
-    compareRunningBalance(old_rb, payload) {
-      this.$store.dispatch("$_payment/requestRunningBalance", payload).then(
+
+    checkRunningBalance(old_rb, payload) {
+      this._requestRunningBalance(payload).then(
         response => {
           console.log(response);
           if (response.length > 0) {
@@ -136,14 +161,7 @@ export default {
             console.log(new_rb);
 
             if (new_rb < old_rb) {
-              //running balance updated
-              //terminate poll
-              //update global running balance
-              this.$store.dispatch("$_payment/completeMpesaPaymentRequest", {});
-              this.$store.commit(
-                "setRunningBalance",
-                response.data.running_balance
-              );
+              this.completeMpesaPaymentRequest({});
               return true;
             }
           }
@@ -201,7 +219,7 @@ export default {
 
       this.payment_state = "requesting Mpesa Payment";
 
-      this.$store.dispatch("$_payment/requestMpesaPayment", full_payload).then(
+      this._requestMpesaPayment(full_payload).then(
         response => {
           console.log(response);
           if (response.status == 200) {

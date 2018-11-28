@@ -4,11 +4,11 @@
       <div class="sign-up-verification-inner">
 
           <div class="sign-up-verification-top">
-            Do you work for a business?
+            Do you work for a Business?
           </div>
 
           <div class="sign-up-verification-text">
-          We'd like to offer you the best experience possible. </br> We'll create a dedicated account for you.
+          We'd like to offer you the best experience possible. <br> We'll create a dedicated account for you.
           </div>
 
           <div>
