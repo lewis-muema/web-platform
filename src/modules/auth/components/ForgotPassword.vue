@@ -1,4 +1,4 @@
-email<template lang="html">
+<template lang="html">
   <div id="forgot_pass"  class="log-item hiddenyy" >
     <div class="sign-inner">
 
