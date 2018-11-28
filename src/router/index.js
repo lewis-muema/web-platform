@@ -93,7 +93,7 @@ export function createRouter() {
               import("../modules/auth/components/ForgotPassword.vue")
           },
           {
-            path: "/auth/reset_password",
+            path: "/auth/reset_password/:content",
             component: () =>
               import("../modules/auth/components/ResetPassword.vue")
           },
