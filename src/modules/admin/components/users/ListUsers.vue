@@ -124,8 +124,8 @@
         },
         data: function () {
             return {
-                empty_payments_state: "Fetching Users",
-                empty_departments_state: "Fetching Departments",
+                empty_payments_state: "Fetching Users...",
+                empty_departments_state: "Fetching Departments...",
                 pagination_limit: 10,
                 pagination_page: 1,
                 filteredUserData:[],
@@ -150,17 +150,19 @@
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
                 if (this.filterState == true) {
+
                     if(Array.isArray(this.filteredUserData)){
                         return this.filteredUserData.slice(from, to);
                     }
                     return [];
 
                 }
-                if(Array.isArray(this.userData)){
-                    return this.userData.slice(from, to);
+                else {
+                    if (Array.isArray(this.userData)) {
+                        return this.userData.slice(from, to);
+                    }
+                    return [];
                 }
-                return [];
-
             },
             active_filter() {
                 return this.filterData.user !== "" || this.filterData.department !== "";
@@ -241,7 +243,6 @@
                     //user filter
                     console.log('performing a user filter');
                     console.log(user_id);
-
                     let vm = this;
                     this.filteredUserData = this.filteredUserData.filter(function (user) {
                         return user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0;

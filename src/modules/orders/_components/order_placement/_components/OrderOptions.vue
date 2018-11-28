@@ -35,22 +35,6 @@
                     </div>
 
                 </div>
-
-                <span v-if="allowCash == true">
-                    <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
-                        <div class="home-view-notes-wrapper--item__option">
-                            <!-- <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
-                            <div class="home-view-notes-wrapper--item__option-div">
-                                <el-radio v-model="payment_method" label="3">Payment on delivery</el-radio>
-                            </div>
-                        </div>
-                        <div class="home-view-notes-wrapper--item__value">
-                            <!-- <input type="checkbox" name="" value=""> -->
-
-                        </div>
-                    </div>
-
-                </span>
                 <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
                     <div class="home-view-notes-wrapper--item__option">
                         <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
@@ -94,6 +78,22 @@
 
                     </div>
                 </div>
+
+                <span v-if="allowCash == true">
+                    <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row" >
+                        <div class="home-view-notes-wrapper--item__option">
+                            <!-- <font-awesome-icon icon="dollar-sign" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
+                            <div class="home-view-notes-wrapper--item__option-div">
+                                <el-radio v-model="payment_method" label="3">Payment on delivery</el-radio>
+                            </div>
+                        </div>
+                        <div class="home-view-notes-wrapper--item__value">
+                            <!-- <input type="checkbox" name="" value=""> -->
+
+                        </div>
+                    </div>
+
+                </span>
 
             </div>
             <div class="home-view--seperator">
