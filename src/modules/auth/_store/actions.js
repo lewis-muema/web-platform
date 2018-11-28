@@ -24,38 +24,34 @@ export default {
   },
   requestForgotPassword(context, payload) {
     console.log("payload", payload);
-    console.log("context", context);
+
     return new Promise((resolve, reject) => {
-      axios
-        .post(endpoint + "", payload)
-        .then(response => {
-          if (response.data.status == true) {
+      payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+        response => {
+          console.log("in store dispatch to global store");
             resolve(response.data);
-          } else {
-            reject(response.data);
-          }
-        })
-        .catch(e => {
-          reject(e);
-        });
+        },
+        error => {
+          reject(error);
+          console.log("failed to dispatch to global store");
+        }
+      );
     });
   },
-  requestResetPassword(context, payload) {
+ requestResetPassword(context, payload) {
     console.log("payload", payload);
-    console.log("context", context);
+
     return new Promise((resolve, reject) => {
-      axios
-        .post(endpoint + "", payload)
-        .then(response => {
-          if (response.data.status == true) {
+      payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+        response => {
+          console.log("in store dispatch to global store");
             resolve(response.data);
-          } else {
-            reject(response.data);
-          }
-        })
-        .catch(e => {
-          reject(e);
-        });
+        },
+        error => {
+          reject(error);
+          console.log("failed to dispatch to global store");
+        }
+      );
     });
   },
   requestSignUpCheck(context, payload) {

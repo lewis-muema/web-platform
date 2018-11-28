@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="">
     <div class="paytitle">
-      Top up your sendy account
+      Top up your Sendy account
     </div>
     <div class="payinfo">
       <div class="payinfo--icon">
