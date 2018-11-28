@@ -100,6 +100,15 @@ export default {
     });
   },
 
+  terminateMpesaPaymentRequest({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      commit("setMpesaLoadingStatus", false);
+      commit("setMpesaFailStatus", true);
+      commit("setMpesaSuccessStatus", false);
+      resolve(true);
+    });
+  },
+
   requestRunningBalance({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch("requestAxiosPost", payload, { root: true }).then(

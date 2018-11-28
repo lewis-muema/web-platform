@@ -96,14 +96,14 @@
                     console.log("department added");
                     console.log(response);
                     let level = 1; //success
-                    let notification = {"title": "Add Department", "level": level, "message": "Department Added!"}; //notification object
+                    let notification = {"title": "", "level": level, "message": "Department Added!"}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
                 }, error => {
                     console.log("department NOT added");
                     console.log(error);
                     let level = 2;
-                    let notification = {"title": "Add Department", "level": level, "message": "An error occurred."}; //notification object
+                    let notification = {"title": "", "level": level, "message": "Something went wrong."}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 

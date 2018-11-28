@@ -7,12 +7,7 @@
     Sign up for Sendy
   </div>
 
-  <!-- <div class="sign-button" onclick="" id="sign-in-v2-logging-in-1">
-  <img class="sign-buttom__img" src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
-  </div>
-  <div class="sign-text">
-     or
-  </div> -->
+
 
   <p class="sign-up-error">
     {{message}}
@@ -25,15 +20,22 @@
     </div>
 
     <div class="sign-holder dimen">
-      <input class="input-control sign-up-form" type="email" name="email" v-model="email" placeholder="Your Email" value="">
+      <input class="input-control sign-up-form" v-validate="'required|email'"  type="email" name="email" v-model="email" placeholder="Your Email" value="">
+      <br>
+      <span class="sign-up-email-error">{{ errors.first('email') }}</span>
     </div>
+
+
     <div class="sign-holder dimen">
-      <input class="input-control sign-up-form" type="tel" placeholder="Phone Number" name="phone" v-model="phone" value="">
+      <vue-tel-input class="input-control sign-up-form" v-model="phone" name="phone" value="" @onBlur="validate_phone" v-validate="'required|check_phone'" data-vv-validate-on="blur"
+               :preferredCountries="['ke', 'ug', 'tz']">
+      </vue-tel-input>
+      <span v-show="errors.has('phone')" class="sign-up-phone-error">{{ errors.first('phone') }}</span>
     </div>
     <div class="sign-holder dimen" id="outer_u_pass">
   <span >
         <input class="input-control sign-up-form" type="password" name="password" v-model="password" placeholder="Password">
-  </span>
+  </span
     </div>
 
     <div class="sign-holder" style="text-align:center;">
@@ -43,7 +45,7 @@
       </span>
     </div>
     <div class="sign-holder">
-      <input class="button-primary" type="submit" name="sign_up_text" v-model="sign_up_text" id="signup" v-on:click="sign_up" >
+      <input class="button-primary signup-submit" type="submit" name="sign_up_text" aria-invalid="false" v-model="sign_up_text" id="signup" v-on:click="sign_up" v-bind:disabled="!this.is_valid">
     </div>
 
     <div class=" sign-holder sign-forgot-pass sign-smaller">
@@ -76,6 +78,9 @@ export default {
     };
   },
   methods: {
+    validate_phone(){
+      this.$validator.validate();
+    },
     ...mapMutations(
       {
         setPassword:'$_auth/setPassword',
@@ -88,54 +93,86 @@ export default {
        requestSignUpCheck :'$_auth/requestSignUpCheck',
    }),
    sign_up: function() {
-     if(this.u_terms == true) {
-
-       let values = {};
-       values.phone = this.phone;
-       values.email = this.email;
-       let full_payload = {
-         values: values,
-         vm: this,
-         app: "NODE_PRIVATE_API",
-         endpoint: "sign_up_check"
-       };
-       this.requestSignUpCheck(full_payload).then(
-         response => {
-           console.log(response);
-           if (response.length > 0) {
-             response = response[0];
-           }
-           if (response.status == true) {
-             console.log(response);
-             this.setName(this.name);
-             this.setEmail(this.email);
-             this.setPhone(this.phone);
-             this.setPassword(this.password);
-             this.$router.push("/auth/sign_up_verification");
-           } else {
-
-             this.message = response.data.reason;
-             console.warn("Sign Up Failed");
-           }
-         },
-         error => {
-           console.error("Check Internet Connection");
-           console.log(error);
-         }
-       );
+     let phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+     let phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+     let email_valid = true
+     for (var i = 0; i < this.errors.items.length; i++) {
+       if (this.errors.items[i].field == 'email') {
+         email_valid = false
+         break
+       }
      }
-     else {
-            this.message = 'Agree to Terms and Conditions';
-            console.log("Agree Terms and Condition")
-     }
+      // console.log(email_valid);
+      if (phone_valid == true && email_valid == true) {
+
+        if(this.u_terms == true) {
+
+          let values = {};
+          values.phone = this.phone;
+          values.email = this.email;
+          let full_payload = {
+            values: values,
+            vm: this,
+            app: "NODE_PRIVATE_API",
+            endpoint: "sign_up_check"
+          };
+          this.requestSignUpCheck(full_payload).then(
+            response => {
+              console.log(response);
+              if (response.length > 0) {
+                response = response[0];
+              }
+              if (response.status == true) {
+                console.log(response);
+                this.setName(this.name);
+                this.setEmail(this.email);
+                this.setPhone(this.phone);
+                this.setPassword(this.password);
+                this.$router.push("/auth/sign_up_verification");
+              } else {
+
+                this.message = response.data.reason;
+                console.warn("Sign Up Failed");
+              }
+            },
+            error => {
+              console.error("Check Internet Connection");
+              console.log(error);
+            }
+          );
+        }
+        else {
+               this.message = 'Agree to Terms and Conditions';
+               console.log("Agree Terms and Condition")
+        }
+
+      }
+        else{
+              this.message = 'Provide valid Email ';
+        }
 
    }
+  },
+  computed : {
+    is_valid : function() {
+      return this.name != '' && this.email != '' && this.phone !=''&& this.password != '' && this.u_terms !='';
+    },
   },
 
 }
 </script>
 
 <style lang="css">
+
+@import '../../../../node_modules/vue-tel-input/dist/vue-tel-input.css';
+
+#sign-up-v2-container > div:nth-child(3) > div:nth-child(3) > div > div > ul {
+    z-index: 9;
+    width: 320px;
+    margin-top: 9px;
+    margin-left: -15px;
+}
+
 .log-item{
   text-align: center;
   border: 0px solid #ccc;
@@ -224,5 +261,20 @@ export default {
 .sign-up-error{
   color: #e08445;
   font-family: 'Rubik', sans-serif;
+}
+.sign-up-email-error{
+ margin-right: 45%;
+ font-size: 13px;
+ font-family: 'Rubik', sans-serif;
+ color: #e08445;
+}
+.sign-up-phone-error{
+ margin-right: 25%;
+ font-size: 13px;
+ font-family: 'Rubik', sans-serif;
+ color: #e08445;
+}
+.signup-submit{
+  width: 110% !important;
 }
 </style>

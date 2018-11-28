@@ -26,7 +26,7 @@
     <div class="divide"></div>
     <div class="form-submits">
       <a v-on:click="last_view" class="waves-effect waves-teal btn-flat">Back</a>
-      <button v-on:click="next_view" class="btn-submit" style="width:30% !important;" name="next" id="nextBtn">Next
+      <button v-on:click="next_view" class="btn-submit" style="width:30% !important;" name="next" v-bind:disabled="!this.is_valid">Next
       </button>
     </div>
   </div>
@@ -154,7 +154,8 @@ export default {
   },
   computed : {
     is_valid : function() {
-      return this.password != '' && this.cpassword !='' && this.password === this.cpassword;
+      // return this.password != '' && this.cpassword !='' && this.password === this.cpassword;
+        return this.cpassword != '' && this.password != '';
     },
     ...mapGetters({
         getName : '$_external/getName',
