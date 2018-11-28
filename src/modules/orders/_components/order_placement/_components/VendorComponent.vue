@@ -31,12 +31,25 @@
 
                         </div> -->
                         <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper">
-                            <div class="home-view-vendor-types-item--cost-wrapper__cost">
-                                Ksh {{formatNumeral(j.cost)}}
+                            <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-left">
+                                <div class="home-view-vendor-types-item--cost-wrapper__cost">
+                                    Ksh {{formatNumeral(j.cost)}}
+                                </div>
+                                <div class="home-view-vendor-types-item--cost-wrapper_time">
+                                    Delivery by {{transformDate(j.eta)}}
+                                </div>
                             </div>
-                            <div class="home-view-vendor-types-item--cost-wrapper_time">
-                                Delivery by {{transformDate(j.eta)}}
+                            <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right">
+                                <el-popover
+                                    placement="right"
+                                    title="Title"
+                                    width="200"
+                                    trigger="hover"
+                                    content="this is content, this is content, this is content">
+                                    <span slot="reference"><i class="el-icon-info"></i></span>
+                                  </el-popover>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -58,7 +71,8 @@ export default {
     components:{OrderOptions},
     data () {
         return {
-            first_time : false
+            first_time : false,
+            popover_visible: false
         }
     },
     computed :{
@@ -88,7 +102,7 @@ export default {
             return "https://images.sendyit.com/web_platform/vendor_type/side/"+id+".svg";
         },
         getPackageIcon(name){
-            return "https://images.sendyit.com/web_platform/vendor_size/"+name+".svg"
+            return "https://images.sendyit.com/web_platform/vendor_size/"+name+".svg?q=1"
         },
         get_current_active_package__class(name){
             return{
@@ -101,6 +115,7 @@ export default {
             }
         },
         transformDate(eta){
+            // return this.moment().duration(eta, "seconds").humanize()
             return this.moment().add(eta, 'seconds').format("HH.mm");
         },
         formatNumeral(num){
@@ -129,5 +144,4 @@ export default {
 
 <style lang="css" scoped>
     @import "../../../../../assets/styles/orders_order_placement_vendors.css";
-
 </style>
