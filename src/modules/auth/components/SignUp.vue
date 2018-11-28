@@ -149,8 +149,18 @@ export default {
       }
         else{
               this.message = 'Provide valid Email ';
+              this.doNotification(
+                2,
+                "Sign Up failed",
+                "Provide valid Email"
+              );
         }
 
+   },
+   doNotification(level, title, message) {
+     let notification = { title: title, level: level, message: message };
+     this.$store.commit("setNotification", notification);
+     this.$store.commit("setNotificationStatus", true);
    }
   },
   computed : {
