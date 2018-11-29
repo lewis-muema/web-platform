@@ -42,10 +42,9 @@
                             <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right">
                                 <el-popover
                                     placement="right"
-                                    title="Title"
-                                    width="200"
-                                    trigger="hover"
-                                    content="this is content, this is content, this is content">
+                                    width="350"
+                                    trigger="hover">
+                                    <div class="reset-font" v-html="j.tier_description"></div>
                                     <span slot="reference"><i class="el-icon-info"></i></span>
                                   </el-popover>
                             </div>
