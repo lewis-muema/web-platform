@@ -1,10 +1,10 @@
 <template lang="html">
     <div class="">
-        <div class="home-view-actions">
-            <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('payment')" @click="do_set_active_order_option('payment')">
+        <div class="home-view-vendor-classes--label">
+            <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('payment')"  @click="do_set_active_order_option('payment')">
                 <span class="home-view-actions--items__span" > <i class="el-icon-goods"></i> Payment</span>
             </a>
-            <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('note')"  @click="do_set_active_order_option('note')">
+            <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('note')" @click="do_set_active_order_option('note')">
                 <span class="home-view-actions--items__span"> <i class="el-icon-edit-outline"></i> Note</span>
             </a>
             <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('schedule')" @click="do_set_active_order_option('schedule')">
