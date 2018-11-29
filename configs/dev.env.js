@@ -12,5 +12,5 @@ module.exports = merge(prodEnv, {
 
   BACKEND_CUSTOMERS_APP: '"https://customerstest.sendyit.com/customers/"',
   BACKEND_API_KEY: '"4RNNeyATKN6B6S6XiOyJdPMEJ3oLRKBT"',
-  DOMAIN: '"webapptest.sendyit.com"'
+  DOMAIN: '"localhost"'
 });
