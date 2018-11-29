@@ -2,18 +2,18 @@
     <div class="">
         <div class="">
           <div class="home-view-vendor-classes--label">
-              <div class="home-view-vendor-classes-label-item">
-                <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('payment')"  @click="do_set_active_order_option('payment')">
+              <div class="home-view-vendor-classes-label-item"  @click="do_set_active_order_option('payment')">
+                <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('payment')" >
                     <span class="home-view-actions--items__span" > <i class="el-icon-goods"></i> Payment</span>
                 </a>
               </div>
-              <div class="home-view-vendor-classes-label-item">
-                <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('note')" @click="do_set_active_order_option('note')">
+              <div class="home-view-vendor-classes-label-item" @click="do_set_active_order_option('note')">
+                <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('note')">
                     <span class="home-view-actions--items__span"> <i class="el-icon-edit-outline"></i> Note</span>
                 </a>
               </div>
-              <div class="home-view-vendor-classes-label-item">
-                <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('schedule')" @click="do_set_active_order_option('schedule')">
+              <div class="home-view-vendor-classes-label-item" @click="do_set_active_order_option('schedule')">
+                <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('schedule')">
                     <span class="home-view-actions--items__span"> <i class="el-icon-time"></i> Schedule</span>
                 </a>
               </div>
