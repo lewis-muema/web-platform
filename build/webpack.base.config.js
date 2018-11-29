@@ -6,7 +6,7 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const FriendlyErrorsPlugin = require("friendly-errors-webpack-plugin");
 
 process.env.NODE_ENV = process.env.DOCKER_ENV || "development";
-process.env.DOCKER_ENV = process.env.DOCKER_ENV || "production";
+process.env.DOCKER_ENV = process.env.DOCKER_ENV || "development";
 const isProd = process.env.NODE_ENV !== "development";
 
 const env =
