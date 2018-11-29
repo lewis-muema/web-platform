@@ -169,9 +169,6 @@ export default {
       else{
            this.message = "Please provide all details";
       }
-        else{
-              this.message = 'Provide valid Email ';
-        }
 
    }
   },
