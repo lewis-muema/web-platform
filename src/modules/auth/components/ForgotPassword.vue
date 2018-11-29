@@ -35,7 +35,7 @@
           </div>
 
           <div class="sign-holder">
-            <input class="button-primary" type="submit" value="Reset Password" v-on:click="request_pass" >
+            <input class="button-primary forgot-btn-color" type="submit" value="Reset Password" v-on:click="request_pass" >
           </div>
           <div class=" sign-holder ">
             <router-link class="sign-holder__link" to="/auth/sign_in">Sign In</router-link>
@@ -244,5 +244,8 @@ text-decoration:none;
   font-size: 13px;
   color: #e08445;
   font-family: "Rubik", sans-serif;
+}
+.forgot-btn-color{
+  border-width: 0px !important;
 }
 </style>
