@@ -50,7 +50,7 @@
       </span>
     </div>
     <div class="sign-holder">
-      <input class="button-primary signup-submit" type="submit" name="sign_up_text" aria-invalid="false" v-model="sign_up_text" id="signup" v-on:click="sign_up" v-bind:disabled="!this.is_valid">
+      <input class="button-primary signup-submit" type="submit" name="sign_up_text" aria-invalid="false" v-model="sign_up_text" id="signup" v-on:click="sign_up" >
     </div>
 
     <div class=" sign-holder sign-forgot-pass sign-smaller">
@@ -86,6 +86,7 @@ export default {
     validate_phone(){
       this.$validator.validate();
     },
+    
     ...mapMutations(
       {
         setPassword:'$_auth/setPassword',
@@ -98,68 +99,76 @@ export default {
        requestSignUpCheck :'$_auth/requestSignUpCheck',
    }),
    sign_up: function() {
-     let phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-     let phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
-     let email_valid = true
-     for (var i = 0; i < this.errors.items.length; i++) {
-       if (this.errors.items[i].field == 'email') {
-         email_valid = false
-         break
+     if (this.name != '' && this.email != '' && this.phone !=''&& this.password != '') {
+
+       let phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+       let phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+       let email_valid = true
+       for (var i = 0; i < this.errors.items.length; i++) {
+         if (this.errors.items[i].field == 'email') {
+           email_valid = false
+           break
+         }
        }
-     }
-      // console.log(email_valid);
-      if (phone_valid == true && email_valid == true) {
+        // console.log(email_valid);
+        if (phone_valid == true && email_valid == true) {
 
-        if(this.u_terms == true) {
+          if(this.u_terms == true) {
 
-          let values = {};
-          values.phone = this.phone;
-          values.email = this.email;
-          let full_payload = {
-            values: values,
-            vm: this,
-            app: "NODE_PRIVATE_API",
-            endpoint: "sign_up_check"
-          };
-          this.requestSignUpCheck(full_payload).then(
-            response => {
-              console.log(response);
-              if (response.length > 0) {
-                response = response[0];
-              }
-              if (response.status == true) {
+            let values = {};
+            values.phone = this.phone;
+            values.email = this.email;
+            let full_payload = {
+              values: values,
+              vm: this,
+              app: "NODE_PRIVATE_API",
+              endpoint: "sign_up_check"
+            };
+            this.requestSignUpCheck(full_payload).then(
+              response => {
                 console.log(response);
-                this.setName(this.name);
-                this.setEmail(this.email);
-                this.setPhone(this.phone);
-                this.setPassword(this.password);
-                this.$router.push("/auth/sign_up_verification");
-              } else {
+                if (response.length > 0) {
+                  response = response[0];
+                }
+                if (response.status == true) {
+                  console.log(response);
+                  this.setName(this.name);
+                  this.setEmail(this.email);
+                  this.setPhone(this.phone);
+                  this.setPassword(this.password);
+                  this.$router.push("/auth/sign_up_verification");
+                } else {
 
-                this.message = response.data.reason;
-                console.warn("Sign Up Failed");
+                  this.message = response.data.reason;
+                  console.warn("Sign Up Failed");
+                }
+              },
+              error => {
+                console.error("Check Internet Connection");
+                console.log(error);
               }
-            },
-            error => {
-              console.error("Check Internet Connection");
-              console.log(error);
-            }
-          );
-        }
-        else {
-               this.message = 'Agree to Terms and Conditions';
-               console.log("Agree Terms and Condition")
-        }
+            );
+          }
+          else {
+                 this.message = 'Agree to Terms and Conditions';
+                 console.log("Agree Terms and Condition")
+          }
 
-      }
-        else{
-              this.message = 'Provide valid Email ';
-              this.doNotification(
-                2,
-                "Sign Up failed",
-                "Provide valid Email"
-              );
         }
+          else{
+                this.message = 'Provide valid Email ';
+                this.doNotification(
+                  2,
+                  "Sign Up failed",
+                  "Provide valid Email"
+                );
+          }
+
+     }
+
+      else{
+           this.message = "Please provide all details";
+      }
 
    },
    doNotification(level, title, message) {
@@ -167,11 +176,6 @@ export default {
      this.$store.commit("setNotification", notification);
      this.$store.commit("setNotificationStatus", true);
    }
-  },
-  computed : {
-    is_valid : function() {
-      return this.name != '' && this.email != '' && this.phone !=''&& this.password != '' && this.u_terms !='';
-    },
   },
 
 }
