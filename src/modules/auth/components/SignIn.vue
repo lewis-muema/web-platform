@@ -56,7 +56,6 @@ export default {
     return {
       email: "",
       password: "",
-
       message: "",
       login_text: "Login",
       session_cookie: null
@@ -142,30 +141,30 @@ export default {
         values: values,
         vm: this,
         app: "NODE_PRIVATE_API",
-        endpoint: "sign_in/"
+        endpoint: "sign_in"
       };
       let that = this;
 
       this.authSignIn(full_payload).then(
         response => {
-          console.log(response);
+          // console.log(response);
+          localStorage.setItem('jwtToken', response)
+          //let jwtToken = localStorage.getItem('jwtToken')
+          //console.log(jwtToken)
           let partsOfToken = response.split('.');
           let middleString = partsOfToken[1];
           let data = atob(middleString);
           let payload = JSON.parse(data).payload;
-          console.log(payload)
-          return;
-
-
+          // console.log(payload)
           //check when response is dual
-          if (response.length > 0) {
-            response = response[0];
-          }
-          if (response.status == true) {
+          // if (response.length > 0) {
+          //   response = response[0];
+          // }
+          if (response) {
             //set cookie
             //commit everything to the store
             //redirect to orders
-            let session_data = response.data;
+            let session_data = payload;
 
             that.setCookie(session_data).then(res => {
               console.log("sessionSnack Now", this.getCookie());
@@ -177,7 +176,7 @@ export default {
             //failed to login
             //show some sort of error
             this.login_text = "Login";
-            this.message = response.data.reason;
+            this.message = "Check your Login Credentials.";
             this.doNotification(
               2,
               "Login failed",
