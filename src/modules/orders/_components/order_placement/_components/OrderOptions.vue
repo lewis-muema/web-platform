@@ -197,6 +197,7 @@ export default {
       get_price_request_object: "$_orders/$_home/get_price_request_object",
       get_active_package_class: "$_orders/$_home/get_active_package_class",
       get_active_vendor_name: "$_orders/$_home/get_active_vendor_name",
+      active_vendor_price_data: "$_orders/$_home/get_active_vendor_details",
       get_order_path: "$_orders/$_home/get_order_path",
       get_pickup_filled: "$_orders/$_home/get_pickup_filled",
       get_payment_method: "$_orders/$_home/get_payment_method",
@@ -213,11 +214,11 @@ export default {
       }
       return "";
     },
-    active_vendor_price_data: function() {
-      return this.active_price_tier_data.price_tiers.find(
-        vendor => vendor.vendor_name === this.get_active_vendor_name
-      );
-    },
+    // active_vendor_price_data: function() {
+    //   return this.active_price_tier_data.price_tiers.find(
+    //     vendor => vendor.vendor_name === this.get_active_vendor_name
+    //   );
+    // },
     order_cost: function() {
         if( typeof this.active_vendor_price_data !== 'undefined'){
             if ("cost" in this.active_vendor_price_data) {

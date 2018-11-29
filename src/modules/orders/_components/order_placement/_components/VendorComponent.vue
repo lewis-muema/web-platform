@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="home-view-vendor-types" v-if="active_price_tier_data != '' ">
-                    <div  v-for="j in active_price_tier_data.price_tiers" :key="j.order_no" @click="set_active_vendor_name(j.vendor_name)" class="home-view-vendor-types--item" :class="get_current_active_vendor_type_class(j.vendor_name)" >
+                    <div  v-for="j in active_price_tier_data.price_tiers" :key="j.order_no" @click="set_active_vendor_name(j.vendor_name);set_active_vendor_details(j);" class="home-view-vendor-types--item" :class="get_current_active_vendor_type_class(j.vendor_name)" >
                         <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
                             <div class="home-view-vendor-types-item--vendor-wrapper__img">
                                 <img class="home-view-vendor-types-item__image" :src="getVendorIcon(j.vendor_id)" alt="">
@@ -93,7 +93,8 @@ export default {
     methods:{
         ...mapMutations({
           set_active_package_class : '$_orders/$_home/set_active_package_class',
-          set_active_vendor_name : '$_orders/$_home/set_active_vendor_name'
+          set_active_vendor_name : '$_orders/$_home/set_active_vendor_name',
+          set_active_vendor_details : '$_orders/$_home/set_active_vendor_details',
         }),
         setActivePackageClass(name){
             this.set_active_package_class(name);
@@ -132,6 +133,7 @@ export default {
         destroyVendorComponent(){
             console.log('in destroyVendorComponent');
             this.set_active_vendor_name('');
+            this.set_active_vendor_details({});
             this.$emit('vendorComponentDestroyed');
             this.$destroy();
         }
