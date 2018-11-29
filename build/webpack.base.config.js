@@ -5,17 +5,15 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
-process.env.NODE_ENV = process.env.DOCKER_ENV || 'production';
+process.env.DOCKER_ENV = process.env.DOCKER_ENV || 'development';
 
 const isProd = process.env.NODE_ENV === 'production'
 
-const env = process.env.NODE_ENV === 'testing'
+const env = process.env.DOCKER_ENV === 'testing'
   ?  require('../configs/test.env')
-  : process.env.NODE_ENV === 'production' ? require('../configs/prod.env')
+  : process.env.DOCKER_ENV === 'production' ? require('../configs/prod.env')
   : require('../configs/dev.env')
 
-//server side
- process.env._ENV = env;
 
 module.exports = {
   devtool: isProd
@@ -34,6 +32,15 @@ module.exports = {
   module: {
     noParse: /es6-promise\.js$/, // avoid webpack shimming process
     rules: [
+     // {
+     //     enforce: "pre",
+     //     test: /\.(js|vue)$/,
+     //     exclude: /node_modules/,
+     //     loader: "eslint-loader",
+     //     options: {
+     //       formatter: require('eslint-friendly-formatter')
+     //     }
+     //  },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -76,11 +83,11 @@ module.exports = {
     maxEntrypointSize: 300000,
     hints: isProd ? 'warning' : false
   },
-  mode: process.env.NODE_ENV || 'production',
+  mode: process.env.DOCKER_ENV == 'development' ? 'development' : 'production',
   plugins: isProd
     ? [
         new webpack.DefinePlugin({
-          'process.env.NODE_ENV': env
+          'process.env.CONFIGS_ENV': env
         }),
         new webpack.optimize.ModuleConcatenationPlugin(),
         new ExtractTextPlugin({
@@ -91,7 +98,7 @@ module.exports = {
       ]
     : [
         new webpack.DefinePlugin({
-          'process.env.NODE_ENV': env
+          'process.env.CONFIGS_ENV': env
         }),
         new FriendlyErrorsPlugin(),
         new VueLoaderPlugin()

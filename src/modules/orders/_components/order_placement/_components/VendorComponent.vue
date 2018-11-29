@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="home-view-vendor-types" v-if="active_price_tier_data != '' ">
-                    <div  v-for="j in active_price_tier_data.price_tiers" :key="j.order_no" @click="set_active_vendor_name(j.vendor_name)" class="home-view-vendor-types--item" :class="get_current_active_vendor_type_class(j.vendor_name)" >
+                    <div  v-for="j in active_price_tier_data.price_tiers" :key="j.order_no" @click="set_active_vendor_name(j.vendor_name);set_active_vendor_details(j);" class="home-view-vendor-types--item" :class="get_current_active_vendor_type_class(j.vendor_name)" >
                         <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
                             <div class="home-view-vendor-types-item--vendor-wrapper__img">
                                 <img class="home-view-vendor-types-item__image" :src="getVendorIcon(j.vendor_id)" alt="">
@@ -31,12 +31,25 @@
 
                         </div> -->
                         <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper">
-                            <div class="home-view-vendor-types-item--cost-wrapper__cost">
-                                Ksh {{formatNumeral(j.cost)}}
+                            <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-left">
+                                <div class="home-view-vendor-types-item--cost-wrapper__cost">
+                                    Ksh {{formatNumeral(j.cost)}}
+                                </div>
+                                <div class="home-view-vendor-types-item--cost-wrapper_time">
+                                    Delivery by {{transformDate(j.eta)}}
+                                </div>
                             </div>
-                            <div class="home-view-vendor-types-item--cost-wrapper_time">
-                                Delivery by {{transformDate(j.eta)}}
+                            <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right">
+                                <el-popover
+                                    placement="right"
+                                    title="Title"
+                                    width="200"
+                                    trigger="hover"
+                                    content="this is content, this is content, this is content">
+                                    <span slot="reference"><i class="el-icon-info"></i></span>
+                                  </el-popover>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -58,7 +71,8 @@ export default {
     components:{OrderOptions},
     data () {
         return {
-            first_time : false
+            first_time : false,
+            popover_visible: false
         }
     },
     computed :{
@@ -79,7 +93,8 @@ export default {
     methods:{
         ...mapMutations({
           set_active_package_class : '$_orders/$_home/set_active_package_class',
-          set_active_vendor_name : '$_orders/$_home/set_active_vendor_name'
+          set_active_vendor_name : '$_orders/$_home/set_active_vendor_name',
+          set_active_vendor_details : '$_orders/$_home/set_active_vendor_details',
         }),
         setActivePackageClass(name){
             this.set_active_package_class(name);
@@ -88,7 +103,7 @@ export default {
             return "https://images.sendyit.com/web_platform/vendor_type/side/"+id+".svg";
         },
         getPackageIcon(name){
-            return "https://images.sendyit.com/web_platform/vendor_size/"+name+".svg"
+            return "https://images.sendyit.com/web_platform/vendor_size/"+name+".svg?q=1"
         },
         get_current_active_package__class(name){
             return{
@@ -101,6 +116,7 @@ export default {
             }
         },
         transformDate(eta){
+            // return this.moment().duration(eta, "seconds").humanize()
             return this.moment().add(eta, 'seconds').format("HH.mm");
         },
         formatNumeral(num){
@@ -117,6 +133,7 @@ export default {
         destroyVendorComponent(){
             console.log('in destroyVendorComponent');
             this.set_active_vendor_name('');
+            this.set_active_vendor_details({});
             this.$emit('vendorComponentDestroyed');
             this.$destroy();
         }
@@ -129,5 +146,4 @@ export default {
 
 <style lang="css" scoped>
     @import "../../../../../assets/styles/orders_order_placement_vendors.css";
-
 </style>
