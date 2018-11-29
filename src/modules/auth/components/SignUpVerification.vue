@@ -272,6 +272,7 @@ export default {
   font-size: 13px !important;
   border: #fff; */
   width:28%;
+  border-width: 0px !important;
 }
 .style-sign-btn{
   color: black !important;

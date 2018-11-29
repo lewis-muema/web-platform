@@ -34,7 +34,7 @@
             </div>
 
             <div class="sign-holder">
-              <input class="button-primary" type="submit" name="login_text" v-model="login_text" v-on:click="sign_in" >
+              <input class="button-primary sign-btn-color" type="submit" name="login_text" v-model="login_text" v-on:click="sign_in" >
             </div>
             <div class=" sign-holder sign-forgot-pass sign-smaller">
               <router-link class="sign-holder__link" to="/auth/forgot_password">Forgot password?</router-link>
@@ -292,5 +292,8 @@ export default {
 .sign-in-error {
   color: #e08445;
   font-family: "Rubik", sans-serif;
+}
+.sign-btn-color{
+  border-width: 0px !important;
 }
 </style>
