@@ -217,9 +217,13 @@
   color: #1782c5;
   margin-bottom: -15px;
 }
-.home-view-actions--items__span .el-icon-goods {
+
+.home-view-actions--items__span .el-icon-goods,
+.home-view-actions--items__span .el-icon-edit-outline,
+.home-view-actions--items__span .el-icon-time {
   position: absolute;
   margin-left: -15px;
+  margin-top: 2px;
 }
 
 /* end order actions */
