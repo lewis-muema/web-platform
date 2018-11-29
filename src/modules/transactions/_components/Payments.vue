@@ -6,11 +6,11 @@
               <el-date-picker class="section--filter-input" type="date" name="from_date" v-model="filterData.from_date" placeholder="From"/>
               <el-date-picker class="section--filter-input" type="date" name="to_date" v-model="filterData.to_date" placeholder="To"/>
 
-              <button type="button" @click="filterPaymentData":class="active_filter?'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'" name="order_payments_text" v-model="order_payments_text">{{this.order_payments_text}}</button>
+              <button type="button" @click="filterPaymentData":class="active_filter?'button-primary section--filter-action align-left btn-payment':'button-primary section--filter-action-inactive align-left btn-payment'" name="order_payments_text" v-model="order_payments_text">{{this.order_payments_text}}</button>
 
         </div>
         <div class="section--filter-action-wrap">
-          <button type="button" class="button-primary section--filter-action" @click="take_to_payment">Pay</button>
+          <button type="button" class="button-primary section--filter-action btn-payment" @click="take_to_payment">Pay</button>
 
         </div>
     </div>
@@ -251,4 +251,7 @@ export default {
 </script>
 
 <style lang="css">
+.btn-payment{
+  border-width:0px !important;
+}
 </style>

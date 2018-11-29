@@ -290,5 +290,6 @@ export default {
 }
 .signup-submit{
   width: 110% !important;
+  border-width: 0px !important;
 }
 </style>
