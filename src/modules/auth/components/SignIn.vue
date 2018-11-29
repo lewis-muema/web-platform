@@ -40,7 +40,7 @@
               <router-link class="sign-holder__link" to="/auth/forgot_password">Forgot password?</router-link>
             </div>
             <div class="sign-holder sign-sign-up sign-smaller">
-              Don't have an Account? <router-link class="sign-holder__link" to="/auth/sign_up">Sign Up</router-link>
+              Don't have an Account? <router-link class="sign-holder__link" to="/auth/sign_up" >Sign Up</router-link>
             </div>
           </div>
       </div>
@@ -98,6 +98,9 @@ export default {
     setCookie: function(value) {
       console.log("setting cookie", value);
       return new Promise((resolve, reject) => {
+        if (value.hasOwnProperty("default")) {
+          resolve(false)
+        }
         let domain = this.$store.getters.getENV.domain || document.domain;
         let path = "/";
 
@@ -130,65 +133,76 @@ export default {
       });
     },
     sign_in: function() {
-      //erase cookie on login just incase
-      this.login_text = "Logging in ...";
-      let values = {};
-      values.email = this.email;
-      values.password = this.password;
-      let full_payload = {
-        values: values,
-        vm: this,
-        app: "NODE_PRIVATE_API",
-        endpoint: "sign_in/"
-      };
-      let that = this;
 
-      this.authSignIn(full_payload).then(
-        response => {
-          console.log(response);
-          //check when response is dual
-          if (response.length > 0) {
-            response = response[0];
-          }
-          if (response.status == true) {
-            //set cookie
-            //commit everything to the store
-            //redirect to orders
-            let session_data = response.data;
+      if (this.email != '' && this.password != '') {
 
-            that.setCookie(session_data).then(res => {
-              console.log("sessionSnack Now", this.getCookie());
+        //erase cookie on login just incase
+        this.login_text = "Logging in ...";
+        this.eraseCookie("_sessionSnack");
+        // return;
 
-              that.$store.commit("setSession", session_data);
-              that.$router.push("/orders");
-            });
-          } else {
-            //failed to login
-            //show some sort of error
+        let values = {};
+        values.email = this.email;
+        values.password = this.password;
+        let full_payload = {
+          values: values,
+          vm: this,
+          app: "NODE_PRIVATE_API",
+          endpoint: "sign_in/"
+        };
+        let that = this;
+
+        this.authSignIn(full_payload).then(
+          response => {
+            console.log(response);
+            //check when response is dual
+            if (response.length > 0) {
+              response = response[0];
+            }
+            if (response.status == true) {
+              //set cookie
+              //commit everything to the store
+              //redirect to orders
+              let session_data = response.data;
+
+              that.setCookie(session_data).then(res => {
+                console.log("sessionSnack Now", this.getCookie());
+
+                that.$store.commit("setSession", session_data);
+                that.$router.push("/orders");
+              });
+            } else {
+              //failed to login
+              //show some sort of error
+              this.login_text = "Login";
+              this.message = response.data.reason;
+              this.doNotification(
+                2,
+                "Login failed",
+                "Login failed. Please try again"
+              );
+              console.warn("login failed");
+            }
+          },
+          error => {
             this.login_text = "Login";
-            this.message = response.data.reason;
-            this.doNotification(
-              2,
-              "Login failed",
-              "Login failed. Please try again"
-            );
-            console.warn("login failed");
+            this.message = "Check Internet Connection";
+            console.error("Check Internet Connection");
+            console.log(error);
           }
-        },
-        error => {
-          this.login_text = "Login";
-          this.message = "Check Internet Connection";
-          console.error("Check Internet Connection");
-          console.log(error);
-        }
-      );
+        );
+      }
+      else {
+
+          this.message = "Provide all values";
+      }
     },
     doNotification(level, title, message) {
       let notification = { title: title, level: level, message: message };
       this.$store.commit("setNotification", notification);
       this.$store.commit("setNotificationStatus", true);
     }
-  }
+  },
 };
 </script>
 
