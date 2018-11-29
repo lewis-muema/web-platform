@@ -5,9 +5,9 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
-process.env.DOCKER_ENV = process.env.DOCKER_ENV || 'development';
-
-const isProd = process.env.NODE_ENV === 'production'
+process.env.NODE_ENV = process.env.DOCKER_ENV || 'production';
+process.env.DOCKER_ENV = process.env.DOCKER_ENV || 'testing';
+const isProd = process.env.NODE_ENV !== 'development'
 
 const env = process.env.DOCKER_ENV === 'testing'
   ?  require('../configs/test.env')
@@ -32,15 +32,6 @@ module.exports = {
   module: {
     noParse: /es6-promise\.js$/, // avoid webpack shimming process
     rules: [
-     // {
-     //     enforce: "pre",
-     //     test: /\.(js|vue)$/,
-     //     exclude: /node_modules/,
-     //     loader: "eslint-loader",
-     //     options: {
-     //       formatter: require('eslint-friendly-formatter')
-     //     }
-     //  },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
