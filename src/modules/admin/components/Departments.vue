@@ -6,13 +6,13 @@
                 <el-input class="section--filter-input" v-model="filterData.department" placeholder="Search Department"></el-input>
 
                 <button type="button"
-                        :class="active_filter ? 'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'"
+                        :class="active_filter ? 'button-primary section--filter-action align-left btn-dprts':'button-primary section--filter-action-inactive align-left btn-dprts'"
                         @click="filterUserTableData">Search
                 </button>
 
             </div>
             <div class="section--filter-action-wrap">
-                <button class="button-primary section--filter-action" @click="addDepartment">Add Department</button>
+                <button class="button-primary section--filter-action btn-dprts" @click="addDepartment">Add Department</button>
             </div>
         </div>
         <el-table
@@ -37,7 +37,7 @@
                     label="Action"
             >
                 <template slot-scope="scope">
-                    <a @click="edit_department(departments_data[scope.$index]['cop_user_id'])">Edit</a>
+                    <a @click="edit_department(departments_data[scope.$index]['cop_user_id'])" class="btn-dpt-edit">Edit</a>
                 </template>
             </el-table-column>
 
@@ -213,5 +213,11 @@
 
     .menu {
         display: flow-root;
+    }
+    .btn-dprts{
+      border-width:0px !important;
+    }
+    .btn-dpt-edit{
+      cursor: pointer;
     }
 </style>

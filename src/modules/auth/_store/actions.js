@@ -54,6 +54,22 @@ export default {
       );
     });
   },
+  requestCheckToken(context, payload) {
+     console.log("payload", payload);
+
+     return new Promise((resolve, reject) => {
+       payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+         response => {
+           console.log("in store dispatch to global store");
+             resolve(response.data);
+         },
+         error => {
+           reject(error);
+           console.log("failed to dispatch to global store");
+         }
+       );
+     });
+   },
   requestSignUpCheck(context, payload) {
     console.log("payload", payload);
 
