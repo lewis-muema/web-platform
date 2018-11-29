@@ -10,14 +10,15 @@ RUN mkdir /opt/sendy/
 COPY . /opt/sendy/
 WORKDIR /opt/sendy/
 
+ARG DOCKER_ENV
+ENV DOCKER_ENV=$DOCKER_ENV
+
 RUN npm install && npm run build 
 
 #RUN npm install -g npm
 # If you are building your code for production
 # RUN npm install --only=production
 
-ARG DOCKER_ENV
-ENV DOCKER_ENV=$DOCKER_ENV
 # Bundle app source
 COPY . .
 
