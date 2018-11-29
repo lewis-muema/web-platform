@@ -10,6 +10,7 @@ export default {
         // waypoints: 1,
         active_package_class:'',
         active_vendor_name:'',
+        active_vendor_details:{},
         active_order_option:'',
         price_request_object:{},
         max_destinations: 9,
