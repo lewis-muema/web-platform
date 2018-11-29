@@ -17,7 +17,7 @@ RUN npm install && npm run build
 # RUN npm install --only=production
 
 ARG DOCKER_ENV
-
+ENV DOCKER_ENV=$DOCKER_ENV
 # Bundle app source
 COPY . .
 
