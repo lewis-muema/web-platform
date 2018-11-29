@@ -149,6 +149,14 @@ export default {
       this.authSignIn(full_payload).then(
         response => {
           console.log(response);
+          let partsOfToken = response.split('.');
+          let middleString = partsOfToken[1];
+          let data = atob(middleString);
+          let payload = JSON.parse(data).payload;
+          console.log(payload)
+          return;
+
+
           //check when response is dual
           if (response.length > 0) {
             response = response[0];
