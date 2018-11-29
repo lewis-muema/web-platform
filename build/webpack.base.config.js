@@ -1,32 +1,31 @@
-const path = require('path')
-const webpack = require('webpack')
-const vueConfig = require('./vue-loader.config')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const path = require("path");
+const webpack = require("webpack");
+const vueConfig = require("./vue-loader.config");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const FriendlyErrorsPlugin = require("friendly-errors-webpack-plugin");
 
-process.env.NODE_ENV = process.env.DOCKER_ENV || 'production';
-process.env.DOCKER_ENV = process.env.DOCKER_ENV || 'testing';
-const isProd = process.env.NODE_ENV !== 'development'
+process.env.NODE_ENV = process.env.DOCKER_ENV || "development";
+process.env.DOCKER_ENV = process.env.DOCKER_ENV || "development";
+const isProd = process.env.NODE_ENV !== "development";
 
-const env = process.env.DOCKER_ENV === 'testing'
-  ?  require('../configs/test.env')
-  : process.env.DOCKER_ENV === 'production' ? require('../configs/prod.env')
-  : require('../configs/dev.env')
-
+const env =
+  process.env.DOCKER_ENV === "testing"
+    ? require("../configs/test.env")
+    : process.env.DOCKER_ENV === "production"
+    ? require("../configs/prod.env")
+    : require("../configs/dev.env");
 
 module.exports = {
-  devtool: isProd
-    ? false
-    : '#cheap-module-source-map',
+  devtool: isProd ? false : "#cheap-module-source-map",
   output: {
-    path: path.resolve(__dirname, '../dist'),
-    publicPath: '/dist/',
-    filename: '[name].[chunkhash].js'
+    path: path.resolve(__dirname, "../dist"),
+    publicPath: "/dist/",
+    filename: "[name].[chunkhash].js"
   },
   resolve: {
     alias: {
-      'public': path.resolve(__dirname, '../public')
+      public: path.resolve(__dirname, "../public")
     }
   },
   module: {
@@ -34,64 +33,64 @@ module.exports = {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
+        loader: "vue-loader",
         options: vueConfig
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
+        loader: "babel-loader",
         exclude: /node_modules/
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        loader: 'url-loader',
+        loader: "url-loader",
         options: {
           limit: 10000,
-          name: '[name].[ext]?[hash]'
+          name: "[name].[ext]?[hash]"
         }
       },
       {
         test: /\.css$/,
         use: isProd
           ? ExtractTextPlugin.extract({
-              use: 'css-loader?minimize',
-              fallback: 'vue-style-loader'
+              use: "css-loader?minimize",
+              fallback: "vue-style-loader"
             })
-          : ['vue-style-loader', 'css-loader']
+          : ["vue-style-loader", "css-loader"]
       },
       {
         test: /\.(ttf|eot|woff|woff2)$/,
         use: {
           loader: "file-loader",
           options: {
-            name: "fonts/[name].[ext]",
-          },
-        },
-      },
+            name: "fonts/[name].[ext]"
+          }
+        }
+      }
     ]
   },
   performance: {
     maxEntrypointSize: 300000,
-    hints: isProd ? 'warning' : false
+    hints: isProd ? "warning" : false
   },
-  mode: process.env.DOCKER_ENV == 'development' ? 'development' : 'production',
+  mode: process.env.DOCKER_ENV == "development" ? "development" : "production",
   plugins: isProd
     ? [
         new webpack.DefinePlugin({
-          'process.env.CONFIGS_ENV': env
+          "process.env.CONFIGS_ENV": env
         }),
         new webpack.optimize.ModuleConcatenationPlugin(),
         new ExtractTextPlugin({
-          filename: 'common.[chunkhash].css',
+          filename: "common.[chunkhash].css",
           allChunks: true
         }),
         new VueLoaderPlugin()
       ]
     : [
         new webpack.DefinePlugin({
-          'process.env.CONFIGS_ENV': env
+          "process.env.CONFIGS_ENV": env
         }),
         new FriendlyErrorsPlugin(),
         new VueLoaderPlugin()
       ]
-}
+};
