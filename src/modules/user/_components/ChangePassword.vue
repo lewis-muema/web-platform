@@ -291,6 +291,7 @@
         font-size: medium;
         text-transform: uppercase;
         letter-spacing: 1.1px;
+        border-width: 0px !important;
     }
 
     .panel-card {

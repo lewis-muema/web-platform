@@ -9,11 +9,11 @@
                     </el-option>
                 </el-select>
 
-                <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left':'button-primary section--filter-action-inactive align-left'" @click="filterUserTableData">Search</button>
+                <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left btn-users':'button-primary section--filter-action-inactive align-left btn-users'" @click="filterUserTableData">Search</button>
 
             </div>
             <div class="section--filter-action-wrap">
-                <button class="button-primary section--filter-action" @click="addUser">Add User</button>
+                <button class="button-primary section--filter-action btn-users" @click="addUser">Add User</button>
             </div>
         </div>
 
@@ -59,7 +59,7 @@
             <el-table-column
                     label="Action">
                 <template slot-scope="scope">
-                    <a @click="edit_user(user_data[scope.$index]['cop_user_id'])">Edit User</a>
+                    <a @click="edit_user(user_data[scope.$index]['cop_user_id'])" class="btn-edit-user">Edit User</a>
                 </template>
             </el-table-column>
         </el-table>
@@ -280,4 +280,10 @@
 <style lang="css" scoped>
     @import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons';
     /* @import "../../../../assets/styles/datatable.css"; */
+    .btn_users{
+      border-width:0px !important;
+    }
+    .btn-edit-user{
+      cursor: pointer;
+    }
 </style>
