@@ -34,6 +34,9 @@ export default {
     set_active_vendor_name(state, val){
       state.active_vendor_name=val;
     },
+    set_active_vendor_details(state, val){
+      state.active_vendor_details=val;
+    },
     set_active_order_option(state, val) {
       state.active_order_option=val;
     },

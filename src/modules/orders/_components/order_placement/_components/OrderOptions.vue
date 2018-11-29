@@ -1,17 +1,25 @@
 <template lang="html">
     <div class="">
-        <div class="home-view-actions">
-            <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('payment')" @click="do_set_active_order_option('payment')">
-                <span class="home-view-actions--items__span" > <i class="el-icon-goods"></i> Payment</span>
-            </a>
-            <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('note')"  @click="do_set_active_order_option('note')">
-                <span class="home-view-actions--items__span"> <i class="el-icon-edit-outline"></i> Note</span>
-            </a>
-            <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('schedule')" @click="do_set_active_order_option('schedule')">
-                <span class="home-view-actions--items__span"> <i class="el-icon-time"></i> Schedule</span>
-            </a>
-        </div>
-
+        <div class="">
+          <div class="home-view-vendor-classes--label">
+              <div class="home-view-vendor-classes-label-item"  @click="do_set_active_order_option('payment')">
+                <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('payment')" >
+                    <span class="home-view-actions--items__span" > <i class="el-icon-goods"></i> Payment</span>
+                </a>
+              </div>
+              <div class="home-view-vendor-classes-label-item" @click="do_set_active_order_option('note')">
+                <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('note')">
+                    <span class="home-view-actions--items__span"> <i class="el-icon-edit-outline"></i> Note</span>
+                </a>
+              </div>
+              <div class="home-view-vendor-classes-label-item" @click="do_set_active_order_option('schedule')">
+                <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('schedule')">
+                    <span class="home-view-actions--items__span"> <i class="el-icon-time"></i> Schedule</span>
+                </a>
+              </div>
+          </div>
+         </div>
+                  
         <div class="home-view-actions--note" v-if="get_active_order_option == 'payment'">
             <div class="">
 
@@ -183,10 +191,10 @@ export default {
       payment_type: "prepay",
       payment_state: 0, // 0- initial 1- loading 2- success 3- cancelled
       should_destroy: false,
-      schedule_picker_options:{
-          disabledDate(time) {
-           return time.getTime() < Date.now()
-         },
+      schedule_picker_options: {
+        disabledDate(time) {
+          return time.getTime() < Date.now();
+        }
       }
     };
   },
@@ -197,6 +205,7 @@ export default {
       get_price_request_object: "$_orders/$_home/get_price_request_object",
       get_active_package_class: "$_orders/$_home/get_active_package_class",
       get_active_vendor_name: "$_orders/$_home/get_active_vendor_name",
+      active_vendor_price_data: "$_orders/$_home/get_active_vendor_details",
       get_order_path: "$_orders/$_home/get_order_path",
       get_pickup_filled: "$_orders/$_home/get_pickup_filled",
       get_payment_method: "$_orders/$_home/get_payment_method",
@@ -213,50 +222,54 @@ export default {
       }
       return "";
     },
-    active_vendor_price_data: function() {
-      return this.active_price_tier_data.price_tiers.find(
-        vendor => vendor.vendor_name === this.get_active_vendor_name
-      );
-    },
+    // active_vendor_price_data: function() {
+    //   return this.active_price_tier_data.price_tiers.find(
+    //     vendor => vendor.vendor_name === this.get_active_vendor_name
+    //   );
+    // },
     order_cost: function() {
-        if( typeof this.active_vendor_price_data !== 'undefined'){
-            if ("cost" in this.active_vendor_price_data) {
-              return (
-                this.active_vendor_price_data.cost -
-                this.active_vendor_price_data.discountAmount
-              );
-            }
+      if (typeof this.active_vendor_price_data !== "undefined") {
+        if ("cost" in this.active_vendor_price_data) {
+          return (
+            this.active_vendor_price_data.cost -
+            this.active_vendor_price_data.discountAmount
+          );
         }
+      }
 
       return 0;
     },
     allowCash() {
       return (
-        this.get_price_request_object.payment_option == 2 || this.getRunningBalance <= 0
+        this.get_price_request_object.payment_option == 2 ||
+        this.getRunningBalance <= 0
       );
-      },
-     place_order_text(){
-          let text = 'Confirm ';
-          if(this.order_is_scheduled == true){
-              text = 'Schedule ';
-          }
-          return text + this.get_active_vendor_name+ ' Order';
-
-      },
-      order_is_scheduled(){
-          console.log('scheduled', this.scheduled_time)
-          console.log('eta', this.eta_time)
-          return this.moment(this.eta_time).isBefore(this.scheduled_time)
-      },
-      eta_time(){
-          return this.moment().add(this.active_vendor_price_data.eta, 'second').format("YYYY-MM-DD HH:mm:ss")
-      },
-      scheduled_time(){
-          return this.moment(this.schedule_time,"YYYY-MM-DD HH:mm:ss Z").format("YYYY-MM-DD HH:mm:ss");
-      },
-      pending_amount(){
-          return numeral(this.getRunningBalance + this.order_cost).format("0,0");
+    },
+    place_order_text() {
+      let text = "Confirm ";
+      if (this.order_is_scheduled == true) {
+        text = "Schedule ";
       }
+      return text + this.get_active_vendor_name + " Order";
+    },
+    order_is_scheduled() {
+      console.log("scheduled", this.scheduled_time);
+      console.log("eta", this.eta_time);
+      return this.moment(this.eta_time).isBefore(this.scheduled_time);
+    },
+    eta_time() {
+      return this.moment()
+        .add(this.active_vendor_price_data.eta, "second")
+        .format("YYYY-MM-DD HH:mm:ss");
+    },
+    scheduled_time() {
+      return this.moment(this.schedule_time, "YYYY-MM-DD HH:mm:ss Z").format(
+        "YYYY-MM-DD HH:mm:ss"
+      );
+    },
+    pending_amount() {
+      return numeral(this.getRunningBalance + this.order_cost).format("0,0");
+    }
   },
   methods: {
     ...mapMutations({
@@ -432,8 +445,8 @@ export default {
           typeof this.order_notes == "undefined"
             ? false
             : this.order_notes.length > 0
-              ? true
-              : false,
+            ? true
+            : false,
         last_digit: "none",
         insurance_id: 1,
         platform: "corporate",
@@ -449,9 +462,11 @@ export default {
         payment_mode: this.payment_method.startsWith("2")
           ? 2
           : this.payment_method == ""
-            ? 0
-            : this.payment_method,
-        schedule_time: this.order_is_scheduled? this.scheduled_time : this.eta_time,
+          ? 0
+          : this.payment_method,
+        schedule_time: this.order_is_scheduled
+          ? this.scheduled_time
+          : this.eta_time,
         tier_tag: this.active_vendor_price_data.tier_tag,
         tier_name: this.active_vendor_price_data.tier_name,
         cop_id: "cop_id" in acc ? acc.cop_id : 0,
@@ -530,12 +545,12 @@ export default {
     getCardValue(last4digits) {
       return "2_" + last4digits;
     },
-    setDefaultOptions(){
-        if(this.get_active_order_option == ''){
-            if(this.get_price_request_object.payment_option != 2){
-                this.set_active_order_option('payment');
-            }
+    setDefaultOptions() {
+      if (this.get_active_order_option == "") {
+        if (this.get_price_request_object.payment_option != 2) {
+          this.set_active_order_option("payment");
         }
+      }
     },
 
     /* start mpesa */
@@ -968,7 +983,7 @@ export default {
   padding-left: 29px;
 }
 .home-view-notes-wrapper--item {
-    padding-left: unset;
+  padding-left: unset;
 }
 .home-view-notes-wrapper--item__option {
   flex: 4;

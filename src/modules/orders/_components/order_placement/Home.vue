@@ -113,6 +113,7 @@ export default {
       removeExtraDestination : '$_orders/$_home/remove_extra_destination',
       set_active_package_class : '$_orders/$_home/set_active_package_class',
       set_active_vendor_name : '$_orders/$_home/set_active_vendor_name',
+      set_active_vendor_details : '$_orders/$_home/set_active_vendor_details',
       remove_markers : '$_orders/remove_markers',
       remove_polyline : '$_orders/remove_polyline',
       clear_order_path : '$_orders/$_home/clear_order_path',
@@ -298,9 +299,10 @@ export default {
                 this.set_active_package_class(default_package_class);
             }
             if(this.get_active_vendor_name == ''){
-                let default_vendor = this.get_price_request_object.economy_price_tiers[0]['price_tiers'][0]['vendor_name'];
-                console.log('default_vendor', default_vendor)
-                this.set_active_vendor_name(default_vendor);
+                let default_vendor_details = this.get_price_request_object.economy_price_tiers[0]['price_tiers'][0];
+                console.log('default_vendor', default_vendor_details)
+                this.set_active_vendor_name(default_vendor_details.vendor_name);
+                this.set_active_vendor_details(default_vendor_details);
             }
         }
         catch(er){
