@@ -557,3 +557,14 @@ span.el-pagination__jump {
   text-align: left;
   padding-right: 10px;
 }
+
+.el-popover{
+    background-color: #1782c5 !important;
+    color: #fff !important;
+}
+.el-popper[x-placement^=right] .popper__arrow::after{
+    border-right-color: #1782c5 !important;
+}
+.el-popover__title{
+    color: #fff !important;
+}

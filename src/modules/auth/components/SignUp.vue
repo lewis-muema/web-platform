@@ -40,7 +40,7 @@
     <div class="sign-holder dimen" id="outer_u_pass">
   <span >
         <input class="input-control sign-up-form" type="password" name="password" v-model="password" placeholder="Password">
-  </span
+  </span>
     </div>
 
     <div class="sign-holder" style="text-align:center;">
@@ -86,7 +86,7 @@ export default {
     validate_phone(){
       this.$validator.validate();
     },
-    
+
     ...mapMutations(
       {
         setPassword:'$_auth/setPassword',
@@ -169,12 +169,10 @@ export default {
       else{
            this.message = "Please provide all details";
       }
+        else{
+              this.message = 'Provide valid Email ';
+        }
 
-   },
-   doNotification(level, title, message) {
-     let notification = { title: title, level: level, message: message };
-     this.$store.commit("setNotification", notification);
-     this.$store.commit("setNotificationStatus", true);
    }
   },
 

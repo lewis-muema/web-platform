@@ -1,6 +1,6 @@
 <template lang="html">
     <div class="external-header">
-        <img class="external-header__img" src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png" onclick="location.href='https://sendyit.com/';">
+        <img class="external-header__img" src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png" onclick="location.href='https://sendyit.com/';">
     </div>
 </template>
 
