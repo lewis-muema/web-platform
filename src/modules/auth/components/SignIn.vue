@@ -67,19 +67,32 @@ export default {
       authSignIn: "$_auth/requestSignIn"
     }),
     eraseCookie(name) {
-      console.log("erase Cookie", name);
-      console.log("erase Cookie", name);
-      var domain = this.$store.getters.getENV.domain || document.domain;
-      var path = "/";
+      // console.log("erase Cookie", name);
+      // var domain = this.$store.getters.getENV.domain || document.domain;
+      // var path = "/";
 
-      document.cookie =
-        name +
-        "=; expires=" +
-        +"Thu, 01 Jan 1970 00:00:00 GMT" +
-        "; domain=" +
-        domain +
-        "; path=" +
-        path;
+      // document.cookie =
+      //   name +
+      //   "=; expires=" +
+      //   +"Thu, 01 Jan 1970 00:00:00 GMT" +
+      //   "; domain=" +
+      //   domain +
+      //   "; path=" +
+      //   path;
+      var pathBits = location.pathname.split("/");
+      var pathCurrent = " path=";
+
+      // do a simple pathless delete first.
+      document.cookie = name + "=; expires=Thu, 01-Jan-1970 00:00:01 GMT;";
+
+      for (var i = 0; i < pathBits.length; i++) {
+        pathCurrent += (pathCurrent.substr(-1) != "/" ? "/" : "") + pathBits[i];
+        document.cookie =
+          name +
+          "=; expires=Thu, 01-Jan-1970 00:00:01 GMT;" +
+          pathCurrent +
+          ";";
+      }
     },
     getCookie: function() {
       var nameEQ = "_sessionSnack" + "=";
@@ -99,7 +112,7 @@ export default {
       console.log("setting cookie", value);
       return new Promise((resolve, reject) => {
         if (value.hasOwnProperty("default")) {
-          resolve(false)
+          resolve(false);
         }
         let domain = this.$store.getters.getENV.domain || document.domain;
         let path = "/";
@@ -133,13 +146,10 @@ export default {
       });
     },
     sign_in: function() {
-
-      if (this.email != '' && this.password != '') {
-
+      if (this.email != "" && this.password != "") {
         //erase cookie on login just incase
         this.login_text = "Logging in ...";
         this.eraseCookie("_sessionSnack");
-        // return;
 
         let values = {};
         values.email = this.email;
@@ -191,10 +201,8 @@ export default {
             console.log(error);
           }
         );
-      }
-      else {
-
-          this.message = "Provide all values";
+      } else {
+        this.message = "Provide all values";
       }
     },
     doNotification(level, title, message) {
@@ -202,7 +210,7 @@ export default {
       this.$store.commit("setNotification", notification);
       this.$store.commit("setNotificationStatus", true);
     }
-  },
+  }
 };
 </script>
 
