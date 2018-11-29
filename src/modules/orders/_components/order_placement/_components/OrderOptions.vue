@@ -2,23 +2,24 @@
     <div class="">
         <div class="">
           <div class="home-view-vendor-classes--label">
-              <div class="home-view-vendor-classes--label">
+              <div class="home-view-vendor-classes-label-item">
                 <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('payment')"  @click="do_set_active_order_option('payment')">
                     <span class="home-view-actions--items__span" > <i class="el-icon-goods"></i> Payment</span>
                 </a>
               </div>
-              <div class="home-view-vendor-classes--label">
+              <div class="home-view-vendor-classes-label-item">
                 <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('note')" @click="do_set_active_order_option('note')">
-                  <span class="home-view-actions--items__span"> <i class="el-icon-edit-outline"></i> Note</span>
+                    <span class="home-view-actions--items__span"> <i class="el-icon-edit-outline"></i> Note</span>
                 </a>
               </div>
-              <div class="home-view-vendor-classes--label">
-              <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('schedule')" @click="do_set_active_order_option('schedule')">
-                  <span class="home-view-actions--items__span"> <i class="el-icon-time"></i> Schedule</span>
+              <div class="home-view-vendor-classes-label-item">
+                <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_order_option_class('schedule')" @click="do_set_active_order_option('schedule')">
+                    <span class="home-view-actions--items__span"> <i class="el-icon-time"></i> Schedule</span>
                 </a>
               </div>
           </div>
-       </div>
+         </div>
+                  
         <div class="home-view-actions--note" v-if="get_active_order_option == 'payment'">
             <div class="">
 
