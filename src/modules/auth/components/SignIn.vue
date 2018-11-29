@@ -80,11 +80,6 @@ export default {
         domain +
         "; path=" +
         path;
-
-      document.cookie =
-        name +
-        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=localhost; path=" +
-        path;
     },
     getCookie: function() {
       var nameEQ = "_sessionSnack" + "=";
@@ -103,6 +98,9 @@ export default {
     setCookie: function(value) {
       console.log("setting cookie", value);
       return new Promise((resolve, reject) => {
+        let domain = this.$store.getters.getENV.domain || document.domain;
+        let path = "/";
+
         let json_string_value = JSON.stringify(value);
         let expires = "";
         let days = 4;
@@ -115,8 +113,10 @@ export default {
           "=" +
           (json_string_value || "") +
           expires +
-          "; path=/";
-
+          "; domain=" +
+          domain +
+          "; path=" +
+          path;
         //do a while to check if the cookie has been set
         //resolve when set
         this.getCookie();
@@ -132,9 +132,6 @@ export default {
     sign_in: function() {
       //erase cookie on login just incase
       this.login_text = "Logging in ...";
-      this.eraseCookie("_sessionSnack");
-      // return;
-
       let values = {};
       values.email = this.email;
       values.password = this.password;
