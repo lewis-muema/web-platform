@@ -7,7 +7,7 @@
             <el-date-picker class="section--filter-input" type="date" v-model="filterData.to_date" name="to_date" placeholder="To"/>
         </div>
         <div class="section--filter-action-wrap">
-          <button type="button" :class="valid_filter ? 'button-primary section--filter-action':  'button-primary section--filter-action-inactive'" name="order_statement_text" v-model="order_statement_text" @click="filterStatementData">{{this.order_statement_text}}</button>
+          <button type="button" :class="valid_filter ? 'button-primary section--filter-action btn-statement':  'button-primary section--filter-action-inactive btn-statement'" name="order_statement_text" v-model="order_statement_text" @click="filterStatementData">{{this.order_statement_text}}</button>
         </div>
     </div>
 
@@ -276,4 +276,7 @@ export default {
 </script>
 
 <style lang="css">
+.btn-statement{
+  border-width:0px !important;
+}
 </style>

@@ -22,7 +22,7 @@ const get_tracking_data = function({commit,dispatch,state}, data) {
 					})
 					setTimeout(function() {
 						dispatch("get_tracking_data", data)
-					}, 600000);
+					}, 20000);
 				}
 				resolve();
 			}, error => {

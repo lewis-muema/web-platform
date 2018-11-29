@@ -75,22 +75,31 @@ export default {
 
     eraseCookie(name) {
       console.log("erase Cookie", name);
-      var domain = this.$store.getters.getENV.domain || document.domain;
-      var path = "/";
+      // var domain = this.$store.getters.getENV.domain || document.domain;
+      // var path = "/";
 
-      document.cookie =
-        name +
-        "=; expires=" +
-        +"Thu, 01 Jan 1970 00:00:00 GMT" +
-        "; domain=" +
-        domain +
-        "; path=" +
-        path;
+      // document.cookie =
+      //   name +
+      //   "=; expires=" +
+      //   +"Thu, 01 Jan 1970 00:00:00 GMT" +
+      //   "; domain=" +
+      //   domain +
+      //   "; path=" +
+      //   path;
+      var pathBits = location.pathname.split("/");
+      var pathCurrent = " path=";
 
-      document.cookie =
-        name +
-        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=localhost; path=" +
-        path;
+      // do a simple pathless delete first.
+      document.cookie = name + "=; expires=Thu, 01-Jan-1970 00:00:01 GMT;";
+
+      for (var i = 0; i < pathBits.length; i++) {
+        pathCurrent += (pathCurrent.substr(-1) != "/" ? "/" : "") + pathBits[i];
+        document.cookie =
+          name +
+          "=; expires=Thu, 01-Jan-1970 00:00:01 GMT;" +
+          pathCurrent +
+          ";";
+      }
     },
     isEmpty(obj) {
       for (var prop in obj) {
