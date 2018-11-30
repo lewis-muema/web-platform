@@ -46,7 +46,10 @@
 
 <script>
 import {mapActions} from 'vuex'
+import {cookie_mixin} from "../../../mixins/cookie_mixin"
+
 export default {
+  mixins: [cookie_mixin],
   data() {
     return {
       message: '',
@@ -127,16 +130,26 @@ export default {
         app: "NODE_PRIVATE_API",
         endpoint: "update_pass"
       };
+      var that = this
       this.requestResetPassword(full_payload).then(response => {
             if (response.length > 0) {
               response = response[0];
             }
             console.log('Update Password',response);
             if (response.status == true) {
-              // console.log(response);
-              this.message = "Password Updated Successfully.";
-              console.log("Password Reset successfull");
-              // this.$router.push("/auth");
+              let session_data = response.data;
+
+              that.setCookie(session_data).then(res => {
+                console.log("sessionSnack Now", this.getCookie());
+
+                that.$store.commit("setSession", session_data);
+              console.log("session_data", session_data);
+              //this.setCookie(session_data);
+              this.$store.commit("setSession", session_data);
+              //this.$ls.set('_sessionLocalSnack', session_data);
+
+             this.$router.push("/orders");
+           });
 
             } else {
 

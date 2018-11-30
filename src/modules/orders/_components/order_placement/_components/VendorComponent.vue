@@ -36,7 +36,7 @@
                                     Ksh {{formatNumeral(j.cost)}}
                                 </div>
                                 <div class="home-view-vendor-types-item--cost-wrapper_time">
-                                    Delivery by {{transformDate(j.eta)}}
+                                     Pickup {{transformDate(j.eta)}}
                                 </div>
                             </div>
                             <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right">
@@ -115,8 +115,10 @@ export default {
             }
         },
         transformDate(eta){
-            // return this.moment().duration(eta, "seconds").humanize()
-            return this.moment().add(eta, 'seconds').format("HH.mm");
+            let start = this.moment();
+            let end   = this.moment().add(eta, 'seconds');
+            return end.from(start);
+            // return this.moment().add(eta, 'seconds').format("HH.mm");
         },
         formatNumeral(num){
             return numeral(num).format('0,0');
