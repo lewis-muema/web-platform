@@ -122,6 +122,11 @@ export default {
     place: function () {
       this.$router.push('/orders')
     },
+    doNotification(level, title, message) {
+      this.$store.commit("setNotificationStatus", true);
+      let notification = {title: title, level: level, message: message};
+      this.$store.commit("setNotification", notification);
+    },
     cancel_order: function () {
       var payload = {
         "order_no": this.tracking_data.order_no,
@@ -132,8 +137,14 @@ export default {
       var that = this
       this.$store.dispatch('$_orders/$_tracking/cancel_order', payload)
       .then(response => {
-        that.cancel_toggle();
-        that.place();
+        if (response.status == true) {
+          that.doNotification("1","Order cancelled","Order cancelled successfully.");
+          that.cancel_toggle();
+          that.place();
+        }
+        else {
+          that.doNotification("3","Order cancellation failed","Could not cancel the order. Please contact Customer Care at 0709779779.");
+        }
       })
     },
   },

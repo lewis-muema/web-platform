@@ -32,6 +32,7 @@ export default {
     $route (to, from){
       this.$store.commit('$_orders/remove_polyline',[])
       this.$store.commit('$_orders/remove_markers',[])
+      this.$store.commit('$_orders/$_tracking/set_tracked_order', '')
     }
   }
 }

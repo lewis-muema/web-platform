@@ -77,7 +77,7 @@
     }
 
     .inviteUser--button {
-        margin-top: 35px;
+        margin-top: 48px;
         margin-left: 20px;
     }
 
@@ -96,7 +96,7 @@
     .show-in {
         font-size: 14px !important;
         padding: 0px 40px;
-        text-align: center;
+        text-align: left;
         color: #555 !important;
     }
 

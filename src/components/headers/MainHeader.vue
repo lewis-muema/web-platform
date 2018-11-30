@@ -48,9 +48,19 @@ export default {
     let cop_id = 0;
 
     if (session.default == "biz") {
-      cop_id = session[session.default]["cop_id"];
-      this.admin_user = true;
-      this.logged_user = session[session.default]["cop_name"];
+          //Admin
+         if (session[session.default]["user_type"] == 2 ) {
+           cop_id = session[session.default]["cop_id"];
+           this.admin_user = true;
+           this.logged_user = session[session.default]["user_name"];
+
+         }
+           // Cop_user
+         else if (session[session.default]["user_type"] == 1 ) {
+           cop_id = session[session.default]["cop_id"];
+           this.logged_user = session[session.default]["user_name"];
+         }
+
     } else {
       let user_id = 0;
       user_id = session[session.default]["user_id"];
@@ -60,17 +70,17 @@ export default {
   },
   methods: {
     logOut() {
-      console.log("attempt to log out");
-      this.$store.commit("setSession", {});
-      this.eraseCookie("_sessionSnack");
-      this.$router.push({ name: "sign_in" });
       try {
+        console.log("attempt to log out");
+        this.$store.commit("setSession", {});
+        this.eraseCookie("_sessionSnack");
         //clear orders to avoid marker persistance
         this.$store.unregisterModule("$_orders");
       } catch (er) {
         // orders was not registered
+      } finally {
+        this.$router.push({ name: "sign_in" });
       }
-      location.reload();
     },
 
     eraseCookie(name) {
