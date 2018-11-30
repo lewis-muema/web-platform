@@ -291,22 +291,56 @@ export default {
         let notification = {"title":title, "level":level, "message":message};
         this.$store.commit('setNotification', notification);
     },
-    setDefaultPackageClass(){
+    doSetDefaultPackageClass(){
         try{
-            if(this.get_active_package_class == ''){
-                let default_package_class = this.get_price_request_object.economy_price_tiers[0]["tier_group"];
-                console.log('default_package_class');
-                this.set_active_package_class(default_package_class);
-            }
-            if(this.get_active_vendor_name == ''){
-                let default_vendor_details = this.get_price_request_object.economy_price_tiers[0]['price_tiers'][0];
-                console.log('default_vendor', default_vendor_details)
-                this.set_active_vendor_name(default_vendor_details.vendor_name);
-                this.set_active_vendor_details(default_vendor_details);
-            }
+            let default_package_class = this.get_price_request_object.economy_price_tiers[0]["tier_group"];
+            console.log('default_package_class');
+            this.set_active_package_class(default_package_class);
         }
         catch(er){
             console.log(er);
+        }
+
+    },
+    doSetDefaultVendorType(){
+        try{
+            let default_vendor_details = this.get_price_request_object.economy_price_tiers[0]['price_tiers'][0];
+            console.log('default_vendor', default_vendor_details)
+            this.set_active_vendor_name(default_vendor_details.vendor_name);
+            this.set_active_vendor_details(default_vendor_details);
+        }
+        catch(er){
+            console.log(er);
+        }
+
+    },
+    setDefaultPackageClass(){
+
+        if(this.get_active_package_class == ''){
+            this.doSetDefaultPackageClass();
+        }
+        else{
+            let self = this;
+            let _package = this.get_price_request_object.economy_price_tiers.filter(function(pack){
+            	return pack.tier_group == self.get_active_package_class
+            })
+            if(_package.length == 0){
+                this.doSetDefaultPackageClass();
+            }
+        }
+        if(this.get_active_vendor_name == ''){
+             this.doSetDefaultVendorType();
+        }
+        else{
+            let self = this;
+            let result = this.get_price_request_object.economy_price_tiers.filter(function(pack) {
+                return pack.price_tiers.some(function(vendor) {
+                  return vendor.vendor_name === self.get_active_vendor_name;
+                });
+              })
+              if(result.length == 0){
+                  this.doSetDefaultVendorType();
+              }
         }
 
     },
