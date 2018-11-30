@@ -238,5 +238,6 @@
     }
     .btn-edit-user{
       border-width:0px !important;
+      margin-left: 15px !important;
     }
 </style>

@@ -146,5 +146,67 @@
     }
     .btn-edit-dept{
        border-width: 0px !important;
+        margin-left: 15px !important;
+    }
+    .admin-edit-item {
+        text-align: center;
+        border: 0 solid #ccc;
+        margin: 5px;
+    }
+
+    .admin-edit-inner {
+        max-width: 60rem;
+        border-radius: 4px;
+        padding: 2rem;
+        font-family: 'Rubik', sans-serif;
+        display: flex;
+    }
+
+    .admin-edit2-details {
+        font-size: 1.3rem;
+        line-height: 1.7em;
+        font-weight: 400;
+        text-align: center;
+        color: #666;
+        /* margin-right: 20%; */
+        margin-top: 18% !important;
+        margin-left: 100px;
+        margin-right: 60px;
+    }
+
+    .edit-holder {
+        margin: 1em;
+        display: block;
+    }
+
+    .edit-dimen {
+        width: 83%;
+    }
+
+    .edit-form {
+        height: 42px !important;
+        width: 160% !important;
+    }
+
+    .edit-select {
+        height: 42px !important;
+        width: 155% !important;
+    }
+
+    .edit-back {
+        width: 40px;
+        border-radius: 20px;
+        transition: .3s;
+        box-shadow: 0 0 6px rgba(0, 0, 0, .12);
+        line-height: 40px !important;
+        cursor: pointer;
+    }
+
+    .edit-position {
+        border-left: 2px solid rgb(23, 130, 197);
+        padding-left: 80px;
+    }
+    .btn-edit-user{
+        border-width:0px !important;
     }
 </style>

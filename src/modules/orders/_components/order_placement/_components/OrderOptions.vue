@@ -52,6 +52,16 @@
                 </div>
 
                 <span v-if="get_price_request_object.payment_option != 2">
+                      <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
+                        <div class="home-view-notes-wrapper--item__option">
+                            <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
+                            <div class="home-view-notes-wrapper--item__option-div">
+                                <el-radio v-model="payment_method" label="1">M-Pesa</el-radio>
+                            </div>
+                        </div>
+                        <div class="home-view-notes-wrapper--item__value">
+                        </div>
+                    </div>
                     <span v-if="allowCash == true">
                         <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
                             <div class="home-view-notes-wrapper--item__option">
@@ -67,20 +77,7 @@
                         </div>
 
                     </span>
-                    <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
-                        <div class="home-view-notes-wrapper--item__option">
-                            <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
-                            <div class="home-view-notes-wrapper--item__option-div">
-
-                              <div class="home-view-notes-wrapper--item__link" @click="takeMeToAddNewCard()">  +  &nbsp;&nbsp; Add New card </div>
-                            </div>
-                        </div>
-                        <div class="home-view-notes-wrapper--item__value">
-                            <!-- <input type="checkbox" name="" value=""> -->
-
-                        </div>
-                    </div>
-                    <div class="" v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0">
+                         <div class="" v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0">
                         <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
                              v-for="card in get_saved_cards">
                             <div class="home-view-notes-wrapper--item__option">
@@ -97,18 +94,20 @@
                         </div>
 
                     </div>
-
-
                     <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
                         <div class="home-view-notes-wrapper--item__option">
                             <!-- <font-awesome-icon icon="mobile-alt" size="xs" class="home-view-notes-wrapper--item__option-svg" width="10px" /> -->
                             <div class="home-view-notes-wrapper--item__option-div">
-                                <el-radio v-model="payment_method" label="1">M-Pesa</el-radio>
+
+                              <div class="home-view-notes-wrapper--item__link" @click="takeMeToAddNewCard()">  +  &nbsp;&nbsp; Visa/Mastercard </div>
                             </div>
                         </div>
                         <div class="home-view-notes-wrapper--item__value">
+                            <!-- <input type="checkbox" name="" value=""> -->
+
                         </div>
                     </div>
+
                 </span>
                 <span v-else>
                     <div class="home-view-payments--postpay">
@@ -263,6 +262,7 @@
                 );
             },
             hide_payment() {
+                console.log("hiding coz i am out")
                 return (
                     this.get_price_request_object.payment_option == 1 ||
                     this.getRunningBalance+this.order_cost <= 0
