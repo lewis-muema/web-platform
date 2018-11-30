@@ -153,7 +153,6 @@ export default {
         this.unset_location_name(index);
     },
     setLocation(place,index){
-        // TO Do reset marker on store when leaving the route
         if (!place){ console.log('not a place', index);return;}
         let path_obj = {
             "name":place.name,
