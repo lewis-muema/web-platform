@@ -48,9 +48,19 @@ export default {
     let cop_id = 0;
 
     if (session.default == "biz") {
-      cop_id = session[session.default]["cop_id"];
-      this.admin_user = true;
-      this.logged_user = session[session.default]["cop_name"];
+          //Admin
+         if (session[session.default]["user_type"] == 2 ) {
+           cop_id = session[session.default]["cop_id"];
+           this.admin_user = true;
+           this.logged_user = session[session.default]["user_name"];
+
+         }
+           // Cop_user
+         else if (session[session.default]["user_type"] == 1 ) {
+           cop_id = session[session.default]["cop_id"];
+           this.logged_user = session[session.default]["user_name"];
+         }
+
     } else {
       let user_id = 0;
       user_id = session[session.default]["user_id"];
@@ -60,46 +70,32 @@ export default {
   },
   methods: {
     logOut() {
-      console.log("attempt to log out");
-      this.$store.commit("setSession", {});
-      this.eraseCookie("_sessionSnack");
-      this.$router.push({ name: "sign_in" });
       try {
+        console.log("attempt to log out");
+        this.$store.commit("setSession", {});
+        this.eraseCookie("_sessionSnack");
         //clear orders to avoid marker persistance
         this.$store.unregisterModule("$_orders");
       } catch (er) {
         // orders was not registered
+      } finally {
+        this.$router.push({ name: "sign_in" });
       }
-      location.reload();
     },
 
     eraseCookie(name) {
       console.log("erase Cookie", name);
-      // var domain = this.$store.getters.getENV.domain || document.domain;
-      // var path = "/";
+      var domain = this.$store.getters.getENV.domain || document.domain;
+      var path = "/";
 
-      // document.cookie =
-      //   name +
-      //   "=; expires=" +
-      //   +"Thu, 01 Jan 1970 00:00:00 GMT" +
-      //   "; domain=" +
-      //   domain +
-      //   "; path=" +
-      //   path;
-      var pathBits = location.pathname.split("/");
-      var pathCurrent = " path=";
-
-      // do a simple pathless delete first.
-      document.cookie = name + "=; expires=Thu, 01-Jan-1970 00:00:01 GMT;";
-
-      for (var i = 0; i < pathBits.length; i++) {
-        pathCurrent += (pathCurrent.substr(-1) != "/" ? "/" : "") + pathBits[i];
-        document.cookie =
-          name +
-          "=; expires=Thu, 01-Jan-1970 00:00:01 GMT;" +
-          pathCurrent +
-          ";";
-      }
+      document.cookie =
+        name +
+        "=; expires=" +
+        +"Thu, 01 Jan 1970 00:00:00 GMT" +
+        "; domain=" +
+        domain +
+        "; path=" +
+        path;
     },
     isEmpty(obj) {
       for (var prop in obj) {

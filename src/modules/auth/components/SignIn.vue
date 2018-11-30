@@ -67,32 +67,17 @@ export default {
       authSignIn: "$_auth/requestSignIn"
     }),
     eraseCookie(name) {
-      // console.log("erase Cookie", name);
-      // var domain = this.$store.getters.getENV.domain || document.domain;
-      // var path = "/";
-
-      // document.cookie =
-      //   name +
-      //   "=; expires=" +
-      //   +"Thu, 01 Jan 1970 00:00:00 GMT" +
-      //   "; domain=" +
-      //   domain +
-      //   "; path=" +
-      //   path;
-      var pathBits = location.pathname.split("/");
-      var pathCurrent = " path=";
-
-      // do a simple pathless delete first.
-      document.cookie = name + "=; expires=Thu, 01-Jan-1970 00:00:01 GMT;";
-
-      for (var i = 0; i < pathBits.length; i++) {
-        pathCurrent += (pathCurrent.substr(-1) != "/" ? "/" : "") + pathBits[i];
-        document.cookie =
-          name +
-          "=; expires=Thu, 01-Jan-1970 00:00:01 GMT;" +
-          pathCurrent +
-          ";";
-      }
+      console.log("erase Cookie", name);
+      var domain = this.$store.getters.getENV.domain || document.domain;
+      var path = "/";
+      document.cookie =
+        name +
+        "=; expires=" +
+        +"Thu, 01 Jan 1970 00:00:00 GMT" +
+        "; domain=" +
+        domain +
+        "; path=" +
+        path;
     },
     getCookie: function() {
       var nameEQ = "_sessionSnack" + "=";
@@ -301,7 +286,7 @@ export default {
   color: #e08445;
   font-family: "Rubik", sans-serif;
 }
-.sign-btn-color{
+.sign-btn-color {
   border-width: 0px !important;
 }
 </style>
