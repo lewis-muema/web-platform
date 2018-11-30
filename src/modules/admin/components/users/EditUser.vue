@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="sign-holder">
-                    <button class="button-primary" type="submit" id="UpdateEdit" v-on:click="update_edit">Update</button>
+                    <button class="button-primary btn-edit-user" type="submit" id="UpdateEdit" v-on:click="update_edit">Update</button>
                 </div>
             </div>
         </div>
@@ -231,5 +231,8 @@
     .edit-position {
         border-left: 2px solid rgb(23, 130, 197);
         padding-left: 80px;
+    }
+    .btn-edit-user{
+      border-width:0px !important;
     }
 </style>

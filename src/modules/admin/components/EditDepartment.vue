@@ -25,7 +25,7 @@
                     </el-select>
                 </div>
                 <div class="sign-holder">
-                    <button class="button-primary" type="submit" id="update_department"
+                    <button class="button-primary btn-edit-dept" type="submit" id="update_department"
                             v-on:click="update_department">Update
                     </button>
                 </div>
@@ -143,5 +143,8 @@
 
     .dept--id-storetemp {
         display: none !important;
+    }
+    .btn-edit-dept{
+       border-width: 0px !important;
     }
 </style>
