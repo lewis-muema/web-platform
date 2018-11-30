@@ -42,11 +42,11 @@
           </div>
           <div class="">
             <span class="" v-if = "this.tracking_data.delivery_status < 2">
-              Estimated Arrival: <span class=""> {{this.tracking_data.eta}} </span>
+              Estimated Arrival: <span class=""> {{date_format(this.tracking_data.date_time)}} </span>
             </span>
-            <span class="" v-else>
+            <!-- <span class="" v-else>
               Estimated Delivery: <span class=""> {{this.tracking_data.etd}} </span>
-            </span>
+            </span> -->
           </div>
         </div>
         <div class="infobar--content infobar--item infobar--actions">
@@ -146,6 +146,19 @@ export default {
           that.doNotification("3","Order cancellation failed","Could not cancel the order. Please contact Customer Care at 0709779779.");
         }
       })
+    },
+    date_format: function( date ) {
+      var from_now = this.moment( date ).fromNow();
+
+      return this.moment( date ).calendar( null, {
+          lastWeek: 'MMM-D hh:mm a',
+          sameDay:  '[Today] hh:mm a',
+          nextDay:  '[Tomorrow] hh:mm a',
+          nextWeek: 'ddd',
+          sameElse: function () {
+              return "MMM D, hh:mm a";
+          }
+      });
     },
   },
   computed: {
