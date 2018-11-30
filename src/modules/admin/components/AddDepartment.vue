@@ -4,7 +4,7 @@
         <div class="admin-edit-inner">
             <div class="">
 
-                <i class="el-icon-caret-left edit-back" v-on:click="go_back"></i>
+                <i class="el-icon-back edit-back" v-on:click="go_back"></i>
 
             </div>
             <div class="admin-edit2-details position--details">
