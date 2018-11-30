@@ -154,8 +154,10 @@
                }
                else if (response.status == "exists") {
                  //Existing password reset option
+                 this.message= "";
                  this.nonce = response.nonce;
                  this.option = true ;
+
 
                }
                else {

@@ -52,7 +52,7 @@ export default {
          if (session[session.default]["user_type"] == 2 ) {
            cop_id = session[session.default]["cop_id"];
            this.admin_user = true;
-           this.logged_user = session[session.default]["cop_name"];
+           this.logged_user = session[session.default]["user_name"];
 
          }
            // Cop_user
