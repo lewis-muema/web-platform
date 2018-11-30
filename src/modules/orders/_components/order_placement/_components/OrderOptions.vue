@@ -993,6 +993,10 @@
             if (this.should_destroy == true) {
                 this.$emit("destroyOrderOptions");
             }
+            else{
+                //save notes
+                this.saveInfoToStore();
+            }
         }
     };
 </script>
