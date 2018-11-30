@@ -22,7 +22,7 @@
                     </el-select>
                 </div>
                 <div class="sign-holder">
-                    <button class="button-primary" type="submit" v-on:click="add_department">Add</button>
+                    <button class="button-primary add_dept--btn" type="submit" v-on:click="add_department">Add</button>
                 </div>
             </div>
         </div>
@@ -120,5 +120,8 @@
 <style lang="css">
     .position--details {
         margin-top: 8% !important;
+    }
+    .add_dept--btn{
+        margin-left: 15px !important;
     }
 </style>
