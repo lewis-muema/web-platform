@@ -11,6 +11,10 @@
           We'd like to offer you the best experience possible. <br> We'll create a dedicated account for you.
           </div>
 
+          <p class="sign-up-error">
+            {{message}}
+          </p>
+
           <div>
 
             <div class="sign-up-verification-holder dimen-sign-up2">
@@ -34,11 +38,15 @@
 
 <script>
 import { mapActions,mapGetters } from "vuex";
+import {cookie_mixin} from "../../../mixins/cookie_mixin"
+
 export default {
+  mixins: [cookie_mixin],
   data() {
     return {
       cop_name: "",
-      phone:""
+      phone:"",
+      message:""
     };
   },
   methods: {
@@ -46,21 +54,6 @@ export default {
       requestPeerSignUp: "$_auth/requestPeerSignUp",
       requestCopSignUp: "$_auth/requestCopSignUp"
     }),
-    setCookie: function(value) {
-      let json_string_value = JSON.stringify(value);
-      let expires = "";
-      let days = 4;
-      var date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = "; expires=" + date.toUTCString();
-
-      document.cookie =
-        "_sessionSnack" +
-        "=" +
-        (json_string_value || "") +
-        expires +
-        "; path=/";
-    },
     ...mapGetters({
        Password :'$_auth/requestPassword',
        Email :'$_auth/requestEmail',
@@ -81,6 +74,8 @@ export default {
         app: "NODE_PRIVATE_API",
         endpoint: "sign_up_submit"
       };
+
+      let that = this;
       this.requestPeerSignUp(full_payload).then(
         response => {
           console.log(response);
@@ -93,14 +88,18 @@ export default {
              console.log(response);
 
              let session_data = response.data;
-             console.log("session_data", session_data);
 
+             that.setCookie(session_data).then(res => {
+               console.log("sessionSnack Now", this.getCookie());
+
+               that.$store.commit("setSession", session_data);
+             console.log("session_data", session_data);
              //this.setCookie(session_data);
              this.$store.commit("setSession", session_data);
              //this.$ls.set('_sessionLocalSnack', session_data);
 
             this.$router.push("/orders");
-
+            });
           } else {
             //failed to login
             //show some sort of error
@@ -115,49 +114,64 @@ export default {
       );
     },
     cop_set: function() {
-      let values = {};
-      values.cop_name = this.cop_name;
-      values.name = this.Name();
-      values.phone = this.Phone();
-      values.email = this.Email();
-      values.password =this.Password();
-      values.type = 'biz';
-      let full_payload = {
-        values: values,
-        vm: this,
-        app: "NODE_PRIVATE_API",
-        endpoint: "sign_up_submit"
-      };
-      this.requestCopSignUp(full_payload).then(
-        response => {
-          console.log(response);
-          if (response.length > 0) {
-            response = response[0];
-          }
-          if (response.status == true) {
-            
-            let session_data = response.data;
-            console.log("session_data", session_data);
+      if (this.cop_name != '') {
 
-            //this.setCookie(session_data);
-            this.$store.commit("setSession", session_data);
-            //this.$ls.set('_sessionLocalSnack', session_data);
+        let values = {};
+        values.cop_name = this.cop_name;
+        values.name = this.Name();
+        values.phone = this.Phone();
+        values.email = this.Email();
+        values.password =this.Password();
+        values.type = 'biz';
+        let full_payload = {
+          values: values,
+          vm: this,
+          app: "NODE_PRIVATE_API",
+          endpoint: "sign_up_submit"
+        };
 
-            console.log("Cop account created");
+        let that = this;
+
+        this.requestCopSignUp(full_payload).then(
+          response => {
             console.log(response);
-            this.$router.push("/orders");
-          } else {
-            //failed to login
-            //show some sort of error
-            console.log(response);
-            console.warn("Sign Up failed");
+            if (response.length > 0) {
+              response = response[0];
+            }
+            if (response.status == true) {
+
+              let session_data = response.data;
+              console.log("session_data", session_data);
+
+              //this.setCookie(session_data);
+              that.setCookie(session_data).then(res => {
+                console.log("sessionSnack Now", this.getCookie());
+              this.$store.commit("setSession", session_data);
+              //this.$ls.set('_sessionLocalSnack', session_data);
+              console.log("Cop account created");
+              console.log(response);
+              this.$router.push("/orders");
+              });
+            } else {
+              //failed to login
+              //show some sort of error
+              console.log(response);
+              console.warn("Sign Up failed");
+            }
+          },
+          error => {
+            console.error("Check Internet Connection");
+            console.log(error);
           }
-        },
-        error => {
-          console.error("Check Internet Connection");
-          console.log(error);
-        }
-      );
+        );
+
+      }
+
+      else{
+
+        this.message = "Provide Business Name"
+      }
+
     }
   }
 };
@@ -218,6 +232,7 @@ export default {
   font-size: 13px !important;
   border: #fff; */
   width:28%;
+  border-width: 0px !important;
 }
 .style-sign-btn{
   color: black !important;

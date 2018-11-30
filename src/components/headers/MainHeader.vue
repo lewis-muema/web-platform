@@ -60,17 +60,17 @@ export default {
   },
   methods: {
     logOut() {
-      console.log("attempt to log out");
-      this.$store.commit("setSession", {});
-      this.eraseCookie("_sessionSnack");
-      this.$router.push({ name: "sign_in" });
       try {
+        console.log("attempt to log out");
+        this.$store.commit("setSession", {});
+        this.eraseCookie("_sessionSnack");
         //clear orders to avoid marker persistance
         this.$store.unregisterModule("$_orders");
       } catch (er) {
         // orders was not registered
+      } finally {
+        this.$router.push({ name: "sign_in" });
       }
-      location.reload();
     },
 
     eraseCookie(name) {
@@ -85,11 +85,6 @@ export default {
         "; domain=" +
         domain +
         "; path=" +
-        path;
-
-      document.cookie =
-        name +
-        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT domain=localhost; path=" +
         path;
     },
     isEmpty(obj) {

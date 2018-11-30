@@ -9,8 +9,11 @@
 <p>&nbsp;</p>
   <p style="font-size:17px;"> Enter new password </p>
   <p style="color:#F90; height:20px;" id="pass_change_info"></p>
+  <p class="sign-up-error">
+    {{message}}
+  </p>
   <div style=" margin:0px auto; ">
-  <form method="post" action="" class="reset-form">
+  <div class="reset-form">
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
 
   <tr>
@@ -24,11 +27,11 @@
   </tr>
 
   <tr>
-    <td align="center"><input type="submit" class="btn btn-primary" style="font-size:14px;  width:310px; margin-top:10px;" value="Change Password" v-on:click="reset_pass" /></td>
+    <td align="center"><input type="submit" class="btn btn-primary" style="font-size:14px;  width:310px; margin-top:10px;" value="Change Password" v-on:click="reset_pass" v-bind:disabled="!this.is_valid" /></td>
   </tr>
 </table>
 
-  </form>
+</div>
   </div>
   <p>&nbsp;</p>
 <p> </p>
@@ -43,7 +46,10 @@
 
 <script>
 import {mapActions} from 'vuex'
+import {cookie_mixin} from "../../../mixins/cookie_mixin"
+
 export default {
+  mixins: [cookie_mixin],
   data() {
     return {
       message: '',
@@ -57,35 +63,41 @@ export default {
   methods:{
      ...mapActions({
         requestResetPassword :'$_auth/requestResetPassword',
+        requestCheckToken :'$_auth/requestCheckToken',
     }),
     check_content: function() {
-      console.log("Checked");
-      let content = this.$route.params.content;
-        console.log('Check content',content);
+
+      let token = this.$route.params.content;
 
         let values = {};
-        values.content = content;
+        values.token = token;
         let full_payload = {
           values: values,
           vm: this,
           app: "NODE_PRIVATE_API",
-          endpoint: ""
+          endpoint: "forgot_token"
         };
-        this.requestResetPassword(full_payload).then(
+        this.requestCheckToken(full_payload).then(
           response => {
-            console.log(response);
+            // console.log(response);
             if (response.length > 0) {
               response = response[0];
             }
-
+             //code 001 -token user_id
+             // code 002 -token does
             if (response.status == true) {
 
-              console.log(response);
+              // console.log(response);
               console.log("Valid Token");
 
             } else {
 
               console.warn("Invalid Token");
+              this.doNotification(
+                2,
+                "Invalid Link",
+                "Invalid Password Reset Link."
+              );
               // this.$router.push("/auth");
             }
           },
@@ -97,18 +109,76 @@ export default {
     },
     reset_pass: function ()
     {
+     if (this.new_password !== this.confirm_password) {
+        console.log("Password does not match!");
+        this.doNotification(
+          2,
+          "Password Failed",
+          "Password does not match. Please try again"
+        );
+
+      }
+      else {
+
       let payload = {};
-      payload.new_password = this.new_password;
-      payload.confirm_password = this.confirm_password;
-      this.requestResetPassword(payload).then(response => {
-         console.log("Password Reset successfull")
-         console.log(response);
+      payload.password = this.new_password;
+      payload.token = this.$route.params.content;
+
+      let full_payload = {
+        values: payload,
+        vm: this,
+        app: "NODE_PRIVATE_API",
+        endpoint: "update_pass"
+      };
+      var that = this
+      this.requestResetPassword(full_payload).then(response => {
+            if (response.length > 0) {
+              response = response[0];
+            }
+            console.log('Update Password',response);
+            if (response.status == true) {
+              let session_data = response.data;
+
+              that.setCookie(session_data).then(res => {
+                console.log("sessionSnack Now", this.getCookie());
+
+                that.$store.commit("setSession", session_data);
+              console.log("session_data", session_data);
+              //this.setCookie(session_data);
+              this.$store.commit("setSession", session_data);
+              //this.$ls.set('_sessionLocalSnack', session_data);
+
+             this.$router.push("/orders");
+           });
+
+            } else {
+
+              console.warn("Password Fail");
+              this.doNotification(
+                2,
+                "Password Reset Failed",
+                "Password Reset failed. Please try again"
+              );
+              // this.$router.push("/auth");
+            }
+
       }, error => {
           console.error("Check Internet Connection")
           this.message ='Login failed';
           console.log(error);
       });
+     }
     },
+    doNotification(level, title, message) {
+      let notification = { title: title, level: level, message: message };
+      this.$store.commit("setNotification", notification);
+      this.$store.commit("setNotificationStatus", true);
+    }
+},
+computed : {
+  is_valid : function() {
+    return this.confirm_password != '' && this.new_password != '';
+  },
 },
 }
 </script>

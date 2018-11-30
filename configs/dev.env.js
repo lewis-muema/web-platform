@@ -10,5 +10,5 @@ module.exports = merge(prodEnv, {
   //PRIVATE_API: '"http://localhost:8888/parcel/index.php/api/v11/"',
   BACKEND_CUSTOMERS_APP: '"https://customerstest.sendyit.com/customers/"',
   BACKEND_API_KEY: '"4RNNeyATKN6B6S6XiOyJdPMEJ3oLRKBT"',
-  DOMAIN: '"webapptest.sendyit.com"'
+  DOMAIN: '"localhost"'
 });

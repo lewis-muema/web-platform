@@ -5,8 +5,8 @@
             </div>
             <div class="section--filter-action-wrap">
 
-                <button v-if="registered" type="button" class="button-primary section--filter-action" name="update_api_text" v-model="update_api_text" v-on:click="updateApiKey">{{this.update_api_text}}</button>
-                <button v-if="!registered" type="button" class="button-primary section--filter-action"name="generate_api_text" v-model="generate_api_text" v-on:click="generateAPIKey" >{{this.generate_api_text}}</button>
+                <button v-if="registered" type="button" class="button-primary section--filter-action btn-api" name="update_api_text" v-model="update_api_text" v-on:click="updateApiKey">{{this.update_api_text}}</button>
+                <button v-if="!registered" type="button" class="button-primary section--filter-action btn-api"name="generate_api_text" v-model="generate_api_text" v-on:click="generateAPIKey" >{{this.generate_api_text}}</button>
             </div>
         </div>
         <el-table
@@ -230,5 +230,8 @@
     }
     .api--help-content a {
         color: #2c82c5 !important;
+    }
+    .btn-api{
+        border-width:0px;
     }
 </style>

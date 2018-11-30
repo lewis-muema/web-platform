@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 const getDefaultState = () => {
   return {
       active_package_class:'',
@@ -52,11 +54,11 @@ export default {
     set_order_path(state, val) {
         console.log('set_order_path',val)
       // state.order_path.splice(index,1);
-      state.order_path.splice(val.index,1,val.path);
+      state.order_path.splice(val.index,val.index == 0 ? 0 : 1,val.path);
     },
     set_location_name(state, val) {
       // unset_location_name(val.index);
-      state.location_names.splice(val.index,1,val.name);
+      state.location_names.splice(val.index,val.index == 0 ? 0 : 1,val.name);
     },
     unset_order_path(state, index) {
       state.order_path.splice(index,1);
