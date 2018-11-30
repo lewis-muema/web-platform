@@ -154,8 +154,10 @@
                }
                else if (response.status == "exists") {
                  //Existing password reset option
+                 this.message= "";
                  this.nonce = response.nonce;
                  this.option = true ;
+
 
                }
                else {
@@ -234,6 +236,7 @@ text-decoration:none;
     font-size: 14px;
 }
 .reset-pass-link{
+  cursor: pointer;
   color: #1782c5;
   text-decoration: none;
 }
