@@ -68,10 +68,8 @@ export default {
     }),
     eraseCookie(name) {
       console.log("erase Cookie", name);
-      console.log("erase Cookie", name);
       var domain = this.$store.getters.getENV.domain || document.domain;
       var path = "/";
-
       document.cookie =
         name +
         "=; expires=" +
@@ -99,7 +97,7 @@ export default {
       console.log("setting cookie", value);
       return new Promise((resolve, reject) => {
         if (value.hasOwnProperty("default")) {
-          resolve(false)
+          resolve(false);
         }
         let domain = this.$store.getters.getENV.domain || document.domain;
         let path = "/";
@@ -133,13 +131,10 @@ export default {
       });
     },
     sign_in: function() {
-
-      if (this.email != '' && this.password != '') {
-
+      if (this.email != "" && this.password != "") {
         //erase cookie on login just incase
         this.login_text = "Logging in ...";
         this.eraseCookie("_sessionSnack");
-        // return;
 
         let values = {};
         values.email = this.email;
@@ -191,10 +186,8 @@ export default {
             console.log(error);
           }
         );
-      }
-      else {
-
-          this.message = "Provide all values";
+      } else {
+        this.message = "Provide all values";
       }
     },
     doNotification(level, title, message) {
@@ -202,7 +195,7 @@ export default {
       this.$store.commit("setNotification", notification);
       this.$store.commit("setNotificationStatus", true);
     }
-  },
+  }
 };
 </script>
 
@@ -293,7 +286,7 @@ export default {
   color: #e08445;
   font-family: "Rubik", sans-serif;
 }
-.sign-btn-color{
+.sign-btn-color {
   border-width: 0px !important;
 }
 </style>
