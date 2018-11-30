@@ -234,6 +234,7 @@ text-decoration:none;
     font-size: 14px;
 }
 .reset-pass-link{
+  cursor: pointer;
   color: #1782c5;
   text-decoration: none;
 }
