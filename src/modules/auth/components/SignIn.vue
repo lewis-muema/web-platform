@@ -152,7 +152,6 @@
 
                     this.authSignIn(full_payload).then(
                         response => {
-                            // console.log(response);
                             localStorage.setItem('jwtToken', response)
                             //let jwtToken = localStorage.getItem('jwtToken')
                             //console.log(jwtToken)
@@ -160,11 +159,6 @@
                             let middleString = partsOfToken[1];
                             let data = atob(middleString);
                             let payload = JSON.parse(data).payload;
-                            // console.log(payload)
-                            //check when response is dual
-                            // if (response.length > 0) {
-                            //   response = response[0];
-                            // }
                             if (response) {
                                 //set cookie
                                 //commit everything to the store
