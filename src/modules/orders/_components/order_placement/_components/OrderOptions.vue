@@ -189,6 +189,7 @@
             "no-ssr": NoSSR
         },
         mounted() {
+            console.log('mounted ***')
             this.payment_display();
         },
         data() {
@@ -264,8 +265,8 @@
             hide_payment() {
                 console.log("hiding coz i am out")
                 return (
-                    this.get_price_request_object.payment_option == 1 ||
-                    this.getRunningBalance+this.order_cost <= 0
+                    this.get_price_request_object.payment_option == 1 &&
+                    this.getRunningBalance+this.order_cost > 0
                 );
             },
             place_order_text() {
@@ -335,7 +336,7 @@
                         this.balance_quote = "Your Balance";
                     }
                 this.order_amount = numeral(this.order_cost).format("0,0");
-                this.user_balance = numeral(this.getRunningBalance).format("0,0");
+                this.user_balance = numeral(Math.abs(this.getRunningBalance)).format("0,0");
 
             },
             do_set_active_order_option(name) {
