@@ -135,8 +135,8 @@ export default {
         this.clearLocation(next_index-1);
     },
     checkChangeEvents(evt, index){
-        console.log('index', index);
-        console.log('evt', evt);
+        //console.log('index', index);
+        //console.log('evt', evt);
         // TO DO research implementation of native input events
     },
     clearLocation(index){
@@ -153,7 +153,10 @@ export default {
         this.unset_location_name(index);
     },
     setLocation(place,index){
-        if (!place){ console.log('not a place', index);return;}
+        if (!place){
+            //console.log('not a place', index);
+            return;
+        }
         let path_obj = {
             "name":place.name,
             "coordinates": ''+place.geometry.location.lat()+','+place.geometry.location.lng()+'',
@@ -210,10 +213,6 @@ export default {
         };
         if(index == 0){
             mark.icon = "pickup";
-            console.log('in pickup');
-        }
-        else{
-            console.log('index', index);
         }
         let marker_payload = {
             "index":index,
@@ -254,7 +253,7 @@ export default {
         let json_decoded_path = JSON.stringify(obj);
         infor.path = json_decoded_path;
         let final_obj = {"values":infor};
-        console.log('infor'.infor);
+        //console.log('infor'.infor);
         return final_obj;
     },
     doPriceRequest(){
@@ -264,12 +263,14 @@ export default {
           "endpoint":"pricing_multiple"
         };
         this.loading = true;
+        let previous_active_vendor = this.get_active_vendor_name;
         this.requestPriceQuote(payload).then(response => {
             this.loading = false;
-           console.log(response);
+           //console.log(response);
 
            if(response.status == true){
                this.setDefaultPackageClass();
+               this.setDefaultVendorType(previous_active_vendor);
 
            } else {
                this.doNotification(2,"Price request failed", "Price request failed. Please try again")
@@ -279,7 +280,7 @@ export default {
 
         }, error => {
             console.error("Check Internet Connection")
-            console.log(error);
+            //console.log(error);
             this.doNotification(3,"Price request failed", "Price request failed. Please check your internet connection and try again.");
             this.loading = false;
         });
@@ -293,25 +294,46 @@ export default {
     doSetDefaultPackageClass(){
         try{
             let default_package_class = this.get_price_request_object.economy_price_tiers[0]["tier_group"];
-            console.log('default_package_class');
+            //console.log('default_package_class');
             this.set_active_package_class(default_package_class);
         }
         catch(er){
-            console.log(er);
+            //console.log(er);
         }
 
     },
     doSetDefaultVendorType(){
         try{
             let default_vendor_details = this.get_price_request_object.economy_price_tiers[0]['price_tiers'][0];
-            console.log('default_vendor', default_vendor_details)
             this.set_active_vendor_name(default_vendor_details.vendor_name);
             this.set_active_vendor_details(default_vendor_details);
         }
         catch(er){
-            console.log(er);
+            //console.log(er);
         }
 
+    },
+    setDefaultVendorType(previous){
+            if(this.get_active_vendor_name == ''){
+                 this.doSetDefaultVendorType();
+            }
+            else{
+                let self = this;
+                let result = this.get_price_request_object.economy_price_tiers.filter(function(pack) {
+                    return pack.price_tiers.some(function(vendor) {
+                      return vendor.vendor_name === previous;
+                    });
+                  })
+                  if(result.length == 0){
+                      this.doSetDefaultVendorType();
+                  }
+                  else{
+                      let new_active_price_object = result[0].price_tiers.find(
+                            vendor => vendor.vendor_name === previous
+                      )
+                      this.set_active_vendor_details(new_active_price_object);
+                  }
+            }
     },
     setDefaultPackageClass(){
 
@@ -327,21 +349,6 @@ export default {
                 this.doSetDefaultPackageClass();
             }
         }
-        if(this.get_active_vendor_name == ''){
-             this.doSetDefaultVendorType();
-        }
-        else{
-            let self = this;
-            let result = this.get_price_request_object.economy_price_tiers.filter(function(pack) {
-                return pack.price_tiers.some(function(vendor) {
-                  return vendor.vendor_name === self.get_active_vendor_name;
-                });
-              })
-              if(result.length == 0){
-                  this.doSetDefaultVendorType();
-              }
-        }
-
     },
     // scroll_to_bottom(){
     //     let container = this.$el.querySelector("#homeview-form");
@@ -363,7 +370,7 @@ export default {
             this.$store.unregisterModule(['$_orders','$_home']);
         }
         catch(er){
-            console.log('failed to unregisterModule $_orders $_home on order placement home', er);
+            //console.log('failed to unregisterModule $_orders $_home on order placement home', er);
         }
 
 
@@ -371,7 +378,7 @@ export default {
             this.$store.unregisterModule('$_payment');
         }
         catch(er){
-            console.log('failed to unregisterModule $_orders $_home on order placement home', er);
+            //console.log('failed to unregisterModule $_orders $_home on order placement home', er);
         }
 
         this.clear_order_path();
