@@ -132,7 +132,6 @@ export default {
             }
         },
         destroyVendorComponent(){
-            console.log('in destroyVendorComponent');
             this.set_active_vendor_name('');
             this.set_active_vendor_details({});
             this.$emit('vendorComponentDestroyed');
