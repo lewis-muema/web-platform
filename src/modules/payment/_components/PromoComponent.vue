@@ -49,14 +49,11 @@ export default {
         app: "PRIVATE_API",
         endpoint: "redeem_promocode"
       };
-      console.log("promocode redeem request");
 
       this.$store
         .dispatch("$_payment/requestPromoCodePayment", full_payload)
         .then(
           response => {
-            console.log(response);
-
             if (response.length > 0) {
               response = response[0];
             }

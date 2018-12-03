@@ -60,8 +60,7 @@ export default {
       email: "",
       password: "",
       message: "",
-      login_text: "Login",
-      session_cookie: null
+      login_text: "Login"
     };
   },
   methods: {
@@ -88,7 +87,6 @@ export default {
 
         this.authSignIn(full_payload).then(
           response => {
-            console.log(response);
             //check when response is dual
             if (response.length > 0) {
               response = response[0];
