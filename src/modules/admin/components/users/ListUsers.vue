@@ -249,7 +249,6 @@
                     });
                     this.filterState = true;
 
-
                 } else {
                     //department filter
                     console.log('performing a department filter');

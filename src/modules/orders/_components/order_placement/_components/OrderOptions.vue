@@ -36,7 +36,7 @@
                                 Total Payment
                             </div>
                             <div class="home-view-payments-wrapper--left__amount-figure">
-                                Ksh {{order_cost_display}}
+                                Ksh {{pending_amount}}
                             </div>
                         </div>
                         <div class="home-view-payments-wrapper--right">
@@ -256,8 +256,8 @@
             },
             hide_payment() {
                 return (
-                    this.get_price_request_object.payment_option == 2 ||
-                    this.getRunningBalance+this.order_cost <= 0
+                    (this.get_price_request_object.payment_option == 2) ||
+                    (this.getRunningBalance == 0) || ((this.getRunningBalance+this.order_cost) <= 0)
                 );
             },
             show_payment(){
