@@ -4,7 +4,7 @@
         <div class="admin-edit-inner">
             <div class="">
 
-                <i class="el-icon-caret-left edit-back" v-on:click="go_back"></i>
+                <i class="el-icon-back edit-back" v-on:click="go_back"></i>
 
             </div>
             <div class="admin-edit2-details position--details">
@@ -22,7 +22,7 @@
                     </el-select>
                 </div>
                 <div class="sign-holder">
-                    <button class="button-primary" type="submit" v-on:click="add_department">Add</button>
+                    <button class="button-primary add_dept--btn" type="submit" v-on:click="add_department">Add</button>
                 </div>
             </div>
         </div>
@@ -120,5 +120,8 @@
 <style lang="css">
     .position--details {
         margin-top: 8% !important;
+    }
+    .add_dept--btn{
+        margin-left: 15px !important;
     }
 </style>
