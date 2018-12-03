@@ -93,8 +93,6 @@ export default {
         this.authSignIn(full_payload).then(
             response => {
                 localStorage.setItem('jwtToken', response)
-                //let jwtToken = localStorage.getItem('jwtToken')
-                //console.log(jwtToken)
                 let partsOfToken = response.split('.');
                 let middleString = partsOfToken[1];
                 let data = atob(middleString);
@@ -105,12 +103,10 @@ export default {
                     //redirect to orders
                     let session_data = payload;
 
-                    that.setCookie(session_data).then(res => {
-                        console.log("sessionSnack Now", this.getCookie());
-
-                        that.$store.commit("setSession", session_data);
-                        that.$router.push("/orders");
-                    });
+                    let json_session = JSON.stringify(session_data);
+                    this.setSession(json_session);
+                    this.$store.commit("setSession", session_data);
+                    this.$router.push("/orders");
                 } else {
                     //failed to login
                     //show some sort of error
