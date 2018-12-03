@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import {mapMutations,mapActions} from 'vuex'
+import { mapMutations, mapActions } from "vuex";
 
 export default {
   name: "SignUp",
@@ -77,44 +77,44 @@ export default {
       phone: "",
       email: "",
       password: "",
-      u_terms:"",
-      sign_up_text:"Sign Up",
-      message:""
+      u_terms: "",
+      sign_up_text: "Sign Up",
+      message: ""
     };
   },
   methods: {
-    validate_phone(){
+    validate_phone() {
       this.$validator.validate();
     },
 
-    ...mapMutations(
-      {
-        setPassword:'$_auth/setPassword',
-        setPhone:'$_auth/setPhone',
-        setEmail:'$_auth/setEmail',
-        setName:'$_auth/setName'
-      }
-    ),
+    ...mapMutations({
+      setPassword: "$_auth/setPassword",
+      setPhone: "$_auth/setPhone",
+      setEmail: "$_auth/setEmail",
+      setName: "$_auth/setName"
+    }),
     ...mapActions({
-       requestSignUpCheck :'$_auth/requestSignUpCheck',
-   }),
-   sign_up: function() {
-     if (this.name != '' && this.email != '' && this.phone !=''&& this.password != '') {
-
-       let phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-       let phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
-       let email_valid = true
-       for (var i = 0; i < this.errors.items.length; i++) {
-         if (this.errors.items[i].field == 'email') {
-           email_valid = false
-           break
-         }
-       }
+      requestSignUpCheck: "$_auth/requestSignUpCheck"
+    }),
+    sign_up: function() {
+      if (
+        this.name != "" &&
+        this.email != "" &&
+        this.phone != "" &&
+        this.password != ""
+      ) {
+        let phoneUtil = require("google-libphonenumber").PhoneNumberUtil.getInstance();
+        let phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+        let email_valid = true;
+        for (var i = 0; i < this.errors.items.length; i++) {
+          if (this.errors.items[i].field == "email") {
+            email_valid = false;
+            break;
+          }
+        }
         // console.log(email_valid);
         if (phone_valid == true && email_valid == true) {
-
-          if(this.u_terms == true) {
-
+          if (this.u_terms == true) {
             let values = {};
             values.phone = this.phone;
             values.email = this.email;
@@ -126,19 +126,16 @@ export default {
             };
             this.requestSignUpCheck(full_payload).then(
               response => {
-                console.log(response);
                 if (response.length > 0) {
                   response = response[0];
                 }
                 if (response.status == true) {
-                  console.log(response);
                   this.setName(this.name);
                   this.setEmail(this.email);
                   this.setPhone(this.phone);
                   this.setPassword(this.password);
                   this.$router.push("/auth/sign_up_verification");
                 } else {
-
                   this.message = response.data.reason;
                   console.warn("Sign Up Failed");
                 }
@@ -148,147 +145,135 @@ export default {
                 console.log(error);
               }
             );
+          } else {
+            this.message = "Agree to Terms and Conditions";
+            console.log("Agree Terms and Condition");
           }
-          else {
-                 this.message = 'Agree to Terms and Conditions';
-                 console.log("Agree Terms and Condition")
-          }
-
+        } else {
+          this.message = "Provide valid Email ";
+          this.doNotification(2, "Sign Up failed", "Provide valid Email");
         }
-          else{
-                this.message = 'Provide valid Email ';
-                this.doNotification(
-                  2,
-                  "Sign Up failed",
-                  "Provide valid Email"
-                );
-          }
-
-     }
-
-      else{
-           this.message = "Please provide all details";
+      } else {
+        this.message = "Please provide all details";
       }
-
-   }
-  },
-
-}
+    }
+  }
+};
 </script>
 
 <style lang="css">
-
-@import '../../../../node_modules/vue-tel-input/dist/vue-tel-input.css';
+@import "../../../../node_modules/vue-tel-input/dist/vue-tel-input.css";
 
 #sign-up-v2-container > div:nth-child(3) > div:nth-child(3) > div > div > ul {
-    z-index: 9;
-    width: 320px;
-    margin-top: 9px;
-    margin-left: -15px;
+  z-index: 9;
+  width: 320px;
+  margin-top: 9px;
+  margin-left: -15px;
 }
 
-.log-item{
+.log-item {
   text-align: center;
   border: 0px solid #ccc;
   margin: 5px;
 }
-.sign-inner{
- max-width: 22rem;
- border: 1px solid #D8DFE6;
- border-radius: 4px;
- margin: 2rem auto;
- padding: 2rem;
- font-family: "Helvetica Nueu", "Helvetica", "Arial", "sans-serif";
+.sign-inner {
+  max-width: 22rem;
+  border: 1px solid #d8dfe6;
+  border-radius: 4px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: "Helvetica Nueu", "Helvetica", "Arial", "sans-serif";
 }
-.sign-text{
- font-size: 1.3rem;
- line-height: 1.7em;
- font-weight: 500;
- text-align: center;
- color: #666;
- padding-top: 5px;
- padding-bottom: 5px;
- font-size: large;
- margin-bottom: 10px;
+.sign-text {
+  font-size: 1.3rem;
+  line-height: 1.7em;
+  font-weight: 500;
+  text-align: center;
+  color: #666;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: large;
+  margin-bottom: 10px;
 }
-.sign-button{
- width: 91.9%;
- margin: 1em;
- background-color: #30487b;
- color: #fff;
- padding-top: 10px;
- padding-bottom: 10px;
- font-size: initial;
- letter-spacing: 1.1px;
- border-radius: 5px;
- text-align: center;
- cursor: pointer;
+.sign-button {
+  width: 91.9%;
+  margin: 1em;
+  background-color: #30487b;
+  color: #fff;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: initial;
+  letter-spacing: 1.1px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
 }
-.sign-holder{
- margin: 1em;
- display: block;
+.sign-holder {
+  margin: 1em;
+  display: block;
 }
- .sign-holder input:not([type="checkbox"]) {
-   width: 100%;
+.sign-holder input:not([type="checkbox"]) {
+  width: 100%;
 }
-.sign-holder .form-control{
-   -webkit-box-shadow: none;
-   -moz-box-shadow: none;
-   box-shadow: none;
-   height: 30px;
+.sign-holder .form-control {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  height: 30px;
 }
 .sign-smaller {
-   font-size: 14px;
-   color: #999999;
+  font-size: 14px;
+  color: #999999;
 }
-.sign-forgot-pass, .sign-sign-up {
-   text-align: center;
+.sign-forgot-pass,
+.sign-sign-up {
+  text-align: center;
 }
-.sign-buttom__img{
- vertical-align: middle;
- width:14px;
- padding-bottom: 3px;
- margin-right: 10px;
+.sign-buttom__img {
+  vertical-align: middle;
+  width: 14px;
+  padding-bottom: 3px;
+  margin-right: 10px;
 }
-.sign-holder__link{
- color: #1782c5;
- text-decoration: none;
+.sign-holder__link {
+  color: #1782c5;
+  text-decoration: none;
 }
-.sign-holder__link2{
- color: #555454;
- text-decoration: none;
+.sign-holder__link2 {
+  color: #555454;
+  text-decoration: none;
 }
-.dimen{
+.dimen {
   width: 83%;
 }
-.sign-holder__grey{
+.sign-holder__grey {
   color: #555454;
 }
 .sign-holder__smaller {
-    font-size: 13px;
-    color: #999999;
+  font-size: 13px;
+  color: #999999;
 }
-.sign-up-form{
-  height:42px!important;
-  width: 110%!important;
+.sign-up-form {
+  height: 42px !important;
+  width: 110% !important;
 }
-.sign-up-error{
+.sign-up-error {
   color: #e08445;
-  font-family: 'Rubik', sans-serif;
+  font-family: "Rubik", sans-serif;
 }
-.sign-up-email-error{
- margin-right: 45%;
- font-size: 13px;
- font-family: 'Rubik', sans-serif;
- color: #e08445;
+.sign-up-email-error {
+  margin-right: 45%;
+  font-size: 13px;
+  font-family: "Rubik", sans-serif;
+  color: #e08445;
 }
-.sign-up-phone-error{
- margin-right: 25%;
- font-size: 13px;
- font-family: 'Rubik', sans-serif;
- color: #e08445;
+.sign-up-phone-error {
+  margin-right: 25%;
+  font-size: 13px;
+  font-family: "Rubik", sans-serif;
+  color: #e08445;
 }
-.signup-submit{
+.signup-submit {
   width: 110% !important;
   border-width: 0px !important;
 }

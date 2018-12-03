@@ -18,32 +18,23 @@ function guard(to, from, next) {
     let session = store.state.session;
 
     console.log("the guard is executing");
-    console.log(session);
-
-    console.log(isEmpty(session));
 
     if (isEmpty(session)) {
-      console.log("empty session here");
-
       if (process.browser) {
-        //read cookies here
+        //read ls here
         let _sessionSnack = localStorage.getItem("_sessionSnack");
-        console.log(_sessionSnack);
 
         if (isEmpty(_sessionSnack) == true) {
           resolve(next("/auth/sign_in"));
-          console.log("router-message", "user not logged in");
         } else {
           session = JSON.parse(_sessionSnack);
           store.state.session = session;
-          console.log("session is updated");
           resolve(next());
         }
       } else {
         resolve(next());
       }
     } else {
-      console.log("session is okay");
       resolve(next());
     }
   });
