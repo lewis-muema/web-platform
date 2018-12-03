@@ -28,9 +28,9 @@ export default {
   mixins: [RegisterStoreModule],
   created() {
     const STORE_KEY = "$_payment";
-    // if (!this.$store.state[STORE_KEY]) {
-    this.$store.registerModule(STORE_KEY, payment_store);
-    // }
+    //if (!this.$store.state[STORE_KEY]) {
+      this.$store.registerModule(STORE_KEY, payment_store);
+    //}
   },
   computed: {
     currentPageHeader: function() {
