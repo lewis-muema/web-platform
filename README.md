@@ -1,6 +1,6 @@
 # Web Platform
 
-> Built on the Code Igniter framework.
+> Built on the Vue.js framework.
 
 ## Build Setup
 
