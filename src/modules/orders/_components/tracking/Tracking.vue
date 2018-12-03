@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <a class="back--button" @click="$router.push('/orders')"><font-awesome-icon icon="arrow-left" width="15px" /></a>
+    <a class="back--button" @click="$router.push('/orders')"><i class="el-icon-back"></i></a>
     <info-window/>
   </div>
 </template>
@@ -48,15 +48,17 @@ export default {
 .back--button
 {
   position: absolute;
-  top: 80px;
-  left: 10px;
-  border: 1px solid;
-  background-color: #fff;
-  border-radius: 50%;
-  padding: 15px;
-  font-size: larger;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
+      top: 80px;
+      left: 10px;
+      border: 1px solid #55555500;
+      background-color: #fff;
+      border-radius: 50%;
+      padding: 15px;
+      font-size: larger;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+      cursor: pointer;
+      color: #555;
 }
 </style>

@@ -5,7 +5,7 @@
 
             <div class="">
 
-                <i class="el-icon-caret-left edit-back" v-on:click="one_step_back"></i>
+                <i class="el-icon-back edit-back" v-on:click="one_step_back"></i>
 
             </div>
 
@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="sign-holder">
-                    <button class="button-primary" type="submit" id="UpdateEdit" v-on:click="update_edit">Update</button>
+                    <button class="button-primary btn-edit-user" type="submit" id="UpdateEdit" v-on:click="update_edit">Update</button>
                 </div>
             </div>
         </div>
@@ -220,16 +220,24 @@
     }
 
     .edit-back {
-        width: 40px;
-        border-radius: 20px;
-        transition: .3s;
-        box-shadow: 0 0 6px rgba(0, 0, 0, .12);
-        line-height: 40px !important;
-        cursor: pointer;
+      width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          transition: .3s;
+          /* box-shadow: 0 0 6px rgba(0, 0, 0, .12); */
+          line-height: 50px !important;
+          cursor: pointer;
+          border: 1px solid #555;
+          text-align: center;
+          font-size: 23px;
     }
 
     .edit-position {
         border-left: 2px solid rgb(23, 130, 197);
         padding-left: 80px;
+    }
+    .btn-edit-user{
+      border-width:0px !important;
+      margin-left: 15px !important;
     }
 </style>

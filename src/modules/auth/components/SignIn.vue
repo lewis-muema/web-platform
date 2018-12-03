@@ -34,7 +34,7 @@
             </div>
 
             <div class="sign-holder">
-              <input class="button-primary" type="submit" name="login_text" v-model="login_text" v-on:click="sign_in" >
+              <input class="button-primary sign-btn-color" type="submit" name="login_text" v-model="login_text" v-on:click="sign_in" >
             </div>
             <div class=" sign-holder sign-forgot-pass sign-smaller">
               <router-link class="sign-holder__link" to="/auth/forgot_password">Forgot password?</router-link>
@@ -67,10 +67,8 @@ export default {
     }),
     eraseCookie(name) {
       console.log("erase Cookie", name);
-      console.log("erase Cookie", name);
       var domain = this.$store.getters.getENV.domain || document.domain;
       var path = "/";
-
       document.cookie =
         name +
         "=; expires=" +
@@ -98,7 +96,7 @@ export default {
       console.log("setting cookie", value);
       return new Promise((resolve, reject) => {
         if (value.hasOwnProperty("default")) {
-          resolve(false)
+          resolve(false);
         }
         let domain = this.$store.getters.getENV.domain || document.domain;
         let path = "/";
@@ -132,22 +130,10 @@ export default {
       });
     },
     sign_in: function() {
-
-      let values = {};
-      values.email = this.email;
-      values.password = this.password;
-      let full_payload = {
-        values: values,
-        vm: this,
-        app: "NODE_PRIVATE_API",
-        endpoint: "sign_in/"
-      };
-      let that = this;
-
+      if (this.email != "" && this.password != "") {
         //erase cookie on login just incase
         this.login_text = "Logging in ...";
         this.eraseCookie("_sessionSnack");
-        // return;
 
         let values = {};
         values.email = this.email;
@@ -203,10 +189,8 @@ export default {
             console.warn("login failed");
           }
         );
-      }
-      else {
-
-          this.message = "Provide all values";
+      } else {
+        this.message = "Provide all values";
       }
     },
     doNotification(level, title, message) {
@@ -214,7 +198,7 @@ export default {
       this.$store.commit("setNotification", notification);
       this.$store.commit("setNotificationStatus", true);
     }
-  },
+  }
 };
 </script>
 
@@ -304,5 +288,8 @@ export default {
 .sign-in-error {
   color: #e08445;
   font-family: "Rubik", sans-serif;
+}
+.sign-btn-color {
+  border-width: 0px !important;
 }
 </style>
