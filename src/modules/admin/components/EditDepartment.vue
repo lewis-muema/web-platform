@@ -40,9 +40,6 @@
 
     export default {
         name: 'EditDepartment',
-        mounted() {
-
-        },
         data() {
             return {
                 message: "",
@@ -113,7 +110,7 @@
                     console.log(response);
                     console.log("updated");
                     let level = 1; //success
-                    this.message = "Edit Successful!"
+                    this.message = "Edit Successful!";
                     let notification = {"title": "", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
@@ -121,7 +118,7 @@
                 }, error => {
                     console.log(error);
                     let level = 2;
-                    this.message = "Something went wrong."
+                    this.message = "Something went wrong.";
                     let notification = {"title": "", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
@@ -138,7 +135,7 @@
 
 <style lang="css">
     .position--details {
-        margin-top: 8% !important;
+        margin-top: 7% !important;
     }
 
     .dept--id-storetemp {
@@ -169,7 +166,7 @@
         text-align: center;
         color: #666;
         /* margin-right: 20%; */
-        margin-top: 18% !important;
+        /*margin-top: 18% !important;*/
         margin-left: 100px;
         margin-right: 60px;
     }
