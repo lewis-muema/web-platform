@@ -70,17 +70,17 @@ export default {
   },
   methods: {
     logOut() {
-      console.log("attempt to log out");
-      this.$store.commit("setSession", {});
-      this.eraseCookie("_sessionSnack");
-      this.$router.push({ name: "sign_in" });
       try {
+        console.log("attempt to log out");
+        this.$store.commit("setSession", {});
+        this.eraseCookie("_sessionSnack");
         //clear orders to avoid marker persistance
         this.$store.unregisterModule("$_orders");
       } catch (er) {
         // orders was not registered
+      } finally {
+        this.$router.push({ name: "sign_in" });
       }
-      location.reload();
     },
 
     eraseCookie(name) {
