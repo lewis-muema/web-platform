@@ -60,8 +60,7 @@ export default {
       email: "",
       password: "",
       message: "",
-      login_text: "Login",
-      session_cookie: null
+      login_text: "Login"
     };
   },
   methods: {

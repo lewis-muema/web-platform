@@ -26,7 +26,7 @@ function guard(to, from, next) {
       console.log("empty session here");
 
       if (process.browser) {
-        //read cookies here
+        //read ls here
         let _sessionSnack = localStorage.getItem("_sessionSnack");
         console.log(_sessionSnack);
 
