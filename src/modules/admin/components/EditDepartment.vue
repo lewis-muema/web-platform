@@ -138,7 +138,7 @@
 
 <style lang="css">
     .position--details {
-        margin-top: 8% !important;
+        margin-top: 7% !important;
     }
 
     .dept--id-storetemp {
@@ -169,7 +169,7 @@
         text-align: center;
         color: #666;
         /* margin-right: 20%; */
-        margin-top: 18% !important;
+        /*margin-top: 18% !important;*/
         margin-left: 100px;
         margin-right: 60px;
     }
