@@ -9,7 +9,7 @@
                     </el-option>
                 </el-select>
 
-                <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left btn-users':'button-primary section--filter-action-inactive align-left btn-users'" @click="filterUserTableData">Search</button>
+                <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left btn-users':'button-primary section--filter-action-inactive align-left btn-users'" @click="filterUserTableData" :disabled="active_filter == true ? false : true">Search</button>
 
             </div>
             <div class="section--filter-action-wrap">
@@ -24,7 +24,7 @@
                 :stripe="true"
         >
             <template slot="empty">
-                {{empty_orders_state}}
+                {{empty_users_state}}
             </template>
             <el-table-column
                     label="Name"
@@ -124,7 +124,7 @@
         },
         data: function () {
             return {
-                empty_payments_state: "Fetching Users...",
+                empty_users_state: "Fetching Users...",
                 empty_departments_state: "Fetching Departments...",
                 pagination_limit: 10,
                 pagination_page: 1,
