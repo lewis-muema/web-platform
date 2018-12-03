@@ -74,155 +74,155 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-const moment = require('moment');
+import { mapActions, mapGetters } from "vuex";
+const moment = require("moment");
 
 export default {
-  name:'Payments',
-  data: function () {
+  name: "Payments",
+  data: function() {
     return {
-      empty_payments_state:"Fetching Payments",
-      pagination_limit:10,
-      pagination_page:1,
-      order_payments_text:'Search',
+      empty_payments_state: "Fetching Payments",
+      pagination_limit: 10,
+      pagination_page: 1,
+      order_payments_text: "Search",
       filterState: false,
       filterData: {
-        "from_date": "",
-        "to_date": ""
+        from_date: "",
+        to_date: ""
       },
-      filteredPaymentData:[]
-    }
+      filteredPaymentData: []
+    };
   },
-  mounted(){
-      //TODO: Get this from session
-      //TODO: also create payload depending on session
+  mounted() {
+    //TODO: Get this from session
+    //TODO: also create payload depending on session
 
-      let session_data = this.$store.getters.getSession;
-      let payment_payload = {};
+    let session_data = this.$store.getters.getSession;
+    let payment_payload = {};
 
-      if(session_data.default == 'biz'){
-        payment_payload = {
-          "cop_id": session_data['biz']['cop_id'],
-          "user_type":session_data['biz']['user_type'],
-          "user_id":session_data['biz']['user_id'],
+    if (session_data.default == "biz") {
+      payment_payload = {
+        cop_id: session_data["biz"]["cop_id"],
+        user_type: session_data["biz"]["user_type"],
+        user_id: session_data["biz"]["user_id"]
+      };
+    } else {
+      //create peer payload
+      payment_payload = {
+        user_id: session_data[session_data.default]["user_id"]
+      };
+    }
 
-        }
-      } else {
-        //create peer payload
-        payment_payload = {
-          "user_id": session_data[session_data.default]['user_id'],
-         }
+    let full_payload = {
+      values: payment_payload,
+      vm: this,
+      app: "NODE_PRIVATE_API",
+      endpoint: "payments"
+    };
+    this.$store.dispatch("$_transactions/requestPayments", full_payload).then(
+      response => {
+        console.log(response);
+        this.empty_payments_state = "Payments Not Found";
+      },
+      error => {
+        console.log(error);
+        this.empty_payments_state = "Payments Failed to Fetch";
       }
-
-      let full_payload = {
-        "values" : payment_payload,
-        "vm":this,
-        "app":"NODE_PRIVATE_API",
-        "endpoint":"payments"
-      }
-      this.$store.dispatch("$_transactions/requestPayments", full_payload).then(response => {
-          console.log(response);
-          this.empty_payments_state = "Payments Not Found";
-      }, error => {
-          console.log(error);
-          this.empty_payments_state = "Payments Failed to Fetch";
-      });
+    );
   },
   methods: {
-    ...mapActions([
-            '$_transactions/requestPayments',
-     ]),
-     take_to_payment() {
-        this.$router.push('/payment/mpesa');
+    ...mapActions(["$_transactions/requestPayments"]),
+    take_to_payment() {
+      this.$router.push("/payment/mpesa");
     },
     changeSize(val) {
-        this.pagination_page = 1;
-        this.pagination_limit = val;
+      this.pagination_page = 1;
+      this.pagination_limit = val;
     },
     changePage() {
-        console.log('Page changed to', this.pagination_page);
-        let from = (this.pagination_page - 1) * this.pagination_limit;
-        let to = this.pagination_page * this.pagination_limit;
-        this.paymentData.slice(from, to);
+      let from = (this.pagination_page - 1) * this.pagination_limit;
+      let to = this.pagination_page * this.pagination_limit;
+      this.paymentData.slice(from, to);
     },
-    filterPaymentData(){
-       //reset filter
-       let session_data = this.$store.getters.getSession;
-        this.filterState  = false;
-        this.empty_payments_state = "Searching Payments";
+    filterPaymentData() {
+      //reset filter
+      let session_data = this.$store.getters.getSession;
+      this.filterState = false;
+      this.empty_payments_state = "Searching Payments";
 
-        let from_date = this.filterData.from_date;
-        let to_date = this.filterData.to_date;
+      let from_date = this.filterData.from_date;
+      let to_date = this.filterData.to_date;
 
-        from_date = moment(from_date).format('YYYY-MM-DD');
-        to_date = moment(to_date).format('YYYY-MM-DD');
+      from_date = moment(from_date).format("YYYY-MM-DD");
+      to_date = moment(to_date).format("YYYY-MM-DD");
 
-        let payload = {};
-        if(session_data.default == 'biz'){
-          payload = {
-            "cop_id": session_data['biz']['cop_id'],
-            "user_type":session_data['biz']['user_type'],
-            "from":from_date,
-            "to":to_date
+      let payload = {};
+      if (session_data.default == "biz") {
+        payload = {
+          cop_id: session_data["biz"]["cop_id"],
+          user_type: session_data["biz"]["user_type"],
+          from: from_date,
+          to: to_date
+        };
+      } else {
+        //create peer payload
+        payload = {
+          user_id: session_data[session_data.default]["user_id"],
+          from: from_date,
+          to: to_date
+        };
+      }
 
-          }
-        } else {
-          //create peer payload
-          payload = {
-            "user_id": session_data[session_data.default]['user_id'],
-            "from":from_date,
-            "to":to_date
-           }
-        }
+      this.order_payments_text = "Searching..";
+      this.requestPayments(payload);
 
-        this.order_payments_text='Searching..';
-        this.requestPayments(payload);
+      this.filteredPaymentData = this.paymentData;
+      this.filterState = true;
 
-        this.filteredPaymentData = this.paymentData;
-
-        console.log(to_date);
-        this.filterState  = true;
-
-        // this.filteredPaymentData = this.payment_data;
-        // this.filteredPaymentData = this.filteredPaymentData.filter(function (payment) {
-        //   return moment(payment.date_time).isSameOrAfter(from_date) && moment(payment.date_time).isSameOrBefore(to_date);
-        // });
-        // this.filterState = true;
-        // this.empty_orders_state = "Payments Not Found";
+      // this.filteredPaymentData = this.payment_data;
+      // this.filteredPaymentData = this.filteredPaymentData.filter(function (payment) {
+      //   return moment(payment.date_time).isSameOrAfter(from_date) && moment(payment.date_time).isSameOrBefore(to_date);
+      // });
+      // this.filterState = true;
+      // this.empty_orders_state = "Payments Not Found";
     },
 
-    requestPayments(payload){
-        let full_payload = {
-          "values" : payload,
-          "vm":this,
-          "app":"NODE_PRIVATE_API",
-          "endpoint":"payments"
+    requestPayments(payload) {
+      let full_payload = {
+        values: payload,
+        vm: this,
+        app: "NODE_PRIVATE_API",
+        endpoint: "payments"
+      };
+      this.$store.dispatch("$_transactions/requestPayments", full_payload).then(
+        response => {
+          this.order_payments_text = "Search";
+          console.log(response);
+          this.empty_payments_state = "Payment Statement Not Found";
+        },
+        error => {
+          console.error(
+            "Got nothing from server. Prompt user to check internet connection and try again"
+          );
+          this.order_payments_text = "Search";
+          console.log(error);
+          this.empty_payments_state = "Payment Statement Failed to Fetch";
         }
-        this.$store.dispatch("$_transactions/requestPayments", full_payload).then(response => {
-           console.log("Got some data, now lets show something in this component");
-           this.order_payments_text='Search';
-           console.log(response);
-           this.empty_payments_state = "Payment Statement Not Found";
-        }, error => {
-            console.error("Got nothing from server. Prompt user to check internet connection and try again");
-            this.order_payments_text='Search';
-            console.log(error);
-            this.empty_payments_state = "Payment Statement Failed to Fetch";
-        });
+      );
     },
 
     formatDate(row, column, cellValue) {
-        return moment(row.date_time).format('MMM Do YYYY, h:mm a');
+      return moment(row.date_time).format("MMM Do YYYY, h:mm a");
     },
     formatAmount(row, column, cellValue) {
-        let value = (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-        value = value.split(".");
-        return value[0];
-     },
+      let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+      value = value.split(".");
+      return value[0];
+    }
   },
   computed: {
     ...mapGetters({
-      paymentData:'$_transactions/getPayments'
+      paymentData: "$_transactions/getPayments"
     }),
     payment_data() {
       let from = (this.pagination_page - 1) * this.pagination_limit;
@@ -234,24 +234,23 @@ export default {
       return this.paymentData.slice(from, to);
     },
     active_filter() {
-      if(this.filterData.from_date !== '' && this.filterData.to_date !== ''){
+      if (this.filterData.from_date !== "" && this.filterData.to_date !== "") {
         this.filterState = false;
       }
-      return this.filterData.from_date !== '' && this.filterData.to_date !== '';
+      return this.filterData.from_date !== "" && this.filterData.to_date !== "";
     },
     payment_total() {
       // if(this.filterState == true){
       //   return this.filteredData.length;
       // }
-     return this.paymentData.length;
+      return this.paymentData.length;
     }
-
-  },
-}
+  }
+};
 </script>
 
 <style lang="css">
-.btn-payment{
-  border-width:0px !important;
+.btn-payment {
+  border-width: 0px !important;
 }
 </style>

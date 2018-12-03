@@ -87,7 +87,6 @@ export default {
 
         this.authSignIn(full_payload).then(
           response => {
-            console.log(response);
             //check when response is dual
             if (response.length > 0) {
               response = response[0];
