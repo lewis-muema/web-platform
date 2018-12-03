@@ -53,159 +53,94 @@
 </template>
 
 <script>
-    import {mapActions} from "vuex";
+import SessionMxn from "../../../mixins/session_mixin.js";
+import { mapActions } from "vuex";
+export default {
+  name: "SignIn",
+  mixins: [SessionMxn],
 
-    export default {
-        name: "SignIn",
-        data() {
-            return {
-                email: "",
-                password: "",
-                message: "",
-                login_text: "Login",
-                session_cookie: null
-            };
-        },
-        methods: {
-            ...mapActions({
-                authSignIn: "$_auth/requestSignIn"
-            }),
-            eraseCookie(name) {
-                console.log("erase Cookie", name);
-                var domain = this.$store.getters.getENV.domain || document.domain;
-                var path = "/";
-                document.cookie =
-                    name +
-                    "=; expires=" +
-                    +"Thu, 01 Jan 1970 00:00:00 GMT" +
-                    "; domain=" +
-                    domain +
-                    "; path=" +
-                    path;
-            },
-            getCookie: function () {
-                var nameEQ = "_sessionSnack" + "=";
-                var ca = document.cookie.split(";");
-                for (var i = 0; i < ca.length; i++) {
-                    var c = ca[i];
-                    while (c.charAt(0) == " ") c = c.substring(1, c.length);
-                    if (c.indexOf(nameEQ) == 0) {
-                    }
-                    this.session_cookie = c.substring(nameEQ.length, c.length);
-                    return c.substring(nameEQ.length, c.length);
-                }
-                this.session_cookie = null;
-                return null;
-            },
-            setCookie: function (value) {
-                console.log("setting cookie", value);
-                return new Promise((resolve, reject) => {
-                    if (value.hasOwnProperty("default")) {
-                        resolve(false);
-                    }
-                    let domain = this.$store.getters.getENV.domain || document.domain;
-                    let path = "/";
-
-                    let json_string_value = JSON.stringify(value);
-                    let expires = "";
-                    let days = 4;
-                    var date = new Date();
-                    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-                    expires = "; expires=" + date.toUTCString();
-
-                    document.cookie =
-                        "_sessionSnack" +
-                        "=" +
-                        (json_string_value || "") +
-                        expires +
-                        "; domain=" +
-                        domain +
-                        "; path=" +
-                        path;
-                    //do a while to check if the cookie has been set
-                    //resolve when set
-                    this.getCookie();
-                    console.log("session_cookie", this.session_cookie);
-
-                    while (this.session_cookie == null) {
-                        console.log("cookie is still", this.session_cookie);
-                        setTimeout(this.getCookie, 1000);
-                    }
-                    resolve(true);
-                });
-            },
-            sign_in: function () {
-                if (this.email != "" && this.password != "") {
-                    //erase cookie on login just incase
-                    this.login_text = "Logging in ...";
-                    this.eraseCookie("_sessionSnack");
-                    let values = {};
-                    values.email = this.email;
-                    values.password = this.password;
-                    let full_payload = {
-                        values: values,
-                        vm: this,
-                        app: "NODE_PRIVATE_API",
-                        endpoint: "sign_in"
-                    };
-                    let that = this;
-
-                    this.authSignIn(full_payload).then(
-                        response => {
-                            localStorage.setItem('jwtToken', response)
-                            //let jwtToken = localStorage.getItem('jwtToken')
-                            //console.log(jwtToken)
-                            let partsOfToken = response.split('.');
-                            let middleString = partsOfToken[1];
-                            let data = atob(middleString);
-                            let payload = JSON.parse(data).payload;
-                            if (response) {
-                                //set cookie
-                                //commit everything to the store
-                                //redirect to orders
-                                let session_data = payload;
-
-                                that.setCookie(session_data).then(res => {
-                                    console.log("sessionSnack Now", this.getCookie());
-
-                                    that.$store.commit("setSession", session_data);
-                                    that.$router.push("/orders");
-                                });
-                            } else {
-                                //failed to login
-                                //show some sort of error
-                                this.login_text = "Login";
-                                this.message = response.data.reason;
-                                this.doNotification(
-                                    2,
-                                    "Login failed",
-                                    "Login failed. Please try again"
-                                );
-                                console.warn("login failed");
-                            }
-                        },
-                        error => {
-                            this.login_text = "Login";
-                            this.message = "Check your Login Credentials.";
-                            this.doNotification(
-                                2,
-                                "Login failed",
-                                "Login failed. Please try again"
-                            );
-                            console.warn("login failed");
-                        }
-                    );
-                } else {
-                    this.message = "Provide all values";
-                }
-            },
-            doNotification(level, title, message) {
-                let notification = {title: title, level: level, message: message};
-                this.$store.commit("setNotification", notification);
-                this.$store.commit("setNotificationStatus", true);
-            }
-        }
+  data() {
+    return {
+      email: "",
+      password: "",
+      message: "",
+      login_text: "Login",
+      session_cookie: null
     };
+  },
+  methods: {
+    ...mapActions({
+      authSignIn: "$_auth/requestSignIn"
+    }),
+    sign_in: function() {
+      if (this.email != "" && this.password != "") {
+        this.login_text = "Logging in ...";
+        //erase any existing session
+        this.deleteSession();
+
+        let params = {
+          email: this.email,
+          password: this.password
+        };
+        let full_payload = {
+          values: params,
+          vm: this,
+          app: "NODE_PRIVATE_API",
+          endpoint: "sign_in/"
+        };
+        let that = this;
+
+        this.authSignIn(full_payload).then(
+          response => {
+            console.log(response);
+            //check when response is dual
+            if (response.length > 0) {
+              response = response[0];
+            }
+            if (response.status == true) {
+              //set session
+              //commit everything to the store
+              //redirect to orders
+              let session_data = response.data;
+              let json_session = JSON.stringify(session_data);
+              this.setSession(json_session);
+              this.$store.commit("setSession", session_data);
+              this.$router.push("/orders");
+            } else {
+              //failed to login
+              //show some sort of error
+              this.login_text = "Login";
+              this.message = response.data.reason;
+              this.doNotification(
+                2,
+                "Login failed",
+                "Login failed. Please try again"
+              );
+              console.warn("login failed");
+            }
+          },
+          error => {
+            this.login_text = "Login";
+            this.message = response.data.reason;
+            this.doNotification(
+              2,
+              "Login failed",
+              "Login failed. Please try again"
+            );
+            console.warn("login failed");
+          }
+        );
+      } else {
+        this.message = "Provide all values";
+      }
+    },
+    doNotification(level, title, message) {
+      let notification = { title: title, level: level, message: message };
+      this.$store.commit("setNotification", notification);
+      this.$store.commit("setNotificationStatus", true);
+    }
+  }
+};
 </script>
 
 <style lang="css">
