@@ -13,19 +13,6 @@ function isEmpty(obj) {
   return true;
 }
 
-function getSessionCookie() {
-  var nameEQ = "_sessionSnack" + "=";
-  var ca = document.cookie.split(";");
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == " ") c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) == 0) {
-    }
-    return c.substring(nameEQ.length, c.length);
-  }
-  return null;
-}
-
 function guard(to, from, next) {
   return new Promise((resolve, reject) => {
     let session = store.state.session;
@@ -40,12 +27,9 @@ function guard(to, from, next) {
 
       if (process.browser) {
         //read cookies here
-        let _sessionSnack = getSessionCookie();
+        let _sessionSnack = localStorage.getItem("_sessionSnack");
         console.log(_sessionSnack);
 
-        //if(_sessionSnack !== null && _sessionSnack !== ''){
-        //update session with whatever is on the cookies
-        //}
         if (isEmpty(_sessionSnack) == true) {
           resolve(next("/auth/sign_in"));
           console.log("router-message", "user not logged in");

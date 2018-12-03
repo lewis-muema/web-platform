@@ -34,9 +34,11 @@
 </template>
 
 <script>
+import SessionMxn from "../../mixins/session_mixin.js";
 import { mapGetters } from "vuex";
 export default {
   name: "main-header",
+  mixins: [SessionMxn],
   data: function() {
     return {
       admin_user: false,
@@ -63,7 +65,7 @@ export default {
       try {
         console.log("attempt to log out");
         this.$store.commit("setSession", {});
-        this.eraseCookie("_sessionSnack");
+        this.deleteSession();
         //clear orders to avoid marker persistance
         this.$store.unregisterModule("$_orders");
       } catch (er) {
@@ -73,37 +75,11 @@ export default {
       }
     },
 
-    eraseCookie(name) {
-      console.log("erase Cookie", name);
-      var domain = this.$store.getters.getENV.domain || document.domain;
-      var path = "/";
-
-      document.cookie =
-        name +
-        "=; expires=" +
-        +"Thu, 01 Jan 1970 00:00:00 GMT" +
-        "; domain=" +
-        domain +
-        "; path=" +
-        path;
-    },
     isEmpty(obj) {
       for (var prop in obj) {
         if (obj.hasOwnProperty(prop)) return false;
       }
       return true;
-    },
-    getSessionCookie() {
-      var nameEQ = "_sessionSnack" + "=";
-      var ca = document.cookie.split(";");
-      for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == " ") c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) == 0) {
-        }
-        return c.substring(nameEQ.length, c.length);
-      }
-      return null;
     },
 
     linkRoute(route) {
