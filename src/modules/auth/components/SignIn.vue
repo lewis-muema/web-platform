@@ -117,9 +117,13 @@ export default {
           },
           error => {
             this.login_text = "Login";
-            this.message = "Check Internet Connection";
-            console.error("Check Internet Connection");
-            console.log(error);
+            this.message = response.data.reason;
+            this.doNotification(
+              2,
+              "Login failed",
+              "Login failed. Please try again"
+            );
+            console.warn("login failed");
           }
         );
       } else {
