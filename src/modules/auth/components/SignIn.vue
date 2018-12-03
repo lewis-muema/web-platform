@@ -91,44 +91,49 @@ export default {
         let that = this;
 
         this.authSignIn(full_payload).then(
-          response => {
-            console.log(response);
-            //check when response is dual
-            if (response.length > 0) {
-              response = response[0];
+            response => {
+                localStorage.setItem('jwtToken', response)
+                //let jwtToken = localStorage.getItem('jwtToken')
+                //console.log(jwtToken)
+                let partsOfToken = response.split('.');
+                let middleString = partsOfToken[1];
+                let data = atob(middleString);
+                let payload = JSON.parse(data).payload;
+                if (response) {
+                    //set cookie
+                    //commit everything to the store
+                    //redirect to orders
+                    let session_data = payload;
+
+                    that.setCookie(session_data).then(res => {
+                        console.log("sessionSnack Now", this.getCookie());
+
+                        that.$store.commit("setSession", session_data);
+                        that.$router.push("/orders");
+                    });
+                } else {
+                    //failed to login
+                    //show some sort of error
+                    this.login_text = "Login";
+                    this.message = response.data.reason;
+                    this.doNotification(
+                        2,
+                        "Login failed",
+                        "Login failed. Please try again"
+                    );
+                    console.warn("login failed");
+                }
+            },
+            error => {
+                this.login_text = "Login";
+                this.message = "Check your Login Credentials.";
+                this.doNotification(
+                    2,
+                    "Login failed",
+                    "Login failed. Please try again"
+                );
+                console.warn("login failed");
             }
-            if (response.status == true) {
-              //set session
-              //commit everything to the store
-              //redirect to orders
-              let session_data = response.data;
-              let json_session = JSON.stringify(session_data);
-              this.setSession(json_session);
-              this.$store.commit("setSession", session_data);
-              this.$router.push("/orders");
-            } else {
-              //failed to login
-              //show some sort of error
-              this.login_text = "Login";
-              this.message = response.data.reason;
-              this.doNotification(
-                2,
-                "Login failed",
-                "Login failed. Please try again"
-              );
-              console.warn("login failed");
-            }
-          },
-          error => {
-            this.login_text = "Login";
-            this.message = response.data.reason;
-            this.doNotification(
-              2,
-              "Login failed",
-              "Login failed. Please try again"
-            );
-            console.warn("login failed");
-          }
         );
       } else {
         this.message = "Provide all values";
