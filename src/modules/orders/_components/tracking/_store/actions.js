@@ -55,6 +55,9 @@ const cancel_order = function({commit, dispatch}, data)
 
 const track_mqtt = function({commit, state})
 {
+	if (!state.tracking_data.confirm_status > 0) {
+		return false
+	}
 	var tracking_no = state.tracking_data.rider.phone_no_1;
 	var city_id = state.tracking_data.city_id;
 	var city_code = '';
