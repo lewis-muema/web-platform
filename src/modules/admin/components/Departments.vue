@@ -38,7 +38,7 @@
                     label="Action"
             >
                 <template slot-scope="scope">
-                    <a @click="edit_department(departments_data[scope.$index]['cop_user_id'])" class="btn-dpt-edit">Edit</a>
+                    <a @click="edit_department(departments_data[scope.$index]['department_id'])" class="btn-dpt-edit">Edit</a>
                 </template>
             </el-table-column>
 
@@ -155,9 +155,8 @@
                 console.log(from, to, departments_data);
 
             },
-            edit_department(cop_user_id) {
-                let cop_user_details = cop_user_id;
-                this.$router.push('/admin/department/edit_department/' + cop_user_id);
+            edit_department(department) {
+                this.$router.push('/admin/department/edit_department/' + department);
             },
             filterUserTableData() {
                 //reset filter
