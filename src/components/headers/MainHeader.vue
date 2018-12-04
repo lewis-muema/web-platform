@@ -2,7 +2,7 @@
     <div class="header">
         <div class="header--item">
             <div class="header--item__left">
-                <a @click="linkRoute('/orders')">
+                <a @click="linkRoute('/orders')" class="header--item__left">
                   <img src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png" alt="logo" class="logo">
                 </a>
             </div>
