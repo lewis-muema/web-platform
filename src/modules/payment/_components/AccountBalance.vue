@@ -23,7 +23,7 @@ export default {
     this.requestRB();
   },
   methods: {
-    ...mapActions(["$_payment/requestRunningBalance"]),
+    ...mapActions({_requestRunningBalance:"$_payment/requestRunningBalance"}),
     requestRB() {
       //this will request from the api and update the store
       let session = this.$store.getters.getSession;
@@ -45,16 +45,9 @@ export default {
         endpoint: "running_balance"
       };
 
-      this.$store.dispatch("$_payment/requestRunningBalance", payload).then(
+      this._requestRunningBalance(payload).then(
         response => {
-          if (response.length > 0) {
-            response = response[0];
-          }
-          if (response.status == 200) {
-            console.log("commit running balance to the global store");
-          }
           console.log(response);
-          //commit  to the global store here
         },
         error => {
           console.log(error);

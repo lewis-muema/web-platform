@@ -438,6 +438,7 @@
                             this.setPickupFilled(false);
                             let order_no = this.get_price_request_object.order_no;
                             this.should_destroy = true;
+                            this.$store.dispatch('$_orders/fetch_ongoing_orders')
                             this.$router.push({
                                 name: "tracking",
                                 params: {order_no: order_no}

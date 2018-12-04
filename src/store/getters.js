@@ -3,7 +3,7 @@ export default {
     let session = state.session;
     if (process.browser) {
       if (isEmpty(session) == true) {
-        //try and get from the cookie
+        //try and get from the ls
         session = localStorage.getItem("_sessionSnack");
         if (session !== null && session !== "") {
           state.session = JSON.parse(session);

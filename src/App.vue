@@ -19,7 +19,6 @@ export default {
   },
   methods: {
     showNotification() {
-      console.log("somebody is trying to show a notification");
       let notification = this.$store.getters.getNotification;
 
       if (notification.level == 1) {
@@ -65,7 +64,6 @@ export default {
   },
   watch: {
     notification_status(val, oldVal) {
-      console.log(val);
       if (val == true) {
         this.showNotification();
       }

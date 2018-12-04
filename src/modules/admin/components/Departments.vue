@@ -7,6 +7,7 @@
 
                 <button type="button"
                         :class="active_filter ? 'button-primary section--filter-action align-left btn-dprts':'button-primary section--filter-action-inactive align-left btn-dprts'"
+                        :disabled="active_filter == true ? false : true"
                         @click="filterUserTableData">Search
                 </button>
 
