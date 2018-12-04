@@ -509,7 +509,7 @@
                     carrier_type: 2,
                     isreturn: false,
                     vendor_type: this.active_vendor_price_data.vendor_id,
-                    rider_phone: this.get_price_request_object.order_no,
+                    rider_phone: this.active_vendor_price_data.order_no,
                     type: this.payment_type
                 };
                 payload = {values: payload};
