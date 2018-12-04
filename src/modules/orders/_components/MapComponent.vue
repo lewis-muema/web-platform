@@ -41,7 +41,7 @@ export default {
       }
       else {
         return {
-          url: require('../../../assets/img/dest_plceholder.png'),
+          url: 'https://images.sendyit.com/web_platform/orders/destination_placeholder.png',
           scaledSize: new google.maps.Size(23, 40),
         }
       }
