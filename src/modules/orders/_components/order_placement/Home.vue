@@ -259,7 +259,7 @@ export default {
     doPriceRequest(){
         let payload = {
           "values" : this.createPriceRequestObject(),
-          "app":"NODE_PRIVATE_API",
+          "app":"PRIVATE_API",
           "endpoint":"pricing_multiple"
         };
         this.loading = true;
