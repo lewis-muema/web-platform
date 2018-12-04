@@ -66,7 +66,7 @@
         <div class="section--pagination-wrap">
             <el-pagination
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="userData.length"
+                    :total="filteredUserData.length"
                     :page-size="pagination_limit"
                     :current-page.sync="pagination_page"
                     @current-change="changePage"
@@ -120,6 +120,7 @@
             }, error => {
                 console.log(error);
             });
+            this.filteredUserData = this.userData;
 
         },
         data: function () {
@@ -150,7 +151,6 @@
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
                 if (this.filterState == true) {
-
                     if(Array.isArray(this.filteredUserData)){
                         return this.filteredUserData.slice(from, to);
                     }
@@ -158,6 +158,7 @@
 
                 }
                 else {
+                    this.filteredUserData = this.userData;
                     if (Array.isArray(this.userData)) {
                         return this.userData.slice(from, to);
                     }

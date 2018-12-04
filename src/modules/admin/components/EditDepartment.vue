@@ -49,16 +49,16 @@
             }
         },
         mounted() {
-            let cop_user_id = this.$route.params.id;
-            this.deptDetails = this.deptData.filter(dept => dept.cop_user_id == cop_user_id)[0];
+            let department = this.$route.params.id;
+            this.deptDetails = this.deptData.filter(dept => dept.department_id == department)[0];
 
-            if (this.deptDetails !== undefined) {
+            if (typeof this.deptDetails != 'undefined') {
                 this.available = true;
             }
             else {
                 this.available = false;
                 this.go_back();
-                console.log("back to users' table")
+                console.log("back to departments' table")
             }
             let session = this.$store.getters.getSession;
             let cop_id = 0;
@@ -67,7 +67,6 @@
             }
             let payload = {
                 "cop_id": cop_id
-
             }
             let users_full_payload = {
                 "values": payload,
