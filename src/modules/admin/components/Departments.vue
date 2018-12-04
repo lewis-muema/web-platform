@@ -47,7 +47,7 @@
         <div class="section--pagination-wrap">
             <el-pagination
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="deptData.length"
+                    :total="filteredUserData.length"
                     :page-size="pagination_limit"
                     :current-page.sync="pagination_page"
                     @current-change="changePage"
@@ -90,6 +90,7 @@
                 console.log(error);
 
             });
+            this.filteredUserData = this.deptData
         },
         data: function () {
             return {
@@ -123,10 +124,13 @@
                     return [];
 
                 }
-                if(Array.isArray(this.deptData)){
-                    return this.deptData.slice(from, to);
+                else {
+                    this.filteredUserData = this.deptData
+                    if (Array.isArray(this.deptData)) {
+                        return this.deptData.slice(from, to);
+                    }
+                    return [];
                 }
-                return [];
             },
 
             active_filter() {
@@ -158,7 +162,7 @@
             filterUserTableData() {
                 //reset filter
                 this.filterState = false;
-                let user_id = this.filterData.user;
+                let user = this.filterData.user;
                 let department = this.filterData.department;
 
                 this.filteredUserData = this.deptData
