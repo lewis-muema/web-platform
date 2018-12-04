@@ -2,7 +2,7 @@
   <div class="content">
     <no-ssr placeholder="">
       <GmapMap :center="{lat:-1.3084143, lng:36.7658132}" :zoom="13" map-type-id="roadmap" class="content" :options="mapOptions" ref="map">
-        <gmap-marker v-for="m in markers" :position="get_position(m.position)" v-if="mapLoaded" :icon="path_icon(m.icon)"></gmap-marker>
+        <gmap-marker v-for="m,number in markers" :position="get_position(m.position)" :key="number" v-if="mapLoaded" :icon="path_icon(m.icon)"></gmap-marker>
         <gmap-polyline v-if="typeof polyline == 'object' && this.mapLoaded" :path="decode_path(polyline.path)" ref="polyline" :options="polyline.options"></gmap-polyline>
         <gmap-marker v-for="v in vendors" :position="v.position" :key="index" :ref="`marker${index}`" :icon="draw_rotated(v.vendor_type,v.rotation)" :visible="v.visible"></gmap-marker>
       </GmapMap>
@@ -35,14 +35,14 @@ export default {
     path_icon: function(icon) {
       if (icon == 'pickup') {
         return {
-          url: require('../../../assets/img/pickup_plceholder.png'),
-          scaledSize: new google.maps.Size(40, 55),
+          url: 'https://images.sendyit.com/web_platform/orders/pickup_placeholder.png',
+          scaledSize: new google.maps.Size(23, 40),
         }
       }
       else {
         return {
-          url: require('../../../assets/img/dest_plceholder.png'),
-          scaledSize: new google.maps.Size(40, 55),
+          url: 'https://images.sendyit.com/web_platform/orders/destination_placeholder.png',
+          scaledSize: new google.maps.Size(23, 40),
         }
       }
     },

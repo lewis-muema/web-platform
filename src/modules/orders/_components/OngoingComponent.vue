@@ -162,25 +162,22 @@ export default {
   position: absolute;
   margin-top: 10px;
   right: 10px;
-  min-width: 250px;
+  min-width: 345px;
   max-height: 55%;
   overflow-x: hidden;
 }
 .ongoing--count
 {
   display: flex;
-    justify-content: space-between;
-    background-color: #fff;
-    color: #1782c5;
-    padding: 9px 18px 9px 60px;
-    font-size: 13px;
-    cursor: pointer;
-    border: 0px solid #1782c5;
-    border-radius: 2px;
-    box-shadow: 0 3px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
-    /* text-align: center; */
-    /* background-color: red; */
-    width: 250px;
+  justify-content: space-between;
+  background-color: #fff;
+  color: #1782c5;
+  padding: 9px 18px 9px 60px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 0px solid #1782c5;
+  border-radius: 2px;
+  box-shadow: 0 3px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
 }
 .ongoing--card
 {

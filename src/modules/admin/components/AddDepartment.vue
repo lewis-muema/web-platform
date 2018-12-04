@@ -4,7 +4,7 @@
         <div class="admin-edit-inner">
             <div class="">
 
-                <i class="el-icon-caret-left edit-back" v-on:click="go_back"></i>
+                <i class="el-icon-back edit-back" v-on:click="go_back"></i>
 
             </div>
             <div class="admin-edit2-details position--details">
@@ -22,7 +22,7 @@
                     </el-select>
                 </div>
                 <div class="sign-holder">
-                    <button class="button-primary" type="submit" v-on:click="add_department">Add</button>
+                    <button class="button-primary add_dept--btn" type="submit" v-on:click="add_department">Add</button>
                 </div>
             </div>
         </div>
@@ -119,6 +119,75 @@
 
 <style lang="css">
     .position--details {
-        margin-top: 8% !important;
+        margin-top: 7% !important;
+    }
+    .add_dept--btn{
+        margin-left: 15px !important;
+    }
+    .admin-edit-item {
+        text-align: center;
+        border: 0 solid #ccc;
+        margin: 5px;
+    }
+
+    .admin-edit-inner {
+        max-width: 60rem;
+        border-radius: 4px;
+        padding: 2rem;
+        font-family: 'Rubik', sans-serif;
+        display: flex;
+    }
+
+    .admin-edit2-details {
+        font-size: 1.3rem;
+        line-height: 1.7em;
+        font-weight: 400;
+        text-align: center;
+        color: #666;
+        /* margin-right: 20%; */
+        /*margin-top: 18% !important;*/
+        margin-left: 100px;
+        margin-right: 60px;
+    }
+
+    .edit-holder {
+        margin: 1em;
+        display: block;
+    }
+
+    .edit-dimen {
+        width: 83%;
+    }
+
+    .edit-form {
+        height: 42px !important;
+        width: 160% !important;
+    }
+
+    .edit-select {
+        height: 42px !important;
+        width: 155% !important;
+    }
+
+    .edit-back {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        transition: .3s;
+        /* box-shadow: 0 0 6px rgba(0, 0, 0, .12); */
+        line-height: 50px !important;
+        cursor: pointer;
+        border: 1px solid #555;
+        text-align: center;
+        font-size: 23px;
+    }
+
+    .edit-position {
+        border-left: 2px solid rgb(23, 130, 197);
+        padding-left: 80px;
+    }
+    .btn-edit-user{
+        border-width:0px !important;
+        margin-left: 15px !important;
     }
 </style>

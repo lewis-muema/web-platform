@@ -2,7 +2,7 @@
     <div class="header">
         <div class="header--item">
             <div class="header--item__left">
-                <a @click="linkRoute('/orders')">
+                <a @click="linkRoute('/orders')" class="header--item__left">
                   <img src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png" alt="logo" class="logo">
                 </a>
             </div>
@@ -50,9 +50,19 @@ export default {
     let cop_id = 0;
 
     if (session.default == "biz") {
-      cop_id = session[session.default]["cop_id"];
-      this.admin_user = true;
-      this.logged_user = session[session.default]["cop_name"];
+          //Admin
+         if (session[session.default]["user_type"] == 2 ) {
+           cop_id = session[session.default]["cop_id"];
+           this.admin_user = true;
+           this.logged_user = session[session.default]["user_name"];
+
+         }
+           // Cop_user
+         else if (session[session.default]["user_type"] == 1 ) {
+           cop_id = session[session.default]["cop_id"];
+           this.logged_user = session[session.default]["user_name"];
+         }
+
     } else {
       let user_id = 0;
       user_id = session[session.default]["user_id"];

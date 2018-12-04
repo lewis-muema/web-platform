@@ -38,7 +38,7 @@
                     label="Action"
             >
                 <template slot-scope="scope">
-                    <a @click="edit_department(departments_data[scope.$index]['cop_user_id'])" class="btn-dpt-edit">Edit</a>
+                    <a @click="edit_department(departments_data[scope.$index]['department_id'])" class="btn-dpt-edit">Edit</a>
                 </template>
             </el-table-column>
 
@@ -47,7 +47,7 @@
         <div class="section--pagination-wrap">
             <el-pagination
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="deptData.length"
+                    :total="filteredUserData.length"
                     :page-size="pagination_limit"
                     :current-page.sync="pagination_page"
                     @current-change="changePage"
@@ -90,6 +90,7 @@
                 console.log(error);
 
             });
+            this.filteredUserData = this.deptData
         },
         data: function () {
             return {
@@ -123,10 +124,13 @@
                     return [];
 
                 }
-                if(Array.isArray(this.deptData)){
-                    return this.deptData.slice(from, to);
+                else {
+                    this.filteredUserData = this.deptData
+                    if (Array.isArray(this.deptData)) {
+                        return this.deptData.slice(from, to);
+                    }
+                    return [];
                 }
-                return [];
             },
 
             active_filter() {
@@ -151,14 +155,13 @@
                 console.log(from, to, departments_data);
 
             },
-            edit_department(cop_user_id) {
-                let cop_user_details = cop_user_id;
-                this.$router.push('/admin/department/edit_department/' + cop_user_id);
+            edit_department(department) {
+                this.$router.push('/admin/department/edit_department/' + department);
             },
             filterUserTableData() {
                 //reset filter
                 this.filterState = false;
-                let user_id = this.filterData.user;
+                let user = this.filterData.user;
                 let department = this.filterData.department;
 
                 this.filteredUserData = this.deptData

@@ -4,7 +4,7 @@
         <div class="admin-edit-inner">
             <div class="">
 
-                <i class="el-icon-caret-left edit-back" v-on:click="go_back"></i>
+                <i class="el-icon-back edit-back" v-on:click="go_back"></i>
 
             </div>
             <div class="admin-edit2-details position--details">
@@ -40,9 +40,6 @@
 
     export default {
         name: 'EditDepartment',
-        mounted() {
-
-        },
         data() {
             return {
                 message: "",
@@ -52,16 +49,16 @@
             }
         },
         mounted() {
-            let cop_user_id = this.$route.params.id;
-            this.deptDetails = this.deptData.filter(dept => dept.cop_user_id == cop_user_id)[0];
+            let department = this.$route.params.id;
+            this.deptDetails = this.deptData.filter(dept => dept.department_id == department)[0];
 
-            if (this.deptDetails !== undefined) {
+            if (typeof this.deptDetails != 'undefined') {
                 this.available = true;
             }
             else {
                 this.available = false;
                 this.go_back();
-                console.log("back to users' table")
+                console.log("back to departments' table")
             }
             let session = this.$store.getters.getSession;
             let cop_id = 0;
@@ -70,7 +67,6 @@
             }
             let payload = {
                 "cop_id": cop_id
-
             }
             let users_full_payload = {
                 "values": payload,
@@ -113,7 +109,7 @@
                     console.log(response);
                     console.log("updated");
                     let level = 1; //success
-                    this.message = "Edit Successful!"
+                    this.message = "Edit Successful!";
                     let notification = {"title": "", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
@@ -121,7 +117,7 @@
                 }, error => {
                     console.log(error);
                     let level = 2;
-                    this.message = "Something went wrong."
+                    this.message = "Something went wrong.";
                     let notification = {"title": "", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
@@ -138,7 +134,7 @@
 
 <style lang="css">
     .position--details {
-        margin-top: 8% !important;
+        margin-top: 7% !important;
     }
 
     .dept--id-storetemp {
@@ -146,5 +142,67 @@
     }
     .btn-edit-dept{
        border-width: 0px !important;
+        margin-left: 15px !important;
+    }
+    .admin-edit-item {
+        text-align: center;
+        border: 0 solid #ccc;
+        margin: 5px;
+    }
+
+    .admin-edit-inner {
+        max-width: 60rem;
+        border-radius: 4px;
+        padding: 2rem;
+        font-family: 'Rubik', sans-serif;
+        display: flex;
+    }
+
+    .admin-edit2-details {
+        font-size: 1.3rem;
+        line-height: 1.7em;
+        font-weight: 400;
+        text-align: center;
+        color: #666;
+        /* margin-right: 20%; */
+        /*margin-top: 18% !important;*/
+        margin-left: 100px;
+        margin-right: 60px;
+    }
+
+    .edit-holder {
+        margin: 1em;
+        display: block;
+    }
+
+    .edit-dimen {
+        width: 83%;
+    }
+
+    .edit-form {
+        height: 42px !important;
+        width: 160% !important;
+    }
+
+    .edit-select {
+        height: 42px !important;
+        width: 155% !important;
+    }
+
+    .edit-back {
+        width: 40px;
+        border-radius: 20px;
+        transition: .3s;
+        box-shadow: 0 0 6px rgba(0, 0, 0, .12);
+        line-height: 40px !important;
+        cursor: pointer;
+    }
+
+    .edit-position {
+        border-left: 2px solid rgb(23, 130, 197);
+        padding-left: 80px;
+    }
+    .btn-edit-user{
+        border-width:0px !important;
     }
 </style>
