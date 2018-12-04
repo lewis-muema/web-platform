@@ -543,7 +543,7 @@
                     app: "PRIVATE_API",
                     endpoint: "running_balance"
                 };
-                this.requestRunningBalanceFromAPI(payload).then(
+                this.$store.dispatch("requestRunningBalance", payload, {root: true}).then(
                     response => {
                         if (response.length > 0) {
                             response = response[0];
@@ -722,7 +722,7 @@
             },
 
             checkRunningBalance(old_rb, payload) {
-                this.requestRunningBalanceFromAPI(payload).then(
+                this.$store.dispatch("requestRunningBalance", payload, {root: true}).then(
                     response => {
                         //console.log(response);
                         if (response.length > 0) {
@@ -939,8 +939,7 @@
                                 endpoint: "running_balance"
                             };
 
-                            this.$store
-                                .dispatch("$_payment/requestRunningBalance", payload)
+                            this.$store.dispatch("requestRunningBalance", payload, {root: true})
                                 .then(response => {
                                     //console.log("running balance response", response);
                                     this.payment_state = 0;

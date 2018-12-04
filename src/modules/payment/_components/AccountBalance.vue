@@ -45,7 +45,7 @@ export default {
         endpoint: "running_balance"
       };
 
-      this._requestRunningBalance(payload).then(
+      this.$store.dispatch("requestRunningBalance", payload, {root: true}).then(
         response => {
           console.log(response);
         },
