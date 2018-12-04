@@ -87,5 +87,22 @@ export default {
     updateRunningBalance({commit}, rb) {
         commit("setRunningBalance", rb);
         return true;
-    }
+    },
+    requestRunningBalance({ dispatch , commit }, payload) {
+        return new Promise((resolve, reject) => {
+          dispatch("requestAxiosPost", payload, { root: true }).then(
+            response => {
+              if (response.status == 200) {
+                let rb = response.data.running_balance;
+                commit("setRunningBalance", rb);
+              }
+              resolve(response);
+            },
+            error => {
+              reject(error);
+              console.log("failed to dispatch to global store");
+            }
+          );
+        });
+      },
 };
