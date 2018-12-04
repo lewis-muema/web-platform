@@ -342,6 +342,12 @@
                     "router-link-active": name == this.get_active_order_option
                 };
             },
+            checkAllowPrePaid() {
+                if (this.get_price_request_object.payment_option == 1 && this.getRunningBalance+this.order_cost > 0) {
+                    return false;
+                }
+                return true;
+            },
             checkPaymentDetails() {
                 if (this.get_active_vendor_name == "") {
                     //console.log("The vehicle type not been set");
@@ -353,7 +359,7 @@
                     return false;
                 }
                 if (this.payment_method == "" ) {
-                    if (this.get_price_request_object.payment_option == 2 ) {
+                    if (this.checkAllowPrePaid()== true  ) {
                         this.handlePostPaidPayments();
                     } else {
                         this.doNotification(
