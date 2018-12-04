@@ -5,7 +5,16 @@
 </template>
 
 <script>
+import * as Sentry from '@sentry/browser';
+import Vue from 'vue';
+
 const ENV = process.env.CONFIGS_ENV;
+
+Sentry.init({
+  dsn: ENV.SENTRY_DSN,
+  integrations: [new Sentry.Integrations.Vue({ Vue })]
+})
+
 export default {
   name: "app",
   created() {

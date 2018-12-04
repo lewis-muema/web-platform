@@ -342,15 +342,8 @@
                     "router-link-active": name == this.get_active_order_option
                 };
             },
-            // getRB() {
-            //     //console.log("balance here", numeral(this.getRunningBalance).format("0,0"))
-            //     return numeral(this.getRunningBalance).format("0,0");
-            // },
             checkAllowPrePaid() {
-                if (this.get_price_request_object.payment_option == 1) {
-                    if (this.getRunningBalance <= 0) {
-                        return true;
-                    }
+                if (this.get_price_request_object.payment_option == 1 && this.getRunningBalance+this.order_cost > 0) {
                     return false;
                 }
                 return true;
@@ -365,12 +358,10 @@
                     );
                     return false;
                 }
-                if (this.payment_method == "" || this.payment_method == 3) {
-                    if (this.checkAllowPrePaid() == true) {
-                        //console.log("might allow pre paid");
+                if (this.payment_method == "" ) {
+                    if (this.checkAllowPrePaid()== true  ) {
                         this.handlePostPaidPayments();
                     } else {
-                        //console.log("notification : Choose a payment method");
                         this.doNotification(
                             "2",
                             "Choose a payment method",
@@ -382,7 +373,11 @@
                     this.saveInfoToStore();
                     if (this.payment_method == 1) {
                         this.handleMpesaPayments();
-                    } else if (this.payment_method == 5) {
+                    } 
+                    else if (this.payment_method == 3) {
+                        this.handleCashPayments();
+                    }
+                    else if (this.payment_method == 5) {
                         this.handlePromoCodePayments();
                     } else if (this.payment_method.startsWith("2_")) {
                         //console.log("sliced", this.payment_method.slice(2));
@@ -405,10 +400,8 @@
                 this.$router.push({name: "promo_payment"});
             },
             handleCashPayments() {
-                //console.log("allowed cash payment");
-                // if(this.getRB() <= 0){
+                this.cash_status = true
                 this.doCompleteOrder();
-                // }
             },
             takeMeToAddNewCard() {
                 this.$router.push({name: "card_payment", query: {action: "add"}});
@@ -500,7 +493,7 @@
                         ? 2
                         : this.payment_method == ""
                             ? 0
-                            : this.payment_method,
+                            : parseInt(this.payment_method),
                     schedule_time: this.order_is_scheduled
                         ? this.scheduled_time
                         : this.eta_time,
@@ -510,7 +503,7 @@
                     carrier_type: 2,
                     isreturn: false,
                     vendor_type: this.active_vendor_price_data.vendor_id,
-                    rider_phone: this.get_price_request_object.order_no,
+                    rider_phone: this.active_vendor_price_data.order_no,
                     type: this.payment_type
                 };
                 payload = {values: payload};
