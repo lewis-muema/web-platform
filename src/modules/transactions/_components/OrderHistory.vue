@@ -12,7 +12,7 @@
             <el-date-picker class="section--filter-input" type="date" name="to_date" value="" placeholder="To" v-model="filterData.to_date"/>
         </div>
         <div class="section--filter-action-wrap">
-          <button type="button" :class="inactive_filter ? 'button-primary section--filter-action-inactive btn-order-hstry':'button-primary section--filter-action btn-order-hstry'" name="order_history_text" v-model="order_history_text" @click="filterTableData">{{this.order_history_text}}</button>
+          <button type="button" :class="inactive_filter ? 'button-primary section--filter-action-inactive btn-order-hstry':'button-primary section--filter-action btn-order-hstry'" name="order_history_text" v-model="order_history_text" @click="filterTableData" :disabled="inactive_filter == true ? true : false">{{this.order_history_text}}</button>
         </div>
     </div>
 
@@ -127,7 +127,6 @@ export default {
         to_date: ""
       },
       filteredData: [],
-      filterState: false,
       loading: false
     };
   },
@@ -141,7 +140,6 @@ export default {
       this.loading = true;
 
       //reset filter
-      this.filterState = false;
       this.empty_orders_state = "Searching Orders";
 
       let user = this.filterData.user;
@@ -330,12 +328,6 @@ export default {
       return this.$store.getters.getSession;
     },
     inactive_filter() {
-      if (
-        this.filterData.user == "" &&
-        (this.filterData.from_date == "" || this.filterData.to_date == "")
-      ) {
-        this.filterState = false;
-      }
       return (
         this.filterData.user == "" &&
         (this.filterData.from_date == "" || this.filterData.to_date == "")

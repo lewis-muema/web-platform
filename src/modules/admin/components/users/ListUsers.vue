@@ -9,7 +9,7 @@
                     </el-option>
                 </el-select>
 
-                <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left btn-users':'button-primary section--filter-action-inactive align-left btn-users'" @click="filterUserTableData">Search</button>
+                <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left btn-users':'button-primary section--filter-action-inactive align-left btn-users'" @click="filterUserTableData" :disabled="active_filter == true ? false : true">Search</button>
 
             </div>
             <div class="section--filter-action-wrap">
@@ -24,7 +24,7 @@
                 :stripe="true"
         >
             <template slot="empty">
-                {{empty_orders_state}}
+                {{empty_users_state}}
             </template>
             <el-table-column
                     label="Name"
@@ -66,7 +66,7 @@
         <div class="section--pagination-wrap">
             <el-pagination
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="userData.length"
+                    :total="filteredUserData.length"
                     :page-size="pagination_limit"
                     :current-page.sync="pagination_page"
                     @current-change="changePage"
@@ -120,11 +120,12 @@
             }, error => {
                 console.log(error);
             });
+            this.filteredUserData = this.userData;
 
         },
         data: function () {
             return {
-                empty_payments_state: "Fetching Users...",
+                empty_users_state: "Fetching Users...",
                 empty_departments_state: "Fetching Departments...",
                 pagination_limit: 10,
                 pagination_page: 1,
@@ -150,7 +151,6 @@
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
                 if (this.filterState == true) {
-
                     if(Array.isArray(this.filteredUserData)){
                         return this.filteredUserData.slice(from, to);
                     }
@@ -158,6 +158,7 @@
 
                 }
                 else {
+                    this.filteredUserData = this.userData;
                     if (Array.isArray(this.userData)) {
                         return this.userData.slice(from, to);
                     }

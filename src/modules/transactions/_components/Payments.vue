@@ -6,7 +6,7 @@
               <el-date-picker class="section--filter-input" type="date" name="from_date" v-model="filterData.from_date" placeholder="From"/>
               <el-date-picker class="section--filter-input" type="date" name="to_date" v-model="filterData.to_date" placeholder="To"/>
 
-              <button type="button" @click="filterPaymentData":class="active_filter?'button-primary section--filter-action align-left btn-payment':'button-primary section--filter-action-inactive align-left btn-payment'" name="order_payments_text" v-model="order_payments_text">{{this.order_payments_text}}</button>
+              <button type="button" @click="filterPaymentData":class="active_filter?'button-primary section--filter-action align-left btn-payment':'button-primary section--filter-action-inactive align-left btn-payment'" name="order_payments_text" v-model="order_payments_text" :disabled="active_filter == true ? false : true" >{{this.order_payments_text}}</button>
 
         </div>
         <div class="section--filter-action-wrap">
@@ -228,9 +228,6 @@ export default {
       let from = (this.pagination_page - 1) * this.pagination_limit;
       let to = this.pagination_page * this.pagination_limit;
 
-      // if(this.filterState == true){
-      //   return this.filteredPaymentData.slice(from, to);
-      // }
       return this.paymentData.slice(from, to);
     },
     active_filter() {
