@@ -272,8 +272,7 @@ export default {
               endpoint: "running_balance"
             };
 
-            this.$store
-              .dispatch("$_payment/requestRunningBalance", payload)
+            this.$store.dispatch("requestRunningBalance", payload, {root: true})
               .then(response => {
                 console.log("running balance response", response);
               });
