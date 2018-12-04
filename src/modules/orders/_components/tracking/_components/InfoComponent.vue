@@ -8,7 +8,7 @@
         <div class="infobar--content infobar--item infobar--driver infobar--item-bordered" >
           <div class="infobar--driver-details" v-if="this.tracking_data.confirm_status > 0">
             <div class="">
-              {{this.tracking_data.rider.rider_name}}
+              {{this.tracking_data.rider.rider_name}} - {{this.tracking_data.rider.rider_phone}}
             </div>
             <div class="">
               {{this.tracking_data.rider.vehicle_name}} - {{this.tracking_data.rider.number_plate}}
