@@ -104,7 +104,7 @@ export default {
               //failed to login
               //show some sort of error
               this.login_text = "Login";
-              this.message = response.data.reason;
+              this.message = response.reason;
               this.doNotification(
                 2,
                 "Login failed",

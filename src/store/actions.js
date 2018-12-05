@@ -36,10 +36,11 @@ export default {
             if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
                 config = {
                     headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": jwtToken
+                        "Content-Type": "application/json"
+                        // "Authorization": jwtToken
                     }
                 };
+                
             }
             else{
                 config = {
@@ -55,7 +56,11 @@ export default {
             let jwtToken = localStorage.getItem('jwtToken');
             payload.values = '"' + payload.values + '"';
             if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
-                config = {headers: {"Content-Type": "text/plain", "Authorization": jwtToken}};
+                config = {headers: {
+                    "Content-Type": "text/plain",
+                    // "Authorization": 
+                }};
+                
             }
             else{
                 config = {
@@ -68,7 +73,7 @@ export default {
 
         return new Promise((resolve, reject) => {
             axios
-                .post(url + payload.endpoint, payload.values)
+                .post(url + payload.endpoint, payload.values , config)
                 .then(response => {
                     resolve(response);
                 })
