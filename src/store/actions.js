@@ -68,7 +68,7 @@ export default {
 
         return new Promise((resolve, reject) => {
             axios
-                .post(url + payload.endpoint, payload.values, config)
+                .post(url + payload.endpoint, payload.values)
                 .then(response => {
                     resolve(response);
                 })
