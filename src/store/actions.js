@@ -30,7 +30,7 @@ export default {
         ) {
             //get from local storage
             let jwtToken = localStorage.getItem('jwtToken');
-            console.log(jwtToken)
+            // console.log(jwtToken)
             //the json is ok
             //set content type to json
             if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
