@@ -8,10 +8,10 @@ const url = "https://privateapitest.sendyit.com/v1/"
 
 export default {
 
-    requestUsersList({commit}, payload)
+    requestUsersList({commit , dispatch}, payload)
     {
         return new Promise((resolve, reject) => {
-            payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+             dispatch("requestAxiosPost", payload, {root: true}).then(response => {
                 console.log('in store dispatch to global store')
                 console.log(response)
                 if (response.data.status == true) {
@@ -28,10 +28,10 @@ export default {
 
         })
     },
-    requestDepartmentsList({commit}, payload)
+    requestDepartmentsList({commit , dispatch}, payload)
     {
         return new Promise((resolve, reject) => {
-            payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+            dispatch("requestAxiosPost", payload, {root: true}).then(response => {
                 console.log('in store dispatch to global store')
                 console.log(response)
                 if (response.data.status == true) {
@@ -48,10 +48,10 @@ export default {
 
         })
     },
-    requestKeysList({commit}, payload)
+    requestKeysList({commit , dispatch}, payload)
     {
         return new Promise((resolve, reject) => {
-            payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+            dispatch("requestAxiosPost", payload, {root: true}).then(response => {
                 console.log('in store dispatch to global store')
                 console.log(response)
                 if (response.data.status == true) {
@@ -68,10 +68,10 @@ export default {
 
         })
     },
-    generateAPIKey({commit}, payload)
+    generateAPIKey({commit, dispatch}, payload)
     {
         return new Promise((resolve, reject) => {
-            payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+            dispatch("requestAxiosPost", payload, {root: true}).then(response => {
                 console.log('in store dispatch to global store')
                 console.log(response)
                 if (response.data.status == true) {
@@ -90,10 +90,10 @@ export default {
 
         })
     },
-    addNewDepartment({commit}, payload)
+    addNewDepartment({commit, dispatch}, payload)
     {
         return new Promise((resolve, reject) => {
-            payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+            dispatch("requestAxiosPost", payload, {root: true}).then(response => {
                 console.log('in store dispatch to global store')
                 console.log(response)
                 if (response.data.status == true) {
@@ -110,10 +110,10 @@ export default {
 
         })
     },
-    editAdminDepartment({commit}, payload)
+    editAdminDepartment({commit, dispatch}, payload)
     {
         return new Promise((resolve, reject) => {
-            payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+            dispatch("requestAxiosPost", payload, {root: true}).then(response => {
                 console.log('in store dispatch to global store')
                 console.log(response)
                 if (response.data.status == true) {
@@ -130,11 +130,11 @@ export default {
 
         })
     },
-    editAdminUser({commit}, payload)
+    editAdminUser({commit, dispatch}, payload)
    {
        return new Promise((resolve, reject) => {
-           payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
-               console.log('in store dispatch to global store')
+        dispatch("requestAxiosPost", payload, {root: true}).then(response => {
+            console.log('in store dispatch to global store')
                console.log(response)
                if (response.data.status == true) {
                    commit('updateUsersList',response.data.data);
@@ -151,11 +151,11 @@ export default {
        })
    },
 
-    inviteNewUsers({commit}, payload)
+    inviteNewUsers({commit, dispatch}, payload)
    {
        return new Promise((resolve, reject) => {
-           payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
-               console.log('in store dispatch to global store')
+           dispatch("requestAxiosPost", payload, {root: true}).then(response => {
+                 console.log('in store dispatch to global store')
                console.log(response)
                if (response.data.status == true) {
                    commit('updateUsersList',response.data.data);
@@ -172,11 +172,11 @@ export default {
        })
    },
 
-    createInviteLink({commit}, payload)
+    createInviteLink({commit, dispatch}, payload)
    {
        return new Promise((resolve, reject) => {
-           payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
-               console.log('in store dispatch to global store')
+        dispatch("requestAxiosPost", payload, {root: true}).then(response => {
+            console.log('in store dispatch to global store')
                console.log(response)
                if (response.data.status == true) {
                    commit('updateInviteLink',response.data.data);

@@ -8,11 +8,11 @@ const url = "https://privateapitest.sendyit.com/v1/"
 
 export default {
 
-    requestOrderHistoryOrders({commit}, payload)
+    requestOrderHistoryOrders({commit, dispatch}, payload)
     {
 
         return new Promise((resolve, reject) => {
-            payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+            dispatch("requestAxiosPost", payload, {root: true}).then(response => {
                 console.log('in store dispatch to global store')
                 if(response.length > 1){
                     response = response[0];    
@@ -32,10 +32,10 @@ export default {
         })
     },
 
-    requestCopUsers({commit}, payload)
+    requestCopUsers({commit, dispatch}, payload)
     {
         return new Promise((resolve, reject) => {
-            payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+            dispatch("requestAxiosPost", payload, {root: true}).then(response => {
                 console.log('in store dispatch to global store')
                 if(response.length > 1){
                     response = response[0];    
@@ -54,9 +54,9 @@ export default {
 
         })
     },
-    requestPayments({commit}, payload){
+    requestPayments({commit, dispatch}, payload){
         return new Promise((resolve, reject) => {
-            payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+            dispatch("requestAxiosPost", payload, {root: true}).then(response => {
                 console.log('in store dispatch to global store')
                 if (response.data.status == true) {
                     commit('setPayments',response.data.data);
@@ -72,9 +72,9 @@ export default {
 
         })
     },
-    requestStatement({commit}, payload){
+    requestStatement({commit, dispatch}, payload){
         return new Promise((resolve, reject) => {
-            payload.vm.$store.dispatch("requestAxiosPost", payload).then(response => {
+            dispatch("requestAxiosPost", payload, {root: true}).then(response => {
                 console.log('in store dispatch to global store')
                 if (response.data.status == true) {
                     commit('setStatement',response.data.data);

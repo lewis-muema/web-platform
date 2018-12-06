@@ -5,7 +5,16 @@
 </template>
 
 <script>
+import * as Sentry from '@sentry/browser';
+import Vue from 'vue';
+
 const ENV = process.env.CONFIGS_ENV;
+
+Sentry.init({
+  dsn: ENV.SENTRY_DSN,
+  integrations: [new Sentry.Integrations.Vue({ Vue })]
+})
+
 export default {
   name: "app",
   created() {
@@ -19,7 +28,6 @@ export default {
   },
   methods: {
     showNotification() {
-      console.log("somebody is trying to show a notification");
       let notification = this.$store.getters.getNotification;
 
       if (notification.level == 1) {
@@ -65,7 +73,6 @@ export default {
   },
   watch: {
     notification_status(val, oldVal) {
-      console.log(val);
       if (val == true) {
         this.showNotification();
       }

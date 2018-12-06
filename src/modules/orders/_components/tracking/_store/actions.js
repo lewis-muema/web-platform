@@ -12,19 +12,21 @@ const get_tracking_data = function({commit,dispatch,state}, data) {
 				root: true
 			})
 			.then(response => {
-				if (state.tracked_order == data.order_no) {
-					commit('set_tracking_data', response.data)
-					commit('$_orders/set_polyline', response.data.polyline, {
-						root: true
-					})
-					commit('$_orders/set_markers', response.data.path, {
-						root: true
-					})
-					setTimeout(function() {
-						dispatch("get_tracking_data", data)
-					}, 20000);
+				if (response.status) {
+					if (state.tracked_order == data.order_no) {
+						commit('set_tracking_data', response.data)
+						commit('$_orders/set_polyline', response.data.polyline, {
+							root: true
+						})
+						commit('$_orders/set_markers', response.data.path, {
+							root: true
+						})
+					}
+					resolve(true);
 				}
-				resolve();
+				else {
+					resolve(false)
+				}
 			}, error => {
 				reject(error);
 				console.log('failed to dispatch to global store')
@@ -55,6 +57,9 @@ const cancel_order = function({commit, dispatch}, data)
 
 const track_mqtt = function({commit, state})
 {
+	if (!state.tracking_data.confirm_status > 0) {
+		return false
+	}
 	var tracking_no = state.tracking_data.rider.phone_no_1;
 	var city_id = state.tracking_data.city_id;
 	var city_code = '';

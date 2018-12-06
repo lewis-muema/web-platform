@@ -13,53 +13,28 @@ function isEmpty(obj) {
   return true;
 }
 
-function getSessionCookie() {
-  var nameEQ = "_sessionSnack" + "=";
-  var ca = document.cookie.split(";");
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == " ") c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) == 0) {
-    }
-    return c.substring(nameEQ.length, c.length);
-  }
-  return null;
-}
-
 function guard(to, from, next) {
   return new Promise((resolve, reject) => {
     let session = store.state.session;
 
     console.log("the guard is executing");
-    console.log(session);
-
-    console.log(isEmpty(session));
 
     if (isEmpty(session)) {
-      console.log("empty session here");
-
       if (process.browser) {
-        //read cookies here
-        let _sessionSnack = getSessionCookie();
-        console.log(_sessionSnack);
+        //read ls here
+        let _sessionSnack = localStorage.getItem("_sessionSnack");
 
-        //if(_sessionSnack !== null && _sessionSnack !== ''){
-        //update session with whatever is on the cookies
-        //}
         if (isEmpty(_sessionSnack) == true) {
           resolve(next("/auth/sign_in"));
-          console.log("router-message", "user not logged in");
         } else {
           session = JSON.parse(_sessionSnack);
           store.state.session = session;
-          console.log("session is updated");
           resolve(next());
         }
       } else {
         resolve(next());
       }
     } else {
-      console.log("session is okay");
       resolve(next());
     }
   });

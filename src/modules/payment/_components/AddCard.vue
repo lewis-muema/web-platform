@@ -145,8 +145,6 @@ export default {
 
       card_payload = Mcrypt.encrypt(card_payload);
 
-      console.log(card_payload);
-
       let full_payload = {
         values: card_payload,
         vm: this,
@@ -156,7 +154,6 @@ export default {
       this.$store.dispatch("$_payment/requestAddNewCard", full_payload).then(
         response => {
           response.data = JSON.parse(Mcrypt.decrypt(response.data));
-          console.log(response);
           let that = this;
 
           if (response.data.status == false) {
