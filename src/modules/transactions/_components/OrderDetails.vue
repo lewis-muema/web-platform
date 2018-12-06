@@ -22,11 +22,11 @@
               </div>
               <div class="order_details_desc_item">
                     <img src="../../../assets/img/maroon_button.png" class="order_details_desc_image">
-                    {{getOrderToName(order_details.path)}}
+                    {{getOrderFromName(order_details.path)}}
               </div>
               <div class="order_details_desc_item">
                     <img src="../../../assets/img/blue_button.png" class="order_details_desc_image">
-                    {{getOrderFromName(order_details.path)}}
+                    {{getOrderToName(order_details.path)}}
               </div>
 
           </div>
