@@ -8,7 +8,7 @@
         <div class="infobar--content infobar--item infobar--driver infobar--item-bordered" >
           <div class="infobar--driver-details" v-if="this.tracking_data.confirm_status > 0">
             <div class="">
-              {{this.tracking_data.rider.rider_name}}
+              {{this.tracking_data.rider.rider_name}} - {{this.tracking_data.rider.rider_phone}}
             </div>
             <div class="">
               {{this.tracking_data.rider.vehicle_name}} - {{this.tracking_data.rider.number_plate}}
@@ -94,11 +94,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
-// import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 
 export default {
   name: 'info-window',
-  // mixins: [Mcrypt],
   data: function() {
     return {
       loading: true,
@@ -107,10 +105,33 @@ export default {
     }
   },
   methods: {
-    // test_mcrypt: function (test_str) {
-    //   console.log(Mcrypt.encrypt(test_str));
-    //   // console.log(JSON.parse(Mcrypt.decrypt(test_str)));
-    // },
+    poll: function (from) {
+      var that = this
+      this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": from})
+      .then(response => {
+        if (response) {
+          if (this.tracking_data.delivery_status == 3) {
+            that.doNotification("1","Order delivered","Your order has been delivered.");
+            that.place()
+          }
+          else {
+            if (this.tracking_data.main_status == 2) {
+              that.doNotification("2","Order cancelled","Your order has been cancelled.");
+              that.place()
+            }
+            else {
+              setTimeout(function() {
+                that.poll(from)
+              }, 20000);
+            }
+          }
+        }
+        else {
+          that.place()
+        }
+        that.loading = false
+      })
+    },
     cancel_toggle: function () {
       if (this.cancel_popup == 1) {
         this.cancel_popup = 0
@@ -140,6 +161,7 @@ export default {
         if (response.status == true) {
           that.doNotification("1","Order cancelled","Order cancelled successfully.");
           that.cancel_toggle();
+          this.$store.dispatch('$_orders/fetch_ongoing_orders')
           that.place();
         }
         else {
@@ -204,10 +226,7 @@ export default {
     this.loading = true
     this.$store.commit('$_orders/$_tracking/set_tracked_order', this.$route.params.order_no)
     var that = this
-    this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": this.$route.params.order_no})
-    .then(response => {
-      that.loading = false
-    })
+    this.poll(this.$route.params.order_no)
   },
   created () {
     this.order_number = this.$route.params.order_no;
@@ -218,10 +237,7 @@ export default {
       this.loading = true
       this.$store.commit('$_orders/$_tracking/set_tracked_order', from)
       var that = this
-      this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": from})
-      .then(response => {
-        that.loading = false
-      })
+      this.poll(from)
     }
   }
 }

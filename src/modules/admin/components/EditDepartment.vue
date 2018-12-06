@@ -40,9 +40,6 @@
 
     export default {
         name: 'EditDepartment',
-        mounted() {
-
-        },
         data() {
             return {
                 message: "",
@@ -52,16 +49,16 @@
             }
         },
         mounted() {
-            let cop_user_id = this.$route.params.id;
-            this.deptDetails = this.deptData.filter(dept => dept.cop_user_id == cop_user_id)[0];
+            let department = this.$route.params.id;
+            this.deptDetails = this.deptData.filter(dept => dept.department_id == department)[0];
 
-            if (this.deptDetails !== undefined) {
+            if (typeof this.deptDetails != 'undefined') {
                 this.available = true;
             }
             else {
                 this.available = false;
                 this.go_back();
-                console.log("back to users' table")
+                console.log("back to departments' table")
             }
             let session = this.$store.getters.getSession;
             let cop_id = 0;
@@ -70,7 +67,6 @@
             }
             let payload = {
                 "cop_id": cop_id
-
             }
             let users_full_payload = {
                 "values": payload,
@@ -113,7 +109,7 @@
                     console.log(response);
                     console.log("updated");
                     let level = 1; //success
-                    this.message = "Edit Successful!"
+                    this.message = "Edit Successful!";
                     let notification = {"title": "", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
@@ -121,7 +117,7 @@
                 }, error => {
                     console.log(error);
                     let level = 2;
-                    this.message = "Something went wrong."
+                    this.message = "Something went wrong.";
                     let notification = {"title": "", "level": level, "message": this.message}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
@@ -138,7 +134,7 @@
 
 <style lang="css">
     .position--details {
-        margin-top: 8% !important;
+        margin-top: 7% !important;
     }
 
     .dept--id-storetemp {
@@ -169,7 +165,7 @@
         text-align: center;
         color: #666;
         /* margin-right: 20%; */
-        margin-top: 18% !important;
+        /*margin-top: 18% !important;*/
         margin-left: 100px;
         margin-right: 60px;
     }
