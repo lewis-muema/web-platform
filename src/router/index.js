@@ -242,7 +242,7 @@ export function createRouter() {
             name: "tracking"
           },
           {
-            path: "/orders/rating",
+            path: "/orders/rating/:order_no",
             component: () =>
               import("../modules/orders/_components/rating/Rating.vue")
           }
