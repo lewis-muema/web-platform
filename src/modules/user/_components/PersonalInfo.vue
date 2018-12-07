@@ -134,8 +134,8 @@
                           updated_session[session.default]['user_email'] = this.user_email;
 
                           let new_session = JSON.stringify(updated_session);
-                          console.log('New session',new_session);
                           this.setSession(new_session);
+                          this.$store.commit("setSession", updated_session);
 
                             console.log("Personal Peer Information Updated successfully")
                             console.log(response);
