@@ -8,7 +8,7 @@
         <div class="infobar--content infobar--item infobar--driver infobar--item-bordered" >
           <div class="infobar--driver-details" v-if="this.tracking_data.confirm_status > 0">
             <div class="">
-              {{this.tracking_data.rider.rider_name}}
+              {{this.tracking_data.rider.rider_name}} - {{this.tracking_data.rider.rider_phone}}
             </div>
             <div class="">
               {{this.tracking_data.rider.vehicle_name}} - {{this.tracking_data.rider.number_plate}}
@@ -42,11 +42,11 @@
           </div>
           <div class="">
             <span class="" v-if = "this.tracking_data.delivery_status < 2">
-              Estimated Arrival: <span class=""> {{this.tracking_data.eta}} </span>
+              Estimated Arrival: <span class=""> {{date_format(this.tracking_data.date_time)}} </span>
             </span>
-            <span class="" v-else>
+            <!-- <span class="" v-else>
               Estimated Delivery: <span class=""> {{this.tracking_data.etd}} </span>
-            </span>
+            </span> -->
           </div>
         </div>
         <div class="infobar--content infobar--item infobar--actions">
@@ -78,7 +78,7 @@
               Share Status
             </div>
           </div>
-          <div @click="cancel_toggle()">
+          <div @click="cancel_toggle()" v-if="!(this.tracking_data.delivery_status > 1)">
             <div class="infobar--actions-icon">
                <i class="el-icon-circle-close-outline"></i>
             </div>
@@ -94,11 +94,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
-// import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 
 export default {
   name: 'info-window',
-  // mixins: [Mcrypt],
   data: function() {
     return {
       loading: true,
@@ -107,10 +105,33 @@ export default {
     }
   },
   methods: {
-    // test_mcrypt: function (test_str) {
-    //   console.log(Mcrypt.encrypt(test_str));
-    //   // console.log(JSON.parse(Mcrypt.decrypt(test_str)));
-    // },
+    poll: function (from) {
+      var that = this
+      this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": from})
+      .then(response => {
+        if (response) {
+          if (this.tracking_data.delivery_status == 3) {
+            that.doNotification("1","Order delivered","Your order has been delivered.");
+            that.$router.push('/orders/rating/'+ from);
+          }
+          else {
+            if (this.tracking_data.main_status == 2) {
+              that.doNotification("2","Order cancelled","Your order has been cancelled.");
+              that.place()
+            }
+            else {
+              setTimeout(function() {
+                that.poll(from)
+              }, 20000);
+            }
+          }
+        }
+        else {
+          that.place()
+        }
+        that.loading = false
+      })
+    },
     cancel_toggle: function () {
       if (this.cancel_popup == 1) {
         this.cancel_popup = 0
@@ -122,6 +143,11 @@ export default {
     place: function () {
       this.$router.push('/orders')
     },
+    doNotification(level, title, message) {
+      this.$store.commit("setNotificationStatus", true);
+      let notification = {title: title, level: level, message: message};
+      this.$store.commit("setNotification", notification);
+    },
     cancel_order: function () {
       var payload = {
         "order_no": this.tracking_data.order_no,
@@ -132,9 +158,29 @@ export default {
       var that = this
       this.$store.dispatch('$_orders/$_tracking/cancel_order', payload)
       .then(response => {
-        that.cancel_toggle();
-        that.place();
+        if (response.status == true) {
+          that.doNotification("1","Order cancelled","Order cancelled successfully.");
+          that.cancel_toggle();
+          this.$store.dispatch('$_orders/fetch_ongoing_orders')
+          that.place();
+        }
+        else {
+          that.doNotification("3","Order cancellation failed","Could not cancel the order. Please contact Customer Care at 0709779779.");
+        }
       })
+    },
+    date_format: function( date ) {
+      var from_now = this.moment( date ).fromNow();
+
+      return this.moment( date ).calendar( null, {
+          lastWeek: 'MMM-D hh:mm a',
+          sameDay:  '[Today] hh:mm a',
+          nextDay:  '[Tomorrow] hh:mm a',
+          nextWeek: 'ddd',
+          sameElse: function () {
+              return "MMM D, hh:mm a";
+          }
+      });
     },
   },
   computed: {
@@ -180,10 +226,7 @@ export default {
     this.loading = true
     this.$store.commit('$_orders/$_tracking/set_tracked_order', this.$route.params.order_no)
     var that = this
-    this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": this.$route.params.order_no})
-    .then(response => {
-      that.loading = false
-    })
+    this.poll(this.$route.params.order_no)
   },
   created () {
     this.order_number = this.$route.params.order_no;
@@ -194,10 +237,7 @@ export default {
       this.loading = true
       this.$store.commit('$_orders/$_tracking/set_tracked_order', from)
       var that = this
-      this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": from})
-      .then(response => {
-        that.loading = false
-      })
+      this.poll(from)
     }
   }
 }

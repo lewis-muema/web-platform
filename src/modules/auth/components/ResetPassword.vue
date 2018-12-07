@@ -45,114 +45,97 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
-import {cookie_mixin} from "../../../mixins/cookie_mixin"
+import { mapActions } from "vuex";
+import SessionMxn from "../../../mixins/session_mixin.js";
 
 export default {
-  mixins: [cookie_mixin],
+  mixins: [SessionMxn],
   data() {
     return {
-      message: '',
-      new_password: '',
-      confirm_password: ''
-    }
+      message: "",
+      new_password: "",
+      confirm_password: ""
+    };
   },
-  mounted(){
+  mounted() {
     this.check_content();
   },
-  methods:{
-     ...mapActions({
-        requestResetPassword :'$_auth/requestResetPassword',
-        requestCheckToken :'$_auth/requestCheckToken',
+  methods: {
+    ...mapActions({
+      requestResetPassword: "$_auth/requestResetPassword",
+      requestCheckToken: "$_auth/requestCheckToken"
     }),
     check_content: function() {
-
       let token = this.$route.params.content;
 
-        let values = {};
-        values.token = token;
-        let full_payload = {
-          values: values,
-          vm: this,
-          app: "NODE_PRIVATE_API",
-          endpoint: "forgot_token"
-        };
-        this.requestCheckToken(full_payload).then(
-          response => {
-            // console.log(response);
-            if (response.length > 0) {
-              response = response[0];
-            }
-             //code 001 -token user_id
-             // code 002 -token does
-            if (response.status == true) {
-
-              // console.log(response);
-              console.log("Valid Token");
-
-            } else {
-
-              console.warn("Invalid Token");
-              this.doNotification(
-                2,
-                "Invalid Link",
-                "Invalid Password Reset Link."
-              );
-              // this.$router.push("/auth");
-            }
-          },
-          error => {
-            console.error("Check Internet Connection");
-            console.log(error);
+      let values = {};
+      values.token = token;
+      let full_payload = {
+        values: values,
+        vm: this,
+        app: "NODE_PRIVATE_API",
+        endpoint: "forgot_token"
+      };
+      this.requestCheckToken(full_payload).then(
+        response => {
+          // console.log(response);
+          if (response.length > 0) {
+            response = response[0];
           }
-        );
+          //code 001 -token user_id
+          // code 002 -token does
+          if (response.status == true) {
+            // console.log(response);
+            console.log("Valid Token");
+          } else {
+            console.warn("Invalid Token");
+            this.doNotification(
+              2,
+              "Invalid Link",
+              "Invalid Password Reset Link."
+            );
+            // this.$router.push("/auth");
+          }
+        },
+        error => {
+          console.error("Check Internet Connection");
+          console.log(error);
+        }
+      );
     },
-    reset_pass: function ()
-    {
-     if (this.new_password !== this.confirm_password) {
+    reset_pass: function() {
+      if (this.new_password !== this.confirm_password) {
         console.log("Password does not match!");
         this.doNotification(
           2,
           "Password Failed",
           "Password does not match. Please try again"
         );
+      } else {
+        let payload = {};
+        payload.password = this.new_password;
+        payload.token = this.$route.params.content;
 
-      }
-      else {
-
-      let payload = {};
-      payload.password = this.new_password;
-      payload.token = this.$route.params.content;
-
-      let full_payload = {
-        values: payload,
-        vm: this,
-        app: "NODE_PRIVATE_API",
-        endpoint: "update_pass"
-      };
-      var that = this
-      this.requestResetPassword(full_payload).then(response => {
+        let full_payload = {
+          values: payload,
+          vm: this,
+          app: "NODE_PRIVATE_API",
+          endpoint: "update_pass"
+        };
+        var that = this;
+        this.requestResetPassword(full_payload).then(
+          response => {
             if (response.length > 0) {
               response = response[0];
             }
-            console.log('Update Password',response);
+            console.log("Update Password", response);
             if (response.status == true) {
               let session_data = response.data;
-
-              that.setCookie(session_data).then(res => {
-                console.log("sessionSnack Now", this.getCookie());
-
-                that.$store.commit("setSession", session_data);
-              console.log("session_data", session_data);
-              //this.setCookie(session_data);
+              let json_session = JSON.stringify(session_data);
+              this.setSession(json_session);
               this.$store.commit("setSession", session_data);
-              //this.$ls.set('_sessionLocalSnack', session_data);
-
-             this.$router.push("/orders");
-           });
-
+              this.$router.push("/orders");
             } else {
-
               console.warn("Password Fail");
               this.doNotification(
                 2,
@@ -161,81 +144,81 @@ export default {
               );
               // this.$router.push("/auth");
             }
-
-      }, error => {
-          console.error("Check Internet Connection")
-          this.message ='Login failed';
-          console.log(error);
-      });
-     }
+          },
+          error => {
+            console.error("Check Internet Connection");
+            this.message = "Login failed";
+            console.log(error);
+          }
+        );
+      }
     },
     doNotification(level, title, message) {
       let notification = { title: title, level: level, message: message };
       this.$store.commit("setNotification", notification);
       this.$store.commit("setNotificationStatus", true);
     }
-},
-computed : {
-  is_valid : function() {
-    return this.confirm_password != '' && this.new_password != '';
   },
-},
-}
+  computed: {
+    is_valid: function() {
+      return this.confirm_password != "" && this.new_password != "";
+    }
+  }
+};
 </script>
 
 <style lang="css">
 .log-item {
-    text-align: center;
-    border: 0px solid #CCC;
-    margin: 5px;
+  text-align: center;
+  border: 0px solid #ccc;
+  margin: 5px;
 }
 .form__longyy {
-    max-width: 300px !important;
-    margin-top: 5px !important;
-    margin-bottom: 15px !important;
-    margin-left: 0px;
-    width: 300px;
-    height: 30px;
-    font-size: 13px;
-    margin-right: 27%;
+  max-width: 300px !important;
+  margin-top: 5px !important;
+  margin-bottom: 15px !important;
+  margin-left: 0px;
+  width: 300px;
+  height: 30px;
+  font-size: 13px;
+  margin-right: 27%;
 }
 .form__input {
-    padding: 5px;
-    display: block;
-    color: #555;
-    background-color: #fff;
-    background-image: none;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-
+  padding: 5px;
+  display: block;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 .btn {
-    display: inline-block;
-    padding: 10px 30px;
-    margin-bottom: 0;
-    font-weight: normal;
-    line-height: 1.42857143;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    user-select: none;
-    background-image: none;
-    border: 1px solid transparent;
-    border-radius: 3px;
-    cursor: pointer;
+  display: inline-block;
+  padding: 10px 30px;
+  margin-bottom: 0;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
 }
 .btn-primary {
-    color: #fff;
-    background-color: #1782C5;
-    border-color: #357ebd;
-    margin-right: 27%;
+  color: #fff;
+  background-color: #1782c5;
+  border-color: #357ebd;
+  margin-right: 27%;
 }
 .form__input:focus {
   border-color: #1782c5;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.reset-form{
+.reset-form {
   margin-left: 23%;
 }
 </style>

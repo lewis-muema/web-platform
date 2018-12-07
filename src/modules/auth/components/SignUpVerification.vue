@@ -37,16 +37,16 @@
 </template>
 
 <script>
-import { mapActions,mapGetters } from "vuex";
-import {cookie_mixin} from "../../../mixins/cookie_mixin"
+import { mapActions, mapGetters } from "vuex";
+import SessionMxn from "../../../mixins/session_mixin.js";
 
 export default {
-  mixins: [cookie_mixin],
+  mixins: [SessionMxn],
   data() {
     return {
       cop_name: "",
-      phone:"",
-      message:""
+      phone: "",
+      message: ""
     };
   },
   methods: {
@@ -55,18 +55,18 @@ export default {
       requestCopSignUp: "$_auth/requestCopSignUp"
     }),
     ...mapGetters({
-       Password :'$_auth/requestPassword',
-       Email :'$_auth/requestEmail',
-       Phone :'$_auth/requestPhone',
-       Name :'$_auth/requestName'
-   }),
+      Password: "$_auth/requestPassword",
+      Email: "$_auth/requestEmail",
+      Phone: "$_auth/requestPhone",
+      Name: "$_auth/requestName"
+    }),
     peer_set: function() {
       let values = {};
       values.name = this.Name();
       values.phone = this.Phone();
       values.email = this.Email();
       values.password = this.Password();
-      values.type='peer';
+      values.type = "peer";
       console.log(values);
       let full_payload = {
         values: values,
@@ -84,22 +84,14 @@ export default {
           }
 
           if (response.status == true) {
-             console.log("Peer Account Created")
-             console.log(response);
+            console.log("Peer Account Created");
+            console.log(response);
 
-             let session_data = response.data;
-
-             that.setCookie(session_data).then(res => {
-               console.log("sessionSnack Now", this.getCookie());
-
-               that.$store.commit("setSession", session_data);
-             console.log("session_data", session_data);
-             //this.setCookie(session_data);
-             this.$store.commit("setSession", session_data);
-             //this.$ls.set('_sessionLocalSnack', session_data);
-
+            let session_data = response.data;
+            let json_session = JSON.stringify(session_data);
+            this.setSession(json_session);
+            this.$store.commit("setSession", session_data);
             this.$router.push("/orders");
-            });
           } else {
             //failed to login
             //show some sort of error
@@ -114,15 +106,14 @@ export default {
       );
     },
     cop_set: function() {
-      if (this.cop_name != '') {
-
+      if (this.cop_name != "") {
         let values = {};
         values.cop_name = this.cop_name;
         values.name = this.Name();
         values.phone = this.Phone();
         values.email = this.Email();
-        values.password =this.Password();
-        values.type = 'biz';
+        values.password = this.Password();
+        values.type = "biz";
         let full_payload = {
           values: values,
           vm: this,
@@ -139,19 +130,12 @@ export default {
               response = response[0];
             }
             if (response.status == true) {
-
               let session_data = response.data;
               console.log("session_data", session_data);
-
-              //this.setCookie(session_data);
-              that.setCookie(session_data).then(res => {
-                console.log("sessionSnack Now", this.getCookie());
+              let json_session = JSON.stringify(session_data);
+              this.setSession(json_session);
               this.$store.commit("setSession", session_data);
-              //this.$ls.set('_sessionLocalSnack', session_data);
-              console.log("Cop account created");
-              console.log(response);
               this.$router.push("/orders");
-              });
             } else {
               //failed to login
               //show some sort of error
@@ -164,14 +148,9 @@ export default {
             console.log(error);
           }
         );
-
+      } else {
+        this.message = "Provide Business Name";
       }
-
-      else{
-
-        this.message = "Provide Business Name"
-      }
-
     }
   }
 };
@@ -189,7 +168,7 @@ export default {
   border-radius: 4px;
   margin: 2rem auto;
   padding: 2rem;
-  font-family: 'Rubik', sans-serif;
+  font-family: "Rubik", sans-serif;
   margin-top: 7%;
 }
 .sign-up-verification-top {
@@ -224,17 +203,17 @@ export default {
   width: 83%;
 }
 
-.btn-sign-up-check{
+.btn-sign-up-check {
   /* bottom: 5px;
   position:absolute;
   left: 2px;
   width: 50px;
   font-size: 13px !important;
   border: #fff; */
-  width:28%;
+  width: 28%;
   border-width: 0px !important;
 }
-.style-sign-btn{
+.style-sign-btn {
   color: black !important;
   background-color: #ffffff !important;
   border: 1px solid #ffffff !important;

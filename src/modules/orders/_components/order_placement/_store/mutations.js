@@ -52,7 +52,6 @@ export default {
       state.payment_method=val;
     },
     set_order_path(state, val) {
-        console.log('set_order_path',val)
       // state.order_path.splice(index,1);
       state.order_path.splice(val.index,val.index == 0 ? 0 : 1,val.path);
     },

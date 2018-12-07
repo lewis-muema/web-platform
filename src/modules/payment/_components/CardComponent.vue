@@ -130,8 +130,6 @@ export default {
       //sort encryption
       let session = this.$store.getters.getSession;
 
-      console.log("requesting card payment");
-      console.log("request-session", session);
       let user_id = 0;
       let cop_id = 0;
       let user_name = "";
@@ -177,7 +175,6 @@ export default {
       this.$store.dispatch("$_payment/requestCardPayment", full_payload).then(
         response => {
           response.data = Mcrypt.decrypt(response.data);
-          console.log(response);
           let that = this;
 
           if (response.data.status == false) {
@@ -256,8 +253,6 @@ export default {
 
       this.$store.dispatch("$_payment/completeCardPayment", full_payload).then(
         response => {
-          console.log(response);
-
           if (response.data.status == true) {
             //this will request the new running balance and update the store
             let notification = {
@@ -277,8 +272,7 @@ export default {
               endpoint: "running_balance"
             };
 
-            this.$store
-              .dispatch("$_payment/requestRunningBalance", payload)
+            this.$store.dispatch("requestRunningBalance", payload, {root: true})
               .then(response => {
                 console.log("running balance response", response);
               });

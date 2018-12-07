@@ -107,7 +107,7 @@
 .homeview--form__scrollable {
   margin-right: -20px;
   padding-right: 30px;
-  max-height: 20.01rem;
+  max-height: 9.5rem;
   overflow-y: scroll;
   overflow-x: hidden;
 }
