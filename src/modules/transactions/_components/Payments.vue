@@ -27,7 +27,6 @@
      <el-table-column
        label="Reciept Number"
        prop="txn"
-        width="180"
        >
      </el-table-column>
      <el-table-column
@@ -39,16 +38,19 @@
      <el-table-column
        label="Method"
        prop="pay_method_name"
+       width="220"
        >
      </el-table-column>
      <el-table-column
        label="Description"
        prop="description"
+       width="220"
        >
      </el-table-column>
      <el-table-column
        label="Amount"
        prop="amount"
+       width="220"
        :formatter="formatAmount"
        class-name="amount--table-format"
        >
