@@ -12,10 +12,15 @@ export default {
 
         //check if payload is a string here and change the content type
         if ("params" in payload) {
-            payload.values = JSON.stringify(payload.params);
+            payload.values = payload.params;
+            if(typeof  payload.params === 'object'){
+                 payload.values = JSON.stringify(payload.params);
+            }
         } else {
             //assume we used values
-            payload.values = JSON.stringify(payload.values);
+            if(typeof payload.values === 'object'){
+                payload.values = JSON.stringify(payload.values);
+            } 
         }
         if (
             /^[\],:{}\s]*$/.test(
@@ -30,7 +35,7 @@ export default {
         ) {
             //get from local storage
             let jwtToken = localStorage.getItem('jwtToken');
-            console.log(jwtToken)
+            // console.log(jwtToken)
             //the json is ok
             //set content type to json
             if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
@@ -84,7 +89,7 @@ export default {
     },
 
     show_notification({commit}, payload) {
-        console.log("dispatching notification to the store");
+        // console.log("dispatching notification to the store");
         commit("setNotification", payload);
         commit("setNotificationStatus", true);
         return true;
