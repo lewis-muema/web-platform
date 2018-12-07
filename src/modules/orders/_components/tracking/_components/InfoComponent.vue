@@ -78,7 +78,7 @@
               Share Status
             </div>
           </div>
-          <div @click="cancel_toggle()">
+          <div @click="cancel_toggle()" v-if="!(this.tracking_data.delivery_status > 1)">
             <div class="infobar--actions-icon">
                <i class="el-icon-circle-close-outline"></i>
             </div>
@@ -112,7 +112,7 @@ export default {
         if (response) {
           if (this.tracking_data.delivery_status == 3) {
             that.doNotification("1","Order delivered","Your order has been delivered.");
-            that.place()
+            that.$router.push('/orders/rating/'+ from);
           }
           else {
             if (this.tracking_data.main_status == 2) {
