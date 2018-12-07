@@ -32,18 +32,31 @@
 
     export default {
         name: 'rate-driver-component',
+        mounted(){
+            console.log(this.getOrderDetails);
+            let session = this.$store.getters.getSession;
+            console.log(session);
+        },
         computed: {
             ...mapGetters({
                 getDriverName: '$_rating/getDriverName',
                 getRiderImage: '$_rating/getRiderImage',
                 getBaseUrl: '$_rating/getBaseUrl',
                 getUserEmail: '$_rating/getUserEmail',
-                getPackageID: '$_rating/getPackageID'
+                getPackageID: '$_rating/getPackageID',
+                getOrderDetails: "$_rating/getOrderHistoryOrders"
             }),
-            driver_background() {
-                let uri = 'url(' + this.getRiderImage + ')';
-                return {background: "white " + uri}
+            order_details() {
+                return this.getOrderDetails.find(
+                    order => order.order_id === this.$route.params.id
+                );
             }
+        },
+        created() {
+            this.order_id = this.$route.params.id;
+            console.log(this.getOrderDetails);
+
+
         },
         data() {
             return {

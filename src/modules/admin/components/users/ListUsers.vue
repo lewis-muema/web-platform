@@ -235,8 +235,8 @@
                             return user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0  && user.department_id == department;
                         }
                         else{
-                            vm.empty_users_state = "Could not find matching department."
-                            console.log("could not find department", department)
+                            vm.empty_users_state = "Could not find users for the department."
+                            console.log("Could not find users for the department.", department)
                         }
                     });
                     this.filterState = true;
@@ -259,8 +259,8 @@
                             return user.department_id == department;
                         }
                         else{
-                            vm.empty_users_state = "Could not find matching department."
-                            console.log("could not find department", department)
+                            vm.empty_users_state = "Could not find users for the department."
+                            console.log("Could not find users for the department.", department)
                         }
                     });
                     // this.filteredUserData = this.filteredUserData.filter( user => user.department_id ==  department);

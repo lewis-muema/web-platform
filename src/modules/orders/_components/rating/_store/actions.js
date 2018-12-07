@@ -7,6 +7,29 @@ const url = "https://privateapitest.sendyit.com/v1/"
 
 
 export default {
+    requestOrderHistoryOrders({commit, dispatch}, payload)
+    {
+
+        return new Promise((resolve, reject) => {
+            dispatch("requestAxiosPost", payload, {root: true}).then(response => {
+                console.log('in store dispatch to global store')
+                if(response.length > 1){
+                    response = response[0];
+                }
+                if (response.data.status == true) {
+                    commit('setOrderHistoryOrders',response.data.data);
+                    resolve(response.data);
+                }
+                else {
+                    reject(response.data);
+                }
+            }, error => {
+                reject(error);
+                console.log('failed to dispatch to global store')
+            });
+
+        })
+    },
 
     requestRatingStatus({commit}, payload)
     {
