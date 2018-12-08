@@ -50,6 +50,7 @@
         },
         mounted() {
             let department = this.$route.params.id;
+            console.log(department)
             this.deptDetails = this.deptData.filter(dept => dept.department_id == department)[0];
 
             if (typeof this.deptDetails != 'undefined') {
