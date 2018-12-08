@@ -1,21 +1,21 @@
 <template lang="html">
     <span>
         <div class="container-image">
-            <div class="rate-rider-image" id="rate-rider-imager">
-
+            <div class="rate-rider-image">
+            <img class="rider-photo" :src="this.driver_photo">
             </div>
         </div>
 
         <div class="rate-rider-content" id="rate-rider-content">
             <div class="rate-rider-please">
-                Please Rate Driver Name{{getDriverName}}
+                Please Rate {{driver_name}}
             </div>
 
             <div class="rate-rider-star">
                 <div class="submit-stars">
                   <el-rate v-model="rated_score" :colors="['#99A9BF', '#F57f20', '#1782C5']">
                   </el-rate>
-                    <textarea v-model="rating_comment" class="rate-comment--textareabox"></textarea>
+                    <textarea placeholder="Share your experience with us." v-model="rating_comment" class="rate-comment--textareabox"></textarea>
                   <button class="rate-rider-primary" @click="rateOrder"> SUBMIT </button>
                 </div>
             </div>
@@ -32,37 +32,50 @@
 
     export default {
         name: 'rate-driver-component',
-        mounted(){
-            console.log(this.getOrderDetails);
-            let session = this.$store.getters.getSession;
-            console.log(session);
+        mounted() {
+            let order_id = this.$route.params.id;
+            this.order = order_id;
+            console.log(order_id)
+            let payload = {
+                "order_no": order_id
+            }
+            let users_full_payload = {
+                "values": payload,
+                "vm": this,
+                "app": "NODE_PRIVATE_API",
+                "endpoint": "pending_delivery"
+            }
+            this.$store.dispatch("$_rating/requestOrder", users_full_payload).then(response => {
+                this.driver_name = response.rider.rider_name;
+                this.driver_photo = response.rider.rider_photo;
+                this.user_email = response.user.email;
+            }, error => {
+                console.log(error);
+            });
         },
         computed: {
             ...mapGetters({
+                getOrder: '$_rating/getOrder',
                 getDriverName: '$_rating/getDriverName',
                 getRiderImage: '$_rating/getRiderImage',
                 getBaseUrl: '$_rating/getBaseUrl',
                 getUserEmail: '$_rating/getUserEmail',
-                getPackageID: '$_rating/getPackageID',
-                getOrderDetails: "$_rating/getOrderHistoryOrders"
+                getPackageID: '$_rating/getPackageID'
             }),
-            order_details() {
-                return this.getOrderDetails.find(
-                    order => order.order_id === this.$route.params.id
-                );
+            driver_background() {
+                let uri = 'url(' + this.getRiderImage + ')';
+                return {background: "white " + uri}
             }
-        },
-        created() {
-            this.order_id = this.$route.params.id;
-            console.log(this.getOrderDetails);
-
-
         },
         data() {
             return {
                 rated_score: 1,
                 show_rating: false,
-                rating_comment: "Share your experience with us.",
+                driver_name: "Sendyier",
+                driver_photo: "",
+                order: "",
+                user_email: "",
+                rating_comment: "",
                 timeliness: false,
                 payment: false,
                 directions: false,
@@ -87,13 +100,15 @@
                 this.updateComment();
             },
             postRating() {
-                let rating_status_payload = {
+                let payload = {
                     "score": this.rated_score,
-                    "user_email": this.getUserEmail,
-                    "package_id": this.getPackageID
+                    "user_email": this.user_email,
+                    "package_id": this.order
                 }
+                console.log(payload)
+
                 let rating_status_full_payload = {
-                    "values" : rating_status_payload,
+                    "values" : payload,
                     "vm":this,
                     "app":"NODE_PRIVATE_API",
                     "endpoint":"Rate/insertRate"
@@ -113,8 +128,8 @@
             updateComment() {
                 let rating_payload = {
                     "score":this.getScore,
-                        "user_email":this.getUserEmail,
-                        "package_id":this.getPackageID,
+                        "user_email":this.user_email,
+                        "package_id":this.order,
                         "timeliness":this.timeliness,
                         "payment":this.payment,
                         "directions":this.directions,
@@ -130,7 +145,6 @@
                     "app":"NODE_PRIVATE_API",
                     "endpoint":"Rate/updateRate"
                 }
-                this.$store.commit('setNotificationStatus', true); //activate notification
                 let level = 0; //this will show the white one
                 this.$store.dispatch("$_rating/requestUpdateRating", rating_full_payload).then(response => {
                     console.log(response);
@@ -142,11 +156,15 @@
                     }
                     let notification = {"title":"Rating", "level":level, "message":message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
                 }, error => {
                     console.log(error);
                     level = 2;
                     let notification = {"title":"Rating", "level":level, "message":message}; //notification object
                     this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
                 });
 
             },
@@ -161,11 +179,15 @@
 <style lang="css">
 
     .rate-rider-image {
-        background: url(https://s3-eu-west-1.amazonaws.com/sendy-partner-docs/photo/20160823_115845.jpg) 50% / cover white;
         width: 100px;
         height: 100px;
         border-radius: 70px;
         margin: 0px auto;
+    }
+    .rider-photo{
+        max-width:100%;
+        max-height:100%;
+        border-radius: 50%;
     }
 
     .rate-rider-content {

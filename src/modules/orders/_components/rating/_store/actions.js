@@ -7,7 +7,7 @@ const url = "https://privateapitest.sendyit.com/v1/"
 
 
 export default {
-    requestOrderHistoryOrders({commit, dispatch}, payload)
+    requestOrder({commit, dispatch}, payload)
     {
 
         return new Promise((resolve, reject) => {
@@ -16,8 +16,8 @@ export default {
                 if(response.length > 1){
                     response = response[0];
                 }
-                if (response.data.status == true) {
-                    commit('setOrderHistoryOrders',response.data.data);
+                if (response.data) {
+                    // commit('updateOrder',response.data.data);
                     resolve(response.data);
                 }
                 else {
