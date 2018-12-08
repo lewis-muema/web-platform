@@ -429,7 +429,7 @@
 
                         if (response.status == true) {
                             this.setPickupFilled(false);
-                            let order_no = this.get_price_request_object.order_no;
+                            let order_no = this.active_vendor_price_data.order_no;
                             this.should_destroy = true;
                             this.$store.dispatch('$_orders/fetch_ongoing_orders')
                             this.$router.push({
@@ -568,10 +568,11 @@
                 if (this.get_schedule_time != "") {
                     //console.log("old session *");
                     this.retrieveFromStore();
-                } else {
-                    this.unsetMap();
-                    //console.log("new session *");
-                }
+                } 
+                // else {
+                //     this.unsetMap();
+                //     //console.log("new session *");
+                // }
             },
             getCardValue(last4digits) {
                 return "2_" + last4digits;

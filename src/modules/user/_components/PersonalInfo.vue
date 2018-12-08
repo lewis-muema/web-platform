@@ -31,10 +31,12 @@
 </template>
 
 <script>
+    import SessionMxn from "../../../mixins/session_mixin.js";
     import {mapGetters, mapActions} from 'vuex'
 
     export default {
         name: 'PersonalInfo',
+        mixins: [SessionMxn],
         data() {
             return {
                 // user_id: '',
@@ -76,7 +78,16 @@
 
                     this.requestPersonalInfo(full_payload).then(response => {
                         if (response.status == true) {
+                            let updated_session = session;
+                            updated_session[session.default]['user_name'] = this.user_name;
+                            updated_session[session.default]['user_phone'] = this.user_phone;
+                            updated_session[session.default]['user_email'] = this.user_email;
 
+                            let new_session = JSON.stringify(updated_session);
+                            console.log('New session',new_session);
+                            this.setSession(new_session);
+
+                            console.log('updated session',updated_session);
                             console.log("Personal Cop User Information Updated successfully")
                             console.log(response);
                             let level = 1; //success
@@ -117,6 +128,14 @@
 
                     this.requestPersonalInfo(full_payload).then(response => {
                         if (response.status == true) {
+                          let updated_session = session;
+                          updated_session[session.default]['user_name'] = this.user_name;
+                          updated_session[session.default]['user_phone'] = this.user_phone;
+                          updated_session[session.default]['user_email'] = this.user_email;
+
+                          let new_session = JSON.stringify(updated_session);
+                          this.setSession(new_session);
+                          this.$store.commit("setSession", updated_session);
 
                             console.log("Personal Peer Information Updated successfully")
                             console.log(response);
@@ -274,7 +293,6 @@
         height: 40px;
         width: 35%;
         font-size: medium;
-        text-transform: uppercase;
         letter-spacing: 1.1px;
         border-width:0px !important;
     }
