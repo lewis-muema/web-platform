@@ -9,7 +9,7 @@ const { app, router, store } = createApp()
 Vue.use(VueGoogleMaps, {
   load: {
     libraries: ['places','geometry'],
-    key: 'AIzaSyDTsp-JumEjWjNNPjPuH5qJEWdFjtQvTsU'
+    key: 'AIzaSyChEOAbj_2URQWRkL8N0p07vk6foBfHXGI'
   },
 })
 
