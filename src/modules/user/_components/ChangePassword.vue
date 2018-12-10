@@ -54,117 +54,133 @@
                 requestChangePassword: '$_user/requestChangePassword',
             }),
             update_password: function () {
-                if (this.new_password !== this.confirm_password) {
-                    console.log("Passwords Don't Match");
-                    this.message = "Passwords don't match";
-                }
-                else {
-                    console.log("Password match");
-                    let session = this.$store.getters.getSession;
+              if ( this.old_password != "" &&
+                   this.new_password != "" &&
+                   this.confirm_password != "") {
 
-                    if (session['biz']['cop_id'] > 0) {
-                        console.log("Cop user found");
+                     if (this.new_password !== this.confirm_password) {
+                         console.log("Passwords Don't Match");
+                         let level = 3;
+                         this.message = "Password does not match. Please try again"
+                         let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                         this.$store.commit('setNotification', notification);
+                         this.$store.commit('setNotificationStatus', true);                }
+                     else {
+                         console.log("Password match");
+                         let session = this.$store.getters.getSession;
 
-                        let values = {
-                            "cop_user_id": session[session.default]['user_id'],
-                            "old_password": this.old_password,
-                            "new_password": this.new_password,
-                            "password": this.confirm_password,
-                        };
+                         if (session['biz']['cop_id'] > 0) {
+                             console.log("Cop user found");
+
+                             let values = {
+                                 "cop_user_id": session[session.default]['user_id'],
+                                 "old_password": this.old_password,
+                                 "new_password": this.new_password,
+                                 "password": this.confirm_password,
+                             };
 
 
-                        let full_payload = {
-                            "values": values,
-                            "vm": this,
-                            "app": "NODE_PRIVATE_API",
-                            "endpoint": "update_user"
-                        }
+                             let full_payload = {
+                                 "values": values,
+                                 "vm": this,
+                                 "app": "NODE_PRIVATE_API",
+                                 "endpoint": "update_user"
+                             }
 
-                        this.requestChangePassword(full_payload).then(response => {
-                            if (response.status == true) {
+                             this.requestChangePassword(full_payload).then(response => {
+                                 if (response.status == true) {
 
-                                console.log("Cop User Password Updated successfully")
-                                console.log(response);
-                                let level = 1; //success
-                                this.message = "Password Changed!"
-                                let notification = {"title": "", "level": level, "message": this.message}; //notification object
-                                this.$store.commit('setNotification', notification);
-                                this.$store.commit('setNotificationStatus', true); //activate notification
-                            }
-                            else {
-                                console.warn('Cop user password Update Failed');
-                                let level = 3;
-                                this.message = "Something went wrong."
-                                let notification = {"title": "", "level": level, "message": this.message}; //notification object
-                                this.$store.commit('setNotification', notification);
-                                this.$store.commit('setNotificationStatus', true); //activate notification
+                                     console.log("Cop User Password Updated successfully")
+                                     console.log(response);
+                                     let level = 1; //success
+                                     this.message = "Password Changed!"
+                                     let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                                     this.$store.commit('setNotification', notification);
+                                     this.$store.commit('setNotificationStatus', true); //activate notification
+                                 }
+                                 else {
+                                     console.warn('Cop user password Update Failed');
+                                     let level = 3;
+                                     this.message = "Something went wrong."
+                                     let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                                     this.$store.commit('setNotification', notification);
+                                     this.$store.commit('setNotificationStatus', true); //activate notification
 
-                            }
-                        }, error => {
-                            console.error("Check Internet Connection")
-                            console.log(error);
-                            let level = 3;
-                            this.message = "Something went wrong."
-                            let notification = {"title": "", "level": level, "message": this.message}; //notification object
-                            this.$store.commit('setNotification', notification);
-                            this.$store.commit('setNotificationStatus', true); //activate notification
-                        });
+                                 }
+                             }, error => {
+                                 console.error("Check Internet Connection")
+                                 console.log(error);
+                                 let level = 3;
+                                 this.message = "Something went wrong."
+                                 let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                                 this.$store.commit('setNotification', notification);
+                                 this.$store.commit('setNotificationStatus', true); //activate notification
+                             });
 
-                    }
-                    else if (session['peer']['user_id'] > 0) {
-                        console.log("Peer user found");
+                         }
+                         else if (session['peer']['user_id'] > 0) {
+                             console.log("Peer user found");
 
-                        let values = {
-                            "user_id": session[session.default]['user_id'],
-                            "old_password": this.old_password,
-                            "password": this.new_password,
-                            "password": this.confirm_password,
-                        };
+                             let values = {
+                                 "user_id": session[session.default]['user_id'],
+                                 "old_password": this.old_password,
+                                 "password": this.new_password,
+                                 "password": this.confirm_password,
+                             };
 
-                        let full_payload = {
-                            "values": values,
-                            "vm": this,
-                            "app": "NODE_PRIVATE_API",
-                            "endpoint": "update_user"
-                        }
+                             let full_payload = {
+                                 "values": values,
+                                 "vm": this,
+                                 "app": "NODE_PRIVATE_API",
+                                 "endpoint": "update_user"
+                             }
 
-                        this.requestChangePassword(full_payload).then(response => {
-                            if (response.status == true) {
+                             this.requestChangePassword(full_payload).then(response => {
+                                 if (response.status == true) {
 
-                                console.log("Personal Peer Information Updated successfully")
-                                console.log(response);
-                                let level = 1; //success
-                                this.message = "Details Saved!"
-                                let notification = {"title": "", "level": level, "message": this.message}; //notification object
-                                this.$store.commit('setNotification', notification);
-                                this.$store.commit('setNotificationStatus', true); //activate notification
-                            }
-                            else {
-                                console.warn('Peer details Update Failed');
-                                let level = 3;
-                                this.message = "Something went wrong."
-                                let notification = {"title": "", "level": level, "message": this.message}; //notification object
-                                this.$store.commit('setNotification', notification);
-                                this.$store.commit('setNotificationStatus', true); //activate notification
+                                     console.log("Personal Peer Information Updated successfully")
+                                     console.log(response);
+                                     let level = 1; //success
+                                     this.message = "Details Saved!"
+                                     let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                                     this.$store.commit('setNotification', notification);
+                                     this.$store.commit('setNotificationStatus', true); //activate notification
+                                 }
+                                 else {
+                                     console.warn('Peer details Update Failed');
+                                     let level = 3;
+                                     this.message = "Something went wrong."
+                                     let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                                     this.$store.commit('setNotification', notification);
+                                     this.$store.commit('setNotificationStatus', true); //activate notification
 
-                            }
-                        }, error => {
-                            console.error("Check Internet Connection")
-                            console.log(error);
-                            let level = 3;
-                            this.message = "Something went wrong."
-                            let notification = {"title": "", "level": level, "message": this.message}; //notification object
-                            this.$store.commit('setNotification', notification);
-                            this.$store.commit('setNotificationStatus', true); //activate notification
-                        });
-                    }
-                    else {
+                                 }
+                             }, error => {
+                                 console.error("Check Internet Connection")
+                                 console.log(error);
+                                 let level = 3;
+                                 this.message = "Something went wrong."
+                                 let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                                 this.$store.commit('setNotification', notification);
+                                 this.$store.commit('setNotificationStatus', true); //activate notification
+                             });
+                         }
+                         else {
 
-                        console.log("Session expired");
-                        this.$router.push('/auth');
-                    }
+                             console.log("Session expired");
+                             this.$router.push('/auth');
+                         }
 
-                }
+                     }
+
+                 }
+              else {
+                let level = 3;
+                this.message = "Provide all values."
+                let notification = {"title": "", "level": level, "message": this.message};
+                this.$store.commit('setNotification', notification);
+                this.$store.commit('setNotificationStatus', true);
+              }
 
             },
         },
@@ -289,7 +305,6 @@
         height: 40px;
         width: 35%;
         font-size: medium;
-        text-transform: uppercase;
         letter-spacing: 1.1px;
         border-width: 0px !important;
     }

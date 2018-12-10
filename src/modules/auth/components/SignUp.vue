@@ -32,7 +32,7 @@
 
 
     <div class="sign-holder dimen">
-      <vue-tel-input class="input-control sign-up-form" v-model="phone" name="phone" value="" @onBlur="validate_phone" v-validate="'required|check_phone'" data-vv-validate-on="blur"
+      <vue-tel-input class="input-control sign-up-form" v-model.trim="phone" name="phone" value="" @onBlur="validate_phone" v-validate="'required|check_phone'" data-vv-validate-on="blur"
                :preferredCountries="['ke', 'ug', 'tz']">
       </vue-tel-input>
       <span v-show="errors.has('phone')" class="sign-up-phone-error">{{ errors.first('phone') }}</span>
@@ -115,8 +115,9 @@ export default {
         // console.log(email_valid);
         if (phone_valid == true && email_valid == true) {
           if (this.u_terms == true) {
+          let phone = this.phone.replace(/[\(\)\-\s]+/g, '');
             let values = {};
-            values.phone = this.phone;
+            values.phone = phone;
             values.email = this.email;
             let full_payload = {
               values: values,

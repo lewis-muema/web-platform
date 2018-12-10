@@ -94,10 +94,11 @@ export default {
       }
 
       if (phone_valid == true && email_valid == true) {
-
+        let phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+        
         this.setViewState(2);
         this.updateName(this.name);
-        this.updatePhone(this.phone);
+        this.updatePhone(phone);
         this.updateBizEmail(this.email);
         this.updateViewStep(0);
 
