@@ -23,7 +23,6 @@
      <el-table-column
        label="Txn"
        prop="txn"
-        width="180"
        >
      </el-table-column>
      <el-table-column
@@ -34,11 +33,13 @@
      <el-table-column
        label="Description"
        prop="description"
+       width="180"
        >
      </el-table-column>
      <el-table-column
        label="Debit"
        prop="amount"
+       width="180"
        :formatter="formatDebitAmount"
        class-name="amount--table-format"
        >
@@ -46,6 +47,7 @@
      <el-table-column
        label="Credit"
        prop="amount"
+       width="180"
        :formatter="formatCreditAmount"
        class-name="amount--table-format"
        >
@@ -53,6 +55,7 @@
      <el-table-column
        label="Running Balance"
        prop="running_balance"
+       width="180"
        :formatter="formatRunningBalance"
        class-name="amount--table-format"
        >

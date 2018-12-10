@@ -220,23 +220,24 @@
             },
             filterUserTableData() {
                 //reset filter
+                let vm = this;
                 this.filterState  = false;
                 let user_id = this.filterData.user;
                 let department = this.filterData.department;
-
-                console.log(user_id);
-                console.log(department);
-
                 this.filteredUserData = this.userData;
-
-
                 console.log(this.filteredUserData);
                 //check if both are filled
                 if(user_id !== '' && department !== ''){
                     console.log('performing a user and departments filter');
                     let vm = this;
                     this.filteredUserData = this.filteredUserData.filter(function (user) {
-                        return user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0  && user.department_id == department;
+                        if (user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0  && user.department_id == department) {
+                            return user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0  && user.department_id == department;
+                        }
+                        else{
+                            vm.empty_users_state = "Could not find users for the department."
+                            console.log("Could not find users for the department.", department)
+                        }
                     });
                     this.filterState = true;
 
@@ -253,8 +254,16 @@
                 } else {
                     //department filter
                     console.log('performing a department filter');
-
-                    this.filteredUserData = this.filteredUserData.filter( user => user.department_id ==  department);
+                    this.filteredUserData = this.filteredUserData.filter(function (user) {
+                        if (user.department_id == department) {
+                            return user.department_id == department;
+                        }
+                        else{
+                            vm.empty_users_state = "Could not find users for the department."
+                            console.log("Could not find users for the department.", department)
+                        }
+                    });
+                    // this.filteredUserData = this.filteredUserData.filter( user => user.department_id ==  department);
                     this.filterState = true;
 
                 }

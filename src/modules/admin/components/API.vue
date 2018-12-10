@@ -29,7 +29,7 @@
                     prop="api_key">
             </el-table-column>
             <el-table-column
-                    label="Created"
+                    label="Created or Last Updated"
                     prop="api_date_created"
             >
             </el-table-column>

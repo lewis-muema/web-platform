@@ -78,7 +78,7 @@
               Share Status
             </div>
           </div>
-          <div @click="cancel_toggle()">
+          <div @click="cancel_toggle()" v-if="!(this.tracking_data.delivery_status > 1)">
             <div class="infobar--actions-icon">
                <i class="el-icon-circle-close-outline"></i>
             </div>
@@ -112,7 +112,7 @@ export default {
         if (response) {
           if (this.tracking_data.delivery_status == 3) {
             that.doNotification("1","Order delivered","Your order has been delivered.");
-            that.place()
+            that.$router.push('/orders/rating/'+ from);
           }
           else {
             if (this.tracking_data.main_status == 2) {
@@ -165,7 +165,25 @@ export default {
           that.place();
         }
         else {
-          that.doNotification("3","Order cancellation failed","Could not cancel the order. Please contact Customer Care at 0709779779.");
+          var payload = {
+            "order_no": this.$route.params.order_no,
+            "cancel_reason_id" : 4,
+            "reason_description" : 'I placed the wrong locations',
+            "client_type" : this.$store.getters.getSession.default
+          }
+          var that = this
+          this.$store.dispatch('$_orders/$_tracking/cancel_order', payload)
+          .then(response => {
+            if (response.status == true) {
+              that.doNotification("1","Order cancelled","Order cancelled successfully.");
+              that.cancel_toggle();
+              this.$store.dispatch('$_orders/fetch_ongoing_orders')
+              that.place();
+            }
+            else {
+              that.doNotification("3","Order cancellation failed","Could not cancel the order. Please contact Customer Care at 0709779779.");
+            }
+          });
         }
       })
     },
