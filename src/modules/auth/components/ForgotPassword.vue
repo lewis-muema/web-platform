@@ -18,7 +18,7 @@
           <span id="pass_change_info"></span>
           </div>
           <div class="sign-holder dimen">
-            <input class="input-control forgot-form" type="text" v-validate="'required|email'"  name="email"  v-model="email" placeholder="Enter Email">
+            <input class="input-control forgot-form" type="text" data-vv-validate-on="blur" v-validate="'required|email'"  name="email"  v-model="email" placeholder="Enter Email">
             <br>
             <span class="sign-up-email-error">{{ errors.first('email') }}</span>
           </div>
@@ -35,7 +35,7 @@
           </div>
 
           <div class="sign-holder">
-            <input class="button-primary forgot-btn-color" type="submit" value="Reset Password" v-on:click="request_pass" >
+            <input class="button-primary forgot-btn-color" type="submit" value="Reset Password" v-on:click="request_pass" v-bind:disabled="!this.is_valid">
           </div>
           <div class=" sign-holder ">
             <router-link class="sign-holder__link" to="/auth/sign_in">Sign In</router-link>
@@ -72,105 +72,128 @@
           },
           request_pass: function ()
           {
-             console.log("Check check");
-            let payload = {};
+            let email_valid = true
+            for (var i = 0; i < this.errors.items.length; i++) {
+              if (this.errors.items[i].field == 'email') {
+                email_valid = false
+                break
+              }
+            }
+            if (email_valid == true) {
 
-             // Check for one account
-            if (this.two_accnts == false) {
+              let payload = {};
 
-              // If password reset request does not exist
-              if (this.option == false) {
+               // Check for one account
+              if (this.two_accnts == false) {
 
-                let email = this.email;
+                // If password reset request does not exist
+                if (this.option == false) {
 
-                payload = {
-                  email: email
-                };
+                  let email = this.email;
+
+                  payload = {
+                    email: email
+                  };
+
+                }
+
+                // If password reset request exist
+                else if (this.option == true) {
+
+                  let email = this.email;
+                  let nonce = this.nonce;
+                  let resend = true;
+
+                  payload = {
+                    email: email,
+                    nonce: nonce,
+                    resend: resend
+                  };
+                }
 
               }
 
-              // If password reset request exist
-              else if (this.option == true) {
-
+              // Check for two accounts
+              else if (this.two_accnts == true) {
                 let email = this.email;
                 let nonce = this.nonce;
-                let resend = true;
+                let type = this.radio;
 
                 payload = {
                   email: email,
                   nonce: nonce,
-                  resend: resend
+                  type: type
                 };
+
               }
 
-            }
-
-            // Check for two accounts
-            else if (this.two_accnts == true) {
-              let email = this.email;
-              let nonce = this.nonce;
-              let type = this.radio;
-
-              payload = {
-                email: email,
-                nonce: nonce,
-                type: type
+              let full_payload = {
+                values: payload,
+                vm: this,
+                app: "NODE_PRIVATE_API",
+                endpoint: "forgot_pass"
               };
 
+              this.requestForgotPassword(full_payload).then(
+                response => {
+                console.log(response);
+                //check when response is dual
+                if (response.length > 0) {
+                  response = response[0];
+                  }
+                  if (response.status == true) {
+
+                     this.option = false ;
+                     this.message = "Password change reset link has been sent to your email";
+                     //Reset link set to user email.
+                  }
+                  else if (response.status == "stall") {
+                    // Activate select account option
+                     this.two_accnts = true ;
+                     this.nonce = response.nonce;
+                    //update nonce data
+
+                  }
+                 else if (response.status == false) {
+                   //Account does not exist
+                   console.log('Account does not exist');
+                   this.message = "Account does not exist.Please sign-up to create a sendy account";
+
+                 }
+                 else if (response.status == "exists") {
+                   //Existing password reset option
+                   this.message= "";
+                   this.nonce = response.nonce;
+                   this.option = true ;
+
+
+                 }
+                 else {
+
+                    //Invalid request
+                    console.log('Invalid Request');
+                 }
+
+              }, error => {
+                  console.error("Check Internet Connection")
+                  console.log(error);
+              });
+
+            }
+            else{
+
+              let level = 3;
+              let notification = {"title": "", "level": level, "message": "Invalid Email provided"}//notification object
+              this.$store.commit('setNotification', notification);
+              this.$store.commit('setNotificationStatus', true);
             }
 
-            let full_payload = {
-              values: payload,
-              vm: this,
-              app: "NODE_PRIVATE_API",
-              endpoint: "forgot_pass"
-            };
-
-            this.requestForgotPassword(full_payload).then(
-              response => {
-              console.log(response);
-              //check when response is dual
-              if (response.length > 0) {
-                response = response[0];
-                }
-                if (response.status == true) {
-
-                   this.option = false ;
-                   this.message = "Password change reset link has been sent to your email";
-                   //Reset link set to user email.
-                }
-                else if (response.status == "stall") {
-                  // Activate select account option
-                   this.two_accnts = true ;
-                   this.nonce = response.nonce;
-                  //update nonce data
-
-                }
-               else if (response.status == false) {
-                 //Account does not exist
-                 console.log('Account does not exist');
-                 this.message = "Account does not exist.Please sign-up to create a sendy account";
-
-               }
-               else if (response.status == "exists") {
-                 //Existing password reset option
-                 this.message= "";
-                 this.nonce = response.nonce;
-                 this.option = true ;
-
-
-               }
-               else {
-
-                  //Invalid request
-                  console.log('Invalid Request');
-               }
-
-            }, error => {
-                console.error("Check Internet Connection")
-                console.log(error);
-            });
           },
+      },
+      computed :{
+        is_valid : function() {
+          return this.email !='';
+        },
       },
       }
       </script>
