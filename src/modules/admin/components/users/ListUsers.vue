@@ -4,12 +4,16 @@
             <div class="section--filter-input-wrap">
                 <el-input class="section--filter-input" v-model="filterData.user" placeholder="Search users"></el-input>
 
-                <el-select class="section--filter-input"  v-model="filterData.department" placeholder="All Departments">
-                    <el-option v-for="dept in deptData" :key="dept.department_id" :label="dept.department_name" :value="dept.department_id">
+                <el-select class="section--filter-input" v-model="filterData.department" placeholder="All Departments">
+                    <el-option v-for="dept in deptData" :key="dept.department_id" :label="dept.department_name"
+                               :value="dept.department_id">
                     </el-option>
                 </el-select>
 
-                <button type="button" :class="active_filter ? 'button-primary section--filter-action align-left btn-users':'button-primary section--filter-action-inactive align-left btn-users'" @click="filterUserTableData" :disabled="active_filter == true ? false : true">Search</button>
+                <button type="button"
+                        :class="active_filter ? 'button-primary section--filter-action align-left btn-users':'button-primary section--filter-action-inactive align-left btn-users'"
+                        @click="filterUserTableData" :disabled="active_filter == true ? false : true">Search
+                </button>
 
             </div>
             <div class="section--filter-action-wrap">
@@ -47,7 +51,7 @@
             <el-table-column
                     label="Type">
                 <template slot-scope="scope">
-                <span>{{ get_user_type(scope.$index) }}</span>
+                    <span>{{ get_user_type(scope.$index) }}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -82,14 +86,14 @@
 </template>
 
 <script>
-    import {mapActions, mapGetters,mapMutations} from 'vuex'
+    import {mapActions, mapGetters, mapMutations} from 'vuex'
 
     export default {
         name: "ListUsers",
         mounted() {
             let session = this.$store.getters.getSession;
             let cop_id = 0;
-            if(session.default == 'biz'){
+            if (session.default == 'biz') {
                 cop_id = session[session.default]['cop_id'];
             }
             let payload = {
@@ -97,10 +101,10 @@
 
             }
             let users_full_payload = {
-                "values" : payload,
-                "vm":this,
-                "app":"NODE_PRIVATE_API",
-                "endpoint":"cop_users"
+                "values": payload,
+                "vm": this,
+                "app": "NODE_PRIVATE_API",
+                "endpoint": "cop_users"
             }
             this.$store.dispatch("$_admin/requestUsersList", users_full_payload).then(response => {
                 console.log(response);
@@ -110,10 +114,10 @@
 
 
             let depts_full_payload = {
-                "values" : payload,
-                "vm":this,
-                "app":"NODE_PRIVATE_API",
-                "endpoint":"cop_departments"
+                "values": payload,
+                "vm": this,
+                "app": "NODE_PRIVATE_API",
+                "endpoint": "cop_departments"
             }
             this.$store.dispatch("$_admin/requestDepartmentsList", depts_full_payload).then(response => {
                 console.log(response);
@@ -129,12 +133,12 @@
                 empty_departments_state: "Fetching Departments...",
                 pagination_limit: 10,
                 pagination_page: 1,
-                filteredUserData:[],
-                filterState:false,
+                filteredUserData: [],
+                filterState: false,
                 search_users: '',
-                filterData:{
+                filterData: {
                     "user": "",
-                    "department":""
+                    "department": ""
                 }
 
             }
@@ -147,11 +151,11 @@
             ...mapActions({
                 requestUsersList: '$_admin/requestUsersList'
             }),
-            user_data(){
+            user_data() {
                 let from = (this.pagination_page - 1) * this.pagination_limit;
                 let to = this.pagination_page * this.pagination_limit;
                 if (this.filterState == true) {
-                    if(Array.isArray(this.filteredUserData)){
+                    if (Array.isArray(this.filteredUserData)) {
                         return this.filteredUserData.slice(from, to);
                     }
                     return [];
@@ -196,7 +200,7 @@
                     }
                     else if (resp === 2) {
 
-                      resp = "Admin"
+                        resp = "Admin"
                     }
 
                 }
@@ -221,27 +225,27 @@
             filterUserTableData() {
                 //reset filter
                 let vm = this;
-                this.filterState  = false;
+                this.filterState = false;
                 let user_id = this.filterData.user;
                 let department = this.filterData.department;
                 this.filteredUserData = this.userData;
                 console.log(this.filteredUserData);
                 //check if both are filled
-                if(user_id !== '' && department !== ''){
+                if (user_id !== '' && department !== '') {
                     console.log('performing a user and departments filter');
                     let vm = this;
                     this.filteredUserData = this.filteredUserData.filter(function (user) {
-                        if (user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0  && user.department_id == department) {
-                            return user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0  && user.department_id == department;
+                        if (user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0 && user.department_id == department) {
+                            return user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0 && user.department_id == department;
                         }
-                        else{
+                        else {
                             vm.empty_users_state = "Could not find users for the department."
                             console.log("Could not find users for the department.", department)
                         }
                     });
                     this.filterState = true;
 
-                } else if(user_id !== ''){
+                } else if (user_id !== '') {
                     //user filter
                     console.log('performing a user filter');
                     console.log(user_id);
@@ -258,7 +262,7 @@
                         if (user.department_id == department) {
                             return user.department_id == department;
                         }
-                        else{
+                        else {
                             vm.empty_users_state = "Could not find users for the department."
                             console.log("Could not find users for the department.", department)
                         }
@@ -269,17 +273,17 @@
                 }
             },
             ...mapMutations(
-              {
-                updateCopUserId:'$_admin/updateCopUserId',
-                updateUserName:'$_admin/updateUserName',
-                updateUserEmail:'$_admin/updateUserEmail',
-                updateUserPhone: '$_admin/updateUserPhone',
-                updateType: '$_admin/updateType'
-              }
+                {
+                    updateCopUserId: '$_admin/updateCopUserId',
+                    updateUserName: '$_admin/updateUserName',
+                    updateUserEmail: '$_admin/updateUserEmail',
+                    updateUserPhone: '$_admin/updateUserPhone',
+                    updateType: '$_admin/updateType'
+                }
             ),
-             edit_user(cop_user_id) {
+            edit_user(cop_user_id) {
                 let cop_user_details = cop_user_id;
-                this.$router.push('/admin/users/edit_user/'+cop_user_id);
+                this.$router.push('/admin/users/edit_user/' + cop_user_id);
             },
 
         }
@@ -289,10 +293,11 @@
 <style lang="css" scoped>
     @import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons';
     /* @import "../../../../assets/styles/datatable.css"; */
-    .btn_users{
-      border-width:0px !important;
+    .btn_users {
+        border-width: 0px !important;
     }
-    .btn-edit-user{
-      cursor: pointer;
+
+    .btn-edit-user {
+        cursor: pointer;
     }
 </style>
