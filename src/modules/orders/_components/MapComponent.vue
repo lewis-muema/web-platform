@@ -4,7 +4,9 @@
       <GmapMap :center="{lat:-1.3084143, lng:36.7658132}" :zoom="13" map-type-id="roadmap" class="content" :options="mapOptions" ref="map">
         <gmap-marker v-for="m,number in markers" :position="get_position(m.position)" :key="number" v-if="mapLoaded" :icon="path_icon(m.icon)"></gmap-marker>
         <gmap-polyline v-if="typeof polyline == 'object' && this.mapLoaded" :path="decode_path(polyline.path)" ref="polyline" :options="polyline.options"></gmap-polyline>
-        <gmap-marker v-for="v in vendors" :position="v.position" :key="index" :ref="`marker${index}`" :icon="draw_rotated(v.vendor_type,v.rotation)" :visible="v.visible"></gmap-marker>
+        <!-- <gmap-marker v-for="v in vendors" :position="v.position" :key="index" :ref="`marker${index}`" :icon="draw_rotated(v.vendor_type,v.rotation)" :visible="v.visible"></gmap-marker> -->
+        <gmap-marker v-for="v in vendors" :position="v.position" :key="v.rider_id" :ref="`marker${v.rider_id}`" :icon="draw_rotated(v.vendor_type,v.rotation)" :visible="v.visible"></gmap-marker>
+
       </GmapMap>
     </no-ssr>
   </div>
@@ -45,6 +47,12 @@ export default {
           scaledSize: new google.maps.Size(23, 40),
         }
       }
+    },
+    vendor_icon: function(id){
+       return {
+        url: 'https://images.sendyit.com/web_platform/vendor_type/top/' + id + '.svg',
+        scaledSize: new google.maps.Size(50, 50),
+      };
     },
     draw_rotated: function(vendor_type, rotation) {
       var canvas = document.createElement('canvas');
@@ -107,7 +115,7 @@ export default {
     this.$gmapApiPromiseLazy().then(() => {
       this.mapLoaded = true
     })
-    // this.$store.dispatch('$_orders/connect_mqtt')
+    this.$store.dispatch('$_orders/connect_mqtt')
   }
 }
 </script>
