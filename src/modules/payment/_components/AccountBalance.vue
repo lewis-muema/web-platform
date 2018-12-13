@@ -23,7 +23,9 @@ export default {
     this.requestRB();
   },
   methods: {
-    ...mapActions({_requestRunningBalance:"$_payment/requestRunningBalance"}),
+    ...mapActions({
+      _requestRunningBalance: "$_payment/requestRunningBalance"
+    }),
     requestRB() {
       //this will request from the api and update the store
       let session = this.$store.getters.getSession;
@@ -45,14 +47,16 @@ export default {
         endpoint: "running_balance"
       };
 
-      this.$store.dispatch("requestRunningBalance", payload, {root: true}).then(
-        response => {
-          console.log(response);
-        },
-        error => {
-          console.log(error);
-        }
-      );
+      this.$store
+        .dispatch("requestRunningBalance", payload, { root: true })
+        .then(
+          response => {
+            console.log(response);
+          },
+          error => {
+            console.log(error);
+          }
+        );
     }
   },
   computed: {
@@ -60,7 +64,7 @@ export default {
     running_balance() {
       //format the amount
       let value = this.$store.getters.getRunningBalance;
-      if (value !== null || value !== "") {
+      if (value !== null && value !== "" && typeof value != "undefined") {
         let val = value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
         val = val.split(".");
         return val[0];
