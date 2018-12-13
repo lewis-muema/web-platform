@@ -5,7 +5,7 @@
         <gmap-marker v-for="m,number in markers" :position="get_position(m.position)" :key="number" v-if="mapLoaded" :icon="path_icon(m.icon)"></gmap-marker>
         <gmap-polyline v-if="typeof polyline == 'object' && this.mapLoaded" :path="decode_path(polyline.path)" ref="polyline" :options="polyline.options"></gmap-polyline>
         <!-- <gmap-marker v-for="v in vendors" :position="v.position" :key="index" :ref="`marker${index}`" :icon="draw_rotated(v.vendor_type,v.rotation)" :visible="v.visible"></gmap-marker> -->
-        <gmap-marker v-for="v in vendors" :position="v.position" :key="v.rider_id" :ref="`marker${v.rider_id}`" :icon="draw_rotated(v.vendor_type,v.rotation)" :visible="v.visible"></gmap-marker>
+        <gmap-marker v-for="v in vendors" :position="v.position" :key="v.rider_id" :ref="`marker${v.rider_id}`" :icon="vendor_icon(v.vendor_type,v.rotation)" :visible="v.visible"></gmap-marker>
 
       </GmapMap>
     </no-ssr>
@@ -50,7 +50,7 @@ export default {
     },
     vendor_icon: function(id){
        return {
-        url: 'https://images.sendyit.com/web_platform/vendor_type/top/' + id + '.svg',
+        url: 'https://images.sendyit.com/web_platform/vendor_type/top/' + id + '.png',
         scaledSize: new google.maps.Size(50, 50),
       };
     },

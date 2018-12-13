@@ -151,8 +151,8 @@ export default {
             console.log("Agree Terms and Condition");
           }
         } else {
-          this.message = "Provide valid Email ";
-          this.doNotification(2, "Sign Up failed", "Provide valid Email");
+          this.message = "Invalid Details ";
+          this.doNotification(2, "Sign Up failed", "Invalid details");
         }
       } else {
         this.message = "Please provide all details";
