@@ -160,7 +160,7 @@
             </div>
             <div v-if="!loading && payment_state == 0">
                 <button type="button" class="button-primary home-view--place-order" name="button"
-                        @click="checkPaymentDetails()">{{place_order_text}}
+                        @click="preCheckPaymentDetails()">{{place_order_text}}
                 </button>
             </div>
             <div class="home-view-place-order--mpesa-cancel" v-if="loading && payment_state == 1">
@@ -348,8 +348,26 @@
                 }
                 return true;
             },
-            checkPaymentDetails() {
-                if (this.get_active_vendor_name == "") {
+            preCheckPaymentDetails() {
+                this.loading = true;
+                this.refreshRunningBalance().then(
+                    response =>{
+                        this.loading = false;
+                        this.checkPaymentDetails();
+                    },
+                    error =>{
+                        this.doNotification(
+                        "2",
+                        "Running balance check",
+                        "Running balance check has failed, please try again."
+                    );
+                        this.loading = false;
+                    }
+                );
+               
+            },
+            checkPaymentDetails(){
+                 if (this.get_active_vendor_name == "") {
                     //console.log("The vehicle type not been set");
                     this.doNotification(
                         "2",
@@ -526,43 +544,46 @@
                 this.order_notes = this.get_order_notes;
             },
             refreshRunningBalance() {
-                let session = this.$store.getters.getSession;
+                return new Promise((resolve, reject) => {
+                    let session = this.$store.getters.getSession;
 
-                let running_balance_payload = {
-                    values: {
-                        cop_id:
-                            "cop_id" in session[session.default]
-                                ? session[session.default]["cop_id"]
-                                : 0,
-                        user_phone: session[session.default]["user_phone"]
-                    }
-                };
+                    let running_balance_payload = {
+                        values: {
+                            cop_id:
+                                "cop_id" in session[session.default]
+                                    ? session[session.default]["cop_id"]
+                                    : 0,
+                            user_phone: session[session.default]["user_phone"]
+                        }
+                    };
 
-                let payload = {
-                    values: running_balance_payload,
-                    app: "PRIVATE_API",
-                    endpoint: "running_balance"
-                };
-                this.$store.dispatch("requestRunningBalance", payload, {root: true}).then(
-                    response => {
-                        if (response.length > 0) {
-                            response = response[0];
+                    let payload = {
+                        values: running_balance_payload,
+                        app: "PRIVATE_API",
+                        endpoint: "running_balance"
+                    };
+                    this.$store.dispatch("requestRunningBalance", payload, {root: true}).then(
+                        response => {
+                            if (response.length > 0) {
+                                response = response[0];
+                            }
+                            if (response.status == 200) {
+                                this.$store.commit(
+                                    "setRunningBalance",
+                                    response.data.running_balance
+                                );
+                                this.setDefaultOptions();
+                                resolve(response.data);
+                            }
+                            else{
+                                reject(response.data);
+                            }
+                        },
+                        error => {
+                            reject(response.data);
                         }
-                        if (response.status == 200) {
-                            //console.log("commit running balance to the global store");
-                            this.$store.commit(
-                                "setRunningBalance",
-                                response.data.running_balance
-                            );
-                            this.setDefaultOptions();
-                        }
-                        //console.log(response);
-                        //commit  to the global store here
-                    },
-                    error => {
-                        //console.log("error  in store dispatch", error);
-                    }
-                );
+                    );
+                });
             },
             initializeOrderPlacement() {
                 if (this.get_schedule_time != "") {
