@@ -275,7 +275,7 @@ export default {
             }
             else{
                  console.error("Check Internet Connection")
-                this.doNotification(3,"Price request failed", "Price request failed. Please check your internet connection and try again.");
+                this.doNotification(3,"Price request failed", "Price request failed. Please try again after a few minutes.");
             }
            
             this.loading = false;

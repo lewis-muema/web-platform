@@ -196,7 +196,7 @@
                 balance_quote: "",
                 order_amount: 0,
                 user_balance: 0,
-                // show_payment: false,
+                mpesa_poll_timer_id:null,
                 loading: false,
                 cash_status: false,
                 card_token: "",
@@ -410,11 +410,9 @@
                 return true;
             },
             handleMpesaPayments() {
-                //console.log("attempting mpesa");
                 this.requestMpesaPayment();
             },
             handlePromoCodePayments() {
-                //console.log("taking you to promo");
                 this.$router.push({name: "promo_payment"});
             },
             handleCashPayments() {
@@ -425,12 +423,10 @@
                 this.$router.push({name: "card_payment", query: {action: "add"}});
             },
             handlePostPaidPayments() {
-                //console.log("allowed post pay payment");
                 this.payment_type = "postpay";
                 this.doCompleteOrder();
             },
             doCompleteOrder() {
-                //console.log("in doCompleteOrder");
                 let payload = {
                     values: this.getCompleteOrderObject(),
                     app: "PRIVATE_API",
@@ -440,7 +436,6 @@
                 this.requestOrderCompletion(payload).then(
                     response => {
                         this.loading = false;
-                        //console.log(response);
                         if (response.length > 0) {
                             response = response[0];
                         }
@@ -465,10 +460,9 @@
                     },
                     error => {
                         console.error("Check Internet Connection");
-                        //console.log(error);
                         this.doNotification(
                             3,
-                            "Order completyion failed",
+                            "Order completion failed",
                             "Order completion failed. Please check your internet connection and try again."
                         );
                         this.loading = false;
@@ -587,13 +581,9 @@
             },
             initializeOrderPlacement() {
                 if (this.get_schedule_time != "") {
-                    //console.log("old session *");
                     this.retrieveFromStore();
                 } 
-                // else {
-                //     this.unsetMap();
-                //     //console.log("new session *");
-                // }
+                return false;
             },
             getCardValue(last4digits) {
                 return "2_" + last4digits;
@@ -657,7 +647,7 @@
                         if (response.length > 0) {
                             response = response[0];
                         }
-                        //console.log(response);
+
                         if (response.status == 200) {
                             this.requestMpesaPaymentPoll();
                         } else {
@@ -668,7 +658,7 @@
                             );
                             this.payment_state = 0;
                             this.loading = false;
-                            //console.log("mpesa payment failed 0");
+                        
                         }
                     },
                     error => {
@@ -679,12 +669,16 @@
                         );
                         this.payment_state = 0;
                         this.loading = false;
-                        //console.log("mpesa payment failed 1");
                     }
                 );
             },
-
-            requestMpesaPaymentPoll() {
+            clearMpesaPollCounter(){
+                //fails silently if the id is not found
+                window.clearTimeout(this.mpesa_poll_timer_id);
+                
+            },
+            requestMpesaPaymentPoll(poll_limit_value=6) {
+                this.clearMpesaPollCounter();
                 //console.log("mpesa payment poll initiated");
                 let session = this.$store.getters.getSession;
                 let cop_id = 0;
@@ -707,15 +701,15 @@
                     endpoint: "running_balance"
                 };
 
-                let poll_limit = 6; //10secs * 6  = 60sec = 1min
+                let poll_limit = poll_limit_value; //10secs * 6  = 60sec = 1min
                 //poll the dispatch
                 for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
                     //wait 10 seconds
                     let that = this;
                     (function (poll_count) {
-                        setTimeout(function () {
+                        that.mpesa_poll_timer_id = setTimeout(function () {
                             let res = that.checkRunningBalance(old_rb, payload);
-                            //console.log("poll count", poll_count);
+                            console.log("poll count", poll_count);
                             if (res) {
                                 poll_count = poll_limit;
                                 that.payment_state = 0;
@@ -728,16 +722,25 @@
                                 that.doCompleteOrder();
                                 return true;
                             }
-                            if (poll_count == 5) {
-                                that.doNotification(
-                                    "2",
-                                    "Payment failed",
-                                    "Please select your preferred payment method and try again."
-                                );
-                                that.payment_state = 0;
-                                that.loading = false;
-                                //console.log("after for loop");
+                            if(poll_limit_value == 6){
+                                 if (poll_count == 5) {
+                                    that.doNotification(
+                                        "2",
+                                        "Payment failed",
+                                        "Please select your preferred payment method and try again."
+                                    );
+                                    that.payment_state = 0;
+                                    that.loading = false;
+                                    that.requestMpesaPaymentPoll(60);
+                                }
                             }
+
+                            if(poll_limit == 60){
+                                if (poll_count == 59) {
+
+                                }
+                            }
+                           
                         }, 10000 * poll_count);
                     })(poll_count);
                 }
@@ -779,6 +782,7 @@
                     "M-Pesa Payment cancelled",
                     "M-Pesa payment has been cancelled, please try again."
                 );
+                this.requestMpesaPaymentPoll(60);
                 return;
             },
 
