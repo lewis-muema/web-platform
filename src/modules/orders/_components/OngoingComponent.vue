@@ -87,16 +87,20 @@ export default {
       });
     },
     poll: function () {
-      var that = this
-      this.$store.dispatch('$_orders/fetch_ongoing_orders')
-      .then(response => {
-        if (["order_placement", "tracking"].includes(that.$router.currentRoute.name)) {
-          setTimeout(function() {
-            that.poll()
-          }, 20000);
-        }
-        that.loading = false
-      })
+      try {
+        var that = this
+        this.$store.dispatch('$_orders/fetch_ongoing_orders')
+        .then(response => {
+          if (["order_placement", "tracking"].includes(that.$router.currentRoute.name)) {
+            setTimeout(function() {
+              that.poll()
+            }, 15000);
+          }
+          that.loading = false
+        })
+      } catch (e) {
+        Sentry.captureException(e);
+      }
     },
     getStatus: function(order) {
       if (this.loading == false) {

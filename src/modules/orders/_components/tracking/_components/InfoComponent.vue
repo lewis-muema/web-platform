@@ -122,7 +122,7 @@ export default {
             else {
               setTimeout(function() {
                 that.poll(from)
-              }, 20000);
+              }, 15000);
             }
           }
         }
