@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="paymethod">
-    <router-link class="paymethod--link" to="/payment/mpesa">Mpesa</router-link>
+    <router-link class="paymethod--link" to="/payment/mpesa">M-Pesa</router-link>
     <router-link class="paymethod--link" to="/payment/card">Card</router-link>
     <router-link class="paymethod--link" to="/payment/promo">Promo Code</router-link>
   </div>
