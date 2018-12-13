@@ -649,12 +649,17 @@
                         }
 
                         if (response.status == 200) {
+                            this.doNotification(
+                                "0",
+                                "M-Pesa Payment",
+                                "Request for payment sent to "+ user_phone+"."
+                            );
                             this.requestMpesaPaymentPoll();
                         } else {
                             this.doNotification(
-                                "2",
-                                "Payment failed",
-                                "Could not reach mpesa, please try again."
+                                "0",
+                                "M-Pesa Payment",
+                                "M-Pesa request to "+user_phone+" failed. Use paybill 848450 account number "+referenceNumber+" amount KES "+this.order_cost+"." 
                             );
                             this.payment_state = 0;
                             this.loading = false;
@@ -663,9 +668,9 @@
                     },
                     error => {
                         this.doNotification(
-                            "2",
-                            "Payment failed",
-                            "Could not reach mpesa, please try again."
+                            "0",
+                            "M-Pesa Payment",
+                            "M-Pesa request to "+user_phone+" failed. Use paybill 848450 account number "+referenceNumber+" amount KES "+this.order_cost+"."
                         );
                         this.payment_state = 0;
                         this.loading = false;
@@ -675,7 +680,6 @@
             clearMpesaPollCounter(){
                 //fails silently if the id is not found
                 window.clearTimeout(this.mpesa_poll_timer_id);
-                
             },
             requestMpesaPaymentPoll(poll_limit_value=6) {
                 this.clearMpesaPollCounter();
@@ -709,7 +713,6 @@
                     (function (poll_count) {
                         that.mpesa_poll_timer_id = setTimeout(function () {
                             let res = that.checkRunningBalance(old_rb, payload);
-                            console.log("poll count", poll_count);
                             if (res) {
                                 poll_count = poll_limit;
                                 that.payment_state = 0;
@@ -717,7 +720,7 @@
                                 that.doNotification(
                                     "1",
                                     "Payment successful",
-                                    "M-Pesa payment was successful."
+                                    "Completing your order..."
                                 );
                                 that.doCompleteOrder();
                                 return true;
@@ -725,22 +728,15 @@
                             if(poll_limit_value == 6){
                                  if (poll_count == 5) {
                                     that.doNotification(
-                                        "2",
-                                        "Payment failed",
-                                        "Please select your preferred payment method and try again."
+                                        "0",
+                                        "Payment not received",
+                                        "We'll keep retrying to check your payment status and complete your order once the payment is received."
                                     );
                                     that.payment_state = 0;
                                     that.loading = false;
                                     that.requestMpesaPaymentPoll(60);
                                 }
-                            }
-
-                            if(poll_limit == 60){
-                                if (poll_count == 59) {
-
-                                }
-                            }
-                           
+                            }                           
                         }, 10000 * poll_count);
                     })(poll_count);
                 }
