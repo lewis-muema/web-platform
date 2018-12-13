@@ -54,16 +54,29 @@
                 this.updateViewState(1);
             },
             inv_many: function () {
-                let set = this.emailSet
-                let emails = set.split(",")
-                let number = emails.length
-                let data = new Array();
-                for (let x = 0; x < number; x++) {
-                    data[x] = new Array(emails[x], '', '')
+                if (this.emailSet != '') {
+                    let set = this.emailSet
+                    let emails = set.split(",")
+                    let number = emails.length
+                    let data = new Array();
+                    for (let x = 0; x < number; x++) {
+                        data[x] = new Array(emails[x], '', '')
+                    }
+                    this.newAdds(number)
+                    this.updateInvites(data)
+                    this.updateViewState(1);
                 }
-                this.newAdds(number)
-                this.updateInvites(data)
-                this.updateViewState(1);
+                else {
+                    let level = 2;
+                    let notification = {
+                        "title": "",
+                        "level": level,
+                        "message": "Please enter valid email address separated by a comma."
+                    }; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+                }
+
             }
         }
     }

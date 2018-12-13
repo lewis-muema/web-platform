@@ -170,7 +170,7 @@
                 if (department !== '') {
                     //department filter
                     console.log('performing a department filter');
-
+                    console.log(department)
                     let vm = this;
                     this.filteredUserData = this.filteredUserData.filter(function (user) {
                         return user.department_name.toLowerCase().indexOf(vm.filterData.department.toLowerCase()) >= 0;

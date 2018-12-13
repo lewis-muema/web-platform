@@ -263,7 +263,6 @@ export default {
   font-family: "Rubik", sans-serif;
 }
 .sign-up-email-error {
-  margin-right: 45%;
   font-size: 13px;
   font-family: "Rubik", sans-serif;
   color: #e08445;
