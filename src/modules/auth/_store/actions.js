@@ -85,7 +85,7 @@ export default {
        );
      });
    },
-    requestCopSignUp(context, payload) {
+    requestSignUpSegmentation(context, payload) {
         console.log("payload", payload);
 
         return new Promise((resolve, reject) => {

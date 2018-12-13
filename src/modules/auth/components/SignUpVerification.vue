@@ -51,8 +51,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      requestPeerSignUp: "$_auth/requestPeerSignUp",
-      requestCopSignUp: "$_auth/requestCopSignUp"
+      requestSignUpSegmentation: "$_auth/requestSignUpSegmentation"
     }),
     ...mapGetters({
       Password: "$_auth/requestPassword",
@@ -76,7 +75,7 @@ export default {
       };
 
       let that = this;
-      this.requestPeerSignUp(full_payload).then(
+      this.requestSignUpSegmentation(full_payload).then(
         response => {
           console.log(response);
           if (response.length > 0) {
@@ -123,7 +122,7 @@ export default {
 
         let that = this;
 
-        this.requestCopSignUp(full_payload).then(
+        this.requestSignUpSegmentation(full_payload).then(
           response => {
             console.log(response);
             if (response.length > 0) {
