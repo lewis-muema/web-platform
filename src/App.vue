@@ -29,14 +29,23 @@ export default {
   methods: {
     showNotification() {
       let notification = this.$store.getters.getNotification;
-
-      if (notification.level == 1) {
+      if (notification.level == 0) {
+        //success
+        this.$notify.info({
+          title: notification.title,
+          message: notification.message,
+          offset: 20,
+          duration: 10000
+        });
+      }
+      else if (notification.level == 1) {
         //success
         this.$notify({
           type: "success",
           title: notification.title,
           message: notification.message,
-          offset: 20
+          offset: 20,
+          duration: 10000
         });
       } else if (notification.level == 2) {
         //warning
@@ -44,7 +53,8 @@ export default {
           title: notification.title,
           message: notification.message,
           type: "warning",
-          offset: 20
+          offset: 20,
+          duration: 10000
         });
       } else if (notification.level == 3) {
         //error
@@ -52,7 +62,8 @@ export default {
           this.$notify({
             type: "error",
             message: notification.message,
-            offset: 20
+            offset: 20,
+            duration: 10000
           });
       } else {
         //default
