@@ -26,7 +26,7 @@
             	<span id="log_in_warn" class="sign-holder__error" >   </span>
             </div>
             <div class="sign-holder dimen">
-              <input class="input-control sign-form" type="text" name="email" v-model="email" placeholder="Email or Phone Number" autocomplete="on">
+              <input class="input-control sign-form" type="text" name="email" v-model="email" placeholder="Enter Email" autocomplete="on">
             </div>
 
             <div class="sign-holder dimen">

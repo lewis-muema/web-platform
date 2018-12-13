@@ -7,7 +7,7 @@ export default {
         // let root_state = rootState;
         // console.log(root_state);
 
-        console.log("payload", payload);
+        // console.log("payload", payload);
         return new Promise((resolve, reject) => {
             dispatch("requestAxiosPost", payload, {root: true}).then(
                 response => {
@@ -22,7 +22,7 @@ export default {
         });
     },
     requestForgotPassword(context, payload) {
-        console.log("payload", payload);
+        // console.log("payload", payload);
 
         return new Promise((resolve, reject) => {
             payload.vm.$store.dispatch("requestAxiosPost", payload).then(
@@ -38,7 +38,7 @@ export default {
         });
     },
     requestResetPassword(context, payload) {
-        console.log("payload", payload);
+        // console.log("payload", payload);
 
         return new Promise((resolve, reject) => {
             payload.vm.$store.dispatch("requestAxiosPost", payload).then(
@@ -54,7 +54,7 @@ export default {
         });
     },
     requestSignUpCheck(context, payload) {
-        console.log("payload", payload);
+        // console.log("payload", payload);
 
     return new Promise((resolve, reject) => {
       payload.vm.$store.dispatch("requestAxiosPost", payload).then(
@@ -70,7 +70,7 @@ export default {
     });
   },
   requestCheckToken(context, payload) {
-     console.log("payload", payload);
+     // console.log("payload", payload);
 
      return new Promise((resolve, reject) => {
        payload.vm.$store.dispatch("requestAxiosPost", payload).then(
@@ -86,7 +86,7 @@ export default {
      });
    },
     requestSignUpSegmentation(context, payload) {
-        console.log("payload", payload);
+        // console.log("payload", payload);
 
         return new Promise((resolve, reject) => {
             payload.vm.$store.dispatch("requestAxiosPost", payload).then(
