@@ -95,7 +95,7 @@ export default {
         return !this.loading && Array.isArray(this.get_order_path) && ((this.get_order_path.length-1) <= this.get_max_destinations) && (this.get_order_path.length>1) && (this.get_extra_destinations <= this.get_order_path.length-2 );
     },
     show_vendor_view(){
-        return Array.isArray(this.get_order_path) && this.get_order_path.length > 1;
+        return Array.isArray(this.get_order_path) && this.get_order_path.length > 1 && this.get_price_request_object.hasOwnProperty('economy_price_tiers');
     }
   },
   methods: {
@@ -266,22 +266,18 @@ export default {
         let previous_active_vendor = this.get_active_vendor_name;
         this.requestPriceQuote(payload).then(response => {
             this.loading = false;
-           //console.log(response);
-
-           if(response.status == true){
-               this.setDefaultPackageClass();
-               this.setDefaultVendorType(previous_active_vendor);
-
-           } else {
-               this.doNotification(2,"Price request failed", "Price request failed. Please try again")
-              console.warn('Price request failed');
-
-           }
-
+            //console.log(response);
+            this.setDefaultPackageClass();
+            this.setDefaultVendorType(previous_active_vendor);
         }, error => {
-            console.error("Check Internet Connection")
-            //console.log(error);
-            this.doNotification(3,"Price request failed", "Price request failed. Please check your internet connection and try again.");
+            if(error.hasOwnProperty('crisis_notification')){
+                this.doNotification(3,error.reason, error.crisis_notification.msg);
+            }
+            else{
+                 console.error("Check Internet Connection")
+                this.doNotification(3,"Price request failed", "Price request failed. Please try again after a few minutes.");
+            }
+           
             this.loading = false;
         });
     },

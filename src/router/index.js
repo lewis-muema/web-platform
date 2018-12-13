@@ -40,6 +40,33 @@ function guard(to, from, next) {
   });
 }
 
+function login_guard(to, from, next) {
+  return new Promise((resolve, reject) => {
+    let session = store.state.session;
+
+    console.log("the guard is executing");
+
+    if (isEmpty(session)) {
+      if (process.browser) {
+        //read ls here
+        let _sessionSnack = localStorage.getItem("_sessionSnack");
+
+        if (isEmpty(_sessionSnack) == true) {
+          resolve(next());
+        } else {
+          session = JSON.parse(_sessionSnack);
+          store.state.session = session;
+          resolve(next("/orders"));
+        }
+      } else {
+        resolve(next());
+      }
+    } else {
+      resolve(next());
+    }
+  });
+}
+
 export function createRouter() {
   const router = new Router({
     mode: "history",
@@ -48,6 +75,7 @@ export function createRouter() {
       {
         path: "/auth",
         component: () => import("../modules/auth/Auth.vue"),
+        beforeEnter: login_guard,
         children: [
           {
             path: "/",
