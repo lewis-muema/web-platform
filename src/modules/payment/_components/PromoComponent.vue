@@ -63,7 +63,7 @@ export default {
             let message = response.data.msg;
             if (response.data.status == true) {
               //update running balance with new value
-              let running_balance = response.data.running_balance;
+              let running_balance = parseFloat(response.data.running_balance);
               this.$store.commit("setRunningBalance", running_balance);
               this.payment_state = "Promocode Redeem Success";
               level = 1;
