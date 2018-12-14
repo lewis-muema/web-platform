@@ -291,6 +291,12 @@
             pending_amount() {
                 return numeral(this.getRunningBalance + this.order_cost).format("0,0");
             },
+            raw_pending_amount() {
+                return this.getRunningBalance + this.order_cost;
+            },
+            payment_is_to_be_requested(){
+                return (this.getRunningBalance + this.order_cost) > 0;
+            },
             order_cost_display(){
                 return numeral(this.order_cost).format("0,0");
             },
@@ -410,7 +416,13 @@
                 return true;
             },
             handleMpesaPayments() {
-                this.requestMpesaPayment();
+                if(this.payment_is_to_be_requested == true){
+                    this.requestMpesaPayment();
+                    return false;
+                }
+                this.doCompleteOrder();
+                return true;
+                
             },
             handlePromoCodePayments() {
                 this.$router.push({name: "promo_payment"});
@@ -620,7 +632,7 @@
                 }
 
                 let mpesa_payload = {
-                    amount: this.order_cost,
+                    amount: this.raw_pending_amount,
                     sourceMobile: user_phone,
                     referenceNumber: referenceNumber,
                     user_id: user_id,
@@ -656,10 +668,11 @@
                             );
                             this.requestMpesaPaymentPoll();
                         } else {
+                            this.refreshRunningBalance();
                             this.doNotification(
                                 "0",
                                 "M-Pesa Payment",
-                                "M-Pesa request to "+user_phone+" failed. Use paybill 848450 account number "+referenceNumber+" amount KES "+this.order_cost+"." 
+                                "M-Pesa request to "+user_phone+" failed. Use paybill 848450 account number "+referenceNumber+" amount KES "+this.pending_amount+"." 
                             );
                             this.payment_state = 0;
                             this.loading = false;
@@ -667,10 +680,11 @@
                         }
                     },
                     error => {
+                        this.refreshRunningBalance();
                         this.doNotification(
                             "0",
                             "M-Pesa Payment",
-                            "M-Pesa request to "+user_phone+" failed. Use paybill 848450 account number "+referenceNumber+" amount KES "+this.order_cost+"."
+                            "M-Pesa request to "+user_phone+" failed. Use paybill 848450 account number "+referenceNumber+" amount KES "+this.pending_amount+"."
                         );
                         this.payment_state = 0;
                         this.loading = false;
@@ -690,7 +704,7 @@
                     cop_id = session.biz.cop_id;
                 }
                 let old_rb = this.$store.getters.getRunningBalance;
-                let requested_amount = this.order_cost;
+                let requested_amount = this.raw_pending_amount;
 
                 let running_balance_payload = {
                     values: {
@@ -711,7 +725,7 @@
                     //wait 10 seconds
                     let that = this;
                     (function (poll_count) {
-                        that.mpesa_poll_timer_id = setTimeout(function () {
+                        that.mpesa_poll_timer_id = window.setTimeout(function () {
                             let res = that.checkRunningBalance(old_rb, payload);
                             if (res) {
                                 poll_count = poll_limit;
@@ -843,11 +857,15 @@
             },
 
             handleCardPayments(card) {
+                if(this.payment_is_to_be_requested == false){
+                    this.doCompleteOrder();
+                    return false;
+                }
                 let card_payload = {
                     // amount: 10,
                     // encrypt amount
                     // encrypt last_4
-                    amount: Mcrypt.encrypt(this.order_cost),
+                    amount: Mcrypt.encrypt(this.raw_pending_amount),
                     last4: Mcrypt.encrypt(card.last4),
                     stripe_user_id: this.get_stripe_user_id
                 };
@@ -895,6 +913,7 @@
                         this.loading = 0;
                     }
                 );
+                return true;
             },
             completeCardPayment(card_trans_id) {
                 let session = this.$store.getters.getSession;
@@ -919,7 +938,7 @@
                 }
 
                 let payload = {
-                    amount: this.order_cost,
+                    amount: this.raw_pending_amount,
                     // amount: 100,
                     pay_method: 2,
                     ref_no: "VISA-" + Math.round(+new Date() / 1000),
