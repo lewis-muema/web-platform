@@ -108,7 +108,7 @@ export default {
               this.doNotification(
                 2,
                 "Login failed",
-                "Login failed. Please try again"
+                "Wrong password or email."
               );
               console.warn("login failed");
             }
