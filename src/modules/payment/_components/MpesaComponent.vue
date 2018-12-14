@@ -1,9 +1,9 @@
 <template lang="html">
-  
+
   <payment_loading v-if="show_loading"></payment_loading>
   <payment_success v-else-if="show_mpesa_success"></payment_success>
   <payment_fail v-else-if="show_mpesa_fail"></payment_fail>
-  
+
   <div class="paymentbody--form" v-else>
     <div class="paymentbody--input-wrap">
       <input type="number" name="amount" v-model="mpesa_payment_data.amount" placeholder="Amount" class="input-control paymentbody--input">
@@ -148,6 +148,7 @@ export default {
     },
 
     checkRunningBalance(old_rb, payload) {
+      var that = this
       this.$store.dispatch("requestRunningBalance", payload, {root: true}).then(
         response => {
           console.log(response);
@@ -161,7 +162,7 @@ export default {
             console.log(new_rb);
 
             if (new_rb < old_rb) {
-              this.completeMpesaPaymentRequest({});
+              that._completeMpesaPaymentRequest({});
               return true;
             }
           }
