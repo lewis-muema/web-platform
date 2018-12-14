@@ -120,9 +120,11 @@ export default {
               that.place()
             }
             else {
-              setTimeout(function() {
-                that.poll(from)
-              }, 15000);
+              if (this.get_tracked_order == from) {
+                setTimeout(function() {
+                  that.poll(from)
+                }, 15000);
+              }
             }
           }
         }
@@ -171,7 +173,6 @@ export default {
             "reason_description" : 'I placed the wrong locations',
             "client_type" : this.$store.getters.getSession.default
           }
-          var that = this
           this.$store.dispatch('$_orders/$_tracking/cancel_order', payload)
           .then(response => {
             if (response.status == true) {
@@ -204,6 +205,7 @@ export default {
   computed: {
     ...mapGetters({
       tracking_data: '$_orders/$_tracking/get_tracking_data',
+      tracked_order: '$_orders/$_tracking/get_tracked_order'
     }),
     getStatus: function() {
       if (this.loading == false) {
