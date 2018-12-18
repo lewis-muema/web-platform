@@ -29,6 +29,17 @@ function guard(to, from, next) {
         } else {
           session = JSON.parse(_sessionSnack);
           store.state.session = session;
+          let analytics_env = '';
+          try{
+              analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+          }
+          catch(er){
+
+          }
+          if('default' in session && analytics_env == 'production'){
+            let acc = session[session.default];
+            mixpanel.identify(acc.user_email);
+          }
           resolve(next());
         }
       } else {
