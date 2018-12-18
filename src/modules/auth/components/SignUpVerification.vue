@@ -90,6 +90,35 @@ export default {
             let session_data = response.data;
             let json_session = JSON.stringify(session_data);
             this.setSession(json_session);
+             if('default' in session_data){
+                  let acc = session_data[session_data.default];
+
+                  mixpanel.alias(acc.user_email);
+
+                  mixpanel.people.set_once({
+                      "$email":acc.user_email ,
+                      "$phone": acc.user_phone ,
+                      "Account Type": acc.default == 'peer'? 'Personal' : 'Business' ,
+                      "$name": acc.user_name,
+                      "$created": new Date(),
+                      "Client Type" : "Web Platform",
+                      "Business Name": acc.default == 'biz' ? acc.cop_name : '',
+                  });
+
+                  //login identify
+                  mixpanel.identify(acc.user_email);
+
+                  // track login
+                  mixpanel.track("New Account Created", {
+                      "Account Type": acc.default == 'peer'? 'Personal' : 'Business',
+                      "Last Login":new Date(),
+                      "Client Type" : "Web Platform",
+                      "Business Name": acc.default == 'biz' ? acc.cop_name : '',
+                      "$email":acc.user_email ,
+                      "$phone": acc.user_phone ,
+                      "$name": acc.user_name,
+                  });
+              }
             this.$store.commit("setSession", session_data);
             this.$router.push("/orders");
           } else {

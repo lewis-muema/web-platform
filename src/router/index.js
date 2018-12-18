@@ -29,6 +29,10 @@ function guard(to, from, next) {
         } else {
           session = JSON.parse(_sessionSnack);
           store.state.session = session;
+          if('default' in session){
+            let acc = session[session.default];
+            mixpanel.identify(acc.user_email);
+          }
           resolve(next());
         }
       } else {
