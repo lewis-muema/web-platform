@@ -99,10 +99,12 @@ export default {
             this.set_active_package_class(name);
         },
         getVendorIcon(id){
-            return "https://images.sendyit.com/web_platform/vendor_type/side/"+id+".svg";
+            //return "https://images.sendyit.com/web_platform/vendor_type/side/"+id+".svg";
+            return "https://s3-eu-west-1.amazonaws.com/webplatform.testimages/test.images/side/"+id+".svg";
         },
         getPackageIcon(name){
-            return "https://images.sendyit.com/web_platform/vendor_size/"+name+".svg?q=1"
+            //return "https://images.sendyit.com/web_platform/vendor_size/"+name+".svg?q=1"
+            return "https://s3-eu-west-1.amazonaws.com/webplatform.testimages/test.images/size/"+name+".svg?q=1"
         },
         get_current_active_package__class(name){
             return{

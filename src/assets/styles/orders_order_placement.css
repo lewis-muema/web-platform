@@ -149,6 +149,7 @@
 .home-view-vendor-classes-menu--img,
 .home-view-vendor-classes-menu--span {
   flex: 1;
+  width: 30px;
 }
 .home-view-vendor-classes-menu--span {
 }
