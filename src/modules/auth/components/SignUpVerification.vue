@@ -90,7 +90,14 @@ export default {
             let session_data = response.data;
             let json_session = JSON.stringify(session_data);
             this.setSession(json_session);
-             if('default' in session_data){
+            let analytics_env = '';
+            try{
+               analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+            }
+            catch(er){
+
+            }
+             if('default' in session_data && analytics_env == 'production'){
                   let acc = session_data[session_data.default];
 
                   mixpanel.alias(acc.user_email);
