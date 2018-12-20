@@ -39,9 +39,13 @@ import {
   Message,
   Notification,
   Popover,
+  RadioGroup,
+  RadioButton,
 } from "element-ui";
 
 Vue.use(Pagination);
+Vue.use(RadioGroup);
+Vue.use(RadioButton);
 Vue.use(Dropdown);
 Vue.use(DropdownMenu);
 Vue.use(DropdownItem);

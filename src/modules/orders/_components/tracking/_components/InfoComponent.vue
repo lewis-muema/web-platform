@@ -52,8 +52,21 @@
         <div class="infobar--content infobar--item infobar--actions">
           <transition name="fade" mode="out-in">
             <div class="infobar--action-slide" v-if="this.cancel_popup">
-              <div class="action--slide-text">
-                Are you sure you want to cancel this order?
+              <div class="">
+                <div class="">
+                  Cancel this order?
+                </div>
+                <div class="">
+                  You can place another one at any time.
+                </div>
+              </div>
+              <div class="">
+                <el-radio-group v-model="cancel_reason" class="" @input="cancel_change">
+                  <el-radio :label="4">I placed the wrong locations</el-radio>
+                  <el-radio :label="5">My order is not ready</el-radio>
+                  <el-radio :label="7">No driver has been allocated</el-radio>
+                  <el-radio :label="8">I placed this order twice</el-radio>
+                </el-radio-group>
               </div>
               <div class="action--slide-desc">
                 <button type="button" name="button" class="action--slide-button" @click="cancel_order()">Yes</button>
@@ -78,7 +91,7 @@
               Share Status
             </div>
           </div>
-          <div @click="cancel_toggle()" v-if="!(this.tracking_data.delivery_status > 1)">
+          <div @click="cancel_toggle()" v-if="!(this.tracking_data.delivery_status > 1)" class="infobar--actions-hover">
             <div class="infobar--actions-icon">
                <i class="el-icon-circle-close-outline"></i>
             </div>
@@ -101,10 +114,32 @@ export default {
     return {
       loading: true,
       order_number: '',
-      cancel_popup: 0
+      cancel_popup: 0,
+      cancel_reason: -1,
+      cancel_desc: ''
     }
   },
   methods: {
+    cancel_change: function(reason) {
+      switch (reason) {
+        case 4:{
+          this.cancel_desc = 'I placed the wrong locations'
+          break;
+        }
+        case 5:{
+          this.cancel_desc = 'My order is not ready'
+          break;
+        }
+        case 7:{
+          this.cancel_desc = 'No driver has been allocated'
+          break;
+        }
+        case 8:{
+          this.cancel_desc = 'I placed this order twice'
+          break;
+        }
+      }
+    },
     poll: function (from) {
       var that = this
       this.$store.dispatch('$_orders/$_tracking/get_tracking_data', {"order_no": from})
@@ -153,8 +188,8 @@ export default {
     cancel_order: function () {
       var payload = {
         "order_no": this.tracking_data.order_no,
-        "cancel_reason_id" : 4,
-        "reason_description" : 'I placed the wrong locations',
+        "cancel_reason_id" : this.cancel_reason,
+        "reason_description" : this.cancel_desc,
         "client_type" : this.$store.getters.getSession.default
       }
       var that = this
@@ -340,7 +375,7 @@ export default {
   height: 30px;
   margin: 0 auto;
 }
-.infobar--actions div:hover
+.infobar--actions-hover:hover
 {
   cursor: pointer;
   color:#1782C5;
@@ -348,15 +383,16 @@ export default {
 .infobar--action-slide
 {
   display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #74696929;
-    position: absolute;
-    background-color: #fff;
-    top: -120px;
-    width: 100%;
-    border-radius: 3px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #74696929;
+  position: absolute;
+  background-color: #fff;
+  top: -255px;
+  width: 100%;
+  min-width: 215px;
+  border-radius: 3px;
 }
 .actions--caret
 {
@@ -434,5 +470,17 @@ export default {
 .fade-enter,
 .fade-leave-active {
   opacity: 0
+}
+.infobar--action-slide .el-radio
+{
+  padding: 10px 0px;
+  margin: 0px;
+}
+.infobar--action-slide .el-radio-group
+{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
 }
 </style>
