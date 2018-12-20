@@ -50,8 +50,7 @@ export default {
     },
     vendor_icon: function(id){
        return {
-        //url: 'https://images.sendyit.com/web_platform/vendor_type/top/' + id + '.png',
-        url: 'https://s3-eu-west-1.amazonaws.com/webplatform.testimages/test.images/top/' + id + '.png',
+        url: 'https://images.sendyit.com/web_platform/vendor_type/top/' + id + '.png',
         scaledSize: new google.maps.Size(50, 50),
       };
     },
