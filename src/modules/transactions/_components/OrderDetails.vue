@@ -24,11 +24,15 @@
                     <img src="../../../assets/img/maroon_button.png" class="order_details_desc_image">
                     {{getOrderFromName(order_details.path)}}
               </div>
-              <div class="order_details_desc_item">
-                    <img src="../../../assets/img/blue_button.png" class="order_details_desc_image">
-                    {{getOrderToName(order_details.path)}}
-              </div>
-
+              <template v-for="(locations,index) in order_details.path" v-if="index >= 1">
+                <div class="order_details_desc_item">
+                      <img src="../../../assets/img/blue_button.png" class="order_details_desc_image">
+                      <span>{{order_details.path[index].name}}</span>
+                      <div class="recepient-padded" v-if="order_details.rider_deliver_img != null">
+                        Recieved by {{order_details.rider_deliver_img[index - 1].name}}
+                      </div>
+                </div>
+              </template>
           </div>
       </div>
       <div class="rider_details_wrap">
@@ -155,5 +159,9 @@ export default {
 .rate--action-btn {
   display: inline-block;
   margin-left: 30px;
+}
+.recepient-padded
+{
+  padding: 5px 0px 0px 15px;
 }
 </style>
