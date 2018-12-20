@@ -42,7 +42,7 @@
           </div>
           <div class="">
             <span class="" v-if = "this.tracking_data.delivery_status < 2">
-              Estimated Arrival: <span class=""> {{date_format(this.tracking_data.date_time)}} </span>
+              A Rider will pick and deliver your order by <span class=""> {{moment(this.tracking_data.date_time).format("h:mm a")}} </span>
             </span>
             <!-- <span class="" v-else>
               Estimated Delivery: <span class=""> {{this.tracking_data.etd}} </span>
