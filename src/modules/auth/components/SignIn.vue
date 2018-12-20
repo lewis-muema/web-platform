@@ -99,6 +99,34 @@ export default {
               let json_session = JSON.stringify(session_data);
               this.setSession(json_session);
               this.$store.commit("setSession", session_data);
+              let analytics_env = '';
+              try{
+                  analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+              }
+              catch(er){
+
+              }
+              if('default' in session_data && analytics_env == 'production'){
+                  let acc = session_data[session_data.default];
+
+                  mixpanel.people.set_once({
+                      "$email":acc.user_email ,
+                      "$phone": acc.user_phone ,
+                      "Account Type": acc.default == 'peer'? 'Personal' : 'Business' ,
+                      "$name": acc.user_name,
+                      "Client Type" : "Web Platform"
+                  });
+
+                  //login identify
+                  mixpanel.identify(acc.user_email);
+
+                  // track login
+                  mixpanel.track("Login", {
+                      "Account Type": acc.default == 'peer'? 'Personal' : 'Business',
+                      "Last Login":new Date(),
+                      "Client Type" : "Web Platform"
+                  });
+              }
               this.$router.push("/orders");
             } else {
               //failed to login
