@@ -113,7 +113,7 @@ export default {
     return {
       order_id: "",
       show_rating: false,
-      dialogVisible : true,
+      dialogVisible : false,
     };
   },
   filters: {
