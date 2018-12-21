@@ -62,7 +62,7 @@
 
                              <input  name="carrier_type" value="2" checked  type="radio"> Any
 
-                          </span> &emsp;&emsp;
+                          </span>
 
                             <span data-toggle="tooltip" data-placement="top" title="Select a Rider with a box">
 
