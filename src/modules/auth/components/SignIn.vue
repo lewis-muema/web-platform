@@ -131,14 +131,31 @@ export default {
             } else {
               //failed to login
               //show some sort of error
-              this.login_text = "Login";
-              this.message = response.reason;
-              this.doNotification(
-                2,
-                "Login failed",
-                "Wrong password or email."
-              );
-              console.warn("login failed");
+              if (response.data.code == 1) {
+
+                this.login_text = "Login";
+                this.message = response.reason;
+                this.doNotification(
+                  2,
+                  "Login failed",
+                  "Wrong password or email."
+                );
+                console.warn("login failed");
+
+              }
+              else {
+
+                this.login_text = "Login";
+                this.message = response.reason;
+                this.doNotification(
+                  2,
+                  "Login failed",
+                  "Account deactivated"
+                );
+                console.warn("login failed");
+
+
+              }
             }
           },
           error => {
