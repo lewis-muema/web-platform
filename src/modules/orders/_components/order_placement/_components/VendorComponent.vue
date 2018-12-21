@@ -51,14 +51,14 @@
                       </div>
                       <div class="home-view-carrier-type" v-if="j.vendor_name !== 'Standard' && j.vendor_name === get_active_vendor_name">
                           <div class="home-view-carrier-type--item">
-                            <el-radio v-model="carrier_type" label="2" @input="dispatch_carrier_store">Any</el-radio>
+                            <el-radio v-model="carrier_type" label="2" @input="dispatch_carrier_type">Any</el-radio>
                           </div>
                           <div class="home-view-carrier-type--item">
-                            <el-radio v-model="carrier_type" label="1" @input="dispatch_carrier_store">{{getCarrierBoxName()}}</el-radio>
+                            <el-radio v-model="carrier_type" label="1" @input="dispatch_carrier_type">{{getCarrierBoxName()}}</el-radio>
 
                           </div>
                           <div class="home-view-carrier-type--item">
-                            <el-radio v-model="carrier_type" label="0" @input="dispatch_carrier_store">{{getCarrierNoBoxName()}}</el-radio>
+                            <el-radio v-model="carrier_type" label="0" @input="dispatch_carrier_type">{{getCarrierNoBoxName()}}</el-radio>
                           </div>
                         </transition>
                   </div>
@@ -69,6 +69,7 @@
     <div class="" v-if="get_active_package_class != '' ">
         <order-options v-on:destroyOrderOptions="destroyVendorComponent()"></order-options>
     </div>
+</div>
 </div>
 
 </template>
@@ -119,7 +120,7 @@ export default {
       set_carrier_type: '$_orders/$_home/set_carrier_type',
 
     }),
-    dispatch_carrier_store: function() {
+    dispatch_carrier_type: function() {
       let type = this.carrier_type;
       this.set_carrier_type(type);
     },
