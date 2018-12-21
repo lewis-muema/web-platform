@@ -15,7 +15,7 @@
                 <div class="home-view-vendor-classes--label">
                     <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in get_price_request_object.economy_price_tiers" :key="index" @click="setActivePackageClass(vendor_class.tier_group)" v-if="vendor_class.price_tiers.length > 0">
                         <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_package__class(vendor_class.tier_group)">
-                          <img :src="getPackageIcon(vendor_class.tier_group)" class="home-view-vendor-classes-menu--img" alt="vendor_class.tier_group"> 
+                          <img :src="getPackageIcon(vendor_class.tier_group)" class="home-view-vendor-classes-menu--img" alt="vendor_class.tier_group">
                           <span class="home-view-vendor-classes-menu--span">{{vendor_class.tier_group}}</span>
                         </a>
                     </div>
@@ -32,7 +32,7 @@
                               {{j.vendor_name}}
                           </div>
                       </div>
-                      
+
                       <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper">
                           <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-left">
                               <div class="home-view-vendor-types-item--cost-wrapper__cost">
@@ -51,14 +51,14 @@
                       </div>
                       <div class="home-view-carrier-type" v-if="j.vendor_name !== 'Standard' && j.vendor_name === get_active_vendor_name">
                           <div class="home-view-carrier-type--item">
-                            <el-radio v-model="carrier_type" label="2">Any</el-radio>
+                            <el-radio v-model="carrier_type" label="2" @input="set_carrier_store">Any</el-radio>
                           </div>
                           <div class="home-view-carrier-type--item">
-                            <el-radio v-model="carrier_type" label="1">{{getCarrierBoxName()}}</el-radio>
-                            
+                            <el-radio v-model="carrier_type" label="1" @input="set_carrier_store">{{getCarrierBoxName()}}</el-radio>
+
                           </div>
                           <div class="home-view-carrier-type--item">
-                            <el-radio v-model="carrier_type" label="0">{{getCarrierNoBoxName()}}</el-radio>
+                            <el-radio v-model="carrier_type" label="0" @input="set_carrier_store">{{getCarrierNoBoxName()}}</el-radio>
                           </div>
                       </div>
                   </div>
@@ -90,14 +90,16 @@ export default {
     return {
       first_time: false,
       popover_visible: false,
-      carrier_type:2,
+      carrier_type: "2",
     }
   },
   computed: {
     ...mapGetters({
       get_price_request_object: '$_orders/$_home/get_price_request_object',
       get_active_package_class: '$_orders/$_home/get_active_package_class',
-      get_active_vendor_name: '$_orders/$_home/get_active_vendor_name'
+      get_active_vendor_name: '$_orders/$_home/get_active_vendor_name',
+      get_carrier_type: '$_orders/$_home/get_carrier_type'
+
     }),
     active_price_tier_data: function() {
       if (this.get_active_package_class != "") {
@@ -113,7 +115,13 @@ export default {
       set_active_package_class: '$_orders/$_home/set_active_package_class',
       set_active_vendor_name: '$_orders/$_home/set_active_vendor_name',
       set_active_vendor_details: '$_orders/$_home/set_active_vendor_details',
+      set_carrier_type: '$_orders/$_home/set_carrier_type',
+
     }),
+    set_carrier_store: function() {
+      let type = this.carrier_type;
+      this.set_carrier_type(type);
+    },
     setActivePackageClass(name) {
       this.set_active_package_class(name);
     },
@@ -156,6 +164,7 @@ export default {
     destroyVendorComponent() {
       this.set_active_vendor_name('');
       this.set_active_vendor_details({});
+      this.set_carrier_type(this.carrier_type);
       this.$emit('vendorComponentDestroyed');
       this.$destroy();
     },
@@ -168,7 +177,10 @@ export default {
   },
   created() {
     this.setFirstTimeUser();
-  }
+  },
+  mounted() {
+    this.set_carrier_type(this.carrier_type)
+  },
 }
 </script>
 
