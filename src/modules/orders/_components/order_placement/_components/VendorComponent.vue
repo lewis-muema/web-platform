@@ -18,19 +18,22 @@
                     </div>
                 </div>
                 <div class="home-view-vendor-types" v-if="active_price_tier_data != '' ">
-                    <div  v-for="j in active_price_tier_data.price_tiers" :key="j.order_no" @click="set_active_vendor_name(j.vendor_name);set_active_vendor_details(j);" class="home-view-vendor-types--item" :class="get_current_active_vendor_type_class(j.vendor_name)" >
-                        <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
+                    <div  v-for="j in active_price_tier_data.price_tiers" :key="j.order_no" @click="set_active_vendor_name(j.vendor_name);set_active_vendor_details(j);check_carrier_type(j.vendor_name);" class="home-view-vendor-types--item" :class="get_current_active_vendor_type_class(j.vendor_name)" >
+
+                          <div class="row">
+                        <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper align_content2">
                             <div class="home-view-vendor-types-item--vendor-wrapper__img">
                                 <img class="home-view-vendor-types-item__image" :src="getVendorIcon(j.vendor_id)" alt="">
                             </div>
                             <div class="home-view-vendor-types-item--vendor-wrapper__vendor">
                                 {{j.vendor_name}}
                             </div>
+
                         </div>
                         <!-- <div class="home-view-vendor-types-item">
 
                         </div> -->
-                        <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper">
+                        <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper align_content">
                             <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-left">
                                 <div class="home-view-vendor-types-item--cost-wrapper__cost">
                                     Ksh {{formatNumeral(j.cost)}}
@@ -50,7 +53,37 @@
                             </div>
 
                         </div>
+
                     </div>
+
+                     <div class="row" style="position:absolute;margin-top:12%;margin-left: 19%;font-size:14px;" v-if="j.vendor_name !== 'Standard'">
+
+                        <div class="carrier_type_content">
+
+                         <span data-toggle="tooltip" data-placement="top" title="Select any Rider">
+
+                             <input  name="carrier_type" value="2" checked  type="radio"> Any
+
+                          </span>
+
+                         <span data-toggle="tooltip" data-placement="top" title="Select a Rider with a box">
+
+                             <input name="carrier_type"  value="1"  type="radio">  {{getCarrierBoxName()}}
+
+                         </span>
+
+                        <span data-toggle="tooltip" data-placement="top" title="Select a Rider without a box" >
+
+                            <input  name="carrier_type" value="0"  type="radio"> {{getCarrierNoBoxName()}}
+
+                        </span>
+
+                      </div>
+
+                     </div>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -71,7 +104,8 @@ export default {
     data () {
         return {
             first_time : false,
-            popover_visible: false
+            popover_visible: false,
+            carrier_state: false
         }
     },
     computed :{
@@ -97,6 +131,16 @@ export default {
         }),
         setActivePackageClass(name){
             this.set_active_package_class(name);
+        },
+        check_carrier_type(name){
+          if( name==this.get_active_vendor_name){
+          console.log('Active');
+          this.carrier_state = true;
+          }
+          else{
+            console.log('Fail');
+            this.carrier_state = true;
+          }
         },
         getVendorIcon(id){
             return "https://images.sendyit.com/web_platform/vendor_type/side/"+id+".svg";
@@ -139,7 +183,13 @@ export default {
             this.set_active_vendor_details({});
             this.$emit('vendorComponentDestroyed');
             this.$destroy();
-        }
+        },
+        getCarrierBoxName(){
+          return this.get_active_package_class == 'small' ? 'Box' : 'Closed';
+        },
+        getCarrierNoBoxName(){
+          return this.get_active_package_class == 'small' ? 'No Box' : 'Open';
+        },
     },
     created(){
         this.setFirstTimeUser();

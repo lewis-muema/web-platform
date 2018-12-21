@@ -56,7 +56,8 @@
 }
 .home-view-vendor-types--item {
   border-radius: 5px;
-  height: 2.5em;
+  /* height: 2.5em; */
+  height: 5.5em;
   margin: 13px 0;
   cursor: pointer;
   border: 1px solid #555;
@@ -229,5 +230,18 @@
   margin-left: -15px;
   margin-top: 2px;
 }
-
+.align_content{
+  position: absolute;
+  left: 245px;
+}
+.align_content2{
+  position: absolute;
+}
+.carrier_type_content{
+  display: flex;
+}
+.carrier_type_content >span{
+  margin: 5px;
+  padding: 5px;
+}
 /* end order actions */
