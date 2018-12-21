@@ -84,8 +84,18 @@
                 </div>
                 <div class="rider_details_actions_ongoing" v-else>
                     <div class="rider_details_action">
-                        <button class="button-primary rider_details_action_btn rider_details--view-delivery-docs-btn" type="button" @click="trackOrder(order_details.order_no)">View Delivery Docs</button>
+                        <button class="button-primary rider_details_action_btn rider_details--view-delivery-docs-btn" type="button" @click="dialogVisible = true">View Delivery Docs</button>
                     </div>
+                    <el-dialog
+                      title="Delivery Documents"
+                      :visible.sync="dialogVisible"
+                      width="80%"
+                      >
+                      <span>
+                        <iframe :src="getDeliveryDocsSrc(order_details.order_no)"  width="100%" height="650" frameborder="0" style="position:relative;z index:999" ref="frame">
+                        </iframe>
+                      </span>
+                    </el-dialog>
                 </div>
               </div>
 
@@ -102,7 +112,8 @@ export default {
   data() {
     return {
       order_id: "",
-      show_rating: false
+      show_rating: false,
+      dialogVisible : true,
     };
   },
   filters: {
@@ -149,6 +160,18 @@ export default {
     trackOrder(order_no) {
       console.log(order_no);
       this.$router.push({ name: "tracking", params: { order_no: order_no } });
+    },
+    getDeliveryDocsSrc(order){
+      let env = '';
+      try{
+          env = process.env.CONFIGS_ENV.ENVIRONMENT;
+      }
+      catch(er){
+      }
+      if (env != 'production'){
+           return "https://apptest.sendyit.com/biz/sendyconnect/verify/"+order;
+      }
+      return "https://oldapp.sendyit.com/biz/sendyconnect/verify/"+order;
     },
     printReceipt() {},
     deliveryDocs() {}
