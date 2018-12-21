@@ -14,78 +14,57 @@
             <div class="">
                 <div class="home-view-vendor-classes--label">
                     <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in get_price_request_object.economy_price_tiers" :key="index" @click="setActivePackageClass(vendor_class.tier_group)" v-if="vendor_class.price_tiers.length > 0">
-                        <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_package__class(vendor_class.tier_group)"><img :src="getPackageIcon(vendor_class.tier_group)" class="home-view-vendor-classes-menu--img" alt="vendor_class.tier_group"> <span class="home-view-vendor-classes-menu--span">{{vendor_class.tier_group}}</span></a>
+                        <a class="home-view-vendor-classes-menu section__link" :class="get_current_active_package__class(vendor_class.tier_group)">
+                          <img :src="getPackageIcon(vendor_class.tier_group)" class="home-view-vendor-classes-menu--img" alt="vendor_class.tier_group"> 
+                          <span class="home-view-vendor-classes-menu--span">{{vendor_class.tier_group}}</span>
+                        </a>
                     </div>
                 </div>
             </div>
             <div class="home-view-vendor-types" v-if="active_price_tier_data != '' ">
-                <div v-for="j in active_price_tier_data.price_tiers" :key="j.order_no" @click="set_active_vendor_name(j.vendor_name);set_active_vendor_details(j);check_carrier_type(j.vendor_name);" class="home-view-vendor-types--item" :class="get_current_active_vendor_type_class(j.vendor_name)">
-
-                    <div class="">
-                        <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper align_content2">
-                            <div class="home-view-vendor-types-item--vendor-wrapper__img">
-                                <img class="home-view-vendor-types-item__image" :src="getVendorIcon(j.vendor_id)" alt="">
-                            </div>
-                            <div class="home-view-vendor-types-item--vendor-wrapper__vendor">
-                                {{j.vendor_name}}
-                            </div>
-
-                        </div>
-                        <!-- <div class="home-view-vendor-types-item">
-
-                        </div> -->
-                        <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper align_content">
-                            <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-left">
-                                <div class="home-view-vendor-types-item--cost-wrapper__cost">
-                                    Ksh {{formatNumeral(j.cost)}}
-                                </div>
-                                <div class="home-view-vendor-types-item--cost-wrapper_time">
-                                    Pickup by {{transformDate(j)}}
-                                </div>
-                            </div>
-                            <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right">
-                                <el-popover placement="right" width="350" trigger="hover">
-                                    <div class="reset-font" v-html="j.tier_description"></div>
-                                    <span slot="reference"><i class="el-icon-info"></i></span>
-                                </el-popover>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="carrier_type_option" v-if="j.vendor_name !== 'Standard'">
-
-                        <div class="carrier_type_content">
-
-                            <span data-toggle="tooltip" data-placement="top" title="Select any Rider">
-
-                             <input  name="carrier_type" value="2" checked  type="radio"> Any
-
-                          </span>
-
-                            <span data-toggle="tooltip" data-placement="top" title="Select a Rider with a box">
-
-                             <input name="carrier_type"  value="1"  type="radio">  {{getCarrierBoxName()}}
-
-                         </span>
-
-                            <span data-toggle="tooltip" data-placement="top" title="Select a Rider without a box">
-
-                            <input  name="carrier_type" value="0"  type="radio"> {{getCarrierNoBoxName()}}
-
-                        </span>
-
-                        </div>
-
-                    </div>
-
+                <div v-for="j in active_price_tier_data.price_tiers" :key="j.order_no" @click="set_active_vendor_name(j.vendor_name);set_active_vendor_details(j);">
+                  <div class="home-view-vendor-types--item home-view-vendor-types-item-wrap" :class="get_current_active_vendor_type_class(j.vendor_name)">
+                      <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
+                          <div class="home-view-vendor-types-item--vendor-wrapper__img">
+                              <img class="home-view-vendor-types-item__image" :src="getVendorIcon(j.vendor_id)" alt="">
+                          </div>
+                          <div class="home-view-vendor-types-item--vendor-wrapper__vendor">
+                              {{j.vendor_name}}
+                          </div>
+                      </div>
+                      
+                      <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper">
+                          <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-left">
+                              <div class="home-view-vendor-types-item--cost-wrapper__cost">
+                                  Ksh {{formatNumeral(j.cost)}}
+                              </div>
+                              <div class="home-view-vendor-types-item--cost-wrapper_time">
+                                  Pickup by {{transformDate(j)}}
+                              </div>
+                          </div>
+                          <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right">
+                              <el-popover placement="right" width="350" trigger="hover">
+                                  <div class="reset-font" v-html="j.tier_description"></div>
+                                  <span slot="reference"><i class="el-icon-info"></i></span>
+                              </el-popover>
+                          </div>
+                      </div>
+                      <div class="home-view-carrier-type" v-if="j.vendor_name !== 'Standard'">
+                          <div class="home-view-carrier-type--item">
+                            <el-radio v-model="carrier_type" label="2">Any</el-radio>
+                          </div>
+                          <div class="home-view-carrier-type--item">
+                            <el-radio v-model="carrier_type" label="1">{{getCarrierBoxName()}}</el-radio>
+                            
+                          </div>
+                          <div class="home-view-carrier-type--item">
+                            <el-radio v-model="carrier_type" label="0">{{getCarrierNoBoxName()}}</el-radio>
+                          </div>
+                      </div>
+                  </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
     <div class="" v-if="get_active_package_class != '' ">
         <order-options v-on:destroyOrderOptions="destroyVendorComponent()"></order-options>
@@ -111,7 +90,7 @@ export default {
     return {
       first_time: false,
       popover_visible: false,
-      carrier_state: false
+      carrier_type:2,
     }
   },
   computed: {
@@ -137,15 +116,6 @@ export default {
     }),
     setActivePackageClass(name) {
       this.set_active_package_class(name);
-    },
-    check_carrier_type(name) {
-      if (name == this.get_active_vendor_name) {
-        console.log('Active');
-        this.carrier_state = true;
-      } else {
-        console.log('Fail');
-        this.carrier_state = true;
-      }
     },
     getVendorIcon(id) {
       return "https://images.sendyit.com/web_platform/vendor_type/side/" + id + ".svg";
