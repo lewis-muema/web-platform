@@ -91,6 +91,9 @@ export default {
     },
     resetState (state) {
        Object.assign(state, getDefaultState())
+     },
+     set_carrier_type(state, val) {
+       state.carrier_type_id = val;
      }
 
 };
