@@ -18,10 +18,14 @@
 .order_details_desc_item {
     margin-top: 10px;
 }
+.order_details_desc_item--no-space {
+    margin-top: unset;
+}
 .order_details_desc_image {
     width: 13px;
     height: auto;
     margin-top: 10px;
+    margin-right: 5px;
 }
 .order_details_price {
     margin-top: 10px;
@@ -84,4 +88,14 @@
 }
 .el-rate__icon {
     font-size: 30px;
+}
+.order_details_desc_item--wrapper{
+padding: 10px 0 10px 0;
+}
+.rider_details--view-delivery-docs-btn{
+margin-top: 20px;
+}
+.recepient-padded
+{
+  padding: 5px 0px 0px 20px;
 }
