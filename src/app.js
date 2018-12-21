@@ -18,6 +18,7 @@ locale.use(lang);
 import {
   Pagination,
   Dropdown,
+  Dialog,
   DropdownMenu,
   DropdownItem,
   Input,
@@ -39,10 +40,15 @@ import {
   Message,
   Notification,
   Popover,
+  RadioGroup,
+  RadioButton,
 } from "element-ui";
 
 Vue.use(Pagination);
+Vue.use(RadioGroup);
+Vue.use(RadioButton);
 Vue.use(Dropdown);
+Vue.use(Dialog);
 Vue.use(DropdownMenu);
 Vue.use(DropdownItem);
 Vue.use(Input);
