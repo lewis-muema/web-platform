@@ -8,6 +8,12 @@
               <div class="order_details_price">
                     KES {{order_details.order_cost}}
               </div>
+              <!-- <div class="order_details_desc_item">
+                     Extra Distance Bill : KES 240 
+              </div>
+              <div class="order_details_desc_item">
+                    Waiting Time Charges : KES 100
+              </div> -->
 
               <div class="order_details_desc_item">
                     Distance : {{order_details.order_details.distance}} KMs
@@ -16,16 +22,27 @@
               <!-- <div class="order_details_desc_item">
                     Duration : {{order_details.order_details.duration}}
               </div>-->
-
-              <div class="order_details_desc_item">
-                    Date :{{order_details.order_date | moment }}
+              <div class="order_details_desc_item--wrapper">
+                <div class="order_details_desc_item">
+                      Date : {{order_details.order_date | moment }}
+                </div>
+                <span v-for="j in order_details.logs">
+                  <div class="order_details_desc_item" v-if="j.log_type == 3">
+                        Picked : {{j.log_time | moment }}
+                  </div>
+                  <div class="order_details_desc_item" v-if="j.log_type == 4">
+                        Delivered : {{j.log_time | moment }}
+                  </div>
+                </span>
+                
               </div>
+              
               <div class="order_details_desc_item">
                     <img src="../../../assets/img/maroon_button.png" class="order_details_desc_image">
                     {{getOrderFromName(order_details.path)}}
               </div>
               <template v-for="(locations,index) in order_details.path" v-if="index >= 1">
-                <div class="order_details_desc_item">
+                <div class="order_details_desc_item order_details_desc_item--no-space">
                       <img src="../../../assets/img/blue_button.png" class="order_details_desc_image">
                       <span>{{order_details.path[index].name}}</span>
                       <div class="recepient-padded" v-if="order_details.rider_deliver_img != null">
@@ -33,6 +50,14 @@
                       </div>
                 </div>
               </template>
+              <div class="order_details_desc_item--wrapper">
+                 <div class="order_details_desc_item" v-if="order_details.extra_distance_amount > 0">
+                      Extra Distance Bill : {{order_details.extra_distance_amount}}
+                </div>
+                 <div class="order_details_desc_item" v-if="order_details.waiting_time_amount > 0">
+                      Waiting Time Charges : {{order_details.waiting_time_amount}}
+                </div>
+              </div>
           </div>
       </div>
       <div class="rider_details_wrap">
@@ -58,12 +83,13 @@
                     </div>
                 </div>
                 <div class="rider_details_actions_ongoing" v-else>
+                    <div class="rider_details_action">
+                        <button class="button-primary rider_details_action_btn rider_details--view-delivery-docs-btn" type="button" @click="trackOrder(order_details.order_no)">View Delivery Docs</button>
+                    </div>
                 </div>
-            </div>
+              </div>
 
           </div>
-
-
         </div>
   </div>
 </template>
@@ -159,9 +185,5 @@ export default {
 .rate--action-btn {
   display: inline-block;
   margin-left: 30px;
-}
-.recepient-padded
-{
-  padding: 5px 0px 0px 15px;
 }
 </style>
