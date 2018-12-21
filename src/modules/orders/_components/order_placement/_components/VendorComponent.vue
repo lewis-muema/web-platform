@@ -49,18 +49,20 @@
                               </el-popover>
                           </div>
                       </div>
-                      <div class="home-view-carrier-type" v-if="j.vendor_name !== 'Standard' && j.vendor_name === get_active_vendor_name">
-                          <div class="home-view-carrier-type--item">
-                            <el-radio v-model="carrier_type" label="2">Any</el-radio>
+                       <transition name="home-carrier-type-fade">
+                          <div class="home-view-carrier-type" v-if="j.vendor_name !== 'Standard' && j.vendor_name === get_active_vendor_name">
+                              <div class="home-view-carrier-type--item">
+                                <el-radio v-model="carrier_type" label="2">Any</el-radio>
+                              </div>
+                              <div class="home-view-carrier-type--item">
+                                <el-radio v-model="carrier_type" label="1">{{getCarrierBoxName()}}</el-radio>
+                                
+                              </div>
+                              <div class="home-view-carrier-type--item">
+                                <el-radio v-model="carrier_type" label="0">{{getCarrierNoBoxName()}}</el-radio>
+                              </div>
                           </div>
-                          <div class="home-view-carrier-type--item">
-                            <el-radio v-model="carrier_type" label="1">{{getCarrierBoxName()}}</el-radio>
-                            
-                          </div>
-                          <div class="home-view-carrier-type--item">
-                            <el-radio v-model="carrier_type" label="0">{{getCarrierNoBoxName()}}</el-radio>
-                          </div>
-                      </div>
+                        </transition>
                   </div>
                 </div>
             </div>
@@ -90,7 +92,7 @@ export default {
     return {
       first_time: false,
       popover_visible: false,
-      carrier_type:2,
+      carrier_type:"2",
     }
   },
   computed: {
