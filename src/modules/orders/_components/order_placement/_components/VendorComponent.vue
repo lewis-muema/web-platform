@@ -49,7 +49,7 @@
                               </el-popover>
                           </div>
                       </div>
-                      <div class="home-view-carrier-type" v-if="j.vendor_name !== 'Standard'">
+                      <div class="home-view-carrier-type" v-if="j.vendor_name !== 'Standard' && j.vendor_name === get_active_vendor_name">
                           <div class="home-view-carrier-type--item">
                             <el-radio v-model="carrier_type" label="2">Any</el-radio>
                           </div>
