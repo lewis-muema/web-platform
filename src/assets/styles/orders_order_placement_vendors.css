@@ -129,6 +129,7 @@
 .home-view-carrier-type{
   width: 100%;
   justify-content:space-evenly;
+  padding: 10px 0 10px 0;
 }
 
 /* --start vendor actions */
