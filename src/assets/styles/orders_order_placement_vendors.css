@@ -244,4 +244,10 @@
   margin: 5px;
   padding: 5px;
 }
+.carrier_type_option{
+  position:absolute;
+  margin-top:12%;
+  margin-left: 19%;
+  font-size:14px;
+}
 /* end order actions */
