@@ -70,6 +70,7 @@
         <order-options v-on:destroyOrderOptions="destroyVendorComponent()"></order-options>
     </div>
 </div>
+</div>
 
 </template>
 
