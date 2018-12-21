@@ -235,3 +235,14 @@
   margin-top: 2px;
 }
 /* end order actions */
+
+
+
+/* start transitions */
+.home-carrier-type-fade-enter-active, .home-carrier-type-fade-leave-active{
+  transition: opacity .9s;
+}
+.home-carrier-type-fade-enter, .home-carrier-type-fade-leave-to {
+  opacity: 0;
+}
+/* end transitions */

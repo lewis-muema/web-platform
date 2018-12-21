@@ -60,7 +60,7 @@
                           <div class="home-view-carrier-type--item">
                             <el-radio v-model="carrier_type" label="0" @input="set_carrier_store">{{getCarrierNoBoxName()}}</el-radio>
                           </div>
-                      </div>
+                        </transition>
                   </div>
                 </div>
             </div>
@@ -90,7 +90,14 @@ export default {
     return {
       first_time: false,
       popover_visible: false,
+      <<
+      << << < HEAD
       carrier_type: "2",
+      ===
+      === =
+      carrier_type: "2",
+      >>>
+      >>> > 602727 c7a00a47070987b734306a830b37bb2681
     }
   },
   computed: {
