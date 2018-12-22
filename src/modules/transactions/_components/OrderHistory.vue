@@ -15,7 +15,7 @@
           <button type="button" :class="inactive_filter ? 'button-primary section--filter-action-inactive btn-order-hstry':'button-primary section--filter-action btn-order-hstry'" name="order_history_text" v-model="order_history_text" @click="filterTableData" :disabled="inactive_filter == true ? true : false">{{this.order_history_text}}</button>
         </div>
     </div>
-    <div class= "bg-grey">
+    <div class= "bg-grey" style= "display: none">
     <button type="button" class= " btn-order-hstry btn-save" name="order_history_text" @click= "exportPDF">PRINT</button>
     </div> 
      <el-table
