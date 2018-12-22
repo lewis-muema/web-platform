@@ -7,8 +7,6 @@
   margin-left: -20px;
   margin-right: -20px;
 }
-.home-view-vendor-classes {
-}
 .home-view-vendor-classes--title {
   text-align: center;
   font-weight: normal;
@@ -56,7 +54,6 @@
 }
 .home-view-vendor-types--item {
   border-radius: 5px;
-  height: 2.5em;
   margin: 13px 0;
   cursor: pointer;
   border: 1px solid #555;
@@ -75,7 +72,7 @@
 .home-view-vendor-types--item,
 .home-view-vendor-types-item,
 .home-view-vendor-types-item--cost-wrapper,
-.home-view-vendor-types-item--vendor-wrapper {
+.home-view-vendor-types-item--vendor-wrapper,.home-view-carrier-type {
   display: flex;
 }
 .home-view-vendor-types-item {
@@ -125,6 +122,14 @@
   align-self: center;
   justify-content: flex-end;
   flex-basis: 10%;
+}
+.home-view-vendor-types-item-wrap{
+  flex-wrap: wrap;
+}
+.home-view-carrier-type{
+  width: 100%;
+  justify-content:space-evenly;
+  padding: 10px 0 10px 0;
 }
 
 /* --start vendor actions */
@@ -229,5 +234,15 @@
   margin-left: -15px;
   margin-top: 2px;
 }
-
 /* end order actions */
+
+
+
+/* start transitions */
+.home-carrier-type-fade-enter-active, .home-carrier-type-fade-leave-active{
+  transition: opacity .9s;
+}
+.home-carrier-type-fade-enter, .home-carrier-type-fade-leave-to {
+  opacity: 0;
+}
+/* end transitions */
