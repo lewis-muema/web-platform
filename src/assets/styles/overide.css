@@ -205,6 +205,10 @@ button span {
   font-size: 11px;
 }
 
+.btn-save:hover{
+  cursor: pointer;
+}
+
 .btn-submit {
   -webkit-appearance: none;
   background-color: #fff;
