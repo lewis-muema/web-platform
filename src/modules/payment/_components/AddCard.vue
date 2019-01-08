@@ -101,7 +101,7 @@ export default {
         this.show_cvv = true;
       }
     },
-    ...mapActions(["$_payment/requestAddNewCard"]),
+    ...mapActions({ _requestAddNewCard: "$_payment/requestAddNewCard" }),
 
     handleAddCard() {
       //sort encryption
@@ -151,7 +151,7 @@ export default {
         app: "PRIVATE_API",
         endpoint: "add_card"
       };
-      this.$store.dispatch("$_payment/requestAddNewCard", full_payload).then(
+      this._requestAddNewCard(full_payload).then(
         response => {
           response.data = JSON.parse(Mcrypt.decrypt(response.data));
           let that = this;

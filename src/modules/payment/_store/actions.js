@@ -25,6 +25,9 @@ export default {
       }).then(
         response => {
           commit("setCardLoadingStatus", false);
+          if (response.length > 1) {
+            response = response[0];
+          }
           resolve(response);
         },
         error => {
@@ -46,6 +49,9 @@ export default {
       }).then(
         response => {
           console.log("in store dispatch to global store");
+          if (response.length > 1) {
+            response = response[0];
+          }
           resolve(response);
         },
         error => {
@@ -53,8 +59,6 @@ export default {
           console.log("failed to dispatch to global store");
         }
       );
-
-      resolve(true);
     });
   },
   resetCardPaymentRequest({ dispatch, commit, getters, rootGetters }, payload) {
