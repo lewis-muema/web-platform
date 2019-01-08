@@ -236,21 +236,23 @@ export default {
       }
 
       let payload = {
-        amount: this.card_payment_data.amount,
-        pay_method: 2,
-        ref_no: "VISA-" + Math.round(+new Date() / 1000),
-        client_id: cop_id,
-        account_no: "SENDY" + cop_id,
-        phone: user_phone,
-        email: user_email,
-        name: user_name,
-        bill_Ref_Number: user_phone,
-        card_trans_id: card_trans_id
-      };
+          values:{
+          amount: this.card_payment_data.amount,
+          pay_method: 2,
+          ref_no: "VISA-" + Math.round(+new Date() / 1000),
+          client_id: cop_id,
+          account_no: "SENDY" + cop_id,
+          phone: user_phone,
+          email: user_email,
+          name: user_name,
+          bill_Ref_Number: user_phone,
+          card_trans_id: card_trans_id
+        }
+        };
 
       let full_payload = {
-        vm: payload.vm,
-        values: payload,
+        vm: this,
+        params: payload,
         app: "PRIVATE_API",
         endpoint: "payment"
       };
