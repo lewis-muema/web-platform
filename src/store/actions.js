@@ -35,14 +35,14 @@ export default {
         ) {
             //get from local storage
             let jwtToken = localStorage.getItem('jwtToken');
-            // console.log(jwtToken)
+            console.log(jwtToken)
             //the json is ok
             //set content type to json
             if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
                 config = {
                     headers: {
-                        "Content-Type": "application/json"
-                        // "Authorization": jwtToken
+                        "Content-Type": "application/json",
+                        "Authorization": jwtToken
                     }
                 };
                 
@@ -57,13 +57,13 @@ export default {
         } else {
             //the json is not ok
             // assume it is just a string
-            // add qoutes to the string
+            // add quotes to the string
             let jwtToken = localStorage.getItem('jwtToken');
             payload.values = '"' + payload.values + '"';
             if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
                 config = {headers: {
                     "Content-Type": "text/plain",
-                    // "Authorization": 
+                    "Authorization": jwtToken
                 }};
                 
             }
