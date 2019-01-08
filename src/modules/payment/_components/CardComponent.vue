@@ -267,11 +267,12 @@ export default {
               level: 1,
               message: "card payment successfull"
             };
-            that.$store.dispatch("show_notification", notification, {
+            let that = this;
+            
+            this.$store.dispatch("show_notification", notification, {
               root: true
             });
 
-            let that = this;
             let payload = {
               values: running_balance_payload,
               vm: this,
