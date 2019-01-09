@@ -329,7 +329,24 @@ export function createRouter() {
       {
         path: "/external/onboard/:type/:content/:tag",
         component: () => import("../modules/external/External.vue")
-      }
+      },
+      {
+        path: "/external",
+        component: () => import("../modules/external/ExternalTracking.vue"),
+        children: [
+          {
+            path: "/external/tracking/:order_no",
+            component: () =>
+              import("../modules/orders/_components/tracking/Tracking.vue"),
+            name: "tracking_external"
+          },
+          {
+            path: "/external/rating/:order_no",
+            component: () =>
+              import("../modules/orders/_components/rating/Rating.vue")
+          }
+        ]
+      },
     ]
   });
 

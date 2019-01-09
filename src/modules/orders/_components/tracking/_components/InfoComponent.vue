@@ -49,7 +49,7 @@
             </span> -->
           </div>
         </div>
-        <div class="infobar--content infobar--item infobar--actions">
+        <div class="infobar--content infobar--item infobar--actions" v-if="this.$route.name != 'tracking_external'">
           <transition name="fade" mode="out-in">
             <div class="infobar--action-slide" v-if="this.cancel_popup">
               <div class="">
@@ -147,7 +147,12 @@ export default {
         if (response) {
           if (this.tracking_data.delivery_status == 3) {
             that.doNotification("1","Order delivered","Your order has been delivered.");
-            that.$router.push('/orders/rating/'+ from);
+            if (that.$route.name != 'tracking_external') {
+              that.$router.push('/orders/rating/'+ from);
+            }
+            else {
+              that.$router.push('/external/rating/'+ from);
+            }
           }
           else {
             if (this.tracking_data.main_status == 2) {
@@ -178,7 +183,12 @@ export default {
       }
     },
     place: function () {
-      this.$router.push('/orders')
+      if (that.$route.name != 'tracking_external') {
+        this.$router.push('/orders')
+      }
+      else {
+        this.$router.push('/')
+      }
     },
     doNotification(level, title, message) {
       this.$store.commit("setNotificationStatus", true);
