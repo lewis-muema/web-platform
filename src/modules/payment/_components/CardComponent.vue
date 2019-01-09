@@ -272,7 +272,13 @@ export default {
             this.$store.dispatch("show_notification", notification, {
               root: true
             });
-
+            
+            let running_balance_payload = {
+              values: {
+                cop_id: cop_id,
+                user_phone: user_phone
+              }
+            };
             let payload = {
               values: running_balance_payload,
               vm: this,
