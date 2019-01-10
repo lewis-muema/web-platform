@@ -44,12 +44,16 @@ export default {
                         "Authorization": jwtToken
                     }
                 };
+                let payload = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
+                this.commit("setNotification", payload);
+                this.commit("setNotificationStatus", true);
+                return true;
                 
             }
             else{
                 let payload = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
-                commit("setNotification", payload);
-                commit("setNotificationStatus", true);
+                this.commit("setNotification", payload);
+                this.commit("setNotificationStatus", true);
                 return true;
             }
         } else {
@@ -67,8 +71,8 @@ export default {
             }
             else{
                 let payload = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
-                commit("setNotification", payload);
-                commit("setNotificationStatus", true);
+                this.commit("setNotification", payload);
+                this.commit("setNotificationStatus", true);
                 return true;
             }
         }
