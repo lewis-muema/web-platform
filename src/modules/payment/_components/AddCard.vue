@@ -122,8 +122,9 @@ export default {
         user_email = session.peer.user_email;
         user_phone = session.peer.user_phone;
       }
-
+      
       user_name = user_name.toString().split(" ");
+  
       let user_fname = user_name[0];
       let user_lname = user_name[user_name.length - 1];
       let card_payload = {
@@ -151,9 +152,9 @@ export default {
         response => {
           
           response.data = Mcrypt.decrypt(response.data);
-          response.data = response.data.trim();
+          response.data = JSON.stringify(response.data.replace(/\s+/g, ''));
           response.data = JSON.parse(response.data);
-
+          
           let that = this;
 
           if (response.data.status == false) {
