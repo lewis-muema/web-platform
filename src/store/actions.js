@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default {
-    requestAxiosPost({state}, payload) {
+    requestAxiosPost({state, commit}, payload) {
         let url = state.ENV[payload.app];
         //add api key - if request is going to the backend
         if (payload.app == "BACKEND_CUSTOMERS_APP") {
@@ -48,8 +48,8 @@ export default {
             }
             else{
                 let payload = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
-                this.commit("setNotification", payload);
-                this.commit("setNotificationStatus", true);
+                commit("setNotification", payload);
+                commit("setNotificationStatus", true);
                 return true;
             }
         } else {
@@ -67,8 +67,8 @@ export default {
             }
             else{
                 let payload = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
-                this.commit("setNotification", payload);
-                this.commit("setNotificationStatus", true);
+                commit("setNotification", payload);
+                commit("setNotificationStatus", true);
                 return true;
             }
         }
