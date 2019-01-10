@@ -13,9 +13,6 @@
     <div class="paymentbody--input-wrap paymentbody--input-spaced">
         <div class="input-control-big">
           <input type="text" name="card_payment_month" v-model="card_payment_data.card_expiry" value="" placeholder="MM/YY" class="input-control paymentbody--input" @change="creditCExpiryMask" @keyup="creditCExpiryMask">
-          <span class="sendy_payments_input_info input_info_last" v-show="invalid_expiry != null">
-            {{ invalid_expiry }}
-          </span>
         </div>
         <div class="input-control-small">
            <el-input placeholder="CVV"  v-model="card_payment_data.cvv" type="number" name="card_payment_cvv" class="paymentbody--input">
@@ -124,7 +121,10 @@ export default {
         this.show_cvv = true;
       }
     },
-    ...mapActions(["$_payment/requestCardPayment"]),
+    ...mapActions({
+      _requestCardPayment: "$_payment/requestCardPayment",
+      _completeCardPayment: "$_payment/completeCardPaymentRequest"
+    }),
 
     handleCardPayment() {
       //sort encryption
@@ -172,9 +172,11 @@ export default {
         app: "PRIVATE_API",
         endpoint: "card_payment"
       };
-      this.$store.dispatch("$_payment/requestCardPayment", full_payload).then(
+      this._requestCardPayment(full_payload).then(
         response => {
           response.data = Mcrypt.decrypt(response.data);
+          response.data = JSON.parse(response.data);
+
           let that = this;
 
           if (response.data.status == false) {
@@ -184,7 +186,7 @@ export default {
               level: 2,
               message: response.data.message
             };
-            that.$store.dispatch("show_notification", notification, {
+            this.$store.dispatch("show_notification", notification, {
               root: true
             });
           } else {
@@ -194,11 +196,14 @@ export default {
               message: "card payment was processed successfully"
             };
             this.payment_state = "Payment Success";
-            that.$store.dispatch("show_notification", notification, {
+            this.$store.dispatch("show_notification", notification, {
               root: true
             });
 
             let card_trans_id = response.data.values.card_trans_id;
+
+            console.log(card_trans_id);
+
             this.completeCardPayment(card_trans_id);
             //complete payment here
           }
@@ -224,7 +229,6 @@ export default {
         user_email = session.biz.user_email;
         user_phone = session.biz.user_phone;
       } else {
-        cop_id = session.peer.cop_id;
         user_id = session.peer.user_id;
         user_name = session.peer.user_name;
         user_email = session.peer.user_email;
@@ -232,27 +236,30 @@ export default {
       }
 
       let payload = {
-        amount: this.card_payment_data.amount,
-        pay_method: 2,
-        ref_no: "VISA-" + Math.round(+new Date() / 1000),
-        client_id: cop_id,
-        account_no: "SENDY" + cop_id,
-        phone: user_phone,
-        email: user_email,
-        name: user_name,
-        bill_Ref_Number: user_phone,
-        card_trans_id: card_trans_id
-      };
+          values:{
+          amount: this.card_payment_data.amount,
+          pay_method: 2,
+          ref_no: "VISA-" + Math.round(+new Date() / 1000),
+          client_id: cop_id,
+          account_no: "SENDY" + cop_id,
+          phone: user_phone,
+          email: user_email,
+          name: user_name,
+          bill_Ref_Number: user_phone,
+          card_trans_id: card_trans_id
+        }
+        };
 
       let full_payload = {
-        vm: payload.vm,
-        values: payload,
+        vm: this,
+        params: payload,
         app: "PRIVATE_API",
         endpoint: "payment"
       };
 
-      this.$store.dispatch("$_payment/completeCardPayment", full_payload).then(
+      this._completeCardPayment(full_payload).then(
         response => {
+          console.log(response);
           if (response.data.status == true) {
             //this will request the new running balance and update the store
             let notification = {
@@ -260,11 +267,18 @@ export default {
               level: 1,
               message: "card payment successfull"
             };
-            that.$store.dispatch("show_notification", notification, {
+            let that = this;
+            
+            this.$store.dispatch("show_notification", notification, {
               root: true
             });
-
-            let that = this;
+            
+            let running_balance_payload = {
+              values: {
+                cop_id: cop_id,
+                user_phone: user_phone
+              }
+            };
             let payload = {
               values: running_balance_payload,
               vm: this,
@@ -272,7 +286,8 @@ export default {
               endpoint: "running_balance"
             };
 
-            this.$store.dispatch("requestRunningBalance", payload, {root: true})
+            this.$store
+              .dispatch("requestRunningBalance", payload, { root: true })
               .then(response => {
                 console.log("running balance response", response);
               });
@@ -282,7 +297,7 @@ export default {
               level: 3,
               message: "card payment failed to complete"
             };
-            that.$store.dispatch("show_notification", notification, {
+            this.$store.dispatch("show_notification", notification, {
               root: true
             });
           }

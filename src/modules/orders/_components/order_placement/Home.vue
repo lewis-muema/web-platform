@@ -369,13 +369,7 @@ export default {
             //console.log('failed to unregisterModule $_orders $_home on order placement home', er);
         }
 
-
-        try{
-            this.$store.unregisterModule('$_payment');
-        }
-        catch(er){
-            //console.log('failed to unregisterModule $_orders $_home on order placement home', er);
-        }
+        // do not unregister payments module since we do not expect any conflicts with the payment page state
 
         this.clear_order_path();
         this.remove_markers();
