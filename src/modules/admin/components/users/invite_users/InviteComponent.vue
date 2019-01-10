@@ -78,7 +78,7 @@
                 }
                 this.populate()
             }
-            else if (number == 3 && this.getInvites!= null) {
+            else if (number == 3 && this.getInvites != null) {
                 this.populate()
             }
         },
@@ -107,7 +107,7 @@
                 inviteNewUsers: '$_admin/inviteNewUsers',
                 createInviteLink: '$_admin/createInviteLink'
             }),
-            populate: function (){
+            populate: function () {
                 let set = this.getInvites
                 for (let i = 0; i < set.length; i++) {
                     this.elements[i].email = set[i][0];
@@ -120,8 +120,8 @@
                 this.updateViewState(3);
             },
             postInvites: function () {
-                for (let i=0, iLen=this.elements.length; i<iLen; i++) {
-                    let email = this.elements[i].email;
+                for (let i = 0, iLen = this.elements.length; i < iLen; i++) {
+                    let email = this.elements[0].email;
                     if (email != '') {
                         this.button = "Sending...";
                         let session = this.$store.getters.getSession;
@@ -129,11 +129,11 @@
                         if (session.default == 'biz') {
                             cop_id = session[session.default]['cop_id'];
                         }
-                        for (let i=0, iLen=this.elements.length; i<iLen; i++) {
+
+                        if (this.elements[i].email !== '') {
                             let email = this.elements[i].email;
                             let name = this.elements[i].name;
                             let department = this.elements[i].department;
-
                             this.invitees.push({
                                 "cop_id": cop_id,
                                 "email": email,
@@ -142,39 +142,11 @@
                                 "name": name,
                                 "department_id": department
                             });
-                        }
-                        let payload = this.invitees;
-                        console.log(payload);
-                        let full_payload = {
-                            "values": payload,
-                            "vm": this,
-                            "app": "NODE_PRIVATE_API",
-                            "endpoint": "invite_user"
-                        }
-                        this.$store.dispatch("$_admin/inviteNewUsers", full_payload).then(response => {
-                            this.button = "Send Invites";
-                            console.log("invitations sent");
-                            console.log(response);
-                            let level = 1; //success
-                            let notification = {"title": "", "level": level, "message": "Invitations sent!"}; //notification object
-                            this.$store.commit('setNotification', notification);
-                            this.$store.commit('setNotificationStatus', true); //activate notification
-                        }, error => {
-                            this.button = "Send Invites";
-                            console.log("invitations NOT sent");
-                            console.log(error);
-                            let level = 3;
-                            let notification = {
-                                "title": "",
-                                "level": level,
-                                "message": "Something went wrong."
-                            }; //notification object
-                            this.$store.commit('setNotification', notification);
-                            this.$store.commit('setNotificationStatus', true); //activate notification
 
-                        });
+                        }
                     }
                     else {
+                        this.button = "Send Invites";
                         let level = 2;
                         let notification = {
                             "title": "",
@@ -185,6 +157,36 @@
                         this.$store.commit('setNotificationStatus', true); //activate notification
                     }
                 }
+                let payload = this.invitees;
+                console.log(payload);
+                let full_payload = {
+                    "values": payload,
+                    "vm": this,
+                    "app": "NODE_PRIVATE_API",
+                    "endpoint": "invite_user"
+                }
+                this.$store.dispatch("$_admin/inviteNewUsers", full_payload).then(response => {
+                    this.button = "Send Invites";
+                    console.log("invitations sent");
+                    console.log(response);
+                    let level = 1; //success
+                    let notification = {"title": "", "level": level, "message": "Invitations sent!"}; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+                }, error => {
+                    this.button = "Send Invites";
+                    console.log("invitations NOT sent");
+                    console.log(error);
+                    let level = 3;
+                    let notification = {
+                        "title": "",
+                        "level": level,
+                        "message": "Something went wrong."
+                    }; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
+                });
 
             },
             addElement: function () {
