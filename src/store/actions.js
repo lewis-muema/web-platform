@@ -86,7 +86,6 @@ export default {
     },
 
     show_notification({commit}, payload) {
-        // console.log("dispatching notification to the store");
         commit("setNotification", payload);
         commit("setNotificationStatus", true);
         return true;
