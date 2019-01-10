@@ -897,7 +897,7 @@ export default {
             response = response[0];
           }
           //decrypt response.data here
-          response.data = JSON.parse(Mcrypt.decrypt(response.data));
+          response.data = JSON.parse(Mcrypt.decrypt(response.data).trim());
           let that = this;
 
           if (response.data.status == false) {
@@ -942,7 +942,6 @@ export default {
         user_email = session.biz.user_email;
         user_phone = session.biz.user_phone;
       } else {
-        cop_id = session.peer.cop_id;
         user_id = session.peer.user_id;
         user_name = session.peer.user_name;
         user_email = session.peer.user_email;
@@ -985,6 +984,12 @@ export default {
               "Successful Payment",
               "Card payment has been completed successfully."
             );
+            let running_balance_payload = {
+              values: {
+                cop_id: cop_id,
+                user_phone: user_phone
+              }
+            };
 
             let payload = {
               values: running_balance_payload,
