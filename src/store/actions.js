@@ -47,11 +47,10 @@ export default {
                 
             }
             else{
-                config = {
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                };
+                let payload = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
+                commit("setNotification", payload);
+                commit("setNotificationStatus", true);
+                return true;
             }
         } else {
             //the json is not ok
@@ -67,11 +66,10 @@ export default {
                 
             }
             else{
-                config = {
-                    headers: {
-                        "Content-Type": "text/plain"
-                    }
-                };
+                let payload = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
+                commit("setNotification", payload);
+                commit("setNotificationStatus", true);
+                return true;
             }
         }
 

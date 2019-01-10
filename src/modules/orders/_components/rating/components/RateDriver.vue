@@ -71,7 +71,7 @@
             return {
                 rated_score: 1,
                 show_rating: false,
-                driver_name: "Sendyier",
+                driver_name: "Sendy Driver",
                 driver_photo: "",
                 order: "",
                 user_email: "",
