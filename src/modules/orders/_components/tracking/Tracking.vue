@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <a class="back--button" @click="$router.push('/orders')"><i class="el-icon-back"></i></a>
+    <a class="back--button" @click="$router.push('/orders')" v-if="this.$route.name != 'tracking_external'"><i class="el-icon-back"></i></a>
     <info-window/>
   </div>
 </template>
