@@ -5,8 +5,7 @@ export default {
         let url = state.ENV[payload.app];
         //add api key - if request is going to the backend
         if (payload.app == "BACKEND_CUSTOMERS_APP") {
-            payload.endpoint =
-                payload.endpoint + "?apikey=" + state.ENV["BACKEND_API_KEY"];
+            payload.endpoint = payload.endpoint + "?apikey=" + state.ENV["BACKEND_API_KEY"];
         }
         let config = {};
 
@@ -46,9 +45,16 @@ export default {
                 };
                 
             }
+            else if (payload.endpoint == "sign_up_check"){
+                config = {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                };
+            }
             else{
-                let payload = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
-                commit("setNotification", payload);
+                let notification = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
+                commit("setNotification", notification);
                 commit("setNotificationStatus", true);
                 return true;
             }
@@ -64,6 +70,14 @@ export default {
                     "Authorization": jwtToken
                 }};
                 
+            }
+            else if (payload.endpoint == "sign_up_check"){
+                config = {
+                    headers: {
+                        "Content-Type": "text/plain"
+
+                    }
+                };
             }
             else{
                 let payload = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
