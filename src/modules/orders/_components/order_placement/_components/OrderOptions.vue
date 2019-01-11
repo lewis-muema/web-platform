@@ -898,7 +898,10 @@ export default {
             response = response[0];
           }
           //decrypt response.data here
-          response.data = JSON.parse(Mcrypt.decrypt(response.data).trim());
+          response.data = Mcrypt.decrypt(response.data);
+          response.data = JSON.stringify(response.data.replace(/\s+/g, ''));
+          response.data = JSON.parse(response.data);
+          
           let that = this;
 
           if (response.data.status == false) {
@@ -929,6 +932,8 @@ export default {
       return true;
     },
     completeCardPayment(card_trans_id) {
+      console.log('completing card payment');
+
       let session = this.$store.getters.getSession;
       let user_id = 0;
       let cop_id = 0;
