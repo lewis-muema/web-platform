@@ -77,7 +77,7 @@
                         </div>
 
                     </span>
-                         <div class="" v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0">
+                    <div class="" v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0">
                         <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
                              v-for="card in get_saved_cards">
                             <div class="home-view-notes-wrapper--item__option">
@@ -337,6 +337,7 @@ export default {
       requestRunningBalanceFromAPI: "$_payment/requestRunningBalance",
       requestMpesaPaymentAction: "$_payment/requestMpesaPayment",
       requestCardPaymentAction: "$_payment/requestCardPayment",
+      _completeCardPayment:"$_payment/completeCardPayment",
       completeMpesaPaymentRequest: "$_payment/completeMpesaPaymentRequest",
       terminateMpesaPaymentRequest: "$_payment/terminateMpesaPaymentRequest",
       requestOrderCompletion: "$_orders/$_home/requestOrderCompletion",
@@ -577,9 +578,7 @@ export default {
           app: "PRIVATE_API",
           endpoint: "running_balance"
         };
-        this.$store.dispatch("requestRunningBalance", payload, {
-          root: true
-        }).then(
+        this.requestRunningBalanceFromAPI(payload).then(
           response => {
             if (response.length > 0) {
               response = response[0];
@@ -767,9 +766,7 @@ export default {
     },
 
     checkRunningBalance(old_rb, payload) {
-      this.$store.dispatch("requestRunningBalance", payload, {
-        root: true
-      }).then(
+      this.requestRunningBalanceFromAPI(payload).then(
         response => {
           //console.log(response);
           if (response.length > 0) {
@@ -869,6 +866,10 @@ export default {
     },
 
     handleCardPayments(card) {
+      console.log('handling card payment');
+      console.log(card);
+      
+
       if (this.payment_is_to_be_requested == false) {
         this.doCompleteOrder();
         return false;
@@ -890,14 +891,14 @@ export default {
         app: "PRIVATE_API",
         endpoint: "charge_customer_card"
       };
-      this.$store.dispatch("$_payment/requestCardPayment", full_payload).then(
+      this.requestCardPaymentAction(full_payload).then(
         response => {
           //console.log(response);
           if (response.length > 0) {
             response = response[0];
           }
           //decrypt response.data here
-          response.data = JSON.parse(Mcrypt.decrypt(response.data));
+          response.data = JSON.parse(Mcrypt.decrypt(response.data).trim());
           let that = this;
 
           if (response.data.status == false) {
@@ -942,7 +943,6 @@ export default {
         user_email = session.biz.user_email;
         user_phone = session.biz.user_phone;
       } else {
-        cop_id = session.peer.cop_id;
         user_id = session.peer.user_id;
         user_name = session.peer.user_name;
         user_email = session.peer.user_email;
@@ -970,7 +970,7 @@ export default {
       };
 
       //this is not encrypted
-      this.$store.dispatch("$_payment/completeCardPayment", full_payload).then(
+      this._completeCardPayment(full_payload).then(
         response => {
           //console.log(response);
           if (response.length > 0) {
@@ -985,6 +985,12 @@ export default {
               "Successful Payment",
               "Card payment has been completed successfully."
             );
+            let running_balance_payload = {
+              values: {
+                cop_id: cop_id,
+                user_phone: user_phone
+              }
+            };
 
             let payload = {
               values: running_balance_payload,
@@ -992,9 +998,7 @@ export default {
               endpoint: "running_balance"
             };
 
-            this.$store.dispatch("requestRunningBalance", payload, {
-                root: true
-              })
+            this.requestRunningBalanceFromAPI(payload)
               .then(response => {
                 //console.log("running balance response", response);
                 this.payment_state = 0;
