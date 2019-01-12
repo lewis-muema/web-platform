@@ -86,7 +86,7 @@
                         values: params,
                         vm: this,
                         app: "NODE_PRIVATE_API",
-                        endpoint: "sign_in/"
+                        endpoint: "sign_in"
                     };
                     let that = this;
 
