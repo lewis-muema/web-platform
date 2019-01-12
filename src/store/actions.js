@@ -45,7 +45,7 @@ export default {
                 };
                 
             }
-            else if (payload.endpoint == "sign_up_check"){
+            else if (payload.endpoint == "sign_up_check" || payload.endpoint == "sign_in"){
                 config = {
                     headers: {
                         "Content-Type": "application/json"
@@ -71,7 +71,7 @@ export default {
                 }};
                 
             }
-            else if (payload.endpoint == "sign_up_check"){
+            else if (payload.endpoint == "sign_up_check" || payload.endpoint == "sign_in"){
                 config = {
                     headers: {
                         "Content-Type": "text/plain"
