@@ -45,7 +45,7 @@ export default {
                 };
                 
             }
-            else if (payload.endpoint == "sign_up_check" || payload.endpoint == "sign_in" || payload.endpoint == "onboard_user" || payload.endpoint == "forgot_pass" || payload.endpoint == "forgot_token"){
+            else if (payload.endpoint == "sign_up_check" || payload.endpoint == "sign_in" || payload.endpoint == "onboard_user" || payload.endpoint == "forgot_pass" || payload.endpoint == "forgot_token"|| payload.endpoint == "sign_up_submit"){
                 config = {
                     headers: {
                         "Content-Type": "application/json"
@@ -71,7 +71,7 @@ export default {
                 }};
                 
             }
-            else if (payload.endpoint == "sign_up_check" || payload.endpoint == "sign_in" || payload.endpoint == "onboard_user" || payload.endpoint == "forgot_pass" || payload.endpoint == "forgot_token"){
+            else if (payload.endpoint == "sign_up_check" || payload.endpoint == "sign_in" || payload.endpoint == "onboard_user" || payload.endpoint == "forgot_pass" || payload.endpoint == "forgot_token"|| payload.endpoint == "sign_up_submit"){
 
                 config = {
                     headers: {
