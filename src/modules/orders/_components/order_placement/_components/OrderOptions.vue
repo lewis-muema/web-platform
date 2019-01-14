@@ -913,7 +913,7 @@ export default {
             this.payment_state = 0;
             this.loading = 0;
           } else {
-            let card_trans_id = response.data.values.card_trans_id;
+            let card_trans_id = response.data.id;
             this.completeCardPayment(card_trans_id);
             //complete payment here
           }
