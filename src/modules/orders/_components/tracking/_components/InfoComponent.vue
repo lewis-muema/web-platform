@@ -213,10 +213,10 @@ export default {
         }
         else {
           var payload = {
-            "order_no": this.$route.params.order_no,
+            "order_no": that.$route.params.order_no,
             "cancel_reason_id" : 4,
             "reason_description" : 'I placed the wrong locations',
-            "client_type" : this.$store.getters.getSession.default
+            "client_type" : that.$store.getters.getSession.default
           }
           this.$store.dispatch('$_orders/$_tracking/cancel_order', payload)
           .then(response => {
