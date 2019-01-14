@@ -33,32 +33,38 @@
 </template>
 
 <script>
-import {mapGetters,mapMutations,mapActions} from 'vuex'
+import {
+  mapGetters,
+  mapMutations,
+  mapActions
+} from 'vuex'
 export default {
   name: 'screen-three-component',
-  data: function () {
+  data: function() {
     return {
-      password : "",
+      password: "",
       cpassword: ""
     }
   },
   methods: {
-    ...mapMutations(
-      {
-        setViewState:'$_external/setViewState',
-        updatePassPlain:'$_external/updatePassPlain',
-        updateViewStep:'$_external/updateViewStep'
-      }
-    ),
+    ...mapMutations({
+      setViewState: '$_external/setViewState',
+      updatePassPlain: '$_external/updatePassPlain',
+      updateViewStep: '$_external/updateViewStep'
+    }),
     ...mapActions({
-       requestInvitation :'$_external/requestInvitation',
-   }),
-    next_view: function ()
-    {  if (this.password !== this.cpassword) {
+      requestInvitation: '$_external/requestInvitation',
+    }),
+    next_view: function() {
+      if (this.password !== this.cpassword) {
+        this.doNotification(
+          2,
+          "Set Password",
+          "Password does not match. Please try again"
+        );
         console.log("Password does not match!")
 
-      }
-      else {
+      } else {
 
         let payload = {};
         this.updatePassPlain(this.cpassword);
@@ -67,50 +73,50 @@ export default {
           // let user_id = this.getCopUserId ;
           let pass = this.cpassword;
           let name = this.getName;
-          let biz_email = this.getBizEmail ;
-          let personal_email = this.getPerEmail ;
-          let phone = this.getPhone ;
-          let type = this.getType ;
+          let biz_email = this.getBizEmail;
+          let personal_email = this.getPerEmail;
+          let phone = this.getPhone;
+          let type = this.getType;
           let dept_id = this.getDeptId;
-          let cop_user_id = this.getCopUserId ;
+          let cop_user_id = this.getCopUserId;
 
 
           payload = {
-            cop_id :cop_id,
-            password : pass,
-            name : name,
-            biz_email : biz_email,
-            personal_email : personal_email,
-            phone : phone,
-            type : type,
-            dept_id : dept_id,
-            cop_user_id : cop_user_id
+            cop_id: cop_id,
+            password: pass,
+            name: name,
+            biz_email: biz_email,
+            personal_email: personal_email,
+            phone: phone,
+            type: type,
+            dept_id: dept_id,
+            cop_user_id: cop_user_id
           };
         } else if (this.getType == 1) {
 
           let cop_id = this.getCopId;
           let pass = this.cpassword;
           let name = this.getName;
-          let biz_email = this.getBizEmail ;
-          let personal_email = this.getPerEmail ;
-          let phone = this.getPhone ;
-          let type = this.getType ;
+          let biz_email = this.getBizEmail;
+          let personal_email = this.getPerEmail;
+          let phone = this.getPhone;
+          let type = this.getType;
           let dept_id = this.getDeptId;
           // let cop_user_id = this.getCopUserId ;
 
 
           payload = {
-            cop_id :cop_id,
-            password : pass,
-            name : name,
-            biz_email : biz_email,
-            personal_email : personal_email,
-            phone : phone,
-            type : type,
-            dept_id : dept_id,
+            cop_id: cop_id,
+            password: pass,
+            name: name,
+            biz_email: biz_email,
+            personal_email: personal_email,
+            phone: phone,
+            type: type,
+            dept_id: dept_id,
             // cop_user_id : cop_user_id
-        };
-      }
+          };
+        }
 
         // this.updatePassPlain(this.cpassword);
 
@@ -123,50 +129,61 @@ export default {
 
         this.requestInvitation(full_payload).then(response => {
 
-             if (response.length > 0) {
-               response = response[0];
-             }
+          if (response.length > 0) {
+            response = response[0];
+          }
 
-             if (response.status == true) {
-                console.log(response);
-                this.setViewState(4);
-                this.updateViewStep(0);
+          if (response.status == true) {
+            console.log(response);
+            this.setViewState(4);
+            this.updateViewStep(0);
 
-             } else {
+          } else {
 
-               console.warn("Onboarding Failed");
-               this.$router.push("/auth");
-             }
+            console.warn("Onboarding Failed");
+            this.$router.push("/auth");
+          }
         }, error => {
-            console.error("Check Internet Connection")
-            console.log(error);
+          console.error("Check Internet Connection")
+          console.log(error);
         });
 
       }
-  },
-    last_view: function(){
+    },
+
+    doNotification(level, title, message) {
+      let notification = {
+        title: title,
+        level: level,
+        message: message
+      };
+      this.$store.commit("setNotification", notification);
+      this.$store.commit("setNotificationStatus", true);
+    },
+
+    last_view: function() {
       this.setViewState(2);
       this.updateViewStep(0);
     },
-    setCurrentStep: function (step){
-        this.updateViewStep(step);
+    setCurrentStep: function(step) {
+      this.updateViewStep(step);
     }
   },
-  computed : {
-    is_valid : function() {
+  computed: {
+    is_valid: function() {
       // return this.password != '' && this.cpassword !='' && this.password === this.cpassword;
-        return this.cpassword != '' && this.password != '';
+      return this.cpassword != '' && this.password != '';
     },
     ...mapGetters({
-        getName : '$_external/getName',
-        getBizEmail : '$_external/getBizEmail',
-        getPerEmail:'$_external/getPerEmail',
-        getPhone : '$_external/getPhone',
-        getType : '$_external/getType',
-        getDeptId : '$_external/getDeptId',
-        getCopId : '$_external/getCopId',
-        getCopUserId : '$_external/getCopUserId'
-      })
+      getName: '$_external/getName',
+      getBizEmail: '$_external/getBizEmail',
+      getPerEmail: '$_external/getPerEmail',
+      getPhone: '$_external/getPhone',
+      getType: '$_external/getType',
+      getDeptId: '$_external/getDeptId',
+      getCopId: '$_external/getCopId',
+      getCopUserId: '$_external/getCopUserId'
+    })
   }
 }
 </script>
