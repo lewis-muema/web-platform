@@ -1,12 +1,11 @@
 import axios from "axios";
 
 export default {
-    requestAxiosPost({state}, payload) {
+    requestAxiosPost({state, commit}, payload) {
         let url = state.ENV[payload.app];
         //add api key - if request is going to the backend
         if (payload.app == "BACKEND_CUSTOMERS_APP") {
-            payload.endpoint =
-                payload.endpoint + "?apikey=" + state.ENV["BACKEND_API_KEY"];
+            payload.endpoint = payload.endpoint + "?apikey=" + state.ENV["BACKEND_API_KEY"];
         }
         let config = {};
 
@@ -35,44 +34,57 @@ export default {
         ) {
             //get from local storage
             let jwtToken = localStorage.getItem('jwtToken');
-            // console.log(jwtToken)
             //the json is ok
             //set content type to json
             if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
                 config = {
                     headers: {
-                        "Content-Type": "application/json"
-                        // "Authorization": jwtToken
+                        "Content-Type": "application/json",
+                        "Authorization": jwtToken
                     }
                 };
                 
             }
-            else{
+            else if (payload.endpoint == "sign_up_check" || payload.endpoint == "sign_in" || payload.endpoint == "onboard_user" || payload.endpoint == "forgot_pass" || payload.endpoint == "forgot_token" || payload.endpoint == "sign_up_submit"|| payload.endpoint == "update_pass") {
                 config = {
                     headers: {
                         "Content-Type": "application/json"
                     }
                 };
             }
+            else{
+                let notification = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
+                commit("setNotification", notification);
+                commit("setNotificationStatus", true);
+                return true;
+            }
         } else {
             //the json is not ok
             // assume it is just a string
-            // add qoutes to the string
+            // add quotes to the string
             let jwtToken = localStorage.getItem('jwtToken');
             payload.values = '"' + payload.values + '"';
             if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
                 config = {headers: {
                     "Content-Type": "text/plain",
-                    // "Authorization": 
+                    "Authorization": jwtToken
                 }};
                 
             }
-            else{
+            else if (payload.endpoint == "sign_up_check" || payload.endpoint == "sign_in" || payload.endpoint == "onboard_user" || payload.endpoint == "forgot_pass" || payload.endpoint == "forgot_token" || payload.endpoint == "sign_up_submit"|| payload.endpoint == "update_pass") {
+
                 config = {
                     headers: {
                         "Content-Type": "text/plain"
+
                     }
                 };
+            }
+            else{
+                let payload = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
+                commit("setNotification", payload);
+                commit("setNotificationStatus", true);
+                return true;
             }
         }
 
@@ -89,7 +101,6 @@ export default {
     },
 
     show_notification({commit}, payload) {
-        // console.log("dispatching notification to the store");
         commit("setNotification", payload);
         commit("setNotificationStatus", true);
         return true;
