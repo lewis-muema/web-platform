@@ -3,6 +3,7 @@ const merge = require('webpack-merge')
 const base = require('./webpack.base.config')
 const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
+const nodeExternals = require('webpack-node-externals')
 
 const config = merge(base, {
   entry: {
@@ -13,6 +14,7 @@ const config = merge(base, {
       // 'create-api': './create-api-client.js'
     }
   },
+  externals: [nodeExternals()],
   plugins: [
     // strip dev-only code in Vue source
     new webpack.DefinePlugin({
