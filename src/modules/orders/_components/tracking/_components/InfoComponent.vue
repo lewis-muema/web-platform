@@ -183,7 +183,7 @@ export default {
       }
     },
     place: function () {
-      if (that.$route.name != 'tracking_external') {
+      if (this.$route.name != 'tracking_external') {
         this.$router.push('/orders')
       }
       else {
