@@ -33,7 +33,7 @@
     export default {
         name: 'rate-driver-component',
         mounted() {
-            let order_id = this.$route.params.id;
+            let order_id = this.$route.params.order_no;
             this.order = order_id;
             console.log(order_id)
             let payload = {
@@ -71,7 +71,7 @@
             return {
                 rated_score: 1,
                 show_rating: false,
-                driver_name: "Sendyier",
+                driver_name: "Sendy Driver",
                 driver_photo: "",
                 order: "",
                 user_email: "",
