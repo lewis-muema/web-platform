@@ -173,11 +173,7 @@
 </template>
 
 <script>
-import {
-  mapActions,
-  mapGetters,
-  mapMutations
-} from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import NoSSR from "vue-no-ssr";
 import numeral from "numeral";
 import payment_store from "../../../../payment/_store";
@@ -213,7 +209,7 @@ export default {
           return time.getTime() < Date.now();
         }
       },
-      price_request_response_received: false,
+      price_request_response_received: false
     };
   },
   computed: {
@@ -231,7 +227,7 @@ export default {
       get_schedule_time: "$_orders/$_home/get_schedule_time",
       get_saved_cards: "$_orders/$_home/get_saved_cards",
       get_stripe_user_id: "$_orders/$_home/get_stripe_user_id",
-      get_carrier_type: "$_orders/$_home/get_carrier_type",
+      get_carrier_type: "$_orders/$_home/get_carrier_type"
     }),
     active_price_tier_data: function() {
       if (this.get_active_package_class != "") {
@@ -261,8 +257,9 @@ export default {
     },
     hide_payment() {
       return (
-        (this.get_price_request_object.payment_option == 2) ||
-        (this.getRunningBalance == 0) || ((this.getRunningBalance + this.order_cost) <= 0)
+        this.get_price_request_object.payment_option == 2 ||
+        this.getRunningBalance == 0 ||
+        this.getRunningBalance + this.order_cost <= 0
       );
     },
     show_payment() {
@@ -300,7 +297,7 @@ export default {
       return this.getRunningBalance + this.order_cost;
     },
     payment_is_to_be_requested() {
-      return (this.getRunningBalance + this.order_cost) > 0;
+      return this.getRunningBalance + this.order_cost > 0;
     },
     order_cost_display() {
       return numeral(this.order_cost).format("0,0");
@@ -311,10 +308,10 @@ export default {
     balance_quote_label() {
       if (this.getRunningBalance > 0) {
         return "You Owe";
-      } else if ((this.getRunningBalance + this.order_cost) > 0) {
+      } else if (this.getRunningBalance + this.order_cost > 0) {
         return "Your Balance";
       }
-    },
+    }
   },
   methods: {
     ...mapMutations({
@@ -337,16 +334,16 @@ export default {
       requestRunningBalanceFromAPI: "$_payment/requestRunningBalance",
       requestMpesaPaymentAction: "$_payment/requestMpesaPayment",
       requestCardPaymentAction: "$_payment/requestCardPayment",
-      _completeCardPayment:"$_payment/completeCardPayment",
+      completeCardPaymentAction: "$_payment/completeCardPaymentRequest",
       completeMpesaPaymentRequest: "$_payment/completeMpesaPaymentRequest",
       terminateMpesaPaymentRequest: "$_payment/terminateMpesaPaymentRequest",
       requestOrderCompletion: "$_orders/$_home/requestOrderCompletion",
       requestSavedCards: "$_orders/$_home/requestSavedCards"
     }),
     do_set_active_order_option(name) {
-      this.get_active_order_option != name ?
-        this.set_active_order_option(name) :
-        this.set_active_order_option("");
+      this.get_active_order_option != name
+        ? this.set_active_order_option(name)
+        : this.set_active_order_option("");
     },
     get_current_active_order_option_class(name) {
       return {
@@ -354,7 +351,10 @@ export default {
       };
     },
     checkAllowPrePaid() {
-      if (this.get_price_request_object.payment_option == 1 && this.getRunningBalance + this.order_cost > 0) {
+      if (
+        this.get_price_request_object.payment_option == 1 &&
+        this.getRunningBalance + this.order_cost > 0
+      ) {
         return false;
       }
       return true;
@@ -375,7 +375,6 @@ export default {
           this.loading = false;
         }
       );
-
     },
     checkPaymentDetails() {
       if (this.get_active_vendor_name == "") {
@@ -425,7 +424,6 @@ export default {
       }
       this.doCompleteOrder();
       return true;
-
     },
     handlePromoCodePayments() {
       this.$router.push({
@@ -433,7 +431,7 @@ export default {
       });
     },
     handleCashPayments() {
-      this.cash_status = true
+      this.cash_status = true;
       this.doCompleteOrder();
     },
     takeMeToAddNewCard() {
@@ -466,7 +464,7 @@ export default {
             this.setPickupFilled(false);
             let order_no = this.active_vendor_price_data.order_no;
             this.should_destroy = true;
-            this.$store.dispatch('$_orders/fetch_ongoing_orders')
+            this.$store.dispatch("$_orders/fetch_ongoing_orders");
             this.$router.push({
               name: "tracking",
               params: {
@@ -507,9 +505,12 @@ export default {
         no_charge_status: false,
         insurance_amount: 10,
         cash_status: this.cash_status,
-        note_status: typeof this.order_notes == "undefined" ?
-          false : this.order_notes.length > 0 ?
-          true : false,
+        note_status:
+          typeof this.order_notes == "undefined"
+            ? false
+            : this.order_notes.length > 0
+            ? true
+            : false,
         last_digit: "none",
         insurance_id: 1,
         platform: "corporate",
@@ -522,11 +523,14 @@ export default {
         destination_paid_status: false,
         delivery_points: this.get_order_path.length - 1,
         sendy_coupon: "0",
-        payment_mode: this.payment_method.startsWith("2") ?
-          2 : this.payment_method == "" ?
-          0 : parseInt(this.payment_method),
-        schedule_time: this.order_is_scheduled ?
-          this.scheduled_time : this.eta_time,
+        payment_mode: this.payment_method.startsWith("2")
+          ? 2
+          : this.payment_method == ""
+          ? 0
+          : parseInt(this.payment_method),
+        schedule_time: this.order_is_scheduled
+          ? this.scheduled_time
+          : this.eta_time,
         tier_tag: this.active_vendor_price_data.tier_tag,
         tier_name: this.active_vendor_price_data.tier_name,
         cop_id: "cop_id" in acc ? acc.cop_id : 0,
@@ -567,8 +571,10 @@ export default {
 
         let running_balance_payload = {
           values: {
-            cop_id: "cop_id" in session[session.default] ?
-              session[session.default]["cop_id"] : 0,
+            cop_id:
+              "cop_id" in session[session.default]
+                ? session[session.default]["cop_id"]
+                : 0,
             user_phone: session[session.default]["user_phone"]
           }
         };
@@ -681,11 +687,16 @@ export default {
             this.doNotification(
               "0",
               "M-Pesa Payment",
-              "M-Pesa request to " + user_phone + " failed. Use paybill 848450 account number " + referenceNumber + " amount KES " + this.pending_amount + "."
+              "M-Pesa request to " +
+                user_phone +
+                " failed. Use paybill 848450 account number " +
+                referenceNumber +
+                " amount KES " +
+                this.pending_amount +
+                "."
             );
             this.payment_state = 0;
             this.loading = false;
-
           }
         },
         error => {
@@ -693,7 +704,13 @@ export default {
           this.doNotification(
             "0",
             "M-Pesa Payment",
-            "M-Pesa request to " + user_phone + " failed. Use paybill 848450 account number " + referenceNumber + " amount KES " + this.pending_amount + "."
+            "M-Pesa request to " +
+              user_phone +
+              " failed. Use paybill 848450 account number " +
+              referenceNumber +
+              " amount KES " +
+              this.pending_amount +
+              "."
           );
           this.payment_state = 0;
           this.loading = false;
@@ -866,9 +883,8 @@ export default {
     },
 
     handleCardPayments(card) {
-      console.log('handling card payment');
+      console.log("handling card payment");
       console.log(card);
-      
 
       if (this.payment_is_to_be_requested == false) {
         this.doCompleteOrder();
@@ -899,9 +915,9 @@ export default {
           }
           //decrypt response.data here
           response.data = Mcrypt.decrypt(response.data);
-          response.data = JSON.stringify(response.data.replace(/\s+/g, ''));
+          response.data = JSON.stringify(response.data.replace(/\s+/g, ""));
           response.data = JSON.parse(response.data);
-          
+
           let that = this;
 
           if (response.data.status == false) {
@@ -932,7 +948,7 @@ export default {
       return true;
     },
     completeCardPayment(card_trans_id) {
-      console.log('completing card payment');
+      console.log("completing card payment");
 
       let session = this.$store.getters.getSession;
       let user_id = 0;
@@ -955,27 +971,29 @@ export default {
       }
 
       let payload = {
-        amount: this.raw_pending_amount,
-        // amount: 100,
-        pay_method: 2,
-        ref_no: "VISA-" + Math.round(+new Date() / 1000),
-        client_id: cop_id,
-        account_no: "SENDY" + cop_id,
-        phone: user_phone,
-        email: user_email,
-        name: user_name,
-        bill_Ref_Number: user_phone,
-        card_trans_id: card_trans_id
+        values: {
+          amount: this.raw_pending_amount,
+          // amount: 100,
+          pay_method: 2,
+          ref_no: "VISA-" + Math.round(+new Date() / 1000),
+          client_id: cop_id,
+          account_no: "SENDY" + cop_id,
+          phone: user_phone,
+          email: user_email,
+          name: user_name,
+          bill_Ref_Number: user_phone,
+          card_trans_id: card_trans_id
+        }
       };
 
       let full_payload = {
-        values: payload,
+        params: payload,
         app: "PRIVATE_API",
         endpoint: "payment"
       };
 
       //this is not encrypted
-      this._completeCardPayment(full_payload).then(
+      this.completeCardPaymentAction(full_payload).then(
         response => {
           //console.log(response);
           if (response.length > 0) {
@@ -1003,13 +1021,12 @@ export default {
               endpoint: "running_balance"
             };
 
-            this.requestRunningBalanceFromAPI(payload)
-              .then(response => {
-                //console.log("running balance response", response);
-                this.payment_state = 0;
-                this.loading = 0;
-                self.doCompleteOrder();
-              });
+            this.requestRunningBalanceFromAPI(payload).then(response => {
+              //console.log("running balance response", response);
+              this.payment_state = 0;
+              this.loading = 0;
+              self.doCompleteOrder();
+            });
           } else {
             this.payment_state = 0;
             this.loading = 0;
@@ -1053,84 +1070,84 @@ export default {
 </script>
 
 <style lang="css">
-    .home-view-actions--items:hover {
-        color: #1782c5;
-    }
+.home-view-actions--items:hover {
+  color: #1782c5;
+}
 
-    .home-view-notes-wrapper--item,
-    .home-view-notes-wrapper--item__option-div,
-    .home-view-notes-wrapper--item__option-svg,
-    .home-view-notes-wrapper--item__option {
-        display: flex;
-    }
+.home-view-notes-wrapper--item,
+.home-view-notes-wrapper--item__option-div,
+.home-view-notes-wrapper--item__option-svg,
+.home-view-notes-wrapper--item__option {
+  display: flex;
+}
 
-    .home-view-notes-wrapper--item__option-div {
-        padding-left: 29px;
-        color: #555555ba;
-    }
+.home-view-notes-wrapper--item__option-div {
+  padding-left: 29px;
+  color: #555555ba;
+}
 
-    .home-view-notes-wrapper--item__link:hover {
-        color: #1782c5;
-        cursor: pointer;
-    }
+.home-view-notes-wrapper--item__link:hover {
+  color: #1782c5;
+  cursor: pointer;
+}
 
-    .home-view-notes-wrapper--item__row {
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 8px;
-        margin-top: -11px;
-        font-size: 13px;
-        padding-left: 29px;
-    }
+.home-view-notes-wrapper--item__row {
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  margin-top: -11px;
+  font-size: 13px;
+  padding-left: 29px;
+}
 
-    .home-view-notes-wrapper--item {
-        padding-left: unset;
-    }
+.home-view-notes-wrapper--item {
+  padding-left: unset;
+}
 
-    .home-view-notes-wrapper--item__option {
-        flex: 4;
-        align-items: center;
-        margin-top: 10px;
-        padding-top: 10px;
-    }
+.home-view-notes-wrapper--item__option {
+  flex: 4;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 10px;
+}
 
-    .home-view-notes-wrapper--item__value {
-        flex: 1;
-        display: flex;
-        align-self: flex-end;
-        flex-direction: row-reverse;
-        justify-content: center;
-        padding-right: 40px;
-    }
+.home-view-notes-wrapper--item__value {
+  flex: 1;
+  display: flex;
+  align-self: flex-end;
+  flex-direction: row-reverse;
+  justify-content: center;
+  padding-right: 40px;
+}
 
-    .home-view-notes-wrapper--item__balance {
-        margin-bottom: 14px;
-        font-size: 14px;
-    }
+.home-view-notes-wrapper--item__balance {
+  margin-bottom: 14px;
+  font-size: 14px;
+}
 
-    .home-view--seperator__mini {
-        margin-left: 30px !important;
-        margin-right: 30px !important;
-        border-top: 1px solid #66666614 !important;
-    }
+.home-view--seperator__mini {
+  margin-left: 30px !important;
+  margin-right: 30px !important;
+  border-top: 1px solid #66666614 !important;
+}
 
-    .home-view-notes-wrapper--item__option-svg {
-        margin-right: 10px;
-    }
+.home-view-notes-wrapper--item__option-svg {
+  margin-right: 10px;
+}
 
-    .home-view-actions__element-date {
-        width: 100% !important;
-    }
+.home-view-actions__element-date {
+  width: 100% !important;
+}
 
-    .el-date-picker {
-        left: 48px;
-    }
+.el-date-picker {
+  left: 48px;
+}
 
-    .home-view-notes-wrapper--item__value .el-radio__label {
-        display: none !important;
-    }
+.home-view-notes-wrapper--item__value .el-radio__label {
+  display: none !important;
+}
 
-    .home-view-place-order--mpesa-cancel {
-        margin-top: 20px;
-    }
+.home-view-place-order--mpesa-cancel {
+  margin-top: 20px;
+}
 </style>
