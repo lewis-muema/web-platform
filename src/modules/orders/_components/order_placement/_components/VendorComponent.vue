@@ -10,7 +10,7 @@
         <div class="home-view-vendor-classes--body">
             <div class="">
                 <div class="home-view-vendor-classes--label">
-                    <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in getPriceRequestObject.economy_price_tiers" :key="index" @click="setActivePackageClass(vendor_class.tier_group)" 
+                    <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in getPriceRequestObject.economy_price_tiers" :key="index" @click="setActivePackageClassWrapper(vendor_class.tier_group)" 
                         v-if="vendor_class.price_tiers.length > 0">
                         <a class="home-view-vendor-classes-menu section__link" :class="getCurrentActivePackageClass(vendor_class.tier_group)">
                           <img :src="getPackageIcon(vendor_class.tier_group)" class="home-view-vendor-classes-menu--img" alt="vendor_class.tier_group">
@@ -128,7 +128,7 @@ export default {
       this.setCarrierType(type);
     },
 
-    setActivePackageClass(name) {
+    setActivePackageClassWrapper(name) {
       this.setActivePackageClass(name);
     },
 
