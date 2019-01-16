@@ -16,7 +16,7 @@
                   <el-rate v-model="rated_score" :colors="['#99A9BF', '#F57f20', '#1782C5']">
                   </el-rate>
                     <textarea placeholder="Share your experience with us." v-model="rating_comment" class="rate-comment--textareabox"></textarea>
-                  <button class="rate-rider-primary" @click="rateOrder"> SUBMIT </button>
+                  <button class="rate-rider-primary" @click="postRating"> SUBMIT </button>
                 </div>
             </div>
 
@@ -92,81 +92,27 @@
                     updateStep: '$_rating/updateStep'
                 }
             ),
-            rateOrder() {
-                this.show_rating = false;
-                this.postRating();
-                this.moveNext();
-                this.submitScore();
-                this.updateComment();
-            },
             postRating() {
                 let payload = {
-                    "score": this.rated_score,
-                    "user_email": this.user_email,
-                    "package_id": this.order
-                }
-                console.log(payload)
-
+                    "values":{
+                        "value": this.rated_score,
+                        "user_email": this.user_email,
+                        "package_id": this.order,
+                        "comment": this.rating_comment
+                    }}
                 let rating_status_full_payload = {
                     "values" : payload,
                     "vm":this,
-                    "app":"NODE_PRIVATE_API",
-                    "endpoint":"Rate/insertRate"
+                    "app":"PRIVATE_API",
+                    "endpoint":"insert_rate"
                 }
                 this.$store.dispatch("$_rating/requestRatingStatus", rating_status_full_payload).then(response => {
                     console.log(response);
+                    this.updateStep(3);
+                    this.updateScore(this.rated_score);
                 }, error => {
                     console.log(error);
                 });
-            },
-            moveNext() {
-                this.updateStep(3);
-            },
-            submitScore() {
-                this.updateScore(this.rated_score);
-            },
-            updateComment() {
-                let rating_payload = {
-                    "score":this.getScore,
-                        "user_email":this.user_email,
-                        "package_id":this.order,
-                        "timeliness":this.timeliness,
-                        "payment":this.payment,
-                        "directions":this.directions,
-                        "cleanliness":this.cleanliness,
-                        "politeness":this.politeness,
-                        "pricing":this.pricing,
-                        "app":this.app,
-                        "comment":this.rating_comment
-                }
-                let rating_full_payload = {
-                    "values" : rating_payload,
-                    "vm":this,
-                    "app":"NODE_PRIVATE_API",
-                    "endpoint":"Rate/updateRate"
-                }
-                let level = 0; //this will show the white one
-                this.$store.dispatch("$_rating/requestUpdateRating", rating_full_payload).then(response => {
-                    console.log(response);
-                    let message = response.data.msg;
-                    if(response.data.status == false){
-                        level = 2; //warning //use 3 to show the red one
-                    } else {
-                        level = 1; //success
-                    }
-                    let notification = {"title":"Rating", "level":level, "message":message}; //notification object
-                    this.$store.commit('setNotification', notification);
-                    this.$store.commit('setNotificationStatus', true); //activate notification
-
-                }, error => {
-                    console.log(error);
-                    level = 2;
-                    let notification = {"title":"Rating", "level":level, "message":message}; //notification object
-                    this.$store.commit('setNotification', notification);
-                    this.$store.commit('setNotificationStatus', true); //activate notification
-
-                });
-
             },
             ...mapActions([
                 '$_rating/requestRatingStatus',
