@@ -15,10 +15,12 @@
           <button type="button" :class="inactive_filter ? 'button-primary section--filter-action-inactive btn-order-hstry':'button-primary section--filter-action btn-order-hstry'" name="order_history_text" v-model="order_history_text" @click="filterTableData" :disabled="inactive_filter == true ? true : false">{{this.order_history_text}}</button>
         </div>
     </div>
-
+    <div class= "bg-grey">
+    <button type="button" class= " btn-order-hstry btn-save" name="order_history_text" @click= "exportPDF">PRINT</button>
+    </div> 
      <el-table
       :data="order_history_data"
-      style="width: 100%"
+      style="width: 100%;"
       :border="true"
       :stripe="true"
       :row-key="getRowKey"
@@ -26,6 +28,7 @@
       @row-click="expandTableRow"
       @expand-change="handleRowExpand"
       v-loading='loading'
+      id="save-pdf"
       >
       <template slot="empty">
             {{empty_orders_state}}
@@ -60,15 +63,18 @@
       <el-table-column
         label="Amount"
         prop="order_cost"
-        width="120"
+        width="80"
+        header-align="center"
+        align="center"
         :formatter="formatAmount"
-        class-name="amount--table-format"
         >
       </el-table-column>
       <el-table-column
         label="Deliveries"
         prop="path"
-        width="120"
+        width="80"
+        header-align="center"
+        align="center"
         >
         <template slot-scope="scope">
           {{order_history_data[scope.$index]['path'].length-1}}
@@ -89,6 +95,7 @@
         </template>
       </el-table-column>
   </el-table>
+  
 
   <div class="section--pagination-wrap">
         <el-pagination
@@ -109,8 +116,41 @@
 
 <script>
 const moment = require("moment");
-
 import { mapActions, mapGetters } from "vuex";
+import { Printd } from 'printd'
+ 
+// some styles for the element (optional)
+const cssText = `
+  table {
+    font-size: 85%;
+    font-family: sans-serif;
+    border-spacing: 0;
+    border-collapse: collapse;
+    text-align: center;
+    width: 600px;
+    position: relative;
+    left: -90px;
+    top: 10px;
+    empty-cells: hide;
+  }
+  td {
+    height: 30px;
+    empty-cells: hide;
+  }
+  tr {
+    height: 30px;
+    empty-cells: hide;
+  }
+  .el-table__expanded-cell{
+    display:none;
+    border-style: none;
+  }
+  .expanded + tr{
+    display: none;
+  }
+`
+ 
+
 export default {
   data() {
     return {
@@ -127,7 +167,8 @@ export default {
         to_date: ""
       },
       filteredData: [],
-      loading: false
+      loading: false,
+      savepdf: "save-pdf"
     };
   },
   filters: {
@@ -317,6 +358,12 @@ export default {
             this.empty_users_state = "Cop Users Failed to Fetch";
           }
         );
+    },
+    exportPDF(){
+      const d = new Printd()
+ 
+      // opens the "print dialog" of your browser to print the element
+      d.print( document.getElementById('save-pdf'), cssText )
     }
   },
   computed: {
@@ -372,4 +419,5 @@ export default {
 .btn-order-hstry{
   border-width:0px !important;
 }
+
 </style>

@@ -8,9 +8,6 @@
     <div class="paymentbody--input-wrap paymentbody--input-spaced">
         <div class="input-control-big">
           <input type="text" name="card_payment_month" v-model="add_card_payment_data.card_expiry" value="" placeholder="MM/YY" class="input-control paymentbody--input" @change="creditCExpiryMask" @keyup="creditCExpiryMask">
-          <span class="sendy_payments_input_info input_info_last" v-show="invalid_expiry != null">
-            {{ invalid_expiry }}
-          </span>
         </div>
         <div class="input-control-small">
            <el-input placeholder="CVV"  v-model="add_card_payment_data.cvv" type="number" name="card_payment_cvv" class="paymentbody--input">
@@ -101,7 +98,7 @@ export default {
         this.show_cvv = true;
       }
     },
-    ...mapActions(["$_payment/requestAddNewCard"]),
+    ...mapActions({ _requestAddNewCard: "$_payment/requestAddNewCard" }),
 
     handleAddCard() {
       //sort encryption
@@ -120,14 +117,14 @@ export default {
         user_email = session.biz.user_email;
         user_phone = session.biz.user_phone;
       } else {
-        cop_id = session.peer.cop_id;
         user_id = session.peer.user_id;
         user_name = session.peer.user_name;
         user_email = session.peer.user_email;
         user_phone = session.peer.user_phone;
       }
-
-      user_name = user_name.split(" ");
+      
+      user_name = user_name.toString().split(" ");
+  
       let user_fname = user_name[0];
       let user_lname = user_name[user_name.length - 1];
       let card_payload = {
@@ -139,8 +136,8 @@ export default {
         cop_id: cop_id,
         user_id: user_id,
         user_phone: user_phone,
-        user_lname: user_name.split(" ")[1],
-        user_fname: user_name.split(" ")[0]
+        user_lname: user_lname,
+        user_fname: user_fname
       };
 
       card_payload = Mcrypt.encrypt(card_payload);
@@ -151,9 +148,13 @@ export default {
         app: "PRIVATE_API",
         endpoint: "add_card"
       };
-      this.$store.dispatch("$_payment/requestAddNewCard", full_payload).then(
+      this._requestAddNewCard(full_payload).then(
         response => {
-          response.data = JSON.parse(Mcrypt.decrypt(response.data));
+          
+          response.data = Mcrypt.decrypt(response.data);
+          response.data = JSON.stringify(response.data.replace(/\s+/g, ''));
+          response.data = JSON.parse(response.data);
+          
           let that = this;
 
           if (response.data.status == false) {

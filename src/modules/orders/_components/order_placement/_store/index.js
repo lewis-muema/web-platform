@@ -23,6 +23,7 @@ export default {
         pickup_filled:false,
         payment_method:'',
         stripe_user_id:'',
+        carrier_type_id:'',
        }
     },
   actions,
