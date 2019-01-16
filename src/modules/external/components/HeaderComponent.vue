@@ -8,32 +8,29 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import ExternalHeader from '../../../components/headers/ExternalHeader.vue'
+import { mapGetters } from "vuex";
+import ExternalHeader from "../../../components/headers/ExternalHeader.vue";
 
 export default {
-  name: 'header-component',
-  components: {ExternalHeader},
-  data: function (){
-    return{
+  name: "header-component",
+  components: { ExternalHeader },
+  data: function() {
+    return {
       styleObject: {
         width: this.progress_width
       }
-    }
+    };
   },
   computed: {
-    ...mapGetters(
-      {
-        getViewState : '$_external/getViewState'
-      }
-    ),
-    progress_width: function()
-    {
-      var real = (this.getViewState/4 *100) + '%'
-      return {width:real}
+    ...mapGetters({
+      getViewState: "$_external/getViewState"
+    }),
+    progress_width: function() {
+      var real = (this.getViewState / 4) * 100 + "%";
+      return { width: real };
     }
   }
-}
+};
 </script>
 
 <style lang="css">
@@ -42,23 +39,20 @@ export default {
   margin: 10px auto;
   width: 100%;
 } */
-.header-logo
-{
+.header-logo {
   max-height: 50px;
 }
-.determinate
-{
+.determinate {
   background-color: orange !important;
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
 }
-.head
-{
+.head {
   margin-bottom: 0px !important;
 }
-.progress{
+.progress {
   position: relative;
   height: 4px;
   display: block;
