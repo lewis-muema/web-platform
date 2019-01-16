@@ -12,39 +12,6 @@
                         Thank You for using Sendy!
                     </div>
                 </div>
-                <!--<div class="rate-grid-wrapper">-->
-                    <!--<div class="">-->
-                        <!--<div class="rate-post-rate-text">-->
-                            <!--<div class="rate-font-small">-->
-                                <!--<div class="rate-font-medium">-->
-                                    <!--Have something <br> <span class="rate-font-big">bigger</span> <br>to deliver?-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="">-->
-                        <!--<div class="rate-post-rate-text">-->
-                            <!--<div class="rate-font-small">-->
-                                <!--<div class="rate-font-normal">-->
-                                    <!--Whether you require a bike or a pickup for your delivery, with Sendy, you have access to all vehicle sizes.-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-
-                    <!--</div>-->
-                    <!--<div class="">-->
-                        <!--<div class="rate-post-rate-personal rate-post-personalone">-->
-                            <!--<div class="">-->
-                                <!--<img :src="getImagesBaseUrl+'rating/vendors.png'" alt="vendors" class="rate-post-image">-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="">-->
-                        <!--<div class="rate-call-to-action">-->
-                            <!--<input type="button" name="" value="New Delivery" @click="NewDelivery()">-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
             </div>
         </div>
     </span>
