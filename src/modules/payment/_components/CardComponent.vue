@@ -178,19 +178,11 @@ export default {
           response.data = JSON.stringify(response.data.replace(/\s+/g, ''));
           response.data = JSON.parse(response.data);
 
+          console.log(response.data);
+
           let that = this;
 
-          if (response.data.status == false) {
-            this.payment_state = "Payment Failed";
-            let notification = {
-              title: "card payment failed",
-              level: 2,
-              message: response.data.message
-            };
-            this.$store.dispatch("show_notification", notification, {
-              root: true
-            });
-          } else {
+          if (response.data.status == true) {
             let notification = {
               title: "card payment sucess",
               level: 1,
@@ -207,11 +199,29 @@ export default {
 
             this.completeCardPayment(card_trans_id);
             //complete payment here
+          } else {
+            this.payment_state = "Payment Failed";
+            let notification = {
+              title: "card payment failed",
+              level: 2,
+              message: response.data.message
+            };
+            this.$store.dispatch("show_notification", notification, {
+              root: true
+            });
           }
         },
         error => {
           console.log(error);
           this.payment_state = "Payment Failed";
+          let notification = {
+              title: "card payment failed",
+              level: 2,
+              message: response.data.message
+            };
+            this.$store.dispatch("show_notification", notification, {
+              root: true
+            });
         }
       );
     },

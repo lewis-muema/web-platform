@@ -31,6 +31,7 @@ export default {
           resolve(response);
         },
         error => {
+          commit("setCardLoadingStatus", false);
           reject(error);
           console.log(
             "failed to dispatch request card payment to global store"
@@ -80,6 +81,8 @@ export default {
           resolve(response);
         },
         error => {
+          commit("setMpesaLoadingStatus", false);
+          commit("setMpesaFailStatus", true);
           reject(error);
           console.log("failed to dispatch to global store");
         }
