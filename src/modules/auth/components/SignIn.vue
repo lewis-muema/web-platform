@@ -53,139 +53,152 @@
 </template>
 
 <script>
-    import SessionMxn from "../../../mixins/session_mixin.js";
-    import {mapActions} from "vuex";
+import SessionMxn from "../../../mixins/session_mixin.js";
+import {
+  mapActions
+} from "vuex";
 
-    export default {
-        name: "SignIn",
-        mixins: [SessionMxn],
+export default {
+  name: "SignIn",
+  mixins: [SessionMxn],
 
-        data() {
-            return {
-                email: "",
-                password: "",
-                message: "",
-                login_text: "Login"
-            };
-        },
-        methods: {
-            ...mapActions({
-                authSignIn: "$_auth/requestSignIn"
-            }),
-            sign_in: function () {
-                if (this.email != "" && this.password != "") {
-                    this.login_text = "Logging in ...";
-                    //erase any existing session
-                    this.deleteSession();
-
-                    let params = {
-                        email: this.email,
-                        password: this.password
-                    };
-                    let full_payload = {
-                        values: params,
-                        vm: this,
-                        app: "NODE_PRIVATE_API",
-                        endpoint: "sign_in"
-                    };
-                    let that = this;
-
-                    this.authSignIn(full_payload).then(
-                        response => {
-                            localStorage.setItem('jwtToken', response)
-                            let partsOfToken = response.split('.');
-                            let middleString = partsOfToken[1];
-                            let data = atob(middleString);
-                            let payload = JSON.parse(data).payload;
-                            if (response) {
-                                //set session
-                                //commit everything to the store
-                                //redirect to orders
-                                let session_data = payload;
-                                let json_session = JSON.stringify(session_data);
-                                this.setSession(json_session);
-                                this.$store.commit("setSession", session_data);
-                                let analytics_env = '';
-                                try {
-                                    analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-                                }
-                                catch (er) {
-
-                                }
-                                if ('default' in session_data && analytics_env == 'production') {
-                                    let acc = session_data[session_data.default];
-
-                                    mixpanel.people.set_once({
-                                        "$email": acc.user_email,
-                                        "$phone": acc.user_phone,
-                                        "Account Type": acc.default == 'peer' ? 'Personal' : 'Business',
-                                        "$name": acc.user_name,
-                                        "Client Type": "Web Platform"
-                                    });
-
-                                    //login identify
-                                    mixpanel.identify(acc.user_email);
-
-                                    // track login
-                                    mixpanel.track("Login", {
-                                        "Account Type": acc.default == 'peer' ? 'Personal' : 'Business',
-                                        "Last Login": new Date(),
-                                        "Client Type": "Web Platform"
-                                    });
-                                }
-                                this.$router.push("/orders");
-                            } else {
-                                //failed to login
-                                //show some sort of error
-                                if (response.data.code == 1) {
-
-                                    this.login_text = "Login";
-                                    this.message = response.reason;
-                                    this.doNotification(
-                                        2,
-                                        "Login failed",
-                                        "Wrong password or email."
-                                    );
-                                    console.warn("login failed");
-
-                                }
-                                else {
-
-                                    this.login_text = "Login";
-                                    this.message = response.reason;
-                                    this.doNotification(
-                                        2,
-                                        "Login failed",
-                                        "Account deactivated"
-                                    );
-                                    console.warn("login failed");
-
-
-                                }
-                            }
-                        },
-                        error => {
-                            this.login_text = "Login";
-                            this.message = "Check your Login credentials";
-                            this.doNotification(
-                                2,
-                                "Login failed",
-                                "Login failed. Please try again"
-                            );
-                            console.warn("login failed");
-                        }
-                    );
-                } else {
-                    this.message = "Provide all values";
-                }
-            },
-            doNotification(level, title, message) {
-                let notification = {title: title, level: level, message: message};
-                this.$store.commit("setNotification", notification);
-                this.$store.commit("setNotificationStatus", true);
-            }
-        }
+  data() {
+    return {
+      email: "",
+      password: "",
+      message: "",
+      login_text: "Login"
     };
+  },
+  methods: {
+    ...mapActions({
+      authSignIn: "$_auth/requestSignIn"
+    }),
+    sign_in: function() {
+      if (this.email != "" && this.password != "") {
+        this.login_text = "Logging in ...";
+        //erase any existing session
+        this.deleteSession();
+        let params = {
+          email: this.email,
+          password: this.password
+        };
+        let full_payload = {
+          values: params,
+          vm: this,
+          app: "NODE_PRIVATE_API",
+          endpoint: "sign_in"
+        };
+        let that = this;
+        this.authSignIn(full_payload).then(
+          response => {
+            let partsOfToken = "";
+            if (Array.isArray(response) == true) {
+
+              let res = response[1];
+              localStorage.setItem('jwtToken', res);
+              partsOfToken = res.toString().split('.');
+
+
+            } else {
+              localStorage.setItem('jwtToken', response);
+              partsOfToken = response.split('.');
+
+            }
+            let middleString = partsOfToken[1];
+            let data = atob(middleString);
+            let payload = JSON.parse(data).payload;
+            if (response) {
+              //set session
+              //commit everything to the store
+              //redirect to orders
+              let session_data = payload;
+              let json_session = JSON.stringify(session_data);
+              this.setSession(json_session);
+              this.$store.commit("setSession", session_data);
+              let analytics_env = '';
+              try {
+                analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+              } catch (er) {
+
+              }
+              if ('default' in session_data && analytics_env == 'production') {
+                let acc = session_data[session_data.default];
+
+                mixpanel.people.set_once({
+                  "$email": acc.user_email,
+                  "$phone": acc.user_phone,
+                  "Account Type": acc.default == 'peer' ? 'Personal' : 'Business',
+                  "$name": acc.user_name,
+                  "Client Type": "Web Platform"
+                });
+
+                //login identify
+                mixpanel.identify(acc.user_email);
+
+                // track login
+                mixpanel.track("Login", {
+                  "Account Type": acc.default == 'peer' ? 'Personal' : 'Business',
+                  "Last Login": new Date(),
+                  "Client Type": "Web Platform"
+                });
+              }
+              this.$router.push("/orders");
+            } else {
+              //failed to login
+              //show some sort of error
+              if (response.data.code == 1) {
+
+                this.login_text = "Login";
+                this.message = response.reason;
+                this.doNotification(
+                  2,
+                  "Login failed",
+                  "Wrong password or email."
+                );
+                console.warn("login failed");
+
+              } else {
+
+                this.login_text = "Login";
+                this.message = response.reason;
+                this.doNotification(
+                  2,
+                  "Login failed",
+                  "Account deactivated"
+                );
+                console.warn("login failed");
+
+
+              }
+            }
+          },
+          error => {
+            this.login_text = "Login";
+            this.message = "Check your Login credentials";
+            this.doNotification(
+              2,
+              "Login failed",
+              "Login failed. Please try again"
+            );
+            console.warn("login failed ", error);
+          }
+        );
+      } else {
+        this.message = "Provide all values";
+      }
+    },
+    doNotification(level, title, message) {
+      let notification = {
+        title: title,
+        level: level,
+        message: message
+      };
+      this.$store.commit("setNotification", notification);
+      this.$store.commit("setNotificationStatus", true);
+    }
+  }
+};
 </script>
 
 <style lang="css">
