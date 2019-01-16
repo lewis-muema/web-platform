@@ -8,7 +8,7 @@ var SessionMxn = {
     },
     deleteSession() {
       localStorage.removeItem("_sessionSnack");
-      // localStorage.removeItem("jwtToken");
+      localStorage.removeItem("jwtToken");
     }
   }
 };
