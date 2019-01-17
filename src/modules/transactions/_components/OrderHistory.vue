@@ -17,7 +17,7 @@
     </div>
     <div class= "bg-grey">
     <button type="button" class= " btn-order-hstry btn-save" name="order_history_text" @click= "exportPDF">PRINT</button>
-    </div> 
+    </div>
      <el-table
       :data="order_history_data"
       style="width: 100%;"
@@ -95,7 +95,7 @@
         </template>
       </el-table-column>
   </el-table>
-  
+
 
   <div class="section--pagination-wrap">
         <el-pagination
@@ -118,7 +118,7 @@
 const moment = require("moment");
 import { mapActions, mapGetters } from "vuex";
 import { Printd } from 'printd'
- 
+
 // some styles for the element (optional)
 const cssText = `
   table {
@@ -149,7 +149,7 @@ const cssText = `
     display: none;
   }
 `
- 
+
 
 export default {
   data() {
@@ -168,7 +168,8 @@ export default {
       },
       filteredData: [],
       loading: false,
-      savepdf: "save-pdf"
+      savepdf: "save-pdf",
+      session_data: {}
     };
   },
   filters: {
@@ -361,7 +362,7 @@ export default {
     },
     exportPDF(){
       const d = new Printd()
- 
+
       // opens the "print dialog" of your browser to print the element
       d.print( document.getElementById('save-pdf'), cssText )
     }
@@ -371,9 +372,6 @@ export default {
       orderHistoryData: "$_transactions/getOrderHistoryOrders",
       copUsers: "$_transactions/getCopUsers"
     }),
-    session_data() {
-      return this.$store.getters.getSession;
-    },
     inactive_filter() {
       return (
         this.filterData.user == "" &&
@@ -390,7 +388,9 @@ export default {
     }
   },
   mounted() {
-    let session_data = this.session_data;
+    let session_data = this.$store.getters.getSession;
+
+    this.session_data = session_data;
 
     let orders_payload = {};
 
