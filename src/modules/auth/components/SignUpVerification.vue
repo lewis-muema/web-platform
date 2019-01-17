@@ -66,6 +66,7 @@ export default {
       values.email = this.Email();
       values.password = this.Password();
       values.type = "peer";
+      values.platform = "web";
       console.log(values);
       let full_payload = {
         values: values,
