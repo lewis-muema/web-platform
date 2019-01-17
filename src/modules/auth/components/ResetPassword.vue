@@ -86,15 +86,15 @@ export default {
           // code 002 -token does
           if (response.status == true) {
             // console.log(response);
-            console.log("Valid Token");
+            // console.log("Valid Token");
           } else {
-            console.warn("Invalid Token");
+            // console.warn("Invalid Token");
             this.doNotification(
               2,
               "Invalid Link",
-              "Invalid Password Reset Link."
+              "Invalid Password Reset Link. Redirected to Login Page"
             );
-            // this.$router.push("/auth");
+            this.$router.push("/auth");
           }
         },
         error => {
