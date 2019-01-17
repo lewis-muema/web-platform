@@ -15,5 +15,6 @@ export default {
     get_payment_method: (state) => state.payment_method,
     get_saved_cards: (state) => state.saved_cards,
     get_stripe_user_id: (state) => state.stripe_user_id,
-    get_carrier_type: (state) => state.carrier_type_id
+    get_carrier_type: (state) => state.carrier_type_id,
+    getReturnStatus: (state) => state.return_status,
 };

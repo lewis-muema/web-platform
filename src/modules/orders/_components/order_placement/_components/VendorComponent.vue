@@ -34,7 +34,7 @@
                       <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper">
                           <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-left">
                               <div class="home-view-vendor-types-item--cost-wrapper__cost">
-                                  Ksh {{formatNumeral(j.cost)}}
+                                  Ksh {{getVendorPrice(j)}}
                               </div>
                               <div class="home-view-vendor-types-item--cost-wrapper_time">
                                   Pickup by {{transformDate(j)}}
@@ -101,6 +101,7 @@ export default {
       get_active_vendor_name: '$_orders/$_home/get_active_vendor_name',
       get_carrier_type: '$_orders/$_home/get_carrier_type',
       getPriceRequestObject: '$_orders/$_home/get_price_request_object',
+      getReturnStatus : '$_orders/$_home/getReturnStatus',
     }),
 
     activePriceTierData: function() {
@@ -162,8 +163,11 @@ export default {
       return this.moment().add(vendor_details.eta, 'seconds').format('hh.mm a');
     },
 
-    formatNumeral(num) {
-      return numeral(num).format('0,0');
+    getVendorPrice(vendorObject){
+      if(this.getReturnStatus !== true){
+        return numeral(vendorObject.cost).format('0,0');
+      }
+      return numeral(vendorObject.return_cost).format('0,0');
     },
 
     setFirstTimeUser() {
