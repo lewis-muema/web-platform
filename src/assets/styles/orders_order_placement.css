@@ -163,6 +163,5 @@
 }
 .homeview-locations-options--set-return{
   flex:1 1 auto;
-  display: flex;
-  justify-content: flex-end;
+  margin-left: 19px;
 }

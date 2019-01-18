@@ -1,6 +1,9 @@
 <template lang="html">
     <div class="">
         <div class="">
+            <div class="homeview-locations-options--set-return" v-if="allow_return">
+              <el-checkbox v-model="return_status" @input="dispatchReturnToPickup">Return to pick up</el-checkbox>
+            </div>
             <div class="home-view-vendor-classes--label">
                 <div class="home-view-vendor-classes-label-item" @click="do_set_active_order_option('payment')">
                     <a class="home-view-vendor-classes-menu section__link"
@@ -184,6 +187,7 @@
         },
         price_request_response_received: false,
         vendors_without_return: ['Standard','Runner'],
+        return_status:false,
       };
     },
 
@@ -204,7 +208,6 @@
         get_stripe_user_id: '$_orders/$_home/get_stripe_user_id',
         get_carrier_type: '$_orders/$_home/get_carrier_type',
         getReturnStatus : '$_orders/$_home/getReturnStatus',
-
       }),
 
       active_price_tier_data: function() {
@@ -307,6 +310,15 @@
         }
       },
 
+      allow_return: function(){
+        let allowed = true;
+        if(this.vendors_without_return.includes(this.get_active_vendor_name)){
+            allowed = false;
+        }
+        return allowed;
+      },
+
+
     },
 
     methods: {
@@ -325,6 +337,7 @@
         clear_extra_destinations: '$_orders/$_home/clear_extra_destination',
         setSavedCards: '$_orders/$_home/set_saved_cards',
         setStripeUserId: '$_orders/$_home/set_stripe_user_id',
+        setReturnStatus : '$_orders/$_home/setReturnStatus',
       }),
 
       ...mapActions({
@@ -476,7 +489,7 @@
               response = response[0];
             }
 
-            if (response.status == true) {
+            if (response.status === true) {
               this.setPickupFilled(false);
               let order_no = this.active_vendor_price_data.order_no;
               this.should_destroy = true;
@@ -660,7 +673,7 @@
         let user_id = 0;
         let user_email = '';
         let user_phone = '';
-        if (session.default == 'biz') {
+        if (session.default === 'biz') {
           referenceNumber += session.biz.cop_id;
           cop_id = session.biz.cop_id;
           user_id = session.biz.user_id;
@@ -697,7 +710,7 @@
               response = response[0];
             }
 
-            if (response.status == 200) {
+            if (response.status === 200) {
               this.doNotification(
                 '0',
                 'M-Pesa Payment',
@@ -738,7 +751,7 @@
         this.clearMpesaPollCounter();
         let session = this.$store.getters.getSession;
         let cop_id = 0;
-        if (session.default == 'biz') {
+        if (session.default === 'biz') {
           cop_id = session.biz.cop_id;
         }
 
@@ -806,7 +819,7 @@
               response = response[0];
             }
 
-            if (response.status == 200) {
+            if (response.status === 200) {
               let new_rb = response.data.running_balance;
 
               if (new_rb < old_rb) {
@@ -834,6 +847,14 @@
         );
         this.requestMpesaPaymentPoll(60);
         return;
+      },
+
+      instantiateReturnStatus(){
+        this.return_status = this.getReturnStatus;
+      },
+
+      dispatchReturnToPickup(){
+        this.setReturnStatus(this.return_status);
       },
 
       /* End mpesa */
@@ -1053,10 +1074,11 @@
       this.initializeOrderPlacement();
       this.refreshRunningBalance();
       this.getUserCards();
+      this.instantiateReturnStatus();
     },
 
     destroyed() {
-      if (this.should_destroy == true) {
+      if (this.should_destroy === true) {
         this.$emit('destroyOrderOptions');
       }
       else {
