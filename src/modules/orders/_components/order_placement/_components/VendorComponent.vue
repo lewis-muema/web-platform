@@ -92,7 +92,7 @@ export default {
       popover_visible: false,
       carrier_type: '2',
       vendors_with_fixed_carrier_type: ['Standard','Runner'],
-
+      vendors_without_return: ['Standard','Runner'],
     }
   },
   computed: {
@@ -121,8 +121,6 @@ export default {
       setActiveVendorName: '$_orders/$_home/set_active_vendor_name',
       setActiveVendorDetails: '$_orders/$_home/set_active_vendor_details',
       setCarrierType: '$_orders/$_home/set_carrier_type',
-      setReturnStatus : '$_orders/$_home/setReturnStatus',
-
     }),
 
     dispatchCarrierType: function() {
@@ -165,7 +163,7 @@ export default {
     },
 
     getVendorPrice(vendorObject){
-      if(this.getReturnStatus !== true || this.vendors_with_fixed_carrier_type.includes(vendorObject.vendor_name)){
+      if(this.getReturnStatus !== true || this.vendors_without_return.includes(vendorObject.vendor_name)){
         return numeral(vendorObject.cost).format('0,0');
       }
       return numeral(vendorObject.return_cost).format('0,0');
@@ -199,29 +197,6 @@ export default {
     setVendorDetails(vendorObject){
       this.setActiveVendorName(vendorObject.vendor_name);
       this.setActiveVendorDetails(vendorObject);
-      this.checkValidityOfReturnStatus();
-    },
-
-    checkValidityOfReturnStatus(){
-      if(this.vendors_with_fixed_carrier_type.includes(this.get_active_vendor_name) && this.getReturnStatus === true){
-        this.resetReturnStatus(this.get_active_vendor_name);
-      }
-    },
-
-    resetReturnStatus(vendor_name){
-        // this.setReturnStatus(false);
-        // Retain return:true since the model does not watch store values
-        this.doNotification('0', 'Could not make the order return', `Sorry, ${vendor_name} orders cannot be made Return. Please use the Express option to place Return orders.`);
-    },
-
-    doNotification(level, title, message) {
-        this.$store.commit('setNotificationStatus', true);
-        let notification = {
-          title: title,
-          level: level,
-          message: message,
-        };
-        this.$store.commit('setNotification', notification);
     },
 
   },
