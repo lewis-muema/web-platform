@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="home-view-vendor-types" v-if="activePriceTierData != '' ">
-                <div v-for="j in activePriceTierData.price_tiers" :key="j.order_no" @click="setActiveVendorName(j.vendor_name);setActiveVendorDetails(j);">
+                <div v-for="j in activePriceTierData.price_tiers" :key="j.order_no" @click="setVendorDetails(j);">
                   <div class="home-view-vendor-types--item home-view-vendor-types-item-wrap" :class="getCurrentActiveTendorTypeClass(j.vendor_name)">
                       <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
                           <div class="home-view-vendor-types-item--vendor-wrapper__img">
@@ -64,7 +64,7 @@
             </div>
         </div>
     </div>
-    <div class="" v-if="get_active_package_class != '' ">
+    <div class="" v-if="get_active_package_class !== '' ">
         <order-options v-on:destroyOrderOptions="destroyVendorComponent()"></order-options>
     </div>
 </div>
@@ -92,7 +92,7 @@ export default {
       popover_visible: false,
       carrier_type: '2',
       vendors_with_fixed_carrier_type: ['Standard','Runner'],
-
+      vendors_without_return: ['Standard','Runner'],
     }
   },
   computed: {
@@ -105,7 +105,7 @@ export default {
     }),
 
     activePriceTierData: function() {
-      if (this.get_active_package_class != '') {
+      if (this.get_active_package_class !== '') {
         return this.getPriceRequestObject.economy_price_tiers.find(
           pack => pack.tier_group === this.get_active_package_class
         )
@@ -121,7 +121,6 @@ export default {
       setActiveVendorName: '$_orders/$_home/set_active_vendor_name',
       setActiveVendorDetails: '$_orders/$_home/set_active_vendor_details',
       setCarrierType: '$_orders/$_home/set_carrier_type',
-
     }),
 
     dispatchCarrierType: function() {
@@ -164,7 +163,7 @@ export default {
     },
 
     getVendorPrice(vendorObject){
-      if(this.getReturnStatus !== true){
+      if(this.getReturnStatus !== true || this.vendors_without_return.includes(vendorObject.vendor_name)){
         return numeral(vendorObject.cost).format('0,0');
       }
       return numeral(vendorObject.return_cost).format('0,0');
@@ -188,11 +187,16 @@ export default {
     },
 
     getCarrierBoxName() {
-      return this.get_active_package_class == 'small' ? 'Box' : 'Closed';
+      return this.get_active_package_class === 'small' ? 'Box' : 'Closed';
     },
 
     getCarrierNoBoxName() {
-      return this.get_active_package_class == 'small' ? 'No Box' : 'Open';
+      return this.get_active_package_class === 'small' ? 'No Box' : 'Open';
+    },
+
+    setVendorDetails(vendorObject){
+      this.setActiveVendorName(vendorObject.vendor_name);
+      this.setActiveVendorDetails(vendorObject);
     },
 
   },
