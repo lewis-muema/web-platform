@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="home-view-vendor-types" v-if="activePriceTierData != '' ">
-                <div v-for="j in activePriceTierData.price_tiers" :key="j.order_no" @click="setActiveVendorName(j.vendor_name);setActiveVendorDetails(j);">
+                <div v-for="j in activePriceTierData.price_tiers" :key="j.order_no" @click="setVendorDetails(j);">
                   <div class="home-view-vendor-types--item home-view-vendor-types-item-wrap" :class="getCurrentActiveTendorTypeClass(j.vendor_name)">
                       <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
                           <div class="home-view-vendor-types-item--vendor-wrapper__img">
@@ -64,7 +64,7 @@
             </div>
         </div>
     </div>
-    <div class="" v-if="get_active_package_class != '' ">
+    <div class="" v-if="get_active_package_class !== '' ">
         <order-options v-on:destroyOrderOptions="destroyVendorComponent()"></order-options>
     </div>
 </div>
@@ -105,7 +105,7 @@ export default {
     }),
 
     activePriceTierData: function() {
-      if (this.get_active_package_class != '') {
+      if (this.get_active_package_class !== '') {
         return this.getPriceRequestObject.economy_price_tiers.find(
           pack => pack.tier_group === this.get_active_package_class
         )
@@ -121,6 +121,7 @@ export default {
       setActiveVendorName: '$_orders/$_home/set_active_vendor_name',
       setActiveVendorDetails: '$_orders/$_home/set_active_vendor_details',
       setCarrierType: '$_orders/$_home/set_carrier_type',
+      setReturnStatus : '$_orders/$_home/setReturnStatus',
 
     }),
 
@@ -164,7 +165,7 @@ export default {
     },
 
     getVendorPrice(vendorObject){
-      if(this.getReturnStatus !== true){
+      if(this.getReturnStatus !== true || this.vendors_with_fixed_carrier_type.includes(vendorObject.vendor_name)){
         return numeral(vendorObject.cost).format('0,0');
       }
       return numeral(vendorObject.return_cost).format('0,0');
@@ -188,11 +189,39 @@ export default {
     },
 
     getCarrierBoxName() {
-      return this.get_active_package_class == 'small' ? 'Box' : 'Closed';
+      return this.get_active_package_class === 'small' ? 'Box' : 'Closed';
     },
 
     getCarrierNoBoxName() {
-      return this.get_active_package_class == 'small' ? 'No Box' : 'Open';
+      return this.get_active_package_class === 'small' ? 'No Box' : 'Open';
+    },
+
+    setVendorDetails(vendorObject){
+      this.setActiveVendorName(vendorObject.vendor_name);
+      this.setActiveVendorDetails(vendorObject);
+      this.checkValidityOfReturnStatus();
+    },
+
+    checkValidityOfReturnStatus(){
+      if(this.vendors_with_fixed_carrier_type.includes(this.get_active_vendor_name) && this.getReturnStatus === true){
+        this.resetReturnStatus(this.get_active_vendor_name);
+      }
+    },
+
+    resetReturnStatus(vendor_name){
+        // this.setReturnStatus(false);
+        // Retain return:true since the model does not watch store values
+        this.doNotification('0', 'Could not make the order return', `Sorry, ${vendor_name} orders cannot be made Return. Please use the Express option to place Return orders.`);
+    },
+
+    doNotification(level, title, message) {
+        this.$store.commit('setNotificationStatus', true);
+        let notification = {
+          title: title,
+          level: level,
+          message: message,
+        };
+        this.$store.commit('setNotification', notification);
     },
 
   },

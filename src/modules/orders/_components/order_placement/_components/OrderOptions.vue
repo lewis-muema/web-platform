@@ -183,6 +183,7 @@
           }
         },
         price_request_response_received: false,
+        vendors_without_return: ['Standard','Runner'],
       };
     },
 
@@ -219,7 +220,7 @@
         let cost = 0;
         if (typeof this.active_vendor_price_data !== 'undefined') {
           if ('cost' in this.active_vendor_price_data) {
-            if(this.getReturnStatus !== true){
+            if(this.getReturnStatus !== true || this.vendors_without_return.includes(this.get_active_vendor_name)){
               cost = this.active_vendor_price_data.cost - this.active_vendor_price_data.discountAmount;
               return cost;
             }
@@ -542,7 +543,7 @@
           sendy_coupon: '0',
           payment_mode: this.payment_method.startsWith('2')
             ? 2
-            : this.payment_method == ''
+            : this.payment_method === ''
             ? 0
             : parseInt(this.payment_method),
           schedule_time: this.order_is_scheduled
@@ -552,7 +553,7 @@
           tier_name: this.active_vendor_price_data.tier_name,
           cop_id: 'cop_id' in acc ? acc.cop_id : 0,
           carrier_type: parseInt(this.get_carrier_type),
-          isreturn: this.getReturnStatus,
+          isreturn: this.getReturnStatus === true && this.vendors_without_return.includes(this.get_active_vendor_name) === false,
           vendor_type: this.active_vendor_price_data.vendor_id,
           rider_phone: this.active_vendor_price_data.order_no,
           type: this.payment_type,

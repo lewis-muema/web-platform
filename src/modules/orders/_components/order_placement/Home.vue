@@ -37,7 +37,7 @@
       <div class="homeview--row homeview--row__more-destinations homeview-locations-options" v-if="allow_add_destination">
           <div class="homeview-locations-options--add-destination">
                <font-awesome-icon icon="plus" size="xs" class="sendy-blue homeview--row__font-awesome" width="10px" />
-                <a href="#" class="homeview--add" @click="addExtraDestination()">Add another Destination</a>
+                <a href="#" class="homeview--add" @click="addExtraDestination()">Add Destination</a>
           </div>
           <div class="homeview-locations-options--set-return" v-if="allow_return">
               <el-checkbox v-model="return_status" @input="dispatchReturnToPickup">Return to pick up</el-checkbox>
@@ -78,7 +78,6 @@ export default {
       return_status:false,
       locations:[],
       map_options:{componentRestrictions: {country: ['ke', 'tz', 'ug', 'rw', 'bi']}},
-      // TO DO : Disable return on some vendors
       vendors_with_without_return: ['Standard','Runner'],
     }
   },
@@ -112,12 +111,11 @@ export default {
         return Array.isArray(this.get_order_path) && this.get_order_path.length > 1 && this.get_price_request_object.hasOwnProperty('economy_price_tiers');
     },
 
-    // TO DO: Disable return on some vendors
-    allow_return(){
+    allow_return: function(){
         let allowed = true;
-        // if(this.vendors_with_without_return.includes(this.get_active_vendor_name)){
-        //     allowed = false;
-        // }
+        if(this.vendors_with_without_return.includes(this.get_active_vendor_name)){
+            allowed = false;
+        }
         return allowed;
     },
 
@@ -227,7 +225,7 @@ export default {
 
     },
     attemptPriceRequest(){
-        if(Array.isArray(this.locations) && this.locations.length > 1 && this.get_pickup_filled == true){
+        if(Array.isArray(this.locations) && this.locations.length > 1 && this.get_pickup_filled === true){
             this.doPriceRequest();
         }
     },
@@ -248,7 +246,7 @@ export default {
         let mark = {
             position:{lat:lat, lng:lng, icon:'destination'}
         };
-        if(index == 0){
+        if(index === 0){
             mark.icon = 'pickup';
         }
         let marker_payload = {
@@ -345,7 +343,7 @@ export default {
 
     },
     setDefaultVendorType(previous){
-        if(this.get_active_vendor_name == ''){
+        if(this.get_active_vendor_name === ''){
                 this.doSetDefaultVendorType();
         }
         else{
@@ -433,7 +431,6 @@ export default {
       this.instantiateReturnStatus();
     },
 
-    // TO DO: disable return on some vendors
     resetReturnStatus(){
         this.return_status = false;
         this.dispatchReturnToPickup();
@@ -448,6 +445,7 @@ export default {
   destroyed () {
       this.destroyOrderPlacement();
   },
+
 
 }
 </script>
