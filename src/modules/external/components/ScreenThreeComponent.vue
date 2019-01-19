@@ -113,7 +113,7 @@ export default {
             personal_email: personal_email,
             phone: phone,
             type: type,
-            dept_id: dept_id,
+            department_id: dept_id,
             // cop_user_id : cop_user_id
           };
         }
