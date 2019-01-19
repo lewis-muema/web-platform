@@ -77,7 +77,7 @@ export default {
           let personal_email = this.getPerEmail;
           let phone = this.getPhone;
           let type = this.getType;
-          let dept_id = this.getDeptId;
+          let department_id = this.getDeptId;
           let cop_user_id = this.getCopUserId;
 
 
@@ -101,7 +101,7 @@ export default {
           let personal_email = this.getPerEmail;
           let phone = this.getPhone;
           let type = this.getType;
-          let dept_id = this.getDeptId;
+          let department_id = this.getDeptId;
           // let cop_user_id = this.getCopUserId ;
 
 
