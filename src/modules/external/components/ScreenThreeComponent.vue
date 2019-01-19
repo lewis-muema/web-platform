@@ -89,7 +89,7 @@ export default {
             personal_email: personal_email,
             phone: phone,
             type: type,
-            dept_id: dept_id,
+            department_id: department_id,
             cop_user_id: cop_user_id
           };
         } else if (this.getType == 1) {
@@ -113,7 +113,7 @@ export default {
             personal_email: personal_email,
             phone: phone,
             type: type,
-            department_id: dept_id,
+            department_id: department_id,
             // cop_user_id : cop_user_id
           };
         }
