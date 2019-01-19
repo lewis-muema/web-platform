@@ -10,9 +10,6 @@
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
 }
-.homeview--form {
-  /* border-left: 3px solid #ccc; */
-}
 .homeview--input-bundler {
   padding-bottom: 15px;
   /* width: 100%; */
@@ -48,7 +45,7 @@
 }
 .homeview--row__more-destinations {
   padding-left: 5px;
-  margin-top: -15px;
+  margin-top: -10px;
   margin-bottom: 10px;
   overflow: hidden;
 }
@@ -65,10 +62,6 @@
 .row {
   display: flex;
   flex-direction: row;
-}
-.homeview--destinations {
-  /* padding: 10px; */
-  /* background-color: #efefef; */
 }
 .slide-fade-enter-active {
   transition: all 0.8s ease;
@@ -150,8 +143,6 @@
 .home-view-vendor-classes-menu--span {
   flex: 1;
 }
-.home-view-vendor-classes-menu--span {
-}
 .home-view-vendor-classes-menu--img {
   position: absolute;
   margin-left: -35px;
@@ -163,4 +154,14 @@
   flex-basis: auto;
   flex-direction: row;
   flex-wrap: wrap;
+}
+.homeview-locations-options{
+  display: flex;
+}
+.homeview-locations-options--add-destination{
+  flex: 2 2 auto;
+}
+.homeview-locations-options--set-return{
+  flex:1 1 auto;
+  margin-left: 19px;
 }
