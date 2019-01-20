@@ -21,6 +21,7 @@
 
 <script>
 import admin_store from './_store';
+import { mapGetters } from 'vuex';
 import RegisterStoreModule from '../../mixins/register_store_module'
 import MainHeader from '../../components/headers/MainHeader.vue'
 
@@ -31,6 +32,21 @@ export default {
   created() {
     const STORE_KEY = '$_admin';
     this.$store.registerModule(STORE_KEY, admin_store);
+  },
+  computed: {
+    ...mapGetters({
+      getSession : 'getSession'
+    }),
+  },
+  watch: {
+    getSession: {
+      handler(val, oldVal){
+        if (oldVal != val) {
+          this.$router.push('/orders')
+        }
+      },
+      deep: true
+    }
   },
   destroyed(){
       // TO DO:  destroy store?
