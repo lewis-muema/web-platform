@@ -13,5 +13,8 @@ export default {
   },
   setNotificationStatus(state, notification_status) {
     state.notification_status = notification_status;
+  },
+  setSessDefault(state, type) {
+    state.session.default = type;
   }
 };
