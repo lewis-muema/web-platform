@@ -24,6 +24,7 @@ export default {
         payment_method:'',
         stripe_user_id:'',
         carrier_type_id:'',
+        return_status:false,
        }
     },
   actions,

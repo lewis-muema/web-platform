@@ -27,7 +27,7 @@
     <div class="sign-holder dimen">
       <input class="input-control sign-up-form" v-validate="'required|email'"  type="email" name="email" v-model="email" placeholder="Your Email" value="">
       <br>
-      <span class="sign-up-email-error">{{ errors.first('email') }}</span>
+      <p class="sign-up-email-error">{{ errors.first('email') }}</p>
     </div>
 
 
@@ -35,11 +35,14 @@
       <vue-tel-input class="input-control sign-up-form" v-model.trim="phone" name="phone" value="" @onBlur="validate_phone" v-validate="'required|check_phone'" data-vv-validate-on="blur"
                :preferredCountries="['ke', 'ug', 'tz']">
       </vue-tel-input>
-      <span v-show="errors.has('phone')" class="sign-up-phone-error">{{ errors.first('phone') }}</span>
+      <p v-show="errors.has('phone')" class="sign-up-phone-error">{{ errors.first('phone') }}</p>
     </div>
     <div class="sign-holder dimen" id="outer_u_pass">
   <span >
-        <input class="input-control sign-up-form" type="password" name="password" v-model="password" placeholder="Password">
+        <input class="input-control sign-up-form" type="password" name="password" v-model="password" placeholder="Password" @keyup="validate_pass" >
+        <br>
+        <p class="pass-validate-error">{{pass_msg}}</p>
+
   </span>
     </div>
 
@@ -67,7 +70,10 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from "vuex";
+import {
+  mapMutations,
+  mapActions
+} from "vuex";
 
 export default {
   name: "SignUp",
@@ -78,8 +84,10 @@ export default {
       email: "",
       password: "",
       u_terms: "",
+      pass_validation: "false",
       sign_up_text: "Sign Up",
-      message: ""
+      message: "",
+      pass_msg: ""
     };
   },
   methods: {
@@ -113,9 +121,9 @@ export default {
           }
         }
         // console.log(email_valid);
-        if (phone_valid == true && email_valid == true) {
+        if (phone_valid == true && email_valid == true && this.pass_validation == true) {
           if (this.u_terms == true) {
-          let phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+            let phone = this.phone.replace(/[\(\)\-\s]+/g, '');
             let values = {};
             values.phone = phone;
             values.email = this.email;
@@ -138,6 +146,7 @@ export default {
                   this.$router.push("/auth/sign_up_verification");
                 } else {
                   this.message = response.data.reason;
+                  this.doNotification(2, "Sign Up failed", response.data.reason);
                   console.warn("Sign Up Failed");
                 }
               },
@@ -149,6 +158,7 @@ export default {
           } else {
             this.message = "Agree to Terms and Conditions";
             console.log("Agree Terms and Condition");
+            this.doNotification(2, "Sign Up failed", "Agree to Terms and Conditions");
           }
         } else {
           this.message = "Invalid Details ";
@@ -156,7 +166,31 @@ export default {
         }
       } else {
         this.message = "Please provide all details";
+        this.doNotification(2, "Sign Up failed", "Provide all details");
       }
+    },
+    doNotification(level, title, message) {
+      let notification = {
+        title: title,
+        level: level,
+        message: message
+      };
+      this.$store.commit("setNotification", notification);
+      this.$store.commit("setNotificationStatus", true);
+    },
+    validate_pass() {
+      let patt = new RegExp("^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9@#$%^&+=]*$");
+      let res = patt.test(this.password);
+      console.log(res);
+      if (res == false) {
+        this.pass_msg = "Password must be at least 8 characters long, contain at least one number and have a mixture of uppercase and lowercase letters.";
+
+      } else {
+        this.pass_msg = "";
+        this.pass_validation = true;
+
+      }
+
     }
   }
 };
@@ -266,15 +300,24 @@ export default {
   font-size: 13px;
   font-family: "Rubik", sans-serif;
   color: #e08445;
+  text-align: left;
 }
 .sign-up-phone-error {
   margin-right: 25%;
   font-size: 13px;
   font-family: "Rubik", sans-serif;
   color: #e08445;
+  text-align: left;
 }
 .signup-submit {
   width: 110% !important;
   border-width: 0px !important;
+}
+.pass-validate-error {
+  color: #e08445;
+  font-family: "Rubik", sans-serif;
+  text-align: left;
+  font-size: 13px;
+  width: 320px;
 }
 </style>
