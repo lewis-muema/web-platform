@@ -13,6 +13,7 @@
 
 <script>
 import payment_store from "./_store";
+import { mapGetters } from 'vuex';
 import RegisterStoreModule from "../../mixins/register_store_module";
 import MainHeader from "../../components/headers/MainHeader.vue";
 import AccountBalance from "./_components/AccountBalance.vue";
@@ -33,6 +34,9 @@ export default {
     //}
   },
   computed: {
+    ...mapGetters({
+      getSession : 'getSession'
+    }),
     currentPageHeader: function() {
       return "account-balance";
     }
@@ -41,7 +45,17 @@ export default {
     go_back() {
       this.$router.go(-1);
     }
-  }
+  },
+  watch: {
+    getSession: {
+      handler(val, oldVal){
+        if (oldVal != val) {
+          this.$router.push('/orders')
+        }
+      },
+      deep: true
+    }
+  },
 };
 </script>
 
