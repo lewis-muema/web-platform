@@ -90,7 +90,6 @@
                     getBizName: '$_admin/getBizName',
                     getAdds: '$_admin/getAdds',
                     getInvites: '$_admin/getInvites',
-                    getUserPhone : '$_admin/getUserPhone',
                 }
             ),
         },
