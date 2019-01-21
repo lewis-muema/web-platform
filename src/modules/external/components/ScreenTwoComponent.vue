@@ -12,7 +12,7 @@
           <label class="input-descript">
             <span>Personal Email</span>
           </label>
-          <input  class="form-control" type="email" v-validate="'required|email'" name="email" placeholder="you@email.com"  v-model="peerEmail" @focus="setCurrentStep(1)" >
+          <input  class="form-control" type="email" v-validate="'required|email'" name="email" placeholder='you@email.com'  v-model="peerEmail" @focus="setCurrentStep(1)" >
           <br>
           <span class="onboarding-email-error">{{ errors.first('email') }}</span>
         </div>
@@ -56,18 +56,14 @@ export default {
        }
       }
 
-      if (email_valid == true) {
-        if (this.getBizEmail == this.peerEmail) {
-
-          this.message = 'Provide a Personal Email ';
-
-        }
-        else {
-
+      if (email_valid) {
+        if (this.getBizEmail !== this.peerEmail) {
           this.updatePerEmail(this.peerEmail);
           this.updateViewStep(0);
           this.setViewState(3);
-
+        }
+        else {
+          this.message = 'Provide a Personal Email';
         }
       }
       else {

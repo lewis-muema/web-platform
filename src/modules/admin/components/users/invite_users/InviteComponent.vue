@@ -135,11 +135,11 @@
                             let name = this.elements[i].name;
                             let department = this.elements[i].department;
                             this.invitees.push({
-                                "cop_id": cop_id,
-                                "email": email,
-                                "password": "qwerty",
-                                "name": name,
-                                "department_id": department,
+                                'cop_id': cop_id,
+                                'email': email,
+                                'password': 'qwerty',
+                                'name': name,
+                                'department_id': department,
                             });
 
                         }
