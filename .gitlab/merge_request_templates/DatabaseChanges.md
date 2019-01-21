@@ -21,6 +21,28 @@ Closes
 - [ ] Conforms to the [code review guidelines]()
 - [ ] Conforms to the [merge request performance guidelines]()
 
+
+## Database checklist
+
+When updating existing columns:
+
+- [ ] Added the new schema to the MR body
+- [ ] Added a description of the changes made
+
+When adding or modifying queries to improve performance:
+
+- [ ] Included data that shows the performance improvement, preferably in the form of a benchmark
+- [ ] Included the output of `EXPLAIN (ANALYZE, BUFFERS)` of the relevant queries
+
+When adding tables:
+
+- [ ] Added indexes for fields that are used in statements such as WHERE, ORDER BY, GROUP BY, and JOINs
+
+When removing columns, tables, indexes or other structures:
+
+- [ ] Made sure the application and any other applications no longer uses (or ignores) these structures
+
+
 ## Author's checklist
 
 - [ ] Unit Tests Passed (required)
