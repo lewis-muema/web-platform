@@ -55,284 +55,277 @@ import add_card from './AddCard.vue';
 import Mcrypt from '../../../mixins/mcrypt_mixin.js';
 
 export default {
-  name: 'card-component',
-  mixins: [Mcrypt],
-  components: { payment_loading, payment_success, payment_fail, add_card },
-  data() {
-    return {
-      card_payment_data: {
-        card_expiry: '',
-        cvv: '',
-        card_no: '',
-        amount: '',
-        is_save: true
-      },
-      payment_state: 'Attempting Payment',
-      show_cvv: false
-    };
-  },
-  mounted() {},
-  computed: {
-    ...mapGetters({
-      card_fail_status: '$_payment/getCardFailStatus',
-      card_loading_status: '$_payment/getCardLoadingStatus',
-      card_success_status: '$_payment/getCardSuccessStatus'
-    }),
-    valid_payment() {
-      return (
-        this.card_payment_data.card_expiry !== '' &&
-        this.card_payment_data.amount !== '' &&
-        this.card_payment_data.card_no !== '' &&
-        this.card_payment_data.cvv !== ''
-      );
-    },
-    cvv_state() {
-      return this.show_cvv;
-    },
-    card_expiry_month() {
-      let exp = this.card_payment_data.card_expiry;
-      if (exp.length === 5) {
-        return exp.slice(0, 2);
-      }
-      return '';
-    },
-    card_expiry_year() {
-      let exp = this.card_payment_data.card_expiry;
-      if (exp.length === 5) {
-        return exp.slice(3);
-      }
-    },
-    card_add_status() {
-      if (typeof this.$route.query.action !== 'undefined') {
-        let action = this.$route.query.action;
-        if (action === 'add') {
-          return true;
-        }
-      } else {
-        return false;
-      }
-    }
-  },
-  methods: {
-    showCvv() {
-      if (this.show_cvv === true) {
-        this.show_cvv = false;
-      } else {
-        this.show_cvv = true;
-      }
-    },
-    ...mapActions({
-      _requestCardPayment: '$_payment/requestCardPayment',
-      _completeCardPayment: '$_payment/completeCardPaymentRequest'
-    }),
+	name: 'card-component',
+	mixins: [Mcrypt],
+	components: { payment_loading, payment_success, payment_fail, add_card },
+	data() {
+		return {
+			card_payment_data: {
+				card_expiry: '',
+				cvv: '',
+				card_no: '',
+				amount: '',
+				is_save: true,
+			},
+			payment_state: 'Attempting Payment',
+			show_cvv: false,
+		};
+	},
+	mounted() {},
+	computed: {
+		...mapGetters({
+			card_fail_status: '$_payment/getCardFailStatus',
+			card_loading_status: '$_payment/getCardLoadingStatus',
+			card_success_status: '$_payment/getCardSuccessStatus',
+		}),
+		valid_payment() {
+			return (
+				this.card_payment_data.card_expiry !== '' &&
+				this.card_payment_data.amount !== '' &&
+				this.card_payment_data.card_no !== '' &&
+				this.card_payment_data.cvv !== ''
+			);
+		},
+		cvv_state() {
+			return this.show_cvv;
+		},
+		card_expiry_month() {
+			let exp = this.card_payment_data.card_expiry;
+			if (exp.length === 5) {
+				return exp.slice(0, 2);
+			}
+			return '';
+		},
+		card_expiry_year() {
+			let exp = this.card_payment_data.card_expiry;
+			if (exp.length === 5) {
+				return exp.slice(3);
+			}
+		},
+		card_add_status() {
+			if (typeof this.$route.query.action !== 'undefined') {
+				let action = this.$route.query.action;
+				if (action === 'add') {
+					return true;
+				}
+			} else {
+				return false;
+			}
+		},
+	},
+	methods: {
+		showCvv() {
+			if (this.show_cvv === true) {
+				this.show_cvv = false;
+			} else {
+				this.show_cvv = true;
+			}
+		},
+		...mapActions({
+			_requestCardPayment: '$_payment/requestCardPayment',
+			_completeCardPayment: '$_payment/completeCardPaymentRequest',
+		}),
 
-    handleCardPayment() {
-      //sort encryption
-      let session = this.$store.getters.getSession;
+		handleCardPayment() {
+			//sort encryption
+			let session = this.$store.getters.getSession;
 
-      let user_id = 0;
-      let cop_id = 0;
-      let user_name = '';
-      let user_email = '';
-      let user_phone = '';
+			let user_id = 0;
+			let cop_id = 0;
+			let user_name = '';
+			let user_email = '';
+			let user_phone = '';
 
-      if (session.default === 'biz') {
-        cop_id = session.biz.cop_id;
-        user_id = session.biz.user_id;
-        user_name = session.biz.user_name;
-        user_email = session.biz.user_email;
-        user_phone = session.biz.user_phone;
-      } else {
-        cop_id = session.peer.cop_id;
-        user_id = session.peer.user_id;
-        user_name = session.peer.user_name;
-        user_email = session.peer.user_email;
-        user_phone = session.peer.user_phone;
-      }
+			if (session.default === 'biz') {
+				cop_id = session.biz.cop_id;
+				user_id = session.biz.user_id;
+				user_name = session.biz.user_name;
+				user_email = session.biz.user_email;
+				user_phone = session.biz.user_phone;
+			} else {
+				cop_id = session.peer.cop_id;
+				user_id = session.peer.user_id;
+				user_name = session.peer.user_name;
+				user_email = session.peer.user_email;
+				user_phone = session.peer.user_phone;
+			}
 
-      let card_payload = {
-        amount: this.card_payment_data.amount,
-        exp_month: this.card_expiry_month,
-        exp_year: this.card_expiry_year,
-        card_no: this.card_payment_data.card_no,
-        cvv: this.card_payment_data.cvv,
-        is_save: this.card_payment_data.is_save,
-        cop_id: cop_id,
-        user_id: user_id,
-        user_email: user_email,
-        user_phone: user_phone,
-        user_name: user_name
-      };
+			let card_payload = {
+				amount: this.card_payment_data.amount,
+				exp_month: this.card_expiry_month,
+				exp_year: this.card_expiry_year,
+				card_no: this.card_payment_data.card_no,
+				cvv: this.card_payment_data.cvv,
+				is_save: this.card_payment_data.is_save,
+				cop_id: cop_id,
+				user_id: user_id,
+				user_email: user_email,
+				user_phone: user_phone,
+				user_name: user_name,
+			};
 
-      card_payload = Mcrypt.encrypt(card_payload);
+			card_payload = Mcrypt.encrypt(card_payload);
 
-      let full_payload = {
-        values: card_payload,
-        vm: this,
-        app: 'PRIVATE_API',
-        endpoint: 'card_payment'
-      };
-      this._requestCardPayment(full_payload).then(
-        response => {
-          response.data = Mcrypt.decrypt(response.data);
-          response.data = JSON.parse(response.data);
-          console.log(response.data);
-          let that = this;
+			let full_payload = {
+				values: card_payload,
+				vm: this,
+				app: 'PRIVATE_API',
+				endpoint: 'card_payment',
+			};
+			this._requestCardPayment(full_payload).then(
+				response => {
+					let res_data = Mcrypt.decrypt(response.data);
+					response.data = JSON.parse(res_data);
 
-          if (response.data.status === true) {
-            let notification = {
-              title: 'card payment sucess',
-              level: 1,
-              message: 'card payment was processed successfully'
-            };
-            this.payment_state = 'Payment Success';
-            this.$store.dispatch('show_notification', notification, {
-              root: true
-            });
+					let that = this;
 
-            let card_trans_id = response.data.values.card_trans_id;
+					if (response.data.status === true) {
+						let notification = {
+							title: 'card payment sucess',
+							level: 1,
+							message: 'card payment was processed successfully',
+						};
+						this.payment_state = 'Payment Success';
+						this.$store.dispatch('show_notification', notification, {
+							root: true,
+						});
 
-            console.log(card_trans_id);
+						let card_trans_id = response.data.values.card_trans_id;
 
-            this.completeCardPayment(card_trans_id);
-            //complete payment here
-          } else {
-            this.payment_state = 'Payment Failed';
-            let notification = {
-              title: 'card payment failed',
-              level: 2,
-              message: response.data.message
-            };
-            this.$store.dispatch('show_notification', notification, {
-              root: true
-            });
-          }
-        },
-        error => {
-          console.log(error);
-          this.payment_state = 'Payment Failed';
-          let notification = {
-            title: 'card payment failed',
-            level: 2,
-            message: 'card payment did not go through'
-          };
-          this.$store.dispatch('show_notification', notification, {
-            root: true
-          });
-        }
-      );
-    },
-    completeCardPayment(card_trans_id) {
-      let session = this.$store.getters.getSession;
-      let user_id = 0;
-      let cop_id = 0;
-      let user_name = '';
-      let user_email = '';
-      let user_phone = '';
+						this.completeCardPayment(card_trans_id);
+						//complete payment here
+					} else {
+						this.payment_state = 'Payment Failed';
+						let notification = {
+							title: 'card payment failed',
+							level: 2,
+							message: response.data.message,
+						};
+						this.$store.dispatch('show_notification', notification, {
+							root: true,
+						});
+					}
+				},
+				error => {
+					this.payment_state = 'Payment Failed';
+					let notification = {
+						title: 'card payment failed',
+						level: 2,
+						message: 'card payment did not go through',
+					};
+					this.$store.dispatch('show_notification', notification, {
+						root: true,
+					});
+				}
+			);
+		},
+		completeCardPayment(card_trans_id) {
+			let session = this.$store.getters.getSession;
+			let user_id = 0;
+			let cop_id = 0;
+			let user_name = '';
+			let user_email = '';
+			let user_phone = '';
 
-      if (session.default === 'biz') {
-        cop_id = session.biz.cop_id;
-        user_id = session.biz.user_id;
-        user_name = session.biz.user_name;
-        user_email = session.biz.user_email;
-        user_phone = session.biz.user_phone;
-      } else {
-        user_id = session.peer.user_id;
-        user_name = session.peer.user_name;
-        user_email = session.peer.user_email;
-        user_phone = session.peer.user_phone;
-      }
+			if (session.default === 'biz') {
+				cop_id = session.biz.cop_id;
+				user_id = session.biz.user_id;
+				user_name = session.biz.user_name;
+				user_email = session.biz.user_email;
+				user_phone = session.biz.user_phone;
+			} else {
+				user_id = session.peer.user_id;
+				user_name = session.peer.user_name;
+				user_email = session.peer.user_email;
+				user_phone = session.peer.user_phone;
+			}
 
-      let payload = {
-        values: {
-          amount: this.card_payment_data.amount,
-          pay_method: 2,
-          ref_no: 'VISA-${Math.round(+new Date() / 1000)}',
-          client_id: cop_id,
-          account_no: 'SENDY' + cop_id,
-          phone: user_phone,
-          email: user_email,
-          name: user_name,
-          bill_Ref_Number: user_phone,
-          card_trans_id: card_trans_id
-        }
-      };
+			let payload = {
+				values: {
+					amount: this.card_payment_data.amount,
+					pay_method: 2,
+					ref_no: 'VISA-${Math.round(+new Date() / 1000)}',
+					client_id: cop_id,
+					account_no: 'SENDY' + cop_id,
+					phone: user_phone,
+					email: user_email,
+					name: user_name,
+					bill_Ref_Number: user_phone,
+					card_trans_id: card_trans_id,
+				},
+			};
 
-      let full_payload = {
-        vm: this,
-        params: payload,
-        app: 'PRIVATE_API',
-        endpoint: 'payment'
-      };
+			let full_payload = {
+				vm: this,
+				params: payload,
+				app: 'PRIVATE_API',
+				endpoint: 'payment',
+			};
 
-      this._completeCardPayment(full_payload).then(
-        response => {
-          console.log(response);
-          if (response.data.status === true) {
-            //this will request the new running balance and update the store
-            let notification = {
-              title: 'card payment complete',
-              level: 1,
-              message: 'card payment successfull'
-            };
-            let that = this;
+			this._completeCardPayment(full_payload).then(
+				response => {
+					if (response.data.status === true) {
+						//this will request the new running balance and update the store
+						let notification = {
+							title: 'card payment complete',
+							level: 1,
+							message: 'card payment successfull',
+						};
+						let that = this;
 
-            this.$store.dispatch('show_notification', notification, {
-              root: true
-            });
+						this.$store.dispatch('show_notification', notification, {
+							root: true,
+						});
 
-            let running_balance_payload = {
-              values: {
-                cop_id: cop_id,
-                user_phone: user_phone
-              }
-            };
-            let payload = {
-              values: running_balance_payload,
-              vm: this,
-              app: 'PRIVATE_API',
-              endpoint: 'running_balance'
-            };
+						let running_balance_payload = {
+							values: {
+								cop_id: cop_id,
+								user_phone: user_phone,
+							},
+						};
+						let payload = {
+							values: running_balance_payload,
+							vm: this,
+							app: 'PRIVATE_API',
+							endpoint: 'running_balance',
+						};
 
-            this.$store
-              .dispatch('requestRunningBalance', payload, { root: true })
-              .then(response => {
-                console.log('running balance response', response);
-              });
-          } else {
-            let notification = {
-              title: 'card payment failed',
-              level: 3,
-              message: 'card payment failed to complete'
-            };
-            this.$store.dispatch('show_notification', notification, {
-              root: true
-            });
-          }
-        },
-        error => {
-          console.log(error);
-          this.payment_state = 'Payment Failed';
-        }
-      );
-    },
-    creditCardMask() {
-      let current_val = this.card_payment_data.card_no;
-      let new_cur = current_val.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
-      this.card_payment_data.card_no = new_cur.trim();
-    },
-    creditCExpiryMask($event) {
-      let current_val = this.card_payment_data.card_expiry;
-      let new_cur = current_val;
-      if ($event.code != 'Backspace') {
-        new_cur = current_val.replace(/\W/gi, '').replace(/(.{2})/g, '$1/');
-        if (new_cur.length > 5) {
-          new_cur = new_cur.slice(0, 5);
-        }
-      }
-      this.card_payment_data.card_expiry = new_cur.trim();
-    }
-  }
+						this.$store
+							.dispatch('requestRunningBalance', payload, { root: true })
+							.then(response => {});
+					} else {
+						let notification = {
+							title: 'card payment failed',
+							level: 3,
+							message: 'card payment failed to complete',
+						};
+						this.$store.dispatch('show_notification', notification, {
+							root: true,
+						});
+					}
+				},
+				error => {
+					this.payment_state = 'Payment Failed';
+				}
+			);
+		},
+		creditCardMask() {
+			let current_val = this.card_payment_data.card_no;
+			let new_cur = current_val.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
+			this.card_payment_data.card_no = new_cur.trim();
+		},
+		creditCExpiryMask($event) {
+			let current_val = this.card_payment_data.card_expiry;
+			let new_cur = current_val;
+			if ($event.code !== 'Backspace') {
+				new_cur = current_val.replace(/\W/gi, '').replace(/(.{2})/g, '$1/');
+				if (new_cur.length > 5) {
+					new_cur = new_cur.slice(0, 5);
+				}
+			}
+			this.card_payment_data.card_expiry = new_cur.trim();
+		},
+	},
 };
 </script>
 <style lang="css">
