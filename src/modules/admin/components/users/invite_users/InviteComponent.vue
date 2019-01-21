@@ -139,7 +139,7 @@
                                 "email": email,
                                 "password": "qwerty",
                                 "name": name,
-                                "department_id": department
+                                "department_id": department,
                             });
 
                         }
