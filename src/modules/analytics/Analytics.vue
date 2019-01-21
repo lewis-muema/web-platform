@@ -39,9 +39,7 @@ export default {
   watch: {
     getSession: {
       handler(val, oldVal){
-        if (oldVal != val) {
-          this.$router.push('/orders')
-        }
+        this.$router.push('/orders');
       },
       deep: true
     }
