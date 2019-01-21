@@ -175,7 +175,6 @@ export default {
       this._requestCardPayment(full_payload).then(
         response => {
           response.data = Mcrypt.decrypt(response.data);
-          //response.data = JSON.stringify(response.data.replace(/\s+/g, ""));
           response.data = JSON.parse(response.data);
           console.log(response.data);
           let that = this;
