@@ -38,7 +38,6 @@ export default {
             //the json is ok
             //set content type to json
             if(externalEndpoints.includes(requestedPayload)){
-                console.log("trueee", requestedPayload)
                 config = {
                     headers: {
                         "Content-Type": "application/json"
