@@ -124,6 +124,7 @@ export default {
         if (phone_valid == true && email_valid == true && this.pass_validation == true) {
           if (this.u_terms == true) {
             let phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+            this.phone = phone ;
             let values = {};
             values.phone = phone;
             values.email = this.email;
