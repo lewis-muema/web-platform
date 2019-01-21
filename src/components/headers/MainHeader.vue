@@ -11,7 +11,7 @@
             <nav>
                <ul>
                    <li class="nav--menu-inactive"><a> Helpline : 0709 779 779</a></li>
-                   <li class="nav--menu-inactive"><a>Hi {{loggedUser}}</a></li>
+                   <li class="nav--menu-inactive"><a>Hi {{logged_user}}</a></li>
                     <li class="nav--menu-dropdown">
                        <a class="nav--menu-dropdown-link">Menu</a>
                        <ul class="nav--menu-dropdown-list">
@@ -43,6 +43,7 @@ export default {
   data: function() {
     return {
       admin_user: false,
+      logged_user: '',
     };
   },
   computed: {
