@@ -401,9 +401,33 @@ export default {
         this.$destroy();
     },
 
+    registerPaymentModule(){
+      const moduleIsRegistered = this.$store._modules.root._children['$_payment'] !== undefined;
+       if (!moduleIsRegistered) {
+        this.$store.registerModule('$_payment', payments_module_store);
+      }
+    },
+
+    registerOrderPlacementModule(){
+      let moduleIsRegistered = false;
+      try{
+        moduleIsRegistered = this.$store._modules.root._children['$_orders']._children['$_home'] !== undefined;
+      } 
+      catch(er){
+        // 
+      }
+
+      if (!moduleIsRegistered) {
+        this.$store.registerModule(['$_orders','$_home'], order_placement_store);
+      }
+
+    },
+
     instantiateHomeComponent(){
-      this.$store.registerModule(['$_orders','$_home'], order_placement_store);
-      this.$store.registerModule('$_payment', payments_module_store);
+      this.registerPaymentModule();
+      this.registerOrderPlacementModule();
+      // this.$store.registerModule(['$_orders','$_home'], order_placement_store);
+      // this.$store.registerModule('$_payment', payments_module_store);
     },
 
   },
