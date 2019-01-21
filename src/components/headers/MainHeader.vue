@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getSess : 'getSession'
+      getSess : 'getSession',
     }),
   },
   mounted() {
