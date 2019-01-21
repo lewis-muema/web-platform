@@ -9,7 +9,7 @@
     <div class="paymentbody--input-wrap">
         <input type="text" name="card_payment_card_no" @change="creditCardMask()" @keyup="creditCardMask()" v-model="card_payment_data.card_no" placeholder="Card Number" class="input-control paymentbody--input">
     </div>
-    
+
     <div class="paymentbody--input-wrap paymentbody--input-spaced">
         <div class="input-control-big">
           <input type="text" name="card_payment_month" v-model="card_payment_data.card_expiry" value="" placeholder="MM/YY" class="input-control paymentbody--input" @change="creditCExpiryMask" @keyup="creditCExpiryMask">
@@ -28,10 +28,10 @@
               <div class="sendy_payments_form_cvv_body">
                 <img src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/cvv.png" alt="CVV">
               </div>
-          </div>  
-        </div>       
+          </div>
+        </div>
     </div>
-    
+
     <div class="paymentbody--input-wrap savecard--desc-wrap">
         <input type="checkbox" name="card_payment_save" v-model="card_payment_data.is_save" class="input-checkbox paymentbody--input-checkbox">
         <div class="savecard--desc-title">Save your card details for easier payment in future</div>
@@ -41,8 +41,8 @@
         <button type="button" name="button" :class="valid_payment ? 'button-primary paymentbody--input-button':'paymentbody--input-button button--primary-inactive'" @click="handleCardPayment">Pay</button>
     </div>
 
-   
-    
+
+
   </div>
 </template>
 
@@ -91,21 +91,21 @@ export default {
     },
     card_expiry_month() {
       let exp = this.card_payment_data.card_expiry;
-      if (exp.length == 5) {
+      if (exp.length === 5) {
         return exp.slice(0, 2);
       }
       return '';
     },
     card_expiry_year() {
       let exp = this.card_payment_data.card_expiry;
-      if (exp.length == 5) {
+      if (exp.length === 5) {
         return exp.slice(3);
       }
     },
     card_add_status() {
       if (typeof this.$route.query.action !== 'undefined') {
         let action = this.$route.query.action;
-        if (action == 'add') {
+        if (action === 'add') {
           return true;
         }
       } else {
@@ -115,7 +115,7 @@ export default {
   },
   methods: {
     showCvv() {
-      if (this.show_cvv == true) {
+      if (this.show_cvv === true) {
         this.show_cvv = false;
       } else {
         this.show_cvv = true;
@@ -136,7 +136,7 @@ export default {
       let user_email = '';
       let user_phone = '';
 
-      if (session.default == 'biz') {
+      if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
         user_id = session.biz.user_id;
         user_name = session.biz.user_name;
@@ -179,7 +179,7 @@ export default {
           console.log(response.data);
           let that = this;
 
-          if (response.data.status == true) {
+          if (response.data.status === true) {
             let notification = {
               title: 'card payment sucess',
               level: 1,
@@ -230,7 +230,7 @@ export default {
       let user_email = '';
       let user_phone = '';
 
-      if (session.default == 'biz') {
+      if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
         user_id = session.biz.user_id;
         user_name = session.biz.user_name;
@@ -247,7 +247,7 @@ export default {
         values: {
           amount: this.card_payment_data.amount,
           pay_method: 2,
-          ref_no: 'VISA-' + Math.round(+new Date() / 1000),
+          ref_no: 'VISA-${Math.round(+new Date() / 1000)}',
           client_id: cop_id,
           account_no: 'SENDY' + cop_id,
           phone: user_phone,
@@ -268,7 +268,7 @@ export default {
       this._completeCardPayment(full_payload).then(
         response => {
           console.log(response);
-          if (response.data.status == true) {
+          if (response.data.status === true) {
             //this will request the new running balance and update the store
             let notification = {
               title: 'card payment complete',
