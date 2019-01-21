@@ -47,43 +47,43 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import payment_loading from "./LoadingComponent.vue";
-import payment_success from "./SuccessComponent.vue";
-import payment_fail from "./FailComponent.vue";
-import add_card from "./AddCard.vue";
-import Mcrypt from "../../../mixins/mcrypt_mixin.js";
+import { mapActions, mapGetters } from 'vuex';
+import payment_loading from './LoadingComponent.vue';
+import payment_success from './SuccessComponent.vue';
+import payment_fail from './FailComponent.vue';
+import add_card from './AddCard.vue';
+import Mcrypt from '../../../mixins/mcrypt_mixin.js';
 
 export default {
-  name: "card-component",
+  name: 'card-component',
   mixins: [Mcrypt],
   components: { payment_loading, payment_success, payment_fail, add_card },
   data() {
     return {
       card_payment_data: {
-        card_expiry: "",
-        cvv: "",
-        card_no: "",
-        amount: "",
+        card_expiry: '',
+        cvv: '',
+        card_no: '',
+        amount: '',
         is_save: true
       },
-      payment_state: "Attempting Payment",
+      payment_state: 'Attempting Payment',
       show_cvv: false
     };
   },
   mounted() {},
   computed: {
     ...mapGetters({
-      card_fail_status: "$_payment/getCardFailStatus",
-      card_loading_status: "$_payment/getCardLoadingStatus",
-      card_success_status: "$_payment/getCardSuccessStatus"
+      card_fail_status: '$_payment/getCardFailStatus',
+      card_loading_status: '$_payment/getCardLoadingStatus',
+      card_success_status: '$_payment/getCardSuccessStatus'
     }),
     valid_payment() {
       return (
-        this.card_payment_data.card_expiry !== "" &&
-        this.card_payment_data.amount !== "" &&
-        this.card_payment_data.card_no !== "" &&
-        this.card_payment_data.cvv !== ""
+        this.card_payment_data.card_expiry !== '' &&
+        this.card_payment_data.amount !== '' &&
+        this.card_payment_data.card_no !== '' &&
+        this.card_payment_data.cvv !== ''
       );
     },
     cvv_state() {
@@ -94,7 +94,7 @@ export default {
       if (exp.length == 5) {
         return exp.slice(0, 2);
       }
-      return "";
+      return '';
     },
     card_expiry_year() {
       let exp = this.card_payment_data.card_expiry;
@@ -103,9 +103,9 @@ export default {
       }
     },
     card_add_status() {
-      if (typeof this.$route.query.action !== "undefined") {
+      if (typeof this.$route.query.action !== 'undefined') {
         let action = this.$route.query.action;
-        if (action == "add") {
+        if (action == 'add') {
           return true;
         }
       } else {
@@ -122,8 +122,8 @@ export default {
       }
     },
     ...mapActions({
-      _requestCardPayment: "$_payment/requestCardPayment",
-      _completeCardPayment: "$_payment/completeCardPaymentRequest"
+      _requestCardPayment: '$_payment/requestCardPayment',
+      _completeCardPayment: '$_payment/completeCardPaymentRequest'
     }),
 
     handleCardPayment() {
@@ -132,11 +132,11 @@ export default {
 
       let user_id = 0;
       let cop_id = 0;
-      let user_name = "";
-      let user_email = "";
-      let user_phone = "";
+      let user_name = '';
+      let user_email = '';
+      let user_phone = '';
 
-      if (session.default == "biz") {
+      if (session.default == 'biz') {
         cop_id = session.biz.cop_id;
         user_id = session.biz.user_id;
         user_name = session.biz.user_name;
@@ -169,8 +169,8 @@ export default {
       let full_payload = {
         values: card_payload,
         vm: this,
-        app: "PRIVATE_API",
-        endpoint: "card_payment"
+        app: 'PRIVATE_API',
+        endpoint: 'card_payment'
       };
       this._requestCardPayment(full_payload).then(
         response => {
@@ -181,12 +181,12 @@ export default {
 
           if (response.data.status == true) {
             let notification = {
-              title: "card payment sucess",
+              title: 'card payment sucess',
               level: 1,
-              message: "card payment was processed successfully"
+              message: 'card payment was processed successfully'
             };
-            this.payment_state = "Payment Success";
-            this.$store.dispatch("show_notification", notification, {
+            this.payment_state = 'Payment Success';
+            this.$store.dispatch('show_notification', notification, {
               root: true
             });
 
@@ -197,26 +197,26 @@ export default {
             this.completeCardPayment(card_trans_id);
             //complete payment here
           } else {
-            this.payment_state = "Payment Failed";
+            this.payment_state = 'Payment Failed';
             let notification = {
-              title: "card payment failed",
+              title: 'card payment failed',
               level: 2,
               message: response.data.message
             };
-            this.$store.dispatch("show_notification", notification, {
+            this.$store.dispatch('show_notification', notification, {
               root: true
             });
           }
         },
         error => {
           console.log(error);
-          this.payment_state = "Payment Failed";
+          this.payment_state = 'Payment Failed';
           let notification = {
-            title: "card payment failed",
+            title: 'card payment failed',
             level: 2,
-            message: "card payment did not go through"
+            message: 'card payment did not go through'
           };
-          this.$store.dispatch("show_notification", notification, {
+          this.$store.dispatch('show_notification', notification, {
             root: true
           });
         }
@@ -226,11 +226,11 @@ export default {
       let session = this.$store.getters.getSession;
       let user_id = 0;
       let cop_id = 0;
-      let user_name = "";
-      let user_email = "";
-      let user_phone = "";
+      let user_name = '';
+      let user_email = '';
+      let user_phone = '';
 
-      if (session.default == "biz") {
+      if (session.default == 'biz') {
         cop_id = session.biz.cop_id;
         user_id = session.biz.user_id;
         user_name = session.biz.user_name;
@@ -247,9 +247,9 @@ export default {
         values: {
           amount: this.card_payment_data.amount,
           pay_method: 2,
-          ref_no: "VISA-" + Math.round(+new Date() / 1000),
+          ref_no: 'VISA-' + Math.round(+new Date() / 1000),
           client_id: cop_id,
-          account_no: "SENDY" + cop_id,
+          account_no: 'SENDY' + cop_id,
           phone: user_phone,
           email: user_email,
           name: user_name,
@@ -261,8 +261,8 @@ export default {
       let full_payload = {
         vm: this,
         params: payload,
-        app: "PRIVATE_API",
-        endpoint: "payment"
+        app: 'PRIVATE_API',
+        endpoint: 'payment'
       };
 
       this._completeCardPayment(full_payload).then(
@@ -271,13 +271,13 @@ export default {
           if (response.data.status == true) {
             //this will request the new running balance and update the store
             let notification = {
-              title: "card payment complete",
+              title: 'card payment complete',
               level: 1,
-              message: "card payment successfull"
+              message: 'card payment successfull'
             };
             let that = this;
 
-            this.$store.dispatch("show_notification", notification, {
+            this.$store.dispatch('show_notification', notification, {
               root: true
             });
 
@@ -290,42 +290,42 @@ export default {
             let payload = {
               values: running_balance_payload,
               vm: this,
-              app: "PRIVATE_API",
-              endpoint: "running_balance"
+              app: 'PRIVATE_API',
+              endpoint: 'running_balance'
             };
 
             this.$store
-              .dispatch("requestRunningBalance", payload, { root: true })
+              .dispatch('requestRunningBalance', payload, { root: true })
               .then(response => {
-                console.log("running balance response", response);
+                console.log('running balance response', response);
               });
           } else {
             let notification = {
-              title: "card payment failed",
+              title: 'card payment failed',
               level: 3,
-              message: "card payment failed to complete"
+              message: 'card payment failed to complete'
             };
-            this.$store.dispatch("show_notification", notification, {
+            this.$store.dispatch('show_notification', notification, {
               root: true
             });
           }
         },
         error => {
           console.log(error);
-          this.payment_state = "Payment Failed";
+          this.payment_state = 'Payment Failed';
         }
       );
     },
     creditCardMask() {
       let current_val = this.card_payment_data.card_no;
-      let new_cur = current_val.replace(/\W/gi, "").replace(/(.{4})/g, "$1 ");
+      let new_cur = current_val.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
       this.card_payment_data.card_no = new_cur.trim();
     },
     creditCExpiryMask($event) {
       let current_val = this.card_payment_data.card_expiry;
       let new_cur = current_val;
-      if ($event.code != "Backspace") {
-        new_cur = current_val.replace(/\W/gi, "").replace(/(.{2})/g, "$1/");
+      if ($event.code != 'Backspace') {
+        new_cur = current_val.replace(/\W/gi, '').replace(/(.{2})/g, '$1/');
         if (new_cur.length > 5) {
           new_cur = new_cur.slice(0, 5);
         }
