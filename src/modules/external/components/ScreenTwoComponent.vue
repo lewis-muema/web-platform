@@ -84,7 +84,7 @@ export default {
       }
     ),
     is_valid : function() {
-      return this.peerEmail != '';
+      return this.peerEmail !== '';
     }
   }
 }
