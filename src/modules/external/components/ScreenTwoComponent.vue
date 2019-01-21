@@ -57,9 +57,18 @@ export default {
       }
 
       if (email_valid == true) {
-        this.updatePerEmail(this.per_email);
-        this.updateViewStep(0);
-        this.setViewState(3);
+        if (this.getBizEmail == this.per_email) {
+
+          this.message = 'Provide a Personal Email ';
+
+        }
+        else {
+
+          this.updatePerEmail(this.per_email);
+          this.updateViewStep(0);
+          this.setViewState(3);
+
+        }
       }
       else {
         this.message = 'Provide valid Email ';
@@ -74,6 +83,10 @@ export default {
     }
   },
   computed : {
+    ...mapGetters({
+        getBizEmail:'$_external/getBizEmail'
+      }
+    ),
     is_valid : function() {
       return this.per_email != '';
     }

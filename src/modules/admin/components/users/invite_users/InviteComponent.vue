@@ -90,6 +90,7 @@
                     getBizName: '$_admin/getBizName',
                     getAdds: '$_admin/getAdds',
                     getInvites: '$_admin/getInvites',
+                    getUserPhone : '$_admin/getUserPhone',
                 }
             ),
         },
@@ -137,7 +138,6 @@
                             this.invitees.push({
                                 "cop_id": cop_id,
                                 "email": email,
-                                "phone": "0712000000",
                                 "password": "qwerty",
                                 "name": name,
                                 "department_id": department
