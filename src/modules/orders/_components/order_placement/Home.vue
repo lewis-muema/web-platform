@@ -436,8 +436,6 @@ export default {
     instantiateHomeComponent(){
       this.registerPaymentModule();
       this.registerOrderPlacementModule();
-      // this.$store.registerModule(['$_orders','$_home'], order_placement_store);
-      // this.$store.registerModule('$_payment', payments_module_store);
     },
 
   },
