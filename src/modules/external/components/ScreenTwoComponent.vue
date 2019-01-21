@@ -34,8 +34,8 @@ export default {
   name: 'screen-two-component',
   data: function () {
     return {
-      peerEmail : "",
-      message : "",
+      peerEmail :'',
+      message :'',
     }
   },
   methods: {
