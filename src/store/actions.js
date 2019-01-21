@@ -21,6 +21,9 @@ export default {
                 payload.values = JSON.stringify(payload.values);
             }
         }
+        let jwtToken = localStorage.getItem('jwtToken');
+        let requestedPayload = payload.endpoint;
+        let externalEndpoints = ['sign_up_check', 'sign_in', 'onboard_user', 'forgot_pass', 'forgot_token', 'sign_up_submit', 'onboard_details', 'update_pass', 'pending_delivery', 'insert_rate'];
         if (
             /^[\],:{}\s]*$/.test(
                 payload.values
@@ -32,11 +35,17 @@ export default {
                     .replace(/(?:^|:|,)(?:\s*\[)+/g, "")
             )
         ) {
-            //get from local storage
-            let jwtToken = localStorage.getItem('jwtToken');
             //the json is ok
             //set content type to json
-            if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
+            if(externalEndpoints.includes(requestedPayload)){
+                console.log("trueee", requestedPayload)
+                config = {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                };
+            }
+            else if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
                 config = {
                     headers: {
                         "Content-Type": "application/json",
@@ -44,13 +53,6 @@ export default {
                     }
                 };
 
-            }
-            else if (payload.endpoint == "sign_up_check" || payload.endpoint == "sign_in" || payload.endpoint == "onboard_user" || payload.endpoint == "forgot_pass" || payload.endpoint == "forgot_token" || payload.endpoint == "sign_up_submit"|| payload.endpoint == "update_pass"|| payload.endpoint == "insert_rate"|| payload.endpoint == "onboard_details"|| payload.endpoint == "pending_delivery") {
-                config = {
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                };
             }
             else{
                 let notification = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
@@ -62,23 +64,22 @@ export default {
             //the json is not ok
             // assume it is just a string
             // add quotes to the string
-            let jwtToken = localStorage.getItem('jwtToken');
             payload.values = '"' + payload.values + '"';
-            if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
-                config = {headers: {
-                    "Content-Type": "text/plain",
-                    "Authorization": jwtToken
-                }};
 
-            }
-            else if (payload.endpoint == "sign_up_check" || payload.endpoint == "sign_in" || payload.endpoint == "onboard_user" || payload.endpoint == "forgot_pass" || payload.endpoint == "forgot_token" || payload.endpoint == "sign_up_submit"|| payload.endpoint == "update_pass"|| payload.endpoint == "insert_rate"|| payload.endpoint == "onboard_details"|| payload.endpoint == "pending_delivery") {
-
+            if(externalEndpoints.includes(requestedPayload)){
                 config = {
                     headers: {
                         "Content-Type": "text/plain"
 
                     }
                 };
+            }
+            else if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
+                config = {headers: {
+                    "Content-Type": "text/plain",
+                    "Authorization": jwtToken
+                }};
+
             }
             else{
                 let payload = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
