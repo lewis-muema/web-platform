@@ -52,14 +52,14 @@ export default {
     }),
   },
   mounted() {
-    this.loggedUser()
+    this.loggedUser();
   },
   watch: {
     getSess: {
       handler(val, oldVal){
-        this.loggedUser()
+        this.loggedUser();
       },
-      deep: true
+      deep: true,
     }
   },
   methods: {
@@ -74,14 +74,14 @@ export default {
            if (session[session.default]["user_type"] == 2 ) {
              cop_id = session[session.default]["cop_id"];
              this.admin_user = true;
-             this.logged_user = firstName + " (Business Acc)";
+             this.logged_user = `${firstName} (Business Acc)`;
 
            }
              // Cop_user
            else if (session[session.default]["user_type"] == 1 ) {
              cop_id = session[session.default]["cop_id"];
              console.log(session[session.default]);
-             this.logged_user = firstName +  " (Business Acc)";
+             this.logged_user = `${firstName} (Business Acc)`;
            }
 
       } else {
@@ -89,7 +89,7 @@ export default {
         user_id = session[session.default]["user_id"];
         this.admin_user = false;
         console.log(session[session.default]);
-        this.logged_user = firstName +  " (Personal Acc)";
+        this.logged_user = `${firstName} (Personal Acc)`;
       }
     },
     logOut() {

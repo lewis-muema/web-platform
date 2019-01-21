@@ -80,7 +80,16 @@ export default {
     'no-ssr': NoSSR,
     'vendor-view': VendorComponent,
   },
-
+  watch: {
+    get_session: {
+      handler(val, oldVal){
+        if (this.show_vendor_view || this.loading) {
+          this.doPriceRequest();
+        }
+      },
+      deep: true,
+    }
+  },
   computed: {
     ...mapGetters({
       // get_waypoints : '$_orders/$_home/get_waypoints',
@@ -94,6 +103,7 @@ export default {
       get_active_package_class : '$_orders/$_home/get_active_package_class',
       get_active_vendor_name : '$_orders/$_home/get_active_vendor_name',
       get_pickup_filled : '$_orders/$_home/get_pickup_filled',
+      get_session : 'getSession',
     }),
 
     allow_add_destination(){
