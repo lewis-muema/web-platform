@@ -43,7 +43,7 @@ export default {
       {
         setViewState:'$_external/setViewState',
         updateViewStep:'$_external/updateViewStep',
-        updatePerEmail:'$_external/updatePerEmail'
+        updatePerEmail:'$_external/updatePerEmail',
       }
     ),
     next_view: function ()
@@ -84,7 +84,7 @@ export default {
   },
   computed : {
     ...mapGetters({
-        getBizEmail:'$_external/getBizEmail'
+        getBizEmail:'$_external/getBizEmail',
       }
     ),
     is_valid : function() {
