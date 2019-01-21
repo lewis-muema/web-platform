@@ -49,14 +49,28 @@
             }
         },
         mounted() {
-
+          this.set_data();
+        },
+        computed : {
+          ...mapGetters({
+            getSess : 'getSession',
+          }),
+        },
+        watch: {
+          getSess: {
+            handler(val, oldVal){
+              this.set_data();
+            },
+            deep: true,
+          }
+        },
+        methods: {
+          set_data: function() {
             let session = this.$store.getters.getSession;
             this.user_name = session[session.default]['user_name'];
             this.user_email = session[session.default]['user_email'];
             this.phone = session[session.default]['user_phone'];
-        },
-        methods: {
-
+          },
           validate_phone() {
             this.$validator.validate();
           },
