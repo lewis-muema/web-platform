@@ -46,8 +46,23 @@ export default {
     };
   },
   computed: {
-    loggedUser: function ()
-    {
+    ...mapGetters({
+      getSess : 'getSession'
+    }),
+  },
+  mounted() {
+    this.loggedUser()
+  },
+  watch: {
+    getSess: {
+      handler(val, oldVal){
+        this.loggedUser()
+      },
+      deep: true
+    }
+  },
+  methods: {
+    loggedUser: function () {
       let session = this.$store.getters.getSession;
       let cop_id = 0;
       let fullName = session[session.default]["user_name"].split(' ');
@@ -58,14 +73,14 @@ export default {
            if (session[session.default]["user_type"] == 2 ) {
              cop_id = session[session.default]["cop_id"];
              this.admin_user = true;
-             return firstName + " (Business Acc)";
+             this.logged_user = firstName + " (Business Acc)";
 
            }
              // Cop_user
            else if (session[session.default]["user_type"] == 1 ) {
              cop_id = session[session.default]["cop_id"];
              console.log(session[session.default]);
-             return firstName +  " (Business Acc)";
+             this.logged_user = firstName +  " (Business Acc)";
            }
 
       } else {
@@ -73,11 +88,9 @@ export default {
         user_id = session[session.default]["user_id"];
         this.admin_user = false;
         console.log(session[session.default]);
-        return firstName +  " (Personal Acc)";
+        this.logged_user = firstName +  " (Personal Acc)";
       }
-    }
-  },
-  methods: {
+    },
     logOut() {
       try {
         console.log("attempt to log out");
