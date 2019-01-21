@@ -122,8 +122,8 @@ export default {
 			}
 		},
 		...mapActions({
-			_requestCardPayment: '$_payment/requestCardPayment',
-			_completeCardPayment: '$_payment/completeCardPaymentRequest',
+			requestCardPaymentAction: '$_payment/requestCardPayment',
+			completeCardPaymentAction: '$_payment/completeCardPaymentRequest',
 		}),
 
 		handleCardPayment() {
@@ -172,7 +172,7 @@ export default {
 				app: 'PRIVATE_API',
 				endpoint: 'card_payment',
 			};
-			this._requestCardPayment(full_payload).then(
+			this.requestCardPaymentAction(full_payload).then(
 				response => {
 					let res_data = Mcrypt.decrypt(response.data);
 					response.data = JSON.parse(res_data);
@@ -262,7 +262,7 @@ export default {
 				endpoint: 'payment',
 			};
 
-			this._completeCardPayment(full_payload).then(
+			this.completeCardPaymentAction(full_payload).then(
 				response => {
 					if (response.data.status === true) {
 						//this will request the new running balance and update the store
