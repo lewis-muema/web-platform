@@ -175,11 +175,9 @@ export default {
       this._requestCardPayment(full_payload).then(
         response => {
           response.data = Mcrypt.decrypt(response.data);
-          response.data = JSON.stringify(response.data.replace(/\s+/g, ''));
+          //response.data = JSON.stringify(response.data.replace(/\s+/g, ""));
           response.data = JSON.parse(response.data);
-
           console.log(response.data);
-
           let that = this;
 
           if (response.data.status == true) {
@@ -215,13 +213,13 @@ export default {
           console.log(error);
           this.payment_state = "Payment Failed";
           let notification = {
-              title: "card payment failed",
-              level: 2,
-              message: response.data.message
-            };
-            this.$store.dispatch("show_notification", notification, {
-              root: true
-            });
+            title: "card payment failed",
+            level: 2,
+            message: "card payment did not go through"
+          };
+          this.$store.dispatch("show_notification", notification, {
+            root: true
+          });
         }
       );
     },
@@ -247,7 +245,7 @@ export default {
       }
 
       let payload = {
-          values:{
+        values: {
           amount: this.card_payment_data.amount,
           pay_method: 2,
           ref_no: "VISA-" + Math.round(+new Date() / 1000),
@@ -259,7 +257,7 @@ export default {
           bill_Ref_Number: user_phone,
           card_trans_id: card_trans_id
         }
-        };
+      };
 
       let full_payload = {
         vm: this,
@@ -279,11 +277,11 @@ export default {
               message: "card payment successfull"
             };
             let that = this;
-            
+
             this.$store.dispatch("show_notification", notification, {
               root: true
             });
-            
+
             let running_balance_payload = {
               values: {
                 cop_id: cop_id,
