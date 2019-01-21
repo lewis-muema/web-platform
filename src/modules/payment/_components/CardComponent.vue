@@ -244,9 +244,9 @@ export default {
 				values: {
 					amount: this.card_payment_data.amount,
 					pay_method: 2,
-					ref_no: 'VISA-${Math.round(+new Date() / 1000)}',
+					ref_no: `VISA-${Math.round(+new Date() / 1000)}`,
 					client_id: cop_id,
-					account_no: 'SENDY' + cop_id,
+					account_no: `SENDY${cop_id}`,
 					phone: user_phone,
 					email: user_email,
 					name: user_name,
