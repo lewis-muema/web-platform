@@ -40,7 +40,7 @@ export default {
             if(externalEndpoints.includes(requestedPayload)){
                 config = {
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
                     }
                 };
             }
@@ -48,7 +48,7 @@ export default {
                 config = {
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": jwtToken
+                        "Authorization": jwtToken,
                     }
                 };
 
@@ -68,7 +68,7 @@ export default {
             if(externalEndpoints.includes(requestedPayload)){
                 config = {
                     headers: {
-                        "Content-Type": "text/plain"
+                        "Content-Type": "text/plain",
 
                     }
                 };
@@ -76,7 +76,7 @@ export default {
             else if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
                 config = {headers: {
                     "Content-Type": "text/plain",
-                    "Authorization": jwtToken
+                    "Authorization": jwtToken,
                 }};
 
             }
