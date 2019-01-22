@@ -49,22 +49,22 @@
         data() {
             return {
                 value: '',
-                button: "Send Invites",
+                button: 'Send Invites',
                 elements: [
                     {
-                        "email": "",
-                        "name": "",
-                        "department": ""
+                        'email': '',
+                        'name': '',
+                        'department': '',
                     },
                     {
-                        "email": "",
-                        "name": "",
-                        "department": ""
+                        'email': '',
+                        'name': '',
+                        'department': '',
                     },
                     {
-                        "email": "",
-                        "name": "",
-                        "department": ""
+                        'email': '',
+                        'name': '',
+                        'department': '',
                     }
                 ],
                 invitees: []
@@ -126,7 +126,7 @@
                         this.button = "Sending...";
                         let session = this.$store.getters.getSession;
                         let cop_id = 0;
-                        if (session.default == 'biz') {
+                        if (session.default === 'biz') {
                             cop_id = session[session.default]['cop_id'];
                         }
 
@@ -141,16 +141,15 @@
                                 'name': name,
                                 'department_id': department,
                             });
-
                         }
                     }
                     else {
-                        this.button = "Send Invites";
+                        this.button = 'Send Invites';
                         let level = 2;
                         let notification = {
-                            "title": "",
-                            "level": level,
-                            "message": "Please enter at least one valid email address."
+                            'title': '',
+                            'level': level,
+                            'message': 'Please enter at least one valid email address.',
                         }; //notification object
                         this.$store.commit('setNotification', notification);
                         this.$store.commit('setNotificationStatus', true); //activate notification
@@ -159,28 +158,32 @@
                 let payload = this.invitees;
                 console.log(payload);
                 let full_payload = {
-                    "values": payload,
-                    "vm": this,
-                    "app": "NODE_PRIVATE_API",
-                    "endpoint": "invite_user"
+                    'values': payload,
+                    'vm': this,
+                    'app': 'NODE_PRIVATE_API',
+                    'endpoint': 'invite_user',
                 }
                 this.$store.dispatch("$_admin/inviteNewUsers", full_payload).then(response => {
-                    this.button = "Send Invites";
-                    console.log("invitations sent");
+                    this.button = 'Send Invites';
+                    console.log('invitations sent');
                     console.log(response);
                     let level = 1; //success
-                    let notification = {"title": "", "level": level, "message": "Invitations sent!"}; //notification object
+                    let notification = {
+                      'title': '',
+                      'level': level,
+                      'message': 'Invitations sent!',
+                    }; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
                 }, error => {
-                    this.button = "Send Invites";
-                    console.log("invitations NOT sent");
+                    this.button = 'Send Invites';
+                    console.log('invitations NOT sent');
                     console.log(error);
                     let level = 3;
                     let notification = {
-                        "title": "",
-                        "level": level,
-                        "message": "Something went wrong."
+                        'title': '',
+                        'level': level,
+                        'message': 'Something went wrong.',
                     }; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
@@ -194,34 +197,42 @@
             getInviteLink: function () {
                 let session = this.$store.getters.getSession;
                 let cop_id = 0;
-                if (session.default == 'biz') {
+                if (session.default === 'biz') {
                     cop_id = session[session.default]['cop_id'];
                     cop_id = cop_id.toString()
                 }
                 let payload = {
-                    "cop_id": cop_id
+                    'cop_id': cop_id,
                 }
 
                 console.log(payload)
                 let full_payload = {
-                    "values": payload,
-                    "vm": this,
-                    "app": "NODE_PRIVATE_API",
-                    "endpoint": "create_invite"
+                    'values': payload,
+                    'vm': this,
+                    'app': 'NODE_PRIVATE_API',
+                    'endpoint': 'create_invite',
                 }
                 this.$store.dispatch("$_admin/createInviteLink", full_payload).then(response => {
                     console.log("link created");
                     this.updateViewState(5);
                     console.log(response);
                     let level = 1; //success
-                    let notification = {"title": "Invite Link", "level": level, "message": "Link created!"}; //notification object
+                    let notification = {
+                      'title': 'Invite Link',
+                      'level': level,
+                      'message': 'Link created!',
+                      }; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
                 }, error => {
-                    console.log("link NOT created");
+                    console.log('link NOT created');
                     console.log(error);
                     let level = 2;
-                    let notification = {"title": "Invite Link", "level": level, "message": "An error occurred."}; //notification object
+                    let notification = {
+                      'title': 'Invite Link',
+                      'level': level,
+                      'message': 'An error occurred.',
+                     }; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 
