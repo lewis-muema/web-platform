@@ -144,48 +144,45 @@ export default {
                 });
               }
               this.$router.push("/orders");
-            } else {
-              //failed to login
-              //show some sort of error
-              if (response.data.code == 1) {
-
-                this.login_text = "Login";
-                this.message = response.reason;
-                this.doNotification(
-                  2,
-                  "Login failed",
-                  "Wrong password or email."
-                );
-                console.warn("login failed");
-
-              } else {
-
-                this.login_text = "Login";
-                this.message = response.reason;
-                this.doNotification(
-                  2,
-                  "Login failed",
-                  "Account deactivated"
-                );
-                console.warn("login failed");
-
-
-              }
             }
           },
           error => {
-            this.login_text = "Login";
-            this.message = "Check your Login credentials";
-            this.doNotification(
-              2,
-              "Login failed",
-              "Login failed. Please try again"
-            );
-            console.warn("login failed ", error);
+            if(error.response.status === 403 ){
+                let authResponse = error.response.data;
+              if (authResponse.data.code === 1) {
+
+                this.login_text = 'Login';
+                this.doNotification(
+                  2,
+                  'Login failed',
+                  'Wrong password or email.'
+                );
+
+              } else {
+
+                this.login_text = 'Login';
+                this.doNotification(
+                  2,
+                  'Login failed',
+                  'Account deactivated',
+                );
+              }
+
+            }
+            else{
+              this.login_text = 'Login';
+              this.message = 'Check your Login credentials';
+              this.doNotification(
+                2,
+                'Login failed',
+                'Login failed. Please try again',
+              );
+            }
+
           }
         );
       } else {
-        this.message = "Provide all values";
+        this.message = 'Provide all values';
       }
     },
     doNotification(level, title, message) {
