@@ -5,7 +5,7 @@ export default {
         let url = state.ENV[payload.app];
         //add api key - if request is going to the backend
         if (payload.app === 'BACKEND_CUSTOMERS_APP') {
-            payload.endpoint = payload.endpoint + '?apikey=' + state.ENV['BACKEND_API_KEY'];
+            payload.endpoint = `${payload.endpoint}?apikey=${state.ENV['BACKEND_API_KEY']}`;
         }
         let config = {};
 
@@ -23,7 +23,18 @@ export default {
         }
         let jwtToken = localStorage.getItem('jwtToken');
         let requestedPayload = payload.endpoint;
-        let externalEndpoints = ['sign_up_check', 'sign_in', 'onboard_user', 'forgot_pass', 'forgot_token', 'sign_up_submit', 'onboard_details', 'update_pass', 'pending_delivery', 'insert_rate'];
+        let externalEndpoints = [
+            'sign_up_check',
+            'sign_in',
+            'onboard_user',
+            'forgot_pass',
+            'forgot_token',
+            'sign_up_submit',
+            'onboard_details',
+            'update_pass',
+            'pending_delivery',
+            'insert_rate',
+        ];
         if (
             /^[\],:{}\s]*$/.test(
                 payload.values
@@ -54,7 +65,7 @@ export default {
 
             }
             else{
-                let notification = {"title":'Your session has expired!', "level":2, "message":'Please log out and log in again.'};
+                let notification = {'title':'Your session has expired!', 'level':2, 'message':'Please log out and log in again.'};
                 commit('setNotification', notification);
                 commit('setNotificationStatus', true);
                 return true;
@@ -65,7 +76,7 @@ export default {
             // add quotes to the string
             payload.values = '"' + payload.values + '"';
 
-            if(externalEndpoints.includes(requestedPayload)){
+            if (externalEndpoints.includes(requestedPayload)) {
                 config = {
                     headers: {
                         'Content-Type': 'text/plain',
@@ -79,9 +90,8 @@ export default {
                     'Authorization': jwtToken,
                 }};
 
-            }
-            else{
-                let payload = {"title":'Your session has expired!', "level":2, "message":'Please log out and log in again.'};
+            } else {
+                let payload = {'title':'Your session has expired!', 'level':2, 'message':'Please log out and log in again.'};
                 commit('setNotification', payload);
                 commit('setNotificationStatus', true);
                 return true;
