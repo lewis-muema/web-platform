@@ -5,18 +5,15 @@ export default {
 				root: true,
 			}).then(
 				response => {
-					console.log('in store dispatch to global store');
 					resolve(response);
 				},
 				error => {
 					reject(error);
-					console.log('failed to dispatch to global store');
 				}
 			);
 		});
 	},
 	requestCardPayment({ dispatch, commit, getters, rootGetters }, payload) {
-		console.log('set loading status before dispatch');
 		commit('setCardLoadingStatus', true);
 
 		return new Promise((resolve, reject) => {
@@ -33,7 +30,6 @@ export default {
 				error => {
 					commit('setCardLoadingStatus', false);
 					reject(error);
-					console.log('failed to dispatch request card payment to global store');
 				}
 			);
 		});
@@ -44,7 +40,6 @@ export default {
 				root: true,
 			}).then(
 				response => {
-					console.log('in store dispatch to global store');
 					if (response.length > 1) {
 						response = response[0];
 					}
@@ -52,7 +47,6 @@ export default {
 				},
 				error => {
 					reject(error);
-					console.log('failed to dispatch to global store');
 				}
 			);
 		});
@@ -79,7 +73,6 @@ export default {
 					commit('setMpesaLoadingStatus', false);
 					commit('setMpesaFailStatus', true);
 					reject(error);
-					console.log('failed to dispatch to global store');
 				}
 			);
 		});
@@ -115,7 +108,7 @@ export default {
 		return new Promise((resolve, reject) => {
 			dispatch('requestAxiosPost', payload, { root: true }).then(
 				response => {
-					if (response.status == 200) {
+					if (response.status === 200) {
 						const rb = response.data.running_balance;
 						dispatch('updateRunningBalance', rb, { root: true });
 					}
@@ -123,7 +116,6 @@ export default {
 				},
 				error => {
 					reject(error);
-					console.log('failed to dispatch to global store');
 				}
 			);
 		});
@@ -145,7 +137,6 @@ export default {
 				error => {
 					commit('setCardLoadingStatus', false);
 					reject(error);
-					console.log('failed to dispatch to global store');
 				}
 			);
 		});
