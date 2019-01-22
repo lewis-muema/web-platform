@@ -211,7 +211,6 @@
                     "app": "NODE_PRIVATE_API",
                     "endpoint": "create_invite"
                 }
-
                 this.$store.dispatch("$_admin/createInviteLink", full_payload).then(response => {
                     console.log("link created");
                     this.updateViewState(5);
