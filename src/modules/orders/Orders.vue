@@ -23,18 +23,31 @@ export default {
   name:'Orders',
   components : {MainHeader,MapComponent,OngoingComponent},
   mixins: [ RegisterStoreModule ],
+
+  methods:{
+    registerOrdersStore(){
+      const moduleIsRegistered = this.$store._modules.root._children['$_orders'] !== undefined;
+      if (!moduleIsRegistered) {
+        this.$store.registerModule('$_orders', order_store);
+      }
+    },
+  },
+
   created() {
-    this.$store.registerModule('$_orders', order_store);
+    this.registerOrdersStore();
     // const STORE_KEY = '$_orders';
     // this.register_store_module(STORE_KEY, order_store);
   },
+
   watch :{
     $route (to, from){
       this.$store.commit('$_orders/remove_polyline',[])
       this.$store.commit('$_orders/remove_markers',[])
       this.$store.commit('$_orders/$_tracking/set_tracked_order', '')
-    }
-  }
+    },
+
+  },
+
 }
 </script>
 
