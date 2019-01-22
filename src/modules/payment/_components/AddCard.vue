@@ -78,21 +78,21 @@ export default {
 		},
 		card_expiry_month() {
 			let exp = this.add_card_payment_data.card_expiry;
-			if (exp.length == 5) {
+			if (exp.length === 5) {
 				return exp.slice(0, 2);
 			}
 			return '';
 		},
 		card_expiry_year() {
 			let exp = this.add_card_payment_data.card_expiry;
-			if (exp.length == 5) {
+			if (exp.length === 5) {
 				return exp.slice(3);
 			}
 		},
 	},
 	methods: {
 		showCvv() {
-			if (this.show_cvv == true) {
+			if (this.show_cvv) {
 				this.show_cvv = false;
 			} else {
 				this.show_cvv = true;
@@ -155,22 +155,22 @@ export default {
 
 					let that = this;
 
-					if (response.data.status == false) {
-						let notification = {
-							title: 'Add Card Failed',
-							level: 2,
-							message: response.data.message,
-						};
-						that.$store.dispatch('show_notification', notification, {
-							root: true,
-						});
-					} else {
+					if (response.data.status) {
 						let notification = {
 							title: 'Add Card Success',
 							level: 1,
 							message: 'card was added successfully',
 						};
 						this.payment_state = 'Payment Success';
+						that.$store.dispatch('show_notification', notification, {
+							root: true,
+						});
+					} else {
+						let notification = {
+							title: 'Add Card Failed',
+							level: 2,
+							message: response.data.message,
+						};
 						that.$store.dispatch('show_notification', notification, {
 							root: true,
 						});

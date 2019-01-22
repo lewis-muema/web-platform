@@ -115,7 +115,7 @@ export default {
 	},
 	methods: {
 		showCvv() {
-			if (this.show_cvv === true) {
+			if (this.show_cvv) {
 				this.show_cvv = false;
 			} else {
 				this.show_cvv = true;
