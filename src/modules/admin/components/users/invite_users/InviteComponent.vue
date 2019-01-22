@@ -137,6 +137,7 @@
                             this.invitees.push({
                                 "cop_id": cop_id,
                                 "email": email,
+                                "password": "",
                                 "name": name,
                                 "department_id": department
                             });
