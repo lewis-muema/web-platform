@@ -1,5 +1,5 @@
 export default {
-	requestPromoCodePayment({ dispatch, commit, getters, rootGetters }, payload) {
+	requestPromoCodePayment({ dispatch }, payload) {
 		return new Promise((resolve, reject) => {
 			dispatch('requestAxiosPost', payload, {
 				root: true,
@@ -13,7 +13,7 @@ export default {
 			);
 		});
 	},
-	requestCardPayment({ dispatch, commit, getters, rootGetters }, payload) {
+	requestCardPayment({ dispatch, commit }, payload) {
 		commit('setCardLoadingStatus', true);
 
 		return new Promise((resolve, reject) => {
@@ -34,7 +34,7 @@ export default {
 			);
 		});
 	},
-	completeCardPaymentRequest({ dispatch, commit, getters, rootGetters }, payload) {
+	completeCardPaymentRequest({ dispatch }, payload) {
 		return new Promise((resolve, reject) => {
 			dispatch('requestAxiosPost', payload, {
 				root: true,
@@ -51,8 +51,8 @@ export default {
 			);
 		});
 	},
-	resetCardPaymentRequest({ dispatch, commit, getters, rootGetters }, payload) {
-		return new Promise((resolve, reject) => {
+	resetCardPaymentRequest({ commit }) {
+		return new Promise(resolve => {
 			commit('setCardLoadingStatus', false);
 			commit('setCardFailStatus', false);
 			commit('setCardSuccessStatus', false);
@@ -60,7 +60,7 @@ export default {
 		});
 	},
 
-	requestMpesaPayment({ dispatch, commit, getters, rootGetters }, payload) {
+	requestMpesaPayment({ dispatch, commit }, payload) {
 		return new Promise((resolve, reject) => {
 			dispatch('requestAxiosPost', payload, { root: true }).then(
 				response => {
@@ -78,16 +78,16 @@ export default {
 		});
 	},
 
-	completeMpesaPaymentRequest({ commit }, payload) {
-		return new Promise((resolve, reject) => {
+	completeMpesaPaymentRequest({ commit }) {
+		return new Promise(resolve => {
 			commit('setMpesaLoadingStatus', false);
 			commit('setMpesaSuccessStatus', true);
 			commit('setMpesaFailStatus', false);
 			resolve(true);
 		});
 	},
-	resetMpesaPaymentRequest({ commit }, payload) {
-		return new Promise((resolve, reject) => {
+	resetMpesaPaymentRequest({ commit }) {
+		return new Promise(resolve => {
 			commit('setMpesaLoadingStatus', false);
 			commit('setMpesaFailStatus', false);
 			commit('setMpesaSuccessStatus', false);
@@ -95,8 +95,8 @@ export default {
 		});
 	},
 
-	terminateMpesaPaymentRequest({ commit }, payload) {
-		return new Promise((resolve, reject) => {
+	terminateMpesaPaymentRequest({ commit }) {
+		return new Promise(resolve => {
 			commit('setMpesaLoadingStatus', false);
 			commit('setMpesaFailStatus', true);
 			commit('setMpesaSuccessStatus', false);
