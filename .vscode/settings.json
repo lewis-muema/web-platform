@@ -1,0 +1,4 @@
+{
+  "prettier.trailingComma": "all",
+  "files.trimTrailingWhitespace": true
+}

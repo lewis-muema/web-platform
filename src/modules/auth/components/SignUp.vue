@@ -182,7 +182,7 @@ export default {
     validate_pass() {
       let patt = new RegExp("^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9@#$%^&+=]*$");
       let res = patt.test(this.password);
-      console.log(res);
+      // console.log(res);
       if (res == false) {
         this.pass_msg = "Password must be at least 8 characters long, contain at least one number and have a mixture of uppercase and lowercase letters.";
 
