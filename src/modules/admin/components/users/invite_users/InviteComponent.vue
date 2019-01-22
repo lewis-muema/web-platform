@@ -137,7 +137,7 @@
                             this.invitees.push({
                                 'cop_id': cop_id,
                                 'email': email,
-                                'password': 'qwerty',
+                                'password': '',
                                 'name': name,
                                 'department_id': department,
                             });
@@ -165,8 +165,6 @@
                 }
                 this.$store.dispatch("$_admin/inviteNewUsers", full_payload).then(response => {
                     this.button = 'Send Invites';
-                    console.log('invitations sent');
-                    console.log(response);
                     let level = 1; //success
                     let notification = {
                       'title': '',
@@ -177,8 +175,6 @@
                     this.$store.commit('setNotificationStatus', true); //activate notification
                 }, error => {
                     this.button = 'Send Invites';
-                    console.log('invitations NOT sent');
-                    console.log(error);
                     let level = 3;
                     let notification = {
                         'title': '',
@@ -213,9 +209,7 @@
                     'endpoint': 'create_invite',
                 }
                 this.$store.dispatch("$_admin/createInviteLink", full_payload).then(response => {
-                    console.log("link created");
                     this.updateViewState(5);
-                    console.log(response);
                     let level = 1; //success
                     let notification = {
                       'title': 'Invite Link',
@@ -225,8 +219,6 @@
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
                 }, error => {
-                    console.log('link NOT created');
-                    console.log(error);
                     let level = 2;
                     let notification = {
                       'title': 'Invite Link',
