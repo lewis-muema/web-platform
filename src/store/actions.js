@@ -40,21 +40,25 @@ export default {
             if(externalEndpoints.includes(requestedPayload)){
                 config = {
                     headers: {
-                        "Content-Type": "application/json",
+                        'Content-Type': 'application/json',
                     }
                 };
             }
             else if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
                 config = {
                     headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": jwtToken,
+                        'Content-Type': 'application/json',
+                        'Authorization': jwtToken,
                     }
                 };
 
             }
             else{
-                let notification = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
+                let notification = {
+                  'title':'Your session has expired!',
+                  'level':2,
+                  'message':'Please log out and log in again.',
+                };
                 commit("setNotification", notification);
                 commit("setNotificationStatus", true);
                 return true;
@@ -68,22 +72,26 @@ export default {
             if(externalEndpoints.includes(requestedPayload)){
                 config = {
                     headers: {
-                        "Content-Type": "text/plain",
+                        'Content-Type': 'text/plain',
 
                     }
                 };
             }
             else if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
                 config = {headers: {
-                    "Content-Type": "text/plain",
-                    "Authorization": jwtToken,
+                    'Content-Type': 'text/plain',
+                    'Authorization': jwtToken,
                 }};
 
             }
             else{
-                let payload = {"title":"Your session has expired!", "level":2, "message":"Please log out and log in again."};
-                commit("setNotification", payload);
-                commit("setNotificationStatus", true);
+                let payload = {
+                  'title':'Your session has expired!',
+                  'level':2,
+                  'message':'Please log out and log in again.',
+                };
+                commit('setNotification', payload);
+                commit('setNotificationStatus', true);
                 return true;
             }
         }
@@ -101,27 +109,27 @@ export default {
     },
 
     show_notification({commit}, payload) {
-        commit("setNotification", payload);
-        commit("setNotificationStatus", true);
+        commit('setNotification', payload);
+        commit('setNotificationStatus', true);
         return true;
     },
     updateRunningBalance({commit}, rb) {
-        commit("setRunningBalance", rb);
+        commit('setRunningBalance', rb);
         return true;
     },
     requestRunningBalance({ dispatch , commit }, payload) {
         return new Promise((resolve, reject) => {
-          dispatch("requestAxiosPost", payload, { root: true }).then(
+          dispatch('requestAxiosPost', payload, { root: true }).then(
             response => {
-              if (response.status == 200) {
+              if (response.status === 200) {
                 let rb = response.data.running_balance;
-                commit("setRunningBalance", rb);
+                commit('setRunningBalance', rb);
               }
               resolve(response);
             },
             error => {
               reject(error);
-              console.log("failed to dispatch to global store");
+              console.log('failed to dispatch to global store');
             }
           );
         });
