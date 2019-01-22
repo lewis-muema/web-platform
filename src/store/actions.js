@@ -65,7 +65,11 @@ export default {
 
             }
             else{
-                let notification = {'title':'Your session has expired!', 'level':2, 'message':'Please log out and log in again.'};
+                let notification = {
+                    'title':'Your session has expired!',
+                    'level':2,
+                    'message':'Please log out and log in again.',
+                };
                 commit('setNotification', notification);
                 commit('setNotificationStatus', true);
                 return true;
@@ -91,7 +95,11 @@ export default {
                 }};
 
             } else {
-                let payload = {'title':'Your session has expired!', 'level':2, 'message':'Please log out and log in again.'};
+                let payload = {
+                    'title':'Your session has expired!',
+                    'level':2,
+                    'message':'Please log out and log in again.',
+                };
                 commit('setNotification', payload);
                 commit('setNotificationStatus', true);
                 return true;
