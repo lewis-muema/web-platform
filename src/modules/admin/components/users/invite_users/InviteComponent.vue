@@ -71,15 +71,15 @@
             }
         },
         mounted() {
-            let number = this.getAdds
+            let number = this.getAdds;
             if (number > 3) {
                 for (let i = 3; i < number; i++) {
                     this.elements.push({value: ''});
                 }
-                this.populate()
+                this.populate();
             }
-            else if (number == 3 && this.getInvites != null) {
-                this.populate()
+            else if (number === 3 && this.getInvites !== null) {
+                this.populate();
             }
         },
         computed: {
@@ -105,10 +105,10 @@
             ),
             ...mapActions({
                 inviteNewUsers: '$_admin/inviteNewUsers',
-                createInviteLink: '$_admin/createInviteLink'
+                createInviteLink: '$_admin/createInviteLink',
             }),
             populate: function () {
-                let set = this.getInvites
+                let set = this.getInvites;
                 for (let i = 0; i < set.length; i++) {
                     this.elements[i].email = set[i][0];
                 }
@@ -122,11 +122,11 @@
             postInvites: function () {
                 for (let i = 0, iLen = this.elements.length; i < iLen; i++) {
                     let email = this.elements[0].email;
-                    if (email != '') {
+                    if (email !== '') {
                         this.button = "Sending...";
                         let session = this.$store.getters.getSession;
                         let cop_id = 0;
-                        if (session.default == 'biz') {
+                        if (session.default === 'biz') {
                             cop_id = session[session.default]['cop_id'];
                         }
 
@@ -137,8 +137,8 @@
                             this.invitees.push({
                                 "cop_id": cop_id,
                                 "email": email,
-                                "phone": "0712000000",
-                                "password": "qwerty",
+                                "phone": "",
+                                "password": "",
                                 "name": name,
                                 "department_id": department
                             });
@@ -173,6 +173,7 @@
                     let notification = {"title": "", "level": level, "message": "Invitations sent!"}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
+                    this.updateViewState(4);
                 }, error => {
                     this.button = "Send Invites";
                     console.log("invitations NOT sent");
@@ -195,21 +196,22 @@
             getInviteLink: function () {
                 let session = this.$store.getters.getSession;
                 let cop_id = 0;
-                if (session.default == 'biz') {
+                if (session.default === 'biz') {
                     cop_id = session[session.default]['cop_id'];
-                    cop_id = cop_id.toString()
+                    cop_id = cop_id.toString();
                 }
                 let payload = {
                     "cop_id": cop_id
                 }
 
-                console.log(payload)
+                console.log(payload);
                 let full_payload = {
                     "values": payload,
                     "vm": this,
                     "app": "NODE_PRIVATE_API",
                     "endpoint": "create_invite"
                 }
+
                 this.$store.dispatch("$_admin/createInviteLink", full_payload).then(response => {
                     console.log("link created");
                     this.updateViewState(5);
