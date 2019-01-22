@@ -59,8 +59,8 @@ export default {
                   'level':2,
                   'message':'Please log out and log in again.',
                 };
-                commit("setNotification", notification);
-                commit("setNotificationStatus", true);
+                commit('setNotification', notification);
+                commit('setNotificationStatus', true);
                 return true;
             }
         } else {
