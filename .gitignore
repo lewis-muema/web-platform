@@ -1,5 +1,6 @@
 .idea*
-package-lock.json
+.prettierrc
+.vscode/*
 src/dist/
 dist/
 .DS_Store
