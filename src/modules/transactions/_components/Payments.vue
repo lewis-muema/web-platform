@@ -1,181 +1,220 @@
 <template lang="html">
+  <div
+    id="payments_container"
+    class=""
+  >
+    <div class="section--filter-wrap">
+      <div class="section--filter-input-wrap">
+        <el-date-picker
+          v-model="filterData.from_date"
+          class="section--filter-input"
+          type="date"
+          name="from_date"
+          placeholder="From"
+        />
+        <el-date-picker
+          v-model="filterData.to_date"
+          class="section--filter-input"
+          type="date"
+          name="to_date"
+          placeholder="To"
+        />
 
-  <div class="" id="payments_container">
-        <div class="section--filter-wrap">
-          <div class="section--filter-input-wrap">
-              <el-date-picker class="section--filter-input" type="date" name="from_date" v-model="filterData.from_date" placeholder="From"/>
-              <el-date-picker class="section--filter-input" type="date" name="to_date" v-model="filterData.to_date" placeholder="To"/>
-
-              <button type="button" @click="filterPaymentData":class="active_filter?'button-primary section--filter-action align-left btn-payment':'button-primary section--filter-action-inactive align-left btn-payment'" name="order_payments_text" v-model="order_payments_text" :disabled="active_filter == true ? false : true" >{{this.order_payments_text}}</button>
-
-        </div>
-        <div class="section--filter-action-wrap">
-          <button type="button" class="button-primary section--filter-action btn-payment" @click="take_to_payment">Pay</button>
-
-        </div>
+        <button
+          type="button"
+          :class="active_filter?'button-primary section--filter-action align-left btn-payment'
+            :'button-primary section--filter-action-inactive align-left btn-payment'"
+          name="order_payments_text"
+          :disabled="active_filter == true ? false : true"
+          @click="filterPaymentData"
+        >
+          {{ order_payments_text }}
+        </button>
+      </div>
+      <div class="section--filter-action-wrap">
+        <button
+          type="button"
+          class="button-primary section--filter-action btn-payment"
+          @click="take_to_payment"
+        >
+          Pay
+        </button>
+      </div>
     </div>
 
     <el-table
-     :data="payment_data"
-     style="width: 100%"
-     :border="true"
-     :stripe="true"
-     >
-     <template slot="empty">
-           {{empty_payments_state}}
-     </template>
-     <el-table-column
-       label="Reciept Number"
-       prop="txn"
-       >
-     </el-table-column>
-     <el-table-column
-       label="Date"
-       prop="date_time"
-       :formatter="formatDate"
-       >
-     </el-table-column>
-     <el-table-column
-       label="Method"
-       prop="pay_method_name"
-       width="220"
-       >
-     </el-table-column>
-     <el-table-column
-       label="Description"
-       prop="description"
-       width="220"
-       >
-     </el-table-column>
-     <el-table-column
-       label="Amount"
-       prop="amount"
-       width="220"
-       :formatter="formatAmount"
-       class-name="amount--table-format"
-       >
-     </el-table-column>
-   </el-table>
+      :data="payment_data"
+      style="width: 100%"
+      :border="true"
+      :stripe="true"
+    >
+      <template slot="empty">
+        {{ empty_payments_state }}
+      </template>
+      <el-table-column
+        label="Reciept Number"
+        prop="txn"
+      />
+      <el-table-column
+        label="Date"
+        prop="date_time"
+        :formatter="formatDate"
+      />
+      <el-table-column
+        label="Method"
+        prop="pay_method_name"
+        width="220"
+      />
+      <el-table-column
+        label="Description"
+        prop="description"
+        width="220"
+      />
+      <el-table-column
+        label="Amount"
+        prop="amount"
+        width="220"
+        :formatter="formatAmount"
+        class-name="amount--table-format"
+      />
+    </el-table>
 
-     <div class="section--pagination-wrap">
-        <el-pagination
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="payment_total"
-            :page-size="pagination_limit"
-            :current-page.sync="pagination_page"
-            @current-change="changePage"
-            :page-sizes="[5,10, 20, 50, 100]"
-            @size-change="changeSize"
-            class="section--pagination-item"
-            >
-        </el-pagination>
+    <div class="section--pagination-wrap">
+      <el-pagination
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="payment_total"
+        :page-size="pagination_limit"
+        :current-page.sync="pagination_page"
+        :page-sizes="[5,10, 20, 50, 100]"
+        class="section--pagination-item"
+        @current-change="changePage"
+        @size-change="changeSize"
+      />
     </div>
-
-
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-const moment = require("moment");
+import { mapActions, mapGetters } from 'vuex';
+
+const moment = require('moment');
 
 export default {
-  name: "Payments",
-  data: function() {
+  name: 'Payments',
+  data() {
     return {
-      empty_payments_state: "Fetching Payments",
+      empty_payments_state: 'Fetching Payments',
       pagination_limit: 10,
       pagination_page: 1,
-      order_payments_text: "Search",
+      order_payments_text: 'Search',
       filterState: false,
       filterData: {
-        from_date: "",
-        to_date: ""
+        from_date: '',
+        to_date: '',
       },
-      filteredPaymentData: []
+      filteredPaymentData: [],
     };
+  },
+  computed: {
+    ...mapGetters({
+      paymentData: '$_transactions/getPayments',
+    }),
+    payment_data() {
+      const from = (this.pagination_page - 1) * this.pagination_limit;
+      const to = this.pagination_page * this.pagination_limit;
+
+      return this.paymentData.slice(from, to);
+    },
+    active_filter() {
+      return (this.filterData.from_date !== '' && this.filterData.from_date !== null) && (this.filterData.to_date !== '' && this.filterData.to_date !== null);
+    },
+    payment_total() {
+      // if(this.filterState == true){
+      //   return this.filteredData.length;
+      // }
+      return this.paymentData.length;
+    },
   },
   mounted() {
-    //TODO: Get this from session
-    //TODO: also create payload depending on session
-
-    let session_data = this.$store.getters.getSession;
-    let payment_payload = {};
-
-    if (session_data.default == "biz") {
-      payment_payload = {
-        cop_id: session_data["biz"]["cop_id"],
-        user_type: session_data["biz"]["user_type"],
-        user_id: session_data["biz"]["user_id"]
-      };
-    } else {
-      //create peer payload
-      payment_payload = {
-        user_id: session_data[session_data.default]["user_id"]
-      };
-    }
-
-    let full_payload = {
-      values: payment_payload,
-      vm: this,
-      app: "NODE_PRIVATE_API",
-      endpoint: "payments"
-    };
-    this.$store.dispatch("$_transactions/requestPayments", full_payload).then(
-      response => {
-        console.log(response);
-        this.empty_payments_state = "Payments Not Found";
-      },
-      error => {
-        console.log(error);
-        this.empty_payments_state = "Payments Failed to Fetch";
-      }
-    );
+    this.loadPayments();
   },
   methods: {
-    ...mapActions(["$_transactions/requestPayments"]),
+    ...mapActions(['$_transactions/requestPayments']),
+    loadPayments() {
+      const sessionData = this.$store.getters.getSession;
+      let paymentPayload = {};
+
+      if (sessionData.default === 'biz') {
+        paymentPayload = {
+          cop_id: sessionData.biz.cop_id,
+          user_type: sessionData.biz.user_type,
+          user_id: sessionData.biz.user_id,
+        };
+      } else {
+        // create peer payload
+        paymentPayload = {
+          user_id: sessionData[sessionData.default].user_id,
+        };
+      }
+
+      const fullPayload = {
+        values: paymentPayload,
+        vm: this,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'payments',
+      };
+      this.$store.dispatch('$_transactions/requestPayments', fullPayload).then(
+        () => {
+          this.empty_payments_state = 'Payments Not Found';
+        },
+        () => {
+          this.empty_payments_state = 'Payments Failed to Fetch';
+        },
+      );
+    },
     take_to_payment() {
-      this.$router.push("/payment/mpesa");
+      this.$router.push('/payment/mpesa');
     },
     changeSize(val) {
       this.pagination_page = 1;
       this.pagination_limit = val;
     },
     changePage() {
-      let from = (this.pagination_page - 1) * this.pagination_limit;
-      let to = this.pagination_page * this.pagination_limit;
+      const from = (this.pagination_page - 1) * this.pagination_limit;
+      const to = this.pagination_page * this.pagination_limit;
       this.paymentData.slice(from, to);
     },
     filterPaymentData() {
-      //reset filter
-      let session_data = this.$store.getters.getSession;
+      // reset filter
+      const sessionData = this.$store.getters.getSession;
       this.filterState = false;
-      this.empty_payments_state = "Searching Payments";
+      this.empty_payments_state = 'Searching Payments';
 
-      let from_date = this.filterData.from_date;
-      let to_date = this.filterData.to_date;
+      let { from_date: fromDate, to_date: toDate } = this.filterData;
+      // let from_date = this.filterData.from_date;
+      // let to_date = this.filterData.to_date;
 
-      from_date = moment(from_date).format("YYYY-MM-DD");
-      to_date = moment(to_date).format("YYYY-MM-DD");
+      fromDate = moment(fromDate).format('YYYY-MM-DD');
+      toDate = moment(toDate).format('YYYY-MM-DD');
 
       let payload = {};
-      if (session_data.default == "biz") {
+      if (sessionData.default === 'biz') {
         payload = {
-          cop_id: session_data["biz"]["cop_id"],
-          user_type: session_data["biz"]["user_type"],
-          from: from_date,
-          to: to_date
+          cop_id: sessionData.biz.cop_id,
+          user_type: sessionData.biz.user_type,
+          from: fromDate,
+          to: toDate,
         };
       } else {
-        //create peer payload
+        // create peer payload
         payload = {
-          user_id: session_data[session_data.default]["user_id"],
-          from: from_date,
-          to: to_date
+          user_id: sessionData[sessionData.default].user_id,
+          from: fromDate,
+          to: toDate,
         };
       }
 
-      this.order_payments_text = "Searching..";
+      this.order_payments_text = 'Searching..';
       this.requestPayments(payload);
 
       this.filteredPaymentData = this.paymentData;
@@ -183,68 +222,41 @@ export default {
 
       // this.filteredPaymentData = this.payment_data;
       // this.filteredPaymentData = this.filteredPaymentData.filter(function (payment) {
-      //   return moment(payment.date_time).isSameOrAfter(from_date) && moment(payment.date_time).isSameOrBefore(to_date);
+      /* return moment(payment.date_time).isSameOrAfter(from_date) && moment(payment.date_time)
+      .isSameOrBefore(to_date); */
       // });
       // this.filterState = true;
       // this.empty_orders_state = "Payments Not Found";
     },
 
     requestPayments(payload) {
-      let full_payload = {
+      const fullPayload = {
         values: payload,
         vm: this,
-        app: "NODE_PRIVATE_API",
-        endpoint: "payments"
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'payments',
       };
-      this.$store.dispatch("$_transactions/requestPayments", full_payload).then(
-        response => {
-          this.order_payments_text = "Search";
-          console.log(response);
-          this.empty_payments_state = "Payment Statement Not Found";
+      this.$store.dispatch('$_transactions/requestPayments', fullPayload).then(
+        () => {
+          this.order_payments_text = 'Search';
+          this.empty_payments_state = 'Payment Statement Not Found';
         },
-        error => {
-          console.error(
-            "Got nothing from server. Prompt user to check internet connection and try again"
-          );
-          this.order_payments_text = "Search";
-          console.log(error);
-          this.empty_payments_state = "Payment Statement Failed to Fetch";
-        }
+        () => {
+          this.order_payments_text = 'Search';
+          this.empty_payments_state = 'Payment Statement Failed to Fetch';
+        },
       );
     },
 
-    formatDate(row, column, cellValue) {
-      return moment(row.date_time).format("MMM Do YYYY, h:mm a");
+    formatDate(row) {
+      return moment(row.date_time).format('MMM Do YYYY, h:mm a');
     },
-    formatAmount(row, column, cellValue) {
-      let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
-      value = value.split(".");
+    formatAmount(row) {
+      let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+      value = value.split('.');
       return value[0];
-    }
+    },
   },
-  computed: {
-    ...mapGetters({
-      paymentData: "$_transactions/getPayments"
-    }),
-    payment_data() {
-      let from = (this.pagination_page - 1) * this.pagination_limit;
-      let to = this.pagination_page * this.pagination_limit;
-
-      return this.paymentData.slice(from, to);
-    },
-    active_filter() {
-      if (this.filterData.from_date !== "" && this.filterData.to_date !== "") {
-        this.filterState = false;
-      }
-      return this.filterData.from_date !== "" && this.filterData.to_date !== "";
-    },
-    payment_total() {
-      // if(this.filterState == true){
-      //   return this.filteredData.length;
-      // }
-      return this.paymentData.length;
-    }
-  }
 };
 </script>
 
