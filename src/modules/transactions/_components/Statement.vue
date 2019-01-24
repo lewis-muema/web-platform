@@ -193,61 +193,63 @@ export default {
       this.pagination_limit = val;
     },
     changePage() {
-      console.log('Page changed to', this.pagination_page);
       const from = (this.pagination_page - 1) * this.pagination_limit;
       const to = this.pagination_page * this.pagination_limit;
       this.statementData.slice(from, to);
     },
-    formatDate(row, column, cellValue) {
+    formatDate(row) {
       return moment(row.date_time).format('MMM Do YYYY, h:mm a');
     },
-    formatRunningBalance(row, column, cellValue) {
+    formatRunningBalance(row) {
       let value = (row.running_balance).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
       value = value.split('.');
       return value[0];
     },
-    formatDebitAmount(row, column, cellValue) {
+    formatDebitAmount(row) {
       if (Math.sign(row.amount) > 0) {
         let value = (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         value = value.split('.');
         return value[0];
       }
+      return row.amount;
     },
-    formatCreditAmount(row, column, cellValue) {
+    formatCreditAmount(row) {
       if (Math.sign(row.amount) < 0) {
         let value = (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         value = value.split('.');
         return value[0];
       }
+      return row.amount;
     },
     filterStatementData() {
       // reset filter
-      const session_data = this.$store.getters.getSession;
+      const sessionData = this.$store.getters.getSession;
 
       this.filterState = false;
       this.empty_statement_state = 'Searching Payments';
 
-      let from_date = this.filterData.from_date;
-      let to_date = this.filterData.to_date;
+      let { from_date: fromDate, to_date: toDate } = this.filterData;
+      // let from_date = this.filterData.from_date;
+      // let to_date = this.filterData.to_date;
 
-      from_date = moment(from_date).format('YYYY-MM-DD');
-      to_date = moment(to_date).format('YYYY-MM-DD');
+      fromDate = moment(fromDate).format('YYYY-MM-DD');
+      toDate = moment(toDate).format('YYYY-MM-DD');
 
       let payload = {};
-      if (session_data.default == 'biz') {
+      if (sessionData.default === 'biz') {
         payload = {
-          cop_id: session_data.biz.cop_id,
-          user_type: session_data.biz.user_type,
-          from: from_date,
-          to: to_date,
+          cop_id: sessionData.biz.cop_id,
+          user_type: sessionData.biz.user_type,
+          from: fromDate,
+          to: toDate,
 
         };
       } else {
         // create peer payload
         payload = {
-          user_id: session_data[session_data.default].user_id,
-          from: from_date,
-          to: to_date,
+          user_id: sessionData[sessionData.default].user_id,
+          from: fromDate,
+          to: toDate,
         };
       }
 
@@ -258,7 +260,6 @@ export default {
 
       this.filteredStatementData = this.statementData;
 
-      console.log(to_date);
       this.filterState = true;
 
       // this.filteredStatementData = this.statement_data;
@@ -268,7 +269,8 @@ export default {
       // if (from_date !== '' && to_date !== '') {
       //
       //   this.filteredStatementData = this.filteredStatementData.filter(function (statement) {
-      //     return moment(statement.date_time).isSameOrAfter(from_date) && moment(statement.date_time).isSameOrBefore(to_date);
+      /* return moment(statement.date_time).isSameOrAfter(from_date)
+      && moment(statement.date_time).isSameOrBefore(to_date); */
       //   });
       //   this.filterState = true;
       //
@@ -277,20 +279,16 @@ export default {
     },
 
     requestStatement(payload) {
-      const full_payload = {
+      const fullPayload = {
         values: payload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'statement',
       };
-      this.$store.dispatch('$_transactions/requestStatement', full_payload).then((response) => {
-        console.log('Got some data, now lets show something in this component');
-        console.log(response);
+      this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(() => {
         this.order_statement_text = 'Search';
         this.empty_statement_state = 'Statement Not Found';
-      }, (error) => {
-        console.error('Got nothing from server. Prompt user to check internet connection and try again');
-        console.log(error);
+      }, () => {
         this.order_statement_text = 'Search';
         this.empty_statement_state = 'Statement Failed to Fetch';
       });

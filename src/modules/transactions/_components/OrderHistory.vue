@@ -285,45 +285,46 @@ export default {
       // reset filter
       this.empty_orders_state = 'Searching Orders';
 
-      const user = this.filterData.user;
-      let from_date = this.filterData.from_date;
-      let to_date = this.filterData.to_date;
+      const { user } = this.filterData;
+      let { from_date: fromDate, to_date: toDate } = this.filterData;
+      // let from_date = this.filterData.from_date;
+      // let to_date = this.filterData.to_date;
 
-      from_date = moment(from_date).format('YYYY-MM-DD');
-      to_date = moment(to_date).format('YYYY-MM-DD');
+      fromDate = moment(fromDate).format('YYYY-MM-DD');
+      toDate = moment(toDate).format('YYYY-MM-DD');
 
       const session = this.$store.getters.getSession;
 
-      const cop_id = 0;
       let payload = {};
 
-      if (session.default == 'biz') {
-        const cop_id = session.biz.cop_id;
-        const user_id = this.filterData.user;
-        const user_type = session.biz.user_type;
+      if (session.default === 'biz') {
+        const { cop_id: copId, user_type: userType } = session.biz;
+        // const cop_id = session.biz.cop_id;
+        const userId = this.filterData.user;
+        // const user_type = session.biz.user_type;
 
         payload = {
-          cop_id,
-          user_type,
-          from: from_date,
-          to: to_date,
+          copId,
+          userType,
+          from: fromDate,
+          to: toDate,
         };
 
-        if (user != '' && user != null && user != 0) {
+        if (user !== '' && user != null && user !== 0) {
           payload = {
-            cop_id,
-            user_id,
-            from: from_date,
-            to: to_date,
+            copId,
+            userId,
+            from: fromDate,
+            to: toDate,
           };
         }
       } else {
-        const user_id = session[session.default].user_id;
+        const userId = session[session.default].user_id;
 
         payload = {
-          user_id,
-          from: from_date,
-          to: to_date,
+          userId,
+          from: fromDate,
+          to: toDate,
         };
       }
       this.order_history_text = 'Searching ...';
@@ -347,20 +348,18 @@ export default {
       return moment();
     },
     getOrderFromName(path) {
-      const name = path[0].name;
-      const splitted_name = name.split(',', 2);
-      return splitted_name[0];
+      const splittedName = path[0].name.split(',', 2);
+      return splittedName[0];
     },
     getOrderToName(path) {
-      const path_length = path.length;
-      const name = path[path_length - 1].name;
-      const splitted_name = name.split(',', 2);
-      return splitted_name[0];
+      const pathLength = path.length;
+      const splittedName = path[pathLength - 1].name.split(',', 2);
+      return splittedName[0];
     },
     getRowKey(row) {
       return row.order_id;
     },
-    expandTableRow(row, event, column) {
+    expandTableRow(row) {
       // check if expand keys contains the same order_id
       // if so do not push the key again
       if (this.expand_keys.includes(row.order_id)) {
@@ -375,7 +374,7 @@ export default {
         });
       }
     },
-    handleRowExpand(row, expanded) {
+    handleRowExpand(row) {
       // check if expand keys contains the same order_id
       // if so do not push the key again
       if (this.expand_keys.includes(row.order_id)) {
@@ -390,7 +389,7 @@ export default {
         });
       }
     },
-    formatAmount(row, column, cellValue) {
+    formatAmount(row) {
       if (typeof row.order_cost !== 'undefined') {
         let value = row.order_cost
           .toFixed(2)
@@ -401,14 +400,14 @@ export default {
       return '';
     },
     requestOrderHistory(payload) {
-      const full_payload = {
+      const fullPayload = {
         values: payload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'order_history',
       };
       this.$store
-        .dispatch('$_transactions/requestOrderHistoryOrders', full_payload)
+        .dispatch('$_transactions/requestOrderHistoryOrders', fullPayload)
         .then(
           () => {
             this.order_history_text = 'Search';
@@ -422,18 +421,18 @@ export default {
     },
     requestCopUsers() {
       // let cop_id = 0;
-      const users_payload = {
+      const userPayload = {
         cop_id: this.sessionData.biz.cop_id,
       };
 
-      const full_users_payload = {
-        values: users_payload,
+      const fullUsersPayload = {
+        values: userPayload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'cop_users',
       };
       this.$store
-        .dispatch('$_transactions/requestCopUsers', full_users_payload)
+        .dispatch('$_transactions/requestCopUsers', fullUsersPayload)
         .then(
           () => {
             this.empty_users_state = 'Cop Users Not Found';
