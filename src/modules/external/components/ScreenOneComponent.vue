@@ -156,8 +156,6 @@ export default {
         app: 'PRIVATE_API',
         endpoint: 'verify_phone',
       };
-      console.log('Phone',phone);
-      console.log('Payload',full_payload);
       this.requestOnboardingPhoneVerification(full_payload).then(
         response => {
           console.log(response);
