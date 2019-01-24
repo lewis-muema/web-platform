@@ -4,7 +4,7 @@
      <!-- <div class="homeview--form__header">
          New Delivery
      </div> -->
-      <div class="homeview--form homeview--row homeview--form__scrollable" id="homeview-form">
+      <div class="homeview--form homeview--row homeview--form__scrollable" ref="scrollable_locations">
         <div class="homeview--input-bundler">
           <no-ssr placeholder="">
               <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img .homeview--input-bundler__destination-input sendy-orange" width="10px"  />
@@ -37,7 +37,7 @@
       <div class="homeview--row homeview--row__more-destinations homeview-locations-options" v-if="allow_add_destination">
           <div class="homeview-locations-options--add-destination">
                <font-awesome-icon icon="plus" size="xs" class="sendy-blue homeview--row__font-awesome" width="10px" />
-                <a href="#" class="homeview--add" @click="addExtraDestination()">Add Destination</a>
+                <a href="#" class="homeview--add" @click="addExtraDestinationWrapper()">Add Destination</a>
           </div>
       </div>
       <div class="orders-loading-container" v-loading="loading" v-if="loading">
@@ -61,9 +61,10 @@ import orders_module_store from '../../_store';
 import payments_module_store from '../../../payment/_store';
 import VendorComponent from './_components/VendorComponent.vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlus, faMapMarkerAlt, faCircle, faClock, faPen, faDollarSign, faTimes, faMobileAlt,faStar } from '@fortawesome/free-solid-svg-icons';
+import { faCcVisa, faCcMastercard } from '@fortawesome/free-brands-svg-icons';
+import { faPlus, faMapMarkerAlt, faCircle, faClock, faPen, faDollarSign, faTimes, faMobileAlt,faStar, } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faPlus,faMapMarkerAlt,faCircle,faClock,faPen,faDollarSign,faTimes,faMobileAlt, faStar);
+library.add(faPlus,faMapMarkerAlt,faCircle,faClock,faPen,faDollarSign,faTimes,faMobileAlt, faStar, faCcVisa,faCcMastercard );
 
 export default {
   name: 'home',
@@ -150,8 +151,8 @@ export default {
     },
 
     addExtraDestinationWrapper(){
-        let next_index = Array.isArray(this.get_order_path)? this.get_order_path.length : 0;
-        this.clearLocation(next_index-1);
+        this.addExtraDestination();
+        this.scrollToBottom();
     },
 
     checkChangeEvents(evt, index){
@@ -303,7 +304,7 @@ export default {
             else{
                 this.doNotification(3,'Price request failed', 'Price request failed. Please try again after a few minutes.');
             }
-           
+
             this.loading = false;
         });
     },
@@ -374,11 +375,12 @@ export default {
             }
         }
     },
-    
-    // scroll_to_bottom(){
-    //     let container = this.$el.querySelector("#homeview-form");
-    //     container.scrollTop = container.scrollHeight;
-    // },
+
+    scrollToBottom(){
+        let container = this.$refs.scrollable_locations;
+        container.scrollTop = container.scrollHeight;
+    },
+
     initial_destination_css(n){
         return {
             'homeview--input-bundler__destination-short-input': false
@@ -422,9 +424,9 @@ export default {
       let moduleIsRegistered = false;
       try{
         moduleIsRegistered = this.$store._modules.root._children['$_orders']._children['$_home'] !== undefined;
-      } 
+      }
       catch(er){
-        // 
+        //
       }
 
       if (!moduleIsRegistered) {
@@ -463,17 +465,17 @@ export default {
     }
     /* Track */
     ::-webkit-scrollbar-track {
-        /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); */
-        /* -webkit-border-radius: 10px; */
-        /* border-radius: 10px; */
-        background-color: rgba(0, 0, 0, 0.05);
+        /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); */
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        background-color: rgba(0, 0, 0, 0.1);
     }
     /* Handle */
     ::-webkit-scrollbar-thumb {
-        /* -webkit-border-radius: 10px; */
-        /* border-radius: 10px; */
-        /* background: rgba(255,255,255,0.0); */
-        /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); */
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        background:#1782c5;
+        /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); */
     }
     ::-webkit-scrollbar-thumb:window-inactive {
         background-color: rgba(0, 0, 0, 0.2);
