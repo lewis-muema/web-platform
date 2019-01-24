@@ -117,6 +117,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      getSess: 'getSession',
       paymentData: '$_transactions/getPayments',
     }),
     payment_data() {
@@ -133,6 +134,14 @@ export default {
       //   return this.filteredData.length;
       // }
       return this.paymentData.length;
+    },
+  },
+  watch: {
+    getSess: {
+      handler() {
+        this.loadPayments();
+      },
+      deep: true,
     },
   },
   mounted() {
