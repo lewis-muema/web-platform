@@ -6,7 +6,7 @@
     <div class="section--filter-wrap">
       <div class="section--filter-input-wrap">
         <el-select
-          v-if="sessionData.default=='biz'"
+          v-if="sessionData.default === 'biz'"
           v-model="filterData.user"
           class="section--filter-input"
           placeholder="Users"
@@ -46,7 +46,7 @@
           :class="inactive_filter ? 'button-primary section--filter-action-inactive btn-order-hstry'
             :'button-primary section--filter-action btn-order-hstry'"
           name="order_history_text"
-          :disabled="inactive_filter == true ? true : false"
+          :disabled="inactive_filter === true ? true : false"
           @click="filterTableData"
         >
           {{ order_history_text }}
@@ -98,7 +98,7 @@
       </el-table-column>
 
       <el-table-column
-        v-if="sessionData.default=='biz'"
+        v-if="sessionData.default === 'biz'"
         key="1"
         label="User"
         prop="user_details.name"
@@ -402,7 +402,6 @@ export default {
     requestOrderHistory(payload) {
       const fullPayload = {
         values: payload,
-        vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'order_history',
       };
@@ -427,7 +426,6 @@ export default {
 
       const fullUsersPayload = {
         values: userPayload,
-        vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'cop_users',
       };
