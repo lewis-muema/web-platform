@@ -1,39 +1,39 @@
-<template lang="html">
-    <div class="">
-        <div class="inv-container inv-justify">
-            <div class="inv-inputs">
-                <div v-for="element in elements" class="side-flex inp">
-                    <input class="form-control" type="text" v-model="element.email" name="email"
-                           placeholder="name@example.com">
-                    <input class="form-control" type="text" v-model="element.name" name="name"
-                           placeholder="Full Name (Optional)">
-                    <el-select class="addUser--select" v-model="element.department" placeholder="Department">
-                        <el-option v-for="department in departments" :key="department.department_id"
-                                   :label="department.department_name" :value="department.department_id">
+<template lang='html'>
+    <div class=''>
+        <div class='inv-container inv-justify'>
+            <div class='inv-inputs'>
+                <div v-for='element in elements' class='side-flex inp'>
+                    <input class='form-control' type='text' v-model='element.email' name='email'
+                           placeholder='name@example.com'>
+                    <input class='form-control' type='text' v-model='element.name' name='name'
+                           placeholder='Full Name (Optional)'>
+                    <el-select class='addUser--select' v-model='element.department' placeholder='Department'>
+                        <el-option v-for='department in departments' :key='department.department_id'
+                                   :label='department.department_name' :value='department.department_id'>
                         </el-option>
                     </el-select>
                 </div>
 
             </div>
         </div>
-        <div class="side-flex add-user-submit">
-            <div class="column-flex pad-flex alleft">
-                <div class="addUser--link"><a v-on:click="addElement" class="add-anchor"><i
-                        class="el-icon-circle-plus-outline"></i>&nbsp;Add
-                    another</a> <span> or </span> <a v-on:click="invite_many" class="add-anchor" href="#">add many
+        <div class='side-flex add-user-submit'>
+            <div class='column-flex pad-flex alleft'>
+                <div class='addUser--link'><a v-on:click='addElement' class='add-anchor'><i
+                        class='el-icon-circle-plus-outline'></i>&nbsp;Add
+                    another</a> <span> or </span> <a v-on:click='invite_many' class='add-anchor' href='#'>add many
                     at once</a></div>
             </div>
-            <div class="addUser--submit">
-                <button v-on:click="postInvites" class="button-primary" type="submit"
-                        name="action">{{button}}
+            <div class='addUser--submit'>
+                <button v-on:click='postInvites' class='button-primary' type='submit'
+                        name='action'>{{button}}
                 </button>
             </div>
         </div>
 
-        <div class="side-flex add-user-submit">
-            <div class="column-flex pad-flex inv-link">
-                <div class="flex"><a v-on:click="getInviteLink" class="add-anchor inviteMany--anchor"><i
-                        class="el-icon-share"></i><span>&nbsp;Get an invite link to share</span></a>
+        <div class='side-flex add-user-submit'>
+            <div class='column-flex pad-flex inv-link'>
+                <div class='flex'><a v-on:click='getInviteLink' class='add-anchor inviteMany--anchor'><i
+                        class='el-icon-share'></i><span>&nbsp;Get an invite link to share</span></a>
                 </div>
             </div>
         </div>
@@ -67,19 +67,19 @@
                         'department': '',
                     }
                 ],
-                invitees: []
+                invitees: [],
             }
         },
         mounted() {
-            let number = this.getAdds
+            let number = this.getAdds;
             if (number > 3) {
                 for (let i = 3; i < number; i++) {
                     this.elements.push({value: ''});
                 }
-                this.populate()
+                this.populate();
             }
-            else if (number == 3 && this.getInvites != null) {
-                this.populate()
+            else if (number === 3 && this.getInvites !== null) {
+                this.populate();
             }
         },
         computed: {
@@ -105,10 +105,10 @@
             ),
             ...mapActions({
                 inviteNewUsers: '$_admin/inviteNewUsers',
-                createInviteLink: '$_admin/createInviteLink'
+                createInviteLink: '$_admin/createInviteLink',
             }),
             populate: function () {
-                let set = this.getInvites
+                let set = this.getInvites;
                 for (let i = 0; i < set.length; i++) {
                     this.elements[i].email = set[i][0];
                 }
@@ -122,8 +122,8 @@
             postInvites: function () {
                 for (let i = 0, iLen = this.elements.length; i < iLen; i++) {
                     let email = this.elements[0].email;
-                    if (email != '') {
-                        this.button = "Sending...";
+                    if (email !== '') {
+                        this.button = 'Sending...';
                         let session = this.$store.getters.getSession;
                         let cop_id = 0;
                         if (session.default === 'biz') {
@@ -156,23 +156,23 @@
                     }
                 }
                 let payload = this.invitees;
-                console.log(payload);
                 let full_payload = {
                     'values': payload,
                     'vm': this,
                     'app': 'NODE_PRIVATE_API',
                     'endpoint': 'invite_user',
                 }
-                this.$store.dispatch("$_admin/inviteNewUsers", full_payload).then(response => {
+                this.$store.dispatch('$_admin/inviteNewUsers', full_payload).then(response => {
                     this.button = 'Send Invites';
                     let level = 1; //success
                     let notification = {
-                      'title': '',
-                      'level': level,
-                      'message': 'Invitations sent!',
+                        'title': '',
+                        'level': level,
+                        'message': 'Invitations sent!',
                     }; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
+                    this.updateViewState(4);
                 }, error => {
                     this.button = 'Send Invites';
                     let level = 3;
@@ -195,13 +195,11 @@
                 let cop_id = 0;
                 if (session.default === 'biz') {
                     cop_id = session[session.default]['cop_id'];
-                    cop_id = cop_id.toString()
+                    cop_id = cop_id.toString();
                 }
                 let payload = {
                     'cop_id': cop_id,
                 }
-
-                console.log(payload)
                 let full_payload = {
                     'values': payload,
                     'vm': this,
@@ -236,7 +234,7 @@
     }
 </script>
 
-<style lang="css">
+<style lang='css'>
 
     .addUser--select {
         width: 100%;
