@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        <div class="home-view-actions--note" v-if="get_active_order_option == 'payment'">
+        <div class="home-view-actions--note" v-if="get_active_order_option === 'payment'">
             <div class="">
             </div>
             <div class="home-view-notes-wrapper">
@@ -51,7 +51,7 @@
                     </div>
                 </div>
 
-                <span v-if="get_price_request_object.payment_option != 2">
+                <span v-if="get_price_request_object.payment_option !== 2">
                       <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
                         <div class="home-view-notes-wrapper--item__option">
                             <div class="home-view-notes-wrapper--item__option-div">
@@ -61,7 +61,7 @@
                         <div class="home-view-notes-wrapper--item__value">
                         </div>
                     </div>
-                    <span v-if="allowCash == true">
+                    <span v-if="allowCash === true">
                         <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
                             <div class="home-view-notes-wrapper--item__option">
                                 <div class="home-view-notes-wrapper--item__option-div">
@@ -77,7 +77,7 @@
                              v-for="card in get_saved_cards">
                             <div class="home-view-notes-wrapper--item__option">
                                 <div class="home-view-notes-wrapper--item__option-div">
-                                    <el-radio v-model="payment_method" :label="getCardValue(card.last4)"> **** **** **** {{card.last4}} </el-radio>
+                                    <el-radio v-model="payment_method" :label="getCardValue(card.last4)"> **** **** **** {{card.last4}} <font-awesome-icon :icon="getCardIcon(card)" class="payments-orange"/></el-radio>
                                 </div>
                             </div>
                             <div class="home-view-notes-wrapper--item__value">
@@ -103,7 +103,7 @@
             </div>
         </div>
 
-        <div class="home-view-actions--note" v-if="get_active_order_option == 'note'">
+        <div class="home-view-actions--note" v-if="get_active_order_option === 'note'">
             <div class="">
             </div>
             <div class="">
@@ -113,7 +113,7 @@
             <div class="">
             </div>
         </div>
-        <div class="home-view-actions--note" v-if="get_active_order_option == 'schedule'">
+        <div class="home-view-actions--note" v-if="get_active_order_option === 'schedule'">
             <div class="home-view-actions--schedule">
                 Schedule a pickup time for your order
             </div>
@@ -135,12 +135,12 @@
             <div v-if="loading" v-loading="loading"
                  class="orders-loading-container orders-loading-container--completion">
             </div>
-            <div v-if="!loading && payment_state == 0">
+            <div v-if="!loading && payment_state === 0">
                 <button type="button" class="button-primary home-view--place-order" name="button"
                         @click="preCheckPaymentDetails()">{{place_order_text}}
                 </button>
             </div>
-            <div class="home-view-place-order--mpesa-cancel" v-if="loading && payment_state == 1">
+            <div class="home-view-place-order--mpesa-cancel" v-if="loading && payment_state === 1">
                 <button type="button" class="button-primary home-view--place-order" name="button"
                         @click="cancelMpesaPaymentRequest()">Cancel Payment
                 </button>
@@ -227,7 +227,7 @@
               cost = this.active_vendor_price_data.cost - this.active_vendor_price_data.discountAmount;
               return cost;
             }
-            cost = this.active_vendor_price_data.return_cost - this.active_vendor_price_data.discountAmount; 
+            cost = this.active_vendor_price_data.return_cost - this.active_vendor_price_data.discountAmount;
             return cost;
           }
 
@@ -244,10 +244,10 @@
 
       hide_payment() {
         return (
-          this.get_price_request_object.payment_option == 2 || 
+          this.get_price_request_object.payment_option == 2 ||
           this.getRunningBalance == 0 || this.getRunningBalance + this.order_cost <= 0
         );
-        
+
       },
 
       show_payment() {
@@ -317,7 +317,6 @@
         }
         return allowed;
       },
-
 
     },
 
@@ -404,7 +403,7 @@
         if (this.payment_method == '') {
           if (this.checkAllowPrePaid() == true) {
             this.handlePostPaidPayments();
-          } 
+          }
           else {
             this.doNotification(
               '2',
@@ -414,7 +413,7 @@
             return false;
           }
 
-        } 
+        }
         else {
           this.saveInfoToStore();
           if (this.payment_method == 1) {
@@ -664,6 +663,11 @@
 
       },
 
+      getCardIcon(card){
+        const name = `cc-${card.type.toLowerCase()}`;
+        return ['fab', name];
+      },
+
       /* start mpesa */
 
       requestMpesaPayment() {
@@ -792,8 +796,8 @@
                 return true;
               }
 
-              if (poll_limit_value == 6) {
-                if (poll_count == 5) {
+              if (poll_limit_value === 6) {
+                if (poll_count === 5) {
                   that.doNotification(
                     '0',
                     'Payment not received',
@@ -865,7 +869,7 @@
         let session = this.$store.getters.getSession;
         let cop_id = 0;
         let user_id = 0;
-        if (session.default == 'biz') {
+        if (session.default === 'biz') {
           cop_id = session.biz.cop_id;
           user_id = session.biz.user_id;
         }
@@ -892,7 +896,7 @@
           response => {
             // decrypt response here
             response = JSON.parse(Mcrypt.decrypt(response));
-            if (response.status == true) {
+            if (response.status === true) {
               this.setSavedCards(response.cards);
               this.setStripeUserId(response.stripe_user_id);
             }
@@ -907,7 +911,7 @@
       },
 
       handleCardPayments(card) {
-        if (this.payment_is_to_be_requested == false) {
+        if (this.payment_is_to_be_requested === false) {
           this.doCompleteOrder();
           return false;
         }
@@ -939,7 +943,7 @@
 
             let that = this;
 
-            if (response.data.status == false) {
+            if (response.data.status === false) {
               this.doNotification(
                 '2',
                 'Card Payment Failed',
@@ -976,7 +980,7 @@
         let user_email = '';
         let user_phone = '';
 
-        if (session.default == 'biz') {
+        if (session.default === 'biz') {
           cop_id = session.biz.cop_id;
           user_id = session.biz.user_id;
           user_name = session.biz.user_name;
@@ -994,7 +998,7 @@
           values: {
             amount: this.raw_pending_amount,
             pay_method: 2,
-            ref_no: 'VISA-' + Math.round(+new Date() / 1000),
+            ref_no: `VISA-${Math.round(+new Date() / 1000)}`,
             client_id: cop_id,
             account_no: `SENDY${cop_id}`,
             phone: user_phone,
@@ -1020,7 +1024,7 @@
             }
 
             let self = this;
-            if (response.data.status == true) {
+            if (response.data.status === true) {
               //this will request the new running balance and update the store
 
               this.doNotification(
