@@ -89,16 +89,48 @@ export default {
         // console.log("payload", payload);
 
         return new Promise((resolve, reject) => {
-            payload.vm.$store.dispatch("requestAxiosPost", payload).then(
+            payload.vm.$store.dispatch('requestAxiosPost', payload).then(
                 response => {
-                    console.log("in store dispatch to global store");
+                    console.log('in store dispatch to global store');
                     resolve(response.data);
                 },
                 error => {
                     reject(error);
-                    console.log("failed to dispatch to global store");
+                    console.log('failed to dispatch to global store');
                 }
             );
         });
+    },
+    requestSignUpPhoneVerification({ commit, dispatch, rootGetters }, payload) {
+      // console.log("payload", payload);
+
+      return new Promise((resolve, reject) => {
+          dispatch('requestAxiosPost', payload, {root: true}).then(
+              response => {
+                  console.log('in store dispatch to global store');
+                  resolve(response.data);
+              },
+              error => {
+                  reject(error);
+                  console.log('failed to dispatch to global store');
+              }
+          );
+      });
+    },
+    requestSignUpVerificationVerify({ commit, dispatch, rootGetters }, payload) {
+      // console.log("payload", payload);
+
+      return new Promise((resolve, reject) => {
+          dispatch('requestAxiosPost', payload, {root: true}).then(
+              response => {
+                  console.log('in store dispatch to global store');
+                  resolve(response.data);
+              },
+              error => {
+                  reject(error);
+                  console.log('failed to dispatch to global store');
+              }
+          );
+      });
     },
 };

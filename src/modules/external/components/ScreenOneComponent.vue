@@ -47,11 +47,30 @@
       <button v-on:click="next_view" class="btn-submit" style="width:30% !important;" name="next" id="nextBtn" v-bind:disabled="!this.is_valid">Next
       </button>
     </div>
+
+    <el-dialog :visible.sync="phoneVerification" class="onboarding-phone-validation">
+       <span slot="title"><img src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png" style="width:85px;"></span>
+       <div>
+
+       <div class="onboarding-validation-description" >
+          For your security, Sendy wants to make sure it's really you. We will send a message with your verification code.
+       </div>
+
+       <div class="onboarding-verification-input">
+        <input type="text" id="onboarding-verif_input" placeholder="Enter Verification Code" v-model="code">
+      </div>
+    </div>
+    <div class="onboarding-verif-button">
+      <button type="button" class="onboarding-cancel " v-on:click="onboardingVerificationCancel" >Cancel</button>
+      <button type="button" class="onboarding-verify" v-on:click="onboardingVerificationVerify" >Verify</button>
+    </div>
+      </el-dialog>
+
   </div>
 </template>
 
 <script>
-import {mapGetters,mapMutations} from 'vuex'
+import {mapGetters,mapMutations,mapActions} from 'vuex'
 
 export default {
   name: 'screen-one-component',
@@ -60,7 +79,10 @@ export default {
       name:'',
       phone:'',
       email : '',
-      message : ''
+      message : '',
+      phoneVerification: false,
+      code:'',
+      requestId:'',
     }
   },
   mounted(){
@@ -81,6 +103,11 @@ export default {
         updateBizEmail :'$_external/updateBizEmail'
       }
     ),
+    ...mapActions({
+      requestOnboardingVerificationVerify : '$_external/requestOnboardingVerificationVerify',
+      requestOnboardingPhoneVerification : '$_external/requestOnboardingPhoneVerification',
+
+    }),
     next_view: function ()
     {
       let phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
@@ -94,13 +121,9 @@ export default {
       }
 
       if (phone_valid == true && email_valid == true) {
-        let phone = this.phone.replace(/[\(\)\-\s]+/g, '');
-        
-        this.setViewState(2);
-        this.updateName(this.name);
-        this.updatePhone(phone);
-        this.updateBizEmail(this.email);
-        this.updateViewStep(0);
+        this.phoneVerification = true ;
+        this.sendVerificationCode();
+
 
       }
       else {
@@ -112,7 +135,108 @@ export default {
     setCurrentStep: function (step){
         this.updateViewStep(step);
         // this.$store.commit('updateViewStep', num);
-    }
+    },
+    onboardingVerificationCancel :function(){
+      this.phoneVerification = false;
+      this.doNotification(
+         2,
+        'Phone Verification',
+        'Phone Verification Failed . Retry to complete Onboarding process',
+      );
+    },
+
+    sendVerificationCode :function(){
+
+      const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+      const values = {};
+      values.phone_no = phone;
+      let full_payload = {
+        values: values,
+        vm: this,
+        app: 'PRIVATE_API',
+        endpoint: 'verify_phone',
+      };
+      console.log('Phone',phone);
+      console.log('Payload',full_payload);
+      this.requestOnboardingPhoneVerification(full_payload).then(
+        response => {
+          console.log(response);
+          if(response.status){
+             this.requestId = response.request_id;
+          }
+          else{
+            this.doNotification(
+               2,
+              'Phone Verification',
+               response.message,
+            );
+
+          }
+        },
+        error => {
+          console.error('Check Internet Connection');
+          console.log(error);
+        }
+      );
+
+    },
+
+    onboardingVerificationVerify :function(){
+
+      const values = {};
+      values.code = this.code;
+      values.request_id = this.requestId;
+      let full_payload = {
+        values: values,
+        vm: this,
+        app: 'PRIVATE_API',
+        endpoint: 'check_verification',
+      };
+      this.requestOnboardingVerificationVerify(full_payload).then(
+        response => {
+          console.log('Verify Code' ,response);
+          if(response.status){
+            this.doNotification(
+               2,
+              'Phone Verification',
+               'Phone verification successful !',
+            );
+
+            let phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+
+            this.setViewState(2);
+            this.updateName(this.name);
+            this.updatePhone(phone);
+            this.updateBizEmail(this.email);
+            this.updateViewStep(0);
+
+          }
+          else{
+            this.doNotification(
+               2,
+              'Phone Verification',
+               response.message,
+            );
+          }
+        },
+        error => {
+          console.error('Check Internet Connection');
+          console.log(error);
+        }
+      );
+
+    },
+
+    doNotification(level, title, message) {
+      let notification = {
+        title: title,
+        level: level,
+        message: message,
+      };
+      this.$store.commit('setNotification', notification);
+      this.$store.commit('setNotificationStatus', true);
+    },
+
   },
   computed : {
       ...mapGetters({
@@ -120,7 +244,7 @@ export default {
           getBizEmail : '$_external/getBizEmail',
           getBizName:'$_external/getBizName',
           getPerEmail:'$_external/getPerEmail',
-          getName : '$_external/getName'
+          getName : '$_external/getName',
         }
       ),
     is_valid : function() {
@@ -253,6 +377,62 @@ export default {
 .onboard-error{
   color: #e08445;
   font-family: 'Rubik', sans-serif;
+}
+#app > div > div.user-invite-body > div > div > div.panel-card > div > div > div.el-dialog__wrapper.onboarding-phone-validation > div > div.el-dialog__header{
+  background-color: #1782c5;
+  text-align: center;
+}
+.onboarding-phone-validation > div
+{
+  margin-top: 18em !important;
+  width: 35% !important;
+}
+.onboarding-validation-description{
+  text-align: left;
+  line-height: 1.5;
+  padding: 10px 0px;
+  font-family: "Rubik", sans-serif;
+}
+.onboarding-verification-input{
+  display: flex;
+  margin-top: 10px;
+}
+#onboarding-verif_input{
+  border: none;
+  padding: 2px;
+  border-bottom: 1px solid #ccc;
+  width: 50%;
+  font-family: "Rubik", sans-serif;
+  font-size: 16px;
+}
+.onboarding-verif-button{
+  padding: 19px 20px 20px;
+  margin-top: 16px;
+  text-align: right;
+  border-top: 1px solid #e5e5e5;
+}
+.onboarding-verify{
+    color: #ecf0f1;
+    background-color: #1782c5;
+    border-color: #1b7fc3;
+    cursor: pointer;
+    border-radius: 4px;
+    height: 40px;
+    transition: background-color 0.3s;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 13px;
+}
+.onboarding-cancel{
+    cursor: pointer;
+    border-radius: 4px;
+    height: 40px;
+    transition: background-color 0.3s;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 13px;
+    border:none;
+    font-family: "Rubik", sans-serif;
 }
 
 
