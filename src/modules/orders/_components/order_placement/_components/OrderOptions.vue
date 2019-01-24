@@ -77,7 +77,7 @@
                              v-for="card in get_saved_cards">
                             <div class="home-view-notes-wrapper--item__option">
                                 <div class="home-view-notes-wrapper--item__option-div">
-                                    <el-radio v-model="payment_method" :label="getCardValue(card.last4)"> **** **** **** {{card.last4}} </i> <font-awesome-icon :icon="getCardIcon(card)" class="payments-orange"/></el-radio>
+                                    <el-radio v-model="payment_method" :label="getCardValue(card.last4)"> **** **** **** {{card.last4}} <font-awesome-icon :icon="getCardIcon(card)" class="payments-orange"/></el-radio>
                                 </div>
                             </div>
                             <div class="home-view-notes-wrapper--item__value">
