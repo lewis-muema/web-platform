@@ -23,7 +23,7 @@
             </div>
         </div>
 
-        <div class="home-view-actions--note" v-if="get_active_order_option == 'payment'">
+        <div class="home-view-actions--note" v-if="get_active_order_option === 'payment'">
             <div class="">
             </div>
             <div class="home-view-notes-wrapper">
@@ -58,7 +58,7 @@
                         <div class="home-view-notes-wrapper--item__value">
                         </div>
                     </div>
-                    <span v-if="allowCash == true">
+                    <span v-if="allowCash">
                         <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
                             <div class="home-view-notes-wrapper--item__option">
                                 <div class="home-view-notes-wrapper--item__option-div">
@@ -100,7 +100,7 @@
             </div>
         </div>
 
-        <div class="home-view-actions--note" v-if="get_active_order_option == 'note'">
+        <div class="home-view-actions--note" v-if="get_active_order_option === 'note'">
             <div class="">
             </div>
             <div class="">
@@ -110,7 +110,7 @@
             <div class="">
             </div>
         </div>
-        <div class="home-view-actions--note" v-if="get_active_order_option == 'schedule'">
+        <div class="home-view-actions--note" v-if="get_active_order_option === 'schedule'">
             <div class="home-view-actions--schedule">
                 Schedule a pickup time for your order
             </div>
@@ -132,12 +132,12 @@
             <div v-if="loading" v-loading="loading"
                  class="orders-loading-container orders-loading-container--completion">
             </div>
-            <div v-if="!loading && payment_state == 0">
+            <div v-if="!loading && payment_state === 0">
                 <button type="button" class="button-primary home-view--place-order" name="button"
                         @click="preCheckPaymentDetails()">{{place_order_text}}
                 </button>
             </div>
-            <div class="home-view-place-order--mpesa-cancel" v-if="loading && payment_state == 1">
+            <div class="home-view-place-order--mpesa-cancel" v-if="loading && payment_state === 1">
                 <button type="button" class="button-primary home-view--place-order" name="button"
                         @click="cancelMpesaPaymentRequest()">Cancel Payment
                 </button>
@@ -238,13 +238,13 @@ export default {
 		},
 
 		allowCash() {
-			return this.get_price_request_object.payment_option == 2 || this.getRunningBalance <= 0;
+			return this.get_price_request_object.payment_option === 2 || this.getRunningBalance <= 0;
 		},
 
 		hide_payment() {
 			return (
-				this.get_price_request_object.payment_option == 2 ||
-				this.getRunningBalance == 0 ||
+				this.get_price_request_object.payment_option === 2 ||
+				this.getRunningBalance === 0 ||
 				this.getRunningBalance + this.order_cost <= 0
 			);
 		},
@@ -255,7 +255,7 @@ export default {
 
 		place_order_text() {
 			let text = 'Confirm ';
-			if (this.order_is_scheduled == true) {
+			if (this.order_is_scheduled) {
 				text = 'Schedule ';
 			}
 			return `${text}${this.get_active_vendor_name} Order`;
@@ -345,13 +345,13 @@ export default {
 
 		get_current_active_order_option_class(name) {
 			return {
-				'router-link-active': name == this.get_active_order_option,
+				'router-link-active': name === this.get_active_order_option,
 			};
 		},
 
 		checkAllowPrePaid() {
 			if (
-				this.get_price_request_object.payment_option == 1 &&
+				this.get_price_request_object.payment_option === 1 &&
 				this.getRunningBalance + this.order_cost > 0
 			) {
 				return false;
@@ -387,8 +387,8 @@ export default {
 				return false;
 			}
 
-			if (this.payment_method == '') {
-				if (this.checkAllowPrePaid() == true) {
+			if (this.payment_method === '') {
+				if (this.checkAllowPrePaid()) {
 					this.handlePostPaidPayments();
 				} else {
 					this.doNotification(
@@ -400,11 +400,11 @@ export default {
 				}
 			} else {
 				this.saveInfoToStore();
-				if (this.payment_method == 1) {
+				if (this.payment_method === 1) {
 					this.handleMpesaPayments();
-				} else if (this.payment_method == 3) {
+				} else if (this.payment_method === 3) {
 					this.handleCashPayments();
-				} else if (this.payment_method == 5) {
+				} else if (this.payment_method === 5) {
 					this.handlePromoCodePayments();
 				} else if (this.payment_method.startsWith('2_')) {
 					let card = this.get_saved_cards.find(
@@ -420,7 +420,7 @@ export default {
 		},
 
 		handleMpesaPayments() {
-			if (this.payment_is_to_be_requested === true) {
+			if (this.payment_is_to_be_requested) {
 				this.requestMpesaPayment();
 				return false;
 			}
@@ -468,7 +468,7 @@ export default {
 						response = response[0];
 					}
 
-					if (response.status == true) {
+					if (response.status) {
 						this.setPickupFilled(false);
 						let order_no = this.active_vendor_price_data.order_no;
 						this.should_destroy = true;
@@ -598,7 +598,7 @@ export default {
 						if (response.length > 0) {
 							response = response[0];
 						}
-						if (response.status == 200) {
+						if (response.status === 200) {
 							this.$store.commit('setRunningBalance', response.data.running_balance);
 							this.setDefaultOptions();
 							resolve(response.data);
@@ -626,8 +626,8 @@ export default {
 		},
 
 		setDefaultOptions() {
-			if (this.get_active_order_option == '') {
-				if (this.show_payment == true) {
+			if (this.get_active_order_option === '') {
+				if (this.show_payment) {
 					this.set_active_order_option('payment');
 				}
 			}
@@ -678,7 +678,7 @@ export default {
 						response = response[0];
 					}
 
-					if (response.status == 200) {
+					if (response.status === 200) {
 						this.doNotification(
 							'0',
 							'M-Pesa Payment',
@@ -722,7 +722,7 @@ export default {
 			this.clearMpesaPollCounter();
 			let session = this.$store.getters.getSession;
 			let cop_id = 0;
-			if (session.default == 'biz') {
+			if (session.default === 'biz') {
 				cop_id = session.biz.cop_id;
 			}
 
@@ -759,8 +759,8 @@ export default {
 							return true;
 						}
 
-						if (poll_limit_value == 6) {
-							if (poll_count == 5) {
+						if (poll_limit_value === 6) {
+							if (poll_count === 5) {
 								that.doNotification(
 									'0',
 									'Payment not received',
@@ -783,7 +783,7 @@ export default {
 						response = response[0];
 					}
 
-					if (response.status == 200) {
+					if (response.status === 200) {
 						let new_rb = response.data.running_balance;
 
 						if (new_rb < old_rb) {
@@ -820,7 +820,7 @@ export default {
 			let session = this.$store.getters.getSession;
 			let cop_id = 0;
 			let user_id = 0;
-			if (session.default == 'biz') {
+			if (session.default === 'biz') {
 				cop_id = session.biz.cop_id;
 				user_id = session.biz.user_id;
 			} else {
@@ -846,7 +846,7 @@ export default {
 				response => {
 					// decrypt response here
 					response = JSON.parse(Mcrypt.decrypt(response));
-					if (response.status == true) {
+					if (response.status) {
 						this.setSavedCards(response.cards);
 						this.setStripeUserId(response.stripe_user_id);
 					} else {
@@ -860,7 +860,7 @@ export default {
 		},
 
 		handleCardPayments(card) {
-			if (this.payment_is_to_be_requested == false) {
+			if (this.payment_is_to_be_requested === false) {
 				this.doCompleteOrder();
 				return false;
 			}
@@ -891,7 +891,7 @@ export default {
 
 					let that = this;
 
-					if (response.data.status === true) {
+					if (response.data.status) {
 						let card_trans_id = response.data.id;
 						this.completeCardPayment(card_trans_id);
 						//complete payment here
@@ -922,7 +922,7 @@ export default {
 			let user_email = '';
 			let user_phone = '';
 
-			if (session.default == 'biz') {
+			if (session.default === 'biz') {
 				cop_id = session.biz.cop_id;
 				user_id = session.biz.user_id;
 				user_name = session.biz.user_name;
@@ -965,7 +965,7 @@ export default {
 					}
 
 					let self = this;
-					if (response.data.status == true) {
+					if (response.data.status) {
 						//this will request the new running balance and update the store
 
 						this.doNotification(
@@ -1014,7 +1014,7 @@ export default {
 	},
 
 	destroyed() {
-		if (this.should_destroy == true) {
+		if (this.should_destroy) {
 			this.$emit('destroyOrderOptions');
 		} else {
 			this.saveInfoToStore();
