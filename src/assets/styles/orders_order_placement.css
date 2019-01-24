@@ -141,11 +141,10 @@
 }
 .home-view-vendor-classes-menu--img,
 .home-view-vendor-classes-menu--span {
-  flex: 1;
+  display: flex;
 }
 .home-view-vendor-classes-menu--img {
-  position: absolute;
-  margin-left: -35px;
+  display: flex;
 }
 .home-view-vendor-classes-menu {
   display: flex;
@@ -153,7 +152,7 @@
   align-items: center;
   flex-basis: auto;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 .homeview-locations-options{
   display: flex;
