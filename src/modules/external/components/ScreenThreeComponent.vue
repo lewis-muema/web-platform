@@ -18,7 +18,7 @@
           <label class="input-descript">
             <span>Confirm Password</span>
           </label>
-          <input id="password" class="form-control" type="cpassword" placeholder="Confirm your password"  v-model="cpassword" @focus="setCurrentStep(2)" >
+          <input id="password" class="form-control" type="password" placeholder="Confirm your password"  v-model="cpassword" @focus="setCurrentStep(2)" >
 
         </div>
       </div>
@@ -77,7 +77,7 @@ export default {
           let personal_email = this.getPerEmail;
           let phone = this.getPhone;
           let type = this.getType;
-          let dept_id = this.getDeptId;
+          let department_id = this.getDeptId;
           let cop_user_id = this.getCopUserId;
 
 
@@ -89,7 +89,7 @@ export default {
             personal_email: personal_email,
             phone: phone,
             type: type,
-            dept_id: dept_id,
+            department_id: department_id,
             cop_user_id: cop_user_id
           };
         } else if (this.getType == 1) {
@@ -101,7 +101,7 @@ export default {
           let personal_email = this.getPerEmail;
           let phone = this.getPhone;
           let type = this.getType;
-          let dept_id = this.getDeptId;
+          let department_id = this.getDeptId;
           // let cop_user_id = this.getCopUserId ;
 
 
@@ -113,7 +113,7 @@ export default {
             personal_email: personal_email,
             phone: phone,
             type: type,
-            dept_id: dept_id,
+            department_id: department_id,
             // cop_user_id : cop_user_id
           };
         }

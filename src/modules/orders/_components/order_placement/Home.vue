@@ -4,7 +4,7 @@
      <!-- <div class="homeview--form__header">
          New Delivery
      </div> -->
-      <div class="homeview--form homeview--row homeview--form__scrollable" id="homeview-form">
+      <div class="homeview--form homeview--row homeview--form__scrollable" ref="scrollable_locations">
         <div class="homeview--input-bundler">
           <no-ssr placeholder="">
               <font-awesome-icon icon="circle" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img .homeview--input-bundler__destination-input sendy-orange" width="10px"  />
@@ -37,12 +37,8 @@
       <div class="homeview--row homeview--row__more-destinations homeview-locations-options" v-if="allow_add_destination">
           <div class="homeview-locations-options--add-destination">
                <font-awesome-icon icon="plus" size="xs" class="sendy-blue homeview--row__font-awesome" width="10px" />
-                <a href="#" class="homeview--add" @click="addExtraDestination()">Add Destination</a>
+                <a href="#" class="homeview--add" @click="addExtraDestinationWrapper()">Add Destination</a>
           </div>
-          <div class="homeview-locations-options--set-return" v-if="allow_return">
-              <el-checkbox v-model="return_status" @input="dispatchReturnToPickup">Return to pick up</el-checkbox>
-          </div>
-          
       </div>
       <div class="orders-loading-container" v-loading="loading" v-if="loading">
       </div>
@@ -65,9 +61,10 @@ import orders_module_store from '../../_store';
 import payments_module_store from '../../../payment/_store';
 import VendorComponent from './_components/VendorComponent.vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlus, faMapMarkerAlt, faCircle, faClock, faPen, faDollarSign, faTimes, faMobileAlt,faStar } from '@fortawesome/free-solid-svg-icons';
+import { faCcVisa, faCcMastercard } from '@fortawesome/free-brands-svg-icons';
+import { faPlus, faMapMarkerAlt, faCircle, faClock, faPen, faDollarSign, faTimes, faMobileAlt,faStar, } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faPlus,faMapMarkerAlt,faCircle,faClock,faPen,faDollarSign,faTimes,faMobileAlt, faStar);
+library.add(faPlus,faMapMarkerAlt,faCircle,faClock,faPen,faDollarSign,faTimes,faMobileAlt, faStar, faCcVisa,faCcMastercard );
 
 export default {
   name: 'home',
@@ -75,10 +72,8 @@ export default {
     return {
       show_destinations: false,
       loading:false,
-      return_status:false,
       locations:[],
       map_options:{componentRestrictions: {country: ['ke', 'tz', 'ug', 'rw', 'bi']}},
-      vendors_with_without_return: ['Standard','Runner'],
     }
   },
 
@@ -86,7 +81,16 @@ export default {
     'no-ssr': NoSSR,
     'vendor-view': VendorComponent,
   },
-
+  watch: {
+    get_session: {
+      handler(val, oldVal){
+        if (this.show_vendor_view || this.loading) {
+          this.doPriceRequest();
+        }
+      },
+      deep: true,
+    }
+  },
   computed: {
     ...mapGetters({
       // get_waypoints : '$_orders/$_home/get_waypoints',
@@ -100,7 +104,7 @@ export default {
       get_active_package_class : '$_orders/$_home/get_active_package_class',
       get_active_vendor_name : '$_orders/$_home/get_active_vendor_name',
       get_pickup_filled : '$_orders/$_home/get_pickup_filled',
-      getReturnStatus : '$_orders/$_home/getReturnStatus',
+      get_session : 'getSession',
     }),
 
     allow_add_destination(){
@@ -109,14 +113,6 @@ export default {
 
     show_vendor_view(){
         return Array.isArray(this.get_order_path) && this.get_order_path.length > 1 && this.get_price_request_object.hasOwnProperty('economy_price_tiers');
-    },
-
-    allow_return: function(){
-        let allowed = true;
-        if(this.vendors_with_without_return.includes(this.get_active_vendor_name)){
-            allowed = false;
-        }
-        return allowed;
     },
 
   },
@@ -143,7 +139,6 @@ export default {
       clear_price_request_object : '$_orders/$_home/clear_price_request_object',
       clear_extra_destinations : '$_orders/$_home/clear_extra_destination',
       resetState : '$_orders/$_home/resetState',
-      setReturnStatus : '$_orders/$_home/setReturnStatus',
     }),
 
     ...mapActions({
@@ -156,8 +151,8 @@ export default {
     },
 
     addExtraDestinationWrapper(){
-        let next_index = Array.isArray(this.get_order_path)? this.get_order_path.length : 0;
-        this.clearLocation(next_index-1);
+        this.addExtraDestination();
+        this.scrollToBottom();
     },
 
     checkChangeEvents(evt, index){
@@ -309,7 +304,7 @@ export default {
             else{
                 this.doNotification(3,'Price request failed', 'Price request failed. Please try again after a few minutes.');
             }
-           
+
             this.loading = false;
         });
     },
@@ -380,11 +375,12 @@ export default {
             }
         }
     },
-    
-    // scroll_to_bottom(){
-    //     let container = this.$el.querySelector("#homeview-form");
-    //     container.scrollTop = container.scrollHeight;
-    // },
+
+    scrollToBottom(){
+        let container = this.$refs.scrollable_locations;
+        container.scrollTop = container.scrollHeight;
+    },
+
     initial_destination_css(n){
         return {
             'homeview--input-bundler__destination-short-input': false
@@ -417,23 +413,31 @@ export default {
         this.$destroy();
     },
 
-    dispatchReturnToPickup(){
-        this.setReturnStatus(this.return_status);
+    registerPaymentModule(){
+      const moduleIsRegistered = this.$store._modules.root._children['$_payment'] !== undefined;
+       if (!moduleIsRegistered) {
+        this.$store.registerModule('$_payment', payments_module_store);
+      }
     },
 
-    instantiateReturnStatus(){
-        this.return_status = this.getReturnStatus;
+    registerOrderPlacementModule(){
+      let moduleIsRegistered = false;
+      try{
+        moduleIsRegistered = this.$store._modules.root._children['$_orders']._children['$_home'] !== undefined;
+      }
+      catch(er){
+        //
+      }
+
+      if (!moduleIsRegistered) {
+        this.$store.registerModule(['$_orders','$_home'], order_placement_store);
+      }
+
     },
 
     instantiateHomeComponent(){
-      this.$store.registerModule(['$_orders','$_home'], order_placement_store);
-      this.$store.registerModule('$_payment', payments_module_store);
-      this.instantiateReturnStatus();
-    },
-
-    resetReturnStatus(){
-        this.return_status = false;
-        this.dispatchReturnToPickup();
+      this.registerPaymentModule();
+      this.registerOrderPlacementModule();
     },
 
   },
@@ -461,17 +465,17 @@ export default {
     }
     /* Track */
     ::-webkit-scrollbar-track {
-        /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); */
-        /* -webkit-border-radius: 10px; */
-        /* border-radius: 10px; */
-        background-color: rgba(0, 0, 0, 0.05);
+        /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); */
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        background-color: rgba(0, 0, 0, 0.1);
     }
     /* Handle */
     ::-webkit-scrollbar-thumb {
-        /* -webkit-border-radius: 10px; */
-        /* border-radius: 10px; */
-        /* background: rgba(255,255,255,0.0); */
-        /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); */
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        background:#1782c5;
+        /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); */
     }
     ::-webkit-scrollbar-thumb:window-inactive {
         background-color: rgba(0, 0, 0, 0.2);

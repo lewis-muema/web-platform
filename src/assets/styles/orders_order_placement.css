@@ -101,7 +101,7 @@
   margin-right: -20px;
   padding-right: 30px;
   max-height: 9.5rem;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 .homeview--input-bundler__destination-short-input {
@@ -141,11 +141,10 @@
 }
 .home-view-vendor-classes-menu--img,
 .home-view-vendor-classes-menu--span {
-  flex: 1;
+  display: flex;
 }
 .home-view-vendor-classes-menu--img {
-  position: absolute;
-  margin-left: -35px;
+  display: flex;
 }
 .home-view-vendor-classes-menu {
   display: flex;
@@ -153,7 +152,7 @@
   align-items: center;
   flex-basis: auto;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 .homeview-locations-options{
   display: flex;
@@ -163,6 +162,8 @@
 }
 .homeview-locations-options--set-return{
   flex:1 1 auto;
-  display: flex;
-  justify-content: flex-end;
+  margin-left: 19px;
+}
+.payments-orange{
+  color: #f57f20;
 }

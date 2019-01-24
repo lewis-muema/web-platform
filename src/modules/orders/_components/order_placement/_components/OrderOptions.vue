@@ -1,6 +1,9 @@
 <template lang="html">
     <div class="">
         <div class="">
+            <div class="homeview-locations-options--set-return" v-if="allow_return">
+              <el-checkbox v-model="return_status" @input="dispatchReturnToPickup">Return to pick up</el-checkbox>
+            </div>
             <div class="home-view-vendor-classes--label">
                 <div class="home-view-vendor-classes-label-item" @click="do_set_active_order_option('payment')">
                     <a class="home-view-vendor-classes-menu section__link"
@@ -48,7 +51,7 @@
                     </div>
                 </div>
 
-                <span v-if="get_price_request_object.payment_option != 2">
+                <span v-if="get_price_request_object.payment_option !== 2">
                       <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
                         <div class="home-view-notes-wrapper--item__option">
                             <div class="home-view-notes-wrapper--item__option-div">
@@ -58,7 +61,7 @@
                         <div class="home-view-notes-wrapper--item__value">
                         </div>
                     </div>
-                    <span v-if="allowCash">
+                    <span v-if="allowCash === true">
                         <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
                             <div class="home-view-notes-wrapper--item__option">
                                 <div class="home-view-notes-wrapper--item__option-div">
@@ -74,7 +77,7 @@
                              v-for="card in get_saved_cards">
                             <div class="home-view-notes-wrapper--item__option">
                                 <div class="home-view-notes-wrapper--item__option-div">
-                                    <el-radio v-model="payment_method" :label="getCardValue(card.last4)"> **** **** **** {{card.last4}} </el-radio>
+                                    <el-radio v-model="payment_method" :label="getCardValue(card.last4)"> **** **** **** {{card.last4}} <font-awesome-icon :icon="getCardIcon(card)" class="payments-orange"/></el-radio>
                                 </div>
                             </div>
                             <div class="home-view-notes-wrapper--item__value">
@@ -155,65 +158,57 @@ import order_store from '../../../_store';
 import home_store from '../_store';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin.js';
 
-export default {
-	name: 'order-options',
-	mixins: [Mcrypt],
-	components: {
-		'no-ssr': NoSSR,
-	},
-	data() {
-		return {
-			schedule_time: this.moment(),
-			order_notes: '',
-			payment_method: '',
-			balance_quote: '',
-			order_amount: 0,
-			user_balance: 0,
-			mpesa_poll_timer_id: null,
-			loading: false,
-			cash_status: false,
-			card_token: '',
-			customer_token: '',
-			payment_type: 'prepay',
-			payment_state: 0, // 0- initial 1- loading 2- success 3- cancelled
-			should_destroy: false,
-			schedule_picker_options: {
-				disabledDate(time) {
-					return time.getTime() < Date.now();
-				},
-			},
-			price_request_response_received: false,
-			vendors_without_return: ['Standard', 'Runner'],
-		};
-	},
+  export default {
+    name: 'order-options',
+    mixins: [Mcrypt],
+    components: {
+      'no-ssr': NoSSR
+    },
+    data() {
+      return {
+        schedule_time: this.moment(),
+        order_notes: '',
+        payment_method: '',
+        balance_quote: '',
+        order_amount: 0,
+        user_balance: 0,
+        mpesa_poll_timer_id: null,
+        loading: false,
+        cash_status: false,
+        card_token: '',
+        customer_token: '',
+        payment_type: 'prepay',
+        payment_state: 0, // 0- initial 1- loading 2- success 3- cancelled
+        should_destroy: false,
+        schedule_picker_options: {
+          disabledDate(time) {
+            return time.getTime() < Date.now();
+          }
+        },
+        price_request_response_received: false,
+        vendors_without_return: ['Standard','Runner'],
+        return_status:false,
+      };
+    },
 
-	computed: {
-		...mapGetters({
-			get_active_order_option: '$_orders/$_home/get_active_order_option',
-			getRunningBalance: 'getRunningBalance',
-			get_price_request_object: '$_orders/$_home/get_price_request_object',
-			get_active_package_class: '$_orders/$_home/get_active_package_class',
-			get_active_vendor_name: '$_orders/$_home/get_active_vendor_name',
-			active_vendor_price_data: '$_orders/$_home/get_active_vendor_details',
-			get_order_path: '$_orders/$_home/get_order_path',
-			get_pickup_filled: '$_orders/$_home/get_pickup_filled',
-			get_payment_method: '$_orders/$_home/get_payment_method',
-			get_order_notes: '$_orders/$_home/get_order_notes',
-			get_schedule_time: '$_orders/$_home/get_schedule_time',
-			get_saved_cards: '$_orders/$_home/get_saved_cards',
-			get_stripe_user_id: '$_orders/$_home/get_stripe_user_id',
-			get_carrier_type: '$_orders/$_home/get_carrier_type',
-			getReturnStatus: '$_orders/$_home/getReturnStatus',
-		}),
-
-		active_price_tier_data: function() {
-			if (this.get_active_package_class != '') {
-				return this.get_price_request_object.economy_price_tiers.find(
-					pack => pack.tier_group === this.get_active_package_class
-				);
-			}
-			return '';
-		},
+    computed: {
+      ...mapGetters({
+        get_active_order_option: '$_orders/$_home/get_active_order_option',
+        getRunningBalance: 'getRunningBalance',
+        get_price_request_object: '$_orders/$_home/get_price_request_object',
+        get_active_package_class: '$_orders/$_home/get_active_package_class',
+        get_active_vendor_name: '$_orders/$_home/get_active_vendor_name',
+        active_vendor_price_data: '$_orders/$_home/get_active_vendor_details',
+        get_order_path: '$_orders/$_home/get_order_path',
+        get_pickup_filled: '$_orders/$_home/get_pickup_filled',
+        get_payment_method: '$_orders/$_home/get_payment_method',
+        get_order_notes: '$_orders/$_home/get_order_notes',
+        get_schedule_time: '$_orders/$_home/get_schedule_time',
+        get_saved_cards: '$_orders/$_home/get_saved_cards',
+        get_stripe_user_id: '$_orders/$_home/get_stripe_user_id',
+        get_carrier_type: '$_orders/$_home/get_carrier_type',
+        getReturnStatus : '$_orders/$_home/getReturnStatus',
+      }),
 
 		order_cost: function() {
 			let cost = 0;
@@ -234,8 +229,17 @@ export default {
 				}
 			}
 
-			return cost;
-		},
+      order_cost: function() {
+        let cost = 0;
+        if (typeof this.active_vendor_price_data !== 'undefined') {
+          if ('cost' in this.active_vendor_price_data) {
+            if(this.getReturnStatus !== true || this.vendors_without_return.includes(this.get_active_vendor_name)){
+              cost = this.active_vendor_price_data.cost - this.active_vendor_price_data.discountAmount;
+              return cost;
+            }
+            cost = this.active_vendor_price_data.return_cost - this.active_vendor_price_data.discountAmount;
+            return cost;
+          }
 
 		allowCash() {
 			return this.get_price_request_object.payment_option === 2 || this.getRunningBalance <= 0;
@@ -253,13 +257,13 @@ export default {
 			return !this.hide_payment;
 		},
 
-		place_order_text() {
-			let text = 'Confirm ';
-			if (this.order_is_scheduled) {
-				text = 'Schedule ';
-			}
-			return `${text}${this.get_active_vendor_name} Order`;
-		},
+      hide_payment() {
+        return (
+          this.get_price_request_object.payment_option == 2 ||
+          this.getRunningBalance == 0 || this.getRunningBalance + this.order_cost <= 0
+        );
+
+      },
 
 		order_is_scheduled() {
 			return this.moment(this.eta_time).isBefore(this.scheduled_time);
@@ -337,17 +341,34 @@ export default {
 			requestSavedCards: '$_orders/$_home/requestSavedCards',
 		}),
 
-		do_set_active_order_option(name) {
-			this.get_active_order_option != name
-				? this.set_active_order_option(name)
-				: this.set_active_order_option('');
-		},
+      allow_return: function(){
+        let allowed = true;
+        if(this.vendors_without_return.includes(this.get_active_vendor_name)){
+            allowed = false;
+        }
+        return allowed;
+      },
 
-		get_current_active_order_option_class(name) {
-			return {
-				'router-link-active': name === this.get_active_order_option,
-			};
-		},
+    },
+
+    methods: {
+      ...mapMutations({
+        remove_polyline: '$_orders/remove_polyline',
+        remove_markers: '$_orders/remove_markers',
+        unsetMap: '$_orders/unsetMap',
+        set_active_order_option: '$_orders/$_home/set_active_order_option',
+        setPickupFilled: '$_orders/$_home/set_pickup_filled',
+        setPaymentMethod: '$_orders/$_home/set_payment_method',
+        setScheduleTime: '$_orders/$_home/set_schedule_time',
+        setOrderNotes: '$_orders/$_home/set_order_notes',
+        clear_order_path: '$_orders/$_home/clear_order_path',
+        clear_location_names_state: '$_orders/$_home/clear_location_names',
+        clear_price_request_object: '$_orders/$_home/clear_price_request_object',
+        clear_extra_destinations: '$_orders/$_home/clear_extra_destination',
+        setSavedCards: '$_orders/$_home/set_saved_cards',
+        setStripeUserId: '$_orders/$_home/set_stripe_user_id',
+        setReturnStatus : '$_orders/$_home/setReturnStatus',
+      }),
 
 		checkAllowPrePaid() {
 			if (
@@ -425,15 +446,41 @@ export default {
 				return false;
 			}
 
-			this.doCompleteOrder();
-			return true;
-		},
+        if (this.payment_method == '') {
+          if (this.checkAllowPrePaid() == true) {
+            this.handlePostPaidPayments();
+          }
+          else {
+            this.doNotification(
+              '2',
+              'Choose a payment method',
+              'Please select a payment method and try again.'
+            );
+            return false;
+          }
 
-		handlePromoCodePayments() {
-			this.$router.push({
-				name: 'promo_payment',
-			});
-		},
+        }
+        else {
+          this.saveInfoToStore();
+          if (this.payment_method == 1) {
+            this.handleMpesaPayments();
+          }
+          else if (this.payment_method == 3) {
+            this.handleCashPayments();
+          }
+          else if (this.payment_method == 5) {
+            this.handlePromoCodePayments();
+          }
+          else if (this.payment_method.startsWith('2_')) {
+            let card = this.get_saved_cards.find(
+              card_details => card_details.last4 === this.payment_method.slice(2)
+            );
+            this.handleCardPayments(card);
+          }
+          else {
+            //console.log('not handled payment method', this.payment_method);
+          }
+        }
 
 		handleCashPayments() {
 			this.cash_status = true;
@@ -564,12 +611,25 @@ export default {
 			this.$store.commit('setNotification', notification);
 		},
 
-		saveInfoToStore() {
-			// save locations, notes & payment option
-			this.setScheduleTime(this.schedule_time);
-			this.setPaymentMethod(this.payment_method);
-			this.setOrderNotes(this.order_notes);
-		},
+            if (response.status === true) {
+              this.setPickupFilled(false);
+              let order_no = this.active_vendor_price_data.order_no;
+              this.should_destroy = true;
+              this.$store.dispatch('$_orders/fetch_ongoing_orders');
+              this.$router.push({
+                name: 'tracking',
+                params: {
+                  order_no: order_no
+                }
+              });
+            }
+            else {
+              this.doNotification(
+                2,
+                'Order completion failed',
+                'Price request failed. Please try again'
+              );
+            }
 
 		retrieveFromStore() {
 			this.schedule_time = this.get_schedule_time;
@@ -726,15 +786,33 @@ export default {
 				cop_id = session.biz.cop_id;
 			}
 
-			let old_rb = this.$store.getters.getRunningBalance;
-			let requested_amount = this.raw_pending_amount;
+      getCardIcon(card){
+        const name = `cc-${card.type.toLowerCase()}`;
+        return ['fab', name];
+      },
 
-			let running_balance_payload = {
-				values: {
-					cop_id: cop_id,
-					user_phone: session[session.default]['user_phone'],
-				},
-			};
+      /* start mpesa */
+
+      requestMpesaPayment() {
+        let session = this.$store.getters.getSession;
+        let referenceNumber = 'SENDY';
+        let cop_id = 0;
+        let user_id = 0;
+        let user_email = '';
+        let user_phone = '';
+        if (session.default === 'biz') {
+          referenceNumber += session.biz.cop_id;
+          cop_id = session.biz.cop_id;
+          user_id = session.biz.user_id;
+          user_email = session.biz.user_email;
+          user_phone = session.biz.user_phone;
+        }
+        else {
+          referenceNumber = session.peer.user_phone;
+          user_id = session.peer.user_id;
+          user_email = session.peer.user_email;
+          user_phone = session.peer.user_phone;
+        }
 
 			let payload = {
 				params: running_balance_payload,
@@ -759,22 +837,37 @@ export default {
 							return true;
 						}
 
-						if (poll_limit_value === 6) {
-							if (poll_count === 5) {
-								that.doNotification(
-									'0',
-									'Payment not received',
-									"We'll keep retrying to check your payment status and complete your order once the payment is received."
-								);
-								that.payment_state = 0;
-								that.loading = false;
-								that.requestMpesaPaymentPoll(60);
-							}
-						}
-					}, 10000 * poll_count);
-				})(poll_count);
-			}
-		},
+            if (response.status === 200) {
+              this.doNotification(
+                '0',
+                'M-Pesa Payment',
+                `Request for payment sent to ${user_phone}.`
+              );
+              this.requestMpesaPaymentPoll();
+            }
+            else {
+              this.refreshRunningBalance();
+              this.doNotification(
+                '0',
+                'M-Pesa Payment',
+                `M-Pesa request to ${user_phone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${this.pending_amount}.`
+              );
+              this.payment_state = 0;
+              this.loading = false;
+            }
+          },
+          error => {
+            this.refreshRunningBalance();
+            this.doNotification(
+              '0',
+              'M-Pesa Payment',
+              `M-Pesa request to ${user_phone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${this.pending_amount}.`
+            );
+            this.payment_state = 0;
+            this.loading = false;
+          }
+        );
+      },
 
 		checkRunningBalance(old_rb, payload) {
 			this.requestRunningBalanceFromAPI(payload).then(
@@ -783,8 +876,13 @@ export default {
 						response = response[0];
 					}
 
-					if (response.status === 200) {
-						let new_rb = response.data.running_balance;
+      requestMpesaPaymentPoll(poll_limit_value = 6) {
+        this.clearMpesaPollCounter();
+        let session = this.$store.getters.getSession;
+        let cop_id = 0;
+        if (session.default === 'biz') {
+          cop_id = session.biz.cop_id;
+        }
 
 						if (new_rb < old_rb) {
 							this.completeMpesaPaymentRequest({});
@@ -814,7 +912,17 @@ export default {
 
 		/* End mpesa */
 
-		/* start card */
+              if (poll_limit_value === 6) {
+                if (poll_count === 5) {
+                  that.doNotification(
+                    '0',
+                    'Payment not received',
+                    "We'll keep retrying to check your payment status and complete your order once the payment is received."
+                  );
+                  that.payment_state = 0;
+                  that.loading = false;
+                  that.requestMpesaPaymentPoll(60);
+                }
 
 		getUserCards() {
 			let session = this.$store.getters.getSession;
@@ -842,22 +950,8 @@ export default {
 				endpoint: 'get_card',
 			};
 
-			this.requestSavedCards(full_payload).then(
-				response => {
-					// decrypt response here
-					response = JSON.parse(Mcrypt.decrypt(response));
-					if (response.status) {
-						this.setSavedCards(response.cards);
-						this.setStripeUserId(response.stripe_user_id);
-					} else {
-						//console.log('failed to get saved cards');
-					}
-				},
-				error => {
-					return false;
-				}
-			);
-		},
+            if (response.status === 200) {
+              let new_rb = response.data.running_balance;
 
 		handleCardPayments(card) {
 			if (this.payment_is_to_be_requested === false) {
@@ -885,34 +979,30 @@ export default {
 						response = response[0];
 					}
 
-					//decrypt response.data here
-					response.data = Mcrypt.decrypt(response.data);
-					response.data = JSON.parse(response.data);
+      instantiateReturnStatus(){
+        this.return_status = this.getReturnStatus;
+      },
+
+      dispatchReturnToPickup(){
+        this.setReturnStatus(this.return_status);
+      },
+
+      /* End mpesa */
 
 					let that = this;
 
-					if (response.data.status) {
-						let card_trans_id = response.data.id;
-						this.completeCardPayment(card_trans_id);
-						//complete payment here
-					} else {
-						this.doNotification(
-							'2',
-							'Card Payment Failed',
-							'Card payment failed, please try again.'
-						);
-						this.payment_state = 0;
-						this.loading = 0;
-					}
-				},
-				error => {
-					this.doNotification('2', 'Card Payment Failed', 'Card payment failed, please try again.');
-					this.payment_state = 0;
-					this.loading = 0;
-				}
-			);
-			return true;
-		},
+      getUserCards() {
+        let session = this.$store.getters.getSession;
+        let cop_id = 0;
+        let user_id = 0;
+        if (session.default === 'biz') {
+          cop_id = session.biz.cop_id;
+          user_id = session.biz.user_id;
+        }
+        else {
+          cop_id = 0;
+          user_id = session.peer.user_id;
+        }
 
 		completeCardPayment(card_trans_id) {
 			let session = this.$store.getters.getSession;
@@ -950,19 +1040,29 @@ export default {
 				},
 			};
 
-			let full_payload = {
-				params: payload,
-				app: 'PRIVATE_API',
-				endpoint: 'payment',
-			};
+        this.requestSavedCards(full_payload).then(
+          response => {
+            // decrypt response here
+            response = JSON.parse(Mcrypt.decrypt(response));
+            if (response.status === true) {
+              this.setSavedCards(response.cards);
+              this.setStripeUserId(response.stripe_user_id);
+            }
+            else {
+              //console.log('failed to get saved cards');
+            }
+          },
+          error => {
+            return false;
+          }
+        );
+      },
 
-			//this is not encrypted
-			this.completeCardPaymentAction(full_payload).then(
-				response => {
-					//console.log(response);
-					if (response.length > 0) {
-						response = response[0];
-					}
+      handleCardPayments(card) {
+        if (this.payment_is_to_be_requested === false) {
+          this.doCompleteOrder();
+          return false;
+        }
 
 					let self = this;
 					if (response.data.status) {
@@ -1013,14 +1113,155 @@ export default {
 		this.getUserCards();
 	},
 
-	destroyed() {
-		if (this.should_destroy) {
-			this.$emit('destroyOrderOptions');
-		} else {
-			this.saveInfoToStore();
-		}
-	},
-};
+            if (response.data.status === false) {
+              this.doNotification(
+                '2',
+                'Card Payment Failed',
+                'Card payment failed, please try again.'
+              );
+              this.payment_state = 0;
+              this.loading = 0;
+            }
+            else {
+              let card_trans_id = response.data.id;
+              this.completeCardPayment(card_trans_id);
+              //complete payment here
+            }
+
+          },
+          error => {
+            this.doNotification(
+              '2',
+              'Card Payment Failed',
+              'Card payment failed, please try again.'
+            );
+            this.payment_state = 0;
+            this.loading = 0;
+          }
+        );
+        return true;
+      },
+
+      completeCardPayment(card_trans_id) {
+        let session = this.$store.getters.getSession;
+        let user_id = 0;
+        let cop_id = 0;
+        let user_name = '';
+        let user_email = '';
+        let user_phone = '';
+
+        if (session.default === 'biz') {
+          cop_id = session.biz.cop_id;
+          user_id = session.biz.user_id;
+          user_name = session.biz.user_name;
+          user_email = session.biz.user_email;
+          user_phone = session.biz.user_phone;
+        }
+        else {
+          user_id = session.peer.user_id;
+          user_name = session.peer.user_name;
+          user_email = session.peer.user_email;
+          user_phone = session.peer.user_phone;
+        }
+
+        let payload = {
+          values: {
+            amount: this.raw_pending_amount,
+            pay_method: 2,
+            ref_no: `VISA-${Math.round(+new Date() / 1000)}`,
+            client_id: cop_id,
+            account_no: `SENDY${cop_id}`,
+            phone: user_phone,
+            email: user_email,
+            name: user_name,
+            bill_Ref_Number: user_phone,
+            card_trans_id: card_trans_id,
+          }
+        };
+
+        let full_payload = {
+          params: payload,
+          app: 'PRIVATE_API',
+          endpoint: 'payment',
+        };
+
+        //this is not encrypted
+        this.completeCardPaymentAction(full_payload).then(
+          response => {
+            //console.log(response);
+            if (response.length > 0) {
+              response = response[0];
+            }
+
+            let self = this;
+            if (response.data.status === true) {
+              //this will request the new running balance and update the store
+
+              this.doNotification(
+                '1',
+                'Successful Payment',
+                'Card payment has been completed successfully.'
+              );
+              let running_balance_payload = {
+                values: {
+                  cop_id: cop_id,
+                  user_phone: user_phone,
+                }
+              };
+
+              let payload = {
+                values: running_balance_payload,
+                app: 'PRIVATE_API',
+                endpoint: 'running_balance',
+              };
+
+              this.requestRunningBalanceFromAPI(payload).then(response => {
+                this.payment_state = 0;
+                this.loading = 0;
+                self.doCompleteOrder();
+              });
+            } else {
+              this.payment_state = 0;
+              this.loading = 0;
+              this.doNotification(
+                '3',
+                'Card Payment Failed',
+                'Card payment failed to complete.',
+              );
+            }
+          },
+          error => {
+            this.doNotification(
+              '3',
+              'Card Payment Failed',
+              'Card payment failed to complete.',
+            );
+            this.payment_state = 0;
+            this.loading = 0;
+          }
+        );
+      }
+      /* end card */
+    },
+
+    created() {
+      this.initializeOrderPlacement();
+      this.refreshRunningBalance();
+      this.getUserCards();
+      this.instantiateReturnStatus();
+    },
+
+    destroyed() {
+      if (this.should_destroy === true) {
+        this.$emit('destroyOrderOptions');
+      }
+      else {
+        this.saveInfoToStore();
+      }
+
+    },
+
+  };
 </script>
 
 <style lang="css">
