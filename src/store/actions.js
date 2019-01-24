@@ -66,15 +66,9 @@ export default {
             }
             else{
                 let notification = {
-<<<<<<< HEAD
-                  'title':'Your session has expired!',
-                  'level':2,
-                  'message':'Please log out and log in again.',
-=======
                     'title':'Your session has expired!',
                     'level':2,
                     'message':'Please log out and log in again.',
->>>>>>> 3aef4114dd67ea444e8883ff7ff433b6e6457fea
                 };
                 commit('setNotification', notification);
                 commit('setNotificationStatus', true);
@@ -100,20 +94,11 @@ export default {
                     'Authorization': jwtToken,
                 }};
 
-<<<<<<< HEAD
-            }
-            else{
-                let payload = {
-                  'title':'Your session has expired!',
-                  'level':2,
-                  'message':'Please log out and log in again.',
-=======
             } else {
                 let payload = {
                     'title':'Your session has expired!',
                     'level':2,
                     'message':'Please log out and log in again.',
->>>>>>> 3aef4114dd67ea444e8883ff7ff433b6e6457fea
                 };
                 commit('setNotification', payload);
                 commit('setNotificationStatus', true);
