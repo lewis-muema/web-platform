@@ -18,6 +18,7 @@
 
 <script>
 import analytics_store from './_store';
+import { mapGetters } from 'vuex';
 import RegisterStoreModule from '../../mixins/register_store_module'
 import MainHeader from '../../components/headers/MainHeader.vue'
 
@@ -29,6 +30,19 @@ export default {
   created() {
     const STORE_KEY = '$_analytics';
     this.register_store_module(STORE_KEY, analytics_store);
+  },
+  computed: {
+    ...mapGetters({
+      getSession : 'getSession'
+    }),
+  },
+  watch: {
+    getSession: {
+      handler(val, oldVal){
+        this.$router.push('/orders');
+      },
+      deep: true
+    }
   },
   destroyed(){
       // TO DO:  destroy store?

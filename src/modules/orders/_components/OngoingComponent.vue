@@ -140,7 +140,8 @@ export default {
   computed : {
     ...mapGetters({
       get_orders: '$_orders/get_ongoing_orders',
-      show : '$_orders/show_ongoing'
+      show : '$_orders/show_ongoing',
+      getSession : 'getSession'
     }),
     num_ongoing: function () {
       return this.get_orders.length
@@ -152,6 +153,14 @@ export default {
         'rotate': this.showing == 0
       }
     },
+  },
+  watch: {
+    getSession: {
+      handler(val, oldVal){
+        this.$store.dispatch('$_orders/fetch_ongoing_orders')
+      },
+      deep: true
+    }
   },
   mounted() {
     this.loading = true

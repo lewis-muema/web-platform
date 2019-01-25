@@ -594,3 +594,7 @@ span.el-pagination__jump {
     background-color: #f3f4f5;
     padding-bottom: 5px;
 }
+
+.el-checkbox__input.is-checked+.el-checkbox__label{
+  color:#f57f20 !important;
+}

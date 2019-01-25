@@ -7,6 +7,7 @@
 
 <script>
 import Vue from "vue"
+import { mapGetters } from 'vuex';
 import user_store from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module'
 import MainHeader from '../../components/headers/MainHeader.vue'
@@ -41,6 +42,21 @@ export default {
   created() {
     const STORE_KEY = '$_user';
     this.$store.registerModule(STORE_KEY, user_store);
+  },
+  computed: {
+    ...mapGetters({
+      getSession : 'getSession'
+    }),
+  },
+  watch: {
+    getSession: {
+      handler(val, oldVal){
+        if (oldVal != val) {
+          this.$router.push('/orders')
+        }
+      },
+      deep: true
+    }
   },
 }
 </script>
