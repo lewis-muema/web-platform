@@ -377,11 +377,13 @@ export default {
     },
 
     allow_return() {
-      let allowed = true;
-      if (this.vendors_without_return.includes(this.get_active_vendor_name)) {
-        allowed = false;
-      }
-      return allowed;
+      // let allowed = true;
+      // if (this.vendors_without_return.includes(this.get_active_vendor_name)) {
+      //   allowed = false;
+      // }
+      // return allowed;
+      // Disable return for now
+      return false;
     },
   },
 
