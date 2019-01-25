@@ -158,7 +158,6 @@ export default {
       };
       this.requestOnboardingPhoneVerification(full_payload).then(
         response => {
-          console.log(response);
           if(response.status){
              this.requestId = response.request_id;
           }
@@ -192,7 +191,6 @@ export default {
       };
       this.requestOnboardingVerificationVerify(full_payload).then(
         response => {
-          console.log('Verify Code' ,response);
           if(response.status){
             this.doNotification(
                2,

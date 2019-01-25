@@ -144,7 +144,6 @@ export default {
             break;
           }
         }
-        // console.log(email_valid);
         if (phone_valid && email_valid && this.pass_validation) {
 
           if (this.u_terms) {
@@ -225,7 +224,6 @@ export default {
     validate_pass() {
       let patt = new RegExp('^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9@#$%^&+=]*$');
       let res = patt.test(this.password);
-      // console.log(res);
       if (!res) {
         this.pass_msg = 'Password must be at least 8 characters long, contain at least one number and have a mixture of uppercase and lowercase letters.';
 
@@ -259,7 +257,6 @@ export default {
       };
       this.requestSignUpVerificationVerify(full_payload).then(
         response => {
-          console.log('Verify Code' ,response);
           if(response.status){
             this.doNotification(
                2,
@@ -296,11 +293,8 @@ export default {
         app: 'PRIVATE_API',
         endpoint: 'verify_phone',
       };
-      console.log('Phone',phone);
-      console.log('Payload',full_payload);
       this.requestSignUpPhoneVerification(full_payload).then(
         response => {
-          console.log(response);
           if(response.status){
              this.requestId = response.request_id;
           }
