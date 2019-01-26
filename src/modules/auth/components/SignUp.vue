@@ -64,6 +64,23 @@
     </div>
 
   </div>
+  <el-dialog :visible.sync="phoneVerification" class="sign-up-phone-validation">
+     <span slot="title"><img src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png" style="width:85px;"></span>
+     <div>
+
+     <div class="signup-validation-description" >
+        For your security, Sendy wants to make sure it's really you. We will send a message with your verification code.
+     </div>
+
+     <div class="signup-verification-input">
+      <input type="text" id="signup-verif_input" placeholder="Enter Verification Code" v-model="code">
+    </div>
+  </div>
+  <div class="signup-verif-button">
+    <button type="button" class="signup-cancel" v-on:click="signUpVerificationCancel" >Cancel</button>
+    <button type="button" class="signup-verify" v-on:click="signUpVerificationVerify" >Verify</button>
+  </div>
+    </el-dialog>
 </div>
 
 </div>
@@ -79,15 +96,20 @@ export default {
   name: "SignUp",
   data() {
     return {
-      name: "",
-      phone: "",
-      email: "",
-      password: "",
-      u_terms: "",
-      pass_validation: "false",
-      sign_up_text: "Sign Up",
-      message: "",
-      pass_msg: ""
+      name: '',
+      phone: '',
+      email: '',
+      password: '',
+      u_terms: '',
+      pass_validation: 'false',
+      sign_up_text: 'Sign Up',
+      message: '',
+      pass_msg: '',
+      phoneVerification: false,
+      phoneVerificationForm : {},
+      code:'',
+      verificationState: false,
+      requestId:'',
     };
   },
   methods: {
@@ -102,7 +124,9 @@ export default {
       setName: "$_auth/setName"
     }),
     ...mapActions({
-      requestSignUpCheck: "$_auth/requestSignUpCheck"
+      requestSignUpCheck: '$_auth/requestSignUpCheck',
+      requestSignUpPhoneVerification: '$_auth/requestSignUpPhoneVerification',
+      requestSignUpVerificationVerify: '$_auth/requestSignUpVerificationVerify',
     }),
     sign_up: function() {
       if (
@@ -120,18 +144,19 @@ export default {
             break;
           }
         }
-        // console.log(email_valid);
-        if (phone_valid == true && email_valid == true && this.pass_validation == true) {
-          if (this.u_terms == true) {
+        if (phone_valid && email_valid && this.pass_validation) {
+
+          if (this.u_terms) {
             let phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+            this.phone = phone ;
             let values = {};
             values.phone = phone;
             values.email = this.email;
             let full_payload = {
               values: values,
               vm: this,
-              app: "NODE_PRIVATE_API",
-              endpoint: "sign_up_check"
+              app: 'NODE_PRIVATE_API',
+              endpoint: 'sign_up_check',
             };
             this.requestSignUpCheck(full_payload).then(
               response => {
@@ -139,59 +164,156 @@ export default {
                   response = response[0];
                 }
                 if (response.status == true) {
-                  this.setName(this.name);
-                  this.setEmail(this.email);
-                  this.setPhone(this.phone);
-                  this.setPassword(this.password);
-                  this.$router.push("/auth/sign_up_verification");
+                  this.phoneVerification = true ;
+                    this.setName(this.name);
+                    this.setEmail(this.email);
+                    this.setPhone(this.phone);
+                    this.setPassword(this.password);
+                    this.sendVerificationCode();
+
                 } else {
                   this.message = response.data.reason;
-                  this.doNotification(2, "Sign Up failed", response.data.reason);
-                  console.warn("Sign Up Failed");
+                  this.doNotification(
+                    2,
+                    'Sign Up failed',
+                    response.data.reason
+                  );
+                  console.warn('Sign Up Failed');
                 }
               },
               error => {
-                console.error("Check Internet Connection");
+                console.error('Check Internet Connection');
                 console.log(error);
               }
             );
           } else {
-            this.message = "Agree to Terms and Conditions";
-            console.log("Agree Terms and Condition");
-            this.doNotification(2, "Sign Up failed", "Agree to Terms and Conditions");
+            this.message = 'Agree to Terms and Conditions';
+            this.doNotification(
+               2,
+              'Sign Up failed',
+              'Agree to Terms and Conditions',
+             );
           }
         } else {
-          this.message = "Invalid Details ";
-          this.doNotification(2, "Sign Up failed", "Invalid details");
+          this.message = 'Invalid Details';
+          this.doNotification(
+             2,
+            'Sign Up failed',
+            'Invalid details',
+          );
         }
       } else {
-        this.message = "Please provide all details";
-        this.doNotification(2, "Sign Up failed", "Provide all details");
+        this.message = 'Please provide all details';
+        this.doNotification(
+          2,
+         'Sign Up failed',
+         'Provide all details',
+        );
       }
     },
+
     doNotification(level, title, message) {
       let notification = {
         title: title,
         level: level,
-        message: message
+        message: message,
       };
-      this.$store.commit("setNotification", notification);
-      this.$store.commit("setNotificationStatus", true);
+      this.$store.commit('setNotification', notification);
+      this.$store.commit('setNotificationStatus', true);
     },
     validate_pass() {
-      let patt = new RegExp("^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9@#$%^&+=]*$");
+      let patt = new RegExp('^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9@#$%^&+=]*$');
       let res = patt.test(this.password);
-      console.log(res);
-      if (res == false) {
-        this.pass_msg = "Password must be at least 8 characters long, contain at least one number and have a mixture of uppercase and lowercase letters.";
+      if (!res) {
+        this.pass_msg = 'Password must be at least 8 characters long, contain at least one number and have a mixture of uppercase and lowercase letters.';
 
       } else {
-        this.pass_msg = "";
+        this.pass_msg = '';
         this.pass_validation = true;
 
       }
 
-    }
+    },
+
+    signUpVerificationCancel :function(){
+      this.phoneVerification = false;
+      this.doNotification(
+         2,
+        'Phone Verification',
+        'Phone Verification Failed . Retry to complete SignUp process',
+      );
+    },
+
+    signUpVerificationVerify :function(){
+
+      const values = {};
+      values.code = this.code;
+      values.request_id = this.requestId;
+      let full_payload = {
+        values: values,
+        vm: this,
+        app: 'PRIVATE_API',
+        endpoint: 'check_verification',
+      };
+      this.requestSignUpVerificationVerify(full_payload).then(
+        response => {
+          if(response.status){
+            this.doNotification(
+               2,
+              'Phone Verification',
+               'Phone verification successful !',
+            );
+            this.$router.push('/auth/sign_up_verification');
+            this.verificationState = true ;
+          }
+          else{
+            this.doNotification(
+               2,
+              'Phone Verification',
+               response.message,
+            );
+          }
+        },
+        error => {
+          console.error('Check Internet Connection');
+          console.log(error);
+        }
+      );
+
+    },
+
+    sendVerificationCode :function(){
+
+      const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+      const values = {};
+      values.phone_no = phone;
+      let full_payload = {
+        values: values,
+        vm: this,
+        app: 'PRIVATE_API',
+        endpoint: 'verify_phone',
+      };
+      this.requestSignUpPhoneVerification(full_payload).then(
+        response => {
+          if(response.status){
+             this.requestId = response.request_id;
+          }
+          else{
+            this.doNotification(
+               2,
+              'Phone Verification',
+               response.message,
+            );
+
+          }
+        },
+        error => {
+          console.error('Check Internet Connection');
+          console.log(error);
+        }
+      );
+
+    },
   }
 };
 </script>
@@ -319,5 +441,61 @@ export default {
   text-align: left;
   font-size: 13px;
   width: 320px;
+}
+#sign-up-v2-container > div.el-dialog__wrapper > div > div.el-dialog__header{
+  background-color: #1782c5;
+}
+.sign-up-phone-validation > div
+{
+  margin-top: 18em !important;
+  width: 35% !important;
+}
+.signup-validation-description{
+  text-align: left;
+  line-height: 1.5;
+  padding: 10px 0px;
+  font-family: "Rubik", sans-serif;
+}
+.signup-verification-input{
+  display: flex;
+  margin-top: 10px;
+}
+#signup-verif_input{
+  border: none;
+  padding: 2px;
+  border-bottom: 1px solid #ccc;
+  width: 50%;
+  font-family: "Rubik", sans-serif;
+  font-size: 16px;
+}
+.signup-verif-button{
+  padding: 19px 20px 20px;
+  margin-top: 16px;
+  text-align: right;
+  border-top: 1px solid #e5e5e5;
+}
+.signup-verify{
+  color: #ecf0f1;
+    background-color: #1782c5;
+    border-color: #1b7fc3;
+    cursor: pointer;
+    border-radius: 4px;
+    height: 40px;
+    transition: background-color 0.3s;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 13px;
+}
+.signup-cancel{
+  color: #ecf0f1;
+    background-color: #1782c5;
+    border-color: #1b7fc3;
+    cursor: pointer;
+    border-radius: 4px;
+    height: 40px;
+    transition: background-color 0.3s;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 13px;
 }
 </style>

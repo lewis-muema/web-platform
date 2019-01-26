@@ -18,7 +18,7 @@
           <label class="input-descript">
             <span>Confirm Password</span>
           </label>
-          <input id="password" class="form-control" type="cpassword" placeholder="Confirm your password"  v-model="cpassword" @focus="setCurrentStep(2)" >
+          <input id="password" class="form-control" type="password" placeholder="Confirm your password"  v-model="cpassword" @focus="setCurrentStep(2)" >
 
         </div>
       </div>

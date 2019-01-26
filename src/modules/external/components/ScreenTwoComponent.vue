@@ -12,7 +12,7 @@
           <label class="input-descript">
             <span>Personal Email</span>
           </label>
-          <input  class="form-control" type="email" v-validate="'required|email'" name="email" placeholder="you@email.com"  v-model="per_email" @focus="setCurrentStep(1)" >
+          <input  class="form-control" type="email" v-validate="'required|email'" name="email" placeholder='you@email.com'  v-model="peerEmail" @focus="setCurrentStep(1)" >
           <br>
           <span class="onboarding-email-error">{{ errors.first('email') }}</span>
         </div>
@@ -34,8 +34,8 @@ export default {
   name: 'screen-two-component',
   data: function () {
     return {
-      per_email : "",
-      message : ""
+      peerEmail :'',
+      message :'',
     }
   },
   methods: {
@@ -43,7 +43,7 @@ export default {
       {
         setViewState:'$_external/setViewState',
         updateViewStep:'$_external/updateViewStep',
-        updatePerEmail:'$_external/updatePerEmail'
+        updatePerEmail:'$_external/updatePerEmail',
       }
     ),
     next_view: function ()
@@ -56,10 +56,15 @@ export default {
        }
       }
 
-      if (email_valid == true) {
-        this.updatePerEmail(this.per_email);
-        this.updateViewStep(0);
-        this.setViewState(3);
+      if (email_valid) {
+        if (this.getBizEmail !== this.peerEmail) {
+          this.updatePerEmail(this.peerEmail);
+          this.updateViewStep(0);
+          this.setViewState(3);
+        }
+        else {
+          this.message = 'Provide a Personal Email';
+        }
       }
       else {
         this.message = 'Provide valid Email ';
@@ -74,8 +79,12 @@ export default {
     }
   },
   computed : {
+    ...mapGetters({
+        getBizEmail:'$_external/getBizEmail',
+      }
+    ),
     is_valid : function() {
-      return this.per_email != '';
+      return this.peerEmail !== '';
     }
   }
 }
