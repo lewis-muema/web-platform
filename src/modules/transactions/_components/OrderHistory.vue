@@ -304,16 +304,16 @@ export default {
         // const user_type = session.biz.user_type;
 
         payload = {
-          copId,
-          userType,
+          cop_id:copId,
+          user_type:userType,
           from: fromDate,
           to: toDate,
         };
 
         if (user !== '' && user != null && user !== 0) {
           payload = {
-            copId,
-            userId,
+            cop_id:copId,
+            user_id:userId,
             from: fromDate,
             to: toDate,
           };
@@ -322,7 +322,7 @@ export default {
         const userId = session[session.default].user_id;
 
         payload = {
-          userId,
+          user_id:userId,
           from: fromDate,
           to: toDate,
         };
