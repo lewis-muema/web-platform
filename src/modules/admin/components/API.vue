@@ -51,22 +51,22 @@
         label="API Status"
       >
         <template slot-scope="scope">
-  <span>{{ get_api_status(scope.$index, 'sandbox') }}</span>
-</template>
+          <span>{{ get_api_status(scope.$index, 'sandbox') }}</span>
+        </template>
       </el-table-column>
       <el-table-column
         label="Account Status"
       >
         <template slot-scope="scope">
-  <span>{{ get_account_status(scope.$index, 'sandbox') }}</span>
-</template>
+          <span>{{ get_account_status(scope.$index, 'sandbox') }}</span>
+        </template>
       </el-table-column>
       <el-table-column
         label="API Enviroment"
       >
         <template slot-scope="scope">
-  <span>Sandbox</span>
-</template>
+          <span>Sandbox</span>
+        </template>
       </el-table-column>
     </el-table>
     <el-table
@@ -76,7 +76,9 @@
       :border="true"
       :stripe="true"
     >
-      <template slot="empty">{{ empty_payments_state }}</template>
+      <template slot="empty">
+{{ empty_payments_state }}
+</template>
 
       <el-table-column
         label="Username"
@@ -94,22 +96,22 @@
         label="API Status"
       >
         <template slot-scope="scope">
-  <span>{{ get_api_status(scope.$index, 'live') }}</span>
-</template>
+          <span>{{ get_api_status(scope.$index, 'live') }}</span>
+        </template>
       </el-table-column>
       <el-table-column
         label="Account Status"
       >
         <template slot-scope="scope">
-  <span>{{ get_account_status(scope.$index, 'live') }}</span>
-</template>
+          <span>{{ get_account_status(scope.$index, 'live') }}</span>
+        </template>
       </el-table-column>
       <el-table-column
         label="API Enviroment"
       >
         <template slot-scope="scope">
-  <span>Live</span>
-</template>
+          <span>Live</span>
+        </template>
       </el-table-column>
     </el-table>
 
@@ -130,130 +132,117 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  name: "API",
+  name: 'API',
   data() {
     return {
       registered: false,
-      empty_payments_state: "Fetching API Credentials",
+      empty_payments_state: 'Fetching API Credentials',
       pagination_limit: 5,
       pagination_page: 1,
-      update_api_text: "Update API Key",
-      generate_api_text: "Generate API Key",
-      button_name: ""
+      update_api_text: 'Update API Key',
+      generate_api_text: 'Generate API Key',
+      button_name: '',
     };
   },
   mounted() {
     const session = this.$store.getters.getSession;
     let cop_id = 0;
-    if (session.default == "biz") {
+    if (String(session.default) === 'biz') {
       cop_id = session[session.default].cop_id;
     }
     const payload = {
-      cop_id
+      cop_id,
     };
-    console.log(payload);
     const apikey_full_payload = {
       values: payload,
       vm: this,
-      app: "NODE_PRIVATE_API",
-      endpoint: "get_api"
+      app: 'NODE_PRIVATE_API',
+      endpoint: 'get_api',
     };
-    this.$store.dispatch("$_admin/requestKeysList", apikey_full_payload).then(
-      response => {
-        console.log(response);
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    this.$store
+      .dispatch('$_admin/requestKeysList', apikey_full_payload)
+      .then((response) => {}, (error) => {});
   },
   computed: {
     ...mapGetters({
-      fetchedData: "$_admin/getKeysList"
-    })
+      fetchedData: '$_admin/getKeysList',
+    }),
   },
   methods: {
     ...mapActions({
-      requestKeysList: "$_admin/requestKeysList"
+      requestKeysList: '$_admin/requestKeysList',
     }),
     updateApiKey() {
       const session = this.$store.getters.getSession;
       let cop_id = 0;
-      this.update_api_text = "Updating..";
-      if (session.default == "biz") {
+      this.update_api_text = 'Updating..';
+      if (String(session.default) === 'biz') {
         cop_id = session[session.default].cop_id;
       }
       const newKey_payload = {
-        cop_id
+        cop_id,
       };
       const newKeyFull_payload = {
         values: newKey_payload,
         vm: this,
-        app: "NODE_PRIVATE_API",
-        endpoint: "generate_api"
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'generate_api',
       };
-      this.$store.dispatch("$_admin/generateAPIKey", newKeyFull_payload).then(
-        response => {
-          console.log("updated");
-          this.update_api_text = "Update API Key";
-          console.log(response);
+      this.$store.dispatch('$_admin/generateAPIKey', newKeyFull_payload).then(
+        (response) => {
+          this.update_api_text = 'Update API Key';
           const level = 1; // success
-          this.message = "Key Updated!";
-          const notification = { title: "", level, message: this.message }; // notification object
-          this.$store.commit("setNotification", notification);
-          this.$store.commit("setNotificationStatus", true); // activate notification
+          this.message = 'Key Updated!';
+          const notification = { title: '', level, message: this.message }; // notification object
+          this.$store.commit('setNotification', notification);
+          this.$store.commit('setNotificationStatus', true); // activate notification
         },
-        error => {
-          this.update_api_text = "Update API Key";
-          console.log(error);
+        (error) => {
+          this.update_api_text = 'Update API Key';
           const level = 3;
-          this.message = "Something went wrong.";
-          const notification = { title: "", level, message: this.message }; // notification object
-          this.$store.commit("setNotification", notification);
-          this.$store.commit("setNotificationStatus", true); // activate notification
-        }
+          this.message = 'Something went wrong.';
+          const notification = { title: '', level, message: this.message }; // notification object
+          this.$store.commit('setNotification', notification);
+          this.$store.commit('setNotificationStatus', true); // activate notification
+        },
       );
     },
     generateAPIKey() {
       const session = this.$store.getters.getSession;
-      this.generate_api_text = "Generating..";
+      this.generate_api_text = 'Generating..';
       let cop_id = 0;
-      if (session.default == "biz") {
+      if (String(session.default) === 'biz') {
         cop_id = session[session.default].cop_id;
       }
       const newKey_payload = {
-        cop_id
+        cop_id,
       };
       const newKeyFull_payload = {
         values: newKey_payload,
         vm: this,
-        app: "NODE_PRIVATE_API",
-        endpoint: "generate_api"
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'generate_api',
       };
-      this.$store.dispatch("$_admin/generateAPIKey", newKeyFull_payload).then(
-        response => {
-          console.log("generated");
-          console.log(response);
-          this.generate_api_text = "Generate API Key";
+      this.$store.dispatch('$_admin/generateAPIKey', newKeyFull_payload).then(
+        (response) => {
+          this.generate_api_text = 'Generate API Key';
           const level = 1; // success
-          this.message = "Key Generated!";
-          const notification = { title: "", level, message: this.message }; // notification object
-          this.$store.commit("setNotification", notification);
-          this.$store.commit("setNotificationStatus", true); // activate notification
+          this.message = 'Key Generated!';
+          const notification = { title: '', level, message: this.message }; // notification object
+          this.$store.commit('setNotification', notification);
+          this.$store.commit('setNotificationStatus', true); // activate notification
         },
-        error => {
-          console.log("NOT generated");
-          this.generate_api_text = "Generate API Key";
-          console.log(error);
+        (error) => {
+          this.generate_api_text = 'Generate API Key';
           const level = 3;
-          this.message = "Something went wrong.";
-          const notification = { title: "", level, message: this.message }; // notification object
-          this.$store.commit("setNotification", notification);
-          this.$store.commit("setNotificationStatus", true); // activate notification
-        }
+          this.message = 'Something went wrong.';
+          const notification = { title: '', level, message: this.message }; // notification object
+          this.$store.commit('setNotification', notification);
+          this.$store.commit('setNotificationStatus', true); // activate notification
+        },
       );
     },
     changeSize(val) {
@@ -261,58 +250,57 @@ export default {
       this.pagination_limit = val;
     },
     changePage() {
-      console.log("Page changed to", this.pagination_page);
       const from = (this.pagination_page - 1) * this.pagination_limit;
       const to = this.pagination_page * this.pagination_limit;
       this.fetchedData.slice(from, to);
     },
     get_account_status(index, env) {
-      let resp = "";
-      if (env === "sandbox") {
+      let resp = '';
+      if (env === 'sandbox') {
         if (this.fetchedData.sandbox.length > 0) {
           resp = this.fetchedData.sandbox[index].account_status;
           if (resp === 1) {
-            resp = "Active";
+            resp = 'Active';
           } else {
-            resp = "Deactivated";
+            resp = 'Deactivated';
           }
         }
       } else if (this.fetchedData.live.length > 0) {
         resp = this.fetchedData.live[index].account_status;
         if (resp === 1) {
-          resp = "Active";
+          resp = 'Active';
         } else {
-          resp = "Deactivated";
+          resp = 'Deactivated';
         }
       }
       return resp;
     },
     get_api_status(index, env) {
-      let resp = "";
-      if (env === "sandbox") {
+      let resp = '';
+      if (env === 'sandbox') {
         if (this.fetchedData.sandbox.length > 0) {
           resp = this.fetchedData.sandbox[index].api_status;
           if (resp === 1) {
-            resp = "Registered";
+            resp = 'Registered';
             this.registered = true;
           } else {
-            resp = "Not Registered";
+            resp = 'Not Registered';
             this.registered = false;
           }
         }
       } else if (this.fetchedData.live.length > 0) {
         resp = this.fetchedData.live[index].api_status;
         if (resp === 1) {
-          resp = "Registered";
+          resp = 'Registered';
           this.registered = true;
         } else {
-          resp = "Not Registered";
+          resp = 'Not Registered';
           this.registered = false;
         }
       }
       return resp;
-    }
-  }
+    },
+  },
 };
 </script>
 
