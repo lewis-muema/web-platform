@@ -34,6 +34,8 @@ export default {
             'update_pass',
             'pending_delivery',
             'insert_rate',
+            'verify_phone',
+            'check_verification',
         ];
         if (
             /^[\],:{}\s]*$/.test(
