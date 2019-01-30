@@ -86,10 +86,8 @@
                     <div class="rider_details_action">
                         <button class="button-primary rider_details_action_btn rider_details--view-delivery-docs-btn" type="button" @click="dialogVisible = true">View Delivery Docs</button>
                     </div>
-                    <el-dialog
+                    <el-dialog class="delivery_image_dialog"
                       :visible.sync="dialogVisible"
-                      width="80%"
-                      height="100%"
                       >
                       <span slot="title">Delivery Documents for {{order_details.order_no}} </span><br>
                       <template v-for="(locations,index) in order_details.path" v-if="index >= 1">
@@ -108,13 +106,11 @@
                           <button class="button-primary dispute-delivery-button" type="button" @click="disputeDocsOption">Dispute Delivery Docs</button>
                       </div>
                     </el-dialog>
-                    <el-dialog   @close="closeDialog()"
+                    <el-dialog  class="dispute_delivery_dialog" @close="closeDialog()"
                       :visible.sync="dialogFormVisible"
-                      width="40%"
-                      height="100%"
                       >
                       <span slot="title">Dispute Delivery Documents - Order {{order_details.order_no}} </span><br>
-                      <div style="width: 60%;margin-left:19%;">
+                      <div class="dispute_documents_body">
                         <div>
 
                          <select class="dispute_type_select" v-model="disputeType" >
@@ -240,7 +236,7 @@ export default {
         return `https://s3-eu-west-1.amazonaws.com/sendy-delivery-signatures/${path}` ;
       },
     disputeDocsOption(){
-      if(this.order_details.extra_distance_amount > 0){
+      if(this.order_details.extra_distance_amount = 0){
          this.dialogFormVisible = true;
       }
       else{
@@ -265,14 +261,11 @@ export default {
         };
         let full_payload = {
             'values': values,
-            'vm': this,
             'app': 'PRIVATE_API',
             'endpoint': 'dispute_order'
         };
-        console.log('payload',full_payload);
         this.requestDisputeDeliveryDocs(full_payload).then(
           response => {
-            console.log('Response',response);
             if(response.status){
               this.doNotification(
                  2,
@@ -290,7 +283,6 @@ export default {
             }
           },
           error => {
-            console.error('Check Internet Connection');
             console.log(error);
           }
         );
@@ -349,7 +341,7 @@ export default {
   margin-left: 30px;
 }
 .delivery_documents_info{
-  width: 26%;
+  width: 50%;
   height: 310px;
   margin: 3%;
   border-radius: 4px;
@@ -381,5 +373,18 @@ export default {
 .dispute-delivery-submit{
   margin-top: 20px;
   width: 320px;
+}
+.delivery_image_dialog{
+  width: 100%;
+  height: 100%;
+}
+.dispute_delivery_dialog{
+  width: 83%;
+  height :100%;
+  margin-left: 10%;
+}
+.dispute_documents_body{
+  width: 60%;
+  margin-left:19%;
 }
 </style>
