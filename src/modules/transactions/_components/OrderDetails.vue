@@ -317,7 +317,7 @@ export default {
 },
   computed: {
     ...mapGetters({
-      getOrderDetails: "$_transactions/getOrderHistoryOrders"
+      getOrderDetails: '$_transactions/getOrderHistoryOrders',
     }),
     order_details() {
       return this.getOrderDetails.find(
