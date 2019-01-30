@@ -91,7 +91,7 @@ export default {
       first_time: false,
       popover_visible: false,
       carrier_type: '2',
-      vendors_with_fixed_carrier_type: ['Standard','Runner'],
+      vendors_with_fixed_carrier_type: ['Standard','Runner', 'Van'],
       vendors_without_return: ['Standard','Runner'],
     }
   },

@@ -79,7 +79,7 @@ class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
           </div>
         </div>
 
-        <span v-if="get_price_request_object.payment_option !== 2">
+        <span v-if="getPriceRequestObject.payment_option !== 2">
           <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
             <div class="home-view-notes-wrapper--item__option">
               <div class="home-view-notes-wrapper--item__option-div">
@@ -253,6 +253,7 @@ export default {
       },
       price_request_response_received: false,
       vendors_without_return: ['Standard', 'Runner'],
+      vendors_with_fixed_carrier_type: ['Standard','Runner', 'Van'],
       return_status: false,
     };
   },
@@ -261,10 +262,10 @@ export default {
     ...mapGetters({
       get_active_order_option: '$_orders/$_home/get_active_order_option',
       getRunningBalance: 'getRunningBalance',
-      get_price_request_object: '$_orders/$_home/get_price_request_object',
+      getPriceRequestObject: '$_orders/$_home/get_price_request_object',
       get_active_package_class: '$_orders/$_home/get_active_package_class',
       get_active_vendor_name: '$_orders/$_home/get_active_vendor_name',
-      active_vendor_price_data: '$_orders/$_home/get_active_vendor_details',
+      activeVendorPriceData: '$_orders/$_home/get_active_vendor_details',
       get_order_path: '$_orders/$_home/get_order_path',
       get_pickup_filled: '$_orders/$_home/get_pickup_filled',
       get_payment_method: '$_orders/$_home/get_payment_method',
@@ -273,31 +274,32 @@ export default {
       get_saved_cards: '$_orders/$_home/get_saved_cards',
       get_stripe_user_id: '$_orders/$_home/get_stripe_user_id',
       get_carrier_type: '$_orders/$_home/get_carrier_type',
-      getReturnStatus: '$_orders/$_home/getReturnStatus',
+      getIsReturn: '$_orders/$_home/getReturnStatus',
     }),
 
     active_price_tier_data() {
       if (this.get_active_package_class != '') {
-        return this.get_price_request_object.economy_price_tiers.find(
+        return this.getPriceRequestObject.economy_price_tiers.find(
           pack => pack.tier_group === this.get_active_package_class,
         );
       }
       return '';
     },
 
+    // cost that the client pays. Is less the discount
     order_cost() {
       let cost = 0;
-      if (typeof this.active_vendor_price_data !== 'undefined') {
-        if ('cost' in this.active_vendor_price_data) {
+      if (typeof this.activeVendorPriceData !== 'undefined') {
+        if ('cost' in this.activeVendorPriceData) {
           if (
-            this.getReturnStatus !== true
+            !this.getIsReturn
 						|| this.vendors_without_return.includes(this.get_active_vendor_name)
           ) {
-            cost =							this.active_vendor_price_data.cost - this.active_vendor_price_data.discountAmount;
+            cost =							this.activeVendorPriceData.cost - this.activeVendorPriceData.discountAmount;
             return cost;
           }
-          cost =						this.active_vendor_price_data.return_cost
-						- this.active_vendor_price_data.discountAmount;
+          cost =						this.activeVendorPriceData.return_cost
+						- this.activeVendorPriceData.discountAmount;
           return cost;
         }
       }
@@ -305,14 +307,19 @@ export default {
       return cost;
     },
 
+    // order cost including discounts
+    full_order_cost(){
+      return this.order_cost + this.activeVendorPriceData.discountAmount;
+    },
+
     allowCash() {
-      return this.get_price_request_object.payment_option == 2 || this.getRunningBalance <= 0;
+      return this.getPriceRequestObject.payment_option === 2 || this.getRunningBalance <= 0;
     },
 
     hide_payment() {
       return (
-        this.get_price_request_object.payment_option == 2
-				|| this.getRunningBalance == 0
+        this.getPriceRequestObject.payment_option === 2
+				|| this.getRunningBalance === 0
 				|| this.getRunningBalance + this.order_cost <= 0
       );
     },
@@ -335,7 +342,7 @@ export default {
 
     eta_time() {
       return this.moment()
-        .add(this.active_vendor_price_data.eta, 'second')
+        .add(this.activeVendorPriceData.eta, 'second')
         .format('YYYY-MM-DD HH:mm:ss');
     },
 
@@ -377,14 +384,17 @@ export default {
     },
 
     allow_return() {
-      // let allowed = true;
-      // if (this.vendors_without_return.includes(this.get_active_vendor_name)) {
-      //   allowed = false;
-      // }
-      // return allowed;
-      // Disable return for now
-      return false;
+      let allowed = true;
+      if (this.vendors_without_return.includes(this.get_active_vendor_name)) {
+        allowed = false;
+      }
+      return allowed;
     },
+
+    final_carrier_type(){
+      return this.vendors_with_fixed_carrier_type.includes(this.get_active_vendor_name) ? 2 : Number(this.get_carrier_type);
+    },
+
   },
 
   methods: {
@@ -418,20 +428,20 @@ export default {
     }),
 
     do_set_active_order_option(name) {
-      this.get_active_order_option != name
+      this.get_active_order_option !== name
         ? this.set_active_order_option(name)
         : this.set_active_order_option('');
     },
 
     get_current_active_order_option_class(name) {
       return {
-        'router-link-active': name == this.get_active_order_option,
+        'router-link-active': name === this.get_active_order_option,
       };
     },
 
     checkAllowPrePaid() {
       if (
-        this.get_price_request_object.payment_option == 1
+        this.getPriceRequestObject.payment_option === 1
 				&& this.getRunningBalance + this.order_cost > 0
       ) {
         return false;
@@ -467,8 +477,8 @@ export default {
         return false;
       }
 
-      if (this.payment_method == '') {
-        if (this.checkAllowPrePaid() == true) {
+      if (this.payment_method === '') {
+        if (this.checkAllowPrePaid()) {
           this.handlePostPaidPayments();
         } else {
           this.doNotification(
@@ -480,11 +490,11 @@ export default {
         }
       } else {
         this.saveInfoToStore();
-        if (this.payment_method == 1) {
+        if (Number(this.payment_method) === 1) {
           this.handleMpesaPayments();
-        } else if (this.payment_method == 3) {
+        } else if (Number(this.payment_method) === 3) {
           this.handleCashPayments();
-        } else if (this.payment_method == 5) {
+        } else if (Number(this.payment_method) === 5) {
           this.handlePromoCodePayments();
         } else if (this.payment_method.startsWith('2_')) {
           const card = this.get_saved_cards.find(
@@ -500,7 +510,7 @@ export default {
     },
 
     handleMpesaPayments() {
-      if (this.payment_is_to_be_requested === true) {
+      if (this.payment_is_to_be_requested) {
         this.requestMpesaPayment();
         return false;
       }
@@ -550,7 +560,7 @@ export default {
 
           if (response.status === true) {
             this.setPickupFilled(false);
-            const order_no = this.active_vendor_price_data.order_no;
+            const order_no = this.activeVendorPriceData.order_no;
             this.should_destroy = true;
             this.$store.dispatch('$_orders/fetch_ongoing_orders');
             this.$router.push({
@@ -587,7 +597,7 @@ export default {
 
       let payload = {
         note: this.order_notes,
-        trans_no: this.active_vendor_price_data.order_no,
+        trans_no: this.activeVendorPriceData.order_no,
         user_email: acc.user_email,
         user_phone: acc.user_phone,
         no_charge_status: false,
@@ -601,7 +611,7 @@ export default {
         customer_token: this.customer_token,
         insurance_status: true,
         close_rider_id: 0,
-        amount: this.active_vendor_price_data.cost,
+        amount: this.full_order_cost,
         schedule_status: this.order_is_scheduled,
         destination_paid_status: false,
         delivery_points: this.get_order_path.length - 1,
@@ -610,17 +620,17 @@ export default {
           ? 2
           : this.payment_method === ''
             ? 0
-            : parseInt(this.payment_method),
+            : Number(this.payment_method),
         schedule_time: this.order_is_scheduled ? this.scheduled_time : this.eta_time,
-        tier_tag: this.active_vendor_price_data.tier_tag,
-        tier_name: this.active_vendor_price_data.tier_name,
+        tier_tag: this.activeVendorPriceData.tier_tag,
+        tier_name: this.activeVendorPriceData.tier_name,
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
-        carrier_type: parseInt(this.get_carrier_type),
+        carrier_type: this.final_carrier_type,
         isreturn:
-					this.getReturnStatus === true
-					&& this.vendors_without_return.includes(this.get_active_vendor_name) === false,
-        vendor_type: this.active_vendor_price_data.vendor_id,
-        rider_phone: this.active_vendor_price_data.order_no,
+					this.getIsReturn
+					&& !this.vendors_without_return.includes(this.get_active_vendor_name),
+        vendor_type: this.activeVendorPriceData.vendor_id,
+        rider_phone: this.activeVendorPriceData.order_no,
         type: this.payment_type,
       };
       payload = {
@@ -673,7 +683,7 @@ export default {
             if (response.length > 0) {
               response = response[0];
             }
-            if (response.status == 200) {
+            if (response.status === 200) {
               this.$store.commit('setRunningBalance', response.data.running_balance);
               this.setDefaultOptions();
               resolve(response.data);
@@ -689,7 +699,7 @@ export default {
     },
 
     initializeOrderPlacement() {
-      if (this.get_schedule_time != '') {
+      if (this.get_schedule_time !== '') {
         this.retrieveFromStore();
       }
 
@@ -701,8 +711,8 @@ export default {
     },
 
     setDefaultOptions() {
-      if (this.get_active_order_option == '') {
-        if (this.show_payment == true) {
+      if (this.get_active_order_option === '') {
+        if (this.show_payment === true) {
           this.set_active_order_option('payment');
         }
       }
@@ -890,7 +900,7 @@ export default {
     },
 
     instantiateReturnStatus() {
-      this.return_status = this.getReturnStatus;
+      this.return_status = this.getIsReturn;
     },
 
     dispatchReturnToPickup() {
