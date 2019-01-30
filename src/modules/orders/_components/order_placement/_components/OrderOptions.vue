@@ -93,7 +93,7 @@ v-model="payment_method"
             </div>
             <div class="home-view-notes-wrapper--item__value" />
           </div>
-          <span v-if="allowCash === true">
+          <span v-if="allowCash">
             <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
               <div class="home-view-notes-wrapper--item__option">
                 <div class="home-view-notes-wrapper--item__option-div">
@@ -330,7 +330,7 @@ export default {
 
     place_order_text() {
       let text = 'Confirm ';
-      if (this.order_is_scheduled == true) {
+      if (this.order_is_scheduled) {
         text = 'Schedule ';
       }
       return `${text}${this.get_active_vendor_name} Order`;
@@ -558,7 +558,7 @@ export default {
             response = response[0];
           }
 
-          if (response.status === true) {
+          if (response.status) {
             this.setPickupFilled(false);
             const order_no = this.activeVendorPriceData.order_no;
             this.should_destroy = true;
@@ -712,7 +712,7 @@ export default {
 
     setDefaultOptions() {
       if (this.get_active_order_option === '') {
-        if (this.show_payment === true) {
+        if (this.show_payment) {
           this.set_active_order_option('payment');
         }
       }
@@ -941,7 +941,7 @@ export default {
         (response) => {
           // decrypt response here
           response = JSON.parse(Mcrypt.decrypt(response));
-          if (response.status === true) {
+          if (response.status) {
             this.setSavedCards(response.cards);
             this.setStripeUserId(response.stripe_user_id);
           } else {
@@ -953,7 +953,7 @@ export default {
     },
 
     handleCardPayments(card) {
-      if (this.payment_is_to_be_requested === false) {
+      if (!this.payment_is_to_be_requested) {
         this.doCompleteOrder();
         return false;
       }
@@ -981,7 +981,7 @@ export default {
           response.data = Mcrypt.decrypt(response.data);
           response.data = JSON.parse(response.data);
 
-          if (response.data.status === true) {
+          if (response.data.status) {
             const card_trans_id = response.data.id;
             this.completeCardPayment(card_trans_id);
             // complete payment here
@@ -1055,7 +1055,7 @@ export default {
           }
 
           const self = this;
-          if (response.data.status === true) {
+          if (response.data.status) {
             // this will request the new running balance and update the store
 
             this.doNotification(
@@ -1105,7 +1105,7 @@ export default {
   },
 
   destroyed() {
-    if (this.should_destroy === true) {
+    if (this.should_destroy) {
       this.$emit('destroyOrderOptions');
     } else {
       this.saveInfoToStore();
