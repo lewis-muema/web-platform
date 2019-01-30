@@ -9,7 +9,7 @@
                     KES {{order_details.order_cost}}
               </div>
               <!-- <div class="order_details_desc_item">
-                     Extra Distance Bill : KES 240 
+                     Extra Distance Bill : KES 240
               </div>
               <div class="order_details_desc_item">
                     Waiting Time Charges : KES 100
@@ -34,9 +34,9 @@
                         Delivered : {{j.log_time | moment }}
                   </div>
                 </span>
-                
+
               </div>
-              
+
               <div class="order_details_desc_item">
                     <img src="../../../assets/img/maroon_button.png" class="order_details_desc_image">
                     {{getOrderFromName(order_details.path)}}
@@ -87,14 +87,62 @@
                         <button class="button-primary rider_details_action_btn rider_details--view-delivery-docs-btn" type="button" @click="dialogVisible = true">View Delivery Docs</button>
                     </div>
                     <el-dialog
-                      title="Delivery Documents"
                       :visible.sync="dialogVisible"
                       width="80%"
+                      height="100%"
                       >
-                      <span>
-                        <iframe :src="getDeliveryDocsSrc(order_details.order_no)"  width="100%" height="650" frameborder="0" style="position:relative;z index:999" ref="frame">
-                        </iframe>
-                      </span>
+                      <span slot="title">Delivery Documents for {{order_details.order_no}} </span><br>
+                      <template v-for="(locations,index) in order_details.path" v-if="index >= 1">
+                        <div class="delivery_documents_info">
+                          <div class="delivery_image_details">Delivery at {{order_details.path[index].name}}</div>
+
+                          <div>
+                              <img class="delivery-image-content" :src="deliveryImagePath(order_details.rider_deliver_img[index - 1].img)"/>
+                          </div>
+                          <div  v-if="order_details.rider_deliver_img != null" class="delivery_image_details" >
+                                Delivery signature by : {{order_details.rider_deliver_img[index - 1].name}}
+                          </div>
+                        </div>
+                      </template>
+                      <div class="rider_details_action">
+                          <button class="button-primary dispute-delivery-button" type="button" @click="disputeDocsOption">Dispute Delivery Docs</button>
+                      </div>
+                    </el-dialog>
+                    <el-dialog   @close="closeDialog()"
+                      :visible.sync="dialogFormVisible"
+                      width="40%"
+                      height="100%"
+                      >
+                      <span slot="title">Dispute Delivery Documents - Order {{order_details.order_no}} </span><br>
+                      <div style="width: 60%;margin-left:19%;">
+                        <div>
+
+                         <select class="dispute_type_select" v-model="disputeType" >
+                         <option value="" disabled selected> Dispute Type </option>
+
+                           <option value="1" >  Waiting time  </option>
+                           <option value="2" >  Extra distance  </option>
+
+                         </select>
+
+                       </div>
+                       <div>
+                         <select class="dispute_type_select" v-model="disputeReason" >
+                         <option value="" disabled selected> Dispute Reason</option>
+
+                           <option value="1">  I was overcharged for this order </option>
+                           <option value="2">  My driver took too long  </option>
+                           <option value="3">  My driver went to a wrong location  </option>
+                           <option value="4">  I had a different issue   </option>
+
+                         </select>
+                     </div>
+                       <textarea placeholder="Description" class="form-control dispute_description" v-model="disputeDescription">
+                       </textarea>
+                       <div class="rider_details_action">
+                           <button class="button-primary dispute-delivery-submit" type="button" @click="disputeDeliveryDocs">Submit</button>
+                       </div>
+                      </div>
                     </el-dialog>
                 </div>
               </div>
@@ -114,6 +162,10 @@ export default {
       order_id: "",
       show_rating: false,
       dialogVisible : false,
+      dialogFormVisible : false,
+      disputeType : '',
+      disputeReason : '',
+      disputeDescription : '',
     };
   },
   filters: {
@@ -125,6 +177,9 @@ export default {
     moment: function() {
       return moment();
     },
+    ...mapActions({
+      requestDisputeDeliveryDocs: '$_transactions/requestDisputeDeliveryDocs',
+    }),
     createStaticMapUrl(path) {
       //TODO:get google_key from configs
       let google_key = "AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc";
@@ -174,8 +229,92 @@ export default {
       return "https://oldapp.sendyit.com/biz/sendyconnect/verify/"+order;
     },
     printReceipt() {},
-    deliveryDocs() {}
+    deliveryDocs() {},
+    closeDialog() {
+      this.disputeType = '';
+      this.disputeReason = '';
+      this.disputeDescription = '';
+      this.dialogFormVisible = false ;
+      },
+    deliveryImagePath(path){
+        return `https://s3-eu-west-1.amazonaws.com/sendy-delivery-signatures/${path}` ;
+      },
+    disputeDocsOption(){
+      if(this.order_details.extra_distance_amount > 0){
+         this.dialogFormVisible = true;
+      }
+      else{
+        this.doNotification(
+           2,
+          'Dispute delivery docs',
+          'Sorry there were no extra charges for this order',
+        );
+      }
+    },
+    disputeDeliveryDocs(){
+      if(this.disputeType !== '' && this.disputeReason !== '' && this.disputeDescription !== ''){
+        let session = this.$store.getters.getSession;
+        let values = {
+            'dispute_type': this.disputeType,
+            'dispute_reason_id': this.disputeReason,
+            'dispute_description': this.disputeDescription,
+            'order_no': this.order_details.order_no ,
+            'name': session[session.default]['user_name'],
+            'email': session[session.default]['user_email'],
+            'phone': session[session.default]['user_phone'],
+        };
+        let full_payload = {
+            'values': values,
+            'vm': this,
+            'app': 'PRIVATE_API',
+            'endpoint': 'dispute_order'
+        };
+        console.log('payload',full_payload);
+        this.requestDisputeDeliveryDocs(full_payload).then(
+          response => {
+            console.log('Response',response);
+            if(response.status){
+              this.doNotification(
+                 2,
+                 'Delivery dispute',
+                 'Delivery dispute successful !',
+              );
+              this.closeDialog();
+            }
+            else{
+              this.doNotification(
+                 2,
+                'Delivery dispute',
+                 response.message,
+              );
+            }
+          },
+          error => {
+            console.error('Check Internet Connection');
+            console.log(error);
+          }
+        );
+
+      }
+      else{
+        this.message = 'Please provide all details';
+        this.doNotification(
+          2,
+         'Delivery dispute failed',
+         'Provide all details',
+        );
+      }
   },
+  doNotification(level, title, message) {
+    let notification = {
+      title: title,
+      level: level,
+      message: message,
+    };
+    this.$store.commit('setNotification', notification);
+    this.$store.commit('setNotificationStatus', true);
+  },
+},
   computed: {
     ...mapGetters({
       getOrderDetails: "$_transactions/getOrderHistoryOrders"
@@ -208,5 +347,39 @@ export default {
 .rate--action-btn {
   display: inline-block;
   margin-left: 30px;
+}
+.delivery_documents_info{
+  width: 26%;
+  height: 310px;
+  margin: 3%;
+  border-radius: 4px;
+  border: 1px solid #dcdfe6;
+}
+.delivery-image-content{
+  width: 60%;
+}
+.delivery_image_details{
+  margin-top: 7%;
+  margin-left: 7%;
+}
+.dispute-delivery-button{
+  margin-top: 20px;
+  margin-left: 15%;
+  width: 100% !important;
+}
+.dispute_type_select{
+  width: 100% !important;
+  margin-bottom: 10px;
+  height: 35px;
+}
+.dispute_description{
+  padding: 12px;
+  margin-right: -6px;
+  width: 100% !important;
+  height: 100px;
+}
+.dispute-delivery-submit{
+  margin-top: 20px;
+  width: 320px;
 }
 </style>
