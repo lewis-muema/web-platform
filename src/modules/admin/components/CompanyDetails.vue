@@ -47,10 +47,12 @@
 </template>
 
 <script>
+    import SessionMxn from '../../../mixins/session_mixin.js';
     import {mapGetters, mapActions} from 'vuex'
 
     export default {
-        name: "CompanyDetails",
+        name: 'CompanyDetails',
+        mixins: [SessionMxn],
         data: function () {
             return {
               cop_name:'',
@@ -105,7 +107,6 @@
 
                       let full_payload = {
                           'values': values,
-                          'vm': this,
                           'app': 'NODE_PRIVATE_API',
                           'endpoint': 'update_cop'
                       }
@@ -122,10 +123,6 @@
                               let new_session = JSON.stringify(updated_session);
                               this.setSession(new_session);
 
-                              console.log('updated session',updated_session);
-                              console.log('Company Information Updated successfully')
-                              console.log(response);
-
                               let level = 1; //success
                               this.message = 'Details Saved!';
                               let notification = {
@@ -135,7 +132,7 @@
                                  };
 
                               this.$store.commit('setNotification', notification);
-                              this.$store.commit('setNotificationStatus', true); //activate notification
+                              this.$store.commit('setNotificationStatus', true);
                           }
                           else {
                               let level = 3;
@@ -147,7 +144,7 @@
                                 };
 
                               this.$store.commit('setNotification', notification);
-                              this.$store.commit('setNotificationStatus', true); //activate notification
+                              this.$store.commit('setNotificationStatus', true);
 
                           }
                       }, error => {
@@ -174,8 +171,13 @@
               else {
 
                 let level = 3;
-                this.message = "Provide all details"
-                let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                this.message = 'Provide all details'
+                let notification = {
+                  'title': '',
+                  'level': level,
+                  'message': this.message,
+                   };
+
                 this.$store.commit('setNotification', notification);
                 this.$store.commit('setNotificationStatus', true);
 

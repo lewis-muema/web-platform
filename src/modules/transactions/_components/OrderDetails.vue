@@ -8,12 +8,6 @@
               <div class="order_details_price">
                     KES {{order_details.order_cost}}
               </div>
-              <!-- <div class="order_details_desc_item">
-                     Extra Distance Bill : KES 240
-              </div>
-              <div class="order_details_desc_item">
-                    Waiting Time Charges : KES 100
-              </div> -->
 
               <div class="order_details_desc_item">
                     Distance : {{order_details.order_details.distance}} KMs
@@ -175,6 +169,7 @@ export default {
     },
     ...mapActions({
       requestDisputeDeliveryDocs: '$_transactions/requestDisputeDeliveryDocs',
+      requestDisputeStatus: '$_transactions/requestDisputeStatus',
     }),
     createStaticMapUrl(path) {
       //TODO:get google_key from configs
@@ -236,8 +231,34 @@ export default {
         return `https://s3-eu-west-1.amazonaws.com/sendy-delivery-signatures/${path}` ;
       },
     disputeDocsOption(){
-      if(this.order_details.extra_distance_amount = 0){
-         this.dialogFormVisible = true;
+      if(this.order_details.extra_distance_amount >= 0){
+         let values ={
+           'order_no':this.order_details.order_no
+         };
+         let full_payload = {
+             'values': values,
+             'app': 'NODE_PRIVATE_API',
+             'endpoint': 'check_dispute'
+         };
+
+         this.requestDisputeStatus(full_payload).then(
+           response => {
+             if(!response.status){
+              this.dialogFormVisible = true;
+             }
+             else{
+               this.doNotification(
+                  2,
+                  'Delivery dispute',
+                  'Failure to dispute documents due to an existing dispute request !',
+               );
+             }
+           },
+           error => {
+             console.log(error);
+           }
+         );
+
       }
       else{
         this.doNotification(
