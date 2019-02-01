@@ -209,8 +209,8 @@ export function createRouter() {
             component: () => import("../modules/admin/components/API.vue")
           },
           {
-            path: "/admin/company_details",
-            component: () => import("../modules/admin/components/CompanyDetails.vue")
+            path: '/admin/company_details',
+            component: () => import('../modules/admin/components/CompanyDetails.vue')
           }
         ]
       },

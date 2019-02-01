@@ -22,29 +22,29 @@
 
 <script>
 import admin_store from './_store';
-import Vue from "vue";
+import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import RegisterStoreModule from '../../mixins/register_store_module'
 import MainHeader from '../../components/headers/MainHeader.vue'
 import VeeValidate from 'vee-validate';
 import { Validator } from 'vee-validate';
-import VueTelInput from 'vue-tel-input'
+import VueTelInput from 'vue-tel-input';
 
-Vue.use(VueTelInput)
+Vue.use(VueTelInput);
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
        getMessage: field => `The phone number not valid`,
        validate: value => {
-         const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-         var validity = false
+         let phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+         let validity = false
          try {
 
-           var number = phoneUtil.parse(value);
+           let number = phoneUtil.parse(value);
            validity = (phoneUtil.isValidNumber(number));
          } catch (e) {
-           console.log(e)
-           validity = false
+           console.log(e) ;
+           validity = false ;
          }
          return validity;
        }
