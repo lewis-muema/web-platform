@@ -40,7 +40,7 @@ Validator.extend('check_phone', {
          let validity = false
          try {
 
-           let number = phoneUtil.parse(value);
+           let number = phoneUtil.format(value);
            validity = (phoneUtil.isValidNumber(number));
          } catch (e) {
            console.log(e) ;
