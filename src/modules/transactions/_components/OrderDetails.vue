@@ -231,7 +231,7 @@ export default {
         return `https://s3-eu-west-1.amazonaws.com/sendy-delivery-signatures/${path}` ;
       },
     disputeDocsOption(){
-      if(this.order_details.extra_distance_amount >= 0){
+      if(this.order_details.extra_distance_amount > 0 || this.order_details.waiting_time_amount >0){
          let values ={
            'order_no':this.order_details.order_no
          };
