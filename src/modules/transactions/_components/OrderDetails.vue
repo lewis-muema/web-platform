@@ -331,21 +331,21 @@ export default {
       this.disputeType = '';
       this.disputeReason = '';
       this.disputeDescription = '';
-      this.dialogFormVisible = false;
-    },
-    deliveryImagePath(path) {
-      return `https://s3-eu-west-1.amazonaws.com/sendy-delivery-signatures/${path}`;
-    },
-    disputeDocsOption() {
-      if (this.order_details.extra_distance_amount >= 0) {
-        const values = {
-          order_no: this.order_details.order_no,
-        };
-        const full_payload = {
-          values,
-          app: 'NODE_PRIVATE_API',
-          endpoint: 'check_dispute',
-        };
+      this.dialogFormVisible = false ;
+      },
+    deliveryImagePath(path){
+        return `https://s3-eu-west-1.amazonaws.com/sendy-delivery-signatures/${path}` ;
+      },
+    disputeDocsOption(){
+      if(this.order_details.extra_distance_amount > 0 || this.order_details.waiting_time_amount >0){
+         let values ={
+           'order_no':this.order_details.order_no
+         };
+         let full_payload = {
+             'values': values,
+             'app': 'NODE_PRIVATE_API',
+             'endpoint': 'check_dispute'
+         };
 
         this.requestDisputeStatus(full_payload).then(
           (response) => {
