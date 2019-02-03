@@ -2,19 +2,10 @@
   <div class="">
     <main-header />
     <div class="tracking-back-button">
-      <i
-        class="el-icon-back edit-back"
-        @click="go_back()"
-      />
+      <i class="el-icon-back edit-back" @click="go_back()" />
     </div>
-    <div
-      id="payment_container"
-      class="container-small"
-    >
-      <component
-        :is="currentPageHeader"
-        class="payment--header"
-      />
+    <div id="payment_container" class="container-small">
+      <component :is="currentPageHeader" class="payment--header" />
       <payment-body />
     </div>
   </div>
@@ -23,7 +14,8 @@
 <script>
 import { mapGetters } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faWallet } from '@fortawesome/free-solid-svg-icons';
+import { faWallet, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCcVisa, faCcMastercard } from '@fortawesome/free-brands-svg-icons';
 import payment_store from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
@@ -31,12 +23,15 @@ import AccountBalance from './_components/AccountBalance.vue';
 import OrderCost from './_components/OrderCost.vue';
 import PaymentBody from './_components/PaymentBody.vue';
 
-library.add(faWallet);
+library.add(faWallet, faCcVisa, faCcMastercard, faTrash);
 
 export default {
   name: 'Payment',
   components: {
-    MainHeader, AccountBalance, OrderCost, PaymentBody,
+    MainHeader,
+    AccountBalance,
+    OrderCost,
+    PaymentBody,
   },
   mixins: [RegisterStoreModule],
   computed: {
