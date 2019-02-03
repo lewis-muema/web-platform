@@ -145,17 +145,30 @@ export default {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         response => {
-          // console.log("in store dispatch to global store");
-          if (response.status == 200) {
+          if (response.status === 200) {
             resolve(response.data);
           } else {
-            // console.log("response not true");
             reject(response.data);
           }
         },
         error => {
           reject(error);
-          // console.log("failed to dispatch to global store");
+        }
+      );
+    });
+  },
+  deleteSavedCard({ commit, dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosPost', payload, { root: true }).then(
+        response => {
+          if (response.status === 200) {
+            resolve(response.data);
+          } else {
+            reject(response.data);
+          }
+        },
+        error => {
+          reject(error);
         }
       );
     });

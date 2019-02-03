@@ -159,17 +159,14 @@ export default {
       show_cvv: false,
     };
   },
-  mounted() {
-    if (this.get_saved_cards.length === 0) {
-      this.isHidden = true;
-    }
-  },
+  mounted() {},
   computed: {
     ...mapGetters({
       card_fail_status: '$_payment/getCardFailStatus',
       card_loading_status: '$_payment/getCardLoadingStatus',
       card_success_status: '$_payment/getCardSuccessStatus',
       get_saved_cards: '$_payment/getSavedCards',
+      get_stripe_user_id: '$_payment/getStripeUserId',
     }),
     valid_payment() {
       if (this.payment_card.startsWith('2_')) {
@@ -183,7 +180,6 @@ export default {
         );
       } else {
         return (
-          this.payment_card !== '' &&
           this.card_payment_data.card_expiry !== '' &&
           this.card_payment_data.amount !== '' &&
           this.card_payment_data.card_no !== '' &&
@@ -230,6 +226,7 @@ export default {
       requestCardPaymentAction: '$_payment/requestCardPayment',
       completeCardPaymentAction: '$_payment/completeCardPaymentRequest',
       requestSavedCards: '$_payment/requestSavedCards',
+      removeSavedCard: '$_payment/deleteSavedCard',
     }),
     ...mapMutations({
       setSavedCards: '$_payment/setSavedCards',
@@ -551,12 +548,60 @@ export default {
       return year.slice(-2);
     },
     deleteSavedCard(card) {
-      this.isHidden = false;
-      this.get_saved_cards.splice(card, 1);
+      let card_payload = {
+        card_id: card.card_id,
+        stripe_user_id: this.get_stripe_user_id,
+      };
+      card_payload = Mcrypt.encrypt(card_payload);
+
+      const full_payload = {
+        values: card_payload,
+        app: 'PRIVATE_API',
+        endpoint: 'remove_card',
+      };
+      this.removeSavedCard(full_payload).then(
+        response => {
+          if (response.length > 0) {
+            let notification = {
+              title: 'Remove Card success',
+              level: 1,
+              message: 'card deleted successfully.',
+            };
+            this.$store.dispatch('show_notification', notification, {
+              root: true,
+            });
+            this.isHidden = false;
+          } else {
+            let notification = {
+              title: 'Remove Card Failed',
+              level: 2,
+              message: 'delete card failed, please try again.',
+            };
+            this.$store.dispatch('show_notification', notification, {
+              root: true,
+            });
+          }
+        },
+        error => {
+          let notification = {
+            title: 'delete card failed',
+            level: 2,
+            message: 'delete card did not go through',
+          };
+          this.$store.dispatch('show_notification', notification, {
+            root: true,
+          });
+        }
+      );
     },
   },
   created() {
     this.getUserCards();
+    if (this.get_saved_cards.length === 0) {
+      this.isHidden = false;
+    } else {
+      this.isHidden = true;
+    }
   },
 };
 </script>

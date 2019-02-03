@@ -6,4 +6,5 @@ export default {
   getCardFailStatus: state => state.card_fail_status,
   getCardSuccessStatus: state => state.card_success_status,
   getSavedCards: state => state.saved_cards,
+  getStripeUserId: state => state.stripe_user_id,
 };
