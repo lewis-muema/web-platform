@@ -10,6 +10,7 @@
                 <router-link class="section__link" to="/admin/department">Department</router-link>
                 <!--<router-link class="section__link" to="/admin/preferences">Preferences</router-link>-->
                 <router-link class="section__link" to="/admin/api">API</router-link>
+                <router-link class="section__link" to="/admin/company_details">Company details</router-link>
             </div>
             <div class="">
                 <router-view></router-view>
@@ -21,9 +22,33 @@
 
 <script>
 import admin_store from './_store';
+import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import RegisterStoreModule from '../../mixins/register_store_module'
 import MainHeader from '../../components/headers/MainHeader.vue'
+import VeeValidate from 'vee-validate';
+import { Validator } from 'vee-validate';
+import VueTelInput from 'vue-tel-input';
+
+Vue.use(VueTelInput);
+Vue.use(VeeValidate);
+
+Validator.extend('check_phone', {
+       getMessage: field => `The phone number not valid`,
+       validate: value => {
+         let phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+         let validity = false
+         try {
+
+           let number = phoneUtil.format(value);
+           validity = (phoneUtil.isValidNumber(number));
+         } catch (e) {
+           console.log(e) ;
+           validity = false ;
+         }
+         return validity;
+       }
+   });
 
 export default {
   name:'admin',
