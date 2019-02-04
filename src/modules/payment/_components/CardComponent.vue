@@ -32,7 +32,7 @@
         </el-radio>
       </div>
     </div>
-    <div v-if="!isHidden">
+    <div v-show="!isHidden">
       <div class="paymentbody--input-wrap">
         <input
           type="text"
@@ -211,6 +211,15 @@ export default {
         }
       } else {
         return false;
+      }
+    },
+  },
+  watch: {
+    get_saved_cards: function() {
+      if (this.get_saved_cards.length === 0) {
+        this.isHidden = false;
+      } else {
+        this.isHidden = true;
       }
     },
   },
