@@ -439,7 +439,6 @@ export default {
     instantiateHomeComponent(){
       this.registerPaymentModule();
       this.registerOrderPlacementModule();
-      this.trackMixpanelEvent('test event');
     },
 
     trackMixpanelEvent(name){
@@ -454,9 +453,6 @@ export default {
       try{
         if(analytics_env === 'production'){
           mixpanel.track(name);
-        }
-        else{
-          console.log('test event');
         }
       }
       catch(er){
