@@ -297,6 +297,7 @@ export default {
             this.loading = false;
             this.setDefaultPackageClass();
             this.setDefaultVendorType(previous_active_vendor);
+            this.trackMixpanelEvent('Make Price Request');
         }, error => {
             if(error.hasOwnProperty('crisis_notification')){
                 this.doNotification(3,error.reason, error.crisis_notification.msg);
@@ -438,6 +439,25 @@ export default {
     instantiateHomeComponent(){
       this.registerPaymentModule();
       this.registerOrderPlacementModule();
+    },
+
+    trackMixpanelEvent(name){
+      let analytics_env = '';
+      try {
+        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } 
+      catch (er) {
+
+      }
+
+      try{
+        if(analytics_env === 'production'){
+          mixpanel.track(name);
+        }
+      }
+      catch(er){
+
+      }
     },
 
   },
