@@ -130,6 +130,7 @@ export default {
 
     setActivePackageClassWrapper(name) {
       this.setActivePackageClass(name);
+      this.trackMixpanelEvent(`Switch To Size: ${name}`);
     },
 
     getVendorIcon(id) {
@@ -197,6 +198,26 @@ export default {
     setVendorDetails(vendorObject){
       this.setActiveVendorName(vendorObject.vendor_name);
       this.setActiveVendorDetails(vendorObject);
+      this.trackMixpanelEvent(`Select Vendor: ${vendorObject.vendor_name}`);
+    },
+
+    trackMixpanelEvent(name){
+      let analytics_env = '';
+      try {
+        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } 
+      catch (er) {
+
+      }
+
+      try{
+        if(analytics_env === 'production'){
+          mixpanel.track(name);
+        }
+      }
+      catch(er){
+
+      }
     },
 
   },
