@@ -15,21 +15,21 @@ import VeeValidate from 'vee-validate';
 import { Validator } from 'vee-validate';
 import VueTelInput from 'vue-tel-input'
 
-Vue.use(VueTelInput);
+Vue.use(VueTelInput)
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
        getMessage: field => `The phone number not valid`,
        validate: value => {
-         let phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-         let validity = false;
+         const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+         var validity = false
          try {
 
-           let number = phoneUtil.format(value);
+           var number = phoneUtil.parse(value);
            validity = (phoneUtil.isValidNumber(number));
          } catch (e) {
-           console.log(e);
-           validity = false;
+           console.log(e)
+           validity = false
          }
          return validity;
        }

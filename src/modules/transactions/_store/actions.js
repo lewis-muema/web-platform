@@ -15,7 +15,7 @@ export default {
             dispatch("requestAxiosPost", payload, {root: true}).then(response => {
                 console.log('in store dispatch to global store')
                 if(response.length > 1){
-                    response = response[0];
+                    response = response[0];    
                 }
                 if (response.data.status == true) {
                     commit('setOrderHistoryOrders',response.data.data);
@@ -38,7 +38,7 @@ export default {
             dispatch("requestAxiosPost", payload, {root: true}).then(response => {
                 console.log('in store dispatch to global store')
                 if(response.length > 1){
-                    response = response[0];
+                    response = response[0];    
                 }
                 if (response.data.status == true) {
                     commit('setCopUsers',response.data.data);
@@ -89,29 +89,6 @@ export default {
              });
 
         })
-    },
-    requestDisputeDeliveryDocs({commit, dispatch}, payload)
-   {
-     return new Promise((resolve, reject) => {
-        dispatch('requestAxiosPost', payload, {root: true}).then(response => {
-             console.log('in store dispatch to global store')
-                 resolve(response.data);
-          }, error => {
-             reject(error);
-             console.log('failed to dispatch to global store')
-          });
-     })
-   },
-   requestDisputeStatus({commit, dispatch}, payload)
-  {
-    return new Promise((resolve, reject) => {
-       dispatch('requestAxiosPost', payload, {root: true}).then(response => {
-            console.log('in store dispatch to global store')
-                resolve(response.data);
-         }, error => {
-            reject(error);
-            console.log('failed to dispatch to global store')
-         });
-    })
-  },
+    }
+
 };
