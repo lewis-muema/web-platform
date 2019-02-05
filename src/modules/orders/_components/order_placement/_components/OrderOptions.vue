@@ -563,6 +563,7 @@ export default {
             const order_no = this.activeVendorPriceData.order_no;
             this.should_destroy = true;
             this.$store.dispatch('$_orders/fetch_ongoing_orders');
+            this.trackMixpanelEvent('Place Order');
             this.$router.push({
               name: 'tracking',
               params: {
@@ -636,6 +637,7 @@ export default {
       payload = {
         values: payload,
       };
+      this.identifyMixpanelUser(acc.user_email);
       return payload;
     },
 
@@ -721,6 +723,44 @@ export default {
     getCardIcon(card) {
       const name = `cc-${card.type.toLowerCase()}`;
       return ['fab', name];
+    },
+
+    identifyMixpanelUser(email){
+      let analytics_env = '';
+      try {
+        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } 
+      catch (er) {
+
+      }
+      try{
+        if(analytics_env === 'production'){
+          mixpanel.identify(email);
+        }
+         
+      }
+      catch(er){
+       
+      }
+    },
+
+    trackMixpanelEvent(name){
+      let analytics_env = '';
+      try {
+        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } 
+      catch (er) {
+
+      }
+
+      try{
+        if(analytics_env === 'production'){
+          mixpanel.track(name);
+        }
+      }
+      catch(er){
+
+      }
     },
 
     /* start mpesa */
