@@ -101,8 +101,8 @@
                           'cop_id': session[session.default]['cop_id'],
                           'cop_name': this.cop_name,
                           'cop_contact_person': this.contact_name,
-                          'cop_email': this.contact_email,
-                          'cop_phone': phone,
+                          'cop_biz_email': this.contact_email,
+                          'cop_biz_phone': phone,
                       };
 
                       let full_payload = {
@@ -116,8 +116,8 @@
                               let updated_session = session;
                               updated_session[session.default]['cop_name'] = this.cop_name;
                               updated_session[session.default]['cop_contact_person'] = this.contact_name;
-                              updated_session[session.default]['cop_email'] = this.contact_email;
-                              updated_session[session.default]['cop_phone'] = phone;
+                              updated_session[session.default]['cop_biz_email'] = this.contact_email;
+                              updated_session[session.default]['cop_biz_phone'] = phone;
 
 
                               let new_session = JSON.stringify(updated_session);
