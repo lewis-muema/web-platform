@@ -5,6 +5,18 @@
     <div class="paymentbody--input-wrap">
         <input type="number" name="card_payment_amount" v-model="card_payment_data.amount" placeholder="Amount" class="input-control paymentbody--input">
     </div>
+    <div v-show="!isHidden">
+      <div class="paymentbody--input-wrap">
+        <input
+          type="text"
+          name="card_payment_card_no"
+          @change="creditCardMask()"
+          @keyup="creditCardMask()"
+          v-model="card_payment_data.card_no"
+          placeholder="Card Number"
+          class="input-control paymentbody--input"
+        />
+      </div>
 
     <div class="paymentbody--input-wrap">
         <input type="text" name="card_payment_card_no" @change="creditCardMask()" @keyup="creditCardMask()" v-model="card_payment_data.card_no" placeholder="Card Number" class="input-control paymentbody--input">
@@ -55,76 +67,123 @@ import add_card from './AddCard.vue';
 import Mcrypt from '../../../mixins/mcrypt_mixin.js';
 
 export default {
-	name: 'card-component',
-	mixins: [Mcrypt],
-	components: { payment_loading, payment_success, payment_fail, add_card },
-	data() {
-		return {
-			card_payment_data: {
-				card_expiry: '',
-				cvv: '',
-				card_no: '',
-				amount: '',
-				is_save: true,
-			},
-			payment_state: 'Attempting Payment',
-			show_cvv: false,
-		};
-	},
-	mounted() {},
-	computed: {
-		...mapGetters({
-			card_fail_status: '$_payment/getCardFailStatus',
-			card_loading_status: '$_payment/getCardLoadingStatus',
-			card_success_status: '$_payment/getCardSuccessStatus',
-		}),
-		valid_payment() {
-			return (
-				this.card_payment_data.card_expiry !== '' &&
-				this.card_payment_data.amount !== '' &&
-				this.card_payment_data.card_no !== '' &&
-				this.card_payment_data.cvv !== ''
-			);
-		},
-		cvv_state() {
-			return this.show_cvv;
-		},
-		card_expiry_month() {
-			let exp = this.card_payment_data.card_expiry;
-			if (exp.length === 5) {
-				return exp.slice(0, 2);
-			}
-			return '';
-		},
-		card_expiry_year() {
-			let exp = this.card_payment_data.card_expiry;
-			if (exp.length === 5) {
-				return exp.slice(3);
-			}
-		},
-		card_add_status() {
-			if (typeof this.$route.query.action !== 'undefined') {
-				let action = this.$route.query.action;
-				if (action === 'add') {
-					return true;
-				}
-			} else {
-				return false;
-			}
-		},
-	},
-	methods: {
-		showCvv() {
-			if (this.show_cvv) {
-				this.show_cvv = false;
-			} else {
-				this.show_cvv = true;
-			}
-		},
-		...mapActions({
-			requestCardPaymentAction: '$_payment/requestCardPayment',
-			completeCardPaymentAction: '$_payment/completeCardPaymentRequest',
-		}),
+  name: 'card-component',
+  mixins: [Mcrypt],
+  components: { payment_loading, payment_success, payment_fail, add_card },
+  data() {
+    return {
+      card_payment_data: {
+        card_expiry: '',
+        cvv: '',
+        card_no: '',
+        amount: '',
+        is_save: true,
+      },
+      payment_card: '',
+      activeNames: ['1'],
+      isHidden: false,
+      payment_state: 'Attempting Payment',
+      show_cvv: false,
+    };
+  },
+  mounted() {},
+  computed: {
+    ...mapGetters({
+      card_fail_status: '$_payment/getCardFailStatus',
+      card_loading_status: '$_payment/getCardLoadingStatus',
+      card_success_status: '$_payment/getCardSuccessStatus',
+      get_saved_cards: '$_payment/getSavedCards',
+      get_stripe_user_id: '$_payment/getStripeUserId',
+    }),
+    valid_payment() {
+      if (this.payment_card.startsWith('2_')) {
+        return this.card_payment_data.amount !== '';
+      } else if (this.payment_card === 1) {
+        return (
+          this.card_payment_data.card_expiry !== '' &&
+          this.card_payment_data.amount !== '' &&
+          this.card_payment_data.card_no !== '' &&
+          this.card_payment_data.cvv !== ''
+        );
+      } else {
+        return (
+          this.card_payment_data.card_expiry !== '' &&
+          this.card_payment_data.amount !== '' &&
+          this.card_payment_data.card_no !== '' &&
+          this.card_payment_data.cvv !== ''
+        );
+      }
+    },
+    cvv_state() {
+      return this.show_cvv;
+    },
+    card_expiry_month() {
+      let exp = this.card_payment_data.card_expiry;
+      if (exp.length === 5) {
+        return exp.slice(0, 2);
+      }
+      return '';
+    },
+    card_expiry_year() {
+      let exp = this.card_payment_data.card_expiry;
+      if (exp.length === 5) {
+        return exp.slice(3);
+      }
+    },
+    card_add_status() {
+      if (typeof this.$route.query.action !== 'undefined') {
+        let action = this.$route.query.action;
+        if (action === 'add') {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    },
+  },
+  watch: {
+    get_saved_cards: function() {
+      if (this.get_saved_cards.length === 0) {
+        this.isHidden = false;
+      } else {
+        this.isHidden = true;
+      }
+    },
+  },
+  methods: {
+    showCvv() {
+      if (this.show_cvv) {
+        this.show_cvv = false;
+      } else {
+        this.show_cvv = true;
+      }
+    },
+    ...mapActions({
+      requestCardPaymentAction: '$_payment/requestCardPayment',
+      completeCardPaymentAction: '$_payment/completeCardPaymentRequest',
+      requestSavedCards: '$_payment/requestSavedCards',
+      removeSavedCard: '$_payment/deleteSavedCard',
+    }),
+    ...mapMutations({
+      setSavedCards: '$_payment/setSavedCards',
+      setStripeUserId: '$_payment/setStripeUserId',
+    }),
+    getPaymentCard() {
+      if (this.payment_card.startsWith('2_')) {
+        const card = this.get_saved_cards.find(
+          card_details => card_details.last4 === this.payment_card.slice(2)
+        );
+        this.handleSavedCard(card);
+      } else {
+        this.handleNewCardPayment();
+      }
+    },
+    handleSavedCard(card) {
+      let card_payload = {
+        amount: Mcrypt.encrypt(this.card_payment_data.amount),
+        last4: Mcrypt.encrypt(card.last4),
+        stripe_user_id: this.get_stripe_user_id,
+      };
 
 		handleCardPayment() {
 			//sort encryption
