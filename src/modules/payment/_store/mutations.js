@@ -16,11 +16,5 @@ export default {
   },
   setCardLoadingStatus(state, status) {
     state.card_loading_status = status;
-  },
-  setSavedCards(state, status) {
-    state.saved_cards = status;
-  },
-  setStripeUserId(state, status) {
-    state.stripe_user_id = status;
-  },
+  }
 };
