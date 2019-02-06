@@ -34,7 +34,7 @@
 </template>
 
 <script>
-    import SessionMxn from "../../../mixins/session_mixin.js";
+    import SessionMxn from '../../../mixins/session_mixin.js';
     import {mapGetters, mapActions} from 'vuex'
 
     export default {
@@ -45,7 +45,7 @@
                 // user_id: '',
                 user_name: '',
                 user_email: '',
-                phone: ''
+                phone: '',
             }
         },
         mounted() {
@@ -79,89 +79,80 @@
             }),
             save_personal: function () {
               if (
-                this.user_name != "" &&
-                this.user_email != "" &&
-                this.phone != ""
+                this.user_name !== '' &&
+                this.user_email !== '' &&
+                this.phone !== ''
               ){
                 let phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
                 let phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
 
-              if (phone_valid == true) {
+              if (phone_valid) {
 
 
                 let phone = this.phone.replace(/[\(\)\-\s]+/g, '');
 
                   let session = this.$store.getters.getSession;
-                  console.log('session', session[session.default]['user_id']);
 
-                    if (session.default == 'biz') {
-                        console.log("Cop user found");
+                    if (session.default === 'biz') {
                         let values = {
-                            "cop_user_id": session[session.default]['user_id'],
-                            "user_name": this.user_name,
-                            "user_email": this.user_email,
-                            "user_phone": phone
+                            'cop_user_id': session[session.default]['user_id'],
+                            'user_name': this.user_name,
+                            'user_email': this.user_email,
+                            'user_phone': phone,
                         };
 
                         let full_payload = {
-                            "values": values,
-                            "vm": this,
-                            "app": "NODE_PRIVATE_API",
-                            "endpoint": "update_user"
+                            'values': values,
+                            'vm': this,
+                            'app': 'NODE_PRIVATE_API',
+                            'endpoint': 'update_user',
                         }
 
                         this.requestPersonalInfo(full_payload).then(response => {
-                            if (response.status == true) {
+                            if (response.status) {
                                 let updated_session = session;
                                 updated_session[session.default]['user_name'] = this.user_name;
                                 updated_session[session.default]['user_phone'] = phone;
                                 updated_session[session.default]['user_email'] = this.user_email;
 
                                 let new_session = JSON.stringify(updated_session);
-                                console.log('New session',new_session);
                                 this.setSession(new_session);
-
-                                console.log('updated session',updated_session);
-                                console.log("Personal Cop User Information Updated successfully")
-                                console.log(response);
                                 let level = 1; //success
-                                this.message = "Details Saved!"
-                                let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                                this.message = 'Details Saved!';
+                                let notification = {'title': '', 'level': level, 'message': this.message,}; //notification object
                                 this.$store.commit('setNotification', notification);
                                 this.$store.commit('setNotificationStatus', true); //activate notification
                             }
                             else {
                                 console.warn('Cop user details Update Failed');
                                 let level = 3;
-                                this.message = "Something went wrong."
-                                let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                                this.message = 'Something went wrong.';
+                                let notification = {'title': '', 'level': level, 'message': this.message,}; //notification object
                                 this.$store.commit('setNotification', notification);
                                 this.$store.commit('setNotificationStatus', true); //activate notification
 
                             }
                         }, error => {
-                            console.error("Check Internet Connection")
                             console.log(error);
                         });
                     }
-                    else if (session.default == 'peer') {
-                        console.log("Peer Account Found");
+                    else if (session.default === 'peer') {
                         let values = {
-                            "user_id": session[session.default]['user_id'],
-                            "user_name": session[session.default]['user_name'],
-                            "user_email": session[session.default]['user_email'],
-                            "user_phone": session[session.default]['user_phone'],
+                            'user_id': session[session.default]['user_id'],
+                            'user_name': session[session.default]['user_name'],
+                            'user_email': session[session.default]['user_email'],
+                            'user_phone': session[session.default]['user_phone'],
                         };
 
                         let full_payload = {
-                            "values": values,
-                            "vm": this,
-                            "app": "NODE_PRIVATE_API",
-                            "endpoint": "update_user"
+                            'values': values,
+                            'vm': this,
+                            'app': 'NODE_PRIVATE_API',
+                            'endpoint': 'update_user',
                         }
 
                         this.requestPersonalInfo(full_payload).then(response => {
-                            if (response.status == true) {
+                            if (response.status) {
                               let updated_session = session;
                               updated_session[session.default]['user_name'] = this.user_name;
                               updated_session[session.default]['user_phone'] = phone;
@@ -169,38 +160,33 @@
 
                               let new_session = JSON.stringify(updated_session);
                               this.setSession(new_session);
-                              this.$store.commit("setSession", updated_session);
+                              this.$store.commit('setSession', updated_session);
 
-                                console.log("Personal Peer Information Updated successfully")
-                                console.log(response);
                                 let level = 1; //success
-                                this.message = "Details Saved!"
-                                let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                                this.message = 'Details Saved!';
+                                let notification = {'title': '', 'level': level, 'message': this.message,}; //notification object
                                 this.$store.commit('setNotification', notification);
                                 this.$store.commit('setNotificationStatus', true); //activate notification
                             }
                             else {
                                 console.warn('Peer details Update Failed');
                                 let level = 3;
-                                this.message = "Something went wrong."
-                                let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                                this.message = 'Something went wrong.';
+                                let notification = {'title': '', 'level': level, 'message': this.message,}; //notification object
                                 this.$store.commit('setNotification', notification);
                                 this.$store.commit('setNotificationStatus', true); //activate notification
 
                             }
                         }, error => {
-                            console.error("Check Internet Connection")
                             console.log(error);
                             let level = 3;
-                            this.message = "Something went wrong."
-                            let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                            this.message = 'Something went wrong.'
+                            let notification = {'title': '', 'level': level, 'message': this.message,}; //notification object
                             this.$store.commit('setNotification', notification);
                             this.$store.commit('setNotificationStatus', true); //activate notification
                         });
                     }
                     else {
-
-                        console.log("Session expired");
                         this.$router.push('/auth');
                     }
 
@@ -209,8 +195,8 @@
                   else {
 
                     let level = 3;
-                    this.message = "Invalid Phone Number"
-                    let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                    this.message = 'Invalid Phone Number';
+                    let notification = {'title': '', 'level': level, 'message': this.message,}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true);
                   }
@@ -219,8 +205,8 @@
                 else {
 
                   let level = 3;
-                  this.message = "Provide all details"
-                  let notification = {"title": "", "level": level, "message": this.message}; //notification object
+                  this.message = 'Provide all details';
+                  let notification = {'title': '', 'level': level, 'message': this.message,}; //notification object
                   this.$store.commit('setNotification', notification);
                   this.$store.commit('setNotificationStatus', true);
 
