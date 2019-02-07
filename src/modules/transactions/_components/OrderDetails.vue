@@ -60,16 +60,18 @@
         <div class="rider_details_item">
           {{ order_details.rider.number_plate }}
         </div>
-        <div class="rider_details_item">
-          <el-rate
-            v-model="order_details.rider.rider_rating"
-            disabled
-            class="el-rate__icon"
-            disabled-void-color="#C0C4CC"
-            :colors="['#1782C5', '#1782C5', '#1782C5']"
-            score-template="{value} points"
-          >
-          </el-rate>
+        <div class="rider_details_item" v-if="order_details.order_details.delivery_status == 3">
+          <div v-if="order_details.rider.rider_rating != null">
+            <el-rate
+              v-model="order_details.rider.rider_rating"
+              disabled
+              class="el-rate__icon"
+              disabled-void-color="#C0C4CC"
+              :colors="['#1782C5', '#1782C5', '#1782C5']"
+              score-template="{value} points"
+            >
+            </el-rate>
+          </div>
         </div>
 
         <div class="rider_details_actions">
