@@ -42,7 +42,8 @@ import {
   Popover,
   RadioGroup,
   RadioButton,
-} from "element-ui";
+  Autocomplete,
+} from 'element-ui';
 
 Vue.use(Pagination);
 Vue.use(RadioGroup);
@@ -66,6 +67,7 @@ Vue.use(TimePicker);
 Vue.use(Icon);
 Vue.use(Rate);
 Vue.use(Popover);
+Vue.use(Autocomplete);
 Vue.use(Loading.directive);
 
 Vue.prototype.$loading = Loading.service;

@@ -633,6 +633,12 @@ export default {
         vendor_type: this.activeVendorPriceData.vendor_id,
         rider_phone: this.activeVendorPriceData.order_no,
         type: this.payment_type,
+        max_temperature:'',
+        delivery_item:'',
+        load_weight:'',
+        load_units:'',
+        additional_loader:'',
+        no_of_loaders:'',
       };
       payload = {
         values: payload,
