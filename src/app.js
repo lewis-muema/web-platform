@@ -35,6 +35,10 @@ import {
   TimePicker,
   Icon,
   Rate,
+  Steps,
+  Step,
+  Row,
+  Col,
   Loading,
   MessageBox,
   Message,
@@ -55,7 +59,11 @@ Vue.use(Input);
 Vue.use(InputNumber);
 Vue.use(Radio);
 Vue.use(Checkbox);
+Vue.use(Steps);
+Vue.use(Step);
 Vue.use(Select);
+Vue.use(Row);
+Vue.use(Col);
 Vue.use(Option);
 Vue.use(Button);
 Vue.use(Table);

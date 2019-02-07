@@ -1,8 +1,284 @@
 <template lang="html">
+  <div>
+   <div class="truck-info-component" v-if="this.truckMoreInfo">
   <transition
     name="fade"
     mode="out-in"
   >
+    <div v-if="loading == false" class="infobar--truck--outer">
+       <div class="infobar-content infobar--content-padded" key="prime">
+
+         <el-row :gutter="20" class="infobar-content infobar--truck-item  infobar--item-truck-bordered infobar-truck-pstn">
+           <el-col :span="6">
+             <div class="">
+               <i class="el-icon-success top-bar-info"></i>
+                ORDER : {{ tracking_data.order_no }}
+             </div>
+           </el-col>
+           <el-col :span="6">
+             <div class="">
+               <img src="https://images.sendyit.com/web_platform/tracking/status.svg" alt="" class="top-bar-img">
+               <span>
+                 STATUS : {{ getStatus }}
+               </span>
+             </div>
+           </el-col>
+           <el-col :span="6">
+             <div class="">
+               <div class="topbar-text">
+                 <font-awesome-icon icon="wallet" class="top-bar-info" />
+                 COST : KES {{ tracking_data.amount }}
+               </div>
+             </div>
+           </el-col>
+           <el-col :span="5">
+             <div class="">
+               <div class="topbar-text">
+                   ORDER TIMELINE
+               </div>
+             </div>
+           </el-col>
+           <el-col :span="1">
+             <div v-if="this.truckMoreInfo"
+               class="infobar--actions-hover"
+               @click="minimiseInfoDetails()"
+             >
+               <div class="infobar--actions-icon">
+                 <i class="el-icon-remove-outline" />
+               </div>
+             </div>
+           </el-col>
+         </el-row>
+            <el-row :gutter="20" class="infobar-content infobar--truck-cont-item" style="padding-bottom: 5px;">
+            <el-col :span="5">
+              <div class="infobar--item-truck-cont-bordered inforbar--item-scrollable">
+                <ul class="timeline" style="">
+                  <li>
+                    <p>PICKUP LOCATION</p>
+                    <p>Lorem ipsum dolor sit amet,</p>
+                  </li>
+                     <div class="" style="padding-left: 13px;">
+                       <p>PICKUP DATE</p>
+                       <p>21 March, 2014</p>
+                     </div>
+                  <li>
+                    <p>DESTINATION</p>
+                    <p>Lorem ipsum dolor sit amet,</p>
+                  </li>
+                </ul>
+              </div>
+            </el-col>
+            <el-col :span="5">
+              <div class="infobar--item-truck-cont-bordered" style="padding-left: 30px;">
+                <div class="" style="padding-bottom: 10px;">
+                  <div class="" style="">
+                    <img src="https://images.sendyit.com/web_platform/vendor_type/side/20.svg" alt="" class="infobar-truck-img">
+                    <span>
+                      TRUCK
+                    </span>
+                  </div>
+                  <div class="" style="padding-left:35px;">
+                       28 TonneTruck, Closed
+                  </div>
+                </div>
+                <div class="" style="padding-bottom: 10px;">
+                  <div class="">
+                    <img src="https://images.sendyit.com/web_platform/tracking/goods.svg" alt="" class="infobar-truck-img">
+                    <span>
+                      GOODS TO BE DELIVERED
+                    </span>
+                  </div>
+                  <div class="" style="padding-left:35px;">
+                        Milk and Yoghurt
+                  </div>
+                </div>
+                <div class="" style="padding-bottom: 10px;">
+                  <div class="">
+                    <img src="https://images.sendyit.com/web_platform/tracking/load_weight.svg" alt="" class="infobar-truck-img">
+                    <span>
+                      LOAD WEIGHT
+                    </span>
+                  </div>
+                  <div class="" style="padding-left:35px;">
+                        0.75 Tonnes
+                  </div>
+                </div>
+                <div class="" style="padding-bottom: 10px;">
+                  <div class="">
+                    <img src="https://images.sendyit.com/web_platform/tracking/loader.svg" alt="" class="infobar-truck-img">
+                    <span>
+                      DO YOU NEED A LOADER
+                    </span>
+                  </div>
+                  <div class="" style="padding-left:35px;">
+                        Yes,7 loaders
+                  </div>
+                </div>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="infobar--item-truck-cont-bordered" style="padding-bottom: 10px;padding-left: 30px;" >
+                <div class="">
+                      NOTES
+                </div>
+                <div class="" style="max-width: 80%!important;">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut elementum enim. Nullam ultrices, nisl vel eleifend porttitor, dui nulla tristique libero, at dictum elit ipsum non neque
+                </div>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="">
+                <div class="inforbar--item-scrollable">
+                  <ul class="timeline" style="">
+                   <li>
+                     <div class="">
+                       <p>ORDER PLACED</p>
+                       <p>Your order has been received and we shall notify you on the actual cost shortly</p>
+                        <p>21 March, 2014</p>
+                     </div>
+                   </li>
+                   <li>
+                     <div class="">
+                       <p>PRICE CONFIRMATION</p>
+                       <div class="">
+                         <p>Price has been confirmed to be Ksh {{tracking_data.amount}}.Choose payment option below</p>
+                          <div class="">
+                            <el-radio v-model="paymentOption" label="1">M-Pesa</el-radio>
+                          </div>
+                          <div class="">
+                            <el-radio v-model="paymentOption" label="2">Card</el-radio>
+                          </div>
+                          <div class="" style="padding-left: 5px; padding-top: 10px;">
+                            <input type="submit" class="button-primary" style="width:200px;"
+                                   value="Make Payment"/>
+                          </div>
+                       </div>
+                         <div class="">
+                           <p>Price has been confirmed to be Ksh {{tracking_data.amount}}</p>
+                           <p>21 March, 2014</p>
+                         </div>
+                     </div>
+                    </li>
+                    <li>
+                      <div class="">
+                        <p>DRIVER ASSIGNED</p>
+                        <p>Lorem ipsum dolor sit amet,</p>
+                        <p>21 March, 2014</p>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="">
+                        <p>DRIVER ARRIVAL</p>
+                        <p>Lorem ipsum dolor sit amet,</p>
+                        <p>21 March, 2014</p>
+                      </div>
+                    </li>
+                 </ul>
+              </div>
+              </div>
+            </el-col>
+
+          </el-row>
+          <div class="save-option" v-if="this.getStatus == 'Pending'">
+            <el-row :gutter="20" class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top" style="padding-bottom: 5px;padding-top: 10px;text-align:center;max-width:70%;margin-left: -35px;">
+              <el-col :span="6">
+                <div class="">
+                  <img src="https://images.sendyit.com/web_platform/tracking/save.svg" alt="" class="infobar-truck-img">
+                  <span> SAVE DETAILS </span>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="" style="padding-top:4px;cursor:pointer;" @click="canceldialog()">
+                  <i class="el-icon-circle-close top-bar-info"></i>
+                     CANCEL ORDER
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+
+          <div class="rider-info" v-if="this.getStatus !== 'Pending'">
+            <el-row :gutter="20" class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top" style="padding-bottom: 5px;padding-top: 10px;text-align:center;max-width:70%">
+              <el-col :span="6">
+                <div class="">
+                  <img
+                    class="rimg"
+                    :src="tracking_data.rider.rider_photo" style="height: 55px;vertical-align: middle;"
+                  >
+                  <span> James </span>
+                  <span> 0700536660 </span>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="">
+                  <img
+                    class="rimg"
+                    :src="tracking_data.rider.rider_photo" style="height: 55px;vertical-align: middle;"
+                  >
+                  <span>KCA 320J</span>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="" style="padding-top: 20px;">
+                  <i class="el-icon-share top-bar-info" ></i>
+                     SHARE
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+       </div>
+       <el-dialog :visible.sync="cancelOption" class="cancelOptions">
+         <div class="">
+           <div class="" style="text-align:center;">
+             Cancel this order?
+           </div>
+           <div class="" style="text-align:center;">
+             You can place another one at any time.
+           </div>
+         </div>
+         <div class="" style="padding-left: 30%;margin-bottom: 10px;margin-top: 10px;">
+           <div class="">
+               <el-radio v-model="cancel_reason" label="4">I placed the wrong locations</el-radio>
+             </div>
+             <div class="">
+               <el-radio v-model="cancel_reason" label="5">My order is not ready</el-radio>
+             </div>
+             <div class="">
+                 <el-radio v-model="cancel_reason" label="7">No driver has been allocated</el-radio>
+               </div>
+               <div class="">
+                 <el-radio v-model="cancel_reason" label="8">I placed this order twice</el-radio>
+               </div>
+         </div>
+         <div class="action--slide-desc">
+           <button
+             type="button"
+             name="button"
+             class="action--slide-button"
+             @click="cancelOrder()"
+           >
+             Yes
+           </button>
+           <button
+             type="button"
+             name="button"
+             class="action--slide-button"
+             @click="cancelToggle()"
+           >
+             No
+           </button>
+         </div>
+         </el-dialog>
+
+    </div>
+  </transition>
+</div>
+
+  <div>
+    <transition
+      name="fade"
+      mode="out-in"
+    >
+    <div v-if="!(this.truckMoreInfo)">
     <div
       v-if="loading == false"
       class="infobar--outer"
@@ -64,9 +340,9 @@
                 {{ moment(tracking_data.date_time).format("h:mm a") }}
               </span>
             </span>
-            <!-- <span class="" v-else>
+            <span class="" v-else>
               Estimated Delivery: <span class=""> {{this.tracking_data.etd}} </span>
-            </span> -->
+            </span>
           </div>
         </div>
         <div
@@ -147,7 +423,19 @@
             </div>
           </div>
           <div
-            v-if="!(tracking_data.delivery_status > 1)"
+            v-if=""
+            class="infobar--actions-hover"
+            @click="maximiseInfoDetails()"
+          >
+            <div class="infobar--actions-icon">
+              <i class="el-icon-circle-plus-outline" />
+            </div>
+            <div class="infobar--actions-text">
+              Expand Info
+            </div>
+          </div>
+          <div
+            v-if=""
             class="infobar--actions-hover"
             @click="cancelToggle()"
           >
@@ -161,7 +449,10 @@
         </div>
       </div>
     </div>
+  </div>
   </transition>
+  </div>
+</div>
 </template>
 
 <script>
@@ -176,6 +467,10 @@ export default {
       cancel_popup: 0,
       cancel_reason: -1,
       cancel_desc: '',
+      maximiseInfo: 0,
+      cancelOption:false,
+      paymentOption:'',
+      truckMoreInfo:false,
     };
   },
   computed: {
@@ -228,6 +523,7 @@ export default {
   },
   created() {
     this.order_number = this.$route.params.order_no;
+    console.log('tracking',this.tracking_data);
   },
   methods: {
     cancelChange(reason) {
@@ -283,6 +579,15 @@ export default {
       } else {
         this.cancel_popup = 1;
       }
+    },
+    maximiseInfoDetails() {
+      this.truckMoreInfo = true;
+    },
+    minimiseInfoDetails() {
+      this.truckMoreInfo = false;
+    },
+    canceldialog(){
+      this.cancelOption = true ;
     },
     place() {
       if (this.$route.name !== 'tracking_external') {
@@ -531,5 +836,121 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+}
+.infobar--truck--outer{
+  display: flex;
+  position: fixed;
+  bottom: 20px;
+  width: 98%;
+  margin: 0 1%;
+  background-color: #fff;
+  color: #555;
+  font-size: 13px;
+  min-height: 90px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+  border-radius: 3px;
+
+}
+.infobar--truck-content{
+  display: flex;
+  flex: 1 1 auto;
+}
+.infobar--truck-content-padded{
+  padding: 15px 0;
+}
+.infobar--truck-item{
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding-left: 8%;
+}
+.infobar-content{
+  flex: 1 1 auto;
+}
+.infobar--item-truck-bordered{
+  border-bottom: 1px solid #74696942;
+}
+.infobar--item-truck-bordered-top{
+  border-top: 1px solid #74696942;
+}
+.infobar-content{
+  flex: 1 1 auto;
+}
+.infobar--truck-cont-item{
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding-left: 8%;
+}
+.infobar--item-truck-cont-bordered{
+  border-right: 1px solid #74696942;
+}
+.el-row {
+  margin-bottom: 20px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+.el-col {
+  border-radius: 4px;
+}
+ul.timeline {
+    list-style-type: none;
+    position: relative;
+}
+ul.timeline:before {
+    content: ' ';
+    background: #d4d9df;
+    display: inline-block;
+    position: absolute;
+    left: 29px;
+    width: 2px;
+    height: 100%;
+    z-index: 400;
+}
+ul.timeline > li {
+    margin: 20px 0;
+    padding-left: 20px;
+    max-height: 300px;
+}
+ul.timeline > li:before {
+    content: ' ';
+    background: white;
+    display: inline-block;
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid #22c0e8;
+    left: 20px;
+    width: 14px;
+    height: 14px;
+    z-index: 400;
+}
+.cancelOptions > div
+{
+  margin-top: 16em !important;
+  width: 30% !important;
+}
+.v-modal{
+  opacity: 0 !important;
+}
+.infobar-truck-pstn{
+  padding-bottom: 15px;
+}
+.topbar-text{
+  padding-bottom: 10px;
+}
+.top-bar-info{
+  color: #1782C5;
+  font-size: 15px;
+}
+.top-bar-img{
+  height:15px;
+  vertical-align:middle;
+}
+.inforbar--item-scrollable{
+  overflow-y: scroll;
+  height: 170px;
+}
+.infobar-truck-img{
+  height:20px;
+  vertical-align:middle;
 }
 </style>
