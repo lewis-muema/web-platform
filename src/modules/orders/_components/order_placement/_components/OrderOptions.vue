@@ -1,20 +1,22 @@
 <template lang="html">
   <div class="">
     <div class="">
-      <div v-if="allow_return"
-class="homeview-locations-options--set-return">
+      <div
+        v-if="allow_return"
+        class="homeview-locations-options--set-return"
+      >
         <el-checkbox
-v-model="return_status"
-                     @input="dispatchReturnToPickup"
->
+          v-model="return_status"
+          @input="dispatchReturnToPickup"
+        >
           Return to pick up
         </el-checkbox>
       </div>
       <div class="home-view-vendor-classes--label">
         <div
-class="home-view-vendor-classes-label-item"
-             @click="do_set_active_order_option('payment')"
->
+          class="home-view-vendor-classes-label-item"
+          @click="do_set_active_order_option('payment')"
+        >
           <a
             class="home-view-vendor-classes-menu section__link"
             :class="get_current_active_order_option_class('payment')"
@@ -25,9 +27,9 @@ class="home-view-vendor-classes-label-item"
           </a>
         </div>
         <div
-class="home-view-vendor-classes-label-item"
-             @click="do_set_active_order_option('note')"
->
+          class="home-view-vendor-classes-label-item"
+          @click="do_set_active_order_option('note')"
+        >
           <a
             class="home-view-vendor-classes-menu section__link"
             :class="get_current_active_order_option_class('note')"
@@ -38,9 +40,9 @@ class="home-view-vendor-classes-label-item"
           </a>
         </div>
         <div
-class="home-view-vendor-classes-label-item"
-             @click="do_set_active_order_option('schedule')"
->
+          class="home-view-vendor-classes-label-item"
+          @click="do_set_active_order_option('schedule')"
+        >
           <a
             class="home-view-vendor-classes-menu section__link"
             :class="get_current_active_order_option_class('schedule')"
@@ -53,12 +55,16 @@ class="home-view-vendor-classes-label-item"
       </div>
     </div>
 
-    <div v-if="get_active_order_option === 'payment'"
-class="home-view-actions--note">
+    <div
+      v-if="get_active_order_option === 'payment'"
+      class="home-view-actions--note"
+    >
       <div class="" />
       <div class="home-view-notes-wrapper">
-        <div v-show="show_payment"
-class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
+        <div
+          v-show="show_payment"
+          class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
+        >
           <div class="home-view-payments-wrapper">
             <div class="home-view-payments-wrapper--left">
               <div class="home-view-payments-wrapper--left__amount-label">
@@ -84,9 +90,9 @@ class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
             <div class="home-view-notes-wrapper--item__option">
               <div class="home-view-notes-wrapper--item__option-div">
                 <el-radio
-v-model="payment_method"
-                          label="1"
->
+                  v-model="payment_method"
+                  label="1"
+                >
                   M-Pesa
                 </el-radio>
               </div>
@@ -98,9 +104,9 @@ v-model="payment_method"
               <div class="home-view-notes-wrapper--item__option">
                 <div class="home-view-notes-wrapper--item__option-div">
                   <el-radio
-v-model="payment_method"
-                            label="3"
->
+                    v-model="payment_method"
+                    label="3"
+                  >
                     Payment on delivery
                   </el-radio>
                 </div>
@@ -108,8 +114,10 @@ v-model="payment_method"
               <div class="home-view-notes-wrapper--item__value" />
             </div>
           </span>
-          <div v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0"
-class="">
+          <div
+            v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0"
+            class=""
+          >
             <div
               v-for="card in get_saved_cards"
               class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
@@ -117,13 +125,13 @@ class="">
               <div class="home-view-notes-wrapper--item__option">
                 <div class="home-view-notes-wrapper--item__option-div">
                   <el-radio
-v-model="payment_method"
-                            :label="getCardValue(card.last4)"
->
+                    v-model="payment_method"
+                    :label="getCardValue(card.last4)"
+                  >
                     **** **** **** {{ card.last4 }} <font-awesome-icon
-:icon="getCardIcon(card)"
-                                                                       class="payments-orange"
-/>
+                      :icon="getCardIcon(card)"
+                      class="payments-orange"
+                    />
                   </el-radio>
                 </div>
               </div>
@@ -134,9 +142,9 @@ v-model="payment_method"
             <div class="home-view-notes-wrapper--item__option">
               <div class="home-view-notes-wrapper--item__option-div">
                 <div
-class="home-view-notes-wrapper--item__link"
-                     @click="takeMeToAddNewCard()"
->
+                  class="home-view-notes-wrapper--item__link"
+                  @click="takeMeToAddNewCard()"
+                >
                   +  &nbsp;&nbsp; Visa/Mastercard
                 </div>
               </div>
@@ -153,20 +161,26 @@ class="home-view-notes-wrapper--item__link"
       </div>
     </div>
 
-    <div v-if="get_active_order_option === 'note'"
-class="home-view-actions--note">
+    <div
+      v-if="get_active_order_option === 'note'"
+      class="home-view-actions--note"
+    >
       <div class="" />
       <div class="">
         <textarea
+          v-model="order_notes"
           name="name"
-          v-model="order_notes" rows="5" class="textarea-control"
+          rows="5"
+          class="textarea-control"
           placeholder="Additional delivery instructions"
         />
       </div>
       <div class="" />
     </div>
-    <div v-if="get_active_order_option === 'schedule'"
-class="home-view-actions--note">
+    <div
+      v-if="get_active_order_option === 'schedule'"
+      class="home-view-actions--note"
+    >
       <div class="home-view-actions--schedule">
         Schedule a pickup time for your order
       </div>
@@ -194,18 +208,20 @@ class="home-view-actions--note">
         <button
           type="button"
           class="button-primary home-view--place-order"
-name="button"
+          name="button"
           @click="preCheckPaymentDetails()"
         >
           {{ place_order_text }}
         </button>
       </div>
-      <div v-if="loading && payment_state === 1"
-class="home-view-place-order--mpesa-cancel">
+      <div
+        v-if="loading && payment_state === 1"
+        class="home-view-place-order--mpesa-cancel"
+      >
         <button
           type="button"
           class="button-primary home-view--place-order"
-name="button"
+          name="button"
           @click="cancelMpesaPaymentRequest()"
         >
           Cancel Payment
@@ -223,13 +239,14 @@ import payment_store from '../../../../payment/_store';
 import order_store from '../../../_store';
 import home_store from '../_store';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin.js';
+import PaymentMxn from '../../../../../mixins/payment_mixin.js';
 
 export default {
   name: 'OrderOptions',
   components: {
     'no-ssr': NoSSR,
   },
-  mixins: [Mcrypt],
+  mixins: [Mcrypt, PaymentMxn],
   data() {
     return {
       schedule_time: this.moment(),
@@ -253,7 +270,7 @@ export default {
       },
       price_request_response_received: false,
       vendors_without_return: ['Standard', 'Runner'],
-      vendors_with_fixed_carrier_type: ['Standard','Runner', 'Van'],
+      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
       return_status: false,
     };
   },
@@ -293,13 +310,12 @@ export default {
         if ('cost' in this.activeVendorPriceData) {
           if (
             !this.getIsReturn
-						|| this.vendors_without_return.includes(this.get_active_vendor_name)
+            || this.vendors_without_return.includes(this.get_active_vendor_name)
           ) {
-            cost =							this.activeVendorPriceData.cost - this.activeVendorPriceData.discountAmount;
+            cost = this.activeVendorPriceData.cost - this.activeVendorPriceData.discountAmount;
             return cost;
           }
-          cost =						this.activeVendorPriceData.return_cost
-						- this.activeVendorPriceData.discountAmount;
+          cost = this.activeVendorPriceData.return_cost - this.activeVendorPriceData.discountAmount;
           return cost;
         }
       }
@@ -308,7 +324,7 @@ export default {
     },
 
     // order cost including discounts
-    full_order_cost(){
+    full_order_cost() {
       return this.order_cost + this.activeVendorPriceData.discountAmount;
     },
 
@@ -319,8 +335,8 @@ export default {
     hide_payment() {
       return (
         this.getPriceRequestObject.payment_option === 2
-				|| this.getRunningBalance === 0
-				|| this.getRunningBalance + this.order_cost <= 0
+        || this.getRunningBalance === 0
+        || this.getRunningBalance + this.order_cost <= 0
       );
     },
 
@@ -391,10 +407,11 @@ export default {
       return allowed;
     },
 
-    final_carrier_type(){
-      return this.vendors_with_fixed_carrier_type.includes(this.get_active_vendor_name) ? 2 : Number(this.get_carrier_type);
+    final_carrier_type() {
+      return this.vendors_with_fixed_carrier_type.includes(this.get_active_vendor_name)
+        ? 2
+        : Number(this.get_carrier_type);
     },
-
   },
 
   methods: {
@@ -442,7 +459,7 @@ export default {
     checkAllowPrePaid() {
       if (
         this.getPriceRequestObject.payment_option === 1
-				&& this.getRunningBalance + this.order_cost > 0
+        && this.getRunningBalance + this.order_cost > 0
       ) {
         return false;
       }
@@ -628,8 +645,7 @@ export default {
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
         carrier_type: this.final_carrier_type,
         isreturn:
-					this.getIsReturn
-					&& !this.vendors_without_return.includes(this.get_active_vendor_name),
+          this.getIsReturn && !this.vendors_without_return.includes(this.get_active_vendor_name),
         vendor_type: this.activeVendorPriceData.vendor_id,
         rider_phone: this.activeVendorPriceData.order_no,
         type: this.payment_type,
@@ -725,42 +741,29 @@ export default {
       return ['fab', name];
     },
 
-    identifyMixpanelUser(email){
+    identifyMixpanelUser(email) {
       let analytics_env = '';
       try {
         analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } 
-      catch (er) {
-
-      }
-      try{
-        if(analytics_env === 'production'){
+      } catch (er) {}
+      try {
+        if (analytics_env === 'production') {
           mixpanel.identify(email);
         }
-         
-      }
-      catch(er){
-       
-      }
+      } catch (er) {}
     },
 
-    trackMixpanelEvent(name){
+    trackMixpanelEvent(name) {
       let analytics_env = '';
       try {
         analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } 
-      catch (er) {
+      } catch (er) {}
 
-      }
-
-      try{
-        if(analytics_env === 'production'){
+      try {
+        if (analytics_env === 'production') {
           mixpanel.track(name);
         }
-      }
-      catch(er){
-
-      }
+      } catch (er) {}
     },
 
     /* start mpesa */
@@ -998,32 +1001,36 @@ export default {
         return false;
       }
 
-      let card_payload = {
+      let cardPayload = {
         amount: Mcrypt.encrypt(this.raw_pending_amount),
         last4: Mcrypt.encrypt(card.last4),
         stripe_user_id: this.get_stripe_user_id,
+        complete_payment: true,
       };
 
       // encrypt the card payload
-      card_payload = Mcrypt.encrypt(card_payload);
+      cardPayload = Mcrypt.encrypt(cardPayload);
 
-      const full_payload = {
-        values: card_payload,
+      const fullPayload = {
+        values: cardPayload,
         app: 'PRIVATE_API',
         endpoint: 'charge_customer_card',
       };
-      this.requestCardPaymentAction(full_payload).then(
+      this.requestCardPaymentAction(fullPayload).then(
         (response) => {
-          if (response.length > 0) {
-            response = response[0];
-          }
-          // decrypt response.data here
-          response.data = Mcrypt.decrypt(response.data);
-          response.data = JSON.parse(response.data);
-
+          response.data = this.sanitizeCardDualResponses(response);
           if (response.data.status) {
-            const card_trans_id = response.data.id;
-            this.completeCardPayment(card_trans_id);
+            const cardTransId = response.data.id;
+            const notification = {
+              title: 'card payment success',
+              level: 1,
+              message: 'card payment was processed successfully',
+            };
+            this.payment_state = 'Payment Success';
+            this.$store.dispatch('show_notification', notification, {
+              root: true,
+            });
+            // this.completeCardPayment(cardTransId);
             // complete payment here
           } else {
             this.doNotification(
@@ -1155,5 +1162,5 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../../../assets/styles/orders_order_placement_options.css";
+@import '../../../../../assets/styles/orders_order_placement_options.css';
 </style>
