@@ -385,6 +385,13 @@ export default {
         this.carrier_type = '1';
         this.dispatchCarrierType(); 
       }
+      else{
+        let allowed_carrier_types = ['0','1','2'];
+        if(!allowed_carrier_types.includes(this.carrier_type)){
+          this.carrier_type = '2';
+          this.dispatchCarrierType();
+        }
+      }
     },
 
     trackMixpanelEvent(name){
