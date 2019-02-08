@@ -567,7 +567,6 @@ export default {
     },
 
     doCompleteOrder() {
-      console.log('in complete order');
       const payload = {
         values: this.getCompleteOrderObject(),
         app: 'PRIVATE_API',

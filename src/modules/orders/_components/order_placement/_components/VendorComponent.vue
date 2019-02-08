@@ -19,7 +19,7 @@
                     </div>
                 </div>
             </div>
-            <div class="home-view-vendor-types" v-if="activePackageClassPriceData != '' ">
+            <div class="home-view-vendor-types" v-if="activePackageClassPriceData !== '' ">
                 <div v-for="j in activePackageClassPriceData.price_tiers" :key="j.order_no" @click="setVendorDetails(j);">
                   <div class="home-view-vendor-types--item home-view-vendor-types-item-wrap" :class="getCurrentActiveTendorTypeClass(j.vendor_name)">
                       <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
