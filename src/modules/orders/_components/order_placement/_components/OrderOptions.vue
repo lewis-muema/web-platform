@@ -275,6 +275,12 @@ export default {
       get_stripe_user_id: '$_orders/$_home/get_stripe_user_id',
       get_carrier_type: '$_orders/$_home/get_carrier_type',
       getIsReturn: '$_orders/$_home/getReturnStatus',
+      getMaxTemperature: '$_orders/$_home/getMaxTemperature',
+      getDeliveryTime: '$_orders/$_home/getDeliveryTime',
+      getLoadWeight: '$_orders/$_home/getLoadWeight',
+      getLoadUnits: '$_orders/$_home/getLoadUnits',
+      getAdditionalLoaderStatus: '$_orders/$_home/getAdditionalLoaderStatus',
+      getNOOfLoaders: '$_orders/$_home/getNOOfLoaders',
     }),
 
     active_price_tier_data() {
@@ -633,12 +639,14 @@ export default {
         vendor_type: this.activeVendorPriceData.vendor_id,
         rider_phone: this.activeVendorPriceData.order_no,
         type: this.payment_type,
-        max_temperature:'',
-        delivery_item:'',
-        load_weight:'',
-        load_units:'',
-        additional_loader:'',
-        no_of_loaders:'',
+        package_details:{
+          max_temperature: Number(this.getMaxTemperature),
+          delivery_item:this.getDeliveryItem,
+          load_weight:Number(this.getLoadWeight),
+          load_units:this.getLoadUnits,
+          additional_loader:Boolean(getAdditionalLoaderStatus),
+          no_of_loaders:Number(this.getNOOfLoaders),
+        },
       };
       payload = {
         values: payload,

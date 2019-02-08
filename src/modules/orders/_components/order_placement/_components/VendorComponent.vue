@@ -68,7 +68,7 @@
                                 What type of truck do you want?
                               </div>
                               <div class="home-view-truck-options-inner--full-select">
-                                <el-select v-model="carrier_type" placeholder="" >
+                                <el-select v-model="carrier_type" @change="dispatchCarrierType" placeholder="" >
                                   <el-option
                                     v-for="item in truckOptions"
                                     :key="item.value"
@@ -84,7 +84,7 @@
                                 Temperature shouldn't exceed? (°C)
                               </div>
                               <div class="home-view-truck-options-inner--number-of-loaders">
-                                <el-input-number v-model="max_temperature" @change="handleChangeInMaxTemperature" :min="1" :max="10"></el-input-number>
+                                <el-input-number v-model.trim="max_temperature" @change="handleChangeInMaxTemperature" :min="1" :max="10"></el-input-number>
                               </div>
                             </div>
 
@@ -93,7 +93,7 @@
                                 What do you want delivered?
                               </div>
                               <div>
-                                <el-input placeholder="(Enter text)" v-model="delivery_item" autocomplete="true"></el-input>
+                                <el-input placeholder="(Enter text)" v-model.trim="delivery_item" @change="dispatchDeliveryItem" autocomplete="true"></el-input>
                                 <!-- TO DO: Handle autocomplete -->
                               </div>
                             </div>
@@ -103,8 +103,8 @@
                                 What is the approximate weight of the load?
                               </div>
                               <div class="home-view-truck-options-inner--load-weight">
-                                <el-input placeholder="(Enter load weight)" v-model="load_weight" >
-                                  <el-select v-model="load_units" slot="append" placeholder="KG">
+                                <el-input placeholder="(Enter load weight)" v-model.trim="load_weight" @change="dispatchLoadWeight">
+                                  <el-select v-model="load_units" slot="append" placeholder="KG" @change="dispatchLoadUnits">
                                     <el-option label="KG" value="kgs"></el-option>
                                     <el-option label="Tonnes" value="tonnes"></el-option>
                                   </el-select>
@@ -117,8 +117,8 @@
                                 Do you want us to provide you with Loader/s?
                               </div>
                               <div class="">
-                                <el-radio v-model="additional_loader" label="1">Yes</el-radio>
-                                <el-radio v-model="additional_loader" label="0">No</el-radio>
+                                <el-radio v-model="additional_loader" @change="dispatchAdditionalLoaderStatus" label="1">Yes</el-radio>
+                                <el-radio v-model="additional_loader" @change="dispatchAdditionalLoaderStatus" label="0">No</el-radio>
                               </div>
                             </div>
 
@@ -207,6 +207,13 @@ export default {
       getPriceRequestObject: '$_orders/$_home/get_price_request_object',
       getReturnStatus : '$_orders/$_home/getReturnStatus',
       activeVendorPriceData: '$_orders/$_home/get_active_vendor_details',
+      getMaxTemperature: '$_orders/$_home/getMaxTemperature',
+      getDeliveryItem: '$_orders/$_home/getDeliveryItem',
+      getLoadWeight: '$_orders/$_home/getLoadWeight',
+      getLoadUnits: '$_orders/$_home/getLoadUnits',
+      getAdditionalLoaderStatus: '$_orders/$_home/getAdditionalLoaderStatus',
+      getNOOfLoaders: '$_orders/$_home/getNOOfLoaders',
+
     }),
 
     activePackageClassPriceData: function() {
@@ -244,11 +251,41 @@ export default {
       setActiveVendorName: '$_orders/$_home/set_active_vendor_name',
       setActiveVendorDetails: '$_orders/$_home/set_active_vendor_details',
       setCarrierType: '$_orders/$_home/set_carrier_type',
+      setMaxTemperature: '$_orders/$_home/setMaxTemperature',
+      setDeliveryItem: '$_orders/$_home/setDeliveryItem',
+      setLoadWeight: '$_orders/$_home/setLoadWeight',
+      setLoadUnits: '$_orders/$_home/setLoadUnits',
+      setAdditionalLoaderStatus: '$_orders/$_home/setAdditionalLoaderStatus',
+      setNOOfLoaders: '$_orders/$_home/setNOOfLoaders',
     }),
 
-    dispatchCarrierType: function() {
+    dispatchCarrierType() {
       let type = this.carrier_type;
       this.setCarrierType(type);
+    },
+
+    dispatchDeliveryItem(val) {
+      this.setDeliveryItem(val);
+    },
+
+    dispatchLoadWeight(val) {
+      this.setLoadWeight(val);
+    },
+
+    dispatchLoadUnits(val) {
+      this.setLoadUnits(val);
+    },
+
+    dispatchAdditionalLoaderStatus(val) {
+      this.setAdditionalLoaderStatus(val);
+    },
+
+    handleChangeInNumberOfLoaders(val) {
+        this.setNOOfLoaders(val);
+    },
+
+    handleChangeInMaxTemperature(val){
+      this.setMaxTemperature(val);
     },
 
     setActivePackageClassWrapper(name) {
@@ -369,22 +406,26 @@ export default {
       }
     },
 
-    handleChangeInNumberOfLoaders(value) {
-        console.log(value);
-    },
-    handleChangeInMaxTemperature(value){
-      console.log(value);
+    initializeVendorComponent(){
+      this.carrier_type = this.get_vendor_carrier_type;
+      this.number_of_loaders = this.getNOOfLoaders;
+      this.max_temperature = this.getMaxTemperature;
+      this.delivery_item = this.getDeliveryItem;
+      this.load_weight = this.getLoadWeight;
+      this.load_units = this.getLoadUnits;
+      this.additional_loader = this.getAdditionalLoaderStatus;
+
     },
 
   },
 
   created() {
     this.setFirstTimeUser();
+    this.initializeVendorComponent();
   },
 
   mounted() {
     this.reCheckCarrierType();
-    this.setCarrierType(this.carrier_type); 
   },
 
   watch: {
