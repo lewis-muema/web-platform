@@ -25,6 +25,12 @@ export default {
         stripe_user_id:'',
         carrier_type_id:'',
         return_status:false,
+        max_temperature:4,
+        delivery_item:'',
+        load_weight:'',
+        load_units:'kgs',
+        additional_loader:'',
+        no_of_loaders:1,
        }
     },
   actions,
