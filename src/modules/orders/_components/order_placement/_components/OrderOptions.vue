@@ -78,8 +78,10 @@ class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
             </div>
           </div>
         </div>
-
-        <span v-if="getPriceRequestObject.payment_option !== 2">
+        <span v-if="checkIfTruckOrder()">
+          <!-- Nothing displayed -->
+        </span>
+        <span v-else-if="getPriceRequestObject.payment_option !== 2">
           <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
             <div class="home-view-notes-wrapper--item__option">
               <div class="home-view-notes-wrapper--item__option-div">
@@ -328,7 +330,8 @@ export default {
       return (
         this.getPriceRequestObject.payment_option === 2
 				|| this.getRunningBalance === 0
-				|| this.getRunningBalance + this.order_cost <= 0
+        || this.getRunningBalance + this.order_cost <= 0
+        || checkIfTruckOrder
       );
     },
 
