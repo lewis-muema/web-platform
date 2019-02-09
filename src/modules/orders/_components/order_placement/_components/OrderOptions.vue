@@ -434,10 +434,7 @@ export default {
     }),
 
     ...mapActions({
-      requestRunningBalanceFromAPI: '$_payment/requestRunningBalance',
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
-      requestCardPaymentAction: '$_payment/requestCardPayment',
-      completeCardPaymentAction: '$_payment/completeCardPaymentRequest',
       completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
       terminateMpesaPaymentRequest: '$_payment/terminateMpesaPaymentRequest',
       requestOrderCompletion: '$_orders/$_home/requestOrderCompletion',
@@ -517,7 +514,7 @@ export default {
           const card = this.get_saved_cards.find(
             card_details => card_details.last4 === this.payment_method.slice(2),
           );
-          this.handleCardPayments(card);
+          this.handleSavedCard(card, true);
         } else {
           // console.log('not handled payment method', this.payment_method);
         }
@@ -784,7 +781,6 @@ export default {
       } else {
         referenceNumber = session.peer.user_phone;
         user_id = session.peer.user_id;
-        user_email = session.peer.user_email;
         user_phone = session.peer.user_phone;
       }
 
@@ -995,152 +991,6 @@ export default {
       );
     },
 
-    handleCardPayments(card) {
-      if (!this.payment_is_to_be_requested) {
-        this.doCompleteOrder();
-        return false;
-      }
-
-      let cardPayload = {
-        amount: Mcrypt.encrypt(this.raw_pending_amount),
-        last4: Mcrypt.encrypt(card.last4),
-        stripe_user_id: this.get_stripe_user_id,
-        complete_payment: true,
-      };
-
-      // encrypt the card payload
-      cardPayload = Mcrypt.encrypt(cardPayload);
-
-      const fullPayload = {
-        values: cardPayload,
-        app: 'PRIVATE_API',
-        endpoint: 'charge_customer_card',
-      };
-      this.requestCardPaymentAction(fullPayload).then(
-        (response) => {
-          response.data = this.sanitizeCardDualResponses(response);
-          if (response.data.status) {
-            const cardTransId = response.data.id;
-            const notification = {
-              title: 'card payment success',
-              level: 1,
-              message: 'card payment was processed successfully',
-            };
-            this.payment_state = 'Payment Success';
-            this.$store.dispatch('show_notification', notification, {
-              root: true,
-            });
-            // this.completeCardPayment(cardTransId);
-            // complete payment here
-          } else {
-            this.doNotification(
-              '2',
-              'Card Payment Failed',
-              'Card payment failed, please try again.',
-            );
-            this.payment_state = 0;
-            this.loading = 0;
-          }
-        },
-        (error) => {
-          this.doNotification('2', 'Card Payment Failed', 'Card payment failed, please try again.');
-          this.payment_state = 0;
-          this.loading = 0;
-        },
-      );
-      return true;
-    },
-
-    completeCardPayment(card_trans_id) {
-      const session = this.$store.getters.getSession;
-      let user_id = 0;
-      let cop_id = 0;
-      let user_name = '';
-      let user_email = '';
-      let user_phone = '';
-
-      if (session.default === 'biz') {
-        cop_id = session.biz.cop_id;
-        user_id = session.biz.user_id;
-        user_name = session.biz.user_name;
-        user_email = session.biz.user_email;
-        user_phone = session.biz.user_phone;
-      } else {
-        user_id = session.peer.user_id;
-        user_name = session.peer.user_name;
-        user_email = session.peer.user_email;
-        user_phone = session.peer.user_phone;
-      }
-
-      const payload = {
-        values: {
-          amount: this.raw_pending_amount,
-          pay_method: 2,
-          ref_no: `VISA-${Math.round(+new Date() / 1000)}`,
-          client_id: cop_id,
-          account_no: `SENDY${cop_id}`,
-          phone: user_phone,
-          email: user_email,
-          name: user_name,
-          bill_Ref_Number: user_phone,
-          card_trans_id,
-        },
-      };
-
-      const full_payload = {
-        params: payload,
-        app: 'PRIVATE_API',
-        endpoint: 'payment',
-      };
-
-      // this is not encrypted
-      this.completeCardPaymentAction(full_payload).then(
-        (response) => {
-          // console.log(response);
-          if (response.length > 0) {
-            response = response[0];
-          }
-
-          const self = this;
-          if (response.data.status) {
-            // this will request the new running balance and update the store
-
-            this.doNotification(
-              '1',
-              'Successful Payment',
-              'Card payment has been completed successfully.',
-            );
-            const running_balance_payload = {
-              values: {
-                cop_id,
-                user_phone,
-              },
-            };
-
-            const payload = {
-              values: running_balance_payload,
-              app: 'PRIVATE_API',
-              endpoint: 'running_balance',
-            };
-
-            this.requestRunningBalanceFromAPI(payload).then((response) => {
-              this.payment_state = 0;
-              this.loading = 0;
-              self.doCompleteOrder();
-            });
-          } else {
-            this.payment_state = 0;
-            this.loading = 0;
-            this.doNotification('3', 'Card Payment Failed', 'Card payment failed to complete.');
-          }
-        },
-        (error) => {
-          this.doNotification('3', 'Card Payment Failed', 'Card payment failed to complete.');
-          this.payment_state = 0;
-          this.loading = 0;
-        },
-      );
-    },
     /* end card */
   },
 

@@ -1,7 +1,12 @@
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Mcrypt from './mcrypt_mixin.js';
 
 const PaymentMxn = {
   methods: {
+    ...mapActions({
+      requestRunningBalanceFromAPI: '$_payment/requestRunningBalance',
+      requestCardPaymentAction: '$_payment/requestCardPayment',
+    }),
     sanitizeCardDualResponses(response) {
       let repsonseData;
       let i;
@@ -9,7 +14,7 @@ const PaymentMxn = {
         for (i = 0; i < response.length; i++) {
           repsonseData = Mcrypt.decrypt(response[i].data);
           repsonseData = JSON.parse(responseData);
-        
+
           if (repsonseData.status) {
             // this is the correct one
             return repsonseData;
@@ -23,12 +28,34 @@ const PaymentMxn = {
       return repsonseData;
     },
     // this function will complete transactions for card payments already in the system
-    handleSavedCard(card) {
+    handleSavedCard(card, orderOptions = false) {
+      if (!this.payment_is_to_be_requested) {
+        this.doCompleteOrder();
+        return false;
+      }
+      const session = this.$store.getters.getSession;
+      let userId = 0;
+      let copId = 0;
+      let userPhone = '';
+
+      if (session.default === 'biz') {
+        copId = session.biz.cop_id;
+        userId = session.biz.user_id;
+        userPhone = session.biz.user_phone;
+      } else {
+        userId = session.peer.user_id;
+        userPhone = session.peer.user_phone;
+      }
       let cardPayload = {
-        amount: Mcrypt.encrypt(this.card_payment_data.amount),
+        amount: orderOptions
+          ? Mcrypt.encrypt(this.raw_pending_amount)
+          : Mcrypt.encrypt(this.card_payment_data.amount),
         last4: Mcrypt.encrypt(card.last4),
         stripe_user_id: this.get_stripe_user_id,
         complete_payment: true,
+        user_id: userId,
+        cop_id: copId,
+        user_phone: userPhone,
       };
       // encrypt the card payload
       cardPayload = Mcrypt.encrypt(cardPayload);
@@ -41,14 +68,8 @@ const PaymentMxn = {
       this.requestCardPaymentAction(fullPayload).then(
         (response) => {
           response.data = this.sanitizeCardDualResponses(response);
-          console.log(response.data);
 
           if (response.data.status) {
-            const cardTransId = response.data.id;
-
-            // this.completeCardPayment(card_trans_id);
-            // complete payment here
-            // show success message here
             const notification = {
               title: 'card payment success',
               level: 1,
@@ -57,6 +78,29 @@ const PaymentMxn = {
             this.payment_state = 'Payment Success';
             this.$store.dispatch('show_notification', notification, {
               root: true,
+            });
+            // request running balance here
+            const runningBalancePayload = {
+              values: {
+                cop_id: copId,
+                user_phone: userPhone,
+              },
+            };
+
+            const payload = {
+              values: runningBalancePayload,
+              app: 'PRIVATE_API',
+              endpoint: 'running_balance',
+            };
+
+            const self = this;
+
+            this.requestRunningBalanceFromAPI(payload).then((response) => {
+              this.payment_state = 0;
+              this.loading = 0;
+              if (orderOptions) {
+                self.doCompleteOrder();
+              }
             });
           } else {
             const notification = {
@@ -91,24 +135,24 @@ const PaymentMxn = {
       // sort encryption
       const session = this.$store.getters.getSession;
 
-      let user_id = 0;
-      let cop_id = 0;
-      let user_name = '';
-      let user_email = '';
-      let user_phone = '';
+      let userId = 0;
+      let copId = 0;
+      let userName = '';
+      let userEmail = '';
+      let userPhone = '';
 
       if (session.default === 'biz') {
-        cop_id = session.biz.cop_id;
-        user_id = session.biz.user_id;
-        user_name = session.biz.user_name;
-        user_email = session.biz.user_email;
-        user_phone = session.biz.user_phone;
+        copId = session.biz.cop_id;
+        userId = session.biz.user_id;
+        userName = session.biz.user_name;
+        userEmail = session.biz.user_email;
+        userPhone = session.biz.user_phone;
       } else {
-        cop_id = session.peer.cop_id;
-        user_id = session.peer.user_id;
-        user_name = session.peer.user_name;
-        user_email = session.peer.user_email;
-        user_phone = session.peer.user_phone;
+        copId = session.peer.cop_id;
+        userId = session.peer.user_id;
+        userName = session.peer.user_name;
+        userEmail = session.peer.user_email;
+        userPhone = session.peer.user_phone;
       }
 
       let cardPayload = {
@@ -118,11 +162,11 @@ const PaymentMxn = {
         card_no: this.card_payment_data.card_no,
         cvv: this.card_payment_data.cvv,
         is_save: this.card_payment_data.is_save,
-        cop_id,
-        user_id,
-        user_email,
-        user_phone,
-        user_name,
+        cop_id: copId,
+        user_id: userId,
+        user_email: userEmail,
+        user_phone: userPhone,
+        user_name: userName,
         complete_payment: true,
       };
 
@@ -149,10 +193,23 @@ const PaymentMxn = {
             this.$store.dispatch('show_notification', notification, {
               root: true,
             });
+            // request running balance
+            const runningBalancePayload = {
+              values: {
+                cop_id: copId,
+                user_phone: userPhone,
+              },
+            };
 
-            const card_trans_id = response.data.values.card_trans_id;
-            // this.completeCardPayment(card_trans_id);
-            // complete payment here
+            const payload = {
+              values: runningBalancePayload,
+              app: 'PRIVATE_API',
+              endpoint: 'running_balance',
+            };
+            this.requestRunningBalanceFromAPI(payload).then((response) => {
+              this.payment_state = 0;
+              this.loading = 0;
+            });
           } else {
             this.payment_state = 'Payment Failed';
             const notification = {
