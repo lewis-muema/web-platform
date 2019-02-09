@@ -108,7 +108,7 @@
                   </div>
 
                   <template v-for="(val, index) in order_details.rider_deliver_img" v-if="index >= 0" >
-                    <div class="delivery_documents_img">
+                    <div class="delivery_documents_img"v-if="val.delivery_image.length > 0">
                       <div style="width: 166%">
                         <div v-for="(val,index) in val.delivery_image[0].images" v-if="index >= 0">
                           <img
