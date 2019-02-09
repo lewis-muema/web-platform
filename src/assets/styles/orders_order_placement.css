@@ -104,6 +104,13 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
+.home-view-vendor-and-optins-wrappper{
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 60vh;
+  margin-right: -20px;
+  padding-right: 10px;
+}
 .homeview--input-bundler__destination-short-input {
   margin-right: unset;
 }
@@ -219,4 +226,7 @@
 }
 .home-view-truck-options-inner--load-weight{
   margin-right: 5px;
+}
+.body{
+  overflow: hidden;
 }
