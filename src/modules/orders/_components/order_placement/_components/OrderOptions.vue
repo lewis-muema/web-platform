@@ -331,7 +331,6 @@ export default {
         this.getPriceRequestObject.payment_option === 2
 				|| this.getRunningBalance === 0
         || this.getRunningBalance + this.order_cost <= 0
-        || checkIfTruckOrder
       );
     },
 
