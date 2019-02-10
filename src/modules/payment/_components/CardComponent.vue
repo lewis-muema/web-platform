@@ -1,20 +1,38 @@
 <template lang="html">
-  <payment_loading v-if="card_loading_status" pay_method="card"></payment_loading>
-  <add_card v-else-if="card_add_status"></add_card>
-  <div class="paymentbody--form" v-else>
-    <div v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0" class="">
+  <payment_loading
+    v-if="card_loading_status"
+    pay_method="card"
+  />
+  <add_card v-else-if="card_add_status" />
+  <div
+    v-else
+    class="paymentbody--form"
+  >
+    <div
+      v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0"
+      class=""
+    >
       <div class="paymentbody--input-wrap">
-        <div class="card--saved-card-width" v-for="card in get_saved_cards">
+        <div
+          v-for="card in get_saved_cards"
+          class="card--saved-card-width"
+        >
           <el-radio
-            class="card--saved-card"
             v-model="payment_card"
-            v-on:change="isHidden = true"
+            class="card--saved-card"
             :label="getCardValue(card.last4)"
             border
+            @change="isHidden = true"
           >
-            <font-awesome-icon :icon="getCardIcon(card)" class="payments-orange" />
+            <font-awesome-icon
+              :icon="getCardIcon(card)"
+              class="payments-orange"
+            />
             **** **** **** {{ card.last4 }}
-            <div v-on:click="deleteSavedCard(card)" class="card--delete">
+            <div
+              class="card--delete"
+              @click="deleteSavedCard(card)"
+            >
               <font-awesome-icon icon="trash" /> Remove
             </div>
             <!--<div class="card&#45;&#45;saved-expiry">Exp: {{ card.exp_month }}/{{ card.exp_year }}</div>-->
@@ -23,45 +41,46 @@
       </div>
       <div class="paymentbody--input-wrap">
         <el-radio
-          v-on:change="isHidden = false"
-          class="card--new-card"
           v-model="payment_card"
+          class="card--new-card"
           label="1"
           border
-          >New Card
+          @change="isHidden = false"
+        >
+          New Card
         </el-radio>
       </div>
     </div>
     <div v-show="!isHidden">
       <div class="paymentbody--input-wrap">
         <input
+          v-model="card_payment_data.card_no"
           type="text"
           name="card_payment_card_no"
-          @change="creditCardMask()"
-          @keyup="creditCardMask()"
-          v-model="card_payment_data.card_no"
           placeholder="Card Number"
           class="input-control paymentbody--input"
-        />
+          @change="creditCardMask()"
+          @keyup="creditCardMask()"
+        >
       </div>
 
       <div class="paymentbody--input-wrap paymentbody--input-spaced">
         <div class="input-control-big">
           <input
+            v-model="card_payment_data.card_expiry"
             type="text"
             name="card_payment_month"
-            v-model="card_payment_data.card_expiry"
             value=""
             placeholder="MM/YY"
             class="input-control paymentbody--input"
             @change="creditCExpiryMask"
             @keyup="creditCExpiryMask"
-          />
+          >
         </div>
         <div class="input-control-small">
           <el-input
-            placeholder="CVV"
             v-model="card_payment_data.cvv"
+            placeholder="CVV"
             type="number"
             name="card_payment_cvv"
             class="paymentbody--input"
@@ -73,9 +92,12 @@
               @click="showCvv"
               @mouseover.native="showCvv"
               @mouseleave.native="showCvv"
-            ></el-button>
+            />
           </el-input>
-          <div class="payment--cvv-info-wrap" v-show="cvv_state">
+          <div
+            v-show="cvv_state"
+            class="payment--cvv-info-wrap"
+          >
             <div class="sendy_payments_form_cvv_title">
               CVV
             </div>
@@ -87,7 +109,7 @@
               <img
                 src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/cvv.png"
                 alt="CVV"
-              />
+              >
             </div>
           </div>
         </div>
@@ -95,11 +117,11 @@
 
       <div class="paymentbody--input-wrap savecard--desc-wrap">
         <input
+          v-model="card_payment_data.is_save"
           type="checkbox"
           name="card_payment_save"
-          v-model="card_payment_data.is_save"
           class="input-checkbox paymentbody--input-checkbox"
-        />
+        >
         <div class="savecard--desc-title">
           Save your card details for easier payment in future
         </div>
@@ -107,12 +129,12 @@
     </div>
     <div class="paymentbody--input-wrap">
       <input
+        v-model="card_payment_data.amount"
         type="number"
         name="card_payment_amount"
-        v-model="card_payment_data.amount"
         placeholder="Amount"
         class="card--input input-control paymentbody--input"
-      />
+      >
     </div>
     <div class="paymentbody--input-wrap">
       <button
@@ -138,11 +160,17 @@ import payment_success from './SuccessComponent.vue';
 import payment_fail from './FailComponent.vue';
 import add_card from './AddCard.vue';
 import Mcrypt from '../../../mixins/mcrypt_mixin.js';
+import PaymentMxn from '../../../mixins/payment_mixin.js';
 
 export default {
-  name: 'card-component',
-  mixins: [Mcrypt],
-  components: { payment_loading, payment_success, payment_fail, add_card },
+  name: 'CardComponent',
+  components: {
+    payment_loading,
+    payment_success,
+    payment_fail,
+    add_card,
+  },
+  mixins: [Mcrypt, PaymentMxn],
   data() {
     return {
       card_payment_data: {
@@ -171,41 +199,41 @@ export default {
     valid_payment() {
       if (this.payment_card.startsWith('2_')) {
         return this.card_payment_data.amount !== '';
-      } else if (this.payment_card === 1) {
+      }
+      if (this.payment_card === 1) {
         return (
-          this.card_payment_data.card_expiry !== '' &&
-          this.card_payment_data.amount !== '' &&
-          this.card_payment_data.card_no !== '' &&
-          this.card_payment_data.cvv !== ''
-        );
-      } else {
-        return (
-          this.card_payment_data.card_expiry !== '' &&
-          this.card_payment_data.amount !== '' &&
-          this.card_payment_data.card_no !== '' &&
-          this.card_payment_data.cvv !== ''
+          this.card_payment_data.card_expiry !== ''
+          && this.card_payment_data.amount !== ''
+          && this.card_payment_data.card_no !== ''
+          && this.card_payment_data.cvv !== ''
         );
       }
+      return (
+        this.card_payment_data.card_expiry !== ''
+        && this.card_payment_data.amount !== ''
+        && this.card_payment_data.card_no !== ''
+        && this.card_payment_data.cvv !== ''
+      );
     },
     cvv_state() {
       return this.show_cvv;
     },
     card_expiry_month() {
-      let exp = this.card_payment_data.card_expiry;
+      const exp = this.card_payment_data.card_expiry;
       if (exp.length === 5) {
         return exp.slice(0, 2);
       }
       return '';
     },
     card_expiry_year() {
-      let exp = this.card_payment_data.card_expiry;
+      const exp = this.card_payment_data.card_expiry;
       if (exp.length === 5) {
         return exp.slice(3);
       }
     },
     card_add_status() {
       if (typeof this.$route.query.action !== 'undefined') {
-        let action = this.$route.query.action;
+        const action = this.$route.query.action;
         if (action === 'add') {
           return true;
         }
@@ -215,7 +243,7 @@ export default {
     },
   },
   watch: {
-    get_saved_cards: function() {
+    get_saved_cards() {
       if (this.get_saved_cards.length === 0) {
         this.isHidden = false;
       } else {
@@ -232,8 +260,6 @@ export default {
       }
     },
     ...mapActions({
-      requestCardPaymentAction: '$_payment/requestCardPayment',
-      completeCardPaymentAction: '$_payment/completeCardPaymentRequest',
       requestSavedCards: '$_payment/requestSavedCards',
       removeSavedCard: '$_payment/deleteSavedCard',
     }),
@@ -244,260 +270,21 @@ export default {
     getPaymentCard() {
       if (this.payment_card.startsWith('2_')) {
         const card = this.get_saved_cards.find(
-          card_details => card_details.last4 === this.payment_card.slice(2)
+          card_details => card_details.last4 === this.payment_card.slice(2),
         );
         this.handleSavedCard(card);
       } else {
         this.handleNewCardPayment();
       }
     },
-    handleSavedCard(card) {
-      let card_payload = {
-        amount: Mcrypt.encrypt(this.card_payment_data.amount),
-        last4: Mcrypt.encrypt(card.last4),
-        stripe_user_id: this.get_stripe_user_id,
-      };
 
-      // encrypt the card payload
-      card_payload = Mcrypt.encrypt(card_payload);
-
-      const full_payload = {
-        values: card_payload,
-        app: 'PRIVATE_API',
-        endpoint: 'charge_customer_card',
-      };
-      this.requestCardPaymentAction(full_payload).then(
-        response => {
-          if (response.length > 0) {
-            response = response[0];
-          }
-          // decrypt response.data here
-          response.data = Mcrypt.decrypt(response.data);
-          response.data = JSON.parse(response.data);
-
-          if (response.data.status) {
-            const card_trans_id = response.data.id;
-            this.completeCardPayment(card_trans_id);
-            // complete payment here
-          } else {
-            let notification = {
-              title: 'Card Payment Failed',
-              level: 2,
-              message: 'Card payment failed, please try again.',
-            };
-            this.payment_state = 'Payment Failed';
-            this.$store.dispatch('show_notification', notification, {
-              root: true,
-            });
-            this.payment_state = 0;
-            this.loading = 0;
-          }
-        },
-        error => {
-          let notification = {
-            title: 'card payment failed',
-            level: 2,
-            message: 'card payment did not go through',
-          };
-          this.$store.dispatch('show_notification', notification, {
-            root: true,
-          });
-          this.payment_state = 0;
-          this.loading = 0;
-        }
-      );
-      return true;
-    },
-    handleNewCardPayment() {
-      //sort encryption
-      let session = this.$store.getters.getSession;
-
-      let user_id = 0;
-      let cop_id = 0;
-      let user_name = '';
-      let user_email = '';
-      let user_phone = '';
-
-      if (session.default === 'biz') {
-        cop_id = session.biz.cop_id;
-        user_id = session.biz.user_id;
-        user_name = session.biz.user_name;
-        user_email = session.biz.user_email;
-        user_phone = session.biz.user_phone;
-      } else {
-        cop_id = session.peer.cop_id;
-        user_id = session.peer.user_id;
-        user_name = session.peer.user_name;
-        user_email = session.peer.user_email;
-        user_phone = session.peer.user_phone;
-      }
-
-      let card_payload = {
-        amount: this.card_payment_data.amount,
-        exp_month: this.card_expiry_month,
-        exp_year: this.card_expiry_year,
-        card_no: this.card_payment_data.card_no,
-        cvv: this.card_payment_data.cvv,
-        is_save: this.card_payment_data.is_save,
-        cop_id: cop_id,
-        user_id: user_id,
-        user_email: user_email,
-        user_phone: user_phone,
-        user_name: user_name,
-      };
-
-      card_payload = Mcrypt.encrypt(card_payload);
-
-      let full_payload = {
-        values: card_payload,
-        vm: this,
-        app: 'PRIVATE_API',
-        endpoint: 'card_payment',
-      };
-      this.requestCardPaymentAction(full_payload).then(
-        response => {
-          let res_data = Mcrypt.decrypt(response.data);
-          response.data = JSON.parse(res_data);
-
-          let that = this;
-
-          if (response.data.status === true) {
-            let notification = {
-              title: 'card payment success',
-              level: 1,
-              message: 'card payment was processed successfully',
-            };
-            this.payment_state = 'Payment Success';
-            this.$store.dispatch('show_notification', notification, {
-              root: true,
-            });
-
-            let card_trans_id = response.data.values.card_trans_id;
-
-            this.completeCardPayment(card_trans_id);
-            //complete payment here
-          } else {
-            this.payment_state = 'Payment Failed';
-            let notification = {
-              title: 'card payment failed',
-              level: 2,
-              message: response.data.message,
-            };
-            this.$store.dispatch('show_notification', notification, {
-              root: true,
-            });
-          }
-        },
-        error => {
-          this.payment_state = 'Payment Failed';
-          let notification = {
-            title: 'card payment failed',
-            level: 2,
-            message: 'card payment did not go through',
-          };
-          this.$store.dispatch('show_notification', notification, {
-            root: true,
-          });
-        }
-      );
-    },
-    completeCardPayment(card_trans_id) {
-      let session = this.$store.getters.getSession;
-      let user_id = 0;
-      let cop_id = 0;
-      let user_name = '';
-      let user_email = '';
-      let user_phone = '';
-
-      if (session.default === 'biz') {
-        cop_id = session.biz.cop_id;
-        user_id = session.biz.user_id;
-        user_name = session.biz.user_name;
-        user_email = session.biz.user_email;
-        user_phone = session.biz.user_phone;
-      } else {
-        user_id = session.peer.user_id;
-        user_name = session.peer.user_name;
-        user_email = session.peer.user_email;
-        user_phone = session.peer.user_phone;
-      }
-
-      let payload = {
-        values: {
-          amount: this.card_payment_data.amount,
-          pay_method: 2,
-          ref_no: `VISA-${Math.round(+new Date() / 1000)}`,
-          client_id: cop_id,
-          account_no: `SENDY${cop_id}`,
-          phone: user_phone,
-          email: user_email,
-          name: user_name,
-          bill_Ref_Number: user_phone,
-          card_trans_id: card_trans_id,
-        },
-      };
-
-      let full_payload = {
-        vm: this,
-        params: payload,
-        app: 'PRIVATE_API',
-        endpoint: 'payment',
-      };
-
-      this.completeCardPaymentAction(full_payload).then(
-        response => {
-          if (response.data.status === true) {
-            //this will request the new running balance and update the store
-            let notification = {
-              title: 'card payment complete',
-              level: 1,
-              message: 'card payment successfull',
-            };
-            let that = this;
-
-            this.$store.dispatch('show_notification', notification, {
-              root: true,
-            });
-
-            let running_balance_payload = {
-              values: {
-                cop_id: cop_id,
-                user_phone: user_phone,
-              },
-            };
-            let payload = {
-              values: running_balance_payload,
-              vm: this,
-              app: 'PRIVATE_API',
-              endpoint: 'running_balance',
-            };
-
-            this.$store
-              .dispatch('requestRunningBalance', payload, { root: true })
-              .then(response => {});
-          } else {
-            let notification = {
-              title: 'card payment failed',
-              level: 3,
-              message: 'card payment failed to complete',
-            };
-            this.$store.dispatch('show_notification', notification, {
-              root: true,
-            });
-          }
-        },
-        error => {
-          this.payment_state = 'Payment Failed';
-        }
-      );
-    },
     creditCardMask() {
-      let current_val = this.card_payment_data.card_no;
-      let new_cur = current_val.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
+      const current_val = this.card_payment_data.card_no;
+      const new_cur = current_val.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
       this.card_payment_data.card_no = new_cur.trim();
     },
     creditCExpiryMask($event) {
-      let current_val = this.card_payment_data.card_expiry;
+      const current_val = this.card_payment_data.card_expiry;
       let new_cur = current_val;
       if ($event.code !== 'Backspace') {
         new_cur = current_val.replace(/\W/gi, '').replace(/(.{2})/g, '$1/');
@@ -534,7 +321,7 @@ export default {
       };
 
       this.requestSavedCards(full_payload).then(
-        response => {
+        (response) => {
           // decrypt response here
           response = JSON.parse(Mcrypt.decrypt(response));
           if (response.status) {
@@ -543,7 +330,7 @@ export default {
           } else {
           }
         },
-        error => false
+        error => false,
       );
     },
     getCardValue(last4digits) {
@@ -569,9 +356,9 @@ export default {
         endpoint: 'remove_card',
       };
       this.removeSavedCard(full_payload).then(
-        response => {
+        (response) => {
           if (response.length > 0) {
-            let notification = {
+            const notification = {
               title: 'Remove Card success',
               level: 1,
               message: 'card deleted successfully.',
@@ -581,7 +368,7 @@ export default {
             });
             this.isHidden = false;
           } else {
-            let notification = {
+            const notification = {
               title: 'Remove Card Failed',
               level: 2,
               message: 'delete card failed, please try again.',
@@ -591,8 +378,8 @@ export default {
             });
           }
         },
-        error => {
-          let notification = {
+        (error) => {
+          const notification = {
             title: 'delete card failed',
             level: 2,
             message: 'delete card did not go through',
@@ -600,7 +387,7 @@ export default {
           this.$store.dispatch('show_notification', notification, {
             root: true,
           });
-        }
+        },
       );
     },
   },
@@ -615,31 +402,31 @@ export default {
 };
 </script>
 <style lang="css">
-.card--new-card{
-    margin-top: 20px;
-    width: 100%;
+.card--new-card {
+  margin-top: 20px;
+  width: 100%;
   padding: 16px 15px !important;
   height: 50px !important;
 }
-.card--saved-card{
-    margin-top: 20px;
-    width: 100%;
+.card--saved-card {
+  margin-top: 20px;
+  width: 100%;
   padding: 16px 15px !important;
   height: 50px !important;
 }
-.card--saved-card-width{
-    width: 100%;
+.card--saved-card-width {
+  width: 100%;
 }
 .payments-orange {
   color: #f57f20;
 }
-.card--saved-expiry{
-    margin-left: 43px;
+.card--saved-expiry {
+  margin-left: 43px;
 }
-.card--input{
+.card--input {
   height: 50px !important;
 }
-.card--delete{
+.card--delete {
   float: right;
 }
 </style>
