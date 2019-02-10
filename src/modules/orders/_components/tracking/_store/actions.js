@@ -131,9 +131,30 @@ const track_mqtt = function({commit, state})
 		console.log(clientId + ' disconnected')
 	})
 }
+const running_balance = function({commit, dispatch}, data)
+{
+  var payload = {
+    "app":"PRIVATE_API",
+    "endpoint":"running_balance",
+    "values":data
+  }
+
+	return new Promise((resolve, reject) => {
+		dispatch("requestAxiosPost", payload, {
+				root: true
+			})
+			.then(response => {
+				resolve(response.data);
+			}, error => {
+				reject(error);
+				console.log('failed to dispatch to global store')
+			});
+	})
+}
 
 export default {
 	get_tracking_data,
 	cancel_order,
-	track_mqtt
+	track_mqtt,
+  running_balance,
 };
