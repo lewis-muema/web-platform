@@ -27,7 +27,13 @@
              <div class="">
                <div class="topbar-text">
                  <font-awesome-icon icon="wallet" class="top-bar-info" />
-                 COST : KES {{ tracking_data.amount }}
+                 <span v-if="this.getStatus == 'Pending'">
+                   COST : KES {{ tracking_data.price_tier.cost - tracking_data.price_tier.price_variance}} - {{ tracking_data.price_tier.cost + tracking_data.price_tier.price_variance}}
+                 </span>
+                 <span v-else>
+                   COST : KES {{ tracking_data.price_tier.cost}}
+
+                 </span>
                </div>
              </div>
            </el-col>
@@ -55,15 +61,15 @@
                 <ul class="timeline" style="">
                   <li>
                     <p>PICKUP LOCATION</p>
-                    <p>Lorem ipsum dolor sit amet,</p>
+                    <p>{{tracking_data.path[0].name}}</p>
                   </li>
                      <div class="" style="padding-left: 13px;">
                        <p>PICKUP DATE</p>
-                       <p>21 March, 2014</p>
+                       <p>{{ tracking_data.date_time | moment }}</p>
                      </div>
                   <li>
                     <p>DESTINATION</p>
-                    <p>Lorem ipsum dolor sit amet,</p>
+                    <p v-for="(val, index) in tracking_data.path" v-if="index > 0" > {{val.name}}</p>
                   </li>
                 </ul>
               </div>
@@ -78,7 +84,7 @@
                     </span>
                   </div>
                   <div class="" style="padding-left:35px;">
-                       28 TonneTruck, Closed
+                       {{tracking_data.price_tier.vendor_name}}
                   </div>
                 </div>
                 <div class="" style="padding-bottom: 10px;">
@@ -88,8 +94,11 @@
                       GOODS TO BE DELIVERED
                     </span>
                   </div>
-                  <div class="" style="padding-left:35px;">
-                        Milk and Yoghurt
+                  <div class="" style="padding-left:35px;" v-if="('load_weight' in tracking_data.package_details )">
+                        {{tracking_data.package_details.delivery_item}}
+                  </div>
+                  <div style="padding-left:35px;" v-else>
+                        Not Indicated
                   </div>
                 </div>
                 <div class="" style="padding-bottom: 10px;">
@@ -99,8 +108,11 @@
                       LOAD WEIGHT
                     </span>
                   </div>
-                  <div class="" style="padding-left:35px;">
-                        0.75 Tonnes
+                  <div class="" style="padding-left:35px;" v-if="('load_weight' in tracking_data.package_details )">
+                      {{tracking_data.package_details.load_weight}} {{tracking_data.package_details.load_units}}
+                  </div>
+                  <div v-else style="padding-left:35px;">
+                       Not Indicated
                   </div>
                 </div>
                 <div class="" style="padding-bottom: 10px;">
@@ -110,8 +122,11 @@
                       DO YOU NEED A LOADER
                     </span>
                   </div>
-                  <div class="" style="padding-left:35px;">
-                        Yes,7 loaders
+                  <div class="" style="padding-left:35px;" v-if="tracking_data.package_details.additional_loader == true">
+                        Yes, {{tracking_data.package_details.no_of_loaders}}
+                  </div>
+                  <div v-else class="" style="padding-left:35px;">
+                          No
                   </div>
                 </div>
               </div>
@@ -121,8 +136,12 @@
                 <div class="">
                       NOTES
                 </div>
-                <div class="" style="max-width: 80%!important;">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut elementum enim. Nullam ultrices, nisl vel eleifend porttitor, dui nulla tristique libero, at dictum elit ipsum non neque
+                <div v-if="tracking_data.order_notes.length > 0 " class="" style="max-width: 80%!important;">
+                  <div v-for="(val, index) in tracking_data.order_notes" v-if="index >= 0" >
+                    <div v-for="(val,index) in tracking_data.order_notes[0].msg" v-if="index >= 0">
+                            {{val}}
+                    </div>
+                  </div>
                 </div>
               </div>
             </el-col>
@@ -134,43 +153,36 @@
                      <div class="">
                        <p>ORDER PLACED</p>
                        <p>Your order has been received and we shall notify you on the actual cost shortly</p>
-                        <p>21 March, 2014</p>
+                        <p>{{ tracking_data.date_time | moment }}</p>
                      </div>
                    </li>
                    <li>
-                     <div class="">
+                     <div class="" v-if="this.getStatus !== 'Pending'">
                        <p>PRICE CONFIRMATION</p>
                        <div class="">
-                         <p>Price has been confirmed to be Ksh {{tracking_data.amount}}.Choose payment option below</p>
-                          <div class="">
-                            <el-radio v-model="paymentOption" label="1">M-Pesa</el-radio>
-                          </div>
-                          <div class="">
-                            <el-radio v-model="paymentOption" label="2">Card</el-radio>
-                          </div>
-                          <div class="" style="padding-left: 5px; padding-top: 10px;">
-                            <input type="submit" class="button-primary" style="width:200px;"
-                                   value="Make Payment"/>
-                          </div>
-                       </div>
-                         <div class="">
+                         <div class="" v-if="this.accType == 2">
                            <p>Price has been confirmed to be Ksh {{tracking_data.amount}}</p>
-                           <p>21 March, 2014</p>
                          </div>
+                         <div class="" v-else>
+                           <p>Price has been confirmed to be Ksh {{tracking_data.amount}}.Choose payment option below</p>
+                           <div class="">
+                             <el-radio v-model="paymentOption" label="1">M-Pesa</el-radio>
+                           </div>
+                           <div class="">
+                             <el-radio v-model="paymentOption" label="2">Card</el-radio>
+                           </div>
+                           <div class="" style="padding-left: 5px; padding-top: 10px;">
+                             <input type="submit" class="button-primary"  @click="takeMeToPayment()" style="width:200px;"
+                                    value="Make Payment"/>
+                           </div>
+                         </div>
+                       </div>
                      </div>
                     </li>
-                    <li>
+                    <li v-for="(val, index) in tracking_data.delivery_log" v-if="index > 0" >
                       <div class="">
-                        <p>DRIVER ASSIGNED</p>
-                        <p>Lorem ipsum dolor sit amet,</p>
-                        <p>21 March, 2014</p>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="">
-                        <p>DRIVER ARRIVAL</p>
-                        <p>Lorem ipsum dolor sit amet,</p>
-                        <p>21 March, 2014</p>
+                        <p>{{val.description}}</p>
+                        <p>{{ val.log_time | moment }}</p>
                       </div>
                     </li>
                  </ul>
@@ -181,12 +193,12 @@
           </el-row>
           <div class="save-option" v-if="this.getStatus == 'Pending'">
             <el-row :gutter="20" class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top" style="padding-bottom: 5px;padding-top: 10px;text-align:center;max-width:70%;margin-left: -35px;">
-              <el-col :span="6">
+              <!-- <el-col :span="6">
                 <div class="">
                   <img src="https://images.sendyit.com/web_platform/tracking/save.svg" alt="" class="infobar-truck-img">
                   <span> SAVE DETAILS </span>
                 </div>
-              </el-col>
+              </el-col> -->
               <el-col :span="6">
                 <div class="" style="padding-top:4px;cursor:pointer;" @click="canceldialog()">
                   <i class="el-icon-circle-close top-bar-info"></i>
@@ -198,14 +210,14 @@
 
           <div class="rider-info" v-if="this.getStatus !== 'Pending'">
             <el-row :gutter="20" class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top" style="padding-bottom: 5px;padding-top: 10px;text-align:center;max-width:70%">
-              <el-col :span="6">
+              <el-col :span="8">
                 <div class="">
                   <img
                     class="rimg"
                     :src="tracking_data.rider.rider_photo" style="height: 55px;vertical-align: middle;"
                   >
-                  <span> James </span>
-                  <span> 0700536660 </span>
+                  <span>{{ tracking_data.rider.rider_name }} - {{ tracking_data.rider.rider_phone }}</span>
+
                 </div>
               </el-col>
               <el-col :span="6">
@@ -214,7 +226,7 @@
                     class="rimg"
                     :src="tracking_data.rider.rider_photo" style="height: 55px;vertical-align: middle;"
                   >
-                  <span>KCA 320J</span>
+                  <span>{{ tracking_data.rider.vehicle_name }} - {{ tracking_data.rider.number_plate }}</span>
                 </div>
               </el-col>
               <el-col :span="6">
@@ -315,10 +327,16 @@
           </div>
         </div>
         <div class="infobar--content infobar--item infobar--order infobar--item-bordered">
-          <div class="">
-            <div class="">
+          <div class="" v-if="this.getStatus == 'Pending'">
+            <div v-if="([6,10,13,14,17,18,19,20].includes(tracking_data.rider.vendor_id))">
+              KES {{ tracking_data.price_tier.cost - tracking_data.price_tier.price_variance}} - {{ tracking_data.price_tier.cost + tracking_data.price_tier.price_variance}}
+            </div>
+            <div v-else>
               KES {{ tracking_data.amount }}
             </div>
+          </div>
+          <div v-else>
+              KES {{ tracking_data.amount }}
           </div>
           <div class="">
             <div class="">
@@ -423,7 +441,7 @@
             </div>
           </div>
           <div
-            v-if=""
+            v-if="([6,10,13,14,17,18,19,20].includes(tracking_data.rider.vendor_id))"
             class="infobar--actions-hover"
             @click="maximiseInfoDetails()"
           >
@@ -456,10 +474,16 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters} from 'vuex';
+const moment = require('moment');
 
 export default {
   name: 'InfoWindow',
+  filters: {
+    moment(date) {
+      return moment(date).format('MMM Do YYYY, h:mm a');
+    },
+  },
   data() {
     return {
       loading: true,
@@ -471,6 +495,8 @@ export default {
       cancelOption:false,
       paymentOption:'',
       truckMoreInfo:false,
+      myRb:'',
+      accType:'',
     };
   },
   computed: {
@@ -520,12 +546,17 @@ export default {
     this.loading = true;
     this.$store.commit('$_orders/$_tracking/set_tracked_order', this.$route.params.order_no);
     this.poll(this.$route.params.order_no);
+    this.checkRunningBalance();
   },
   created() {
     this.order_number = this.$route.params.order_no;
-    console.log('tracking',this.tracking_data);
+    console.log('tracking 1',this.tracking_data);
+
   },
   methods: {
+    moment() {
+      return moment();
+    },
     cancelChange(reason) {
       switch (reason) {
         case 4: {
@@ -579,12 +610,42 @@ export default {
       } else {
         this.cancel_popup = 1;
       }
+      this.cancelOption = false;
     },
     maximiseInfoDetails() {
       this.truckMoreInfo = true;
     },
     minimiseInfoDetails() {
       this.truckMoreInfo = false;
+    },
+    checkRunningBalance(){
+     let session = this.$store.getters.getSession;
+      let payload = {
+        cop_id : session[session.default]['cop_id'],
+        user_phone:session[session.default]['user_phone'],
+      };
+      this.$store.dispatch('$_orders/$_tracking/running_balance', payload)
+        .then((response) => {
+          if(response.status){
+            this.myRb = response.running_balance;
+            this.accType = response.payment_plan;
+          }
+        });
+    },
+    takeMeToPayment(){
+      if(this.paymentOption === 1){
+         this.$router.push('/payment/mpesa');
+      }
+      else if (this.paymentOption === 2){
+         this.$router.push('/payment/card');
+      }
+      else{
+          this.doNotification(
+            '2',
+            'Payment Failure',
+            'Choose a Payment Option.',
+          );
+      }
     },
     canceldialog(){
       this.cancelOption = true ;
