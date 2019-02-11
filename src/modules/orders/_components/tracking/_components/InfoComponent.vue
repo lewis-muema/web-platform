@@ -157,7 +157,7 @@
                      </div>
                    </li>
                    <li>
-                     <div class="" v-if="this.getStatus != 'Pending'">
+                     <div class="" v-if="this.getStatus !== 'Pending'">
                        <p>PRICE CONFIRMATION</p>
                        <div class="">
                          <div class="" v-if="this.accType == 1">
