@@ -63,7 +63,7 @@
                     <p>PICKUP LOCATION</p>
                     <p>{{tracking_data.path[0].name}}</p>
                   </li>
-                     <div class="" style="padding-left: 13px;">
+                     <div class="timeline-date-disp">
                        <p>PICKUP DATE</p>
                        <p>{{ tracking_data.date_time | moment }}</p>
                      </div>
@@ -160,20 +160,25 @@
                      <div class="" v-if="this.getStatus !== 'Pending'">
                        <p>PRICE CONFIRMATION</p>
                        <div class="">
-                         <div class="" v-if="this.accType == 2">
+                         <div class="" v-if="this.accType === 1">
                            <p>Price has been confirmed to be Ksh {{tracking_data.amount}}</p>
                          </div>
                          <div class="" v-else>
-                           <p>Price has been confirmed to be Ksh {{tracking_data.amount}}.Choose payment option below</p>
-                           <div class="">
-                             <el-radio v-model="paymentOption" label="1">M-Pesa</el-radio>
+                           <div v-if= "this.myRb <= 0">
+                              <p>Price has been confirmed to be Ksh {{tracking_data.amount}}</p>
                            </div>
-                           <div class="">
-                             <el-radio v-model="paymentOption" label="2">Card</el-radio>
-                           </div>
-                           <div class="" style="padding-left: 5px; padding-top: 10px;">
-                             <input type="submit" class="button-primary"  @click="takeMeToPayment()" style="width:200px;"
-                                    value="Make Payment"/>
+                           <div v-else>
+                             <p>Price has been confirmed to be Ksh {{tracking_data.amount}}.Choose payment option below</p>
+                             <div class="">
+                               <el-radio v-model="paymentOption" label="1">M-Pesa</el-radio>
+                             </div>
+                             <div class="">
+                               <el-radio v-model="paymentOption" label="2">Card</el-radio>
+                             </div>
+                             <div class="" style="padding-left: 5px; padding-top: 10px;">
+                               <input type="submit" class="button-primary"  @click="takeMeToPayment()" style="width:200px;"
+                                      value="Make Payment"/>
+                             </div>
                            </div>
                          </div>
                        </div>
@@ -550,7 +555,6 @@ export default {
   },
   created() {
     this.order_number = this.$route.params.order_no;
-    console.log('tracking 1',this.tracking_data);
 
   },
   methods: {
@@ -1013,5 +1017,8 @@ ul.timeline > li:before {
 .infobar-truck-img{
   height:20px;
   vertical-align:middle;
+}
+.timeline-date-disp{
+  padding-left: 30px;
 }
 </style>
