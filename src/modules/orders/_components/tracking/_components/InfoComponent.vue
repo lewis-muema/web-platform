@@ -63,7 +63,7 @@
                     <p>PICKUP LOCATION</p>
                     <p>{{tracking_data.path[0].name}}</p>
                   </li>
-                     <div class="" style="padding-left: 30px;">
+                     <div class="timeline-date-disp">
                        <p>PICKUP DATE</p>
                        <p>{{ tracking_data.date_time | moment }}</p>
                      </div>
@@ -1017,5 +1017,8 @@ ul.timeline > li:before {
 .infobar-truck-img{
   height:20px;
   vertical-align:middle;
+}
+.timeline-date-disp{
+  padding-left: 30px;
 }
 </style>
