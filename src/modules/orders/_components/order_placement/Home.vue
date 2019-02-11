@@ -29,7 +29,6 @@
                 <font-awesome-icon icon="times" size="xs" class="homeview--row__font-awesome homeview--input-bundler__img-right " width="10px"  @click="removeExtraDestinationWrapper(n+1)"/>
             </no-ssr>
           </div>
-
         </div>
 
       </div>
@@ -48,8 +47,7 @@
       <div v-if="!show_vendor_view && !loading" class="home-view--seperator home-view--form__seperator">
           <button type="button" class="button--primary-inactive home-view--place-order" >Confirm Order</button>
       </div>
-      </div>
-
+    </div>
   </div>
 </template>
 
@@ -475,7 +473,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../../assets/styles/orders_order_placement.css";
+    @import "../../../../assets/styles/orders_order_placement.css";
 </style>
 <style scoped>
 
