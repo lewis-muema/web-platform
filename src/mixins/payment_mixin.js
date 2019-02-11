@@ -183,7 +183,7 @@ const PaymentMxn = {
           response.data = this.sanitizeCardDualResponses(response);
           const that = this;
 
-          if (response.data.status === true) {
+          if (response.data.status) {
             const notification = {
               title: 'card payment success',
               level: 1,
