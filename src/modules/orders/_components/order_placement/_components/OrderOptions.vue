@@ -84,8 +84,10 @@
             </div>
           </div>
         </div>
-
-        <span v-if="getPriceRequestObject.payment_option !== 2">
+        <span v-if="checkIfTruckOrder()">
+          <!-- Nothing displayed -->
+        </span>
+        <span v-else-if="getPriceRequestObject.payment_option !== 2">
           <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
             <div class="home-view-notes-wrapper--item__option">
               <div class="home-view-notes-wrapper--item__option-div">
@@ -241,6 +243,8 @@ import home_store from '../_store';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin.js';
 import PaymentMxn from '../../../../../mixins/payment_mixin.js';
 
+const TRUCK_VENDORS = [6,10,13,14,17,18,19,20];
+
 export default {
   name: 'OrderOptions',
   components: {
@@ -292,6 +296,12 @@ export default {
       get_stripe_user_id: '$_orders/$_home/get_stripe_user_id',
       get_carrier_type: '$_orders/$_home/get_carrier_type',
       getIsReturn: '$_orders/$_home/getReturnStatus',
+      getMaxTemperature: '$_orders/$_home/getMaxTemperature',
+      getDeliveryItem: '$_orders/$_home/getDeliveryItem',
+      getLoadWeight: '$_orders/$_home/getLoadWeight',
+      getLoadUnits: '$_orders/$_home/getLoadUnits',
+      getAdditionalLoaderStatus: '$_orders/$_home/getAdditionalLoaderStatus',
+      getNOOfLoaders: '$_orders/$_home/getNOOfLoaders',
     }),
 
     active_price_tier_data() {
@@ -335,7 +345,11 @@ export default {
     hide_payment() {
       return (
         this.getPriceRequestObject.payment_option === 2
+<<<<<<< HEAD
         || this.getRunningBalance === 0
+=======
+				|| this.getRunningBalance === 0
+>>>>>>> c316fd337752e10909e3d8390a48c55df7cf5dbb
         || this.getRunningBalance + this.order_cost <= 0
       );
     },
@@ -463,12 +477,26 @@ export default {
       return true;
     },
 
+    checkIfTruckOrder(){
+      let is_truck = false;
+      if(TRUCK_VENDORS.includes(this.activeVendorPriceData.vendor_id)){
+        is_truck = true;
+      }
+
+      return is_truck;
+    },
+
     preCheckPaymentDetails() {
       this.loading = true;
       this.refreshRunningBalance().then(
         (response) => {
           this.loading = false;
+          if(this.checkIfTruckOrder()){
+            this.handlePostPaidPayments();
+            return true;
+          }
           this.checkPaymentDetails();
+          return true;
         },
         (error) => {
           this.doNotification(
@@ -646,6 +674,14 @@ export default {
         vendor_type: this.activeVendorPriceData.vendor_id,
         rider_phone: this.activeVendorPriceData.order_no,
         type: this.payment_type,
+        package_details:{
+          max_temperature: Number(this.getMaxTemperature),
+          delivery_item:this.getDeliveryItem,
+          load_weight:Number(this.getLoadWeight),
+          load_units:this.getLoadUnits,
+          additional_loader:Boolean(this.getAdditionalLoaderStatus),
+          no_of_loaders:Number(this.getNOOfLoaders),
+        },
       };
       payload = {
         values: payload,
