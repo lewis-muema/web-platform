@@ -345,11 +345,7 @@ export default {
     hide_payment() {
       return (
         this.getPriceRequestObject.payment_option === 2
-<<<<<<< HEAD
         || this.getRunningBalance === 0
-=======
-				|| this.getRunningBalance === 0
->>>>>>> c316fd337752e10909e3d8390a48c55df7cf5dbb
         || this.getRunningBalance + this.order_cost <= 0
       );
     },
