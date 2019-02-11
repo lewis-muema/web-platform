@@ -107,10 +107,23 @@
                     Delivery at {{ order_details.path[index].name }}
                   </div>
 
-                  <div>
+                  <template v-for="(val, index) in order_details.rider_deliver_img" v-if="index >= 0" >
+                    <div class="delivery_documents_img"v-if="val.delivery_image.length > 0">
+                      <div style="width: 166%">
+                        <div v-for="(val,index) in val.delivery_image[0].images" v-if="index >= 0">
+                          <img
+                            class="delivery-image-content"
+                            :src="deliveryImagePath(val)"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+
+                  <div class="delivery_documents_sign">
                     <img
                       class="delivery-image-content"
-                      :src="deliveryImagePath(order_details.rider_deliver_img[index - 1].img)"
+                      :src="deliverySignaturePath(order_details.rider_deliver_img[index - 1].img)"
                     />
                   </div>
                   <div
@@ -275,9 +288,14 @@ export default {
       this.disputeDescription = '';
       this.dialogFormVisible = false;
     },
-    deliveryImagePath(path) {
+    deliverySignaturePath(path) {
       return `https://s3-eu-west-1.amazonaws.com/sendy-delivery-signatures/${path}`;
     },
+
+    deliveryImagePath(path) {
+      return `https://s3-eu-west-1.amazonaws.com/sendy-delivery-signatures/rider_delivery_image//${path}`;
+    },
+
     disputeDocsOption() {
       if (
         this.order_details.extra_distance_amount > 0 ||
@@ -394,7 +412,18 @@ export default {
 }
 .delivery_documents_info {
   width: 50%;
-  height: 310px;
+  min-height: 310px;
+  margin: 3%;
+  border-radius: 4px;
+  border: 1px solid #dcdfe6;
+}
+.delivery_documents_img {
+  min-height: 310px;
+  margin: 3%;
+  border-radius: 4px;
+}
+.delivery_documents_sign {
+  min-height: 310px;
   margin: 3%;
   border-radius: 4px;
   border: 1px solid #dcdfe6;
