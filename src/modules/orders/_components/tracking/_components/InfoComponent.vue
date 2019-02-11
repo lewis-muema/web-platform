@@ -160,7 +160,7 @@
                      <div class="" v-if="this.getStatus !== 'Pending'">
                        <p>PRICE CONFIRMATION</p>
                        <div class="">
-                         <div class="" v-if="this.accType == 1">
+                         <div class="" v-if="this.accType === 1">
                            <p>Price has been confirmed to be Ksh {{tracking_data.amount}}</p>
                          </div>
                          <div class="" v-else>
