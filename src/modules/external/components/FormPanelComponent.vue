@@ -1,22 +1,22 @@
 <template lang="html">
   <div class="form-panel-outer">
-    <screen-one-component v-if="this.getViewState == 1 "></screen-one-component>
-    <screen-two-component v-if="this.getViewState == 2 "></screen-two-component>
-    <screen-three-component v-if="this.getViewState == 3 "></screen-three-component>
+    <onboarding-info-component v-if="this.getViewState == 1 "></onboarding-info-component>
+    <email-validation-component v-if="this.getViewState == 2 "></email-validation-component>
+    <password-validation-component v-if="this.getViewState == 3 "></password-validation-component>
     <complete-component v-if="this.getViewState == 4 "></complete-component>
   </div>
 </template>
 
 <script>
 import {mapGetters,mapMutations} from 'vuex'
-import ScreenOneComponent from './ScreenOneComponent.vue'
-import ScreenTwoComponent from './ScreenTwoComponent.vue'
-import ScreenThreeComponent from './ScreenThreeComponent.vue'
+import OnboardingInfoComponent from './OnboardingInfoComponent.vue'
+import EmailValidationComponent from './EmailValidationComponent.vue'
+import PasswordValidationComponent from './PasswordValidationComponent.vue'
 import CompleteComponent from './CompleteComponent.vue'
 
 export default {
   name: 'form-panel-component',
-  components: {ScreenOneComponent,ScreenTwoComponent,ScreenThreeComponent,CompleteComponent},
+  components: {OnboardingInfoComponent,EmailValidationComponent,PasswordValidationComponent,CompleteComponent},
   computed: {
     ...mapGetters(
       {

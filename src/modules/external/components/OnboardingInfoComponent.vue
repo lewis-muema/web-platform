@@ -73,7 +73,7 @@
 import {mapGetters,mapMutations,mapActions} from 'vuex'
 
 export default {
-  name: 'screen-one-component',
+  name: 'onboarding-info-component',
   data: function () {
     return {
       name:'',
