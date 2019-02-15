@@ -31,7 +31,7 @@
 import {mapGetters,mapMutations} from 'vuex'
 
 export default {
-  name: 'screen-two-component',
+  name: 'email-validation-component',
   data: function () {
     return {
       peerEmail :'',
