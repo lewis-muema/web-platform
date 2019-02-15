@@ -230,3 +230,6 @@
 .body{
   overflow: hidden;
 }
+.home-view-truck-options-inner--load-weight .el-input-group__append, .el-select-dropdown__list span{
+  font-size: smaller !important;
+}
