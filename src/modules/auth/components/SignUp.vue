@@ -146,7 +146,7 @@
         <span slot="title">
           <img
             src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
-            style="width:85px;"
+            class="signup-sendy-logo"
           >
         </span>
         <div>
@@ -230,7 +230,7 @@ export default {
         const phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
         let email_valid = true;
         for (let i = 0; i < this.errors.items.length; i++) {
-          if (this.errors.items[i].field == 'email') {
+          if (this.errors.items[i].field === 'email') {
             email_valid = false;
             break;
           }
@@ -545,5 +545,8 @@ export default {
     padding-left: 20px;
     padding-right: 20px;
     font-size: 13px;
+}
+.signup-sendy-logo{
+    width:85px;
 }
 </style>

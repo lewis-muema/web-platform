@@ -4,7 +4,7 @@
       class="help-card"
       style="width:400px;margin-left:30%;margin-top:30px;"
     >
-      <p style="margin-bottom: 20px;">
+      <p class="personal-info-padding">
         <label class="input-descript">
           <span>Name</span>
         </label>
@@ -15,7 +15,7 @@
           class="form-control profile1-dimen"
         >
       </p>
-      <p style="margin-bottom: 20px;">
+      <p class="personal-info-padding">
         <label class="input-descript">
           <span>Email</span>
         </label>
@@ -163,7 +163,6 @@ export default {
 
             const full_payload = {
               values,
-              vm: this,
               app: 'NODE_PRIVATE_API',
               endpoint: 'update_user',
             };
@@ -389,5 +388,8 @@ export default {
         -webkit-box-direction: normal;
         padding-top: 3px ! important;
 
+    }
+    .personal-info-padding{
+      margin-bottom: 20px;
     }
 </style>

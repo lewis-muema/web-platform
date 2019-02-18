@@ -8,7 +8,7 @@
         Forgot your password?
       </div>
       <div
-        v-if="this.option == true"
+        v-if="this.option"
         class="reset-link-details"
       >
         You have a pending password change request sent to your email awaiting your confirmation
@@ -116,7 +116,7 @@ export default {
     request_pass() {
       let email_valid = true;
       for (let i = 0; i < this.errors.items.length; i++) {
-        if (this.errors.items[i].field == 'email') {
+        if (this.errors.items[i].field === 'email') {
           email_valid = false;
           break;
         }
@@ -189,7 +189,7 @@ export default {
               // Account does not exist
               console.log('Account does not exist');
               this.message = 'Account does not exist.Please sign-up to create a sendy account';
-            } else if (response.status == 'exists') {
+            } else if (response.status === 'exists') {
               // Existing password reset option
               this.message = '';
               this.nonce = response.nonce;
@@ -214,7 +214,7 @@ export default {
   },
   computed: {
     is_valid() {
-      return this.email != '';
+      return this.email !== '';
     },
   },
 };

@@ -1,6 +1,5 @@
 <template lang="html">
   <div class="log_cont">
-    <!-- <div align="center" style="margin-bottom:0px;"><img src="https://app.sendyit.com/biz/image/logo.png" height="60px;"  style="margin-bottom:10px;" />  </div> -->
     <div
       id="change_con"
       class="change_cont"
@@ -10,24 +9,19 @@
         class="log-item "
       >
         <p>&nbsp;</p>
-        <p style="font-size:17px;">
+        <p class="reset-pass-text">
           Enter new password
         </p>
         <p
           id="pass_change_info"
-          style="color:#F90; height:20px;"
+          class="reset-pass-inner-text"
         />
         <p class="sign-up-error">
           {{ message }}
         </p>
-        <div style=" margin:0px auto; ">
+        <div class="reset-pass-cntxt">
           <div class="reset-form">
-            <table
-              width="100%"
-              border="0"
-              cellspacing="0"
-              cellpadding="0"
-            >
+            <table class="reset-pass-new-pass">
               <tr>
                 <td align="center">
                   <input
@@ -55,8 +49,7 @@
                 <td align="center">
                   <input
                     type="submit"
-                    class="btn btn-primary"
-                    style="font-size:14px;  width:310px; margin-top:10px;"
+                    class="btn btn-primary reset-pass-input"
                     value="Change Password"
                     :disabled="!this.is_valid"
                     @click="reset_pass"
@@ -244,5 +237,26 @@ export default {
 }
 .reset-form {
   margin-left: 23%;
+}
+.reset-pass-new-pass{
+  width:100%;
+  border:0px;
+  cellspacing :0px;
+  cellpadding :0px;
+}
+.reset-pass-inner-text{
+  color:#F90;
+  height:20px;
+}
+.reset-pass-text{
+  font-size:17px;
+}
+.reset-pass-cntxt{
+  margin:0px auto;
+}
+.reset-pass-input{
+  font-size:14px;
+  width:310px;
+  margin-top:10px;
 }
 </style>
