@@ -28,7 +28,7 @@ export default {
         max_temperature:4,
         delivery_item:'',
         load_weight:'',
-        load_units:'kgs',
+        load_units:'tonnes',
         additional_loader:'',
         no_of_loaders:1,
        }
