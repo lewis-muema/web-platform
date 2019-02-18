@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="form-panel-outer">
-    <onboarding-info-component v-if="this.getViewState == 1 "></onboarding-info-component>
-    <email-validation-component v-if="this.getViewState == 2 "></email-validation-component>
-    <password-validation-component v-if="this.getViewState == 3 "></password-validation-component>
-    <complete-component v-if="this.getViewState == 4 "></complete-component>
+    <onboarding-info-component v-if="this.getViewState === 1 "></onboarding-info-component>
+    <email-validation-component v-if="this.getViewState === 2 "></email-validation-component>
+    <password-validation-component v-if="this.getViewState === 3 "></password-validation-component>
+    <complete-component v-if="this.getViewState === 4 "></complete-component>
   </div>
 </template>
 
