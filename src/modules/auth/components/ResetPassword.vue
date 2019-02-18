@@ -1,60 +1,83 @@
 <template lang="html">
   <div class="log_cont">
+    <div
+      id="change_con"
+      class="change_cont"
+    >
+      <div
+        id="forgot_pass"
+        class="log-item "
+      >
+        <p>&nbsp;</p>
+        <p class="reset-pass-text">
+          Enter new password
+        </p>
+        <p
+          id="pass_change_info"
+          class="reset-pass-inner-text"
+        />
+        <p class="sign-up-error">
+          {{ message }}
+        </p>
+        <div class="reset-pass-cntxt">
+          <div class="reset-form">
+            <table class="reset-pass-new-pass">
+              <tr>
+                <td align="center">
+                  <input
+                    v-model="new_password"
+                    class="form__input form__longyy"
+                    placeholder="New Password"
+                    type="password"
+                    name="new_password"
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td align="center">
+                  <input
+                    v-model="confirm_password"
+                    class="form__input form__longyy"
+                    placeholder="Confirm New Password"
+                    type="password"
+                    name="confirm password"
+                  >
+                </td>
+              </tr>
 
-<!-- <div align="center" style="margin-bottom:0px;"><img src="https://app.sendyit.com/biz/image/logo.png" height="60px;"  style="margin-bottom:10px;" />  </div> -->
-<div class="change_cont" id="change_con">
-
-  <div class="log-item " id="forgot_pass" >
-
-<p>&nbsp;</p>
-  <p style="font-size:17px;"> Enter new password </p>
-  <p style="color:#F90; height:20px;" id="pass_change_info"></p>
-  <p class="sign-up-error">
-    {{message}}
-  </p>
-  <div style=" margin:0px auto; ">
-  <div class="reset-form">
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-
-  <tr>
-    <td align="center">
-    <input class="form__input form__longyy"  placeholder="New Password" type="password" v-model="new_password" name="new_password" /></td>
-  </tr>
-  <tr>
-    <td align="center">
-    <input class="form__input form__longyy"  placeholder="Confirm New Password" type="password" v-model="confirm_password"  name="confirm password" />
-    </td>
-  </tr>
-
-  <tr>
-    <td align="center"><input type="submit" class="btn btn-primary" style="font-size:14px;  width:310px; margin-top:10px;" value="Change Password" v-on:click="reset_pass" v-bind:disabled="!this.is_valid" /></td>
-  </tr>
-</table>
-
-</div>
+              <tr>
+                <td align="center">
+                  <input
+                    type="submit"
+                    class="btn btn-primary reset-pass-input"
+                    value="Change Password"
+                    :disabled="!this.is_valid"
+                    @click="reset_pass"
+                  >
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <p>&nbsp;</p>
+        <p />
+        <p>&nbsp;</p>
+      </div>
+    </div>
   </div>
-  <p>&nbsp;</p>
-<p> </p>
-<p>&nbsp;</p>
-</div>
-
-</div>
-
-</div>
-
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import SessionMxn from "../../../mixins/session_mixin.js";
+import { mapActions } from 'vuex';
+import SessionMxn from '../../../mixins/session_mixin.js';
 
 export default {
   mixins: [SessionMxn],
   data() {
     return {
-      message: "",
-      new_password: "",
-      confirm_password: ""
+      message: '',
+      new_password: '',
+      confirm_password: '',
     };
   },
   mounted() {
@@ -62,108 +85,102 @@ export default {
   },
   methods: {
     ...mapActions({
-      requestResetPassword: "$_auth/requestResetPassword",
-      requestCheckToken: "$_auth/requestCheckToken"
+      requestResetPassword: '$_auth/requestResetPassword',
+      requestCheckToken: '$_auth/requestCheckToken',
     }),
-    check_content: function() {
-      let token = this.$route.params.content;
+    check_content() {
+      const token = this.$route.params.content;
 
-      let values = {};
+      const values = {};
       values.token = token;
-      let full_payload = {
-        values: values,
+      const full_payload = {
+        values,
         vm: this,
-        app: "NODE_PRIVATE_API",
-        endpoint: "forgot_token"
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'forgot_token',
       };
       this.requestCheckToken(full_payload).then(
-        response => {
+        (response) => {
           // console.log(response);
           if (response.length > 0) {
             response = response[0];
           }
-          //code 001 -token user_id
+          // code 001 -token user_id
           // code 002 -token does
-          if (response.status == true) {
+          if (response.status) {
             // console.log(response);
             // console.log("Valid Token");
           } else {
             // console.warn("Invalid Token");
             this.doNotification(
               2,
-              "Invalid Link",
-              "Invalid Password Reset Link. Redirected to Login Page"
+              'Invalid Link',
+              'Invalid Password Reset Link. Redirected to Login Page',
             );
-            this.$router.push("/auth");
+            this.$router.push('/auth');
           }
         },
-        error => {
-          console.error("Check Internet Connection");
+        (error) => {
+          console.error('Check Internet Connection');
           console.log(error);
-        }
+        },
       );
     },
-    reset_pass: function() {
+    reset_pass() {
       if (this.new_password !== this.confirm_password) {
-        console.log("Password does not match!");
-        this.doNotification(
-          2,
-          "Password Failed",
-          "Password does not match. Please try again"
-        );
+        console.log('Password does not match!');
+        this.doNotification(2, 'Password Failed', 'Password does not match. Please try again');
       } else {
-        let payload = {};
+        const payload = {};
         payload.password = this.new_password;
         payload.token = this.$route.params.content;
 
-        let full_payload = {
+        const full_payload = {
           values: payload,
           vm: this,
-          app: "NODE_PRIVATE_API",
-          endpoint: "update_pass"
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'update_pass',
         };
-        var that = this;
+        const that = this;
         this.requestResetPassword(full_payload).then(
-          response => {
+          (response) => {
             if (response.length > 0) {
               response = response[0];
             }
-            console.log("Update Password", response);
-            if (response.status == true) {
-              let session_data = response.data;
-              let json_session = JSON.stringify(session_data);
+            console.log('Update Password', response);
+            if (response.status) {
+              const session_data = response.data;
+              const json_session = JSON.stringify(session_data);
               this.setSession(json_session);
-              this.$store.commit("setSession", session_data);
-              this.$router.push("/orders");
+              this.$store.commit('setSession', session_data);
+              this.$router.push('/orders');
             } else {
-              console.warn("Password Fail");
               this.doNotification(
                 2,
-                "Password Reset Failed",
-                "Password Reset failed. Please try again"
+                'Password Reset Failed',
+                'Password Reset failed. Please try again',
               );
               // this.$router.push("/auth");
             }
           },
-          error => {
-            console.error("Check Internet Connection");
-            this.message = "Login failed";
+          (error) => {
+            this.message = 'Login failed';
             console.log(error);
-          }
+          },
         );
       }
     },
     doNotification(level, title, message) {
-      let notification = { title: title, level: level, message: message };
-      this.$store.commit("setNotification", notification);
-      this.$store.commit("setNotificationStatus", true);
-    }
+      const notification = { title, level, message };
+      this.$store.commit('setNotification', notification);
+      this.$store.commit('setNotificationStatus', true);
+    },
   },
   computed: {
-    is_valid: function() {
-      return this.confirm_password != "" && this.new_password != "";
-    }
-  }
+    is_valid() {
+      return this.confirm_password !== '' && this.new_password !== '';
+    },
+  },
 };
 </script>
 
@@ -220,5 +237,26 @@ export default {
 }
 .reset-form {
   margin-left: 23%;
+}
+.reset-pass-new-pass{
+  width:100%;
+  border:0px;
+  cellspacing :0px;
+  cellpadding :0px;
+}
+.reset-pass-inner-text{
+  color:#F90;
+  height:20px;
+}
+.reset-pass-text{
+  font-size:17px;
+}
+.reset-pass-cntxt{
+  margin:0px auto;
+}
+.reset-pass-input{
+  font-size:14px;
+  width:310px;
+  margin-top:10px;
 }
 </style>
