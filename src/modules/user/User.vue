@@ -1,65 +1,67 @@
 <template lang="html">
-  <div class="" id="user_container">
-      <main-header></main-header>
-    <router-view></router-view>
+  <div
+    id="user_container"
+    class=""
+  >
+    <main-header />
+    <router-view />
   </div>
 </template>
 
 <script>
-import Vue from "vue"
+import Vue from 'vue';
 import { mapGetters } from 'vuex';
-import user_store from './_store';
-import RegisterStoreModule from '../../mixins/register_store_module'
-import MainHeader from '../../components/headers/MainHeader.vue'
 import VeeValidate from 'vee-validate';
 import { Validator } from 'vee-validate';
-import VueTelInput from 'vue-tel-input'
+import VueTelInput from 'vue-tel-input';
+import user_store from './_store';
+import RegisterStoreModule from '../../mixins/register_store_module';
+import MainHeader from '../../components/headers/MainHeader.vue';
 
 Vue.use(VueTelInput);
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
-       getMessage: field => `The phone number not valid`,
-       validate: value => {
-         let phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-         let validity = false;
-         try {
-
-           let number = phoneUtil.format(value);
-           validity = (phoneUtil.isValidNumber(number));
-         } catch (e) {
-           console.log(e);
-           validity = false;
-         }
-         return validity;
-       }
-   });
+  getMessage: field => 'The phone number not valid',
+  validate: (value) => {
+    const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+    let validity = false;
+    try {
+      const numb = phoneUtil.format(value);
+      const number = phoneUtil.parse(numb);
+      validity = phoneUtil.isValidNumber(number);
+    } catch (e) {
+      console.log(e);
+      validity = false;
+    }
+    return validity;
+  },
+});
 
 export default {
-  name:'User',
-  mixins: [ RegisterStoreModule ],
-  components : {MainHeader},
+  name: 'User',
+  components: { MainHeader },
+  mixins: [RegisterStoreModule],
   created() {
     const STORE_KEY = '$_user';
     this.$store.registerModule(STORE_KEY, user_store);
   },
   computed: {
     ...mapGetters({
-      getSession : 'getSession'
+      getSession: 'getSession',
     }),
   },
   watch: {
     getSession: {
-      handler(val, oldVal){
+      handler(val, oldVal) {
         if (oldVal != val) {
-          this.$router.push('/orders')
+          this.$router.push('/orders');
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
-}
+};
 </script>
 
-<style lang="css">
-</style>
+<style lang="css"></style>
