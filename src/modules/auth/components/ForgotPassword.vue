@@ -110,12 +110,13 @@ export default {
       requestForgotPassword: '$_auth/requestForgotPassword',
     }),
     resend_link() {
+      console.log('Reset Password request');
       this.request_pass();
     },
     request_pass() {
       let email_valid = true;
       for (let i = 0; i < this.errors.items.length; i++) {
-        if (this.errors.items[i].field === 'email') {
+        if (this.errors.items[i].field == 'email') {
           email_valid = false;
           break;
         }
@@ -170,11 +171,12 @@ export default {
 
         this.requestForgotPassword(full_payload).then(
           (response) => {
+            console.log(response);
             // check when response is dual
             if (response.length > 0) {
               response = response[0];
             }
-            if (response.status) {
+            if (response.status === true) {
               this.option = false;
               this.message = 'Password change reset link has been sent to your email';
               // Reset link set to user email.
@@ -183,19 +185,22 @@ export default {
               this.two_accnts = true;
               this.nonce = response.nonce;
               // update nonce data
-            } else if (!response.status) {
+            } else if (response.status === false) {
               // Account does not exist
+              console.log('Account does not exist');
               this.message = 'Account does not exist.Please sign-up to create a sendy account';
-            } else if (response.status === 'exists') {
+            } else if (response.status == 'exists') {
               // Existing password reset option
               this.message = '';
               this.nonce = response.nonce;
               this.option = true;
             } else {
               // Invalid request
+              console.log('Invalid Request');
             }
           },
           (error) => {
+            console.error('Check Internet Connection');
             console.log(error);
           },
         );
