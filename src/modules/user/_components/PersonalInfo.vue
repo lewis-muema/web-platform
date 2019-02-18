@@ -26,7 +26,7 @@
           class="form-control profile1-dimen"
         >
       </p>
-      <p style="margin-bottom: 20px;">
+      <p class="personal-info-padding">
         <label class="input-descript">
           <span>Phone Number</span>
         </label>
