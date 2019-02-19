@@ -156,9 +156,9 @@ export default {
           } else if (session.default === 'peer') {
             const values = {
               user_id: session[session.default].user_id,
-              user_name: session[session.default].user_name,
-              user_email: session[session.default].user_email,
-              user_phone: session[session.default].user_phone,
+              user_name: this.user_name,
+              user_email: this.user_email,
+              user_phone: phone,
             };
 
             const full_payload = {
