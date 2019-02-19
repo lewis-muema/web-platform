@@ -124,8 +124,8 @@ export default {
             cop_id: session[session.default].cop_id,
             cop_name: this.cop_name,
             cop_contact_person: this.contact_name,
-            cop_biz_email: this.contact_email,
-            cop_biz_phone: phone,
+            cop_email: this.contact_email,
+            cop_phone: phone,
           };
 
           const full_payload = {

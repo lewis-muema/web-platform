@@ -61,8 +61,7 @@ Validator.extend('check_phone', {
     const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
     let validity = false;
     try {
-      const numb = phoneUtil.format(value);
-      const number = phoneUtil.parse(numb);
+      const number = phoneUtil.parse(value);
       validity = phoneUtil.isValidNumber(number);
     } catch (e) {
       console.log(e);
