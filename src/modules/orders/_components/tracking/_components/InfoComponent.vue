@@ -12,7 +12,7 @@
            <el-col :span="6">
              <div class="">
                <i class="el-icon-success top-bar-info"></i>
-                ORDER : {{ tracking_data.order_no }}
+                ORDER NUMBER : {{ tracking_data.order_no }}
              </div>
            </el-col>
            <el-col :span="6">
@@ -28,7 +28,14 @@
                <div class="topbar-text">
                  <font-awesome-icon icon="wallet" class="top-bar-info" />
                  <span v-if="this.getStatus == 'Pending'">
-                   COST : KES {{ tracking_data.price_tier.cost - tracking_data.price_tier.price_variance}} - {{ tracking_data.price_tier.cost + tracking_data.price_tier.price_variance}}
+                   <span v-if="('customer_min_amount' in this.tracking_data.package_details)">
+
+                      MINIMUM COST : KES {{ tracking_data.package_details.customer_min_amount}}
+
+                   </span>
+                   <span v-else>
+                       MINIMUM COST : Not Indicated
+                   </span>
                  </span>
                  <span v-else>
                    COST : KES {{ tracking_data.price_tier.cost}}
