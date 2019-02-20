@@ -50,7 +50,7 @@
 
                 <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-left">
                   <div class="home-view-vendor-types-item--cost-wrapper__cost">
-                    <span v-if="j.vendor_id === 20">
+                    <span v-if="!isFixedCost(j)">
                       Price to be confirmed
                     </span>
                     <span v-else>
