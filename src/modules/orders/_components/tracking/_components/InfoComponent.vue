@@ -34,7 +34,7 @@
 
                    </span>
                    <span v-else>
-                       MINIMUM COST : Not Indicated
+                      COST : KES {{ tracking_data.price_tier.cost}}
                    </span>
                  </span>
                  <span v-else>
