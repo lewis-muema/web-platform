@@ -4,76 +4,78 @@
     class="log-item"
   >
     <div class="sign-inner">
-      <div class="sign-top">
-        Log in to Sendy
-      </div>
+      <label>
+        <div class="sign-top">
+          Log in to Sendy
+        </div>
 
-      <!-- <div class="sign-in-button" @click="" id="sign-in-v2-logging-in-1">
+        <!-- <div class="sign-in-button" @click="" id="sign-in-v2-logging-in-1">
             <img  class="sign-buttom__img" alt="" src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
             </div>
             <div class="sign-text">
                or
             </div> -->
 
-      <p class="sign-in-error">
-        {{ message }}
-      </p>
+        <p class="sign-in-error">
+          {{ message }}
+        </p>
 
-      <div @keyup.enter="sign_in">
-        <div class="sign-holder dimen">
-          <span
-            id="log_in_warn"
-            class="sign-holder__error"
-          />
-        </div>
-        <div class="sign-holder dimen">
-          <input
-            v-model="email"
-            class="input-control sign-form"
-            type="text"
-            name="email"
-            placeholder="Enter Email"
-            autocomplete="on"
-          >
-        </div>
+        <div @keyup.enter="sign_in">
+          <div class="sign-holder dimen">
+            <span
+              id="log_in_warn"
+              class="sign-holder__error"
+            />
+          </div>
+          <div class="sign-holder dimen">
+            <input
+              v-model="email"
+              class="input-control sign-form"
+              type="text"
+              name="email"
+              placeholder="Enter Email"
+              autocomplete="on"
+            >
+          </div>
 
-        <div class="sign-holder dimen">
-          <input
-            v-model="password"
-            class="input-control sign-form"
-            type="password"
-            name="password"
-            placeholder="Password"
-          >
-        </div>
+          <div class="sign-holder dimen">
+            <input
+              v-model="password"
+              class="input-control sign-form"
+              type="password"
+              name="password"
+              placeholder="Password"
+            >
+          </div>
 
-        <div class="sign-holder">
-          <input
-            v-model="login_text"
-            class="button-primary sign-btn-color"
-            type="submit"
-            name="login_text"
-            @click="sign_in"
-          >
+          <div class="sign-holder">
+            <input
+              v-model="login_text"
+              class="button-primary sign-btn-color"
+              type="submit"
+              name="login_text"
+              @click="sign_in"
+            >
+          </div>
+          <div class=" sign-holder sign-forgot-pass sign-smaller">
+            <router-link
+              class="sign-holder__link"
+              to="/auth/forgot_password"
+            >
+              Forgot password?
+            </router-link>
+          </div>
+          <div class="sign-holder sign-sign-up sign-smaller">
+            Don't have an Account?
+            <router-link
+              class="sign-holder__link"
+              to="/auth/sign_up"
+            >
+              Sign Up
+            </router-link>
+          </div>
         </div>
-        <div class=" sign-holder sign-forgot-pass sign-smaller">
-          <router-link
-            class="sign-holder__link"
-            to="/auth/forgot_password"
-          >
-            Forgot password?
-          </router-link>
-        </div>
-        <div class="sign-holder sign-sign-up sign-smaller">
-          Don't have an Account?
-          <router-link
-            class="sign-holder__link"
-            to="/auth/sign_up"
-          >
-            Sign Up
-          </router-link>
-        </div>
-      </div>
+      </label>
     </div>
   </div>
 </template>
@@ -263,7 +265,7 @@ export default {
 
 .sign-smaller {
     font-size: 14px;
-    color: #999999;
+    color: #595959;
 }
 
 .sign-forgot-pass,
@@ -279,7 +281,7 @@ export default {
 }
 
 .sign-holder__link {
-    color: #1782c5;
+    color: #0E5D90;
     text-decoration: none;
 }
 
@@ -303,5 +305,6 @@ export default {
 
 .sign-btn-color {
     border-width: 0px !important;
+    background-color: #0E5D90;
 }
 </style>
