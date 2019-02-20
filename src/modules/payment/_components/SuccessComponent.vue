@@ -1,85 +1,88 @@
 <template lang="html">
-    <div>
-        <div class="payment--loading-title">
-        {{payment_loading_title}}
-        </div>
-        <div class="payment--mpesa-image">
-            <img src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/success.png"/>
-        </div>
-        <div class="paymemt--mpesa-loader-actions">
-            <button type="button" class="button-primary paymentbody--input-button" @click="backToPaymentRequest">
-                Ok
-            </button>
-        </div>
+  <div>
+    <div class="payment--loading-title">
+      {{ payment_loading_title }}
     </div>
-
+    <div class="payment--mpesa-image">
+      <img
+        src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/success.png"
+        alt=""
+      >
+    </div>
+    <div class="paymemt--mpesa-loader-actions">
+      <button
+        type="button"
+        class="button-primary paymentbody--input-button"
+        @click="backToPaymentRequest"
+      >
+        Ok
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
-  name: "payment_success",
+  name: 'PaymentSuccess',
   data() {
     return {
-      loading: true
+      loading: true,
     };
   },
   mounted() {
     this.requestRB();
   },
   methods: {
-    ...mapActions(["$_payment/resetMpesaPaymentRequest"]),
+    ...mapActions(['$_payment/resetMpesaPaymentRequest']),
     backToPaymentRequest() {
-      let payload = {};
-      this.$store.dispatch("$_payment/resetMpesaPaymentRequest", payload).then(
-        response => {
+      const payload = {};
+      this.$store.dispatch('$_payment/resetMpesaPaymentRequest', payload).then(
+        (response) => {
           console.log(response);
         },
-        error => {
+        (error) => {
           console.log(error);
-        }
+        },
       );
     },
     requestRB() {
-      //this will request from the api and update the store
-      let session = this.$store.getters.getSession;
+      // this will request from the api and update the store
+      const session = this.$store.getters.getSession;
       let cop_id = 0;
-      if (session.default == "biz") {
+      if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
       }
-      let running_balance_payload = {
+      const running_balance_payload = {
         values: {
-          cop_id: cop_id,
-          user_phone: session[session.default]["user_phone"]
-        }
+          cop_id,
+          user_phone: session[session.default].user_phone,
+        },
       };
 
-      let payload = {
+      const payload = {
         values: running_balance_payload,
-        vm: this,
-        app: "PRIVATE_API",
-        endpoint: "running_balance"
+        app: 'PRIVATE_API',
+        endpoint: 'running_balance',
       };
 
-      this.$store
-        .dispatch("requestRunningBalance", payload, { root: true })
-        .then(
-          response => {
-            console.log(response);
-          },
-          error => {
-            console.log(error);
-          }
-        );
-    }
+      this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
+        (response) => {
+          console.log(response);
+        },
+        (error) => {
+          console.log(error);
+        },
+      );
+    },
   },
   computed: {
     payment_loading_title() {
-      return "Your payment was successful";
-    }
-  }
+      return 'Your payment was successful';
+    },
+  },
 };
 </script>
 
-<style lang="css">
-</style>
+<style lang="css"></style>

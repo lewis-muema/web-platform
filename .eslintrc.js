@@ -1,9 +1,6 @@
 module.exports = {
-  extends: [
-    'airbnb-base',
-    'plugin:vue/recommended',
-  ],
+  extends: ['airbnb-base', 'plugin:vue/recommended'],
   rules: {
-    "no-debugger": process.env.NODE_ENV === 'production' ? 2 : 0,
-  }
-}
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+  },
+};

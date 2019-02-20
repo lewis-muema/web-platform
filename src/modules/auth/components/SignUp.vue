@@ -12,7 +12,7 @@
       </div>
 
       <!-- <div class="sign-button" onclick="" id="sign-in-v2-logging-in-1">
-  <img class="sign-buttom__img" src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
+  <img class="sign-buttom__img" alt= "" src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
   </div>
   <div class="sign-text">
      or
