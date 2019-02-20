@@ -163,8 +163,8 @@
                         <p>{{ tracking_data.date_time | moment }}</p>
                      </div>
                    </li>
-                   <li>
-                     <div class="" v-if="this.getStatus !== 'Pending'">
+                   <li v-if="this.getStatus !== 'Pending'">
+                     <div class="">
                        <p>PRICE CONFIRMATION</p>
                        <div class="">
                          <div class="" v-if="this.accType === 1">
