@@ -1,492 +1,669 @@
 <template lang="html">
   <div>
-   <div class="truck-info-component" v-if="this.truckMoreInfo">
-  <transition
-    name="fade"
-    mode="out-in"
-  >
-    <div v-if="loading == false" class="infobar--truck--outer">
-       <div class="infobar-content infobar--content-padded" key="prime">
-
-         <el-row :gutter="20" class="infobar-content infobar--truck-item  infobar--item-truck-bordered infobar-truck-pstn">
-           <el-col :span="6">
-             <div class="">
-               <i class="el-icon-success top-bar-info"></i>
-                ORDER NUMBER : {{ tracking_data.order_no }}
-             </div>
-           </el-col>
-           <el-col :span="6">
-             <div class="">
-               <img src="https://images.sendyit.com/web_platform/tracking/status.svg" alt="" class="top-bar-img">
-               <span>
-                 STATUS : {{ getStatus }}
-               </span>
-             </div>
-           </el-col>
-           <el-col :span="6">
-             <div class="">
-               <div class="topbar-text">
-                 <font-awesome-icon icon="wallet" class="top-bar-info" />
-                 <span v-if="this.getStatus == 'Pending'">
-                   <span v-if="('customer_min_amount' in this.tracking_data.package_details)">
-
-                      MINIMUM COST : KES {{ tracking_data.package_details.customer_min_amount}}
-
-                   </span>
-                   <span v-else>
-                      COST : KES {{ tracking_data.price_tier.cost}}
-                   </span>
-                 </span>
-                 <span v-else>
-                   COST : KES {{ tracking_data.price_tier.cost}}
-
-                 </span>
-               </div>
-             </div>
-           </el-col>
-           <el-col :span="5">
-             <div class="">
-               <div class="topbar-text">
-                   ORDER TIMELINE
-               </div>
-             </div>
-           </el-col>
-           <el-col :span="1">
-             <div v-if="this.truckMoreInfo"
-               class="infobar--actions-hover"
-               @click="minimiseInfoDetails()"
-             >
-               <div class="infobar--actions-icon">
-                 <i class="el-icon-remove-outline" />
-               </div>
-             </div>
-           </el-col>
-         </el-row>
-            <el-row :gutter="20" class="infobar-content infobar--truck-cont-item" style="padding-bottom: 5px;">
-            <el-col :span="5">
-              <div class="infobar--item-truck-cont-bordered inforbar--item-scrollable">
-                <ul class="timeline" style="">
-                  <li>
-                    <p>PICKUP LOCATION</p>
-                    <p>{{tracking_data.path[0].name}}</p>
-                  </li>
-                     <div class="timeline-date-disp">
-                       <p>PICKUP DATE</p>
-                       <p>{{ tracking_data.date_time | moment }}</p>
-                     </div>
-                  <li>
-                    <p>DESTINATION</p>
-                    <p v-for="(val, index) in tracking_data.path" v-if="index > 0" > {{val.name}}</p>
-                  </li>
-                </ul>
-              </div>
-            </el-col>
-            <el-col :span="5">
-              <div class="infobar--item-truck-cont-bordered" style="padding-left: 30px;">
-                <div class="" style="padding-bottom: 10px;">
-                  <div class="" style="">
-                    <img src="https://images.sendyit.com/web_platform/vendor_type/side/20.svg" alt="" class="infobar-truck-img">
-                    <span>
-                      TRUCK
+    <div
+      v-if="this.truckMoreInfo"
+      class="truck-info-component"
+    >
+      <transition
+        name="fade"
+        mode="out-in"
+      >
+        <div
+          v-if="!loading"
+          class="infobar--truck--outer"
+        >
+          <div
+            key="prime"
+            class="infobar-content infobar--content-padded"
+          >
+            <el-row
+              :gutter="20"
+              class="infobar-content infobar--truck-item  infobar--item-truck-bordered infobar-truck-pstn"
+            >
+              <el-col :span="6">
+                <div class="info-text-transform">
+                  <i class="el-icon-success top-bar-info" />
+                  Order Number : {{ tracking_data.order_no }}
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="info-text-transform">
+                  <img
+                    src="https://images.sendyit.com/web_platform/tracking/status.svg"
+                    alt=""
+                    class="top-bar-img"
+                  >
+                  <span> Status : {{ getStatus }} </span>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="info-text-transform">
+                  <div class="topbar-text">
+                    <font-awesome-icon
+                      icon="wallet"
+                      class="top-bar-info"
+                    />
+                    <span v-if="this.getStatus === 'Pending'">
+                      <span v-if="'customer_min_amount' in this.tracking_data.package_details">
+                        Minimum Cost : KES {{ tracking_data.package_details.customer_min_amount }}
+                      </span>
+                      <span v-else>
+                        Cost : KES {{ tracking_data.price_tier.cost }}
+                      </span>
+                    </span>
+                    <span v-else>
+                      Cost : KES {{ tracking_data.price_tier.cost }}
                     </span>
                   </div>
-                  <div class="" style="padding-left:35px;">
-                       {{tracking_data.price_tier.vendor_name}}
+                </div>
+              </el-col>
+              <el-col :span="5">
+                <div class="info-text-transform">
+                  <div class="topbar-text">
+                    Order Timeline
                   </div>
                 </div>
-                <div class="" style="padding-bottom: 10px;">
-                  <div class="">
-                    <img src="https://images.sendyit.com/web_platform/tracking/goods.svg" alt="" class="infobar-truck-img">
-                    <span>
-                      GOODS TO BE DELIVERED
-                    </span>
-                  </div>
-                  <div class="" style="padding-left:35px;" v-if="('load_weight' in tracking_data.package_details )">
-                        {{tracking_data.package_details.delivery_item}}
-                  </div>
-                  <div style="padding-left:35px;" v-else>
-                        Not Indicated
+              </el-col>
+              <el-col :span="1">
+                <div
+                  v-if="this.truckMoreInfo"
+                  class="infobar--actions-hover"
+                  @click="minimiseInfoDetails()"
+                >
+                  <div class="infobar--actions-icon">
+                    <i class="el-icon-remove-outline" />
                   </div>
                 </div>
-                <div class="" style="padding-bottom: 10px;">
-                  <div class="">
-                    <img src="https://images.sendyit.com/web_platform/tracking/load_weight.svg" alt="" class="infobar-truck-img">
-                    <span>
-                      LOAD WEIGHT
-                    </span>
-                  </div>
-                  <div class="" style="padding-left:35px;" v-if="('load_weight' in tracking_data.package_details )">
-                      {{tracking_data.package_details.load_weight}} {{tracking_data.package_details.load_units}}
-                  </div>
-                  <div v-else style="padding-left:35px;">
-                       Not Indicated
-                  </div>
+              </el-col>
+            </el-row>
+            <el-row
+              :gutter="20"
+              class="infobar-content infobar--truck-cont-item infobar--truck-cont-padding"
+            >
+              <el-col :span="5">
+                <div class="infobar--item-truck-cont-bordered inforbar--item-scrollable">
+                  <ul
+                    class="timeline"
+                    style=""
+                  >
+                    <li>
+                      <p class="info-text-transform">
+                        Pickup Location
+                      </p>
+                      <p>{{ tracking_data.path[0].name }}</p>
+                    </li>
+                    <div class="timeline-date-disp">
+                      <p class="info-text-transform">
+                        Pickup Date
+                      </p>
+                      <p>{{ tracking_data.date_time | moment }}</p>
+                    </div>
+                    <li>
+                      <p class="info-text-transform">
+                        Destination
+                      </p>
+                      <p
+                        v-for="(val, index) in tracking_data.path"
+                        v-if="index > 0"
+                      >
+                        {{ val.name }}
+                      </p>
+                    </li>
+                  </ul>
                 </div>
-                <div class="" style="padding-bottom: 10px;">
-                  <div class="">
-                    <img src="https://images.sendyit.com/web_platform/tracking/loader.svg" alt="" class="infobar-truck-img">
-                    <span>
-                      DO YOU NEED A LOADER
-                    </span>
+              </el-col>
+              <el-col :span="5">
+                <div class="infobar--item-truck-cont-bordered tracking-loader-outer">
+                  <div class="tracking-loader">
+                    <div
+                      class=""
+                      style=""
+                    >
+                      <img
+                        src="https://images.sendyit.com/web_platform/vendor_type/side/20.svg"
+                        alt=""
+                        class="infobar-truck-img"
+                      >
+                      <span class="info-text-transform">
+                        Truck
+                      </span>
+                    </div>
+                    <div class="tracking-loader-inner">
+                      {{ tracking_data.price_tier.vendor_name }}
+                    </div>
                   </div>
-                  <div class="" style="padding-left:35px;" v-if="tracking_data.package_details.additional_loader == true">
-                        Yes, {{tracking_data.package_details.no_of_loaders}}
+                  <div class="tracking-loader">
+                    <div class="">
+                      <img
+                        src="https://images.sendyit.com/web_platform/tracking/goods.svg"
+                        alt=""
+                        class="infobar-truck-img"
+                      >
+                      <span class="info-text-transform">
+                        Goods to be delivered
+                      </span>
+                    </div>
+                    <div
+                      v-if="'delivery_item' in tracking_data.package_details"
+                      class="tracking-loader-inner"
+                    >
+                      {{ tracking_data.package_details.delivery_item }}
+                    </div>
+                    <div
+                      v-else
+                      class="tracking-loader-inner"
+                    >
+                      Not Indicated
+                    </div>
                   </div>
-                  <div v-else class="" style="padding-left:35px;">
-                          No
+                  <div class="tracking-loader">
+                    <div class="">
+                      <img
+                        src="https://images.sendyit.com/web_platform/tracking/load_weight.svg"
+                        alt=""
+                        class="infobar-truck-img"
+                      >
+                      <span class="info-text-transform">
+                        Load Weight
+                      </span>
+                    </div>
+                    <div
+                      v-if="'load_weight' in tracking_data.package_details"
+                      class="tracking-loader-inner"
+                    >
+                      {{ tracking_data.package_details.load_weight }}
+                      {{ tracking_data.package_details.load_units }}
+                    </div>
+                    <div
+                      v-else
+                      class="tracking-loader-inner"
+                    >
+                      Not Indicated
+                    </div>
                   </div>
-                </div>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="infobar--item-truck-cont-bordered" style="padding-bottom: 10px;padding-left: 30px;" >
-                <div class="">
-                      NOTES
-                </div>
-                <div v-if="tracking_data.order_notes.length > 0 " class="" style="max-width: 80%!important;">
-                  <div v-for="(val, index) in tracking_data.order_notes" v-if="index >= 0" >
-                    <div v-for="(val,index) in tracking_data.order_notes[0].msg" v-if="index >= 0">
-                            {{val}}
+                  <div class="tracking-loader">
+                    <div class="">
+                      <img
+                        src="https://images.sendyit.com/web_platform/tracking/loader.svg"
+                        alt=""
+                        class="infobar-truck-img"
+                      >
+                      <span class="info-text-transform">
+                        Do you need a loader?
+                      </span>
+                    </div>
+                    <div
+                      v-if="tracking_data.package_details.additional_loader"
+                      class="tracking-loader-inner"
+                    >
+                      Yes, {{ tracking_data.package_details.no_of_loaders }}
+                    </div>
+                    <div
+                      v-else
+                      class="tracking-loader-inner"
+                    >
+                      No
                     </div>
                   </div>
                 </div>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="">
-                <div class="inforbar--item-scrollable">
-                  <ul class="timeline" style="">
-                   <li>
-                     <div class="">
-                       <p>ORDER PLACED</p>
-                       <p>Your order has been received and we shall notify you on the actual cost shortly</p>
-                        <p>{{ tracking_data.date_time | moment }}</p>
-                     </div>
-                   </li>
-                   <li v-if="this.getStatus !== 'Pending'">
-                     <div class="">
-                       <p>PRICE CONFIRMATION</p>
-                       <div class="">
-                         <div class="" v-if="this.accType === 1">
-                           <p>Price has been confirmed to be Ksh {{tracking_data.amount}}</p>
-                         </div>
-                         <div class="" v-else>
-                           <div v-if= "this.myRb <= 0">
-                              <p>Price has been confirmed to be Ksh {{tracking_data.amount}}</p>
-                           </div>
-                           <div v-else>
-                             <p>Price has been confirmed to be Ksh {{tracking_data.amount}}.Choose payment option below</p>
-                             <div class="">
-                               <el-radio v-model="paymentOption" label="1">M-Pesa</el-radio>
-                             </div>
-                             <div class="">
-                               <el-radio v-model="paymentOption" label="2">Card</el-radio>
-                             </div>
-                             <div class="" style="padding-left: 5px; padding-top: 10px;">
-                               <input type="submit" class="button-primary"  @click="takeMeToPayment()" style="width:200px;"
-                                      value="Make Payment"/>
-                             </div>
-                           </div>
-                         </div>
-                       </div>
-                     </div>
-                    </li>
-                    <li v-for="(val, index) in tracking_data.delivery_log" v-if="index > 0" >
-                      <div class="">
-                        <p>{{val.description}}</p>
-                        <p>{{ val.log_time | moment }}</p>
+              </el-col>
+              <el-col :span="6">
+                <div class="infobar--item-truck-cont-bordered tracking-notes">
+                  <div class="info-text-transform">
+                    Notes
+                  </div>
+                  <div
+                    v-if="tracking_data.order_notes.length > 0"
+                    class="tracking-notes-inner"
+                  >
+                    <div
+                      v-for="(val, index) in tracking_data.order_notes"
+                      v-if="index >= 0"
+                    >
+                      <div
+                        v-for="(val, index) in tracking_data.order_notes[0].msg"
+                        v-if="index >= 0"
+                      >
+                        {{ val }}
                       </div>
-                    </li>
-                 </ul>
-              </div>
-              </div>
-            </el-col>
-
-          </el-row>
-          <div class="save-option" v-if="this.getStatus == 'Pending'">
-            <el-row :gutter="20" class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top" style="padding-bottom: 5px;padding-top: 10px;text-align:center;max-width:70%;margin-left: -35px;">
-              <!-- <el-col :span="6">
+                    </div>
+                  </div>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="">
+                  <div class="inforbar--item-scrollable">
+                    <ul
+                      class="timeline"
+                      style=""
+                    >
+                      <li>
+                        <div class="">
+                          <p class="info-text-transform">
+                            Order Placed
+                          </p>
+                          <p>
+                            Your order has been received and we shall notify you on the actual cost
+                            shortly
+                          </p>
+                          <p>{{ tracking_data.date_time | moment }}</p>
+                        </div>
+                      </li>
+                      <li v-if="this.getStatus !== 'Pending'">
+                        <div class="">
+                          <p class="info-text-transform">
+                            Price Confirmation
+                          </p>
+                          <div class="">
+                            <div
+                              v-if="this.accType === 1"
+                              class=""
+                            >
+                              <p>Price has been confirmed to be Ksh {{ tracking_data.amount }}</p>
+                            </div>
+                            <div
+                              v-else
+                              class=""
+                            >
+                              <div v-if="this.myRb <= 0">
+                                <p>Price has been confirmed to be Ksh {{ tracking_data.amount }}</p>
+                              </div>
+                              <div v-else>
+                                <p>
+                                  Price has been confirmed to be Ksh
+                                  {{ tracking_data.amount }}.Choose payment option below
+                                </p>
+                                <div class="">
+                                  <el-radio
+                                    v-model="paymentOption"
+                                    label="1"
+                                  >
+                                    M-Pesa
+                                  </el-radio>
+                                </div>
+                                <div class="">
+                                  <el-radio
+                                    v-model="paymentOption"
+                                    label="2"
+                                  >
+                                    Card
+                                  </el-radio>
+                                </div>
+                                <div class="info-payment-button">
+                                  <input
+                                    type="submit"
+                                    class="button-primary button-tracking-payment"
+                                    value="Make Payment"
+                                    @click="takeMeToPayment()"
+                                  >
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                      <li
+                        v-for="(val, index) in tracking_data.delivery_log"
+                        v-if="index > 0"
+                      >
+                        <div class="">
+                          <p class="">
+                            {{ val.description }}
+                          </p>
+                          <p>{{ val.log_time | moment }}</p>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </el-col>
+            </el-row>
+            <div
+              v-if="this.getStatus === 'Pending'"
+              class="save-option"
+            >
+              <el-row
+                :gutter="20"
+                class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top infobar--item-truck-cancel"
+              >
+                <!-- <el-col :span="6">
                 <div class="">
                   <img src="https://images.sendyit.com/web_platform/tracking/save.svg" alt="" class="infobar-truck-img">
                   <span> SAVE DETAILS </span>
                 </div>
               </el-col> -->
-              <el-col :span="6">
-                <div class="" style="padding-top:4px;cursor:pointer;" @click="canceldialog()">
-                  <i class="el-icon-circle-close top-bar-info"></i>
-                     CANCEL ORDER
-                </div>
-              </el-col>
-            </el-row>
-          </div>
-
-          <div class="rider-info" v-if="this.getStatus !== 'Pending'">
-            <el-row :gutter="20" class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top" style="padding-bottom: 5px;padding-top: 10px;text-align:center;max-width:70%">
-              <el-col :span="8">
-                <div class="">
-                  <img
-                    class="rimg"
-                    :src="tracking_data.rider.rider_photo" style="height: 55px;vertical-align: middle;"
+                <el-col :span="6">
+                  <div
+                    class="info-text-transform info-text-cursor"
+                    @click="canceldialog()"
                   >
-                  <span>{{ tracking_data.rider.rider_name }} - {{ tracking_data.rider.rider_phone }}</span>
+                    <i class="el-icon-circle-close top-bar-info" />
+                    Cancel Order
+                  </div>
+                </el-col>
+              </el-row>
+            </div>
 
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="">
-                  <img
-                    class="rimg"
-                    :src="tracking_data.rider.rider_photo" style="height: 55px;vertical-align: middle;"
-                  >
-                  <span>{{ tracking_data.rider.vehicle_name }} - {{ tracking_data.rider.number_plate }}</span>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="" style="padding-top: 20px;">
-                  <i class="el-icon-share top-bar-info" ></i>
-                     SHARE
-                </div>
-              </el-col>
-            </el-row>
-          </div>
-       </div>
-       <el-dialog :visible.sync="cancelOption" class="cancelOptions">
-         <div class="">
-           <div class="" style="text-align:center;">
-             Cancel this order?
-           </div>
-           <div class="" style="text-align:center;">
-             You can place another one at any time.
-           </div>
-         </div>
-         <div class="" style="padding-left: 30%;margin-bottom: 10px;margin-top: 10px;">
-           <div class="">
-               <el-radio v-model="cancel_reason" label="4">I placed the wrong locations</el-radio>
-             </div>
-             <div class="">
-               <el-radio v-model="cancel_reason" label="5">My order is not ready</el-radio>
-             </div>
-             <div class="">
-                 <el-radio v-model="cancel_reason" label="7">No driver has been allocated</el-radio>
-               </div>
-               <div class="">
-                 <el-radio v-model="cancel_reason" label="8">I placed this order twice</el-radio>
-               </div>
-         </div>
-         <div class="action--slide-desc">
-           <button
-             type="button"
-             name="button"
-             class="action--slide-button"
-             @click="cancelOrder()"
-           >
-             Yes
-           </button>
-           <button
-             type="button"
-             name="button"
-             class="action--slide-button"
-             @click="cancelToggle()"
-           >
-             No
-           </button>
-         </div>
-         </el-dialog>
-
-    </div>
-  </transition>
-</div>
-
-  <div>
-    <transition
-      name="fade"
-      mode="out-in"
-    >
-    <div v-if="!(this.truckMoreInfo)">
-    <div
-      v-if="loading == false"
-      class="infobar--outer"
-    >
-      <div class="infobar--content infobar--content-padded">
-        <div class="infobar--photo infobar--content infobar--item infobar--item-bordered">
-          <img
-            class="rimg"
-            :src="tracking_data.rider.rider_photo"
-          >
-        </div>
-        <div class="infobar--content infobar--item infobar--driver infobar--item-bordered">
-          <div
-            v-if="tracking_data.confirm_status > 0"
-            class="infobar--driver-details"
-          >
-            <div class="">
-              {{ tracking_data.rider.rider_name }} - {{ tracking_data.rider.rider_phone }}
-            </div>
-            <div class="">
-              {{ tracking_data.rider.vehicle_name }} - {{ tracking_data.rider.number_plate }}
-            </div>
-          </div>
-          <div
-            v-else
-            class="infobar--driver-details"
-          >
-            <div class="">
-              {{ tracking_data.description_head }}
-            </div>
-            <div class="">
-              {{ tracking_data.marketing_message }}
-            </div>
-          </div>
-        </div>
-        <div class="infobar--content infobar--item infobar--order infobar--item-bordered">
-          <div class="" v-if="this.getStatus == 'Pending'">
-            <div v-if="([6,10,13,14,17,18,19,20].includes(tracking_data.rider.vendor_id))">
-              KES {{ tracking_data.price_tier.cost - tracking_data.price_tier.price_variance}} - {{ tracking_data.price_tier.cost + tracking_data.price_tier.price_variance}}
-            </div>
-            <div v-else>
-              KES {{ tracking_data.amount }}
-            </div>
-          </div>
-          <div v-else>
-              KES {{ tracking_data.amount }}
-          </div>
-          <div class="">
-            <div class="">
-              {{ tracking_data.order_no }}
-            </div>
-          </div>
-        </div>
-
-        <div class="infobar--content infobar--item infobar--status infobar--item-bordered">
-          <div class="">
-            {{ getStatus }}
-          </div>
-          <div class="">
-            <span
-              v-if="tracking_data.delivery_status < 2"
-              class=""
-            >
-              A Rider will pick and deliver your order by <span class="">
-                {{ moment(tracking_data.date_time).format("h:mm a") }}
-              </span>
-            </span>
-            <span class="" v-else>
-              Estimated Delivery: <span class=""> {{this.tracking_data.etd}} </span>
-            </span>
-          </div>
-        </div>
-        <div
-          v-if="this.$route.name != 'tracking_external'"
-          class="infobar--content infobar--item infobar--actions"
-        >
-          <transition
-            name="fade"
-            mode="out-in"
-          >
             <div
-              v-if="cancel_popup"
-              class="infobar--action-slide"
+              v-if="this.getStatus !== 'Pending'"
+              class="rider-info"
             >
-              <div class="">
-                <div class="">
-                  Cancel this order?
-                </div>
-                <div class="">
-                  You can place another one at any time.
-                </div>
+              <el-row
+                :gutter="20"
+                class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top infobar--item-truck-options"
+              >
+                <el-col :span="8">
+                  <div class="">
+                    <img
+                      class="rimg rimg-disp"
+                      :src="tracking_data.rider.rider_photo"
+                    >
+                    <span>
+                      {{ tracking_data.rider.rider_name }} -
+                      {{ tracking_data.rider.rider_phone }}
+                    </span>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="">
+                    <img
+                      class="rimg rimg-disp"
+                      :src="tracking_data.rider.rider_photo"
+                    >
+                    <span>
+                      {{ tracking_data.rider.vehicle_name }} -
+                      {{ tracking_data.rider.number_plate }}
+                    </span>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="share-option">
+                    <i class="el-icon-share top-bar-info" />
+                    SHARE
+                  </div>
+                </el-col>
+              </el-row>
+            </div>
+          </div>
+          <el-dialog
+            :visible.sync="cancelOption"
+            class="cancelOptions"
+          >
+            <div class="">
+              <div class="cancel-reason-option">
+                Cancel this order?
               </div>
+              <div class="cancel-reason-option">
+                You can place another one at any time.
+              </div>
+            </div>
+            <div class="cancel-reason-text">
               <div class="">
-                <el-radio-group
+                <el-radio
                   v-model="cancel_reason"
-                  class=""
-                  @input="cancelChange"
+                  label="4"
                 >
-                  <el-radio :label="4">
-                    I placed the wrong locations
-                  </el-radio>
-                  <el-radio :label="5">
-                    My order is not ready
-                  </el-radio>
-                  <el-radio :label="7">
-                    No driver has been allocated
-                  </el-radio>
-                  <el-radio :label="8">
-                    I placed this order twice
-                  </el-radio>
-                </el-radio-group>
+                  I placed the wrong locations
+                </el-radio>
               </div>
-              <div class="action--slide-desc">
-                <button
-                  type="button"
-                  name="button"
-                  class="action--slide-button"
-                  @click="cancelOrder()"
+              <div class="">
+                <el-radio
+                  v-model="cancel_reason"
+                  label="5"
                 >
-                  Yes
-                </button>
-                <button
-                  type="button"
-                  name="button"
-                  class="action--slide-button"
+                  My order is not ready
+                </el-radio>
+              </div>
+              <div class="">
+                <el-radio
+                  v-model="cancel_reason"
+                  label="7"
+                >
+                  No driver has been allocated
+                </el-radio>
+              </div>
+              <div class="">
+                <el-radio
+                  v-model="cancel_reason"
+                  label="8"
+                >
+                  I placed this order twice
+                </el-radio>
+              </div>
+            </div>
+            <div class="action--slide-desc">
+              <button
+                type="button"
+                name="button"
+                class="action--slide-button"
+                @click="cancelOrder()"
+              >
+                Yes
+              </button>
+              <button
+                type="button"
+                name="button"
+                class="action--slide-button"
+                @click="cancelToggle()"
+              >
+                No
+              </button>
+            </div>
+          </el-dialog>
+        </div>
+      </transition>
+    </div>
+
+    <div>
+      <transition
+        name="fade"
+        mode="out-in"
+      >
+        <div v-if="!this.truckMoreInfo">
+          <div
+            v-if="!loading"
+            class="infobar--outer"
+          >
+            <div class="infobar--content infobar--content-padded">
+              <div class="infobar--photo infobar--content infobar--item infobar--item-bordered">
+                <img
+                  class="rimg"
+                  :src="tracking_data.rider.rider_photo"
+                >
+              </div>
+              <div class="infobar--content infobar--item infobar--driver infobar--item-bordered">
+                <div
+                  v-if="tracking_data.confirm_status > 0"
+                  class="infobar--driver-details"
+                >
+                  <div class="">
+                    {{ tracking_data.rider.rider_name }} - {{ tracking_data.rider.rider_phone }}
+                  </div>
+                  <div class="">
+                    {{ tracking_data.rider.vehicle_name }} - {{ tracking_data.rider.number_plate }}
+                  </div>
+                </div>
+                <div
+                  v-else
+                  class="infobar--driver-details"
+                >
+                  <div class="">
+                    {{ tracking_data.description_head }}
+                  </div>
+                  <div class="">
+                    {{ tracking_data.marketing_message }}
+                  </div>
+                </div>
+              </div>
+              <div class="infobar--content infobar--item infobar--order infobar--item-bordered">
+                <div
+                  v-if="this.getStatus === 'Pending'"
+                  class=""
+                >
+                  <div
+                    v-if="
+                      [20].includes(tracking_data.rider.vendor_id) &&
+                        'customer_min_amount' in this.tracking_data.package_details
+                    "
+                  >
+                    Minimum Amount : KES
+                    {{ tracking_data.package_details.customer_min_amount }}
+                  </div>
+                  <div v-else>
+                    KES {{ tracking_data.amount }}
+                  </div>
+                </div>
+                <div v-else>
+                  KES {{ tracking_data.amount }}
+                </div>
+                <div class="">
+                  <div class="">
+                    {{ tracking_data.order_no }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="infobar--content infobar--item infobar--status infobar--item-bordered">
+                <div class="">
+                  {{ getStatus }}
+                </div>
+                <div class="">
+                  <span
+                    v-if="tracking_data.delivery_status < 2"
+                    class=""
+                  >
+                    A Rider will pick and deliver your order by
+                    <span class="">
+                      {{ moment(tracking_data.date_time).format('h:mm a') }}
+                    </span>
+                  </span>
+                  <span
+                    v-else
+                    class=""
+                  >
+                    Estimated Delivery:
+                    <span class="">
+                      {{ this.tracking_data.etd }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                v-if="this.$route.name !== 'tracking_external'"
+                class="infobar--content infobar--item infobar--actions"
+              >
+                <transition
+                  name="fade"
+                  mode="out-in"
+                >
+                  <div
+                    v-if="cancel_popup"
+                    class="infobar--action-slide"
+                  >
+                    <div class="">
+                      <div class="">
+                        Cancel this order?
+                      </div>
+                      <div class="">
+                        You can place another one at any time.
+                      </div>
+                    </div>
+                    <div class="">
+                      <el-radio-group
+                        v-model="cancel_reason"
+                        class=""
+                        @input="cancelChange"
+                      >
+                        <el-radio :label="4">
+                          I placed the wrong locations
+                        </el-radio>
+                        <el-radio :label="5">
+                          My order is not ready
+                        </el-radio>
+                        <el-radio :label="7">
+                          No driver has been allocated
+                        </el-radio>
+                        <el-radio :label="8">
+                          I placed this order twice
+                        </el-radio>
+                      </el-radio-group>
+                    </div>
+                    <div class="action--slide-desc">
+                      <button
+                        type="button"
+                        name="button"
+                        class="action--slide-button"
+                        @click="cancelOrder()"
+                      >
+                        Yes
+                      </button>
+                      <button
+                        type="button"
+                        name="button"
+                        class="action--slide-button"
+                        @click="cancelToggle()"
+                      >
+                        No
+                      </button>
+                    </div>
+                    <div class="actions--caret" />
+                  </div>
+                </transition>
+                <div v-if="false">
+                  <div class="infobar--actions-icon">
+                    <i class="el-icon-sold-out" />
+                  </div>
+                  <div class="infobar--actions-text">
+                    Free delivery
+                  </div>
+                </div>
+                <div v-if="false">
+                  <div class="infobar--actions-icon">
+                    <i class="el-icon-share" />
+                  </div>
+                  <div class="infobar--actions-text">
+                    Share Status
+                  </div>
+                </div>
+                <div
+                  v-if="
+                    [20].includes(tracking_data.rider.vendor_id) &&
+                      'customer_min_amount' in this.tracking_data.package_details
+                  "
+                  class="infobar--actions-hover"
+                  @click="maximiseInfoDetails()"
+                >
+                  <div class="infobar--actions-icon">
+                    <i class="el-icon-circle-plus-outline" />
+                  </div>
+                  <div class="infobar--actions-text">
+                    Expand Info
+                  </div>
+                </div>
+                <div
+                  v-if=""
+                  class="infobar--actions-hover"
                   @click="cancelToggle()"
                 >
-                  No
-                </button>
+                  <div class="infobar--actions-icon">
+                    <i class="el-icon-circle-close-outline" />
+                  </div>
+                  <div class="infobar--actions-text">
+                    Cancel Order
+                  </div>
+                </div>
               </div>
-              <div class="actions--caret" />
-            </div>
-          </transition>
-          <div v-if="false">
-            <div class="infobar--actions-icon">
-              <i class="el-icon-sold-out" />
-            </div>
-            <div class="infobar--actions-text">
-              Free delivery
-            </div>
-          </div>
-          <div v-if="false">
-            <div class="infobar--actions-icon">
-              <i class="el-icon-share" />
-            </div>
-            <div class="infobar--actions-text">
-              Share Status
-            </div>
-          </div>
-          <div
-            v-if="([6,10,13,14,17,18,19,20].includes(tracking_data.rider.vendor_id))"
-            class="infobar--actions-hover"
-            @click="maximiseInfoDetails()"
-          >
-            <div class="infobar--actions-icon">
-              <i class="el-icon-circle-plus-outline" />
-            </div>
-            <div class="infobar--actions-text">
-              Expand Info
-            </div>
-          </div>
-          <div
-            v-if=""
-            class="infobar--actions-hover"
-            @click="cancelToggle()"
-          >
-            <div class="infobar--actions-icon">
-              <i class="el-icon-circle-close-outline" />
-            </div>
-            <div class="infobar--actions-text">
-              Cancel Order
             </div>
           </div>
         </div>
-      </div>
+      </transition>
     </div>
   </div>
-  </transition>
-  </div>
-</div>
 </template>
 
 <script>
-import { mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
+
 const moment = require('moment');
 
 export default {
@@ -504,11 +681,11 @@ export default {
       cancel_reason: -1,
       cancel_desc: '',
       maximiseInfo: 0,
-      cancelOption:false,
-      paymentOption:'',
-      truckMoreInfo:false,
-      myRb:'',
-      accType:'',
+      cancelOption: false,
+      paymentOption: '',
+      truckMoreInfo: false,
+      myRb: '',
+      accType: '',
     };
   },
   computed: {
@@ -517,25 +694,20 @@ export default {
       tracked_order: '$_orders/$_tracking/get_tracked_order',
     }),
     getStatus() {
-      if (this.loading === false) {
+      if (!this.loading) {
         switch (this.tracking_data.delivery_status) {
-          case 3:
-          {
+          case 3: {
             return 'Delivered';
           }
-          case 2:
-          {
+          case 2: {
             return 'In Transit';
           }
-          default:
-          {
+          default: {
             switch (this.tracking_data.confirm_status) {
-              case 1:
-              {
+              case 1: {
                 return 'Confirmed';
               }
-              default:
-              {
+              default: {
                 return 'Pending';
               }
             }
@@ -562,7 +734,6 @@ export default {
   },
   created() {
     this.order_number = this.$route.params.order_no;
-
   },
   methods: {
     moment() {
@@ -591,7 +762,8 @@ export default {
     },
     poll(from) {
       const that = this;
-      this.$store.dispatch('$_orders/$_tracking/get_tracking_data', { order_no: from })
+      this.$store
+        .dispatch('$_orders/$_tracking/get_tracking_data', { order_no: from })
         .then((response) => {
           if (response) {
             if (this.tracking_data.delivery_status === 3) {
@@ -629,37 +801,30 @@ export default {
     minimiseInfoDetails() {
       this.truckMoreInfo = false;
     },
-    checkRunningBalance(){
-     let session = this.$store.getters.getSession;
-      let payload = {
-        cop_id : session[session.default]['cop_id'],
-        user_phone:session[session.default]['user_phone'],
+    checkRunningBalance() {
+      const session = this.$store.getters.getSession;
+      const payload = {
+        cop_id: session[session.default].cop_id,
+        user_phone: session[session.default].user_phone,
       };
-      this.$store.dispatch('$_orders/$_tracking/running_balance', payload)
-        .then((response) => {
-          if(response.status){
-            this.myRb = response.running_balance;
-            this.accType = response.payment_plan;
-          }
-        });
+      this.$store.dispatch('$_orders/$_tracking/running_balance', payload).then((response) => {
+        if (response.status) {
+          this.myRb = response.running_balance;
+          this.accType = response.payment_plan;
+        }
+      });
     },
-    takeMeToPayment(){
-      if(this.paymentOption === 1){
-         this.$router.push('/payment/mpesa');
-      }
-      else if (this.paymentOption === 2){
-         this.$router.push('/payment/card');
-      }
-      else{
-          this.doNotification(
-            '2',
-            'Payment Failure',
-            'Choose a Payment Option.',
-          );
+    takeMeToPayment() {
+      if (this.paymentOption === 1) {
+        this.$router.push('/payment/mpesa');
+      } else if (this.paymentOption === 2) {
+        this.$router.push('/payment/card');
+      } else {
+        this.doNotification('2', 'Payment Failure', 'Choose a Payment Option.');
       }
     },
-    canceldialog(){
-      this.cancelOption = true ;
+    canceldialog() {
+      this.cancelOption = true;
     },
     place() {
       if (this.$route.name !== 'tracking_external') {
@@ -681,33 +846,35 @@ export default {
         client_type: this.$store.getters.getSession.default,
       };
       const that = this;
-      this.$store.dispatch('$_orders/$_tracking/cancel_order', payload)
-        .then((response) => {
-          if (response.status === true) {
-            that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
-            that.cancelToggle();
-            this.$store.dispatch('$_orders/fetch_ongoing_orders');
-            that.place();
-          } else {
-            const payload2 = {
-              order_no: that.$route.params.order_no,
-              cancel_reason_id: 4,
-              reason_description: 'I placed the wrong locations',
-              client_type: that.$store.getters.getSession.default,
-            };
-            this.$store.dispatch('$_orders/$_tracking/cancel_order', payload2)
-              .then((response2) => {
-                if (response2.status === true) {
-                  that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
-                  that.cancelToggle();
-                  this.$store.dispatch('$_orders/fetch_ongoing_orders');
-                  that.place();
-                } else {
-                  that.doNotification('3', 'Order cancellation failed', 'Could not cancel the order. Please contact Customer Care at 0709779779.');
-                }
-              });
-          }
-        });
+      this.$store.dispatch('$_orders/$_tracking/cancel_order', payload).then((response) => {
+        if (response.status) {
+          that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+          that.cancelToggle();
+          this.$store.dispatch('$_orders/fetch_ongoing_orders');
+          that.place();
+        } else {
+          const payload2 = {
+            order_no: that.$route.params.order_no,
+            cancel_reason_id: 4,
+            reason_description: 'I placed the wrong locations',
+            client_type: that.$store.getters.getSession.default,
+          };
+          this.$store.dispatch('$_orders/$_tracking/cancel_order', payload2).then((response2) => {
+            if (response2.status) {
+              that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+              that.cancelToggle();
+              this.$store.dispatch('$_orders/fetch_ongoing_orders');
+              that.place();
+            } else {
+              that.doNotification(
+                '3',
+                'Order cancellation failed',
+                'Could not cancel the order. Please contact Customer Care at 0709779779.',
+              );
+            }
+          });
+        }
+      });
     },
     dateFormat(date) {
       return this.moment(date).calendar(null, {
@@ -1026,6 +1193,67 @@ ul.timeline > li:before {
   vertical-align:middle;
 }
 .timeline-date-disp{
+  padding-left: 30px;
+}
+.info-text-transform{
+  text-transform: uppercase;
+}
+.info-text-cursor{
+  padding-top:4px;
+  cursor:pointer;
+}
+.infobar--truck-cont-item{
+  padding-bottom: 5px;
+}
+.cancel-reason-option{
+  text-align:center;
+}
+.cancel-reason-text{
+  padding-left: 30%;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.share-option{
+  padding-top: 20px;
+}
+.rimg-disp{
+  height: 55px;
+  vertical-align: middle;
+}
+.infobar--item-truck-options{
+  padding-bottom: 5px;
+  padding-top: 10px;
+  text-align:center;
+  max-width:70%
+}
+.infobar--item-truck-cancel{
+  padding-bottom: 5px;
+  padding-top: 10px;
+  text-align:center;
+  max-width:70%;
+  margin-left: -35px;
+}
+.info-payment-button{
+  padding-left: 5px;
+  padding-top: 10px;
+}
+.button-tracking-payment{
+  width:200px;
+}
+.tracking-notes{
+  padding-bottom: 10px;
+  padding-left: 30px;
+}
+.tracking-notes-inner{
+  max-width: 80%!important;
+}
+.tracking-loader{
+  padding-bottom: 10px;
+}
+.tracking-loader-inner{
+  padding-left:35px;
+}
+.tracking-loader-outer{
   padding-left: 30px;
 }
 </style>
