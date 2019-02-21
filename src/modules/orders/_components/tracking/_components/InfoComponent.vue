@@ -497,7 +497,7 @@
               </div>
               <div class="infobar--content infobar--item infobar--order infobar--item-bordered">
                 <div
-                  v-if="this.getStatus == 'Pending'"
+                  v-if="this.getStatus === 'Pending'"
                   class=""
                 >
                   <div
