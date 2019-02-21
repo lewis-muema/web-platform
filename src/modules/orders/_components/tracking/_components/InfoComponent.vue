@@ -1254,6 +1254,6 @@ ul.timeline > li:before {
   padding-left:35px;
 }
 .tracking-loader-outer{
-  padding-left: 30px;
+  padding-left:30px;
 }
 </style>
