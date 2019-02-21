@@ -130,6 +130,10 @@ export default {
       state.max_temperature = val;
     },
 
+    setCustomerMinAmount(state, val) {
+      state.customer_min_amount = val;
+    },
+
     setDeliveryItem(state, val) {
       state.delivery_item = val;
     },
