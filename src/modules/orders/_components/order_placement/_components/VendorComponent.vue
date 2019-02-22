@@ -83,15 +83,6 @@
                     <div class="home-view-truck-options-divider">
                     </div>
 
-                    <div class="home-view-truck-options-inner-wrapper" v-if="!isFixedCost(j)">
-                      <div class="home-view-truck-options-label">
-                       What is the minimum amount you are willing to pay for this order?
-                      </div>
-                      <div>
-                        <el-input v-model.trim="customer_min_amount" @change="handleChangeInMinAmount" :min="0" type="number"></el-input>
-                      </div>
-                    </div>
-
                     <div class="home-view-truck-options-inner-wrapper">
                       <div class="home-view-truck-options-label">
                         What type of truck do you want?
@@ -141,6 +132,15 @@
                       </div>
                     </div>
 
+                    <div class="home-view-truck-options-inner-wrapper" v-if="!isFixedCost(j)">
+                      <div class="home-view-truck-options-label">
+                       What is the minimum amount you are willing to pay for this order?
+                      </div>
+                      <div>
+                        <el-input v-model.trim="customer_min_amount" @change="handleChangeInMinAmount" :min="0" type="number"></el-input>
+                      </div>
+                    </div>
+                    
                     <div class="home-view-truck-options-inner-wrapper">
                       <div class="home-view-truck-options-label">
                         Do you want us to provide you with Loader/s?
