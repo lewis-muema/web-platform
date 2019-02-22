@@ -243,7 +243,8 @@ import home_store from '../_store';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin.js';
 import PaymentMxn from '../../../../../mixins/payment_mixin.js';
 
-const TRUCK_VENDORS = [6,10,13,14,17,18,19,20];
+// const TRUCK_VENDORS = [6,10,13,14,17,18,19,20];
+const TRUCK_VENDORS = [20];
 
 export default {
   name: 'OrderOptions',
@@ -297,6 +298,7 @@ export default {
       get_carrier_type: '$_orders/$_home/get_carrier_type',
       getIsReturn: '$_orders/$_home/getReturnStatus',
       getMaxTemperature: '$_orders/$_home/getMaxTemperature',
+      getCustomerMinAmount: '$_orders/$_home/getCustomerMinAmount',
       getDeliveryItem: '$_orders/$_home/getDeliveryItem',
       getLoadWeight: '$_orders/$_home/getLoadWeight',
       getLoadUnits: '$_orders/$_home/getLoadUnits',
@@ -482,14 +484,37 @@ export default {
       return is_truck;
     },
 
+    isValidateCustomerMinAmount(){
+      let customer_min_amount_is_filled = false;
+      let min_amount = 0;
+      try {
+        min_amount = Number(this.getCustomerMinAmount);
+      }catch(er){
+        // 
+      }
+      if(min_amount <= 0){
+        this.doNotification(
+            '2',
+            'Missing Minimum Order Amount',
+            'The minimum order amount is missing, please fill it to enable the drivers bid effectively.',
+        );
+        return false;
+      }
+
+      return true;
+    },
+
     preCheckPaymentDetails() {
       this.loading = true;
       this.refreshRunningBalance().then(
         (response) => {
           this.loading = false;
           if(this.checkIfTruckOrder()){
-            this.handlePostPaidPayments();
-            return true;
+            if(this.isValidateCustomerMinAmount()){
+              this.handlePostPaidPayments();
+              return true;
+            }
+            return false;
           }
           this.checkPaymentDetails();
           return true;
@@ -677,6 +702,7 @@ export default {
           load_units:this.getLoadUnits,
           additional_loader:Boolean(this.getAdditionalLoaderStatus),
           no_of_loaders:Number(this.getNOOfLoaders),
+          customer_min_amount:Number(this.getCustomerMinAmount),
         },
       };
       payload = {

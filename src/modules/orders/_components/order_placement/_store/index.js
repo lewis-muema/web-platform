@@ -26,6 +26,7 @@ export default {
         carrier_type_id:'',
         return_status:false,
         max_temperature:4,
+        customer_min_amount: '',
         delivery_item:'',
         load_weight:'',
         load_units:'tonnes',

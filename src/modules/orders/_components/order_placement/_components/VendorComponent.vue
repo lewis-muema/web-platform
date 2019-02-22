@@ -50,8 +50,8 @@
 
                 <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-left">
                   <div class="home-view-vendor-types-item--cost-wrapper__cost">
-                    <span v-if="j.price_variance > 0">
-                      Ksh {{getMinVendorPrice(j)}} - Ksh {{getMaxVendorPrice(j)}}
+                    <span v-if="!isFixedCost(j)">
+                      Price to be confirmed
                     </span>
                     <span v-else>
                       Ksh {{getVendorPrice(j)}}
@@ -82,6 +82,16 @@
                   <div v-if="get_active_package_class === 'large'"  class="home-view-truck-options-wrapper">
                     <div class="home-view-truck-options-divider">
                     </div>
+
+                    <div class="home-view-truck-options-inner-wrapper" v-if="!isFixedCost(j)">
+                      <div class="home-view-truck-options-label">
+                       What is the minimum amount you are willing to pay for this order?
+                      </div>
+                      <div>
+                        <el-input v-model.trim="customer_min_amount" @change="handleChangeInMinAmount" :min="0" type="number"></el-input>
+                      </div>
+                    </div>
+
                     <div class="home-view-truck-options-inner-wrapper">
                       <div class="home-view-truck-options-label">
                         What type of truck do you want?
@@ -123,7 +133,7 @@
                       </div>
                       <div class="home-view-truck-options-inner--load-weight">
                         <el-input placeholder="(Enter load weight)" v-model.trim="load_weight" @change="dispatchLoadWeight">
-                          <el-select v-model="load_units" slot="append" placeholder="KG" @change="dispatchLoadUnits">
+                          <el-select v-model="load_units" slot="append" placeholder="Tonnes" @change="dispatchLoadUnits">
                             <el-option label="KG" value="kgs"></el-option>
                             <el-option label="Tonnes" value="tonnes"></el-option>
                           </el-select>
@@ -191,14 +201,14 @@ import numeral from 'numeral';
 import {
   mapActions,
   mapGetters,
-  mapMutations
+  mapMutations,
 }
 from 'vuex';
 import OrderOptions from './OrderOptions.vue';
 
 export default {
   components: {
-    OrderOptions
+    OrderOptions,
   },
   data() {
     return {
@@ -211,6 +221,7 @@ export default {
       delivery_item: '',
       load_weight:'',
       load_units:'',
+      customer_min_amount: '',
       vendors_with_fixed_carrier_type: ['Standard','Runner', 'Van'],
       vendors_without_return: ['Standard','Runner'],
       baseTruckOptions: [
@@ -234,6 +245,7 @@ export default {
       getReturnStatus : '$_orders/$_home/getReturnStatus',
       activeVendorPriceData: '$_orders/$_home/get_active_vendor_details',
       getMaxTemperature: '$_orders/$_home/getMaxTemperature',
+      getCustomerMinAmount: '$_orders/$_home/getCustomerMinAmount',
       getDeliveryItem: '$_orders/$_home/getDeliveryItem',
       getLoadWeight: '$_orders/$_home/getLoadWeight',
       getLoadUnits: '$_orders/$_home/getLoadUnits',
@@ -278,6 +290,7 @@ export default {
       setActiveVendorDetails: '$_orders/$_home/set_active_vendor_details',
       setCarrierType: '$_orders/$_home/set_carrier_type',
       setMaxTemperature: '$_orders/$_home/setMaxTemperature',
+      setCustomerMinAmount: '$_orders/$_home/setCustomerMinAmount',
       setDeliveryItem: '$_orders/$_home/setDeliveryItem',
       setLoadWeight: '$_orders/$_home/setLoadWeight',
       setLoadUnits: '$_orders/$_home/setLoadUnits',
@@ -312,6 +325,10 @@ export default {
 
     handleChangeInMaxTemperature(val){
       this.setMaxTemperature(val);
+    },
+
+    handleChangeInMinAmount(val){
+      this.setCustomerMinAmount(val);
     },
 
     setActivePackageClassWrapper(name) {
@@ -368,6 +385,13 @@ export default {
     getMaxVendorPrice(vendorObject){
       const price = this.getPlainVendorPrice(vendorObject) * ((100 + vendorObject.price_variance)/100);
        return numeral(price).format('0');
+    },
+
+    isFixedCost(vendorObject){
+      if(vendorObject.vendor_id === 20){
+        return false;
+      }
+      return true;
     },
 
     setFirstTimeUser() {
@@ -447,6 +471,7 @@ export default {
       this.load_weight = this.getLoadWeight;
       this.load_units = this.getLoadUnits;
       this.additional_loader = this.getAdditionalLoaderStatus;
+      this.customer_min_amount = this.getCustomerMinAmount;
 
     },
 
