@@ -503,7 +503,8 @@
                   <div
                     v-if="
                       [20].includes(tracking_data.rider.vendor_id) &&
-                        'customer_min_amount' in this.tracking_data.package_details
+                        'customer_min_amount' in this.tracking_data.package_details &&
+                        'fixed_cost' in this.tracking_data.package_details
                     "
                   >
                     Minimum Amount : KES
@@ -628,7 +629,8 @@
                 <div
                   v-if="
                     [20].includes(tracking_data.rider.vendor_id) &&
-                      'customer_min_amount' in this.tracking_data.package_details
+                      'customer_min_amount' in this.tracking_data.package_details &&
+                      'fixed_cost' in this.tracking_data.package_details
                   "
                   class="infobar--actions-hover"
                   @click="maximiseInfoDetails()"
@@ -734,6 +736,7 @@ export default {
   },
   created() {
     this.order_number = this.$route.params.order_no;
+    console.log('Tracking', this.tracking_data);
   },
   methods: {
     moment() {
