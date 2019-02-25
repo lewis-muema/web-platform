@@ -10,7 +10,7 @@
       >
         <div
           v-if="!loading"
-          class="infobar--truck--outer"
+          class="infobar--outer"
         >
           <div
             key="prime"
@@ -1076,20 +1076,6 @@ export default {
   justify-content: center;
   align-items: flex-start;
 }
-.infobar--truck--outer{
-  display: flex;
-  position: fixed;
-  bottom: 20px;
-  width: 90%;
-  margin: 0 5%;
-  background-color: #fff;
-  color: #555;
-  font-size: 13px;
-  min-height: 90px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
-  border-radius: 3px;
-
-}
 .infobar--truck-content{
   display: flex;
   flex: 1 1 auto;
@@ -1214,7 +1200,7 @@ ul.timeline > li:before {
   margin-top: 10px;
 }
 .share-option{
-  padding-top: 20px;
+  padding-top: 5px;
 }
 .rimg-disp{
   height: 55px;
