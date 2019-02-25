@@ -897,8 +897,8 @@ export default {
   display: flex;
   position: fixed;
   bottom: 20px;
-  width: 98%;
-  margin: 0 1%;
+  width: 90%;
+  margin: 0 5%;
   background-color: #fff;
   color: #555;
   font-size: 13px;
@@ -1080,8 +1080,8 @@ export default {
   display: flex;
   position: fixed;
   bottom: 20px;
-  width: 98%;
-  margin: 0 1%;
+  width: 90%;
+  margin: 0 5%;
   background-color: #fff;
   color: #555;
   font-size: 13px;
