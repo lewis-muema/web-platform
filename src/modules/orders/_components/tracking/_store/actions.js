@@ -29,7 +29,7 @@ const get_tracking_data = function({commit,dispatch,state}, data) {
 				}
 			}, error => {
 				reject(error);
-				console.log('failed to dispatch to global store');
+				// handle failure to dispatch to global store
 			});
 	})
 }
@@ -50,7 +50,7 @@ const cancel_order = function({commit, dispatch}, data)
 				resolve(response.data);
 			}, error => {
 				reject(error);
-				console.log('failed to dispatch to global store')
+				// handle failure to dispatch to global store
 			});
 	})
 }
@@ -109,12 +109,11 @@ const trackMQTT = function({commit, state})
 	let client = mqtt.connect(host, options);
 
 	client.on('error', function(err) {
-		console.log(err);
+		// handle error
 		client.end();
 	})
 
 	client.on('connect', function() {
-		console.log(`client connected:${clientId}`);
 		commit('setIsMQTTConnected', true);
 	})
 
@@ -124,13 +123,12 @@ const trackMQTT = function({commit, state})
 
 	client.on('message', function(topic, message, packet) {
 		let vendor = JSON.parse(message.toString());
-		// console.log('vendor', vendor);
 		vendor.overide_visible = true;
 		commit('$_orders/set_vendor_markers', vendor, {root: true});
 	})
 
 	client.on('close', function() {
-		console.log(`${clientId} disconnected`);
+		// closed
 	})
 }
 
@@ -150,7 +148,7 @@ const running_balance = function({dispatch}, data)
 				resolve(response.data);
 			}, error => {
 				reject(error);
-				console.log('failed to dispatch to global store');
+				// handle failure to dispatch to global store'
 			});
 	})
 }
