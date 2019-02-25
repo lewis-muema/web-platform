@@ -692,6 +692,7 @@ export default {
     ...mapGetters({
       tracking_data: '$_orders/$_tracking/get_tracking_data',
       tracked_order: '$_orders/$_tracking/get_tracked_order',
+      isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
     }),
     getStatus() {
       if (!this.loading) {
@@ -725,10 +726,18 @@ export default {
       this.$store.commit('$_orders/$_tracking/set_tracked_order', from);
       this.poll(from);
     },
+
+    tracking_data(data){
+      if(data.confirm_status === 1){
+        this.reCheckMQTTConnection();
+      }
+    },
+
   },
   mounted() {
     this.loading = true;
     this.$store.commit('$_orders/$_tracking/set_tracked_order', this.$route.params.order_no);
+    this.$store.dispatch('$_orders/$_tracking/trackMQTT');
     this.poll(this.$route.params.order_no);
     this.checkRunningBalance();
   },
@@ -887,6 +896,12 @@ export default {
         },
       });
     },
+
+    reCheckMQTTConnection(){
+      if(!this.isMQTTConnected){
+        this.$store.dispatch('$_orders/$_tracking/trackMQTT');
+      }
+    }
   },
 };
 </script>

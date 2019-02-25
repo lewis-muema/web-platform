@@ -1,11 +1,11 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 const set_page = (state, payload) => {
   state.page = payload;
 };
 
 const toggle_ongoing = (state) => {
-  if (state.ongoing_show == 0) {
+  if (state.ongoing_show === 0) {
     state.ongoing_show = 1;
   }
   else {
@@ -21,17 +21,17 @@ const set_ongoing_orders = (state, payload) => {
 const set_markers = (state, payload) => {
   payload.forEach(function (value, i) {
 
-    var icon = 'destination'
-    if (i == 0) {
-      icon = 'pickup'
+    let icon = 'destination';
+    if (i === 0) {
+      icon = 'pickup';
     }
-    var marker = {
+    let marker = {
       position: {
         lat: Number(value.coordinates.split(',')[0]),
-        lng: Number(value.coordinates.split(',')[1])
+        lng: Number(value.coordinates.split(',')[1]),
       },
       icon: icon
-    }
+    };
     state.map.markers.push(marker);
   })
 };
@@ -42,45 +42,61 @@ const set_polyline = (state, payload) => {
 
 const set_vendor_markers = (state, payload) => {
 
+  /* 
+  TO DO re-enable when we start busing live locations on the home page
+  
   if('busy' in payload){
     if(payload.busy == true){
-      return
+      return false;
+    }
+  }
+  */
+
+  let visible = false;
+  if('page' in state){
+    // order placement 
+    if (state.page === 0) {
+      visible = true;
+    }
+    // tracking
+    else{
+      if ('overide_visible' in payload){
+        visible = true;
+      }
     }
   }
 
-  var visible = false
-  if (state.page == 0) {
-    visible = true
-  }
-  var id = payload.rider_id
-  var value= {
+ 
+ 
+  let id = payload.rider_id;
+  let value = {
     position: {
       lat: payload.lat,
-      lng: payload.lng
+      lng: payload.lng,
     },
     vendor_type: payload.vendor_type,
     rotation: payload.bearing,
-    visible: visible
+    visible: visible,
   }
 
-  Vue.set(state.map.vendors, id, value)
+  Vue.set(state.map.vendors, id, value);
 };
 
 const hide_vendors = (state, payload) => {
-  for (var key in state.map.vendors) {
+  for (let key in state.map.vendors) {
     if (!state.map.vendors.hasOwnProperty(key)) continue;
-    var obj = state.map.vendors[key];
+    let obj = state.map.vendors[key];
 
-    obj.visible = false
+    obj.visible = false;
   }
 };
 
 const remove_markers = (state) => {
-  state.map.markers = []
+  state.map.markers = [];
 }
 
 const remove_polyline = (state) => {
-  state.map.polyline.path = ""
+  state.map.polyline.path = '';
 }
 
 const set_location_marker = (state,payload) => {
@@ -92,8 +108,9 @@ const unset_location_marker = (state,index) => {
 const unsetMap = (state) => {
     state.map.markers.splice(0);
     state.map.vendors.splice(0);
-    state.map.polyline.path = ""
+    state.map.polyline.path = '';
 }
+
 export default {
   set_page,
   toggle_ongoing,
@@ -105,5 +122,5 @@ export default {
   remove_markers,
   remove_polyline,
   set_location_marker,
-  unset_location_marker
+  unset_location_marker,
 };
