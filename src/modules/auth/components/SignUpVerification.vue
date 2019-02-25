@@ -89,7 +89,6 @@ export default {
       values.password = this.Password();
       values.type = 'peer';
       values.platform = 'web';
-      console.log(values);
       const full_payload = {
         values,
         vm: this,
@@ -100,7 +99,6 @@ export default {
       const that = this;
       this.requestSignUpSegmentation(full_payload).then(
         (response) => {
-          console.log(response);
           if (response.length > 0) {
             response = response[0];
           }
@@ -147,11 +145,11 @@ export default {
           } else {
             // failed to login
             // show some sort of error
-            console.log(response);
+            this.doNotification(2, 'Sign Up Error ', 'Sign Up failed');
           }
         },
         (error) => {
-          console.log(error);
+          this.doNotification(2, 'Sign Up Error ', error);
         },
       );
     },
@@ -175,7 +173,6 @@ export default {
 
         this.requestSignUpSegmentation(full_payload).then(
           (response) => {
-            console.log(response);
             if (response.length > 0) {
               response = response[0];
             }
@@ -188,11 +185,11 @@ export default {
             } else {
               // failed to login
               // show some sort of error
-              console.log(response);
+              this.doNotification(2, 'Sign Up Error ', 'Sign Up failed');
             }
           },
           (error) => {
-            console.log(error);
+            this.doNotification(2, 'Sign Up Error ', error);
           },
         );
       } else {

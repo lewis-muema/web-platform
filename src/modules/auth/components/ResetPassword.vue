@@ -121,14 +121,12 @@ export default {
           }
         },
         (error) => {
-          console.error('Check Internet Connection');
-          console.log(error);
+          this.message = 'Check Internet Connection';
         },
       );
     },
     reset_pass() {
       if (this.new_password !== this.confirm_password) {
-        console.log('Password does not match!');
         this.doNotification(2, 'Password Failed', 'Password does not match. Please try again');
       } else {
         const payload = {};
@@ -147,7 +145,6 @@ export default {
             if (response.length > 0) {
               response = response[0];
             }
-            console.log('Update Password', response);
             if (response.status) {
               const session_data = response.data;
               const json_session = JSON.stringify(session_data);
@@ -165,7 +162,6 @@ export default {
           },
           (error) => {
             this.message = 'Login failed';
-            console.log(error);
           },
         );
       }
