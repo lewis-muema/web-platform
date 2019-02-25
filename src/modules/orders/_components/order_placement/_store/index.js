@@ -25,6 +25,13 @@ export default {
         stripe_user_id:'',
         carrier_type_id:'',
         return_status:false,
+        max_temperature:4,
+        customer_min_amount: '',
+        delivery_item:'',
+        load_weight:'',
+        load_units:'tonnes',
+        additional_loader:'',
+        no_of_loaders:1,
        }
     },
   actions,

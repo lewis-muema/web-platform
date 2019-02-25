@@ -17,4 +17,11 @@ export default {
     get_stripe_user_id: (state) => state.stripe_user_id,
     get_carrier_type: (state) => state.carrier_type_id,
     getReturnStatus: (state) => state.return_status,
+    getMaxTemperature: (state) => state.max_temperature,
+    getCustomerMinAmount: (state) => state.customer_min_amount,
+    getDeliveryItem: (state) => state.delivery_item,
+    getLoadWeight: (state) => state.load_weight,
+    getLoadUnits: (state) => state.load_units,
+    getAdditionalLoaderStatus: (state) => state.additional_loader,
+    getNOOfLoaders: (state) => state.no_of_loaders,
 };

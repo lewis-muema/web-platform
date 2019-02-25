@@ -39,11 +39,11 @@ import {
   mapActions
 } from 'vuex'
 export default {
-  name: 'screen-three-component',
+  name: 'password-validation-component',
   data: function() {
     return {
-      password: "",
-      cpassword: ""
+      password: '',
+      cpassword: '',
     }
   },
   methods: {

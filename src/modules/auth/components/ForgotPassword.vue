@@ -110,7 +110,6 @@ export default {
       requestForgotPassword: '$_auth/requestForgotPassword',
     }),
     resend_link() {
-      console.log('Reset Password request');
       this.request_pass();
     },
     request_pass() {
@@ -171,7 +170,6 @@ export default {
 
         this.requestForgotPassword(full_payload).then(
           (response) => {
-            console.log(response);
             // check when response is dual
             if (response.length > 0) {
               response = response[0];
@@ -187,7 +185,6 @@ export default {
               // update nonce data
             } else if (response.status === false) {
               // Account does not exist
-              console.log('Account does not exist');
               this.message = 'Account does not exist.Please sign-up to create a sendy account';
             } else if (response.status === 'exists') {
               // Existing password reset option
@@ -196,12 +193,11 @@ export default {
               this.option = true;
             } else {
               // Invalid request
-              console.log('Invalid Request');
+              this.message = 'Invalid Request';
             }
           },
           (error) => {
-            console.error('Check Internet Connection');
-            console.log(error);
+            this.message = 'Sign Up Failed, Kindly retry again';
           },
         );
       } else {

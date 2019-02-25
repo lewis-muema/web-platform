@@ -35,6 +35,10 @@ import {
   TimePicker,
   Icon,
   Rate,
+  Steps,
+  Step,
+  Row,
+  Col,
   Loading,
   MessageBox,
   Message,
@@ -42,7 +46,8 @@ import {
   Popover,
   RadioGroup,
   RadioButton,
-} from "element-ui";
+  Autocomplete,
+} from 'element-ui';
 
 Vue.use(Pagination);
 Vue.use(RadioGroup);
@@ -55,7 +60,11 @@ Vue.use(Input);
 Vue.use(InputNumber);
 Vue.use(Radio);
 Vue.use(Checkbox);
+Vue.use(Steps);
+Vue.use(Step);
 Vue.use(Select);
+Vue.use(Row);
+Vue.use(Col);
 Vue.use(Option);
 Vue.use(Button);
 Vue.use(Table);
@@ -66,6 +75,7 @@ Vue.use(TimePicker);
 Vue.use(Icon);
 Vue.use(Rate);
 Vue.use(Popover);
+Vue.use(Autocomplete);
 Vue.use(Loading.directive);
 
 Vue.prototype.$loading = Loading.service;
