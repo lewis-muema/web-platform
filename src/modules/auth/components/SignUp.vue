@@ -266,7 +266,7 @@ export default {
                 }
               },
               (error) => {
-                console.log(error);
+                this.doNotification(2, 'Sign Up Error ', error);
               },
             );
           } else {
@@ -333,8 +333,7 @@ export default {
           }
         },
         (error) => {
-          console.error('Check Internet Connection');
-          console.log(error);
+          this.doNotification(2, 'Phone Verification Error ', error);
         },
       );
     },
@@ -358,7 +357,7 @@ export default {
           }
         },
         (error) => {
-          console.log(error);
+          this.doNotification(2, 'Phone Verification Error ', error);
         },
       );
     },
