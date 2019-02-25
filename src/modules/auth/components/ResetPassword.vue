@@ -121,7 +121,7 @@ export default {
           }
         },
         (error) => {
-          this.message = 'Check Internet Connection';
+          this.message = 'Reset Password Failed, Kindly retry again';
         },
       );
     },
@@ -161,7 +161,7 @@ export default {
             }
           },
           (error) => {
-            this.message = 'Login failed';
+            this.message = 'Reset Password Failed, Kindly retry again';
           },
         );
       }

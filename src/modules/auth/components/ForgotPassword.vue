@@ -197,7 +197,7 @@ export default {
             }
           },
           (error) => {
-            this.message = 'Check Internet Connection';
+            this.message = 'Sign Up Failed, Kindly retry again';
           },
         );
       } else {
