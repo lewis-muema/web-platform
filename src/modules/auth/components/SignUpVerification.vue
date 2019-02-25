@@ -145,11 +145,11 @@ export default {
           } else {
             // failed to login
             // show some sort of error
-            this.doNotification(2, 'Sign Up Error ', 'Sign Up failed');
+            this.doNotification(2, 'Sign Up Error ', response.message);
           }
         },
         (error) => {
-          this.doNotification(2, 'Sign Up Error ', error);
+          this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
         },
       );
     },
@@ -185,11 +185,11 @@ export default {
             } else {
               // failed to login
               // show some sort of error
-              this.doNotification(2, 'Sign Up Error ', 'Sign Up failed');
+              this.doNotification(2, 'Sign Up Error ', response.message);
             }
           },
           (error) => {
-            this.doNotification(2, 'Sign Up Error ', error);
+            this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
           },
         );
       } else {

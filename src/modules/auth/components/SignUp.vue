@@ -266,7 +266,7 @@ export default {
                 }
               },
               (error) => {
-                this.doNotification(2, 'Sign Up Error ', error);
+                this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
               },
             );
           } else {
@@ -333,7 +333,11 @@ export default {
           }
         },
         (error) => {
-          this.doNotification(2, 'Phone Verification Error ', error);
+          this.doNotification(
+            2,
+            'Phone Verification Error ',
+            'Check Internet connection and retry',
+          );
         },
       );
     },
@@ -357,7 +361,11 @@ export default {
           }
         },
         (error) => {
-          this.doNotification(2, 'Phone Verification Error ', error);
+          this.doNotification(
+            2,
+            'Phone Verification Error ',
+            'Check Internet connection and retry',
+          );
         },
       );
     },
