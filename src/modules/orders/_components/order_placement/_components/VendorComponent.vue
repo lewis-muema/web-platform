@@ -11,7 +11,7 @@
 
         <div class="">
           <div class="home-view-vendor-classes--label">
-            <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in getPriceRequestObject.economy_price_tiers" :key="index" @click="setActivePackageClassWrapper(vendor_class.tier_group)" 
+            <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in getPriceRequestObject.economy_price_tiers" :key="index" @click="setActivePackageClassWrapper(vendor_class.tier_group)"
               v-if="vendor_class.price_tiers.length > 0">
               <a class="home-view-vendor-classes-menu section__link" :class="getCurrentActivePackageClass(vendor_class.tier_group)">
                 <img :src="getPackageIcon(vendor_class.tier_group)" class="home-view-vendor-classes-menu--img" alt="vendor_class.tier_group">
@@ -28,7 +28,7 @@
           <div v-for="j in activePackageClassPriceData.price_tiers" :key="j.order_no" @click="setVendorDetails(j);">
 
             <div class="home-view-vendor-types--item home-view-vendor-types-item-wrap" :class="getCurrentActiveTendorTypeClass(j.vendor_name)">
-              
+
               <!-- start vendor wrapper -->
               <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
                 <div class="home-view-vendor-types-item--vendor-wrapper__img">
@@ -55,7 +55,7 @@
                     </span>
                     <span v-else>
                       Ksh {{getVendorPrice(j)}}
-                    </span>  
+                    </span>
                   </div>
                   <div class="home-view-vendor-types-item--cost-wrapper_time">
                     Pickup by {{transformDate(j)}}
@@ -98,7 +98,7 @@
                         </el-select>
                       </div>
                     </div>
-                    
+
                     <div class="home-view-truck-options-inner-wrapper" v-if="Number(carrier_type) === 3">
                       <div class="home-view-truck-options-label">
                         Temperature shouldn't exceed? (°C)
@@ -176,7 +176,7 @@
                     </div>
                   </div>
                   <!-- end small vendors -->
-                  
+
                 </div>
                 <!-- end carrier type section -->
               </transition>
@@ -228,11 +228,11 @@ export default {
         {
           value: '0',
           label: 'Open'
-        }, 
+        },
         {
           value: '1',
           label: 'Closed'
-        }, 
+        },
       ],
     }
   },
@@ -262,7 +262,7 @@ export default {
       }
       return '';
     },
-    
+
 
     truckOptions: function(){
       let custom_vendor_options = {};
@@ -271,12 +271,12 @@ export default {
           custom_vendor_options.value = '3';
           custom_vendor_options.label = 'Refrigerated';
         }
-        
+
         if(this.activeVendorPriceData.available_options.flatbed){
           custom_vendor_options.value = '4';
           custom_vendor_options.label = 'Flatbed';
         }
-        
+
       }
       return this.baseTruckOptions.concat(custom_vendor_options);
     },
@@ -433,16 +433,14 @@ export default {
     reCheckCarrierType(){
       if(this.get_active_package_class === 'large' && Number(this.carrier_type) === 2){
         this.carrier_type = '1';
-        this.dispatchCarrierType(); 
-      }
-      else if(this.get_active_package_class !== 'large'){
+        this.dispatchCarrierType();
+      } else if(this.get_active_package_class !== 'large'){
         let allowed_carrier_types = ['0','1','2'];
         if(!allowed_carrier_types.includes(this.carrier_type)){
           this.carrier_type = '2';
           this.dispatchCarrierType();
         }
-      }
-      else{
+      } else{
       }
     },
 
@@ -450,7 +448,7 @@ export default {
       let analytics_env = '';
       try {
         analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } 
+      }
       catch (er) {
 
       }
