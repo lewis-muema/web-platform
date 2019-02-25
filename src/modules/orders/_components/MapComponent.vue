@@ -96,7 +96,7 @@ export default {
     ...mapGetters({
       markers: '$_orders/get_markers',
       vendors: '$_orders/get_vendors',
-      polyline: '$_orders/get_polyline'
+      polyline: '$_orders/get_polyline',
     }),
   },
   watch: {
