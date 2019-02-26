@@ -1260,7 +1260,7 @@ ul.timeline > li:before {
   padding-left: 20px;
 }
 .tracking-notes-inner{
-  padding-left: 40px;
+  padding-left: 30px;
   padding-top: 5px;
 }
 </style>
