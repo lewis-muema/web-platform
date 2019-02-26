@@ -477,7 +477,7 @@ export default {
 
     checkIfTruckOrder(){
       let is_truck = false;
-      if(TRUCK_VENDORS.includes(this.activeVendorPriceData.vendor_id)){
+      if(TRUCK_VENDORS.includes(this.activeVendorPriceData.vendor_id) && !this.getPriceRequestObject.fixed_cost){
         is_truck = true;
       }
 

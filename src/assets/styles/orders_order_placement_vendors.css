@@ -130,6 +130,9 @@
   justify-content:space-evenly;
   padding: 10px 0 10px 0;
 }
+.home-view-carrier-type--left-aligned{
+  justify-content: space-around;
+}
 
 /* --start vendor actions */
 

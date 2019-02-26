@@ -164,15 +164,22 @@
                   <!-- end large vendors -->
 
                   <!-- start small vendors -->
-                  <div v-else class="home-view-carrier-type">
-                    <div class="home-view-carrier-type--item">
-                      <el-radio v-model="carrier_type" label="2" @input="dispatchCarrierType">Any</el-radio>
-                    </div>
-                    <div class="home-view-carrier-type--item">
-                      <el-radio v-model="carrier_type" label="1" @input="dispatchCarrierType">{{getCarrierBoxName()}}</el-radio>
-                    </div>
-                    <div class="home-view-carrier-type--item">
-                      <el-radio v-model="carrier_type" label="0" @input="dispatchCarrierType">{{getCarrierNoBoxName()}}</el-radio>
+                  <div v-else class="home-view-truck-options-wrapper" >
+                    <div class="home-view-truck-options-inner-wrapper">
+                      <div class="home-view-truck-options-label">
+                         What type of {{getVendorNameOnCarrierType}} do you want?
+                      </div>
+                      <div class="home-view-carrier-type home-view-carrier-type--left-aligned">
+                        <div class="home-view-carrier-type--item">
+                          <el-radio v-model="carrier_type" label="2" @input="dispatchCarrierType">Any</el-radio>
+                        </div>
+                        <div class="home-view-carrier-type--item">
+                          <el-radio v-model="carrier_type" label="1" @input="dispatchCarrierType">{{getCarrierBoxName()}}</el-radio>
+                        </div>
+                        <div class="home-view-carrier-type--item">
+                          <el-radio v-model="carrier_type" label="0" @input="dispatchCarrierType">{{getCarrierNoBoxName()}}</el-radio>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <!-- end small vendors -->
@@ -281,6 +288,14 @@ export default {
       return this.baseTruckOptions.concat(custom_vendor_options);
     },
 
+    getVendorNameOnCarrierType: function(){
+      let vendor_disp_name = 'motorbike';
+      if(this.get_active_package_class === 'medium'){
+        vendor_disp_name = this.get_active_vendor_name;
+      }
+      return vendor_disp_name.toLowerCase();
+    },
+
   },
 
   methods: {
@@ -374,7 +389,7 @@ export default {
     },
 
     getVendorPrice(vendorObject){
-      return numeral(this.getPlainVendorPrice(vendorObject)).format('0');
+      return numeral(this.getPlainVendorPrice(vendorObject)).format('0,0');
     },
 
     getMinVendorPrice(vendorObject){
@@ -388,7 +403,7 @@ export default {
     },
 
     isFixedCost(vendorObject){
-      if(vendorObject.vendor_id === 20){
+      if(vendorObject.vendor_id === 20 && !this.getPriceRequestObject.fixed_cost){
         return false;
       }
       return true;
