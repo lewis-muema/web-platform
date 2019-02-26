@@ -210,7 +210,12 @@
               <el-col :span="6">
                 <div class="infobar--item-truck-cont-bordered tracking-notes">
                   <div class="info-text-transform">
-                    Notes
+                    <img
+                      src="https://images.sendyit.com/web_platform/tracking/edit.svg"
+                      alt=""
+                      class="infobar-truck-img"
+                    >
+                    Additional Information
                   </div>
                   <div
                     v-if="tracking_data.order_notes.length > 0"
@@ -220,13 +225,11 @@
                       v-for="(val, index) in tracking_data.order_notes"
                       v-if="index >= 0"
                     >
-                      <div
-                        v-for="(val, index) in tracking_data.order_notes[0].msg"
-                        v-if="index >= 0"
-                      >
-                        {{ val }}
-                      </div>
+                      {{ val.msg }}
                     </div>
+                  </div>
+                  <div v-else>
+                    No notes provided.
                   </div>
                 </div>
               </el-col>
@@ -727,12 +730,11 @@ export default {
       this.poll(from);
     },
 
-    tracking_data(data){
-      if(data.confirm_status === 1){
+    tracking_data(data) {
+      if (data.confirm_status === 1) {
         this.reCheckMQTTConnection();
       }
     },
-
   },
   mounted() {
     this.loading = true;
@@ -897,11 +899,11 @@ export default {
       });
     },
 
-    reCheckMQTTConnection(){
-      if(!this.isMQTTConnected){
+    reCheckMQTTConnection() {
+      if (!this.isMQTTConnected) {
         this.$store.dispatch('$_orders/$_tracking/trackMQTT');
       }
-    }
+    },
   },
 };
 </script>
@@ -1255,6 +1257,10 @@ ul.timeline > li:before {
   padding-left:35px;
 }
 .tracking-loader-outer{
+  padding-left: 20px;
+}
+.tracking-notes-inner{
   padding-left: 30px;
+  padding-top: 5px;
 }
 </style>
