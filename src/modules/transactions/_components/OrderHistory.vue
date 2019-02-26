@@ -125,7 +125,7 @@
             <span
               v-if="
                 order_history_data[scope.$index]['confirm_status'] === 0 &&
-                  order_history_data[scope.$index]['customer_min_amount'] != null
+                  order_history_data[scope.$index]['customer_min_amount'] !== null
               "
             >
               {{ order_history_data[scope.$index]['customer_min_amount'] }}
@@ -275,9 +275,6 @@ export default {
   mounted() {
     this.populateOrders();
   },
-  created() {
-    console.log('Orders', this.order_history_data);
-  },
   methods: {
     populateOrders() {
       const sessionData = this.$store.getters.getSession;
@@ -335,7 +332,7 @@ export default {
           to: toDate,
         };
 
-        if (user !== '' && user != null && user !== 0) {
+        if (user !== '' && user !== null && user !== 0) {
           payload = {
             cop_id: copId,
             user_id: userId,
