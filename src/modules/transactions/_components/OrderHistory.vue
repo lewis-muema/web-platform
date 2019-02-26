@@ -43,10 +43,13 @@
       <div class="section--filter-action-wrap">
         <button
           type="button"
-          :class="inactive_filter ? 'button-primary section--filter-action-inactive btn-order-hstry'
-            :'button-primary section--filter-action btn-order-hstry'"
+          :class="
+            inactive_filter
+              ? 'button-primary section--filter-action-inactive btn-order-hstry'
+              : 'button-primary section--filter-action btn-order-hstry'
+          "
           name="order_history_text"
-          :disabled="inactive_filter === true ? true : false"
+          :disabled="inactive_filter ? true : false"
           @click="filterTableData"
         >
           {{ order_history_text }}
@@ -106,12 +109,33 @@
       />
       <el-table-column
         label="Amount"
-        prop="order_cost"
         width="80"
         header-align="center"
         align="center"
         :formatter="formatAmount"
-      />
+      >
+        <template slot-scope="scope">
+          <span
+            v-if="order_history_data[scope.$index]['fixed_cost']"
+            class=""
+          >
+            {{ order_history_data[scope.$index]['order_cost'] }}
+          </span>
+          <span v-else>
+            <span
+              v-if="
+                order_history_data[scope.$index]['confirm_status'] === 0 &&
+                  order_history_data[scope.$index]['customer_min_amount'] !== null
+              "
+            >
+              {{ order_history_data[scope.$index]['customer_min_amount'] }}
+            </span>
+            <span v-else>
+              {{ order_history_data[scope.$index]['order_cost'] }}
+            </span>
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="Deliveries"
         prop="path"
@@ -120,7 +144,7 @@
         align="center"
       >
         <template slot-scope="scope">
-          {{ order_history_data[scope.$index]['path'].length-1 }}
+          {{ order_history_data[scope.$index]['path'].length - 1 }}
         </template>
       </el-table-column>
       <el-table-column
@@ -141,14 +165,13 @@
       </el-table-column>
     </el-table>
 
-
     <div class="section--pagination-wrap">
       <el-pagination
         layout="total, sizes, prev, pager, next, jumper"
         :total="order_history_total"
         :page-size="pagination_limit"
         :current-page.sync="pagination_page"
-        :page-sizes="[5,10, 20, 50, 100]"
+        :page-sizes="[5, 10, 20, 50, 100]"
         class="section--pagination-item"
         @current-change="changePage"
         @size-change="changeSize"
@@ -193,7 +216,6 @@ const cssText = `
     display: none;
   }
 `;
-
 
 export default {
   filters: {
@@ -304,16 +326,16 @@ export default {
         // const user_type = session.biz.user_type;
 
         payload = {
-          cop_id:copId,
-          user_type:userType,
+          cop_id: copId,
+          user_type: userType,
           from: fromDate,
           to: toDate,
         };
 
-        if (user !== '' && user != null && user !== 0) {
+        if (user !== '' && user !== null && user !== 0) {
           payload = {
-            cop_id:copId,
-            user_id:userId,
+            cop_id: copId,
+            user_id: userId,
             from: fromDate,
             to: toDate,
           };
@@ -322,7 +344,7 @@ export default {
         const userId = session[session.default].user_id;
 
         payload = {
-          user_id:userId,
+          user_id: userId,
           from: fromDate,
           to: toDate,
         };
@@ -340,10 +362,7 @@ export default {
       const to = this.pagination_page * this.pagination_limit;
       this.orderHistoryData.slice(from, to);
     },
-    ...mapActions([
-      '$_transactions/requestOrderHistoryOrders',
-      '$_transactions/requestCopUsers',
-    ]),
+    ...mapActions(['$_transactions/requestOrderHistoryOrders', '$_transactions/requestCopUsers']),
     moment() {
       return moment();
     },
@@ -391,9 +410,7 @@ export default {
     },
     formatAmount(row) {
       if (typeof row.order_cost !== 'undefined') {
-        let value = row.order_cost
-          .toFixed(2)
-          .replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        let value = row.order_cost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         value = value.split('.');
         return value[0];
       }
@@ -405,18 +422,16 @@ export default {
         app: 'NODE_PRIVATE_API',
         endpoint: 'order_history',
       };
-      this.$store
-        .dispatch('$_transactions/requestOrderHistoryOrders', fullPayload)
-        .then(
-          () => {
-            this.order_history_text = 'Search';
-            this.empty_orders_state = 'Order History Not Found';
-          },
-          () => {
-            this.order_history_text = 'Search';
-            this.empty_orders_state = 'Order History Failed to Fetch';
-          },
-        );
+      this.$store.dispatch('$_transactions/requestOrderHistoryOrders', fullPayload).then(
+        () => {
+          this.order_history_text = 'Search';
+          this.empty_orders_state = 'Order History Not Found';
+        },
+        () => {
+          this.order_history_text = 'Search';
+          this.empty_orders_state = 'Order History Failed to Fetch';
+        },
+      );
     },
     requestCopUsers() {
       // let cop_id = 0;
@@ -429,16 +444,14 @@ export default {
         app: 'NODE_PRIVATE_API',
         endpoint: 'cop_users',
       };
-      this.$store
-        .dispatch('$_transactions/requestCopUsers', fullUsersPayload)
-        .then(
-          () => {
-            this.empty_users_state = 'Cop Users Not Found';
-          },
-          () => {
-            this.empty_users_state = 'Cop Users Failed to Fetch';
-          },
-        );
+      this.$store.dispatch('$_transactions/requestCopUsers', fullUsersPayload).then(
+        () => {
+          this.empty_users_state = 'Cop Users Not Found';
+        },
+        () => {
+          this.empty_users_state = 'Cop Users Failed to Fetch';
+        },
+      );
     },
     exportPDF() {
       const d = new Printd();
@@ -454,5 +467,4 @@ export default {
 .btn-order-hstry{
   border-width:0px !important;
 }
-
 </style>
