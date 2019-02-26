@@ -122,7 +122,12 @@
             {{ order_history_data[scope.$index]['order_cost'] }}
           </span>
           <span v-else>
-            <span v-if="order_history_data[scope.$index]['confirm_status'] === 0">
+            <span
+              v-if="
+                order_history_data[scope.$index]['confirm_status'] === 0 &&
+                  order_history_data[scope.$index]['customer_min_amount'] != null
+              "
+            >
               {{ order_history_data[scope.$index]['customer_min_amount'] }}
             </span>
             <span v-else>
