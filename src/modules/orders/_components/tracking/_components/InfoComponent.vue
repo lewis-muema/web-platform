@@ -337,6 +337,7 @@
               </el-col> -->
                 <el-col :span="6">
                   <div
+                    v-if="tracking_data.delivery_status < 2"
                     class="info-text-transform info-text-cursor"
                     @click="canceldialog()"
                   >
@@ -644,7 +645,7 @@
                   </div>
                 </div>
                 <div
-                  v-if=""
+                  v-if="tracking_data.delivery_status < 2"
                   class="infobar--actions-hover"
                   @click="cancelToggle()"
                 >
