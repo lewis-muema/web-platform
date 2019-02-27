@@ -65,7 +65,7 @@
           v-show="show_payment"
           class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
         >
-          <div class="home-view-payments-wrapper">
+          <div class="home-view-payments-wrapper" v-show="show_payment_label">
             <div class="home-view-payments-wrapper--left">
               <div class="home-view-payments-wrapper--left__amount-label">
                 Total Payment
@@ -347,13 +347,16 @@ export default {
     hide_payment() {
       return (
         this.getPriceRequestObject.payment_option === 2
-        || this.getRunningBalance === 0
         || this.getRunningBalance + this.order_cost <= 0
       );
     },
 
     show_payment() {
       return !this.hide_payment;
+    },
+
+    show_payment_label(){
+      return !this.hide_payment && this.getRunningBalance !== 0;
     },
 
     place_order_text() {
@@ -411,12 +414,9 @@ export default {
       }
     },
 
+    // Disabled return orders - users to place the last pickup as the last destination
     allow_return() {
-      let allowed = true;
-      if (this.vendors_without_return.includes(this.get_active_vendor_name)) {
-        allowed = false;
-      }
-      return allowed;
+      return false;
     },
 
     final_carrier_type() {
