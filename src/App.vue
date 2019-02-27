@@ -1,6 +1,9 @@
 <template>
-  <div id="app" class="box app">
-    <router-view class="box"></router-view>
+  <div
+    id="app"
+    class="box app app-overflow"
+  >
+    <router-view class="box" />
   </div>
 </template>
 
@@ -12,83 +15,82 @@ const ENV = process.env.CONFIGS_ENV;
 
 Sentry.init({
   dsn: ENV.SENTRY_DSN,
-  integrations: [new Sentry.Integrations.Vue({ Vue })]
-})
+  integrations: [new Sentry.Integrations.Vue({ Vue })],
+});
 
 export default {
-  name: "app",
-  created() {
-    this.$store.commit("setENV", ENV);
-  },
+  name: 'App',
   computed: {
     notification_status() {
-      //this is never always fired :-(
+      // this is never always fired :-(
       return this.$store.getters.getNotificationStatus;
-    }
+    },
+  },
+  watch: {
+    notification_status(val, oldVal) {
+      if (val) {
+        this.showNotification();
+      }
+    },
+  },
+  created() {
+    this.$store.commit('setENV', ENV);
   },
   methods: {
     showNotification() {
-      let notification = this.$store.getters.getNotification;
-      if (notification.level == 0) {
-        //success
+      const notification = this.$store.getters.getNotification;
+      if (notification.level === 0) {
+        // success
         this.$notify.info({
           title: notification.title,
           message: notification.message,
           offset: 20,
-          duration: 10000
+          duration: 10000,
         });
-      }
-      else if (notification.level == 1) {
-        //success
+      } else if (notification.level === 1) {
+        // success
         this.$notify({
-          type: "success",
+          type: 'success',
           title: notification.title,
           message: notification.message,
           offset: 20,
-          duration: 10000
+          duration: 10000,
         });
-      } else if (notification.level == 2) {
-        //warning
+      } else if (notification.level === 2) {
+        // warning
         this.$notify({
           title: notification.title,
           message: notification.message,
-          type: "warning",
+          type: 'warning',
           offset: 20,
-          duration: 10000
+          duration: 10000,
         });
-      } else if (notification.level == 3) {
-        //error
-        title: notification.title,
-          this.$notify({
-            type: "error",
-            message: notification.message,
-            offset: 20,
-            duration: 10000
-          });
+      } else if (notification.level === 3) {
+        // error
+        notification.title,
+        this.$notify({
+          type: 'error',
+          message: notification.message,
+          offset: 20,
+          duration: 10000,
+        });
       } else {
-        //default
-        //check to make sure that either title or message is set
-        //reset notification status
+        // default
+        // check to make sure that either title or message is set
+        // reset notification status
 
-        if (notification.title !== "" || notification.message !== "") {
+        if (notification.title !== '' || notification.message !== '') {
           this.$notify({
             title: notification.title,
-            message: notification.message
+            message: notification.message,
           });
-          offset: 20;
+          20;
         }
       }
-      //reset notification status
-      this.$store.commit("setNotificationStatus", false);
-    }
+      // reset notification status
+      this.$store.commit('setNotificationStatus', false);
+    },
   },
-  watch: {
-    notification_status(val, oldVal) {
-      if (val == true) {
-        this.showNotification();
-      }
-    }
-  }
 };
 </script>
 
