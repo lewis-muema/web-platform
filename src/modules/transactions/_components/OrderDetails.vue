@@ -1,11 +1,36 @@
 <template lang="html">
-  <div v-if="order_details" id="order_details_container" class="">
+  <div
+    v-if="order_details"
+    id="order_details_container"
+    class=""
+  >
     <div class="order-details-wrapper">
       <div class="order_details_map">
-        <Img :src="createStaticMapUrl(order_details.path)"></Img>
+        <Img :src="createStaticMapUrl(order_details.path)" />
       </div>
       <div class="order_details_desc">
-        <div class="order_details_price">KES {{ order_details.order_cost }}</div>
+        <div
+          v-if="this.order_details.fixed_cost"
+          class="order_details_price"
+        >
+          KES {{ order_details.order_cost }}
+        </div>
+        <div
+          v-else
+          class="order_details_price"
+        >
+          <div
+            v-if="
+              this.order_details.order_details.delivery_status === 0 &&
+                this.order_details.customer_min_amount
+            "
+          >
+            KES {{ order_details.customer_min_amount }}
+          </div>
+          <div v-else>
+            KES {{ order_details.order_cost }}
+          </div>
+        </div>
 
         <div class="order_details_desc_item">
           Distance : {{ order_details.order_details.distance }} KMs
@@ -15,35 +40,61 @@
                     Duration : {{order_details.order_details.duration}}
               </div>-->
         <div class="order_details_desc_item--wrapper">
-          <div class="order_details_desc_item">Date : {{ order_details.order_date | moment }}</div>
+          <div class="order_details_desc_item">
+            Date : {{ order_details.order_date | moment }}
+          </div>
           <span v-for="j in order_details.logs">
-            <div v-if="j.log_type === 3" class="order_details_desc_item">
+            <div
+              v-if="j.log_type === 3"
+              class="order_details_desc_item"
+            >
               Picked : {{ j.log_time | moment }}
             </div>
-            <div v-if="j.log_type === 4" class="order_details_desc_item">
+            <div
+              v-if="j.log_type === 4"
+              class="order_details_desc_item"
+            >
               Delivered : {{ j.log_time | moment }}
             </div>
           </span>
         </div>
 
         <div class="order_details_desc_item">
-          <img src="../../../assets/img/maroon_button.png" class="order_details_desc_image" />
+          <img
+            src="../../../assets/img/maroon_button.png"
+            class="order_details_desc_image"
+          >
           {{ getOrderFromName(order_details.path) }}
         </div>
-        <template v-for="(locations, index) in order_details.path" v-if="index >= 1">
+        <template
+          v-for="(locations, index) in order_details.path"
+          v-if="index >= 1"
+        >
           <div class="order_details_desc_item order_details_desc_item--no-space">
-            <img src="../../../assets/img/blue_button.png" class="order_details_desc_image" />
+            <img
+              src="../../../assets/img/blue_button.png"
+              class="order_details_desc_image"
+            >
             <span>{{ order_details.path[index].name }}</span>
-            <div v-if="order_details.rider_deliver_img != null" class="recepient-padded">
+            <div
+              v-if="order_details.rider_deliver_img !== null"
+              class="recepient-padded"
+            >
               Recieved by {{ order_details.rider_deliver_img[index - 1].name }}
             </div>
           </div>
         </template>
         <div class="order_details_desc_item--wrapper">
-          <div v-if="order_details.extra_distance_amount > 0" class="order_details_desc_item">
+          <div
+            v-if="order_details.extra_distance_amount > 0"
+            class="order_details_desc_item"
+          >
             Extra Distance Bill : {{ order_details.extra_distance_amount }}
           </div>
-          <div v-if="order_details.waiting_time_amount > 0" class="order_details_desc_item">
+          <div
+            v-if="order_details.waiting_time_amount > 0"
+            class="order_details_desc_item"
+          >
             Waiting Time Charges : {{ order_details.waiting_time_amount }}
           </div>
         </div>
@@ -51,7 +102,7 @@
     </div>
     <div class="rider_details_wrap">
       <div class="rider_details_image">
-        <img :src="order_details.rider.rider_photo" />
+        <img :src="order_details.rider.rider_photo">
       </div>
       <div class="rider_details_items">
         <div class="rider_details_item">
@@ -60,8 +111,11 @@
         <div class="rider_details_item">
           {{ order_details.rider.number_plate }}
         </div>
-        <div class="rider_details_item" v-if="order_details.order_details.delivery_status == 3">
-          <div v-if="order_details.rider.rider_rating != null">
+        <div
+          v-if="order_details.order_details.delivery_status === 3"
+          class="rider_details_item"
+        >
+          <div v-if="order_details.rider.rider_rating !== null">
             <el-rate
               v-model="order_details.rider.rider_rating"
               disabled
@@ -69,8 +123,7 @@
               disabled-void-color="#C0C4CC"
               :colors="['#1782C5', '#1782C5', '#1782C5']"
               score-template="{value} points"
-            >
-            </el-rate>
+            />
           </div>
         </div>
 
@@ -89,7 +142,10 @@
               </button>
             </div>
           </div>
-          <div v-else class="rider_details_actions_ongoing">
+          <div
+            v-else
+            class="rider_details_actions_ongoing"
+          >
             <div class="rider_details_action">
               <button
                 class="button-primary rider_details_action_btn rider_details--view-delivery-docs-btn"
@@ -99,22 +155,39 @@
                 View Delivery Docs
               </button>
             </div>
-            <el-dialog class="delivery_image_dialog" :visible.sync="dialogVisible">
-              <span slot="title"> Delivery Documents for {{ order_details.order_no }} </span><br />
-              <template v-for="(locations, index) in order_details.path" v-if="index >= 1">
+            <el-dialog
+              class="delivery_image_dialog"
+              :visible.sync="dialogVisible"
+            >
+              <span slot="title">
+                Delivery Documents for {{ order_details.order_no }}
+              </span><br>
+              <template
+                v-for="(locations, index) in order_details.path"
+                v-if="index >= 1"
+              >
                 <div class="delivery_documents_info">
                   <div class="delivery_image_details">
                     Delivery at {{ order_details.path[index].name }}
                   </div>
 
-                  <template v-for="(val, index) in order_details.rider_deliver_img" v-if="index >= 0" >
-                    <div class="delivery_documents_img"v-if="val.delivery_image.length > 0">
+                  <template
+                    v-for="(val, index) in order_details.rider_deliver_img"
+                    v-if="index >= 0"
+                  >
+                    <div
+                      v-if="val.delivery_image.length > 0"
+                      class="delivery_documents_img"
+                    >
                       <div style="width: 166%">
-                        <div v-for="(val,index) in val.delivery_image[0].images" v-if="index >= 0">
+                        <div
+                          v-for="(val, index) in val.delivery_image[0].images"
+                          v-if="index >= 0"
+                        >
                           <img
                             class="delivery-image-content"
                             :src="deliveryImagePath(val)"
-                          />
+                          >
                         </div>
                       </div>
                     </div>
@@ -124,10 +197,10 @@
                     <img
                       class="delivery-image-content"
                       :src="deliverySignaturePath(order_details.rider_deliver_img[index - 1].img)"
-                    />
+                    >
                   </div>
                   <div
-                    v-if="order_details.rider_deliver_img != null"
+                    v-if="order_details.rider_deliver_img !== null"
                     class="delivery_image_details"
                   >
                     Delivery signature by : {{ order_details.rider_deliver_img[index - 1].name }}
@@ -150,12 +223,19 @@
               @close="closeDialog()"
             >
               <span slot="title">
-                Dispute Delivery Documents - Order {{ order_details.order_no }} </span
-              ><br />
+                Dispute Delivery Documents - Order {{ order_details.order_no }}
+              </span><br>
               <div class="dispute_documents_body">
                 <div>
-                  <select v-model="disputeType" class="dispute_type_select">
-                    <option value="" disabled selected>
+                  <select
+                    v-model="disputeType"
+                    class="dispute_type_select"
+                  >
+                    <option
+                      value=""
+                      disabled
+                      selected
+                    >
                       Dispute Type
                     </option>
 
@@ -168,8 +248,15 @@
                   </select>
                 </div>
                 <div>
-                  <select v-model="disputeReason" class="dispute_type_select">
-                    <option value="" disabled selected>
+                  <select
+                    v-model="disputeReason"
+                    class="dispute_type_select"
+                  >
+                    <option
+                      value=""
+                      disabled
+                      selected
+                    >
                       Dispute Reason
                     </option>
 
@@ -191,7 +278,7 @@
                   v-model="disputeDescription"
                   placeholder="Description"
                   class="form-control dispute_description"
-                ></textarea>
+                />
                 <div class="rider_details_action">
                   <button
                     class="button-primary dispute-delivery-submit"
@@ -267,7 +354,6 @@ export default {
       this.show_rating = false;
     },
     trackOrder(order_no) {
-      console.log(order_no);
       this.$router.push({ name: 'tracking', params: { order_no } });
     },
     getDeliveryDocsSrc(order) {
@@ -298,39 +384,39 @@ export default {
 
     disputeDocsOption() {
       if (
-        this.order_details.extra_distance_amount > 0 ||
-        this.order_details.waiting_time_amount > 0
+        this.order_details.extra_distance_amount > 0
+        || this.order_details.waiting_time_amount > 0
       ) {
-        let values = {
+        const values = {
           order_no: this.order_details.order_no,
         };
-        let full_payload = {
-          values: values,
+        const full_payload = {
+          values,
           app: 'NODE_PRIVATE_API',
           endpoint: 'check_dispute',
         };
 
         this.requestDisputeStatus(full_payload).then(
-          response => {
+          (response) => {
             if (!response.status) {
               this.dialogFormVisible = true;
             } else {
               this.doNotification(
                 2,
                 'Delivery dispute',
-                'Failure to dispute documents due to an existing dispute request !'
+                'Failure to dispute documents due to an existing dispute request !',
               );
             }
           },
-          error => {
-            console.log(error);
-          }
+          (error) => {
+            this.doNotification(2, 'Delivery dispute', 'Something went wrong, please retry .');
+          },
         );
       } else {
         this.doNotification(
           2,
           'Dispute delivery docs',
-          'Sorry there were no extra charges for this order'
+          'Sorry there were no extra charges for this order',
         );
       }
     },
@@ -352,7 +438,7 @@ export default {
           endpoint: 'dispute_order',
         };
         this.requestDisputeDeliveryDocs(full_payload).then(
-          response => {
+          (response) => {
             if (response.status) {
               this.doNotification(2, 'Delivery dispute', 'Delivery dispute successful !');
               this.closeDialog();
@@ -360,9 +446,9 @@ export default {
               this.doNotification(2, 'Delivery dispute', response.message);
             }
           },
-          error => {
-            console.log(error);
-          }
+          (error) => {
+            this.doNotification(2, 'Delivery dispute', 'Something went wrong, please retry .');
+          },
         );
       } else {
         this.message = 'Please provide all details';
