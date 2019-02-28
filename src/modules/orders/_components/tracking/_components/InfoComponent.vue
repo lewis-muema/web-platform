@@ -210,7 +210,12 @@
               <el-col :span="6">
                 <div class="infobar--item-truck-cont-bordered tracking-notes">
                   <div class="info-text-transform">
-                    Notes
+                    <img
+                      src="https://images.sendyit.com/web_platform/tracking/edit.svg"
+                      alt=""
+                      class="infobar-truck-img"
+                    >
+                    Additional Information
                   </div>
                   <div
                     v-if="tracking_data.order_notes.length > 0"
@@ -220,13 +225,11 @@
                       v-for="(val, index) in tracking_data.order_notes"
                       v-if="index >= 0"
                     >
-                      <div
-                        v-for="(val, index) in tracking_data.order_notes[0].msg"
-                        v-if="index >= 0"
-                      >
-                        {{ val }}
-                      </div>
+                      {{ val.msg }}
                     </div>
+                  </div>
+                  <div v-else>
+                    No notes provided.
                   </div>
                 </div>
               </el-col>
@@ -334,6 +337,7 @@
               </el-col> -->
                 <el-col :span="6">
                   <div
+                    v-if="tracking_data.delivery_status < 2"
                     class="info-text-transform info-text-cursor"
                     @click="canceldialog()"
                   >
@@ -641,7 +645,7 @@
                   </div>
                 </div>
                 <div
-                  v-if=""
+                  v-if="tracking_data.delivery_status < 2"
                   class="infobar--actions-hover"
                   @click="cancelToggle()"
                 >
@@ -692,6 +696,7 @@ export default {
     ...mapGetters({
       tracking_data: '$_orders/$_tracking/get_tracking_data',
       tracked_order: '$_orders/$_tracking/get_tracked_order',
+      isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
     }),
     getStatus() {
       if (!this.loading) {
@@ -725,10 +730,17 @@ export default {
       this.$store.commit('$_orders/$_tracking/set_tracked_order', from);
       this.poll(from);
     },
+
+    tracking_data(data) {
+      if (data.confirm_status === 1) {
+        this.reCheckMQTTConnection();
+      }
+    },
   },
   mounted() {
     this.loading = true;
     this.$store.commit('$_orders/$_tracking/set_tracked_order', this.$route.params.order_no);
+    this.$store.dispatch('$_orders/$_tracking/trackMQTT');
     this.poll(this.$route.params.order_no);
     this.checkRunningBalance();
   },
@@ -886,6 +898,12 @@ export default {
           return 'MMM D, hh:mm a';
         },
       });
+    },
+
+    reCheckMQTTConnection() {
+      if (!this.isMQTTConnected) {
+        this.$store.dispatch('$_orders/$_tracking/trackMQTT');
+      }
     },
   },
 };
@@ -1240,6 +1258,10 @@ ul.timeline > li:before {
   padding-left:35px;
 }
 .tracking-loader-outer{
+  padding-left: 20px;
+}
+.tracking-notes-inner{
   padding-left: 30px;
+  padding-top: 5px;
 }
 </style>
