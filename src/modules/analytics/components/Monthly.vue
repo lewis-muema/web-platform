@@ -28,7 +28,7 @@ export default {
           var payload = {
             resource: { dashboard: parseInt("100017".substring(4)) },
             params: {
-              "acc_no": this.account
+              "acc_no": "SENDY"+1083
             }
           };
           var token = jwt.sign(payload, METABASE_SECRET_KEY);
