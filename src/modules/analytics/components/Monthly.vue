@@ -1,6 +1,6 @@
 <template lang="html">
-    <div class="dashboard">
-       <iframe class="iframe"
+    <div class="monthly-dashboard">
+       <iframe class="monthly-iframe"
          v-bind:src="this.showBoard()"
          frameborder="0"
          width="100%"
@@ -11,10 +11,10 @@
 </template>
 
 <script>
-let jwt = require("jsonwebtoken");
+let jwt = require('jsonwebtoken');
 
 export default {
-    name:"Monthly",
+    name:'Monthly',
     data: function() {
         return {
           resource: 17
@@ -22,26 +22,26 @@ export default {
       },
       methods: {
         showBoard: function() {
-          var METABASE_SITE_URL = "https://metabase.sendyit.com";
-          var METABASE_SECRET_KEY = "baddc28e2149d570c8967cd8c6589e13d7356cd6a1c71e50f07d5f08d6b3bdc6";
+          let METABASE_SITE_URL = 'https://metabase.sendyit.com';
+          let METABASE_SECRET_KEY = 'baddc28e2149d570c8967cd8c6589e13d7356cd6a1c71e50f07d5f08d6b3bdc6';
 
-          var payload = {
-            resource: { dashboard: parseInt("100017".substring(4)) },
+          let payload = {
+            resource: { dashboard: parseInt('100017'.substring(4), 10)},
             params: {
-              "acc_no": "SENDY"+1083
+              'acc_no': this.account
             }
           };
-          var token = jwt.sign(payload, METABASE_SECRET_KEY);
+          let token = jwt.sign(payload, METABASE_SECRET_KEY);
 
-          var iframeUrl = METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=false&titled=false";
+          let iframeUrl = `${METABASE_SITE_URL}/embed/dashboard/${token}#bordered=false&titled=false`;
 
-          return iframeUrl
+          return iframeUrl;
         }
       },
       computed : {
         account: function() {
-          if (typeof this.$store.getters.getSession.biz != undefined) {
-            return "SENDY"+this.$store.getters.getSession.biz.cop_id
+          if (typeof this.$store.getters.getSession.biz !== undefined) {
+            return `SENDY${this.$store.getters.getSession.biz.cop_id}`;
           }
         }
       }
@@ -49,11 +49,11 @@ export default {
 </script>
 
 <style lang="css">
-.iframe
+.monthly-iframe
 {
   min-height: 142vh;
 }
-.dashboard{
+.monthly-dashboard{
     height: auto;
 }
 </style>
