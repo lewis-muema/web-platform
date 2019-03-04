@@ -123,7 +123,7 @@
                         What is the approximate weight of the load?
                       </div>
                       <div class="home-view-truck-options-inner--load-weight">
-                        <el-input type="number" placeholder="(Enter load weight)" v-model="load_weight" :min="0" :max="10" @input="dispatchLoadWeight">
+                        <el-input type="number" placeholder="(Enter load weight)" v-model="load_weight" :min="0" :max="getMaxAllowedWeight" @input="dispatchLoadWeight">
                           <el-select v-model="load_units" slot="append" placeholder="Tonnes" @change="dispatchLoadUnits">
                             <el-option label="KG" value="kgs"></el-option>
                             <el-option label="Tonnes" value="tonnes"></el-option>
