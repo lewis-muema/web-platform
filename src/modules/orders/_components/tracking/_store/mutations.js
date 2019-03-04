@@ -4,8 +4,12 @@ const set_tracking_data = (state, payload) => {
 const set_tracked_order = (state, payload) => {
   state.tracked_order = payload;
 };
+const setIsMQTTConnected = (state, payload) => {
+  state.isMQTTConnected = payload;
+};
 
 export default {
   set_tracking_data,
-  set_tracked_order
+  set_tracked_order,
+  setIsMQTTConnected,
 };

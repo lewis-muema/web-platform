@@ -191,16 +191,18 @@ export default {
   border: 0px solid #1782c5;
   border-radius: 2px;
   box-shadow: 0 3px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+  max-width: 72%;
 }
 .ongoing--card
 {
-  font-size: 13px;
+    font-size: 13px;
     margin-top: 15px;
     border: 0px solid #1782C5;
     cursor: pointer;
     transition: all .5s ease-in-out;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
     border-radius: 2px !important;
+    max-width: 90%;
 }
 .ongoing--card:hover,.ongoing--card.active
 {

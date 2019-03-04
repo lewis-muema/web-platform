@@ -1,202 +1,220 @@
 <template lang="html">
-  <div id="forgot_pass"  class="log-item hiddenyy" >
+  <div
+    id="forgot_pass"
+    class="log-item hiddenyy"
+  >
     <div class="sign-inner">
+      <div class="sign-top">
+        Forgot your password?
+      </div>
+      <div
+        v-if="this.option"
+        class="reset-link-details"
+      >
+        You have a pending password change request sent to your email awaiting your confirmation
+        <a
+          class="reset-pass-link"
+          @click="resend_link"
+        >
+          Resend?
+        </a>
+      </div>
 
-        <div class="sign-top">
-         Forgot your password?
+      <p class="reset-link-details">
+        {{ message }}
+      </p>
+
+      <div>
+        <div class="sign-holder">
+          <span id="pass_change_info" />
         </div>
-        <div class="reset-link-details" v-if="this.option == true">
-         You have a pending password change request sent to your email awaiting your confirmation <a class="reset-pass-link" v-on:click="resend_link"> Resend?</a>
+        <div class="sign-holder dimen">
+          <input
+            v-model="email"
+            v-validate="'required|email'"
+            class="input-control forgot-form"
+            type="text"
+            data-vv-validate-on="blur"
+            name="email"
+            placeholder="Enter Email"
+          >
+          <br>
+          <span class="sign-up-email-error">
+            {{ errors.first('email') }}
+          </span>
         </div>
 
-        <p class="reset-link-details">
-          {{message}}
-        </p>
+        <div
+          v-if="this.two_accnts == true"
+          class=""
+        >
+          <span class="forgot-paswword-moreinfo">
+            Looks like you have two accounts with us. Select one.
+          </span>
 
-        <div>
-          <div class="sign-holder">
-          <span id="pass_change_info"></span>
+          <div style="margin-top: 3%;">
+            <el-radio
+              v-model="radio"
+              label="1"
+            >
+              Business
+            </el-radio>
+            <el-radio
+              v-model="radio"
+              label="2"
+            >
+              Peer
+            </el-radio>
           </div>
-          <div class="sign-holder dimen">
-            <input class="input-control forgot-form" type="text" data-vv-validate-on="blur" v-validate="'required|email'"  name="email"  v-model="email" placeholder="Enter Email">
-            <br>
-            <span class="sign-up-email-error">{{ errors.first('email') }}</span>
-          </div>
-
-          <div class="" v-if="this.two_accnts == true">
-
-            <span class="forgot-paswword-moreinfo">Looks like you have two accounts with us. Select one.</span>
-
-             <div style="margin-top: 3%;">
-            <el-radio v-model="radio" label="1">Business</el-radio>
-            <el-radio v-model="radio" label="2">Peer</el-radio>
-           </div>
-
-          </div>
-
-          <div class="sign-holder">
-            <input class="button-primary forgot-btn-color" type="submit" value="Reset Password" v-on:click="request_pass" v-bind:disabled="!this.is_valid">
-          </div>
-          <div class=" sign-holder ">
-            <router-link class="sign-holder__link" to="/auth/sign_in">Sign In</router-link>
-          </div>
-
         </div>
+
+        <div class="sign-holder">
+          <input
+            class="button-primary forgot-btn-color"
+            type="submit"
+            value="Reset Password"
+            :disabled="!this.is_valid"
+            @click="request_pass"
+          >
+        </div>
+        <div class=" sign-holder ">
+          <router-link
+            class="sign-holder__link"
+            to="/auth/sign_in"
+          >
+            Sign In
+          </router-link>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 </template>
 
-      <script>
-      import {mapActions} from 'vuex'
-      export default {
-        data() {
-          return {
-            email: '',
-            radio: '',
-            two_accnts: false,
-            option: false,
-            nonce:'',
-            message:''
-          }
-        },
+<script>
+import { mapActions } from 'vuex';
 
-        methods:{
-           ...mapActions({
-              requestForgotPassword :'$_auth/requestForgotPassword',
-          }),
-          resend_link:function() {
-            console.log('Reset Password request');
-            this.request_pass();
+export default {
+  data() {
+    return {
+      email: '',
+      radio: '',
+      two_accnts: false,
+      option: false,
+      nonce: '',
+      message: '',
+    };
+  },
 
-
-          },
-          request_pass: function ()
-          {
-            let email_valid = true
-            for (var i = 0; i < this.errors.items.length; i++) {
-              if (this.errors.items[i].field == 'email') {
-                email_valid = false
-                break
-              }
-            }
-            if (email_valid == true) {
-
-              let payload = {};
-
-               // Check for one account
-              if (this.two_accnts == false) {
-
-                // If password reset request does not exist
-                if (this.option == false) {
-
-                  let email = this.email;
-
-                  payload = {
-                    email: email
-                  };
-
-                }
-
-                // If password reset request exist
-                else if (this.option == true) {
-
-                  let email = this.email;
-                  let nonce = this.nonce;
-                  let resend = true;
-
-                  payload = {
-                    email: email,
-                    nonce: nonce,
-                    resend: resend
-                  };
-                }
-
-              }
-
-              // Check for two accounts
-              else if (this.two_accnts == true) {
-                let email = this.email;
-                let nonce = this.nonce;
-                let type = this.radio;
-
-                payload = {
-                  email: email,
-                  nonce: nonce,
-                  type: type
-                };
-
-              }
-
-              let full_payload = {
-                values: payload,
-                vm: this,
-                app: "NODE_PRIVATE_API",
-                endpoint: "forgot_pass"
-              };
-
-              this.requestForgotPassword(full_payload).then(
-                response => {
-                console.log(response);
-                //check when response is dual
-                if (response.length > 0) {
-                  response = response[0];
-                  }
-                  if (response.status == true) {
-
-                     this.option = false ;
-                     this.message = "Password change reset link has been sent to your email";
-                     //Reset link set to user email.
-                  }
-                  else if (response.status == "stall") {
-                    // Activate select account option
-                     this.two_accnts = true ;
-                     this.nonce = response.nonce;
-                    //update nonce data
-
-                  }
-                 else if (response.status == false) {
-                   //Account does not exist
-                   console.log('Account does not exist');
-                   this.message = "Account does not exist.Please sign-up to create a sendy account";
-
-                 }
-                 else if (response.status == "exists") {
-                   //Existing password reset option
-                   this.message= "";
-                   this.nonce = response.nonce;
-                   this.option = true ;
-
-
-                 }
-                 else {
-
-                    //Invalid request
-                    console.log('Invalid Request');
-                 }
-
-              }, error => {
-                  console.error("Check Internet Connection")
-                  console.log(error);
-              });
-
-            }
-            else{
-
-              let level = 3;
-              let notification = {"title": "", "level": level, "message": "Invalid Email provided"}//notification object
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true);
-            }
-
-          },
-      },
-      computed :{
-        is_valid : function() {
-          return this.email !='';
-        },
-      },
+  methods: {
+    ...mapActions({
+      requestForgotPassword: '$_auth/requestForgotPassword',
+    }),
+    resend_link() {
+      this.request_pass();
+    },
+    request_pass() {
+      let email_valid = true;
+      for (let i = 0; i < this.errors.items.length; i++) {
+        if (this.errors.items[i].field === 'email') {
+          email_valid = false;
+          break;
+        }
       }
-      </script>
+      if (email_valid) {
+        let payload = {};
+
+        // Check for one account
+        if (!this.two_accnts) {
+          // If password reset request does not exist
+          if (!this.option) {
+            const email = this.email;
+
+            payload = {
+              email,
+            };
+          }
+
+          // If password reset request exist
+          else if (this.option) {
+            const email = this.email;
+            const nonce = this.nonce;
+            const resend = true;
+
+            payload = {
+              email,
+              nonce,
+              resend,
+            };
+          }
+        }
+
+        // Check for two accounts
+        else if (this.two_accnts) {
+          const email = this.email;
+          const nonce = this.nonce;
+          const type = this.radio;
+
+          payload = {
+            email,
+            nonce,
+            type,
+          };
+        }
+
+        const full_payload = {
+          values: payload,
+          vm: this,
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'forgot_pass',
+        };
+
+        this.requestForgotPassword(full_payload).then(
+          (response) => {
+            // check when response is dual
+            if (response.length > 0) {
+              response = response[0];
+            }
+            if (response.status === true) {
+              this.option = false;
+              this.message = 'Password change reset link has been sent to your email';
+              // Reset link set to user email.
+            } else if (response.status === 'stall') {
+              // Activate select account option
+              this.two_accnts = true;
+              this.nonce = response.nonce;
+              // update nonce data
+            } else if (response.status === false) {
+              // Account does not exist
+              this.message = 'Account does not exist.Please sign-up to create a sendy account';
+            } else if (response.status === 'exists') {
+              // Existing password reset option
+              this.message = '';
+              this.nonce = response.nonce;
+              this.option = true;
+            } else {
+              // Invalid request
+              this.message = 'Invalid Request';
+            }
+          },
+          (error) => {
+            this.message = 'Sign Up Failed, Kindly retry again';
+          },
+        );
+      } else {
+        const level = 3;
+        const notification = { title: '', level, message: 'Invalid Email provided' }; // notification object
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
+      }
+    },
+  },
+  computed: {
+    is_valid() {
+      return this.email !== '';
+    },
+  },
+};
+</script>
 
 <style lang="css">
 .log-item{

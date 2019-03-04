@@ -1,14 +1,14 @@
-import mqtt from 'mqtt'
+import mqtt from 'mqtt';
 
 const get_tracking_data = function({commit,dispatch,state}, data) {
-	var payload = {
-		"app": "NODE_PRIVATE_API",
-		"endpoint": "pending_delivery",
-		"values": data
+	let payload = {
+		app: 'NODE_PRIVATE_API',
+		endpoint: 'pending_delivery',
+		values: data,
 	}
 
 	return new Promise((resolve, reject) => {
-		dispatch("requestAxiosPost", payload, {
+		dispatch('requestAxiosPost', payload, {
 				root: true
 			})
 			.then(response => {
@@ -17,7 +17,7 @@ const get_tracking_data = function({commit,dispatch,state}, data) {
 						commit('set_tracking_data', response.data)
 						commit('$_orders/set_polyline', response.data.polyline, {
 							root: true
-						})
+						});
 						commit('$_orders/set_markers', response.data.path, {
 							root: true
 						})
@@ -25,44 +25,44 @@ const get_tracking_data = function({commit,dispatch,state}, data) {
 					resolve(true);
 				}
 				else {
-					resolve(false)
+					resolve(false);
 				}
 			}, error => {
 				reject(error);
-				console.log('failed to dispatch to global store')
+				// handle failure to dispatch to global store
 			});
 	})
 }
 
 const cancel_order = function({commit, dispatch}, data)
 {
-  var payload = {
-    "app":"PRIVATE_API",
-    "endpoint":"cancel_order",
-    "values":data
+  let payload = {
+    app: 'PRIVATE_API',
+    endpoint: 'cancel_order',
+    values: data,
   }
 
 	return new Promise((resolve, reject) => {
-		dispatch("requestAxiosPost", payload, {
+		dispatch('requestAxiosPost', payload, {
 				root: true
 			})
 			.then(response => {
 				resolve(response.data);
 			}, error => {
 				reject(error);
-				console.log('failed to dispatch to global store')
+				// handle failure to dispatch to global store
 			});
 	})
 }
 
-const track_mqtt = function({commit, state})
+const trackMQTT = function({commit, state})
 {
 	if (!state.tracking_data.confirm_status > 0) {
-		return false
+		return false;
 	}
-	var tracking_no = state.tracking_data.rider.phone_no_1;
-	var city_id = state.tracking_data.city_id;
-	var city_code = '';
+	let tracking_no = state.tracking_data.rider.phone_no_1;
+	let city_id = state.tracking_data.city_id;
+	let city_code = '';
 
 	switch (city_id) {
 		case 1:
@@ -84,11 +84,11 @@ const track_mqtt = function({commit, state})
 			city_code = 'ke-nairobi';
 	}
 
-	var uri = city_code + '/' + tracking_no;
+	let uri = `${city_code}/${tracking_no}`;
 
-	var clientId = 'mqttjs_wtp_' + Math.random().toString(16).substr(2, 8) + '_' + Math.random() + '_' + new Date().getTime()
-	var host = 'wss://chat.sendyit.com:443'
-	var options = {
+	let clientId = `mqttjs_wtp_${Math.random().toString(16).substr(2, 8)}_${Math.random()}_${new Date().getTime()}`;
+	let host = 'wss://chat.sendyit.com:443';
+	let options = {
 		keepalive: 10,
 		clientId: clientId,
 		protocolId: 'MQTT',
@@ -104,50 +104,51 @@ const track_mqtt = function({commit, state})
 		},
 		username: 'sendy',
 		password: '93a3a43dbac9ddd362702fb525b42a2d',
-		rejectUnauthorized: false
+		rejectUnauthorized: false,
 	}
-	var client = mqtt.connect(host, options)
+	let client = mqtt.connect(host, options);
 
 	client.on('error', function(err) {
-		console.log(err)
-		client.end()
+		// handle error
+		client.end();
 	})
 
 	client.on('connect', function() {
-		console.log('client connected:' + clientId)
+		commit('setIsMQTTConnected', true);
 	})
 
-	client.subscribe('partner_app_positions/' + uri, {
-		qos: 0
+	client.subscribe(`partner_app_positions/${uri}`, {
+		qos: 0,
 	})
 
 	client.on('message', function(topic, message, packet) {
-		var vendor = JSON.parse(message.toString());
-		console.log(vendor)
-		commit('$_orders/set_vendor_markers', vendor)
+		let vendor = JSON.parse(message.toString());
+		vendor.overide_visible = true;
+		commit('$_orders/set_vendor_markers', vendor, {root: true});
 	})
 
 	client.on('close', function() {
-		console.log(clientId + ' disconnected')
+		// closed
 	})
 }
-const running_balance = function({commit, dispatch}, data)
+
+const running_balance = function({dispatch}, data)
 {
-  var payload = {
-    "app":"PRIVATE_API",
-    "endpoint":"running_balance",
-    "values":data
-  }
+  let payload = {
+    app: 'PRIVATE_API',
+    endpoint: 'running_balance',
+    values: data,
+  };
 
 	return new Promise((resolve, reject) => {
-		dispatch("requestAxiosPost", payload, {
+		dispatch('requestAxiosPost', payload, {
 				root: true
 			})
 			.then(response => {
 				resolve(response.data);
 			}, error => {
 				reject(error);
-				console.log('failed to dispatch to global store')
+				// handle failure to dispatch to global store'
 			});
 	})
 }
@@ -155,6 +156,6 @@ const running_balance = function({commit, dispatch}, data)
 export default {
 	get_tracking_data,
 	cancel_order,
-	track_mqtt,
+	trackMQTT,
   running_balance,
 };
