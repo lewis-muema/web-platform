@@ -44,7 +44,12 @@
                       class="top-bar-info"
                     />
                     <span v-if="this.getStatus === 'Pending'">
-                      <span v-if="'customer_min_amount' in this.tracking_data.package_details">
+                      <span
+                        v-if="
+                          'customer_min_amount' in this.tracking_data.package_details &&
+                            !this.tracking_data.fixed_cost
+                        "
+                      >
                         Minimum Cost : KES {{ tracking_data.package_details.customer_min_amount }}
                       </span>
                       <span v-else>
@@ -219,7 +224,12 @@
                       v-for="(val, index) in tracking_data.order_notes"
                       v-if="index >= 0"
                     >
-                      {{ val.msg }}
+                      <div v-if="val.msg === ''">
+                        No notes provided.
+                      </div>
+                      <div v-else>
+                        {{ val.msg }}
+                      </div>
                     </div>
                   </div>
                   <div v-else>
@@ -236,10 +246,21 @@
                           <p class="info-text-transform">
                             Order Placed
                           </p>
-                          <p>
-                            Your order has been received and we shall notify you on the actual cost
-                            shortly
-                          </p>
+                          <div v-if="!this.tracking_data.fixed_cost">
+                            <p>
+                              Your order has been received and we shall notify you on the actual
+                              cost shortly
+                            </p>
+                          </div>
+                          <div v-else>
+                            <p>
+                              Your order has been received.The Order cost is KES
+                              {{ tracking_data.price_tier.cost }}
+                            </p>
+
+                            <p />
+                          </div>
+
                           <p>{{ tracking_data.date_time | moment }}</p>
                         </div>
                       </li>
@@ -489,7 +510,8 @@
                     <div
                       v-if="
                         [20].includes(tracking_data.rider.vendor_id) &&
-                          'customer_min_amount' in this.tracking_data.package_details
+                          'customer_min_amount' in this.tracking_data.package_details &&
+                          !this.tracking_data.fixed_cost
                       "
                     >
                       Minimum Amount : KES
@@ -567,7 +589,8 @@
                   <div
                     v-if="
                       [20].includes(tracking_data.rider.vendor_id) &&
-                        'customer_min_amount' in this.tracking_data.package_details
+                        'customer_min_amount' in this.tracking_data.package_details &&
+                        !this.tracking_data.fixed_cost
                     "
                   >
                     Minimum Amount : KES
@@ -587,7 +610,10 @@
                 </div>
               </div>
 
-              <div class="infobar--content infobar--item infobar--status infobar--item-bordered" v-if="tracking_data.confirm_status === 1">
+              <div
+                v-if="tracking_data.confirm_status === 1"
+                class="infobar--content infobar--item infobar--status infobar--item-bordered"
+              >
                 <div class="">
                   {{ getStatus }}
                 </div>
