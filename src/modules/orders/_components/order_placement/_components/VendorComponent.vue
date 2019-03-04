@@ -104,7 +104,7 @@
                         Temperature shouldn't exceed? (°C)
                       </div>
                       <div class="home-view-truck-options-inner--number-of-loaders">
-                        <el-input-number v-model.trim="max_temperature" @change="handleChangeInMaxTemperature" :min="1" :max="10"></el-input-number>
+                        <el-input-number v-model.trim="max_temperature" @change="handleChangeInMaxTemperature" :min="1" :max="10" ></el-input-number>
                       </div>
                     </div>
 
@@ -123,7 +123,7 @@
                         What is the approximate weight of the load?
                       </div>
                       <div class="home-view-truck-options-inner--load-weight">
-                        <el-input placeholder="(Enter load weight)" v-model.trim="load_weight" @change="dispatchLoadWeight">
+                        <el-input type="number" placeholder="(Enter load weight)" v-model="load_weight" :min="0" :max="10" @input="dispatchLoadWeight">
                           <el-select v-model="load_units" slot="append" placeholder="Tonnes" @change="dispatchLoadUnits">
                             <el-option label="KG" value="kgs"></el-option>
                             <el-option label="Tonnes" value="tonnes"></el-option>
@@ -137,7 +137,7 @@
                        What is the minimum amount you are willing to pay for this order?
                       </div>
                       <div>
-                        <el-input v-model.trim="customer_min_amount" @change="handleChangeInMinAmount" :min="0" type="number"></el-input>
+                        <el-input v-model.trim="customer_min_amount" @change="handleChangeInMinAmount" :min="0" type="number" placeholder="Kes"></el-input>
                       </div>
                     </div>
                     
@@ -164,15 +164,22 @@
                   <!-- end large vendors -->
 
                   <!-- start small vendors -->
-                  <div v-else class="home-view-carrier-type">
-                    <div class="home-view-carrier-type--item">
-                      <el-radio v-model="carrier_type" label="2" @input="dispatchCarrierType">Any</el-radio>
-                    </div>
-                    <div class="home-view-carrier-type--item">
-                      <el-radio v-model="carrier_type" label="1" @input="dispatchCarrierType">{{getCarrierBoxName()}}</el-radio>
-                    </div>
-                    <div class="home-view-carrier-type--item">
-                      <el-radio v-model="carrier_type" label="0" @input="dispatchCarrierType">{{getCarrierNoBoxName()}}</el-radio>
+                  <div v-else class="home-view-truck-options-wrapper" >
+                    <div class="home-view-truck-options-inner-wrapper">
+                      <div class="home-view-truck-options-label">
+                         What type of {{getVendorNameOnCarrierType}} do you want?
+                      </div>
+                      <div class="home-view-carrier-type home-view-carrier-type--left-aligned">
+                        <div class="home-view-carrier-type--item">
+                          <el-radio v-model="carrier_type" label="2" @input="dispatchCarrierType">Any</el-radio>
+                        </div>
+                        <div class="home-view-carrier-type--item">
+                          <el-radio v-model="carrier_type" label="1" @input="dispatchCarrierType">{{getCarrierBoxName()}}</el-radio>
+                        </div>
+                        <div class="home-view-carrier-type--item">
+                          <el-radio v-model="carrier_type" label="0" @input="dispatchCarrierType">{{getCarrierNoBoxName()}}</el-radio>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <!-- end small vendors -->
@@ -281,6 +288,24 @@ export default {
       return this.baseTruckOptions.concat(custom_vendor_options);
     },
 
+    getVendorNameOnCarrierType: function(){
+      let vendor_disp_name = 'motorbike';
+      if(this.get_active_package_class === 'medium'){
+        vendor_disp_name = this.get_active_vendor_name;
+      }
+      return vendor_disp_name.toLowerCase();
+    },
+
+    getMaxAllowedWeight(){
+      if(this.get_active_package_class === 'large'){
+        let weight = Number(this.get_active_vendor_name.slice(0, -10));
+        if(this.getLoadUnits !== 'tonnes'){
+          return weight * 1000;
+        }
+        return weight;
+      }
+    },
+
   },
 
   methods: {
@@ -308,7 +333,19 @@ export default {
     },
 
     dispatchLoadWeight(val) {
-      this.setLoadWeight(val);
+      val = Number(val);
+      let dispatch_value = val;
+      if(val > this.getMaxAllowedWeight){
+         this.doNotification(
+            '2',
+            'The weight of the load exceeds the truck capacity',
+            `The weight of the load exceeds the capacity of the truck you selected, please select a truck that fits ${val} ${this.getLoadUnits}.`,
+        );
+        dispatch_value = this.getMaxAllowedWeight;
+        this.load_weight = dispatch_value;
+
+      }
+      this.setLoadWeight(dispatch_value);
     },
 
     dispatchLoadUnits(val) {
@@ -374,7 +411,7 @@ export default {
     },
 
     getVendorPrice(vendorObject){
-      return numeral(this.getPlainVendorPrice(vendorObject)).format('0');
+      return numeral(this.getPlainVendorPrice(vendorObject)).format('0,0');
     },
 
     getMinVendorPrice(vendorObject){
@@ -388,7 +425,7 @@ export default {
     },
 
     isFixedCost(vendorObject){
-      if(vendorObject.vendor_id === 20){
+      if(vendorObject.vendor_id === 20 && !this.getPriceRequestObject.fixed_cost){
         return false;
       }
       return true;
@@ -473,6 +510,16 @@ export default {
       this.additional_loader = this.getAdditionalLoaderStatus;
       this.customer_min_amount = this.getCustomerMinAmount;
 
+    },
+
+    doNotification(level, title, message) {
+      this.$store.commit('setNotificationStatus', true);
+      const notification = {
+        title,
+        level,
+        message,
+      };
+      this.$store.commit('setNotification', notification);
     },
 
   },
