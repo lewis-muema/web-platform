@@ -621,7 +621,7 @@
                 </div>
               </div>
 
-              <div class="infobar--content infobar--item infobar--status infobar--item-bordered">
+              <div class="infobar--content infobar--item infobar--status infobar--item-bordered" v-if="tracking_data.confirm_status === 1">
                 <div class="">
                   {{ getStatus }}
                 </div>
