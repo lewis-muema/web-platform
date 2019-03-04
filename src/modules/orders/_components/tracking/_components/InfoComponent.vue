@@ -82,10 +82,7 @@
             >
               <el-col :span="5">
                 <div class="infobar--item-truck-cont-bordered inforbar--item-scrollable">
-                  <ul
-                    class="timeline"
-                    style=""
-                  >
+                  <ul class="timeline">
                     <li>
                       <p class="info-text-transform">
                         Pickup Location
@@ -115,10 +112,7 @@
               <el-col :span="5">
                 <div class="infobar--item-truck-cont-bordered tracking-loader-outer">
                   <div class="tracking-loader">
-                    <div
-                      class=""
-                      style=""
-                    >
+                    <div class="">
                       <img
                         src="https://images.sendyit.com/web_platform/vendor_type/side/20.svg"
                         alt=""
@@ -236,10 +230,7 @@
               <el-col :span="6">
                 <div class="">
                   <div class="inforbar--item-scrollable">
-                    <ul
-                      class="timeline"
-                      style=""
-                    >
+                    <ul class="timeline">
                       <li>
                         <div class="">
                           <p class="info-text-transform">
@@ -375,8 +366,7 @@
                       :src="tracking_data.rider.rider_photo"
                     >
                     <span>
-                      {{ tracking_data.rider.vehicle_name }} -
-                      {{ tracking_data.rider.number_plate }}
+                      {{ tracking_data.rider.vehicle_name }} {{ tracking_data.rider.number_plate }}
                     </span>
                   </div>
                 </el-col>
@@ -468,35 +458,17 @@
             v-if="!loading"
             class="mobile-inforbar--outer"
           >
-            <div
-              class=""
-              style="width:100%"
-            >
-              <div
-                class=""
-                style="width: 100%;float: right;display: inline-block;padding-left: 20px;padding-bottom :16px"
-              >
-                <div
-                  class=""
-                  style="display: inline-block;width: 70px;object-fit: contain;float: left;"
-                >
+            <div class="mobile-inforbar--inner">
+              <div class="mobile-inforbar-details">
+                <div class="mobile-inforbar-img">
                   <img
                     :src="tracking_data.rider.rider_photo"
-                    style="height:60px"
+                    class="mobile-img"
                   >
                 </div>
-                <div
-                  class=""
-                  style="width: 70%;display: inline-block;float: left;font-size: 15px;padding-left: 10px; padding-top: 10px;"
-                >
-                  <div
-                    class=""
-                    style="padding-bottom: 10px;"
-                  >
-                    <span
-                      class=""
-                      style="padding-right:25px"
-                    >
+                <div class="mobile-inforbar-rider-name">
+                  <div class="mobile-rider-name-inner">
+                    <span class="mobile-rider-name">
                       {{ tracking_data.rider.rider_name }}
                     </span>
                     <span class="">
@@ -504,15 +476,12 @@
                     </span>
                   </div>
                   <div class="">
-                    {{ tracking_data.rider.vehicle_name }} - {{ tracking_data.rider.number_plate }}
+                    {{ tracking_data.rider.vehicle_name }} {{ tracking_data.rider.number_plate }}
                   </div>
                 </div>
               </div>
               <div class="">
-                <div
-                  class=""
-                  style="padding-left: 10px;padding-bottom: 10px;border-bottom: 1px solid #74696942;padding-top: 10px;"
-                >
+                <div class="mobile-order-amount">
                   <div
                     v-if="this.getStatus === 'Pending'"
                     class=""
@@ -534,10 +503,7 @@
                     Cost: KES {{ tracking_data.amount }}
                   </div>
                 </div>
-                <div
-                  class=""
-                  style="padding-left: 10px;padding-bottom: 10px;border-bottom: 1px solid #74696942; padding-top: 10px;"
-                >
+                <div class="mobile-order-status">
                   Status : {{ getStatus }}
                 </div>
                 <div class="">
@@ -578,7 +544,7 @@
                     {{ tracking_data.rider.rider_name }} - {{ tracking_data.rider.rider_phone }}
                   </div>
                   <div class="">
-                    {{ tracking_data.rider.vehicle_name }} - {{ tracking_data.rider.number_plate }}
+                    {{ tracking_data.rider.vehicle_name }} {{ tracking_data.rider.number_plate }}
                   </div>
                 </div>
                 <div
@@ -1396,5 +1362,50 @@ ul.timeline > li:before {
 .tracking-notes-inner{
   padding-left: 30px;
   padding-top: 5px;
+}
+.mobile-inforbar--inner{
+  width:100%;
+}
+.mobile-inforbar-details{
+  width: 100%;
+  float: right;
+  display: inline-block;
+  padding-left: 20px;
+  padding-bottom :16px;
+}
+.mobile-inforbar-img{
+  display: inline-block;
+  width: 70px;
+  object-fit: contain;
+  float: left;
+}
+.mobile-img{
+  height:60px
+}
+.mobile-inforbar-rider-name{
+  width: 70%;
+  display: inline-block;
+  float: left;
+  font-size: 15px;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+.mobile-rider-name-inner{
+  padding-bottom: 10px;
+}
+.mobile-rider-name{
+  padding-right:25px
+}
+.mobile-order-amount{
+  padding-left: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #74696942;
+  padding-top: 10px;
+}
+.mobile-order-status{
+  padding-left: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #74696942;
+  padding-top: 10px;
 }
 </style>
