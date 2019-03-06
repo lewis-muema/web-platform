@@ -44,7 +44,12 @@
                       class="top-bar-info"
                     />
                     <span v-if="this.getStatus === 'Pending'">
-                      <span v-if="'customer_min_amount' in this.tracking_data.package_details">
+                      <span
+                        v-if="
+                          'customer_min_amount' in this.tracking_data.package_details &&
+                            !this.tracking_data.fixed_cost
+                        "
+                      >
                         Minimum Cost : KES {{ tracking_data.package_details.customer_min_amount }}
                       </span>
                       <span v-else>
@@ -82,10 +87,7 @@
             >
               <el-col :span="5">
                 <div class="infobar--item-truck-cont-bordered inforbar--item-scrollable">
-                  <ul
-                    class="timeline"
-                    style=""
-                  >
+                  <ul class="timeline">
                     <li>
                       <p class="info-text-transform">
                         Pickup Location
@@ -115,10 +117,7 @@
               <el-col :span="5">
                 <div class="infobar--item-truck-cont-bordered tracking-loader-outer">
                   <div class="tracking-loader">
-                    <div
-                      class=""
-                      style=""
-                    >
+                    <div class="">
                       <img
                         src="https://images.sendyit.com/web_platform/vendor_type/side/20.svg"
                         alt=""
@@ -225,7 +224,12 @@
                       v-for="(val, index) in tracking_data.order_notes"
                       v-if="index >= 0"
                     >
-                      {{ val.msg }}
+                      <div v-if="val.msg === ''">
+                        No notes provided.
+                      </div>
+                      <div v-else>
+                        {{ val.msg }}
+                      </div>
                     </div>
                   </div>
                   <div v-else>
@@ -236,19 +240,27 @@
               <el-col :span="6">
                 <div class="">
                   <div class="inforbar--item-scrollable">
-                    <ul
-                      class="timeline"
-                      style=""
-                    >
+                    <ul class="timeline">
                       <li>
                         <div class="">
                           <p class="info-text-transform">
                             Order Placed
                           </p>
-                          <p>
-                            Your order has been received and we shall notify you on the actual cost
-                            shortly
-                          </p>
+                          <div v-if="!this.tracking_data.fixed_cost">
+                            <p>
+                              Your order has been received and we shall notify you on the actual
+                              cost shortly
+                            </p>
+                          </div>
+                          <div v-else>
+                            <p>
+                              Your order has been received.The Order cost is KES
+                              {{ tracking_data.price_tier.cost }}
+                            </p>
+
+                            <p />
+                          </div>
+
                           <p>{{ tracking_data.date_time | moment }}</p>
                         </div>
                       </li>
@@ -375,8 +387,7 @@
                       :src="tracking_data.rider.rider_photo"
                     >
                     <span>
-                      {{ tracking_data.rider.vehicle_name }} -
-                      {{ tracking_data.rider.number_plate }}
+                      {{ tracking_data.rider.vehicle_name }} {{ tracking_data.rider.number_plate }}
                     </span>
                   </div>
                 </el-col>
@@ -466,7 +477,78 @@
         <div v-if="!this.truckMoreInfo">
           <div
             v-if="!loading"
-            class="infobar--outer"
+            class="mobile-inforbar--outer"
+          >
+            <div class="mobile-inforbar--inner">
+              <div class="mobile-inforbar-details">
+                <div class="mobile-inforbar-img">
+                  <img
+                    :src="tracking_data.rider.rider_photo"
+                    class="mobile-img"
+                  >
+                </div>
+                <div class="mobile-inforbar-rider-name">
+                  <div class="mobile-rider-name-inner">
+                    <span class="mobile-rider-name">
+                      {{ tracking_data.rider.rider_name }}
+                    </span>
+                    <span class="">
+                      {{ tracking_data.rider.rider_phone }}
+                    </span>
+                  </div>
+                  <div class="">
+                    {{ tracking_data.rider.vehicle_name }} {{ tracking_data.rider.number_plate }}
+                  </div>
+                </div>
+              </div>
+              <div class="">
+                <div class="mobile-order-amount">
+                  <div
+                    v-if="this.getStatus === 'Pending'"
+                    class=""
+                  >
+                    <div
+                      v-if="
+                        [20].includes(tracking_data.rider.vendor_id) &&
+                          'customer_min_amount' in this.tracking_data.package_details &&
+                          !this.tracking_data.fixed_cost
+                      "
+                    >
+                      Minimum Amount : KES
+                      {{ tracking_data.package_details.customer_min_amount }}
+                    </div>
+                    <div v-else>
+                      Cost : KES {{ tracking_data.amount }}
+                    </div>
+                  </div>
+                  <div v-else>
+                    Cost: KES {{ tracking_data.amount }}
+                  </div>
+                </div>
+                <div class="mobile-order-status">
+                  Status : {{ getStatus }}
+                </div>
+                <div class="">
+                  <div
+                    v-if=""
+                    class="infobar--actions-hover"
+                    @click="canceldialog()"
+                  >
+                    <div class="infobar--actions-icon">
+                      <i class="el-icon-circle-close-outline" />
+                      <span class="infobar--actions-text">
+                        Cancel Order
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            v-if="!loading"
+            class="infobar--outer exceed_mobile"
           >
             <div class="infobar--content infobar--content-padded">
               <div class="infobar--photo infobar--content infobar--item infobar--item-bordered">
@@ -484,7 +566,7 @@
                     {{ tracking_data.rider.rider_name }} - {{ tracking_data.rider.rider_phone }}
                   </div>
                   <div class="">
-                    {{ tracking_data.rider.vehicle_name }} - {{ tracking_data.rider.number_plate }}
+                    {{ tracking_data.rider.vehicle_name }} {{ tracking_data.rider.number_plate }}
                   </div>
                 </div>
                 <div
@@ -507,7 +589,8 @@
                   <div
                     v-if="
                       [20].includes(tracking_data.rider.vendor_id) &&
-                        'customer_min_amount' in this.tracking_data.package_details
+                        'customer_min_amount' in this.tracking_data.package_details &&
+                        !this.tracking_data.fixed_cost
                     "
                   >
                     Minimum Amount : KES
@@ -527,7 +610,10 @@
                 </div>
               </div>
 
-              <div class="infobar--content infobar--item infobar--status infobar--item-bordered">
+              <div
+                v-if="tracking_data.confirm_status === 1"
+                class="infobar--content infobar--item infobar--status infobar--item-bordered"
+              >
                 <div class="">
                   {{ getStatus }}
                 </div>
@@ -556,63 +642,6 @@
                 v-if="this.$route.name !== 'tracking_external'"
                 class="infobar--content infobar--item infobar--actions"
               >
-                <transition
-                  name="fade"
-                  mode="out-in"
-                >
-                  <div
-                    v-if="cancel_popup"
-                    class="infobar--action-slide"
-                  >
-                    <div class="">
-                      <div class="">
-                        Cancel this order?
-                      </div>
-                      <div class="">
-                        You can place another one at any time.
-                      </div>
-                    </div>
-                    <div class="">
-                      <el-radio-group
-                        v-model="cancel_reason"
-                        class=""
-                        @input="cancelChange"
-                      >
-                        <el-radio :label="4">
-                          I placed the wrong locations
-                        </el-radio>
-                        <el-radio :label="5">
-                          My order is not ready
-                        </el-radio>
-                        <el-radio :label="7">
-                          No driver has been allocated
-                        </el-radio>
-                        <el-radio :label="8">
-                          I placed this order twice
-                        </el-radio>
-                      </el-radio-group>
-                    </div>
-                    <div class="action--slide-desc">
-                      <button
-                        type="button"
-                        name="button"
-                        class="action--slide-button"
-                        @click="cancelOrder()"
-                      >
-                        Yes
-                      </button>
-                      <button
-                        type="button"
-                        name="button"
-                        class="action--slide-button"
-                        @click="cancelToggle()"
-                      >
-                        No
-                      </button>
-                    </div>
-                    <div class="actions--caret" />
-                  </div>
-                </transition>
                 <div v-if="false">
                   <div class="infobar--actions-icon">
                     <i class="el-icon-sold-out" />
@@ -647,7 +676,7 @@
                 <div
                   v-if="tracking_data.delivery_status < 2"
                   class="infobar--actions-hover"
-                  @click="cancelToggle()"
+                  @click="canceldialog()"
                 >
                   <div class="infobar--actions-icon">
                     <i class="el-icon-circle-close-outline" />
@@ -659,6 +688,71 @@
               </div>
             </div>
           </div>
+          <el-dialog
+            :visible.sync="cancelOption"
+            class="cancelOptions"
+          >
+            <div class="">
+              <div class="cancel-reason-option">
+                Cancel this order?
+              </div>
+              <div class="cancel-reason-option">
+                You can place another one at any time.
+              </div>
+            </div>
+            <div class="cancel-reason-text">
+              <div class="">
+                <el-radio
+                  v-model="cancel_reason"
+                  label="4"
+                >
+                  I placed the wrong locations
+                </el-radio>
+              </div>
+              <div class="">
+                <el-radio
+                  v-model="cancel_reason"
+                  label="5"
+                >
+                  My order is not ready
+                </el-radio>
+              </div>
+              <div class="">
+                <el-radio
+                  v-model="cancel_reason"
+                  label="7"
+                >
+                  No driver has been allocated
+                </el-radio>
+              </div>
+              <div class="">
+                <el-radio
+                  v-model="cancel_reason"
+                  label="8"
+                >
+                  I placed this order twice
+                </el-radio>
+              </div>
+            </div>
+            <div class="action--slide-desc">
+              <button
+                type="button"
+                name="button"
+                class="action--slide-button"
+                @click="cancelOrder()"
+              >
+                Yes
+              </button>
+              <button
+                type="button"
+                name="button"
+                class="action--slide-button"
+                @click="cancelToggle()"
+              >
+                No
+              </button>
+            </div>
+          </el-dialog>
         </div>
       </transition>
     </div>
@@ -910,6 +1004,36 @@ export default {
 </script>
 
 <style lang="css">
+@media only screen and (max-width: 599px){
+  .exceed_mobile{
+    display: none !important;
+  }
+  .mobile-inforbar--outer{
+    display: flex !important;
+  }
+  .cancelOptions > div {
+    margin-top: 6em !important;
+    width: 95% !important;
+  }
+  .cancel-reason-text{
+    padding-left: 25% !important;
+  }
+}
+.mobile-inforbar--outer
+{
+  display: none;
+  position: fixed;
+  bottom: 5px;
+  width: 90%;
+  margin: 0 5%;
+  background-color: #fff;
+  color: #555;
+  font-size: 13px;
+  max-height: 100px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+  border-radius: 3px;
+  overflow: scroll;
+}
 .infobar--outer
 {
   display: flex;
@@ -923,6 +1047,7 @@ export default {
   min-height: 90px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
   border-radius: 3px;
+
 }
 .infobar--content
 {
@@ -1168,8 +1293,8 @@ ul.timeline > li:before {
 }
 .cancelOptions > div
 {
-  margin-top: 16em !important;
-  width: 30% !important;
+  margin-top: 16em;
+  width: 30%;
 }
 .v-modal{
   opacity: 0 !important;
@@ -1263,5 +1388,50 @@ ul.timeline > li:before {
 .tracking-notes-inner{
   padding-left: 30px;
   padding-top: 5px;
+}
+.mobile-inforbar--inner{
+  width:100%;
+}
+.mobile-inforbar-details{
+  width: 100%;
+  float: right;
+  display: inline-block;
+  padding-left: 20px;
+  padding-bottom :16px;
+}
+.mobile-inforbar-img{
+  display: inline-block;
+  width: 70px;
+  object-fit: contain;
+  float: left;
+}
+.mobile-img{
+  height:60px
+}
+.mobile-inforbar-rider-name{
+  width: 70%;
+  display: inline-block;
+  float: left;
+  font-size: 15px;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+.mobile-rider-name-inner{
+  padding-bottom: 10px;
+}
+.mobile-rider-name{
+  padding-right:25px
+}
+.mobile-order-amount{
+  padding-left: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #74696942;
+  padding-top: 10px;
+}
+.mobile-order-status{
+  padding-left: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #74696942;
+  padding-top: 10px;
 }
 </style>
