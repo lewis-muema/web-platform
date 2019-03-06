@@ -107,7 +107,7 @@
 .home-view-vendor-and-optins-wrappper{
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 60vh;
+  max-height: 50vh;
   margin-right: -20px;
   padding-right: 10px;
 }
