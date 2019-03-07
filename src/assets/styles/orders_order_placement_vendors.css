@@ -98,7 +98,7 @@
   height: 30px;
   min-width: 30px;
 }
-.home-view-vendor-types-item--cost-wrapper_time, 
+.home-view-vendor-types-item--cost-wrapper_time,
 .home-view-vendor-types-item-vendor--vendor-local-name{
   font-size: xx-small;
 }
@@ -233,7 +233,6 @@
 .home-view-actions--items__span .el-icon-goods,
 .home-view-actions--items__span .el-icon-edit-outline,
 .home-view-actions--items__span .el-icon-time {
-  position: absolute;
   margin-left: -15px;
   margin-top: 2px;
 }
