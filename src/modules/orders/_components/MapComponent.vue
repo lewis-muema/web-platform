@@ -76,6 +76,7 @@ export default {
       infoHeader: '',
       infoDescription: '',
       iconLabel: '',
+      vendor_icon_id: '',
     };
   },
   methods: {
@@ -135,48 +136,48 @@ export default {
       return new google.maps.LatLng(literal);
     },
     activeMarker() {
-      console.log('Checking marker..');
-      console.log(this.markers.length);
-      if (this.iconLabel !== '') {
-        console.log('Label', this.iconLabel);
-        console.log('Markers', this.markers);
-        for (const prop in this.markers) {
-          console.log('Looping through ...');
-          const index = prop;
-          const main = this.markers[prop];
-          this.toggleInfoWindow(main, index);
-        }
+      const size = Object.keys(this.markers).length;
+      if (this.iconLabel !== '' && size > 0 && this.polyline.path !== '') {
+        const main = this.markers.find(location => location.icon === this.iconLabel);
+        const index = this.markers.findIndex(location => location.icon === this.iconLabel);
+        this.toggleInfoWindow(main, index);
       } else {
         this.infoWinOpen = false;
-        console.log('Error');
       }
     },
     orderStatus(data) {
-      if (data.delivery_status === 3) {
-        // return 'Delivered';
-        this.infoHeader = '';
-        this.infoDescription = '';
-      } else if (data.delivery_status === 2) {
-        // return 'In Transit';
-        this.infoHeader = 'Delivery in progress';
-        this.infoDescription = 'Order arrival time 1pm-2pm';
-        this.iconLabel = 'destination';
-      } else if (data.delivery_status === 0 && data.confirm_status === 1) {
-        // return 'Confirmed';
-        this.infoHeader = 'Rider is on the way';
-        this.infoDescription = 'Order pickup time 11am -12pm';
-        this.iconLabel = 'pickup';
+      if (data.status) {
+        if (data.rider.vendor_id == 23) {
+          this.vendor_icon_id = 1;
+        } else {
+          this.vendor_icon_id = data.rider.vendor_id;
+        }
+        if (data.delivery_status === 3) {
+          // return 'Delivered';
+          this.infoHeader = '';
+          this.infoDescription = '';
+        } else if (data.delivery_status === 2) {
+          // return 'In Transit';
+          this.infoHeader = 'Delivery in progress';
+          this.infoDescription = 'Order arrival time 1pm-2pm';
+          this.iconLabel = 'destination';
+        } else if (data.delivery_status === 0 && data.confirm_status === 1) {
+          // return 'Confirmed';
+          this.infoHeader = 'Rider is on the way';
+          this.infoDescription = 'Order pickup time 11am -12pm';
+          this.iconLabel = 'pickup';
+        } else {
+          // return 'Pending';
+          this.infoHeader = 'Matching your order';
+          this.infoDescription = 'A rider will be allocated to your order';
+          this.iconLabel = 'pickup';
+        }
+        this.activeMarker();
       } else {
-        // return 'Pending';
-        this.infoHeader = 'Matching your order';
-        this.infoDescription = 'A rider will be allocated to your order';
-        this.iconLabel = 'pickup';
+        this.infoWinOpen = false;
       }
-      this.activeMarker();
     },
     activeState() {
-      console.log('Order new');
-      console.log(this.$route.params.order_no);
       this.$store
         .dispatch('$_orders/get_order_data', { order_no: this.$route.params.order_no })
         .then((response) => {
@@ -189,13 +190,9 @@ export default {
     },
 
     toggleInfoWindow(marker, idx) {
-      console.log('check', marker);
       this.infoWindowPos = marker.position;
-      console.log('position', marker);
       this.infoContent = this.getInfoWindowContent(marker);
-      console.log('before');
       this.infoWinOpen = true;
-      console.log('after');
     },
     getInfoWindowContent(marker) {
       return `<div class="" style="width:275px">
@@ -203,7 +200,9 @@ export default {
                  width: 70px;
                  object-fit: contain;
                  float: left;">
-                   <img style ="height: 45px;" src="https://images.sendyit.com/web_platform/vendor_type/top/1.png"></img>
+          <img style ="height: 45px;" src="https://images.sendyit.com/web_platform/vendor_type/top/${
+  this.vendor_icon_id
+}.png"></img>
                  </div>
                  <div style="  width: 70%;
                    display: inline-block;
@@ -233,6 +232,8 @@ export default {
         }
         this.$refs.map.$mapObject.fitBounds(bounds);
         this.$refs.map.$mapObject.setZoom(this.$refs.map.$mapObject.zoom - 1);
+        this.activeState();
+        this.activeMarker();
       }
     },
     '$route.params.order_no': function trackedOrder(order) {
