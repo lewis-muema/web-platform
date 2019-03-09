@@ -56,17 +56,17 @@
   border-radius: 5px;
   margin: 13px 0;
   cursor: pointer;
-  border: 1px solid #555;
+  border: 2px solid #E1E3E8;
   padding-top: 4px;
   padding-bottom: 4px;
   background-color: transparent;
+  color: #1782c5;
 }
 .home-view-vendor-types--item:hover,
 .home-view-vendor-types--item:active,
 .home-view-vendor-types--item__active {
-  border: 1px solid #1782c5;
+  border: 2px solid #1782c5;
   background-color: #fff;
-  color: #1782c5;
 }
 
 .home-view-vendor-types--item,
@@ -86,31 +86,30 @@
   flex-direction: row;
   padding-right: 10px;
   align-items: center;
+  /* flex-basis: 52%; */
 }
 .home-view-vendor-types-item--vendor-wrapper {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  flex: 1;
+  /* flex-basis: 43%; */
 }
 .home-view-vendor-types-item__image {
   height: 30px;
   min-width: 30px;
 }
-.home-view-vendor-types-item--cost-wrapper_time {
-  font-size: x-small;
-  padding-bottom: 5px;
+.home-view-vendor-types-item--cost-wrapper_time, 
+.home-view-vendor-types-item-vendor--vendor-local-name{
+  font-size: xx-small;
 }
 .home-view-vendor-types-item--cost-wrapper__cost {
   font-size: smaller;
-  padding-top: 5px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .home-view-vendor-types-item--vendor-wrapper__img {
-  padding: 0px 30px 0px 27px;
-}
-.home-view-vendor-types-item--vendor-wrapper__vendor {
-  padding-left: 5px;
-  font-size: 14px;
+  padding-left: 10px;
+  flex-basis: 25%;
 }
 .home-view-vendor-types-item--cost-wrapper-left {
   flex-direction: column;
@@ -130,6 +129,9 @@
   width: 100%;
   justify-content:space-evenly;
   padding: 10px 0 10px 0;
+}
+.home-view-carrier-type--left-aligned{
+  justify-content: space-around;
 }
 
 /* --start vendor actions */
@@ -184,7 +186,8 @@
 .home-view-payments-wrapper--left__amount-label,
 .home-view-payments-wrapper--left__amount-figure,
 .home-view-payments-wrapper--right-label,
-.home-view-payments-wrapper--right-amount {
+.home-view-payments-wrapper--right-amount,
+.home-view-vendor-types-item--vendor-wrapper__vendor {
   display: flex;
 }
 .home-view-payments-wrapper {

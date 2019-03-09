@@ -120,7 +120,6 @@ export default {
 
             const full_payload = {
               values,
-              vm: this,
               app: 'NODE_PRIVATE_API',
               endpoint: 'update_user',
             };
@@ -141,7 +140,6 @@ export default {
                   this.$store.commit('setNotification', notification);
                   this.$store.commit('setNotificationStatus', true); // activate notification
                 } else {
-                  console.warn('Cop user details Update Failed');
                   const level = 3;
                   this.message = 'Something went wrong.';
                   const notification = { title: '', level, message: this.message }; // notification object
@@ -150,7 +148,11 @@ export default {
                 }
               },
               (error) => {
-                console.log(error);
+                const level = 3;
+                this.message = 'Something went wrong.';
+                const notification = { title: '', level, message: this.message }; // notification object
+                this.$store.commit('setNotification', notification);
+                this.$store.commit('setNotificationStatus', true);
               },
             );
           } else if (session.default === 'peer') {
@@ -185,7 +187,6 @@ export default {
                   this.$store.commit('setNotification', notification);
                   this.$store.commit('setNotificationStatus', true); // activate notification
                 } else {
-                  console.warn('Peer details Update Failed');
                   const level = 3;
                   this.message = 'Something went wrong.';
                   const notification = { title: '', level, message: this.message }; // notification object
@@ -194,7 +195,6 @@ export default {
                 }
               },
               (error) => {
-                console.log(error);
                 const level = 3;
                 this.message = 'Something went wrong.';
                 const notification = { title: '', level, message: this.message }; // notification object

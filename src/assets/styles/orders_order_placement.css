@@ -104,6 +104,13 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
+.home-view-vendor-and-optins-wrappper{
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 50vh;
+  margin-right: -20px;
+  padding-right: 10px;
+}
 .homeview--input-bundler__destination-short-input {
   margin-right: unset;
 }
@@ -144,7 +151,8 @@
   display: flex;
 }
 .home-view-vendor-classes-menu--img {
-  display: flex;
+  max-width: 20px;
+  padding: 0 5px;
 }
 .home-view-vendor-classes-menu {
   display: flex;
@@ -166,4 +174,63 @@
 }
 .payments-orange{
   color: #f57f20;
+}
+.home-view-vendor-types-item--vendor-wrapper__vendor{
+  flex-direction: column;
+  flex:1;
+}
+.home-view-vendor-types-item-vendor--vendor-formal-name{
+  font-size: 14px;
+}
+.home-view-vendor-types-item-vendor--vendor-local-name{
+  font-weight: 500;
+}
+.home-view-vendor-types-item-vendor--vendor-formal-name,
+.home-view-vendor-types-item-vendor--vendor-local-name,
+.home-view-vendor-types-item--cost-wrapper__cost,
+.home-view-vendor-types-item--cost-wrapper_time{
+  padding: 3px;
+}
+.home-view-truck-options-wrapper{
+  width: 100%;
+  font-size: 14px;
+}
+.home-view-truck-options-inner-wrapper{
+  padding: 10px;
+}
+.home-view-truck-options--load-units .el-input-group__append, .home-view-truck-options--load-units .el-input-group__prepend {
+  width: 70px !important;
+}
+.home-view-truck-options-divider{
+  border: 1px solid #E1E3E8;
+  margin: 0 10px 10px 10px;
+}
+.home-view-truck-options-label{
+  color: #212120;;
+  font-weight: 300;
+  padding: 5px 0;
+}
+.el-popper[x-placement^=bottom]{
+  margin-top: 0px !important;
+  background-color: #1782c5 !important;
+  border: 0px solid #1782c5;
+}
+.el-popper[x-placement^=bottom] .popper__arrow{
+  display: none;
+}
+.el-select-dropdown__item, .el-select-dropdown__item.hover, .el-select-dropdown__item.selected{
+  color: #ffffff !important;
+  background-color:#1782c5 !important;
+}
+.el-select-dropdown__list{
+  padding: unset !important;
+}
+.home-view-truck-options-inner--load-weight{
+  margin-right: 5px;
+}
+.body{
+  overflow: hidden;
+}
+.home-view-truck-options-inner--load-weight .el-input-group__append, .el-select-dropdown__list span{
+  font-size: smaller !important;
 }

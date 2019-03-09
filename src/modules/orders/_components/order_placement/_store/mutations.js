@@ -14,6 +14,14 @@ const getDefaultState = () => {
       pickup_filled:false,
       payment_method:'',
       stripe_user_id:'',
+      carrier_type_id:'',
+      return_status:false,
+      max_temperature:4,
+      delivery_item:'',
+      load_weight:'',
+      load_units:'kgs',
+      additional_loader:'',
+      no_of_loaders:1,
   };
 };
 
@@ -107,15 +115,42 @@ export default {
     },
 
     resetState (state) {
-       Object.assign(state, getDefaultState())
-     },
+      Object.assign(state, getDefaultState());
+    },
 
-     set_carrier_type(state, val) {
-       state.carrier_type_id = val;
-     },
+    set_carrier_type(state, val) {
+      state.carrier_type_id = val;
+    },
 
-     setReturnStatus(state, val) {
+    setReturnStatus(state, val) {
       state.return_status = val;
     },
 
+    setMaxTemperature(state, val) {
+      state.max_temperature = val;
+    },
+
+    setCustomerMinAmount(state, val) {
+      state.customer_min_amount = val;
+    },
+
+    setDeliveryItem(state, val) {
+      state.delivery_item = val;
+    },
+
+    setLoadWeight(state, val) {
+      state.load_weight = val;
+    },
+
+    setLoadUnits(state, val) {
+      state.load_units = val;
+    },
+
+    setAdditionalLoaderStatus(state, val) {
+      state.additional_loader = val;
+    },
+
+    setNOOfLoaders(state, val) {
+      state.no_of_loaders = val;
+    },
 };
