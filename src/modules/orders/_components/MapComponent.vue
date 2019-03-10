@@ -147,7 +147,7 @@ export default {
     },
     orderStatus(data) {
       if (data.status) {
-        if (data.rider.vendor_id == 23) {
+        if (data.rider.vendor_id === 23) {
           this.vendor_icon_id = 1;
         } else {
           this.vendor_icon_id = data.rider.vendor_id;
