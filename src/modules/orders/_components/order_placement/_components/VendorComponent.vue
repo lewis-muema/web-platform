@@ -269,7 +269,7 @@
                   >
                     <div class="home-view-truck-options-inner-wrapper">
                       <div class="home-view-truck-options-label">
-                        What type of {{ getVendorNameOnCarrierType }} do you wa nt?
+                        What type of {{ getVendorNameOnCarrierType }} do you want?
                       </div>
                       <div class="home-view-truck-options-inner--full-select">
                         <el-select
@@ -278,7 +278,7 @@
                           @change="dispatchCarrierType"
                         >
                           <el-option
-                            v-for="item in CarrierOptions"
+                            v-for="item in carrierOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value"
@@ -341,7 +341,7 @@ export default {
           label: 'Closed',
         },
       ],
-      CarrierOptions: [
+      carrierOptions: [
         {
           value: '2',
           label: 'Any',
