@@ -150,6 +150,7 @@ export default {
       }
     },
     orderStatus(data) {
+      const waiting = data.delivery_log.find(position => position.log_type === 10);
       if (data.status) {
         if (data.rider.vendor_id === 23) {
           this.vendor_icon_id = 1;
@@ -160,20 +161,31 @@ export default {
           // return 'Delivered';
           this.infoHeader = '';
           this.infoDescription = '';
+        } else if (data.delivery_status === 2 && waiting !== undefined) {
+          // return 'Waiting at destination'
+          this.infoHeader = 'Your rider has arrived and is waiting at the destination.';
+          this.iconLabel = 'destination';
         } else if (data.delivery_status === 2) {
           // return 'In Transit';
-          this.infoHeader = 'Delivery in progress';
+          this.infoHeader = 'Your delivery is in progress.';
           this.infoDescription = `Order arrival time ${this.delivery_eta}`;
           this.iconLabel = 'destination';
+        } else if (
+          data.delivery_status === 0
+          && data.confirm_status === 1
+          && waiting !== undefined
+        ) {
+          // return 'Waiting at pick up location';
+          this.infoHeader = 'Your rider has arrived and is waiting at the pickup location.';
+          this.iconLabel = 'pickup';
         } else if (data.delivery_status === 0 && data.confirm_status === 1) {
           // return 'Confirmed';
-          this.infoHeader = 'Rider is on the way';
+          this.infoHeader = 'Your rider is on the way.';
           this.infoDescription = `Order pickup time ${this.pick_up_eta}`;
           this.iconLabel = 'pickup';
         } else {
           // return 'Pending';
-          this.infoHeader = 'Matching your order';
-          this.infoDescription = 'A rider will be allocated to your order';
+          this.infoHeader = 'We are matching your order with a rider. ';
           this.iconLabel = 'pickup';
         }
         this.activeMarker();
