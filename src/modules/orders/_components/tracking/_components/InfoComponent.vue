@@ -1502,20 +1502,20 @@ ul.timeline > li:before {
   flex-basis: 115px !important;
 }
 .el-step__head.is-success{
-  color: #c0c4cc;
-  border-color: #c0c4cc;
+  color: #c0c4cc !important;
+  border-color: #c0c4cc !important;
 }
 .el-step__title.is-success{
-  color: #c0c4cc;
+  color: #c0c4cc !important;
 }
 .el-step__description.is-success{
-  color: #c0c4cc;
+  color: #c0c4cc !important;
 }
 .el-step__title.is-process{
-  font-weight: 400;
+  font-weight: 400 !important;
 }
 .el-step__head.is-process {
-  color: #f57f20;
-  border-color: #f57f20;
+  color: #f57f20 !important;
+  border-color: #f57f20 !important;
 }
 </style>
