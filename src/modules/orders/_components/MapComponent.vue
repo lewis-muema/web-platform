@@ -49,6 +49,8 @@
 import NoSSR from 'vue-no-ssr';
 import { mapGetters } from 'vuex';
 
+const moment = require('moment');
+
 export default {
   name: 'MapComponent',
   components: {
@@ -77,6 +79,8 @@ export default {
       infoDescription: '',
       iconLabel: '',
       vendor_icon_id: '',
+      pick_up_eta: '',
+      delivery_eta: '',
     };
   },
   methods: {
@@ -159,12 +163,12 @@ export default {
         } else if (data.delivery_status === 2) {
           // return 'In Transit';
           this.infoHeader = 'Delivery in progress';
-          this.infoDescription = 'Order arrival time 1pm-2pm';
+          this.infoDescription = `Order arrival time ${this.delivery_eta}`;
           this.iconLabel = 'destination';
         } else if (data.delivery_status === 0 && data.confirm_status === 1) {
           // return 'Confirmed';
           this.infoHeader = 'Rider is on the way';
-          this.infoDescription = 'Order pickup time 11am -12pm';
+          this.infoDescription = `Order pickup time ${this.pick_up_eta}`;
           this.iconLabel = 'pickup';
         } else {
           // return 'Pending';
@@ -173,8 +177,33 @@ export default {
           this.iconLabel = 'pickup';
         }
         this.activeMarker();
+        this.orderETA(data);
       } else {
         this.infoWinOpen = false;
+      }
+    },
+    orderETA(data) {
+      if (data.confirm_status === 1) {
+        const pick_up_eta = data.eta_data.etp;
+        const eta_split = pick_up_eta.split('to');
+        const start = eta_split[0].replace(/\s+/g, '');
+        const end = eta_split[1].replace(/\s+/g, '');
+
+        const start_eta = moment(start, moment.ISO_8601).format('h:mm a');
+        const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
+
+        this.pick_up_eta = `${start_eta}-${end_eta}`;
+      } else if (data.delivery_status === 2) {
+        const delivery_eta = data.eta_data.etp;
+        const eta_split = delivery_eta.split('to');
+        const start = eta_split[0].replace(/\s+/g, '');
+        const end = eta_split[1].replace(/\s+/g, '');
+
+        const start_eta = moment(start, moment.ISO_8601).format('h:mm a');
+        const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
+
+        this.delivery_eta = `${start_eta}-${end_eta}`;
+      } else {
       }
     },
     activeState() {

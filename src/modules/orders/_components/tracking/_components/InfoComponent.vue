@@ -624,15 +624,15 @@
                 >
                   <el-step
                     title="Rider allocation"
-                    description="allocate ETA"
+                    :description="this.confirm_eta"
                   />
                   <el-step
                     title="Pick up"
-                    description="pickup ETA"
+                    :description="this.pick_up_eta"
                   />
                   <el-step
                     title="Delivery"
-                    description="delivery ETA"
+                    :description="this.delivery_eta"
                   />
                 </el-steps>
                 <!-- <div class="">
@@ -680,10 +680,7 @@
                   </div>
                 </div>
                 <div
-                  v-if="
-                    [20].includes(tracking_data.rider.vendor_id) &&
-                      'customer_min_amount' in this.tracking_data.package_details
-                  "
+                  v-if="[6, 10, 13, 14, 17, 18, 19, 20].includes(tracking_data.rider.vendor_id)"
                   class="infobar--actions-hover"
                   @click="maximiseInfoDetails()"
                 >
@@ -791,6 +788,9 @@ export default {
     moment(date) {
       return moment(date).format('MMM Do YYYY, h:mm a');
     },
+    eta_moment(date) {
+      return moment(date).format('hA');
+    },
   },
   data() {
     return {
@@ -805,6 +805,9 @@ export default {
       truckMoreInfo: false,
       myRb: '',
       accType: '',
+      pick_up_eta: 'Awaiting Confirmation',
+      delivery_eta: 'Awaiting Pickup',
+      confirm_eta: '',
     };
   },
   computed: {
@@ -813,6 +816,48 @@ export default {
       tracked_order: '$_orders/$_tracking/get_tracked_order',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
     }),
+    order_eta() {
+      if (this.tracking_data.confirm_status === 0) {
+        const confirm_eta = this.tracking_data.eta_data.etc;
+        const eta_split = confirm_eta.split('to');
+        const start = eta_split[0].replace(/\s+/g, '');
+        const end = eta_split[1].replace(/\s+/g, '');
+
+        const start_eta = moment(start, moment.ISO_8601).format('h:mm a');
+        const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
+
+        this.confirm_eta = `${start_eta}-${end_eta}`;
+        this.pick_up_eta = 'Awaiting Confirmation';
+        this.delivery_eta = 'Awaiting Pickup';
+      } else if (this.tracking_data.confirm_status === 1) {
+        const pick_up_eta = this.tracking_data.eta_data.etp;
+        const confirmed_eta = this.tracking_data.eta_data.confirmed;
+        const eta_split = pick_up_eta.split('to');
+        const start = eta_split[0].replace(/\s+/g, '');
+        const end = eta_split[1].replace(/\s+/g, '');
+
+        const start_eta = moment(start, moment.ISO_8601).format('h:mm a');
+        const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
+
+        this.pick_up_eta = `${start_eta}-${end_eta}`;
+        this.confirm_eta = moment(confirmed_eta, moment.ISO_8601).format('h:mm a');
+      } else if (this.tracking_data.delivery_status === 2) {
+        const delivery_eta = this.tracking_data.eta_data.etp;
+        const confirmed_eta = this.tracking_data.eta_data.confirmed;
+        const picked_eta = this.tracking_data.eta_data.picked;
+        const eta_split = delivery_eta.split('to');
+        const start = eta_split[0].replace(/\s+/g, '');
+        const end = eta_split[1].replace(/\s+/g, '');
+
+        const start_eta = moment(start, moment.ISO_8601).format('h:mm a');
+        const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
+
+        this.delivery_eta = `${start_eta}-${end_eta}`;
+        this.confirm_eta = moment(confirmed_eta, moment.ISO_8601).format('h:mm a');
+        this.pick_up_eta = moment(picked_eta, moment.ISO_8601).format('h:mm a');
+      } else {
+      }
+    },
     getStatus() {
       if (!this.loading) {
         switch (this.tracking_data.delivery_status) {
@@ -868,12 +913,14 @@ export default {
       this.loading = true;
       this.$store.commit('$_orders/$_tracking/set_tracked_order', from);
       this.poll(from);
+      this.order_eta();
     },
 
     tracking_data(data) {
       if (data.confirm_status === 1) {
         this.reCheckMQTTConnection();
       }
+      this.order_eta();
     },
   },
   mounted() {
@@ -882,6 +929,7 @@ export default {
     this.$store.dispatch('$_orders/$_tracking/trackMQTT');
     this.poll(this.$route.params.order_no);
     this.checkRunningBalance();
+    this.order_eta();
   },
   created() {
     this.order_number = this.$route.params.order_no;
@@ -1388,7 +1436,7 @@ ul.timeline > li:before {
   margin-top: 10px;
 }
 .share-option{
-  padding-top: 5px;
+  padding-top: 20px;
 }
 .rimg-disp{
   height: 55px;
@@ -1480,7 +1528,7 @@ ul.timeline > li:before {
   padding-top: 10px;
 }
 .infobar--item-bordered > div{
-  width: 79%;
+  /* width: 90%; */
 }
 .infobar--order-align{
   text-align: center;
@@ -1493,29 +1541,29 @@ ul.timeline > li:before {
   }
 .el-step__description{
     font-size: 10px !important;
-    width: 60px!important;
+    width: 103px!important;
   }
 /* .infobar--status{
   width: 23% !important;
 } */
 .el-step.is-horizontal {
-  flex-basis: 115px !important;
+  flex-basis: 160px !important;
 }
 .el-step__head.is-success{
-  color: #c0c4cc;
-  border-color: #c0c4cc;
+  color: #c0c4cc !important;
+  border-color: #c0c4cc !important;
 }
 .el-step__title.is-success{
-  color: #c0c4cc;
+  color: #c0c4cc !important;
 }
 .el-step__description.is-success{
-  color: #c0c4cc;
+  color: #c0c4cc !important;
 }
 .el-step__title.is-process{
-  font-weight: 400;
+  font-weight: 400 !important;
 }
 .el-step__head.is-process {
-  color: #f57f20;
-  border-color: #f57f20;
+  color: #f57f20 !important;
+  border-color: #f57f20 !important;
 }
 </style>
