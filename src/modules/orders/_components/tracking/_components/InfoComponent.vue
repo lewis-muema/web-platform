@@ -581,7 +581,9 @@
                   </div>
                 </div>
               </div>
-              <div class="infobar--content infobar--item infobar--order infobar--item-bordered">
+              <div
+                class="infobar--content infobar--item infobar--order infobar--item-bordered infobar--order-align"
+              >
                 <div
                   v-if="this.getStatus === 'Pending'"
                   class=""
@@ -611,10 +613,29 @@
               </div>
 
               <div
-                v-if="tracking_data.confirm_status === 1"
+                v-if=""
                 class="infobar--content infobar--item infobar--status infobar--item-bordered"
               >
-                <div class="">
+                <el-steps
+                  :space="200"
+                  :active="this.getStatusCode"
+                  finish-status="success"
+                  style="font-size:10px !important"
+                >
+                  <el-step
+                    title="Rider allocation"
+                    description="allocate ETA"
+                  />
+                  <el-step
+                    title="Pick up"
+                    description="pickup ETA"
+                  />
+                  <el-step
+                    title="Delivery"
+                    description="delivery ETA"
+                  />
+                </el-steps>
+                <!-- <div class="">
                   {{ getStatus }}
                 </div>
                 <div class="">
@@ -636,7 +657,7 @@
                       {{ this.tracking_data.etd }}
                     </span>
                   </span>
-                </div>
+                </div> -->
               </div>
               <div
                 v-if="this.$route.name !== 'tracking_external'"
@@ -808,6 +829,30 @@ export default {
               }
               default: {
                 return 'Pending';
+              }
+            }
+          }
+        }
+      } else {
+        return '';
+      }
+    },
+    getStatusCode() {
+      if (!this.loading) {
+        switch (this.tracking_data.delivery_status) {
+          case 3: {
+            return 3;
+          }
+          case 2: {
+            return 2;
+          }
+          default: {
+            switch (this.tracking_data.confirm_status) {
+              case 1: {
+                return 1;
+              }
+              default: {
+                return 0;
               }
             }
           }
@@ -1433,5 +1478,44 @@ ul.timeline > li:before {
   padding-bottom: 10px;
   border-bottom: 1px solid #74696942;
   padding-top: 10px;
+}
+.infobar--item-bordered > div{
+  width: 79%;
+}
+.infobar--order-align{
+  text-align: center;
+}
+.infobar--item-bordered > div > div:nth-child(3){
+  max-width: 18.3333% !important;
+}
+.el-step__title {
+    font-size: 12px !important;
+  }
+.el-step__description{
+    font-size: 10px !important;
+    width: 60px!important;
+  }
+/* .infobar--status{
+  width: 23% !important;
+} */
+.el-step.is-horizontal {
+  flex-basis: 115px !important;
+}
+.el-step__head.is-success{
+  color: #c0c4cc;
+  border-color: #c0c4cc;
+}
+.el-step__title.is-success{
+  color: #c0c4cc;
+}
+.el-step__description.is-success{
+  color: #c0c4cc;
+}
+.el-step__title.is-process{
+  font-weight: 400;
+}
+.el-step__head.is-process {
+  color: #f57f20;
+  border-color: #f57f20;
 }
 </style>
