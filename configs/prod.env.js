@@ -1,7 +1,6 @@
 module.exports = {
   ENVIRONMENT: '"production"',
   DEBUG_MODE: false,
-  // NODE_PRIVATE_API: '"https://privateapi.sendyit.com/v1/"',
   NODE_PRIVATE_API: '"https://auth.sendyit.com/v1/"',
   PRIVATE_API: '"https://api.sendyit.com/parcel/api/v11/"',
   BACKEND_CUSTOMERS_APP: '"https://prod.sendyit.com/customers/"',
