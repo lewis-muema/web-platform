@@ -151,6 +151,7 @@ export default {
     },
     orderStatus(data) {
       const waiting = data.delivery_log.find(position => position.log_type === 10);
+      const rider_locations = this.isMQTTConnected;
       if (data.status) {
         if (data.rider.vendor_id === 23) {
           this.vendor_icon_id = 1;
@@ -168,9 +169,16 @@ export default {
           this.infoDescription = '';
         } else if (data.delivery_status === 2) {
           // return 'In Transit';
-          this.infoHeader = 'Your delivery is in progress.';
-          this.infoDescription = `Order arrival time ${this.delivery_eta}`;
-          this.iconLabel = 'destination';
+          if (!rider_locations) {
+            this.infoHeader = "Your rider is still on the way. We are working to restore the rider's location";
+            this.infoDescription = '';
+            this.iconLabel = 'destination';
+            this.vendor_icon_id = 'location';
+          } else {
+            this.infoHeader = 'Your delivery is in progress.';
+            this.infoDescription = `Order arrival time ${this.delivery_eta}`;
+            this.iconLabel = 'destination';
+          }
         } else if (
           data.delivery_status === 0
           && data.confirm_status === 1
@@ -182,9 +190,16 @@ export default {
           this.iconLabel = 'pickup';
         } else if (data.delivery_status === 0 && data.confirm_status === 1) {
           // return 'Confirmed';
-          this.infoHeader = 'Your rider is on the way.';
-          this.infoDescription = `Order pickup time ${this.pick_up_eta}`;
-          this.iconLabel = 'pickup';
+          if (!rider_locations) {
+            this.infoHeader = "Your rider is still on the way. We are working to restore the rider's location";
+            this.infoDescription = '';
+            this.iconLabel = 'pickup';
+            this.vendor_icon_id = 'location';
+          } else {
+            this.infoHeader = 'Your rider is on the way.';
+            this.infoDescription = `Order pickup time ${this.pick_up_eta}`;
+            this.iconLabel = 'pickup';
+          }
         } else {
           // return 'Pending';
           this.infoHeader = 'We are matching your order with a rider. ';
@@ -267,6 +282,7 @@ export default {
       vendors: '$_orders/get_vendors',
       polyline: '$_orders/get_polyline',
       tracking_data: '$_orders/$_tracking/get_tracking_data',
+      isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
     }),
   },
   watch: {
