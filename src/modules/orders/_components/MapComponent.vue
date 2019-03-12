@@ -165,6 +165,7 @@ export default {
           // return 'Waiting at destination'
           this.infoHeader = 'Your rider has arrived and is waiting at the destination.';
           this.iconLabel = 'destination';
+          this.infoDescription = '';
         } else if (data.delivery_status === 2) {
           // return 'In Transit';
           this.infoHeader = 'Your delivery is in progress.';
@@ -177,6 +178,7 @@ export default {
         ) {
           // return 'Waiting at pick up location';
           this.infoHeader = 'Your rider has arrived and is waiting at the pickup location.';
+          this.infoDescription = '';
           this.iconLabel = 'pickup';
         } else if (data.delivery_status === 0 && data.confirm_status === 1) {
           // return 'Confirmed';
@@ -186,6 +188,7 @@ export default {
         } else {
           // return 'Pending';
           this.infoHeader = 'We are matching your order with a rider. ';
+          this.infoDescription = '';
           this.iconLabel = 'pickup';
         }
         this.activeMarker();
@@ -205,6 +208,7 @@ export default {
         const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
 
         this.pick_up_eta = `${start_eta}-${end_eta}`;
+        this.delivery_eta = '';
       } else if (data.delivery_status === 2) {
         const delivery_eta = data.eta_data.etp;
         const eta_split = delivery_eta.split('to');
@@ -215,6 +219,7 @@ export default {
         const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
 
         this.delivery_eta = `${start_eta}-${end_eta}`;
+        this.pick_up_eta = '';
       } else {
       }
     },
