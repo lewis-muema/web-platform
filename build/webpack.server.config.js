@@ -1,8 +1,8 @@
-import webpack from 'webpack';
-import merge from 'webpack-merge';
-import nodeExternals from 'webpack-node-externals';
-import VueSSRServerPlugin from 'vue-server-renderer/server-plugin';
-import base from './webpack.base.config';
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const nodeExternals = require('webpack-node-externals');
+const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
+const base = require('./webpack.base.config');
 
 module.exports = merge(base, {
   target: 'node',

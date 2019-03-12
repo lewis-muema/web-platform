@@ -1,9 +1,9 @@
-import path from 'path';
-import webpack from 'webpack';
-import VueLoaderPlugin from 'vue-loader/lib/plugin';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin';
-import vueConfig from './vue-loader.config';
+const path = require('path');
+const webpack = require('webpack');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
+const vueConfig = require('./vue-loader.config');
 
 process.env.NODE_ENV = process.env.DOCKER_ENV || 'development';
 process.env.DOCKER_ENV = process.env.DOCKER_ENV || 'development';

@@ -1,10 +1,10 @@
-import fs from 'fs';
-import path from 'path';
-import MFS from 'memory-fs';
-import webpack from 'webpack';
-import chokidar from 'chokidar';
-import clientConfig from './webpack.client.config';
-import serverConfig from './webpack.server.config';
+const fs = require('fs');
+const path = require('path');
+const MFS = require('memory-fs');
+const webpack = require('webpack');
+const chokidar = require('chokidar');
+const clientConfig = require('./webpack.client.config');
+const serverConfig = require('./webpack.server.config');
 
 const readFile = (fs, file) => {
   try {
@@ -35,6 +35,7 @@ module.exports = function setupDevServer(app, templatePath, cb) {
   template = fs.readFileSync(templatePath, 'utf-8');
   chokidar.watch(templatePath).on('change', () => {
     template = fs.readFileSync(templatePath, 'utf-8');
+    console.log('index.html template updated.');
     update();
   });
 

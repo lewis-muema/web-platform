@@ -1,8 +1,8 @@
-import webpack from 'webpack';
-import merge from 'webpack-merge';
-import SWPrecachePlugin from 'sw-precache-webpack-plugin';
-import VueSSRClientPlugin from 'vue-server-renderer/client-plugin';
-import base from './webpack.base.config';
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const SWPrecachePlugin = require('sw-precache-webpack-plugin');
+const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
+const base = require('./webpack.base.config');
 // const nodeExternals = require('webpack-node-externals')
 
 const config = merge(base, {
@@ -80,4 +80,4 @@ const config = merge(base, {
 //   )
 // }
 
-export default config;
+module.exports = config;
