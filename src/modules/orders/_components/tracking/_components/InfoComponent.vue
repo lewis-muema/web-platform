@@ -1528,7 +1528,7 @@ ul.timeline > li:before {
   padding-top: 10px;
 }
 .infobar--item-bordered > div{
-  /* width: 90%; */
+  width: 70%;
 }
 .infobar--order-align{
   text-align: center;
