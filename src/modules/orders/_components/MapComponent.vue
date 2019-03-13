@@ -81,6 +81,7 @@ export default {
       vendor_icon_id: '',
       pick_up_eta: '',
       delivery_eta: '',
+      vendor_name: '',
     };
   },
   methods: {
@@ -158,19 +159,28 @@ export default {
         } else {
           this.vendor_icon_id = data.rider.vendor_id;
         }
+        if (data.rider.vendor_id === 23 || data.rider.vendor_id === 1) {
+          this.vendor_name = 'rider';
+        } else {
+          this.vendor_name = 'driver';
+        }
         if (data.delivery_status === 3) {
           // return 'Delivered';
           this.infoHeader = '';
           this.infoDescription = '';
         } else if (data.delivery_status === 2 && waiting !== undefined) {
           // return 'Waiting at destination'
-          this.infoHeader = 'Your driver has arrived and is waiting at the destination.';
+          this.infoHeader = `Your ${
+            this.vendor_name
+          }has arrived and is waiting at the destination.`;
           this.iconLabel = 'destination';
           this.infoDescription = '';
         } else if (data.delivery_status === 2) {
           // return 'In Transit';
           if (!rider_locations) {
-            this.infoHeader = "Your delivery is still in progress. We are working to restore the driver's location.";
+            this.infoHeader = `Your delivery is still in progress. We are working to restore the ${
+              this.vendor_name
+            }'s location.`;
             this.infoDescription = '';
             this.iconLabel = 'destination';
             this.vendor_icon_id = 'location';
@@ -185,24 +195,28 @@ export default {
           && waiting !== undefined
         ) {
           // return 'Waiting at pick up location';
-          this.infoHeader = 'Your driver has arrived and is waiting at the pickup location.';
+          this.infoHeader = `Your ${
+            this.vendor_name
+          } has arrived and is waiting at the pickup location.`;
           this.infoDescription = '';
           this.iconLabel = 'pickup';
         } else if (data.delivery_status === 0 && data.confirm_status === 1) {
           // return 'Confirmed';
           if (!rider_locations) {
-            this.infoHeader = "Your driver is still on the way. We are working to restore the driver's location";
+            this.infoHeader = `Your ${
+              this.vendor_name
+            } is still on the way. We are working to restore the ${this.vendor_name}'s location`;
             this.infoDescription = '';
             this.iconLabel = 'pickup';
             this.vendor_icon_id = 'location';
           } else {
-            this.infoHeader = 'Your driver is on the way.';
+            this.infoHeader = `Your ${this.vendor_name} is on the way.`;
             this.infoDescription = `Order pickup time ${this.pick_up_eta}`;
             this.iconLabel = 'pickup';
           }
         } else {
           // return 'Pending';
-          this.infoHeader = 'We are matching your order with a driver. ';
+          this.infoHeader = `We are matching your order with a ${this.vendor_name}. `;
           this.infoDescription = '';
           this.iconLabel = 'pickup';
         }
