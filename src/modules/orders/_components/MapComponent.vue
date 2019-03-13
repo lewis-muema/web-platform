@@ -170,7 +170,7 @@ export default {
         } else if (data.delivery_status === 2) {
           // return 'In Transit';
           if (!rider_locations) {
-            this.infoHeader = "Your rider is still on the way. We are working to restore the rider's location";
+            this.infoHeader = "Your delivery is still in progress. We are working to restore the rider's location.";
             this.infoDescription = '';
             this.iconLabel = 'destination';
             this.vendor_icon_id = 'location';
