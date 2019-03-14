@@ -82,7 +82,7 @@ export default {
       pick_up_eta: '',
       delivery_eta: '',
       vendor_name: '',
-      destination_waiting: '',
+      destination_waiting: false,
     };
   },
   methods: {
