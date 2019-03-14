@@ -253,7 +253,7 @@ export default {
         this.pick_up_eta = `${start_eta}-${end_eta}`;
         this.delivery_eta = '';
       } else if (data.delivery_status === 2) {
-        const delivery_eta = data.eta_data.etp;
+        const delivery_eta = data.eta_data.etd;
         const eta_split = delivery_eta.split('to');
         const start = eta_split[0].replace(/\s+/g, '');
         const end = eta_split[1].replace(/\s+/g, '');
