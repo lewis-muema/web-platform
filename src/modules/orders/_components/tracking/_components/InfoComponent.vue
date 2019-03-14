@@ -613,7 +613,7 @@
               </div>
 
               <div
-                v-if=""
+                v-if="[1, 23].includes(tracking_data.rider.vendor_id)"
                 class="infobar--content infobar--item infobar--status infobar--item-bordered"
               >
                 <el-steps
@@ -635,29 +635,6 @@
                     :description="this.delivery_eta"
                   />
                 </el-steps>
-                <!-- <div class="">
-                  {{ getStatus }}
-                </div>
-                <div class="">
-                  <span
-                    v-if="tracking_data.delivery_status < 2"
-                    class=""
-                  >
-                    A Rider will pick and deliver your order by
-                    <span class="">
-                      {{ moment(tracking_data.date_time).format('h:mm a') }}
-                    </span>
-                  </span>
-                  <span
-                    v-else
-                    class=""
-                  >
-                    Estimated Delivery:
-                    <span class="">
-                      {{ this.tracking_data.etd }}
-                    </span>
-                  </span>
-                </div> -->
               </div>
               <div
                 v-if="this.$route.name !== 'tracking_external'"
