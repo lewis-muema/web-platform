@@ -1,227 +1,237 @@
 <template lang="html">
-    <div class="departments_container" id="departments_container">
-        <div class="section--filter-wrap">
-            <div class="section--filter-input-wrap">
+  <div
+    id="departments_container"
+    class="departments_container"
+  >
+    <div class="section--filter-wrap">
+      <div class="section--filter-input-wrap">
+        <el-input
+          v-model="filterData.department"
+          class="section--filter-input"
+          placeholder="Search Department"
+        />
 
-                <el-input class="section--filter-input" v-model="filterData.department" placeholder="Search Department"></el-input>
-
-                <button type="button"
-                        :class="active_filter ? 'button-primary section--filter-action align-left btn-dprts':'button-primary section--filter-action-inactive align-left btn-dprts'"
-                        :disabled="active_filter == true ? false : true"
-                        @click="filterUserTableData">Search
-                </button>
-
-            </div>
-            <div class="section--filter-action-wrap">
-                <button class="button-primary section--filter-action btn-dprts" @click="addDepartment">Add Department</button>
-            </div>
-        </div>
-        <el-table
-                :data="departments_data"
-                style="width: 100%"
-                :border="true"
-                :stripe="true"
+        <button
+          type="button"
+          :class="
+            active_filter
+              ? 'button-primary section--filter-action align-left btn-dprts'
+              : 'button-primary section--filter-action-inactive align-left btn-dprts'
+          "
+          :disabled="active_filter == true ? false : true"
+          @click="filterUserTableData"
         >
-            <template slot="empty">
-                {{empty_departments_state}}
-            </template>
-            <el-table-column
-                    label="Name"
-                    prop="department_name"
-            >
-            </el-table-column>
-            <el-table-column
-                    label="Admin"
-                    prop="department_admin">
-            </el-table-column>
-            <el-table-column
-                    label="Action"
-            >
-                <template slot-scope="scope">
-                    <a @click="edit_department(departments_data[scope.$index]['department_id'])" class="btn-dpt-edit">Edit</a>
-                </template>
-            </el-table-column>
-
-        </el-table>
-
-        <div class="section--pagination-wrap">
-            <el-pagination
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="filteredUserData.length"
-                    :page-size="pagination_limit"
-                    :current-page.sync="pagination_page"
-                    @current-change="changePage"
-                    :page-sizes="[10, 20, 50, 100]"
-                    @size-change="changeSize"
-                    class="section--pagination-item"
-            >
-            </el-pagination>
-        </div>
+          Search
+        </button>
+      </div>
+      <div class="section--filter-action-wrap">
+        <button
+          class="button-primary section--filter-action btn-dprts"
+          @click="addDepartment"
+        >
+          Add Department
+        </button>
+      </div>
     </div>
+    <el-table
+      :data="departments_data"
+      style="width: 100%"
+      :border="true"
+      :stripe="true"
+    >
+      <template slot="empty">
+        {{ empty_departments_state }}
+      </template>
+      <el-table-column
+        label="Name"
+        prop="department_name"
+      />
+      <el-table-column
+        label="Admin"
+        prop="department_admin"
+      />
+      <el-table-column label="Action">
+        <template slot-scope="scope">
+          <a
+            class="btn-dpt-edit"
+            @click="edit_department(departments_data[scope.$index]['department_id'])"
+          >
+            Edit
+          </a>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <div class="section--pagination-wrap">
+      <el-pagination
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="filteredUserData.length"
+        :page-size="pagination_limit"
+        :current-page.sync="pagination_page"
+        :page-sizes="[10, 20, 50, 100]"
+        class="section--pagination-item"
+        @current-change="changePage"
+        @size-change="changeSize"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
-    import {mapGetters, mapActions} from 'vuex'
+import { mapGetters, mapActions } from 'vuex';
 
-    export default {
-        name: "Departments",
-        mounted() {
-
-            let session = this.$store.getters.getSession;
-            let cop_id = 0;
-            if (session.default == 'biz') {
-                cop_id = session[session.default]['cop_id'];
-            }
-            let payload = {
-                "cop_id": cop_id
-
-            }
-            let users_full_payload = {
-                "values": payload,
-                "vm": this,
-                "app": "NODE_PRIVATE_API",
-                "endpoint": "cop_departments"
-            }
-            this.$store.dispatch("$_admin/requestDepartmentsList", users_full_payload).then(response => {
-                console.log('departments data here')
-                console.log(response);
-
-            }, error => {
-                console.log(error);
-
-            });
-            this.filteredUserData = this.deptData
-        },
-        data: function () {
-            return {
-                empty_departments_state: 'Fetching Departments',
-                pagination_limit: 10,
-                pagination_page: 1,
-                filterState: false,
-                filteredUserData: [],
-                search_users: '',
-                filterData: {
-                    "user": "",
-                    "department": ""
-                }
-            }
-        },
-        computed: {
-            ...mapGetters({
-                deptData: '$_admin/getDepartmentsList',
-                userData: '$_admin/getUsersList',
-            }),
-            ...mapActions({
-                requestDepartmentsList: '$_admin/requestDepartmentsList'
-            }),
-            departments_data() {
-                let from = (this.pagination_page - 1) * this.pagination_limit;
-                let to = this.pagination_page * this.pagination_limit;
-                if (this.filterState == true) {
-                    if(Array.isArray(this.filteredUserData)){
-                        return this.filteredUserData.slice(from, to);
-                    }
-                    return [];
-
-                }
-                else {
-                    this.filteredUserData = this.deptData
-                    if (Array.isArray(this.deptData)) {
-                        return this.deptData.slice(from, to);
-                    }
-                    return [];
-                }
-            },
-
-            active_filter() {
-                return this.filterData.user !== "" || this.filterData.department !== "";
-            }
-
-        },
-        methods: {
-            addDepartment() {
-                //TODO:route to add department
-                this.$router.push('/admin/department/add_department');
-            },
-            changeSize(val) {
-                this.pagination_page = 1;
-                this.pagination_limit = val;
-            },
-            changePage() {
-                console.log('Page changed to', this.pagination_page);
-                let from = (this.pagination_page - 1) * this.pagination_limit;
-                let to = this.pagination_page * this.pagination_limit;
-                let departments_data = this.deptData.slice(from, to);
-                console.log(from, to, departments_data);
-
-            },
-            edit_department(department) {
-                this.$router.push('/admin/department/edit_department/' + department);
-            },
-            filterUserTableData() {
-                //reset filter
-                this.filterState = false;
-                let user = this.filterData.user;
-                let department = this.filterData.department;
-
-                this.filteredUserData = this.deptData
-                console.log(this.filteredUserData);
-                //check if both are filled
-                if (department !== '') {
-                    //department filter
-                    console.log('performing a department filter');
-                    console.log(department)
-                    let vm = this;
-                    this.filteredUserData = this.filteredUserData.filter(function (user) {
-                        return user.department_name.toLowerCase().indexOf(vm.filterData.department.toLowerCase()) >= 0;
-                    });
-                    this.filterState = true;
-
-                }
-            },
-        }
+export default {
+  name: 'Departments',
+  data() {
+    return {
+      empty_departments_state: 'Fetching Departments',
+      pagination_limit: 10,
+      pagination_page: 1,
+      filterState: false,
+      filteredUserData: [],
+      search_users: '',
+      filterData: {
+        user: '',
+        department: '',
+      },
+    };
+  },
+  mounted() {
+    const session = this.$store.getters.getSession;
+    let cop_id = 0;
+    if (session.default == 'biz') {
+      cop_id = session[session.default].cop_id;
     }
+    const payload = {
+      cop_id,
+    };
+    const users_full_payload = {
+      values: payload,
+      vm: this,
+      app: 'NODE_PRIVATE_API',
+      endpoint: 'cop_departments',
+    };
+    this.$store.dispatch('$_admin/requestDepartmentsList', users_full_payload).then(
+      (response) => {
+        console.log('departments data here');
+        console.log(response);
+      },
+      (error) => {
+        console.log(error);
+      },
+    );
+    this.filteredUserData = this.deptData;
+  },
+  computed: {
+    ...mapGetters({
+      deptData: '$_admin/getDepartmentsList',
+      userData: '$_admin/getUsersList',
+    }),
+    ...mapActions({
+      requestDepartmentsList: '$_admin/requestDepartmentsList',
+    }),
+    departments_data() {
+      const from = (this.pagination_page - 1) * this.pagination_limit;
+      const to = this.pagination_page * this.pagination_limit;
+      if (this.filterState == true) {
+        if (Array.isArray(this.filteredUserData)) {
+          return this.filteredUserData.slice(from, to);
+        }
+        return [];
+      }
+      this.filteredUserData = this.deptData;
+      if (Array.isArray(this.deptData)) {
+        return this.deptData.slice(from, to);
+      }
+      return [];
+    },
+
+    active_filter() {
+      return this.filterData.user !== '' || this.filterData.department !== '';
+    },
+  },
+  methods: {
+    addDepartment() {
+      // TODO:route to add department
+      this.$router.push('/admin/department/add_department');
+    },
+    changeSize(val) {
+      this.pagination_page = 1;
+      this.pagination_limit = val;
+    },
+    changePage() {
+      console.log('Page changed to', this.pagination_page);
+      const from = (this.pagination_page - 1) * this.pagination_limit;
+      const to = this.pagination_page * this.pagination_limit;
+      const departments_data = this.deptData.slice(from, to);
+      console.log(from, to, departments_data);
+    },
+    edit_department(department) {
+      this.$router.push(`/admin/department/edit_department/${department}`);
+    },
+    filterUserTableData() {
+      // reset filter
+      this.filterState = false;
+      const { user } = this.filterData;
+      const { department } = this.filterData;
+
+      this.filteredUserData = this.deptData;
+      console.log(this.filteredUserData);
+      // check if both are filled
+      if (department !== '') {
+        // department filter
+        console.log('performing a department filter');
+        console.log(department);
+        const vm = this;
+        this.filteredUserData = this.filteredUserData.filter(
+          user => user.department_name.toLowerCase().indexOf(vm.filterData.department.toLowerCase()) >= 0,
+        );
+        this.filterState = true;
+      }
+    },
+  },
+};
 </script>
 
 <style lang="css">
-    @import "../../../assets/styles/datatable.css";
+@import "../../../assets/styles/datatable.css";
 
-    .button {
-        float: right;
-    }
+.button {
+    float: right;
+}
 
-    .button__element {
-        text-transform: uppercase;
-        display: inline-block;
-        padding: 10px 30px;
-        margin-bottom: 0;
-        font-size: 14px;
-        font-weight: normal;
-        line-height: 1.42857143;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: middle;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        background-image: none;
-        border: 1px solid transparent;
-        border-radius: 3px;
-        color: #fff;
-        background-color: #1782C5;
-        border-color: #357ebd;
-        text-decoration: none;
-    }
+.button__element {
+    text-transform: uppercase;
+    display: inline-block;
+    padding: 10px 30px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    color: #fff;
+    background-color: #1782C5;
+    border-color: #357ebd;
+    text-decoration: none;
+}
 
-    .menu {
-        display: flow-root;
-    }
-    .btn-dprts{
-      border-width:0px !important;
-    }
-    .btn-dpt-edit{
-      cursor: pointer;
-    }
+.menu {
+    display: flow-root;
+}
+.btn-dprts{
+  border-width:0px !important;
+}
+.btn-dpt-edit{
+  cursor: pointer;
+}
 </style>

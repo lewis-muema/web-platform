@@ -57,71 +57,65 @@ export default {
   */
   methods: {
     create_datatable(el, data, options) {
-
-        var col = [];
-        for (var i = 0; i < data.length; i++) {
-            for (var key in data[i]) {
-                if (col.indexOf(key) === -1) {
-                    col.push(key);
-                }
-            }
-        }
-        if (options.count == true) {
-          col.splice(0, 0, " ");
-        }
-        options.custom_col.forEach(function(element) {
-          element.pos = col.push(element.key);
-        });
-
-        var table = document.createElement("table");
-
-        {
-          var trf = table.insertRow(0);
-          var td = document.createElement('td');
-          td.setAttribute('colSpan', col.length);
-          td.setAttribute('class', 'datatable--title');
-          td.innerHTML = options.title
-          trf.appendChild(td);
-        }
-
-
-        var tr = table.insertRow(-1);
-
-        for (var i = 0; i < col.length; i++) {
-          var th = document.createElement("th");
-          th.innerHTML = col[i];
-          tr.appendChild(th);
-        }
-
-        var customs = options.custom_col.length;
-
-        for (var i = 0; i < data.length; i++) {
-          tr = table.insertRow(-1);
-          if("child_row" in options){
-            tr.onclick = "expand("+i+")";
-          }
-          var custom_count = 0
-          for (var j = 0; j < col.length; j++) {
-            var tabCell = tr.insertCell(-1);
-            if (options.count == true && j==0) {
-              tabCell.innerHTML = i+1;
-            }
-            else {
-              if (j >= (col.length - customs)) {
-                tabCell.innerHTML = options.custom_col[custom_count].render;
-                custom_count++;
-              }
-              else {
-                tabCell.innerHTML = data[i][col[j]];
-              }
-            }
+      const col = [];
+      for (var i = 0; i < data.length; i++) {
+        for (const key in data[i]) {
+          if (col.indexOf(key) === -1) {
+            col.push(key);
           }
         }
+      }
+      if (options.count == true) {
+        col.splice(0, 0, ' ');
+      }
+      options.custom_col.forEach((element) => {
+        element.pos = col.push(element.key);
+      });
 
-        table.setAttribute('class', 'datatable');
-        var divContainer = document.getElementById(el);
-        divContainer.innerHTML = "";
-        divContainer.appendChild(table);
-    }
-  }
-}
+      const table = document.createElement('table');
+
+      {
+        const trf = table.insertRow(0);
+        const td = document.createElement('td');
+        td.setAttribute('colSpan', col.length);
+        td.setAttribute('class', 'datatable--title');
+        td.innerHTML = options.title;
+        trf.appendChild(td);
+      }
+
+      let tr = table.insertRow(-1);
+
+      for (var i = 0; i < col.length; i++) {
+        const th = document.createElement('th');
+        th.innerHTML = col[i];
+        tr.appendChild(th);
+      }
+
+      const customs = options.custom_col.length;
+
+      for (var i = 0; i < data.length; i++) {
+        tr = table.insertRow(-1);
+        if ('child_row' in options) {
+          tr.onclick = `expand(${i})`;
+        }
+        let custom_count = 0;
+        for (let j = 0; j < col.length; j++) {
+          const tabCell = tr.insertCell(-1);
+          if (options.count == true && j == 0) {
+            tabCell.innerHTML = i + 1;
+          } else if (j >= col.length - customs) {
+            tabCell.innerHTML = options.custom_col[custom_count].render;
+            custom_count++;
+          } else {
+            tabCell.innerHTML = data[i][col[j]];
+          }
+        }
+      }
+
+      table.setAttribute('class', 'datatable');
+      const divContainer = document.getElementById(el);
+      divContainer.innerHTML = '';
+      divContainer.appendChild(table);
+    },
+  },
+};

@@ -233,7 +233,7 @@ export default {
     },
     card_add_status() {
       if (typeof this.$route.query.action !== 'undefined') {
-        const action = this.$route.query.action;
+        const { action } = this.$route.query;
         if (action === 'add') {
           return true;
         }

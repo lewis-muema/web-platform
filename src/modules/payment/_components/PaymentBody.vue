@@ -1,19 +1,19 @@
 <template lang="html">
   <div class="paymentbody">
-    <pay-method/>
+    <pay-method />
     <div class="">
-      <router-view></router-view>
+      <router-view />
     </div>
   </div>
 </template>
 
 <script>
-import PayMethod from './PayMethod.vue'
+import PayMethod from './PayMethod.vue';
 
 export default {
-  name: 'payment-body',
-  components: {PayMethod}
-}
+  name: 'PaymentBody',
+  components: { PayMethod },
+};
 </script>
 
 <style lang="css">

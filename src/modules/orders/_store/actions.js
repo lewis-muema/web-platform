@@ -1,6 +1,3 @@
-import axios from 'axios';
-import mqtt from 'mqtt';
-
 const positions = [
   {
     sim_card_sn: '89254021004075720312',
@@ -292,10 +289,8 @@ const positions = [
   },
 ];
 
-const fetch_ongoing_orders = function ({
-  state, commit, dispatch, rootState,
-}) {
-  const session = rootState.session;
+const fetchOngoingOrders = function ({ commit, dispatch, rootState }) {
+  const { session } = rootState;
   const data = { phone: `${session[session.default].user_phone}` };
   const payload = {
     app: 'NODE_PRIVATE_API',
@@ -311,20 +306,19 @@ const fetch_ongoing_orders = function ({
       },
       (error) => {
         reject(error);
-        console.log('failed to dispatch to global store');
       },
     );
   });
 };
 
-const connect_mqtt = function ({ commit }, payload) {
+const connectMqtt = function ({ commit }) {
   for (let i = 0; i < positions.length; i++) {
     const vendor = positions[i];
     commit('set_vendor_markers', vendor);
   }
 };
 
-const intializeMqtt = function ({ commit }, payload) {
+const intializeMqtt = function (payload) {
   return false;
   // const CLIENTID = `mqttjs_wp_${Math.random().toString(16).substr(2, 8)}_${Math.random()}_${new Date().getTime()}`;
   // const HOST = 'wss://chat.sendyit.com:443';
@@ -373,7 +367,7 @@ const intializeMqtt = function ({ commit }, payload) {
   // })
 };
 
-const get_order_data = function ({ commit, dispatch, state }, data) {
+const getOrderData = function ({ dispatch }, data) {
   const payload = {
     app: 'NODE_PRIVATE_API',
     endpoint: 'pending_delivery',
@@ -396,8 +390,8 @@ const get_order_data = function ({ commit, dispatch, state }, data) {
 };
 
 export default {
-  fetch_ongoing_orders,
-  connect_mqtt,
+  fetchOngoingOrders,
+  connectMqtt,
   intializeMqtt,
-  get_order_data,
+  getOrderData,
 };

@@ -9,8 +9,14 @@
           <label class="input-descript">
             <span>Create Password</span>
           </label>
-          <input id="password" class="form-control" type="password" placeholder="Enter your password"  v-model="password" @focus="setCurrentStep(1)" >
-
+          <input
+            id="password"
+            v-model="password"
+            class="form-control"
+            type="password"
+            placeholder="Enter your password"
+            @focus="setCurrentStep(1)"
+          >
         </div>
       </div>
       <div class="row">
@@ -18,159 +24,164 @@
           <label class="input-descript">
             <span>Confirm Password</span>
           </label>
-          <input id="password" class="form-control" type="password" placeholder="Confirm your password"  v-model="cpassword" @focus="setCurrentStep(2)" >
-
+          <input
+            id="password"
+            v-model="cpassword"
+            class="form-control"
+            type="password"
+            placeholder="Confirm your password"
+            @focus="setCurrentStep(2)"
+          >
         </div>
       </div>
     </div>
-    <div class="divide"></div>
+    <div class="divide" />
     <div class="form-submits">
-      <a v-on:click="last_view" class="waves-effect waves-teal btn-flat">Back</a>
-      <button v-on:click="next_view" class="btn-submit" style="width:30% !important;" name="next" v-bind:disabled="!this.is_valid">Next
+      <a
+        class="waves-effect waves-teal btn-flat"
+        @click="last_view"
+      >
+        Back
+      </a>
+      <button
+        class="btn-submit"
+        style="width:30% !important;"
+        name="next"
+        :disabled="!this.is_valid"
+        @click="next_view"
+      >
+        Next
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import {
-  mapGetters,
-  mapMutations,
-  mapActions
-} from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex';
+
 export default {
-  name: 'password-validation-component',
-  data: function() {
+  name: 'PasswordValidationComponent',
+  data() {
     return {
       password: '',
       cpassword: '',
-    }
+    };
   },
   methods: {
     ...mapMutations({
       setViewState: '$_external/setViewState',
       updatePassPlain: '$_external/updatePassPlain',
-      updateViewStep: '$_external/updateViewStep'
+      updateViewStep: '$_external/updateViewStep',
     }),
     ...mapActions({
       requestInvitation: '$_external/requestInvitation',
     }),
-    next_view: function() {
+    next_view() {
       if (this.password !== this.cpassword) {
-        this.doNotification(
-          2,
-          "Set Password",
-          "Password does not match. Please try again"
-        );
-        console.log("Password does not match!")
-
+        this.doNotification(2, 'Set Password', 'Password does not match. Please try again');
+        console.log('Password does not match!');
       } else {
-
         let payload = {};
         this.updatePassPlain(this.cpassword);
         if (this.getType == 0) {
-          let cop_id = this.getCopId;
+          const cop_id = this.getCopId;
           // let user_id = this.getCopUserId ;
-          let pass = this.cpassword;
-          let name = this.getName;
-          let biz_email = this.getBizEmail;
-          let personal_email = this.getPerEmail;
-          let phone = this.getPhone;
-          let type = this.getType;
-          let department_id = this.getDeptId;
-          let cop_user_id = this.getCopUserId;
-
+          const pass = this.cpassword;
+          const name = this.getName;
+          const biz_email = this.getBizEmail;
+          const personal_email = this.getPerEmail;
+          const phone = this.getPhone;
+          const type = this.getType;
+          const department_id = this.getDeptId;
+          const cop_user_id = this.getCopUserId;
 
           payload = {
-            cop_id: cop_id,
+            cop_id,
             password: pass,
-            name: name,
-            biz_email: biz_email,
-            personal_email: personal_email,
-            phone: phone,
-            type: type,
-            department_id: department_id,
-            cop_user_id: cop_user_id
+            name,
+            biz_email,
+            personal_email,
+            phone,
+            type,
+            department_id,
+            cop_user_id,
           };
         } else if (this.getType == 1) {
-
-          let cop_id = this.getCopId;
-          let pass = this.cpassword;
-          let name = this.getName;
-          let biz_email = this.getBizEmail;
-          let personal_email = this.getPerEmail;
-          let phone = this.getPhone;
-          let type = this.getType;
-          let department_id = this.getDeptId;
+          const cop_id = this.getCopId;
+          const pass = this.cpassword;
+          const name = this.getName;
+          const biz_email = this.getBizEmail;
+          const personal_email = this.getPerEmail;
+          const phone = this.getPhone;
+          const type = this.getType;
+          const department_id = this.getDeptId;
           // let cop_user_id = this.getCopUserId ;
 
-
           payload = {
-            cop_id: cop_id,
+            cop_id,
             password: pass,
-            name: name,
-            biz_email: biz_email,
-            personal_email: personal_email,
-            phone: phone,
-            type: type,
-            department_id: department_id,
+            name,
+            biz_email,
+            personal_email,
+            phone,
+            type,
+            department_id,
             // cop_user_id : cop_user_id
           };
         }
 
         // this.updatePassPlain(this.cpassword);
 
-        let full_payload = {
+        const full_payload = {
           values: payload,
           vm: this,
-          app: "NODE_PRIVATE_API",
-          endpoint: "onboard_user"
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'onboard_user',
         };
 
-        this.requestInvitation(full_payload).then(response => {
+        this.requestInvitation(full_payload).then(
+          (response) => {
+            if (response.length > 0) {
+              response = response[0];
+            }
 
-          if (response.length > 0) {
-            response = response[0];
-          }
-
-          if (response.status == true) {
-            console.log(response);
-            this.setViewState(4);
-            this.updateViewStep(0);
-
-          } else {
-
-            console.warn("Onboarding Failed");
-            this.$router.push("/auth");
-          }
-        }, error => {
-          console.error("Check Internet Connection")
-          console.log(error);
-        });
-
+            if (response.status == true) {
+              console.log(response);
+              this.setViewState(4);
+              this.updateViewStep(0);
+            } else {
+              console.warn('Onboarding Failed');
+              this.$router.push('/auth');
+            }
+          },
+          (error) => {
+            console.error('Check Internet Connection');
+            console.log(error);
+          },
+        );
       }
     },
 
     doNotification(level, title, message) {
-      let notification = {
-        title: title,
-        level: level,
-        message: message
+      const notification = {
+        title,
+        level,
+        message,
       };
-      this.$store.commit("setNotification", notification);
-      this.$store.commit("setNotificationStatus", true);
+      this.$store.commit('setNotification', notification);
+      this.$store.commit('setNotificationStatus', true);
     },
 
-    last_view: function() {
+    last_view() {
       this.setViewState(2);
       this.updateViewStep(0);
     },
-    setCurrentStep: function(step) {
+    setCurrentStep(step) {
       this.updateViewStep(step);
-    }
+    },
   },
   computed: {
-    is_valid: function() {
+    is_valid() {
       // return this.password != '' && this.cpassword !='' && this.password === this.cpassword;
       return this.cpassword != '' && this.password != '';
     },
@@ -182,10 +193,10 @@ export default {
       getType: '$_external/getType',
       getDeptId: '$_external/getDeptId',
       getCopId: '$_external/getCopId',
-      getCopUserId: '$_external/getCopUserId'
-    })
-  }
-}
+      getCopUserId: '$_external/getCopUserId',
+    }),
+  },
+};
 </script>
 
 <style lang="css">

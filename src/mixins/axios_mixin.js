@@ -1,32 +1,33 @@
 import axios from 'axios';
-import store from "@/data/state"
+import store from '@/data/state';
 
 class Http {
-
   constructor() {
     let service = axios.create({});
-    service.interceptors.request.use((config) => {
-      config.headers.common['x-access-token'] = store.state.token
-      return config
-    })
+    service.interceptors.request.use(config => {
+      config.headers.common['x-access-token'] = store.state.token;
+      return config;
+    });
     this.service = service;
   }
 
   redirectTo = (document, path) => {
-    document.location = path
-  }
+    document.location = path;
+  };
 
   get(path) {
-    return this.service.get(path)
+    return this.service.get(path);
   }
 
   patch(path, payload, callback) {
-    return this.service.request({
-      method: 'PATCH',
-      url: path,
-      responseType: 'json',
-      data: payload
-    }).then((response) => callback(response.status, response.data));
+    return this.service
+      .request({
+        method: 'PATCH',
+        url: path,
+        responseType: 'json',
+        data: payload,
+      })
+      .then(response => callback(response.status, response.data));
   }
 
   post(path, payload) {
@@ -34,9 +35,9 @@ class Http {
       method: 'POST',
       url: path,
       responseType: 'json',
-      data: payload
-    })
+      data: payload,
+    });
   }
 }
 
-export default new Http;
+export default new Http();

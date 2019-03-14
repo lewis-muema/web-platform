@@ -1,15 +1,16 @@
+/* eslint no-param-reassign: "error" */
 export default {
   requestPromoCodePayment({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, {
         root: true,
       }).then(
-        response => {
+        (response) => {
           resolve(response);
         },
-        error => {
+        (error) => {
           reject(error);
-        }
+        },
       );
     });
   },
@@ -20,17 +21,17 @@ export default {
       dispatch('requestAxiosPost', payload, {
         root: true,
       }).then(
-        response => {
+        (response) => {
           commit('setCardLoadingStatus', false);
           if (response.length > 1) {
             response = response[0];
           }
           resolve(response);
         },
-        error => {
+        (error) => {
           commit('setCardLoadingStatus', false);
           reject(error);
-        }
+        },
       );
     });
   },
@@ -39,20 +40,20 @@ export default {
       dispatch('requestAxiosPost', payload, {
         root: true,
       }).then(
-        response => {
+        (response) => {
           if (response.length > 1) {
             response = response[0];
           }
           resolve(response);
         },
-        error => {
+        (error) => {
           reject(error);
-        }
+        },
       );
     });
   },
   resetCardPaymentRequest({ commit }) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       commit('setCardLoadingStatus', false);
       commit('setCardFailStatus', false);
       commit('setCardSuccessStatus', false);
@@ -63,23 +64,23 @@ export default {
   requestMpesaPayment({ dispatch, commit }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
-        response => {
+        (response) => {
           commit('setMpesaLoadingStatus', true);
           commit('setMpesaFailStatus', false);
           commit('setMpesaSuccessStatus', false);
           resolve(response);
         },
-        error => {
+        (error) => {
           commit('setMpesaLoadingStatus', false);
           commit('setMpesaFailStatus', true);
           reject(error);
-        }
+        },
       );
     });
   },
 
   completeMpesaPaymentRequest({ commit }) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       commit('setMpesaLoadingStatus', false);
       commit('setMpesaSuccessStatus', true);
       commit('setMpesaFailStatus', false);
@@ -87,7 +88,7 @@ export default {
     });
   },
   resetMpesaPaymentRequest({ commit }) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       commit('setMpesaLoadingStatus', false);
       commit('setMpesaFailStatus', false);
       commit('setMpesaSuccessStatus', false);
@@ -96,7 +97,7 @@ export default {
   },
 
   terminateMpesaPaymentRequest({ commit }) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       commit('setMpesaLoadingStatus', false);
       commit('setMpesaFailStatus', true);
       commit('setMpesaSuccessStatus', false);
@@ -107,16 +108,16 @@ export default {
   requestRunningBalance({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
-        response => {
+        (response) => {
           if (response.status === 200) {
             const rb = response.data.running_balance;
             dispatch('updateRunningBalance', rb, { root: true });
           }
           resolve(response);
         },
-        error => {
+        (error) => {
           reject(error);
-        }
+        },
       );
     });
   },
@@ -127,49 +128,49 @@ export default {
       dispatch('requestAxiosPost', payload, {
         root: true,
       }).then(
-        response => {
+        (response) => {
           commit('setCardLoadingStatus', false);
           if (response.length > 0) {
             response = response[0];
           }
           resolve(response);
         },
-        error => {
+        (error) => {
           commit('setCardLoadingStatus', false);
           reject(error);
-        }
+        },
       );
     });
   },
-  requestSavedCards({ commit, dispatch }, payload) {
+  requestSavedCards({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
-        response => {
+        (response) => {
           if (response.status === 200) {
             resolve(response.data);
           } else {
             reject(response.data);
           }
         },
-        error => {
+        (error) => {
           reject(error);
-        }
+        },
       );
     });
   },
-  deleteSavedCard({ commit, dispatch }, payload) {
+  deleteSavedCard({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
-        response => {
+        (response) => {
           if (response.status === 200) {
             resolve(response.data);
           } else {
             reject(response.data);
           }
         },
-        error => {
+        (error) => {
           reject(error);
-        }
+        },
       );
     });
   },

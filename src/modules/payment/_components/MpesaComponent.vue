@@ -31,7 +31,11 @@
       <button
         type="button"
         name="button"
-        :class="valid_payment ? 'button-primary paymentbody--input-button':'button--primary-inactive paymentbody--input-button'"
+        :class="
+          valid_payment
+            ? 'button-primary paymentbody--input-button'
+            : 'button--primary-inactive paymentbody--input-button'
+        "
         @click="requestMpesaPayment"
       >
         Pay
@@ -73,7 +77,7 @@ export default {
     }),
     prepareMpesaPayment() {
       const session = this.$store.getters.getSession;
-      const user_phone = session[session.default].user_phone;
+      const { user_phone } = session[session.default];
       console.log(user_phone);
       this.mpesa_payment_data.phone_number = user_phone;
       // pass amount here
@@ -287,5 +291,4 @@ export default {
 };
 </script>
 
-<style lang="css">
-</style>
+<style lang="css"></style>

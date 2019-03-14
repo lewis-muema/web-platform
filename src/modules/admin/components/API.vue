@@ -47,23 +47,17 @@
         label="Created or Last Updated"
         prop="api_date_created"
       />
-      <el-table-column
-        label="API Status"
-      >
+      <el-table-column label="API Status">
         <template slot-scope="scope">
           <span>{{ get_api_status(scope.$index, 'sandbox') }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="Account Status"
-      >
+      <el-table-column label="Account Status">
         <template slot-scope="scope">
           <span>{{ get_account_status(scope.$index, 'sandbox') }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="API Enviroment"
-      >
+      <el-table-column label="API Enviroment">
         <template slot-scope="scope">
           <span>Sandbox</span>
         </template>
@@ -77,8 +71,8 @@
       :stripe="true"
     >
       <template slot="empty">
-{{ empty_payments_state }}
-</template>
+        {{ empty_payments_state }}
+      </template>
 
       <el-table-column
         label="Username"
@@ -92,23 +86,17 @@
         label="Created or Last Updated"
         prop="api_date_created"
       />
-      <el-table-column
-        label="API Status"
-      >
+      <el-table-column label="API Status">
         <template slot-scope="scope">
           <span>{{ get_api_status(scope.$index, 'live') }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="Account Status"
-      >
+      <el-table-column label="Account Status">
         <template slot-scope="scope">
           <span>{{ get_account_status(scope.$index, 'live') }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="API Enviroment"
-      >
+      <el-table-column label="API Enviroment">
         <template slot-scope="scope">
           <span>Live</span>
         </template>
@@ -119,13 +107,14 @@
       <p>
         <span class="content--bold">
           Ready to start using the Sendy API?
-        </span> Head over to the <a
+        </span>
+        Head over to the
+        <a
           href="http://docs.sendypublicapi.apiary.io/#"
           target="_blank"
         >
           developer site
-        </a>&nbsp;for complete
-        documentation.
+        </a>&nbsp;for complete documentation.
       </p>
     </div>
   </div>
