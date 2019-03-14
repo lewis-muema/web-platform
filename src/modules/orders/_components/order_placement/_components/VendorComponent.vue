@@ -636,7 +636,7 @@ export default {
         return 'In 2 to 4 hours';
       }
       return vendorObject.vendor_description;
-    }
+    },
   },
 
   watch: {
