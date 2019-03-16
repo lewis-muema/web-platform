@@ -1,3 +1,5 @@
+/* eslint no-param-reassign: "error" */
+/* eslint max-len: ["error", { "ignoreComments": true }] */
 export default {
   /*
   Usage:
@@ -58,14 +60,14 @@ export default {
   methods: {
     create_datatable(el, data, options) {
       const col = [];
-      for (var i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i += 1) {
         for (const key in data[i]) {
           if (col.indexOf(key) === -1) {
             col.push(key);
           }
         }
       }
-      if (options.count == true) {
+      if (options.count) {
         col.splice(0, 0, ' ');
       }
       options.custom_col.forEach((element) => {
@@ -85,7 +87,7 @@ export default {
 
       let tr = table.insertRow(-1);
 
-      for (var i = 0; i < col.length; i++) {
+      for (let i = 0; i < col.length; i += 1) {
         const th = document.createElement('th');
         th.innerHTML = col[i];
         tr.appendChild(th);
@@ -93,19 +95,19 @@ export default {
 
       const customs = options.custom_col.length;
 
-      for (var i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i += 1) {
         tr = table.insertRow(-1);
         if ('child_row' in options) {
           tr.onclick = `expand(${i})`;
         }
-        let custom_count = 0;
-        for (let j = 0; j < col.length; j++) {
+        let customCount = 0;
+        for (let j = 0; j < col.length; j += 1) {
           const tabCell = tr.insertCell(-1);
-          if (options.count == true && j == 0) {
+          if (options.count && j === 0) {
             tabCell.innerHTML = i + 1;
           } else if (j >= col.length - customs) {
-            tabCell.innerHTML = options.custom_col[custom_count].render;
-            custom_count++;
+            tabCell.innerHTML = options.custom_col[customCount].render;
+            customCount += 1;
           } else {
             tabCell.innerHTML = data[i][col[j]];
           }

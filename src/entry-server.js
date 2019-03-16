@@ -1,3 +1,4 @@
+/* eslint no-param-reassign: "error" */
 import { createApp } from './app';
 
 export default context => new Promise((resolve, reject) => {

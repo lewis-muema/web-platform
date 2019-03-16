@@ -1,6 +1,6 @@
 /* eslint no-param-reassign: "error" */
 /* eslint no-lonely-if: "error" */
-/* eslint no-useless-escape: "error" */
+
 import axios from 'axios';
 
 export default {
@@ -18,11 +18,9 @@ export default {
       if (typeof payload.params === 'object') {
         payload.values = JSON.stringify(payload.params);
       }
-    } else {
+    } else if (typeof payload.values === 'object') {
       // assume we used values
-      if (typeof payload.values === 'object') {
-        payload.values = JSON.stringify(payload.values);
-      }
+      payload.values = JSON.stringify(payload.values);
     }
     const jwtToken = localStorage.getItem('jwtToken');
     const requestedPayload = payload.endpoint;
@@ -43,8 +41,8 @@ export default {
     if (
       /^[\],:{}\s]*$/.test(
         payload.values
-          .replace(/\\["\\\/bfnrtu]/g, '@')
-          .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
+          .replace(/\\["\\bfnrtu]/g, '@')
+          .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+]?\d+)?/g, ']')
           .replace(/(?:^|:|,)(?:\s*\[)+/g, ''),
       )
     ) {
@@ -93,12 +91,12 @@ export default {
           },
         };
       } else {
-        const payload = {
+        const notification = {
           title: 'Your session has expired!',
           level: 2,
           message: 'Please log out and log in again.',
         };
-        commit('setNotification', payload);
+        commit('setNotification', notification);
         commit('setNotificationStatus', true);
         return true;
       }

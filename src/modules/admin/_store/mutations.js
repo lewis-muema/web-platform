@@ -13,13 +13,13 @@ export default {
     state.view_state = n;
   },
   updateBizName(state, n) {
-    state.biz_name = n;
+    state.bizName = n;
   },
   updateAdds(state, n) {
     if (n === 1) {
-      state.adds++;
+      state.adds += 1;
     } else {
-      state.adds--;
+      state.adds -= 1;
     }
   },
   newAdds(state, n) {

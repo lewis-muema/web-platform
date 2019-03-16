@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: 0 */
 import Vue from 'vue';
 import * as VueGoogleMaps from 'vue2-google-maps';
 import { createApp } from './app';
@@ -12,7 +13,6 @@ Vue.use(VueGoogleMaps, {
     key: process.env.CONFIGS_ENV.GOOGLE_API_KEY,
   },
 });
-
 if (window.__INITIAL_STATE__) {
   store.replaceState(window.__INITIAL_STATE__);
 }

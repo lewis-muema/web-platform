@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import Vue from 'vue';
 import Vuex from 'vuex';
 import globalStore from './global';

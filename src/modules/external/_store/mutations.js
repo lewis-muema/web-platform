@@ -16,7 +16,7 @@ export default {
     state.biz_email = val;
   },
   updateBizName(state, val) {
-    state.biz_name = val;
+    state.bizName = val;
   },
   updatePerEmail(state, val) {
     state.personal_email = val;

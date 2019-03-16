@@ -7,7 +7,7 @@ const state = {
   view_state: 1,
   view_step: 0,
   personal_email: '',
-  biz_name: '',
+  bizName: '',
   biz_email: '',
   phone: '',
   name: '',
@@ -17,12 +17,12 @@ const state = {
   cop_user_id: '',
   password_plain: '',
   invite_type: '',
-  help_panel(biz_name) {
+  help_panel(bizName) {
     return {
       1: {
         0: [
           'Welcome',
-          `You have been invited to join the ${biz_name} account on Sendy. Tell us a little more about you`,
+          `You have been invited to join the ${bizName} account on Sendy. Tell us a little more about you`,
         ],
         1: ['Name', 'Your name is what will show on your account when you sign in.'],
         2: ['Email', 'The business email address you will use to log in.'],

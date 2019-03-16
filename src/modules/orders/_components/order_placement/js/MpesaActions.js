@@ -81,10 +81,12 @@ export default {
 
     const pollLimit = 6; // 10secs * 6  = 60sec = 1min
     // poll the dispatch
-    for (let pollCount = 0; pollCount < pollLimit; pollCount++) {
+    for (let pollCount = 0; pollCount < pollLimit; pollCount += 1) {
       // wait 10 seconds
       const that = this;
-      (function (pollCount) {
+      const loopCount = function () {};
+
+      (function loopCount(pollCount) {
         setTimeout(() => {
           const res = that.checkRunningBalance(oldRb, payload);
           if (res) {

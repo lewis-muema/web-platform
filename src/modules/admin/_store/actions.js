@@ -155,7 +155,7 @@ export default {
     });
   },
 
-  requestCopInfo({ commit, dispatch }, payload) {
+  requestCopInfo({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {

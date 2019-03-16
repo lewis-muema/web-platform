@@ -71,7 +71,7 @@ export default {
 
   set_location_name(state, val) {
     // unset_location_name(val.index);
-    state.location_names.splice(val.index, val.index == 0 ? 0 : 1, val.name);
+    state.location_names.splice(val.index, val.index === 0 ? 0 : 1, val.name);
   },
 
   unset_order_path(state, index) {
@@ -90,11 +90,11 @@ export default {
     state.location_names = [];
   },
   add_extra_destination(state) {
-    state.extra_destinations++;
+    state.extra_destinations += 1;
   },
 
   remove_extra_destination(state) {
-    state.extra_destinations--;
+    state.extra_destinations -= 1;
   },
 
   clear_extra_destinations(state) {

@@ -26,8 +26,8 @@ class Mcrypt {
   }
 
   decrypt(ciphertext) {
-    const encrypted_hex = this.hexToBase64(ciphertext);
-    const plaintext = CryptoJS.AES.decrypt(encrypted_hex, this.key, {
+    const encryptedHex = this.hexToBase64(ciphertext);
+    const plaintext = CryptoJS.AES.decrypt(encryptedHex, this.key, {
       iv: this.iv,
       padding: CryptoJS.pad.ZeroPadding,
     });
@@ -44,7 +44,7 @@ class Mcrypt {
   }
 
   base64ToHex(str) {
-    for (var i = 0, bin = atob(str.replace(/[ \r\n]+$/, '')), hex = []; i < bin.length; ++i) {
+    for (let i = 0, bin = atob(str.replace(/[ \r\n]+$/, '')), hex = []; i < bin.length; i += 1) {
       let tmp = bin.charCodeAt(i).toString(16);
       if (tmp.length === 1) tmp = `0${tmp}`;
       hex[hex.length] = tmp;

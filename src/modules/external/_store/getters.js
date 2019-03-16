@@ -12,7 +12,7 @@ export default {
   },
 
   getBizName(state) {
-    return state.biz_name;
+    return state.bizName;
   },
 
   getBizEmail(state) {

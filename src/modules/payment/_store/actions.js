@@ -1,4 +1,4 @@
-/* eslint no-param-reassign: "error" */
+/* eslint-disable prefer-destructuring */
 export default {
   requestPromoCodePayment({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
@@ -22,11 +22,12 @@ export default {
         root: true,
       }).then(
         (response) => {
+          let responseData = response;
           commit('setCardLoadingStatus', false);
           if (response.length > 1) {
-            response = response[0];
+            responseData = response[0];
           }
-          resolve(response);
+          resolve(responseData);
         },
         (error) => {
           commit('setCardLoadingStatus', false);
@@ -41,10 +42,11 @@ export default {
         root: true,
       }).then(
         (response) => {
+          let responseData = response;
           if (response.length > 1) {
-            response = response[0];
+            responseData = response[0];
           }
-          resolve(response);
+          resolve(responseData);
         },
         (error) => {
           reject(error);
@@ -129,11 +131,12 @@ export default {
         root: true,
       }).then(
         (response) => {
+          let responseData = response;
           commit('setCardLoadingStatus', false);
           if (response.length > 0) {
-            response = response[0];
+            responseData = response[0];
           }
-          resolve(response);
+          resolve(responseData);
         },
         (error) => {
           commit('setCardLoadingStatus', false);

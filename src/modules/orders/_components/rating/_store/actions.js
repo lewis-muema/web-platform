@@ -1,9 +1,11 @@
 /* eslint no-param-reassign: "error" */
+/* eslint-disable prefer-destructuring */
 export default {
   requestOrder({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
+          const responder = '';
           if (response.length > 1) {
             response = response[0];
           }

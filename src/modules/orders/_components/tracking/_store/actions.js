@@ -1,6 +1,6 @@
 import mqtt from 'mqtt';
 
-const getTrackingData = function ({ commit, dispatch, state }, data) {
+const getTrackingData = function getTrackingData({ commit, dispatch, state }, data) {
   const payload = {
     app: 'NODE_PRIVATE_API',
     endpoint: 'pending_delivery',
@@ -35,7 +35,7 @@ const getTrackingData = function ({ commit, dispatch, state }, data) {
   });
 };
 
-const cancelOrder = function ({ dispatch }, data) {
+const cancelOrder = function cancelOrder({ dispatch }, data) {
   const payload = {
     app: 'PRIVATE_API',
     endpoint: 'cancel_order',
@@ -57,7 +57,7 @@ const cancelOrder = function ({ dispatch }, data) {
   });
 };
 
-const trackMQTT = function ({ commit, state }) {
+const trackMQTT = function trackMQTT({ commit, state }) {
   if (!state.tracking_data.confirm_status > 0) {
     return false;
   }
@@ -135,7 +135,7 @@ const trackMQTT = function ({ commit, state }) {
   });
 };
 
-const runningBalance = function ({ dispatch }, data) {
+const runningBalance = function runningBalance({ dispatch }, data) {
   const payload = {
     app: 'PRIVATE_API',
     endpoint: 'running_balance',

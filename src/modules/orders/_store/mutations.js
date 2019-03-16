@@ -54,9 +54,8 @@ const setVendorMarkers = (state, payload) => {
     // order placement
     if (state.page === 0) {
       visible = true;
-    }
-    // tracking
-    else if ('overide_visible' in payload) {
+    } else if ('overide_visible' in payload) {
+      // tracking
       visible = true;
     }
   }
@@ -77,7 +76,7 @@ const setVendorMarkers = (state, payload) => {
 
 const hideVendors = (state) => {
   for (const key in state.map.vendors) {
-    if (!state.map.vendors.hasOwnProperty(key)) continue;
+    if (Object.prototype.hasOwnProperty.call(!state.map.vendors, key)) continue;
     const obj = state.map.vendors[key];
 
     obj.visible = false;

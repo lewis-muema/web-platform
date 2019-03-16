@@ -1,7 +1,5 @@
 export default {
   requestInvitation(context, payload) {
-    console.log('payload', payload);
-
     return new Promise((resolve, reject) => {
       payload.vm.$store.dispatch('requestAxiosPost', payload).then(
         (response) => {
@@ -14,8 +12,6 @@ export default {
     });
   },
   requestTokenValidation(context, payload) {
-    console.log('payload', payload);
-
     return new Promise((resolve, reject) => {
       payload.vm.$store.dispatch('requestAxiosPost', payload).then(
         (response) => {

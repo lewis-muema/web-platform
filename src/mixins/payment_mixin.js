@@ -1,5 +1,5 @@
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-import Mcrypt from './mcrypt_mixin.js';
+import { mapActions } from 'vuex';
+import Mcrypt from './mcrypt_mixin';
 
 const PaymentMxn = {
   methods: {
@@ -8,12 +8,12 @@ const PaymentMxn = {
       requestCardPaymentAction: '$_payment/requestCardPayment',
     }),
     sanitizeCardDualResponses(response) {
-      let repsonseData;
+      let repsonseData = '';
       let i;
       if (response.length > 0) {
-        for (i = 0; i < response.length; i++) {
+        for (i = 0; i < response.length; i += 1) {
           repsonseData = Mcrypt.decrypt(response[i].data);
-          repsonseData = JSON.parse(responseData);
+          repsonseData = JSON.parse(repsonseData);
 
           if (repsonseData.status) {
             // this is the correct one
@@ -95,7 +95,7 @@ const PaymentMxn = {
 
             const self = this;
 
-            this.requestRunningBalanceFromAPI(payload).then((response) => {
+            this.requestRunningBalanceFromAPI(payload).then(() => {
               this.payment_state = 0;
               this.loading = 0;
               if (orderOptions) {
@@ -116,7 +116,7 @@ const PaymentMxn = {
             this.loading = 0;
           }
         },
-        (error) => {
+        () => {
           const notification = {
             title: 'card payment failed',
             level: 2,
@@ -181,7 +181,6 @@ const PaymentMxn = {
       this.requestCardPaymentAction(fullPayload).then(
         (response) => {
           response.data = this.sanitizeCardDualResponses(response);
-          const that = this;
 
           if (response.data.status) {
             const notification = {
@@ -206,7 +205,7 @@ const PaymentMxn = {
               app: 'PRIVATE_API',
               endpoint: 'running_balance',
             };
-            this.requestRunningBalanceFromAPI(payload).then((response) => {
+            this.requestRunningBalanceFromAPI(payload).then(() => {
               this.payment_state = 0;
               this.loading = 0;
             });
@@ -222,7 +221,7 @@ const PaymentMxn = {
             });
           }
         },
-        (error) => {
+        () => {
           this.payment_state = 'Payment Failed';
           const notification = {
             title: 'card payment failed',

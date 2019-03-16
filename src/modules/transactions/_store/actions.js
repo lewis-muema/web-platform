@@ -1,16 +1,18 @@
+/* eslint-disable prefer-destructuring */
 export default {
   requestOrderHistoryOrders({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
+          let workingResponse = response;
           if (response.length > 1) {
-            response = response[0];
+            workingResponse = response[0];
           }
-          if (response.data.status) {
-            commit('setOrderHistoryOrders', response.data.data);
-            resolve(response.data);
+          if (workingResponse.data.status) {
+            commit('setOrderHistoryOrders', workingResponse.data.data);
+            resolve(workingResponse.data);
           } else {
-            reject(response.data);
+            reject(workingResponse.data);
           }
         },
         (error) => {
@@ -24,14 +26,15 @@ export default {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
+          let workingResponse = response;
           if (response.length > 1) {
-            response = response[0];
+            workingResponse = response[0];
           }
-          if (response.data.status) {
-            commit('setCopUsers', response.data.data);
-            resolve(response.data);
+          if (workingResponse.data.status) {
+            commit('setCopUsers', workingResponse.data.data);
+            resolve(workingResponse.data);
           } else {
-            reject(response.data);
+            reject(workingResponse.data);
           }
         },
         (error) => {

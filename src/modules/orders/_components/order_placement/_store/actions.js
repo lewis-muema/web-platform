@@ -1,11 +1,10 @@
 export default {
-  requestPriceQuote({ commit, dispatch, rootGetters }, payload) {
+  requestPriceQuote({ commit, dispatch }, payload) {
     // console.log("payload", payload);
 
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
-          console.log('in store dispatch to global store');
           if (response.data.status) {
             const priceRequestObject = response.data.values;
             commit('set_price_request_object', priceRequestObject);
@@ -26,7 +25,7 @@ export default {
     });
   },
 
-  requestOrderCompletion({ commit, dispatch, rootGetters }, payload) {
+  requestOrderCompletion({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
@@ -45,7 +44,7 @@ export default {
     });
   },
 
-  requestSavedCards({ commit, dispatch }, payload) {
+  requestSavedCards({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
