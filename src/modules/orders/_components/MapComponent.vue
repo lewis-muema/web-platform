@@ -81,6 +81,8 @@ export default {
       vendor_icon_id: '',
       pick_up_eta: '',
       delivery_eta: '',
+      vendor_name: '',
+      destination_waiting: false,
     };
   },
   methods: {
@@ -151,6 +153,15 @@ export default {
     },
     orderStatus(data) {
       const waiting = data.delivery_log.find(position => position.log_type === 10);
+      const waitingIndex = data.delivery_log.findIndex(position => position.log_type === 10);
+      if (waitingIndex !== -1) {
+        const string = data.delivery_log[waitingIndex].description;
+        if (string.includes('is ready to deliver your order')) {
+          this.destination_waiting = true;
+        } else {
+          this.destination_waiting = false;
+        }
+      }
       const rider_locations = this.isMQTTConnected;
       if (data.status) {
         if (data.rider.vendor_id === 23) {
@@ -158,19 +169,32 @@ export default {
         } else {
           this.vendor_icon_id = data.rider.vendor_id;
         }
+        if (data.rider.vendor_id === 23 || data.rider.vendor_id === 1) {
+          this.vendor_name = 'rider';
+        } else {
+          this.vendor_name = 'driver';
+        }
         if (data.delivery_status === 3) {
           // return 'Delivered';
           this.infoHeader = '';
           this.infoDescription = '';
-        } else if (data.delivery_status === 2 && waiting !== undefined) {
+        } else if (
+          data.delivery_status === 2
+          && waiting !== undefined
+          && this.destination_waiting
+        ) {
           // return 'Waiting at destination'
-          this.infoHeader = 'Your rider has arrived and is waiting at the destination.';
+          this.infoHeader = `Your ${
+            this.vendor_name
+          }has arrived and is waiting at the destination.`;
           this.iconLabel = 'destination';
           this.infoDescription = '';
         } else if (data.delivery_status === 2) {
           // return 'In Transit';
           if (!rider_locations) {
-            this.infoHeader = "Your rider is still on the way. We are working to restore the rider's location";
+            this.infoHeader = `Your delivery is still in progress. We are working to restore the ${
+              this.vendor_name
+            }'s location.`;
             this.infoDescription = '';
             this.iconLabel = 'destination';
             this.vendor_icon_id = 'location';
@@ -185,24 +209,28 @@ export default {
           && waiting !== undefined
         ) {
           // return 'Waiting at pick up location';
-          this.infoHeader = 'Your rider has arrived and is waiting at the pickup location.';
+          this.infoHeader = `Your ${
+            this.vendor_name
+          } has arrived and is waiting at the pickup location.`;
           this.infoDescription = '';
           this.iconLabel = 'pickup';
         } else if (data.delivery_status === 0 && data.confirm_status === 1) {
           // return 'Confirmed';
           if (!rider_locations) {
-            this.infoHeader = "Your rider is still on the way. We are working to restore the rider's location";
+            this.infoHeader = `Your ${
+              this.vendor_name
+            } is still on the way. We are working to restore the ${this.vendor_name}'s location`;
             this.infoDescription = '';
             this.iconLabel = 'pickup';
             this.vendor_icon_id = 'location';
           } else {
-            this.infoHeader = 'Your rider is on the way.';
+            this.infoHeader = `Your ${this.vendor_name} is on the way.`;
             this.infoDescription = `Order pickup time ${this.pick_up_eta}`;
             this.iconLabel = 'pickup';
           }
         } else {
           // return 'Pending';
-          this.infoHeader = 'We are matching your order with a rider. ';
+          this.infoHeader = `We are matching your order with a ${this.vendor_name}. `;
           this.infoDescription = '';
           this.iconLabel = 'pickup';
         }
@@ -225,7 +253,7 @@ export default {
         this.pick_up_eta = `${start_eta}-${end_eta}`;
         this.delivery_eta = '';
       } else if (data.delivery_status === 2) {
-        const delivery_eta = data.eta_data.etp;
+        const delivery_eta = data.eta_data.etd;
         const eta_split = delivery_eta.split('to');
         const start = eta_split[0].replace(/\s+/g, '');
         const end = eta_split[1].replace(/\s+/g, '');
@@ -243,7 +271,11 @@ export default {
         .dispatch('$_orders/get_order_data', { order_no: this.$route.params.order_no })
         .then((response) => {
           if (response.status) {
-            this.orderStatus(response.data);
+            if (response.data.status) {
+              this.orderStatus(response.data);
+            } else {
+              this.infoWinOpen = false;
+            }
           } else {
             this.infoWinOpen = false;
           }

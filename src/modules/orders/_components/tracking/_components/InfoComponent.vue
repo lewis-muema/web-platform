@@ -613,7 +613,7 @@
               </div>
 
               <div
-                v-if=""
+                v-if="[1, 23].includes(tracking_data.rider.vendor_id)"
                 class="infobar--content infobar--item infobar--status infobar--item-bordered"
               >
                 <el-steps
@@ -635,29 +635,6 @@
                     :description="this.delivery_eta"
                   />
                 </el-steps>
-                <!-- <div class="">
-                  {{ getStatus }}
-                </div>
-                <div class="">
-                  <span
-                    v-if="tracking_data.delivery_status < 2"
-                    class=""
-                  >
-                    A Rider will pick and deliver your order by
-                    <span class="">
-                      {{ moment(tracking_data.date_time).format('h:mm a') }}
-                    </span>
-                  </span>
-                  <span
-                    v-else
-                    class=""
-                  >
-                    Estimated Delivery:
-                    <span class="">
-                      {{ this.tracking_data.etd }}
-                    </span>
-                  </span>
-                </div> -->
               </div>
               <div
                 v-if="this.$route.name !== 'tracking_external'"
@@ -842,7 +819,7 @@ export default {
         this.pick_up_eta = `${start_eta}-${end_eta}`;
         this.confirm_eta = moment(confirmed_eta, moment.ISO_8601).format('h:mm a');
       } else if (this.tracking_data.delivery_status === 2) {
-        const delivery_eta = this.tracking_data.eta_data.etp;
+        const delivery_eta = this.tracking_data.eta_data.etd;
         const confirmed_eta = this.tracking_data.eta_data.confirmed;
         const picked_eta = this.tracking_data.eta_data.picked;
         const eta_split = delivery_eta.split('to');

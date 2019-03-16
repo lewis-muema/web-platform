@@ -61,7 +61,7 @@
                     {{ j.vendor_name }}
                   </div>
                   <div class="home-view-vendor-types-item-vendor--vendor-local-name">
-                    {{ j.vendor_description }}
+                    {{ getVendorDescription(j) }}
                   </div>
                 </div>
               </div>
@@ -629,6 +629,13 @@ export default {
         message,
       };
       this.$store.commit('setNotification', notification);
+    },
+
+    getVendorDescription(vendorObject){
+      if(vendorObject.vendor_id === 22){
+        return 'In 2 to 4 hours';
+      }
+      return vendorObject.vendor_description;
     },
   },
 
