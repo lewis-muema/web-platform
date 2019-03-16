@@ -152,18 +152,18 @@ export default {
       }
     },
     orderStatus(data) {
-      const waiting = data.delivery_log.find(position => position.log_type === 10);
-      const waitingIndex = data.delivery_log.findIndex(position => position.log_type === 10);
-      if (waitingIndex !== -1) {
-        const string = data.delivery_log[waitingIndex].description;
-        if (string.includes('is ready to deliver your order')) {
-          this.destination_waiting = true;
-        } else {
-          this.destination_waiting = false;
-        }
-      }
-      const rider_locations = this.isMQTTConnected;
       if (data.status) {
+        const waiting = data.delivery_log.find(position => position.log_type === 10);
+        const waitingIndex = data.delivery_log.findIndex(position => position.log_type === 10);
+        if (waitingIndex !== -1) {
+          const string = data.delivery_log[waitingIndex].description;
+          if (string.includes('is ready to deliver your order')) {
+            this.destination_waiting = true;
+          } else {
+            this.destination_waiting = false;
+          }
+        }
+        const rider_locations = this.isMQTTConnected;
         if (data.rider.vendor_id === 23) {
           this.vendor_icon_id = 1;
         } else {
@@ -270,12 +270,8 @@ export default {
       this.$store
         .dispatch('$_orders/get_order_data', { order_no: this.$route.params.order_no })
         .then((response) => {
-          if (response.status) {
-            if (response.data.status) {
-              this.orderStatus(response.data);
-            } else {
-              this.infoWinOpen = false;
-            }
+          if (response.data.status) {
+            this.orderStatus(response.data);
           } else {
             this.infoWinOpen = false;
           }
