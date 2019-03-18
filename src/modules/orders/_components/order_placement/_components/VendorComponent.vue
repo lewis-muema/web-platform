@@ -262,33 +262,6 @@
                   </div>
                   <!-- end large vendors -->
 
-                  <!-- start medium vendors -->
-                  <div
-                    v-else-if="get_active_package_class === 'medium'"
-                    class="home-view-truck-options-wrapper"
-                  >
-                    <div class="home-view-truck-options-inner-wrapper">
-                      <div class="home-view-truck-options-label">
-                        What type of {{ getVendorNameOnCarrierType }} do you want?
-                      </div>
-                      <div class="home-view-truck-options-inner--full-select">
-                        <el-select
-                          v-model="carrier_type"
-                          placeholder=""
-                          @change="dispatchCarrierType"
-                        >
-                          <el-option
-                            v-for="item in mediumVendorOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                          />
-                        </el-select>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- end medium vendors -->
-
                   <!-- start small vendors -->
                   <div
                     v-else
@@ -368,20 +341,6 @@ export default {
           label: 'Closed',
         },
       ],
-      mediumVendorOptions: [
-        {
-          value: '2',
-          label: 'Any',
-        },
-        {
-          value: '1',
-          label: 'Closed',
-        },
-        {
-          value: '0',
-          label: 'Open',
-        },
-      ],
       smallVendorOptions: [
         {
           value: '2',
@@ -389,11 +348,11 @@ export default {
         },
         {
           value: '1',
-          label: 'Box',
+          label: this.getCarrierBoxName(),
         },
         {
           value: '0',
-          label: 'No Box',
+          label: this.getCarrierNoBoxName(),
         },
       ],
     };
