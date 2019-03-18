@@ -52,7 +52,6 @@ export default {
   mounted() {
     const order_id = this.$route.params.order_no;
     this.order = order_id;
-    console.log(order_id);
     const payload = {
       order_no: order_id,
     };
@@ -69,7 +68,9 @@ export default {
         this.user_email = response.user.email;
       },
       (error) => {
-        console.log(error);
+        const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
       },
     );
   },
@@ -127,12 +128,13 @@ export default {
       };
       this.$store.dispatch('$_rating/requestRatingStatus', rating_status_full_payload).then(
         (response) => {
-          console.log(response);
           this.updateStep(3);
           this.updateScore(this.rated_score);
         },
         (error) => {
-          console.log(error);
+          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+          this.$store.commit('setNotification', notification);
+          this.$store.commit('setNotificationStatus', true);
         },
       );
     },

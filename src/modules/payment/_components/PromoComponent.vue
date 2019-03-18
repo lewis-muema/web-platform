@@ -47,7 +47,7 @@ export default {
     requestPromoPayment() {
       const session = this.$store.getters.getSession;
       let cop_id = 0;
-      if (session.default == 'biz') {
+      if (session.default === 'biz') {
         cop_id = session[session.default].cop_id;
       }
       const promo_payload = {
@@ -76,7 +76,7 @@ export default {
           this.$store.commit('setNotificationStatus', true);
           let level = 0;
           const message = response.data.msg;
-          if (response.data.status == true) {
+          if (response.data.status) {
             // update running balance with new value
             const running_balance = parseFloat(response.data.running_balance);
             this.$store.commit('setRunningBalance', running_balance);

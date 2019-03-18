@@ -1,3 +1,4 @@
+/* eslint consistent-return: "error" */
 function getTitle(vm) {
   // components can simply provide a `title` option
   // which can be either a string or a function

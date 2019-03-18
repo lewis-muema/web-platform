@@ -78,25 +78,25 @@ export default {
     prepareMpesaPayment() {
       const session = this.$store.getters.getSession;
       const { user_phone } = session[session.default];
-      console.log(user_phone);
+
       this.mpesa_payment_data.phone_number = user_phone;
       // pass amount here
     },
     empty(value) {
-      return value == null || value.length === 0 || Object.getOwnPropertyNames(value).length === 0;
+      return value === null || value.length === 0 || Object.getOwnPropertyNames(value).length === 0;
     },
     validatePhone(phone) {
       if (this.empty(phone)) {
         return false;
       }
-      if (isNaN(phone) && phone.startsWith('+') == false) {
+      if (isNaN(phone) && !phone.startsWith('+')) {
         this.mpesa_number_invalid = true;
         return false;
       }
       try {
         const number = phoneUtil.parseAndKeepRawInput(phone, 'KE');
         const res = phoneUtil.isValidNumberForRegion(number, 'KE');
-        if (res == true) {
+        if (res) {
           this.mpesa_number_invalid = false;
         } else {
           this.mpesa_number_invalid = true;
@@ -109,10 +109,9 @@ export default {
     },
 
     requestMpesaPaymentPoll() {
-      console.log('mpesa payment poll initiated');
       const session = this.$store.getters.getSession;
       let cop_id = 0;
-      if (session.default == 'biz') {
+      if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
       }
       const old_rb = this.$store.getters.getRunningBalance;
@@ -139,7 +138,7 @@ export default {
         (function (poll_count) {
           setTimeout(() => {
             const res = that.checkRunningBalance(old_rb, payload);
-            console.log('poll count', poll_count);
+
             if (res) {
               poll_count = poll_limit;
               // let notification = {
@@ -153,7 +152,7 @@ export default {
               that._completeMpesaPaymentRequest({});
               return true;
             }
-            if (poll_count == 5) {
+            if (poll_count === 5) {
               // let notification = {
               //   level: 2,
               //   title: "Payment failed",
@@ -164,7 +163,6 @@ export default {
               //   root: true
               // });
               that._terminateMpesaPaymentRequest({});
-              console.log('after for loop');
             }
           }, 10000 * poll_count);
         }(poll_count));
@@ -175,15 +173,12 @@ export default {
       const that = this;
       this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
         (response) => {
-          console.log(response);
           if (response.length > 0) {
             response = response[0];
           }
-          if (response.status == 200) {
+          if (response.status === 200) {
             // check if rb has changed
             const new_rb = response.data.running_balance;
-            console.log(old_rb);
-            console.log(new_rb);
 
             if (new_rb < old_rb) {
               that._completeMpesaPaymentRequest({});
@@ -193,21 +188,17 @@ export default {
           // commit  to the global store here
           return false;
         },
-        (error) => {
-          console.log(error);
-          return false;
-        },
+        error => false,
       );
     },
 
     requestMpesaPayment() {
-      console.log('requesting mpesa payment');
       const session = this.$store.getters.getSession;
       let referenceNumber = 'SENDY';
       let cop_id = 0;
       let user_id = 0;
       let user_email = '';
-      if (session.default == 'biz') {
+      if (session.default === 'biz') {
         referenceNumber += session.biz.cop_id;
         cop_id = session.biz.cop_id;
         user_id = session.biz.user_id;
@@ -229,8 +220,6 @@ export default {
         email: user_email,
       };
 
-      console.log(mpesa_payload);
-
       // TODO: implement the discount bundles if needed
 
       const full_payload = {
@@ -240,14 +229,11 @@ export default {
         endpoint: 'initiate_mpesa',
       };
 
-      console.log(mpesa_payload);
-
       this.payment_state = 'requesting Mpesa Payment';
 
       this._requestMpesaPayment(full_payload).then(
         (response) => {
-          console.log(response);
-          if (response.status == 200) {
+          if (response.status === 200) {
             // request poll here
             this.requestMpesaPaymentPoll();
           }

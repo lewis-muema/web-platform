@@ -99,7 +99,7 @@ export default {
   mounted() {
     const session = this.$store.getters.getSession;
     let cop_id = 0;
-    if (session.default == 'biz') {
+    if (session.default === 'biz') {
       cop_id = session[session.default].cop_id;
     }
     const payload = {
@@ -112,12 +112,11 @@ export default {
       endpoint: 'cop_departments',
     };
     this.$store.dispatch('$_admin/requestDepartmentsList', users_full_payload).then(
-      (response) => {
-        console.log('departments data here');
-        console.log(response);
-      },
+      (response) => {},
       (error) => {
-        console.log(error);
+        const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
       },
     );
     this.filteredUserData = this.deptData;
@@ -160,11 +159,9 @@ export default {
       this.pagination_limit = val;
     },
     changePage() {
-      console.log('Page changed to', this.pagination_page);
       const from = (this.pagination_page - 1) * this.pagination_limit;
       const to = this.pagination_page * this.pagination_limit;
       const departments_data = this.deptData.slice(from, to);
-      console.log(from, to, departments_data);
     },
     edit_department(department) {
       this.$router.push(`/admin/department/edit_department/${department}`);
@@ -176,12 +173,9 @@ export default {
       const { department } = this.filterData;
 
       this.filteredUserData = this.deptData;
-      console.log(this.filteredUserData);
       // check if both are filled
       if (department !== '') {
         // department filter
-        console.log('performing a department filter');
-        console.log(department);
         const vm = this;
         this.filteredUserData = this.filteredUserData.filter(
           user => user.department_name.toLowerCase().indexOf(vm.filterData.department.toLowerCase()) >= 0,

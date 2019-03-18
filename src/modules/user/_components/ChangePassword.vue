@@ -77,19 +77,15 @@ export default {
     update_password() {
       if (this.old_password != '' && this.new_password != '' && this.confirm_password != '') {
         if (this.new_password !== this.confirm_password) {
-          console.log("Passwords Don't Match");
           const level = 3;
           this.message = 'Password does not match. Please try again';
           const notification = { title: '', level, message: this.message }; // notification object
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true);
         } else {
-          console.log('Password match');
           const session = this.$store.getters.getSession;
 
           if (session.biz.cop_id > 0) {
-            console.log('Cop user found');
-
             const values = {
               cop_user_id: session[session.default].user_id,
               old_password: this.old_password,
@@ -106,16 +102,13 @@ export default {
 
             this.requestChangePassword(full_payload).then(
               (response) => {
-                if (response.status == true) {
-                  console.log('Cop User Password Updated successfully');
-                  console.log(response);
+                if (response.status) {
                   const level = 1; // success
                   this.message = 'Password Changed!';
                   const notification = { title: '', level, message: this.message }; // notification object
                   this.$store.commit('setNotification', notification);
                   this.$store.commit('setNotificationStatus', true); // activate notification
                 } else {
-                  console.warn('Cop user password Update Failed');
                   const level = 3;
                   this.message = 'Something went wrong.';
                   const notification = { title: '', level, message: this.message }; // notification object
@@ -124,8 +117,6 @@ export default {
                 }
               },
               (error) => {
-                console.error('Check Internet Connection');
-                console.log(error);
                 const level = 3;
                 this.message = 'Something went wrong.';
                 const notification = { title: '', level, message: this.message }; // notification object
@@ -134,8 +125,6 @@ export default {
               },
             );
           } else if (session.peer.user_id > 0) {
-            console.log('Peer user found');
-
             const values = {
               user_id: session[session.default].user_id,
               old_password: this.old_password,
@@ -152,16 +141,13 @@ export default {
 
             this.requestChangePassword(full_payload).then(
               (response) => {
-                if (response.status == true) {
-                  console.log('Personal Peer Information Updated successfully');
-                  console.log(response);
+                if (response.status) {
                   const level = 1; // success
                   this.message = 'Details Saved!';
                   const notification = { title: '', level, message: this.message }; // notification object
                   this.$store.commit('setNotification', notification);
                   this.$store.commit('setNotificationStatus', true); // activate notification
                 } else {
-                  console.warn('Peer details Update Failed');
                   const level = 3;
                   this.message = 'Something went wrong.';
                   const notification = { title: '', level, message: this.message }; // notification object
@@ -170,8 +156,6 @@ export default {
                 }
               },
               (error) => {
-                console.error('Check Internet Connection');
-                console.log(error);
                 const level = 3;
                 this.message = 'Something went wrong.';
                 const notification = { title: '', level, message: this.message }; // notification object
@@ -180,7 +164,6 @@ export default {
               },
             );
           } else {
-            console.log('Session expired');
             this.$router.push('/auth');
           }
         }

@@ -45,7 +45,7 @@
         </div>
 
         <div
-          v-if="this.two_accnts == true"
+          v-if="this.two_accnts === true"
           class=""
         >
           <span class="forgot-paswword-moreinfo">

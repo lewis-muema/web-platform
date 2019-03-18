@@ -49,7 +49,7 @@ export default {
   },
   mounted() {
     const session = this.$store.getters.getSession;
-    if (session.default == 'biz') {
+    if (session.default === 'biz') {
       this.bizName = session[session.default].cop_name;
     }
   },

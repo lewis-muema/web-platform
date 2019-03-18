@@ -28,7 +28,7 @@
               : 'button-primary section--filter-action-inactive align-left btn-payment'
           "
           name="order_payments_text"
-          :disabled="active_filter == true ? false : true"
+          :disabled="active_filter === true ? false : true"
           @click="filterPaymentData"
         >
           {{ order_payments_text }}

@@ -66,7 +66,7 @@ export default {
   mounted() {
     const session = this.$store.getters.getSession;
     let cop_id = 0;
-    if (session.default == 'biz') {
+    if (session.default === 'biz') {
       cop_id = session[session.default].cop_id;
     }
     const payload = {
@@ -74,16 +74,15 @@ export default {
     };
     const users_full_payload = {
       values: payload,
-      vm: this,
       app: 'NODE_PRIVATE_API',
       endpoint: 'cop_users',
     };
     this.$store.dispatch('$_admin/requestUsersList', users_full_payload).then(
-      (response) => {
-        console.log(response);
-      },
+      (response) => {},
       (error) => {
-        console.log(error);
+        const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
       },
     );
   },
@@ -100,7 +99,7 @@ export default {
     add_department() {
       const session = this.$store.getters.getSession;
       let cop_id = 0;
-      if (session.default == 'biz') {
+      if (session.default === 'biz') {
         cop_id = session[session.default].cop_id;
       }
       const newDept_payload = {
@@ -111,22 +110,17 @@ export default {
 
       const full_payload = {
         values: newDept_payload,
-        vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'cop_departments_add',
       };
       this.$store.dispatch('$_admin/addNewDepartment', full_payload).then(
         (response) => {
-          console.log('department added');
-          console.log(response);
           const level = 1; // success
           const notification = { title: '', level, message: 'Department Added!' }; // notification object
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true); // activate notification
         },
         (error) => {
-          console.log('department NOT added');
-          console.log(error);
           const level = 2;
           const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
           this.$store.commit('setNotification', notification);

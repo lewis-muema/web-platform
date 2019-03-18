@@ -1,19 +1,18 @@
-/* eslint no-param-reassign: "error" */
 /* eslint-disable prefer-destructuring */
 export default {
   requestOrder({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
-          const responder = '';
+          let responder = response;
           if (response.length > 1) {
-            response = response[0];
+            responder = response[0];
           }
-          if (response.data) {
+          if (responder.data) {
             // commit('updateOrder',response.data.data);
-            resolve(response.data);
+            resolve(responder.data);
           } else {
-            reject(response.data);
+            reject(responder.data);
           }
         },
         (error) => {

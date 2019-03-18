@@ -142,14 +142,13 @@ export default {
   },
   mounted() {
     const cop_user_id = this.$route.params.id;
-    this.userDetails = this.userData.filter(user => user.cop_user_id == cop_user_id)[0];
+    this.userDetails = this.userData.filter(user => user.cop_user_id === cop_user_id)[0];
 
     if (this.userDetails !== undefined) {
       this.available = true;
     } else {
       this.available = false;
       this.one_step_back();
-      console.log("back to users' table");
     }
   },
   computed: {
@@ -190,7 +189,6 @@ export default {
       this.$store.dispatch('$_admin/editAdminUser', editUser_full_payload).then(
         (response) => {
           // return;
-          console.log('updated');
 
           const level = 1; // success
           this.message = 'Edit Successful!';
@@ -202,7 +200,6 @@ export default {
           // vm.one_step_back()
         },
         (error) => {
-          console.log(error);
           const level = 3;
           this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object

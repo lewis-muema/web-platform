@@ -173,14 +173,14 @@ export default {
       const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
       const phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
       let email_valid = true;
-      for (let i = 0; i < this.errors.items.length; i++) {
-        if (this.errors.items[i].field == 'email') {
+      for (let i = 0; i < this.errors.items.length; i += 1) {
+        if (this.errors.items[i].field === 'email') {
           email_valid = false;
           break;
         }
       }
 
-      if (phone_valid == true && email_valid == true) {
+      if (phone_valid && email_valid) {
         this.phoneVerification = true;
         this.sendVerificationCode();
       } else {
@@ -218,10 +218,7 @@ export default {
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
-        (error) => {
-          console.error('Check Internet Connection');
-          console.log(error);
-        },
+        (error) => {},
       );
     },
 
@@ -251,10 +248,7 @@ export default {
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
-        (error) => {
-          console.error('Check Internet Connection');
-          console.log(error);
-        },
+        (error) => {},
       );
     },
 
@@ -277,10 +271,10 @@ export default {
       getName: '$_external/getName',
     }),
     is_valid() {
-      return this.f_name != '' && this.phone != '' && this.email != '';
+      return this.f_name !== '' && this.phone !== '' && this.email !== '';
     },
     is_type() {
-      if (this.getType == 0) {
+      if (this.getType === 0) {
         return true;
       }
       return false;

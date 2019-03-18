@@ -237,7 +237,6 @@ export default {
           }
         },
         (error) => {
-          console.log(error);
           const notification = {
             title: 'Add Card Failed',
             level: 2,

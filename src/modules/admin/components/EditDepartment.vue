@@ -68,19 +68,17 @@ export default {
   },
   mounted() {
     const department = this.$route.params.id;
-    console.log(department);
-    this.deptDetails = this.deptData.filter(dept => dept.department_id == department)[0];
+    this.deptDetails = this.deptData.filter(dept => dept.department_id === department)[0];
 
     if (typeof this.deptDetails !== 'undefined') {
       this.available = true;
     } else {
       this.available = false;
       this.go_back();
-      console.log("back to departments' table");
     }
     const session = this.$store.getters.getSession;
     let cop_id = 0;
-    if (session.default == 'biz') {
+    if (session.default === 'biz') {
       cop_id = session[session.default].cop_id;
     }
     const payload = {
@@ -88,16 +86,15 @@ export default {
     };
     const users_full_payload = {
       values: payload,
-      vm: this,
       app: 'NODE_PRIVATE_API',
       endpoint: 'cop_users',
     };
     this.$store.dispatch('$_admin/requestUsersList', users_full_payload).then(
-      (response) => {
-        console.log(response);
-      },
+      (response) => {},
       (error) => {
-        console.log(error);
+        const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
       },
     );
   },
@@ -118,7 +115,6 @@ export default {
       payload.department_id = this.deptDetails.department_id;
       payload.department_name = this.deptDetails.department_name;
       payload.cop_user_id = this.deptDetails.cop_user_id;
-      console.log('payload', payload);
       const editDept_full_payload = {
         values: payload,
         vm: this,
@@ -127,8 +123,6 @@ export default {
       };
       this.$store.dispatch('$_admin/editAdminDepartment', editDept_full_payload).then(
         (response) => {
-          console.log(response);
-          console.log('updated');
           const level = 1; // success
           this.message = 'Edit Successful!';
           const notification = { title: '', level, message: this.message }; // notification object
@@ -136,7 +130,6 @@ export default {
           this.$store.commit('setNotificationStatus', true); // activate notification
         },
         (error) => {
-          console.log(error);
           const level = 2;
           this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object

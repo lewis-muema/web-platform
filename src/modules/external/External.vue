@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="user-invite-outer">
     <header-component />
-    <bod-component v-if="this.received_response == true" />
+    <bod-component v-if="this.received_response" />
   </div>
 </template>
 
@@ -28,7 +28,6 @@ Validator.extend('check_phone', {
       const number = phoneUtil.parse(value);
       validity = phoneUtil.isValidNumber(number);
     } catch (e) {
-      console.log(e);
       validity = false;
     }
     return validity;
@@ -64,14 +63,13 @@ export default {
       updateCopUserID: '$_external/updateCopUserID',
     }),
     check_validity() {
-      console.log('Checked');
       let type = '';
       const { content } = this.$route.params;
       const { tag } = this.$route.params;
 
-      if (this.$route.params.type == 'link') {
+      if (this.$route.params.type === 'link') {
         type = 1;
-      } else if (this.$route.params.type == 'email') {
+      } else if (this.$route.params.type === 'email') {
         type = 0;
       }
       const values = {};
@@ -86,19 +84,16 @@ export default {
       };
       this.requestTokenValidation(full_payload).then(
         (response) => {
-          console.log(response);
           if (response.length > 0) {
             response = response[0];
           }
 
-          if (response.status == true) {
+          if (response.status) {
             let dept_id = 1;
             if (response.data.department_id) {
               dept_id = response.data.department_id;
             }
 
-            console.log(response);
-            console.log('Valid Token');
             this.updateCopID(response.data.cop_id);
             this.updateBizName(response.data.cop_name);
             this.updateDeptID(dept_id);
@@ -109,14 +104,10 @@ export default {
             this.received_response = true;
             // this.$router.push("");
           } else {
-            console.warn('Invalid Token');
             this.$router.push('/auth');
           }
         },
-        (error) => {
-          console.error('Check Internet Connection');
-          console.log(error);
-        },
+        (error) => {},
       );
     },
   },

@@ -41,11 +41,11 @@ export default {
     backToPaymentRequest() {
       const payload = {};
       this.$store.dispatch('$_payment/resetMpesaPaymentRequest', payload).then(
-        (response) => {
-          console.log(response);
-        },
+        (response) => {},
         (error) => {
-          console.log(error);
+          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+          this.$store.commit('setNotification', notification);
+          this.$store.commit('setNotificationStatus', true);
         },
       );
     },
@@ -54,13 +54,10 @@ export default {
     payment_loading_title() {
       const session = this.$store.getters.getSession;
       let account_no = session[session.default].user_phone;
-      if (session.default == 'biz') {
+      if (session.default === 'biz') {
         account_no = `SENDY${session.biz.cop_id}`;
       }
-      return (
-        `Sorry, Safaricom cannot be reached. Instead, please pay to Pay Bill no. 848450 with Account Number.${
-          account_no}`
-      );
+      return `Sorry, Safaricom cannot be reached. Instead, please pay to Pay Bill no. 848450 with Account Number.${account_no}`;
     },
   },
 };

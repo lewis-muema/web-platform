@@ -6,7 +6,7 @@ Vue.use(Router);
 let entryUrl = null;
 
 function isEmpty(obj) {
-  for (var prop in obj) {
+  for (let prop in obj) {
     if (obj.hasOwnProperty(prop)) return false;
   }
 
@@ -17,14 +17,12 @@ function guard(to, from, next) {
   return new Promise((resolve, reject) => {
     let session = store.state.session;
 
-    console.log('the guard is executing');
-
     if (isEmpty(session)) {
       if (process.browser) {
         //read ls here
         let _sessionSnack = localStorage.getItem('_sessionSnack');
 
-        if (isEmpty(_sessionSnack) == true) {
+        if (isEmpty(_sessionSnack)) {
           resolve(next('/auth/sign_in'));
         } else {
           session = JSON.parse(_sessionSnack);
@@ -33,7 +31,7 @@ function guard(to, from, next) {
           try {
             analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
           } catch (er) {}
-          if ('default' in session && analytics_env == 'production') {
+          if ('default' in session && analytics_env === 'production') {
             let acc = session[session.default];
             mixpanel.identify(acc.user_email);
           }
@@ -51,15 +49,12 @@ function guard(to, from, next) {
 function login_guard(to, from, next) {
   return new Promise((resolve, reject) => {
     let session = store.state.session;
-
-    console.log('the guard is executing');
-
     if (isEmpty(session)) {
       if (process.browser) {
         //read ls here
         let _sessionSnack = localStorage.getItem('_sessionSnack');
 
-        if (isEmpty(_sessionSnack) == true) {
+        if (isEmpty(_sessionSnack)) {
           resolve(next());
         } else {
           session = JSON.parse(_sessionSnack);

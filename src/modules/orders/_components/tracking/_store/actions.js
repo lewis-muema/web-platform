@@ -1,3 +1,5 @@
+/* eslint consistent-return: "error" */
+
 import mqtt from 'mqtt';
 
 const getTrackingData = function getTrackingData({ commit, dispatch, state }, data) {

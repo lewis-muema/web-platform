@@ -1,4 +1,7 @@
 /* eslint no-param-reassign: "error" */
+/* eslint-disable prefer-destructuring */
+/* eslint no-shadow: "error" */
+/* eslint-env es6 */
 export default {
   /* start mpesa */
 
@@ -84,35 +87,35 @@ export default {
     for (let pollCount = 0; pollCount < pollLimit; pollCount += 1) {
       // wait 10 seconds
       const that = this;
-      const loopCount = function () {};
-
-      (function loopCount(pollCount) {
+      const updatedPollCount = pollCount;
+      (function (updatedPollCount) {
         setTimeout(() => {
           const res = that.checkRunningBalance(oldRb, payload);
           if (res) {
-            pollCount = pollLimit;
+            updatedPollCount = pollLimit;
             return true;
           }
-        }, 10000 * pollCount);
-      }(pollCount));
+        }, 10000 * updatedPollCount);
+      }(updatedPollCount));
     }
   },
 
   checkRunningBalance(oldRb, payload) {
     this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
       (response) => {
+        let responder = response;
         if (response.length > 0) {
-          response = response[0];
+          responder = response[0];
         }
-        if (response.status === 200) {
+        if (responder.status === 200) {
           // check if rb has changed
-          const newRb = response.data.running_balance;
+          const newRb = responder.data.running_balance;
           if (newRb < oldRb) {
             // running balance updated
             // terminate poll
             // update global running balance
             this.completeMpesaPaymentRequest({});
-            this.$store.commit('setRunningBalance', response.data.running_balance);
+            this.$store.commit('setRunningBalance', responder.data.running_balance);
             return true;
           }
         }

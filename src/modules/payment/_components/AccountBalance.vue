@@ -8,7 +8,8 @@
         <!-- <font-awesome-icon icon="wallet" /> -->
       </div>
       <div class="payinfo--balance">
-        Balance <span class="payinfo--balance-el">
+        Balance
+        <span class="payinfo--balance-el">
           {{ running_balance }}
         </span>Kes
       </div>
@@ -32,7 +33,7 @@ export default {
       // this will request from the api and update the store
       const session = this.$store.getters.getSession;
       let cop_id = 0;
-      if (session.default == 'biz') {
+      if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
       }
       const running_balance_payload = {
@@ -49,14 +50,9 @@ export default {
         endpoint: 'running_balance',
       };
 
-      this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
-        (response) => {
-          console.log(response);
-        },
-        (error) => {
-          console.log(error);
-        },
-      );
+      this.$store
+        .dispatch('requestRunningBalance', payload, { root: true })
+        .then((response) => {}, (error) => {});
     },
   },
   computed: {

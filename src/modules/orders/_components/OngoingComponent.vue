@@ -83,7 +83,7 @@ export default {
       this.change_page(1);
     },
     active_card(order_no) {
-      if (this.$route.params.order_no == order_no) {
+      if (this.$route.params.order_no === order_no) {
         return true;
       }
       return false;
@@ -117,7 +117,7 @@ export default {
       }
     },
     getStatus(order) {
-      if (this.loading == false) {
+      if (!this.loading) {
         switch (order.delivery_status) {
           case 3: {
             return 'Delivered';
@@ -158,7 +158,7 @@ export default {
       return {
         'sendy-blue': true,
         'rotate-transform': true,
-        rotate: this.showing == 0,
+        rotate: this.showing === 0,
       };
     },
   },

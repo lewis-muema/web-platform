@@ -170,7 +170,9 @@ export default {
               }
             },
             (error) => {
-              console.log(error);
+              const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+              this.$store.commit('setNotification', notification);
+              this.$store.commit('setNotificationStatus', true);
             },
           );
         } else {

@@ -340,11 +340,7 @@ export default {
       this.attemptPriceRequest();
     },
     attemptPriceRequest() {
-      if (
-        Array.isArray(this.locations)
-        && this.locations.length > 1
-        && this.get_pickup_filled === true
-      ) {
+      if (Array.isArray(this.locations) && this.locations.length > 1 && this.get_pickup_filled) {
         this.doPriceRequest();
       }
     },
@@ -473,7 +469,7 @@ export default {
         const self = this;
         const result = this.get_price_request_object.economy_price_tiers.filter(pack => pack.price_tiers.some(vendor => vendor.vendor_name === previous));
 
-        if (result.length == 0) {
+        if (result.length === 0) {
           this.doSetDefaultVendorType();
         } else {
           const new_active_price_object = result[0].price_tiers.find(

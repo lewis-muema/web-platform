@@ -79,11 +79,10 @@ export default {
     next_view() {
       if (this.password !== this.cpassword) {
         this.doNotification(2, 'Set Password', 'Password does not match. Please try again');
-        console.log('Password does not match!');
       } else {
         let payload = {};
         this.updatePassPlain(this.cpassword);
-        if (this.getType == 0) {
+        if (this.getType === 0) {
           const cop_id = this.getCopId;
           // let user_id = this.getCopUserId ;
           const pass = this.cpassword;
@@ -106,7 +105,7 @@ export default {
             department_id,
             cop_user_id,
           };
-        } else if (this.getType == 1) {
+        } else if (this.getType === 1) {
           const cop_id = this.getCopId;
           const pass = this.cpassword;
           const name = this.getName;
@@ -145,18 +144,17 @@ export default {
               response = response[0];
             }
 
-            if (response.status == true) {
-              console.log(response);
+            if (response.status) {
               this.setViewState(4);
               this.updateViewStep(0);
             } else {
-              console.warn('Onboarding Failed');
               this.$router.push('/auth');
             }
           },
           (error) => {
-            console.error('Check Internet Connection');
-            console.log(error);
+            const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+            this.$store.commit('setNotification', notification);
+            this.$store.commit('setNotificationStatus', true);
           },
         );
       }

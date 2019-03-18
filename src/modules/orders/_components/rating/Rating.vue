@@ -1,14 +1,14 @@
 <template lang="html">
   <span class="rating">
     <span v-if="getStep === 3">
-      <PostRateComponent v-if="getPostRatingComponent == 0" />
+      <PostRateComponent v-if="getPostRatingComponent === 0" />
       <PostRateComponentBusiness v-if="getPostRatingComponent == 1" />
     </span>
     <span v-else>
       <div class="container">
         <div class="rate-rider-middle">
           <div id="rateriderreuse">
-            <RateDriver v-if="getStep == 1" />
+            <RateDriver v-if="getStep === 1" />
             <!--<CommentsComponent v-if="getStep == 2"></CommentsComponent>-->
           </div>
         </div>

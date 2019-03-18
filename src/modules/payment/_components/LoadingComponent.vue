@@ -37,22 +37,22 @@ export default {
     ...mapActions(['$_payment/resetMpesaPaymentRequest', '$_payment/resetCardPaymentRequest']),
     cancelPaymentRequest() {
       const payload = {};
-      if (this.pay_method == 'mpesa') {
+      if (this.pay_method === 'mpesa') {
         this.$store.dispatch('$_payment/resetMpesaPaymentRequest', payload).then(
-          (response) => {
-            console.log(response);
-          },
+          (response) => {},
           (error) => {
-            console.log(error);
+            const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+            this.$store.commit('setNotification', notification);
+            this.$store.commit('setNotificationStatus', true);
           },
         );
       } else {
         this.$store.dispatch('$_payment/resetCardPaymentRequest', payload).then(
-          (response) => {
-            console.log(response);
-          },
+          (response) => {},
           (error) => {
-            console.log(error);
+            const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+            this.$store.commit('setNotification', notification);
+            this.$store.commit('setNotificationStatus', true);
           },
         );
       }
@@ -60,9 +60,10 @@ export default {
   },
   computed: {
     payment_loading_title() {
-      if (this.pay_method == 'mpesa') {
+      if (this.pay_method === 'mpesa') {
         return 'Please follow the M-Pesa instructions on your phone screen';
-      } if (this.pay_method == 'card') {
+      }
+      if (this.pay_method === 'card') {
         return 'Processing your card operation';
       }
     },

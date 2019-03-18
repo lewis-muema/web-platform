@@ -29,7 +29,7 @@
               : 'button-primary section--filter-action-inactive btn-statement'
           "
           name="order_statement_text"
-          :disabled="valid_filter == true ? false : true"
+          :disabled="valid_filter === true ? false : true"
           @click="filterStatementData"
         >
           {{ order_statement_text }}

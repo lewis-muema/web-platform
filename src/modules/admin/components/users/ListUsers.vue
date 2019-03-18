@@ -28,7 +28,7 @@
               ? 'button-primary section--filter-action align-left btn-users'
               : 'button-primary section--filter-action-inactive align-left btn-users'
           "
-          :disabled="active_filter == true ? false : true"
+          :disabled="active_filter === true ? false : true"
           @click="filterUserTableData"
         >
           Search
@@ -129,7 +129,7 @@ export default {
   mounted() {
     const session = this.$store.getters.getSession;
     let cop_id = 0;
-    if (session.default == 'biz') {
+    if (session.default === 'biz') {
       cop_id = session[session.default].cop_id;
     }
     const payload = {
@@ -142,11 +142,11 @@ export default {
       endpoint: 'cop_users',
     };
     this.$store.dispatch('$_admin/requestUsersList', users_full_payload).then(
-      (response) => {
-        console.log(response);
-      },
+      (response) => {},
       (error) => {
-        console.log(error);
+        const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
       },
     );
 
@@ -157,11 +157,11 @@ export default {
       endpoint: 'cop_departments',
     };
     this.$store.dispatch('$_admin/requestDepartmentsList', depts_full_payload).then(
-      (response) => {
-        console.log(response);
-      },
+      (response) => {},
       (error) => {
-        console.log(error);
+        const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
       },
     );
     this.filteredUserData = this.userData;
@@ -177,7 +177,7 @@ export default {
     user_data() {
       const from = (this.pagination_page - 1) * this.pagination_limit;
       const to = this.pagination_page * this.pagination_limit;
-      if (this.filterState == true) {
+      if (this.filterState) {
         if (Array.isArray(this.filteredUserData)) {
           return this.filteredUserData.slice(from, to);
         }
@@ -203,11 +203,9 @@ export default {
       this.pagination_limit = val;
     },
     changePage() {
-      console.log('Page changed to', this.pagination_page);
       const from = (this.pagination_page - 1) * this.pagination_limit;
       const to = this.pagination_page * this.pagination_limit;
       const user_data = this.userData.slice(from, to);
-      console.log(from, to, user_data);
     },
     get_user_type(index) {
       let resp = '';
@@ -242,29 +240,25 @@ export default {
       const user_id = this.filterData.user;
       const { department } = this.filterData;
       this.filteredUserData = this.userData;
-      console.log(this.filteredUserData);
+
       // check if both are filled
       if (user_id !== '' && department !== '') {
-        console.log('performing a user and departments filter');
         const vm = this;
         this.filteredUserData = this.filteredUserData.filter((user) => {
           if (
             user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0
-            && user.department_id == department
+            && user.department_id === department
           ) {
             return (
               user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0
-              && user.department_id == department
+              && user.department_id === department
             );
           }
           vm.empty_users_state = 'Could not find users for the department.';
-          console.log('Could not find users for the department.', department);
         });
         this.filterState = true;
       } else if (user_id !== '') {
         // user filter
-        console.log('performing a user filter');
-        console.log(user_id);
         const vm = this;
         this.filteredUserData = this.filteredUserData.filter(
           user => user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0,
@@ -272,13 +266,12 @@ export default {
         this.filterState = true;
       } else {
         // department filter
-        console.log('performing a department filter');
+
         this.filteredUserData = this.filteredUserData.filter((user) => {
-          if (user.department_id == department) {
-            return user.department_id == department;
+          if (user.department_id === department) {
+            return user.department_id === department;
           }
           vm.empty_users_state = 'Could not find users for the department.';
-          console.log('Could not find users for the department.', department);
         });
         // this.filteredUserData = this.filteredUserData.filter( user => user.department_id ==  department);
         this.filterState = true;

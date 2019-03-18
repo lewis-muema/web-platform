@@ -36,11 +36,11 @@ export default {
     backToPaymentRequest() {
       const payload = {};
       this.$store.dispatch('$_payment/resetMpesaPaymentRequest', payload).then(
-        (response) => {
-          console.log(response);
-        },
+        (response) => {},
         (error) => {
-          console.log(error);
+          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+          this.$store.commit('setNotification', notification);
+          this.$store.commit('setNotificationStatus', true);
         },
       );
     },
@@ -66,11 +66,11 @@ export default {
       };
 
       this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
-        (response) => {
-          console.log(response);
-        },
+        (response) => {},
         (error) => {
-          console.log(error);
+          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+          this.$store.commit('setNotification', notification);
+          this.$store.commit('setNotificationStatus', true);
         },
       );
     },

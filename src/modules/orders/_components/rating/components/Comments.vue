@@ -15,9 +15,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img :src="cards_background"><span
-                  class="card-title .center-align"
-                >
+                <img :src="cards_background"><span class="card-title .center-align">
                   Timeliness
                 </span>
               </div>
@@ -155,13 +153,11 @@
             </div>
           </div>
         </span>
-        <span v-if="getScore == 3">
+        <span v-if="getScore === 3">
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img :src="cards_background"><span
-                  class="card-title .center-align"
-                >
+                <img :src="cards_background"><span class="card-title .center-align">
                   Timeliness
                 </span>
               </div>
@@ -229,13 +225,11 @@
             </div>
           </div>
         </span>
-        <span v-if="getScore == 4">
+        <span v-if="getScore === 4">
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img :src="cards_background"><span
-                  class="card-title .center-align"
-                >
+                <img :src="cards_background"><span class="card-title .center-align">
                   Timeliness
                 </span>
               </div>
@@ -501,9 +495,11 @@ export default {
     getCommentsTitle() {
       if (this.getScore <= 2) {
         return 'Ooh no! What did we mess up on?';
-      } if (this.getScore === 3) {
+      }
+      if (this.getScore === 3) {
         return 'How can we do better next time?';
-      } if (this.getScore === 4) {
+      }
+      if (this.getScore === 4) {
         return 'What would you like us to improve on?';
       }
       return '';
@@ -528,11 +524,11 @@ export default {
         comment: this.comment,
       };
       this.$store.dispatch('$_rating/requestRatingUpdate', payload).then(
-        (response) => {
-          console.log(response);
-        },
+        (response) => {},
         (error) => {
-          console.log(error);
+          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+          this.$store.commit('setNotification', notification);
+          this.$store.commit('setNotificationStatus', true);
         },
       );
     },
@@ -553,19 +549,19 @@ export default {
     },
     selectReason(id) {
       this.resetSelectReasons();
-      if (id == 1) {
+      if (id === 1) {
         this.timeliness = true;
-      } else if (id == 2) {
+      } else if (id === 2) {
         this.payment = true;
-      } else if (id == 3) {
+      } else if (id === 3) {
         this.directions = true;
-      } else if (id == 4) {
+      } else if (id === 4) {
         this.cleanliness = true;
-      } else if (id == 5) {
+      } else if (id === 5) {
         this.politeness = true;
-      } else if (id == 6) {
+      } else if (id === 6) {
         this.pricing = true;
-      } else if (id == 7) {
+      } else if (id === 7) {
         this.app = true;
       } else {
         // growth
