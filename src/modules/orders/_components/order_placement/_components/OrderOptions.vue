@@ -65,7 +65,10 @@
           v-show="show_payment"
           class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
         >
-          <div class="home-view-payments-wrapper" v-show="show_payment_label">
+          <div
+            v-show="show_payment_label"
+            class="home-view-payments-wrapper"
+          >
             <div class="home-view-payments-wrapper--left">
               <div class="home-view-payments-wrapper--left__amount-label">
                 Total Payment
@@ -130,7 +133,8 @@
                     v-model="payment_method"
                     :label="getCardValue(card.last4)"
                   >
-                    **** **** **** {{ card.last4 }} <font-awesome-icon
+                    **** **** **** {{ card.last4 }}
+                    <font-awesome-icon
                       :icon="getCardIcon(card)"
                       class="payments-orange"
                     />
@@ -147,7 +151,7 @@
                   class="home-view-notes-wrapper--item__link"
                   @click="takeMeToAddNewCard()"
                 >
-                  +  &nbsp;&nbsp; Visa/Mastercard
+                  + &nbsp;&nbsp; Visa/Mastercard
                 </div>
               </div>
             </div>
@@ -355,7 +359,7 @@ export default {
       return !this.hide_payment;
     },
 
-    show_payment_label(){
+    show_payment_label() {
       return !this.hide_payment && this.getRunningBalance !== 0;
     },
 
@@ -475,28 +479,31 @@ export default {
       return true;
     },
 
-    checkIfTruckOrder(){
+    checkIfTruckOrder() {
       let is_truck = false;
-      if(TRUCK_VENDORS.includes(this.activeVendorPriceData.vendor_id) && !this.getPriceRequestObject.fixed_cost){
+      if (
+        TRUCK_VENDORS.includes(this.activeVendorPriceData.vendor_id)
+        && !this.getPriceRequestObject.fixed_cost
+      ) {
         is_truck = true;
       }
 
       return is_truck;
     },
 
-    isValidateCustomerMinAmount(){
-      let customer_min_amount_is_filled = false;
+    isValidateCustomerMinAmount() {
+      const customer_min_amount_is_filled = false;
       let min_amount = 0;
       try {
         min_amount = Number(this.getCustomerMinAmount);
-      }catch(er){
-        // 
+      } catch (er) {
+        //
       }
-      if(min_amount <= 0){
+      if (min_amount <= 0) {
         this.doNotification(
-            '2',
-            'Missing Minimum Order Amount',
-            'The minimum order amount is missing, please fill it to enable the drivers bid effectively.',
+          '2',
+          'Missing Minimum Order Amount',
+          'The minimum order amount is missing, please fill it to enable the drivers bid effectively.',
         );
         return false;
       }
@@ -509,8 +516,8 @@ export default {
       this.refreshRunningBalance().then(
         (response) => {
           this.loading = false;
-          if(this.checkIfTruckOrder()){
-            if(this.isValidateCustomerMinAmount()){
+          if (this.checkIfTruckOrder()) {
+            if (this.isValidateCustomerMinAmount()) {
               this.handlePostPaidPayments();
               return true;
             }
@@ -623,7 +630,7 @@ export default {
 
           if (response.status) {
             this.setPickupFilled(false);
-            const order_no = this.activeVendorPriceData.order_no;
+            const { order_no } = this.activeVendorPriceData;
             this.should_destroy = true;
             this.$store.dispatch('$_orders/fetch_ongoing_orders');
             this.trackMixpanelEvent('Place Order');
@@ -695,14 +702,14 @@ export default {
         vendor_type: this.activeVendorPriceData.vendor_id,
         rider_phone: this.activeVendorPriceData.order_no,
         type: this.payment_type,
-        package_details:{
+        package_details: {
           max_temperature: Number(this.getMaxTemperature),
-          delivery_item:this.getDeliveryItem,
-          load_weight:Number(this.getLoadWeight),
-          load_units:this.getLoadUnits,
-          additional_loader:Boolean(this.getAdditionalLoaderStatus),
-          no_of_loaders:Number(this.getNOOfLoaders),
-          customer_min_amount:Number(this.getCustomerMinAmount),
+          delivery_item: this.getDeliveryItem,
+          load_weight: Number(this.getLoadWeight),
+          load_units: this.getLoadUnits,
+          additional_loader: Boolean(this.getAdditionalLoaderStatus),
+          no_of_loaders: Number(this.getNOOfLoaders),
+          customer_min_amount: Number(this.getCustomerMinAmount),
         },
       };
       payload = {
@@ -817,6 +824,12 @@ export default {
       try {
         if (analytics_env === 'production') {
           mixpanel.track(name);
+          this.$ga.event({
+            eventCategory: 'Orders',
+            eventAction: 'Order Placement',
+            eventLabel: name,
+            eventValue: 15,
+          });
         }
       } catch (er) {}
     },
