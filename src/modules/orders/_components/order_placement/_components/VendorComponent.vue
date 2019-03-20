@@ -399,12 +399,25 @@ export default {
     },
 
     truckOptions() {
-      const custom_vendor_options = {};
-      const local = this.baseTruckOptions;
       if (this.get_active_package_class === 'medium') {
-        custom_vendor_options.value = '2';
-        custom_vendor_options.label = 'Any';
-      } else if (this.activeVendorPriceData.hasOwnProperty('available_options')) {
+        return this.mediumOptions;
+      }
+      return this.largeOptions;
+    },
+    mediumOptions() {
+      const custom_vendor_options = {};
+      custom_vendor_options.value = '2';
+      custom_vendor_options.label = 'Any';
+
+      const new_carrier_data = this.baseTruckOptions.concat(custom_vendor_options);
+      const itemIndex = new_carrier_data.findIndex(item => item.label === 'Any');
+      new_carrier_data.splice(0, 0, new_carrier_data.splice(itemIndex, 1)[0]);
+
+      return new_carrier_data;
+    },
+    largeOptions() {
+      const custom_vendor_options = {};
+      if (this.activeVendorPriceData.hasOwnProperty('available_options')) {
         if (this.activeVendorPriceData.available_options.refrigerated) {
           custom_vendor_options.value = '3';
           custom_vendor_options.label = 'Refrigerated';
