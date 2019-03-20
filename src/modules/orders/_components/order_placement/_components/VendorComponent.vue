@@ -112,16 +112,30 @@
                   v-if="expandVendorOptions(j)"
                   class="home-view-carrier-type"
                 >
-                  <!-- start large vendors -->
+                  <!-- start large /medium vendors -->
                   <div
-                    v-if="get_active_package_class === 'large'"
+                    v-if="
+                      get_active_package_class === 'large' || get_active_package_class === 'medium'
+                    "
                     class="home-view-truck-options-wrapper"
                   >
-                    <div class="home-view-truck-options-divider" />
+                    <div
+                      v-if="get_active_package_class === 'large'"
+                      class="home-view-truck-options-divider"
+                    />
 
                     <div class="home-view-truck-options-inner-wrapper">
-                      <div class="home-view-truck-options-label">
+                      <div
+                        v-if="get_active_package_class === 'large'"
+                        class="home-view-truck-options-label"
+                      >
                         What type of truck do you want?
+                      </div>
+                      <div
+                        v-else
+                        class="home-view-truck-options-label"
+                      >
+                        What type of {{ getVendorNameOnCarrierType }} do you want?
                       </div>
                       <div class="home-view-truck-options-inner--full-select">
                         <el-select
@@ -138,125 +152,126 @@
                         </el-select>
                       </div>
                     </div>
+                    <div v-if="get_active_package_class === 'large'">
+                      <div
+                        v-if="Number(carrier_type) === 3"
+                        class="home-view-truck-options-inner-wrapper"
+                      >
+                        <div class="home-view-truck-options-label">
+                          Temperature shouldn't exceed? (°C)
+                        </div>
+                        <div class="home-view-truck-options-inner--number-of-loaders">
+                          <el-input-number
+                            v-model.trim="max_temperature"
+                            :min="1"
+                            :max="10"
+                            @change="handleChangeInMaxTemperature"
+                          />
+                        </div>
+                      </div>
 
-                    <div
-                      v-if="Number(carrier_type) === 3"
-                      class="home-view-truck-options-inner-wrapper"
-                    >
-                      <div class="home-view-truck-options-label">
-                        Temperature shouldn't exceed? (°C)
+                      <div class="home-view-truck-options-inner-wrapper">
+                        <div class="home-view-truck-options-label">
+                          What do you want delivered?
+                        </div>
+                        <div>
+                          <el-input
+                            v-model.trim="delivery_item"
+                            placeholder="(Enter text)"
+                            autocomplete="true"
+                            @change="dispatchDeliveryItem"
+                          />
+                          <!-- TO DO: Handle autocomplete -->
+                        </div>
                       </div>
-                      <div class="home-view-truck-options-inner--number-of-loaders">
-                        <el-input-number
-                          v-model.trim="max_temperature"
-                          :min="1"
-                          :max="10"
-                          @change="handleChangeInMaxTemperature"
-                        />
-                      </div>
-                    </div>
 
-                    <div class="home-view-truck-options-inner-wrapper">
-                      <div class="home-view-truck-options-label">
-                        What do you want delivered?
-                      </div>
-                      <div>
-                        <el-input
-                          v-model.trim="delivery_item"
-                          placeholder="(Enter text)"
-                          autocomplete="true"
-                          @change="dispatchDeliveryItem"
-                        />
-                        <!-- TO DO: Handle autocomplete -->
-                      </div>
-                    </div>
-
-                    <div class="home-view-truck-options-inner-wrapper">
-                      <div class="home-view-truck-options-label">
-                        What is the approximate weight of the load?
-                      </div>
-                      <div class="home-view-truck-options-inner--load-weight">
-                        <el-input
-                          v-model="load_weight"
-                          type="number"
-                          placeholder="(Enter load weight)"
-                          :min="0"
-                          :max="getMaxAllowedWeight"
-                          @input="dispatchLoadWeight"
-                        >
-                          <el-select
-                            slot="append"
-                            v-model="load_units"
-                            placeholder="Tonnes"
-                            @change="dispatchLoadUnits"
+                      <div class="home-view-truck-options-inner-wrapper">
+                        <div class="home-view-truck-options-label">
+                          What is the approximate weight of the load?
+                        </div>
+                        <div class="home-view-truck-options-inner--load-weight">
+                          <el-input
+                            v-model="load_weight"
+                            type="number"
+                            placeholder="(Enter load weight)"
+                            :min="0"
+                            :max="getMaxAllowedWeight"
+                            @input="dispatchLoadWeight"
                           >
-                            <el-option
-                              label="KG"
-                              value="kgs"
-                            />
-                            <el-option
-                              label="Tonnes"
-                              value="tonnes"
-                            />
-                          </el-select>
-                        </el-input>
+                            <el-select
+                              slot="append"
+                              v-model="load_units"
+                              placeholder="Tonnes"
+                              @change="dispatchLoadUnits"
+                            >
+                              <el-option
+                                label="KG"
+                                value="kgs"
+                              />
+                              <el-option
+                                label="Tonnes"
+                                value="tonnes"
+                              />
+                            </el-select>
+                          </el-input>
+                        </div>
                       </div>
-                    </div>
 
-                    <div
-                      v-if="!isFixedCost(j)"
-                      class="home-view-truck-options-inner-wrapper"
-                    >
-                      <div class="home-view-truck-options-label">
-                        What is the minimum amount you are willing to pay for this order?
+                      <div
+                        v-if="!isFixedCost(j)"
+                        class="home-view-truck-options-inner-wrapper"
+                      >
+                        <div class="home-view-truck-options-label">
+                          What is the minimum amount you are willing to pay for this order?
+                        </div>
+                        <div>
+                          <el-input
+                            v-model.trim="customer_min_amount"
+                            :min="0"
+                            type="number"
+                            placeholder="Kes"
+                            @change="handleChangeInMinAmount"
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <el-input
-                          v-model.trim="customer_min_amount"
-                          :min="0"
-                          type="number"
-                          placeholder="Kes"
-                          @change="handleChangeInMinAmount"
-                        />
-                      </div>
-                    </div>
 
-                    <div class="home-view-truck-options-inner-wrapper">
-                      <div class="home-view-truck-options-label">
-                        Do you want us to provide you with Loader/s?
+                      <div class="home-view-truck-options-inner-wrapper">
+                        <div class="home-view-truck-options-label">
+                          Do you want us to provide you with Loader/s?
+                        </div>
+                        <div class="">
+                          <el-radio
+                            v-model="additional_loader"
+                            label="1"
+                            @change="dispatchAdditionalLoaderStatus"
+                          >
+                            Yes
+                          </el-radio>
+                          <el-radio
+                            v-model="additional_loader"
+                            label="0"
+                            @change="dispatchAdditionalLoaderStatus"
+                          >
+                            No
+                          </el-radio>
+                        </div>
                       </div>
-                      <div class="">
-                        <el-radio
-                          v-model="additional_loader"
-                          label="1"
-                          @change="dispatchAdditionalLoaderStatus"
-                        >
-                          Yes
-                        </el-radio>
-                        <el-radio
-                          v-model="additional_loader"
-                          label="0"
-                          @change="dispatchAdditionalLoaderStatus"
-                        >
-                          No
-                        </el-radio>
-                      </div>
-                    </div>
 
-                    <div
-                      v-if="Number(additional_loader) === 1"
-                      class="home-view-truck-options-inner-wrapper"
-                    >
-                      <div class="home-view-truck-options-label">
-                        How many Loaders do you require?
-                      </div>
-                      <div class="home-view-truck-options-inner--number-of-loaders">
-                        <el-input-number
-                          v-model="number_of_loaders"
-                          :min="1"
-                          :max="10"
-                          @change="handleChangeInNumberOfLoaders"
-                        />
+                      <div
+                        v-if="Number(additional_loader) === 1"
+                        class="home-view-truck-options-inner-wrapper"
+                      >
+                        <div class="home-view-truck-options-label">
+                          How many Loaders do you require?
+                        </div>
+                        <div class="home-view-truck-options-inner--number-of-loaders">
+                          <el-input-number
+                            v-model="number_of_loaders"
+                            :min="1"
+                            :max="10"
+                            @change="handleChangeInNumberOfLoaders"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -278,7 +293,7 @@
                           @change="dispatchCarrierType"
                         >
                           <el-option
-                            v-for="item in carrierOptions"
+                            v-for="item in smallVendorOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value"
@@ -341,18 +356,18 @@ export default {
           label: 'Closed',
         },
       ],
-      carrierOptions: [
+      smallVendorOptions: [
         {
           value: '2',
           label: 'Any',
         },
         {
           value: '1',
-          label: 'Closed',
+          label: 'Box',
         },
         {
           value: '0',
-          label: 'Open',
+          label: 'No Box',
         },
       ],
     };
@@ -384,6 +399,22 @@ export default {
     },
 
     truckOptions() {
+      if (this.get_active_package_class === 'medium') {
+        return this.mediumOptions;
+      }
+      return this.largeOptions;
+    },
+    mediumOptions() {
+      const custom_vendor_options = [
+        {
+          value: '2',
+          label: 'Any',
+        },
+      ];
+
+      return custom_vendor_options.concat(this.baseTruckOptions);
+    },
+    largeOptions() {
       const custom_vendor_options = {};
       if (this.activeVendorPriceData.hasOwnProperty('available_options')) {
         if (this.activeVendorPriceData.available_options.refrigerated) {
@@ -396,6 +427,7 @@ export default {
           custom_vendor_options.label = 'Flatbed';
         }
       }
+
       return this.baseTruckOptions.concat(custom_vendor_options);
     },
 
