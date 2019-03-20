@@ -405,15 +405,14 @@ export default {
       return this.largeOptions;
     },
     mediumOptions() {
-      const custom_vendor_options = {};
-      custom_vendor_options.value = '2';
-      custom_vendor_options.label = 'Any';
+      const custom_vendor_options = [
+        {
+          value: '2',
+          label: 'Any',
+        },
+      ];
 
-      const new_carrier_data = this.baseTruckOptions.concat(custom_vendor_options);
-      const itemIndex = new_carrier_data.findIndex(item => item.label === 'Any');
-      new_carrier_data.splice(0, 0, new_carrier_data.splice(itemIndex, 1)[0]);
-
-      return new_carrier_data;
+      return custom_vendor_options.concat(this.baseTruckOptions);
     },
     largeOptions() {
       const custom_vendor_options = {};
