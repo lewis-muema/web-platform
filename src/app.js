@@ -1,19 +1,14 @@
-import Vue from "vue";
-import App from "./App.vue";
-import { createRouter } from "./router";
-import { createStore } from "./store";
-import { sync } from "vuex-router-sync";
+import Vue from 'vue';
+import { sync } from 'vuex-router-sync';
 
-import moment from "moment";
-Vue.prototype.moment = moment;
+import moment from 'moment';
 
 // import Element from "element-ui";
 // import "element-ui/lib/theme-chalk/index.css";
+import VueAnalytics from 'vue-analytics';
 
-import lang from "element-ui/lib/locale/lang/en";
-import locale from "element-ui/lib/locale";
-// configure language
-locale.use(lang);
+import lang from 'element-ui/lib/locale/lang/en';
+import locale from 'element-ui/lib/locale';
 
 import {
   Pagination,
@@ -48,6 +43,37 @@ import {
   RadioButton,
   Autocomplete,
 } from 'element-ui';
+
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { createStore } from './store';
+import { createRouter } from './router';
+import App from './App.vue';
+
+const router = createRouter();
+Vue.use(VueAnalytics, {
+  id: ['UA-50235468-1'],
+  linkers: ['sendyit.com', 'sendy.co.ke', 'growth.sendyit.com', 'app.sendyit.com'],
+  router,
+  autoTracking: {
+    exception: true,
+    pageviewOnLoad: true,
+    pageviewTemplate(route) {
+      return {
+        page: route.path,
+        title: document.title,
+        location: window.location.href,
+      };
+    },
+  },
+  debug: {
+    enable: !isProd,
+    sendHitTask: isProd,
+  },
+});
+
+Vue.prototype.moment = moment;
+// configure language
+locale.use(lang);
 
 Vue.use(Pagination);
 Vue.use(RadioGroup);
@@ -85,9 +111,7 @@ Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
-
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-Vue.component("font-awesome-icon", FontAwesomeIcon);
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 export function createApp() {
   // create router and store instances
@@ -101,7 +125,7 @@ export function createApp() {
   const app = new Vue({
     router,
     store,
-    render: h => h(App)
+    render: h => h(App),
   });
 
   // expose the app, the router and the store.
