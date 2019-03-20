@@ -50,6 +50,9 @@ import { createRouter } from './router';
 import App from './App.vue';
 
 const router = createRouter();
+
+const isProd = process.env.NODE_ENV === 'production';
+
 Vue.use(VueAnalytics, {
   id: ['UA-50235468-1'],
   linkers: ['sendyit.com', 'sendy.co.ke', 'growth.sendyit.com', 'app.sendyit.com'],

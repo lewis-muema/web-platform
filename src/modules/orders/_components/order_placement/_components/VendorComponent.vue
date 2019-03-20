@@ -638,6 +638,12 @@ export default {
       try {
         if (analytics_env === 'production') {
           mixpanel.track(name);
+          this.$ga.event({
+            eventCategory: 'Orders',
+            eventAction: 'Price Request',
+            eventLabel: name,
+            eventValue: 14,
+          });
         }
       } catch (er) {}
     },
