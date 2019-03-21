@@ -5,7 +5,6 @@ import moment from 'moment';
 
 // import Element from "element-ui";
 // import "element-ui/lib/theme-chalk/index.css";
-import VueAnalytics from 'vue-analytics';
 
 import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
@@ -48,31 +47,6 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { createStore } from './store';
 import { createRouter } from './router';
 import App from './App.vue';
-
-const router = createRouter();
-
-const isProd = process.env.NODE_ENV === 'production';
-
-Vue.use(VueAnalytics, {
-  id: ['UA-50235468-1'],
-  linkers: ['sendyit.com', 'sendy.co.ke', 'growth.sendyit.com', 'app.sendyit.com'],
-  router,
-  autoTracking: {
-    exception: true,
-    pageviewOnLoad: true,
-    pageviewTemplate(route) {
-      return {
-        page: route.path,
-        title: document.title,
-        location: window.location.href,
-      };
-    },
-  },
-  debug: {
-    enable: !isProd,
-    sendHitTask: isProd,
-  },
-});
 
 Vue.prototype.moment = moment;
 // configure language

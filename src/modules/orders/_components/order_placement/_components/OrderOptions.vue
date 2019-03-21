@@ -824,12 +824,12 @@ export default {
       try {
         if (analytics_env === 'production') {
           mixpanel.track(name);
-          this.$ga.event({
-            eventCategory: 'Orders',
-            eventAction: 'Order Placement',
-            eventLabel: name,
-            eventValue: 15,
-          });
+          // this.$ga.event({
+          //   eventCategory: 'Orders',
+          //   eventAction: 'Order Placement',
+          //   eventLabel: name,
+          //   eventValue: 15,
+          // });
         }
       } catch (er) {}
     },
