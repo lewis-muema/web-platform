@@ -94,10 +94,20 @@ export default {
       login_text: 'Login',
     };
   },
+  mounted() {
+    this.landOnSignInPage();
+  },
   methods: {
     ...mapActions({
       authSignIn: '$_auth/requestSignIn',
     }),
+    landOnSignInPage() {
+      window.ga('send', {
+        hitType: 'pageview',
+        page: location.pathname,
+        title: 'View Page - Sign In - Web Platform',
+      });
+    },
     sign_in() {
       if (this.email !== '' && this.password !== '') {
         this.login_text = 'Logging in ...';
@@ -127,7 +137,7 @@ export default {
             }
             const middleString = partsOfToken[1];
             const data = atob(middleString);
-            const payload = JSON.parse(data).payload;
+            const { payload } = JSON.parse(data);
             if (response) {
               // set session
               // commit everything to the store
