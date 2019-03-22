@@ -222,7 +222,7 @@
                         class="home-view-truck-options-inner-wrapper"
                       >
                         <div class="home-view-truck-options-label">
-                          What is the minimum amount you are willing to pay for this order?
+                          How much are you offering to pay for this order?
                         </div>
                         <div>
                           <el-input
