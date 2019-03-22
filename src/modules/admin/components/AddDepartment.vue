@@ -34,35 +34,38 @@
 
     export default {
         name: 'AddDepartment',
-        mounted() {
-            let session = this.$store.getters.getSession;
-            let cop_id = 0;
-            if(session.default == 'biz'){
-                cop_id = session[session.default]['cop_id'];
-            }
-            let payload = {
-                "cop_id": cop_id
-
-            }
-            let users_full_payload = {
-                "values" : payload,
-                "vm":this,
-                "app":"NODE_PRIVATE_API",
-                "endpoint":"cop_users"
-            }
-            this.$store.dispatch("$_admin/requestUsersList", users_full_payload).then(response => {
-                console.log(response);
-            }, error => {
-                console.log(error);
-            });
-        },
         data() {
             return {
                 empty_departments_state: 'Adding Department',
                 filterData: {
-                    "user": ""
-                }
+                    'user': '',
+                },
+                department_name: '',
             }
+        },
+        mounted() {
+            let session = this.$store.getters.getSession;
+            let cop_id = 0;
+            if(session.default === 'biz'){
+                cop_id = session[session.default]['cop_id'];
+            }
+            let payload = {
+                'cop_id': cop_id,
+
+            }
+            let users_full_payload = {
+                'values' : payload,
+                'app':'NODE_PRIVATE_API',
+                'endpoint':'cop_users',
+            }
+            this.$store.dispatch('$_admin/requestUsersList', users_full_payload).then(response => {
+
+            }, error => {
+              let level = 2;
+              let notification = {'title': '', 'level': level, 'message': 'Something went wrong.'}; //notification object
+              this.$store.commit('setNotification', notification);
+              this.$store.commit('setNotificationStatus', true);
+            });
         },
         computed: {
             ...mapGetters({
@@ -77,33 +80,28 @@
             add_department: function () {
                 let session = this.$store.getters.getSession;
                 let cop_id = 0;
-                if (session.default == 'biz') {
+                if (session.default === 'biz') {
                     cop_id = session[session.default]['cop_id'];
                 }
                 let newDept_payload = {
-                    "cop_id": cop_id,
-                    "department_name": this.department_name,
-                    "cop_user_id": this.filterData.user
+                    'cop_id': cop_id,
+                    'department_name': this.department_name,
+                    'cop_user_id': this.filterData.user,
                 }
 
                 let full_payload = {
-                    "values": newDept_payload,
-                    "vm": this,
-                    "app": "NODE_PRIVATE_API",
-                    "endpoint": "cop_departments_add"
+                    'values': newDept_payload,
+                    'app': 'NODE_PRIVATE_API',
+                    'endpoint': 'cop_departments_add',
                 }
-                this.$store.dispatch("$_admin/addNewDepartment", full_payload).then(response => {
-                    console.log("department added");
-                    console.log(response);
+                this.$store.dispatch('$_admin/addNewDepartment', full_payload).then(response => {
                     let level = 1; //success
-                    let notification = {"title": "", "level": level, "message": "Department Added!"}; //notification object
+                    let notification = {'title': '', 'level': level, 'message': 'Department Added!'}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
                 }, error => {
-                    console.log("department NOT added");
-                    console.log(error);
                     let level = 2;
-                    let notification = {"title": "", "level": level, "message": "Something went wrong."}; //notification object
+                    let notification = {'title': '', 'level': level, 'message': 'Something went wrong.'}; //notification object
                     this.$store.commit('setNotification', notification);
                     this.$store.commit('setNotificationStatus', true); //activate notification
 

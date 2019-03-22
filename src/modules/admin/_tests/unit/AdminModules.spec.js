@@ -34,7 +34,20 @@ describe('Admin.vue', () => {
   // });
 });
 describe('AddDepartment.vue', () => {
-  it('checks the add department component', () => {});
+  // let getters;
+  // let store;
+  // let state ;
+  //
+  // beforeEach(() => {
+  //   getters = { 'getSession': () => 'biz' };
+  //   store = new Vuex.Store({
+  //     getters,
+  //   });
+  // });
+
+  it('checks the add department component', () => {
+    // const wrapper = mount(AddDepartment ,{sync : false , store});
+  });
 });
 describe('API.vue', () => {
   it('checks the API component', () => {});
@@ -67,7 +80,43 @@ describe('LinkShowComponent.vue', () => {
   it('checks the invite users - link show component', () => {});
 });
 describe('ManyComponent.vue', () => {
-  it('checks the invite users - many component', () => {});
+  let getters;
+  let store;
+  let state ;
+  let mutations ;
+  let actions ;
+
+  beforeEach(() => {
+    mutations = { '$_admin/setViewState': () => 1 };
+    store = new Vuex.Store({
+      getters,
+      mutations,
+    });
+  });
+  it('checks the many component if email is set', () => {
+      const wrapper = mount(ManyComponent ,{
+        sync : false ,
+        store,
+
+    });
+     wrapper.setData({
+       emailSet: 'clinton@sendy.co.ke'
+     });
+      expect(wrapper.vm.emailSet).equal('clinton@sendy.co.ke');
+
+  });
+  it('checks the many component if cancel button works', () => {
+      const wrapper = mount(ManyComponent ,{
+        sync : false ,
+        store,
+
+    });
+    wrapper.find(".show-link-justify").trigger("click");
+    wrapper.vm.get_inv();
+      // 
+      // expect(wrapper.vm.insane).equal(true);
+
+  });
 });
 describe('AddUser.vue', () => {
   it('checks the add user component', () => {});
