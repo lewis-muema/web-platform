@@ -85,6 +85,7 @@ export default {
       phone: '',
       contact_email: '',
       contact_name: '',
+      message : '',
     };
   },
   mounted() {

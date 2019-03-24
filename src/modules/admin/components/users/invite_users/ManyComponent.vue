@@ -32,7 +32,9 @@
         components: {},
         data() {
             return {
-                emailSet: ''
+                emailSet: '',
+                cancelInvite : false ,
+                inviteMany : false ,
             }
         },
         computed: {
@@ -52,6 +54,7 @@
             ),
             get_inv: function () {
                 this.updateViewState(1);
+                this.cancelInvite = true ;
             },
             inv_many: function () {
                 if (this.emailSet != '') {
@@ -65,8 +68,10 @@
                     this.newAdds(number)
                     this.updateInvites(data)
                     this.updateViewState(1);
+                    this.inviteMany = true ;
                 }
                 else {
+                    this.inviteMany = false ;
                     let level = 2;
                     let notification = {
                         "title": "",
