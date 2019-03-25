@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { mount } from '@vue/test-utils';
 import Vuex from 'vuex';
+import VueRouter from 'vue-router'
 import AddDepartment from '../../components/AddDepartment.vue';
 import API from '../../components/API.vue';
 import CompanyDetails from '../../components/CompanyDetails.vue';
@@ -20,6 +21,8 @@ import ManyComponent from '../../components/users/invite_users/ManyComponent.vue
 
 
 Vue.use(Vuex);
+Vue.use(VueRouter);
+const router = new VueRouter();
 const spy = sinon.spy();
 let session = {
           'peer': {},
@@ -42,11 +45,14 @@ let session = {
           'default': 'biz',
           'first_time': false,
 }
+let getters;
+let store;
+let state ;
+let mutations ;
+let actions ;
+
 
 describe('AddDepartment.vue', () => {
-  let getters;
-  let store;
-  let state ;
 
   beforeEach(() => {
     getters = {
@@ -64,11 +70,6 @@ describe('AddDepartment.vue', () => {
   });
 });
 describe('API.vue', () => {
-  let getters;
-  let store;
-  let state ;
-  let actions ;
-  let mutations ;
 
   beforeEach(() => {
     getters = {
@@ -79,20 +80,23 @@ describe('API.vue', () => {
           '$_admin/requestKeysList' : spy ,
           '$_admin/generateAPIKey' : spy ,
     };
-    // mutations = {
-    //      'setNotification' : () => {
-    //                                     title = '',
-    //                                     level = 1,
-    //                                     message = 'Key Generated!'
-    //                                 },
-    //       'setNotificationStatus' : () => true ,
-    // }
+    mutations = {
+         'setNotification' : () => {
+                                     'Key Generated!'
+                                    },
+          'setNotificationStatus' : () => true ,
+    }
     store = new Vuex.Store({
       getters,
       actions,
       mutations,
     });
   });
+
+  it('renders a vue instance in API Component', () => {
+  expect(mount(API , { store }).isVueInstance()).to.be.true;
+});
+
   it('checks the API component - generate API Key', () => {
     const wrapper = mount(API ,{
       sync : false ,
@@ -107,30 +111,30 @@ describe('API.vue', () => {
   });
 });
 describe('CompanyDetails.vue', () => {
-  let getters;
-  let store;
-  let state ;
-  let actions ;
 
   beforeEach(() => {
     getters = {
                'getSession': () => session,
               };
     actions = {
-         '$_admin/requestCopInfo' :spy ,
+         '$_admin/requestCopInfo' : spy ,
     }
     store = new Vuex.Store({
       getters,
       actions,
     });
   });
+//   it('renders a vue instance in Company Details component', () => {
+//   expect(mount(CompanyDetails , { store }).isVueInstance()).to.be.true;
+// });
+
   it('checks the company details component', () => {
     const wrapper = mount(CompanyDetails ,{
       sync : false ,
       store,
 
     });
-    wrapper.vm.save_cop();
+    wrapper.vm.set_data();
     // wrapper.setData({
     //   message: 'Details Saved!'
     // });
@@ -150,10 +154,6 @@ describe('Users.vue', () => {
   it('checks the admin users component', () => {});
 });
 describe('EndComponent.vue', () => {
-  let getters;
-  let store;
-  let state ;
-  let mutations ;
 
   beforeEach(() => {
     mutations = { '$_admin/setViewState': () => 1 ,
@@ -169,6 +169,11 @@ describe('EndComponent.vue', () => {
       mutations,
     });
   });
+
+  it('renders a vue instance in End component', () => {
+  expect(mount(EndComponent , { store }).isVueInstance()).to.be.true;
+});
+
   it('checks back button after sucessfull user invite ', () => {
     const wrapper = mount(EndComponent ,{
       sync : false ,
@@ -183,9 +188,6 @@ describe('InviteComponent.vue', () => {
   it('checks the invite users - invite component', () => {});
 });
 describe('LinkShowComponent.vue', () => {
-  let getters;
-  let store;
-  let mutations ;
 
   beforeEach(() => {
     mutations = {
@@ -203,6 +205,11 @@ describe('LinkShowComponent.vue', () => {
       mutations,
     });
   });
+
+  it('renders a vue instance in Link Show Component', () => {
+  expect(mount(LinkShowComponent , { store }).isVueInstance()).to.be.true;
+});
+
   it('checks the invite users - copy link  option', () => {
     const wrapper = mount(LinkShowComponent ,{
       sync : false ,
@@ -216,11 +223,6 @@ describe('LinkShowComponent.vue', () => {
   });
 });
 describe('ManyComponent.vue', () => {
-  let getters;
-  let store;
-  let state ;
-  let mutations ;
-  let actions ;
 
   beforeEach(() => {
     mutations = { '$_admin/setViewState': () => 1 ,
@@ -232,6 +234,9 @@ describe('ManyComponent.vue', () => {
       mutations,
     });
   });
+  it('renders a vue instance in Many Component', () => {
+  expect(mount(ManyComponent).isVueInstance()).to.be.true;
+});
   it('checks the many component if email is set', () => {
       const wrapper = mount(ManyComponent ,{
         sync : false ,
@@ -272,11 +277,79 @@ describe('ManyComponent.vue', () => {
   });
 });
 describe('AddUser.vue', () => {
-  it('checks the add user component', () => {});
+
+  beforeEach(() => {
+    getters = { '$_admin/getViewState': () => 1 ,
+                '$_admin/getAdds' : () => '',
+                '$_admin/getDepartmentsList' : () => '',
+
+  };
+    store = new Vuex.Store({
+      getters,
+    });
+  });
+
+  it('renders a vue instance in Add User Component', () => {
+  expect(mount(AddUser , { store }).isVueInstance()).to.be.true;
+});
+
+  it('checks the add user component', () => {
+    const wrapper = mount(AddUser ,{
+      sync : false ,
+      store,
+
+  });
+  });
 });
 describe('EditUser.vue', () => {
-  it('checks the edit user component', () => {});
+
+  beforeEach(() => {
+    getters = {
+                 userData : () => '',
+                '$_admin/getDepartmentsList' : () => '',
+
+              };
+    actions = {
+                '$_admin/requestCopInfo' :spy ,
+              };
+
+    store = new Vuex.Store({
+      getters,
+      actions,
+    });
+  });
+  it('checks the edit user component', () => {
+  //   const wrapper = mount(EditUser ,{
+  //     sync : false ,
+  //     store,
+  //     router,
+  //
+  // });
+  });
 });
 describe('ListUsers.vue', () => {
-  it('checks the list users component', () => {});
+  beforeEach(() => {
+    getters = {
+                 userData : () => '',
+                '$_admin/getDepartmentsList' : () => '',
+                'getSession': () => session,
+
+              };
+    actions = {
+                '$_admin/requestUsersList' :spy ,
+              };
+
+    store = new Vuex.Store({
+      getters,
+      actions,
+    });
+  });
+  it('checks the list users component', () => {
+    //   const wrapper = mount(ListUsers ,{
+    //     sync : false ,
+    //     store,
+    //     router,
+    //
+    // });
+  });
 });
