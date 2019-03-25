@@ -12,10 +12,8 @@ unitTest:
   stage: test
   # What scripts do we want to run?
   script:
-    # install mocha
-    - npm i mocha
+
     # install mocha-webpack
-    
     - npm i mocha-webpack
     # Run tests
     - npm run test
