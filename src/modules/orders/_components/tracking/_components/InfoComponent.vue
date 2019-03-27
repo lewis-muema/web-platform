@@ -165,7 +165,7 @@
                       class="infobar-truck-img"
                     >
                     <span class="info-text-transform">
-                      {{tracking_data.rider.vendor_name }}
+                      {{this.vendorName }}
                     </span>
                     </div>
                   </div>
@@ -331,7 +331,7 @@
                       </li>
 
                       <!-- Pricing check -->
-                      <li id="timeline_right" v-bind:class="{timelinePay :isPayed,payedReached :setPayed }">
+                      <li  v-if="! [1,2,3,23].includes(tracking_data.rider.vendor_id)" id="timeline_right" v-bind:class="{timelinePay :isPayed,payedReached :setPayed }">
                         <div class="">
                           <p class="info-text-transform infor-top-bar-text">
                             Price Confirmation
@@ -394,6 +394,7 @@
                            <p>
                             Your Order has been confirmed by {{ tracking_data.rider.rider_name  }}
                           </p>
+                          <p>{{this.confirm_eta}}</p>
                         </div>
                       </li>
 
@@ -881,6 +882,7 @@ export default {
       setPicked:false,
       setDelivered:false,
       setPayed : true ,
+      vendorName : '',
     };
   },
   computed: {
@@ -890,6 +892,7 @@ export default {
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
     }),
     order_eta() {
+      this.checkVendorName();
       if (this.tracking_data.confirm_status === 0) {
         this.setPayed = false ,
         this.isPayed = true ;
@@ -1094,6 +1097,19 @@ export default {
     getVendorIcon(id){
       return `https://images.sendyit.com/web_platform/vendor_type/side/${id}.svg`;
 
+    },
+    checkVendorName(){
+      if(this.tracking_data.rider.vendor_name === 'Bike' ){
+        if(this.tracking_data.rider.vendor_id === 1){
+          this.vendorName = 'Express';
+        }
+        else{
+          this.vendorName = 'Standard';
+        }
+      }
+      else{
+        this.vendorName = this.tracking_data.rider.vendor_name;
+      }
     },
     checkScheduler(){
       let schedulerRange = moment().add(2, 'h');
@@ -1484,16 +1500,16 @@ ul.timeline > li {
 }
 ul.timeline > li:before {
     /* content: ' '; */
-    background: #51A65B;
+    background: #1B7FC3;
     display: inline-block;
     position: absolute;
     border-radius: 50%;
-    border: 3px solid #51A65B;
+    border: 3px solid #1B7FC3;
     left: 20px;
     width: 14px;
     height: 14px;
     z-index: 400;
-    content: '✓';
+    content: '';
     font-size: 16px;
     color: white ;
 
