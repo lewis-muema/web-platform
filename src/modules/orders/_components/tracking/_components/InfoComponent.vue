@@ -331,7 +331,7 @@
                       </li>
 
                       <!-- Pricing check -->
-                      <li  v-if="! [1,2,3,23].includes(tracking_data.rider.vendor_id)" id="timeline_right" v-bind:class="{timelinePay :isPayed,payedReached :setPayed }">
+                      <li  v-if="! this.non_truck_orders.includes(tracking_data.rider.vendor_id)" id="timeline_right" v-bind:class="{timelinePay :isPayed,payedReached :setPayed }">
                         <div class="">
                           <p class="info-text-transform infor-top-bar-text">
                             Price Confirmation
@@ -883,6 +883,7 @@ export default {
       setDelivered:false,
       setPayed : true ,
       vendorName : '',
+      non_truck_orders : [1,2,3,23],
     };
   },
   computed: {
@@ -1100,12 +1101,10 @@ export default {
     },
     checkVendorName(){
       if(this.tracking_data.rider.vendor_name === 'Bike' ){
-        if(this.tracking_data.rider.vendor_id === 1){
           this.vendorName = 'Express';
-        }
-        else{
+      }
+      else if (this.tracking_data.rider.vendor_name === 'Economy Bike' ) {
           this.vendorName = 'Standard';
-        }
       }
       else{
         this.vendorName = this.tracking_data.rider.vendor_name;
