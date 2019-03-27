@@ -1,45 +1,67 @@
 <template lang="html">
-
   <div class="home-view-vendor-and-optins-wrappper">
-    <div class="home-view--seperator">
-    </div>
+    <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
-        Load Size And Delivery Type
+      Load Size And Delivery Type
     </div>
     <div class="home-view-vendor-classes">
       <div class="home-view-vendor-classes--body">
-
         <div class="">
           <div class="home-view-vendor-classes--label">
-            <div class="home-view-vendor-classes-label-item" v-for="(vendor_class, index) in getPriceRequestObject.economy_price_tiers" :key="index" @click="setActivePackageClassWrapper(vendor_class.tier_group)"
-              v-if="vendor_class.price_tiers.length > 0">
-              <a class="home-view-vendor-classes-menu section__link" :class="getCurrentActivePackageClass(vendor_class.tier_group)">
-                <img :src="getPackageIcon(vendor_class.tier_group)" class="home-view-vendor-classes-menu--img" alt="vendor_class.tier_group">
-                <span class="home-view-vendor-classes-menu--span">{{vendor_class.tier_group}}</span>
+            <div
+              v-for="(vendor_class, index) in getPriceRequestObject.economy_price_tiers"
+              v-if="vendor_class.price_tiers.length > 0"
+              :key="index"
+              class="home-view-vendor-classes-label-item"
+              @click="setActivePackageClassWrapper(vendor_class.tier_group)"
+            >
+              <a
+                class="home-view-vendor-classes-menu section__link"
+                :class="getCurrentActivePackageClass(vendor_class.tier_group)"
+              >
+                <img
+                  :src="getPackageIcon(vendor_class.tier_group)"
+                  class="home-view-vendor-classes-menu--img"
+                  alt="vendor_class.tier_group"
+                >
+                <span class="home-view-vendor-classes-menu--span">
+                  {{ vendor_class.tier_group }}
+                </span>
               </a>
             </div>
           </div>
         </div>
 
         <!-- start vendor types wrapper -->
-        <div class="home-view-vendor-types" v-if="activePackageClassPriceData !== '' ">
-
+        <div
+          v-if="activePackageClassPriceData !== ''"
+          class="home-view-vendor-types"
+        >
           <!-- start vendor types loop -->
-          <div v-for="j in activePackageClassPriceData.price_tiers" :key="j.order_no" @click="setVendorDetails(j);">
-
-            <div class="home-view-vendor-types--item home-view-vendor-types-item-wrap" :class="getCurrentActiveTendorTypeClass(j.vendor_name)">
-
+          <div
+            v-for="j in activePackageClassPriceData.price_tiers"
+            :key="j.order_no"
+            @click="setVendorDetails(j)"
+          >
+            <div
+              class="home-view-vendor-types--item home-view-vendor-types-item-wrap"
+              :class="getCurrentActiveTendorTypeClass(j.vendor_name)"
+            >
               <!-- start vendor wrapper -->
               <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
                 <div class="home-view-vendor-types-item--vendor-wrapper__img">
-                  <img class="home-view-vendor-types-item__image" :src="getVendorIcon(j.vendor_id)" alt="">
+                  <img
+                    class="home-view-vendor-types-item__image"
+                    :src="getVendorIcon(j.vendor_id)"
+                    alt=""
+                  >
                 </div>
                 <div class="home-view-vendor-types-item--vendor-wrapper__vendor">
                   <div class="home-view-vendor-types-item-vendor--vendor-formal-name">
-                    {{j.vendor_name}}
+                    {{ j.vendor_name }}
                   </div>
                   <div class="home-view-vendor-types-item-vendor--vendor-local-name">
-                    {{j.vendor_description}}
+                    {{ getVendorDescription(j) }}
                   </div>
                 </div>
               </div>
@@ -47,143 +69,240 @@
 
               <!-- start cost wrapper -->
               <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper">
-
-                <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-left">
+                <div
+                  class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-left"
+                >
                   <div class="home-view-vendor-types-item--cost-wrapper__cost">
                     <span v-if="!isFixedCost(j)">
                       Price to be confirmed
                     </span>
                     <span v-else>
-                      Ksh {{getVendorPrice(j)}}
+                      Ksh {{ getVendorPrice(j) }}
                     </span>
                   </div>
                   <div class="home-view-vendor-types-item--cost-wrapper_time">
-                    Pickup by {{transformDate(j)}}
+                    Pickup by {{ transformDate(j) }}
                   </div>
                 </div>
 
-                <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right">
-                  <el-popover placement="right" width="350" trigger="hover">
-                      <div class="reset-font" v-html="j.tier_description"></div>
-                      <span slot="reference"><i class="el-icon-info"></i></span>
+                <div
+                  class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right"
+                >
+                  <el-popover
+                    placement="right"
+                    width="350"
+                    trigger="hover"
+                  >
+                    <div
+                      class="reset-font"
+                      v-html="j.tier_description"
+                    />
+                    <span slot="reference">
+                      <i class="el-icon-info" />
+                    </span>
                   </el-popover>
                 </div>
-
               </div>
               <!-- end cost wrapper -->
 
               <!-- start carrier type transition -->
               <transition name="home-carrier-type-fade">
-
                 <!-- start carrier type section -->
-                <div class="home-view-carrier-type" v-if="expandVendorOptions(j)">
-
-                  <!-- start large vendors -->
-                  <div v-if="get_active_package_class === 'large'"  class="home-view-truck-options-wrapper">
-                    <div class="home-view-truck-options-divider">
-                    </div>
+                <div
+                  v-if="expandVendorOptions(j)"
+                  class="home-view-carrier-type"
+                >
+                  <!-- start large /medium vendors -->
+                  <div
+                    v-if="
+                      get_active_package_class === 'large' || get_active_package_class === 'medium'
+                    "
+                    class="home-view-truck-options-wrapper"
+                  >
+                    <div
+                      v-if="get_active_package_class === 'large'"
+                      class="home-view-truck-options-divider"
+                    />
 
                     <div class="home-view-truck-options-inner-wrapper">
-                      <div class="home-view-truck-options-label">
+                      <div
+                        v-if="get_active_package_class === 'large'"
+                        class="home-view-truck-options-label"
+                      >
                         What type of truck do you want?
                       </div>
+                      <div
+                        v-else
+                        class="home-view-truck-options-label"
+                      >
+                        What type of {{ getVendorNameOnCarrierType }} do you want?
+                      </div>
                       <div class="home-view-truck-options-inner--full-select">
-                        <el-select v-model="carrier_type" @change="dispatchCarrierType" placeholder="" >
+                        <el-select
+                          v-model="carrier_type"
+                          placeholder=""
+                          @change="dispatchCarrierType"
+                        >
                           <el-option
                             v-for="item in truckOptions"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value">
-                          </el-option>
+                            :value="item.value"
+                          />
                         </el-select>
                       </div>
                     </div>
-
-                    <div class="home-view-truck-options-inner-wrapper" v-if="Number(carrier_type) === 3">
-                      <div class="home-view-truck-options-label">
-                        Temperature shouldn't exceed? (°C)
+                    <div v-if="get_active_package_class === 'large'">
+                      <div
+                        v-if="Number(carrier_type) === 3"
+                        class="home-view-truck-options-inner-wrapper"
+                      >
+                        <div class="home-view-truck-options-label">
+                          Temperature shouldn't exceed? (°C)
+                        </div>
+                        <div class="home-view-truck-options-inner--number-of-loaders">
+                          <el-input-number
+                            v-model.trim="max_temperature"
+                            :min="1"
+                            :max="10"
+                            @change="handleChangeInMaxTemperature"
+                          />
+                        </div>
                       </div>
-                      <div class="home-view-truck-options-inner--number-of-loaders">
-                        <el-input-number v-model.trim="max_temperature" @change="handleChangeInMaxTemperature" :min="1" :max="10" ></el-input-number>
+
+                      <div class="home-view-truck-options-inner-wrapper">
+                        <div class="home-view-truck-options-label">
+                          What do you want delivered?
+                        </div>
+                        <div>
+                          <el-input
+                            v-model.trim="delivery_item"
+                            placeholder="(Enter text)"
+                            autocomplete="true"
+                            @change="dispatchDeliveryItem"
+                          />
+                          <!-- TO DO: Handle autocomplete -->
+                        </div>
+                      </div>
+
+                      <div class="home-view-truck-options-inner-wrapper">
+                        <div class="home-view-truck-options-label">
+                          What is the approximate weight of the load?
+                        </div>
+                        <div class="home-view-truck-options-inner--load-weight">
+                          <el-input
+                            v-model="load_weight"
+                            type="number"
+                            placeholder="(Enter load weight)"
+                            :min="0"
+                            :max="getMaxAllowedWeight"
+                            @input="dispatchLoadWeight"
+                          >
+                            <el-select
+                              slot="append"
+                              v-model="load_units"
+                              placeholder="Tonnes"
+                              @change="dispatchLoadUnits"
+                            >
+                              <el-option
+                                label="KG"
+                                value="kgs"
+                              />
+                              <el-option
+                                label="Tonnes"
+                                value="tonnes"
+                              />
+                            </el-select>
+                          </el-input>
+                        </div>
+                      </div>
+
+                      <div
+                        v-if="!isFixedCost(j)"
+                        class="home-view-truck-options-inner-wrapper"
+                      >
+                        <div class="home-view-truck-options-label">
+                          How much are you offering to pay for this order?
+                        </div>
+                        <div>
+                          <el-input
+                            v-model.trim="customer_min_amount"
+                            :min="0"
+                            type="number"
+                            placeholder="Kes"
+                            @change="handleChangeInMinAmount"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="home-view-truck-options-inner-wrapper">
+                        <div class="home-view-truck-options-label">
+                          Do you want us to provide you with Loader/s?
+                        </div>
+                        <div class="">
+                          <el-radio
+                            v-model="additional_loader"
+                            label="1"
+                            @change="dispatchAdditionalLoaderStatus"
+                          >
+                            Yes
+                          </el-radio>
+                          <el-radio
+                            v-model="additional_loader"
+                            label="0"
+                            @change="dispatchAdditionalLoaderStatus"
+                          >
+                            No
+                          </el-radio>
+                        </div>
+                      </div>
+
+                      <div
+                        v-if="Number(additional_loader) === 1"
+                        class="home-view-truck-options-inner-wrapper"
+                      >
+                        <div class="home-view-truck-options-label">
+                          How many Loaders do you require?
+                        </div>
+                        <div class="home-view-truck-options-inner--number-of-loaders">
+                          <el-input-number
+                            v-model="number_of_loaders"
+                            :min="1"
+                            :max="10"
+                            @change="handleChangeInNumberOfLoaders"
+                          />
+                        </div>
                       </div>
                     </div>
-
-                    <div class="home-view-truck-options-inner-wrapper">
-                      <div class="home-view-truck-options-label">
-                        What do you want delivered?
-                      </div>
-                      <div>
-                        <el-input placeholder="(Enter text)" v-model.trim="delivery_item" @change="dispatchDeliveryItem" autocomplete="true"></el-input>
-                        <!-- TO DO: Handle autocomplete -->
-                      </div>
-                    </div>
-
-                    <div class="home-view-truck-options-inner-wrapper">
-                      <div class="home-view-truck-options-label">
-                        What is the approximate weight of the load?
-                      </div>
-                      <div class="home-view-truck-options-inner--load-weight">
-                        <el-input type="number" placeholder="(Enter load weight)" v-model="load_weight" :min="0" :max="getMaxAllowedWeight" @input="dispatchLoadWeight">
-                          <el-select v-model="load_units" slot="append" placeholder="Tonnes" @change="dispatchLoadUnits">
-                            <el-option label="KG" value="kgs"></el-option>
-                            <el-option label="Tonnes" value="tonnes"></el-option>
-                          </el-select>
-                        </el-input>
-                      </div>
-                    </div>
-
-                    <div class="home-view-truck-options-inner-wrapper" v-if="!isFixedCost(j)">
-                      <div class="home-view-truck-options-label">
-                       What is the minimum amount you are willing to pay for this order?
-                      </div>
-                      <div>
-                        <el-input v-model.trim="customer_min_amount" @change="handleChangeInMinAmount" :min="0" type="number" placeholder="Kes"></el-input>
-                      </div>
-                    </div>
-                    
-                    <div class="home-view-truck-options-inner-wrapper">
-                      <div class="home-view-truck-options-label">
-                        Do you want us to provide you with Loader/s?
-                      </div>
-                      <div class="">
-                        <el-radio v-model="additional_loader" @change="dispatchAdditionalLoaderStatus" label="1">Yes</el-radio>
-                        <el-radio v-model="additional_loader" @change="dispatchAdditionalLoaderStatus" label="0">No</el-radio>
-                      </div>
-                    </div>
-
-                    <div class="home-view-truck-options-inner-wrapper" v-if="Number(additional_loader) === 1">
-                      <div class="home-view-truck-options-label">
-                        How many Loaders do you require?
-                      </div>
-                      <div class="home-view-truck-options-inner--number-of-loaders">
-                        <el-input-number v-model="number_of_loaders" @change="handleChangeInNumberOfLoaders" :min="1" :max="10"></el-input-number>
-                      </div>
-                    </div>
-
                   </div>
                   <!-- end large vendors -->
 
                   <!-- start small vendors -->
-                  <div v-else class="home-view-truck-options-wrapper" >
+                  <div
+                    v-else
+                    class="home-view-truck-options-wrapper"
+                  >
                     <div class="home-view-truck-options-inner-wrapper">
                       <div class="home-view-truck-options-label">
-                         What type of {{getVendorNameOnCarrierType}} do you want?
+                        What type of {{ getVendorNameOnCarrierType }} do you want?
                       </div>
-                      <div class="home-view-carrier-type home-view-carrier-type--left-aligned">
-                        <div class="home-view-carrier-type--item">
-                          <el-radio v-model="carrier_type" label="2" @input="dispatchCarrierType">Any</el-radio>
-                        </div>
-                        <div class="home-view-carrier-type--item">
-                          <el-radio v-model="carrier_type" label="1" @input="dispatchCarrierType">{{getCarrierBoxName()}}</el-radio>
-                        </div>
-                        <div class="home-view-carrier-type--item">
-                          <el-radio v-model="carrier_type" label="0" @input="dispatchCarrierType">{{getCarrierNoBoxName()}}</el-radio>
-                        </div>
+                      <div class="home-view-truck-options-inner--full-select">
+                        <el-select
+                          v-model="carrier_type"
+                          placeholder=""
+                          @change="dispatchCarrierType"
+                        >
+                          <el-option
+                            v-for="item in smallVendorOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                          />
+                        </el-select>
                       </div>
                     </div>
                   </div>
                   <!-- end small vendors -->
-
                 </div>
                 <!-- end carrier type section -->
               </transition>
@@ -193,24 +312,20 @@
           <!-- end vendor type loop -->
         </div>
         <!-- end vendor types wrapper -->
-
       </div>
     </div>
-    <div class="" v-if="get_active_package_class !== '' ">
-      <order-options v-on:destroyOrderOptions="destroyVendorComponent()"></order-options>
+    <div
+      v-if="get_active_package_class !== ''"
+      class=""
+    >
+      <order-options @destroyOrderOptions="destroyVendorComponent()" />
     </div>
   </div>
-
 </template>
 
 <script>
 import numeral from 'numeral';
-import {
-  mapActions,
-  mapGetters,
-  mapMutations,
-}
-from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import OrderOptions from './OrderOptions.vue';
 
 export default {
@@ -221,27 +336,41 @@ export default {
     return {
       first_time: false,
       popover_visible: false,
-      additional_loader:false,
+      additional_loader: false,
       carrier_type: '2',
-      number_of_loaders:1,
-      max_temperature:4,
+      number_of_loaders: 1,
+      max_temperature: 4,
       delivery_item: '',
-      load_weight:'',
-      load_units:'',
+      load_weight: '',
+      load_units: '',
       customer_min_amount: '',
-      vendors_with_fixed_carrier_type: ['Standard','Runner', 'Van'],
-      vendors_without_return: ['Standard','Runner'],
+      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
+      vendors_without_return: ['Standard', 'Runner'],
       baseTruckOptions: [
         {
           value: '0',
-          label: 'Open'
+          label: 'Open',
         },
         {
           value: '1',
-          label: 'Closed'
+          label: 'Closed',
         },
       ],
-    }
+      smallVendorOptions: [
+        {
+          value: '2',
+          label: 'Any',
+        },
+        {
+          value: '1',
+          label: 'Box',
+        },
+        {
+          value: '0',
+          label: 'No Box',
+        },
+      ],
+    };
   },
   computed: {
     ...mapGetters({
@@ -249,7 +378,7 @@ export default {
       get_active_vendor_name: '$_orders/$_home/get_active_vendor_name',
       get_vendor_carrier_type: '$_orders/$_home/get_carrier_type',
       getPriceRequestObject: '$_orders/$_home/get_price_request_object',
-      getReturnStatus : '$_orders/$_home/getReturnStatus',
+      getReturnStatus: '$_orders/$_home/getReturnStatus',
       activeVendorPriceData: '$_orders/$_home/get_active_vendor_details',
       getMaxTemperature: '$_orders/$_home/getMaxTemperature',
       getCustomerMinAmount: '$_orders/$_home/getCustomerMinAmount',
@@ -258,54 +387,67 @@ export default {
       getLoadUnits: '$_orders/$_home/getLoadUnits',
       getAdditionalLoaderStatus: '$_orders/$_home/getAdditionalLoaderStatus',
       getNOOfLoaders: '$_orders/$_home/getNOOfLoaders',
-
     }),
 
-    activePackageClassPriceData: function() {
+    activePackageClassPriceData() {
       if (this.get_active_package_class !== '') {
         return this.getPriceRequestObject.economy_price_tiers.find(
-          pack => pack.tier_group === this.get_active_package_class
-        )
+          pack => pack.tier_group === this.get_active_package_class,
+        );
       }
       return '';
     },
 
+    truckOptions() {
+      if (this.get_active_package_class === 'medium') {
+        return this.mediumOptions;
+      }
+      return this.largeOptions;
+    },
+    mediumOptions() {
+      const custom_vendor_options = [
+        {
+          value: '2',
+          label: 'Any',
+        },
+      ];
 
-    truckOptions: function(){
-      let custom_vendor_options = {};
-      if(this.activeVendorPriceData.hasOwnProperty('available_options')){
-        if(this.activeVendorPriceData.available_options.refrigerated){
+      return custom_vendor_options.concat(this.baseTruckOptions);
+    },
+    largeOptions() {
+      const custom_vendor_options = {};
+      if (this.activeVendorPriceData.hasOwnProperty('available_options')) {
+        if (this.activeVendorPriceData.available_options.refrigerated) {
           custom_vendor_options.value = '3';
           custom_vendor_options.label = 'Refrigerated';
         }
 
-        if(this.activeVendorPriceData.available_options.flatbed){
+        if (this.activeVendorPriceData.available_options.flatbed) {
           custom_vendor_options.value = '4';
           custom_vendor_options.label = 'Flatbed';
         }
-
       }
+
       return this.baseTruckOptions.concat(custom_vendor_options);
     },
 
-    getVendorNameOnCarrierType: function(){
+    getVendorNameOnCarrierType() {
       let vendor_disp_name = 'motorbike';
-      if(this.get_active_package_class === 'medium'){
+      if (this.get_active_package_class === 'medium') {
         vendor_disp_name = this.get_active_vendor_name;
       }
       return vendor_disp_name.toLowerCase();
     },
 
-    getMaxAllowedWeight(){
-      if(this.get_active_package_class === 'large'){
-        let weight = Number(this.get_active_vendor_name.slice(0, -10));
-        if(this.getLoadUnits !== 'tonnes'){
+    getMaxAllowedWeight() {
+      if (this.get_active_package_class === 'large') {
+        const weight = Number(this.get_active_vendor_name.slice(0, -10));
+        if (this.getLoadUnits !== 'tonnes') {
           return weight * 1000;
         }
         return weight;
       }
     },
-
   },
 
   methods: {
@@ -324,7 +466,7 @@ export default {
     }),
 
     dispatchCarrierType() {
-      let type = this.carrier_type;
+      const type = this.carrier_type;
       this.setCarrierType(type);
     },
 
@@ -335,15 +477,16 @@ export default {
     dispatchLoadWeight(val) {
       val = Number(val);
       let dispatch_value = val;
-      if(val > this.getMaxAllowedWeight){
-         this.doNotification(
-            '2',
-            'The weight of the load exceeds the truck capacity',
-            `The weight of the load exceeds the capacity of the truck you selected, please select a truck that fits ${val} ${this.getLoadUnits}.`,
+      if (val > this.getMaxAllowedWeight) {
+        this.doNotification(
+          '2',
+          'The weight of the load exceeds the truck capacity',
+          `The weight of the load exceeds the capacity of the truck you selected, please select a truck that fits ${val} ${
+            this.getLoadUnits
+          }.`,
         );
         dispatch_value = this.getMaxAllowedWeight;
         this.load_weight = dispatch_value;
-
       }
       this.setLoadWeight(dispatch_value);
     },
@@ -357,14 +500,14 @@ export default {
     },
 
     handleChangeInNumberOfLoaders(val) {
-        this.setNOOfLoaders(val);
+      this.setNOOfLoaders(val);
     },
 
-    handleChangeInMaxTemperature(val){
+    handleChangeInMaxTemperature(val) {
       this.setMaxTemperature(val);
     },
 
-    handleChangeInMinAmount(val){
+    handleChangeInMinAmount(val) {
       this.setCustomerMinAmount(val);
     },
 
@@ -383,13 +526,13 @@ export default {
 
     getCurrentActivePackageClass(name) {
       return {
-        'router-link-active': name === this.get_active_package_class
+        'router-link-active': name === this.get_active_package_class,
       };
     },
 
     getCurrentActiveTendorTypeClass(name) {
       return {
-        'home-view-vendor-types--item__active': name === this.get_active_vendor_name
+        'home-view-vendor-types--item__active': name === this.get_active_vendor_name,
       };
     },
 
@@ -400,41 +543,43 @@ export default {
       if (vendor_details.hasOwnProperty('customer_eta')) {
         return this.moment(vendor_details.customer_eta, 'YYYY-MM-DD HH:mm:ss').format('hh.mm a');
       }
-      return this.moment().add(vendor_details.eta, 'seconds').format('hh.mm a');
+      return this.moment()
+        .add(vendor_details.eta, 'seconds')
+        .format('hh.mm a');
     },
 
-    getPlainVendorPrice(vendorObject){
-      if(this.getReturnStatus !== true || this.vendors_without_return.includes(vendorObject.vendor_name)){
+    getPlainVendorPrice(vendorObject) {
+      if (!this.getReturnStatus || this.vendors_without_return.includes(vendorObject.vendor_name)) {
         return vendorObject.cost;
       }
       return vendorObject.return_cost;
     },
 
-    getVendorPrice(vendorObject){
+    getVendorPrice(vendorObject) {
       return numeral(this.getPlainVendorPrice(vendorObject)).format('0,0');
     },
 
-    getMinVendorPrice(vendorObject){
-      const price =  this.getPlainVendorPrice(vendorObject) * ((100 - vendorObject.price_variance)/100);
+    getMinVendorPrice(vendorObject) {
+      const price = this.getPlainVendorPrice(vendorObject) * ((100 - vendorObject.price_variance) / 100);
       return numeral(price).format('0');
     },
 
-    getMaxVendorPrice(vendorObject){
-      const price = this.getPlainVendorPrice(vendorObject) * ((100 + vendorObject.price_variance)/100);
-       return numeral(price).format('0');
+    getMaxVendorPrice(vendorObject) {
+      const price = this.getPlainVendorPrice(vendorObject) * ((100 + vendorObject.price_variance) / 100);
+      return numeral(price).format('0');
     },
 
-    isFixedCost(vendorObject){
-      if(vendorObject.vendor_id === 20 && !this.getPriceRequestObject.fixed_cost){
+    isFixedCost(vendorObject) {
+      if (vendorObject.vendor_id === 20 && !this.getPriceRequestObject.fixed_cost) {
         return false;
       }
       return true;
     },
 
     setFirstTimeUser() {
-      let session = this.$store.getters.getSession;
+      const session = this.$store.getters.getSession;
       if (session.hasOwnProperty('first_time')) {
-        if (session.first_time !== false) {
+        if (session.first_time) {
           this.first_time = true;
         }
       }
@@ -456,51 +601,54 @@ export default {
       return this.get_active_package_class === 'small' ? 'No Box' : 'Open';
     },
 
-    expandVendorOptions(vendor){
-      return !this.vendors_with_fixed_carrier_type.includes(vendor.vendor_name) && vendor.vendor_name === this.get_active_vendor_name;
+    expandVendorOptions(vendor) {
+      return (
+        !this.vendors_with_fixed_carrier_type.includes(vendor.vendor_name)
+        && vendor.vendor_name === this.get_active_vendor_name
+      );
     },
 
-    setVendorDetails(vendorObject){
+    setVendorDetails(vendorObject) {
       this.setActiveVendorName(vendorObject.vendor_name);
       this.setActiveVendorDetails(vendorObject);
       this.reCheckCarrierType();
       this.trackMixpanelEvent(`Select Vendor: ${vendorObject.vendor_name}`);
     },
 
-    reCheckCarrierType(){
-      if(this.get_active_package_class === 'large' && Number(this.carrier_type) === 2){
+    reCheckCarrierType() {
+      if (this.get_active_package_class === 'large' && Number(this.carrier_type) === 2) {
         this.carrier_type = '1';
         this.dispatchCarrierType();
-      } else if(this.get_active_package_class !== 'large'){
-        let allowed_carrier_types = ['0','1','2'];
-        if(!allowed_carrier_types.includes(this.carrier_type)){
+      } else if (this.get_active_package_class !== 'large') {
+        const allowed_carrier_types = ['0', '1', '2'];
+        if (!allowed_carrier_types.includes(this.carrier_type)) {
           this.carrier_type = '2';
           this.dispatchCarrierType();
         }
-      } else{
+      } else {
       }
     },
 
-    trackMixpanelEvent(name){
+    trackMixpanelEvent(name) {
       let analytics_env = '';
       try {
         analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      }
-      catch (er) {
+      } catch (er) {}
 
-      }
-
-      try{
-        if(analytics_env === 'production'){
+      try {
+        if (analytics_env === 'production') {
           mixpanel.track(name);
+          // this.$ga.event({
+          //   eventCategory: 'Orders',
+          //   eventAction: 'Price Request',
+          //   eventLabel: name,
+          //   eventValue: 14,
+          // });
         }
-      }
-      catch(er){
-
-      }
+      } catch (er) {}
     },
 
-    initializeVendorComponent(){
+    initializeVendorComponent() {
       this.carrier_type = this.get_vendor_carrier_type;
       this.number_of_loaders = this.getNOOfLoaders;
       this.max_temperature = this.getMaxTemperature;
@@ -509,7 +657,6 @@ export default {
       this.load_units = this.getLoadUnits;
       this.additional_loader = this.getAdditionalLoaderStatus;
       this.customer_min_amount = this.getCustomerMinAmount;
-
     },
 
     doNotification(level, title, message) {
@@ -522,6 +669,18 @@ export default {
       this.$store.commit('setNotification', notification);
     },
 
+    getVendorDescription(vendorObject){
+      if(vendorObject.vendor_id === 22){
+        return 'In 2 to 4 hours';
+      }
+      return vendorObject.vendor_description;
+    },
+  },
+
+  watch: {
+    get_active_package_class(new_val, old_val) {
+      this.reCheckCarrierType();
+    },
   },
 
   created() {
@@ -532,19 +691,10 @@ export default {
   mounted() {
     this.reCheckCarrierType();
   },
-
-  watch: {
-    get_active_package_class(new_val,old_val){
-      this.reCheckCarrierType();
-    },
-  },
-
-}
-
+};
 </script>
 
 <style lang="css" scoped>
 
-  @import "../../../../../assets/styles/orders_order_placement_vendors.css";
-
+@import "../../../../../assets/styles/orders_order_placement_vendors.css";
 </style>
