@@ -273,7 +273,7 @@
                       alt=""
                       class="infobar-truck-img"
                     >
-                    Additional Information
+                    Notes
                   </div>
                   <div
                     v-if="tracking_data.order_notes.length > 0"
