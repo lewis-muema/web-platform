@@ -115,7 +115,7 @@
               class="infobar-content infobar--truck-cont-item infobar--truck-cont-padding"
             >
               <el-col :span="5">
-                <div class="infobar--item-truck-cont-bordered inforbar--item-scrollable">
+                <div class="inforbar--item-scrollable">
                   <ul class="timeline inforbar_route_timeline">
                     <li>
                       <p class="info-text-transform infor-top-bar-text">
@@ -139,7 +139,7 @@
                 </div>
               </el-col>
               <el-col :span="5">
-                <div class="infobar--item-truck-cont-bordered tracking-loader-outer">
+                <div class="tracking-loader-outer">
                   <div class="tracking-loader">
                     <div class="">
                       <img
@@ -266,7 +266,7 @@
                 </div>
               </el-col>
               <el-col :span="6">
-                <div class="infobar--item-truck-cont-bordered tracking-notes">
+                <div class="tracking-notes">
                   <div class="info-text-transform infor-top-bar-text">
                     <img
                       src="https://images.sendyit.com/web_platform/tracking/edit.svg"
@@ -296,7 +296,7 @@
                   </div>
                 </div>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="6" class="infobar--item-truck-cont-bordered">
                 <div class="">
                   <div class="inforbar--item-scrollable">
 
@@ -315,7 +315,7 @@
                           <div v-else>
                             <p>
                               Your order has been received.The Order cost is KES
-                              {{ tracking_data.price_tier.cost }}
+                              {{ tracking_data.amount}}
                             </p>
 
                             <p />
@@ -1467,7 +1467,7 @@ export default {
   padding-left: 8%;
 }
 .infobar--item-truck-cont-bordered{
-  border-right: 1px solid #74696942;
+  border-left: 1px solid #74696942;
 }
 .el-row {
   margin-bottom: 20px;
