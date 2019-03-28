@@ -73,7 +73,7 @@
                           Cost :
                         </span>
                         <span>
-                        KES  {{ tracking_data.price_tier.cost }}
+                        KES  {{ tracking_data.amount }}
                         </span>
                       </span>
                     </span>
