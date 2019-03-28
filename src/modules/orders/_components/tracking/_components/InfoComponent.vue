@@ -123,12 +123,7 @@
                       </p>
                       <p>{{ tracking_data.path[0].name }}</p>
                     </li>
-                    <div class="timeline-date-disp">
-                      <p class="info-text-transform infor-top-bar-text">
-                        Pickup Date
-                      </p>
-                      <p>{{ tracking_data.date_time | moment }}</p>
-                    </div>
+
                     <li>
                       <p class="info-text-transform infor-top-bar-text">
                         Destination
@@ -333,7 +328,7 @@
                       <!-- Pricing check -->
                       <li  v-if="! this.non_truck_orders.includes(tracking_data.rider.vendor_id)" id="timeline_right" v-bind:class="{timelinePay :isPayed,payedReached :setPayed }">
                         <div class="">
-                          <p class="info-text-transform infor-top-bar-text">
+                          <p class="info-text-transform infor-top-bar-text" v-bind:class="{payedActive :setPayed }">
                             Price Confirmation
                           </p>
                           <div class="">
@@ -388,20 +383,25 @@
 
                       <li  id= "timeline_right" v-bind:class="{timelineConfirmed :isConfirmed ,confirmedReached :setConfirmed }">
                         <div class="">
-                          <p class="info-text-transform infor-top-bar-text">
+                          <p class="info-text-transform infor-top-bar-text" v-bind:class="{confirmedActive :setConfirmed }">
                             Order Confirmed
                           </p>
-                           <p>
-                            Your Order has been confirmed by {{ tracking_data.rider.rider_name  }}
-                          </p>
-                          <p>{{this.confirm_eta}}</p>
+                           <div  v-if="tracking_data.delivery_status > 0">
+                             <p>
+                              Your Order has been confirmed by {{ tracking_data.rider.rider_name  }}
+                            </p>
+                            <p>{{this.confirm_eta}}</p>
+                           </div>
+                           <div  v-else>
+                             <p>{{this.confirm_eta}}</p>
+                           </div>
                         </div>
                       </li>
 
                       <!-- In Transit  -->
                       <li id="timeline_right" v-bind:class="{ timelinePicked : isPicked , pickedReached :setPicked}">
                         <div class="">
-                          <p class="info-text-transform infor-top-bar-text">
+                          <p class="info-text-transform infor-top-bar-text" v-bind:class="{pickedActive :setPicked }">
                             Order Picked
                           </p>
                           <p>{{this.pick_up_eta}} </p>
@@ -411,7 +411,7 @@
                       <!-- Delivered -->
                       <li id="timeline_right" v-bind:class="{timelineDelivered :isDelivered ,deliveredReached :setDelivered}">
                         <div class="">
-                          <p class="info-text-transform infor-top-bar-text">
+                          <p class="info-text-transform infor-top-bar-text" v-bind:class="{deliveredActive :setDelivered }">
                             Delivered
                           </p>
                           <p>{{this.delivery_eta}}</p>
@@ -1767,5 +1767,17 @@ ul.timeline > li#timeline_right.payedReached:before{
 .el-step.is-vertical .el-step__description{
   font-size: 12px !important;
   /* width: 103px!important; */
+}
+.confirmedActive{
+  color: #1B7FC3;
+}
+.pickedActive {
+  color: #1B7FC3;
+}
+.deliveredActive {
+  color: #1B7FC3;
+}
+.payedActive{
+  color: #1B7FC3;
 }
 </style>
