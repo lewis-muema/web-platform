@@ -1089,7 +1089,13 @@ export default {
     },
     checkVendorName(){
       if(this.tracking_data.rider.vendor_name === 'Bike' ){
-          this.vendorName = 'Express';
+         if(this.tracking_data.price_type === 3){
+           this.vendorName = 'Standard';
+         }
+         else{
+           this.vendorName = 'Express';
+         }
+
       }
       else if (this.tracking_data.rider.vendor_name === 'Economy Bike' ) {
           this.vendorName = 'Standard';
