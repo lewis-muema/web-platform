@@ -73,7 +73,7 @@
                           Cost :
                         </span>
                         <span>
-                        KES  {{ tracking_data.price_tier.cost }}
+                        KES  {{ tracking_data.amount }}
                         </span>
                       </span>
                     </span>
@@ -82,7 +82,7 @@
                         Cost :
                       </span>
                       <span>
-                      KES  {{ tracking_data.price_tier.cost }}
+                      KES  {{ tracking_data.amount }}
                       </span>
                     </span>
                   </div>
@@ -115,7 +115,7 @@
               class="infobar-content infobar--truck-cont-item infobar--truck-cont-padding"
             >
               <el-col :span="5">
-                <div class="infobar--item-truck-cont-bordered inforbar--item-scrollable">
+                <div class="inforbar--item-scrollable">
                   <ul class="timeline inforbar_route_timeline">
                     <li>
                       <p class="info-text-transform infor-top-bar-text">
@@ -139,7 +139,7 @@
                 </div>
               </el-col>
               <el-col :span="5">
-                <div class="infobar--item-truck-cont-bordered tracking-loader-outer">
+                <div class="tracking-loader-outer">
                   <div class="tracking-loader">
                     <div class="">
                       <img
@@ -266,7 +266,7 @@
                 </div>
               </el-col>
               <el-col :span="6">
-                <div class="infobar--item-truck-cont-bordered tracking-notes">
+                <div class="tracking-notes">
                   <div class="info-text-transform infor-top-bar-text">
                     <img
                       src="https://images.sendyit.com/web_platform/tracking/edit.svg"
@@ -296,7 +296,7 @@
                   </div>
                 </div>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="6" class="infobar--item-truck-cont-bordered">
                 <div class="">
                   <div class="inforbar--item-scrollable">
 
@@ -315,7 +315,7 @@
                           <div v-else>
                             <p>
                               Your order has been received.The Order cost is KES
-                              {{ tracking_data.price_tier.cost }}
+                              {{ tracking_data.amount}}
                             </p>
 
                             <p />
@@ -326,53 +326,58 @@
                       </li>
 
                       <!-- Pricing check -->
-                      <li  v-if="! this.non_truck_orders.includes(tracking_data.rider.vendor_id)" id="timeline_right" v-bind:class="{timelinePay :isPayed,payedReached :setPayed }">
+                      <li  v-if="(this.truck_orders.includes(tracking_data.rider.vendor_id))" id="timeline_right" v-bind:class="{timelinePay :isPayed,payedReached :setPayed }">
                         <div class="">
                           <p class="info-text-transform infor-top-bar-text" v-bind:class="{payedActive :setPayed }">
                             Price Confirmation
                           </p>
-                          <div class="">
-                            <div
-                              v-if="this.accType === 1"
-                              class=""
-                            >
-                              <p>Price has been confirmed to be Ksh {{ tracking_data.amount }}</p>
-                            </div>
-                            <div
-                              v-else
-                              class=""
-                            >
-                              <div v-if="this.myRb <= 0">
+                          <div class="" v-if="this.getStatus === 'Pending'">
+
+                          </div>
+                          <div v-else>
+                            <div class="">
+                              <div
+                                v-if="this.accType === 1"
+                                class=""
+                              >
                                 <p>Price has been confirmed to be Ksh {{ tracking_data.amount }}</p>
                               </div>
-                              <div v-else>
-                                <p>
-                                  Price has been confirmed to be Ksh
-                                  {{ tracking_data.amount }}.Choose payment option below
-                                </p>
-                                <div class="">
-                                  <el-radio
-                                    v-model="paymentOption"
-                                    label="1"
-                                  >
-                                    M-Pesa
-                                  </el-radio>
+                              <div
+                                v-else
+                                class=""
+                              >
+                                <div v-if="this.myRb <= 0">
+                                  <p>Price has been confirmed to be Ksh {{ tracking_data.amount }}</p>
                                 </div>
-                                <div class="">
-                                  <el-radio
-                                    v-model="paymentOption"
-                                    label="2"
-                                  >
-                                    Card
-                                  </el-radio>
-                                </div>
-                                <div class="info-payment-button">
-                                  <input
-                                    type="submit"
-                                    class="button-primary button-tracking-payment"
-                                    value="Make Payment"
-                                    @click="takeMeToPayment()"
-                                  >
+                                <div v-else>
+                                  <p>
+                                    Price has been confirmed to be Ksh
+                                    {{ tracking_data.amount }}.Choose payment option below
+                                  </p>
+                                  <div class="">
+                                    <el-radio
+                                      v-model="paymentOption"
+                                      label="1"
+                                    >
+                                      M-Pesa
+                                    </el-radio>
+                                  </div>
+                                  <div class="">
+                                    <el-radio
+                                      v-model="paymentOption"
+                                      label="2"
+                                    >
+                                      Card
+                                    </el-radio>
+                                  </div>
+                                  <div class="info-payment-button">
+                                    <input
+                                      type="submit"
+                                      class="button-primary button-tracking-payment"
+                                      value="Make Payment"
+                                      @click="takeMeToPayment()"
+                                    >
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -465,8 +470,7 @@
                       :src="tracking_data.rider.rider_photo"
                     >
                     <span>
-                      {{ tracking_data.rider.rider_name }} -
-                      {{ tracking_data.rider.rider_phone }}
+                      {{ tracking_data.rider.rider_name }}    {{ tracking_data.rider.rider_phone }}
                     </span>
                   </div>
                 </el-col>
@@ -868,7 +872,7 @@ export default {
       maximiseInfo: 0,
       cancelOption: false,
       paymentOption: '',
-      truckMoreInfo: false,
+      truckMoreInfo: true,
       myRb: '',
       accType: '',
       pick_up_eta: 'Awaiting Confirmation',
@@ -881,9 +885,9 @@ export default {
       setConfirmed: false,
       setPicked:false,
       setDelivered:false,
-      setPayed : true ,
+      setPayed : false ,
       vendorName : '',
-      non_truck_orders : [1,2,3,23],
+      truck_orders : [20],
     };
   },
   computed: {
@@ -895,7 +899,7 @@ export default {
     order_eta() {
       this.checkVendorName();
       if (this.tracking_data.confirm_status === 0) {
-        this.setPayed = false ,
+        this.setPayed = false ;
         this.isPayed = true ;
         this.setConfirmed = true ;
         const confirm_eta = this.tracking_data.eta_data.etc;
@@ -1467,7 +1471,7 @@ export default {
   padding-left: 8%;
 }
 .infobar--item-truck-cont-bordered{
-  border-right: 1px solid #74696942;
+  border-left: 1px solid #74696942;
 }
 .el-row {
   margin-bottom: 20px;
@@ -1632,7 +1636,7 @@ ul.timeline > li#timeline_right.payedReached:before{
   padding-bottom: 5px;
   padding-top: 10px;
   text-align:center;
-  max-width:70%
+  max-width:85%
 }
 .infobar--item-truck-cancel{
   padding-bottom: 5px;
