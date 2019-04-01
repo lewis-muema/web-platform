@@ -391,7 +391,7 @@
                           <p class="info-text-transform infor-top-bar-text" v-bind:class="{confirmedActive :setConfirmed }">
                             Order Confirmed
                           </p>
-                           <div  v-if="tracking_data.delivery_status > 0">
+                           <div  v-if="tracking_data.confirm_status > 0">
                              <p>
                               Your Order has been confirmed by {{ tracking_data.rider.rider_name  }}
                             </p>
@@ -914,7 +914,7 @@ export default {
         this.pick_up_eta = 'Awaiting Confirmation';
         this.delivery_eta = 'Awaiting Pickup';
 
-      } else if (this.tracking_data.confirm_status === 1) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 ) {
         this.setConfirmed = false;
         this.setPicked = true ;
         this.isConfirmed = true ;

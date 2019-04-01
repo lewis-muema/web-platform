@@ -241,7 +241,7 @@ export default {
       }
     },
     orderETA(data) {
-      if (data.confirm_status === 1) {
+      if (data.confirm_status === 1 && data.delivery_status === 0 ) {
         const pick_up_eta = data.eta_data.etp;
         const eta_split = pick_up_eta.split('to');
         const start = eta_split[0].replace(/\s+/g, '');
