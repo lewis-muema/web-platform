@@ -1031,7 +1031,6 @@ export default {
     this.poll(this.$route.params.order_no);
     this.checkRunningBalance();
     this.order_eta();
-    console.log('Tracking',this.tracking_data);
   },
   created() {
     this.order_number = this.$route.params.order_no;
