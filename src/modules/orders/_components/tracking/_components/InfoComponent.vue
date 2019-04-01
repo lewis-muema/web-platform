@@ -1034,7 +1034,6 @@ export default {
   },
   created() {
     this.order_number = this.$route.params.order_no;
-    console.log('Tracking',this.tracking_data);
   },
   methods: {
     moment() {
