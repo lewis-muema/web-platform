@@ -669,8 +669,9 @@ export default {
       this.$store.commit('setNotification', notification);
     },
 
-    getVendorDescription(vendorObject){
-      if(vendorObject.vendor_id === 22){
+    getVendorDescription(vendorObject) {
+      const standardOrders = [22, 24];
+      if (standardOrders.includes(vendorObject.vendor_id)) {
         return 'In 2 to 4 hours';
       }
       return vendorObject.vendor_description;
