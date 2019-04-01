@@ -898,10 +898,9 @@ export default {
     }),
     order_eta() {
       this.checkVendorName();
+      this.checkScheduler();
+      this.setTimeLineIconState();
       if (this.tracking_data.confirm_status === 0) {
-        this.setPayed = false ;
-        this.isPayed = true ;
-        this.setConfirmed = true ;
         const confirm_eta = this.tracking_data.eta_data.etc;
         const eta_split = confirm_eta.split('to');
         const start = eta_split[0].replace(/\s+/g, '');
@@ -915,10 +914,6 @@ export default {
         this.delivery_eta = 'Awaiting Pickup';
 
       } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 ) {
-        this.setConfirmed = false;
-        this.setPicked = true ;
-        this.isConfirmed = true ;
-        this.isPayed = true ;
         const pick_up_eta = this.tracking_data.eta_data.etp;
         const confirmed_eta = this.tracking_data.eta_data.confirmed;
         const eta_split = pick_up_eta.split('to');
@@ -931,11 +926,6 @@ export default {
         this.pick_up_eta = `${start_eta}-${end_eta}`;
         this.confirm_eta = moment(confirmed_eta, moment.ISO_8601).format('h:mm a');
       } else if (this.tracking_data.delivery_status === 2) {
-        this.setPicked = false;
-        this.setDelivered = true ;
-        this.isConfirmed = true ;
-        this.isPayed = true ;
-        this.isPicked = true ;
         const delivery_eta = this.tracking_data.eta_data.etd;
         const confirmed_eta = this.tracking_data.eta_data.confirmed;
         const picked_eta = this.tracking_data.eta_data.picked;
@@ -950,11 +940,6 @@ export default {
         this.confirm_eta = moment(confirmed_eta, moment.ISO_8601).format('h:mm a');
         this.pick_up_eta = moment(picked_eta, moment.ISO_8601).format('h:mm a');
       } else if (this.tracking_data.delivery_status === 3){
-        this.setDelivered = false;
-        this.isDelivered = true ;
-        this.isConfirmed = true ;
-        this.isPayed = true ;
-        this.isPicked = true ;
       }
        else {
       }
@@ -1097,7 +1082,6 @@ export default {
     },
     maximiseInfoDetails() {
       this.truckMoreInfo = true;
-      this.checkScheduler();
     },
     getVendorIcon(id){
       return `https://images.sendyit.com/web_platform/vendor_type/side/${id}.svg`;
@@ -1124,6 +1108,43 @@ export default {
 
       }else{
         this.scheduled_time = false ;
+      }
+    },
+    setTimeLineIconState(){
+      if(this.tracking_data.confirm_status === 0){
+        this.setPayed = false;
+        this.setDelivered = false;
+        this.isDelivered = false;
+        this.isPicked = false ;
+        this.setPicked = false ;
+        this.isPayed = true;
+        this.setConfirmed = true;
+      }else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 ) {
+        this.setConfirmed = false;
+        this.setDelivered = false;
+        this.isDelivered = false;
+        this.setPicked = true ;
+        this.isConfirmed = true ;
+        this.isPayed = true ;
+      }
+      else if (this.tracking_data.delivery_status === 2){
+        this.setPicked = false;
+        this.isDelivered = false;
+        this.setDelivered = true ;
+        this.isConfirmed = true ;
+        this.isPayed = true ;
+        this.isPicked = true ;
+      }
+      else if (this.tracking_data.delivery_status === 3){
+        this.setDelivered = false;
+        this.isDelivered = true ;
+        this.isConfirmed = true ;
+        this.isPayed = true ;
+        this.isPicked = true ;
+
+      }
+      else{
+
       }
     },
     minimiseInfoDetails() {
