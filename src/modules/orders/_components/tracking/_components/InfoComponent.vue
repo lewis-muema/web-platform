@@ -1112,15 +1112,16 @@ export default {
     },
     setTimeLineIconState(){
       if(this.tracking_data.confirm_status === 0){
-        this.setPayed = false;
+        this.isPayed = false;
         this.setDelivered = false;
         this.isDelivered = false;
         this.isPicked = false ;
         this.setPicked = false ;
-        this.isPayed = true;
         this.setConfirmed = true;
+        this.setPayed = true;
       }else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 ) {
         this.setConfirmed = false;
+        this.setPayed = false;
         this.setDelivered = false;
         this.isDelivered = false;
         this.setPicked = true ;
