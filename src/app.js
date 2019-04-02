@@ -90,6 +90,7 @@ Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
+import exportFromJSON from 'export-from-json';
 export function createApp() {
   // create router and store instances
   const router = createRouter();
