@@ -462,7 +462,7 @@ export default {
 
   created() {
     this.instantiateHomeComponent();
-    this.trackMixpanelEvent('Landing Page', {
+    this.trackMixpanelEvent('Home Page', {
       'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
       'Client Type': 'Web Platform',
     });
