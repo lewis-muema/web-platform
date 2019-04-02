@@ -940,6 +940,13 @@ export default {
         this.confirm_eta = moment(confirmed_eta, moment.ISO_8601).format('h:mm a');
         this.pick_up_eta = moment(picked_eta, moment.ISO_8601).format('h:mm a');
       } else if (this.tracking_data.delivery_status === 3){
+        const delivery_eta = this.tracking_data.eta_data.delivered;
+        const confirmed_eta = this.tracking_data.eta_data.confirmed;
+        const picked_eta = this.tracking_data.eta_data.picked;
+
+        this.delivery_eta = moment(delivery_eta, moment.ISO_8601).format('h:mm a');
+        this.confirm_eta = moment(confirmed_eta, moment.ISO_8601).format('h:mm a');
+        this.pick_up_eta = moment(picked_eta, moment.ISO_8601).format('h:mm a');
       }
        else {
       }
