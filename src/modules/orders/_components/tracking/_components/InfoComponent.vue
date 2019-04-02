@@ -41,7 +41,7 @@
                   <img
                     src="https://images.sendyit.com/web_platform/tracking/status.svg"
                     alt=""
-                    class="top-bar-img"
+                    class="top-bar-img infobar-truck-img"
                   >
                   <span class="infor-top-bar-text" > Status :</span>
                   <span> {{ getStatus }} </span>
@@ -52,7 +52,7 @@
                   <div class="topbar-text">
                     <font-awesome-icon
                       icon="wallet"
-                      class="top-bar-info"
+                      class="top-bar-info infobar-truck-img"
                     />
                     <span v-if="this.getStatus === 'Pending'">
                       <span
@@ -114,7 +114,7 @@
               :gutter="20"
               class="infobar-content infobar--truck-cont-item infobar--truck-cont-padding"
             >
-              <el-col :span="5">
+              <el-col :span="5" class="inforbar_left_scrollable">
                 <div class="inforbar--item-scrollable">
                   <ul class="timeline inforbar_route_timeline">
                     <li>
@@ -157,7 +157,7 @@
                     <img
                       :src="getVendorIcon(this.tracking_data.rider.vendor_id)"
                       alt=""
-                      class="infobar-truck-img"
+                      class="infobar-truck-img inforbar-vendor-icon"
                     >
                     <span class="info-text-transform">
                       {{this.vendorName }}
@@ -1609,8 +1609,7 @@ ul.timeline > li#timeline_right.payedReached:before{
   opacity: 0 !important;
 }
 .infobar-truck-pstn{
-  padding-bottom: 15px;
-  margin-left: 13px !important;
+  margin-left: -2px !important;
   margin-right: 13px !important;
 }
 .topbar-text{
@@ -1629,8 +1628,9 @@ ul.timeline > li#timeline_right.payedReached:before{
   height: 190px;
 }
 .infobar-truck-img{
-  height:20px;
+  height:16px;
   vertical-align:middle;
+  margin-bottom: 7px;
 }
 .timeline-date-disp{
   padding-left: 30px;
@@ -1641,6 +1641,8 @@ ul.timeline > li#timeline_right.payedReached:before{
 .info-text-cursor{
   padding-top:4px;
   cursor:pointer;
+  text-decoration: underline;
+  color: #8A8A8A;
 }
 .infobar--truck-cont-item{
   padding-bottom: 5px;
@@ -1682,7 +1684,7 @@ ul.timeline > li#timeline_right.payedReached:before{
 }
 .tracking-notes{
   padding-bottom: 10px;
-  padding-left: 30px;
+  padding-left: 89px;
 }
 .tracking-notes-inner{
   max-width: 80%!important;
@@ -1691,10 +1693,10 @@ ul.timeline > li#timeline_right.payedReached:before{
   padding-bottom: 10px;
 }
 .tracking-loader-inner{
-  padding-left:35px;
+  padding-left:19px;
 }
 .tracking-loader-outer{
-  padding-left: 20px;
+  padding-left: 50px;
 }
 .tracking-notes-inner{
   padding-left: 30px;
@@ -1811,5 +1813,18 @@ ul.timeline > li#timeline_right.payedReached:before{
 }
 .payedActive{
   color: #1B7FC3;
+}
+ul.inforbar_route_timeline:before{
+  background: #1B7FC3 !important;
+  height: 75% !important;
+}
+ul.inforbar_order_timeline:before{
+  height : 90% !important;
+}
+.inforbar_left_scrollable{
+  padding-left: 0px !important;
+}
+.inforbar-vendor-icon{
+  margin-bottom: 0px !important;
 }
 </style>
