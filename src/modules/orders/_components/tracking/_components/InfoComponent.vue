@@ -36,7 +36,7 @@
                   </span>
                 </div>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="6" class="status-text">
                 <div class="info-text-transform">
                   <img
                     src="https://images.sendyit.com/web_platform/tracking/status.svg"
@@ -95,7 +95,7 @@
                   </div>
                 </div>
               </el-col>
-              <el-col :span="1">
+              <el-col :span="1" class="minimise-icon">
                 <div
                   v-if="this.truckMoreInfo"
                   class="infobar--actions-hover"
@@ -1691,10 +1691,7 @@ ul.timeline > li#timeline_right.payedReached:before{
 }
 .tracking-notes{
   padding-bottom: 10px;
-  padding-left: 89px;
-}
-.tracking-notes-inner{
-  max-width: 80%!important;
+  padding-left: 30px;
 }
 .tracking-loader{
   padding-bottom: 10px;
@@ -1706,8 +1703,9 @@ ul.timeline > li#timeline_right.payedReached:before{
   padding-left: 50px;
 }
 .tracking-notes-inner{
-  padding-left: 30px;
+  padding-left: 19px;
   padding-top: 5px;
+  max-width: 80%!important;
 }
 .mobile-inforbar--inner{
   width:100%;
@@ -1833,5 +1831,11 @@ ul.inforbar_order_timeline:before{
 }
 .inforbar-vendor-icon{
   margin-bottom: 0px !important;
+}
+.status-text{
+  width: 234px !important;
+}
+.minimise-icon{
+  padding-left: 6% !important;
 }
 </style>
