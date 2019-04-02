@@ -71,6 +71,11 @@ export default {
       message: '',
     };
   },
+  created(){
+   this.trackMixpanelPage('Sign Up Verification Page', {
+     'Client Type': 'Web Platform',
+   });
+  },
   methods: {
     ...mapActions({
       requestSignUpSegmentation: '$_auth/requestSignUpSegmentation',
@@ -81,6 +86,18 @@ export default {
       Phone: '$_auth/requestPhone',
       Name: '$_auth/requestName',
     }),
+    trackMixpanelPage(name) {
+      let analytics_env = '';
+      try {
+        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {}
+
+      try {
+        if (analytics_env === 'production') {
+           mixpanel.track(name);
+        }
+      } catch (er) {}
+    },
     peer_set() {
       const values = {};
       values.name = this.Name();

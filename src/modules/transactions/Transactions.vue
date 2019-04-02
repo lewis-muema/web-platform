@@ -30,11 +30,36 @@ export default {
   components : {MainHeader},
   created() {
     this.$store.registerModule('$_transactions', trans_store);
+    this.trackMixpanelPage('Orders Page', {
+      'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+      'Client Type': 'Web Platform',
+    });
+
   },
   computed: {
     ...mapGetters({
       getSession : 'getSession'
     }),
+  },
+  methods:{
+    trackMixpanelPage(name){
+      let analytics_env = '';
+      try {
+        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+      }
+      catch (er) {
+
+      }
+
+      try{
+        if(analytics_env === 'production'){
+          mixpanel.track(name);
+        }
+      }
+      catch(er){
+
+      }
+    },
   },
   watch: {
     getSession: {

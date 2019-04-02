@@ -443,7 +443,7 @@ export default {
       let analytics_env = '';
       try {
         analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } 
+      }
       catch (er) {
 
       }
@@ -462,6 +462,10 @@ export default {
 
   created() {
     this.instantiateHomeComponent();
+    this.trackMixpanelEvent('Home Page', {
+      'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+      'Client Type': 'Web Platform',
+    });
   },
 
   destroyed () {
