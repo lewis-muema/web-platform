@@ -337,14 +337,14 @@ export default {
       first_time: false,
       popover_visible: false,
       additional_loader: false,
-      carrier_type: '2',
+      carrier_type: '1',
       number_of_loaders: 1,
       max_temperature: 4,
       delivery_item: '',
       load_weight: '',
       load_units: '',
       customer_min_amount: '',
-      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
+      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van','Express'],
       vendors_without_return: ['Standard', 'Runner'],
       baseTruckOptions: [
         {
