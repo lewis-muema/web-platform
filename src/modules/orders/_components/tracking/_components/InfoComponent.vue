@@ -444,7 +444,7 @@
               </el-col>
                 <el-col :span="6" class="cancel-text-option">
                   <div
-                    v-if="tracking_data.delivery_status < 2"
+                    v-if="tracking_data.delivery_status < 2 && this.user_state"
                     class="info-text-transform info-text-cursor "
                     @click="canceldialog()"
                   >
@@ -624,7 +624,7 @@
                 </div>
                 <div class="">
                   <div
-                    v-if=""
+                    v-if="tracking_data.delivery_status < 2 && this.user_state"
                     class="infobar--actions-hover"
                     @click="canceldialog()"
                   >
@@ -762,7 +762,7 @@
                   </div>
                 </div>
                 <div
-                  v-if="tracking_data.delivery_status < 2"
+                  v-if="tracking_data.delivery_status < 2 && this.user_state"
                   class="infobar--actions-hover"
                   @click="canceldialog()"
                 >
@@ -888,6 +888,7 @@ export default {
       setPayed : false ,
       vendorName : '',
       truck_orders : [20],
+      user_state : false ,
     };
   },
   computed: {
@@ -900,6 +901,7 @@ export default {
       this.checkVendorName();
       this.checkScheduler();
       this.setTimeLineIconState();
+      this.confirmUser();
       if (this.tracking_data.confirm_status === 0) {
         const confirm_eta = this.tracking_data.eta_data.etc;
         const eta_split = confirm_eta.split('to');
@@ -1160,6 +1162,19 @@ export default {
       else{
 
       }
+    },
+    confirmUser(){
+      const session = this.$store.getters.getSession;
+      let session_user_email = session[session.default].user_email;
+      let order_user_email = this.tracking_data.user.email;
+
+       if(session_user_email === order_user_email){
+          this.user_state = true;
+       }
+       else{
+         this.user_state = false;
+       }
+
     },
     minimiseInfoDetails() {
       this.truckMoreInfo = false;
