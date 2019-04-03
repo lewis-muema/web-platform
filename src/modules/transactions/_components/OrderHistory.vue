@@ -65,6 +65,14 @@
       >
         PRINT
       </button>
+      <button
+        type="button"
+        class=" btn-order-hstry btn-save"
+        name="order_history_text"
+        @click="exportXLS"
+      >
+        EXPORT
+      </button>
     </div>
     <el-table
       id="save-pdf"
@@ -183,6 +191,9 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { Printd } from 'printd';
+import exportFromJSON from 'export-from-json'
+import * as _  from 'lodash';
+
 
 const moment = require('moment');
 
@@ -452,6 +463,27 @@ export default {
           this.empty_users_state = 'Cop Users Failed to Fetch';
         },
       );
+    },
+    exportXLS(){
+      let data;
+      let data2 = [];
+
+      for (let i = 0; i < this.order_history_data.length; i++) {
+        let arr = {};
+        arr.OrderAmount= this.order_history_data[i].order_cost;
+        arr.OrderNumber=this.order_history_data[i].order_no;
+        arr.OrderDate=this.order_history_data[i].order_date;
+        arr.OrderDistanceKM=this.order_history_data[i].order_details.distance;
+        arr.User=this.order_history_data[i].user_details.name;
+        arr.From=this.order_history_data[i].path[0].name;
+        arr.To=this.order_history_data[i].path[1].name;
+        data2.push(arr)
+        };
+       data = _.map(data2,(row)=>{return _.pick(row,'OrderAmount','OrderNumber','OrderDate','user','OrderDistanceKM','From','To')});
+      const fileName = 'download';
+      const exportType = 'xls';
+
+      exportFromJSON({ data, fileName, exportType })
     },
     exportPDF() {
       const d = new Printd();

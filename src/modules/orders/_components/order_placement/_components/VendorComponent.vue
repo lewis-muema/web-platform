@@ -61,7 +61,7 @@
                     {{ j.vendor_name }}
                   </div>
                   <div class="home-view-vendor-types-item-vendor--vendor-local-name">
-                    {{ j.vendor_description }}
+                    {{ getVendorDescription(j) }}
                   </div>
                 </div>
               </div>
@@ -222,7 +222,7 @@
                         class="home-view-truck-options-inner-wrapper"
                       >
                         <div class="home-view-truck-options-label">
-                          What is the minimum amount you are willing to pay for this order?
+                          How much are you offering to pay for this order?
                         </div>
                         <div>
                           <el-input
@@ -667,6 +667,14 @@ export default {
         message,
       };
       this.$store.commit('setNotification', notification);
+    },
+
+    getVendorDescription(vendorObject) {
+      const standardOrders = [22, 24];
+      if (standardOrders.includes(vendorObject.vendor_id)) {
+        return 'In 2 to 4 hours';
+      }
+      return vendorObject.vendor_description;
     },
   },
 
