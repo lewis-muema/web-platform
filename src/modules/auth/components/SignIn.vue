@@ -94,28 +94,13 @@ export default {
       login_text: 'Login',
     };
   },
-  created(){
-   this.trackMixpanelPage('Sign In Page', {
-     'Client Type': 'Web Platform',
-   });
+  mounted() {
+    this.landOnSignInPage();
   },
   methods: {
     ...mapActions({
       authSignIn: '$_auth/requestSignIn',
     }),
-    trackMixpanelPage(name) {
-      let analytics_env = '';
-      try {
-        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {}
-
-      try {
-        if (analytics_env === 'production') {
-           mixpanel.track(name);
-           this.landOnSignInPage();
-        }
-      } catch (er) {}
-    },
     landOnSignInPage() {
       window.ga('send', {
         hitType: 'pageview',
