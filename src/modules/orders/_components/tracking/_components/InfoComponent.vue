@@ -436,12 +436,12 @@
                 :gutter="20"
                 class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top infobar--item-truck-cancel"
               >
-                <!-- <el-col :span="6">
-                <div class="">
+                <el-col :span="6">
+                <div class="info-text-transform info-text-cursor " @click="saveDetails()">
                   <img src="https://images.sendyit.com/web_platform/tracking/save.svg" alt="" class="infobar-truck-img">
-                  <span> SAVE DETAILS </span>
+                  <span> Save Details</span>
                 </div>
-              </el-col> -->
+              </el-col>
                 <el-col :span="6" class="cancel-text-option">
                   <div
                     v-if="tracking_data.delivery_status < 2"
@@ -1238,6 +1238,51 @@ export default {
           });
         }
       });
+    },
+    saveDetails(){
+      let sessionData = this.$store.getters.getSession;
+      let params = {};
+
+      if (sessionData.default === 'biz') {
+        // create cop payload
+        params = {
+          cop_id: sessionData.biz.cop_id,
+          order_no: this.$route.params.order_no,
+          user_id: sessionData.biz.user_id,
+        };
+      } else {
+        // create peer payload
+         params = {
+           cop_id: 0 ,
+           order_no: this.$route.params.order_no,
+           user_id: sessionData.biz.user_id,
+        };
+      }
+
+      this.$store.dispatch('$_orders/$_tracking/save_order_details', params).then((response) => {
+        if (response.status) {
+          this.doNotification(
+            1,
+            'Save Details',
+            'Order Details saved successfully.',
+          );
+        } else {
+          this.doNotification(
+            3,
+            'Save Details failed',
+            'Could not save details. Kindly retry.',
+          );
+        }
+      },
+      (error) => {
+        this.doNotification(
+          2,
+          'Save Details Error ',
+          'Check Internet connection and retry',
+        );
+      },
+    );
+
     },
     dateFormat(date) {
       return this.moment(date).calendar(null, {
