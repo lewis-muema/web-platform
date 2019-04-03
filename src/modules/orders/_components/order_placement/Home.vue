@@ -438,34 +438,10 @@ export default {
       this.registerPaymentModule();
       this.registerOrderPlacementModule();
     },
-
-    trackMixpanelEvent(name){
-      let analytics_env = '';
-      try {
-        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      }
-      catch (er) {
-
-      }
-
-      try{
-        if(analytics_env === 'production'){
-          mixpanel.track(name);
-        }
-      }
-      catch(er){
-
-      }
-    },
-
   },
 
   created() {
     this.instantiateHomeComponent();
-    this.trackMixpanelEvent('Home Page', {
-      'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-      'Client Type': 'Web Platform',
-    });
   },
 
   destroyed () {
