@@ -153,9 +153,30 @@ const running_balance = function({dispatch}, data)
 	})
 }
 
+const save_order_details = function({commit, dispatch}, data)
+{
+  let payload = {
+		values: data,
+		app: 'NODE_PRIVATE_API',
+		endpoint: 'remember_order',
+  }
+	return new Promise((resolve, reject) => {
+		dispatch('requestAxiosPost', payload, {
+				root: true
+			})
+			.then(response => {
+				resolve(response.data);
+			}, error => {
+				reject(error);
+			});
+	})
+}
+
+
 export default {
 	get_tracking_data,
 	cancel_order,
 	trackMQTT,
   running_balance,
+	save_order_details,
 };
