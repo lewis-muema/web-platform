@@ -436,12 +436,12 @@
                 :gutter="20"
                 class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top infobar--item-truck-cancel"
               >
-                <el-col :span="6" v-bind:class="{ saveDetailsDisable: isSaved}">
+                <!-- <el-col :span="6" v-bind:class="{ saveDetailsDisable: isSaved}">
                 <div class="info-text-transform info-text-cursor " @click="saveDetails()">
                   <img src="https://images.sendyit.com/web_platform/tracking/save.svg" alt="" class="infobar-truck-img">
                   <span> Save Details</span>
                 </div>
-              </el-col>
+              </el-col> -->
                 <el-col :span="6" class="cancel-text-option">
                   <div
                     v-if="tracking_data.delivery_status < 2 && this.user_state"
