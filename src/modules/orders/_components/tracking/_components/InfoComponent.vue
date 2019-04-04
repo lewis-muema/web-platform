@@ -436,15 +436,15 @@
                 :gutter="20"
                 class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top infobar--item-truck-cancel"
               >
-                <!-- <el-col :span="6">
-                <div class="">
+                <!-- <el-col :span="6" v-bind:class="{ saveDetailsDisable: isSaved}">
+                <div class="info-text-transform info-text-cursor " @click="saveDetails()">
                   <img src="https://images.sendyit.com/web_platform/tracking/save.svg" alt="" class="infobar-truck-img">
-                  <span> SAVE DETAILS </span>
+                  <span> Save Details</span>
                 </div>
               </el-col> -->
                 <el-col :span="6" class="cancel-text-option">
                   <div
-                    v-if="tracking_data.delivery_status < 2"
+                    v-if="tracking_data.delivery_status < 2 && this.user_state"
                     class="info-text-transform info-text-cursor "
                     @click="canceldialog()"
                   >
@@ -624,7 +624,7 @@
                 </div>
                 <div class="">
                   <div
-                    v-if=""
+                    v-if="tracking_data.delivery_status < 2 && this.user_state"
                     class="infobar--actions-hover"
                     @click="canceldialog()"
                   >
@@ -762,7 +762,7 @@
                   </div>
                 </div>
                 <div
-                  v-if="tracking_data.delivery_status < 2"
+                  v-if="tracking_data.delivery_status < 2 && this.user_state"
                   class="infobar--actions-hover"
                   @click="canceldialog()"
                 >
@@ -888,6 +888,8 @@ export default {
       setPayed : false ,
       vendorName : '',
       truck_orders : [20],
+      user_state : false ,
+      isSaved : false ,
     };
   },
   computed: {
@@ -900,6 +902,7 @@ export default {
       this.checkVendorName();
       this.checkScheduler();
       this.setTimeLineIconState();
+      this.confirmUser();
       if (this.tracking_data.confirm_status === 0) {
         const confirm_eta = this.tracking_data.eta_data.etc;
         const eta_split = confirm_eta.split('to');
@@ -1161,6 +1164,19 @@ export default {
 
       }
     },
+    confirmUser(){
+      const session = this.$store.getters.getSession;
+      let session_user_email = session[session.default].user_email;
+      let order_user_email = this.tracking_data.user.email;
+
+       if(session_user_email === order_user_email){
+          this.user_state = true;
+       }
+       else{
+         this.user_state = false;
+       }
+
+    },
     minimiseInfoDetails() {
       this.truckMoreInfo = false;
     },
@@ -1238,6 +1254,52 @@ export default {
           });
         }
       });
+    },
+    saveDetails(){
+      let sessionData = this.$store.getters.getSession;
+      let params = {};
+
+      if (sessionData.default === 'biz') {
+        // create cop payload
+        params = {
+          cop_id: sessionData.biz.cop_id,
+          order_no: this.$route.params.order_no,
+          user_id: sessionData.biz.user_id,
+        };
+      } else {
+        // create peer payload
+         params = {
+           cop_id: 0 ,
+           order_no: this.$route.params.order_no,
+           user_id: sessionData.biz.user_id,
+        };
+      }
+
+      this.$store.dispatch('$_orders/$_tracking/save_order_details', params).then((response) => {
+        if (response.status) {
+          this.doNotification(
+            1,
+            'Save Details',
+            'Order Details saved successfully.',
+          );
+          this.isSaved = true ;
+        } else {
+          this.doNotification(
+            3,
+            'Save Details failed',
+            'Could not save details. Kindly retry.',
+          );
+        }
+      },
+      (error) => {
+        this.doNotification(
+          2,
+          'Save Details Error ',
+          'Check Internet connection and retry',
+        );
+      },
+    );
+
     },
     dateFormat(date) {
       return this.moment(date).calendar(null, {
@@ -1837,5 +1899,8 @@ ul.inforbar_order_timeline:before{
 }
 .minimise-icon{
   padding-left: 6% !important;
+}
+.saveDetailsDisable{
+  display: none;
 }
 </style>

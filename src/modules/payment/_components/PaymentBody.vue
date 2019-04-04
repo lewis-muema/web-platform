@@ -27,8 +27,7 @@ export default {
   margin: .5em;
 }
 .paymentbody--input {
-    height: 45px;
-    margin-top: 20px;
+  margin-top: 20px;
 }
 .paymentbody--input-spaced
 {
