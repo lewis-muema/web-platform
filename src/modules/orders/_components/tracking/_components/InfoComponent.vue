@@ -436,7 +436,7 @@
                 :gutter="20"
                 class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top infobar--item-truck-cancel"
               >
-                <el-col :span="6">
+                <el-col :span="6" v-bind:class="{ saveDetailsDisable: isSaved}">
                 <div class="info-text-transform info-text-cursor " @click="saveDetails()">
                   <img src="https://images.sendyit.com/web_platform/tracking/save.svg" alt="" class="infobar-truck-img">
                   <span> Save Details</span>
@@ -889,6 +889,7 @@ export default {
       vendorName : '',
       truck_orders : [20],
       user_state : false ,
+      isSaved : false ,
     };
   },
   computed: {
@@ -1281,6 +1282,7 @@ export default {
             'Save Details',
             'Order Details saved successfully.',
           );
+          this.isSaved = true ;
         } else {
           this.doNotification(
             3,
@@ -1897,5 +1899,8 @@ ul.inforbar_order_timeline:before{
 }
 .minimise-icon{
   padding-left: 6% !important;
+}
+.saveDetailsDisable{
+  display: none;
 }
 </style>
