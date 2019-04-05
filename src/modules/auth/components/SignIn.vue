@@ -165,7 +165,7 @@ export default {
                 mixpanel.identify(acc.user_email);
 
                 // track login
-                mixpanel.track('Login', {
+                mixpanel.track('User Login', {
                   'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
                   'Last Login': new Date(),
                   'Client Type': 'Web Platform',
