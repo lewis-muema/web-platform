@@ -30,7 +30,7 @@ const PaymentMxn = {
     // this function will complete transactions for card payments already in the system
     handleSavedCard(card, orderOptions = false) {
       if (!this.payment_is_to_be_requested) {
-        this.doCompleteOrder();
+        // this.doCompleteOrder();
         return false;
       }
       const session = this.$store.getters.getSession;
