@@ -266,7 +266,7 @@ export default {
             this.requestMpesaPaymentPoll();
           }
           this.payment_state = 'Mpesa Payment Success';
-          let acc = this.$store.getters.getSession;
+          const acc = this.$store.getters.getSession;
 
           this.trackMixpanelEvent('Mpesa Payment', {
             'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
