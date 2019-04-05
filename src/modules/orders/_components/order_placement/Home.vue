@@ -314,6 +314,8 @@ export default {
             this.loading = false;
             this.setDefaultPackageClass();
             this.setDefaultVendorType(previous_active_vendor);
+            const acc = this.$store.getters.getSession;
+
             this.trackMixpanelEvent('Make Price Request', {
               'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
               'Client Type': 'Web Platform',
