@@ -266,11 +266,10 @@ export default {
             this.requestMpesaPaymentPoll();
           }
           this.payment_state = 'Mpesa Payment Success';
-          let session = this.$store.getters.getSession;
-          let acc = session.default;
+          let acc = this.$store.getters.getSession;
 
           this.trackMixpanelEvent('Mpesa Payment', {
-            'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+            'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
             'Client Type': 'Web Platform',
           });
         },

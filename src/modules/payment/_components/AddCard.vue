@@ -231,11 +231,10 @@ export default {
               message: 'card was added successfully',
             };
             this.payment_state = 'Payment Success';
-            let session = this.$store.getters.getSession;
-            let acc = session.default;
+            const acc = this.$store.getters.getSession;
 
             this.trackMixpanelEvent('Card Payment', {
-              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+              'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
               'Client Type': 'Web Platform',
             });
             that.$store.dispatch('show_notification', notification, {
