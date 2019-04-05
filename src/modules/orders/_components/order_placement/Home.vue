@@ -314,8 +314,11 @@ export default {
             this.loading = false;
             this.setDefaultPackageClass();
             this.setDefaultVendorType(previous_active_vendor);
+            let session = this.$store.getters.getSession;
+            let acc = session.default;
+
             this.trackMixpanelEvent('Make Price Request', {
-              'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
               'Client Type': 'Web Platform',
             });
         }, error => {
