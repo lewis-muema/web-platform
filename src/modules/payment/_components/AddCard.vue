@@ -232,10 +232,10 @@ export default {
             };
             this.payment_state = 'Payment Success';
             let session = this.$store.getters.getSession;
-            let acc = session[session.default];
+            let acc = session.default;
 
             this.trackMixpanelEvent('Card Payment', {
-              'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
               'Client Type': 'Web Platform',
             });
             that.$store.dispatch('show_notification', notification, {

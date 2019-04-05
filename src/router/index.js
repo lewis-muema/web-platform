@@ -52,13 +52,13 @@ function guard(to, from, next) {
 
       }
       if( analytics_env === 'production'){
-        let acc = session[session.default];
+        let acc = session.default;
         if ('innerTrack' in to.meta) {
           let details = to.meta.innerTrack;
           if (details !== 'undefined') {
             mixpanel.track(details , {
               'Client Type': 'Web Platform',
-              'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
             });
 
           }
