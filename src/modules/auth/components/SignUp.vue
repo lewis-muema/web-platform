@@ -208,29 +208,10 @@ export default {
       requestId: '',
     };
   },
-  created(){
-   this.trackMixpanelPage('Sign Up Page', {
-     'Client Type': 'Web Platform',
-   });
-  },
   methods: {
     validate_phone() {
       this.$validator.validate();
     },
-
-    trackMixpanelPage(name) {
-      let analytics_env = '';
-      try {
-        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {}
-
-      try {
-        if (analytics_env === 'production') {
-           mixpanel.track(name);
-        }
-      } catch (er) {}
-    },
-
     ...mapMutations({
       setPassword: '$_auth/setPassword',
       setPhone: '$_auth/setPhone',
