@@ -57,22 +57,15 @@
       </div>
     </div>
     <div class="bg-grey">
-      <button
-        type="button"
-        class=" btn-order-hstry btn-save"
-        name="order_history_text"
-        @click="exportPDF"
-      >
-        PRINT
-      </button>
-      <button
-        type="button"
-        class=" btn-order-hstry btn-save"
-        name="order_history_text"
-        @click="exportXLS"
-      >
-        EXPORT
-      </button>
+      <el-dropdown @command="handleCommand"  align="right">
+          <el-button type="primary" size="mini">
+            Download<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item  command="a">Excel</el-dropdown-item>
+              <el-dropdown-item  command="b">PDF</el-dropdown-item>
+            </el-dropdown-menu>
+      </el-dropdown>
     </div>
     <el-table
       id="save-pdf"
@@ -464,7 +457,8 @@ export default {
         },
       );
     },
-    exportXLS(){
+    handleCommand(command){
+      if(command=="a"){
       let data;
       let data2 = [];
 
@@ -484,12 +478,13 @@ export default {
       const exportType = 'xls';
 
       exportFromJSON({ data, fileName, exportType })
-    },
-    exportPDF() {
-      const d = new Printd();
 
+      }
+      else{
+      const d = new Printd();
       // opens the "print dialog" of your browser to print the element
       d.print(document.getElementById('save-pdf'), cssText);
+      }
     },
   },
 };
@@ -498,5 +493,8 @@ export default {
 <style lang="css">
 .btn-order-hstry{
   border-width:0px !important;
+}
+.el-dropdown{
+  float: right;
 }
 </style>
