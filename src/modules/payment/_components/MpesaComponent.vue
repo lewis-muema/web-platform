@@ -75,6 +75,24 @@ export default {
       _completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
       _terminateMpesaPaymentRequest: '$_payment/terminateMpesaPaymentRequest',
     }),
+    trackMixpanelEvent(name){
+      let analytics_env = '';
+      try {
+        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+      }
+      catch (er) {
+
+      }
+
+      try{
+        if(analytics_env === 'production'){
+          mixpanel.track(name);
+        }
+      }
+      catch(er){
+
+      }
+    },
     prepareMpesaPayment() {
       const session = this.$store.getters.getSession;
       const { user_phone } = session[session.default];
@@ -238,6 +256,12 @@ export default {
             this.requestMpesaPaymentPoll();
           }
           this.payment_state = 'Mpesa Payment Success';
+          const acc = this.$store.getters.getSession;
+
+          this.trackMixpanelEvent('Mpesa Payment', {
+            'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+            'Client Type': 'Web Platform',
+          });
         },
         (error) => {
           this.payment_state = 'Mpesa Payment Failed';

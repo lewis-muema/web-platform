@@ -1,4 +1,5 @@
 /* eslint consistent-return: "error" */
+/* eslint no-unused-vars: "error" */
 
 import mqtt from 'mqtt';
 
@@ -159,9 +160,30 @@ const runningBalance = function runningBalance({ dispatch }, data) {
   });
 };
 
+const saveOrderDetails = function saveOrderDetails({ dispatch }, data) {
+  const payload = {
+    values: data,
+    app: 'NODE_PRIVATE_API',
+    endpoint: 'remember_order',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   getTrackingData,
   cancelOrder,
   trackMQTT,
   runningBalance,
+  saveOrderDetails,
 };

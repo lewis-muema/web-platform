@@ -212,7 +212,6 @@ export default {
     validate_phone() {
       this.$validator.validate();
     },
-
     ...mapMutations({
       setPassword: '$_auth/setPassword',
       setPhone: '$_auth/setPhone',

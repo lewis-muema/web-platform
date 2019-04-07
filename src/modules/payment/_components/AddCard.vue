@@ -148,6 +148,24 @@ export default {
         this.show_cvv = true;
       }
     },
+    trackMixpanelEvent(name){
+      let analytics_env = '';
+      try {
+        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+      }
+      catch (er) {
+
+      }
+
+      try{
+        if(analytics_env === 'production'){
+          mixpanel.track(name);
+        }
+      }
+      catch(er){
+
+      }
+    },
     ...mapActions({ requestAddNewCardAction: '$_payment/requestAddNewCard' }),
 
     handleAddCard() {
@@ -222,6 +240,12 @@ export default {
               message: 'card was added successfully',
             };
             this.payment_state = 'Payment Success';
+            const acc = this.$store.getters.getSession;
+
+            this.trackMixpanelEvent('Card Payment', {
+              'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+              'Client Type': 'Web Platform',
+            });
             that.$store.dispatch('show_notification', notification, {
               root: true,
             });

@@ -282,9 +282,28 @@ export default {
       // TO DO research implementation of native input events
     },
 
-    clearLocation(index) {
-      this.resetLocation(index);
-      this.attemptPriceRequest();
+    trackMixpanelEvent(name){
+      let analytics_env = '';
+      try {
+        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+      }
+      catch (er) {
+
+      }
+
+      try{
+        if(analytics_env === 'production'){
+          mixpanel.track(name);
+        }
+      }
+      catch(er){
+
+      }
+    },
+
+    clearLocation(index){
+        this.resetLocation(index);
+        this.attemptPriceRequest();
     },
 
     resetLocation(index) {
@@ -405,35 +424,34 @@ export default {
       const final_obj = { values: infor };
       return final_obj;
     },
-    doPriceRequest() {
-      const payload = {
-        values: this.createPriceRequestObject(),
-        app: 'PRIVATE_API',
-        endpoint: 'pricing_multiple',
-      };
-      this.loading = true;
-      const previous_active_vendor = this.get_active_vendor_name;
-      this.requestPriceQuote(payload).then(
-        (response) => {
-          this.loading = false;
-          this.setDefaultPackageClass();
-          this.setDefaultVendorType(previous_active_vendor);
-          this.trackMixpanelEvent('Make Price Request');
-        },
-        (error) => {
-          if (error.hasOwnProperty('crisis_notification')) {
-            this.doNotification(3, error.reason, error.crisis_notification.msg);
-          } else {
-            this.doNotification(
-              3,
-              'Price request failed',
-              'Price request failed. Please try again after a few minutes.',
-            );
-          }
+    doPriceRequest(){
+        let payload = {
+          values : this.createPriceRequestObject(),
+          app:'PRIVATE_API',
+          endpoint:'pricing_multiple',
+        };
+        this.loading = true;
+        let previous_active_vendor = this.get_active_vendor_name;
+        this.requestPriceQuote(payload).then(response => {
+            this.loading = false;
+            this.setDefaultPackageClass();
+            this.setDefaultVendorType(previous_active_vendor);
+            const acc = this.$store.getters.getSession;
 
-          this.loading = false;
-        },
-      );
+            this.trackMixpanelEvent('Make Price Request', {
+              'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+              'Client Type': 'Web Platform',
+            });
+        }, error => {
+            if(error.hasOwnProperty('crisis_notification')){
+                this.doNotification(3,error.reason, error.crisis_notification.msg);
+            }
+            else{
+                this.doNotification(3,'Price request failed', 'Price request failed. Please try again after a few minutes.');
+            }
+
+            this.loading = false;
+        });
     },
 
     doNotification(level, title, message) {
@@ -553,19 +571,6 @@ export default {
     instantiateHomeComponent() {
       this.registerPaymentModule();
       this.registerOrderPlacementModule();
-    },
-
-    trackMixpanelEvent(name) {
-      let analytics_env = '';
-      try {
-        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {}
-
-      try {
-        if (analytics_env === 'production') {
-          mixpanel.track(name);
-        }
-      } catch (er) {}
     },
   },
 

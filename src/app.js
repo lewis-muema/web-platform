@@ -44,9 +44,11 @@ import {
 } from 'element-ui';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import exportFromJSON from 'export-from-json';
 import { createStore } from './store';
 import { createRouter } from './router';
 import App from './App.vue';
+
 
 Vue.prototype.moment = moment;
 // configure language
@@ -89,7 +91,6 @@ Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 Vue.component('font-awesome-icon', FontAwesomeIcon);
-
 export function createApp() {
   // create router and store instances
   const router = createRouter();

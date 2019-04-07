@@ -16,24 +16,35 @@
             key="prime"
             class="infobar-content infobar--content-padded"
           >
+            <!-- Tracking more Info top bar -->
             <el-row
               :gutter="20"
-              class="infobar-content infobar--truck-item  infobar--item-truck-bordered infobar-truck-pstn"
+              class="infobar-content infobar--truck-item  infobar--item-truck-bordered infobar-truck-pstn "
             >
               <el-col :span="6">
                 <div class="info-text-transform">
-                  <i class="el-icon-success top-bar-info" />
-                  Order Number : {{ tracking_data.order_no }}
+                  <img
+                    src="https://images.sendyit.com/web_platform/tracking/checkmark.svg"
+                    alt=""
+                    class="infobar-truck-img"
+                  >
+                  <span class="infor-top-bar-text">
+                     Order Number :
+                  </span>
+                  <span>
+                     {{ tracking_data.order_no }}
+                  </span>
                 </div>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="6" class="status-text">
                 <div class="info-text-transform">
                   <img
                     src="https://images.sendyit.com/web_platform/tracking/status.svg"
                     alt=""
-                    class="top-bar-img"
+                    class="top-bar-img infobar-truck-img"
                   >
-                  <span> Status : {{ getStatus }} </span>
+                  <span class="infor-top-bar-text" > Status :</span>
+                  <span> {{ getStatus }} </span>
                 </div>
               </el-col>
               <el-col :span="6">
@@ -41,7 +52,7 @@
                   <div class="topbar-text">
                     <font-awesome-icon
                       icon="wallet"
-                      class="top-bar-info"
+                      class="top-bar-info infobar-truck-img"
                     />
                     <span v-if="this.getStatus === 'Pending'">
                       <span
@@ -50,26 +61,41 @@
                             !this.tracking_data.fixed_cost
                         "
                       >
-                        Minimum Cost : KES {{ tracking_data.package_details.customer_min_amount }}
+                      <span class="infor-top-bar-text">
+                          Minimum Cost :
+                      </span>
+                      <span>
+                        KES  {{ tracking_data.package_details.customer_min_amount }}
+                      </span>
                       </span>
                       <span v-else>
-                        Cost : KES {{ tracking_data.price_tier.cost }}
+                        <span class="infor-top-bar-text">
+                          Cost :
+                        </span>
+                        <span>
+                        KES  {{ tracking_data.amount }}
+                        </span>
                       </span>
                     </span>
                     <span v-else>
-                      Cost : KES {{ tracking_data.price_tier.cost }}
+                      <span class="infor-top-bar-text">
+                        Cost :
+                      </span>
+                      <span>
+                      KES  {{ tracking_data.amount }}
+                      </span>
                     </span>
                   </div>
                 </div>
               </el-col>
               <el-col :span="5">
                 <div class="info-text-transform">
-                  <div class="topbar-text">
+                  <div class="topbar-text infor-top-bar-text">
                     Order Timeline
                   </div>
                 </div>
               </el-col>
-              <el-col :span="1">
+              <el-col :span="1" class="minimise-icon">
                 <div
                   v-if="this.truckMoreInfo"
                   class="infobar--actions-hover"
@@ -81,27 +107,25 @@
                 </div>
               </el-col>
             </el-row>
+
+            <!-- end of tracking more info top bar  -->
+
             <el-row
               :gutter="20"
               class="infobar-content infobar--truck-cont-item infobar--truck-cont-padding"
             >
-              <el-col :span="5">
-                <div class="infobar--item-truck-cont-bordered inforbar--item-scrollable">
-                  <ul class="timeline">
+              <el-col :span="5" class="inforbar_left_scrollable">
+                <div class="inforbar--item-scrollable">
+                  <ul class="timeline inforbar_route_timeline">
                     <li>
-                      <p class="info-text-transform">
+                      <p class="info-text-transform infor-top-bar-text">
                         Pickup Location
                       </p>
                       <p>{{ tracking_data.path[0].name }}</p>
                     </li>
-                    <div class="timeline-date-disp">
-                      <p class="info-text-transform">
-                        Pickup Date
-                      </p>
-                      <p>{{ tracking_data.date_time | moment }}</p>
-                    </div>
+
                     <li>
-                      <p class="info-text-transform">
+                      <p class="info-text-transform infor-top-bar-text">
                         Destination
                       </p>
                       <p
@@ -115,22 +139,53 @@
                 </div>
               </el-col>
               <el-col :span="5">
-                <div class="infobar--item-truck-cont-bordered tracking-loader-outer">
+                <div class="tracking-loader-outer">
                   <div class="tracking-loader">
                     <div class="">
                       <img
-                        src="https://images.sendyit.com/web_platform/vendor_type/side/20.svg"
+                        src="https://images.sendyit.com/web_platform/tracking/checkmark.svg"
                         alt=""
                         class="infobar-truck-img"
                       >
-                      <span class="info-text-transform">
-                        Truck
+                      <span class="info-text-transform infor-top-bar-text">
+                        Type of order
                       </span>
                     </div>
-                    <div class="tracking-loader-inner">
-                      {{ tracking_data.price_tier.vendor_name }}
+                    <div
+                      class="tracking-loader-inner"
+                    >
+                    <img
+                      :src="getVendorIcon(this.tracking_data.rider.vendor_id)"
+                      alt=""
+                      class="infobar-truck-img inforbar-vendor-icon"
+                    >
+                    <span class="info-text-transform">
+                      {{this.vendorName }}
+                    </span>
                     </div>
                   </div>
+                  <div class="tracking-loader" v-if = "this.scheduled_time">
+                    <div class="">
+                      <img
+                        src="https://images.sendyit.com/web_platform/tracking/calendar.svg"
+                        alt=""
+                        class="infobar-truck-img"
+                      >
+                      <span class="info-text-transform infor-top-bar-text">
+                        Scheduled pick up time
+                      </span>
+                    </div>
+                    <div
+                      class="tracking-loader-inner"
+                    >
+                    <span class="info-text-transform">
+                      {{tracking_data.date_time | moment }}
+                    </span>
+                    </div>
+                  </div>
+
+                  <!-- Show for truck orders  -->
+                  <div class="" v-if="! [1,2,3,23].includes(tracking_data.rider.vendor_id)">
                   <div class="tracking-loader">
                     <div class="">
                       <img
@@ -138,7 +193,7 @@
                         alt=""
                         class="infobar-truck-img"
                       >
-                      <span class="info-text-transform">
+                      <span class="info-text-transform infor-top-bar-text">
                         Goods to be delivered
                       </span>
                     </div>
@@ -162,7 +217,7 @@
                         alt=""
                         class="infobar-truck-img"
                       >
-                      <span class="info-text-transform">
+                      <span class="info-text-transform infor-top-bar-text">
                         Load Weight
                       </span>
                     </div>
@@ -187,7 +242,7 @@
                         alt=""
                         class="infobar-truck-img"
                       >
-                      <span class="info-text-transform">
+                      <span class="info-text-transform infor-top-bar-text">
                         Do you need a loader?
                       </span>
                     </div>
@@ -205,16 +260,20 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- End for truck orders  -->
+
+                </div>
               </el-col>
               <el-col :span="6">
-                <div class="infobar--item-truck-cont-bordered tracking-notes">
-                  <div class="info-text-transform">
+                <div class="tracking-notes">
+                  <div class="info-text-transform infor-top-bar-text">
                     <img
                       src="https://images.sendyit.com/web_platform/tracking/edit.svg"
                       alt=""
                       class="infobar-truck-img"
                     >
-                    Additional Information
+                    Notes
                   </div>
                   <div
                     v-if="tracking_data.order_notes.length > 0"
@@ -232,18 +291,19 @@
                       </div>
                     </div>
                   </div>
-                  <div v-else>
+                  <div v-else class="tracking-notes-inner">
                     No notes provided.
                   </div>
                 </div>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="6" class="infobar--item-truck-cont-bordered">
                 <div class="">
                   <div class="inforbar--item-scrollable">
-                    <ul class="timeline">
+
+                    <ul class="timeline inforbar_order_timeline">
                       <li>
                         <div class="">
-                          <p class="info-text-transform">
+                          <p class="info-text-transform infor-top-bar-text">
                             Order Placed
                           </p>
                           <div v-if="!this.tracking_data.fixed_cost">
@@ -255,7 +315,7 @@
                           <div v-else>
                             <p>
                               Your order has been received.The Order cost is KES
-                              {{ tracking_data.price_tier.cost }}
+                              {{ tracking_data.amount}}
                             </p>
 
                             <p />
@@ -264,71 +324,106 @@
                           <p>{{ tracking_data.date_time | moment }}</p>
                         </div>
                       </li>
-                      <li v-if="this.getStatus !== 'Pending'">
+
+                      <!-- Pricing check -->
+                      <li  v-if="(this.truck_orders.includes(tracking_data.rider.vendor_id))" id="timeline_right" v-bind:class="{timelinePay :isPayed,payedReached :setPayed }">
                         <div class="">
-                          <p class="info-text-transform">
+                          <p class="info-text-transform infor-top-bar-text" v-bind:class="{payedActive :setPayed }">
                             Price Confirmation
                           </p>
-                          <div class="">
-                            <div
-                              v-if="this.accType === 1"
-                              class=""
-                            >
-                              <p>Price has been confirmed to be Ksh {{ tracking_data.amount }}</p>
-                            </div>
-                            <div
-                              v-else
-                              class=""
-                            >
-                              <div v-if="this.myRb <= 0">
+                          <div class="" v-if="this.getStatus === 'Pending'">
+
+                          </div>
+                          <div v-else>
+                            <div class="">
+                              <div
+                                v-if="this.accType === 1"
+                                class=""
+                              >
                                 <p>Price has been confirmed to be Ksh {{ tracking_data.amount }}</p>
                               </div>
-                              <div v-else>
-                                <p>
-                                  Price has been confirmed to be Ksh
-                                  {{ tracking_data.amount }}.Choose payment option below
-                                </p>
-                                <div class="">
-                                  <el-radio
-                                    v-model="paymentOption"
-                                    label="1"
-                                  >
-                                    M-Pesa
-                                  </el-radio>
+                              <div
+                                v-else
+                                class=""
+                              >
+                                <div v-if="this.myRb <= 0">
+                                  <p>Price has been confirmed to be Ksh {{ tracking_data.amount }}</p>
                                 </div>
-                                <div class="">
-                                  <el-radio
-                                    v-model="paymentOption"
-                                    label="2"
-                                  >
-                                    Card
-                                  </el-radio>
-                                </div>
-                                <div class="info-payment-button">
-                                  <input
-                                    type="submit"
-                                    class="button-primary button-tracking-payment"
-                                    value="Make Payment"
-                                    @click="takeMeToPayment()"
-                                  >
+                                <div v-else>
+                                  <p>
+                                    Price has been confirmed to be Ksh
+                                    {{ tracking_data.amount }}.Choose payment option below
+                                  </p>
+                                  <div class="">
+                                    <el-radio
+                                      v-model="paymentOption"
+                                      label="1"
+                                    >
+                                      M-Pesa
+                                    </el-radio>
+                                  </div>
+                                  <div class="">
+                                    <el-radio
+                                      v-model="paymentOption"
+                                      label="2"
+                                    >
+                                      Card
+                                    </el-radio>
+                                  </div>
+                                  <div class="info-payment-button">
+                                    <input
+                                      type="submit"
+                                      class="button-primary button-tracking-payment"
+                                      value="Make Payment"
+                                      @click="takeMeToPayment()"
+                                    >
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </li>
-                      <li
-                        v-for="(val, index) in tracking_data.delivery_log"
-                        v-if="index > 0"
-                      >
+                      <!-- Confirmed -->
+
+                      <li  id= "timeline_right" v-bind:class="{timelineConfirmed :isConfirmed ,confirmedReached :setConfirmed }">
                         <div class="">
-                          <p class="">
-                            {{ val.description }}
+                          <p class="info-text-transform infor-top-bar-text" v-bind:class="{confirmedActive :setConfirmed }">
+                            Order Confirmed
                           </p>
-                          <p>{{ val.log_time | moment }}</p>
+                           <div  v-if="tracking_data.confirm_status > 0">
+                             <p>
+                              Your Order has been confirmed by {{ tracking_data.rider.rider_name  }}
+                            </p>
+                            <p>{{this.confirm_eta}}</p>
+                           </div>
+                           <div  v-else>
+                             <p>{{this.confirm_eta}}</p>
+                           </div>
+                        </div>
+                      </li>
+
+                      <!-- In Transit  -->
+                      <li id="timeline_right" v-bind:class="{ timelinePicked : isPicked , pickedReached :setPicked}">
+                        <div class="">
+                          <p class="info-text-transform infor-top-bar-text" v-bind:class="{pickedActive :setPicked }">
+                            Order Picked
+                          </p>
+                          <p>{{this.pick_up_eta}} </p>
+                        </div>
+                      </li>
+
+                      <!-- Delivered -->
+                      <li id="timeline_right" v-bind:class="{timelineDelivered :isDelivered ,deliveredReached :setDelivered}">
+                        <div class="">
+                          <p class="info-text-transform infor-top-bar-text" v-bind:class="{deliveredActive :setDelivered }">
+                            Delivered
+                          </p>
+                          <p>{{this.delivery_eta}}</p>
                         </div>
                       </li>
                     </ul>
+
                   </div>
                 </div>
               </el-col>
@@ -341,16 +436,16 @@
                 :gutter="20"
                 class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top infobar--item-truck-cancel"
               >
-                <!-- <el-col :span="6">
-                <div class="">
+                <!-- <el-col :span="6" v-bind:class="{ saveDetailsDisable: isSaved}">
+                <div class="info-text-transform info-text-cursor " @click="saveDetails()">
                   <img src="https://images.sendyit.com/web_platform/tracking/save.svg" alt="" class="infobar-truck-img">
-                  <span> SAVE DETAILS </span>
+                  <span> Save Details</span>
                 </div>
               </el-col> -->
-                <el-col :span="6">
+                <el-col :span="6" class="cancel-text-option">
                   <div
-                    v-if="tracking_data.delivery_status < 2"
-                    class="info-text-transform info-text-cursor"
+                    v-if="tracking_data.delivery_status < 2 && this.user_state"
+                    class="info-text-transform info-text-cursor "
                     @click="canceldialog()"
                   >
                     <i class="el-icon-circle-close top-bar-info" />
@@ -375,17 +470,16 @@
                       :src="tracking_data.rider.rider_photo"
                     >
                     <span>
-                      {{ tracking_data.rider.rider_name }} -
-                      {{ tracking_data.rider.rider_phone }}
+                      {{ tracking_data.rider.rider_name }}    {{ tracking_data.rider.rider_phone }}
                     </span>
                   </div>
                 </el-col>
                 <el-col :span="6">
-                  <div class="">
-                    <img
+                  <div class="share-option">
+                    <!-- <img
                       class="rimg rimg-disp"
                       :src="tracking_data.rider.rider_photo"
-                    >
+                    > -->
                     <span>
                       {{ tracking_data.rider.vehicle_name }} {{ tracking_data.rider.number_plate }}
                     </span>
@@ -530,7 +624,7 @@
                 </div>
                 <div class="">
                   <div
-                    v-if=""
+                    v-if="tracking_data.delivery_status < 2 && this.user_state"
                     class="infobar--actions-hover"
                     @click="canceldialog()"
                   >
@@ -613,7 +707,7 @@
               </div>
 
               <div
-                v-if=""
+                v-if="[1, 23].includes(tracking_data.rider.vendor_id)"
                 class="infobar--content infobar--item infobar--status infobar--item-bordered"
               >
                 <el-steps
@@ -635,29 +729,6 @@
                     :description="this.delivery_eta"
                   />
                 </el-steps>
-                <!-- <div class="">
-                  {{ getStatus }}
-                </div>
-                <div class="">
-                  <span
-                    v-if="tracking_data.delivery_status < 2"
-                    class=""
-                  >
-                    A Rider will pick and deliver your order by
-                    <span class="">
-                      {{ moment(tracking_data.date_time).format('h:mm a') }}
-                    </span>
-                  </span>
-                  <span
-                    v-else
-                    class=""
-                  >
-                    Estimated Delivery:
-                    <span class="">
-                      {{ this.tracking_data.etd }}
-                    </span>
-                  </span>
-                </div> -->
               </div>
               <div
                 v-if="this.$route.name !== 'tracking_external'"
@@ -680,7 +751,6 @@
                   </div>
                 </div>
                 <div
-                  v-if="[6, 10, 13, 14, 17, 18, 19, 20].includes(tracking_data.rider.vendor_id)"
                   class="infobar--actions-hover"
                   @click="maximiseInfoDetails()"
                 >
@@ -692,7 +762,7 @@
                   </div>
                 </div>
                 <div
-                  v-if="tracking_data.delivery_status < 2"
+                  v-if="tracking_data.delivery_status < 2 && this.user_state"
                   class="infobar--actions-hover"
                   @click="canceldialog()"
                 >
@@ -802,12 +872,24 @@ export default {
       maximiseInfo: 0,
       cancelOption: false,
       paymentOption: '',
-      truckMoreInfo: false,
+      truckMoreInfo: true,
       myRb: '',
       accType: '',
       pick_up_eta: 'Awaiting Confirmation',
       delivery_eta: 'Awaiting Pickup',
       confirm_eta: '',
+      scheduled_time : false,
+      isConfirmed : false ,
+      isPicked : false ,
+      isDelivered : false ,
+      setConfirmed: false,
+      setPicked:false,
+      setDelivered:false,
+      setPayed : false ,
+      vendorName : '',
+      truck_orders : [20],
+      user_state : false ,
+      isSaved : false ,
     };
   },
   computed: {
@@ -817,6 +899,10 @@ export default {
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
     }),
     order_eta() {
+      this.checkVendorName();
+      this.checkScheduler();
+      this.setTimeLineIconState();
+      this.confirmUser();
       if (this.tracking_data.confirm_status === 0) {
         const confirm_eta = this.tracking_data.eta_data.etc;
         const eta_split = confirm_eta.split('to');
@@ -829,7 +915,8 @@ export default {
         this.confirm_eta = `${start_eta}-${end_eta}`;
         this.pick_up_eta = 'Awaiting Confirmation';
         this.delivery_eta = 'Awaiting Pickup';
-      } else if (this.tracking_data.confirm_status === 1) {
+
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 ) {
         const pick_up_eta = this.tracking_data.eta_data.etp;
         const confirmed_eta = this.tracking_data.eta_data.confirmed;
         const eta_split = pick_up_eta.split('to');
@@ -842,7 +929,7 @@ export default {
         this.pick_up_eta = `${start_eta}-${end_eta}`;
         this.confirm_eta = moment(confirmed_eta, moment.ISO_8601).format('h:mm a');
       } else if (this.tracking_data.delivery_status === 2) {
-        const delivery_eta = this.tracking_data.eta_data.etp;
+        const delivery_eta = this.tracking_data.eta_data.etd;
         const confirmed_eta = this.tracking_data.eta_data.confirmed;
         const picked_eta = this.tracking_data.eta_data.picked;
         const eta_split = delivery_eta.split('to');
@@ -855,7 +942,16 @@ export default {
         this.delivery_eta = `${start_eta}-${end_eta}`;
         this.confirm_eta = moment(confirmed_eta, moment.ISO_8601).format('h:mm a');
         this.pick_up_eta = moment(picked_eta, moment.ISO_8601).format('h:mm a');
-      } else {
+      } else if (this.tracking_data.delivery_status === 3){
+        const delivery_eta = this.tracking_data.eta_data.delivered;
+        const confirmed_eta = this.tracking_data.eta_data.confirmed;
+        const picked_eta = this.tracking_data.eta_data.picked;
+
+        this.delivery_eta = moment(delivery_eta, moment.ISO_8601).format('h:mm a');
+        this.confirm_eta = moment(confirmed_eta, moment.ISO_8601).format('h:mm a');
+        this.pick_up_eta = moment(picked_eta, moment.ISO_8601).format('h:mm a');
+      }
+       else {
       }
     },
     getStatus() {
@@ -997,6 +1093,90 @@ export default {
     maximiseInfoDetails() {
       this.truckMoreInfo = true;
     },
+    getVendorIcon(id){
+      return `https://images.sendyit.com/web_platform/vendor_type/side/${id}.svg`;
+
+    },
+    checkVendorName(){
+      if(this.tracking_data.rider.vendor_name === 'Bike' ){
+         if(this.tracking_data.price_type === 3){
+           this.vendorName = 'Standard';
+         }
+         else{
+           this.vendorName = 'Express';
+         }
+
+      }
+      else if (this.tracking_data.rider.vendor_name === 'Economy Bike' ) {
+          this.vendorName = 'Standard';
+      }
+      else{
+        this.vendorName = this.tracking_data.rider.vendor_name;
+      }
+    },
+    checkScheduler(){
+      let schedulerRange = moment().add(2, 'h');
+      let orderPlaced = moment(this.tracking_data.date_time);
+      let check = orderPlaced.diff(schedulerRange);
+
+      if(check > 0){
+        this.scheduled_time = true ;
+
+      }else{
+        this.scheduled_time = false ;
+      }
+    },
+    setTimeLineIconState(){
+      if(this.tracking_data.confirm_status === 0){
+        this.isPayed = false;
+        this.setDelivered = false;
+        this.isDelivered = false;
+        this.isPicked = false ;
+        this.setPicked = false ;
+        this.setConfirmed = true;
+        this.setPayed = true;
+      }else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 ) {
+        this.setConfirmed = false;
+        this.setPayed = false;
+        this.setDelivered = false;
+        this.isDelivered = false;
+        this.setPicked = true ;
+        this.isConfirmed = true ;
+        this.isPayed = true ;
+      }
+      else if (this.tracking_data.delivery_status === 2){
+        this.setPicked = false;
+        this.isDelivered = false;
+        this.setDelivered = true ;
+        this.isConfirmed = true ;
+        this.isPayed = true ;
+        this.isPicked = true ;
+      }
+      else if (this.tracking_data.delivery_status === 3){
+        this.setDelivered = false;
+        this.isDelivered = true ;
+        this.isConfirmed = true ;
+        this.isPayed = true ;
+        this.isPicked = true ;
+
+      }
+      else{
+
+      }
+    },
+    confirmUser(){
+      const session = this.$store.getters.getSession;
+      let session_user_email = session[session.default].user_email;
+      let order_user_email = this.tracking_data.user.email;
+
+       if(session_user_email === order_user_email){
+          this.user_state = true;
+       }
+       else{
+         this.user_state = false;
+       }
+
+    },
     minimiseInfoDetails() {
       this.truckMoreInfo = false;
     },
@@ -1074,6 +1254,52 @@ export default {
           });
         }
       });
+    },
+    saveDetails(){
+      let sessionData = this.$store.getters.getSession;
+      let params = {};
+
+      if (sessionData.default === 'biz') {
+        // create cop payload
+        params = {
+          cop_id: sessionData.biz.cop_id,
+          order_no: this.$route.params.order_no,
+          user_id: sessionData.biz.user_id,
+        };
+      } else {
+        // create peer payload
+         params = {
+           cop_id: 0 ,
+           order_no: this.$route.params.order_no,
+           user_id: sessionData.biz.user_id,
+        };
+      }
+
+      this.$store.dispatch('$_orders/$_tracking/save_order_details', params).then((response) => {
+        if (response.status) {
+          this.doNotification(
+            1,
+            'Save Details',
+            'Order Details saved successfully.',
+          );
+          this.isSaved = true ;
+        } else {
+          this.doNotification(
+            3,
+            'Save Details failed',
+            'Could not save details. Kindly retry.',
+          );
+        }
+      },
+      (error) => {
+        this.doNotification(
+          2,
+          'Save Details Error ',
+          'Check Internet connection and retry',
+        );
+      },
+    );
+
     },
     dateFormat(date) {
       return this.moment(date).calendar(null, {
@@ -1342,7 +1568,7 @@ export default {
   padding-left: 8%;
 }
 .infobar--item-truck-cont-bordered{
-  border-right: 1px solid #74696942;
+  border-left: 1px solid #74696942;
 }
 .el-row {
   margin-bottom: 20px;
@@ -1373,16 +1599,75 @@ ul.timeline > li {
     max-height: 300px;
 }
 ul.timeline > li:before {
-    content: ' ';
-    background: white;
+    /* content: ' '; */
+    background: #1B7FC3;
     display: inline-block;
     position: absolute;
     border-radius: 50%;
-    border: 3px solid #22c0e8;
+    border: 3px solid #1B7FC3;
     left: 20px;
     width: 14px;
     height: 14px;
     z-index: 400;
+    content: '';
+    font-size: 16px;
+    color: white ;
+
+}
+ul.timeline > li#timeline_right:before{
+  content : '';
+  background: #8A8A8A;
+  border: 3px solid #8A8A8A;
+}
+ul.timeline > li#timeline_right.timelineConfirmed:before{
+  background: #51A65B;
+  border: 3px solid #51A65B;
+  content: '✓';
+}
+ul.timeline > li#timeline_right.timelinePicked:before{
+  background: #51A65B;
+  border: 3px solid #51A65B;
+  content: '✓';
+}
+ul.timeline > li#timeline_right.timelineDelivered:before{
+  background: #51A65B;
+  border: 3px solid #51A65B;
+  content: '✓';
+}
+ul.timeline > li#timeline_right.timelinePay:before{
+  background: #51A65B;
+  border: 3px solid #51A65B;
+  content: '✓';
+}
+ul.timeline > li#timeline_right.confirmedReached:before{
+  background: #F57F20;
+  border: 3px solid #F57F20;
+  content: '';
+}
+ul.timeline > li#timeline_right.pickedReached:before{
+  background: #F57F20;
+  border: 3px solid #F57F20;
+  content: '';
+}
+ul.timeline > li#timeline_right.deliveredReached:before{
+  background: #F57F20;
+  border: 3px solid #F57F20;
+  content: '';
+}
+ul.timeline > li#timeline_right.payedReached:before{
+  background: #F57F20;
+  border: 3px solid #F57F20;
+  content: '';
+}
+.inforbar_route_timeline li:first-child:before {
+    background: #F57F20;
+    border: 3px solid #F57F20;
+    content : '';
+}
+.inforbar_order_timeline li:first-child:before {
+    background: #51A65B;
+    border: 3px solid #51A65B;
+    content: '✓';
 }
 .cancelOptions > div
 {
@@ -1393,7 +1678,8 @@ ul.timeline > li:before {
   opacity: 0 !important;
 }
 .infobar-truck-pstn{
-  padding-bottom: 15px;
+  margin-left: -2px !important;
+  margin-right: 13px !important;
 }
 .topbar-text{
   padding-bottom: 10px;
@@ -1408,11 +1694,12 @@ ul.timeline > li:before {
 }
 .inforbar--item-scrollable{
   overflow-y: scroll;
-  height: 170px;
+  height: 190px;
 }
 .infobar-truck-img{
-  height:20px;
+  height:16px;
   vertical-align:middle;
+  margin-bottom: 7px;
 }
 .timeline-date-disp{
   padding-left: 30px;
@@ -1423,6 +1710,8 @@ ul.timeline > li:before {
 .info-text-cursor{
   padding-top:4px;
   cursor:pointer;
+  text-decoration: underline;
+  color: #8A8A8A;
 }
 .infobar--truck-cont-item{
   padding-bottom: 5px;
@@ -1446,7 +1735,7 @@ ul.timeline > li:before {
   padding-bottom: 5px;
   padding-top: 10px;
   text-align:center;
-  max-width:70%
+  max-width:85%
 }
 .infobar--item-truck-cancel{
   padding-bottom: 5px;
@@ -1466,21 +1755,19 @@ ul.timeline > li:before {
   padding-bottom: 10px;
   padding-left: 30px;
 }
-.tracking-notes-inner{
-  max-width: 80%!important;
-}
 .tracking-loader{
   padding-bottom: 10px;
 }
 .tracking-loader-inner{
-  padding-left:35px;
+  padding-left:19px;
 }
 .tracking-loader-outer{
-  padding-left: 20px;
+  padding-left: 50px;
 }
 .tracking-notes-inner{
-  padding-left: 30px;
+  padding-left: 19px;
   padding-top: 5px;
+  max-width: 80%!important;
 }
 .mobile-inforbar--inner{
   width:100%;
@@ -1541,7 +1828,7 @@ ul.timeline > li:before {
   }
 .el-step__description{
     font-size: 10px !important;
-    width: 103px!important;
+    /* width: 103px!important; */
   }
 /* .infobar--status{
   width: 23% !important;
@@ -1565,5 +1852,55 @@ ul.timeline > li:before {
 .el-step__head.is-process {
   color: #f57f20 !important;
   border-color: #f57f20 !important;
+}
+.infor-top-bar-text{
+  color: #8A8A8A;
+}
+.cancel-text-option{
+  width: 23% !important;
+}
+.steps-inner{
+  font-size:10px !important;
+}
+.el-step.is-vertical .el-step__title {
+  font-size: 15px !important;
+}
+.el-step.is-vertical .el-step__description{
+  font-size: 12px !important;
+  /* width: 103px!important; */
+}
+.confirmedActive{
+  color: #1B7FC3;
+}
+.pickedActive {
+  color: #1B7FC3;
+}
+.deliveredActive {
+  color: #1B7FC3;
+}
+.payedActive{
+  color: #1B7FC3;
+}
+ul.inforbar_route_timeline:before{
+  background: #1B7FC3 !important;
+  height: 75% !important;
+}
+ul.inforbar_order_timeline:before{
+  height : 90% !important;
+}
+.inforbar_left_scrollable{
+  padding-left: 0px !important;
+}
+.inforbar-vendor-icon{
+  margin-bottom: 0px !important;
+}
+.status-text{
+  width: 234px !important;
+}
+.minimise-icon{
+  padding-left: 6% !important;
+}
+.saveDetailsDisable{
+  display: none;
 }
 </style>

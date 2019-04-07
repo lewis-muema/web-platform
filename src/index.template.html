@@ -68,6 +68,8 @@
       ]);
       ga('require', 'GTM-56KF6PL');
       ga('send', 'pageview');
+      let PageLoadTime = Math.round(performance.now());
+      ga('send', 'timing', 'JS Dependencies', 'Website Load', PageLoadTime);
     </script>
   </head>
   <body class="body">

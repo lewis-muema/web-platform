@@ -94,10 +94,20 @@ export default {
       login_text: 'Login',
     };
   },
+  mounted() {
+    this.landOnSignInPage();
+  },
   methods: {
     ...mapActions({
       authSignIn: '$_auth/requestSignIn',
     }),
+    landOnSignInPage() {
+      window.ga('send', {
+        hitType: 'pageview',
+        page: location.pathname,
+        title: 'View Page - Sign In - Web Platform',
+      });
+    },
     sign_in() {
       if (this.email !== '' && this.password !== '') {
         this.login_text = 'Logging in ...';
@@ -155,7 +165,7 @@ export default {
                 mixpanel.identify(acc.user_email);
 
                 // track login
-                mixpanel.track('Login', {
+                mixpanel.track('User Login', {
                   'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
                   'Last Login': new Date(),
                   'Client Type': 'Web Platform',

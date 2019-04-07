@@ -82,6 +82,7 @@ export default {
       pick_up_eta: '',
       delivery_eta: '',
       vendor_name: '',
+      destination_waiting: false,
     };
   },
   methods: {
@@ -151,9 +152,18 @@ export default {
       }
     },
     orderStatus(data) {
-      const waiting = data.delivery_log.find(position => position.log_type === 10);
-      const rider_locations = this.isMQTTConnected;
       if (data.status) {
+        const waiting = data.delivery_log.find(position => position.log_type === 10);
+        const waitingIndex = data.delivery_log.findIndex(position => position.log_type === 10);
+        if (waitingIndex !== -1) {
+          const string = data.delivery_log[waitingIndex].description;
+          if (string.includes('is ready to deliver your order')) {
+            this.destination_waiting = true;
+          } else {
+            this.destination_waiting = false;
+          }
+        }
+        const rider_locations = this.isMQTTConnected;
         if (data.rider.vendor_id === 23) {
           this.vendor_icon_id = 1;
         } else {
@@ -168,7 +178,11 @@ export default {
           // return 'Delivered';
           this.infoHeader = '';
           this.infoDescription = '';
-        } else if (data.delivery_status === 2 && waiting !== undefined) {
+        } else if (
+          data.delivery_status === 2
+          && waiting !== undefined
+          && this.destination_waiting
+        ) {
           // return 'Waiting at destination'
           this.infoHeader = `Your ${
             this.vendor_name
@@ -227,7 +241,7 @@ export default {
       }
     },
     orderETA(data) {
-      if (data.confirm_status === 1) {
+      if (data.confirm_status === 1 && data.delivery_status === 0 ) {
         const pick_up_eta = data.eta_data.etp;
         const eta_split = pick_up_eta.split('to');
         const start = eta_split[0].replace(/\s+/g, '');
@@ -239,7 +253,7 @@ export default {
         this.pick_up_eta = `${start_eta}-${end_eta}`;
         this.delivery_eta = '';
       } else if (data.delivery_status === 2) {
-        const delivery_eta = data.eta_data.etp;
+        const delivery_eta = data.eta_data.etd;
         const eta_split = delivery_eta.split('to');
         const start = eta_split[0].replace(/\s+/g, '');
         const end = eta_split[1].replace(/\s+/g, '');
@@ -256,7 +270,7 @@ export default {
       this.$store
         .dispatch('$_orders/get_order_data', { order_no: this.$route.params.order_no })
         .then((response) => {
-          if (response.status) {
+          if (response.data.status) {
             this.orderStatus(response.data);
           } else {
             this.infoWinOpen = false;

@@ -1,4 +1,7 @@
 /* eslint class-methods-use-this: "error" */
+/* eslint-env es6 */
+/* global hex:true */
+/* eslint no-undef: "error" */
 import CryptoJS from 'crypto-js';
 
 /*

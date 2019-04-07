@@ -1,12 +1,13 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from '../store/global';
+
 Vue.use(Router);
 
-let entryUrl = null;
+const entryUrl = null;
 
 function isEmpty(obj) {
-  for (let prop in obj) {
+  for (const prop in obj) {
     if (obj.hasOwnProperty(prop)) return false;
   }
 
@@ -16,11 +17,10 @@ function isEmpty(obj) {
 function guard(to, from, next) {
   return new Promise((resolve, reject) => {
     let session = store.state.session;
-
     if (isEmpty(session)) {
       if (process.browser) {
-        //read ls here
-        let _sessionSnack = localStorage.getItem('_sessionSnack');
+        // read ls here
+        const _sessionSnack = localStorage.getItem('_sessionSnack');
 
         if (isEmpty(_sessionSnack)) {
           resolve(next('/auth/sign_in'));
@@ -32,7 +32,7 @@ function guard(to, from, next) {
             analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
           } catch (er) {}
           if ('default' in session && analytics_env === 'production') {
-            let acc = session[session.default];
+            const acc = session[session.default];
             mixpanel.identify(acc.user_email);
           }
           resolve(next());
@@ -42,6 +42,21 @@ function guard(to, from, next) {
       }
     } else {
       resolve(next());
+      let analytics_env = '';
+      try {
+        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {}
+      if (analytics_env === 'production') {
+        if ('innerTrack' in to.meta) {
+          const details = to.meta.innerTrack;
+          if (details !== 'undefined') {
+            mixpanel.track(details, {
+              'Client Type': 'Web Platform',
+              'Account Type': session.default === 'peer' ? 'Personal' : 'Business',
+            });
+          }
+        }
+      }
     }
   });
 }
@@ -49,13 +64,29 @@ function guard(to, from, next) {
 function login_guard(to, from, next) {
   return new Promise((resolve, reject) => {
     let session = store.state.session;
+
     if (isEmpty(session)) {
       if (process.browser) {
-        //read ls here
-        let _sessionSnack = localStorage.getItem('_sessionSnack');
+        // read ls here
+        const _sessionSnack = localStorage.getItem('_sessionSnack');
 
         if (isEmpty(_sessionSnack)) {
           resolve(next());
+          if ('login' in to.meta) {
+            const details = to.meta.login;
+            if (details !== 'undefined') {
+              let analytics_env = '';
+              try {
+                analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+              } catch (er) {}
+              // let path = window.location.href;
+              if (analytics_env === 'production') {
+                mixpanel.track(details, {
+                  'Client Type': 'Web Platform',
+                });
+              }
+            }
+          }
         } else {
           session = JSON.parse(_sessionSnack);
           store.state.session = session;
@@ -83,15 +114,21 @@ export function createRouter() {
           {
             path: '/',
             component: () => import('../modules/auth/components/SignIn.vue'),
+            beforeEnter: login_guard,
+            meta: { login: 'Sign In Page' },
           },
           {
             path: '/auth/sign_in',
             name: 'sign_in',
             component: () => import('../modules/auth/components/SignIn.vue'),
+            beforeEnter: login_guard,
+            meta: { login: 'Sign In Page' },
           },
           {
             path: '/auth/sign_up',
             component: () => import('../modules/auth/components/SignUp.vue'),
+            beforeEnter: login_guard,
+            meta: { login: 'Sign Up Page' },
           },
           {
             path: '/auth/forgot_password',
@@ -104,6 +141,8 @@ export function createRouter() {
           {
             path: '/auth/sign_up_verification',
             component: () => import('../modules/auth/components/SignUpVerification.vue'),
+            beforeEnter: login_guard,
+            meta: { login: 'Sign Up Verification Page' },
           },
         ],
       },
@@ -111,14 +150,17 @@ export function createRouter() {
         path: '/transactions',
         component: () => import('../modules/transactions/Transactions.vue'),
         beforeEnter: guard,
+        meta: { innerTrack: 'Order History Page' },
         children: [
           {
             path: '/',
             component: () => import('../modules/transactions/_components/OrderHistory.vue'),
+            meta: { innerTrack: 'Order History Page' },
           },
           {
             path: '/transactions/order_history',
             component: () => import('../modules/transactions/_components/OrderHistory.vue'),
+            meta: { innerTrack: 'Order History Page' },
             children: [
               {
                 path: 'details/:id',
@@ -240,21 +282,26 @@ export function createRouter() {
         path: '/orders',
         component: () => import('../modules/orders/Orders.vue'),
         beforeEnter: guard,
+        meta: { innerTrack: 'Order Placement Page' },
         children: [
           {
             path: '/',
             component: () => import('../modules/orders/_components/order_placement/Home.vue'),
             alias: '/orders/home',
             name: 'order_placement',
+            meta: { innerTrack: 'Order Placement Page' },
           },
           {
             path: '/orders/tracking/:order_no',
             component: () => import('../modules/orders/_components/tracking/Tracking.vue'),
             name: 'tracking',
+            beforeEnter: guard,
+            meta: { innerTrack: 'Tracking Page' },
           },
           {
             path: '/orders/rating/:order_no',
             component: () => import('../modules/orders/_components/rating/Rating.vue'),
+            meta: { innerTrack: 'Rating Page' },
           },
         ],
       },
