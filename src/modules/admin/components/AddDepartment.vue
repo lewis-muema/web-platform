@@ -1,14 +1,8 @@
 <template lang="html">
-  <div
-    id="log_in"
-    class="admin-edit-item"
-  >
+  <div id="log_in" class="admin-edit-item">
     <div class="admin-edit-inner">
       <div class="">
-        <i
-          class="el-icon-back edit-back"
-          @click="go_back"
-        />
+        <i class="el-icon-back edit-back" @click="go_back" />
       </div>
       <div class="admin-edit2-details position--details">
         Add Department
@@ -20,7 +14,7 @@
             class="input-control edit-form"
             type="text"
             placeholder="Name"
-          >
+          />
         </div>
         <div class="edit-holder">
           <el-select
@@ -37,11 +31,7 @@
           </el-select>
         </div>
         <div class="sign-holder">
-          <button
-            class="button-primary add_dept--btn"
-            type="submit"
-            @click="add_department"
-          >
+          <button class="button-primary add_dept--btn" type="submit" @click="add_department">
             Add
           </button>
         </div>
@@ -51,80 +41,86 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+    import {mapActions, mapGetters, mapMutations} from 'vuex'
 
-export default {
-  name: 'AddDepartment',
-  data() {
-    return {
-      empty_departments_state: 'Adding Department',
-      filterData: {
-        user: '',
-      },
-    };
-  },
-  mounted() {
-    const session = this.$store.getters.getSession;
-    let cop_id = 0;
-    if (session.default === 'biz') {
-      cop_id = session[session.default].cop_id;
-    }
-    const payload = {
-      cop_id,
-    };
-    const users_full_payload = {
-      values: payload,
-      app: 'NODE_PRIVATE_API',
-      endpoint: 'cop_users',
-    };
-    this.$store.dispatch('$_admin/requestUsersList', users_full_payload).then(
-      (response) => {},
-      (error) => {
-        const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true);
-      },
-    );
-  },
-  computed: {
-    ...mapGetters({
-      userData: '$_admin/getUsersList',
-      requestUsersList: '$_admin/requestUsersList',
-    }),
-  },
-  methods: {
-    ...mapActions({
-      addNewDepartment: '$_admin/addNewDepartment',
-    }),
-    add_department() {
-      const session = this.$store.getters.getSession;
-      let cop_id = 0;
-      if (session.default === 'biz') {
-        cop_id = session[session.default].cop_id;
-      }
-      const newDept_payload = {
-        cop_id,
-        department_name: this.department_name,
-        cop_user_id: this.filterData.user,
-      };
-
-      const full_payload = {
-        values: newDept_payload,
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'cop_departments_add',
-      };
-      this.$store.dispatch('$_admin/addNewDepartment', full_payload).then(
-        (response) => {
-          const level = 1; // success
-          const notification = { title: '', level, message: 'Department Added!' }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+    export default {
+        name: 'AddDepartment',
+        data() {
+            return {
+                empty_departments_state: 'Adding Department',
+                filterData: {
+                    'user': '',
+                },
+                department_name: '',
+            }
         },
-        (error) => {
-          const level = 2;
-          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+        mounted() {
+            let session = this.$store.getters.getSession;
+            let cop_id = 0;
+            if(session.default === 'biz'){
+                cop_id = session[session.default]['cop_id'];
+            }
+            let payload = {
+                'cop_id': cop_id,
+
+            }
+            let users_full_payload = {
+                'values' : payload,
+                'app':'NODE_PRIVATE_API',
+                'endpoint':'cop_users',
+            }
+            this.$store.dispatch('$_admin/requestUsersList', users_full_payload).then(response => {
+
+            }, error => {
+              let level = 2;
+              let notification = {'title': '', 'level': level, 'message': 'Something went wrong.'}; //notification object
+              this.$store.commit('setNotification', notification);
+              this.$store.commit('setNotificationStatus', true);
+            });
+        },
+        computed: {
+            ...mapGetters({
+                userData: '$_admin/getUsersList',
+                requestUsersList: '$_admin/requestUsersList'
+            }),
+        },
+        methods: {
+            ...mapActions({
+                addNewDepartment: '$_admin/addNewDepartment'
+            }),
+            add_department: function () {
+                let session = this.$store.getters.getSession;
+                let cop_id = 0;
+                if (session.default === 'biz') {
+                    cop_id = session[session.default]['cop_id'];
+                }
+                let newDept_payload = {
+                    'cop_id': cop_id,
+                    'department_name': this.department_name,
+                    'cop_user_id': this.filterData.user,
+                }
+
+                let full_payload = {
+                    'values': newDept_payload,
+                    'app': 'NODE_PRIVATE_API',
+                    'endpoint': 'cop_departments_add',
+                }
+                this.$store.dispatch('$_admin/addNewDepartment', full_payload).then(response => {
+                    let level = 1; //success
+                    let notification = {'title': '', 'level': level, 'message': 'Department Added!'}; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+                }, error => {
+                    let level = 2;
+                    let notification = {'title': '', 'level': level, 'message': 'Something went wrong.'}; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+
+                });
+            },
+            go_back: function () {
+                this.$router.push('/admin/department');
+            }
         },
       );
     },

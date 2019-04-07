@@ -4,11 +4,7 @@
       <form class="col s12">
         <div class="row textarea--row">
           <div class="input-field col s12 inviteMany--textarea">
-            <textarea
-              id="email_area"
-              v-model="emailSet"
-              class="inviteMany--textareabox"
-            />
+            <textarea id="email_area" v-model="emailSet" class="inviteMany--textareabox" />
             <div class="active inviteMany--text">
               Enter multiple email addresses separated by a comma
             </div>
@@ -17,20 +13,12 @@
       </form>
       <div class="side-flex many-flex many-action-buttons">
         <div class="column-flex space-right">
-          <a
-            class="show-link-justify"
-            @click="get_inv"
-          >
+          <a class="show-link-justify" @click="get_inv">
             Cancel
           </a>
         </div>
         <div class="column-flex">
-          <button
-            class="button-primary"
-            type="submit"
-            name="action"
-            @click="inv_many"
-          >
+          <button class="button-primary" type="submit" name="action" @click="inv_many">
             Add Invitees
           </button>
         </div>
@@ -42,36 +30,62 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex';
 
-export default {
-  name: 'ManyComponent',
-  components: {},
-  data() {
-    return {
-      emailSet: '',
-    };
-  },
-  computed: {
-    ...mapGetters({
-      getState: '$_admin/getViewState',
-    }),
-  },
-  methods: {
-    ...mapMutations({
-      updateViewState: '$_admin/setViewState',
-      newAdds: '$_admin/newAdds',
-      updateInvites: '$_admin/updateInvites',
-    }),
-    get_inv() {
-      this.updateViewState(1);
-    },
-    inv_many() {
-      if (this.emailSet != '') {
-        const set = this.emailSet;
-        const emails = set.split(',');
-        const number = emails.length;
-        const data = new Array();
-        for (let x = 0; x < number; x++) {
-          data[x] = new Array(emails[x], '', '');
+    export default {
+        name: 'many-component',
+        components: {},
+        data() {
+            return {
+                emailSet: '',
+                cancelInvite : false ,
+                inviteMany : false ,
+            }
+        },
+        computed: {
+            ...mapGetters(
+                {
+                    getState: '$_admin/getViewState'
+                }
+            )
+        },
+        methods: {
+            ...mapMutations(
+                {
+                    updateViewState: '$_admin/setViewState',
+                    newAdds: '$_admin/newAdds',
+                    updateInvites: '$_admin/updateInvites'
+                }
+            ),
+            get_inv: function () {
+                this.updateViewState(1);
+                this.cancelInvite = true ;
+            },
+            inv_many: function () {
+                if (this.emailSet != '') {
+                    let set = this.emailSet
+                    let emails = set.split(",")
+                    let number = emails.length
+                    let data = new Array();
+                    for (let x = 0; x < number; x++) {
+                        data[x] = new Array(emails[x], '', '')
+                    }
+                    this.newAdds(number)
+                    this.updateInvites(data)
+                    this.updateViewState(1);
+                    this.inviteMany = true ;
+                }
+                else {
+                    this.inviteMany = false ;
+                    let level = 2;
+                    let notification = {
+                        "title": "",
+                        "level": level,
+                        "message": "Please enter valid email address separated by a comma."
+                    }; //notification object
+                    this.$store.commit('setNotification', notification);
+                    this.$store.commit('setNotificationStatus', true); //activate notification
+                }
+
+            }
         }
         this.newAdds(number);
         this.updateInvites(data);
