@@ -1,5 +1,6 @@
 /* eslint no-param-reassign: "error" */
 /* eslint no-use-before-define: ["error", { "functions": false }] */
+/* eslint no-restricted-syntax: ["error","WithStatement"] */
 export default {
   getSession(state) {
     let { session } = state;

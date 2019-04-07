@@ -2,6 +2,8 @@
 /* eslint-disable prefer-destructuring */
 /* eslint no-shadow: "error" */
 /* eslint-env es6 */
+/* eslint func-names: ["error", "as-needed"] */
+/* eslint no-unused-vars: "error" */
 export default {
   /* start mpesa */
 

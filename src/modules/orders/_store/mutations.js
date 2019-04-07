@@ -1,4 +1,5 @@
 /* eslint no-param-reassign: "error" */
+/* eslint no-restricted-syntax: ["error","WithStatement"] */
 import Vue from 'vue';
 
 const setPage = (state, payload) => {
@@ -76,10 +77,11 @@ const setVendorMarkers = (state, payload) => {
 
 const hideVendors = (state) => {
   for (const key in state.map.vendors) {
-    if (Object.prototype.hasOwnProperty.call(!state.map.vendors, key)) continue;
-    const obj = state.map.vendors[key];
+    if (Object.prototype.hasOwnProperty.call(!state.map.vendors, key)) {
+      const obj = state.map.vendors[key];
 
-    obj.visible = false;
+      obj.visible = false;
+    }
   }
 };
 

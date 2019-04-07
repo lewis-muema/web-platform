@@ -1,3 +1,4 @@
+/* eslint no-restricted-syntax: ["error","WithStatement", "BinaryExpression[operator='in']"] */
 import axios from 'axios';
 import store from '@/data/state';
 
