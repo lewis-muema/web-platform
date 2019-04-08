@@ -118,12 +118,6 @@
 
                 });
             },
-            go_back: function () {
-                this.$router.push('/admin/department');
-            }
-        },
-      );
-    },
     go_back() {
       this.$router.push('/admin/department');
     },

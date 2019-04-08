@@ -184,8 +184,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { Printd } from 'printd';
-import exportFromJSON from 'export-from-json'
 import * as _  from 'lodash';
+import  exportFromJSON from 'export-from-json';
 
 
 const moment = require('moment');

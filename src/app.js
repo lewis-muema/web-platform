@@ -1,4 +1,6 @@
 /* eslint-disable import/prefer-default-export */
+/* eslint no-unused-vars: "error" */
+/* exported exportFromJSON */
 import Vue from 'vue';
 import { sync } from 'vuex-router-sync';
 
@@ -45,7 +47,6 @@ import {
 } from 'element-ui';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import exportFromJSON from 'export-from-json';
 import { createStore } from './store';
 import { createRouter } from './router';
 import App from './App.vue';
@@ -82,7 +83,7 @@ Vue.use(Rate);
 Vue.use(Popover);
 Vue.use(Autocomplete);
 Vue.use(Loading.directive);
-Vue.use(exportFromJSON);
+// Vue.use(exportFromJSON);
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$msgbox = MessageBox;
