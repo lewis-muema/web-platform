@@ -85,23 +85,8 @@ import { mapGetters, mapMutations } from 'vuex';
                     this.$store.commit('setNotificationStatus', true); //activate notification
                 }
 
-            }
-        }
-        this.newAdds(number);
-        this.updateInvites(data);
-        this.updateViewState(1);
-      } else {
-        const level = 2;
-        const notification = {
-          title: '',
-          level,
-          message: 'Please enter valid email address separated by a comma.',
-        }; // notification object
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true); // activate notification
-      }
-    },
-  },
+            },
+        },
 };
 </script>
 

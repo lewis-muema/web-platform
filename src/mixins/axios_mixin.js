@@ -6,14 +6,16 @@ class Http {
   constructor() {
     const service = axios.create({});
     service.interceptors.request.use((config) => {
-      config.headers.common['x-access-token'] = store.state.token;
-      return config;
+      const resolved = config;
+      resolved.headers.common['x-access-token'] = store.state.token;
+      return resolved;
     });
     this.service = service;
   }
 
   redirectTo = (document, path) => {
-    document.location = path;
+    const data = document;
+    data.location = path;
   };
 
   get(path) {

@@ -1,21 +1,24 @@
+/* eslint no-restricted-syntax: ["error", "WithStatement"] */
+/* global mixpanel  */
+/* eslint no-undef: "error" */
+/* eslint no-underscore-dangle: ["error", { "allow": ["_sessionSnack"] }] */
+
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from '../store/global';
 
 Vue.use(Router);
 
-const entryUrl = null;
-
 function isEmpty(obj) {
   for (const prop in obj) {
-    if (obj.hasOwnProperty(prop)) return false;
+    if (Object.prototype.hasOwnProperty.call(obj, prop)) return false;
   }
 
   return true;
 }
 
 function guard(to, from, next) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     let { session } = store.state;
     if (isEmpty(session)) {
       if (process.browser) {
@@ -27,11 +30,13 @@ function guard(to, from, next) {
         } else {
           session = JSON.parse(_sessionSnack);
           store.state.session = session;
-          let analytics_env = '';
+          let analyticsEnv = '';
           try {
-            analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-          } catch (er) {}
-          if ('default' in session && analytics_env === 'production') {
+            analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+          } catch (er) {
+            // empty
+          }
+          if ('default' in session && analyticsEnv === 'production') {
             const acc = session[session.default];
             mixpanel.identify(acc.user_email);
           }
@@ -42,11 +47,13 @@ function guard(to, from, next) {
       }
     } else {
       resolve(next());
-      let analytics_env = '';
+      let analyticsEnv = '';
       try {
-        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {}
-      if (analytics_env === 'production') {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // empty
+      }
+      if (analyticsEnv === 'production') {
         if ('innerTrack' in to.meta) {
           const details = to.meta.innerTrack;
           if (details !== 'undefined') {
@@ -61,8 +68,8 @@ function guard(to, from, next) {
   });
 }
 
-function login_guard(to, from, next) {
-  return new Promise((resolve, reject) => {
+function loginGuard(to, from, next) {
+  return new Promise((resolve) => {
     let { session } = store.state;
 
     if (isEmpty(session)) {
@@ -75,12 +82,14 @@ function login_guard(to, from, next) {
           if ('login' in to.meta) {
             const details = to.meta.login;
             if (details !== 'undefined') {
-              let analytics_env = '';
+              let analyticsEnv = '';
               try {
-                analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-              } catch (er) {}
+                analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+              } catch (er) {
+                // empty
+              }
               // let path = window.location.href;
-              if (analytics_env === 'production') {
+              if (analyticsEnv === 'production') {
                 mixpanel.track(details, {
                   'Client Type': 'Web Platform',
                 });
@@ -109,25 +118,25 @@ export function createRouter() {
       {
         path: '/auth',
         component: () => import('../modules/auth/Auth.vue'),
-        beforeEnter: login_guard,
+        beforeEnter: loginGuard,
         children: [
           {
             path: '/',
             component: () => import('../modules/auth/components/SignIn.vue'),
-            beforeEnter: login_guard,
+            beforeEnter: loginGuard,
             meta: { login: 'Sign In Page' },
           },
           {
             path: '/auth/sign_in',
             name: 'sign_in',
             component: () => import('../modules/auth/components/SignIn.vue'),
-            beforeEnter: login_guard,
+            beforeEnter: loginGuard,
             meta: { login: 'Sign In Page' },
           },
           {
             path: '/auth/sign_up',
             component: () => import('../modules/auth/components/SignUp.vue'),
-            beforeEnter: login_guard,
+            beforeEnter: loginGuard,
             meta: { login: 'Sign Up Page' },
           },
           {
@@ -141,7 +150,7 @@ export function createRouter() {
           {
             path: '/auth/sign_up_verification',
             component: () => import('../modules/auth/components/SignUpVerification.vue'),
-            beforeEnter: login_guard,
+            beforeEnter: loginGuard,
             meta: { login: 'Sign Up Verification Page' },
           },
         ],
