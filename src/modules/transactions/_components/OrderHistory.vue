@@ -57,22 +57,17 @@
       </div>
     </div>
     <div class="bg-grey">
-      <button
-        type="button"
-        class=" btn-order-hstry btn-save"
-        name="order_history_text"
-        @click="exportPDF"
-      >
-        PRINT
-      </button>
-      <button
-        type="button"
-        class=" btn-order-hstry btn-save"
-        name="order_history_text"
-        @click="exportXLS"
-      >
-        EXPORT
-      </button>
+      <div class="download_history">
+      <el-dropdown @command="handleCommand"  align="right">
+          <el-button class="download_history" type="primary" size="mini">
+            Download<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+            <el-dropdown-menu class="download_history"slot="dropdown">
+              <el-dropdown-item  command="a">Excel</el-dropdown-item>
+              <el-dropdown-item  command="b">PDF</el-dropdown-item>
+            </el-dropdown-menu>
+      </el-dropdown>
+      </div>
     </div>
     <el-table
       id="save-pdf"
@@ -464,32 +459,37 @@ export default {
         },
       );
     },
-    exportXLS(){
+    handleCommand(command){
+      if(command=="a"){
       let data;
       let data2 = [];
 
       for (let i = 0; i < this.order_history_data.length; i++) {
+        console.log(this.order_history_data)
         let arr = {};
-        arr.OrderAmount= this.order_history_data[i].order_cost;
         arr.OrderNumber=this.order_history_data[i].order_no;
+        arr.OrderAmount= this.order_history_data[i].order_cost;
         arr.OrderDate=this.order_history_data[i].order_date;
         arr.OrderDistanceKM=this.order_history_data[i].order_details.distance;
         arr.User=this.order_history_data[i].user_details.name;
         arr.From=this.order_history_data[i].path[0].name;
         arr.To=this.order_history_data[i].path[1].name;
+        arr.RiderName=this.order_history_data[i].rider.rider_name;
+        arr.RiderPhone=this.order_history_data[i].rider.rider_phone;
         data2.push(arr)
         };
-       data = _.map(data2,(row)=>{return _.pick(row,'OrderAmount','OrderNumber','OrderDate','user','OrderDistanceKM','From','To')});
-      const fileName = 'download';
-      const exportType = 'xls';
+       data = _.map(data2,(row)=>{return _.pick(row,'OrderNumber','OrderAmount','OrderDate','User','OrderDistanceKM','From','To','RiderName','RiderPhone')});
+      const fileName = 'Order History';
+      const exportType = 'csv';
 
       exportFromJSON({ data, fileName, exportType })
-    },
-    exportPDF() {
-      const d = new Printd();
 
+      }
+      else{
+      const d = new Printd();
       // opens the "print dialog" of your browser to print the element
       d.print(document.getElementById('save-pdf'), cssText);
+      }
     },
   },
 };
@@ -498,5 +498,8 @@ export default {
 <style lang="css">
 .btn-order-hstry{
   border-width:0px !important;
+}
+.el-dropdown{
+  float: right;
 }
 </style>

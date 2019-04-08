@@ -159,6 +159,25 @@ export default {
         // TO DO research implementation of native input events
     },
 
+    trackMixpanelEvent(name){
+      let analytics_env = '';
+      try {
+        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+      }
+      catch (er) {
+
+      }
+
+      try{
+        if(analytics_env === 'production'){
+          mixpanel.track(name);
+        }
+      }
+      catch(er){
+
+      }
+    },
+
     clearLocation(index){
         this.resetLocation(index);
         this.attemptPriceRequest();
@@ -295,7 +314,12 @@ export default {
             this.loading = false;
             this.setDefaultPackageClass();
             this.setDefaultVendorType(previous_active_vendor);
-            this.trackMixpanelEvent('Make Price Request');
+            const acc = this.$store.getters.getSession;
+
+            this.trackMixpanelEvent('Make Price Request', {
+              'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+              'Client Type': 'Web Platform',
+            });
         }, error => {
             if(error.hasOwnProperty('crisis_notification')){
                 this.doNotification(3,error.reason, error.crisis_notification.msg);
