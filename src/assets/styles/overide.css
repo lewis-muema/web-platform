@@ -626,10 +626,10 @@ span.el-pagination__jump {
 .home-view-truck-options-inner--number-of-loaders .el-input-number .el-input__inner{
   border: 1px solid #1782c5;
 }
-.el-button{
-  color: #ecf0f1;
-  background-color: #1782c5;
-  border-color: #1b7fc3;
+.el-button.download_history{
+  color: #ecf0f1 !important;
+  background-color: #1782c5 !important;
+  border-color: #1b7fc3 !important;
   cursor: pointer;
   position: relative;
   display: block;
@@ -639,4 +639,11 @@ span.el-pagination__jump {
   padding-left: 20px;
   padding-right: 20px;
   font-size: 13px;
+  width: 90%;
+}
+.el-dropdown-menu.download_history{
+  color: #ecf0f1 !important;
+  background-color: #ffffff !important;
+  font-size: 13px;
+  width: 9.5%;
 }
