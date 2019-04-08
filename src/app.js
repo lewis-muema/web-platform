@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import Vue from 'vue';
 import { sync } from 'vuex-router-sync';
 
@@ -49,7 +50,6 @@ import { createStore } from './store';
 import { createRouter } from './router';
 import App from './App.vue';
 
-
 Vue.prototype.moment = moment;
 // configure language
 locale.use(lang);
@@ -82,6 +82,7 @@ Vue.use(Rate);
 Vue.use(Popover);
 Vue.use(Autocomplete);
 Vue.use(Loading.directive);
+Vue.use(exportFromJSON);
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$msgbox = MessageBox;

@@ -1,4 +1,4 @@
-/* eslint class-methods-use-this: "error" */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["hexToBase64","base64ToHex"] }] */
 /* eslint-env es6 */
 /* global hex:true */
 /* eslint no-undef: "error" */

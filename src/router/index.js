@@ -16,7 +16,7 @@ function isEmpty(obj) {
 
 function guard(to, from, next) {
   return new Promise((resolve, reject) => {
-    let session = store.state.session;
+    let { session } = store.state;
     if (isEmpty(session)) {
       if (process.browser) {
         // read ls here
@@ -63,7 +63,7 @@ function guard(to, from, next) {
 
 function login_guard(to, from, next) {
   return new Promise((resolve, reject) => {
-    let session = store.state.session;
+    let { session } = store.state;
 
     if (isEmpty(session)) {
       if (process.browser) {

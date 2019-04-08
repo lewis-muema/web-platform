@@ -1,4 +1,5 @@
-/* eslint consistent-return: "error" */
+/* eslint consistent-return: ["error", { "treatUndefinedAsUnspecified": true }] */
+
 function getTitle(vm) {
   // components can simply provide a `title` option
   // which can be either a string or a function

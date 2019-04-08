@@ -4,8 +4,8 @@ import store from '@/data/state';
 
 class Http {
   constructor() {
-    let service = axios.create({});
-    service.interceptors.request.use(config => {
+    const service = axios.create({});
+    service.interceptors.request.use((config) => {
       config.headers.common['x-access-token'] = store.state.token;
       return config;
     });

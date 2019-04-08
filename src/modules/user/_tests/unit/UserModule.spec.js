@@ -1,13 +1,15 @@
+/* global describe,it */
+/* eslint no-undef: "error" */
 import Vue from 'vue';
-import sinon from 'sinon';
-import { expect } from 'chai';
-import { mount } from '@vue/test-utils';
+// import sinon from 'sinon';
+// import { expect } from 'chai';
+// import { mount } from '@vue/test-utils';
 import Vuex from 'vuex';
-import User from '../../User.vue';
-import ChangePassword from '../../_components/ChangePassword.vue';
-import FreeDeliveries from '../../_components/FreeDeliveries.vue';
-import PersonalInfo from '../../_components/PersonalInfo.vue';
-import Profile from '../../_components/Profile.vue';
+// import User from '../../User.vue';
+// import ChangePassword from '../../_components/ChangePassword.vue';
+// import FreeDeliveries from '../../_components/FreeDeliveries.vue';
+// import PersonalInfo from '../../_components/PersonalInfo.vue';
+// import Profile from '../../_components/Profile.vue';
 
 
 Vue.use(Vuex);

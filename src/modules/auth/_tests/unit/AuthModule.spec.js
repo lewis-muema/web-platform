@@ -1,14 +1,16 @@
+/* global describe,it */
+/* eslint no-undef: "error" */
 import Vue from 'vue';
-import sinon from 'sinon';
-import { expect } from 'chai';
-import { mount } from '@vue/test-utils';
+// import sinon from 'sinon';
+// import { expect } from 'chai';
+// import { mount } from '@vue/test-utils';
 import Vuex from 'vuex';
-import Auth from '../../Auth.vue';
-import ForgotPassword from '../../components/ForgotPassword.vue';
-import ResetPassword from '../../components/ResetPassword.vue';
-import SignIn from '../../components/SignIn.vue';
-import SignUp from '../../components/SignUp.vue';
-import SignUpVerification from '../../components/SignUpVerification.vue';
+// import Auth from '../../Auth.vue';
+// import ForgotPassword from '../../components/ForgotPassword.vue';
+// import ResetPassword from '../../components/ResetPassword.vue';
+// import SignIn from '../../components/SignIn.vue';
+// import SignUp from '../../components/SignUp.vue';
+// import SignUpVerification from '../../components/SignUpVerification.vue';
 
 Vue.use(Vuex);
 

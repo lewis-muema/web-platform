@@ -1,6 +1,7 @@
 /* eslint consistent-return: "error" */
 /* eslint no-param-reassign: "error" */
 /* eslint prefer-promise-reject-errors: "error" */
+
 import { createApp } from './app';
 
 export default context => new Promise((resolve, reject) => {

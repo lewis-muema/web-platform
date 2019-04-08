@@ -1,5 +1,7 @@
 /* eslint no-param-reassign: "error" */
 /* eslint max-len: ["error", { "ignoreComments": true }] */
+/* eslint no-restricted-syntax: ["error", "WithStatement"] */
+
 export default {
   /*
   Usage:

@@ -1,21 +1,22 @@
+/* global describe,it */
+/* eslint no-undef: "error" */
 import Vue from 'vue';
-import sinon from 'sinon';
-import { expect } from 'chai';
-import { mount } from '@vue/test-utils';
+// import sinon from 'sinon';
+// import { expect } from 'chai';
+// import { mount } from '@vue/test-utils';
 import Vuex from 'vuex';
-import Payment from '../../Payment.vue';
-import AccountBalanceComponent from '../../_components/AccountBalance.vue';
-import AddCardComponent from '../../_components/AddCard.vue';
-import CardComponent from '../../_components/CardComponent.vue';
-import FailComponent from '../../_components/FailComponent.vue';
-import LoadingComponent from '../../_components/LoadingComponent.vue';
-import MpesaComponent from '../../_components/MpesaComponent.vue';
-import OrderCost from '../../_components/OrderCost.vue';
-import PaymentBody from '../../_components/PaymentBody.vue';
-import PayMethod from '../../_components/PayMethod.vue';
-import PromoComponent from '../../_components/PromoComponent.vue';
-import SuccessComponent from '../../_components/SuccessComponent.vue';
-
+// import Payment from '../../Payment.vue';
+// import AccountBalanceComponent from '../../_components/AccountBalance.vue';
+// import AddCardComponent from '../../_components/AddCard.vue';
+// import CardComponent from '../../_components/CardComponent.vue';
+// import FailComponent from '../../_components/FailComponent.vue';
+// import LoadingComponent from '../../_components/LoadingComponent.vue';
+// import MpesaComponent from '../../_components/MpesaComponent.vue';
+// import OrderCost from '../../_components/OrderCost.vue';
+// import PaymentBody from '../../_components/PaymentBody.vue';
+// import PayMethod from '../../_components/PayMethod.vue';
+// import PromoComponent from '../../_components/PromoComponent.vue';
+// import SuccessComponent from '../../_components/SuccessComponent.vue';
 
 
 Vue.use(Vuex);

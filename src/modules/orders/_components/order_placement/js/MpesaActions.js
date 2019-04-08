@@ -2,8 +2,10 @@
 /* eslint-disable prefer-destructuring */
 /* eslint no-shadow: "error" */
 /* eslint-env es6 */
-/* eslint func-names: ["error", "as-needed"] */
-/* eslint no-unused-vars: "error" */
+/* eslint func-names: ["error", "never"] */
+/* eslint no-unused-vars: ["error", { "vars": "local" }] */
+/* eslint no-shadow: ["error", { "allow": ["updatedPollCount"] }] */
+
 export default {
   /* start mpesa */
 
@@ -91,13 +93,14 @@ export default {
       const that = this;
       const updatedPollCount = pollCount;
       (function (updatedPollCount) {
+        let newPollCount = updatedPollCount;
         setTimeout(() => {
           const res = that.checkRunningBalance(oldRb, payload);
           if (res) {
-            updatedPollCount = pollLimit;
+            newPollCount = pollLimit;
             return true;
           }
-        }, 10000 * updatedPollCount);
+        }, 10000 * newPollCount);
       }(updatedPollCount));
     }
   },

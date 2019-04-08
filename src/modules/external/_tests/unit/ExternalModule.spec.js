@@ -1,15 +1,16 @@
+/* global describe,beforeEach,it */
+/* eslint no-undef: "error" */
 import Vue from 'vue';
-import sinon from 'sinon';
+// import sinon from 'sinon';
 import { expect } from 'chai';
 import { mount } from '@vue/test-utils';
 import Vuex from 'vuex';
 import HeaderComponent from '../../components/HeaderComponent.vue';
-import EmailValidationComponent from '../../components/EmailValidationComponent.vue';
+// import EmailValidationComponent from '../../components/EmailValidationComponent.vue';
 
 Vue.use(Vuex);
 
 describe('HeaderComponent.vue', () => {
-  let state;
   let getters;
   let store;
 

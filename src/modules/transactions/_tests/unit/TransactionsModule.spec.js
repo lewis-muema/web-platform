@@ -1,13 +1,17 @@
+/* global describe,it */
+/* eslint no-undef: "error" */
+
 import Vue from 'vue';
-import sinon from 'sinon';
-import { expect } from 'chai';
-import { mount } from '@vue/test-utils';
+// import sinon from 'sinon';
+// import { expect } from 'chai';
+// import { mount } from '@vue/test-utils';
+
 import Vuex from 'vuex';
-import Transactions from '../../Transactions.vue';
-import OrderDetails from '../../_components/OrderDetails.vue';
-import OrderHistory from '../../_components/OrderHistory.vue';
-import Payments from '../../_components/Payments.vue';
-import Statement from '../../_components/Statement.vue';
+// import Transactions from '../../Transactions.vue';
+// import OrderDetails from '../../_components/OrderDetails.vue';
+// import OrderHistory from '../../_components/OrderHistory.vue';
+// import Payments from '../../_components/Payments.vue';
+// import Statement from '../../_components/Statement.vue';
 
 
 Vue.use(Vuex);

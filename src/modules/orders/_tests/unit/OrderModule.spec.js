@@ -1,16 +1,18 @@
+/* global describe,it */
+/* eslint no-undef: "error" */
 import Vue from 'vue';
-import sinon from 'sinon';
-import { expect } from 'chai';
-import { mount } from '@vue/test-utils';
+// import sinon from 'sinon';
+// import { expect } from 'chai';
+// import { mount } from '@vue/test-utils';
 import Vuex from 'vuex';
-import Order from '../../Orders.vue';
-import OngoingComponent from '../../_components/OngoingComponent.vue';
-import MapComponent from '../../_components/MapComponent.vue';
-import OrderOptions from '../../_components/order_placement/_components/OrderOptions.vue';
-import VendorComponent from '../../_components/order_placement/_components/VendorComponent.vue';
-import Comments from '../../_components/rating/components/Comments.vue';
-import PostRate from '../../_components/rating/components/PostRate.vue';
-import PostRateBusiness from '../../_components/rating/components/PostRateBusiness.vue';
+// import Order from '../../Orders.vue';
+// import OngoingComponent from '../../_components/OngoingComponent.vue';
+// import MapComponent from '../../_components/MapComponent.vue';
+// import OrderOptions from '../../_components/order_placement/_components/OrderOptions.vue';
+// import VendorComponent from '../../_components/order_placement/_components/VendorComponent.vue';
+// import Comments from '../../_components/rating/components/Comments.vue';
+// import PostRate from '../../_components/rating/components/PostRate.vue';
+// import PostRateBusiness from '../../_components/rating/components/PostRateBusiness.vue';
 
 Vue.use(Vuex);
 
