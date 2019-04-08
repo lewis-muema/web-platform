@@ -2,6 +2,8 @@
 /* global mixpanel  */
 /* eslint no-undef: "error" */
 /* eslint no-underscore-dangle: ["error", { "allow": ["_sessionSnack"] }] */
+/* eslint-disable import/prefer-default-export */
+
 
 import Vue from 'vue';
 import Router from 'vue-router';

@@ -100,6 +100,7 @@ export default {
             newPollCount = pollLimit;
             return true;
           }
+          return false;
         }, 10000 * newPollCount);
       }(updatedPollCount));
     }

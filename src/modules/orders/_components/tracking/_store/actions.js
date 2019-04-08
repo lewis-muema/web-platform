@@ -1,5 +1,6 @@
 /* eslint consistent-return: "error" */
 /* eslint no-unused-vars: "error" */
+/* eslint consistent-return: ["error", { "treatUndefinedAsUnspecified": true }] */
 
 import mqtt from 'mqtt';
 
@@ -60,82 +61,82 @@ const cancelOrder = function cancelOrder({ dispatch }, data) {
   });
 };
 
+// eslint consistent-return: "error"
 const trackMQTT = function trackMQTT({ commit, state }) {
-  if (!state.tracking_data.confirm_status > 0) {
-    return false;
-  }
-  const trackingNo = state.tracking_data.rider.phone_no_1;
-  const { cityId } = state.tracking_data;
-  let cityCode = '';
+  if (state.tracking_data.confirm_status > 0) {
+    const trackingNo = state.tracking_data.rider.phone_no_1;
+    const { cityId } = state.tracking_data;
+    let cityCode = '';
 
-  switch (cityId) {
-    case 1:
-      cityCode = 'ke-nairobi';
-      break;
-    case 2:
-      cityCode = 'ke-mombasa';
-      break;
-    case 3:
-      cityCode = 'ke-thika';
-      break;
-    case 4:
-      cityCode = 'ke-nakuru';
-      break;
-    case 5:
-      cityCode = 'ke-kisumu';
-      break;
-    default:
-      cityCode = 'ke-nairobi';
-  }
+    switch (cityId) {
+      case 1:
+        cityCode = 'ke-nairobi';
+        break;
+      case 2:
+        cityCode = 'ke-mombasa';
+        break;
+      case 3:
+        cityCode = 'ke-thika';
+        break;
+      case 4:
+        cityCode = 'ke-nakuru';
+        break;
+      case 5:
+        cityCode = 'ke-kisumu';
+        break;
+      default:
+        cityCode = 'ke-nairobi';
+    }
 
-  const uri = `${cityCode}/${trackingNo}`;
+    const uri = `${cityCode}/${trackingNo}`;
 
-  const clientId = `mqttjs_wtp_${Math.random()
-    .toString(16)
-    .substr(2, 8)}_${Math.random()}_${new Date().getTime()}`;
-  const host = 'wss://chat.sendyit.com:443';
-  const options = {
-    keepalive: 10,
-    clientId,
-    protocolId: 'MQTT',
-    protocolVersion: 4,
-    clean: true,
-    reconnectPeriod: 1000,
-    connectTimeout: 30 * 1000,
-    will: {
-      topic: 'WillMsg',
-      payload: 'Connection Closed abnormally..!',
+    const clientId = `mqttjs_wtp_${Math.random()
+      .toString(16)
+      .substr(2, 8)}_${Math.random()}_${new Date().getTime()}`;
+    const host = 'wss://chat.sendyit.com:443';
+    const options = {
+      keepalive: 10,
+      clientId,
+      protocolId: 'MQTT',
+      protocolVersion: 4,
+      clean: true,
+      reconnectPeriod: 1000,
+      connectTimeout: 30 * 1000,
+      will: {
+        topic: 'WillMsg',
+        payload: 'Connection Closed abnormally..!',
+        qos: 0,
+        retain: false,
+      },
+      username: 'sendy',
+      password: '93a3a43dbac9ddd362702fb525b42a2d',
+      rejectUnauthorized: false,
+    };
+    const client = mqtt.connect(host, options);
+
+    client.on('error', () => {
+      // handle error
+      client.end();
+    });
+
+    client.on('connect', () => {
+      commit('setIsMQTTConnected', true);
+    });
+
+    client.subscribe(`partner_app_positions/${uri}`, {
       qos: 0,
-      retain: false,
-    },
-    username: 'sendy',
-    password: '93a3a43dbac9ddd362702fb525b42a2d',
-    rejectUnauthorized: false,
-  };
-  const client = mqtt.connect(host, options);
+    });
 
-  client.on('error', () => {
-    // handle error
-    client.end();
-  });
+    client.on('message', (topic, message) => {
+      const vendor = JSON.parse(message.toString());
+      vendor.overide_visible = true;
+      commit('$_orders/set_vendor_markers', vendor, { root: true });
+    });
 
-  client.on('connect', () => {
-    commit('setIsMQTTConnected', true);
-  });
-
-  client.subscribe(`partner_app_positions/${uri}`, {
-    qos: 0,
-  });
-
-  client.on('message', (topic, message) => {
-    const vendor = JSON.parse(message.toString());
-    vendor.overide_visible = true;
-    commit('$_orders/set_vendor_markers', vendor, { root: true });
-  });
-
-  client.on('close', () => {
-    // closed
-  });
+    client.on('close', () => {
+      // closed
+    });
+  }
 };
 
 const runningBalance = function runningBalance({ dispatch }, data) {
