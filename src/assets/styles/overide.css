@@ -554,7 +554,7 @@ span.el-pagination__jump {
   width: 28%;
   background-color: #1782c5 !important;
   color: #ffffff !important;
-  border-color: transparent !important; 
+  border-color: transparent !important;
   border-left: 1px solid transparent !important;
   border-radius: 0px;
 }
@@ -639,11 +639,11 @@ span.el-pagination__jump {
   padding-left: 20px;
   padding-right: 20px;
   font-size: 13px;
-  width: 90%;
+  width: 90% !important;
 }
-.el-dropdown-menu.download_history{
+.el-dropdown-menu.export_dropdown{
   color: #ecf0f1 !important;
   background-color: #ffffff !important;
   font-size: 13px;
-  width: 9.5%;
+  width: 10.5% !important;
 }
