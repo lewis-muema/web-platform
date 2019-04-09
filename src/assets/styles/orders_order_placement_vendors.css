@@ -25,7 +25,24 @@
   justify-content: center;
   align-items: center;
 }
-
+.vendor__img_pstn{
+  flex-basis: 11% !important;
+}
+.home-next-step{
+  color :#1782C5;
+}
+.back-to-home-btn{
+  padding-left: 6px;
+  color: #000000;
+  font-size: 25px;
+  cursor: pointer;
+}
+.vendor_component-actions__element-date {
+  width: 100% !important;
+}
+.pair_rider_section{
+  width:100%;
+}
 .home-view-vendor-classes--label {
   padding: 5px 0px;
   margin-top: 5px;
