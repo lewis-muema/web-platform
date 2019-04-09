@@ -62,7 +62,7 @@
           <el-button class="download_history" type="primary" size="mini">
             Download<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
-            <el-dropdown-menu class="download_history"slot="dropdown">
+            <el-dropdown-menu class="export_dropdown"slot="dropdown">
               <el-dropdown-item  command="a">Excel</el-dropdown-item>
               <el-dropdown-item  command="b">PDF</el-dropdown-item>
             </el-dropdown-menu>
