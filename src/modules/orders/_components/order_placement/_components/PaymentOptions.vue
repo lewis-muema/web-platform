@@ -1,7 +1,7 @@
 <template lang="html">
-  <div class="">
+  <div class="" style="width:150% ">
     <div class="">
-      <div
+      <!-- <div
         v-if="allow_return"
         class="homeview-locations-options--set-return"
       >
@@ -11,64 +11,33 @@
         >
           Return to pick up
         </el-checkbox>
-      </div>
+      </div> -->
       <div class="home-view-vendor-classes--label">
         <div
           class="home-view-vendor-classes-label-item"
           @click="do_set_active_order_option('payment')"
         >
           <a
-            class="home-view-vendor-classes-menu section__link"
+            class="home-view-vendor-classes-menu options-section__link"
             :class="get_current_active_order_option_class('payment')"
           >
             <span class="home-view-actions--items__span">
-              <i class="el-icon-goods" /> Payment
+              Payment Options
             </span>
-          </a>
-        </div>
-        <div
-          class="home-view-vendor-classes-label-item"
-          @click="do_set_active_order_option('note')"
-        >
-          <a
-            class="home-view-vendor-classes-menu section__link"
-            :class="get_current_active_order_option_class('note')"
-          >
-            <span class="home-view-actions--items__span">
-              <i class="el-icon-edit-outline" /> Note
-            </span>
-          </a>
-        </div>
-        <div
-          class="home-view-vendor-classes-label-item"
-          @click="do_set_active_order_option('schedule')"
-        >
-          <a
-            class="home-view-vendor-classes-menu section__link"
-            :class="get_current_active_order_option_class('schedule')"
-          >
-            <span class="home-view-actions--items__span">
-              <i class="el-icon-time" /> Schedule
-            </span>
+            <font-awesome-icon icon="chevron-down" :class="revertIcon" width="15px" />
           </a>
         </div>
       </div>
     </div>
 
-    <div
-      v-if="get_active_order_option === 'payment'"
-      class="home-view-actions--note"
-    >
+    <div v-if="get_active_order_option === 'payment'" class="home-view-actions--note">
       <div class="" />
       <div class="home-view-notes-wrapper">
         <div
           v-show="show_payment"
           class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
         >
-          <div
-            v-show="show_payment_label"
-            class="home-view-payments-wrapper"
-          >
+          <div v-show="show_payment_label" class="home-view-payments-wrapper">
             <div class="home-view-payments-wrapper--left">
               <div class="home-view-payments-wrapper--left__amount-label">
                 Total Payment
@@ -94,10 +63,7 @@
           <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
             <div class="home-view-notes-wrapper--item__option">
               <div class="home-view-notes-wrapper--item__option-div">
-                <el-radio
-                  v-model="payment_method"
-                  label="1"
-                >
+                <el-radio v-model="payment_method" label="1">
                   M-Pesa
                 </el-radio>
               </div>
@@ -108,10 +74,7 @@
             <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
               <div class="home-view-notes-wrapper--item__option">
                 <div class="home-view-notes-wrapper--item__option-div">
-                  <el-radio
-                    v-model="payment_method"
-                    label="3"
-                  >
+                  <el-radio v-model="payment_method" label="3">
                     Payment on delivery
                   </el-radio>
                 </div>
@@ -119,25 +82,16 @@
               <div class="home-view-notes-wrapper--item__value" />
             </div>
           </span>
-          <div
-            v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0"
-            class=""
-          >
+          <div v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0" class="">
             <div
               v-for="card in get_saved_cards"
               class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
             >
               <div class="home-view-notes-wrapper--item__option">
                 <div class="home-view-notes-wrapper--item__option-div">
-                  <el-radio
-                    v-model="payment_method"
-                    :label="getCardValue(card.last4)"
-                  >
+                  <el-radio v-model="payment_method" :label="getCardValue(card.last4)">
                     **** **** **** {{ card.last4 }}
-                    <font-awesome-icon
-                      :icon="getCardIcon(card)"
-                      class="payments-orange"
-                    />
+                    <font-awesome-icon :icon="getCardIcon(card)" class="payments-orange" />
                   </el-radio>
                 </div>
               </div>
@@ -147,10 +101,7 @@
           <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
             <div class="home-view-notes-wrapper--item__option">
               <div class="home-view-notes-wrapper--item__option-div">
-                <div
-                  class="home-view-notes-wrapper--item__link"
-                  @click="takeMeToAddNewCard()"
-                >
+                <div class="home-view-notes-wrapper--item__link" @click="takeMeToAddNewCard()">
                   + &nbsp;&nbsp; Visa/Mastercard
                 </div>
               </div>
@@ -167,43 +118,6 @@
       </div>
     </div>
 
-    <div
-      v-if="get_active_order_option === 'note'"
-      class="home-view-actions--note"
-    >
-      <div class="" />
-      <div class="">
-        <textarea
-          v-model="order_notes"
-          name="name"
-          rows="5"
-          class="textarea-control"
-          placeholder="Additional delivery instructions"
-        />
-      </div>
-      <div class="" />
-    </div>
-    <div
-      v-if="get_active_order_option === 'schedule'"
-      class="home-view-actions--note"
-    >
-      <div class="home-view-actions--schedule">
-        Schedule a pickup time for your order
-      </div>
-      <div class="">
-        <div class="block">
-          <el-date-picker
-            v-model="schedule_time"
-            class="home-view-actions__element-date"
-            type="datetime"
-            :picker-options="schedule_picker_options"
-            format="dd-MM-yyyy h:mm a"
-            placeholder="Select date and time"
-          />
-        </div>
-      </div>
-      <div class="" />
-    </div>
     <div class="home-view-place-order">
       <div
         v-if="loading"
@@ -220,10 +134,7 @@
           {{ place_order_text }}
         </button>
       </div>
-      <div
-        v-if="loading && payment_state === 1"
-        class="home-view-place-order--mpesa-cancel"
-      >
+      <div v-if="loading && payment_state === 1" class="home-view-place-order--mpesa-cancel">
         <button
           type="button"
           class="button-primary home-view--place-order"
@@ -246,6 +157,9 @@ import order_store from '../../../_store';
 import home_store from '../_store';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin.js';
 import PaymentMxn from '../../../../../mixins/payment_mixin.js';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+library.add(faChevronDown);
 
 // const TRUCK_VENDORS = [6,10,13,14,17,18,19,20];
 const TRUCK_VENDORS = [20];
@@ -281,6 +195,7 @@ export default {
       vendors_without_return: ['Standard', 'Runner'],
       vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
       return_status: false,
+      showing: 1,
     };
   },
 
@@ -318,6 +233,13 @@ export default {
       }
       return '';
     },
+    revertIcon: function() {
+      return {
+        'sendy-blue': true,
+        'rotate-transform': true,
+        rotate: this.get_active_order_option === 'payment',
+      };
+    },
 
     // cost that the client pays. Is less the discount
     order_cost() {
@@ -325,8 +247,8 @@ export default {
       if (typeof this.activeVendorPriceData !== 'undefined') {
         if ('cost' in this.activeVendorPriceData) {
           if (
-            !this.getIsReturn
-            || this.vendors_without_return.includes(this.get_active_vendor_name)
+            !this.getIsReturn ||
+            this.vendors_without_return.includes(this.get_active_vendor_name)
           ) {
             cost = this.activeVendorPriceData.cost - this.activeVendorPriceData.discountAmount;
             return cost;
@@ -350,8 +272,8 @@ export default {
 
     hide_payment() {
       return (
-        this.getPriceRequestObject.payment_option === 2
-        || this.getRunningBalance + this.order_cost <= 0
+        this.getPriceRequestObject.payment_option === 2 ||
+        this.getRunningBalance + this.order_cost <= 0
       );
     },
 
@@ -372,7 +294,7 @@ export default {
     },
 
     order_is_scheduled() {
-      return this.moment(this.eta_time).isBefore(this.scheduled_time);
+      return this.moment(this.eta_time).isBefore(this.get_schedule_time);
     },
 
     eta_time() {
@@ -382,7 +304,7 @@ export default {
     },
 
     scheduled_time() {
-      return this.moment(this.schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format('YYYY-MM-DD HH:mm:ss');
+      return this.moment(this.get_schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format('YYYY-MM-DD HH:mm:ss');
     },
 
     getRB() {
@@ -465,14 +387,14 @@ export default {
 
     get_current_active_order_option_class(name) {
       return {
-        'router-link-active': name === this.get_active_order_option,
+        'options-link-active': name === this.get_active_order_option,
       };
     },
 
     checkAllowPrePaid() {
       if (
-        this.getPriceRequestObject.payment_option === 1
-        && this.getRunningBalance + this.order_cost > 0
+        this.getPriceRequestObject.payment_option === 1 &&
+        this.getRunningBalance + this.order_cost > 0
       ) {
         return false;
       }
@@ -482,8 +404,8 @@ export default {
     checkIfTruckOrder() {
       let is_truck = false;
       if (
-        TRUCK_VENDORS.includes(this.activeVendorPriceData.vendor_id)
-        && !this.getPriceRequestObject.fixed_cost
+        TRUCK_VENDORS.includes(this.activeVendorPriceData.vendor_id) &&
+        !this.getPriceRequestObject.fixed_cost
       ) {
         is_truck = true;
       }
@@ -514,7 +436,7 @@ export default {
     preCheckPaymentDetails() {
       this.loading = true;
       this.refreshRunningBalance().then(
-        (response) => {
+        response => {
           this.loading = false;
           if (this.checkIfTruckOrder()) {
             if (this.isValidateCustomerMinAmount()) {
@@ -526,7 +448,7 @@ export default {
           this.checkPaymentDetails();
           return true;
         },
-        (error) => {
+        error => {
           this.doNotification(
             '2',
             'Running balance check',
@@ -622,7 +544,7 @@ export default {
       };
       this.loading = true;
       this.requestOrderCompletion(payload).then(
-        (response) => {
+        response => {
           this.loading = false;
           if (response.length > 0) {
             response = response[0];
@@ -648,7 +570,7 @@ export default {
             );
           }
         },
-        (error) => {
+        error => {
           this.doNotification(
             3,
             'Order completion failed',
@@ -667,14 +589,14 @@ export default {
       }
 
       let payload = {
-        note: this.order_notes,
+        note: this.get_order_notes,
         trans_no: this.activeVendorPriceData.order_no,
         user_email: acc.user_email,
         user_phone: acc.user_phone,
         no_charge_status: false,
         insurance_amount: 10,
         cash_status: this.cash_status,
-        note_status: typeof this.order_notes === 'undefined' ? false : this.order_notes.length > 0,
+        note_status: typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
         last_digit: 'none',
         insurance_id: 1,
         platform: 'corporate',
@@ -690,8 +612,8 @@ export default {
         payment_mode: this.payment_method.startsWith('2')
           ? 2
           : this.payment_method === ''
-            ? 0
-            : Number(this.payment_method),
+          ? 0
+          : Number(this.payment_method),
         schedule_time: this.order_is_scheduled ? this.scheduled_time : this.eta_time,
         tier_tag: this.activeVendorPriceData.tier_tag,
         tier_name: this.activeVendorPriceData.tier_name,
@@ -731,15 +653,14 @@ export default {
 
     saveInfoToStore() {
       // save locations, notes & payment option
-      this.setScheduleTime(this.schedule_time);
+      // this.setScheduleTime(this.schedule_time);
       this.setPaymentMethod(this.payment_method);
-      this.setOrderNotes(this.order_notes);
+      // this.setOrderNotes(this.order_notes);
     },
 
     retrieveFromStore() {
       this.schedule_time = this.get_schedule_time;
       this.payment_method = this.get_payment_method;
-      this.order_notes = this.get_order_notes;
     },
 
     refreshRunningBalance() {
@@ -759,7 +680,7 @@ export default {
           endpoint: 'running_balance',
         };
         this.requestRunningBalanceFromAPI(payload).then(
-          (response) => {
+          response => {
             if (response.length > 0) {
               response = response[0];
             }
@@ -771,7 +692,7 @@ export default {
               reject(response.data);
             }
           },
-          (error) => {
+          error => {
             reject(response.data);
           },
         );
@@ -873,7 +794,7 @@ export default {
       this.loading = true;
 
       this.requestMpesaPaymentAction(full_payload).then(
-        (response) => {
+        response => {
           if (response.length > 0) {
             response = response[0];
           }
@@ -898,7 +819,7 @@ export default {
             this.loading = false;
           }
         },
-        (error) => {
+        error => {
           this.refreshRunningBalance();
           this.doNotification(
             '0',
@@ -947,7 +868,7 @@ export default {
       for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
         // wait 10 seconds
         const that = this;
-        (function (poll_count) {
+        (function(poll_count) {
           that.mpesa_poll_timer_id = window.setTimeout(() => {
             const res = that.checkRunningBalance(old_rb, payload);
             if (res) {
@@ -972,13 +893,13 @@ export default {
               }
             }
           }, 10000 * poll_count);
-        }(poll_count));
+        })(poll_count);
       }
     },
 
     checkRunningBalance(old_rb, payload) {
       this.requestRunningBalanceFromAPI(payload).then(
-        (response) => {
+        response => {
           if (response.length > 0) {
             response = response[0];
           }
@@ -1048,7 +969,7 @@ export default {
       };
 
       this.requestSavedCards(full_payload).then(
-        (response) => {
+        response => {
           // decrypt response here
           response = JSON.parse(Mcrypt.decrypt(response));
           if (response.status) {

@@ -7,7 +7,7 @@
     <div class="home-view-vendor-classes">
       <div class="home-view-vendor-classes--body">
         <div class="">
-          <div class="home-view-vendor-classes--label">
+          <div class="home-view-vendor-classes--label home-view--outline">
             <div
               v-for="(vendor_class, index) in getPriceRequestObject.economy_price_tiers"
               v-if="vendor_class.price_tiers.length > 0"
@@ -111,7 +111,7 @@
     </div>
   </div>
 
-  <div class="" v-else>
+  <div class="extended-options-wrappper" v-else>
     <!-- start carrier type transition -->
     <transition name="home-carrier-type-fade">
       <div class="home-view-vendor-types-item-wrap home-next-step">
@@ -176,10 +176,10 @@
                   v-model="schedule_time"
                   class="vendor_component-actions__element-date"
                   type="datetime"
-                  :picker-options="schedule_picker_options"
                   format="dd-MM-yyyy h:mm a"
                   placeholder="As soon as possible"
-                  prefix-icon ="el-icon-date"
+                  prefix-icon="el-icon-date"
+                  @change="dispatchScheduleTime"
                 />
               </div>
             </div>
@@ -187,34 +187,53 @@
               <div class="home-view-truck-options-label">
                 Do you have any special instructions?
               </div>
-                <div class="" />
-                <div class="">
-                  <textarea
-                    v-model="order_notes"
-                    name="name"
-                    rows="5"
-                    class="textarea-control"
-                    placeholder="Add notes"
-                  />
+              <div class="" />
+              <div class="" @change="dispatchOrderNotes">
+                <textarea
+                  v-model="order_notes"
+                  name="name"
+                  rows="5"
+                  class="textarea-control"
+                  placeholder="Add notes"
+
+                />
+              </div>
+            </div>
+
+            <!-- show small vendor extended options -->
+            <div v-if="this.small_vendors.includes(activeVendorPriceData.vendor_id)">
+              <div
+                class="home-view-truck-options-inner-wrapper"
+                v-if="
+                  !this.vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)
+                "
+              >
+                <div class="home-view-truck-options-label">
+                  What type of {{ getVendorNameOnCarrierType }} do you want?
                 </div>
-            </div>
-            <div class="home-view-truck-options-inner-wrapper">
-              <div class="home-view-truck-options-label">
-                 Pair with a rider ?
+                <div class="home-view-truck-options-inner--full-select">
+                  <el-select v-model="carrier_type" placeholder="" @change="dispatchCarrierType">
+                    <el-option
+                      v-for="item in smallVendorOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
               </div>
-              <div class="">
-                 <el-select v-model="pair_rider" class="pair_rider_section">
-                  <el-option label="Yes" value="1" />
-                  <el-option label="No"  value="2" />
-                </el-select>
-              </div>
             </div>
-            <div
-              v-if="get_active_package_class === 'large' || get_active_package_class === 'medium'"
-            >
-              <div class="home-view-truck-options-inner-wrapper" v-if="!this.vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)">
+
+            <!-- show large and medium extended options -->
+            <div v-else>
+              <div
+                class="home-view-truck-options-inner-wrapper"
+                v-if="
+                  !this.vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)
+                "
+              >
                 <div
-                  v-if="get_active_package_class === 'large'"
+                  v-if="this.large_vendors.includes(activeVendorPriceData.vendor_id)"
                   class="home-view-truck-options-label"
                 >
                   What type of truck do you want?
@@ -233,8 +252,12 @@
                   </el-select>
                 </div>
               </div>
-              <div v-if="get_active_package_class === 'large'">
-                <div v-if="Number(carrier_type) === 3" class="home-view-truck-options-inner-wrapper">
+
+              <div v-if="this.large_vendors.includes(activeVendorPriceData.vendor_id)">
+                <div
+                  v-if="Number(carrier_type) === 3"
+                  class="home-view-truck-options-inner-wrapper"
+                >
                   <div class="home-view-truck-options-label">
                     Temperature shouldn't exceed? (°C)
                   </div>
@@ -332,27 +355,38 @@
                 </div>
               </div>
             </div>
-            <!-- end large vendors -->
 
-            <!-- start small vendors -->
-            <div v-else>
-              <div class="home-view-truck-options-inner-wrapper" v-if="!this.vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)">
-                <div class="home-view-truck-options-label">
-                  What type of {{ getVendorNameOnCarrierType }} do you want?
-                </div>
-                <div class="home-view-truck-options-inner--full-select">
-                  <el-select v-model="carrier_type" placeholder="" @change="dispatchCarrierType">
-                    <el-option
-                      v-for="item in smallVendorOptions"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
+            <div class="home-view-truck-options-inner-wrapper">
+              <div class="home-view-truck-options-label">
+                Pair with a rider ?
+              </div>
+              <div class="">
+                <el-select v-model="pair_rider" class="pair_rider_section">
+                  <el-option label="Yes" value="1" />
+                  <el-option label="No" value="2" />
+                </el-select>
+              </div>
+            </div>
+            <div class="home-view-truck-options-inner-wrapper" v-if="this.pair_rider === 1">
+              <div class="home-view-truck-options-label">
+                Enter number plate of the {{ getVendorNameOnCarrierType }} ?
+              </div>
+              <div class="">
+                <div>
+                  <el-input
+                    v-model.trim="number_plate"
+                    placeholder="Enter Full Number plate"
+                    autocomplete="true"
+                    @change=""
+                  />
                 </div>
               </div>
             </div>
-            <!-- end small vendors -->
+            <div class="home-view-truck-options-inner-wrapper">
+              <div class="home-view-vendor-classes--label">
+                <payment-options @destroyOrderOptions="destroyVendorComponent()" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -365,11 +399,12 @@
 <script>
 import numeral from 'numeral';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import PaymentOptions from './PaymentOptions.vue';
 
 export default {
-  // components: {
-  //   VendorComponent,
-  // },
+  components: {
+    PaymentOptions,
+  },
   data() {
     return {
       first_time: false,
@@ -411,6 +446,10 @@ export default {
       schedule_time: this.moment(),
       order_notes: '',
       pair_rider: '2',
+      number_plate: '',
+      small_vendors: [1, 22],
+      medium_vendors: [2, 3],
+      large_vendors: [6, 10, 13, 14, 17, 18, 19, 20],
     };
   },
   computed: {
@@ -477,6 +516,8 @@ export default {
       let vendor_disp_name = 'motorbike';
       if (this.get_active_package_class === 'medium') {
         vendor_disp_name = this.get_active_vendor_name;
+      } else if (this.get_active_package_class === 'large') {
+        vendor_disp_name = this.get_active_vendor_name;
       }
       return vendor_disp_name.toLowerCase();
     },
@@ -507,16 +548,22 @@ export default {
       setNOOfLoaders: '$_orders/$_home/setNOOfLoaders',
       setOrderState: '$_orders/$_home/setOrderState',
       setExtendOptions: '$_orders/$_home/setExtendOptions',
+      setScheduleTime: '$_orders/$_home/set_schedule_time',
+      setOrderNotes: '$_orders/$_home/set_order_notes',
     }),
 
     dispatchCarrierType() {
       const type = this.carrier_type;
       this.setCarrierType(type);
     },
+    dispatchScheduleTime(){
+      this.setScheduleTime(this.schedule_time);
+    },
+    dispatchOrderNotes(){
+      this.setOrderNotes(this.order_notes);
+    },
 
     goToNextStep() {
-      console.log('Am here');
-      console.log(this.activeVendorPriceData);
       this.setOrderState(2);
       this.setExtendOptions(true);
     },
@@ -524,8 +571,8 @@ export default {
       this.setOrderState(1);
       this.setExtendOptions(false);
     },
-    dispatchDeliveryItem(val) {
-      this.setDeliveryItem(val);
+    dispatchDeliveryItem() {
+      this.setDeliveryItem(this.delivery_item);
     },
 
     dispatchLoadWeight(val) {
