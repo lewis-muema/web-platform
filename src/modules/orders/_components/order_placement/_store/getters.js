@@ -24,4 +24,6 @@ export default {
     getLoadUnits: (state) => state.load_units,
     getAdditionalLoaderStatus: (state) => state.additional_loader,
     getNOOfLoaders: (state) => state.no_of_loaders,
+    getOrderState: (state) => state.order_state,
+    get_extended_options: (state) => state.extended_options,
 };

@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="home-view-vendor-and-optins-wrappper">
+  <div class="home-view-vendor-and-optins-wrappper" v-if="getOrderState === 1">
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
       Load Size And Delivery Type
@@ -7,7 +7,7 @@
     <div class="home-view-vendor-classes">
       <div class="home-view-vendor-classes--body">
         <div class="">
-          <div class="home-view-vendor-classes--label">
+          <div class="home-view-vendor-classes--label home-view--outline">
             <div
               v-for="(vendor_class, index) in getPriceRequestObject.economy_price_tiers"
               v-if="vendor_class.price_tiers.length > 0"
@@ -23,7 +23,7 @@
                   :src="getPackageIcon(vendor_class.tier_group)"
                   class="home-view-vendor-classes-menu--img"
                   alt="vendor_class.tier_group"
-                >
+                />
                 <span class="home-view-vendor-classes-menu--span">
                   {{ vendor_class.tier_group }}
                 </span>
@@ -33,10 +33,7 @@
         </div>
 
         <!-- start vendor types wrapper -->
-        <div
-          v-if="activePackageClassPriceData !== ''"
-          class="home-view-vendor-types"
-        >
+        <div v-if="activePackageClassPriceData !== ''" class="home-view-vendor-types">
           <!-- start vendor types loop -->
           <div
             v-for="j in activePackageClassPriceData.price_tiers"
@@ -54,7 +51,7 @@
                     class="home-view-vendor-types-item__image"
                     :src="getVendorIcon(j.vendor_id)"
                     alt=""
-                  >
+                  />
                 </div>
                 <div class="home-view-vendor-types-item--vendor-wrapper__vendor">
                   <div class="home-view-vendor-types-item-vendor--vendor-formal-name">
@@ -76,9 +73,7 @@
                     <span v-if="!isFixedCost(j)">
                       Price to be confirmed
                     </span>
-                    <span v-else>
-                      Ksh {{ getVendorPrice(j) }}
-                    </span>
+                    <span v-else> Ksh {{ getVendorPrice(j) }} </span>
                   </div>
                   <div class="home-view-vendor-types-item--cost-wrapper_time">
                     Pickup by {{ transformDate(j) }}
@@ -88,15 +83,8 @@
                 <div
                   class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right"
                 >
-                  <el-popover
-                    placement="right"
-                    width="350"
-                    trigger="hover"
-                  >
-                    <div
-                      class="reset-font"
-                      v-html="j.tier_description"
-                    />
+                  <el-popover placement="right" width="350" trigger="hover">
+                    <div class="reset-font" v-html="j.tier_description" />
                     <span slot="reference">
                       <i class="el-icon-info" />
                     </span>
@@ -104,209 +92,6 @@
                 </div>
               </div>
               <!-- end cost wrapper -->
-
-              <!-- start carrier type transition -->
-              <transition name="home-carrier-type-fade">
-                <!-- start carrier type section -->
-                <div
-                  v-if="expandVendorOptions(j)"
-                  class="home-view-carrier-type"
-                >
-                  <!-- start large /medium vendors -->
-                  <div
-                    v-if="
-                      get_active_package_class === 'large' || get_active_package_class === 'medium'
-                    "
-                    class="home-view-truck-options-wrapper"
-                  >
-                    <div
-                      v-if="get_active_package_class === 'large'"
-                      class="home-view-truck-options-divider"
-                    />
-
-                    <div class="home-view-truck-options-inner-wrapper">
-                      <div
-                        v-if="get_active_package_class === 'large'"
-                        class="home-view-truck-options-label"
-                      >
-                        What type of truck do you want?
-                      </div>
-                      <div
-                        v-else
-                        class="home-view-truck-options-label"
-                      >
-                        What type of {{ getVendorNameOnCarrierType }} do you want?
-                      </div>
-                      <div class="home-view-truck-options-inner--full-select">
-                        <el-select
-                          v-model="carrier_type"
-                          placeholder=""
-                          @change="dispatchCarrierType"
-                        >
-                          <el-option
-                            v-for="item in truckOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                          />
-                        </el-select>
-                      </div>
-                    </div>
-                    <div v-if="get_active_package_class === 'large'">
-                      <div
-                        v-if="Number(carrier_type) === 3"
-                        class="home-view-truck-options-inner-wrapper"
-                      >
-                        <div class="home-view-truck-options-label">
-                          Temperature shouldn't exceed? (°C)
-                        </div>
-                        <div class="home-view-truck-options-inner--number-of-loaders">
-                          <el-input-number
-                            v-model.trim="max_temperature"
-                            :min="1"
-                            :max="10"
-                            @change="handleChangeInMaxTemperature"
-                          />
-                        </div>
-                      </div>
-
-                      <div class="home-view-truck-options-inner-wrapper">
-                        <div class="home-view-truck-options-label">
-                          What do you want delivered?
-                        </div>
-                        <div>
-                          <el-input
-                            v-model.trim="delivery_item"
-                            placeholder="(Enter text)"
-                            autocomplete="true"
-                            @change="dispatchDeliveryItem"
-                          />
-                          <!-- TO DO: Handle autocomplete -->
-                        </div>
-                      </div>
-
-                      <div class="home-view-truck-options-inner-wrapper">
-                        <div class="home-view-truck-options-label">
-                          What is the approximate weight of the load?
-                        </div>
-                        <div class="home-view-truck-options-inner--load-weight">
-                          <el-input
-                            v-model="load_weight"
-                            type="number"
-                            placeholder="(Enter load weight)"
-                            :min="0"
-                            :max="getMaxAllowedWeight"
-                            @input="dispatchLoadWeight"
-                          >
-                            <el-select
-                              slot="append"
-                              v-model="load_units"
-                              placeholder="Tonnes"
-                              @change="dispatchLoadUnits"
-                            >
-                              <el-option
-                                label="KG"
-                                value="kgs"
-                              />
-                              <el-option
-                                label="Tonnes"
-                                value="tonnes"
-                              />
-                            </el-select>
-                          </el-input>
-                        </div>
-                      </div>
-
-                      <div
-                        v-if="!isFixedCost(j)"
-                        class="home-view-truck-options-inner-wrapper"
-                      >
-                        <div class="home-view-truck-options-label">
-                          How much are you offering to pay for this order?
-                        </div>
-                        <div>
-                          <el-input
-                            v-model.trim="customer_min_amount"
-                            :min="0"
-                            type="number"
-                            placeholder="Kes"
-                            @change="handleChangeInMinAmount"
-                          />
-                        </div>
-                      </div>
-
-                      <div class="home-view-truck-options-inner-wrapper">
-                        <div class="home-view-truck-options-label">
-                          Do you want us to provide you with Loader/s?
-                        </div>
-                        <div class="">
-                          <el-radio
-                            v-model="additional_loader"
-                            label="1"
-                            @change="dispatchAdditionalLoaderStatus"
-                          >
-                            Yes
-                          </el-radio>
-                          <el-radio
-                            v-model="additional_loader"
-                            label="0"
-                            @change="dispatchAdditionalLoaderStatus"
-                          >
-                            No
-                          </el-radio>
-                        </div>
-                      </div>
-
-                      <div
-                        v-if="Number(additional_loader) === 1"
-                        class="home-view-truck-options-inner-wrapper"
-                      >
-                        <div class="home-view-truck-options-label">
-                          How many Loaders do you require?
-                        </div>
-                        <div class="home-view-truck-options-inner--number-of-loaders">
-                          <el-input-number
-                            v-model="number_of_loaders"
-                            :min="1"
-                            :max="10"
-                            @change="handleChangeInNumberOfLoaders"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- end large vendors -->
-
-                  <!-- start small vendors -->
-                  <div
-                    v-else
-                    class="home-view-truck-options-wrapper"
-                  >
-                    <div class="home-view-truck-options-inner-wrapper">
-                      <div class="home-view-truck-options-label">
-                        What type of {{ getVendorNameOnCarrierType }} do you want?
-                      </div>
-                      <div class="home-view-truck-options-inner--full-select">
-                        <el-select
-                          v-model="carrier_type"
-                          placeholder=""
-                          @change="dispatchCarrierType"
-                        >
-                          <el-option
-                            v-for="item in smallVendorOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                          />
-                        </el-select>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- end small vendors -->
-                </div>
-                <!-- end carrier type section -->
-              </transition>
-              <!-- end carrier type transition -->
             </div>
           </div>
           <!-- end vendor type loop -->
@@ -314,23 +99,312 @@
         <!-- end vendor types wrapper -->
       </div>
     </div>
-    <div
-      v-if="get_active_package_class !== ''"
-      class=""
-    >
-      <order-options @destroyOrderOptions="destroyVendorComponent()" />
+    <div v-if="get_active_package_class !== ''" class="">
+      <button
+        type="button"
+        class="button-primary home-view--place-order"
+        name="button"
+        v-on:click="goToNextStep"
+      >
+        Continue
+      </button>
     </div>
+  </div>
+
+  <div class="extended-options-wrappper" v-else>
+    <!-- start carrier type transition -->
+    <transition name="home-carrier-type-fade">
+      <div class="home-view-vendor-types-item-wrap home-next-step">
+        <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
+          <div class="" v-on:click="goBackToHome">
+            <i class="el-icon-back back-to-home-btn"></i>
+          </div>
+          <div class="home-view-vendor-types-item--vendor-wrapper__img vendor__img_pstn">
+            <img
+              class="home-view-vendor-types-item__image"
+              :src="getVendorIcon(activeVendorPriceData.vendor_id)"
+              alt=""
+            />
+          </div>
+          <div class="home-view-vendor-types-item--vendor-wrapper__vendor">
+            <div class="home-view-vendor-types-item-vendor--vendor-formal-name">
+              {{ activeVendorPriceData.vendor_name }}
+            </div>
+            <div class="home-view-vendor-types-item-vendor--vendor-local-name">
+              {{ getVendorDescription(activeVendorPriceData) }}
+            </div>
+          </div>
+          <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper">
+            <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-left">
+              <div class="home-view-vendor-types-item--cost-wrapper__cost">
+                <span v-if="!isFixedCost(activeVendorPriceData)">
+                  Price to be confirmed
+                </span>
+                <span v-else> Ksh {{ getVendorPrice(activeVendorPriceData) }} </span>
+              </div>
+              <div class="home-view-vendor-types-item--cost-wrapper_time">
+                Pickup by {{ transformDate(activeVendorPriceData) }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- start carrier type section -->
+        <div v-if="" class="home-view-carrier-type">
+          <!-- start large /medium vendors -->
+          <div class="home-view-truck-options-wrapper">
+            <div class="home-view-truck-options-divider" />
+            <div class="home-view-truck-options-inner-wrapper">
+              <div class="home-view-truck-options-label">
+                What do you want delivered?
+              </div>
+              <div>
+                <el-input
+                  v-model.trim="delivery_item"
+                  placeholder="(Enter text)"
+                  autocomplete="true"
+                  @change="dispatchDeliveryItem"
+                />
+                <!-- TO DO: Handle autocomplete -->
+              </div>
+            </div>
+            <div class="home-view-truck-options-inner-wrapper">
+              <div class="home-view-truck-options-label">
+                Pick up time for your order
+              </div>
+              <div class="block">
+                <el-date-picker
+                  v-model="schedule_time"
+                  class="vendor_component-actions__element-date"
+                  type="datetime"
+                  format="dd-MM-yyyy h:mm a"
+                  placeholder="As soon as possible"
+                  prefix-icon="el-icon-date"
+                  @change="dispatchScheduleTime"
+                />
+              </div>
+            </div>
+            <div class="home-view-truck-options-inner-wrapper">
+              <div class="home-view-truck-options-label">
+                Additional Instructions
+              </div>
+              <div class="" />
+              <div class="" @change="dispatchOrderNotes">
+                <textarea
+                  v-model="order_notes"
+                  name="name"
+                  rows="5"
+                  class="textarea-control"
+                  placeholder="Instructions.."
+                />
+              </div>
+            </div>
+
+            <!-- show small vendor extended options -->
+            <div v-if="small_vendors.includes(activeVendorPriceData.vendor_id)">
+              <div
+                class="home-view-truck-options-inner-wrapper"
+                v-if="
+                  !vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)
+                "
+              >
+                <div class="home-view-truck-options-label">
+                  What type of {{ getVendorNameOnCarrierType }} do you want?
+                </div>
+                <div class="home-view-truck-options-inner--full-select">
+                  <el-select v-model="carrier_type" placeholder="" @change="dispatchCarrierType">
+                    <el-option
+                      v-for="item in smallVendorOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
+              </div>
+            </div>
+
+            <!-- show large and medium extended options -->
+            <div v-else>
+              <div
+                class="home-view-truck-options-inner-wrapper"
+                v-if="
+                  !vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)
+                "
+              >
+                <div
+                  v-if="large_vendors.includes(activeVendorPriceData.vendor_id)"
+                  class="home-view-truck-options-label"
+                >
+                  What type of truck do you want?
+                </div>
+                <div v-else class="home-view-truck-options-label">
+                  What type of {{ getVendorNameOnCarrierType }} do you want?
+                </div>
+                <div class="home-view-truck-options-inner--full-select">
+                  <el-select v-model="carrier_type" placeholder="" @change="dispatchCarrierType">
+                    <el-option
+                      v-for="item in truckOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
+              </div>
+
+              <div v-if="large_vendors.includes(activeVendorPriceData.vendor_id)">
+                <div
+                  v-if="Number(carrier_type) === 3"
+                  class="home-view-truck-options-inner-wrapper"
+                >
+                  <div class="home-view-truck-options-label">
+                    Temperature shouldn't exceed? (°C)
+                  </div>
+                  <div class="home-view-truck-options-inner--number-of-loaders">
+                    <el-input-number
+                      v-model.trim="max_temperature"
+                      :min="1"
+                      :max="10"
+                      @change="handleChangeInMaxTemperature"
+                    />
+                  </div>
+                </div>
+
+                <!-- <div class="home-view-truck-options-inner-wrapper">
+                  <div class="home-view-truck-options-label">
+                    What is the approximate weight of the load?
+                  </div>
+                  <div class="home-view-truck-options-inner--load-weight">
+                    <el-input
+                      v-model="load_weight"
+                      type="number"
+                      placeholder="(Enter load weight)"
+                      :min="0"
+                      :max="getMaxAllowedWeight"
+                      @input="dispatchLoadWeight"
+                    >
+                      <el-select
+                        slot="append"
+                        v-model="load_units"
+                        placeholder="Tonnes"
+                        @change="dispatchLoadUnits"
+                      >
+                        <el-option label="KG" value="kgs" />
+                        <el-option label="Tonnes" value="tonnes" />
+                      </el-select>
+                    </el-input>
+                  </div>
+                </div> -->
+
+                <div
+                  v-if="!isFixedCost(activeVendorPriceData)"
+                  class="home-view-truck-options-inner-wrapper"
+                >
+                  <div class="home-view-truck-options-label">
+                    How much are you offering to pay for this order?
+                  </div>
+                  <div>
+                    <el-input
+                      v-model.trim="customer_min_amount"
+                      :min="0"
+                      type="number"
+                      placeholder="Kes"
+                      @change="handleChangeInMinAmount"
+                    />
+                  </div>
+                </div>
+
+                <div class="home-view-truck-options-inner-wrapper">
+                  <div class="home-view-truck-options-label">
+                    Do you want us to provide you with Loader/s?
+                  </div>
+                  <div class="">
+                    <el-radio
+                      v-model="additional_loader"
+                      label="1"
+                      @change="dispatchAdditionalLoaderStatus"
+                    >
+                      Yes
+                    </el-radio>
+                    <el-radio
+                      v-model="additional_loader"
+                      label="0"
+                      @change="dispatchAdditionalLoaderStatus"
+                    >
+                      No
+                    </el-radio>
+                  </div>
+                </div>
+
+                <div
+                  v-if="Number(additional_loader) === 1"
+                  class="home-view-truck-options-inner-wrapper"
+                >
+                  <div class="home-view-truck-options-label">
+                    How many Loaders do you require?
+                  </div>
+                  <div class="home-view-truck-options-inner--number-of-loaders">
+                    <el-input-number
+                      v-model="number_of_loaders"
+                      :min="1"
+                      :max="10"
+                      @change="handleChangeInNumberOfLoaders"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pair with rider  -->
+
+            <!-- <div class="home-view-truck-options-inner-wrapper">
+              <div class="home-view-truck-options-label">
+                Pair with a rider ?
+              </div>
+              <div class="">
+                <el-select v-model="pair_rider" class="pair_rider_section">
+                  <el-option label="Yes" value="1" />
+                  <el-option label="No" value="2" />
+                </el-select>
+              </div>
+            </div>
+            <div class="home-view-truck-options-inner-wrapper" v-if="this.pair_rider === 1">
+              <div class="home-view-truck-options-label">
+                Enter number plate of the {{ getVendorNameOnCarrierType }} ?
+              </div>
+              <div class="">
+                <div>
+                  <el-input
+                    v-model.trim="number_plate"
+                    placeholder="Enter Full Number plate"
+                    autocomplete="true"
+                    @change=""
+                  />
+                </div>
+              </div>
+            </div> -->
+            <div class="home-view-truck-options-inner-wrapper">
+              <div class="home-view-vendor-classes--label">
+                <payment-options @destroyOrderOptions="destroyVendorComponent()" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end carrier type section -->
+    </transition>
+    <!-- end carrier type transition -->
   </div>
 </template>
 
 <script>
 import numeral from 'numeral';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import OrderOptions from './OrderOptions.vue';
+import PaymentOptions from './PaymentOptions.vue';
 
 export default {
   components: {
-    OrderOptions,
+    PaymentOptions,
   },
   data() {
     return {
@@ -344,7 +418,7 @@ export default {
       load_weight: '',
       load_units: '',
       customer_min_amount: '',
-      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van','Express'],
+      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van', 'Express'],
       vendors_without_return: ['Standard', 'Runner'],
       baseTruckOptions: [
         {
@@ -370,6 +444,13 @@ export default {
           label: 'No Box',
         },
       ],
+      schedule_time: this.moment(),
+      order_notes: '',
+      pair_rider: '2',
+      number_plate: '',
+      small_vendors: [1, 22],
+      medium_vendors: [2, 3],
+      large_vendors: [6, 10, 13, 14, 17, 18, 19, 20],
     };
   },
   computed: {
@@ -387,6 +468,7 @@ export default {
       getLoadUnits: '$_orders/$_home/getLoadUnits',
       getAdditionalLoaderStatus: '$_orders/$_home/getAdditionalLoaderStatus',
       getNOOfLoaders: '$_orders/$_home/getNOOfLoaders',
+      getOrderState: '$_orders/$_home/getOrderState',
     }),
 
     activePackageClassPriceData() {
@@ -435,6 +517,8 @@ export default {
       let vendor_disp_name = 'motorbike';
       if (this.get_active_package_class === 'medium') {
         vendor_disp_name = this.get_active_vendor_name;
+      } else if (this.get_active_package_class === 'large') {
+        vendor_disp_name = this.get_active_vendor_name;
       }
       return vendor_disp_name.toLowerCase();
     },
@@ -463,15 +547,45 @@ export default {
       setLoadUnits: '$_orders/$_home/setLoadUnits',
       setAdditionalLoaderStatus: '$_orders/$_home/setAdditionalLoaderStatus',
       setNOOfLoaders: '$_orders/$_home/setNOOfLoaders',
+      setOrderState: '$_orders/$_home/setOrderState',
+      setExtendOptions: '$_orders/$_home/setExtendOptions',
+      setScheduleTime: '$_orders/$_home/set_schedule_time',
+      setOrderNotes: '$_orders/$_home/set_order_notes',
     }),
 
     dispatchCarrierType() {
       const type = this.carrier_type;
       this.setCarrierType(type);
     },
+    dispatchScheduleTime() {
+      this.setScheduleTime(this.schedule_time);
+    },
+    dispatchOrderNotes() {
+      this.setOrderNotes(this.order_notes);
+    },
 
-    dispatchDeliveryItem(val) {
-      this.setDeliveryItem(val);
+    goToNextStep() {
+      this.setDefaultCarrierType();
+      this.setOrderState(2);
+      this.setExtendOptions(true);
+    },
+    setDefaultCarrierType() {
+      if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+        this.carrier_type = '1';
+      } else {
+        if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+          this.carrier_type = '2';
+        } else {
+          this.carrier_type = '1';
+        }
+      }
+    },
+    goBackToHome() {
+      this.setOrderState(1);
+      this.setExtendOptions(false);
+    },
+    dispatchDeliveryItem() {
+      this.setDeliveryItem(this.delivery_item);
     },
 
     dispatchLoadWeight(val) {
@@ -560,12 +674,14 @@ export default {
     },
 
     getMinVendorPrice(vendorObject) {
-      const price = this.getPlainVendorPrice(vendorObject) * ((100 - vendorObject.price_variance) / 100);
+      const price =
+        this.getPlainVendorPrice(vendorObject) * ((100 - vendorObject.price_variance) / 100);
       return numeral(price).format('0');
     },
 
     getMaxVendorPrice(vendorObject) {
-      const price = this.getPlainVendorPrice(vendorObject) * ((100 + vendorObject.price_variance) / 100);
+      const price =
+        this.getPlainVendorPrice(vendorObject) * ((100 + vendorObject.price_variance) / 100);
       return numeral(price).format('0');
     },
 
@@ -603,8 +719,8 @@ export default {
 
     expandVendorOptions(vendor) {
       return (
-        !this.vendors_with_fixed_carrier_type.includes(vendor.vendor_name)
-        && vendor.vendor_name === this.get_active_vendor_name
+        !this.vendors_with_fixed_carrier_type.includes(vendor.vendor_name) &&
+        vendor.vendor_name === this.get_active_vendor_name
       );
     },
 

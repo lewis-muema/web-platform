@@ -35,3 +35,11 @@
   color: #1782c5 !important;
   margin-bottom: -3px;
 }
+
+.options-section__link{
+  color: #555 !important;
+  text-transform: capitalize !important;
+  font-size: 14px;
+  text-align: center;
+  text-decoration: none;
+}

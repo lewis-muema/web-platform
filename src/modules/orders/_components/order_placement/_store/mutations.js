@@ -22,6 +22,7 @@ const getDefaultState = () => {
       load_units:'kgs',
       additional_loader:'',
       no_of_loaders:1,
+      order_state: 1,
   };
 };
 
@@ -152,5 +153,11 @@ export default {
 
     setNOOfLoaders(state, val) {
       state.no_of_loaders = val;
+    },
+    setOrderState(state, val) {
+      state.order_state = val;
+    },
+    setExtendOptions(state, val) {
+      state.extended_options = val;
     },
 };
