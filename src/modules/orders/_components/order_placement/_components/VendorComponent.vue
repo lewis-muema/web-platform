@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="home-view-vendor-and-optins-wrappper" v-if="this.getOrderState === 1">
+  <div class="home-view-vendor-and-optins-wrappper" v-if="getOrderState === 1">
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
       Load Size And Delivery Type
@@ -200,11 +200,11 @@
             </div>
 
             <!-- show small vendor extended options -->
-            <div v-if="this.small_vendors.includes(activeVendorPriceData.vendor_id)">
+            <div v-if="small_vendors.includes(activeVendorPriceData.vendor_id)">
               <div
                 class="home-view-truck-options-inner-wrapper"
                 v-if="
-                  !this.vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)
+                  !vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)
                 "
               >
                 <div class="home-view-truck-options-label">
@@ -228,11 +228,11 @@
               <div
                 class="home-view-truck-options-inner-wrapper"
                 v-if="
-                  !this.vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)
+                  !vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)
                 "
               >
                 <div
-                  v-if="this.large_vendors.includes(activeVendorPriceData.vendor_id)"
+                  v-if="large_vendors.includes(activeVendorPriceData.vendor_id)"
                   class="home-view-truck-options-label"
                 >
                   What type of truck do you want?
@@ -252,7 +252,7 @@
                 </div>
               </div>
 
-              <div v-if="this.large_vendors.includes(activeVendorPriceData.vendor_id)">
+              <div v-if="large_vendors.includes(activeVendorPriceData.vendor_id)">
                 <div
                   v-if="Number(carrier_type) === 3"
                   class="home-view-truck-options-inner-wrapper"

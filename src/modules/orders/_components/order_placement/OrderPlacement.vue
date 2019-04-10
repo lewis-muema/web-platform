@@ -3,7 +3,7 @@
      <!-- <div class="homeview--form__header">
          New Delivery
      </div> -->
-   <div v-if="!this.get_extended_options">
+   <div v-if="!get_extended_options">
       <div class="homeview--form homeview--row homeview--form__scrollable" ref="scrollable_locations">
         <div class="homeview--input-bundler">
           <no-ssr placeholder="">
