@@ -185,7 +185,7 @@
             </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
-                Do you have any special instructions?
+                Additional Instructions
               </div>
               <div class="" />
               <div class="" @change="dispatchOrderNotes">
@@ -194,8 +194,7 @@
                   name="name"
                   rows="5"
                   class="textarea-control"
-                  placeholder="Add notes"
-
+                  placeholder="Instructions.."
                 />
               </div>
             </div>
@@ -271,7 +270,7 @@
                   </div>
                 </div>
 
-                <div class="home-view-truck-options-inner-wrapper">
+                <!-- <div class="home-view-truck-options-inner-wrapper">
                   <div class="home-view-truck-options-label">
                     What is the approximate weight of the load?
                   </div>
@@ -295,7 +294,7 @@
                       </el-select>
                     </el-input>
                   </div>
-                </div>
+                </div> -->
 
                 <div
                   v-if="!isFixedCost(activeVendorPriceData)"
@@ -356,7 +355,9 @@
               </div>
             </div>
 
-            <div class="home-view-truck-options-inner-wrapper">
+            <!-- Pair with rider  -->
+
+            <!-- <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
                 Pair with a rider ?
               </div>
@@ -381,7 +382,7 @@
                   />
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-vendor-classes--label">
                 <payment-options @destroyOrderOptions="destroyVendorComponent()" />
@@ -556,16 +557,28 @@ export default {
       const type = this.carrier_type;
       this.setCarrierType(type);
     },
-    dispatchScheduleTime(){
+    dispatchScheduleTime() {
       this.setScheduleTime(this.schedule_time);
     },
-    dispatchOrderNotes(){
+    dispatchOrderNotes() {
       this.setOrderNotes(this.order_notes);
     },
 
     goToNextStep() {
+      this.setDefaultCarrierType();
       this.setOrderState(2);
       this.setExtendOptions(true);
+    },
+    setDefaultCarrierType() {
+      if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+        this.carrier_type = '1';
+      } else {
+        if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+          this.carrier_type = '2';
+        } else {
+          this.carrier_type = '1';
+        }
+      }
     },
     goBackToHome() {
       this.setOrderState(1);

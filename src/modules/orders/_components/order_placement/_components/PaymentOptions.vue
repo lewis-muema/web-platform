@@ -304,7 +304,9 @@ export default {
     },
 
     scheduled_time() {
-      return this.moment(this.get_schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format('YYYY-MM-DD HH:mm:ss');
+      return this.moment(this.get_schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
     },
 
     getRB() {
@@ -596,7 +598,8 @@ export default {
         no_charge_status: false,
         insurance_amount: 10,
         cash_status: this.cash_status,
-        note_status: typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
+        note_status:
+          typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
         last_digit: 'none',
         insurance_id: 1,
         platform: 'corporate',
@@ -653,9 +656,8 @@ export default {
 
     saveInfoToStore() {
       // save locations, notes & payment option
-      // this.setScheduleTime(this.schedule_time);
+
       this.setPaymentMethod(this.payment_method);
-      // this.setOrderNotes(this.order_notes);
     },
 
     retrieveFromStore() {

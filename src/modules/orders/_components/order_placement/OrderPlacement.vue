@@ -105,7 +105,8 @@ export default {
       get_active_vendor_name : '$_orders/$_home/get_active_vendor_name',
       get_pickup_filled : '$_orders/$_home/get_pickup_filled',
       get_session : 'getSession',
-      get_extended_options : '$_orders/$_home/get_extended_options',
+      get_extended_options
+ : '$_orders/$_home/get_extended_options',
     }),
 
     allow_add_destination(){
