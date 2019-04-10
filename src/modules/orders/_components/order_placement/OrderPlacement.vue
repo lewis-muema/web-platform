@@ -471,9 +471,6 @@ export default {
   created() {
     this.instantiateHomeComponent();
   },
-  mounted(){
-    console.log('Here, not yet mounted');
-  },
 
   destroyed () {
       this.destroyOrderPlacement();
