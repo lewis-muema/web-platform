@@ -1,52 +1,71 @@
 <template lang="html">
-    <div class="">
-        <main-header></main-header>
+  <div class="">
+    <main-header />
 
-        <div class="container" id="transactions_container">
-          <div class="section">
-              <router-link class="section__link" to="/transactions/order_history">Orders</router-link>
-              <router-link class="section__link" to="/transactions/statement">Statement</router-link>
-              <router-link class="section__link" to="/transactions/payments">Payments</router-link>
-          </div>
-          <div class="">
-            <router-view></router-view>
-          </div>
-        </div>
+    <div
+      id="transactions_container"
+      class="container"
+    >
+      <div class="section">
+        <router-link
+          class="section__link"
+          to="/transactions/order_history"
+        >
+          Orders
+        </router-link>
+        <router-link
+          class="section__link"
+          to="/transactions/statement"
+        >
+          Statement
+        </router-link>
+        <router-link
+          class="section__link"
+          to="/transactions/payments"
+        >
+          Payments
+        </router-link>
+      </div>
+      <div class="">
+        <router-view />
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-import Vue from 'vue'
+import Vue from 'vue';
 import { mapGetters } from 'vuex';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 import trans_store from './_store';
-import MainHeader from '../../components/headers/MainHeader.vue'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faStar } from '@fortawesome/free-solid-svg-icons'
-library.add(faStar)
+import MainHeader from '../../components/headers/MainHeader.vue';
+
+library.add(faStar);
 
 export default {
-  name:'Transactions',
-  //mixins: [ RegisterStoreModule ],
-  components : {MainHeader},
+  name: 'Transactions',
+  // mixins: [ RegisterStoreModule ],
+  components: { MainHeader },
   created() {
     this.$store.registerModule('$_transactions', trans_store);
   },
   computed: {
     ...mapGetters({
-      getSession : 'getSession'
+      getSession: 'getSession',
     }),
   },
   watch: {
     getSession: {
-      handler(val, oldVal){
+      handler(val, oldVal) {
         if (oldVal != val) {
-          this.$router.push('/orders')
+          this.$router.push('/orders');
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
-}
+};
 </script>
 
 <style lang="css">

@@ -1,3 +1,6 @@
+/* eslint-disable import/prefer-default-export */
+/* eslint no-unused-vars: "error" */
+/* exported exportFromJSON */
 import Vue from 'vue';
 import { sync } from 'vuex-router-sync';
 
@@ -80,6 +83,7 @@ Vue.use(Rate);
 Vue.use(Popover);
 Vue.use(Autocomplete);
 Vue.use(Loading.directive);
+// Vue.use(exportFromJSON);
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$msgbox = MessageBox;
@@ -89,8 +93,6 @@ Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 Vue.component('font-awesome-icon', FontAwesomeIcon);
-
-import exportFromJSON from 'export-from-json';
 export function createApp() {
   // create router and store instances
   const router = createRouter();

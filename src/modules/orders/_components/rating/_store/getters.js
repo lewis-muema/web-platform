@@ -1,4 +1,3 @@
-
 const getScore = state => state.score;
 const getViewState = state => state.view_state;
 const getBaseUrl = state => state.base_url;
@@ -12,16 +11,16 @@ const getImagesBaseUrl = state => state.images_base_url;
 const getPostRatingComponent = state => state.post_rating_component;
 const getPostRatingComponentBusiness = state => state.post_rating_component_business;
 export default {
-    getScore,
-    getPackageID,
-    getBaseUrl,
-    getViewState,
-    getRiderImage,
-    getDriverBaseImage,
-    getUserEmail,
-    getStep,
-    getDriverName,
-    getImagesBaseUrl,
-    getPostRatingComponent,
-    getPostRatingComponentBusiness
+  getScore,
+  getPackageID,
+  getBaseUrl,
+  getViewState,
+  getRiderImage,
+  getDriverBaseImage,
+  getUserEmail,
+  getStep,
+  getDriverName,
+  getImagesBaseUrl,
+  getPostRatingComponent,
+  getPostRatingComponentBusiness,
 };

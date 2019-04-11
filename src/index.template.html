@@ -80,7 +80,7 @@
     <script type="text/javascript">
       !(function(e, t, n) {
         function a() {
-          var e = t.getElementsByTagName('script')[0],
+          let e = t.getElementsByTagName('script')[0],
             n = t.createElement('script');
           (n.type = 'text/javascript'),
             (n.async = !0),
@@ -110,9 +110,9 @@
     <!-- start Mixpanel --><script type="text/javascript">
       (function(c, a) {
         if (!a.__SV) {
-          var b = window;
+          let b = window;
           try {
-            var d,
+            let d,
               m,
               j,
               k = b.location,
@@ -127,22 +127,22 @@
                 (b.sessionStorage.setItem('_mpcehash', f),
                 history.replaceState(j.desiredHash || '', c.title, k.pathname + k.search)));
           } catch (n) {}
-          var l, h;
+          let l, h;
           window.mixpanel = a;
           a._i = [];
           a.init = function(b, d, g) {
             function c(b, i) {
-              var a = i.split('.');
-              2 == a.length && ((b = b[a[0]]), (i = a[1]));
+              let a = i.split('.');
+              2 === a.length && ((b = b[a[0]]), (i = a[1]));
               b[i] = function() {
                 b.push([i].concat(Array.prototype.slice.call(arguments, 0)));
               };
             }
-            var e = a;
+            let e = a;
             'undefined' !== typeof g ? (e = a[g] = []) : (g = 'mixpanel');
             e.people = e.people || [];
             e.toString = function(b) {
-              var a = 'mixpanel';
+              let a = 'mixpanel';
               'mixpanel' !== g && (a += '.' + g);
               b || (a += ' (stub)');
               return a;
@@ -154,7 +154,7 @@
               ' '
             );
             for (h = 0; h < l.length; h++) c(e, l[h]);
-            var f = 'set set_once union unset remove delete'.split(' ');
+            let f = 'set set_once union unset remove delete'.split(' ');
             e.get_group = function() {
               function a(c) {
                 b[c] = function() {
@@ -164,7 +164,7 @@
                 };
               }
               for (
-                var b = {},
+                let b = {},
                   d = ['get_group'].concat(Array.prototype.slice.call(arguments, 0)),
                   c = 0;
                 c < f.length;

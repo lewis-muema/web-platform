@@ -3,10 +3,13 @@
     <div class="container">
       <div class="content">
         <div class="panel-card">
-          <form-panel-component></form-panel-component>
+          <form-panel-component />
         </div>
-        <div class="help-card" v-if="this.getViewState != 4 ">
-          <help-panel-component></help-panel-component>
+        <div
+          v-if="this.getViewState != 4"
+          class="help-card"
+        >
+          <help-panel-component />
         </div>
       </div>
     </div>
@@ -14,21 +17,19 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import FormPanelComponent from './FormPanelComponent.vue'
-import HelpPanelComponent from './HelpPanelComponent.vue'
+import { mapGetters } from 'vuex';
+import FormPanelComponent from './FormPanelComponent.vue';
+import HelpPanelComponent from './HelpPanelComponent.vue';
 
 export default {
-  name: 'bod-component',
-  components: {FormPanelComponent,HelpPanelComponent},
+  name: 'BodComponent',
+  components: { FormPanelComponent, HelpPanelComponent },
   computed: {
-    ...mapGetters(
-      {
-        getViewState:'$_external/getViewState',
-      }
-    )
-  }
-}
+    ...mapGetters({
+      getViewState: '$_external/getViewState',
+    }),
+  },
+};
 </script>
 
 <style lang="css">

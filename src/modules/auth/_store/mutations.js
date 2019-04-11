@@ -1,3 +1,4 @@
+/* eslint no-param-reassign: "error" */
 export default {
   setPassword(state, val) {
     state.password = val;

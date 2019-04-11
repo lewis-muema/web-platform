@@ -23,10 +23,13 @@
       <div class="section--filter-action-wrap">
         <button
           type="button"
-          :class="valid_filter ? 'button-primary section--filter-action btn-statement'
-            : 'button-primary section--filter-action-inactive btn-statement'"
+          :class="
+            valid_filter
+              ? 'button-primary section--filter-action btn-statement'
+              : 'button-primary section--filter-action-inactive btn-statement'
+          "
           name="order_statement_text"
-          :disabled="valid_filter == true ? false : true"
+          :disabled="valid_filter === true ? false : true"
           @click="filterStatementData"
         >
           {{ order_statement_text }}
@@ -86,7 +89,7 @@
         :total="statement_total"
         :page-size="pagination_limit"
         :current-page.sync="pagination_page"
-        :page-sizes="[5,10, 20, 50, 100]"
+        :page-sizes="[5, 10, 20, 50, 100]"
         class="section--pagination-item"
         @current-change="changePage"
         @size-change="changeSize"
@@ -114,7 +117,6 @@ export default {
         to_date: '',
       },
       filteredStatementData: [],
-
     };
   },
   computed: {
@@ -163,7 +165,6 @@ export default {
           cop_id: sessionData.biz.cop_id,
           user_type: sessionData.biz.user_type,
           user_id: sessionData.biz.user_id,
-
         };
       } else {
         // create peer payload
@@ -179,15 +180,16 @@ export default {
         endpoint: 'statement',
       };
 
-      this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(() => {
-        this.empty_statement_state = 'Statement Not Found';
-      }, () => {
-        this.empty_statement_state = 'Statement Failed to Fetch';
-      });
+      this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(
+        () => {
+          this.empty_statement_state = 'Statement Not Found';
+        },
+        () => {
+          this.empty_statement_state = 'Statement Failed to Fetch';
+        },
+      );
     },
-    ...mapActions([
-      '$_transactions/requestStatement',
-    ]),
+    ...mapActions(['$_transactions/requestStatement']),
     changeSize(val) {
       this.pagination_page = 1;
       this.pagination_limit = val;
@@ -201,13 +203,13 @@ export default {
       return moment(row.date_time).format('MMM Do YYYY, h:mm a');
     },
     formatRunningBalance(row) {
-      let value = (row.running_balance).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+      let value = row.running_balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
       value = value.split('.');
       return value[0];
     },
     formatDebitAmount(row) {
       if (Math.sign(row.amount) > 0) {
-        let value = (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         value = value.split('.');
         return value[0];
       }
@@ -215,7 +217,7 @@ export default {
     },
     formatCreditAmount(row) {
       if (Math.sign(row.amount) < 0) {
-        let value = (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         value = value.split('.');
         return value[0];
       }
@@ -242,7 +244,6 @@ export default {
           user_type: sessionData.biz.user_type,
           from: fromDate,
           to: toDate,
-
         };
       } else {
         // create peer payload
@@ -252,7 +253,6 @@ export default {
           to: toDate,
         };
       }
-
 
       this.order_statement_text = 'Searching...';
       this.requestStatement(payload);
@@ -285,16 +285,17 @@ export default {
         app: 'NODE_PRIVATE_API',
         endpoint: 'statement',
       };
-      this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(() => {
-        this.order_statement_text = 'Search';
-        this.empty_statement_state = 'Statement Not Found';
-      }, () => {
-        this.order_statement_text = 'Search';
-        this.empty_statement_state = 'Statement Failed to Fetch';
-      });
+      this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(
+        () => {
+          this.order_statement_text = 'Search';
+          this.empty_statement_state = 'Statement Not Found';
+        },
+        () => {
+          this.order_statement_text = 'Search';
+          this.empty_statement_state = 'Statement Failed to Fetch';
+        },
+      );
     },
-
-
   },
 };
 </script>

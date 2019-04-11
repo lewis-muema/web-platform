@@ -30,7 +30,6 @@ Validator.extend('check_phone', {
       const number = phoneUtil.parse(value);
       validity = phoneUtil.isValidNumber(number);
     } catch (e) {
-      console.log(e);
       validity = false;
     }
     return validity;

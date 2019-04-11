@@ -4,10 +4,7 @@
   <payment_success v-else-if="show_mpesa_success" />
   <payment_fail v-else-if="show_mpesa_fail" />
 
-  <div
-    v-else
-    class="paymentbody--form"
-  >
+  <div v-else class="paymentbody--form">
     <div class="paymentbody--input-wrap">
       <input
         v-model="mpesa_payment_data.amount"
@@ -15,7 +12,7 @@
         name="amount"
         placeholder="Amount"
         class="input-control paymentbody--input"
-      >
+      />
     </div>
     <div class="paymentbody--input-wrap">
       <input
@@ -25,13 +22,17 @@
         name="phone_no"
         placeholder="Safaricom Phone Number"
         class="input-control paymentbody--input"
-      >
+      />
     </div>
     <div class="paymentbody--input-wrap">
       <button
         type="button"
         name="button"
-        :class="valid_payment ? 'button-primary paymentbody--input-button':'button--primary-inactive paymentbody--input-button'"
+        :class="
+          valid_payment
+            ? 'button-primary paymentbody--input-button'
+            : 'button--primary-inactive paymentbody--input-button'
+        "
         @click="requestMpesaPayment"
       >
         Pay
@@ -71,28 +72,22 @@ export default {
       _completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
       _terminateMpesaPaymentRequest: '$_payment/terminateMpesaPaymentRequest',
     }),
-    trackMixpanelEvent(name){
+    trackMixpanelEvent(name) {
       let analytics_env = '';
       try {
         analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      }
-      catch (er) {
+      } catch (er) {}
 
-      }
-
-      try{
-        if(analytics_env === 'production'){
+      try {
+        if (analytics_env === 'production') {
           mixpanel.track(name);
         }
-      }
-      catch(er){
-
-      }
+      } catch (er) {}
     },
     prepareMpesaPayment() {
       const session = this.$store.getters.getSession;
       const user_phone = session[session.default].user_phone;
-      console.log(user_phone);
+
       this.mpesa_payment_data.phone_number = user_phone;
       // pass amount here
     },
@@ -123,10 +118,10 @@ export default {
     },
 
     requestMpesaPaymentPoll() {
-      console.log('mpesa payment poll initiated');
+
       const session = this.$store.getters.getSession;
       let cop_id = 0;
-      if (session.default == 'biz') {
+      if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
       }
       const old_rb = this.$store.getters.getRunningBalance;
@@ -150,10 +145,10 @@ export default {
       for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
         // wait 10 seconds
         const that = this;
-        (function (poll_count) {
+        (function(poll_count) {
           setTimeout(() => {
             const res = that.checkRunningBalance(old_rb, payload);
-            console.log('poll count', poll_count);
+
             if (res) {
               poll_count = poll_limit;
               // let notification = {
@@ -167,7 +162,7 @@ export default {
               that._completeMpesaPaymentRequest({});
               return true;
             }
-            if (poll_count == 5) {
+            if (poll_count === 5) {
               // let notification = {
               //   level: 2,
               //   title: "Payment failed",
@@ -178,26 +173,25 @@ export default {
               //   root: true
               // });
               that._terminateMpesaPaymentRequest({});
-              console.log('after for loop');
+
             }
           }, 10000 * poll_count);
-        }(poll_count));
+        })(poll_count);
       }
     },
 
     checkRunningBalance(old_rb, payload) {
       const that = this;
       this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
-        (response) => {
-          console.log(response);
+        response => {
+
           if (response.length > 0) {
             response = response[0];
           }
-          if (response.status == 200) {
+          if (response.status === 200) {
             // check if rb has changed
             const new_rb = response.data.running_balance;
-            console.log(old_rb);
-            console.log(new_rb);
+
 
             if (new_rb < old_rb) {
               that._completeMpesaPaymentRequest({});
@@ -207,15 +201,14 @@ export default {
           // commit  to the global store here
           return false;
         },
-        (error) => {
-          console.log(error);
+        error => {
+
           return false;
         },
       );
     },
 
     requestMpesaPayment() {
-      console.log('requesting mpesa payment');
       const session = this.$store.getters.getSession;
       let referenceNumber = 'SENDY';
       let cop_id = 0;
@@ -243,7 +236,6 @@ export default {
         email: user_email,
       };
 
-      console.log(mpesa_payload);
 
       // TODO: implement the discount bundles if needed
 
@@ -254,14 +246,12 @@ export default {
         endpoint: 'initiate_mpesa',
       };
 
-      console.log(mpesa_payload);
 
       this.payment_state = 'requesting Mpesa Payment';
 
       this._requestMpesaPayment(full_payload).then(
-        (response) => {
-          console.log(response);
-          if (response.status == 200) {
+        response => {
+          if (response.status === 200) {
             // request poll here
             this.requestMpesaPaymentPoll();
           }
@@ -273,7 +263,7 @@ export default {
             'Client Type': 'Web Platform',
           });
         },
-        (error) => {
+        error => {
           this.payment_state = 'Mpesa Payment Failed';
         },
       );
@@ -298,10 +288,10 @@ export default {
       // validate amount
       // validate mpesa number
       return (
-        this.mpesa_payment_data.amount !== ''
-        && this.mpesa_payment_data.amount !== 0
-        && this.mpesa_payment_data.phone_number !== ''
-        && this.valid_phone
+        this.mpesa_payment_data.amount !== '' &&
+        this.mpesa_payment_data.amount !== 0 &&
+        this.mpesa_payment_data.phone_number !== '' &&
+        this.valid_phone
       );
     },
     valid_phone() {
@@ -311,5 +301,4 @@ export default {
 };
 </script>
 
-<style lang="css">
-</style>
+<style lang="css"></style>

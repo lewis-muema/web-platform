@@ -1,144 +1,136 @@
+/* eslint no-param-reassign: "error" */
+/* eslint-disable prefer-destructuring */
+/* eslint no-shadow: "error" */
+/* eslint-env es6 */
+/* eslint func-names: ["error", "never"] */
+/* eslint no-unused-vars: ["error", { "vars": "local" }] */
+/* eslint no-shadow: ["error", { "allow": ["updatedPollCount"] }] */
+
 export default {
+  /* start mpesa */
 
-    /* start mpesa */
+  requestMpesaPayment() {
+    const session = this.$store.getters.getSession;
+    let referenceNumber = 'SENDY';
+    let copId = 0;
+    let userId = 0;
+    let userEmail = '';
+    let userPhone = '';
+    if (session.default === 'biz') {
+      referenceNumber += session.biz.cop_id;
+      copId = session.biz.cop_id;
+      userId = session.biz.user_id;
+      userEmail = session.biz.user_email;
+      userPhone = session.biz.user_phone;
+    } else {
+      referenceNumber = session.peer.user_phone;
+      userId = session.peer.user_id;
+      userEmail = session.peer.user_email;
+      userPhone = session.peer.user_phone;
+    }
+    // TOOD: add cop_id to refrence if cop account
+    // pass the phone no if peer
+    const mpesaPayload = {
+      amount: this.order_cost,
+      sourceMobile: userPhone,
+      referenceNumber,
+      userId,
+      copId,
+      phone: userPhone,
+      email: userEmail,
+    };
 
-    requestMpesaPayment() {
-      console.log("requesting mpesa payment");
-      let session = this.$store.getters.getSession;
-      let referenceNumber = "SENDY";
-      let cop_id = 0;
-      let user_id = 0;
-      let user_email = "";
-      let user_phone = "";
-      if (session.default == "biz") {
-        referenceNumber += session.biz.cop_id;
-        cop_id = session.biz.cop_id;
-        user_id = session.biz.user_id;
-        user_email = session.biz.user_email;
-        user_phone = session.biz.user_phone;
-      } else {
-        referenceNumber = session.peer.user_phone;
-        user_id = session.peer.user_id;
-        user_email = session.peer.user_email;
-        user_phone = session.peer.user_phone;
-      }
-      //TOOD: add cop_id to refrence if cop account
-      //pass the phone no if peer
-      let mpesa_payload = {
-        amount: this.order_cost,
-        sourceMobile: user_phone,
-        referenceNumber: referenceNumber,
-        user_id: user_id,
-        cop_id: cop_id,
-        phone: user_phone,
-        email: user_email
-      };
+    // TODO: implement the discount bundles if needed
 
-      console.log(mpesa_payload);
+    const fullPayload = {
+      values: mpesaPayload,
+      app: 'NODE_PRIVATE_API',
+      endpoint: 'initiate_mpesa',
+    };
 
-      //TODO: implement the discount bundles if needed
+    this.payment_state = 'requesting Mpesa Payment';
 
-      let full_payload = {
-        values: mpesa_payload,
-        app: "NODE_PRIVATE_API",
-        endpoint: "initiate_mpesa"
-      };
-
-      console.log(mpesa_payload);
-
-      this.payment_state = "requesting Mpesa Payment";
-
-      this.requestMpesaPaymentAction(full_payload).then(
-        response => {
-          console.log(response);
-          if (response.status == 200) {
-            //request poll here
-            this.requestMpesaPaymentPoll();
-          }
-          this.payment_state = "Mpesa Payment Success";
-        },
-        error => {
-          this.payment_state = "Mpesa Payment Failed";
+    this.requestMpesaPaymentAction(fullPayload).then(
+      (response) => {
+        if (response.status === 200) {
+          // request poll here
+          this.requestMpesaPaymentPoll();
         }
-      );
-    },
+        this.payment_state = 'Mpesa Payment Success';
+      },
+      () => {
+        this.payment_state = 'Mpesa Payment Failed';
+      },
+    );
+  },
 
-    requestMpesaPaymentPoll() {
-      console.log("mpesa payment poll initiated");
-      let session = this.$store.getters.getSession;
-      let cop_id = 0;
-      if (session.default == "biz") {
-        cop_id = session.biz.cop_id;
-      }
-      let old_rb = this.$store.getters.getRunningBalance;
-      let requested_amount = this.order_cost;
+  requestMpesaPaymentPoll() {
+    const session = this.$store.getters.getSession;
+    let copId = 0;
+    if (session.default === 'biz') {
+      copId = session.biz.cop_id;
+    }
+    const oldRb = this.$store.getters.getRunningBalance;
+    // const requestedAmount = this.order_cost;
 
-      let running_balance_payload = {
-        values: {
-          cop_id: cop_id,
-          user_phone: session[session.default]["user_phone"]
-        }
-      };
+    const runningBalancePayload = {
+      values: {
+        copId,
+        user_phone: session[session.default].user_phone,
+      },
+    };
 
-      let payload = {
-        values: running_balance_payload,
-        app: "PRIVATE_API",
-        endpoint: "running_balance"
-      };
+    const payload = {
+      values: runningBalancePayload,
+      app: 'PRIVATE_API',
+      endpoint: 'running_balance',
+    };
 
-      let poll_limit = 6; //10secs * 6  = 60sec = 1min
-      //poll the dispatch
-      for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
-        //wait 10 seconds
-         let that = this;
-         (function (poll_count) {
-          setTimeout(function () {
-            let res = that.checkRunningBalance(old_rb, payload);
-            if(res){
-              poll_count = poll_limit;
-              return true;
-            }
-          }, 10000*poll_count);
-        })(poll_count);
-      }
-
-    },
-
-    checkRunningBalance(old_rb, payload) {
-      this.$store.dispatch("requestRunningBalance", payload, {root: true}).then(
-        response => {
-          console.log(response);
-          if (response.length > 0) {
-            response = response[0];
+    const pollLimit = 6; // 10secs * 6  = 60sec = 1min
+    // poll the dispatch
+    for (let pollCount = 0; pollCount < pollLimit; pollCount += 1) {
+      // wait 10 seconds
+      const that = this;
+      const updatedPollCount = pollCount;
+      (function (updatedPollCount) {
+        let newPollCount = updatedPollCount;
+        setTimeout(() => {
+          const res = that.checkRunningBalance(oldRb, payload);
+          if (res) {
+            newPollCount = pollLimit;
+            return true;
           }
-          if (response.status == 200) {
-            //check if rb has changed
-            let new_rb = response.data.running_balance;
-            console.log(old_rb);
-            console.log(new_rb);
-
-            if (new_rb < old_rb) {
-              //running balance updated
-              //terminate poll
-              //update global running balance
-              this.completeMpesaPaymentRequest({});
-              this.$store.commit(
-                "setRunningBalance",
-                response.data.running_balance
-              );
-              return true;
-            }
-          }
-          //commit  to the global store here
           return false;
-        },
-        error => {
-          console.log(error);
-          return false;
+        }, 10000 * newPollCount);
+      }(updatedPollCount));
+    }
+  },
+
+  checkRunningBalance(oldRb, payload) {
+    this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
+      (response) => {
+        let responder = response;
+        if (response.length > 0) {
+          responder = response[0];
         }
-      );
-    },
+        if (responder.status === 200) {
+          // check if rb has changed
+          const newRb = responder.data.running_balance;
+          if (newRb < oldRb) {
+            // running balance updated
+            // terminate poll
+            // update global running balance
+            this.completeMpesaPaymentRequest({});
+            this.$store.commit('setRunningBalance', responder.data.running_balance);
+            return true;
+          }
+        }
+        // commit  to the global store here
+        return false;
+      },
+      // error => false,
+    );
+  },
 
-    /* End mpesa */
-
-}
+  /* End mpesa */
+};
