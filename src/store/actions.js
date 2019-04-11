@@ -106,7 +106,18 @@ export default {
       axios
         .post(url + payload.endpoint, payload.values, config)
         .then((response) => {
-          resolve(response);
+          if (response.data === 401 || response.data === 403) {
+            const notification = {
+              title: 'Something went wrong!',
+              level: 2,
+              message: 'Please log out and log in again.',
+            };
+            commit('setNotification', notification);
+            commit('setNotificationStatus', true);
+          }
+          else{
+             resolve(response);
+          }
         })
         .catch((e) => {
           reject(e);
