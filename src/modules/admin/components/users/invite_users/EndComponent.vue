@@ -5,11 +5,22 @@
         Invites Sent
       </div>
       <div class="end-text">
-        The invites have been sent successfully. They will show up on your users page when they accept the invite.
+        The invites have been sent successfully. They will show up on your users page when they
+        accept the invite.
       </div>
       <div class="end-btn">
-        <a v-on:click="back_btn" class="end--back-link">Back</a>
-        <a v-bind:href="this.getBaseUrl + '/admin/users'" class="button-primary end--button-return">Return to Users</a>
+        <a
+          class="end--back-link"
+          @click="back_btn"
+        >
+          Back
+        </a>
+        <a
+          :href="this.getBaseUrl + '/admin/users'"
+          class="button-primary end--button-return"
+        >
+          Return to Users
+        </a>
       </div>
     </div>
   </div>
@@ -19,33 +30,27 @@
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
-  name: 'end-component',
-  methods:
-  {
-      ...mapMutations(
-          {
-              updateViewState: '$_admin/setViewState',
-              updateInvites: '$_admin/updateInvites',
-              updateAddedStatus: '$_admin/updateAddedStatus',
-              newAdds: '$_admin/newAdds',
-          }
-      ),
-    back_btn: function() {
+  name: 'EndComponent',
+  methods: {
+    ...mapMutations({
+      updateViewState: '$_admin/setViewState',
+      updateInvites: '$_admin/updateInvites',
+      updateAddedStatus: '$_admin/updateAddedStatus',
+      newAdds: '$_admin/newAdds',
+    }),
+    back_btn() {
       this.updateViewState(1);
-      this.updateInvites ([]);
-      this.updateAddedStatus ('');
-      this.newAdds (3);
-    }
+      this.updateInvites([]);
+      this.updateAddedStatus('');
+      this.newAdds(3);
+    },
   },
   computed: {
-      ...mapGetters(
-          {
-              getBaseUrl: '$_admin/getBaseUrl',
-
-          }
-      ),
+    ...mapGetters({
+      getBaseUrl: '$_admin/getBaseUrl',
+    }),
   },
-}
+};
 </script>
 
 <style lang="css">

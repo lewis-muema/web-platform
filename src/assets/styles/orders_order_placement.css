@@ -107,7 +107,7 @@
 .home-view-vendor-and-optins-wrappper{
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 50vh;
+  max-height: 60vh;
   margin-right: -20px;
   padding-right: 10px;
 }
@@ -233,4 +233,11 @@
 }
 .home-view-truck-options-inner--load-weight .el-input-group__append, .el-select-dropdown__list span{
   font-size: smaller !important;
+}
+.extended-options-wrappper{
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 70vh;
+  margin-right: -20px;
+  padding-right: 10px;
 }

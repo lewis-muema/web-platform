@@ -268,7 +268,7 @@ export default {
     },
     activeState() {
       this.$store
-        .dispatch('$_orders/get_order_data', { order_no: this.$route.params.order_no })
+        .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
         .then((response) => {
           if (response.data.status) {
             this.orderStatus(response.data);
@@ -306,10 +306,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      markers: '$_orders/get_markers',
-      vendors: '$_orders/get_vendors',
-      polyline: '$_orders/get_polyline',
-      tracking_data: '$_orders/$_tracking/get_tracking_data',
+      markers: '$_orders/getMarkers',
+      vendors: '$_orders/getVendors',
+      polyline: '$_orders/getPolyline',
+      tracking_data: '$_orders/$_tracking/getTrackingData',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
     }),
   },
@@ -327,7 +327,7 @@ export default {
       }
     },
     '$route.params.order_no': function trackedOrder(order) {
-      this.$store.dispatch('$_orders/get_order_data', { order_no: order }).then((response) => {
+      this.$store.dispatch('$_orders/getOrderData', { order_no: order }).then((response) => {
         if (response.status) {
           this.orderStatus(response.data);
         } else {
@@ -340,7 +340,7 @@ export default {
     this.$gmapApiPromiseLazy().then(() => {
       this.mapLoaded = true;
     });
-    this.$store.dispatch('$_orders/connect_mqtt');
+    this.$store.dispatch('$_orders/connectMqtt');
     this.activeState();
     this.activeMarker();
   },

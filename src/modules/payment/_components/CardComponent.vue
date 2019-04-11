@@ -1,22 +1,10 @@
 <template lang="html">
-  <payment_loading
-    v-if="card_loading_status"
-    pay_method="card"
-  />
+  <payment_loading v-if="card_loading_status" pay_method="card" />
   <add_card v-else-if="card_add_status" />
-  <div
-    v-else
-    class="paymentbody--form"
-  >
-    <div
-      v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0"
-      class=""
-    >
+  <div v-else class="paymentbody--form">
+    <div v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0" class="">
       <div class="paymentbody--input-wrap">
-        <div
-          v-for="card in get_saved_cards"
-          class="card--saved-card-width"
-        >
+        <div v-for="card in get_saved_cards" class="card--saved-card-width">
           <el-radio
             v-model="payment_card"
             class="card--saved-card"
@@ -24,15 +12,9 @@
             border
             @change="isHidden = true"
           >
-            <font-awesome-icon
-              :icon="getCardIcon(card)"
-              class="payments-orange"
-            />
+            <font-awesome-icon :icon="getCardIcon(card)" class="payments-orange" />
             **** **** **** {{ card.last4 }}
-            <div
-              class="card--delete"
-              @click="deleteSavedCard(card)"
-            >
+            <div class="card--delete" @click="deleteSavedCard(card)">
               <font-awesome-icon icon="trash" /> Remove
             </div>
             <!--<div class="card&#45;&#45;saved-expiry">Exp: {{ card.exp_month }}/{{ card.exp_year }}</div>-->
@@ -61,7 +43,7 @@
           class="input-control paymentbody--input"
           @change="creditCardMask()"
           @keyup="creditCardMask()"
-        >
+        />
       </div>
 
       <div class="paymentbody--input-wrap paymentbody--input-spaced">
@@ -75,7 +57,7 @@
             class="input-control paymentbody--input"
             @change="creditCExpiryMask"
             @keyup="creditCExpiryMask"
-          >
+          />
         </div>
         <div class="input-control-small">
           <el-input
@@ -94,10 +76,7 @@
               @mouseleave.native="showCvv"
             />
           </el-input>
-          <div
-            v-show="cvv_state"
-            class="payment--cvv-info-wrap"
-          >
+          <div v-show="cvv_state" class="payment--cvv-info-wrap">
             <div class="sendy_payments_form_cvv_title">
               CVV
             </div>
@@ -109,7 +88,7 @@
               <img
                 src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/cvv.png"
                 alt="CVV"
-              >
+              />
             </div>
           </div>
         </div>
@@ -121,7 +100,7 @@
           type="checkbox"
           name="card_payment_save"
           class="input-checkbox paymentbody--input-checkbox"
-        >
+        />
         <div class="savecard--desc-title">
           Save your card details for easier payment in future
         </div>
@@ -134,7 +113,7 @@
         name="card_payment_amount"
         placeholder="Amount"
         class="card--input input-control paymentbody--input"
-      >
+      />
     </div>
     <div class="paymentbody--input-wrap">
       <button
@@ -202,17 +181,17 @@ export default {
       }
       if (this.payment_card === 1) {
         return (
-          this.card_payment_data.card_expiry !== ''
-          && this.card_payment_data.amount !== ''
-          && this.card_payment_data.card_no !== ''
-          && this.card_payment_data.cvv !== ''
+          this.card_payment_data.card_expiry !== '' &&
+          this.card_payment_data.amount !== '' &&
+          this.card_payment_data.card_no !== '' &&
+          this.card_payment_data.cvv !== ''
         );
       }
       return (
-        this.card_payment_data.card_expiry !== ''
-        && this.card_payment_data.amount !== ''
-        && this.card_payment_data.card_no !== ''
-        && this.card_payment_data.cvv !== ''
+        this.card_payment_data.card_expiry !== '' &&
+        this.card_payment_data.amount !== '' &&
+        this.card_payment_data.card_no !== '' &&
+        this.card_payment_data.cvv !== ''
       );
     },
     cvv_state() {
@@ -321,7 +300,7 @@ export default {
       };
 
       this.requestSavedCards(full_payload).then(
-        (response) => {
+        response => {
           // decrypt response here
           response = JSON.parse(Mcrypt.decrypt(response));
           if (response.status) {
@@ -356,7 +335,7 @@ export default {
         endpoint: 'remove_card',
       };
       this.removeSavedCard(full_payload).then(
-        (response) => {
+        response => {
           if (response.length > 0) {
             const notification = {
               title: 'Remove Card success',
@@ -378,7 +357,7 @@ export default {
             });
           }
         },
-        (error) => {
+        error => {
           const notification = {
             title: 'delete card failed',
             level: 2,

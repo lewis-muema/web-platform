@@ -4,7 +4,7 @@
       Connect your personal Sendy account
     </div>
     <p class="onboard-error">
-      {{message}}
+      {{ message }}
     </p>
     <div class="form-inputs">
       <div class="row">
@@ -12,48 +12,68 @@
           <label class="input-descript">
             <span>Personal Email</span>
           </label>
-          <input  class="form-control" type="email" v-validate="'required|email'" name="email" placeholder='you@email.com'  v-model="peerEmail" @focus="setCurrentStep(1)" >
+          <input
+            v-model="peerEmail"
+            v-validate="'required|email'"
+            class="form-control"
+            type="email"
+            name="email"
+            placeholder="you@email.com"
+            @focus="setCurrentStep(1)"
+          >
           <br>
-          <span class="onboarding-email-error">{{ errors.first('email') }}</span>
+          <span class="onboarding-email-error">
+            {{ errors.first('email') }}
+          </span>
         </div>
       </div>
     </div>
-    <div class="divide"></div>
+    <div class="divide" />
     <div class="form-submits">
-      <a v-on:click="last_view" class="waves-effect waves-teal btn-flat">Back</a>
-      <button v-on:click="next_view" class="btn-submit" style="width:30% !important;" name="next" id="nextBtn" v-bind:disabled="!this.is_valid">Next
+      <a
+        class="waves-effect waves-teal btn-flat"
+        @click="last_view"
+      >
+        Back
+      </a>
+      <button
+        id="nextBtn"
+        class="btn-submit"
+        style="width:30% !important;"
+        name="next"
+        :disabled="!this.is_valid"
+        @click="next_view"
+      >
+        Next
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import {mapGetters,mapMutations} from 'vuex'
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
-  name: 'email-validation-component',
-  data: function () {
+  name: 'EmailValidationComponent',
+  data() {
     return {
-      peerEmail :'',
-      message :'',
-    }
+      peerEmail: '',
+      message: '',
+    };
   },
   methods: {
-    ...mapMutations(
-      {
-        setViewState:'$_external/setViewState',
-        updateViewStep:'$_external/updateViewStep',
-        updatePerEmail:'$_external/updatePerEmail',
-      }
-    ),
-    next_view: function ()
-    {
-      let email_valid = true
-      for (var i = 0; i < this.errors.items.length; i++) {
-      if (this.errors.items[i].field == 'email') {
-        email_valid = false
-        break
-       }
+    ...mapMutations({
+      setViewState: '$_external/setViewState',
+      updateViewStep: '$_external/updateViewStep',
+      updatePerEmail: '$_external/updatePerEmail',
+    }),
+    next_view() {
+      let email_valid = true;
+      for (let i = 0; i < this.errors.items.length; i++) {
+        if (this.errors.items[i].field == 'email') {
+          email_valid = false;
+          break;
+        }
       }
 
       if (email_valid) {
@@ -61,33 +81,29 @@ export default {
           this.updatePerEmail(this.peerEmail);
           this.updateViewStep(0);
           this.setViewState(3);
-        }
-        else {
+        } else {
           this.message = 'Provide a Personal Email';
         }
-      }
-      else {
+      } else {
         this.message = 'Provide valid Email ';
       }
-
     },
-    last_view: function(){
-        this.setViewState(1);
+    last_view() {
+      this.setViewState(1);
     },
-    setCurrentStep: function (step){
-        this.updateViewStep(step);
-    }
+    setCurrentStep(step) {
+      this.updateViewStep(step);
+    },
   },
-  computed : {
+  computed: {
     ...mapGetters({
-        getBizEmail:'$_external/getBizEmail',
-      }
-    ),
-    is_valid : function() {
+      getBizEmail: '$_external/getBizEmail',
+    }),
+    is_valid() {
       return this.peerEmail !== '';
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="css">

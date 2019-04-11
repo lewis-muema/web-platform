@@ -45,7 +45,7 @@
         </div>
 
         <div
-          v-if="this.two_accnts == true"
+          v-if="this.two_accnts === true"
           class=""
         >
           <span class="forgot-paswword-moreinfo">
@@ -127,7 +127,7 @@ export default {
         if (!this.two_accnts) {
           // If password reset request does not exist
           if (!this.option) {
-            const email = this.email;
+            const { email } = this;
 
             payload = {
               email,
@@ -136,8 +136,8 @@ export default {
 
           // If password reset request exist
           else if (this.option) {
-            const email = this.email;
-            const nonce = this.nonce;
+            const { email } = this;
+            const { nonce } = this;
             const resend = true;
 
             payload = {
@@ -150,8 +150,8 @@ export default {
 
         // Check for two accounts
         else if (this.two_accnts) {
-          const email = this.email;
-          const nonce = this.nonce;
+          const { email } = this;
+          const { nonce } = this;
           const type = this.radio;
 
           payload = {
