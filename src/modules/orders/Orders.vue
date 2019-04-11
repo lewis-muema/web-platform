@@ -32,9 +32,9 @@ export default {
 
   watch: {
     $route(to, from) {
-      this.$store.commit('$_orders/remove_polyline', []);
-      this.$store.commit('$_orders/remove_markers', []);
-      this.$store.commit('$_orders/$_tracking/set_tracked_order', '');
+      this.$store.commit('$_orders/removePolyline', []);
+      this.$store.commit('$_orders/removeMarkers', []);
+      this.$store.commit('$_orders/$_tracking/setTrackedOrder', '');
     },
   },
 

@@ -67,8 +67,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      change_page: '$_orders/set_page',
-      hide_vendors: '$_orders/hide_vendors',
+      change_page: '$_orders/setPage',
+      hide_vendors: '$_orders/hideVendors',
     }),
     toggle_ongoing() {
       if (this.showing) {
@@ -104,7 +104,7 @@ export default {
     poll() {
       try {
         const that = this;
-        this.$store.dispatch('$_orders/fetch_ongoing_orders').then((response) => {
+        this.$store.dispatch('$_orders/fetchOngoingOrders').then((response) => {
           if (['order_placement', 'tracking'].includes(that.$router.currentRoute.name)) {
             setTimeout(() => {
               that.poll();
@@ -147,8 +147,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      get_orders: '$_orders/get_ongoing_orders',
-      show: '$_orders/show_ongoing',
+      get_orders: '$_orders/getOngoingOrders',
+      show: '$_orders/showOngoing',
       getSession: 'getSession',
     }),
     num_ongoing() {
@@ -165,7 +165,7 @@ export default {
   watch: {
     getSession: {
       handler(val, oldVal) {
-        this.$store.dispatch('$_orders/fetch_ongoing_orders');
+        this.$store.dispatch('$_orders/fetchOngoingOrders');
       },
       deep: true,
     },

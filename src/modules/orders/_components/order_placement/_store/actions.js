@@ -7,7 +7,7 @@ export default {
         (response) => {
           if (response.data.status) {
             const priceRequestObject = response.data.values;
-            commit('set_price_request_object', priceRequestObject);
+            commit('setPriceRequestObject', priceRequestObject);
             // commit("$_orders/set_polyline", response.data.values.polyline[0], {
             //   root: true
             // });

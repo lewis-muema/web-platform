@@ -15,7 +15,7 @@ const fetchOngoingOrders = function fetchOngoingOrders({ commit, dispatch, rootS
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosPost', payload, { root: true }).then(
       (response) => {
-        commit('set_ongoing_orders', response.data);
+        commit('setOngoingOrders', response.data);
         resolve(response.data);
       },
       (error) => {
@@ -28,7 +28,7 @@ const fetchOngoingOrders = function fetchOngoingOrders({ commit, dispatch, rootS
 const connectMqtt = function connectMqtt({ commit }) {
   for (let i = 0; i < positions.length; i += 1) {
     const vendor = positions[i];
-    commit('set_vendor_markers', vendor);
+    commit('setVendorMarkers', vendor);
   }
 };
 

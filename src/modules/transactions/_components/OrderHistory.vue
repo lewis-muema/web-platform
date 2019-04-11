@@ -57,15 +57,17 @@
       </div>
     </div>
     <div class="bg-grey">
+      <div class="download_history">
       <el-dropdown @command="handleCommand"  align="right">
-          <el-button type="primary" size="mini">
+          <el-button class="download_history" type="primary" size="mini">
             Download<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
-            <el-dropdown-menu slot="dropdown">
+            <el-dropdown-menu class="export_dropdown"slot="dropdown">
               <el-dropdown-item  command="a">Excel</el-dropdown-item>
               <el-dropdown-item  command="b">PDF</el-dropdown-item>
             </el-dropdown-menu>
       </el-dropdown>
+      </div>
     </div>
     <el-table
       id="save-pdf"
@@ -463,19 +465,22 @@ export default {
       let data2 = [];
 
       for (let i = 0; i < this.order_history_data.length; i++) {
+        console.log(this.order_history_data)
         let arr = {};
-        arr.OrderAmount= this.order_history_data[i].order_cost;
         arr.OrderNumber=this.order_history_data[i].order_no;
+        arr.OrderAmount= this.order_history_data[i].order_cost;
         arr.OrderDate=this.order_history_data[i].order_date;
         arr.OrderDistanceKM=this.order_history_data[i].order_details.distance;
         arr.User=this.order_history_data[i].user_details.name;
         arr.From=this.order_history_data[i].path[0].name;
         arr.To=this.order_history_data[i].path[1].name;
+        arr.RiderName=this.order_history_data[i].rider.rider_name;
+        arr.RiderPhone=this.order_history_data[i].rider.rider_phone;
         data2.push(arr)
         };
-       data = _.map(data2,(row)=>{return _.pick(row,'OrderAmount','OrderNumber','OrderDate','user','OrderDistanceKM','From','To')});
-      const fileName = 'download';
-      const exportType = 'xls';
+       data = _.map(data2,(row)=>{return _.pick(row,'OrderNumber','OrderAmount','OrderDate','User','OrderDistanceKM','From','To','RiderName','RiderPhone')});
+      const fileName = 'Order History';
+      const exportType = 'csv';
 
       exportFromJSON({ data, fileName, exportType })
 

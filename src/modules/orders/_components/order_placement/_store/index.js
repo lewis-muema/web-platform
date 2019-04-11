@@ -31,6 +31,8 @@ export default {
       load_units: 'tonnes',
       additional_loader: '',
       no_of_loaders: 1,
+      order_state: 1,
+      extended_options: false,
     };
   },
   actions,

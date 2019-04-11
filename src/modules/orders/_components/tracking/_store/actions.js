@@ -18,11 +18,11 @@ const getTrackingData = function getTrackingData({ commit, dispatch, state }, da
       (response) => {
         if (response.status) {
           if (state.tracked_order === data.order_no) {
-            commit('set_tracking_data', response.data);
-            commit('$_orders/set_polyline', response.data.polyline, {
+            commit('setTrackingData', response.data);
+            commit('$_orders/setPolyline', response.data.polyline, {
               root: true,
             });
-            commit('$_orders/set_markers', response.data.path, {
+            commit('$_orders/setMarkers', response.data.path, {
               root: true,
             });
           }
@@ -130,7 +130,7 @@ const trackMQTT = function trackMQTT({ commit, state }) {
     client.on('message', (topic, message) => {
       const vendor = JSON.parse(message.toString());
       vendor.overide_visible = true;
-      commit('$_orders/set_vendor_markers', vendor, { root: true });
+      commit('$_orders/setVendorMarkers', vendor, { root: true });
     });
 
     client.on('close', () => {
