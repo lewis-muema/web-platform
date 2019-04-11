@@ -8,10 +8,8 @@
         <!-- <font-awesome-icon icon="wallet" /> -->
       </div>
       <div class="payinfo--balance">
-        Balance
-        <span class="payinfo--balance-el">
-          {{ running_balance }}
-        </span>Kes
+        Balance <span class="payinfo--balance-el">{{ running_balance }}</span
+        >Kes
       </div>
     </div>
   </div>
@@ -21,7 +19,7 @@
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-  name: 'AccountBalance',
+  name: 'account-balance',
   mounted() {
     this.requestRB();
   },
@@ -30,42 +28,48 @@ export default {
       _requestRunningBalance: '$_payment/requestRunningBalance',
     }),
     requestRB() {
-      // this will request from the api and update the store
-      const session = this.$store.getters.getSession;
+      //this will request from the api and update the store
+      let session = this.$store.getters.getSession;
       let cop_id = 0;
       if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
       }
-      const running_balance_payload = {
+      let running_balance_payload = {
         values: {
-          cop_id,
-          user_phone: session[session.default].user_phone,
+          cop_id: cop_id,
+          user_phone: session[session.default]['user_phone'],
         },
       };
 
-      const payload = {
+      let payload = {
         values: running_balance_payload,
         vm: this,
         app: 'PRIVATE_API',
         endpoint: 'running_balance',
       };
 
-      this.$store
-        .dispatch('requestRunningBalance', payload, { root: true })
-        .then((response) => {}, (error) => {});
+      this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
+        response => {
+
+        },
+        error => {
+
+        },
+      );
     },
   },
   computed: {
-    // this just gets what is on the store
+    //this just gets what is on the store
     running_balance() {
-      // format the amount
-      const value = this.$store.getters.getRunningBalance;
+      //format the amount
+      let value = this.$store.getters.getRunningBalance;
       if (value !== null && value !== '' && typeof value !== 'undefined') {
         let val = value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         val = val.split('.');
         return val[0];
+      } else {
+        return value;
       }
-      return value;
     },
   },
 };

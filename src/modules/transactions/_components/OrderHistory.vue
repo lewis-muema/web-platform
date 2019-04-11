@@ -465,7 +465,6 @@ export default {
       let data2 = [];
 
       for (let i = 0; i < this.order_history_data.length; i++) {
-        console.log(this.order_history_data)
         let arr = {};
         arr.OrderNumber=this.order_history_data[i].order_no;
         arr.OrderAmount= this.order_history_data[i].order_cost;

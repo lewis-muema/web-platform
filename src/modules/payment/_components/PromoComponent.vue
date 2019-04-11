@@ -2,12 +2,12 @@
   <div class="paymentbody--form">
     <div class="paymentbody--input-wrap">
       <input
-        v-model="promocode_payment_data.sendy_coupon"
         type="text"
         name="sendy_coupon"
+        v-model="promocode_payment_data.sendy_coupon"
         placeholder="Promo Code"
         class="input-control paymentbody--input"
-      >
+      />
     </div>
     <div class="paymentbody--input-wrap">
       <button
@@ -45,22 +45,22 @@ export default {
   methods: {
     ...mapActions(['$_payment/requestPromoCodePayment']),
     requestPromoPayment() {
-      const session = this.$store.getters.getSession;
+      let session = this.$store.getters.getSession;
       let cop_id = 0;
       if (session.default === 'biz') {
-        cop_id = session[session.default].cop_id;
+        cop_id = session[session.default]['cop_id'];
       }
-      const promo_payload = {
+      let promo_payload = {
         values: {
-          user_email: session[session.default].user_email,
-          user_phone: session[session.default].user_phone,
+          user_email: session[session.default]['user_email'],
+          user_phone: session[session.default]['user_phone'],
           sendy_coupon: this.promocode_payment_data.sendy_coupon,
-          cop_id,
+          cop_id: cop_id,
           client_type: session.default,
         },
       };
 
-      const full_payload = {
+      let full_payload = {
         values: promo_payload,
         vm: this,
         app: 'PRIVATE_API',
@@ -68,17 +68,17 @@ export default {
       };
 
       this.$store.dispatch('$_payment/requestPromoCodePayment', full_payload).then(
-        (response) => {
+        response => {
           if (response.length > 0) {
             response = response[0];
           }
 
           this.$store.commit('setNotificationStatus', true);
           let level = 0;
-          const message = response.data.msg;
-          if (response.data.status) {
-            // update running balance with new value
-            const running_balance = parseFloat(response.data.running_balance);
+          let message = response.data.msg;
+          if (response.data.status == true) {
+            //update running balance with new value
+            let running_balance = parseFloat(response.data.running_balance);
             this.$store.commit('setRunningBalance', running_balance);
             this.payment_state = 'Promocode Redeem Success';
             level = 1;
@@ -86,14 +86,14 @@ export default {
             this.payment_state = 'Promocode Redeem Failed';
             level = 2;
           }
-          const notification = {
+          let notification = {
             title: 'redeem promocode',
-            level,
-            message: `${message}`,
+            level: level,
+            message: '' + message,
           };
           this.$store.commit('setNotification', notification);
         },
-        (error) => {
+        error => {
           this.payment_state = 'Promocode Redeeem Failed';
         },
       );

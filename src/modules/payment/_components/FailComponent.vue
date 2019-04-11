@@ -4,21 +4,13 @@
       {{ payment_loading_title }}
     </div>
     <div class="payment--mpesa-image">
-      <img src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/fail.png">
+      <img src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/fail.png" />
     </div>
     <div class="paymemt--mpesa-loader-actions">
-      <button
-        type="button"
-        class="button-primary align-left"
-        @click="backToPaymentRequest"
-      >
+      <button type="button" class="button-primary align-left" @click="backToPaymentRequest">
         Help
       </button>
-      <button
-        type="button"
-        class="button-primary align-right"
-        @click="backToPaymentRequest"
-      >
+      <button type="button" class="button-primary align-right" @click="backToPaymentRequest">
         Ok
       </button>
     </div>
@@ -27,9 +19,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-
 export default {
-  name: 'PaymentFail',
+  name: 'payment_fail',
   data() {
     return {
       loading: true,
@@ -39,25 +30,26 @@ export default {
   methods: {
     ...mapActions(['$_payment/resetMpesaPaymentRequest']),
     backToPaymentRequest() {
-      const payload = {};
+      let payload = {};
       this.$store.dispatch('$_payment/resetMpesaPaymentRequest', payload).then(
-        (response) => {},
-        (error) => {
-          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true);
+        response => {
+        },
+        error => {
         },
       );
     },
   },
   computed: {
     payment_loading_title() {
-      const session = this.$store.getters.getSession;
-      let account_no = session[session.default].user_phone;
+      let session = this.$store.getters.getSession;
+      let account_no = session[session.default]['user_phone'];
       if (session.default === 'biz') {
-        account_no = `SENDY${session.biz.cop_id}`;
+        account_no = `SENDY ${session.biz.cop_id}`;
       }
-      return `Sorry, Safaricom cannot be reached. Instead, please pay to Pay Bill no. 848450 with Account Number.${account_no}`;
+      return (
+        'Sorry, Safaricom cannot be reached. Instead, please pay to Pay Bill no. 848450 with Account Number.' +
+        account_no
+      );
     },
   },
 };

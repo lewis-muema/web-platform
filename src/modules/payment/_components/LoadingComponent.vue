@@ -3,7 +3,7 @@
     <div class="payment--loading-title">
       {{ payment_loading_title }}
     </div>
-    <div class="payment--mpesa-loader" />
+    <div class="payment--mpesa-loader"></div>
     <div class="paymemt--mpesa-loader-actions">
       <button
         type="button"
@@ -18,11 +18,10 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-
 export default {
-  name: 'PaymentLoading',
+  name: 'payment_loading',
   props: {
-    payMethod: {
+    pay_method: {
       type: String,
       default: 'mpesa',
     },
@@ -36,23 +35,23 @@ export default {
   methods: {
     ...mapActions(['$_payment/resetMpesaPaymentRequest', '$_payment/resetCardPaymentRequest']),
     cancelPaymentRequest() {
-      const payload = {};
+      let payload = {};
       if (this.pay_method === 'mpesa') {
         this.$store.dispatch('$_payment/resetMpesaPaymentRequest', payload).then(
-          (response) => {},
-          (error) => {
-            const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
-            this.$store.commit('setNotification', notification);
-            this.$store.commit('setNotificationStatus', true);
+          response => {
+
+          },
+          error => {
+
           },
         );
       } else {
         this.$store.dispatch('$_payment/resetCardPaymentRequest', payload).then(
-          (response) => {},
-          (error) => {
-            const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
-            this.$store.commit('setNotification', notification);
-            this.$store.commit('setNotificationStatus', true);
+          response => {
+
+          },
+          error => {
+
           },
         );
       }
@@ -62,8 +61,7 @@ export default {
     payment_loading_title() {
       if (this.pay_method === 'mpesa') {
         return 'Please follow the M-Pesa instructions on your phone screen';
-      }
-      if (this.pay_method === 'card') {
+      } else if (this.pay_method === 'card') {
         return 'Processing your card operation';
       }
     },
