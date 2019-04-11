@@ -1,22 +1,24 @@
 <template>
   <div>
     <span>{{ count }}</span>
-    <button @click="increment">Increment</button>
+    <button @click="increment">
+      Increment
+    </button>
   </div>
 </template>
 
 <script>
 export default {
-  data () {
+  data() {
     return {
-      count: 0
-    }
+      count: 0,
+    };
   },
 
   methods: {
-    increment () {
-      this.count++
-    }
-  }
-}
+    increment() {
+      this.count++;
+    },
+  },
+};
 </script>

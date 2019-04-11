@@ -455,12 +455,12 @@ export default {
   },
   computed: {
     ...mapGetters({
-      get_active_package_class: '$_orders/$_home/get_active_package_class',
-      get_active_vendor_name: '$_orders/$_home/get_active_vendor_name',
-      get_vendor_carrier_type: '$_orders/$_home/get_carrier_type',
-      getPriceRequestObject: '$_orders/$_home/get_price_request_object',
+      get_active_package_class: '$_orders/$_home/getActivePackageClass',
+      get_active_vendor_name: '$_orders/$_home/getActiveVendorName',
+      get_vendor_carrier_type: '$_orders/$_home/getCarrierType',
+      getPriceRequestObject: '$_orders/$_home/getPriceRequestObject',
       getReturnStatus: '$_orders/$_home/getReturnStatus',
-      activeVendorPriceData: '$_orders/$_home/get_active_vendor_details',
+      activeVendorPriceData: '$_orders/$_home/getActiveVendorDetails',
       getMaxTemperature: '$_orders/$_home/getMaxTemperature',
       getCustomerMinAmount: '$_orders/$_home/getCustomerMinAmount',
       getDeliveryItem: '$_orders/$_home/getDeliveryItem',
@@ -536,10 +536,10 @@ export default {
 
   methods: {
     ...mapMutations({
-      setActivePackageClass: '$_orders/$_home/set_active_package_class',
-      setActiveVendorName: '$_orders/$_home/set_active_vendor_name',
-      setActiveVendorDetails: '$_orders/$_home/set_active_vendor_details',
-      setCarrierType: '$_orders/$_home/set_carrier_type',
+      setActivePackageClass: '$_orders/$_home/setActivePackageClass',
+      setActiveVendorName: '$_orders/$_home/setActiveVendorName',
+      setActiveVendorDetails: '$_orders/$_home/setActiveVendorDetails',
+      setCarrierType: '$_orders/$_home/setCarrierType',
       setMaxTemperature: '$_orders/$_home/setMaxTemperature',
       setCustomerMinAmount: '$_orders/$_home/setCustomerMinAmount',
       setDeliveryItem: '$_orders/$_home/setDeliveryItem',
@@ -549,8 +549,8 @@ export default {
       setNOOfLoaders: '$_orders/$_home/setNOOfLoaders',
       setOrderState: '$_orders/$_home/setOrderState',
       setExtendOptions: '$_orders/$_home/setExtendOptions',
-      setScheduleTime: '$_orders/$_home/set_schedule_time',
-      setOrderNotes: '$_orders/$_home/set_order_notes',
+      setScheduleTime: '$_orders/$_home/setScheduleTime',
+      setOrderNotes: '$_orders/$_home/setOrderNotes',
     }),
 
     dispatchCarrierType() {
