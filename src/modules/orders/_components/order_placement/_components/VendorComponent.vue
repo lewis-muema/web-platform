@@ -160,7 +160,6 @@
               <div>
                 <el-input
                   v-model.trim="delivery_item"
-                  placeholder="(Enter text)"
                   autocomplete="true"
                   @change="dispatchDeliveryItem"
                 />
@@ -194,7 +193,7 @@
                   name="name"
                   rows="5"
                   class="textarea-control"
-                  placeholder="Instructions.."
+                  placeholder=" Instructions.."
                 />
               </div>
             </div>
@@ -444,7 +443,7 @@ export default {
           label: 'No Box',
         },
       ],
-      schedule_time: this.moment(),
+      schedule_time: '',
       order_notes: '',
       pair_rider: '2',
       number_plate: '',
