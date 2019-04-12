@@ -57,26 +57,28 @@
       <el-table-column
         label="Reciept Number"
         prop="txn"
+        min-width="80"
       />
       <el-table-column
         label="Date"
         prop="date_time"
         :formatter="formatDate"
+        width="170"
       />
       <el-table-column
         label="Method"
         prop="pay_method_name"
-        width="220"
+        width="125"
       />
       <el-table-column
         label="Description"
         prop="description"
-        width="220"
+        min-width="80"
       />
       <el-table-column
         label="Amount"
         prop="amount"
-        width="220"
+        width="125"
         :formatter="formatAmount"
         class-name="amount--table-format"
       />

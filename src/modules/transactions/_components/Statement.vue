@@ -49,35 +49,37 @@
       <el-table-column
         label="Txn"
         prop="txn"
+        min-width="80"
       />
       <el-table-column
         label="Date"
         prop="date_time"
         :formatter="formatDate"
+        width="170"
       />
       <el-table-column
         label="Description"
         prop="description"
-        width="180"
+        min-width="80"
       />
       <el-table-column
         label="Debit"
         prop="amount"
-        width="180"
+        width="80"
         :formatter="formatDebitAmount"
         class-name="amount--table-format"
       />
       <el-table-column
         label="Credit"
         prop="amount"
-        width="180"
+        width="80"
         :formatter="formatCreditAmount"
         class-name="amount--table-format"
       />
       <el-table-column
         label="Running Balance"
         prop="running_balance"
-        width="180"
+        width="125"
         :formatter="formatRunningBalance"
         class-name="amount--table-format"
       />
