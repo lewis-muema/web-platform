@@ -83,6 +83,7 @@ export default {
       delivery_eta: '',
       vendor_name: '',
       destination_waiting: false,
+      rider_online_status: false,
     };
   },
   methods: {
@@ -115,7 +116,7 @@ export default {
       const image = document.createElement('img');
       image.crossOrigin = 'anonymous';
       image.src = `https://images.sendyit.com/web_platform/vendor_type/top/${vendor_type}.svg`;
-      const imageLoadPromise = new Promise((resolve) => {
+      const imageLoadPromise = new Promise(resolve => {
         image.onload = resolve;
       }).then(() => {
         ctx.drawImage(image, 0, 0);
@@ -152,6 +153,7 @@ export default {
       }
     },
     orderStatus(data) {
+      this.checkRiderPosition();
       if (data.status) {
         const waiting = data.delivery_log.find(position => position.log_type === 10);
         const waitingIndex = data.delivery_log.findIndex(position => position.log_type === 10);
@@ -163,7 +165,7 @@ export default {
             this.destination_waiting = false;
           }
         }
-        const rider_locations = this.isMQTTConnected;
+        const rider_locations = this.rider_online_status;
         if (data.rider.vendor_id === 23) {
           this.vendor_icon_id = 1;
         } else {
@@ -179,9 +181,9 @@ export default {
           this.infoHeader = '';
           this.infoDescription = '';
         } else if (
-          data.delivery_status === 2
-          && waiting !== undefined
-          && this.destination_waiting
+          data.delivery_status === 2 &&
+          waiting !== undefined &&
+          this.destination_waiting
         ) {
           // return 'Waiting at destination'
           this.infoHeader = `Your ${
@@ -204,9 +206,9 @@ export default {
             this.iconLabel = 'destination';
           }
         } else if (
-          data.delivery_status === 0
-          && data.confirm_status === 1
-          && waiting !== undefined
+          data.delivery_status === 0 &&
+          data.confirm_status === 1 &&
+          waiting !== undefined
         ) {
           // return 'Waiting at pick up location';
           this.infoHeader = `Your ${
@@ -241,7 +243,7 @@ export default {
       }
     },
     orderETA(data) {
-      if (data.confirm_status === 1 && data.delivery_status === 0 ) {
+      if (data.confirm_status === 1 && data.delivery_status === 0) {
         const pick_up_eta = data.eta_data.etp;
         const eta_split = pick_up_eta.split('to');
         const start = eta_split[0].replace(/\s+/g, '');
@@ -269,13 +271,21 @@ export default {
     activeState() {
       this.$store
         .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
-        .then((response) => {
+        .then(response => {
           if (response.data.status) {
             this.orderStatus(response.data);
           } else {
             this.infoWinOpen = false;
           }
         });
+    },
+    checkRiderPosition() {
+      let size = Object.keys(this.vendors).length;
+      if (size > 0) {
+        this.rider_online_status = true;
+      } else {
+        this.rider_online_status = false;
+      }
     },
 
     toggleInfoWindow(marker, idx) {
@@ -290,8 +300,8 @@ export default {
                  object-fit: contain;
                  float: left;">
           <img style ="height: 45px;" src="https://images.sendyit.com/web_platform/vendor_type/top/${
-  this.vendor_icon_id
-}.png"></img>
+            this.vendor_icon_id
+          }.png"></img>
                  </div>
                  <div style="  width: 70%;
                    display: inline-block;
@@ -327,7 +337,7 @@ export default {
       }
     },
     '$route.params.order_no': function trackedOrder(order) {
-      this.$store.dispatch('$_orders/getOrderData', { order_no: order }).then((response) => {
+      this.$store.dispatch('$_orders/getOrderData', { order_no: order }).then(response => {
         if (response.status) {
           this.orderStatus(response.data);
         } else {
