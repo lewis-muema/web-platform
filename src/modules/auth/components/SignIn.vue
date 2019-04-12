@@ -1,8 +1,5 @@
 <template lang="html">
-  <div
-    id="log_in"
-    class="log-item"
-  >
+  <div id="log_in" class="log-item">
     <div class="sign-inner">
       <div class="sign-top">
         Log in to Sendy
@@ -21,10 +18,7 @@
 
       <div @keyup.enter="sign_in">
         <div class="sign-holder dimen">
-          <span
-            id="log_in_warn"
-            class="sign-holder__error"
-          />
+          <span id="log_in_warn" class="sign-holder__error" />
         </div>
         <div class="sign-holder dimen">
           <input
@@ -34,7 +28,7 @@
             name="email"
             placeholder="Enter Email"
             autocomplete="on"
-          >
+          />
         </div>
 
         <div class="sign-holder dimen">
@@ -44,7 +38,7 @@
             type="password"
             name="password"
             placeholder="Password"
-          >
+          />
         </div>
 
         <div class="sign-holder">
@@ -54,22 +48,16 @@
             type="submit"
             name="login_text"
             @click="sign_in"
-          >
+          />
         </div>
         <div class=" sign-holder sign-forgot-pass sign-smaller">
-          <router-link
-            class="sign-holder__link"
-            to="/auth/forgot_password"
-          >
+          <router-link class="sign-holder__link" to="/auth/forgot_password">
             Forgot password?
           </router-link>
         </div>
         <div class="sign-holder sign-sign-up sign-smaller">
           Don't have an Account?
-          <router-link
-            class="sign-holder__link"
-            to="/auth/sign_up"
-          >
+          <router-link class="sign-holder__link" to="/auth/sign_up">
             Sign Up
           </router-link>
         </div>
@@ -125,71 +113,69 @@ export default {
         };
         const that = this;
         this.authSignIn(full_payload).then(
-          (response) => {
-            let partsOfToken = '';
-            if (Array.isArray(response)) {
-              const res = response[1];
-              localStorage.setItem('jwtToken', res);
-              partsOfToken = res.toString().split('.');
-            } else {
-              localStorage.setItem('jwtToken', response);
-              partsOfToken = response.split('.');
-            }
-            const middleString = partsOfToken[1];
-            const data = atob(middleString);
-            const { payload } = JSON.parse(data);
-            if (response) {
-              // set session
-              // commit everything to the store
-              // redirect to orders
-              const session_data = payload;
-              const json_session = JSON.stringify(session_data);
-              this.setSession(json_session);
-              this.$store.commit('setSession', session_data);
-              let analytics_env = '';
-              try {
-                analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-              } catch (er) {}
-              if ('default' in session_data && analytics_env === 'production') {
-                const acc = session_data[session_data.default];
-
-                mixpanel.people.set_once({
-                  $email: acc.user_email,
-                  $phone: acc.user_phone,
-                  'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-                  $name: acc.user_name,
-                  'Client Type': 'Web Platform',
-                });
-
-                // login identify
-                mixpanel.identify(acc.user_email);
-
-                // track login
-                mixpanel.track('User Login', {
-                  'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-                  'Last Login': new Date(),
-                  'Client Type': 'Web Platform',
-                });
+          response => {
+            if (response.status) {
+              let partsOfToken = '';
+              if (Array.isArray(response)) {
+                const res = response[1];
+                localStorage.setItem('jwtToken', res);
+                partsOfToken = res.toString().split('.');
+              } else {
+                localStorage.setItem('jwtToken', response);
+                partsOfToken = response.split('.');
               }
-              this.$router.push('/orders');
-            }
-          },
-          (error) => {
-            if (error.response.status === 403) {
-              const authResponse = error.response.data;
-              if (authResponse.data.code === 1) {
+              const middleString = partsOfToken[1];
+              const data = atob(middleString);
+              const { payload } = JSON.parse(data);
+              if (response) {
+                // set session
+                // commit everything to the store
+                // redirect to orders
+                const session_data = payload;
+                const json_session = JSON.stringify(session_data);
+                this.setSession(json_session);
+                this.$store.commit('setSession', session_data);
+                let analytics_env = '';
+                try {
+                  analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+                } catch (er) {}
+                if ('default' in session_data && analytics_env === 'production') {
+                  const acc = session_data[session_data.default];
+
+                  mixpanel.people.set_once({
+                    $email: acc.user_email,
+                    $phone: acc.user_phone,
+                    'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                    $name: acc.user_name,
+                    'Client Type': 'Web Platform',
+                  });
+
+                  // login identify
+                  mixpanel.identify(acc.user_email);
+
+                  // track login
+                  mixpanel.track('User Login', {
+                    'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                    'Last Login': new Date(),
+                    'Client Type': 'Web Platform',
+                  });
+                }
+                this.$router.push('/orders');
+              }
+            } else {
+              const errorResponse = response.data;
+              if (errorResponse.code === 1) {
                 this.login_text = 'Login';
                 this.doNotification(2, 'Login failed', 'Wrong password or email.');
               } else {
                 this.login_text = 'Login';
                 this.doNotification(2, 'Login failed', 'Account deactivated');
               }
-            } else {
-              this.login_text = 'Login';
-              this.message = 'Check your Login credentials';
-              this.doNotification(2, 'Login failed', 'Login failed. Please try again');
             }
           },
+          error => {
+            this.doNotification(2, 'Login failed', 'Login failed. Please try again');
+          }
         );
       } else {
         this.message = 'Provide all values';
