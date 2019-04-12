@@ -62,7 +62,7 @@
           <el-button class="download_history" type="primary" size="mini">
             Download<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
-            <el-dropdown-menu class="download_history"slot="dropdown">
+            <el-dropdown-menu class="export_dropdown"slot="dropdown">
               <el-dropdown-item  command="a">Excel</el-dropdown-item>
               <el-dropdown-item  command="b">PDF</el-dropdown-item>
             </el-dropdown-menu>
@@ -186,8 +186,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { Printd } from 'printd';
-import exportFromJSON from 'export-from-json'
 import * as _  from 'lodash';
+import  exportFromJSON from 'export-from-json';
 
 
 const moment = require('moment');
@@ -465,7 +465,6 @@ export default {
       let data2 = [];
 
       for (let i = 0; i < this.order_history_data.length; i++) {
-        console.log(this.order_history_data)
         let arr = {};
         arr.OrderNumber=this.order_history_data[i].order_no;
         arr.OrderAmount= this.order_history_data[i].order_cost;

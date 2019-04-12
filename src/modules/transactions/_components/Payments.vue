@@ -22,10 +22,13 @@
 
         <button
           type="button"
-          :class="active_filter?'button-primary section--filter-action align-left btn-payment'
-            :'button-primary section--filter-action-inactive align-left btn-payment'"
+          :class="
+            active_filter
+              ? 'button-primary section--filter-action align-left btn-payment'
+              : 'button-primary section--filter-action-inactive align-left btn-payment'
+          "
           name="order_payments_text"
-          :disabled="active_filter == true ? false : true"
+          :disabled="active_filter === true ? false : true"
           @click="filterPaymentData"
         >
           {{ order_payments_text }}
@@ -85,7 +88,7 @@
         :total="payment_total"
         :page-size="pagination_limit"
         :current-page.sync="pagination_page"
-        :page-sizes="[5,10, 20, 50, 100]"
+        :page-sizes="[5, 10, 20, 50, 100]"
         class="section--pagination-item"
         @current-change="changePage"
         @size-change="changeSize"
@@ -127,7 +130,11 @@ export default {
       return this.paymentData.slice(from, to);
     },
     active_filter() {
-      return (this.filterData.from_date !== '' && this.filterData.from_date !== null) && (this.filterData.to_date !== '' && this.filterData.to_date !== null);
+      return (
+        this.filterData.from_date !== ''
+        && this.filterData.from_date !== null
+        && (this.filterData.to_date !== '' && this.filterData.to_date !== null)
+      );
     },
     payment_total() {
       // if(this.filterState == true){

@@ -201,20 +201,20 @@ export default {
 
   computed: {
     ...mapGetters({
-      get_active_order_option: '$_orders/$_home/get_active_order_option',
+      get_active_order_option: '$_orders/$_home/getActiveOrderOption',
       getRunningBalance: 'getRunningBalance',
-      getPriceRequestObject: '$_orders/$_home/get_price_request_object',
-      get_active_package_class: '$_orders/$_home/get_active_package_class',
-      get_active_vendor_name: '$_orders/$_home/get_active_vendor_name',
-      activeVendorPriceData: '$_orders/$_home/get_active_vendor_details',
-      get_order_path: '$_orders/$_home/get_order_path',
-      get_pickup_filled: '$_orders/$_home/get_pickup_filled',
-      get_payment_method: '$_orders/$_home/get_payment_method',
-      get_order_notes: '$_orders/$_home/get_order_notes',
-      get_schedule_time: '$_orders/$_home/get_schedule_time',
-      get_saved_cards: '$_orders/$_home/get_saved_cards',
-      get_stripe_user_id: '$_orders/$_home/get_stripe_user_id',
-      get_carrier_type: '$_orders/$_home/get_carrier_type',
+      getPriceRequestObject: '$_orders/$_home/getPriceRequestObject',
+      get_active_package_class: '$_orders/$_home/getActivePackageClass',
+      get_active_vendor_name: '$_orders/$_home/getActiveVendorName',
+      activeVendorPriceData: '$_orders/$_home/getActiveVendorDetails',
+      get_order_path: '$_orders/$_home/getOrderPath',
+      get_pickup_filled: '$_orders/$_home/getPickupFilled',
+      get_payment_method: '$_orders/$_home/getPaymentMethod',
+      get_order_notes: '$_orders/$_home/getOrderNotes',
+      get_schedule_time: '$_orders/$_home/getScheduleTime',
+      get_saved_cards: '$_orders/$_home/getSavedCards',
+      get_stripe_user_id: '$_orders/$_home/getStripeUserId',
+      get_carrier_type: '$_orders/$_home/getCarrierType',
       getIsReturn: '$_orders/$_home/getReturnStatus',
       getMaxTemperature: '$_orders/$_home/getMaxTemperature',
       getCustomerMinAmount: '$_orders/$_home/getCustomerMinAmount',
@@ -356,20 +356,20 @@ export default {
 
   methods: {
     ...mapMutations({
-      remove_polyline: '$_orders/remove_polyline',
-      remove_markers: '$_orders/remove_markers',
+      remove_polyline: '$_orders/removePolyline',
+      remove_markers: '$_orders/removeMarkers',
       unsetMap: '$_orders/unsetMap',
-      set_active_order_option: '$_orders/$_home/set_active_order_option',
-      setPickupFilled: '$_orders/$_home/set_pickup_filled',
-      setPaymentMethod: '$_orders/$_home/set_payment_method',
-      setScheduleTime: '$_orders/$_home/set_schedule_time',
-      setOrderNotes: '$_orders/$_home/set_order_notes',
-      clear_order_path: '$_orders/$_home/clear_order_path',
-      clear_location_names_state: '$_orders/$_home/clear_location_names',
-      clear_price_request_object: '$_orders/$_home/clear_price_request_object',
-      clear_extra_destinations: '$_orders/$_home/clear_extra_destination',
-      setSavedCards: '$_orders/$_home/set_saved_cards',
-      setStripeUserId: '$_orders/$_home/set_stripe_user_id',
+      set_active_order_option: '$_orders/$_home/setActiveOrderOption',
+      setPickupFilled: '$_orders/$_home/setPickUpFilled',
+      setPaymentMethod: '$_orders/$_home/setPaymentMethod',
+      setScheduleTime: '$_orders/$_home/setScheduleTime',
+      setOrderNotes: '$_orders/$_home/setOrderNotes',
+      clear_order_path: '$_orders/$_home/clearOrderPath',
+      clear_location_names_state: '$_orders/$_home/clearLocationNames',
+      clear_price_request_object: '$_orders/$_home/clearPriceRequestObject',
+      clear_extra_destinations: '$_orders/$_home/clearExtraDestination',
+      setSavedCards: '$_orders/$_home/setSavedCards',
+      setStripeUserId: '$_orders/$_home/setStripeUserId',
       setReturnStatus: '$_orders/$_home/setReturnStatus',
     }),
 
@@ -556,7 +556,7 @@ export default {
             this.setPickupFilled(false);
             const { order_no } = this.activeVendorPriceData;
             this.should_destroy = true;
-            this.$store.dispatch('$_orders/fetch_ongoing_orders');
+            this.$store.dispatch('$_orders/fetchOngoingOrders');
             this.trackMixpanelEvent('Place Order');
             this.$router.push({
               name: 'tracking',
