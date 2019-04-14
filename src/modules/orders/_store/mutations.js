@@ -1,50 +1,48 @@
+/* eslint no-param-reassign: "error" */
+/* eslint no-restricted-syntax: ["error","WithStatement"] */
 import Vue from 'vue';
 
-const set_page = (state, payload) => {
+const setPage = (state, payload) => {
   state.page = payload;
 };
 
-const toggle_ongoing = (state) => {
+const toggleOngoing = (state) => {
   if (state.ongoing_show === 0) {
     state.ongoing_show = 1;
-  }
-  else {
+  } else {
     state.ongoing_show = 0;
   }
-
 };
 
-const set_ongoing_orders = (state, payload) => {
+const setOngoingOrders = (state, payload) => {
   state.ongoing_orders = payload;
 };
 
-const set_markers = (state, payload) => {
-  payload.forEach(function (value, i) {
-
+const setMarkers = (state, payload) => {
+  payload.forEach((value, i) => {
     let icon = 'destination';
     if (i === 0) {
       icon = 'pickup';
     }
-    let marker = {
+    const marker = {
       position: {
         lat: Number(value.coordinates.split(',')[0]),
         lng: Number(value.coordinates.split(',')[1]),
       },
-      icon: icon
+      icon,
     };
     state.map.markers.push(marker);
-  })
+  });
 };
 
-const set_polyline = (state, payload) => {
+const setPolyline = (state, payload) => {
   state.map.polyline.path = payload;
 };
 
-const set_vendor_markers = (state, payload) => {
-
-  /* 
+const setVendorMarkers = (state, payload) => {
+  /*
   TO DO re-enable when we start busing live locations on the home page
-  
+
   if('busy' in payload){
     if(payload.busy == true){
       return false;
@@ -53,74 +51,70 @@ const set_vendor_markers = (state, payload) => {
   */
 
   let visible = false;
-  if('page' in state){
-    // order placement 
+  if ('page' in state) {
+    // order placement
     if (state.page === 0) {
       visible = true;
-    }
-    // tracking
-    else{
-      if ('overide_visible' in payload){
-        visible = true;
-      }
+    } else if ('overide_visible' in payload) {
+      // tracking
+      visible = true;
     }
   }
 
- 
- 
-  let id = payload.rider_id;
-  let value = {
+  const id = payload.rider_id;
+  const value = {
     position: {
       lat: payload.lat,
       lng: payload.lng,
     },
     vendor_type: payload.vendor_type,
     rotation: payload.bearing,
-    visible: visible,
-  }
+    visible,
+  };
 
   Vue.set(state.map.vendors, id, value);
 };
 
-const hide_vendors = (state, payload) => {
-  for (let key in state.map.vendors) {
-    if (!state.map.vendors.hasOwnProperty(key)) continue;
-    let obj = state.map.vendors[key];
+const hideVendors = (state) => {
+  for (const key in state.map.vendors) {
+    if (Object.prototype.hasOwnProperty.call(!state.map.vendors, key)) {
+      const obj = state.map.vendors[key];
 
-    obj.visible = false;
+      obj.visible = false;
+    }
   }
 };
 
-const remove_markers = (state) => {
+const removeMarkers = (state) => {
   state.map.markers = [];
-}
+};
 
-const remove_polyline = (state) => {
+const removePolyline = (state) => {
   state.map.polyline.path = '';
-}
+};
 
-const set_location_marker = (state,payload) => {
-    state.map.markers.splice(payload.index,0,payload.marker);
-}
-const unset_location_marker = (state,index) => {
-    state.map.markers.splice(index,1);
-}
-const unsetMap = (state) => {
-    state.map.markers.splice(0);
-    state.map.vendors.splice(0);
-    state.map.polyline.path = '';
-}
+const setLocationMarker = (state, payload) => {
+  state.map.markers.splice(payload.index, 0, payload.marker);
+};
+const unsetLocationMarker = (state, index) => {
+  state.map.markers.splice(index, 1);
+};
+// const unsetMap = (state) => {
+//   state.map.markers.splice(0);
+//   state.map.vendors.splice(0);
+//   state.map.polyline.path = '';
+// };
 
 export default {
-  set_page,
-  toggle_ongoing,
-  set_ongoing_orders,
-  set_markers,
-  set_polyline,
-  set_vendor_markers,
-  hide_vendors,
-  remove_markers,
-  remove_polyline,
-  set_location_marker,
-  unset_location_marker,
+  setPage,
+  toggleOngoing,
+  setOngoingOrders,
+  setMarkers,
+  setPolyline,
+  setVendorMarkers,
+  hideVendors,
+  removeMarkers,
+  removePolyline,
+  setLocationMarker,
+  unsetLocationMarker,
 };

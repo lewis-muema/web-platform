@@ -1,11 +1,5 @@
-import axios from 'axios';
-
-const endpoint = 'https://privateapitest.sendyit.com/v1/';
-
 export default {
-  requestSignIn({
-    dispatch, commit, getters, rootGetters,
-  }, payload) {
+  requestSignIn({ dispatch }, payload) {
     // let root_state = rootState;
     // console.log(root_state);
 
@@ -91,7 +85,7 @@ export default {
       );
     });
   },
-  requestSignUpPhoneVerification({ commit, dispatch, rootGetters }, payload) {
+  requestSignUpPhoneVerification({ dispatch }, payload) {
     // console.log("payload", payload);
 
     return new Promise((resolve, reject) => {
@@ -105,7 +99,7 @@ export default {
       );
     });
   },
-  requestSignUpVerificationVerify({ commit, dispatch, rootGetters }, payload) {
+  requestSignUpVerificationVerify({ dispatch }, payload) {
     // console.log("payload", payload);
 
     return new Promise((resolve, reject) => {

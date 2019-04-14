@@ -30,11 +30,13 @@
             <ul class="nav--menu-dropdown-list">
               <li v-if="switchValid">
                 <a @click="switchAccount()">
-                  Switch to <span v-if="this.$store.getters.getSession.default === 'peer'">
+                  Switch to
+                  <span v-if="this.$store.getters.getSession.default === 'peer'">
                     Business
                   </span><span v-else>
                     Personal
-                  </span> account
+                  </span>
+                  account
                 </a>
               </li>
               <li>

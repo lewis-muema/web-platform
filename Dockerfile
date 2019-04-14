@@ -13,7 +13,7 @@ WORKDIR /opt/sendy/
 ARG DOCKER_ENV
 ENV DOCKER_ENV=$DOCKER_ENV
 
-RUN npm install && npm run build 
+RUN npm install && npm run build
 
 #RUN npm install -g npm
 # If you are building your code for production

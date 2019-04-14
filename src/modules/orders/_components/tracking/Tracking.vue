@@ -29,8 +29,8 @@ export default {
   mixins: [RegisterStoreModule],
   watch: {
     $route() {
-      this.$store.commit('$_orders/remove_polyline', []);
-      this.$store.commit('$_orders/remove_markers', []);
+      this.$store.commit('$_orders/removePolyline', []);
+      this.$store.commit('$_orders/removeMarkers', []);
     },
   },
   created() {
@@ -46,8 +46,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      hide_vendors: '$_orders/hide_vendors',
-      change_page: '$_orders/set_page',
+      hide_vendors: '$_orders/hideVendors',
+      change_page: '$_orders/setPage',
     }),
   },
 };

@@ -1,13 +1,11 @@
 <template lang="html">
-  <div class="">
-  </div>
+  <div class="" />
 </template>
 
 <script>
 export default {
-  name: 'order-cost'
-}
+  name: 'OrderCost',
+};
 </script>
 
-<style lang="css">
-</style>
+<style lang="css"></style>
