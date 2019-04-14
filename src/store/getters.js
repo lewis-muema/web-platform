@@ -1,11 +1,14 @@
+/* eslint no-param-reassign: "error" */
+/* eslint no-use-before-define: ["error", { "functions": false }] */
+/* eslint no-restricted-syntax: ["error","WithStatement"] */
 export default {
   getSession(state) {
-    let session = state.session;
+    let { session } = state;
     if (process.browser) {
-      if (isEmpty(session) == true) {
-        //try and get from the ls
-        session = localStorage.getItem("_sessionSnack");
-        if (session !== null && session !== "") {
+      if (isEmpty(session)) {
+        // try and get from the ls
+        session = localStorage.getItem('_sessionSnack');
+        if (session !== null && session !== '') {
           state.session = JSON.parse(session);
         }
       }
@@ -23,12 +26,12 @@ export default {
   },
   getENV(state) {
     return state.ENV;
-  }
+  },
 };
 
 function isEmpty(obj) {
-  for (var prop in obj) {
-    if (obj.hasOwnProperty(prop)) return false;
+  for (const prop in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, prop)) return false;
   }
 
   return true;

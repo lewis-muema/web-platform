@@ -894,8 +894,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      tracking_data: '$_orders/$_tracking/get_tracking_data',
-      tracked_order: '$_orders/$_tracking/get_tracked_order',
+      tracking_data: '$_orders/$_tracking/getTrackingData',
+      tracked_order: '$_orders/$_tracking/getTrackedOrder',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
     }),
     order_eta() {
@@ -1007,7 +1007,7 @@ export default {
     '$route.params.order_no': function trackedOrder(from) {
       this.order_number = from;
       this.loading = true;
-      this.$store.commit('$_orders/$_tracking/set_tracked_order', from);
+      this.$store.commit('$_orders/$_tracking/setTrackedOrder', from);
       this.poll(from);
       this.order_eta();
     },
@@ -1021,7 +1021,7 @@ export default {
   },
   mounted() {
     this.loading = true;
-    this.$store.commit('$_orders/$_tracking/set_tracked_order', this.$route.params.order_no);
+    this.$store.commit('$_orders/$_tracking/setTrackedOrder', this.$route.params.order_no);
     this.$store.dispatch('$_orders/$_tracking/trackMQTT');
     this.poll(this.$route.params.order_no);
     this.checkRunningBalance();
@@ -1058,7 +1058,7 @@ export default {
     poll(from) {
       const that = this;
       this.$store
-        .dispatch('$_orders/$_tracking/get_tracking_data', { order_no: from })
+        .dispatch('$_orders/$_tracking/getTrackingData', { order_no: from })
         .then((response) => {
           if (response) {
             if (this.tracking_data.delivery_status === 3) {
@@ -1186,7 +1186,7 @@ export default {
         cop_id: session[session.default].cop_id,
         user_phone: session[session.default].user_phone,
       };
-      this.$store.dispatch('$_orders/$_tracking/running_balance', payload).then((response) => {
+      this.$store.dispatch('$_orders/$_tracking/runningBalance', payload).then((response) => {
         if (response.status) {
           this.myRb = response.running_balance;
           this.accType = response.payment_plan;
@@ -1225,11 +1225,11 @@ export default {
         client_type: this.$store.getters.getSession.default,
       };
       const that = this;
-      this.$store.dispatch('$_orders/$_tracking/cancel_order', payload).then((response) => {
+      this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then((response) => {
         if (response.status) {
           that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
           that.cancelToggle();
-          this.$store.dispatch('$_orders/fetch_ongoing_orders');
+          this.$store.dispatch('$_orders/fetchOngoingOrders');
           that.place();
         } else {
           const payload2 = {
@@ -1238,11 +1238,11 @@ export default {
             reason_description: 'I placed the wrong locations',
             client_type: that.$store.getters.getSession.default,
           };
-          this.$store.dispatch('$_orders/$_tracking/cancel_order', payload2).then((response2) => {
+          this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then((response2) => {
             if (response2.status) {
               that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
               that.cancelToggle();
-              this.$store.dispatch('$_orders/fetch_ongoing_orders');
+              this.$store.dispatch('$_orders/fetchOngoingOrders');
               that.place();
             } else {
               that.doNotification(
@@ -1275,7 +1275,7 @@ export default {
         };
       }
 
-      this.$store.dispatch('$_orders/$_tracking/save_order_details', params).then((response) => {
+      this.$store.dispatch('$_orders/$_tracking/saveOrderDetails', params).then((response) => {
         if (response.status) {
           this.doNotification(
             1,

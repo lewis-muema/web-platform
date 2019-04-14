@@ -1,3 +1,7 @@
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["hexToBase64","base64ToHex"] }] */
+/* eslint-env es6 */
+/* global hex:true */
+/* eslint no-undef: "error" */
 import CryptoJS from 'crypto-js';
 
 /*
@@ -20,49 +24,47 @@ Usage
 */
 
 class Mcrypt {
-	constructor() {
-		this.iv = CryptoJS.enc.Base64.parse('RjhDNEFCN0FBM0JDNTkxNA==');
-		this.key = CryptoJS.enc.Utf8.parse('DAEB1667DCC64C84');
-	}
+  constructor() {
+    this.iv = CryptoJS.enc.Base64.parse('RjhDNEFCN0FBM0JDNTkxNA==');
+    this.key = CryptoJS.enc.Utf8.parse('DAEB1667DCC64C84');
+  }
 
-	decrypt(ciphertext) {
-		let encrypted_hex = this.hexToBase64(ciphertext);
-		let plaintext = CryptoJS.AES.decrypt(encrypted_hex, this.key, {
-			iv: this.iv,
-			padding: CryptoJS.pad.ZeroPadding
-		});
-		return CryptoJS.enc.Utf8.stringify(plaintext);
-	}
+  decrypt(ciphertext) {
+    const encryptedHex = this.hexToBase64(ciphertext);
+    const plaintext = CryptoJS.AES.decrypt(encryptedHex, this.key, {
+      iv: this.iv,
+      padding: CryptoJS.pad.ZeroPadding,
+    });
+    return CryptoJS.enc.Utf8.stringify(plaintext);
+  }
 
-	hexToBase64(hexstring) {
-		return btoa(
-			hexstring
-				.match(/\w{2}/g)
-				.map((a) => {
-          return String.fromCharCode(parseInt(a, 16));
-        })
-				.join('')
-		);
-	}
+  hexToBase64(hexstring) {
+    return btoa(
+      hexstring
+        .match(/\w{2}/g)
+        .map(a => String.fromCharCode(parseInt(a, 16)))
+        .join(''),
+    );
+  }
 
-	base64ToHex(str) {
-		for (var i = 0, bin = atob(str.replace(/[ \r\n]+$/, '')), hex = []; i < bin.length; ++i) {
-			let tmp = bin.charCodeAt(i).toString(16);
-			if (tmp.length === 1) tmp = '0' + tmp;
-			hex[hex.length] = tmp;
-		}
-		return hex.join('');
-	}
+  base64ToHex(str) {
+    for (let i = 0, bin = atob(str.replace(/[ \r\n]+$/, '')), hex = []; i < bin.length; i += 1) {
+      let tmp = bin.charCodeAt(i).toString(16);
+      if (tmp.length === 1) tmp = `0${tmp}`;
+      hex[hex.length] = tmp;
+    }
+    return hex.join('');
+  }
 
-	encrypt(plaintext) {
-		let text = JSON.stringify(plaintext);
-		let encrypted = CryptoJS.AES.encrypt(text, this.key, {
-			iv: this.iv,
-			padding: CryptoJS.pad.ZeroPadding
-		});
+  encrypt(plaintext) {
+    const text = JSON.stringify(plaintext);
+    const encrypted = CryptoJS.AES.encrypt(text, this.key, {
+      iv: this.iv,
+      padding: CryptoJS.pad.ZeroPadding,
+    });
 
-		return this.base64ToHex(encrypted.toString());
-	}
+    return this.base64ToHex(encrypted.toString());
+  }
 }
 
 export default new Mcrypt();

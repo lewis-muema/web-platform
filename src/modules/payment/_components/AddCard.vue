@@ -139,23 +139,17 @@ export default {
         this.show_cvv = true;
       }
     },
-    trackMixpanelEvent(name){
+    trackMixpanelEvent(name) {
       let analytics_env = '';
       try {
         analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      }
-      catch (er) {
+      } catch (er) {}
 
-      }
-
-      try{
-        if(analytics_env === 'production'){
+      try {
+        if (analytics_env === 'production') {
           mixpanel.track(name);
         }
-      }
-      catch(er){
-
-      }
+      } catch (er) {}
     },
     ...mapActions({ requestAddNewCardAction: '$_payment/requestAddNewCard' }),
 
@@ -231,6 +225,8 @@ export default {
               message: 'card was added successfully',
             };
             this.payment_state = 'Payment Success';
+            const acc = this.$store.getters.getSession;
+
             this.trackMixpanelEvent('Card Payment', {
               'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
               'Client Type': 'Web Platform',
@@ -250,7 +246,6 @@ export default {
           }
         },
         error => {
-          console.log(error);
           let notification = {
             title: 'Add Card Failed',
             level: 2,
@@ -259,7 +254,7 @@ export default {
           that.$store.dispatch('show_notification', notification, {
             root: true,
           });
-        }
+        },
       );
     },
 

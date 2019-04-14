@@ -1,37 +1,44 @@
 <template lang="html">
-    <div class="admin_invite_outer">
-           <invite-component v-if="this.getState === 1"></invite-component>
-           <link-component v-if="this.getState === 2"></link-component>
-           <many-component v-if="this.getState === 3"></many-component>
-           <end-component v-if="this.getState === 4"></end-component>
-           <link-show-component v-if="this.getState === 5"></link-show-component>
-    </div>
+  <div class="admin_invite_outer">
+    <invite-component v-if="this.getState === 1" />
+    <link-component v-if="this.getState === 2" />
+    <many-component v-if="this.getState === 3" />
+    <end-component v-if="this.getState === 4" />
+    <link-show-component v-if="this.getState === 5" />
+  </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import ManyComponent from './invite_users/ManyComponent.vue'
-import EndComponent from './invite_users/EndComponent.vue'
-import InviteComponent from './invite_users/InviteComponent.vue'
-import LinkComponent from './invite_users/LinkComponent.vue'
-import LinkShowComponent from './invite_users/LinkShowComponent.vue'
+import { mapGetters } from 'vuex';
+import ManyComponent from './invite_users/ManyComponent.vue';
+import EndComponent from './invite_users/EndComponent.vue';
+import InviteComponent from './invite_users/InviteComponent.vue';
+import LinkComponent from './invite_users/LinkComponent.vue';
+import LinkShowComponent from './invite_users/LinkShowComponent.vue';
 
 export default {
-    name:'AddUser',
-    components: {InviteComponent,ManyComponent,LinkComponent,EndComponent,LinkShowComponent},
-    computed: {
-       ...mapGetters(
-           {
-               getState: '$_admin/getViewState'
-           }
-       )
-     },
-     mounted() {
-        let materialize_script = document.createElement('script')
-        materialize_script.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/js/materialize.min.js')
-        document.head.appendChild(materialize_script)
-      },
-}
+  name: 'AddUser',
+  components: {
+    InviteComponent,
+    ManyComponent,
+    LinkComponent,
+    EndComponent,
+    LinkShowComponent,
+  },
+  computed: {
+    ...mapGetters({
+      getState: '$_admin/getViewState',
+    }),
+  },
+  mounted() {
+    const materialize_script = document.createElement('script');
+    materialize_script.setAttribute(
+      'src',
+      'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/js/materialize.min.js',
+    );
+    document.head.appendChild(materialize_script);
+  },
+};
 </script>
 <style lang="css">
 .cancel-btn

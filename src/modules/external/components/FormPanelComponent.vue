@@ -1,38 +1,38 @@
 <template lang="html">
   <div class="form-panel-outer">
-    <onboarding-info-component v-if="this.getViewState === 1 "></onboarding-info-component>
-    <email-validation-component v-if="this.getViewState === 2 "></email-validation-component>
-    <password-validation-component v-if="this.getViewState === 3 "></password-validation-component>
-    <complete-component v-if="this.getViewState === 4 "></complete-component>
+    <onboarding-info-component v-if="this.getViewState === 1" />
+    <email-validation-component v-if="this.getViewState === 2" />
+    <password-validation-component v-if="this.getViewState === 3" />
+    <complete-component v-if="this.getViewState === 4" />
   </div>
 </template>
 
 <script>
-import {mapGetters,mapMutations} from 'vuex'
-import OnboardingInfoComponent from './OnboardingInfoComponent.vue'
-import EmailValidationComponent from './EmailValidationComponent.vue'
-import PasswordValidationComponent from './PasswordValidationComponent.vue'
-import CompleteComponent from './CompleteComponent.vue'
+import { mapGetters, mapMutations } from 'vuex';
+import OnboardingInfoComponent from './OnboardingInfoComponent.vue';
+import EmailValidationComponent from './EmailValidationComponent.vue';
+import PasswordValidationComponent from './PasswordValidationComponent.vue';
+import CompleteComponent from './CompleteComponent.vue';
 
 export default {
-  name: 'form-panel-component',
-  components: {OnboardingInfoComponent,EmailValidationComponent,PasswordValidationComponent,CompleteComponent},
+  name: 'FormPanelComponent',
+  components: {
+    OnboardingInfoComponent,
+    EmailValidationComponent,
+    PasswordValidationComponent,
+    CompleteComponent,
+  },
   computed: {
-    ...mapGetters(
-      {
-        getViewState:'$_external/getViewState',
-      }
-    )
+    ...mapGetters({
+      getViewState: '$_external/getViewState',
+    }),
   },
   methods: {
-    ...mapMutations(
-      {
-        setViewState:'$_external/setViewState',
-      }
-    )
-
-  }
-}
+    ...mapMutations({
+      setViewState: '$_external/setViewState',
+    }),
+  },
+};
 </script>
 
 <style lang="css">
