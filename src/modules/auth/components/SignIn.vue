@@ -114,7 +114,16 @@ export default {
         const that = this;
         this.authSignIn(full_payload).then(
           response => {
-            if (response.status) {
+            if (response.hasOwnProperty('status')) {
+              let errorResponse = response.data;
+              if (errorResponse.code === 1) {
+                this.login_text = 'Login';
+                this.doNotification(2, 'Login failed', 'Wrong password or email.');
+              } else {
+                this.login_text = 'Login';
+                this.doNotification(2, 'Login failed', 'Account deactivated');
+              }
+            } else {
               let partsOfToken = '';
               if (Array.isArray(response)) {
                 const res = response[1];
@@ -161,15 +170,6 @@ export default {
                   });
                 }
                 this.$router.push('/orders');
-              }
-            } else {
-              const errorResponse = response.data;
-              if (errorResponse.code === 1) {
-                this.login_text = 'Login';
-                this.doNotification(2, 'Login failed', 'Wrong password or email.');
-              } else {
-                this.login_text = 'Login';
-                this.doNotification(2, 'Login failed', 'Account deactivated');
               }
             }
           },
