@@ -1,21 +1,15 @@
 <template lang="html">
   <div class="inv-container">
     <div class="up-flex">
-      <div
-        class="input-spaced"
-        style="display: none;"
-      >
-        <el-select
-          v-model="value"
-          class="addUser--select"
-          placeholder="Select"
-        >
+      <div class="input-spaced" style="display: none;">
+        <el-select class="addUser--select" v-model="value" placeholder="Select">
           <el-option
             v-for="item in options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          />
+          >
+          </el-option>
         </el-select>
         <!--<select>-->
         <!--<option value="0" selected>Expires in 7 days</option>-->
@@ -25,29 +19,19 @@
         <!--</select>-->
       </div>
       <div class="input-spaced">
-        <el-select
-          v-model="value"
-          class="addUser--select"
-          placeholder="Select"
-        >
+        <el-select class="addUser--select" v-model="value" placeholder="Select">
           <el-option
             v-for="item in options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          />
+          >
+          </el-option>
         </el-select>
       </div>
       <div class="side-flex mid-btn">
-        <a @click="get_inv">
-          Cancel
-        </a>
-        <button
-          class="button-primary"
-          type="submit"
-          name="action"
-          @click="get_link"
-        >
+        <a v-on:click="get_inv">Cancel</a>
+        <button v-on:click="get_link" class="button-primary" type="submit" name="action">
           Create Link
         </button>
       </div>
@@ -63,7 +47,7 @@ import { mapGetters, mapMutations } from 'vuex';
 import axios from 'axios';
 
 export default {
-  name: 'LinkComponent',
+  name: 'link-component',
   components: {},
   data() {
     return {
@@ -108,7 +92,7 @@ export default {
       updateViewState: '$_admin/setViewState',
       updateInviteLink: '$_admin/updateInviteLink',
     }),
-    get_inv() {
+    get_inv: function() {
       this.updateViewState(1);
     },
   },
