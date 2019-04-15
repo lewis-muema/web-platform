@@ -118,9 +118,8 @@ export default {
             };
             commit('setNotification', notification);
             commit('setNotificationStatus', true);
-          }
-          else{
-             resolve(response);
+          } else {
+            resolve(response);
           }
         })
         .catch((e) => {
