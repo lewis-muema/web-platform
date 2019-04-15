@@ -1,15 +1,8 @@
 <template lang="html">
-  <div
-    v-if="available"
-    id="log_in"
-    class="admin-edit-item"
-  >
+  <div v-if="available" id="log_in" class="admin-edit-item">
     <div class="admin-edit-inner">
       <div class="">
-        <i
-          class="el-icon-back edit-back"
-          @click="go_back"
-        />
+        <i class="el-icon-back edit-back" v-on:click="go_back"></i>
       </div>
       <div class="admin-edit2-details position--details">
         Edit Department Details
@@ -17,17 +10,17 @@
       <div class="edit-position">
         <div class="edit-holder edit-dimen">
           <input
-            v-model="deptDetails.department_name"
             class="input-control edit-form"
             type="text"
             name="department_name"
+            v-model="deptDetails.department_name"
             placeholder="Name"
-          >
+          />
         </div>
         <div class="edit-holder">
           <el-select
-            v-model="deptDetails.cop_user_id"
             class="addUser--select edit-select"
+            v-model="deptDetails.cop_user_id"
             placeholder="Admin"
           >
             <el-option
@@ -35,15 +28,16 @@
               :key="user.cop_user_id"
               :label="user.name"
               :value="user.cop_user_id"
-            />
+            >
+            </el-option>
           </el-select>
         </div>
         <div class="sign-holder">
           <button
-            id="update_department"
             class="button-primary btn-edit-dept"
             type="submit"
-            @click="update_department"
+            id="update_department"
+            v-on:click="update_department"
           >
             Update
           </button>
@@ -67,7 +61,7 @@ export default {
     };
   },
   mounted() {
-    const department = this.$route.params.id;
+    let department = this.$route.params.id;
     this.deptDetails = this.deptData.filter(dept => dept.department_id === department)[0];
 
     if (typeof this.deptDetails !== 'undefined') {
@@ -76,27 +70,23 @@ export default {
       this.available = false;
       this.go_back();
     }
-    const session = this.$store.getters.getSession;
+    let session = this.$store.getters.getSession;
     let cop_id = 0;
     if (session.default === 'biz') {
-      cop_id = session[session.default].cop_id;
+      cop_id = session[session.default]['cop_id'];
     }
-    const payload = {
-      cop_id,
+    let payload = {
+      cop_id: cop_id,
     };
-    const users_full_payload = {
+    let users_full_payload = {
       values: payload,
+      vm: this,
       app: 'NODE_PRIVATE_API',
       endpoint: 'cop_users',
     };
-    this.$store.dispatch('$_admin/requestUsersList', users_full_payload).then(
-      (response) => {},
-      (error) => {
-        const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true);
-      },
-    );
+    this.$store
+      .dispatch('$_admin/requestUsersList', users_full_payload)
+      .then(response => {}, error => {});
   },
   computed: {
     ...mapGetters({
@@ -110,35 +100,35 @@ export default {
       editAdminDepartment: '$_admin/editAdminDepartment',
       requestUsersList: '$_admin/requestUsersList',
     }),
-    update_department() {
-      const payload = {};
+    update_department: function() {
+      let payload = {};
       payload.department_id = this.deptDetails.department_id;
       payload.department_name = this.deptDetails.department_name;
       payload.cop_user_id = this.deptDetails.cop_user_id;
-      const editDept_full_payload = {
+      let editDept_full_payload = {
         values: payload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'cop_departments_update',
       };
       this.$store.dispatch('$_admin/editAdminDepartment', editDept_full_payload).then(
-        (response) => {
-          const level = 1; // success
+        response => {
+          let level = 1; //success
           this.message = 'Edit Successful!';
-          const notification = { title: '', level, message: this.message }; // notification object
+          let notification = { title: '', level: level, message: this.message }; //notification object
           this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.$store.commit('setNotificationStatus', true); //activate notification
         },
-        (error) => {
-          const level = 2;
+        error => {
+          let level = 2;
           this.message = 'Something went wrong.';
-          const notification = { title: '', level, message: this.message }; // notification object
+          let notification = { title: '', level: level, message: this.message }; //notification object
           this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
-        },
+          this.$store.commit('setNotificationStatus', true); //activate notification
+        }
       );
     },
-    go_back() {
+    go_back: function() {
       this.$router.push('/admin/department');
     },
   },

@@ -2,37 +2,23 @@
   <div class="inv-container">
     <div class="show-out">
       <div class="show-txt">
-        <label class="inviteUser--text">
-          Invite link for {{ bizName }}
-        </label>
+        <label class="inviteUser--text">Invite link for {{ bizName }}</label>
         <input
-          id="in_link"
           readonly
           :value="this.getInviteLink"
+          id="in_link"
           type="text"
           class="form-control show--input"
-        >
+        />
       </div>
       <div class="inviteUser--button">
-        <button
-          class="button-primary"
-          @click="copy_link"
-        >
-          {{ button }}
-        </button>
+        <button v-on:click="copy_link" class="button-primary">{{ button }}</button>
       </div>
       <div class="inviteUser--button show-button-justify">
-        <a
-          class="show-link-justify"
-          @click="back"
-        >
-          BACK
-        </a>
+        <a v-on:click="back" class="show-link-justify">BACK</a>
       </div>
     </div>
-    <div class="show-in">
-      Anyone can use this link to join {{ this.getBizName }} on Sendy
-    </div>
+    <div class="show-in">Anyone can use this link to join {{ this.getBizName }} on Sendy</div>
   </div>
 </template>
 
@@ -40,7 +26,7 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
-  name: 'LinkShowComponent',
+  name: 'link-show-component',
   data() {
     return {
       button: 'Copy to clipboard',
@@ -48,9 +34,9 @@ export default {
     };
   },
   mounted() {
-    const session = this.$store.getters.getSession;
+    let session = this.$store.getters.getSession;
     if (session.default === 'biz') {
-      this.bizName = session[session.default].cop_name;
+      this.bizName = session[session.default]['cop_name'];
     }
   },
 
@@ -66,13 +52,13 @@ export default {
       updateViewState: '$_admin/updateViewState',
     }),
 
-    copy_link() {
-      const copyText = document.getElementById('in_link');
+    copy_link: function() {
+      let copyText = document.getElementById('in_link');
       copyText.select();
       document.execCommand('Copy');
       this.button = 'Copied';
     },
-    back() {
+    back: function() {
       this.updateViewState(1);
     },
   },

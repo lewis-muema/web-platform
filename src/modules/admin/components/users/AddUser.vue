@@ -1,10 +1,10 @@
 <template lang="html">
   <div class="admin_invite_outer">
-    <invite-component v-if="this.getState === 1" />
-    <link-component v-if="this.getState === 2" />
-    <many-component v-if="this.getState === 3" />
-    <end-component v-if="this.getState === 4" />
-    <link-show-component v-if="this.getState === 5" />
+    <invite-component v-if="this.getState === 1"></invite-component>
+    <link-component v-if="this.getState === 2"></link-component>
+    <many-component v-if="this.getState === 3"></many-component>
+    <end-component v-if="this.getState === 4"></end-component>
+    <link-show-component v-if="this.getState === 5"></link-show-component>
   </div>
 </template>
 
@@ -18,23 +18,17 @@ import LinkShowComponent from './invite_users/LinkShowComponent.vue';
 
 export default {
   name: 'AddUser',
-  components: {
-    InviteComponent,
-    ManyComponent,
-    LinkComponent,
-    EndComponent,
-    LinkShowComponent,
-  },
+  components: { InviteComponent, ManyComponent, LinkComponent, EndComponent, LinkShowComponent },
   computed: {
     ...mapGetters({
       getState: '$_admin/getViewState',
     }),
   },
   mounted() {
-    const materialize_script = document.createElement('script');
+    let materialize_script = document.createElement('script');
     materialize_script.setAttribute(
       'src',
-      'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/js/materialize.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/js/materialize.min.js'
     );
     document.head.appendChild(materialize_script);
   },
