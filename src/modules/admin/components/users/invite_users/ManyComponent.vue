@@ -34,6 +34,8 @@ export default {
   data() {
     return {
       emailSet: '',
+      cancelInvite: false,
+      inviteMany: false,
     };
   },
   computed: {
@@ -49,6 +51,7 @@ export default {
     }),
     get_inv: function() {
       this.updateViewState(1);
+      this.cancelInvite = true;
     },
     inv_many: function() {
       if (this.emailSet !== '') {
@@ -62,6 +65,7 @@ export default {
         this.newAdds(number);
         this.updateInvites(data);
         this.updateViewState(1);
+        this.inviteMany = true;
       } else {
         let level = 2;
         let notification = {
