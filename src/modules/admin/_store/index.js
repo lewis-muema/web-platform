@@ -9,7 +9,7 @@ const state = {
   cop_id: '',
   base_url: '',
   view_state: 1,
-  bizName: '',
+  biz_name: '',
   departments: '',
   adds: 3,
   invite_link: '',

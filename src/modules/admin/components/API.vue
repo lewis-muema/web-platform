@@ -25,28 +25,14 @@
         </button>
       </div>
     </div>
-    <el-table
-      :data="fetchedData.sandbox"
-      style="width: 100%"
-      :border="true"
-      :stripe="true"
-    >
+    <el-table :data="fetchedData.sandbox" style="width: 100%" :border="true" :stripe="true">
       <template slot="empty">
         {{ empty_payments_state }}
       </template>
 
-      <el-table-column
-        label="Username"
-        prop="api_username"
-      />
-      <el-table-column
-        label="API Key"
-        prop="api_key"
-      />
-      <el-table-column
-        label="Created or Last Updated"
-        prop="api_date_created"
-      />
+      <el-table-column label="Username" prop="api_username" />
+      <el-table-column label="API Key" prop="api_key" />
+      <el-table-column label="Created or Last Updated" prop="api_date_created" />
       <el-table-column label="API Status">
         <template slot-scope="scope">
           <span>{{ get_api_status(scope.$index, 'sandbox') }}</span>
@@ -74,18 +60,9 @@
         {{ empty_payments_state }}
       </template>
 
-      <el-table-column
-        label="Username"
-        prop="api_username"
-      />
-      <el-table-column
-        label="API Key"
-        prop="api_key"
-      />
-      <el-table-column
-        label="Created or Last Updated"
-        prop="api_date_created"
-      />
+      <el-table-column label="Username" prop="api_username" />
+      <el-table-column label="API Key" prop="api_key" />
+      <el-table-column label="Created or Last Updated" prop="api_date_created" />
       <el-table-column label="API Status">
         <template slot-scope="scope">
           <span>{{ get_api_status(scope.$index, 'live') }}</span>
@@ -109,12 +86,8 @@
           Ready to start using the Sendy API?
         </span>
         Head over to the
-        <a
-          href="http://docs.sendypublicapi.apiary.io/#"
-          target="_blank"
-        >
-          developer site
-        </a>&nbsp;for complete documentation.
+        <a href="http://docs.sendypublicapi.apiary.io/#" target="_blank"> developer site </a
+        >&nbsp;for complete documentation.
       </p>
     </div>
   </div>
@@ -153,7 +126,7 @@ export default {
     };
     this.$store
       .dispatch('$_admin/requestKeysList', apikey_full_payload)
-      .then((response) => {}, (error) => {});
+      .then(response => {}, error => {});
   },
   computed: {
     ...mapGetters({
@@ -181,7 +154,7 @@ export default {
         endpoint: 'generate_api',
       };
       this.$store.dispatch('$_admin/generateAPIKey', newKeyFull_payload).then(
-        (response) => {
+        response => {
           this.update_api_text = 'Update API Key';
           const level = 1; // success
           this.message = 'Key Updated!';
@@ -189,14 +162,14 @@ export default {
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true); // activate notification
         },
-        (error) => {
+        error => {
           this.update_api_text = 'Update API Key';
           const level = 3;
           this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true); // activate notification
-        },
+        }
       );
     },
     generateAPIKey() {
@@ -216,7 +189,7 @@ export default {
         endpoint: 'generate_api',
       };
       this.$store.dispatch('$_admin/generateAPIKey', newKeyFull_payload).then(
-        (response) => {
+        response => {
           this.generate_api_text = 'Generate API Key';
           const level = 1; // success
           this.message = 'Key Generated!';
@@ -224,14 +197,14 @@ export default {
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true); // activate notification
         },
-        (error) => {
+        error => {
           this.generate_api_text = 'Generate API Key';
           const level = 3;
           this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true); // activate notification
-        },
+        }
       );
     },
     changeSize(val) {
