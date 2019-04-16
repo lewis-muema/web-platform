@@ -3,9 +3,7 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">
-            Branch
-          </span>
+          <span class="card__image--title">Branch</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
@@ -14,8 +12,8 @@
         </div>
         <div class="card__action">
           <label class="switch">
-            <input type="checkbox">
-            <span class="slider round" />
+            <input type="checkbox" />
+            <span class="slider round"></span>
           </label>
         </div>
       </div>
@@ -23,9 +21,7 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title card__image--bg">
-            Ecommerce orders
-          </span>
+          <span class="card__image--title card__image--bg">Ecommerce orders</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
@@ -34,8 +30,8 @@
         </div>
         <div class="card__action">
           <label class="switch">
-            <input type="checkbox">
-            <span class="slider round" />
+            <input type="checkbox" />
+            <span class="slider round"></span>
           </label>
         </div>
       </div>
@@ -43,9 +39,7 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title card__image--bg">
-            Order history details
-          </span>
+          <span class="card__image--title card__image--bg">Order history details</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
@@ -54,8 +48,8 @@
         </div>
         <div class="card__action">
           <label class="switch">
-            <input type="checkbox">
-            <span class="slider round" />
+            <input type="checkbox" />
+            <span class="slider round"></span>
           </label>
         </div>
       </div>
@@ -63,9 +57,7 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">
-            Order breakdown
-          </span>
+          <span class="card__image--title">Order breakdown</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
@@ -74,8 +66,8 @@
         </div>
         <div class="card__action">
           <label class="switch">
-            <input type="checkbox">
-            <span class="slider round" />
+            <input type="checkbox" />
+            <span class="slider round"></span>
           </label>
         </div>
       </div>
@@ -83,9 +75,7 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">
-            Insurance
-          </span>
+          <span class="card__image--title">Insurance</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
@@ -95,8 +85,8 @@
         </div>
         <div class="card__action">
           <label class="switch">
-            <input type="checkbox">
-            <span class="slider round" />
+            <input type="checkbox" />
+            <span class="slider round"></span>
           </label>
         </div>
       </div>
@@ -104,19 +94,15 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">
-            SMS Password change
-          </span>
+          <span class="card__image--title">SMS Password change</span>
         </div>
         <div class="card__content">
-          <p class="card__paragraph">
-            Receive a password change link via sms.
-          </p>
+          <p class="card__paragraph">Receive a password change link via sms.</p>
         </div>
         <div class="card__action">
           <label class="switch">
-            <input type="checkbox">
-            <span class="slider round" />
+            <input type="checkbox" />
+            <span class="slider round"></span>
           </label>
         </div>
       </div>
@@ -124,9 +110,7 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">
-            Delivery picture
-          </span>
+          <span class="card__image--title">Delivery picture</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
@@ -135,8 +119,8 @@
         </div>
         <div class="card__action">
           <label class="switch">
-            <input type="checkbox">
-            <span class="slider round" />
+            <input type="checkbox" />
+            <span class="slider round"></span>
           </label>
         </div>
       </div>

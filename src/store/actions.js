@@ -2,9 +2,11 @@
 /* eslint no-lonely-if: "error" */
 
 import axios from 'axios';
+import { createApp } from '../app';
 
 export default {
   requestAxiosPost({ state, commit }, payload) {
+    const { router } = createApp();
     const url = state.ENV[payload.app];
     // add api key - if request is going to the backend
     if (payload.app === 'BACKEND_CUSTOMERS_APP') {
@@ -69,6 +71,7 @@ export default {
         };
         commit('setNotification', notification);
         commit('setNotificationStatus', true);
+        router.push('/auth/sign_in');
         return true;
       }
     } else {
@@ -98,6 +101,7 @@ export default {
         };
         commit('setNotification', notification);
         commit('setNotificationStatus', true);
+        router.push('/auth/sign_in');
         return true;
       }
     }
@@ -106,10 +110,31 @@ export default {
       axios
         .post(url + payload.endpoint, payload.values, config)
         .then((response) => {
-          resolve(response);
+          if (response.data === 401 || response.data === 403) {
+            const notification = {
+              title: 'Something went wrong!',
+              level: 2,
+              message: 'Please log out and log in again.',
+            };
+            commit('setNotification', notification);
+            commit('setNotificationStatus', true);
+          } else {
+            resolve(response);
+          }
         })
         .catch((e) => {
-          reject(e);
+          if (e.response.status === 403) {
+            const notification = {
+              title: 'Your session has expired!',
+              level: 2,
+              message: 'Please log out and log in again.',
+            };
+            commit('setNotification', notification);
+            commit('setNotificationStatus', true);
+            router.push('/auth/sign_in');
+          } else {
+            reject(e);
+          }
         });
     });
   },

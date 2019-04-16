@@ -1,37 +1,18 @@
 <template lang="html">
   <div class="">
     <main-header />
-    <div
-      id="admin_container"
-      class="container admin-container"
-    >
-      <!--<div class="title">-->
-      <!--<h3 class="title__text">Admin Settings</h3>-->
-      <!--</div>-->
+    <div id="admin_container" class="container admin-container">
       <div class="section">
-        <router-link
-          class="section__link"
-          to="/admin/users"
-        >
+        <router-link class="section__link" to="/admin/users">
           Users
         </router-link>
-        <router-link
-          class="section__link"
-          to="/admin/department"
-        >
+        <router-link class="section__link" to="/admin/department">
           Department
         </router-link>
-        <!--<router-link class="section__link" to="/admin/preferences">Preferences</router-link>-->
-        <router-link
-          class="section__link"
-          to="/admin/api"
-        >
+        <router-link class="section__link" to="/admin/api">
           API
         </router-link>
-        <router-link
-          class="section__link"
-          to="/admin/company_details"
-        >
+        <router-link class="section__link" to="/admin/company_details">
           Company details
         </router-link>
       </div>
@@ -57,7 +38,7 @@ Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
   getMessage: field => 'The phone number not valid',
-  validate: (value) => {
+  validate: value => {
     const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
     let validity = false;
     try {
