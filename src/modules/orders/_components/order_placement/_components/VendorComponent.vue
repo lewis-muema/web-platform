@@ -112,6 +112,59 @@
   </div>
 
   <div class="extended-options-wrappper" v-else>
+    <!-- <div v-if="getPairRiderNextStep">
+      <transition name="home-carrier-type-fade">
+        <div class="home-view-vendor-types-item-wrap">
+          <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
+            <div class="" v-on:click="goBackToHome">
+              <i class="el-icon-back back-to-home-btn"></i>
+            </div>
+
+            <div class="home-view-vendor-types-item-vendor--vendor-formal-name">
+              Pair
+            </div>
+          </div>
+
+          <div class="home-view-carrier-type">
+            <div class="home-view-pair-rider-wrapper">
+              <div class="home-view-truck-options-divider" />
+              <div class="home-pair-text">
+                Already have a sendy rider on your pick up location? Enter the vehicle number plate
+                to pair with it.
+              </div>
+              <div>
+                <el-input
+                  v-model="vehicle_plate"
+                  placeholder="Enter number plate"
+                  class="pair-number-plate"
+                />
+              </div>
+              <div v-if="!this.pair_status" class="pair_confirm_btn">
+                <button
+                  type="button"
+                  class="button-primary home-view--place-order"
+                  name="button"
+                  @click="checkVehicleDetails()"
+                >
+                  Continue
+                </button>
+              </div>
+              <div v-else>
+                <button
+                  type="button"
+                  class="button-primary home-view--place-order"
+                  name="button"
+                  @click="pairWithRiderComplete()"
+                >
+                  Pair and Confirm Order
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </div> -->
+
     <!-- start carrier type transition -->
     <transition name="home-carrier-type-fade">
       <div class="home-view-vendor-types-item-wrap home-next-step">
@@ -149,7 +202,7 @@
           </div>
         </div>
         <!-- start carrier type section -->
-        <div v-if="" class="home-view-carrier-type">
+        <div class="home-view-carrier-type">
           <!-- start large /medium vendors -->
           <div class="home-view-truck-options-wrapper">
             <div class="home-view-truck-options-divider" />
@@ -202,9 +255,7 @@
             <div v-if="small_vendors.includes(activeVendorPriceData.vendor_id)">
               <div
                 class="home-view-truck-options-inner-wrapper"
-                v-if="
-                  !vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)
-                "
+                v-if="!vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)"
               >
                 <div class="home-view-truck-options-label">
                   What type of {{ getVendorNameOnCarrierType }} do you want?
@@ -226,9 +277,7 @@
             <div v-else>
               <div
                 class="home-view-truck-options-inner-wrapper"
-                v-if="
-                  !vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)
-                "
+                v-if="!vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)"
               >
                 <div
                   v-if="large_vendors.includes(activeVendorPriceData.vendor_id)"
@@ -270,30 +319,30 @@
                 </div>
 
                 <!-- <div class="home-view-truck-options-inner-wrapper">
-                  <div class="home-view-truck-options-label">
-                    What is the approximate weight of the load?
-                  </div>
-                  <div class="home-view-truck-options-inner--load-weight">
-                    <el-input
-                      v-model="load_weight"
-                      type="number"
-                      placeholder="(Enter load weight)"
-                      :min="0"
-                      :max="getMaxAllowedWeight"
-                      @input="dispatchLoadWeight"
-                    >
-                      <el-select
-                        slot="append"
-                        v-model="load_units"
-                        placeholder="Tonnes"
-                        @change="dispatchLoadUnits"
+                    <div class="home-view-truck-options-label">
+                      What is the approximate weight of the load?
+                    </div>
+                    <div class="home-view-truck-options-inner--load-weight">
+                      <el-input
+                        v-model="load_weight"
+                        type="number"
+                        placeholder="(Enter load weight)"
+                        :min="0"
+                        :max="getMaxAllowedWeight"
+                        @input="dispatchLoadWeight"
                       >
-                        <el-option label="KG" value="kgs" />
-                        <el-option label="Tonnes" value="tonnes" />
-                      </el-select>
-                    </el-input>
-                  </div>
-                </div> -->
+                        <el-select
+                          slot="append"
+                          v-model="load_units"
+                          placeholder="Tonnes"
+                          @change="dispatchLoadUnits"
+                        >
+                          <el-option label="KG" value="kgs" />
+                          <el-option label="Tonnes" value="tonnes" />
+                        </el-select>
+                      </el-input>
+                    </div>
+                  </div> -->
 
                 <div
                   v-if="!isFixedCost(activeVendorPriceData)"
@@ -356,7 +405,7 @@
 
             <!-- Pair with rider  -->
 
-            <!-- <div class="home-view-truck-options-inner-wrapper">
+            <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
                 Pair with a rider ?
               </div>
@@ -367,21 +416,63 @@
                 </el-select>
               </div>
             </div>
-            <div class="home-view-truck-options-inner-wrapper" v-if="this.pair_rider === 1">
+            <div class="home-view-truck-options-inner-wrapper" v-if="this.pair_rider === '1'">
               <div class="home-view-truck-options-label">
                 Enter number plate of the {{ getVendorNameOnCarrierType }} ?
               </div>
               <div class="">
-                <div>
+                <el-popover
+                  placement="right"
+                  width="200"
+                  trigger="manual"
+                  v-model="visible2"
+                  popper-class="pop-over-layout"
+                >
                   <el-input
-                    v-model.trim="number_plate"
+                    v-model.trim="vehicle_plate"
                     placeholder="Enter Full Number plate"
                     autocomplete="true"
-                    @change=""
+                    slot="reference"
+                    @change="checkVehicleDetails"
                   />
-                </div>
+                  <div class="pair_info_text_content">
+                    <div v-if="pair_status === '1'">
+                      <p class="upper_scope_pair_text">Number plate not found</p>
+                      <p>Vehicle not registered on the Sendy Platform.Try again</p>
+                    </div>
+                    <div v-if="pair_status === '2'">
+                      <el-row :gutter="20">
+                        <el-col :span="8" class="display_rider_inline">
+                          <div class="">
+                            <img class="display_paired_rider_img" :src="pair_rider_image" />
+                            <div>
+                              {{ pair_rider_name }}
+                            </div>
+                            <div>
+                              <el-rate
+                                v-model="pair_rider_rating"
+                                disabled
+                                show-score
+                                text-color="#1782C5"
+                              >
+                              </el-rate>
+                            </div>
+                          </div>
+                        </el-col>
+                        <el-col :span="6" class="pair_right_more_info">
+                          <div class="share-option">
+                            <div>{{ pair_rider_make }} {{ pair_rider_model }}</div>
+                            <div>
+                              {{ pair_rider_plate }}
+                            </div>
+                          </div>
+                        </el-col>
+                      </el-row>
+                    </div>
+                  </div>
+                </el-popover>
               </div>
-            </div> -->
+            </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-vendor-classes--label">
                 <payment-options @destroyOrderOptions="destroyVendorComponent()" />
@@ -446,10 +537,19 @@ export default {
       schedule_time: '',
       order_notes: '',
       pair_rider: '2',
-      number_plate: '',
       small_vendors: [1, 22],
       medium_vendors: [2, 3],
       large_vendors: [6, 10, 13, 14, 17, 18, 19, 20],
+      pair_status: '',
+      vehicle_plate: '',
+      pair_rider: '2',
+      visible2: false,
+      pair_rider_image: '',
+      pair_rider_name: '',
+      pair_rider_rating: '',
+      pair_rider_make: '',
+      pair_rider_model: '',
+      pair_rider_plate: '',
     };
   },
   computed: {
@@ -468,12 +568,13 @@ export default {
       getAdditionalLoaderStatus: '$_orders/$_home/getAdditionalLoaderStatus',
       getNOOfLoaders: '$_orders/$_home/getNOOfLoaders',
       getOrderState: '$_orders/$_home/getOrderState',
+      getPairRiderNextStep: '$_orders/$_home/getPairRiderNextStep',
     }),
 
     activePackageClassPriceData() {
       if (this.get_active_package_class !== '') {
         return this.getPriceRequestObject.economy_price_tiers.find(
-          pack => pack.tier_group === this.get_active_package_class,
+          pack => pack.tier_group === this.get_active_package_class
         );
       }
       return '';
@@ -551,6 +652,9 @@ export default {
       setScheduleTime: '$_orders/$_home/setScheduleTime',
       setOrderNotes: '$_orders/$_home/setOrderNotes',
     }),
+    ...mapActions({
+      requestPairRider: '$_orders/$_home/requestPairRider',
+    }),
 
     dispatchCarrierType() {
       const type = this.carrier_type;
@@ -596,7 +700,7 @@ export default {
           'The weight of the load exceeds the truck capacity',
           `The weight of the load exceeds the capacity of the truck you selected, please select a truck that fits ${val} ${
             this.getLoadUnits
-          }.`,
+          }.`
         );
         dispatch_value = this.getMaxAllowedWeight;
         this.load_weight = dispatch_value;
@@ -629,6 +733,63 @@ export default {
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
     },
 
+    checkVehicleDetails(val) {
+      let vehicle_details = this.vehicle_plate;
+      if (vehicle_details === '') {
+        this.visible2 = false;
+        this.pair_status = '';
+        this.doNotification(
+          '2',
+          'Vehicle number plate is not provided',
+          'Please provide the vehicle details to pair'
+        );
+      } else {
+        this.handlePairRequest(vehicle_details);
+      }
+    },
+    updateData(val) {
+      this.pair_rider_image = val.rider_photo;
+      this.pair_rider_name = val.rider_name;
+      this.pair_rider_rating = val.rider_rating;
+      this.pair_rider_make = val.make;
+      this.pair_rider_model = val.model;
+      this.pair_rider_plate = val.registration_no;
+
+      this.visible2 = true;
+    },
+    handlePairRequest(plate) {
+      this.visible2 = false;
+      this.pair_status = '';
+
+      const payload = {};
+      payload.registration_no = plate;
+      const full_payload = {
+        values: payload,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'pair_order_rider_details',
+      };
+
+      this.requestPairRider(full_payload).then(
+        response => {
+          console.log(response);
+          if (response.status) {
+            if (response.length > 1) {
+              this.doNotification(
+                '2',
+                'Pair with Rider Error',
+                'Kindly contact the customer care team.'
+              );
+            } else {
+              this.updateData(response.data);
+            }
+          } else {
+            this.pair_status = '1';
+            this.visible2 = true;
+          }
+        },
+        error => false
+      );
+    },
     getVendorIcon(id) {
       return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
     },

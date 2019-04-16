@@ -63,4 +63,21 @@ export default {
       );
     });
   },
+
+  requestPairRider({ dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosPost', payload, { root: true }).then(
+        (response) => {
+          if (!response.data.status) {
+            resolve(response.data);
+          } else {
+            reject(response.data);
+          }
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
 };

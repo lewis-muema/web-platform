@@ -158,4 +158,7 @@ export default {
   setOrderState(state, val) {
     state.order_state = val;
   },
+  setPairRiderNextStep(state, val) {
+    state.pair_next_step = val;
+  },
 };

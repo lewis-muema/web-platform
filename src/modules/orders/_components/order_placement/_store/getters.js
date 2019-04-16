@@ -25,4 +25,5 @@ export default {
   getNOOfLoaders: state => state.no_of_loaders,
   getOrderState: state => state.order_state,
   getExtendedOptions: state => state.extended_options,
+  getPairRiderNextStep: state => state.pair_next_step,
 };

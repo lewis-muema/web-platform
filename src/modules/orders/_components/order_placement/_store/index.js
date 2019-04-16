@@ -33,6 +33,7 @@ export default {
       no_of_loaders: 1,
       order_state: 1,
       extended_options: false,
+      pair_next_step: false,
     };
   },
   actions,
