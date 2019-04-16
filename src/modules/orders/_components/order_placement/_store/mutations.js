@@ -90,11 +90,11 @@ export default {
     state.location_names = [];
   },
   addExtraDestination(state) {
-    state.extra_destinations += 1;
+    state.extra_destinations++;
   },
 
   removeExtraDestination(state) {
-    state.extra_destinations -= 1;
+    state.extra_destinations--;
   },
 
   clearExtraDestinations(state) {
