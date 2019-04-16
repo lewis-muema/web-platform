@@ -1,15 +1,8 @@
 <template lang="html">
-  <div
-    v-if="available"
-    id="log_in"
-    class="admin-edit-item"
-  >
+  <div v-if="available" id="log_in" class="admin-edit-item">
     <div class="admin-edit-inner">
       <div class="">
-        <i
-          class="el-icon-back edit-back"
-          @click="one_step_back"
-        />
+        <i class="el-icon-back edit-back" v-on:click="one_step_back"></i>
       </div>
 
       <div class="admin-edit2-details">
@@ -18,40 +11,40 @@
       <div class="edit-position">
         <div class="edit-holder edit-dimen">
           <input
-            v-model="userDetails.name"
             class="input-control edit-form"
             type="text"
             style="margin-top: 14%;"
             name="name"
+            v-model="userDetails.name"
             placeholder="Name"
             autocomplete="off"
-          >
+          />
         </div>
 
         <div class="edit-holder edit-dimen">
           <input
-            v-model="userDetails.email"
             class="input-control edit-form"
             type="text"
             name="email"
+            v-model="userDetails.email"
             placeholder="Email"
-          >
+          />
         </div>
 
         <div class="edit-holder edit-dimen">
           <input
-            v-model="userDetails.phone"
             class="input-control edit-form"
             type="text"
             name="phone"
+            v-model="userDetails.phone"
             placeholder="Phone"
-          >
+          />
         </div>
 
         <div class="edit-holder">
           <el-select
-            v-model="userDetails.department_id"
             class="addUser--select edit-select"
+            v-model="userDetails.department_id"
             placeholder="Department"
           >
             <el-option
@@ -59,14 +52,15 @@
               :key="depart.department_id"
               :label="depart.department_name"
               :value="depart.department_id"
-            />
+            >
+            </el-option>
           </el-select>
         </div>
 
         <div class="edit-holder">
           <el-select
-            v-model="userDetails.status"
             class="addUser--select edit-select"
+            v-model="userDetails.status"
             placeholder="Status"
           >
             <el-option
@@ -74,14 +68,15 @@
               :key="status.status"
               :label="status.status_label"
               :value="status.status"
-            />
+            >
+            </el-option>
           </el-select>
         </div>
 
         <div class="edit-holder">
           <el-select
-            v-model="userDetails.type"
             class="addUser--select edit-select"
+            v-model="userDetails.type"
             placeholder="User Type"
           >
             <el-option
@@ -89,16 +84,17 @@
               :key="type.type"
               :label="type.type_name"
               :value="type.type"
-            />
+            >
+            </el-option>
           </el-select>
         </div>
 
         <div class="sign-holder">
           <button
-            id="UpdateEdit"
             class="button-primary btn-edit-user"
             type="submit"
-            @click="update_edit"
+            id="UpdateEdit"
+            v-on:click="update_edit"
           >
             Update
           </button>
@@ -141,8 +137,8 @@ export default {
     };
   },
   mounted() {
-    const cop_user_id = this.$route.params.id;
-    this.userDetails = this.userData.filter(user => user.cop_user_id === cop_user_id)[0];
+    let cop_user_id = this.$route.params.id;
+    this.userDetails = this.userData.filter(user => user.cop_user_id == cop_user_id)[0];
 
     if (this.userDetails !== undefined) {
       this.available = true;
@@ -162,9 +158,9 @@ export default {
     ...mapActions({
       editAdminUser: '$_admin/editAdminUser',
     }),
-    update_edit() {
-      const vm = this;
-      const payload = {};
+    update_edit: function() {
+      let vm = this;
+      let payload = {};
       payload.cop_user_id = this.userDetails.cop_user_id;
       payload.user_name = this.userDetails.name;
       // payload.user_email = this.userDetails.email;
@@ -173,44 +169,38 @@ export default {
       payload.user_type = this.userDetails.type;
       payload.user_email = this.userDetails.email;
       payload.status = this.userDetails.status;
-      // this.editAdminUser(payload).then(response => {
-      //     console.log("User Details Updated!")
-      //     console.log(response);
-      // }, error => {
-      //     console.error("Check Internet Connection")
-      //     console.log(error);
-      // });
-      const editUser_full_payload = {
+
+      let editUser_full_payload = {
         values: payload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'update_user',
       };
       this.$store.dispatch('$_admin/editAdminUser', editUser_full_payload).then(
-        (response) => {
+        response => {
           // return;
 
-          const level = 1; // success
+          let level = 1; //success
           this.message = 'Edit Successful!';
 
-          const notification = { title: '', level, message: this.message }; // notification object
+          let notification = { title: '', level: level, message: this.message }; //notification object
           this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.$store.commit('setNotificationStatus', true); //activate notification
 
           // vm.one_step_back()
         },
-        (error) => {
-          const level = 3;
+        error => {
+          let level = 3;
           this.message = 'Something went wrong.';
-          const notification = { title: '', level, message: this.message }; // notification object
+          let notification = { title: '', level: level, message: this.message }; //notification object
           this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.$store.commit('setNotificationStatus', true); //activate notification
 
           // vm.one_step_back()
-        },
+        }
       );
     },
-    one_step_back() {
+    one_step_back: function() {
       this.$router.push('/admin/users/');
     },
   },

@@ -1,6 +1,5 @@
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["hexToBase64","base64ToHex"] }] */
 /* eslint-env es6 */
-/* global hex:true */
 /* eslint no-undef: "error" */
 import CryptoJS from 'crypto-js';
 
@@ -48,7 +47,9 @@ class Mcrypt {
   }
 
   base64ToHex(str) {
-    for (let i = 0, bin = atob(str.replace(/[ \r\n]+$/, '')), hex = []; i < bin.length; i += 1) {
+    const bin = atob(str.replace(/[ \r\n]+$/, ''));
+    const hex = [];
+    for (let i = 0; i < bin.length; i += 1) {
       let tmp = bin.charCodeAt(i).toString(16);
       if (tmp.length === 1) tmp = `0${tmp}`;
       hex[hex.length] = tmp;

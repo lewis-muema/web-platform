@@ -13,7 +13,7 @@ export default {
     state.view_state = n;
   },
   updateBizName(state, n) {
-    state.bizName = n;
+    state.biz_name = n;
   },
   updateAdds(state, n) {
     if (n === 1) {
