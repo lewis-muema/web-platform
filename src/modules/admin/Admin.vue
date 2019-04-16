@@ -73,7 +73,7 @@ export default {
     },
   },
   destroyed() {
-    // TO DO:  destroy store?
+    // TO DO:  destroy store
   },
 };
 </script>
