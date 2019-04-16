@@ -9,6 +9,7 @@ module.exports = {
         ignore: ['@/'],
       },
     ],
+    'no-plusplus': 'off',
   },
   parserOptions: {
     ecmaVersion: 2018,
