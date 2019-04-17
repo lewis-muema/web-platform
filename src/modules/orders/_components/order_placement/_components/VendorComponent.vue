@@ -438,7 +438,17 @@
                     autocomplete="true"
                     slot="reference"
                     @change="checkVehicleDetails"
-                  />
+                  >
+                    <i
+                      v-if="pair_status !== ''"
+                      class="el-icon-close el-input__icon"
+                      slot="suffix"
+                    ></i>
+
+                    <!-- <div v-if="pair_status === ''">
+                      <i class="el-icon-loading el-input__icon" slot="suffix"> </i>
+                    </div> -->
+                  </el-input>
                   <div class="pair_info_text_content">
                     <div v-if="pair_status === '1'">
                       <p class="upper_scope_pair_text">Number plate not found</p>
@@ -554,6 +564,7 @@ export default {
       pair_rider_make: '',
       pair_rider_model: '',
       pair_rider_plate: '',
+      triger: false,
     };
   },
   computed: {
@@ -683,6 +694,9 @@ export default {
         this.setPairWithRiderStatus(false);
       }
     },
+    trigerLoad() {
+      console.log('triggered', this.vehicle_plate);
+    },
 
     goToNextStep() {
       this.setDefaultCarrierType();
@@ -753,40 +767,59 @@ export default {
     checkVehicleDetails(val) {
       let vehicle_details = this.vehicle_plate;
       if (vehicle_details === '') {
-        this.setPairWithRiderStatus(false);
-        this.visible2 = false;
-        this.pair_status = '';
         this.doNotification(
           '2',
           'Vehicle number plate is not provided',
           'Please provide the vehicle details to pair'
         );
+        this.setPairWithRiderStatus(false);
+        this.visible2 = false;
+        this.pair_status = '';
       } else {
         this.handlePairRequest(vehicle_details);
       }
     },
     updateData(value) {
       let val = value[0];
-      this.pair_rider_image = val.rider_photo;
-      this.pair_rider_name = val.rider_name;
-      this.pair_rider_rating = parseInt(val.rider_rating);
-      this.pair_rider_make = val.make;
-      this.pair_rider_model = val.model;
-      this.pair_rider_plate = val.registration_no;
+      let pair_vendor_type = val.vendor_type;
+      let order_vendor_type = this.activeVendorPriceData.vendor_id;
+      if (pair_vendor_type === order_vendor_type) {
+        this.pair_rider_image = val.rider_photo;
+        this.pair_rider_name = val.rider_name;
+        this.pair_rider_rating = parseInt(val.rider_rating);
+        this.pair_rider_make = val.make;
+        this.pair_rider_model = val.model;
+        this.pair_rider_plate = val.registration_no;
 
-      this.visible2 = true;
-      this.pair_status = '2';
+        this.visible2 = true;
+        this.pair_status = '2';
 
-      this.setPairWithRiderStatus(true);
-      this.setPairSerialNumber(val.sim_card_sn);
-      this.setPairRiderPhone(val.rider_phone);
+        this.setPairWithRiderStatus(true);
+        this.setPairSerialNumber(val.sim_card_sn);
+        this.setPairRiderPhone(val.rider_phone);
+      } else {
+        this.visible2 = false;
+        this.pair_status = '';
+
+        this.doNotification(
+          3,
+          'Pair with Rider Error',
+          'Vehicle type provided does not match that of order'
+        );
+      }
     },
     handlePairRequest(plate) {
       this.visible2 = false;
       this.pair_status = '';
-
+      const checkInputType = new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
+      const res = checkInputType.test(plate);
       const payload = {};
-      payload.registration_no = plate;
+      if (res) {
+        payload.phone_no = plate;
+      } else {
+        payload.registration_no = plate;
+      }
+
       const full_payload = {
         values: payload,
         app: 'NODE_PRIVATE_API',
@@ -796,15 +829,7 @@ export default {
       this.requestPairRider(full_payload).then(
         response => {
           if (response.status) {
-            if (response.length > 1) {
-              this.doNotification(
-                '2',
-                'Pair with Rider Error',
-                'Kindly contact the customer care team.'
-              );
-            } else {
-              this.updateData(response.data);
-            }
+            this.updateData(response.data);
           } else {
             this.pair_status = '1';
             this.visible2 = true;
