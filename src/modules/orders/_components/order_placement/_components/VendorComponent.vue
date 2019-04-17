@@ -422,7 +422,8 @@
             </div>
             <div class="home-view-truck-options-inner-wrapper" v-if="this.pair_rider === '1'">
               <div class="home-view-truck-options-label">
-                Enter number plate of the {{ getVendorNameOnCarrierType }} to pair
+                Enter their phone number or the {{ getVendorNameOnCarrierType }}'s number plate to
+                pair
               </div>
               <div class="">
                 <el-popover
@@ -458,7 +459,11 @@
                       <el-row :gutter="20">
                         <el-col :span="8" class="display_rider_inline">
                           <div class="">
-                            <img class="display_paired_rider_img" :src="pair_rider_image" />
+                            <img
+                              align="middle"
+                              class="display_paired_rider_img"
+                              :src="pair_rider_image"
+                            />
                             <div>
                               {{ pair_rider_name }}
                             </div>
@@ -475,7 +480,9 @@
                         </el-col>
                         <el-col :span="6" class="pair_right_more_info">
                           <div class="share-option">
-                            <div>{{ pair_rider_make }} {{ pair_rider_model }}</div>
+                            <div class="pair-model-info">
+                              {{ pair_rider_make }} {{ pair_rider_model }}
+                            </div>
                             <div>
                               {{ pair_rider_plate }}
                             </div>
@@ -780,7 +787,7 @@ export default {
       }
     },
     updateData(value) {
-      let val = value[0];
+      let val = value;
       let pair_vendor_type = val.vendor_type;
       let order_vendor_type = this.activeVendorPriceData.vendor_id;
       if (pair_vendor_type === order_vendor_type) {

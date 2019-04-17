@@ -122,7 +122,6 @@ export default {
           }
         })
         .catch((e) => {
-          console.log(e.response);
           if (e.response.status === 403) {
             const notification = {
               title: 'Your session has expired!',

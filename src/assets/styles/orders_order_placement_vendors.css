@@ -282,6 +282,7 @@
 .display_paired_rider_img{
   height: 55px;
   vertical-align: middle;
+  border-radius: 50%;
 }
 .display_rider_inline{
   border-right: 1px solid #74696942;
@@ -300,7 +301,10 @@
 .pair_right_more_info{
   width: 40%;
   text-align: center;
-  padding-top: 50px;
+  padding-top: 20px;
+}
+.pair-model-info{
+  font-size: 12px;
 }
 
 .home-view-actions--items__span .el-icon-goods,
