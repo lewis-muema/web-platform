@@ -2,11 +2,10 @@
 /* eslint no-lonely-if: "error" */
 
 import axios from 'axios';
-import { createApp } from '../app';
 
 export default {
   requestAxiosPost({ state, commit }, payload) {
-    const { router } = createApp();
+    // const { router } = createApp();
     const url = state.ENV[payload.app];
     // add api key - if request is going to the backend
     if (payload.app === 'BACKEND_CUSTOMERS_APP') {
@@ -71,7 +70,7 @@ export default {
         };
         commit('setNotification', notification);
         commit('setNotificationStatus', true);
-        router.push('/auth/sign_in');
+        // router.push('/auth/sign_in');
         return true;
       }
     } else {
@@ -101,7 +100,7 @@ export default {
         };
         commit('setNotification', notification);
         commit('setNotificationStatus', true);
-        router.push('/auth/sign_in');
+        // router.push('/auth/sign_in');
         return true;
       }
     }
@@ -131,7 +130,7 @@ export default {
             };
             commit('setNotification', notification);
             commit('setNotificationStatus', true);
-            router.push('/auth/sign_in');
+            // router.push('/auth/sign_in');
           } else {
             reject(e);
           }

@@ -410,7 +410,11 @@
                 Pair with a rider ?
               </div>
               <div class="">
-                <el-select v-model="pair_rider" class="pair_rider_section">
+                <el-select
+                  v-model="pair_rider"
+                  class="pair_rider_section"
+                  @change="dispatchPairStatus"
+                >
                   <el-option label="Yes" value="1" />
                   <el-option label="No" value="2" />
                 </el-select>
@@ -452,8 +456,8 @@
                               <el-rate
                                 v-model="pair_rider_rating"
                                 disabled
-                                show-score
-                                text-color="#1782C5"
+                                disabled-void-color="#C0C4CC"
+                                :colors="['#1782C5', '#1782C5', '#1782C5']"
                               >
                               </el-rate>
                             </div>
@@ -651,6 +655,9 @@ export default {
       setExtendOptions: '$_orders/$_home/setExtendOptions',
       setScheduleTime: '$_orders/$_home/setScheduleTime',
       setOrderNotes: '$_orders/$_home/setOrderNotes',
+      setPairWithRiderStatus: '$_orders/$_home/setPairWithRiderStatus',
+      setPairSerialNumber: '$_orders/$_home/setPairSerialNumber',
+      setPairRiderPhone: '$_orders/$_home/setPairRiderPhone',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -665,6 +672,16 @@ export default {
     },
     dispatchOrderNotes() {
       this.setOrderNotes(this.order_notes);
+    },
+    dispatchPairStatus() {
+      const status = this.pair_rider;
+      if (status === 1) {
+        // pair with rider
+        this.setPairWithRiderStatus(true);
+      } else {
+        // do not pair
+        this.setPairWithRiderStatus(false);
+      }
     },
 
     goToNextStep() {
@@ -736,6 +753,7 @@ export default {
     checkVehicleDetails(val) {
       let vehicle_details = this.vehicle_plate;
       if (vehicle_details === '') {
+        this.setPairWithRiderStatus(false);
         this.visible2 = false;
         this.pair_status = '';
         this.doNotification(
@@ -747,15 +765,21 @@ export default {
         this.handlePairRequest(vehicle_details);
       }
     },
-    updateData(val) {
+    updateData(value) {
+      let val = value[0];
       this.pair_rider_image = val.rider_photo;
       this.pair_rider_name = val.rider_name;
-      this.pair_rider_rating = val.rider_rating;
+      this.pair_rider_rating = parseInt(val.rider_rating);
       this.pair_rider_make = val.make;
       this.pair_rider_model = val.model;
       this.pair_rider_plate = val.registration_no;
 
       this.visible2 = true;
+      this.pair_status = '2';
+
+      this.setPairWithRiderStatus(true);
+      this.setPairSerialNumber(val.sim_card_sn);
+      this.setPairRiderPhone(val.rider_phone);
     },
     handlePairRequest(plate) {
       this.visible2 = false;
@@ -771,7 +795,6 @@ export default {
 
       this.requestPairRider(full_payload).then(
         response => {
-          console.log(response);
           if (response.status) {
             if (response.length > 1) {
               this.doNotification(
@@ -785,6 +808,7 @@ export default {
           } else {
             this.pair_status = '1';
             this.visible2 = true;
+            this.setPairWithRiderStatus(false);
           }
         },
         error => false

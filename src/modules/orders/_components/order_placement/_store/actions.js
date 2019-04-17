@@ -68,11 +68,7 @@ export default {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
-          if (!response.data.status) {
-            resolve(response.data);
-          } else {
-            reject(response.data);
-          }
+          resolve(response.data);
         },
         (error) => {
           reject(error);
