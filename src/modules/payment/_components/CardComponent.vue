@@ -249,7 +249,7 @@ export default {
     getPaymentCard() {
       if (this.payment_card.startsWith('2_')) {
         const card = this.get_saved_cards.find(
-          card_details => card_details.last4 === this.payment_card.slice(2),
+          card_details => card_details.last4 === this.payment_card.slice(2)
         );
         this.handleSavedCard(card);
       } else {
@@ -309,7 +309,7 @@ export default {
           } else {
           }
         },
-        error => false,
+        error => false
       );
     },
     getCardValue(last4digits) {
@@ -337,6 +337,7 @@ export default {
       this.removeSavedCard(full_payload).then(
         response => {
           if (response.length > 0) {
+            this.isHidden = false;
             const notification = {
               title: 'Remove Card success',
               level: 1,
@@ -345,7 +346,6 @@ export default {
             this.$store.dispatch('show_notification', notification, {
               root: true,
             });
-            this.isHidden = false;
           } else {
             const notification = {
               title: 'Remove Card Failed',
@@ -366,7 +366,7 @@ export default {
           this.$store.dispatch('show_notification', notification, {
             root: true,
           });
-        },
+        }
       );
     },
   },
