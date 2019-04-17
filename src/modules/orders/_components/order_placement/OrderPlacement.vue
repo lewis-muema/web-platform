@@ -111,9 +111,7 @@
             class="sendy-blue homeview--row__font-awesome"
             width="10px"
           />
-          <a href="#" class="homeview--add" @click="addExtraDestinationWrapper()"
-            >Add Destination</a
-          >
+          <a class="homeview--add" @click="addExtraDestinationWrapper()">Add Destination</a>
         </div>
       </div>
       <div class="orders-loading-container" v-loading="loading" v-if="loading"></div>
@@ -166,7 +164,7 @@ library.add(
   faMobileAlt,
   faStar,
   faCcVisa,
-  faCcMastercard,
+  faCcMastercard
 );
 
 export default {
@@ -441,12 +439,12 @@ export default {
             this.doNotification(
               3,
               'Price request failed',
-              'Price request failed. Please try again after a few minutes.',
+              'Price request failed. Please try again after a few minutes.'
             );
           }
 
           this.loading = false;
-        },
+        }
       );
     },
 
@@ -493,7 +491,7 @@ export default {
           this.doSetDefaultVendorType();
         } else {
           let new_active_price_object = result[0].price_tiers.find(
-            vendor => vendor.vendor_name === previous,
+            vendor => vendor.vendor_name === previous
           );
           this.set_active_vendor_details(new_active_price_object);
         }
