@@ -407,7 +407,7 @@
 
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
-                Pair with a rider ?
+                Do you have a specific rider at your pick up location ?
               </div>
               <div class="">
                 <el-select
@@ -422,7 +422,7 @@
             </div>
             <div class="home-view-truck-options-inner-wrapper" v-if="this.pair_rider === '1'">
               <div class="home-view-truck-options-label">
-                Enter number plate of the {{ getVendorNameOnCarrierType }} ?
+                Enter number plate of the {{ getVendorNameOnCarrierType }} to pair
               </div>
               <div class="">
                 <el-popover
