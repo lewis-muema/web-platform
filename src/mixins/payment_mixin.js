@@ -29,9 +29,6 @@ const PaymentMxn = {
     },
     // this function will complete transactions for card payments already in the system
     handleSavedCard(card, orderOptions = false) {
-      if (!this.payment_is_to_be_requested) {
-        return false;
-      }
       const session = this.$store.getters.getSession;
       let userId = 0;
       let copId = 0;
