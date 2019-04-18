@@ -75,7 +75,7 @@
               <div class="home-view-notes-wrapper--item__option">
                 <div class="home-view-notes-wrapper--item__option-div">
                   <el-radio v-model="payment_method" label="3">
-                    Payment on delivery
+                    Cash on delivery
                   </el-radio>
                 </div>
               </div>
