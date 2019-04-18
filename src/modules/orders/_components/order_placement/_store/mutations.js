@@ -158,4 +158,13 @@ export default {
   setOrderState(state, val) {
     state.order_state = val;
   },
+  setPairWithRiderStatus(state, val) {
+    state.pair_rider_status = val;
+  },
+  setPairSerialNumber(state, val) {
+    state.pair_serial_number = val;
+  },
+  setPairRiderPhone(state, val) {
+    state.pair_rider_phone = val;
+  },
 };

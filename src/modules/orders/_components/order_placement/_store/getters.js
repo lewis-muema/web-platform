@@ -25,4 +25,7 @@ export default {
   getNOOfLoaders: state => state.no_of_loaders,
   getOrderState: state => state.order_state,
   getExtendedOptions: state => state.extended_options,
+  getPairWithRiderStatus: state => state.pair_rider_status,
+  getPairSerialNumber: state => state.pair_serial_number,
+  getPairRiderPhone: state => state.pair_rider_phone,
 };

@@ -241,3 +241,12 @@
   margin-right: -20px;
   padding-right: 10px;
 }
+.home-pair-text{
+  text-align: center;
+  font-size: 14px;
+  padding: 20px;
+}
+.home-view-pair-rider-wrapper{
+  width: 90%;
+  font-size: 14px;
+}
