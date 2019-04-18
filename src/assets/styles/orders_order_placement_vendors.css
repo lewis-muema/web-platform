@@ -274,6 +274,10 @@
   height: 110px;
   background-color: white !important;
   width: 18% !important;
+  min-height: 90px !important;
+}
+.pair-rider-name{
+  padding: 8px;
 }
 .el-popper[x-placement^=right] .popper__arrow::after{
   bottom: 0px;
@@ -301,7 +305,7 @@
 .pair_right_more_info{
   width: 40%;
   text-align: center;
-  padding-top: 20px;
+  padding-top: 40px;
 }
 .pair-model-info{
   font-size: 12px;
