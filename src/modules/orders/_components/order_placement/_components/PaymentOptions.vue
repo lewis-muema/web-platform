@@ -22,7 +22,7 @@
             :class="get_current_active_order_option_class('payment')"
           >
             <span class="home-view-actions--items__span">
-              Payment Options
+              {{ pay_order_text }}
             </span>
             <font-awesome-icon icon="chevron-down" :class="revertIcon" width="15px" />
           </a>
@@ -294,6 +294,22 @@ export default {
         text = 'Schedule ';
       }
       return `${text}${this.get_active_vendor_name} Order`;
+    },
+
+    pay_order_text() {
+      let text = 'Payment Options';
+      if (this.getPriceRequestObject.payment_option === 2) {
+        text = 'Post Pay';
+      } else {
+        if (this.abs_running_balance > 0) {
+          text = 'Payment Options';
+        } else {
+          text = 'Cash on delivery';
+          this.payment_method = '3';
+        }
+      }
+
+      return text;
     },
 
     order_is_scheduled() {
