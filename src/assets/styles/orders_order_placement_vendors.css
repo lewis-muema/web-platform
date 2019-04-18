@@ -271,13 +271,14 @@
 }
 .pop-over-layout{
   /* top: 250px !important; */
-  height: 110px;
+  height: 133px;
   background-color: white !important;
   width: 18% !important;
-  min-height: 90px !important;
+  /* min-height: 90px !important; */
 }
 .pair-rider-name{
   padding: 8px;
+  font-size: 13px;
 }
 .el-popper[x-placement^=right] .popper__arrow::after{
   bottom: 0px;
@@ -286,12 +287,13 @@
 .display_paired_rider_img{
   height: 55px;
   vertical-align: middle;
-  border-radius: 50%;
+  border-radius: 15%;
 }
 .display_rider_inline{
   border-right: 1px solid #74696942;
-  width:55% !important;
+  width:58% !important;
   text-align: center;
+  padding-top: 14px;
 }
 .upper_scope_pair_text{
   color: rgba(0, 0, 0, 0.5);
@@ -305,7 +307,7 @@
 .pair_right_more_info{
   width: 40%;
   text-align: center;
-  padding-top: 40px;
+  padding-top: 20%;
 }
 .pair-model-info{
   font-size: 12px;

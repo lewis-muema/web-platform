@@ -252,7 +252,7 @@
                   </div>
                 </div>
               </el-col>
-              <el-col :span="6" class="infobar--item-truck-cont-bordered">
+              <el-col :span="6" class="">
                 <div class="">
                   <div class="inforbar--item-scrollable">
                     <ul class="timeline inforbar_order_timeline">
@@ -1607,7 +1607,7 @@ ul.timeline > li#timeline_right.payedReached:before{
 .rimg-disp{
   vertical-align: middle;
   max-width: 16%;
-  border-radius: 50%;
+  border-radius: 15%;
 }
 .infobar--item-truck-options{
   padding-bottom: 5px;
