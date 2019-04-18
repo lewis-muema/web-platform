@@ -5,7 +5,6 @@ import axios from 'axios';
 
 export default {
   requestAxiosPost({ state, commit }, payload) {
-    // const { router } = createApp();
     const url = state.ENV[payload.app];
     // add api key - if request is going to the backend
     if (payload.app === 'BACKEND_CUSTOMERS_APP') {
@@ -70,7 +69,6 @@ export default {
         };
         commit('setNotification', notification);
         commit('setNotificationStatus', true);
-        // router.push('/auth/sign_in');
         return true;
       }
     } else {
@@ -100,7 +98,6 @@ export default {
         };
         commit('setNotification', notification);
         commit('setNotificationStatus', true);
-        // router.push('/auth/sign_in');
         return true;
       }
     }
@@ -130,7 +127,6 @@ export default {
             };
             commit('setNotification', notification);
             commit('setNotificationStatus', true);
-            // router.push('/auth/sign_in');
           } else {
             reject(e);
           }
