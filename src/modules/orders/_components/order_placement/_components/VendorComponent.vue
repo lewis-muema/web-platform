@@ -435,15 +435,23 @@
                 >
                   <el-input
                     v-model.trim="vehicle_plate"
-                    placeholder="Enter Full Number plate"
+                    placeholder="Enter Full Number plate / Phone Number"
                     autocomplete="true"
                     slot="reference"
                     @change="checkVehicleDetails"
+                    @focus="setVehicle"
                   >
+                    <i
+                      v-if="searchOption"
+                      class="el-icon-search el-input__icon"
+                      slot="suffix"
+                      @click="checkVehicleDetails"
+                    ></i>
                     <i
                       v-if="pair_status !== ''"
                       class="el-icon-close el-input__icon"
                       slot="suffix"
+                      @click="clearVehicleDetails"
                     ></i>
 
                     <!-- <div v-if="pair_status === ''">
@@ -572,6 +580,7 @@ export default {
       pair_rider_model: '',
       pair_rider_plate: '',
       triger: false,
+      searchOption: false,
     };
   },
   computed: {
@@ -701,10 +710,6 @@ export default {
         this.setPairWithRiderStatus(false);
       }
     },
-    trigerLoad() {
-      console.log('triggered', this.vehicle_plate);
-    },
-
     goToNextStep() {
       this.setDefaultCarrierType();
       this.setOrderState(2);
@@ -769,6 +774,16 @@ export default {
     setActivePackageClassWrapper(name) {
       this.setActivePackageClass(name);
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
+    },
+
+    clearVehicleDetails() {
+      this.vehicle_plate = '';
+      this.setPairWithRiderStatus(false);
+      this.visible2 = false;
+      this.pair_status = '';
+    },
+    setVehicle() {
+      this.searchOption = true;
     },
 
     checkVehicleDetails(val) {
