@@ -423,8 +423,13 @@
               </div>
               <div class="home-view-truck-options-inner-wrapper" v-if="this.pair_rider === '1'">
                 <div class="home-view-truck-options-label">
-                  Enter their phone number or the {{ getVendorNameOnCarrierType }}'s number plate to
-                  pair
+                  <div v-if="[21].includes(activeVendorPriceData.vendor_id)">
+                    Enter their phone number to pair
+                  </div>
+                  <div v-else>
+                    Enter their phone number or the {{ getVendorNameOnCarrierType }}'s number plate
+                    to pair
+                  </div>
                 </div>
                 <div class="">
                   <el-popover
@@ -436,7 +441,7 @@
                   >
                     <el-input
                       v-model.trim="vehicle_plate"
-                      placeholder="Enter Full Number plate / Phone Number"
+                      :placeholder="vehicleDetailsPlaceholder"
                       autocomplete="true"
                       slot="reference"
                       @input="checkVehicleDetails"
@@ -455,8 +460,8 @@
                     </el-input>
                     <div class="pair_info_text_content">
                       <div v-if="pair_status === '1'">
-                        <p class="upper_scope_pair_text">Number plate not found</p>
-                        <p>Vehicle not registered on the Sendy Platform.Try again</p>
+                        <p class="upper_scope_pair_text">Driver not found</p>
+                        <p>{{ this.failure_text }}</p>
                       </div>
                       <div v-if="pair_status === '2'">
                         <el-row :gutter="20">
@@ -561,7 +566,7 @@ export default {
       ],
       schedule_time: '',
       order_notes: '',
-      small_vendors: [1, 22],
+      small_vendors: [1, 22, 21],
       medium_vendors: [2, 3],
       large_vendors: [6, 10, 13, 14, 17, 18, 19, 20],
       pair_status: '',
@@ -576,6 +581,7 @@ export default {
       pair_rider_plate: '',
       triger: false,
       searchOption: false,
+      failure_text: '',
     };
   },
   computed: {
@@ -596,6 +602,10 @@ export default {
       getOrderState: '$_orders/$_home/getOrderState',
       getPairRiderNextStep: '$_orders/$_home/getPairRiderNextStep',
     }),
+
+    vehicleDetailsPlaceholder() {
+      return 'Enter Full Number plate / Phone Number';
+    },
 
     activePackageClassPriceData() {
       if (this.get_active_package_class !== '') {
@@ -798,32 +808,19 @@ export default {
     },
     updateData(value) {
       let val = value;
-      let pair_vendor_type = val.vendor_type;
-      let order_vendor_type = this.activeVendorPriceData.vendor_id;
-      if (pair_vendor_type === order_vendor_type) {
-        this.pair_rider_image = val.rider_photo;
-        this.pair_rider_name = val.rider_name;
-        this.pair_rider_rating = parseInt(val.rider_rating);
-        this.pair_rider_make = val.make;
-        this.pair_rider_model = val.model;
-        this.pair_rider_plate = val.registration_no;
+      this.pair_rider_image = val.rider_photo;
+      this.pair_rider_name = val.rider_name;
+      this.pair_rider_rating = parseInt(val.rider_rating);
+      this.pair_rider_make = val.make;
+      this.pair_rider_model = val.model;
+      this.pair_rider_plate = val.registration_no;
 
-        this.visible2 = true;
-        this.pair_status = '2';
+      this.visible2 = true;
+      this.pair_status = '2';
 
-        this.setPairWithRiderStatus(true);
-        this.setPairSerialNumber(val.sim_card_sn);
-        this.setPairRiderPhone(val.rider_phone);
-      } else {
-        this.visible2 = false;
-        this.pair_status = '';
-
-        this.doNotification(
-          3,
-          'Pair with Rider Error',
-          'Vehicle type provided does not match that of order'
-        );
-      }
+      this.setPairWithRiderStatus(true);
+      this.setPairSerialNumber(val.sim_card_sn);
+      this.setPairRiderPhone(val.rider_phone);
     },
     handlePairRequest(plate) {
       this.visible2 = false;
@@ -831,6 +828,7 @@ export default {
       const checkInputType = new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
       const res = checkInputType.test(plate);
       const payload = {};
+      payload.vendor_type = this.activeVendorPriceData.vendor_id;
       if (res) {
         payload.phone_no = plate;
       } else {
@@ -849,6 +847,7 @@ export default {
             this.updateData(response.data);
           } else {
             this.pair_status = '1';
+            this.failure_text = response.message;
             this.visible2 = true;
             this.setPairWithRiderStatus(false);
           }
