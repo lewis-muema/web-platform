@@ -414,6 +414,7 @@
                     v-model="pair_rider"
                     class="pair_rider_section"
                     @change="dispatchPairStatus"
+                    placeholder="Select"
                   >
                     <el-option label="Yes" value="1" />
                     <el-option label="No" value="2" />
@@ -472,7 +473,7 @@
                                 class="display_paired_rider_img"
                                 :src="pair_rider_image"
                               />
-                              <div>
+                              <div class="pair-rider-name">
                                 {{ pair_rider_name }}
                               </div>
                               <div>
@@ -566,13 +567,12 @@ export default {
       ],
       schedule_time: '',
       order_notes: '',
-      pair_rider: '2',
       small_vendors: [1, 22],
       medium_vendors: [2, 3],
       large_vendors: [6, 10, 13, 14, 17, 18, 19, 20],
       pair_status: '',
       vehicle_plate: '',
-      pair_rider: '2',
+      pair_rider: '',
       visible2: false,
       pair_rider_image: '',
       pair_rider_name: '',
