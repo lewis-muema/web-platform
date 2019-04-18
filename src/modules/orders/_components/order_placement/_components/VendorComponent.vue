@@ -439,14 +439,12 @@
                       placeholder="Enter Full Number plate / Phone Number"
                       autocomplete="true"
                       slot="reference"
-                      @change="checkVehicleDetails"
-                      @focus="setVehicle"
+                      @input="checkVehicleDetails"
                     >
                       <i
                         v-if="searchOption"
-                        class="el-icon-search el-input__icon"
+                        class="el-icon-loading el-input__icon"
                         slot="suffix"
-                        @click="checkVehicleDetails"
                       ></i>
                       <i
                         v-if="pair_status !== ''"
@@ -454,10 +452,6 @@
                         slot="suffix"
                         @click="clearVehicleDetails"
                       ></i>
-
-                      <!-- <div v-if="pair_status === ''">
-                      <i class="el-icon-loading el-input__icon" slot="suffix"> </i>
-                    </div> -->
                     </el-input>
                     <div class="pair_info_text_content">
                       <div v-if="pair_status === '1'">
@@ -783,10 +777,6 @@ export default {
       this.visible2 = false;
       this.pair_status = '';
     },
-    setVehicle() {
-      this.searchOption = true;
-    },
-
     checkVehicleDetails(val) {
       let vehicle_details = this.vehicle_plate;
       if (vehicle_details === '') {
@@ -797,9 +787,13 @@ export default {
         );
         this.setPairWithRiderStatus(false);
         this.visible2 = false;
+        this.searchOption = false;
         this.pair_status = '';
       } else {
-        this.handlePairRequest(vehicle_details);
+        this.searchOption = true;
+        if (vehicle_details.length > 6) {
+          this.handlePairRequest(vehicle_details);
+        }
       }
     },
     updateData(value) {
@@ -861,6 +855,7 @@ export default {
         },
         error => false
       );
+      this.searchOption = false;
     },
     getVendorIcon(id) {
       return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
