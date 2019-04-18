@@ -33,6 +33,9 @@ export default {
       no_of_loaders: 1,
       order_state: 1,
       extended_options: false,
+      pair_rider_status: false,
+      pair_serial_number: '',
+      pair_rider_phone: '',
     };
   },
   actions,
