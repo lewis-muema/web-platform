@@ -425,10 +425,13 @@
               </el-row>
             </div>
 
-            <div v-if="this.getStatus !== 'Pending'" class="rider-info">
+            <div
+              v-if="this.getStatus !== 'Pending'"
+              class="rider-info infobar--item-truck-bordered-top"
+            >
               <el-row
                 :gutter="20"
-                class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top infobar--item-truck-options"
+                class="infobar-content infobar--truck-item   infobar--item-truck-options"
               >
                 <el-col :span="8">
                   <div class="">
@@ -449,12 +452,12 @@
                     </span>
                   </div>
                 </el-col>
-                <el-col :span="6">
+                <!-- <el-col :span="6">
                   <div class="share-option">
                     <i class="el-icon-share top-bar-info" />
                     SHARE
                   </div>
-                </el-col>
+                </el-col> -->
               </el-row>
             </div>
           </div>
@@ -1261,7 +1264,7 @@ export default {
   height: 72px;
   width: auto !important;
   margin-bottom: -29px;
-  border-radius: 9px;
+  border-radius: 50%;
 }
 .infobar--driver-details
 {
@@ -1481,57 +1484,67 @@ ul.timeline > li:before {
 ul.timeline > li#timeline_right:before{
   content : '';
   background: #8A8A8A;
-  border: 3px solid #8A8A8A;
+  border: 4px solid #8A8A8A;
 }
 ul.timeline > li#timeline_right.timelineConfirmed:before{
   background: #51A65B;
-  border: 3px solid #51A65B;
+  border: 4px solid #51A65B;
   content: '✓';
+  font-size: 11px;
+  padding-left: 3px;
 }
 ul.timeline > li#timeline_right.timelinePicked:before{
   background: #51A65B;
-  border: 3px solid #51A65B;
+  border: 4px solid #51A65B;
   content: '✓';
+  font-size: 11px;
+  padding-left: 3px;
 }
 ul.timeline > li#timeline_right.timelineDelivered:before{
   background: #51A65B;
-  border: 3px solid #51A65B;
+  border: 4px solid #51A65B;
   content: '✓';
+  font-size: 11px;
+  padding-left: 3px;
 }
 ul.timeline > li#timeline_right.timelinePay:before{
   background: #51A65B;
-  border: 3px solid #51A65B;
+  border: 4px solid #51A65B;
   content: '✓';
+  font-size: 11px;
+  padding-left: 3px;
 }
 ul.timeline > li#timeline_right.confirmedReached:before{
   background: #F57F20;
-  border: 3px solid #F57F20;
+  border: 4px solid #F57F20;
   content: '';
 }
 ul.timeline > li#timeline_right.pickedReached:before{
   background: #F57F20;
-  border: 3px solid #F57F20;
+  border: 4px solid #F57F20;
   content: '';
 }
 ul.timeline > li#timeline_right.deliveredReached:before{
   background: #F57F20;
-  border: 3px solid #F57F20;
+  border: 4px solid #F57F20;
   content: '';
 }
 ul.timeline > li#timeline_right.payedReached:before{
   background: #F57F20;
-  border: 3px solid #F57F20;
+  border: 4px solid #F57F20;
   content: '';
 }
 .inforbar_route_timeline li:first-child:before {
     background: #F57F20;
-    border: 3px solid #F57F20;
+    border: 4px solid #F57F20;
     content : '';
 }
 .inforbar_order_timeline li:first-child:before {
     background: #51A65B;
-    border: 3px solid #51A65B;
+    border: 4px solid #51A65B;
     content: '✓';
+    font-size: 11px;
+    padding-left: 3px;
 }
 .cancelOptions > div
 {
@@ -1542,8 +1555,8 @@ ul.timeline > li#timeline_right.payedReached:before{
   opacity: 0 !important;
 }
 .infobar-truck-pstn{
-  margin-left: -2px !important;
-  margin-right: 13px !important;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
 }
 .topbar-text{
   padding-bottom: 10px;
@@ -1593,6 +1606,8 @@ ul.timeline > li#timeline_right.payedReached:before{
 }
 .rimg-disp{
   vertical-align: middle;
+  max-width: 16%;
+  border-radius: 50%;
 }
 .infobar--item-truck-options{
   padding-bottom: 5px;
@@ -1615,6 +1630,7 @@ ul.timeline > li#timeline_right.payedReached:before{
   width:200px;
 }
 .tracking-notes{
+  padding-top: 12px;
   padding-bottom: 10px;
   padding-left: 30px;
 }
@@ -1625,7 +1641,8 @@ ul.timeline > li#timeline_right.payedReached:before{
   padding-left:19px;
 }
 .tracking-loader-outer{
-  padding-left: 50px;
+  padding-left: 58px;
+  padding-top: 12px;
 }
 .tracking-notes-inner{
   padding-left: 19px;
@@ -1750,6 +1767,9 @@ ul.inforbar_route_timeline:before{
 }
 ul.inforbar_order_timeline:before{
   height : 90% !important;
+  width: 2px ;
+  background: #8A8A8A !important;
+  margin-left: 2px;
 }
 .inforbar_left_scrollable{
   padding-left: 0px !important;
