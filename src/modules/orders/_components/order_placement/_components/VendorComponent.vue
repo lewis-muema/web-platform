@@ -404,102 +404,103 @@
             </div>
 
             <!-- Pair with rider  -->
-
-            <div class="home-view-truck-options-inner-wrapper">
-              <div class="home-view-truck-options-label">
-                Do you have a specific rider at your pick up location ?
-              </div>
-              <div class="">
-                <el-select
-                  v-model="pair_rider"
-                  class="pair_rider_section"
-                  @change="dispatchPairStatus"
-                >
-                  <el-option label="Yes" value="1" />
-                  <el-option label="No" value="2" />
-                </el-select>
-              </div>
-            </div>
-            <div class="home-view-truck-options-inner-wrapper" v-if="this.pair_rider === '1'">
-              <div class="home-view-truck-options-label">
-                Enter their phone number or the {{ getVendorNameOnCarrierType }}'s number plate to
-                pair
-              </div>
-              <div class="">
-                <el-popover
-                  placement="right"
-                  width="200"
-                  trigger="manual"
-                  v-model="visible2"
-                  popper-class="pop-over-layout"
-                >
-                  <el-input
-                    v-model.trim="vehicle_plate"
-                    placeholder="Enter Full Number plate / Phone Number"
-                    autocomplete="true"
-                    slot="reference"
-                    @change="checkVehicleDetails"
-                    @focus="setVehicle"
+            <div v-if="![22].includes(activeVendorPriceData.vendor_id)">
+              <div class="home-view-truck-options-inner-wrapper">
+                <div class="home-view-truck-options-label">
+                  Do you have a specific rider at your pick up location ?
+                </div>
+                <div class="">
+                  <el-select
+                    v-model="pair_rider"
+                    class="pair_rider_section"
+                    @change="dispatchPairStatus"
                   >
-                    <i
-                      v-if="searchOption"
-                      class="el-icon-search el-input__icon"
-                      slot="suffix"
-                      @click="checkVehicleDetails"
-                    ></i>
-                    <i
-                      v-if="pair_status !== ''"
-                      class="el-icon-close el-input__icon"
-                      slot="suffix"
-                      @click="clearVehicleDetails"
-                    ></i>
+                    <el-option label="Yes" value="1" />
+                    <el-option label="No" value="2" />
+                  </el-select>
+                </div>
+              </div>
+              <div class="home-view-truck-options-inner-wrapper" v-if="this.pair_rider === '1'">
+                <div class="home-view-truck-options-label">
+                  Enter their phone number or the {{ getVendorNameOnCarrierType }}'s number plate to
+                  pair
+                </div>
+                <div class="">
+                  <el-popover
+                    placement="right"
+                    width="200"
+                    trigger="manual"
+                    v-model="visible2"
+                    popper-class="pop-over-layout"
+                  >
+                    <el-input
+                      v-model.trim="vehicle_plate"
+                      placeholder="Enter Full Number plate / Phone Number"
+                      autocomplete="true"
+                      slot="reference"
+                      @change="checkVehicleDetails"
+                      @focus="setVehicle"
+                    >
+                      <i
+                        v-if="searchOption"
+                        class="el-icon-search el-input__icon"
+                        slot="suffix"
+                        @click="checkVehicleDetails"
+                      ></i>
+                      <i
+                        v-if="pair_status !== ''"
+                        class="el-icon-close el-input__icon"
+                        slot="suffix"
+                        @click="clearVehicleDetails"
+                      ></i>
 
-                    <!-- <div v-if="pair_status === ''">
+                      <!-- <div v-if="pair_status === ''">
                       <i class="el-icon-loading el-input__icon" slot="suffix"> </i>
                     </div> -->
-                  </el-input>
-                  <div class="pair_info_text_content">
-                    <div v-if="pair_status === '1'">
-                      <p class="upper_scope_pair_text">Number plate not found</p>
-                      <p>Vehicle not registered on the Sendy Platform.Try again</p>
+                    </el-input>
+                    <div class="pair_info_text_content">
+                      <div v-if="pair_status === '1'">
+                        <p class="upper_scope_pair_text">Number plate not found</p>
+                        <p>Vehicle not registered on the Sendy Platform.Try again</p>
+                      </div>
+                      <div v-if="pair_status === '2'">
+                        <el-row :gutter="20">
+                          <el-col :span="8" class="display_rider_inline">
+                            <div class="">
+                              <img
+                                align="middle"
+                                class="display_paired_rider_img"
+                                :src="pair_rider_image"
+                              />
+                              <div>
+                                {{ pair_rider_name }}
+                              </div>
+                              <div>
+                                <el-rate
+                                  v-model="pair_rider_rating"
+                                  disabled
+                                  disabled-void-color="#C0C4CC"
+                                  :colors="['#1782C5', '#1782C5', '#1782C5']"
+                                >
+                                </el-rate>
+                              </div>
+                            </div>
+                          </el-col>
+                          <el-col :span="6" class="pair_right_more_info">
+                            <div class="share-option">
+                              <div class="pair-model-info">
+                                {{ pair_rider_make }} {{ pair_rider_model }}
+                              </div>
+                              <div>
+                                {{ pair_rider_plate }}
+                              </div>
+                            </div>
+                          </el-col>
+                        </el-row>
+                      </div>
                     </div>
-                    <div v-if="pair_status === '2'">
-                      <el-row :gutter="20">
-                        <el-col :span="8" class="display_rider_inline">
-                          <div class="">
-                            <img
-                              align="middle"
-                              class="display_paired_rider_img"
-                              :src="pair_rider_image"
-                            />
-                            <div>
-                              {{ pair_rider_name }}
-                            </div>
-                            <div>
-                              <el-rate
-                                v-model="pair_rider_rating"
-                                disabled
-                                disabled-void-color="#C0C4CC"
-                                :colors="['#1782C5', '#1782C5', '#1782C5']"
-                              >
-                              </el-rate>
-                            </div>
-                          </div>
-                        </el-col>
-                        <el-col :span="6" class="pair_right_more_info">
-                          <div class="share-option">
-                            <div class="pair-model-info">
-                              {{ pair_rider_make }} {{ pair_rider_model }}
-                            </div>
-                            <div>
-                              {{ pair_rider_plate }}
-                            </div>
-                          </div>
-                        </el-col>
-                      </el-row>
-                    </div>
-                  </div>
-                </el-popover>
+                  </el-popover>
+                </div>
               </div>
             </div>
             <div class="home-view-truck-options-inner-wrapper">
