@@ -22,7 +22,7 @@
             :class="get_current_active_order_option_class('payment')"
           >
             <span class="home-view-actions--items__span">
-              Payment Options
+              {{ pay_order_text }}
             </span>
             <font-awesome-icon icon="chevron-down" :class="revertIcon" width="15px" />
           </a>
@@ -75,7 +75,7 @@
               <div class="home-view-notes-wrapper--item__option">
                 <div class="home-view-notes-wrapper--item__option-div">
                   <el-radio v-model="payment_method" label="3">
-                    Payment on delivery
+                    Cash on delivery
                   </el-radio>
                 </div>
               </div>
@@ -223,12 +223,15 @@ export default {
       getLoadUnits: '$_orders/$_home/getLoadUnits',
       getAdditionalLoaderStatus: '$_orders/$_home/getAdditionalLoaderStatus',
       getNOOfLoaders: '$_orders/$_home/getNOOfLoaders',
+      getPairWithRiderStatus: '$_orders/$_home/getPairWithRiderStatus',
+      getPairSerialNumber: '$_orders/$_home/getPairSerialNumber',
+      getPairRiderPhone: '$_orders/$_home/getPairRiderPhone',
     }),
 
     active_price_tier_data() {
       if (this.get_active_package_class != '') {
         return this.getPriceRequestObject.economy_price_tiers.find(
-          pack => pack.tier_group === this.get_active_package_class,
+          pack => pack.tier_group === this.get_active_package_class
         );
       }
       return '';
@@ -293,6 +296,22 @@ export default {
       return `${text}${this.get_active_vendor_name} Order`;
     },
 
+    pay_order_text() {
+      let text = 'Payment Options';
+      if (this.getPriceRequestObject.payment_option === 2) {
+        text = 'Post Pay';
+      } else {
+        if (this.abs_running_balance > 0) {
+          text = 'Payment Options';
+        } else {
+          text = 'Cash on delivery';
+          this.payment_method = '3';
+        }
+      }
+
+      return text;
+    },
+
     order_is_scheduled() {
       return this.moment(this.eta_time).isBefore(this.get_schedule_time);
     },
@@ -305,7 +324,7 @@ export default {
 
     scheduled_time() {
       return this.moment(this.get_schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format(
-        'YYYY-MM-DD HH:mm:ss',
+        'YYYY-MM-DD HH:mm:ss'
       );
     },
 
@@ -427,7 +446,7 @@ export default {
         this.doNotification(
           '2',
           'Missing Minimum Order Amount',
-          'The minimum order amount is missing, please fill it to enable the drivers bid effectively.',
+          'The minimum order amount is missing, please fill it to enable the drivers bid effectively.'
         );
         return false;
       }
@@ -454,10 +473,10 @@ export default {
           this.doNotification(
             '2',
             'Running balance check',
-            'Running balance check has failed, please try again.',
+            'Running balance check has failed, please try again.'
           );
           this.loading = false;
-        },
+        }
       );
     },
 
@@ -466,7 +485,7 @@ export default {
         this.doNotification(
           '2',
           'Select a vehicle type',
-          'The vehicle type not been set, please set and try again.',
+          'The vehicle type not been set, please set and try again.'
         );
         return false;
       }
@@ -478,7 +497,7 @@ export default {
           this.doNotification(
             '2',
             'Choose a payment method',
-            'Please select a payment method and try again.',
+            'Please select a payment method and try again.'
           );
           return false;
         }
@@ -492,7 +511,7 @@ export default {
           this.handlePromoCodePayments();
         } else if (this.payment_method.startsWith('2_')) {
           const card = this.get_saved_cards.find(
-            card_details => card_details.last4 === this.payment_method.slice(2),
+            card_details => card_details.last4 === this.payment_method.slice(2)
           );
           this.handleSavedCard(card, true);
         } else {
@@ -568,7 +587,7 @@ export default {
             this.doNotification(
               2,
               'Order completion failed',
-              'Price request failed. Please try again',
+              'Price request failed. Please try again'
             );
           }
         },
@@ -576,10 +595,10 @@ export default {
           this.doNotification(
             3,
             'Order completion failed',
-            'Order completion failed. Please check your internet connection and try again.',
+            'Order completion failed. Please check your internet connection and try again.'
           );
           this.loading = false;
-        },
+        }
       );
     },
 
@@ -637,6 +656,13 @@ export default {
           customer_min_amount: Number(this.getCustomerMinAmount),
         },
       };
+      if (this.getPairWithRiderStatus) {
+        payload.rider_details = {
+          sim_card_sn: this.getPairSerialNumber,
+          rider_phone: this.getPairRiderPhone,
+          order_no: this.activeVendorPriceData.order_no,
+        };
+      }
       payload = {
         values: payload,
       };
@@ -696,7 +722,7 @@ export default {
           },
           error => {
             reject(response.data);
-          },
+          }
         );
       });
     },
@@ -805,7 +831,7 @@ export default {
             this.doNotification(
               '0',
               'M-Pesa Payment',
-              `Request for payment sent to ${user_phone}.`,
+              `Request for payment sent to ${user_phone}.`
             );
             this.requestMpesaPaymentPoll();
           } else {
@@ -815,7 +841,7 @@ export default {
               'M-Pesa Payment',
               `M-Pesa request to ${user_phone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
                 this.pending_amount
-              }.`,
+              }.`
             );
             this.payment_state = 0;
             this.loading = false;
@@ -828,11 +854,11 @@ export default {
             'M-Pesa Payment',
             `M-Pesa request to ${user_phone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
               this.pending_amount
-            }.`,
+            }.`
           );
           this.payment_state = 0;
           this.loading = false;
-        },
+        }
       );
     },
 
@@ -887,7 +913,7 @@ export default {
                 that.doNotification(
                   '0',
                   'Payment not received',
-                  "We'll keep retrying to check your payment status and complete your order once the payment is received.",
+                  "We'll keep retrying to check your payment status and complete your order once the payment is received."
                 );
                 that.payment_state = 0;
                 that.loading = false;
@@ -917,7 +943,7 @@ export default {
 
           return false;
         },
-        error => false,
+        error => false
       );
     },
 
@@ -927,7 +953,7 @@ export default {
       this.doNotification(
         '2',
         'M-Pesa Payment cancelled',
-        'M-Pesa payment has been cancelled, please try again.',
+        'M-Pesa payment has been cancelled, please try again.'
       );
       this.requestMpesaPaymentPoll(60);
     },
@@ -981,7 +1007,7 @@ export default {
             // console.log('failed to get saved cards');
           }
         },
-        error => false,
+        error => false
       );
     },
 
