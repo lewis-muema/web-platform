@@ -112,59 +112,6 @@
   </div>
 
   <div class="extended-options-wrappper" v-else>
-    <!-- <div v-if="getPairRiderNextStep">
-      <transition name="home-carrier-type-fade">
-        <div class="home-view-vendor-types-item-wrap">
-          <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
-            <div class="" v-on:click="goBackToHome">
-              <i class="el-icon-back back-to-home-btn"></i>
-            </div>
-
-            <div class="home-view-vendor-types-item-vendor--vendor-formal-name">
-              Pair
-            </div>
-          </div>
-
-          <div class="home-view-carrier-type">
-            <div class="home-view-pair-rider-wrapper">
-              <div class="home-view-truck-options-divider" />
-              <div class="home-pair-text">
-                Already have a sendy rider on your pick up location? Enter the vehicle number plate
-                to pair with it.
-              </div>
-              <div>
-                <el-input
-                  v-model="vehicle_plate"
-                  placeholder="Enter number plate"
-                  class="pair-number-plate"
-                />
-              </div>
-              <div v-if="!this.pair_status" class="pair_confirm_btn">
-                <button
-                  type="button"
-                  class="button-primary home-view--place-order"
-                  name="button"
-                  @click="checkVehicleDetails()"
-                >
-                  Continue
-                </button>
-              </div>
-              <div v-else>
-                <button
-                  type="button"
-                  class="button-primary home-view--place-order"
-                  name="button"
-                  @click="pairWithRiderComplete()"
-                >
-                  Pair and Confirm Order
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </transition>
-    </div> -->
-
     <!-- start carrier type transition -->
     <transition name="home-carrier-type-fade">
       <div class="home-view-vendor-types-item-wrap home-next-step">
@@ -216,7 +163,52 @@
                   autocomplete="true"
                   @change="dispatchDeliveryItem"
                 />
-                <!-- TO DO: Handle autocomplete -->
+              </div>
+            </div>
+            <div v-if="small_vendors.includes(activeVendorPriceData.vendor_id)">
+              <div
+                class="home-view-truck-options-inner-wrapper"
+                v-if="!vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)"
+              >
+                <div class="home-view-truck-options-label">
+                  What type of bike do you want?
+                </div>
+                <div class="home-view-truck-options-inner--full-select">
+                  <el-select v-model="carrier_type" placeholder="" @change="dispatchCarrierType">
+                    <el-option
+                      v-for="item in smallVendorOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
+              </div>
+            </div>
+            <div v-else>
+              <div
+                class="home-view-truck-options-inner-wrapper"
+                v-if="!vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)"
+              >
+                <div
+                  v-if="large_vendors.includes(activeVendorPriceData.vendor_id)"
+                  class="home-view-truck-options-label"
+                >
+                  What type of truck do you want?
+                </div>
+                <div v-else class="home-view-truck-options-label">
+                  What type of {{ getVendorNameOnCarrierType }} do you want?
+                </div>
+                <div class="home-view-truck-options-inner--full-select">
+                  <el-select v-model="carrier_type" placeholder="" @change="dispatchCarrierType">
+                    <el-option
+                      v-for="item in truckOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
               </div>
             </div>
             <div class="home-view-truck-options-inner-wrapper">
@@ -251,74 +243,23 @@
               </div>
             </div>
 
-            <!-- show small vendor extended options -->
-            <div v-if="small_vendors.includes(activeVendorPriceData.vendor_id)">
-              <div
-                class="home-view-truck-options-inner-wrapper"
-                v-if="!vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)"
-              >
-                <div class="home-view-truck-options-label">
-                  What type of {{ getVendorNameOnCarrierType }} do you want?
-                </div>
-                <div class="home-view-truck-options-inner--full-select">
-                  <el-select v-model="carrier_type" placeholder="" @change="dispatchCarrierType">
-                    <el-option
-                      v-for="item in smallVendorOptions"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
-                </div>
-              </div>
-            </div>
-
             <!-- show large and medium extended options -->
-            <div v-else>
-              <div
-                class="home-view-truck-options-inner-wrapper"
-                v-if="!vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)"
-              >
-                <div
-                  v-if="large_vendors.includes(activeVendorPriceData.vendor_id)"
-                  class="home-view-truck-options-label"
-                >
-                  What type of truck do you want?
+            <div v-if="large_vendors.includes(activeVendorPriceData.vendor_id)">
+              <div v-if="Number(carrier_type) === 3" class="home-view-truck-options-inner-wrapper">
+                <div class="home-view-truck-options-label">
+                  Temperature shouldn't exceed? (°C)
                 </div>
-                <div v-else class="home-view-truck-options-label">
-                  What type of {{ getVendorNameOnCarrierType }} do you want?
-                </div>
-                <div class="home-view-truck-options-inner--full-select">
-                  <el-select v-model="carrier_type" placeholder="" @change="dispatchCarrierType">
-                    <el-option
-                      v-for="item in truckOptions"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
+                <div class="home-view-truck-options-inner--number-of-loaders">
+                  <el-input-number
+                    v-model.trim="max_temperature"
+                    :min="1"
+                    :max="10"
+                    @change="handleChangeInMaxTemperature"
+                  />
                 </div>
               </div>
 
-              <div v-if="large_vendors.includes(activeVendorPriceData.vendor_id)">
-                <div
-                  v-if="Number(carrier_type) === 3"
-                  class="home-view-truck-options-inner-wrapper"
-                >
-                  <div class="home-view-truck-options-label">
-                    Temperature shouldn't exceed? (°C)
-                  </div>
-                  <div class="home-view-truck-options-inner--number-of-loaders">
-                    <el-input-number
-                      v-model.trim="max_temperature"
-                      :min="1"
-                      :max="10"
-                      @change="handleChangeInMaxTemperature"
-                    />
-                  </div>
-                </div>
-
-                <!-- <div class="home-view-truck-options-inner-wrapper">
+              <!-- <div class="home-view-truck-options-inner-wrapper">
                     <div class="home-view-truck-options-label">
                       What is the approximate weight of the load?
                     </div>
@@ -344,61 +285,60 @@
                     </div>
                   </div> -->
 
-                <div
-                  v-if="!isFixedCost(activeVendorPriceData)"
-                  class="home-view-truck-options-inner-wrapper"
-                >
-                  <div class="home-view-truck-options-label">
-                    How much are you offering to pay for this order?
-                  </div>
-                  <div>
-                    <el-input
-                      v-model.trim="customer_min_amount"
-                      :min="0"
-                      type="number"
-                      placeholder="Kes"
-                      @change="handleChangeInMinAmount"
-                    />
-                  </div>
+              <div
+                v-if="!isFixedCost(activeVendorPriceData)"
+                class="home-view-truck-options-inner-wrapper"
+              >
+                <div class="home-view-truck-options-label">
+                  How much are you offering to pay for this order?
                 </div>
-
-                <div class="home-view-truck-options-inner-wrapper">
-                  <div class="home-view-truck-options-label">
-                    Do you want us to provide you with Loader/s?
-                  </div>
-                  <div class="">
-                    <el-radio
-                      v-model="additional_loader"
-                      label="1"
-                      @change="dispatchAdditionalLoaderStatus"
-                    >
-                      Yes
-                    </el-radio>
-                    <el-radio
-                      v-model="additional_loader"
-                      label="0"
-                      @change="dispatchAdditionalLoaderStatus"
-                    >
-                      No
-                    </el-radio>
-                  </div>
+                <div>
+                  <el-input
+                    v-model.trim="customer_min_amount"
+                    :min="0"
+                    type="number"
+                    placeholder="Kes"
+                    @change="handleChangeInMinAmount"
+                  />
                 </div>
+              </div>
 
-                <div
-                  v-if="Number(additional_loader) === 1"
-                  class="home-view-truck-options-inner-wrapper"
-                >
-                  <div class="home-view-truck-options-label">
-                    How many Loaders do you require?
-                  </div>
-                  <div class="home-view-truck-options-inner--number-of-loaders">
-                    <el-input-number
-                      v-model="number_of_loaders"
-                      :min="1"
-                      :max="10"
-                      @change="handleChangeInNumberOfLoaders"
-                    />
-                  </div>
+              <div class="home-view-truck-options-inner-wrapper">
+                <div class="home-view-truck-options-label">
+                  Do you want us to provide you with Loader/s?
+                </div>
+                <div class="">
+                  <el-radio
+                    v-model="additional_loader"
+                    label="1"
+                    @change="dispatchAdditionalLoaderStatus"
+                  >
+                    Yes
+                  </el-radio>
+                  <el-radio
+                    v-model="additional_loader"
+                    label="0"
+                    @change="dispatchAdditionalLoaderStatus"
+                  >
+                    No
+                  </el-radio>
+                </div>
+              </div>
+
+              <div
+                v-if="Number(additional_loader) === 1"
+                class="home-view-truck-options-inner-wrapper"
+              >
+                <div class="home-view-truck-options-label">
+                  How many Loaders do you require?
+                </div>
+                <div class="home-view-truck-options-inner--number-of-loaders">
+                  <el-input-number
+                    v-model="number_of_loaders"
+                    :min="1"
+                    :max="10"
+                    @change="handleChangeInNumberOfLoaders"
+                  />
                 </div>
               </div>
             </div>
@@ -538,7 +478,7 @@ export default {
       load_weight: '',
       load_units: '',
       customer_min_amount: '',
-      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van', 'Express'],
+      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
       vendors_without_return: ['Standard', 'Runner'],
       baseTruckOptions: [
         {
@@ -557,11 +497,11 @@ export default {
         },
         {
           value: '1',
-          label: 'Box',
+          label: 'Bike with box',
         },
         {
           value: '0',
-          label: 'No Box',
+          label: 'Bike without box',
         },
       ],
       schedule_time: '',
