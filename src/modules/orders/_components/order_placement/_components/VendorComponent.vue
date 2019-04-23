@@ -674,6 +674,8 @@ export default {
     goBackToHome() {
       this.setOrderState(1);
       this.setExtendOptions(false);
+      this.pair_rider = '';
+      this.vehicle_plate = '';
     },
     dispatchDeliveryItem() {
       this.setDeliveryItem(this.delivery_item);
