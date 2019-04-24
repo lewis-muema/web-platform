@@ -347,7 +347,7 @@
             <div v-if="![22].includes(activeVendorPriceData.vendor_id)">
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  Do you have a specific rider at your pick up location ?
+                  Do you have a specific {{ riderNameDisplay }} at your pick up location ?
                 </div>
                 <div class="">
                   <el-select
@@ -400,7 +400,7 @@
                     </el-input>
                     <div class="pair_info_text_content">
                       <div v-if="pair_status === '1'">
-                        <p class="upper_scope_pair_text">Driver not found</p>
+                        <p class="upper_scope_pair_text">{{ riderNameDisplay }} not found</p>
                         <p>{{ this.failure_text }}</p>
                       </div>
                       <div v-if="pair_status === '2'">
@@ -506,7 +506,7 @@ export default {
       ],
       schedule_time: '',
       order_notes: '',
-      small_vendors: [1, 22, 21],
+      small_vendors: [1, 22, 21, 23],
       medium_vendors: [2, 3],
       large_vendors: [6, 10, 13, 14, 17, 18, 19, 20],
       pair_status: '',
@@ -607,6 +607,15 @@ export default {
         }
         return weight;
       }
+    },
+    riderNameDisplay() {
+      let display_pair_name = 'rider';
+      if (this.small_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+        display_pair_name = 'rider';
+      } else {
+        display_pair_name = 'driver';
+      }
+      return display_pair_name.toLowerCase();
     },
   },
 
