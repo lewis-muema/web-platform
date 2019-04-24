@@ -579,6 +579,11 @@ export default {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
           console.log(position.coords);
+          let lat = position.coords.latitude;
+          let long = position.coords.longitude;
+
+          let markedCoords = `${lat},${long}`;
+          console.log(markedCoords);
         });
       }
     },
