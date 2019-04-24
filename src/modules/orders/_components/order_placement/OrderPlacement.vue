@@ -187,6 +187,7 @@ export default {
       handler(val, oldVal) {
         if (this.show_vendor_view || this.loading) {
           this.doPriceRequest();
+          this.checkUserLocation();
         }
       },
       deep: true,
@@ -574,10 +575,20 @@ export default {
       this.registerPaymentModule();
       this.registerOrderPlacementModule();
     },
+    checkUserLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          console.log(position.coords);
+        });
+      }
+    },
   },
 
   created() {
     this.instantiateHomeComponent();
+  },
+  mounted() {
+    this.checkUserLocation();
   },
 
   destroyed() {
