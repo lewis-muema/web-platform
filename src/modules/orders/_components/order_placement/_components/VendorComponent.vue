@@ -400,7 +400,7 @@
                     </el-input>
                     <div class="pair_info_text_content">
                       <div v-if="pair_status === '1'">
-                        <p class="upper_scope_pair_text">Driver not found</p>
+                        <p class="upper_scope_pair_text">{{ riderNameDisplay }} not found</p>
                         <p>{{ this.failure_text }}</p>
                       </div>
                       <div v-if="pair_status === '2'">
