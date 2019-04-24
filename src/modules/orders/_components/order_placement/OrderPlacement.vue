@@ -550,6 +550,7 @@ export default {
 
     registerPaymentModule() {
       const moduleIsRegistered = this.$store._modules.root._children['$_payment'] !== undefined;
+
       if (!moduleIsRegistered) {
         this.$store.registerModule('$_payment', payments_module_store);
       }
