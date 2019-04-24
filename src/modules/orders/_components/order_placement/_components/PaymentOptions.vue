@@ -1,17 +1,6 @@
 <template lang="html">
   <div class="" style="width:150% ">
     <div class="">
-      <!-- <div
-        v-if="allow_return"
-        class="homeview-locations-options--set-return"
-      >
-        <el-checkbox
-          v-model="return_status"
-          @input="dispatchReturnToPickup"
-        >
-          Return to pick up
-        </el-checkbox>
-      </div> -->
       <div class="home-view-vendor-classes--label">
         <div
           class="home-view-vendor-classes-label-item"
