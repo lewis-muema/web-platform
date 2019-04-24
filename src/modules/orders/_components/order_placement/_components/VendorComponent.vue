@@ -347,7 +347,7 @@
             <div v-if="![22].includes(activeVendorPriceData.vendor_id)">
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  Do you have a specific rider at your pick up location ?
+                  Do you have a specific {{ riderNameDisplay }} at your pick up location ?
                 </div>
                 <div class="">
                   <el-select
@@ -607,6 +607,15 @@ export default {
         }
         return weight;
       }
+    },
+    riderNameDisplay() {
+      let display_pair_name = 'rider';
+      if (this.small_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+        display_pair_name = 'rider';
+      } else {
+        display_pair_name = 'driver';
+      }
+      return display_pair_name.toLowerCase();
     },
   },
 
