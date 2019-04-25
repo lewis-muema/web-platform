@@ -28,4 +28,6 @@ export default {
   getPairWithRiderStatus: state => state.pair_rider_status,
   getPairSerialNumber: state => state.pair_serial_number,
   getPairRiderPhone: state => state.pair_rider_phone,
+  getCountryCode: state => state.country_code,
+  getDefaultCurrency: state => state.default_currency,
 };

@@ -11,6 +11,7 @@ import moment from 'moment';
 
 import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
+import VueGeolocation from 'vue-browser-geolocation';
 
 import {
   Pagination,
@@ -83,6 +84,7 @@ Vue.use(Rate);
 Vue.use(Popover);
 Vue.use(Autocomplete);
 Vue.use(Loading.directive);
+Vue.use(VueGeolocation);
 // Vue.use(exportFromJSON);
 
 Vue.prototype.$loading = Loading.service;
