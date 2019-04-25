@@ -314,7 +314,6 @@ export default {
         //console.log('not a place', index);
         return;
       }
-      console.log(place);
       const countryIndex = place.address_components.findIndex(country_code =>
         country_code.types.includes('country')
       );
@@ -336,7 +335,6 @@ export default {
           country_code: place.address_components[countryIndex].short_name,
         },
       };
-      console.log(path_obj);
       let path_payload = {
         index: index,
         path: path_obj,
