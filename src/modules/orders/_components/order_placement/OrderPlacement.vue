@@ -153,6 +153,8 @@ import {
   faStar,
 } from '@fortawesome/free-solid-svg-icons';
 
+const currencyConversion = require('country-tz-currency');
+
 library.add(
   faPlus,
   faMapMarkerAlt,
@@ -208,6 +210,8 @@ export default {
       get_pickup_filled: '$_orders/$_home/getPickupFilled',
       get_session: 'getSession',
       get_extended_options: '$_orders/$_home/getExtendedOptions',
+      getCountryCode: '$_orders/$_home/getCountryCode',
+      getDefaultCurrency: '$_orders/$_home/getDefaultCurrency',
     }),
 
     allow_add_destination() {
@@ -251,10 +255,13 @@ export default {
       clear_price_request_object: '$_orders/$_home/clearPriceRequestObject',
       clear_extra_destinations: '$_orders/$_home/clearExtraDestination',
       resetState: '$_orders/$_home/resetState',
+      setCountryCode: '$_orders/$_home/setCountryCode',
+      setDefaultCurrency: '$_orders/$_home/setDefaultCurrency',
     }),
 
     ...mapActions({
       requestPriceQuote: '$_orders/$_home/requestPriceQuote',
+      requestCountryCode: '$_orders/$_home/requestCountryCode',
     }),
 
     removeExtraDestinationWrapper(index) {
@@ -307,7 +314,10 @@ export default {
         //console.log('not a place', index);
         return;
       }
-
+      console.log(place);
+      const countryIndex = place.address_components.findIndex(country_code =>
+        country_code.types.includes('country')
+      );
       let path_obj = {
         name: place.name,
         coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
@@ -323,8 +333,10 @@ export default {
           Typed: '',
           Vicinity: 'Not Indicated',
           Address: 'Not Indicated',
+          country_code: place.address_components[countryIndex].short_name,
         },
       };
+      console.log(path_obj);
       let path_payload = {
         index: index,
         path: path_obj,
@@ -380,6 +392,7 @@ export default {
     },
 
     createPriceRequestObject() {
+      this.checkUserLocation();
       let obj = { path: this.get_order_path };
       let acc = {};
       let session = this.$store.getters.getSession;
@@ -407,6 +420,9 @@ export default {
         promotion_status: false,
         destination_paid_status: false,
         is_edit: false,
+        country_code: this.getCountryCode,
+        default_currency: this.getDefaultCurrency,
+        preffered_currency: this.getDefaultCurrency,
       };
       let json_decoded_path = JSON.stringify(obj);
       infor.path = json_decoded_path;
@@ -576,16 +592,34 @@ export default {
       this.registerOrderPlacementModule();
     },
     checkUserLocation() {
+      let markedCoords = '';
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
-          console.log(position.coords);
           let lat = position.coords.latitude;
           let long = position.coords.longitude;
 
-          let markedCoords = `${lat},${long}`;
-          console.log(markedCoords);
+          markedCoords = `${lat},${long}`;
+          this.getCode(markedCoords);
         });
       }
+    },
+    getCode(position) {
+      const payload = {};
+      payload.coordinates = position;
+      let full_payload = {
+        values: payload,
+        app: 'PRIVATE_API',
+        endpoint: 'geocountry',
+      };
+      this.requestCountryCode(full_payload).then(
+        response => {
+          let code = response.country_code;
+          this.setCountryCode(response.country_code);
+          let country_code_data = currencyConversion.getCountryByCode(code);
+          this.setDefaultCurrency(country_code_data.currencyCode);
+        },
+        error => {}
+      );
     },
   },
 

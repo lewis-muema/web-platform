@@ -73,7 +73,7 @@
                     <span v-if="!isFixedCost(j)">
                       Price to be confirmed
                     </span>
-                    <span v-else> Ksh {{ getVendorPrice(j) }} </span>
+                    <span v-else> {{ getVendorCurrency(j) }} {{ getVendorPrice(j) }} </span>
                   </div>
                   <div class="home-view-vendor-types-item--cost-wrapper_time">
                     Pickup by {{ transformDate(j) }}
@@ -140,7 +140,10 @@
                 <span v-if="!isFixedCost(activeVendorPriceData)">
                   Price to be confirmed
                 </span>
-                <span v-else> Ksh {{ getVendorPrice(activeVendorPriceData) }} </span>
+                <span v-else>
+                  {{ getVendorCurrency(activeVendorPriceData) }}
+                  {{ getVendorPrice(activeVendorPriceData) }}
+                </span>
               </div>
               <div class="home-view-vendor-types-item--cost-wrapper_time">
                 Pickup by {{ transformDate(activeVendorPriceData) }}
@@ -849,7 +852,9 @@ export default {
     getVendorPrice(vendorObject) {
       return numeral(this.getPlainVendorPrice(vendorObject)).format('0,0');
     },
-
+    getVendorCurrency(vendorObject) {
+      return vendorObject.currency;
+    },
     getMinVendorPrice(vendorObject) {
       const price =
         this.getPlainVendorPrice(vendorObject) * ((100 - vendorObject.price_variance) / 100);
