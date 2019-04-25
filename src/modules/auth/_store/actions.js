@@ -113,7 +113,6 @@ export default {
   },
 
   requestCountryCode({ dispatch }, payload) {
-    console.log(payload);
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
