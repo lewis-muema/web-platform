@@ -1,15 +1,12 @@
 <template lang="html">
-  <div
-    id="log_in"
-    class="sign-up-verification"
-  >
+  <div id="log_in" class="sign-up-verification">
     <div class="sign-up-verification-inner">
       <div class="sign-up-verification-top">
         Do you work for a Business?
       </div>
 
       <div class="sign-up-verification-text">
-        We'd like to offer you the best experience possible. <br>
+        We'd like to offer you the best experience possible. <br />
         We'll create a dedicated account for you.
       </div>
 
@@ -19,10 +16,7 @@
 
       <div>
         <div class="sign-up-verification-holder dimen-sign-up2">
-          <span
-            id="log_in_warn"
-            class="sign-up-verification-holder__error"
-          />
+          <span id="log_in_warn" class="sign-up-verification-holder__error" />
         </div>
         <div class="sign-up-verification-holder dimen-sign-up2">
           <input
@@ -32,7 +26,7 @@
             name="cop_name"
             placeholder="Business name"
             autocomplete="on"
-          >
+          />
         </div>
 
         <div
@@ -44,14 +38,14 @@
             type="submit"
             value="No"
             @click="peer_set"
-          >
+          />
 
           <input
             class="button-primary btn-sign-up-check"
             type="submit"
             value="Done"
             @click="cop_set"
-          >
+          />
         </div>
       </div>
     </div>
@@ -61,6 +55,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin.js';
+const currencyConversion = require('country-tz-currency');
 
 export default {
   mixins: [SessionMxn],
@@ -69,11 +64,14 @@ export default {
       cop_name: '',
       phone: '',
       message: '',
+      currency: '',
+      cntry_code: '',
     };
   },
   methods: {
     ...mapActions({
       requestSignUpSegmentation: '$_auth/requestSignUpSegmentation',
+      requestCountryCode: '$_auth/requestCountryCode',
     }),
     ...mapGetters({
       Password: '$_auth/requestPassword',
@@ -82,6 +80,7 @@ export default {
       Name: '$_auth/requestName',
     }),
     peer_set() {
+      this.checkUserLocation();
       const values = {};
       values.name = this.Name();
       values.phone = this.Phone();
@@ -89,6 +88,8 @@ export default {
       values.password = this.Password();
       values.type = 'peer';
       values.platform = 'web';
+      values.country_code = this.cntry_code;
+      values.default_currency = this.currency;
       const full_payload = {
         values,
         vm: this,
@@ -98,7 +99,7 @@ export default {
 
       const that = this;
       this.requestSignUpSegmentation(full_payload).then(
-        (response) => {
+        response => {
           if (response.length > 0) {
             response = response[0];
           }
@@ -148,12 +149,13 @@ export default {
             this.doNotification(2, 'Sign Up Error ', response.message);
           }
         },
-        (error) => {
+        error => {
           this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
-        },
+        }
       );
     },
     cop_set() {
+      this.checkUserLocation();
       if (this.cop_name !== '') {
         const values = {};
         values.cop_name = this.cop_name;
@@ -162,6 +164,8 @@ export default {
         values.email = this.Email();
         values.password = this.Password();
         values.type = 'biz';
+        values.country_code = this.cntry_code;
+        values.default_currency = this.currency;
         const full_payload = {
           values,
           vm: this,
@@ -172,7 +176,7 @@ export default {
         const that = this;
 
         this.requestSignUpSegmentation(full_payload).then(
-          (response) => {
+          response => {
             if (response.length > 0) {
               response = response[0];
             }
@@ -188,14 +192,56 @@ export default {
               this.doNotification(2, 'Sign Up Error ', response.message);
             }
           },
-          (error) => {
+          error => {
             this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
-          },
+          }
         );
       } else {
         this.message = 'Provide Business Name';
       }
     },
+    checkUserLocation() {
+      let markedCoords = '';
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          let lat = position.coords.latitude;
+          let long = position.coords.longitude;
+
+          markedCoords = `${lat},${long}`;
+          this.getCode(markedCoords);
+        });
+      }
+    },
+    getCode(position) {
+      const payload = {};
+      payload.coordinates = position;
+      let full_payload = {
+        values: payload,
+        app: 'PRIVATE_API',
+        endpoint: 'geocountry',
+      };
+      this.requestCountryCode(full_payload).then(
+        response => {
+          let code = response.country_code;
+          this.cntry_code = response.country_code;
+          let country_code_data = currencyConversion.getCountryByCode(code);
+          this.currency = country_code_data.currencyCode;
+        },
+        error => {}
+      );
+    },
+    doNotification(level, title, message) {
+      const notification = {
+        title,
+        level,
+        message,
+      };
+      this.$store.commit('setNotification', notification);
+      this.$store.commit('setNotificationStatus', true);
+    },
+  },
+  mounted() {
+    this.checkUserLocation();
   },
 };
 </script>
