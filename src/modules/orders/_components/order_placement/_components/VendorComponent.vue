@@ -344,7 +344,7 @@
             </div>
 
             <!-- Pair with rider  -->
-            <div v-if="![22, 23, 24].includes(activeVendorPriceData.vendor_id)">
+            <div v-if="![22, 24].includes(activeVendorPriceData.vendor_id)">
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
                   Do you have a specific {{ riderNameDisplay }} at your pick up location ?
