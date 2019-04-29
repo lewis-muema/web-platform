@@ -32,7 +32,7 @@
                 Total Payment
               </div>
               <div class="home-view-payments-wrapper--left__amount-figure">
-                Ksh {{ pending_amount }}
+                {{ default_currency }} {{ pending_amount }}
               </div>
             </div>
             <div class="home-view-payments-wrapper--right">
@@ -40,7 +40,7 @@
                 {{ balance_quote_label }}
               </div>
               <div class="home-view-payments-wrapper--right-amount">
-                Ksh {{ abs_running_balance }}
+                {{ default_currency }} {{ abs_running_balance }}
               </div>
             </div>
           </div>
@@ -188,6 +188,7 @@ export default {
       return_status: false,
       showing: 1,
       country_code: 'KE',
+      default_currency: 'KES',
     };
   },
 
@@ -1011,7 +1012,13 @@ export default {
     /* end card */
 
     checkCountryCode() {
+      this.getUserDefaultCurrency();
       this.country_code = this.getCountryCode;
+    },
+    getUserDefaultCurrency() {
+      const session = this.$store.getters.getSession;
+      const default_user_currency = session[session.default].default_currency;
+      this.default_currency = default_user_currency;
     },
   },
 
