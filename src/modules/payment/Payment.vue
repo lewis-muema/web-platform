@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faWallet, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCcVisa, faCcMastercard } from '@fortawesome/free-brands-svg-icons';
@@ -22,6 +22,7 @@ import MainHeader from '../../components/headers/MainHeader.vue';
 import AccountBalance from './_components/AccountBalance.vue';
 import OrderCost from './_components/OrderCost.vue';
 import PaymentBody from './_components/PaymentBody.vue';
+const currencyConversion = require('country-tz-currency');
 
 library.add(faWallet, faCcVisa, faCcMastercard, faTrash);
 
@@ -53,7 +54,14 @@ export default {
   created() {
     this.registerPaymentModule();
   },
+  mounted() {
+    this.checkUserLocation();
+  },
   methods: {
+    ...mapActions({
+      requestCountryCode: '$_payment/requestCountryCode',
+    }),
+
     go_back() {
       this.$router.go(-1);
     },
@@ -63,6 +71,37 @@ export default {
       if (!moduleIsRegistered) {
         this.$store.registerModule('$_payment', payment_store);
       }
+    },
+    checkUserLocation() {
+      let markedCoords = '';
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          let lat = position.coords.latitude;
+          let long = position.coords.longitude;
+
+          markedCoords = `${lat},${long}`;
+          // markedCoords = '0.3130284,32.4590386'; (Uganda coordinates for test)
+          this.getCode(markedCoords);
+        });
+      }
+    },
+    getCode(position) {
+      const payload = {};
+      payload.coordinates = position;
+      let full_payload = {
+        values: payload,
+        app: 'PRIVATE_API',
+        endpoint: 'geocountry',
+      };
+      this.requestCountryCode(full_payload).then(
+        response => {
+          let code = response.country_code;
+          this.$store.commit('setCountryCode', code);
+          let country_code_data = currencyConversion.getCountryByCode(code);
+          this.$store.commit('setDefaultCurrency', country_code_data.currencyCode);
+        },
+        error => {}
+      );
     },
   },
 };

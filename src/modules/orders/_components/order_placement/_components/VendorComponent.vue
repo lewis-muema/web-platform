@@ -350,7 +350,7 @@
             <div v-if="![22, 24].includes(activeVendorPriceData.vendor_id)">
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  Do you have a specific {{ riderNameDisplay }} at your pick up location ?
+                  Do you have a preferred {{ riderNameDisplay }} at your pick up location ?
                 </div>
                 <div class="">
                   <el-select
