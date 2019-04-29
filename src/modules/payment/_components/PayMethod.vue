@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="paymethod">
-    <router-link v-if="!country_code" class="paymethod--link" to="/payment/mpesa">
+    <router-link v-if="getCountryCode === 'KE'" class="paymethod--link" to="/payment/mpesa">
       M-Pesa
     </router-link>
     <router-link class="paymethod--link" to="/payment/card">
@@ -17,37 +17,10 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'PayMethod',
-  data() {
-    return {
-      country_code: false,
-    };
-  },
   computed: {
     ...mapGetters({
-      getSess: 'getSession',
+      getCountryCode: 'getCountryCode',
     }),
-  },
-  watch: {
-    getSess: {
-      handler() {
-        this.getCountryCode();
-      },
-      deep: true,
-    },
-  },
-  mounted() {
-    this.getCountryCode();
-  },
-  computed: {
-    getCountryCode() {
-      const session = this.$store.getters.getSession;
-      const countryCode = session[session.default].country_code;
-      if (countryCode === 'UG') {
-        this.country_code = true;
-      } else {
-        this.country_code = false;
-      }
-    },
   },
 };
 </script>
