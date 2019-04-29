@@ -1011,9 +1011,7 @@ export default {
     /* end card */
 
     checkCountryCode() {
-      const session = this.$store.getters.getSession;
-      const countryCode = session[session.default].country_code;
-      this.country_code = countryCode;
+      this.country_code = this.getCountryCode;
     },
   },
 
