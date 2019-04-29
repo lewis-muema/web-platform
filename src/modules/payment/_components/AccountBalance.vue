@@ -61,7 +61,11 @@ export default {
     checkDefaultCurrency() {
       const session = this.$store.getters.getSession;
       const countryCurrency = session[session.default].default_currency;
-      this.default_currency = countryCurrency;
+      if (countryCurrency === null) {
+        this.default_currency = 'KES';
+      } else {
+        this.default_currency = countryCurrency;
+      }
     },
   },
   computed: {
