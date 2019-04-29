@@ -929,7 +929,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.tracking_data.price_tier.currency);
     this.loading = true;
     this.$store.commit('$_orders/$_tracking/setTrackedOrder', this.$route.params.order_no);
     this.$store.dispatch('$_orders/$_tracking/trackMQTT');
