@@ -169,10 +169,12 @@ export default {
       this.$router.push(route);
     },
     linkPayments() {
-      if (this.getCountryCode === 'KE') {
-        this.$router.push('/payment/mpesa');
-      } else {
+      const session = this.$store.getters.getSession;
+      const countryCode = session[session.default].country_code;
+      if (countryCode === 'UG') {
         this.$router.push('/payment/card');
+      } else {
+        this.$router.push('/payment/mpesa');
       }
     },
   },
