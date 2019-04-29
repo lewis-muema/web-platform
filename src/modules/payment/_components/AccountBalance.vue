@@ -8,8 +8,8 @@
         <!-- <font-awesome-icon icon="wallet" /> -->
       </div>
       <div class="payinfo--balance">
-        Balance <span class="payinfo--balance-el">{{ running_balance }}</span
-        >Kes
+        Balance <span class="payinfo--balance-el">{{ running_balance }}</span>
+        {{ default_currency }}
       </div>
     </div>
   </div>
@@ -20,6 +20,11 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'account-balance',
+  data() {
+    return {
+      default_currency: 'KES',
+    };
+  },
   mounted() {
     this.requestRB();
   },
@@ -28,6 +33,7 @@ export default {
       _requestRunningBalance: '$_payment/requestRunningBalance',
     }),
     requestRB() {
+      this.checkDefaultCurrency();
       //this will request from the api and update the store
       let session = this.$store.getters.getSession;
       let cop_id = 0;
@@ -48,14 +54,18 @@ export default {
         endpoint: 'running_balance',
       };
 
-      this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
-        response => {
-
-        },
-        error => {
-
-        },
-      );
+      this.$store
+        .dispatch('requestRunningBalance', payload, { root: true })
+        .then(response => {}, error => {});
+    },
+    checkDefaultCurrency() {
+      const session = this.$store.getters.getSession;
+      const countryCurrency = session[session.default].default_currency;
+      if (countryCurrency === null) {
+        this.default_currency = 'KES';
+      } else {
+        this.default_currency = countryCurrency;
+      }
     },
   },
   computed: {
