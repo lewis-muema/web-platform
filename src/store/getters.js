@@ -27,6 +27,12 @@ export default {
   getENV(state) {
     return state.ENV;
   },
+  getCountryCode(state) {
+    return state.country_code;
+  },
+  getDefaultCurrency(state) {
+    return state.default_currency;
+  },
 };
 
 function isEmpty(obj) {

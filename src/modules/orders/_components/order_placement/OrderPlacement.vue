@@ -210,8 +210,8 @@ export default {
       get_pickup_filled: '$_orders/$_home/getPickupFilled',
       get_session: 'getSession',
       get_extended_options: '$_orders/$_home/getExtendedOptions',
-      getCountryCode: '$_orders/$_home/getCountryCode',
-      getDefaultCurrency: '$_orders/$_home/getDefaultCurrency',
+      getCountryCode: 'getCountryCode',
+      getDefaultCurrency: 'getDefaultCurrency',
     }),
 
     allow_add_destination() {
@@ -597,6 +597,7 @@ export default {
           let long = position.coords.longitude;
 
           markedCoords = `${lat},${long}`;
+          // markedCoords = '0.3130284,32.4590386'; (Uganda coordinates for test)
           this.getCode(markedCoords);
         });
       }
@@ -612,9 +613,9 @@ export default {
       this.requestCountryCode(full_payload).then(
         response => {
           let code = response.country_code;
-          this.setCountryCode(response.country_code);
+          this.$store.commit('setCountryCode', code);
           let country_code_data = currencyConversion.getCountryByCode(code);
-          this.setDefaultCurrency(country_code_data.currencyCode);
+          this.$store.commit('setDefaultCurrency', country_code_data.currencyCode);
         },
         error => {}
       );

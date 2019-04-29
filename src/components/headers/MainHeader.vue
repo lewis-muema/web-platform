@@ -2,15 +2,12 @@
   <div class="header">
     <div class="header--item">
       <div class="header--item__left">
-        <a
-          class="header--item__left"
-          @click="linkRoute('/orders')"
-        >
+        <a class="header--item__left" @click="linkRoute('/orders')">
           <img
             src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
             alt="logo"
             class="logo"
-          >
+          />
         </a>
       </div>
     </div>
@@ -31,9 +28,8 @@
               <li v-if="switchValid">
                 <a @click="switchAccount()">
                   Switch to
-                  <span v-if="this.$store.getters.getSession.default === 'peer'">
-                    Business
-                  </span><span v-else>
+                  <span v-if="this.$store.getters.getSession.default === 'peer'"> Business </span
+                  ><span v-else>
                     Personal
                   </span>
                   account
@@ -45,7 +41,7 @@
                 </a>
               </li>
               <li>
-                <a @click="linkRoute('/payment/mpesa')">
+                <a @click="linkPayments()">
                   Payment
                 </a>
               </li>
@@ -72,10 +68,7 @@
                 </a>
               </li>
               <li class="menu--last-child">
-                <a
-                  class="menu--last-child-link"
-                  @click="logOut"
-                >
+                <a class="menu--last-child-link" @click="logOut">
                   Log Out
                 </a>
               </li>
@@ -104,6 +97,7 @@ export default {
   computed: {
     ...mapGetters({
       getSess: 'getSession',
+      getCountryCode: 'getCountryCode',
     }),
   },
   watch: {
@@ -173,6 +167,13 @@ export default {
     },
     linkRoute(route) {
       this.$router.push(route);
+    },
+    linkPayments() {
+      if (this.getCountryCode === 'KE') {
+        this.$router.push('/payment/mpesa');
+      } else {
+        this.$router.push('/payment/card');
+      }
     },
   },
 };

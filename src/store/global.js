@@ -14,6 +14,8 @@ const state = {
   running_balance: 0,
   notification: {},
   notification_status: false,
+  country_code: 'KE',
+  default_currency: 'KES',
 };
 
 export default {
