@@ -32,7 +32,7 @@
                 Total Payment
               </div>
               <div class="home-view-payments-wrapper--left__amount-figure">
-                {{ default_currency }} {{ pending_amount }}
+                {{ rb_currency }} {{ pending_amount }}
               </div>
             </div>
             <div class="home-view-payments-wrapper--right">
@@ -40,7 +40,7 @@
                 {{ balance_quote_label }}
               </div>
               <div class="home-view-payments-wrapper--right-amount">
-                {{ default_currency }} {{ abs_running_balance }}
+                {{ rb_currency }} {{ abs_running_balance }}
               </div>
             </div>
           </div>
@@ -189,6 +189,7 @@ export default {
       showing: 1,
       country_code: 'KE',
       default_currency: 'KES',
+      rb_currency: 'KES',
     };
   },
 
@@ -697,6 +698,8 @@ export default {
           values: {
             cop_id: 'cop_id' in session[session.default] ? session[session.default].cop_id : 0,
             user_phone: session[session.default].user_phone,
+            default_currency: this.default_currency,
+            rb_currency: this.activeVendorPriceData.currency,
           },
         };
 
@@ -1014,6 +1017,7 @@ export default {
     checkCountryCode() {
       this.getUserDefaultCurrency();
       this.country_code = this.getCountryCode;
+      this.rb_currency = this.activeVendorPriceData.currency;
     },
     getUserDefaultCurrency() {
       const session = this.$store.getters.getSession;
