@@ -695,17 +695,15 @@ export default {
         const session = this.$store.getters.getSession;
 
         const running_balance_payload = {
-          values: {
-            cop_id: 'cop_id' in session[session.default] ? session[session.default].cop_id : 0,
-            user_phone: session[session.default].user_phone,
-            default_currency: this.default_currency,
-            rb_currency: this.activeVendorPriceData.currency,
-          },
+          cop_id: 'cop_id' in session[session.default] ? session[session.default].cop_id : 0,
+          phone: session[session.default].user_phone,
+          default_currency: this.default_currency,
+          rb_currency: this.activeVendorPriceData.currency,
         };
 
         const payload = {
           values: running_balance_payload,
-          app: 'PRIVATE_API',
+          app: 'NODE_PRIVATE_API',
           endpoint: 'running_balance',
         };
         this.requestRunningBalanceFromAPI(payload).then(
