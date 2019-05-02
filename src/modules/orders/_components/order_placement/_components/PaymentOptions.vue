@@ -712,7 +712,8 @@ export default {
               response = response[0];
             }
             if (response.status === 200) {
-              this.$store.commit('setRunningBalance', response.data.running_balance);
+              const resp = response.data;
+              this.$store.commit('setRunningBalance', resp.data.running_balance);
               this.setDefaultOptions();
               resolve(response.data);
             } else {
