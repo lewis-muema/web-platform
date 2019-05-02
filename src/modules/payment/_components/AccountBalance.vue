@@ -54,9 +54,18 @@ export default {
         endpoint: 'running_balance',
       };
 
-      this.$store
-        .dispatch('requestRunningBalance', payload, { root: true })
-        .then(response => {}, error => {});
+      this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
+        response => {
+          let balance = '';
+          if (response.data.running_balance === 0) {
+            balance = response.data.running_balance;
+          } else {
+            balance = response.data.running_balance * -1;
+          }
+          this.$store.commit('setRunningBalance', balance);
+        },
+        error => {}
+      );
     },
     checkDefaultCurrency() {
       const session = this.$store.getters.getSession;
