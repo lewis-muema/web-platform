@@ -9,7 +9,7 @@
       </div>
       <div class="payinfo--balance">
         Balance <span class="payinfo--balance-el">{{ running_balance }}</span>
-        {{ default_currency }}
+        {{ getDefaultCurrency }}
       </div>
     </div>
   </div>
@@ -17,6 +17,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+const currencyConversion = require('country-tz-currency');
 
 export default {
   name: 'account-balance',
@@ -31,6 +32,7 @@ export default {
   methods: {
     ...mapActions({
       _requestRunningBalance: '$_payment/requestRunningBalance',
+      requestCountryCode: '$_payment/requestCountryCode',
     }),
     requestRB() {
       this.checkDefaultCurrency();
@@ -41,26 +43,26 @@ export default {
         cop_id = session.biz.cop_id;
       }
       let running_balance_payload = {
-        values: {
-          cop_id: cop_id,
-          user_phone: session[session.default]['user_phone'],
-        },
+        cop_id: cop_id,
+        phone: session[session.default]['user_phone'],
+        default_currency: session[session.default].default_currency,
+        rb_currency: this.getDefaultCurrency,
       };
-
       let payload = {
         values: running_balance_payload,
         vm: this,
-        app: 'PRIVATE_API',
+        app: 'NODE_PRIVATE_API',
         endpoint: 'running_balance',
       };
 
       this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
         response => {
+          const resp = response.data;
           let balance = '';
-          if (response.data.running_balance === 0) {
-            balance = response.data.running_balance;
+          if (resp.data.running_balance === 0) {
+            balance = resp.data.running_balance;
           } else {
-            balance = response.data.running_balance * -1;
+            balance = resp.data.running_balance * -1;
           }
           this.$store.commit('setRunningBalance', balance);
         },
@@ -76,8 +78,43 @@ export default {
         this.default_currency = countryCurrency;
       }
     },
+    checkUserLocation() {
+      let markedCoords = '';
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          let lat = position.coords.latitude;
+          let long = position.coords.longitude;
+
+          markedCoords = `${lat},${long}`;
+          // markedCoords = '0.3130284,32.4590386'; (Uganda coordinates for test)
+          this.getCode(markedCoords);
+        });
+      }
+    },
+    getCode(position) {
+      const payload = {};
+      payload.coordinates = position;
+      let full_payload = {
+        values: payload,
+        app: 'PRIVATE_API',
+        endpoint: 'geocountry',
+      };
+      this.requestCountryCode(full_payload).then(
+        response => {
+          let code = response.country_code;
+          this.$store.commit('setCountryCode', code);
+          let country_code_data = currencyConversion.getCountryByCode(code);
+          this.$store.commit('setDefaultCurrency', country_code_data.currencyCode);
+          this.requestRB();
+        },
+        error => {}
+      );
+    },
   },
   computed: {
+    ...mapGetters({
+      getDefaultCurrency: 'getDefaultCurrency',
+    }),
     //this just gets what is on the store
     running_balance() {
       //format the amount
@@ -90,6 +127,9 @@ export default {
         return value;
       }
     },
+  },
+  created() {
+    this.checkUserLocation();
   },
 };
 </script>

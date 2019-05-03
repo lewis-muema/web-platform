@@ -15,7 +15,7 @@
       <nav>
         <ul>
           <li class="nav--menu-inactive">
-            <a> Helpline : 0709 779 779</a>
+            <a> Helpline : +254 709 779 779</a>
           </li>
           <li class="nav--menu-inactive">
             <a>Hi {{ logged_user }}</a>
