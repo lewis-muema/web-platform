@@ -189,7 +189,6 @@ export default {
       handler(val, oldVal) {
         if (this.show_vendor_view || this.loading) {
           this.doPriceRequest();
-          this.checkUserLocation();
         }
       },
       deep: true,
@@ -261,7 +260,6 @@ export default {
 
     ...mapActions({
       requestPriceQuote: '$_orders/$_home/requestPriceQuote',
-      requestCountryCode: '$_orders/$_home/requestCountryCode',
     }),
 
     removeExtraDestinationWrapper(index) {
@@ -390,7 +388,6 @@ export default {
     },
 
     createPriceRequestObject() {
-      this.checkUserLocation();
       let obj = { path: this.get_order_path };
       let acc = {};
       let session = this.$store.getters.getSession;
@@ -589,46 +586,11 @@ export default {
       this.registerPaymentModule();
       this.registerOrderPlacementModule();
     },
-    checkUserLocation() {
-      let markedCoords = '';
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          let lat = position.coords.latitude;
-          let long = position.coords.longitude;
-
-          markedCoords = `${lat},${long}`;
-          // markedCoords = '0.3130284,32.4590386'; (Uganda coordinates for test)
-          this.getCode(markedCoords);
-        });
-      }
-    },
-    getCode(position) {
-      const payload = {};
-      payload.coordinates = position;
-      let full_payload = {
-        values: payload,
-        app: 'PRIVATE_API',
-        endpoint: 'geocountry',
-      };
-      this.requestCountryCode(full_payload).then(
-        response => {
-          let code = response.country_code;
-          this.$store.commit('setCountryCode', code);
-          let country_code_data = currencyConversion.getCountryByCode(code);
-          this.$store.commit('setDefaultCurrency', country_code_data.currencyCode);
-        },
-        error => {}
-      );
-    },
   },
 
   created() {
     this.instantiateHomeComponent();
   },
-  mounted() {
-    this.checkUserLocation();
-  },
-
   destroyed() {
     this.destroyOrderPlacement();
   },
