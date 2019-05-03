@@ -3,7 +3,7 @@
     <no-ssr placeholder="">
       <GmapMap
         ref="map"
-        :center="{ lat: -1.3084143, lng: 36.7658132 }"
+        :center="mapCentreLocation"
         :zoom="13"
         map-type-id="roadmap"
         class="content"
@@ -47,8 +47,9 @@
 
 <script>
 import NoSSR from 'vue-no-ssr';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
+const currencyConversion = require('country-tz-currency');
 const moment = require('moment');
 
 export default {
@@ -60,6 +61,10 @@ export default {
     return {
       mapOptions: {
         disableDefaultUI: true,
+      },
+      mapCentreLocation: {
+        lat: -1.3084143,
+        lng: 36.7658132,
       },
       markerOptions: {},
       mapLoaded: false,
@@ -87,6 +92,9 @@ export default {
     };
   },
   methods: {
+    ...mapActions({
+      requestCountryCode: '$_orders/$_home/requestCountryCode',
+    }),
     path_icon(icon) {
       if (icon === 'pickup') {
         return {
@@ -313,6 +321,47 @@ export default {
                    </div>
               </div>`;
     },
+    checkUserLocation() {
+      let markedCoords = '';
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          let lat = position.coords.latitude;
+          let long = position.coords.longitude;
+
+          markedCoords = `${lat},${long}`;
+          // markedCoords = '0.3130284,32.4590386'; (Uganda coordinates for test)
+          this.getCode(markedCoords);
+        });
+      }
+    },
+    getCode(position) {
+      const payload = {};
+      payload.coordinates = position;
+      let full_payload = {
+        values: payload,
+        app: 'PRIVATE_API',
+        endpoint: 'geocountry',
+      };
+      this.requestCountryCode(full_payload).then(
+        response => {
+          let code = response.country_code;
+          this.$store.commit('setCountryCode', code);
+          let country_code_data = currencyConversion.getCountryByCode(code);
+          this.$store.commit('setDefaultCurrency', country_code_data.currencyCode);
+          this.setMapCentreLocation(code);
+        },
+        error => {}
+      );
+    },
+    setMapCentreLocation(code) {
+      if (code === 'UG') {
+        this.mapCentreLocation.lat = 0.3355622;
+        this.mapCentreLocation.lng = 32.5801543;
+      } else {
+        this.mapCentreLocation.lat = -1.3084143;
+        this.mapCentreLocation.lng = 36.7658132;
+      }
+    },
   },
   computed: {
     ...mapGetters({
@@ -353,6 +402,7 @@ export default {
     this.$store.dispatch('$_orders/connectMqtt');
     this.activeState();
     this.activeMarker();
+    this.checkUserLocation();
   },
 };
 </script>
