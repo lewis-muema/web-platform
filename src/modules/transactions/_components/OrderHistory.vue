@@ -104,23 +104,25 @@
         align="center"
         :formatter="formatAmount"
       >
-        <template slot-scope="scope">
-          <span v-if="order_history_data[scope.$index]['fixed_cost']" class="">
-            {{ order_history_data[scope.$index]['order_cost'] }} {{ default_currency }}
-          </span>
-          <span v-else>
-            <span
-              v-if="
-                order_history_data[scope.$index]['confirm_status'] === 0 &&
-                  order_history_data[scope.$index]['customer_min_amount']
-              "
-            >
-              {{ order_history_data[scope.$index]['customer_min_amount'] }} {{ default_currency }}
+        <template slot-scope="scope" class="order_cost_amount">
+          <div class="order_cost_amount">
+            <span v-if="order_history_data[scope.$index]['fixed_cost']" class="">
+              {{ default_currency }} {{ order_history_data[scope.$index]['order_cost'] }}
             </span>
             <span v-else>
-              {{ order_history_data[scope.$index]['order_cost'] }} {{ default_currency }}
+              <span
+                v-if="
+                  order_history_data[scope.$index]['confirm_status'] === 0 &&
+                    order_history_data[scope.$index]['customer_min_amount']
+                "
+              >
+                {{ default_currency }} {{ order_history_data[scope.$index]['customer_min_amount'] }}
+              </span>
+              <span v-else>
+                {{ default_currency }} {{ order_history_data[scope.$index]['order_cost'] }}
+              </span>
             </span>
-          </span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column
