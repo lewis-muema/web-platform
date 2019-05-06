@@ -50,3 +50,6 @@
     cursor: not-allowed;
     background: rgba(44, 130, 197, .7);
 }
+.order_cost_amount{
+  text-align: right;
+}
