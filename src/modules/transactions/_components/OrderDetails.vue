@@ -6,7 +6,7 @@
       </div>
       <div class="order_details_desc">
         <div v-if="this.order_details.fixed_cost" class="order_details_price">
-          {{ order_details.order_cost }} {{ default_currency }}
+          {{ default_currency }} {{ order_details.order_cost }}
         </div>
         <div v-else class="order_details_price">
           <div
@@ -15,9 +15,9 @@
                 this.order_details.customer_min_amount
             "
           >
-            {{ order_details.customer_min_amount }} {{ default_currency }}
+            {{ default_currency }} {{ order_details.customer_min_amount }}
           </div>
-          <div v-else>{{ order_details.order_cost }} {{ default_currency }}</div>
+          <div v-else>{{ default_currency }} {{ order_details.order_cost }}</div>
         </div>
 
         <div class="order_details_desc_item">
