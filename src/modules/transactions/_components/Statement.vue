@@ -1,8 +1,5 @@
 <template lang="html">
-  <div
-    id="statement_container"
-    class=""
-  >
+  <div id="statement_container" class="">
     <div class="section--filter-wrap">
       <div class="section--filter-input-wrap">
         <el-date-picker
@@ -37,42 +34,24 @@
       </div>
     </div>
 
-    <el-table
-      :data="statement_data"
-      style="width: 100%"
-      :border="true"
-      :stripe="true"
-    >
+    <el-table :data="statement_data" style="width: 100%" :border="true" :stripe="true">
       <template slot="empty">
         {{ empty_statement_state }}
       </template>
-      <el-table-column
-        label="Txn"
-        prop="txn"
-        min-width="80"
-      />
-      <el-table-column
-        label="Date"
-        prop="date_time"
-        :formatter="formatDate"
-        width="170"
-      />
-      <el-table-column
-        label="Description"
-        prop="description"
-        min-width="80"
-      />
+      <el-table-column label="Txn" prop="txn" min-width="80" />
+      <el-table-column label="Date" prop="date_time" :formatter="formatDate" width="170" />
+      <el-table-column label="Description" prop="description" min-width="80" />
       <el-table-column
         label="Debit"
         prop="amount"
-        width="80"
+        width="110"
         :formatter="formatDebitAmount"
         class-name="amount--table-format"
       />
       <el-table-column
         label="Credit"
         prop="amount"
-        width="80"
+        width="110"
         :formatter="formatCreditAmount"
         class-name="amount--table-format"
       />
@@ -188,7 +167,7 @@ export default {
         },
         () => {
           this.empty_statement_state = 'Statement Failed to Fetch';
-        },
+        }
       );
     },
     ...mapActions(['$_transactions/requestStatement']),
@@ -295,7 +274,7 @@ export default {
         () => {
           this.order_statement_text = 'Search';
           this.empty_statement_state = 'Statement Failed to Fetch';
-        },
+        }
       );
     },
   },
