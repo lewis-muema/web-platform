@@ -107,7 +107,8 @@
         <template slot-scope="scope" class="order_cost_amount">
           <div class="order_cost_amount">
             <span v-if="order_history_data[scope.$index]['fixed_cost']" class="">
-              {{ default_currency }} {{ order_history_data[scope.$index]['order_cost'] }}
+              {{ default_currency }}
+              {{ formatCurrency(order_history_data[scope.$index]['order_cost']) }}
             </span>
             <span v-else>
               <span
@@ -116,10 +117,12 @@
                     order_history_data[scope.$index]['customer_min_amount']
                 "
               >
-                {{ default_currency }} {{ order_history_data[scope.$index]['customer_min_amount'] }}
+                {{ default_currency }}
+                {{ formatCurrency(order_history_data[scope.$index]['customer_min_amount']) }}
               </span>
               <span v-else>
-                {{ default_currency }} {{ order_history_data[scope.$index]['order_cost'] }}
+                {{ default_currency }}
+                {{ formatCurrency(order_history_data[scope.$index]['order_cost']) }}
               </span>
             </span>
           </div>
@@ -168,6 +171,7 @@ import { mapActions, mapGetters } from 'vuex';
 import { Printd } from 'printd';
 import * as _ from 'lodash';
 import exportFromJSON from 'export-from-json';
+import numeral from 'numeral';
 
 const moment = require('moment');
 
@@ -485,6 +489,9 @@ export default {
         // opens the "print dialog" of your browser to print the element
         d.print(document.getElementById('save-pdf'), cssText);
       }
+    },
+    formatCurrency(currency) {
+      return numeral(currency).format('0,0');
     },
   },
 };
