@@ -453,17 +453,17 @@ export default {
         let data;
         let data2 = [];
 
-        for (let i = 0; i < this.order_history_data.length; i++) {
+        for (let i = 0; i < this. orderHistoryData.length; i++) {
           let arr = {};
-          arr.OrderNumber = this.order_history_data[i].order_no;
-          arr.OrderAmount = this.order_history_data[i].order_cost;
-          arr.OrderDate = this.order_history_data[i].order_date;
-          arr.OrderDistanceKM = this.order_history_data[i].order_details.distance;
-          arr.User = this.order_history_data[i].user_details.name;
-          arr.From = this.order_history_data[i].path[0].name;
-          arr.To = this.order_history_data[i].path[1].name;
-          arr.RiderName = this.order_history_data[i].rider.rider_name;
-          arr.RiderPhone = this.order_history_data[i].rider.rider_phone;
+          arr.OrderNumber = this. orderHistoryData[i].order_no;
+          arr.OrderAmount = this. orderHistoryData[i].order_cost;
+          arr.OrderDate = this. orderHistoryData[i].order_date;
+          arr.OrderDistanceKM = this. orderHistoryData[i].order_details.distance;
+          arr.User = this. orderHistoryData[i].user_details.name;
+          arr.From = this. orderHistoryData[i].path[0].name;
+          arr.To = this. orderHistoryData[i].path[1].name;
+          arr.RiderName = this. orderHistoryData[i].rider.rider_name;
+          arr.RiderPhone = this. orderHistoryData[i].rider.rider_phone;
           data2.push(arr);
         }
         data = _.map(data2, row => {
