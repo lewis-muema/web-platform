@@ -6,7 +6,7 @@
       </div>
       <div class="order_details_desc">
         <div v-if="this.order_details.fixed_cost" class="order_details_price">
-          {{ default_currency }} {{ order_details.order_cost }}
+          {{ default_currency }} {{ formatCurrency(order_details.order_cost) }}
         </div>
         <div v-else class="order_details_price">
           <div
@@ -15,9 +15,9 @@
                 this.order_details.customer_min_amount
             "
           >
-            {{ default_currency }} {{ order_details.customer_min_amount }}
+            {{ default_currency }} {{ formatCurrency(order_details.customer_min_amount) }}
           </div>
-          <div v-else>{{ default_currency }} {{ order_details.order_cost }}</div>
+          <div v-else>{{ default_currency }} {{ formatCurrency(order_details.order_cost) }}</div>
         </div>
 
         <div class="order_details_desc_item">
@@ -227,6 +227,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import numeral from 'numeral';
 
 const moment = require('moment');
 
@@ -393,6 +394,9 @@ export default {
     setUserDefaultCurrency() {
       const sessionData = this.$store.getters.getSession;
       this.default_currency = sessionData[sessionData.default].default_currency;
+    },
+    formatCurrency(currency) {
+      return numeral(currency).format('0,0');
     },
   },
   computed: {
