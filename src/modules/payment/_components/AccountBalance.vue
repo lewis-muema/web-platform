@@ -9,7 +9,7 @@
       </div>
       <div class="payinfo--balance">
         Balance <span class="payinfo--balance-el">{{ running_balance }}</span>
-        {{ getDefaultCurrency }}
+        {{ default_currency }}
       </div>
     </div>
   </div>
