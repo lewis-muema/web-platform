@@ -92,6 +92,7 @@ export default {
       switchValid: false,
       admin_user: false,
       logged_user: '',
+      mpesa_valid: false,
     };
   },
   computed: {
@@ -169,7 +170,15 @@ export default {
       this.$router.push(route);
     },
     linkPayments() {
-      if (this.getCountryCode === 'KE') {
+      let session = this.$store.getters.getSession;
+      let phone = session[session.default]['user_phone'];
+      let int_value = phone.substring(0, 4);
+      if (int_value === '+254') {
+        this.mpesa_valid = true;
+      } else {
+        this.mpesa_valid = false;
+      }
+      if (this.getCountryCode === 'KE' && this.mpesa_valid) {
         this.$router.push('/payment/mpesa');
       } else {
         this.$router.push('/payment/card');
