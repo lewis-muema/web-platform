@@ -107,7 +107,7 @@
         <template slot-scope="scope" class="order_cost_amount">
           <div class="order_cost_amount">
             <span v-if="order_history_data[scope.$index]['fixed_cost']" class="">
-              {{ default_currency }}
+              {{ order_history_data[scope.$index]['order_currency'] }}
               {{ formatCurrency(order_history_data[scope.$index]['order_cost']) }}
             </span>
             <span v-else>
@@ -117,11 +117,11 @@
                     order_history_data[scope.$index]['customer_min_amount']
                 "
               >
-                {{ default_currency }}
+                {{ order_history_data[scope.$index]['order_currency'] }}
                 {{ formatCurrency(order_history_data[scope.$index]['customer_min_amount']) }}
               </span>
               <span v-else>
-                {{ default_currency }}
+                {{ order_history_data[scope.$index]['order_currency'] }}
                 {{ formatCurrency(order_history_data[scope.$index]['order_cost']) }}
               </span>
             </span>
@@ -453,17 +453,17 @@ export default {
         let data;
         let data2 = [];
 
-        for (let i = 0; i < this. orderHistoryData.length; i++) {
+        for (let i = 0; i < this.orderHistoryData.length; i++) {
           let arr = {};
-          arr.OrderNumber = this. orderHistoryData[i].order_no;
-          arr.OrderAmount = this. orderHistoryData[i].order_cost;
-          arr.OrderDate = this. orderHistoryData[i].order_date;
-          arr.OrderDistanceKM = this. orderHistoryData[i].order_details.distance;
-          arr.User = this. orderHistoryData[i].user_details.name;
-          arr.From = this. orderHistoryData[i].path[0].name;
-          arr.To = this. orderHistoryData[i].path[1].name;
-          arr.RiderName = this. orderHistoryData[i].rider.rider_name;
-          arr.RiderPhone = this. orderHistoryData[i].rider.rider_phone;
+          arr.OrderNumber = this.orderHistoryData[i].order_no;
+          arr.OrderAmount = this.orderHistoryData[i].order_cost;
+          arr.OrderDate = this.orderHistoryData[i].order_date;
+          arr.OrderDistanceKM = this.orderHistoryData[i].order_details.distance;
+          arr.User = this.orderHistoryData[i].user_details.name;
+          arr.From = this.orderHistoryData[i].path[0].name;
+          arr.To = this.orderHistoryData[i].path[1].name;
+          arr.RiderName = this.orderHistoryData[i].rider.rider_name;
+          arr.RiderPhone = this.orderHistoryData[i].rider.rider_phone;
           data2.push(arr);
         }
         data = _.map(data2, row => {
