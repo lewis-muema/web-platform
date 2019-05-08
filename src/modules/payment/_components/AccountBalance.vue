@@ -46,7 +46,7 @@ export default {
         cop_id: cop_id,
         phone: session[session.default]['user_phone'],
         default_currency: session[session.default].default_currency,
-        rb_currency: this.getDefaultCurrency,
+        rb_currency: session[session.default].default_currency,
       };
       let payload = {
         values: running_balance_payload,
