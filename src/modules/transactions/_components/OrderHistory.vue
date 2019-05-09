@@ -453,26 +453,6 @@ export default {
         let data;
         let data2 = [];
 
-<<<<<<< HEAD
-      for (let i = 0; i < this.orderHistoryData.length; i++) {
-        let arr = {};
-        arr.OrderNumber=this.orderHistoryData[i].order_no;
-        arr.OrderAmount= this.orderHistoryData[i].order_cost;
-        arr.OrderDate=this.orderHistoryData[i].order_date;
-        arr.OrderDistanceKM=this.orderHistoryData[i].order_details.distance;
-        arr.User=this.orderHistoryData[i].user_details.name;
-        arr.From=this.orderHistoryData[i].path[0].name;
-        arr.To=this.orderHistoryData[i].path[1].name;
-        arr.RiderName=this.orderHistoryData[i].rider.rider_name;
-        arr.RiderPhone=this.orderHistoryData[i].rider.rider_phone;
-        data2.push(arr)
-        };
-       data = _.map(data2,(row)=>{return _.pick(row,'OrderNumber','OrderAmount','OrderDate','User','OrderDistanceKM','From','To','RiderName','RiderPhone')});
-      const fileName = 'Order History';
-      const exportType = 'csv';
-
-      exportFromJSON({ data, fileName, exportType })
-=======
         for (let i = 0; i < this.orderHistoryData.length; i++) {
           let arr = {};
           arr.OrderNumber = this.orderHistoryData[i].order_no;
@@ -502,7 +482,6 @@ export default {
         });
         const fileName = 'Order History';
         const exportType = 'csv';
->>>>>>> 69655e18c83675eef4a4a2c302c1347f461bd8b7
 
         exportFromJSON({ data, fileName, exportType });
       } else {

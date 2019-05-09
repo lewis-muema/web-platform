@@ -33,7 +33,6 @@
         </button>
       </div>
     </div>
-<<<<<<< HEAD
      <div class="bg-grey">
       <div class="download_history">
       <el-dropdown @command="handleCommand"  align="right">
@@ -65,11 +64,9 @@
       style="width: 100%"
       :border="true"
       :stripe="true"
-    >
-=======
+    />
 
     <el-table :data="statement_data" style="width: 100%" :border="true" :stripe="true">
->>>>>>> 69655e18c83675eef4a4a2c302c1347f461bd8b7
       <template slot="empty">
         {{ empty_statement_state }}
       </template>
