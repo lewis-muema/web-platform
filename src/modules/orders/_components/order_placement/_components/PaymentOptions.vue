@@ -788,7 +788,6 @@ export default {
     /* start mpesa */
 
     requestMpesaPayment() {
-      console.log('Am here');
       const session = this.$store.getters.getSession;
       let referenceNumber = 'SENDY';
       let cop_id = 0;
