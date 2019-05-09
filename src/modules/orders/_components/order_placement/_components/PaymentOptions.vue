@@ -50,7 +50,10 @@
         </span>
         <span v-else-if="getPriceRequestObject.payment_option !== 2">
           <div v-if="country_code === 'KE'">
-            <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
+            <div
+              class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
+              v-if="mpesa_valid"
+            >
               <div class="home-view-notes-wrapper--item__option">
                 <div class="home-view-notes-wrapper--item__option-div">
                   <el-radio v-model="payment_method" label="1">
@@ -190,6 +193,7 @@ export default {
       country_code: 'KE',
       default_currency: 'KES',
       rb_currency: 'KES',
+      mpesa_valid: false,
     };
   },
 
@@ -1023,6 +1027,16 @@ export default {
       const default_user_currency = session[session.default].default_currency;
       this.default_currency = default_user_currency;
     },
+    checkUserPhone() {
+      let session = this.$store.getters.getSession;
+      let phone = session[session.default]['user_phone'];
+      let int_value = phone.substring(0, 4);
+      if (int_value === '+254') {
+        this.mpesa_valid = true;
+      } else {
+        this.mpesa_valid = false;
+      }
+    },
   },
 
   created() {
@@ -1033,6 +1047,7 @@ export default {
   },
   mounted() {
     this.checkCountryCode();
+    this.checkUserPhone();
   },
 
   destroyed() {
