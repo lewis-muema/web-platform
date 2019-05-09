@@ -10,7 +10,7 @@
     <router-link class="paymethod--link" to="/payment/card">
       Card
     </router-link>
-    <router-link class="paymethod--link" to="/payment/promo">
+    <router-link v-if="getCountryCode === 'KE'" class="paymethod--link" to="/payment/promo">
       Promo Code
     </router-link>
   </div>
