@@ -36,7 +36,32 @@
         </button>
       </div>
     </div>
-
+     <div class="bg-grey">
+      <div class="download_history">
+      <el-dropdown @command="handleCommand"  align="right">
+          <el-button class="download_history" type="primary" size="mini">
+            Download<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+            <el-dropdown-menu class="export_dropdown"slot="dropdown">
+              <el-dropdown-item  command="a">Excel</el-dropdown-item>
+              <!-- <el-dropdown-item  command="b">PDF</el-dropdown-item> -->
+            </el-dropdown-menu>
+      </el-dropdown>
+      </div>
+    </div>
+     <!-- <el-table
+      id="save-pdf"
+      v-loading="loading"
+      :data="statement_data"
+      style="width: 100%;"
+      :border="true"
+      :stripe="true"
+      :row-key="getRowKey"
+      :expand-row-keys="expand_keys"
+      @row-click="expandTableRow"
+      @expand-change="handleRowExpand"
+    /> -->
+    
     <el-table
       :data="statement_data"
       style="width: 100%"
@@ -102,6 +127,9 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { Printd } from 'printd';
+import * as _  from 'lodash';
+import  exportFromJSON from 'export-from-json';
 
 const moment = require('moment');
 
@@ -117,6 +145,9 @@ export default {
       filterData: {
         from_date: '',
         to_date: '',
+        // loading: false,
+        // savepdf: 'save-pdf',
+   
       },
       filteredStatementData: [],
     };
@@ -298,6 +329,34 @@ export default {
         },
       );
     },
+    handleCommand(command){
+      if(command=="a"){
+      let data;
+      let data2 = [];
+
+      for (let i = 0; i < this.statementData.length; i++) {
+        let arr = {};
+        arr.Amount=this.statementData[i].amount;
+        arr.Date= this.statementData[i].date_time;
+        arr.Description=this.statementData[i].description;
+        arr.PaymentMethod=this.statementData[i].pay_method_name;
+        arr.RunningBalance=this.statementData[i].running_balance;
+        arr.Transaction=this.statementData[i].txn;
+        data2.push(arr)
+        };
+       data = _.map(data2,(row)=>{return _.pick(row,'Amount','Date','Description','PaymentMethod','RunningBalance','Transaction')});
+      const fileName = 'Statement';
+      const exportType = 'csv';
+
+      exportFromJSON({ data, fileName, exportType })
+      }
+      else{
+      // const d = new Printd();
+      // // opens the "print dialog" of your browser to print the element
+      // d.print(document.getElementById('save1-pdf'), cssText);
+      }
+
+    }
   },
 };
 </script>
@@ -305,5 +364,11 @@ export default {
 <style lang="css">
 .btn-statement{
   border-width:0px !important;
+}
+.btn-order-hstry{
+  border-width:0px !important;
+}
+.el-dropdown{
+  float: right;
 }
 </style>
