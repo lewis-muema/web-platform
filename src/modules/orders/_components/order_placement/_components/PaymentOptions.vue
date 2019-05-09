@@ -294,7 +294,6 @@ export default {
       }
       return `${text}${this.get_active_vendor_name} Order`;
     },
-
     pay_order_text() {
       let text = 'Payment Options';
       if (this.getPriceRequestObject.payment_option === 2) {
@@ -305,7 +304,6 @@ export default {
         } else {
           if (this.country_code === 'KE') {
             text = 'Cash on delivery';
-            this.payment_method = '3';
           } else {
             text = 'Card Payment';
           }
@@ -1014,6 +1012,27 @@ export default {
         error => false
       );
     },
+    setDefaultPaymentOptions() {
+      this.refreshRunningBalance().then(
+        response => {
+          if (this.country_code === 'KE') {
+            if (this.allowCash) {
+              this.payment_method = '3';
+            } else {
+              this.payment_method = '1';
+            }
+          }
+        },
+        error => {
+          this.doNotification(
+            '2',
+            'Running balance check',
+            'Running balance check has failed, please try again.'
+          );
+          this.loading = false;
+        }
+      );
+    },
 
     /* end card */
 
@@ -1044,6 +1063,7 @@ export default {
     this.refreshRunningBalance();
     this.getUserCards();
     this.instantiateReturnStatus();
+    this.setDefaultPaymentOptions();
   },
   mounted() {
     this.checkCountryCode();
