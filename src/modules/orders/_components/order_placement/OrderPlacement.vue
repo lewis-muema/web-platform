@@ -153,6 +153,8 @@ import {
   faStar,
 } from '@fortawesome/free-solid-svg-icons';
 
+const currencyConversion = require('country-tz-currency');
+
 library.add(
   faPlus,
   faMapMarkerAlt,
@@ -207,6 +209,8 @@ export default {
       get_pickup_filled: '$_orders/$_home/getPickupFilled',
       get_session: 'getSession',
       get_extended_options: '$_orders/$_home/getExtendedOptions',
+      getCountryCode: 'getCountryCode',
+      getDefaultCurrency: 'getDefaultCurrency',
     }),
 
     allow_add_destination() {
@@ -250,6 +254,8 @@ export default {
       clear_price_request_object: '$_orders/$_home/clearPriceRequestObject',
       clear_extra_destinations: '$_orders/$_home/clearExtraDestination',
       resetState: '$_orders/$_home/resetState',
+      setCountryCode: '$_orders/$_home/setCountryCode',
+      setDefaultCurrency: '$_orders/$_home/setDefaultCurrency',
     }),
 
     ...mapActions({
@@ -306,7 +312,9 @@ export default {
         //console.log('not a place', index);
         return;
       }
-
+      const countryIndex = place.address_components.findIndex(country_code =>
+        country_code.types.includes('country')
+      );
       let path_obj = {
         name: place.name,
         coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
@@ -322,6 +330,7 @@ export default {
           Typed: '',
           Vicinity: 'Not Indicated',
           Address: 'Not Indicated',
+          country_code: place.address_components[countryIndex].short_name,
         },
       };
       let path_payload = {
@@ -406,6 +415,9 @@ export default {
         promotion_status: false,
         destination_paid_status: false,
         is_edit: false,
+        country_code: this.getCountryCode,
+        default_currency: this.getDefaultCurrency,
+        preffered_currency: this.getDefaultCurrency,
       };
       let json_decoded_path = JSON.stringify(obj);
       infor.path = json_decoded_path;
@@ -579,7 +591,6 @@ export default {
   created() {
     this.instantiateHomeComponent();
   },
-
   destroyed() {
     this.destroyOrderPlacement();
   },

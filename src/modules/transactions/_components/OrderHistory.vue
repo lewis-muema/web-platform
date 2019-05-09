@@ -1,8 +1,5 @@
 <template lang="html">
-  <div
-    id="order_hist_container"
-    class=""
-  >
+  <div id="order_hist_container" class="">
     <div class="section--filter-wrap">
       <div class="section--filter-input-wrap">
         <el-select
@@ -11,10 +8,7 @@
           class="section--filter-input"
           placeholder="Users"
         >
-          <el-option
-            label="All Users"
-            value="-1"
-          />
+          <el-option label="All Users" value="-1" />
           <el-option
             v-for="user in copUsers"
             :key="user.cop_user_id"
@@ -58,15 +52,15 @@
     </div>
     <div class="bg-grey">
       <div class="download_history">
-      <el-dropdown @command="handleCommand"  align="right">
+        <el-dropdown @command="handleCommand" align="right">
           <el-button class="download_history" type="primary" size="mini">
             Download<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
-            <el-dropdown-menu class="export_dropdown"slot="dropdown">
-              <el-dropdown-item  command="a">Excel</el-dropdown-item>
-              <el-dropdown-item  command="b">PDF</el-dropdown-item>
-            </el-dropdown-menu>
-      </el-dropdown>
+          <el-dropdown-menu class="export_dropdown" slot="dropdown">
+            <el-dropdown-item command="a">Excel</el-dropdown-item>
+            <el-dropdown-item command="b">PDF</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
     </div>
     <el-table
@@ -89,15 +83,8 @@
           <router-view />
         </template>
       </el-table-column>
-      <el-table-column
-        label="Txn"
-        prop="order_no"
-        width="180"
-      />
-      <el-table-column
-        label="Date"
-        prop="order_date"
-      >
+      <el-table-column label="Txn" prop="order_no" width="180" />
+      <el-table-column label="Date" prop="order_date">
         <template slot-scope="props">
           {{ order_history_data[props.$index]['order_date'] | moment }}
         </template>
@@ -112,31 +99,33 @@
       />
       <el-table-column
         label="Amount"
-        width="80"
+        width="150"
         header-align="center"
         align="center"
         :formatter="formatAmount"
       >
-        <template slot-scope="scope">
-          <span
-            v-if="order_history_data[scope.$index]['fixed_cost']"
-            class=""
-          >
-            {{ order_history_data[scope.$index]['order_cost'] }}
-          </span>
-          <span v-else>
-            <span
-              v-if="
-                order_history_data[scope.$index]['confirm_status'] === 0 &&
-                  order_history_data[scope.$index]['customer_min_amount']
-              "
-            >
-              {{ order_history_data[scope.$index]['customer_min_amount'] }}
+        <template slot-scope="scope" class="order_cost_amount">
+          <div class="order_cost_amount">
+            <span v-if="order_history_data[scope.$index]['fixed_cost']" class="">
+              {{ order_history_data[scope.$index]['order_currency'] }}
+              {{ formatCurrency(order_history_data[scope.$index]['order_cost']) }}
             </span>
             <span v-else>
-              {{ order_history_data[scope.$index]['order_cost'] }}
+              <span
+                v-if="
+                  order_history_data[scope.$index]['confirm_status'] === 0 &&
+                    order_history_data[scope.$index]['customer_min_amount']
+                "
+              >
+                {{ order_history_data[scope.$index]['order_currency'] }}
+                {{ formatCurrency(order_history_data[scope.$index]['customer_min_amount']) }}
+              </span>
+              <span v-else>
+                {{ order_history_data[scope.$index]['order_currency'] }}
+                {{ formatCurrency(order_history_data[scope.$index]['order_cost']) }}
+              </span>
             </span>
-          </span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -150,18 +139,12 @@
           {{ order_history_data[scope.$index]['path'].length - 1 }}
         </template>
       </el-table-column>
-      <el-table-column
-        label="From"
-        prop="path"
-      >
+      <el-table-column label="From" prop="path">
         <template slot-scope="scope">
           {{ getOrderFromName(order_history_data[scope.$index]['path']) }}
         </template>
       </el-table-column>
-      <el-table-column
-        label="To"
-        prop="path"
-      >
+      <el-table-column label="To" prop="path">
         <template slot-scope="scope">
           {{ getOrderToName(order_history_data[scope.$index]['path']) }}
         </template>
@@ -186,9 +169,9 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { Printd } from 'printd';
-import * as _  from 'lodash';
-import  exportFromJSON from 'export-from-json';
-
+import * as _ from 'lodash';
+import exportFromJSON from 'export-from-json';
+import numeral from 'numeral';
 
 const moment = require('moment');
 
@@ -247,6 +230,7 @@ export default {
       loading: false,
       savepdf: 'save-pdf',
       sessionData: {},
+      default_currency: '',
     };
   },
   computed: {
@@ -257,8 +241,8 @@ export default {
     }),
     inactive_filter() {
       return (
-        this.filterData.user === ''
-        && (this.filterData.from_date === '' || this.filterData.to_date === '')
+        this.filterData.user === '' &&
+        (this.filterData.from_date === '' || this.filterData.to_date === '')
       );
     },
     order_history_data() {
@@ -280,6 +264,7 @@ export default {
   },
   mounted() {
     this.populateOrders();
+    this.setUserDefaultCurrency();
   },
   methods: {
     populateOrders() {
@@ -306,6 +291,10 @@ export default {
       if (sessionData.default === 'biz') {
         this.requestCopUsers();
       }
+    },
+    setUserDefaultCurrency() {
+      const sessionData = this.$store.getters.getSession;
+      this.default_currency = sessionData[sessionData.default].default_currency;
     },
     filterTableData() {
       this.loading = true;
@@ -436,7 +425,7 @@ export default {
         () => {
           this.order_history_text = 'Search';
           this.empty_orders_state = 'Order History Failed to Fetch';
-        },
+        }
       );
     },
     requestCopUsers() {
@@ -456,14 +445,15 @@ export default {
         },
         () => {
           this.empty_users_state = 'Cop Users Failed to Fetch';
-        },
+        }
       );
     },
-    handleCommand(command){
-      if(command=="a"){
-      let data;
-      let data2 = [];
+    handleCommand(command) {
+      if (command == 'a') {
+        let data;
+        let data2 = [];
 
+<<<<<<< HEAD
       for (let i = 0; i < this.orderHistoryData.length; i++) {
         let arr = {};
         arr.OrderNumber=this.orderHistoryData[i].order_no;
@@ -482,13 +472,47 @@ export default {
       const exportType = 'csv';
 
       exportFromJSON({ data, fileName, exportType })
+=======
+        for (let i = 0; i < this.orderHistoryData.length; i++) {
+          let arr = {};
+          arr.OrderNumber = this.orderHistoryData[i].order_no;
+          arr.OrderAmount = this.orderHistoryData[i].order_cost;
+          arr.OrderDate = this.orderHistoryData[i].order_date;
+          arr.OrderDistanceKM = this.orderHistoryData[i].order_details.distance;
+          arr.User = this.orderHistoryData[i].user_details.name;
+          arr.From = this.orderHistoryData[i].path[0].name;
+          arr.To = this.orderHistoryData[i].path[1].name;
+          arr.RiderName = this.orderHistoryData[i].rider.rider_name;
+          arr.RiderPhone = this.orderHistoryData[i].rider.rider_phone;
+          data2.push(arr);
+        }
+        data = _.map(data2, row => {
+          return _.pick(
+            row,
+            'OrderNumber',
+            'OrderAmount',
+            'OrderDate',
+            'User',
+            'OrderDistanceKM',
+            'From',
+            'To',
+            'RiderName',
+            'RiderPhone'
+          );
+        });
+        const fileName = 'Order History';
+        const exportType = 'csv';
+>>>>>>> 69655e18c83675eef4a4a2c302c1347f461bd8b7
 
+        exportFromJSON({ data, fileName, exportType });
+      } else {
+        const d = new Printd();
+        // opens the "print dialog" of your browser to print the element
+        d.print(document.getElementById('save-pdf'), cssText);
       }
-      else{
-      const d = new Printd();
-      // opens the "print dialog" of your browser to print the element
-      d.print(document.getElementById('save-pdf'), cssText);
-      }
+    },
+    formatCurrency(currency) {
+      return numeral(currency).format('0,0');
     },
   },
 };

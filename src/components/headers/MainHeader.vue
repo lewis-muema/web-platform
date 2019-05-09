@@ -2,15 +2,12 @@
   <div class="header">
     <div class="header--item">
       <div class="header--item__left">
-        <a
-          class="header--item__left"
-          @click="linkRoute('/orders')"
-        >
+        <a class="header--item__left" @click="linkRoute('/orders')">
           <img
             src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
             alt="logo"
             class="logo"
-          >
+          />
         </a>
       </div>
     </div>
@@ -18,7 +15,7 @@
       <nav>
         <ul>
           <li class="nav--menu-inactive">
-            <a> Helpline : 0709 779 779</a>
+            <a> Helpline : +254 709 779 779</a>
           </li>
           <li class="nav--menu-inactive">
             <a>Hi {{ logged_user }}</a>
@@ -31,9 +28,8 @@
               <li v-if="switchValid">
                 <a @click="switchAccount()">
                   Switch to
-                  <span v-if="this.$store.getters.getSession.default === 'peer'">
-                    Business
-                  </span><span v-else>
+                  <span v-if="this.$store.getters.getSession.default === 'peer'"> Business </span
+                  ><span v-else>
                     Personal
                   </span>
                   account
@@ -45,7 +41,7 @@
                 </a>
               </li>
               <li>
-                <a @click="linkRoute('/payment/mpesa')">
+                <a @click="linkPayments()">
                   Payment
                 </a>
               </li>
@@ -72,10 +68,7 @@
                 </a>
               </li>
               <li class="menu--last-child">
-                <a
-                  class="menu--last-child-link"
-                  @click="logOut"
-                >
+                <a class="menu--last-child-link" @click="logOut">
                   Log Out
                 </a>
               </li>
@@ -99,11 +92,13 @@ export default {
       switchValid: false,
       admin_user: false,
       logged_user: '',
+      mpesa_valid: false,
     };
   },
   computed: {
     ...mapGetters({
       getSess: 'getSession',
+      getCountryCode: 'getCountryCode',
     }),
   },
   watch: {
@@ -173,6 +168,21 @@ export default {
     },
     linkRoute(route) {
       this.$router.push(route);
+    },
+    linkPayments() {
+      let session = this.$store.getters.getSession;
+      let phone = session[session.default]['user_phone'];
+      let int_value = phone.substring(0, 4);
+      if (int_value === '+254') {
+        this.mpesa_valid = true;
+      } else {
+        this.mpesa_valid = false;
+      }
+      if (this.getCountryCode === 'KE' && this.mpesa_valid) {
+        this.$router.push('/payment/mpesa');
+      } else {
+        this.$router.push('/payment/card');
+      }
     },
   },
 };

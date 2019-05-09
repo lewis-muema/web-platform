@@ -18,4 +18,10 @@ export default {
   setSessDefault(state, type) {
     state.session.default = type;
   },
+  setCountryCode(state, code) {
+    state.country_code = code;
+  },
+  setDefaultCurrency(state, defaultCurrency) {
+    state.default_currency = defaultCurrency;
+  },
 };

@@ -36,6 +36,8 @@ export default {
       pair_rider_status: false,
       pair_serial_number: '',
       pair_rider_phone: '',
+      country_code: '',
+      default_currency: '',
     };
   },
   actions,

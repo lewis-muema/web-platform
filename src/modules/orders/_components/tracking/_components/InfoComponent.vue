@@ -49,20 +49,27 @@
                         <span class="infor-top-bar-text">
                           Minimum Cost :
                         </span>
-                        <span> KES {{ tracking_data.package_details.customer_min_amount }} </span>
+                        <span>
+                          {{ tracking_data.price_tier.currency }}
+                          {{ tracking_data.package_details.customer_min_amount }}
+                        </span>
                       </span>
                       <span v-else>
                         <span class="infor-top-bar-text">
                           Cost :
                         </span>
-                        <span> KES {{ tracking_data.amount }} </span>
+                        <span>
+                          {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                        </span>
                       </span>
                     </span>
                     <span v-else>
                       <span class="infor-top-bar-text">
                         Cost :
                       </span>
-                      <span> KES {{ tracking_data.amount }} </span>
+                      <span>
+                        {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                      </span>
                     </span>
                   </div>
                 </div>
@@ -269,7 +276,8 @@
                           </div>
                           <div v-else>
                             <p>
-                              Your order has been received.The Order cost is KES
+                              Your order has been received.The Order cost is
+                              {{ tracking_data.price_tier.currency }}
                               {{ tracking_data.amount }}
                             </p>
 
@@ -297,17 +305,23 @@
                           <div v-else>
                             <div class="">
                               <div v-if="this.accType === 1" class="">
-                                <p>Price has been confirmed to be Ksh {{ tracking_data.amount }}</p>
+                                <p>
+                                  Price has been confirmed to be
+                                  {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                                </p>
                               </div>
                               <div v-else class="">
                                 <div v-if="this.myRb <= 0">
                                   <p>
-                                    Price has been confirmed to be Ksh {{ tracking_data.amount }}
+                                    Price has been confirmed to be
+                                    {{ tracking_data.price_tier.currency }}
+                                    {{ tracking_data.amount }}
                                   </p>
                                 </div>
                                 <div v-else>
                                   <p>
-                                    Price has been confirmed to be Ksh
+                                    Price has been confirmed to be
+                                    {{ tracking_data.price_tier.currency }}
                                     {{ tracking_data.amount }}.Choose payment option below
                                   </p>
                                   <div class="">
@@ -548,12 +562,16 @@
                           !this.tracking_data.fixed_cost
                       "
                     >
-                      Minimum Amount : KES
+                      Minimum Amount : {{ tracking_data.price_tier.currency }}
                       {{ tracking_data.package_details.customer_min_amount }}
                     </div>
-                    <div v-else>Cost : KES {{ tracking_data.amount }}</div>
+                    <div v-else>
+                      Cost : {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                    </div>
                   </div>
-                  <div v-else>Cost: KES {{ tracking_data.amount }}</div>
+                  <div v-else>
+                    Cost: {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                  </div>
                 </div>
                 <div class="mobile-order-status">Status : {{ getStatus }}</div>
                 <div class="">
@@ -608,12 +626,14 @@
                         !this.tracking_data.fixed_cost
                     "
                   >
-                    Minimum Amount : KES
+                    Minimum Amount : {{ tracking_data.price_tier.currency }}
                     {{ tracking_data.package_details.customer_min_amount }}
                   </div>
-                  <div v-else>KES {{ tracking_data.amount }}</div>
+                  <div v-else>
+                    {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                  </div>
                 </div>
-                <div v-else>KES {{ tracking_data.amount }}</div>
+                <div v-else>{{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}</div>
                 <div class="">
                   <div class="">
                     {{ tracking_data.order_no }}

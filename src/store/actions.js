@@ -37,6 +37,7 @@ export default {
       'insert_rate',
       'verify_phone',
       'check_verification',
+      'geocountry',
     ];
     if (
       /^[\],:{}\s]*$/.test(
