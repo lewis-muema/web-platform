@@ -814,6 +814,7 @@ export default {
         cop_id,
         phone: user_phone,
         email: user_email,
+        currency: this.activeVendorPriceData.currency,
       };
       const full_payload = {
         values: mpesa_payload,

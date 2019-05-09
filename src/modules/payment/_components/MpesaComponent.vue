@@ -118,7 +118,6 @@ export default {
     },
 
     requestMpesaPaymentPoll() {
-
       const session = this.$store.getters.getSession;
       let cop_id = 0;
       if (session.default === 'biz') {
@@ -173,7 +172,6 @@ export default {
               //   root: true
               // });
               that._terminateMpesaPaymentRequest({});
-
             }
           }, 10000 * poll_count);
         })(poll_count);
@@ -184,14 +182,12 @@ export default {
       const that = this;
       this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
         response => {
-
           if (response.length > 0) {
             response = response[0];
           }
           if (response.status === 200) {
             // check if rb has changed
             const new_rb = response.data.running_balance;
-
 
             if (new_rb < old_rb) {
               that._completeMpesaPaymentRequest({});
@@ -202,9 +198,8 @@ export default {
           return false;
         },
         error => {
-
           return false;
-        },
+        }
       );
     },
 
@@ -234,8 +229,8 @@ export default {
         cop_id,
         phone: this.mpesa_payment_data.phone_number, // confirm about this later
         email: user_email,
+        currency: session[session.default]['default_currency'],
       };
-
 
       // TODO: implement the discount bundles if needed
 
@@ -245,7 +240,6 @@ export default {
         app: 'NODE_PRIVATE_API',
         endpoint: 'initiate_mpesa',
       };
-
 
       this.payment_state = 'requesting Mpesa Payment';
 
@@ -265,7 +259,7 @@ export default {
         },
         error => {
           this.payment_state = 'Mpesa Payment Failed';
-        },
+        }
       );
     },
   },
