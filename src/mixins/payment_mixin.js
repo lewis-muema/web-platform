@@ -28,7 +28,7 @@ const PaymentMxn = {
       return repsonseData;
     },
     // this function will complete transactions for card payments already in the system
-    handleSavedCard(card, orderOptions = false) {
+    handleSavedCard(setCurrency, card, orderOptions = false) {
       const session = this.$store.getters.getSession;
       let userId = 0;
       let copId = 0;
@@ -52,6 +52,7 @@ const PaymentMxn = {
         user_id: userId,
         cop_id: copId,
         user_phone: userPhone,
+        currency: setCurrency,
       };
       // encrypt the card payload
       cardPayload = Mcrypt.encrypt(cardPayload);
@@ -127,7 +128,7 @@ const PaymentMxn = {
       );
       return true;
     },
-    handleNewCardPayment() {
+    handleNewCardPayment(setCurrency) {
       // sort encryption
       const session = this.$store.getters.getSession;
 
@@ -164,6 +165,7 @@ const PaymentMxn = {
         user_phone: userPhone,
         user_name: userName,
         complete_payment: true,
+        currency: setCurrency,
       };
 
       cardPayload = Mcrypt.encrypt(cardPayload);
