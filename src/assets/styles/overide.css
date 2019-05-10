@@ -587,7 +587,7 @@ span.el-pagination__jump {
 }
 
 .el-popover{
-    background-color: #1782c5;
+    background-color: #1782c5 !important;
     color: #fff !important;
 }
 .el-popper[x-placement^=right] .popper__arrow::after{

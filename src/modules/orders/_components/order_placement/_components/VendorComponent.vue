@@ -84,10 +84,7 @@
                   class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right"
                 >
                   <el-popover placement="right" width="350" trigger="hover">
-                    <div
-                      class="reset-font tier_description_background"
-                      v-html="j.tier_description"
-                    />
+                    <div class="reset-font" v-html="j.tier_description" />
                     <span slot="reference" class="extra_info_background">
                       <i class="el-icon-info" />
                     </span>
