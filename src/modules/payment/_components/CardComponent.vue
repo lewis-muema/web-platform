@@ -247,13 +247,15 @@ export default {
       setStripeUserId: '$_payment/setStripeUserId',
     }),
     getPaymentCard() {
+      const session = this.$store.getters.getSession;
+      const setCurrency = session[session.default]['default_currency'];
       if (this.payment_card.startsWith('2_')) {
         const card = this.get_saved_cards.find(
           card_details => card_details.last4 === this.payment_card.slice(2)
         );
-        this.handleSavedCard(card);
+        this.handleSavedCard(setCurrency, card);
       } else {
-        this.handleNewCardPayment();
+        this.handleNewCardPayment(setCurrency);
       }
     },
 

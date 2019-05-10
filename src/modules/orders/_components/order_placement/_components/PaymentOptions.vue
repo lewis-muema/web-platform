@@ -514,7 +514,8 @@ export default {
           const card = this.get_saved_cards.find(
             card_details => card_details.last4 === this.payment_method.slice(2)
           );
-          this.handleSavedCard(card, true);
+          const setCurrency = this.activeVendorPriceData.currency;
+          this.handleSavedCard(setCurrency, card, true);
         } else {
           // console.log('not handled payment method', this.payment_method);
         }
