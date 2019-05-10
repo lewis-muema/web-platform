@@ -1051,10 +1051,10 @@ export default {
       let session = this.$store.getters.getSession;
       let phone = session[session.default]['user_phone'];
       let int_value = phone.substring(0, 4);
-      if (int_value === '+254') {
-        this.mpesa_valid = true;
-      } else {
+      if (int_value === '+256') {
         this.mpesa_valid = false;
+      } else {
+        this.mpesa_valid = true;
       }
     },
   },
