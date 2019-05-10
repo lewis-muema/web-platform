@@ -331,4 +331,7 @@
 .home-carrier-type-fade-enter, .home-carrier-type-fade-leave-to {
   opacity: 0;
 }
+.tier_description_background{
+  background-color: #1782C5 ;
+}
 /* end transitions */
