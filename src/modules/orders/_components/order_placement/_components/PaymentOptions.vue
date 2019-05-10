@@ -49,7 +49,7 @@
           <!-- Nothing displayed -->
         </span>
         <span v-else-if="getPriceRequestObject.payment_option !== 2">
-          <div v-if="country_code === 'KE'">
+          <div v-if="country_code === 'KE' && default_currency === 'KES'">
             <div
               class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
               v-if="mpesa_valid"
