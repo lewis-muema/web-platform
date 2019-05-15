@@ -7,6 +7,7 @@ const state = {
   phone: '',
   email: '',
   name: '',
+  country_code: '',
 };
 
 export default {

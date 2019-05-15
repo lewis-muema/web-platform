@@ -12,4 +12,7 @@ export default {
   setName(state, val) {
     state.name = val;
   },
+  setUserCountryCode(state, val) {
+    state.country_code = val;
+  },
 };

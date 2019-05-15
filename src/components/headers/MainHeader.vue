@@ -15,7 +15,7 @@
       <nav>
         <ul>
           <li class="nav--menu-inactive">
-            <a> Helpline : +254 709 779 779</a>
+            <a> Helpline : {{ helpline_contact }}</a>
           </li>
           <li class="nav--menu-inactive">
             <a>Hi {{ logged_user }}</a>
@@ -93,6 +93,7 @@ export default {
       admin_user: false,
       logged_user: '',
       mpesa_valid: false,
+      helpline_contact: '',
     };
   },
   computed: {
@@ -118,7 +119,7 @@ export default {
       const session = this.$store.getters.getSession;
       const fullName = session[session.default].user_name.split(' ');
       const firstName = fullName[0];
-
+      this.helpline_contact = session.customer_care_number;
       if (session.default === 'biz') {
         // Admin
         if (session[session.default].user_type === 2) {
