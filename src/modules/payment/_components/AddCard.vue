@@ -224,6 +224,7 @@ export default {
               level: 1,
               message: 'card was added successfully',
             };
+            this.$router.push('/orders');
             this.payment_state = 'Payment Success';
             const acc = this.$store.getters.getSession;
 
@@ -254,7 +255,7 @@ export default {
           that.$store.dispatch('show_notification', notification, {
             root: true,
           });
-        },
+        }
       );
     },
 

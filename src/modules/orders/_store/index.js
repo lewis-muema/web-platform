@@ -21,6 +21,12 @@ export default {
         vendors: {},
       },
       ongoing_show: 1,
+      home_locations: [],
+      order_path: [],
+      location_path: [],
+      outer_price_request: {},
+      outer_active_vendor_data: {},
+      outer_active_package_data: 'small',
     };
   },
   actions,

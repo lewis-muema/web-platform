@@ -104,7 +104,21 @@ const unsetLocationMarker = (state, index) => {
 //   state.map.vendors.splice(0);
 //   state.map.polyline.path = '';
 // };
-
+const setHomeLocations = (state, payload) => {
+  state.home_locations = payload;
+};
+const setStorePath = (state, val) => {
+  state.location_path.splice(val.index, val.index === 0 ? 0 : 1, val.path);
+};
+const setOuterPriceRequestObject = (state, payload) => {
+  state.outer_price_request = payload;
+};
+const setOuterActiveVendorDetails = (state, payload) => {
+  state.outer_active_vendor_data = payload;
+};
+const setOuterActivePackageClass = (state, payload) => {
+  state.outer_active_package_data = payload;
+};
 export default {
   setPage,
   toggleOngoing,
@@ -117,4 +131,9 @@ export default {
   removePolyline,
   setLocationMarker,
   unsetLocationMarker,
+  setHomeLocations,
+  setStorePath,
+  setOuterPriceRequestObject,
+  setOuterActiveVendorDetails,
+  setOuterActivePackageClass,
 };

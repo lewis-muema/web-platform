@@ -211,6 +211,9 @@ export default {
       get_extended_options: '$_orders/$_home/getExtendedOptions',
       getCountryCode: 'getCountryCode',
       getDefaultCurrency: 'getDefaultCurrency',
+      getHomeLocations: '$_orders/getHomeLocations',
+      getStoreOrderPath: '$_orders/getStorePath',
+      getOuterPriceRequestData: '$_orders/getOuterPriceRequestData',
     }),
 
     allow_add_destination() {
@@ -225,9 +228,9 @@ export default {
 
     show_vendor_view() {
       return (
-        Array.isArray(this.get_order_path) &&
-        this.get_order_path.length > 1 &&
-        this.get_price_request_object.hasOwnProperty('economy_price_tiers')
+        Array.isArray(this.getStoreOrderPath) &&
+        this.getStoreOrderPath.length > 1 &&
+        this.getOuterPriceRequestData.hasOwnProperty('economy_price_tiers')
       );
     },
   },
@@ -256,6 +259,9 @@ export default {
       resetState: '$_orders/$_home/resetState',
       setCountryCode: '$_orders/$_home/setCountryCode',
       setDefaultCurrency: '$_orders/$_home/setDefaultCurrency',
+      setHomeLocations: '$_orders/setHomeLocations',
+      setStorePath: '$_orders/setStorePath',
+      setOuterPriceRequestObject: '$_orders/setOuterPriceRequestObject',
     }),
 
     ...mapActions({
@@ -344,6 +350,7 @@ export default {
       this.resetLocation(index);
       this.setMarker(place.geometry.location.lat(), place.geometry.location.lng(), index);
       this.set_order_path(path_payload);
+      this.setStorePath(path_payload);
       this.setLocationInModel(index, place.name);
       this.set_location_name(location_name_payload);
       if (index === 0) {
@@ -388,7 +395,7 @@ export default {
     },
 
     createPriceRequestObject() {
-      let obj = { path: this.get_order_path };
+      let obj = { path: this.getStoreOrderPath };
       let acc = {};
       let session = this.$store.getters.getSession;
       if ('default' in session) {
@@ -432,8 +439,11 @@ export default {
       };
       this.loading = true;
       let previous_active_vendor = this.get_active_vendor_name;
+      let defined_locations = this.locations;
       this.requestPriceQuote(payload).then(
         response => {
+          this.setHomeLocations(defined_locations);
+          this.setOuterPriceRequestObject(response.values);
           this.loading = false;
           this.setDefaultPackageClass();
           this.setDefaultVendorType(previous_active_vendor);
@@ -586,10 +596,20 @@ export default {
       this.registerPaymentModule();
       this.registerOrderPlacementModule();
     },
+    initializeOrderFlow() {
+      const stored_location = this.getHomeLocations;
+      if (stored_location.length > 1) {
+        this.locations = stored_location;
+        this.setPickupFilled(true);
+        this.setPickupFilled(true);
+        this.attemptPriceRequest();
+      }
+    },
   },
 
   created() {
     this.instantiateHomeComponent();
+    this.initializeOrderFlow();
   },
   destroyed() {
     this.destroyOrderPlacement();
