@@ -161,6 +161,7 @@
   flex-basis: auto;
   flex-direction: row;
   flex-wrap: nowrap;
+  width: 100%;
 }
 .homeview-locations-options{
   display: flex;
