@@ -66,7 +66,7 @@
     <el-table
       id="save-pdf"
       v-loading="loading"
-      :data="order_history_data"
+      :data="orderHistoryData"
       style="width: 100%;"
       :border="true"
       :stripe="true"
