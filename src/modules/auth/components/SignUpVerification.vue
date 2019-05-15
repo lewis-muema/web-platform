@@ -65,19 +65,18 @@ export default {
       phone: '',
       message: '',
       currency: '',
-      cntry_code: '',
     };
   },
   methods: {
     ...mapActions({
       requestSignUpSegmentation: '$_auth/requestSignUpSegmentation',
-      requestCountryCode: '$_auth/requestCountryCode',
     }),
     ...mapGetters({
       Password: '$_auth/requestPassword',
       Email: '$_auth/requestEmail',
       Phone: '$_auth/requestPhone',
       Name: '$_auth/requestName',
+      getUserCountryCode: '$_auth/getUserCountryCode',
     }),
     peer_set() {
       this.checkUserLocation();
@@ -88,7 +87,7 @@ export default {
       values.password = this.Password();
       values.type = 'peer';
       values.platform = 'web';
-      values.country_code = this.cntry_code;
+      values.country_code = this.getUserCountryCode;
       values.default_currency = this.currency;
       const full_payload = {
         values,
@@ -164,7 +163,7 @@ export default {
         values.email = this.Email();
         values.password = this.Password();
         values.type = 'biz';
-        values.country_code = this.cntry_code;
+        values.country_code = this.getUserCountryCode;
         values.default_currency = this.currency;
         const full_payload = {
           values,
@@ -201,35 +200,10 @@ export default {
       }
     },
     checkUserLocation() {
-      let markedCoords = '';
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          let lat = position.coords.latitude;
-          let long = position.coords.longitude;
+      let country_code_data = currencyConversion.getCountryByCode(this.getUserCountryCode);
+      this.currency = country_code_data.currencyCode;
+    },
 
-          markedCoords = `${lat},${long}`;
-          this.getCode(markedCoords);
-        });
-      }
-    },
-    getCode(position) {
-      const payload = {};
-      payload.coordinates = position;
-      let full_payload = {
-        values: payload,
-        app: 'PRIVATE_API',
-        endpoint: 'geocountry',
-      };
-      this.requestCountryCode(full_payload).then(
-        response => {
-          let code = response.country_code;
-          this.cntry_code = response.country_code;
-          let country_code_data = currencyConversion.getCountryByCode(code);
-          this.currency = country_code_data.currencyCode;
-        },
-        error => {}
-      );
-    },
     doNotification(level, title, message) {
       const notification = {
         title,

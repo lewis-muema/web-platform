@@ -147,6 +147,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
 export default {
   name: 'SignUp',
@@ -177,6 +178,7 @@ export default {
       setPhone: '$_auth/setPhone',
       setEmail: '$_auth/setEmail',
       setName: '$_auth/setName',
+      setUserCountryCode: '$_auth/setUserCountryCode',
     }),
     ...mapActions({
       requestSignUpCheck: '$_auth/requestSignUpCheck',
@@ -187,6 +189,8 @@ export default {
       if (this.name !== '' && this.email !== '' && this.phone !== '' && this.password !== '') {
         const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
         const phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+        const phoneNumber = parsePhoneNumberFromString(this.phone);
+        this.setUserCountryCode(phoneNumber.country);
         let email_valid = true;
         for (let i = 0; i < this.errors.items.length; i++) {
           if (this.errors.items[i].field === 'email') {
