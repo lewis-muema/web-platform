@@ -80,7 +80,7 @@
           <input v-model="u_terms" type="checkbox" name="u_terms" class="hiddeny" />
           <span class="sign-holder__smaller">
             By creating a Sendy account you’re agreeing to the
-            <a class=" sign-holder__grey" href="https://sendyit.com/terms/show">
+            <a class=" sign-holder__grey" href="https://sendyit.com/terms">
               terms and conditions
             </a>
           </span>
