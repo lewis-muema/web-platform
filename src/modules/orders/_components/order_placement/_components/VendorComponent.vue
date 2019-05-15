@@ -544,6 +544,8 @@ export default {
       getNOOfLoaders: '$_orders/$_home/getNOOfLoaders',
       getOrderState: '$_orders/$_home/getOrderState',
       getPairRiderNextStep: '$_orders/$_home/getPairRiderNextStep',
+      getOuterActiveVendorDetails: '$_orders/getOuterActiveVendorDetails',
+      getOuterActivePackageClass: '$_orders/getOuterActivePackageClass',
     }),
 
     vehicleDetailsPlaceholder() {
@@ -642,6 +644,8 @@ export default {
       setPairWithRiderStatus: '$_orders/$_home/setPairWithRiderStatus',
       setPairSerialNumber: '$_orders/$_home/setPairSerialNumber',
       setPairRiderPhone: '$_orders/$_home/setPairRiderPhone',
+      setOuterActiveVendorDetails: '$_orders/setOuterActiveVendorDetails',
+      setOuterActivePackageClass: '$_orders/setOuterActivePackageClass',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -732,6 +736,7 @@ export default {
 
     setActivePackageClassWrapper(name) {
       this.setActivePackageClass(name);
+      this.setOuterActivePackageClass(name);
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
     },
 
@@ -909,6 +914,7 @@ export default {
     setVendorDetails(vendorObject) {
       this.setActiveVendorName(vendorObject.vendor_name);
       this.setActiveVendorDetails(vendorObject);
+      this.setOuterActiveVendorDetails(vendorObject);
       this.reCheckCarrierType();
       this.trackMixpanelEvent(`Select Vendor: ${vendorObject.vendor_name}`);
     },
@@ -956,6 +962,17 @@ export default {
       this.additional_loader = this.getAdditionalLoaderStatus;
       this.customer_min_amount = this.getCustomerMinAmount;
     },
+    initiateStoreData() {
+      const activeVendorName = this.getOuterActiveVendorDetails;
+      const activeVendorClass = this.getOuterActivePackageClass;
+      if ('vendor_name' in activeVendorName && activeVendorClass !== '') {
+        this.setActiveVendorName(activeVendorName.vendor_name);
+        this.setActivePackageClass(activeVendorClass);
+        this.setDefaultCarrierType();
+        this.setOrderState(2);
+        this.setExtendOptions(true);
+      }
+    },
 
     doNotification(level, title, message) {
       this.$store.commit('setNotificationStatus', true);
@@ -985,6 +1002,7 @@ export default {
   created() {
     this.setFirstTimeUser();
     this.initializeVendorComponent();
+    this.initiateStoreData();
   },
 
   mounted() {
