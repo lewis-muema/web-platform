@@ -104,7 +104,7 @@ export default {
     }
 
     return new Promise((resolve, reject) => {
-      axios.post(url + payload.endpoint, payload.values, config).then(
+      axios.post(`${url}${payload.endpoint}`, payload.values, config).then(
         (response) => {
           if (response.data === 401 || response.data === 403) {
             const notification = {
