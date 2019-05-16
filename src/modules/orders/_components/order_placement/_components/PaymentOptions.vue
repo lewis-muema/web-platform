@@ -299,7 +299,7 @@ export default {
       if (this.getPriceRequestObject.payment_option === 2) {
         text = 'Post Pay';
       } else {
-        if (this.abs_running_balance > 0) {
+        if (this.abs_running_balance < 0) {
           text = 'Payment Options';
         } else {
           if (this.country_code === 'KE') {
@@ -354,10 +354,10 @@ export default {
     },
 
     balance_quote_label() {
-      if (this.getRunningBalance > 0) {
+      if (this.getRunningBalance < 0) {
         return 'You Owe';
       }
-      if (this.getRunningBalance + this.order_cost > 0) {
+      if (this.getRunningBalance - this.order_cost < 0) {
         return 'Your Balance';
       }
     },
@@ -1070,6 +1070,7 @@ export default {
   mounted() {
     this.checkCountryCode();
     this.checkUserPhone();
+    console.log(this.abs_running_balance);
   },
 
   destroyed() {
