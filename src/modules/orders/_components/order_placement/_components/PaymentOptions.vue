@@ -7,7 +7,7 @@
           @click="do_set_active_order_option('payment')"
         >
           <a
-            class="home-view-vendor-classes-menu options-section__link"
+            class="home-view-vendor-classes-menu-payment options-section__link"
             :class="get_current_active_order_option_class('payment')"
           >
             <span class="home-view-actions--items__span">

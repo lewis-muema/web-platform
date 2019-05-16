@@ -251,3 +251,11 @@
   width: 90%;
   font-size: 14px;
 }
+.home-view-vendor-classes-menu-payment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-basis: auto;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
