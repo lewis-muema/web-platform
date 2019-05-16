@@ -269,13 +269,13 @@ export default {
     },
 
     allowCash() {
-      return this.getPriceRequestObject.payment_option === 2 || this.getRunningBalance <= 0;
+      return this.getPriceRequestObject.payment_option === 2 || this.getRunningBalance >= 0;
     },
 
     hide_payment() {
       return (
         this.getPriceRequestObject.payment_option === 2 ||
-        this.getRunningBalance + this.order_cost <= 0
+        this.getRunningBalance - this.order_cost >= 0
       );
     },
 
@@ -299,7 +299,7 @@ export default {
       if (this.getPriceRequestObject.payment_option === 2) {
         text = 'Post Pay';
       } else {
-        if (this.abs_running_balance > 0) {
+        if (this.getRunningBalance < 0) {
           text = 'Payment Options';
         } else {
           if (this.country_code === 'KE') {
@@ -334,15 +334,15 @@ export default {
     },
 
     pending_amount() {
-      return numeral(this.getRunningBalance + this.order_cost).format('0,0');
+      return numeral(Math.abs(this.getRunningBalance - this.order_cost)).format('0,0');
     },
 
     raw_pending_amount() {
-      return this.getRunningBalance + this.order_cost;
+      return numeral(Math.abs(this.getRunningBalance - this.order_cost)).format('0,0');
     },
 
     payment_is_to_be_requested() {
-      return this.getRunningBalance + this.order_cost > 0;
+      return this.getRunningBalance - this.order_cost < 0;
     },
 
     order_cost_display() {
@@ -354,10 +354,10 @@ export default {
     },
 
     balance_quote_label() {
-      if (this.getRunningBalance > 0) {
+      if (this.getRunningBalance < 0) {
         return 'You Owe';
       }
-      if (this.getRunningBalance + this.order_cost > 0) {
+      if (this.getRunningBalance - this.order_cost < 0) {
         return 'Your Balance';
       }
     },
@@ -1070,6 +1070,7 @@ export default {
   mounted() {
     this.checkCountryCode();
     this.checkUserPhone();
+    this.setDefaultPaymentOptions();
   },
 
   destroyed() {

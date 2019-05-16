@@ -104,9 +104,8 @@ export default {
     }
 
     return new Promise((resolve, reject) => {
-      axios
-        .post(url + payload.endpoint, payload.values, config)
-        .then((response) => {
+      axios.post(`${url}${payload.endpoint}`, payload.values, config).then(
+        (response) => {
           if (response.data === 401 || response.data === 403) {
             const notification = {
               title: 'Something went wrong!',
@@ -118,20 +117,11 @@ export default {
           } else {
             resolve(response);
           }
-        })
-        .catch((e) => {
-          if (e.response.status === 403) {
-            const notification = {
-              title: 'Your session has expired!',
-              level: 2,
-              message: 'Please log out and log in again.',
-            };
-            commit('setNotification', notification);
-            commit('setNotificationStatus', true);
-          } else {
-            reject(e);
-          }
-        });
+        },
+        (error) => {
+          reject(error);
+        },
+      );
     });
   },
 
