@@ -432,6 +432,7 @@ export default {
       return final_obj;
     },
     doPriceRequest() {
+      this.setOuterPriceRequestObject('');
       let payload = {
         values: this.createPriceRequestObject(),
         app: 'PRIVATE_API',
