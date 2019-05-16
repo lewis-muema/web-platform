@@ -87,7 +87,7 @@ export default {
       values.password = this.Password();
       values.type = 'peer';
       values.platform = 'web';
-      values.country_code = this.getUserCountryCode;
+      values.country_code = this.getUserCountryCode();
       values.default_currency = this.currency;
       const full_payload = {
         values,
@@ -163,7 +163,7 @@ export default {
         values.email = this.Email();
         values.password = this.Password();
         values.type = 'biz';
-        values.country_code = this.getUserCountryCode;
+        values.country_code = this.getUserCountryCode();
         values.default_currency = this.currency;
         const full_payload = {
           values,
@@ -200,7 +200,7 @@ export default {
       }
     },
     checkUserLocation() {
-      let country_code_data = currencyConversion.getCountryByCode(this.getUserCountryCode);
+      let country_code_data = currencyConversion.getCountryByCode(this.getUserCountryCode());
       this.currency = country_code_data.currencyCode;
     },
 
