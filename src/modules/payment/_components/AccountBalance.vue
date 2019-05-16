@@ -58,12 +58,7 @@ export default {
       this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
         response => {
           const resp = response.data;
-          let balance = '';
-          if (resp.data.running_balance === 0) {
-            balance = resp.data.running_balance;
-          } else {
-            balance = resp.data.running_balance * -1;
-          }
+          let balance = resp.data.running_balance;
           this.$store.commit('setRunningBalance', balance);
         },
         error => {}

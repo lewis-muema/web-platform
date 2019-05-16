@@ -692,6 +692,8 @@ export default {
       this.setExtendOptions(false);
       this.pair_rider = '';
       this.vehicle_plate = '';
+      this.setOuterActiveVendorDetails('');
+      this.setOuterActivePackageClass('');
     },
     dispatchDeliveryItem() {
       this.setDeliveryItem(this.delivery_item);
