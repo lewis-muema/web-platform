@@ -111,7 +111,7 @@
     </div>
   </div>
 
-  <div class="extended-options-wrappper" v-else>
+  <div class="extended-options-wrappper" v-else-if="getOrderState === 2">
     <!-- start carrier type transition -->
     <transition name="home-carrier-type-fade">
       <div class="home-view-vendor-types-item-wrap home-next-step">
