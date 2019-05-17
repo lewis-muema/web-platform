@@ -646,6 +646,7 @@ export default {
       setPairRiderPhone: '$_orders/$_home/setPairRiderPhone',
       setOuterActiveVendorDetails: '$_orders/setOuterActiveVendorDetails',
       setOuterActivePackageClass: '$_orders/setOuterActivePackageClass',
+      clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -692,8 +693,7 @@ export default {
       this.setExtendOptions(false);
       this.pair_rider = '';
       this.vehicle_plate = '';
-      this.setOuterActiveVendorDetails('');
-      this.setOuterActivePackageClass('');
+      this.clearOuterActiveVendorDetails();
     },
     dispatchDeliveryItem() {
       this.setDeliveryItem(this.delivery_item);
