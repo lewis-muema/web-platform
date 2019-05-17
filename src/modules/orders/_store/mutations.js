@@ -107,14 +107,26 @@ const unsetLocationMarker = (state, index) => {
 const setHomeLocations = (state, payload) => {
   state.home_locations = payload;
 };
+const clearHomeLocation = (state) => {
+  state.home_locations = [];
+};
 const setStorePath = (state, val) => {
   state.location_path.splice(val.index, val.index === 0 ? 0 : 1, val.path);
+};
+const clearStorePath = (state) => {
+  state.location_path = [];
 };
 const setOuterPriceRequestObject = (state, payload) => {
   state.outer_price_request = payload;
 };
+const clearOuterPriceRequestObject = (state) => {
+  state.outer_price_request = {};
+};
 const setOuterActiveVendorDetails = (state, payload) => {
   state.outer_active_vendor_data = payload;
+};
+const clearOuterActiveVendorDetails = (state) => {
+  state.outer_active_vendor_data = {};
 };
 const setOuterActivePackageClass = (state, payload) => {
   state.outer_active_package_data = payload;
@@ -136,4 +148,8 @@ export default {
   setOuterPriceRequestObject,
   setOuterActiveVendorDetails,
   setOuterActivePackageClass,
+  clearHomeLocation,
+  clearStorePath,
+  clearOuterPriceRequestObject,
+  clearOuterActiveVendorDetails,
 };
