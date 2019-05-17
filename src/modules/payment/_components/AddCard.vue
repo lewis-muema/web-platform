@@ -224,7 +224,12 @@ export default {
               level: 1,
               message: 'card was added successfully',
             };
-            this.$router.push('/orders');
+            this.$router.push({
+              name: 'order_placement',
+              query: {
+                action: 'add_card',
+              },
+            });
             this.payment_state = 'Payment Success';
             const acc = this.$store.getters.getSession;
 

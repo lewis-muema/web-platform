@@ -261,7 +261,11 @@ export default {
       setDefaultCurrency: '$_orders/$_home/setDefaultCurrency',
       setHomeLocations: '$_orders/setHomeLocations',
       setStorePath: '$_orders/setStorePath',
+      clearStorePath: '$_orders/clearStorePath',
+      clearOuterPriceRequestObject: '$_orders/clearOuterPriceRequestObject',
+      clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
       setOuterPriceRequestObject: '$_orders/setOuterPriceRequestObject',
+      setOrderState: '$_orders/$_home/setOrderState',
     }),
 
     ...mapActions({
@@ -443,6 +447,7 @@ export default {
       let defined_locations = this.locations;
       this.requestPriceQuote(payload).then(
         response => {
+          this.setOrderState(1);
           this.setHomeLocations(defined_locations);
           this.setOuterPriceRequestObject(response.values);
           this.loading = false;
@@ -598,12 +603,19 @@ export default {
       this.registerOrderPlacementModule();
     },
     initializeOrderFlow() {
-      const stored_location = this.getHomeLocations;
-      if (stored_location.length > 1) {
-        this.locations = stored_location;
-        this.setPickupFilled(true);
-        this.setPickupFilled(true);
-        this.attemptPriceRequest();
+      if (this.$route.path === '/orders/') {
+        const stored_location = this.getHomeLocations;
+        if (stored_location.length > 1) {
+          this.locations = stored_location;
+          this.setPickupFilled(true);
+          this.setPickupFilled(true);
+          this.attemptPriceRequest();
+        }
+      } else {
+        this.clearStorePath();
+        this.setOrderState(3);
+        this.clearOuterPriceRequestObject();
+        this.clearOuterActiveVendorDetails();
       }
     },
   },
