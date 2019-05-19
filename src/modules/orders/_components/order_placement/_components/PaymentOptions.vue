@@ -49,7 +49,7 @@
           <!-- Nothing displayed -->
         </span>
         <span v-else-if="getPriceRequestObject.payment_option !== 2">
-          <div v-if="this.mpesa_valid && default_currency === 'KES'">
+          <div v-if="mpesa_valid && default_currency === 'KES'">
             <div
               class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
               v-if="mpesa_valid"
@@ -1017,7 +1017,7 @@ export default {
     setDefaultPaymentOptions() {
       this.refreshRunningBalance().then(
         response => {
-          if (this.default_currency === 'KE' && this.mpesa_valid) {
+          if (this.default_currency === 'KES' && this.mpesa_valid) {
             if (this.allowCash) {
               this.payment_method = '3';
             } else {
