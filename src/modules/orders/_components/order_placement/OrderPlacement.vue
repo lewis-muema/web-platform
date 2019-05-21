@@ -176,13 +176,7 @@ export default {
       show_destinations: false,
       loading: false,
       locations: [],
-<<<<<<< HEAD
       map_options: {},
-=======
-      map_options: {
-        componentRestrictions: { country: ['bi', 'et', 'ss', 'sd', 'ke', 'tz', 'ug', 'rw'] },
-      },
->>>>>>> b3baef66239f1732806f0b5da407716c38948c99
     };
   },
 
