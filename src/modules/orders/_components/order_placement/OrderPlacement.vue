@@ -141,6 +141,7 @@ import payments_module_store from '../../../payment/_store';
 import VendorComponent from './_components/VendorComponent.vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCcVisa, faCcMastercard } from '@fortawesome/free-brands-svg-icons';
+import SessionMxn from '../../../../mixins/session_mixin.js';
 import {
   faPlus,
   faMapMarkerAlt,
@@ -171,6 +172,7 @@ library.add(
 
 export default {
   name: 'OrderPlacement',
+  mixins: [SessionMxn],
   data: function() {
     return {
       show_destinations: false,
@@ -602,6 +604,14 @@ export default {
       this.registerPaymentModule();
       this.registerOrderPlacementModule();
     },
+    checkSessionData() {
+      let session = this.$store.getters.getSession;
+      let acc = session[session.default];
+      if (!acc.hasOwnProperty('country_code')) {
+        this.deleteSession();
+        this.$router.push({ path: '/auth/sign_in' });
+      }
+    },
     initializeOrderFlow() {
       if (this.$route.path === '/orders/') {
         const stored_location = this.getHomeLocations;
@@ -623,6 +633,7 @@ export default {
   created() {
     this.instantiateHomeComponent();
     this.initializeOrderFlow();
+    this.checkSessionData();
   },
   destroyed() {
     this.destroyOrderPlacement();
