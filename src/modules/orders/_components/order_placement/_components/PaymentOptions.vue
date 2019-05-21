@@ -1023,6 +1023,8 @@ export default {
             } else {
               this.payment_method = '1';
             }
+          } else {
+            this.payment_method = '';
           }
         },
         error => {
