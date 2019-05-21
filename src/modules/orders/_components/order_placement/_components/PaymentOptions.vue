@@ -416,7 +416,7 @@ export default {
     checkAllowPrePaid() {
       if (
         this.getPriceRequestObject.payment_option === 1 &&
-        this.getRunningBalance - this.order_cost > 0
+        this.getRunningBalance - this.order_cost >= 0
       ) {
         return true;
       }
