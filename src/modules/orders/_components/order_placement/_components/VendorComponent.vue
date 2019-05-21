@@ -73,7 +73,7 @@
                     <span v-if="!isFixedCost(j)">
                       Price to be confirmed
                     </span>
-                    <span v-else> Ksh {{ getVendorPrice(j) }} </span>
+                    <span v-else> {{ getVendorCurrency(j) }} {{ getVendorPrice(j) }} </span>
                   </div>
                   <div class="home-view-vendor-types-item--cost-wrapper_time">
                     Pickup by {{ transformDate(j) }}
@@ -85,7 +85,7 @@
                 >
                   <el-popover placement="right" width="350" trigger="hover">
                     <div class="reset-font" v-html="j.tier_description" />
-                    <span slot="reference">
+                    <span slot="reference" class="extra_info_background">
                       <i class="el-icon-info" />
                     </span>
                   </el-popover>
@@ -111,7 +111,7 @@
     </div>
   </div>
 
-  <div class="extended-options-wrappper" v-else>
+  <div class="extended-options-wrappper" v-else-if="getOrderState === 2">
     <!-- start carrier type transition -->
     <transition name="home-carrier-type-fade">
       <div class="home-view-vendor-types-item-wrap home-next-step">
@@ -140,7 +140,10 @@
                 <span v-if="!isFixedCost(activeVendorPriceData)">
                   Price to be confirmed
                 </span>
-                <span v-else> Ksh {{ getVendorPrice(activeVendorPriceData) }} </span>
+                <span v-else>
+                  {{ getVendorCurrency(activeVendorPriceData) }}
+                  {{ getVendorPrice(activeVendorPriceData) }}
+                </span>
               </div>
               <div class="home-view-vendor-types-item--cost-wrapper_time">
                 Pickup by {{ transformDate(activeVendorPriceData) }}
@@ -347,7 +350,7 @@
             <div v-if="![22, 24].includes(activeVendorPriceData.vendor_id)">
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  Do you have a specific {{ riderNameDisplay }} at your pick up location ?
+                  Do you have a preferred {{ riderNameDisplay }} at your pick up location ?
                 </div>
                 <div class="">
                   <el-select
@@ -541,6 +544,8 @@ export default {
       getNOOfLoaders: '$_orders/$_home/getNOOfLoaders',
       getOrderState: '$_orders/$_home/getOrderState',
       getPairRiderNextStep: '$_orders/$_home/getPairRiderNextStep',
+      getOuterActiveVendorDetails: '$_orders/getOuterActiveVendorDetails',
+      getOuterActivePackageClass: '$_orders/getOuterActivePackageClass',
     }),
 
     vehicleDetailsPlaceholder() {
@@ -639,6 +644,9 @@ export default {
       setPairWithRiderStatus: '$_orders/$_home/setPairWithRiderStatus',
       setPairSerialNumber: '$_orders/$_home/setPairSerialNumber',
       setPairRiderPhone: '$_orders/$_home/setPairRiderPhone',
+      setOuterActiveVendorDetails: '$_orders/setOuterActiveVendorDetails',
+      setOuterActivePackageClass: '$_orders/setOuterActivePackageClass',
+      clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -685,6 +693,7 @@ export default {
       this.setExtendOptions(false);
       this.pair_rider = '';
       this.vehicle_plate = '';
+      this.clearOuterActiveVendorDetails();
     },
     dispatchDeliveryItem() {
       this.setDeliveryItem(this.delivery_item);
@@ -729,6 +738,7 @@ export default {
 
     setActivePackageClassWrapper(name) {
       this.setActivePackageClass(name);
+      this.setOuterActivePackageClass(name);
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
     },
 
@@ -849,7 +859,9 @@ export default {
     getVendorPrice(vendorObject) {
       return numeral(this.getPlainVendorPrice(vendorObject)).format('0,0');
     },
-
+    getVendorCurrency(vendorObject) {
+      return vendorObject.currency;
+    },
     getMinVendorPrice(vendorObject) {
       const price =
         this.getPlainVendorPrice(vendorObject) * ((100 - vendorObject.price_variance) / 100);
@@ -904,6 +916,7 @@ export default {
     setVendorDetails(vendorObject) {
       this.setActiveVendorName(vendorObject.vendor_name);
       this.setActiveVendorDetails(vendorObject);
+      this.setOuterActiveVendorDetails(vendorObject);
       this.reCheckCarrierType();
       this.trackMixpanelEvent(`Select Vendor: ${vendorObject.vendor_name}`);
     },
@@ -951,6 +964,17 @@ export default {
       this.additional_loader = this.getAdditionalLoaderStatus;
       this.customer_min_amount = this.getCustomerMinAmount;
     },
+    initiateStoreData() {
+      const activeVendorName = this.getOuterActiveVendorDetails;
+      const activeVendorClass = this.getOuterActivePackageClass;
+      if ('vendor_name' in activeVendorName && activeVendorClass !== '') {
+        this.setActiveVendorName(activeVendorName.vendor_name);
+        this.setActivePackageClass(activeVendorClass);
+        this.setDefaultCarrierType();
+        this.setOrderState(2);
+        this.setExtendOptions(true);
+      }
+    },
 
     doNotification(level, title, message) {
       this.$store.commit('setNotificationStatus', true);
@@ -980,6 +1004,7 @@ export default {
   created() {
     this.setFirstTimeUser();
     this.initializeVendorComponent();
+    this.initiateStoreData();
   },
 
   mounted() {

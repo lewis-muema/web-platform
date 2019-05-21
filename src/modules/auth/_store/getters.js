@@ -11,4 +11,7 @@ export default {
   requestName(state) {
     return state.name;
   },
+  getUserCountryCode(state) {
+    return state.country_code;
+  },
 };

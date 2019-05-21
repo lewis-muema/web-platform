@@ -7,7 +7,7 @@
           @click="do_set_active_order_option('payment')"
         >
           <a
-            class="home-view-vendor-classes-menu options-section__link"
+            class="home-view-vendor-classes-menu-payment options-section__link"
             :class="get_current_active_order_option_class('payment')"
           >
             <span class="home-view-actions--items__span">
@@ -32,7 +32,7 @@
                 Total Payment
               </div>
               <div class="home-view-payments-wrapper--left__amount-figure">
-                Ksh {{ pending_amount }}
+                {{ rb_currency }} {{ pending_amount }}
               </div>
             </div>
             <div class="home-view-payments-wrapper--right">
@@ -40,7 +40,7 @@
                 {{ balance_quote_label }}
               </div>
               <div class="home-view-payments-wrapper--right-amount">
-                Ksh {{ abs_running_balance }}
+                {{ rb_currency }} {{ abs_running_balance }}
               </div>
             </div>
           </div>
@@ -49,28 +49,33 @@
           <!-- Nothing displayed -->
         </span>
         <span v-else-if="getPriceRequestObject.payment_option !== 2">
-          <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
-            <div class="home-view-notes-wrapper--item__option">
-              <div class="home-view-notes-wrapper--item__option-div">
-                <el-radio v-model="payment_method" label="1">
-                  M-Pesa
-                </el-radio>
-              </div>
-            </div>
-            <div class="home-view-notes-wrapper--item__value" />
-          </div>
-          <span v-if="allowCash">
-            <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
+          <div v-if="mpesa_valid && default_currency === 'KES'">
+            <div
+              class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
+              v-if="mpesa_valid"
+            >
               <div class="home-view-notes-wrapper--item__option">
                 <div class="home-view-notes-wrapper--item__option-div">
-                  <el-radio v-model="payment_method" label="3">
-                    Cash on delivery
+                  <el-radio v-model="payment_method" label="1">
+                    M-Pesa
                   </el-radio>
                 </div>
               </div>
               <div class="home-view-notes-wrapper--item__value" />
             </div>
-          </span>
+            <span v-if="allowCash">
+              <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
+                <div class="home-view-notes-wrapper--item__option">
+                  <div class="home-view-notes-wrapper--item__option-div">
+                    <el-radio v-model="payment_method" label="3">
+                      Cash on delivery
+                    </el-radio>
+                  </div>
+                </div>
+                <div class="home-view-notes-wrapper--item__value" />
+              </div>
+            </span>
+          </div>
           <div v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0" class="">
             <div
               v-for="card in get_saved_cards"
@@ -185,6 +190,10 @@ export default {
       vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
       return_status: false,
       showing: 1,
+      country_code: 'KE',
+      default_currency: 'KES',
+      rb_currency: 'KES',
+      mpesa_valid: false,
     };
   },
 
@@ -215,6 +224,7 @@ export default {
       getPairWithRiderStatus: '$_orders/$_home/getPairWithRiderStatus',
       getPairSerialNumber: '$_orders/$_home/getPairSerialNumber',
       getPairRiderPhone: '$_orders/$_home/getPairRiderPhone',
+      getCountryCode: 'getCountryCode',
     }),
 
     active_price_tier_data() {
@@ -259,13 +269,13 @@ export default {
     },
 
     allowCash() {
-      return this.getPriceRequestObject.payment_option === 2 || this.getRunningBalance <= 0;
+      return this.getPriceRequestObject.payment_option === 2 || this.getRunningBalance >= 0;
     },
 
     hide_payment() {
       return (
         this.getPriceRequestObject.payment_option === 2 ||
-        this.getRunningBalance + this.order_cost <= 0
+        this.getRunningBalance - this.order_cost >= 0
       );
     },
 
@@ -284,17 +294,19 @@ export default {
       }
       return `${text}${this.get_active_vendor_name} Order`;
     },
-
     pay_order_text() {
       let text = 'Payment Options';
       if (this.getPriceRequestObject.payment_option === 2) {
         text = 'Post Pay';
       } else {
-        if (this.abs_running_balance > 0) {
+        if (this.getRunningBalance < 0) {
           text = 'Payment Options';
         } else {
-          text = 'Cash on delivery';
-          this.payment_method = '3';
+          if (this.default_currency === 'KES' && this.mpesa_valid) {
+            text = 'Cash on delivery';
+          } else {
+            text = 'Card Payment';
+          }
         }
       }
 
@@ -322,15 +334,15 @@ export default {
     },
 
     pending_amount() {
-      return numeral(this.getRunningBalance + this.order_cost).format('0,0');
+      return numeral(Math.abs(this.getRunningBalance - this.order_cost)).format('0,0');
     },
 
     raw_pending_amount() {
-      return this.getRunningBalance + this.order_cost;
+      return numeral(Math.abs(this.getRunningBalance - this.order_cost)).format('0,0');
     },
 
     payment_is_to_be_requested() {
-      return this.getRunningBalance + this.order_cost > 0;
+      return this.getRunningBalance - this.order_cost < 0;
     },
 
     order_cost_display() {
@@ -342,10 +354,10 @@ export default {
     },
 
     balance_quote_label() {
-      if (this.getRunningBalance > 0) {
+      if (this.getRunningBalance < 0) {
         return 'You Owe';
       }
-      if (this.getRunningBalance + this.order_cost > 0) {
+      if (this.getRunningBalance - this.order_cost < 0) {
         return 'Your Balance';
       }
     },
@@ -404,11 +416,11 @@ export default {
     checkAllowPrePaid() {
       if (
         this.getPriceRequestObject.payment_option === 1 &&
-        this.getRunningBalance + this.order_cost > 0
+        this.getRunningBalance - this.order_cost >= 0
       ) {
-        return false;
+        return true;
       }
-      return true;
+      return false;
     },
 
     checkIfTruckOrder() {
@@ -502,7 +514,8 @@ export default {
           const card = this.get_saved_cards.find(
             card_details => card_details.last4 === this.payment_method.slice(2)
           );
-          this.handleSavedCard(card, true);
+          const setCurrency = this.activeVendorPriceData.currency;
+          this.handleSavedCard(setCurrency, card, true);
         } else {
           // console.log('not handled payment method', this.payment_method);
         }
@@ -685,15 +698,15 @@ export default {
         const session = this.$store.getters.getSession;
 
         const running_balance_payload = {
-          values: {
-            cop_id: 'cop_id' in session[session.default] ? session[session.default].cop_id : 0,
-            user_phone: session[session.default].user_phone,
-          },
+          cop_id: 'cop_id' in session[session.default] ? session[session.default].cop_id : 0,
+          phone: session[session.default].user_phone,
+          default_currency: this.default_currency,
+          rb_currency: this.activeVendorPriceData.currency,
         };
 
         const payload = {
           values: running_balance_payload,
-          app: 'PRIVATE_API',
+          app: 'NODE_PRIVATE_API',
           endpoint: 'running_balance',
         };
         this.requestRunningBalanceFromAPI(payload).then(
@@ -702,7 +715,8 @@ export default {
               response = response[0];
             }
             if (response.status === 200) {
-              this.$store.commit('setRunningBalance', response.data.running_balance);
+              const resp = response.data;
+              this.$store.commit('setRunningBalance', resp.data.running_balance);
               this.setDefaultOptions();
               resolve(response.data);
             } else {
@@ -801,6 +815,7 @@ export default {
         cop_id,
         phone: user_phone,
         email: user_email,
+        currency: this.activeVendorPriceData.currency,
       };
       const full_payload = {
         values: mpesa_payload,
@@ -999,8 +1014,56 @@ export default {
         error => false
       );
     },
+    setDefaultPaymentOptions() {
+      this.refreshRunningBalance().then(
+        response => {
+          if (this.default_currency === 'KES' && this.mpesa_valid) {
+            if (this.allowCash) {
+              if (this.checkAllowPrePaid()) {
+                this.payment_method = '';
+              } else {
+                this.payment_method = '3';
+              }
+            } else {
+              this.payment_method = '1';
+            }
+          } else {
+            this.payment_method = '';
+          }
+        },
+        error => {
+          this.doNotification(
+            '2',
+            'Running balance check',
+            'Running balance check has failed, please try again.'
+          );
+          this.loading = false;
+        }
+      );
+    },
 
     /* end card */
+
+    checkCountryCode() {
+      this.getUserDefaultCurrency();
+      this.country_code = this.getCountryCode;
+      this.rb_currency = this.activeVendorPriceData.currency;
+    },
+    getUserDefaultCurrency() {
+      const session = this.$store.getters.getSession;
+      const default_user_currency = session[session.default].default_currency;
+      this.default_currency = default_user_currency;
+    },
+    checkUserPhone() {
+      let session = this.$store.getters.getSession;
+      let phone = session[session.default]['user_phone'];
+      let int_value = phone.substring(0, 4);
+      if (int_value === '+256') {
+        this.mpesa_valid = false;
+      } else {
+        this.mpesa_valid = true;
+      }
+    },
   },
 
   created() {
@@ -1008,6 +1071,12 @@ export default {
     this.refreshRunningBalance();
     this.getUserCards();
     this.instantiateReturnStatus();
+    this.setDefaultPaymentOptions();
+  },
+  mounted() {
+    this.checkCountryCode();
+    this.checkUserPhone();
+    this.setDefaultPaymentOptions();
   },
 
   destroyed() {
