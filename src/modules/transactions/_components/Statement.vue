@@ -1,8 +1,5 @@
 <template lang="html">
-  <div
-    id="statement_container"
-    class=""
-  >
+  <div id="statement_container" class="">
     <div class="section--filter-wrap">
       <div class="section--filter-input-wrap">
         <el-date-picker
@@ -36,43 +33,57 @@
         </button>
       </div>
     </div>
-
+     <div class="bg-grey">
+      <div class="download_history">
+      <el-dropdown @command="handleCommand"  align="right">
+          <el-button class="download_history" type="primary" size="mini">
+            Download<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+            <el-dropdown-menu class="export_dropdown"slot="dropdown">
+              <el-dropdown-item  command="a">Excel</el-dropdown-item>
+              <!-- <el-dropdown-item  command="b">PDF</el-dropdown-item> -->
+            </el-dropdown-menu>
+      </el-dropdown>
+      </div>
+    </div>
+     <!-- <el-table
+      id="save-pdf"
+      v-loading="loading"
+      :data="statement_data"
+      style="width: 100%;"
+      :border="true"
+      :stripe="true"
+      :row-key="getRowKey"
+      :expand-row-keys="expand_keys"
+      @row-click="expandTableRow"
+      @expand-change="handleRowExpand"
+    /> -->
+    
     <el-table
       :data="statement_data"
       style="width: 100%"
       :border="true"
       :stripe="true"
-    >
+    />
+
+    <el-table :data="statement_data" style="width: 100%" :border="true" :stripe="true">
       <template slot="empty">
         {{ empty_statement_state }}
       </template>
-      <el-table-column
-        label="Txn"
-        prop="txn"
-        min-width="80"
-      />
-      <el-table-column
-        label="Date"
-        prop="date_time"
-        :formatter="formatDate"
-        width="170"
-      />
-      <el-table-column
-        label="Description"
-        prop="description"
-        min-width="80"
-      />
+      <el-table-column label="Txn" prop="txn" min-width="80" />
+      <el-table-column label="Date" prop="date_time" :formatter="formatDate" width="170" />
+      <el-table-column label="Description" prop="description" min-width="80" />
       <el-table-column
         label="Debit"
         prop="amount"
-        width="80"
+        width="110"
         :formatter="formatDebitAmount"
         class-name="amount--table-format"
       />
       <el-table-column
         label="Credit"
         prop="amount"
-        width="80"
+        width="110"
         :formatter="formatCreditAmount"
         class-name="amount--table-format"
       />
@@ -102,6 +113,9 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { Printd } from 'printd';
+import * as _  from 'lodash';
+import  exportFromJSON from 'export-from-json';
 
 const moment = require('moment');
 
@@ -117,6 +131,9 @@ export default {
       filterData: {
         from_date: '',
         to_date: '',
+        // loading: false,
+        // savepdf: 'save-pdf',
+   
       },
       filteredStatementData: [],
     };
@@ -188,7 +205,7 @@ export default {
         },
         () => {
           this.empty_statement_state = 'Statement Failed to Fetch';
-        },
+        }
       );
     },
     ...mapActions(['$_transactions/requestStatement']),
@@ -295,9 +312,37 @@ export default {
         () => {
           this.order_statement_text = 'Search';
           this.empty_statement_state = 'Statement Failed to Fetch';
-        },
+        }
       );
     },
+    handleCommand(command){
+      if(command=="a"){
+      let data;
+      let data2 = [];
+
+      for (let i = 0; i < this.statementData.length; i++) {
+        let arr = {};
+        arr.Amount=this.statementData[i].amount;
+        arr.Date= this.statementData[i].date_time;
+        arr.Description=this.statementData[i].description;
+        arr.PaymentMethod=this.statementData[i].pay_method_name;
+        arr.RunningBalance=this.statementData[i].running_balance;
+        arr.Transaction=this.statementData[i].txn;
+        data2.push(arr)
+        };
+       data = _.map(data2,(row)=>{return _.pick(row,'Amount','Date','Description','PaymentMethod','RunningBalance','Transaction')});
+      const fileName = 'Statement';
+      const exportType = 'csv';
+
+      exportFromJSON({ data, fileName, exportType })
+      }
+      else{
+      // const d = new Printd();
+      // // opens the "print dialog" of your browser to print the element
+      // d.print(document.getElementById('save1-pdf'), cssText);
+      }
+
+    }
   },
 };
 </script>
@@ -305,5 +350,11 @@ export default {
 <style lang="css">
 .btn-statement{
   border-width:0px !important;
+}
+.btn-order-hstry{
+  border-width:0px !important;
+}
+.el-dropdown{
+  float: right;
 }
 </style>

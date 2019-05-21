@@ -306,7 +306,7 @@
   font-weight: 300;
 }
 .pair_right_more_info{
-  width: 40%;
+  width: 40% !important;
   text-align: center;
   padding-top: 20%;
 }
@@ -330,5 +330,11 @@
 }
 .home-carrier-type-fade-enter, .home-carrier-type-fade-leave-to {
   opacity: 0;
+}
+.tier_description_background{
+  background-color: #1782C5 ;
+}
+.extra_info_background{
+  background-color: #fff;
 }
 /* end transitions */

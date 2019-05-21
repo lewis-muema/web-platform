@@ -49,20 +49,27 @@
                         <span class="infor-top-bar-text">
                           Minimum Cost :
                         </span>
-                        <span> KES {{ tracking_data.package_details.customer_min_amount }} </span>
+                        <span>
+                          {{ tracking_data.price_tier.currency }}
+                          {{ tracking_data.package_details.customer_min_amount }}
+                        </span>
                       </span>
                       <span v-else>
                         <span class="infor-top-bar-text">
                           Cost :
                         </span>
-                        <span> KES {{ tracking_data.amount }} </span>
+                        <span>
+                          {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                        </span>
                       </span>
                     </span>
                     <span v-else>
                       <span class="infor-top-bar-text">
                         Cost :
                       </span>
-                      <span> KES {{ tracking_data.amount }} </span>
+                      <span>
+                        {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                      </span>
                     </span>
                   </div>
                 </div>
@@ -182,28 +189,6 @@
                     <div class="tracking-loader">
                       <div class="">
                         <img
-                          src="https://images.sendyit.com/web_platform/tracking/load_weight.svg"
-                          alt=""
-                          class="infobar-truck-img"
-                        />
-                        <span class="info-text-transform infor-top-bar-text">
-                          Load Weight
-                        </span>
-                      </div>
-                      <div
-                        v-if="'load_weight' in tracking_data.package_details"
-                        class="tracking-loader-inner"
-                      >
-                        {{ tracking_data.package_details.load_weight }}
-                        {{ tracking_data.package_details.load_units }}
-                      </div>
-                      <div v-else class="tracking-loader-inner">
-                        Not Indicated
-                      </div>
-                    </div>
-                    <div class="tracking-loader">
-                      <div class="">
-                        <img
                           src="https://images.sendyit.com/web_platform/tracking/loader.svg"
                           alt=""
                           class="infobar-truck-img"
@@ -261,21 +246,6 @@
                           <p class="info-text-transform infor-top-bar-text">
                             Order Placed
                           </p>
-                          <div v-if="!this.tracking_data.fixed_cost">
-                            <p>
-                              Your order has been received and we shall notify you on the actual
-                              cost shortly
-                            </p>
-                          </div>
-                          <div v-else>
-                            <p>
-                              Your order has been received.The Order cost is KES
-                              {{ tracking_data.amount }}
-                            </p>
-
-                            <p />
-                          </div>
-
                           <p>{{ tracking_data.date_time | moment }}</p>
                         </div>
                       </li>
@@ -297,17 +267,23 @@
                           <div v-else>
                             <div class="">
                               <div v-if="this.accType === 1" class="">
-                                <p>Price has been confirmed to be Ksh {{ tracking_data.amount }}</p>
+                                <p>
+                                  Price has been confirmed to be
+                                  {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                                </p>
                               </div>
                               <div v-else class="">
                                 <div v-if="this.myRb <= 0">
                                   <p>
-                                    Price has been confirmed to be Ksh {{ tracking_data.amount }}
+                                    Price has been confirmed to be
+                                    {{ tracking_data.price_tier.currency }}
+                                    {{ tracking_data.amount }}
                                   </p>
                                 </div>
                                 <div v-else>
                                   <p>
-                                    Price has been confirmed to be Ksh
+                                    Price has been confirmed to be
+                                    {{ tracking_data.price_tier.currency }}
                                     {{ tracking_data.amount }}.Choose payment option below
                                   </p>
                                   <div class="">
@@ -548,12 +524,16 @@
                           !this.tracking_data.fixed_cost
                       "
                     >
-                      Minimum Amount : KES
+                      Minimum Amount : {{ tracking_data.price_tier.currency }}
                       {{ tracking_data.package_details.customer_min_amount }}
                     </div>
-                    <div v-else>Cost : KES {{ tracking_data.amount }}</div>
+                    <div v-else>
+                      Cost : {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                    </div>
                   </div>
-                  <div v-else>Cost: KES {{ tracking_data.amount }}</div>
+                  <div v-else>
+                    Cost: {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                  </div>
                 </div>
                 <div class="mobile-order-status">Status : {{ getStatus }}</div>
                 <div class="">
@@ -608,12 +588,14 @@
                         !this.tracking_data.fixed_cost
                     "
                   >
-                    Minimum Amount : KES
+                    Minimum Amount : {{ tracking_data.price_tier.currency }}
                     {{ tracking_data.package_details.customer_min_amount }}
                   </div>
-                  <div v-else>KES {{ tracking_data.amount }}</div>
+                  <div v-else>
+                    {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                  </div>
                 </div>
-                <div v-else>KES {{ tracking_data.amount }}</div>
+                <div v-else>{{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}</div>
                 <div class="">
                   <div class="">
                     {{ tracking_data.order_no }}
@@ -1572,6 +1554,8 @@ ul.timeline > li#timeline_right.payedReached:before{
 .inforbar--item-scrollable{
   overflow-y: scroll;
   height: 190px;
+  width: 130%;
+  font-size: 12px;
 }
 .infobar-truck-img{
   height:16px;

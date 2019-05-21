@@ -167,4 +167,10 @@ export default {
   setPairRiderPhone(state, val) {
     state.pair_rider_phone = val;
   },
+  setCountryCode(state, val) {
+    state.country_code = val;
+  },
+  setDefaultCurrency(state, val) {
+    state.default_currency = val;
+  },
 };

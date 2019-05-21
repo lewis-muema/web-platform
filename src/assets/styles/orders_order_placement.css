@@ -161,6 +161,7 @@
   flex-basis: auto;
   flex-direction: row;
   flex-wrap: nowrap;
+  width: 100%;
 }
 .homeview-locations-options{
   display: flex;
@@ -193,7 +194,7 @@
 }
 .home-view-truck-options-wrapper{
   width: 100%;
-  font-size: 14px;
+  font-size: 13px;
 }
 .home-view-truck-options-inner-wrapper{
   padding: 10px;
@@ -249,4 +250,12 @@
 .home-view-pair-rider-wrapper{
   width: 90%;
   font-size: 14px;
+}
+.home-view-vendor-classes-menu-payment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-basis: auto;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }

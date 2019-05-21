@@ -72,8 +72,6 @@ export default {
     });
   },
   requestSignUpSegmentation(context, payload) {
-    // console.log("payload", payload);
-
     return new Promise((resolve, reject) => {
       payload.vm.$store.dispatch('requestAxiosPost', payload).then(
         (response) => {
@@ -102,6 +100,19 @@ export default {
   requestSignUpVerificationVerify({ dispatch }, payload) {
     // console.log("payload", payload);
 
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosPost', payload, { root: true }).then(
+        (response) => {
+          resolve(response.data);
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
+
+  requestCountryCode({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {

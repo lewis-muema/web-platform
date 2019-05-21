@@ -153,6 +153,8 @@ import {
   faStar,
 } from '@fortawesome/free-solid-svg-icons';
 
+const currencyConversion = require('country-tz-currency');
+
 library.add(
   faPlus,
   faMapMarkerAlt,
@@ -174,7 +176,7 @@ export default {
       show_destinations: false,
       loading: false,
       locations: [],
-      map_options: { componentRestrictions: { country: ['ke', 'tz', 'ug', 'rw', 'bi'] } },
+      map_options: {},
     };
   },
 
@@ -207,6 +209,11 @@ export default {
       get_pickup_filled: '$_orders/$_home/getPickupFilled',
       get_session: 'getSession',
       get_extended_options: '$_orders/$_home/getExtendedOptions',
+      getCountryCode: 'getCountryCode',
+      getDefaultCurrency: 'getDefaultCurrency',
+      getHomeLocations: '$_orders/getHomeLocations',
+      getStoreOrderPath: '$_orders/getStorePath',
+      getOuterPriceRequestData: '$_orders/getOuterPriceRequestData',
     }),
 
     allow_add_destination() {
@@ -221,9 +228,9 @@ export default {
 
     show_vendor_view() {
       return (
-        Array.isArray(this.get_order_path) &&
-        this.get_order_path.length > 1 &&
-        this.get_price_request_object.hasOwnProperty('economy_price_tiers')
+        Array.isArray(this.getStoreOrderPath) &&
+        this.getStoreOrderPath.length > 1 &&
+        this.getOuterPriceRequestData.hasOwnProperty('economy_price_tiers')
       );
     },
   },
@@ -250,6 +257,15 @@ export default {
       clear_price_request_object: '$_orders/$_home/clearPriceRequestObject',
       clear_extra_destinations: '$_orders/$_home/clearExtraDestination',
       resetState: '$_orders/$_home/resetState',
+      setCountryCode: '$_orders/$_home/setCountryCode',
+      setDefaultCurrency: '$_orders/$_home/setDefaultCurrency',
+      setHomeLocations: '$_orders/setHomeLocations',
+      setStorePath: '$_orders/setStorePath',
+      clearStorePath: '$_orders/clearStorePath',
+      clearOuterPriceRequestObject: '$_orders/clearOuterPriceRequestObject',
+      clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
+      setOuterPriceRequestObject: '$_orders/setOuterPriceRequestObject',
+      setOrderState: '$_orders/$_home/setOrderState',
     }),
 
     ...mapActions({
@@ -306,7 +322,9 @@ export default {
         //console.log('not a place', index);
         return;
       }
-
+      const countryIndex = place.address_components.findIndex(country_code =>
+        country_code.types.includes('country')
+      );
       let path_obj = {
         name: place.name,
         coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
@@ -322,6 +340,7 @@ export default {
           Typed: '',
           Vicinity: 'Not Indicated',
           Address: 'Not Indicated',
+          country_code: place.address_components[countryIndex].short_name,
         },
       };
       let path_payload = {
@@ -335,6 +354,7 @@ export default {
       this.resetLocation(index);
       this.setMarker(place.geometry.location.lat(), place.geometry.location.lng(), index);
       this.set_order_path(path_payload);
+      this.setStorePath(path_payload);
       this.setLocationInModel(index, place.name);
       this.set_location_name(location_name_payload);
       if (index === 0) {
@@ -379,7 +399,7 @@ export default {
     },
 
     createPriceRequestObject() {
-      let obj = { path: this.get_order_path };
+      let obj = { path: this.getStoreOrderPath };
       let acc = {};
       let session = this.$store.getters.getSession;
       if ('default' in session) {
@@ -406,6 +426,9 @@ export default {
         promotion_status: false,
         destination_paid_status: false,
         is_edit: false,
+        country_code: this.getCountryCode,
+        default_currency: this.getDefaultCurrency,
+        preffered_currency: this.getDefaultCurrency,
       };
       let json_decoded_path = JSON.stringify(obj);
       infor.path = json_decoded_path;
@@ -413,6 +436,7 @@ export default {
       return final_obj;
     },
     doPriceRequest() {
+      this.setOuterPriceRequestObject('');
       let payload = {
         values: this.createPriceRequestObject(),
         app: 'PRIVATE_API',
@@ -420,8 +444,12 @@ export default {
       };
       this.loading = true;
       let previous_active_vendor = this.get_active_vendor_name;
+      let defined_locations = this.locations;
       this.requestPriceQuote(payload).then(
         response => {
+          this.setOrderState(1);
+          this.setHomeLocations(defined_locations);
+          this.setOuterPriceRequestObject(response.values);
           this.loading = false;
           this.setDefaultPackageClass();
           this.setDefaultVendorType(previous_active_vendor);
@@ -574,12 +602,28 @@ export default {
       this.registerPaymentModule();
       this.registerOrderPlacementModule();
     },
+    initializeOrderFlow() {
+      if (this.$route.path === '/orders/') {
+        const stored_location = this.getHomeLocations;
+        if (stored_location.length > 1) {
+          this.locations = stored_location;
+          this.setPickupFilled(true);
+          this.setPickupFilled(true);
+          this.attemptPriceRequest();
+        }
+      } else {
+        this.clearStorePath();
+        this.setOrderState(3);
+        this.clearOuterPriceRequestObject();
+        this.clearOuterActiveVendorDetails();
+      }
+    },
   },
 
   created() {
     this.instantiateHomeComponent();
+    this.initializeOrderFlow();
   },
-
   destroyed() {
     this.destroyOrderPlacement();
   },
