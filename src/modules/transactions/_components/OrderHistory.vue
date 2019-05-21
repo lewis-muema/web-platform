@@ -58,7 +58,7 @@
           </el-button>
           <el-dropdown-menu class="export_dropdown" slot="dropdown">
             <el-dropdown-item command="a">Excel</el-dropdown-item>
-            <el-dropdown-item command="b">PDF</el-dropdown-item>
+            <!-- <el-dropdown-item command="b">PDF</el-dropdown-item> -->
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -66,7 +66,7 @@
     <el-table
       id="save-pdf"
       v-loading="loading"
-      :data="orderHistoryData"
+      :data="order_history_data"
       style="width: 100%;"
       :border="true"
       :stripe="true"
