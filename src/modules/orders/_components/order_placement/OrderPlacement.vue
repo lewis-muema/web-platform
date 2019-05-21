@@ -176,7 +176,7 @@ export default {
       show_destinations: false,
       loading: false,
       locations: [],
-      map_options: { componentRestrictions: { country: ['ke', 'tz', 'ug', 'rw', 'bi'] } },
+      map_options: {},
     };
   },
 

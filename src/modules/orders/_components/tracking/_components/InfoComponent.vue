@@ -189,28 +189,6 @@
                     <div class="tracking-loader">
                       <div class="">
                         <img
-                          src="https://images.sendyit.com/web_platform/tracking/load_weight.svg"
-                          alt=""
-                          class="infobar-truck-img"
-                        />
-                        <span class="info-text-transform infor-top-bar-text">
-                          Load Weight
-                        </span>
-                      </div>
-                      <div
-                        v-if="'load_weight' in tracking_data.package_details"
-                        class="tracking-loader-inner"
-                      >
-                        {{ tracking_data.package_details.load_weight }}
-                        {{ tracking_data.package_details.load_units }}
-                      </div>
-                      <div v-else class="tracking-loader-inner">
-                        Not Indicated
-                      </div>
-                    </div>
-                    <div class="tracking-loader">
-                      <div class="">
-                        <img
                           src="https://images.sendyit.com/web_platform/tracking/loader.svg"
                           alt=""
                           class="infobar-truck-img"
@@ -268,22 +246,6 @@
                           <p class="info-text-transform infor-top-bar-text">
                             Order Placed
                           </p>
-                          <div v-if="!this.tracking_data.fixed_cost">
-                            <p>
-                              Your order has been received and we shall notify you on the actual
-                              cost shortly
-                            </p>
-                          </div>
-                          <div v-else>
-                            <p>
-                              Your order has been received.The Order cost is
-                              {{ tracking_data.price_tier.currency }}
-                              {{ tracking_data.amount }}
-                            </p>
-
-                            <p />
-                          </div>
-
                           <p>{{ tracking_data.date_time | moment }}</p>
                         </div>
                       </li>
@@ -1592,6 +1554,8 @@ ul.timeline > li#timeline_right.payedReached:before{
 .inforbar--item-scrollable{
   overflow-y: scroll;
   height: 190px;
+  width: 130%;
+  font-size: 12px;
 }
 .infobar-truck-img{
   height:16px;
