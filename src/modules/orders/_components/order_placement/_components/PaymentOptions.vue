@@ -416,11 +416,11 @@ export default {
     checkAllowPrePaid() {
       if (
         this.getPriceRequestObject.payment_option === 1 &&
-        this.getRunningBalance + this.order_cost > 0
+        this.getRunningBalance - this.order_cost >= 0
       ) {
-        return false;
+        return true;
       }
-      return true;
+      return false;
     },
 
     checkIfTruckOrder() {
@@ -1019,10 +1019,16 @@ export default {
         response => {
           if (this.default_currency === 'KES' && this.mpesa_valid) {
             if (this.allowCash) {
-              this.payment_method = '3';
+              if (this.checkAllowPrePaid()) {
+                this.payment_method = '';
+              } else {
+                this.payment_method = '3';
+              }
             } else {
               this.payment_method = '1';
             }
+          } else {
+            this.payment_method = '';
           }
         },
         error => {
