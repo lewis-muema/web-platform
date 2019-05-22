@@ -653,8 +653,7 @@ export default {
     }),
 
     dispatchCarrierType() {
-      const type = this.carrier_type;
-      this.setCarrierType(type);
+      this.setCarrierType(this.carrier_type);
     },
     dispatchScheduleTime() {
       this.setScheduleTime(this.schedule_time);
