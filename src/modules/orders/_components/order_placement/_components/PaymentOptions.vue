@@ -413,10 +413,11 @@ export default {
       };
     },
 
-    checkAllowPrePaid() {
+    checkAccountPaymentOption() {
       if (
-        this.getPriceRequestObject.payment_option === 1 &&
-        this.getRunningBalance - this.order_cost >= 0
+        (this.getPriceRequestObject.payment_option === 1 &&
+          this.getRunningBalance - this.order_cost >= 0) ||
+        this.getPriceRequestObject.payment_option === 2
       ) {
         return true;
       }
@@ -492,7 +493,7 @@ export default {
       }
 
       if (this.payment_method === '') {
-        if (this.checkAllowPrePaid()) {
+        if (this.checkAccountPaymentOption()) {
           this.handlePostPaidPayments();
         } else {
           this.doNotification(
@@ -1019,7 +1020,7 @@ export default {
         response => {
           if (this.default_currency === 'KES' && this.mpesa_valid) {
             if (this.allowCash) {
-              if (this.checkAllowPrePaid()) {
+              if (this.checkAccountPaymentOption()) {
                 this.payment_method = '';
               } else {
                 this.payment_method = '3';
