@@ -970,6 +970,7 @@ export default {
       if ('vendor_name' in activeVendorName && activeVendorClass !== '') {
         this.setActiveVendorName(activeVendorName.vendor_name);
         this.setActivePackageClass(activeVendorClass);
+        this.setActiveVendorDetails(activeVendorName);
         this.setDefaultCarrierType();
         this.setOrderState(2);
         this.setExtendOptions(true);
