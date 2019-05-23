@@ -15,4 +15,7 @@ export default {
   setUserCountryCode(state, val) {
     state.country_code = val;
   },
+  setVerificationRequestId(state, val) {
+    state.request_id = val;
+  },
 };
