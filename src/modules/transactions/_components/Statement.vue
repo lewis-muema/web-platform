@@ -41,23 +41,12 @@
           </el-button>
             <el-dropdown-menu class="export_dropdown"slot="dropdown">
               <el-dropdown-item  command="a">Excel</el-dropdown-item>
-              <!-- <el-dropdown-item  command="b">PDF</el-dropdown-item> -->
+              <el-dropdown-item  command="b">PDF</el-dropdown-item>
             </el-dropdown-menu>
       </el-dropdown>
       </div>
     </div>
-     <!-- <el-table
-      id="save-pdf"
-      v-loading="loading"
-      :data="statement_data"
-      style="width: 100%;"
-      :border="true"
-      :stripe="true"
-      :row-key="getRowKey"
-      :expand-row-keys="expand_keys"
-      @row-click="expandTableRow"
-      @expand-change="handleRowExpand"
-    /> -->
+     
     
     <el-table
       :data="statement_data"
@@ -116,6 +105,9 @@ import { mapActions, mapGetters } from 'vuex';
 import { Printd } from 'printd';
 import * as _  from 'lodash';
 import  exportFromJSON from 'export-from-json';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const moment = require('moment');
 
@@ -337,10 +329,30 @@ export default {
       exportFromJSON({ data, fileName, exportType })
       }
       else{
-      // const d = new Printd();
-      // // opens the "print dialog" of your browser to print the element
-      // d.print(document.getElementById('save1-pdf'), cssText);
-      }
+              
+          let pdfBody = [
+            ['Amount', 'Date', 'Description','Payment Method','Running Balance','Transaction']
+          ];
+
+          this.statementData.forEach(item => {
+            pdfBody.push([
+              item.amount, item.date_time,item.description,item.pay_method_name,item.running_balance,item.txn
+            ])
+          });
+
+          var docDefinition = {
+                  pageSize: 'A3',
+            widths: [ '*', 'auto', 100, '*' ],
+
+                  content: [
+              {
+                table: {
+                  body: pdfBody
+                }
+              }]
+                };
+          pdfMake.createPdf(docDefinition).download('Statement.pdf');
+                }
 
     }
   },
