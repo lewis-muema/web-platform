@@ -244,6 +244,7 @@ export default {
       unset_polyline: '$_orders/removePolyline',
       set_order_path: '$_orders/$_home/setOrderPath',
       unset_order_path: '$_orders/$_home/unsetOrderPath',
+      unsetStorePath: '$_orders/unsetStorePath',
       set_location_name: '$_orders/$_home/setLocationName',
       unset_location_name: '$_orders/$_home/unsetLocationName',
       setPickupFilled: '$_orders/$_home/setPickUpFilled',
@@ -315,6 +316,7 @@ export default {
 
       this.unset_location_marker(index);
       this.unset_order_path(index);
+      this.unsetStorePath(index);
       this.deleteLocationInModel(index);
       this.unset_location_name(index);
     },
@@ -370,6 +372,8 @@ export default {
         this.locations.length > 1 &&
         this.get_pickup_filled === true
       ) {
+        this.clearOuterPriceRequestObject();
+        this.clearOuterActiveVendorDetails();
         this.doPriceRequest();
       }
     },
