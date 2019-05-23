@@ -8,6 +8,7 @@ const state = {
   email: '',
   name: '',
   country_code: '',
+  request_id: '',
 };
 
 export default {
