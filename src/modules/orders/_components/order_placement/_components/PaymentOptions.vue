@@ -611,9 +611,6 @@ export default {
       if ('default' in session) {
         acc = session[session.default];
       }
-      if (this.get_schedule_time === '') {
-        this.setScheduleTime(this.moment());
-      }
       let payload = {
         note: this.get_order_notes,
         trans_no: this.activeVendorPriceData.order_no,
