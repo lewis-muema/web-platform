@@ -1620,6 +1620,7 @@ ul.timeline > li#timeline_right.payedReached:before{
 }
 .tracking-loader{
   padding-bottom: 10px;
+  width: 120%;
 }
 .tracking-loader-inner{
   padding-left:19px;
