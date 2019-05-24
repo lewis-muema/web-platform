@@ -58,7 +58,7 @@
           </el-button>
           <el-dropdown-menu class="export_dropdown" slot="dropdown">
             <el-dropdown-item command="a">Excel</el-dropdown-item>
-            <!-- <el-dropdown-item command="b">PDF</el-dropdown-item> -->
+            <el-dropdown-item command="b">PDF</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -171,6 +171,10 @@ import { mapActions, mapGetters } from 'vuex';
 import { Printd } from 'printd';
 import * as _ from 'lodash';
 import exportFromJSON from 'export-from-json';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 import numeral from 'numeral';
 
 const moment = require('moment');
@@ -485,10 +489,41 @@ export default {
 
         exportFromJSON({ data, fileName, exportType });
       } else {
-        const d = new Printd();
-        // opens the "print dialog" of your browser to print the element
-        d.print(document.getElementById('save-pdf'), cssText);
-      }
+       let pdfBdy = [
+         ['Order Number',
+         'Order Amount',
+            'Order Date',
+            'Order Distance in KM',
+            'User',
+            'From',
+            'To',
+            'Riders Name',
+            'Riders Phone']
+       ];
+       this.orderHistoryData.forEach(item => {
+         pdfBdy.push([
+           item.order_no, item.order_cost,item.order_date,
+          item.order_details.distance,item.user_details.name,
+          item.path[0].name,item.path[1].name,item.rider.rider_name,item.rider.rider_phone
+         ])
+       });
+       var docDefinition = {
+                  pageSize: 'A3',
+            widths: [ '*', 'auto', 100, '*' ],
+              footer:  function(currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
+
+
+                  content: [
+              {
+                table: {
+                  body: pdfBdy
+                }
+              }]
+                };
+          pdfMake.createPdf(docDefinition).download('Order History.pdf');
+                }
+
+      
     },
     formatCurrency(currency) {
       return numeral(currency).format('0,0');
