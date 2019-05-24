@@ -146,7 +146,7 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapMutations, mapActions, mapGetters } from 'vuex';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
 export default {
@@ -166,7 +166,6 @@ export default {
       phoneVerificationForm: {},
       code: '',
       verificationState: false,
-      requestId: '',
     };
   },
   methods: {
@@ -179,11 +178,15 @@ export default {
       setEmail: '$_auth/setEmail',
       setName: '$_auth/setName',
       setUserCountryCode: '$_auth/setUserCountryCode',
+      setVerificationRequestId: '$_auth/setVerificationRequestId',
     }),
     ...mapActions({
       requestSignUpCheck: '$_auth/requestSignUpCheck',
       requestSignUpPhoneVerification: '$_auth/requestSignUpPhoneVerification',
       requestSignUpVerificationVerify: '$_auth/requestSignUpVerificationVerify',
+    }),
+    ...mapGetters({
+      getVerificationRequestId: '$_auth/getVerificationRequestId',
     }),
     sign_up() {
       if (this.name !== '' && this.email !== '' && this.phone !== '' && this.password !== '') {
@@ -279,7 +282,7 @@ export default {
     signUpVerificationVerify() {
       const values = {};
       values.code = this.code;
-      values.request_id = this.requestId;
+      values.request_id = this.getVerificationRequestId();
       const full_payload = {
         values,
         vm: this,
@@ -319,7 +322,7 @@ export default {
       this.requestSignUpPhoneVerification(full_payload).then(
         response => {
           if (response.status) {
-            this.requestId = response.request_id;
+            this.setVerificationRequestId(response.request_id);
           } else {
             this.doNotification(2, 'Phone Verification', response.message);
           }

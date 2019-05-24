@@ -116,6 +116,9 @@ const setStorePath = (state, val) => {
 const clearStorePath = (state) => {
   state.location_path = [];
 };
+const unsetStorePath = (state, index) => {
+  state.location_path.splice(index, 1);
+};
 const setOuterPriceRequestObject = (state, payload) => {
   state.outer_price_request = payload;
 };
@@ -152,4 +155,5 @@ export default {
   clearStorePath,
   clearOuterPriceRequestObject,
   clearOuterActiveVendorDetails,
+  unsetStorePath,
 };
