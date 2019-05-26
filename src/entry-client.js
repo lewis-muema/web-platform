@@ -21,3 +21,13 @@ if (window.__INITIAL_STATE__) {
 router.onReady(() => {
   app.$mount('#app');
 });
+
+window.events = new Vue();
+
+/*
+ * Bootstrap application with global functions
+ * NB: Keep this at a minimum (Only 5 allowed at most)
+ */
+window.flash = (details) => {
+  window.events.$emit('flash', details);
+};
