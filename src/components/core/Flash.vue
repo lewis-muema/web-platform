@@ -2,15 +2,26 @@
 
 <script>
   export default {
-    props: ['details'],
+    props: [
+      'details'
+    ],
 
     data(){
-      return {}
+      return {
+        codes: {
+          '0': 'success',
+          '1': 'success',
+          '2': 'warning',
+          '3': 'error',
+        }
+      }
     },
 
     methods: {
       flash(details){
-        this.$notify(details);
+        let data = Object.assign({}, details);
+        data['type'] = this.codes[details.type];
+        this.$notify(data);
       },
     },
 
