@@ -265,7 +265,6 @@ export default {
                   this.setEmail(this.email);
                   this.setPhone(this.phone);
                   this.setPassword(this.password);
-                  this.$router.push('/auth/sign_up_verification');
                   this.sendVerificationCode();
                 } else {
                   this.message = response.data.reason;
