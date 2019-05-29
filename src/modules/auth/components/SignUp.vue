@@ -260,13 +260,13 @@ export default {
                   response = response[0];
                 }
                 if (response.status) {
-                  // this.phoneVerification = true;
+                  this.phoneVerification = true;
                   this.setName(this.name);
                   this.setEmail(this.email);
                   this.setPhone(this.phone);
                   this.setPassword(this.password);
                   this.$router.push('/auth/sign_up_verification');
-                  // this.sendVerificationCode();
+                  this.sendVerificationCode();
                 } else {
                   this.message = response.data.reason;
                   this.doNotification(2, 'Sign Up failed', response.data.reason);
