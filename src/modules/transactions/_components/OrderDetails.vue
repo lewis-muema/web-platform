@@ -74,6 +74,9 @@
           {{ order_details.rider.rider_name }}
         </div>
         <div class="rider_details_item">
+          {{ order_details.rider.rider_phone }}
+        </div>
+        <div class="rider_details_item">
           {{ order_details.rider.number_plate }}
         </div>
         <div v-if="order_details.order_details.delivery_status === 3" class="rider_details_item">

@@ -36,6 +36,7 @@
     "mqtt": "^2.18.8",
     "numeral": "^2.0.6",
     "path": "^0.12.7",
+    "pdfmake": "^0.1.56",
     "printd": "^1.1.0",
     "serve-favicon": "^2.5.0",
     "sinon": "^7.2.2",

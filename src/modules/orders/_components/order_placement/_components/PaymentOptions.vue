@@ -611,7 +611,6 @@ export default {
       if ('default' in session) {
         acc = session[session.default];
       }
-
       let payload = {
         note: this.get_order_notes,
         trans_no: this.activeVendorPriceData.order_no,
