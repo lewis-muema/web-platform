@@ -124,52 +124,58 @@ export default {
                 this.doNotification(2, 'Login failed', 'Account deactivated');
               }
             } else {
-              let partsOfToken = '';
-              if (Array.isArray(response)) {
-                const res = response[1];
-                localStorage.setItem('jwtToken', res);
-                partsOfToken = res.toString().split('.');
-              } else {
-                localStorage.setItem('jwtToken', response);
-                partsOfToken = response.split('.');
-              }
-              const middleString = partsOfToken[1];
-              const data = atob(middleString);
-              const { payload } = JSON.parse(data);
-              if (response) {
-                // set session
-                // commit everything to the store
-                // redirect to orders
-                const session_data = payload;
-                const json_session = JSON.stringify(session_data);
-                this.setSession(json_session);
-                this.$store.commit('setSession', session_data);
-                let analytics_env = '';
-                try {
-                  analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-                } catch (er) {}
-                if ('default' in session_data && analytics_env === 'production') {
-                  const acc = session_data[session_data.default];
+              try{
+                if (response) {
+                  let partsOfToken = '';
+                  if (Array.isArray(response)) {
+                    const res = response[1];
+                    localStorage.setItem('jwtToken', res);
+                    partsOfToken = res.toString().split('.');
+                  } else {
+                    localStorage.setItem('jwtToken', response);
+                    partsOfToken = response.split('.');
+                  }
+                  const middleString = partsOfToken[1];
+                  const data = atob(middleString);
+                  const { payload } = JSON.parse(data);
 
-                  mixpanel.people.set_once({
-                    $email: acc.user_email,
-                    $phone: acc.user_phone,
-                    'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-                    $name: acc.user_name,
-                    'Client Type': 'Web Platform',
-                  });
+                  // set session
+                  // commit everything to the store
+                  // redirect to orders
+                  const session_data = payload;
+                  const json_session = JSON.stringify(session_data);
+                  this.setSession(json_session);
+                  this.$store.commit('setSession', session_data);
+                  let analytics_env = '';
+                  try {
+                    analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+                  } catch (er) {}
+                  if ('default' in session_data && analytics_env === 'production') {
+                    const acc = session_data[session_data.default];
 
-                  // login identify
-                  mixpanel.identify(acc.user_email);
+                    mixpanel.people.set_once({
+                      $email: acc.user_email,
+                      $phone: acc.user_phone,
+                      'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                      $name: acc.user_name,
+                      'Client Type': 'Web Platform',
+                    });
 
-                  // track login
-                  mixpanel.track('User Login', {
-                    'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-                    'Last Login': new Date(),
-                    'Client Type': 'Web Platform',
-                  });
+                    // login identify
+                    mixpanel.identify(acc.user_email);
+
+                    // track login
+                    mixpanel.track('User Login', {
+                      'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                      'Last Login': new Date(),
+                      'Client Type': 'Web Platform',
+                    });
+                  }
+                  this.$router.push('/orders');
                 }
-                this.$router.push('/orders');
+              } catch (error) {
+                //@todo Log the error (central logging)
+                this.login_text = 'Login';
               }
             }
           },
