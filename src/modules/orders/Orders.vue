@@ -24,10 +24,16 @@ export default {
   components: { MainHeader, MapComponent, OngoingComponent },
   mixins: [RegisterStoreModule],
 
+  watch: {
+    $route(to, from) {
+      this.$store.commit('$_orders/removePolyline', []);
+      this.$store.commit('$_orders/removeMarkers', []);
+      this.$store.commit('$_orders/$_tracking/setTrackedOrder', '');
+    },
+  },
+
   created() {
     this.registerOrdersStore();
-    this.destroyStoredMarkersData();
-
     // const STORE_KEY = '$_orders';
     // this.register_store_module(STORE_KEY, order_store);
   },
@@ -38,11 +44,6 @@ export default {
       if (!moduleIsRegistered) {
         this.$store.registerModule('$_orders', order_store);
       }
-    },
-    destroyStoredMarkersData() {
-      this.$store.commit('$_orders/removePolyline', []);
-      this.$store.commit('$_orders/removeMarkers', []);
-      this.$store.commit('$_orders/$_tracking/setTrackedOrder', '');
     },
   },
 };
