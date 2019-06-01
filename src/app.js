@@ -95,6 +95,9 @@ Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 Vue.component('font-awesome-icon', FontAwesomeIcon);
+
+require('./views');
+
 export function createApp() {
   // create router and store instances
   const router = createRouter();
