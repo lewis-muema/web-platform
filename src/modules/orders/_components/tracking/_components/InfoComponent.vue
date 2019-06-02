@@ -246,7 +246,7 @@
                           <p class="info-text-transform infor-top-bar-text">
                             Order Placed
                           </p>
-                          <p>{{ tracking_data.date_time | moment }}</p>
+                          <p>{{ tracking_data.eta_data.placed | moment }}</p>
                         </div>
                       </li>
 

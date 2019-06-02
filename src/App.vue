@@ -3,6 +3,9 @@
     id="app"
     class="box app app-overflow"
   >
+    <!-- Global component responsible for flashing notifications -->
+    <sendy-flash details="" />
+    
     <router-view class="box" />
   </div>
 </template>
