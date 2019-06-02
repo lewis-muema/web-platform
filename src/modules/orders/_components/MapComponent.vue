@@ -124,7 +124,7 @@ export default {
       const image = document.createElement('img');
       image.crossOrigin = 'anonymous';
       image.src = `https://images.sendyit.com/web_platform/vendor_type/top/${vendor_type}.svg`;
-      const imageLoadPromise = new Promise(resolve => {
+      const imageLoadPromise = new Promise((resolve) => {
         image.onload = resolve;
       }).then(() => {
         ctx.drawImage(image, 0, 0);
@@ -189,9 +189,9 @@ export default {
           this.infoHeader = '';
           this.infoDescription = '';
         } else if (
-          data.delivery_status === 2 &&
-          waiting !== undefined &&
-          this.destination_waiting
+          data.delivery_status === 2
+          && waiting !== undefined
+          && this.destination_waiting
         ) {
           // return 'Waiting at destination'
           this.infoHeader = `Your ${
@@ -214,9 +214,9 @@ export default {
             this.iconLabel = 'destination';
           }
         } else if (
-          data.delivery_status === 0 &&
-          data.confirm_status === 1 &&
-          waiting !== undefined
+          data.delivery_status === 0
+          && data.confirm_status === 1
+          && waiting !== undefined
         ) {
           // return 'Waiting at pick up location';
           this.infoHeader = `Your ${
@@ -279,7 +279,7 @@ export default {
     activeState() {
       this.$store
         .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
-        .then(response => {
+        .then((response) => {
           if (response.data.status) {
             this.orderStatus(response.data);
           } else {
@@ -288,7 +288,7 @@ export default {
         });
     },
     checkRiderPosition() {
-      let size = Object.keys(this.vendors).length;
+      const size = Object.keys(this.vendors).length;
       if (size > 0) {
         this.rider_online_status = true;
       } else {
@@ -308,8 +308,8 @@ export default {
                  object-fit: contain;
                  float: left;">
           <img style ="height: 45px;" src="https://images.sendyit.com/web_platform/vendor_type/top/${
-            this.vendor_icon_id
-          }.png"></img>
+  this.vendor_icon_id
+}.png"></img>
                  </div>
                  <div style="  width: 70%;
                    display: inline-block;
@@ -324,9 +324,9 @@ export default {
     checkUserLocation() {
       let markedCoords = '';
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          let lat = position.coords.latitude;
-          let long = position.coords.longitude;
+        navigator.geolocation.getCurrentPosition((position) => {
+          const lat = position.coords.latitude;
+          const long = position.coords.longitude;
 
           markedCoords = `${lat},${long}`;
           // markedCoords = '0.3130284,32.4590386'; (Uganda coordinates for test)
@@ -337,20 +337,20 @@ export default {
     getCode(position) {
       const payload = {};
       payload.coordinates = position;
-      let full_payload = {
+      const full_payload = {
         values: payload,
         app: 'PRIVATE_API',
         endpoint: 'geocountry',
       };
       this.requestCountryCode(full_payload).then(
-        response => {
-          let code = response.country_code;
+        (response) => {
+          const code = response.country_code;
           this.$store.commit('setCountryCode', code);
-          let country_code_data = currencyConversion.getCountryByCode(code);
+          const country_code_data = currencyConversion.getCountryByCode(code);
           this.$store.commit('setDefaultCurrency', country_code_data.currencyCode);
           this.setMapCentreLocation(code);
         },
-        error => {}
+        (error) => {},
       );
     },
     setMapCentreLocation(code) {
@@ -361,6 +361,11 @@ export default {
         this.mapCentreLocation.lat = -1.3084143;
         this.mapCentreLocation.lng = 36.7658132;
       }
+    },
+    removeStoredMarkers() {
+      this.$store.commit('$_orders/removePolyline', []);
+      this.$store.commit('$_orders/removeMarkers', []);
+      this.$store.commit('$_orders/$_tracking/setTrackedOrder', '');
     },
   },
   computed: {
@@ -386,7 +391,7 @@ export default {
       }
     },
     '$route.params.order_no': function trackedOrder(order) {
-      this.$store.dispatch('$_orders/getOrderData', { order_no: order }).then(response => {
+      this.$store.dispatch('$_orders/getOrderData', { order_no: order }).then((response) => {
         if (response.status) {
           this.orderStatus(response.data);
         } else {
@@ -403,6 +408,7 @@ export default {
     this.activeState();
     this.activeMarker();
     this.checkUserLocation();
+    this.removeStoredMarkers();
   },
 };
 </script>
