@@ -641,9 +641,4 @@ span.el-pagination__jump {
   font-size: 13px;
   width: 90% !important;
 }
-.el-dropdown-menu.export_dropdown{
-  color: #ecf0f1 !important;
-  background-color: #ffffff !important;
-  font-size: 13px;
-  width: 10.5% !important;
-}
+
