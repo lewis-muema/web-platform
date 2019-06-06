@@ -532,11 +532,22 @@ export default {
 };
 </script>
 
-<style lang="css">
+<style lang="css" >
 .btn-order-hstry{
   border-width:0px !important;
 }
 .el-dropdown{
   float: right;
+}
+.body > div.el-picker-panel.el-date-picker.el-popper{
+background-color: #fff !important;
+}
+#dropdown-menu-9018{
+background-color: #fff !important;
+color:dimgray !important;
+}
+.body > div.el-select-dropdown.el-popper > div.el-scrollbar > div.el-select-dropdown__wrap.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default > ul > li{
+background-color: #fff !important;
+color:dimgray !important;
 }
 </style>
