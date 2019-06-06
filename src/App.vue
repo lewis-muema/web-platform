@@ -5,7 +5,7 @@
   >
     <!-- Global component responsible for flashing notifications -->
     <sendy-flash details="" />
-    
+
     <router-view class="box" />
   </div>
 </template>
@@ -48,7 +48,7 @@ export default {
           title: notification.title,
           message: notification.message,
           offset: 20,
-          duration: 10000,
+          duration: 5000,
         });
       } else if (notification.level === 1) {
         // success
@@ -57,7 +57,7 @@ export default {
           title: notification.title,
           message: notification.message,
           offset: 20,
-          duration: 10000,
+          duration: 5000,
         });
       } else if (notification.level === 2) {
         // warning
@@ -66,7 +66,7 @@ export default {
           message: notification.message,
           type: 'warning',
           offset: 20,
-          duration: 10000,
+          duration: 5000,
         });
       } else if (notification.level === 3) {
         // error
@@ -75,7 +75,7 @@ export default {
           type: 'error',
           message: notification.message,
           offset: 20,
-          duration: 10000,
+          duration: 5000,
         });
       } else {
         // default
