@@ -56,7 +56,7 @@
           <el-button class="download_history" type="primary" size="mini">
             Download<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
-          <el-dropdown-menu class="export_dropdown" slot="dropdown">
+          <el-dropdown-menu class="export_dropdown" id="order_hist"slot="dropdown">
             <el-dropdown-item command="a">Excel</el-dropdown-item>
             <el-dropdown-item command="b">PDF</el-dropdown-item>
           </el-dropdown-menu>
@@ -542,12 +542,13 @@ export default {
 .body > div.el-picker-panel.el-date-picker.el-popper{
 background-color: #fff !important;
 }
-.el-dropdown-menu.export_dropdown{
+#order_hist{
   color: #ecf0f1 !important;
   background-color: #ffffff !important;
   font-size: 13px;
   width: 10.5% !important;
 }
+
 .body > div.el-select-dropdown.el-popper > div.el-scrollbar > div.el-select-dropdown__wrap.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default > ul > li{
 background-color: #fff !important;
 color:dimgray !important;
