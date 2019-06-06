@@ -428,65 +428,15 @@
                     </span>
                   </div>
                 </el-col>
-                <!-- <el-col :span="6">
-                  <div class="share-option">
+                <el-col :span="6">
+                  <div class="share-option" @click="sharedialog()">
                     <i class="el-icon-share top-bar-info" />
                     SHARE
                   </div>
-                </el-col> -->
+                </el-col>
               </el-row>
             </div>
           </div>
-          <el-dialog :visible.sync="cancelOption" class="cancelOptions">
-            <div class="">
-              <div class="cancel-reason-option">
-                Cancel this order?
-              </div>
-              <div class="cancel-reason-option">
-                You can place another one at any time.
-              </div>
-            </div>
-            <div class="cancel-reason-text">
-              <div class="">
-                <el-radio v-model="cancel_reason" label="4">
-                  I placed the wrong locations
-                </el-radio>
-              </div>
-              <div class="">
-                <el-radio v-model="cancel_reason" label="5">
-                  My order is not ready
-                </el-radio>
-              </div>
-              <div class="">
-                <el-radio v-model="cancel_reason" label="7">
-                  No driver has been allocated
-                </el-radio>
-              </div>
-              <div class="">
-                <el-radio v-model="cancel_reason" label="8">
-                  I placed this order twice
-                </el-radio>
-              </div>
-            </div>
-            <div class="action--slide-desc">
-              <button
-                type="button"
-                name="button"
-                class="action--slide-button"
-                @click="cancelOrder()"
-              >
-                Yes
-              </button>
-              <button
-                type="button"
-                name="button"
-                class="action--slide-button"
-                @click="cancelToggle()"
-              >
-                No
-              </button>
-            </div>
-          </el-dialog>
         </div>
       </transition>
     </div>
@@ -661,6 +611,12 @@
               </div>
             </div>
           </div>
+        </div>
+      </transition>
+    </div>
+    <div>
+      <transition name="fade" mode="out-in">
+        <div class="">
           <el-dialog :visible.sync="cancelOption" class="cancelOptions">
             <div class="">
               <div class="cancel-reason-option">
@@ -708,6 +664,38 @@
                 @click="cancelToggle()"
               >
                 No
+              </button>
+            </div>
+          </el-dialog>
+
+          <el-dialog :visible.sync="shareOption" class="cancelOptions">
+            <div class="">
+              <div class="share-text-option share-order-option share-notification-extend">
+                Share ETA via SMS
+              </div>
+              <div class="share-eta-divider"></div>
+              <div class="share-text-option share-notification-extend share-eta-input-header">
+                Recipient Phone Number
+              </div>
+            </div>
+            <div class="share-notification-extend share-eta-input">
+              <el-input
+                v-model.trim="recipientPhone"
+                :min="0"
+                type="number"
+                autocomplete="true"
+                class="share-input-layout"
+              />
+            </div>
+
+            <div class="share-notification-extend eta-button-align">
+              <button
+                type="button"
+                name="button"
+                class="action--slide-button input-phone"
+                @click="shareETASms()"
+              >
+                Submit
               </button>
             </div>
           </el-dialog>
@@ -760,6 +748,8 @@ export default {
       truck_orders: [20],
       user_state: false,
       isSaved: false,
+      shareOption: false,
+      recipientPhone: '',
     };
   },
   computed: {
@@ -1079,42 +1069,46 @@ export default {
       this.$store.commit('setNotification', notification);
     },
     cancelOrder() {
-      const payload = {
-        order_no: this.tracking_data.order_no,
-        cancel_reason_id: this.cancel_reason,
-        reason_description: this.cancel_desc,
-        client_type: this.$store.getters.getSession.default,
-      };
-      const that = this;
-      this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then(response => {
-        if (response.status) {
-          that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
-          that.cancelToggle();
-          this.$store.dispatch('$_orders/fetchOngoingOrders');
-          that.place();
-        } else {
-          const payload2 = {
-            order_no: that.$route.params.order_no,
-            cancel_reason_id: 4,
-            reason_description: 'I placed the wrong locations',
-            client_type: that.$store.getters.getSession.default,
-          };
-          this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then(response2 => {
-            if (response2.status) {
-              that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
-              that.cancelToggle();
-              this.$store.dispatch('$_orders/fetchOngoingOrders');
-              that.place();
-            } else {
-              that.doNotification(
-                '3',
-                'Order cancellation failed',
-                'Could not cancel the order. Please contact Customer Care at 0709779779.'
-              );
-            }
-          });
-        }
-      });
+      if (this.cancel_reason !== '') {
+        const payload = {
+          order_no: this.tracking_data.order_no,
+          cancel_reason_id: this.cancel_reason,
+          reason_description: this.cancel_desc,
+          client_type: this.$store.getters.getSession.default,
+        };
+        const that = this;
+        this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then(response => {
+          if (response.status) {
+            that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+            that.cancelToggle();
+            this.$store.dispatch('$_orders/fetchOngoingOrders');
+            that.place();
+          } else {
+            const payload2 = {
+              order_no: that.$route.params.order_no,
+              cancel_reason_id: 4,
+              reason_description: 'I placed the wrong locations',
+              client_type: that.$store.getters.getSession.default,
+            };
+            this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then(response2 => {
+              if (response2.status) {
+                that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+                that.cancelToggle();
+                this.$store.dispatch('$_orders/fetchOngoingOrders');
+                that.place();
+              } else {
+                that.doNotification(
+                  2,
+                  'Order cancellation failed',
+                  'Could not cancel the order. Please contact Customer Care at 0709779779.'
+                );
+              }
+            });
+          }
+        });
+      } else {
+        this.doNotification(3, 'Order cancellation failed', 'Please select cancellation reason.');
+      }
     },
     saveDetails() {
       let sessionData = this.$store.getters.getSession;
@@ -1167,6 +1161,35 @@ export default {
         this.$store.dispatch('$_orders/$_tracking/trackMQTT');
       }
     },
+    sharedialog() {
+      this.shareOption = true;
+    },
+    shareETASms() {
+      if (this.recipientPhone !== '' && this.recipientPhone.length > 9) {
+        const payload = {};
+        const track = window.location.href;
+        const session = this.$store.getters.getSession;
+        let user_name = session[session.default].user_name;
+        payload.phone = this.recipientPhone;
+        payload.message = `Hi! ${user_name}wants you to track their Sendy order here: ${track}`;
+
+        this.$store.dispatch('$_orders/$_tracking/requestETASms', payload).then(
+          response => {
+            if (response.status === 200) {
+              this.doNotification(1, 'Share ETA', 'SMS sent successfully.');
+              this.shareOption = false;
+            } else {
+              this.doNotification(2, 'Share ETA failed', 'Could not send ETA sms. Kindly retry.');
+            }
+          },
+          error => {
+            this.doNotification(2, 'Share ETA Error ', 'Check Internet connection and retry');
+          }
+        );
+      } else {
+        this.doNotification(2, 'Share ETA failed !', 'Please enter a valid phone number');
+      }
+    },
   },
 };
 </script>
@@ -1180,7 +1203,7 @@ export default {
     display: flex !important;
   }
   .cancelOptions > div {
-    margin-top: 6em !important;
+    margin-top: 25vh !important;
     width: 95% !important;
   }
   .cancel-reason-text{
@@ -1530,7 +1553,7 @@ ul.timeline > li#timeline_right.payedReached:before{
 }
 .cancelOptions > div
 {
-  margin-top: 16em;
+  margin-top: 25vh !important;
   width: 30%;
 }
 .v-modal{
@@ -1587,6 +1610,7 @@ ul.timeline > li#timeline_right.payedReached:before{
 }
 .share-option{
   padding-top: 20px;
+  cursor: pointer;
 }
 .rimg-disp{
   vertical-align: middle;
@@ -1770,5 +1794,37 @@ ul.inforbar_order_timeline:before{
 }
 .saveDetailsDisable{
   display: none;
+}
+.share-order-option{
+  line-height: 20px;
+}
+.share-text-option{
+  text-align: left;
+  margin: 0px 10px 10px 10px;
+}
+.input-phone{
+  height: 40px !important;
+  width: 30% ;
+}
+.el-dialog__body{
+  padding-top: 0px !important;
+  padding-left : 0px !important;
+  padding-right : 0px !important;
+}
+.share-notification-extend{
+  padding-right: 20px;
+  padding-left: 20px;
+}
+.share-eta-divider{
+  border-bottom: 1px solid #74696942;
+}
+.share-eta-input-header{
+  padding-top: 20px;
+}
+.share-eta-input{
+  margin: 0px 10px 10px 10px;
+}
+.eta-button-align{
+  text-align: right;
 }
 </style>
