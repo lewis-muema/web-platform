@@ -532,7 +532,7 @@ export default {
 };
 </script>
 
-<style lang="css" >
+<style lang="css">
 .btn-order-hstry{
   border-width:0px !important;
 }
@@ -542,9 +542,11 @@ export default {
 .body > div.el-picker-panel.el-date-picker.el-popper{
 background-color: #fff !important;
 }
-#dropdown-menu-9018{
-background-color: #fff !important;
-color:dimgray !important;
+.el-dropdown-menu.export_dropdown{
+  color: #ecf0f1 !important;
+  background-color: #ffffff !important;
+  font-size: 13px;
+  width: 10.5% !important;
 }
 .body > div.el-select-dropdown.el-popper > div.el-scrollbar > div.el-select-dropdown__wrap.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default > ul > li{
 background-color: #fff !important;
