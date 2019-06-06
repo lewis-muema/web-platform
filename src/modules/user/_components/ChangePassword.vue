@@ -37,12 +37,6 @@
           class="form-control profile-dimen"
         >
       </p>
-      <!--<p class="change-password-error">-->
-      <!--{{message}}-->
-      <!--</p>-->
-      <!--<p class="change-password-success">-->
-      <!--{{message}}-->
-      <!--</p>-->
       <p>
         <br>
         <input
@@ -57,13 +51,14 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
+import SessionMxn from '../../../mixins/session_mixin';
 
 export default {
   name: 'ChangePassword',
+  mixins: [SessionMxn],
   data() {
     return {
-      // user_id: '',
       old_password: '',
       new_password: '',
       confirm_password: '',
@@ -75,7 +70,7 @@ export default {
       requestChangePassword: '$_user/requestChangePassword',
     }),
     update_password() {
-      if (this.old_password != '' && this.new_password != '' && this.confirm_password != '') {
+      if (this.old_password !== '' && this.new_password !== '' && this.confirm_password !== '') {
         if (this.new_password !== this.confirm_password) {
           const level = 3;
           this.message = 'Password does not match. Please try again';
@@ -93,21 +88,25 @@ export default {
               password: this.confirm_password,
             };
 
-            const full_payload = {
+            const fullPayload = {
               values,
               vm: this,
               app: 'NODE_PRIVATE_API',
               endpoint: 'update_user',
             };
 
-            this.requestChangePassword(full_payload).then(
+            this.requestChangePassword(fullPayload).then(
               (response) => {
                 if (response.status) {
                   const level = 1; // success
-                  this.message = 'Password Changed!';
-                  const notification = { title: '', level, message: this.message }; // notification object
+                  this.message = 'Password Changed. You will be redirected to the login page after 5 seconds';
+                  const notification = { title: 'Password Change', level, message: this.message }; // notification object
                   this.$store.commit('setNotification', notification);
                   this.$store.commit('setNotificationStatus', true); // activate notification
+                  setTimeout(() => {
+                    this.deleteSession();
+                    this.$router.push('/auth/sign_in');
+                  }, 5000);
                 } else {
                   const level = 3;
                   this.message = 'Something went wrong.';
@@ -129,24 +128,26 @@ export default {
               user_id: session[session.default].user_id,
               old_password: this.old_password,
               password: this.new_password,
-              password: this.confirm_password,
             };
 
-            const full_payload = {
+            const fullPayload = {
               values,
               vm: this,
               app: 'NODE_PRIVATE_API',
               endpoint: 'update_user',
             };
 
-            this.requestChangePassword(full_payload).then(
+            this.requestChangePassword(fullPayload).then(
               (response) => {
                 if (response.status) {
                   const level = 1; // success
-                  this.message = 'Details Saved!';
-                  const notification = { title: '', level, message: this.message }; // notification object
+                  this.message = 'Password Changed. You will be redirected to the login page after 5 seconds';
+                  const notification = { title: 'Password Change', level, message: this.message }; // notification object
                   this.$store.commit('setNotification', notification);
                   this.$store.commit('setNotificationStatus', true); // activate notification
+                  setTimeout(() => {
+                    this.$router.push('/auth/sign_in');
+                  }, 5000);
                 } else {
                   const level = 3;
                   this.message = 'Something went wrong.';
