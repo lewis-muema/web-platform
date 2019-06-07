@@ -1171,7 +1171,7 @@ export default {
         const session = this.$store.getters.getSession;
         let user_name = session[session.default].user_name;
         payload.phone = this.recipientPhone;
-        payload.message = `Hi! ${user_name}wants you to track their Sendy order here: ${track}`;
+        payload.message = `Hi! ${user_name} wants you to track their Sendy order here: ${track}`;
 
         this.$store.dispatch('$_orders/$_tracking/requestETASms', payload).then(
           response => {
