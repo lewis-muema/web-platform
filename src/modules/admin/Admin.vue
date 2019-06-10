@@ -1,18 +1,34 @@
 <template lang="html">
   <div class="">
     <main-header />
-    <div id="admin_container" class="container admin-container">
+    <div
+      id="admin_container"
+      class="container adm
+n-container"
+    >
       <div class="section">
-        <router-link class="section__link" to="/admin/users">
+        <router-link
+          class="section__link"
+          to="/admin/users"
+        >
           Users
         </router-link>
-        <router-link class="section__link" to="/admin/department">
+        <router-link
+          class="section__link"
+          to="/admin/department"
+        >
           Department
         </router-link>
-        <router-link class="section__link" to="/admin/api">
+        <router-link
+          class="section__link"
+          to="/admin/api"
+        >
           API
         </router-link>
-        <router-link class="section__link" to="/admin/company_details">
+        <router-link
+          class="section__link"
+          to="/admin/company_details"
+        >
           Company details
         </router-link>
       </div>
@@ -26,23 +42,22 @@
 <script>
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
-import VeeValidate from 'vee-validate';
-import { Validator } from 'vee-validate';
+import VeeValidate, { Validator } from 'vee-validate';
 import VueTelInput from 'vue-tel-input';
-import MainHeader from '../../components/headers/MainHeader.vue';
 import RegisterStoreModule from '../../mixins/register_store_module';
-import admin_store from './_store';
+import MainHeader from '../../components/headers/MainHeader.vue';
+import adminStore from './_store';
 
 Vue.use(VueTelInput);
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
   getMessage: field => 'The phone number not valid',
-  validate: value => {
+  validate: (value) => {
     const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
     let validity = false;
     try {
-      const number = phoneUtil.parse(value);
+      const number = phoneUtil.format(value);
       validity = phoneUtil.isValidNumber(number);
     } catch (e) {
       validity = false;
@@ -57,7 +72,7 @@ export default {
   mixins: [RegisterStoreModule],
   created() {
     const STORE_KEY = '$_admin';
-    this.$store.registerModule(STORE_KEY, admin_store);
+    this.$store.registerModule(STORE_KEY, adminStore);
   },
   computed: {
     ...mapGetters({
@@ -73,7 +88,7 @@ export default {
     },
   },
   destroyed() {
-    // TO DO:  destroy store
+    // TO DO:  destroy store?
   },
 };
 </script>
