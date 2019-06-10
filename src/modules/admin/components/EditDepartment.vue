@@ -2,7 +2,7 @@
   <div v-if="available" id="log_in" class="admin-edit-item">
     <div class="admin-edit-inner">
       <div class="">
-        <i class="el-icon-back edit-back" v-on:click="go_back"></i>
+        <i class="el-icon-back edit-back" @click="go_back" />
       </div>
       <div class="admin-edit2-details position--details">
         Edit Department Details
@@ -10,17 +10,17 @@
       <div class="edit-position">
         <div class="edit-holder edit-dimen">
           <input
+            v-model="deptDetails.department_name"
             class="input-control edit-form"
             type="text"
             name="department_name"
-            v-model="deptDetails.department_name"
             placeholder="Name"
           />
         </div>
         <div class="edit-holder">
           <el-select
-            class="addUser--select edit-select"
             v-model="deptDetails.cop_user_id"
+            class="addUser--select edit-select"
             placeholder="Admin"
           >
             <el-option
@@ -28,16 +28,15 @@
               :key="user.cop_user_id"
               :label="user.name"
               :value="user.cop_user_id"
-            >
-            </el-option>
+            />
           </el-select>
         </div>
         <div class="sign-holder">
           <button
+            id="update_department"
             class="button-primary btn-edit-dept"
             type="submit"
-            id="update_department"
-            v-on:click="update_department"
+            @click="update_department"
           >
             Update
           </button>
@@ -60,9 +59,15 @@ export default {
       userDetails: {},
     };
   },
+  computed: {
+    ...mapGetters({
+      deptData: '$_admin/getDepartmentsList',
+      userData: '$_admin/getUsersList',
+    }),
+  },
   mounted() {
-    let department = this.$route.params.id;
-    this.deptDetails = this.deptData.filter(dept => dept.department_id === department)[0];
+    const department = this.$route.params.id;
+    this.deptDetails = this.deptData.filter(dept => dept.department_id == department)[0];
 
     if (typeof this.deptDetails !== 'undefined') {
       this.available = true;
@@ -70,65 +75,58 @@ export default {
       this.available = false;
       this.go_back();
     }
-    let session = this.$store.getters.getSession;
+    const session = this.$store.getters.getSession;
     let cop_id = 0;
     if (session.default === 'biz') {
-      cop_id = session[session.default]['cop_id'];
+      cop_id = session[session.default].cop_id;
     }
-    let payload = {
-      cop_id: cop_id,
+    const payload = {
+      cop_id,
     };
-    let users_full_payload = {
+    const usersFullPayload = {
       values: payload,
       vm: this,
       app: 'NODE_PRIVATE_API',
       endpoint: 'cop_users',
     };
     this.$store
-      .dispatch('$_admin/requestUsersList', users_full_payload)
+      .dispatch('$_admin/requestUsersList', usersFullPayload)
       .then(response => {}, error => {});
   },
-  computed: {
-    ...mapGetters({
-      deptData: '$_admin/getDepartmentsList',
-      userData: '$_admin/getUsersList',
-    }),
-  },
-
   methods: {
     ...mapActions({
       editAdminDepartment: '$_admin/editAdminDepartment',
       requestUsersList: '$_admin/requestUsersList',
     }),
-    update_department: function() {
-      let payload = {};
+    update_department() {
+      const payload = {};
       payload.department_id = this.deptDetails.department_id;
       payload.department_name = this.deptDetails.department_name;
       payload.cop_user_id = this.deptDetails.cop_user_id;
-      let editDept_full_payload = {
+      const editDeptFullPayload = {
         values: payload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'cop_departments_update',
       };
-      this.$store.dispatch('$_admin/editAdminDepartment', editDept_full_payload).then(
+      this.$store.dispatch('$_admin/editAdminDepartment', editDeptFullPayload).then(
         response => {
-          let level = 1; //success
+          const level = 1; // success
           this.message = 'Edit Successful!';
-          let notification = { title: '', level: level, message: this.message }; //notification object
+          const notification = { title: '', level, message: this.message }; // notification object
           this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); //activate notification
+          this.$store.commit('setNotificationStatus', true); // activate notification
         },
         error => {
-          let level = 2;
+          const level = 2;
           this.message = 'Something went wrong.';
-          let notification = { title: '', level: level, message: this.message }; //notification object
+          const notification = { title: '', level, message: this.message }; // notification object
           this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); //activate notification
+          this.$store.commit('setNotificationStatus', true); // activate notification
         }
       );
     },
-    go_back: function() {
+    go_back() {
       this.$router.push('/admin/department');
     },
   },
@@ -168,7 +166,7 @@ export default {
     text-align: center;
     color: #666;
     /* margin-right: 20%; */
-    /*margin-top: 18% !important;*/
+    margin-top: 7% !important;
     margin-left: 100px;
     margin-right: 60px;
 }
