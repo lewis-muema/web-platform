@@ -25,14 +25,28 @@
         </button>
       </div>
     </div>
-    <el-table :data="fetchedData.sandbox" style="width: 100%" :border="true" :stripe="true">
+    <el-table
+      :data="fetchedData.sandbox"
+      style="width: 100%"
+      :border="true"
+      :stripe="true"
+    >
       <template slot="empty">
         {{ empty_payments_state }}
       </template>
 
-      <el-table-column label="Username" prop="api_username" />
-      <el-table-column label="API Key" prop="api_key" />
-      <el-table-column label="Created or Last Updated" prop="api_date_created" />
+      <el-table-column
+        label="Username"
+        prop="api_username"
+      />
+      <el-table-column
+        label="API Key"
+        prop="api_key"
+      />
+      <el-table-column
+        label="Created or Last Updated"
+        prop="api_date_created"
+      />
       <el-table-column label="API Status">
         <template slot-scope="scope">
           <span>{{ get_api_status(scope.$index, 'sandbox') }}</span>
@@ -60,9 +74,18 @@
         {{ empty_payments_state }}
       </template>
 
-      <el-table-column label="Username" prop="api_username" />
-      <el-table-column label="API Key" prop="api_key" />
-      <el-table-column label="Created or Last Updated" prop="api_date_created" />
+      <el-table-column
+        label="Username"
+        prop="api_username"
+      />
+      <el-table-column
+        label="API Key"
+        prop="api_key"
+      />
+      <el-table-column
+        label="Created or Last Updated"
+        prop="api_date_created"
+      />
       <el-table-column label="API Status">
         <template slot-scope="scope">
           <span>{{ get_api_status(scope.$index, 'live') }}</span>
@@ -86,8 +109,10 @@
           Ready to start using the Sendy API?
         </span>
         Head over to the
-        <a href="http://docs.sendypublicapi.apiary.io/#" target="_blank"> developer site </a
-        >&nbsp;for complete documentation.
+        <a
+          href="http://docs.sendypublicapi.apiary.io/#"
+          target="_blank"
+        > developer site </a>&nbsp;for complete documentation.
       </p>
     </div>
   </div>
@@ -118,15 +143,15 @@ export default {
     const payload = {
       cop_id,
     };
-    const apikey_full_payload = {
+    const apikeyFullPayload = {
       values: payload,
       vm: this,
       app: 'NODE_PRIVATE_API',
       endpoint: 'get_api',
     };
     this.$store
-      .dispatch('$_admin/requestKeysList', apikey_full_payload)
-      .then(response => {}, error => {});
+      .dispatch('$_admin/requestKeysList', apikeyFullPayload)
+      .then((response) => {}, (error) => {});
   },
   computed: {
     ...mapGetters({
@@ -144,17 +169,17 @@ export default {
       if (String(session.default) === 'biz') {
         cop_id = session[session.default].cop_id;
       }
-      const newKey_payload = {
+      const newKeyPayload = {
         cop_id,
       };
-      const newKeyFull_payload = {
-        values: newKey_payload,
+      const newKeyFullPayload = {
+        values: newKeyPayload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'generate_api',
       };
-      this.$store.dispatch('$_admin/generateAPIKey', newKeyFull_payload).then(
-        response => {
+      this.$store.dispatch('$_admin/generateAPIKey', newKeyFullPayload).then(
+        (response) => {
           this.update_api_text = 'Update API Key';
           const level = 1; // success
           this.message = 'Key Updated!';
@@ -162,14 +187,14 @@ export default {
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true); // activate notification
         },
-        error => {
+        (error) => {
           this.update_api_text = 'Update API Key';
           const level = 3;
           this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true); // activate notification
-        }
+        },
       );
     },
     generateAPIKey() {
@@ -179,17 +204,17 @@ export default {
       if (String(session.default) === 'biz') {
         cop_id = session[session.default].cop_id;
       }
-      const newKey_payload = {
+      const newKeyPayload = {
         cop_id,
       };
-      const newKeyFull_payload = {
-        values: newKey_payload,
+      const newKeyFullPayload = {
+        values: newKeyPayload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'generate_api',
       };
-      this.$store.dispatch('$_admin/generateAPIKey', newKeyFull_payload).then(
-        response => {
+      this.$store.dispatch('$_admin/generateAPIKey', newKeyFullPayload).then(
+        (response) => {
           this.generate_api_text = 'Generate API Key';
           const level = 1; // success
           this.message = 'Key Generated!';
@@ -197,14 +222,14 @@ export default {
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true); // activate notification
         },
-        error => {
+        (error) => {
           this.generate_api_text = 'Generate API Key';
           const level = 3;
           this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true); // activate notification
-        }
+        },
       );
     },
     changeSize(val) {
