@@ -2,7 +2,7 @@
   <div id="log_in" class="admin-edit-item">
     <div class="admin-edit-inner">
       <div class="">
-        <i class="el-icon-back edit-back" v-on:click="go_back"></i>
+        <i class="el-icon-back edit-back" @click="go_back" />
       </div>
       <div class="admin-edit2-details position--details">
         Add Department
@@ -10,16 +10,16 @@
       <div class="edit-position">
         <div class="edit-holder edit-dimen">
           <input
+            v-model="department_name"
             class="input-control edit-form"
             type="text"
-            v-model="department_name"
             placeholder="Name"
           />
         </div>
         <div class="edit-holder">
           <el-select
-            class="addUser--select edit-select"
             v-model="filterData.user"
+            class="addUser--select edit-select"
             placeholder="Admin"
           >
             <el-option
@@ -27,12 +27,11 @@
               :key="user.cop_user_id"
               :label="user.name"
               :value="user.cop_user_id"
-            >
-            </el-option>
+            />
           </el-select>
         </div>
         <div class="sign-holder">
-          <button class="button-primary add_dept--btn" type="submit" v-on:click="add_department">
+          <button class="button-primary add_dept--btn" type="submit" @click="add_department">
             Add
           </button>
         </div>
@@ -42,29 +41,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'AddDepartment',
-  mounted() {
-    let session = this.$store.getters.getSession;
-    let cop_id = 0;
-    if (session.default === 'biz') {
-      cop_id = session[session.default]['cop_id'];
-    }
-    let payload = {
-      cop_id: cop_id,
-    };
-    let users_full_payload = {
-      values: payload,
-      vm: this,
-      app: 'NODE_PRIVATE_API',
-      endpoint: 'cop_users',
-    };
-    this.$store
-      .dispatch('$_admin/requestUsersList', users_full_payload)
-      .then(response => {}, error => {});
-  },
   data() {
     return {
       empty_departments_state: 'Adding Department',
@@ -72,6 +52,25 @@ export default {
         user: '',
       },
     };
+  },
+  mounted() {
+    const session = this.$store.getters.getSession;
+    let cop_id = 0;
+    if (session.default === 'biz') {
+      cop_id = session[session.default].cop_id;
+    }
+    const payload = {
+      cop_id,
+    };
+    const usersFullPayload = {
+      values: payload,
+      vm: this,
+      app: 'NODE_PRIVATE_API',
+      endpoint: 'cop_users',
+    };
+    this.$store
+      .dispatch('$_admin/requestUsersList', usersFullPayload)
+      .then(response => {}, error => {});
   },
   computed: {
     ...mapGetters({
@@ -83,40 +82,40 @@ export default {
     ...mapActions({
       addNewDepartment: '$_admin/addNewDepartment',
     }),
-    add_department: function() {
-      let session = this.$store.getters.getSession;
+    add_department() {
+      const session = this.$store.getters.getSession;
       let cop_id = 0;
       if (session.default === 'biz') {
-        cop_id = session[session.default]['cop_id'];
+        cop_id = session[session.default].cop_id;
       }
-      let newDept_payload = {
-        cop_id: cop_id,
+      const newDeptPayload = {
+        cop_id,
         department_name: this.department_name,
         cop_user_id: this.filterData.user,
       };
 
-      let full_payload = {
-        values: newDept_payload,
+      const fullPayload = {
+        values: newDeptPayload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'cop_departments_add',
       };
-      this.$store.dispatch('$_admin/addNewDepartment', full_payload).then(
+      this.$store.dispatch('$_admin/addNewDepartment', fullPayload).then(
         response => {
-          let level = 1; //success
-          let notification = { title: '', level: level, message: 'Department Added!' }; //notification object
+          const level = 1; // success
+          const notification = { title: '', level, message: 'Department Added!' }; // notification object
           this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); //activate notification
+          this.$store.commit('setNotificationStatus', true); // activate notification
         },
         error => {
-          let level = 2;
-          let notification = { title: '', level: level, message: 'Something went wrong.' }; //notification object
+          const level = 2;
+          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
           this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); //activate notification
+          this.$store.commit('setNotificationStatus', true); // activate notification
         }
       );
     },
-    go_back: function() {
+    go_back() {
       this.$router.push('/admin/department');
     },
   },

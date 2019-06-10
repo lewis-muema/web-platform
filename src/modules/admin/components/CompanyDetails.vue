@@ -1,8 +1,5 @@
 <template lang="html">
-  <div
-    id="cop_info_container"
-    class="cop_info_container"
-  >
+  <div id="cop_info_container" class="cop_info_container">
     <div class="cop-edit-inner">
       <div class="company-edit2-details">
         Edit Company Details.
@@ -17,29 +14,21 @@
             class="input-control cop-edit-form"
             type="text"
             autocomplete="off"
-          >
+          />
         </div>
 
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
             <span>Name of contact person</span>
           </label>
-          <input
-            v-model="contact_name"
-            class="input-control cop-edit-form"
-            type="text"
-          >
+          <input v-model="contact_name" class="input-control cop-edit-form" type="text" />
         </div>
 
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
             <span>Email of Contact person</span>
           </label>
-          <input
-            v-model="contact_email"
-            class="input-control cop-edit-form"
-            type="text"
-          >
+          <input v-model="contact_email" class="input-control cop-edit-form" type="text" />
         </div>
 
         <div class="cop-edit-holder">
@@ -59,11 +48,7 @@
         </div>
 
         <div class="sign-holder">
-          <button
-            class="button-primary btn-edit-cop-info"
-            type="submit"
-            @click="save_cop"
-          >
+          <button class="button-primary btn-edit-cop-info" type="submit" @click="save_cop">
             Save
           </button>
         </div>
@@ -73,8 +58,8 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import SessionMxn from '../../../mixins/session_mixin.js';
+import { mapActions } from 'vuex';
+import SessionMxn from '../../../mixins/session_mixin';
 
 export default {
   name: 'CompanyDetails',
@@ -85,7 +70,7 @@ export default {
       phone: '',
       contact_email: '',
       contact_name: '',
-      message : '',
+      message: '',
     };
   },
   mounted() {
@@ -108,15 +93,15 @@ export default {
 
     save_cop() {
       if (
-        this.cop_name !== ''
-        && this.phone !== ''
-        && this.contact_email !== ''
-        && this.contact_name !== ''
+        this.cop_name !== '' &&
+        this.phone !== '' &&
+        this.contact_email !== '' &&
+        this.contact_name !== ''
       ) {
         const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-        const phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+        const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
 
-        if (phone_valid) {
+        if (phoneValid) {
           const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
 
           const session = this.$store.getters.getSession;
@@ -136,16 +121,16 @@ export default {
           };
 
           this.requestCopInfo(full_payload).then(
-            (response) => {
+            response => {
               if (response.status) {
-                const updated_session = session;
-                updated_session[session.default].cop_name = this.cop_name;
-                updated_session[session.default].cop_contact_person = this.contact_name;
-                updated_session[session.default].cop_biz_email = this.contact_email;
-                updated_session[session.default].cop_biz_phone = phone;
+                const updatedSession = session;
+                updatedSession[session.default].cop_name = this.cop_name;
+                updatedSession[session.default].cop_contact_person = this.contact_name;
+                updatedSession[session.default].cop_biz_email = this.contact_email;
+                updatedSession[session.default].cop_biz_phone = phone;
 
-                const new_session = JSON.stringify(updated_session);
-                this.setSession(new_session);
+                const newSession = JSON.stringify(updatedSession);
+                this.setSession(newSession);
 
                 const level = 1; // success
                 this.message = 'Details Saved!';
@@ -170,11 +155,12 @@ export default {
                 this.$store.commit('setNotificationStatus', true);
               }
             },
-            (error) => {
+            error => {
+              const level = 3;
               const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
               this.$store.commit('setNotification', notification);
               this.$store.commit('setNotificationStatus', true);
-            },
+            }
           );
         } else {
           const level = 3;
