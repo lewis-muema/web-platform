@@ -45,9 +45,6 @@
             :preferred-countries="['ke', 'ug', 'tz']"
             @onBlur="validate_phone"
           />
-          <span v-show="errors.has('phone')" class="sign-up-phone-error">{{
-            errors.first('phone')
-          }}</span>
         </div>
 
         <div class="sign-holder">
@@ -73,6 +70,7 @@ export default {
       phone: '',
       contact_email: '',
       contact_name: '',
+      message: '',
     };
   },
   mounted() {
@@ -88,8 +86,8 @@ export default {
     set_data() {
       const session = this.$store.getters.getSession;
       this.cop_name = session[session.default].cop_name;
-      this.phone = session[session.default].cop_phone;
-      this.contact_email = session[session.default].cop_email;
+      this.phone = session[session.default].cop_biz_phone;
+      this.contact_email = session[session.default].cop_biz_email;
       this.contact_name = session[session.default].cop_contact_person;
     },
 
@@ -112,17 +110,17 @@ export default {
             cop_id: session[session.default].cop_id,
             cop_name: this.cop_name,
             cop_contact_person: this.contact_name,
-            cop_biz_email: this.contact_email,
-            cop_biz_phone: phone,
+            cop_email: this.contact_email,
+            cop_phone: phone,
           };
 
-          const fullPayload = {
+          const full_payload = {
             values,
             app: 'NODE_PRIVATE_API',
             endpoint: 'update_cop',
           };
 
-          this.requestCopInfo(fullPayload).then(
+          this.requestCopInfo(full_payload).then(
             response => {
               if (response.status) {
                 const updatedSession = session;
@@ -157,7 +155,12 @@ export default {
                 this.$store.commit('setNotificationStatus', true);
               }
             },
-            error => {}
+            error => {
+              const level = 3;
+              const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+              this.$store.commit('setNotification', notification);
+              this.$store.commit('setNotificationStatus', true);
+            }
           );
         } else {
           const level = 3;
