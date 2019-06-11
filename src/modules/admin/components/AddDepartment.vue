@@ -1,8 +1,14 @@
 <template lang="html">
-  <div id="log_in" class="admin-edit-item">
+  <div
+    id="log_in"
+    class="admin-edit-item"
+  >
     <div class="admin-edit-inner">
       <div class="">
-        <i class="el-icon-back edit-back" @click="go_back" />
+        <i
+          class="el-icon-back edit-back"
+          @click="go_back"
+        />
       </div>
       <div class="admin-edit2-details position--details">
         Add Department
@@ -14,7 +20,7 @@
             class="input-control edit-form"
             type="text"
             placeholder="Name"
-          />
+          >
         </div>
         <div class="edit-holder">
           <el-select
@@ -30,8 +36,17 @@
             />
           </el-select>
         </div>
-        <div class="sign-holder">
-          <button class="button-primary add_dept--btn" type="submit" @click="add_department">
+        <div class="add-dept-holder">
+          <button
+            type="submit"
+            :disabled="disabled == 1 ? true : false"
+            :class="
+              disabled == 1
+                ? 'button-primary add_dept--btn inactive-btn'
+                : 'button-primary add_dept--btn'
+            "
+            @click="add_department"
+          >
             Add
           </button>
         </div>
@@ -48,10 +63,18 @@ export default {
   data() {
     return {
       empty_departments_state: 'Adding Department',
+      department_name: '',
+      disabled: 0,
       filterData: {
         user: '',
       },
     };
+  },
+  computed: {
+    ...mapGetters({
+      userData: '$_admin/getUsersList',
+      requestUsersList: '$_admin/requestUsersList',
+    }),
   },
   mounted() {
     const session = this.$store.getters.getSession;
@@ -70,50 +93,63 @@ export default {
     };
     this.$store
       .dispatch('$_admin/requestUsersList', usersFullPayload)
-      .then(response => {}, error => {});
-  },
-  computed: {
-    ...mapGetters({
-      userData: '$_admin/getUsersList',
-      requestUsersList: '$_admin/requestUsersList',
-    }),
+      .then((response) => {}, (error) => {});
   },
   methods: {
     ...mapActions({
       addNewDepartment: '$_admin/addNewDepartment',
     }),
     add_department() {
-      const session = this.$store.getters.getSession;
-      let cop_id = 0;
-      if (session.default === 'biz') {
-        cop_id = session[session.default].cop_id;
-      }
-      const newDeptPayload = {
-        cop_id,
-        department_name: this.department_name,
-        cop_user_id: this.filterData.user,
-      };
-
-      const fullPayload = {
-        values: newDeptPayload,
-        vm: this,
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'cop_departments_add',
-      };
-      this.$store.dispatch('$_admin/addNewDepartment', fullPayload).then(
-        response => {
-          const level = 1; // success
-          const notification = { title: '', level, message: 'Department Added!' }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
-        },
-        error => {
-          const level = 2;
-          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+      if (this.filterData.user !== '' && this.department_name !== '') {
+        const session = this.$store.getters.getSession;
+        let cop_id = 0;
+        if (session.default === 'biz') {
+          cop_id = session[session.default].cop_id;
         }
-      );
+        const newDeptPayload = {
+          cop_id,
+          department_name: this.department_name,
+          cop_user_id: this.filterData.user,
+        };
+
+        const fullPayload = {
+          values: newDeptPayload,
+          vm: this,
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'cop_departments_add',
+        };
+        this.$store.dispatch('$_admin/addNewDepartment', fullPayload).then(
+          (response) => {
+            const level = 1;
+            this.disabled = 1;
+            const notification = {
+              title: 'Add Department',
+              level,
+              message: 'Department added successfully',
+            };
+            this.$store.commit('setNotification', notification);
+            this.$store.commit('setNotificationStatus', true);
+            setTimeout(() => {
+              this.$router.push('/admin/department');
+            }, 5000);
+          },
+          (error) => {
+            const level = 2;
+            const notification = { title: '', level, message: 'Something went wrong.' };
+            this.$store.commit('setNotification', notification);
+            this.$store.commit('setNotificationStatus', true);
+          },
+        );
+      } else {
+        const level = 2;
+        const notification = {
+          title: 'Add Department Error !',
+          level,
+          message: 'Please provide Department name and Admin',
+        };
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
+      }
     },
     go_back() {
       this.$router.push('/admin/department');
@@ -194,5 +230,12 @@ export default {
 .btn-edit-user{
     border-width:0px !important;
     margin-left: 15px !important;
+}
+.inactive-btn{
+  background: rgba(0,0,0,0.50);
+  border: 1px solid rgba(0,0,0,0.50);
+}
+.add-dept-holder{
+  display: block;
 }
 </style>
