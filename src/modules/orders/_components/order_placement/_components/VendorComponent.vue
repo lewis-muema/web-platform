@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="home-view-vendor-and-optins-wrappper" v-if="getOrderState === 1">
+  <div v-if="getOrderState === 1" class="home-view-vendor-and-optins-wrappper">
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
       Load Size And Delivery Type
@@ -104,20 +104,20 @@
         type="button"
         class="button-primary home-view--place-order"
         name="button"
-        v-on:click="goToNextStep"
+        @click="goToNextStep"
       >
         Continue
       </button>
     </div>
   </div>
 
-  <div class="extended-options-wrappper" v-else-if="getOrderState === 2">
+  <div v-else-if="getOrderState === 2" class="extended-options-wrappper">
     <!-- start carrier type transition -->
     <transition name="home-carrier-type-fade">
       <div class="home-view-vendor-types-item-wrap home-next-step">
         <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
-          <div class="" v-on:click="goBackToHome">
-            <i class="el-icon-back back-to-home-btn"></i>
+          <div class="" @click="goBackToHome">
+            <i class="el-icon-back back-to-home-btn" />
           </div>
           <div class="home-view-vendor-types-item--vendor-wrapper__img vendor__img_pstn">
             <img
@@ -170,14 +170,19 @@
             </div>
             <div v-if="small_vendors.includes(activeVendorPriceData.vendor_id)">
               <div
-                class="home-view-truck-options-inner-wrapper"
                 v-if="!vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)"
+                class="home-view-truck-options-inner-wrapper"
               >
                 <div class="home-view-truck-options-label">
                   What type of bike do you want?
                 </div>
                 <div class="home-view-truck-options-inner--full-select">
-                  <el-select v-model="carrier_type" placeholder="" @change="dispatchCarrierType">
+                  <el-select
+                    v-model="carrier_type"
+                    placeholder=""
+                    filterable
+                    @change="dispatchCarrierType"
+                  >
                     <el-option
                       v-for="item in smallVendorOptions"
                       :key="item.value"
@@ -190,8 +195,8 @@
             </div>
             <div v-else>
               <div
-                class="home-view-truck-options-inner-wrapper"
                 v-if="!vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)"
+                class="home-view-truck-options-inner-wrapper"
               >
                 <div
                   v-if="large_vendors.includes(activeVendorPriceData.vendor_id)"
@@ -203,7 +208,12 @@
                   What type of {{ getVendorNameOnCarrierType }} do you want?
                 </div>
                 <div class="home-view-truck-options-inner--full-select">
-                  <el-select v-model="carrier_type" placeholder="" @change="dispatchCarrierType">
+                  <el-select
+                    v-model="carrier_type"
+                    placeholder=""
+                    filterable
+                    @change="dispatchCarrierType"
+                  >
                     <el-option
                       v-for="item in truckOptions"
                       :key="item.value"
@@ -356,15 +366,16 @@
                   <el-select
                     v-model="pair_rider"
                     class="pair_rider_section"
-                    @change="dispatchPairStatus"
                     placeholder="Select"
+                    filterable
+                    @change="dispatchPairStatus"
                   >
                     <el-option label="Yes" value="1" />
                     <el-option label="No" value="2" />
                   </el-select>
                 </div>
               </div>
-              <div class="home-view-truck-options-inner-wrapper" v-if="this.pair_rider === '1'">
+              <div v-if="pair_rider === '1'" class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
                   <div v-if="[21].includes(activeVendorPriceData.vendor_id)">
                     Enter their phone number to pair
@@ -376,35 +387,31 @@
                 </div>
                 <div class="">
                   <el-popover
+                    v-model="visible2"
                     placement="right"
                     width="200"
                     trigger="manual"
-                    v-model="visible2"
                     popper-class="pop-over-layout"
                   >
                     <el-input
+                      slot="reference"
                       v-model.trim="vehicle_plate"
                       :placeholder="vehicleDetailsPlaceholder"
                       autocomplete="true"
-                      slot="reference"
                       @input="checkVehicleDetails"
                     >
-                      <i
-                        v-if="searchOption"
-                        class="el-icon-loading el-input__icon"
-                        slot="suffix"
-                      ></i>
+                      <i v-if="searchOption" slot="suffix" class="el-icon-loading el-input__icon" />
                       <i
                         v-if="pair_status !== ''"
-                        class="el-icon-close el-input__icon"
                         slot="suffix"
+                        class="el-icon-close el-input__icon"
                         @click="clearVehicleDetails"
-                      ></i>
+                      />
                     </el-input>
                     <div class="pair_info_text_content">
                       <div v-if="pair_status === '1'">
                         <p class="upper_scope_pair_text">{{ riderNameDisplay }} not found</p>
-                        <p>{{ this.failure_text }}</p>
+                        <p>{{ failure_text }}</p>
                       </div>
                       <div v-if="pair_status === '2'">
                         <el-row :gutter="20">
@@ -424,8 +431,7 @@
                                   disabled
                                   disabled-void-color="#C0C4CC"
                                   :colors="['#1782C5', '#1782C5', '#1782C5']"
-                                >
-                                </el-rate>
+                                />
                               </div>
                             </div>
                           </el-col>
@@ -568,40 +574,40 @@ export default {
       return this.largeOptions;
     },
     mediumOptions() {
-      const custom_vendor_options = [
+      const customVendorOptions = [
         {
           value: '2',
           label: 'Any',
         },
       ];
 
-      return custom_vendor_options.concat(this.baseTruckOptions);
+      return customVendorOptions.concat(this.baseTruckOptions);
     },
     largeOptions() {
-      const custom_vendor_options = {};
-      if (this.activeVendorPriceData.hasOwnProperty('available_options')) {
+      const customVendorOptions = {};
+      if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'available_options')) {
         if (this.activeVendorPriceData.available_options.refrigerated) {
-          custom_vendor_options.value = '3';
-          custom_vendor_options.label = 'Refrigerated';
+          customVendorOptions.value = '3';
+          customVendorOptions.label = 'Refrigerated';
         }
 
         if (this.activeVendorPriceData.available_options.flatbed) {
-          custom_vendor_options.value = '4';
-          custom_vendor_options.label = 'Flatbed';
+          customVendorOptions.value = '4';
+          customVendorOptions.label = 'Flatbed';
         }
       }
 
-      return this.baseTruckOptions.concat(custom_vendor_options);
+      return this.baseTruckOptions.concat(customVendorOptions);
     },
 
     getVendorNameOnCarrierType() {
-      let vendor_disp_name = 'motorbike';
+      let vendorDispName = 'motorbike';
       if (this.get_active_package_class === 'medium') {
-        vendor_disp_name = this.get_active_vendor_name;
+        vendorDispName = this.get_active_vendor_name;
       } else if (this.get_active_package_class === 'large') {
-        vendor_disp_name = this.get_active_vendor_name;
+        vendorDispName = this.get_active_vendor_name;
       }
-      return vendor_disp_name.toLowerCase();
+      return vendorDispName.toLowerCase();
     },
 
     getMaxAllowedWeight() {
@@ -614,14 +620,29 @@ export default {
       }
     },
     riderNameDisplay() {
-      let display_pair_name = 'rider';
+      let displayPairName = 'rider';
       if (this.small_vendors.includes(this.activeVendorPriceData.vendor_id)) {
-        display_pair_name = 'rider';
+        displayPairName = 'rider';
       } else {
-        display_pair_name = 'driver';
+        displayPairName = 'driver';
       }
-      return display_pair_name.toLowerCase();
+      return displayPairName.toLowerCase();
     },
+  },
+  watch: {
+    get_active_package_class(new_val, old_val) {
+      this.reCheckCarrierType();
+    },
+  },
+
+  created() {
+    this.setFirstTimeUser();
+    this.initializeVendorComponent();
+    this.initiateStoreData();
+  },
+
+  mounted() {
+    this.reCheckCarrierType();
   },
 
   methods: {
@@ -679,12 +700,10 @@ export default {
     setDefaultCarrierType() {
       if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
         this.carrier_type = '1';
+      } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+        this.carrier_type = '2';
       } else {
-        if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
-          this.carrier_type = '2';
-        } else {
-          this.carrier_type = '1';
-        }
+        this.carrier_type = '1';
       }
     },
     goBackToHome() {
@@ -700,7 +719,7 @@ export default {
 
     dispatchLoadWeight(val) {
       val = Number(val);
-      let dispatch_value = val;
+      let dispatchValue = val;
       if (val > this.getMaxAllowedWeight) {
         this.doNotification(
           '2',
@@ -709,10 +728,10 @@ export default {
             this.getLoadUnits
           }.`
         );
-        dispatch_value = this.getMaxAllowedWeight;
-        this.load_weight = dispatch_value;
+        dispatchValue = this.getMaxAllowedWeight;
+        this.load_weight = dispatchValue;
       }
-      this.setLoadWeight(dispatch_value);
+      this.setLoadWeight(dispatchValue);
     },
 
     dispatchLoadUnits(val) {
@@ -747,9 +766,9 @@ export default {
       this.visible2 = false;
       this.pair_status = '';
     },
-    checkVehicleDetails(val) {
-      let vehicle_details = this.vehicle_plate;
-      if (vehicle_details === '') {
+    checkVehicleDetails() {
+      const vehicleDetails = this.vehicle_plate;
+      if (vehicleDetails === '') {
         this.doNotification(
           '2',
           'Vehicle number plate is not provided',
@@ -761,16 +780,16 @@ export default {
         this.pair_status = '';
       } else {
         this.searchOption = true;
-        if (vehicle_details.length > 6) {
-          this.handlePairRequest(vehicle_details);
+        if (vehicleDetails.length > 6) {
+          this.handlePairRequest(vehicleDetails);
         }
       }
     },
     updateData(value) {
-      let val = value;
+      const val = value;
       this.pair_rider_image = val.rider_photo;
       this.pair_rider_name = val.rider_name;
-      this.pair_rider_rating = parseInt(val.rider_rating);
+      this.pair_rider_rating = parseInt(val.rider_rating, 10);
       this.pair_rider_make = val.make;
       this.pair_rider_model = val.model;
       this.pair_rider_plate = val.registration_no;
@@ -795,13 +814,13 @@ export default {
         payload.registration_no = plate;
       }
 
-      const full_payload = {
+      const fullPayload = {
         values: payload,
         app: 'NODE_PRIVATE_API',
         endpoint: 'pair_order_rider_details',
       };
 
-      this.requestPairRider(full_payload).then(
+      this.requestPairRider(fullPayload).then(
         response => {
           if (response.status) {
             this.updateData(response.data);
@@ -836,15 +855,15 @@ export default {
       };
     },
 
-    transformDate(vendor_details) {
+    transformDate(vendorDetails) {
       // let start = this.moment();
       // let end   = this.moment().add(eta, 'seconds');
       // return end.from(start);
-      if (vendor_details.hasOwnProperty('customer_eta')) {
-        return this.moment(vendor_details.customer_eta, 'YYYY-MM-DD HH:mm:ss').format('hh.mm a');
+      if (Object.prototype.hasOwnProperty.call(vendorDetails, 'customer_eta')) {
+        return this.moment(vendorDetails.customer_eta, 'YYYY-MM-DD HH:mm:ss').format('hh.mm a');
       }
       return this.moment()
-        .add(vendor_details.eta, 'seconds')
+        .add(vendorDetails.eta, 'seconds')
         .format('hh.mm a');
     },
 
@@ -882,7 +901,8 @@ export default {
 
     setFirstTimeUser() {
       const session = this.$store.getters.getSession;
-      if (session.hasOwnProperty('first_time')) {
+
+      if (Object.prototype.hasOwnProperty.call(session, 'first_time')) {
         if (session.first_time) {
           this.first_time = true;
         }
@@ -925,23 +945,24 @@ export default {
         this.carrier_type = '1';
         this.dispatchCarrierType();
       } else if (this.get_active_package_class !== 'large') {
-        const allowed_carrier_types = ['0', '1', '2'];
-        if (!allowed_carrier_types.includes(this.carrier_type)) {
+        const allowedCarrierTypes = ['0', '1', '2'];
+        if (!allowedCarrierTypes.includes(this.carrier_type)) {
           this.carrier_type = '2';
           this.dispatchCarrierType();
         }
       } else {
+        // ...
       }
     },
 
     trackMixpanelEvent(name) {
-      let analytics_env = '';
+      let analyticsEnv = '';
       try {
-        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
       } catch (er) {}
 
       try {
-        if (analytics_env === 'production') {
+        if (analyticsEnv === 'production') {
           mixpanel.track(name);
           // this.$ga.event({
           //   eventCategory: 'Orders',
@@ -950,7 +971,9 @@ export default {
           //   eventValue: 14,
           // });
         }
-      } catch (er) {}
+      } catch (er) {
+        // ...
+      }
     },
 
     initializeVendorComponent() {
@@ -993,22 +1016,6 @@ export default {
       }
       return vendorObject.vendor_description;
     },
-  },
-
-  watch: {
-    get_active_package_class(new_val, old_val) {
-      this.reCheckCarrierType();
-    },
-  },
-
-  created() {
-    this.setFirstTimeUser();
-    this.initializeVendorComponent();
-    this.initiateStoreData();
-  },
-
-  mounted() {
-    this.reCheckCarrierType();
   },
 };
 </script>
