@@ -175,16 +175,12 @@ export default {
       };
       this.$store.dispatch('$_admin/editAdminUser', editUserFullPayload).then(
         response => {
-          // return;
-
           const level = 1; // success
           this.message = 'Edit Successful!';
 
           const notification = { title: '', level, message: this.message }; // notification object
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true); // activate notification
-
-          // vm.one_step_back()
         },
         error => {
           const level = 3;
