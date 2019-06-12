@@ -2,21 +2,24 @@
   <div class="">
     <div class="inv-container inv-justify">
       <div class="inv-inputs">
-        <div v-for="element in elements" class="side-flex inp">
+        <div
+          v-for="element in elements"
+          class="side-flex inp"
+        >
           <input
             v-model="element.email"
             class="form-control"
             type="text"
             name="email"
             placeholder="name@example.com"
-          />
+          >
           <input
             v-model="element.name"
             class="form-control"
             type="text"
             name="name"
             placeholder="Full Name (Optional)"
-          />
+          >
           <el-select
             v-model="element.department"
             class="addUser--select"
@@ -36,15 +39,25 @@
     <div class="side-flex add-user-submit">
       <div class="column-flex pad-flex alleft">
         <div class="addUser--link">
-          <a class="add-anchor" @click="addElement"
-            ><i class="el-icon-circle-plus-outline" />&nbsp;Add another</a
-          >
+          <a
+            class="add-anchor"
+            @click="addElement"
+          ><i class="el-icon-circle-plus-outline" />&nbsp;Add another</a>
           <span> or </span>
-          <a class="add-anchor" href="#" @click="invite_many">add many at once</a>
+          <a
+            class="add-anchor"
+            href="#"
+            @click="invite_many"
+          >add many at once</a>
         </div>
       </div>
       <div class="addUser--submit">
-        <button class="button-primary" type="submit" name="action" @click="postInvites">
+        <button
+          class="button-primary"
+          type="submit"
+          name="action"
+          @click="postInvites"
+        >
           {{ button }}
         </button>
       </div>
@@ -53,9 +66,10 @@
     <div class="side-flex add-user-submit">
       <div class="column-flex pad-flex inv-link">
         <div class="flex">
-          <a class="add-anchor inviteMany--anchor" @click="getInviteLink"
-            ><i class="el-icon-share" /><span>&nbsp;Get an invite link to share</span></a
-          >
+          <a
+            class="add-anchor inviteMany--anchor"
+            @click="getInviteLink"
+          ><i class="el-icon-share" /><span>&nbsp;Get an invite link to share</span></a>
         </div>
       </div>
     </div>
@@ -179,9 +193,9 @@ export default {
         endpoint: 'invite_user',
       };
       this.$store.dispatch('$_admin/inviteNewUsers', full_payload).then(
-        response => {
+        (response) => {
           this.button = 'Send Invites';
-          if (response.data.status) {
+          if (response.status) {
             const level = 1;
             const notification = {
               title: 'Add Users',
@@ -193,17 +207,9 @@ export default {
             this.updateViewState(4);
           }
         },
-        error => {
-          this.button = 'Send Invites';
-          const level = 3;
-          const notification = {
-            title: '',
-            level,
-            message: 'Something went wrong.',
-          }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
-        }
+        (error) => {
+          // ...
+        },
       );
     },
     addElement() {
@@ -226,7 +232,7 @@ export default {
         endpoint: 'create_invite',
       };
       this.$store.dispatch('$_admin/createInviteLink', full_payload).then(
-        response => {
+        (response) => {
           this.updateViewState(5);
           const level = 1; // success
           const notification = {
@@ -237,7 +243,7 @@ export default {
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true); // activate notification
         },
-        error => {
+        (error) => {
           const level = 2;
           const notification = {
             title: 'Invite Link',
@@ -246,7 +252,7 @@ export default {
           }; // notification object
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true); // activate notification
-        }
+        },
       );
     },
   },
