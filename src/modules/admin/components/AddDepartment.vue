@@ -1,14 +1,8 @@
 <template lang="html">
-  <div
-    id="log_in"
-    class="admin-edit-item"
-  >
+  <div id="log_in" class="admin-edit-item">
     <div class="admin-edit-inner">
       <div class="">
-        <i
-          class="el-icon-back edit-back"
-          @click="go_back"
-        />
+        <i class="el-icon-back edit-back" @click="go_back" />
       </div>
       <div class="admin-edit2-details position--details">
         Add Department
@@ -20,13 +14,14 @@
             class="input-control edit-form"
             type="text"
             placeholder="Name"
-          >
+          />
         </div>
         <div class="edit-holder">
           <el-select
             v-model="filterData.user"
             class="addUser--select edit-select"
             placeholder="Admin"
+            filterable
           >
             <el-option
               v-for="user in userData"
@@ -93,7 +88,7 @@ export default {
     };
     this.$store
       .dispatch('$_admin/requestUsersList', usersFullPayload)
-      .then((response) => {}, (error) => {});
+      .then(response => {}, error => {});
   },
   methods: {
     ...mapActions({
@@ -119,7 +114,7 @@ export default {
           endpoint: 'cop_departments_add',
         };
         this.$store.dispatch('$_admin/addNewDepartment', fullPayload).then(
-          (response) => {
+          response => {
             const level = 1;
             this.disabled = 1;
             const notification = {
@@ -133,12 +128,12 @@ export default {
               this.$router.push('/admin/department');
             }, 5000);
           },
-          (error) => {
+          error => {
             const level = 2;
             const notification = { title: '', level, message: 'Something went wrong.' };
             this.$store.commit('setNotification', notification);
             this.$store.commit('setNotificationStatus', true);
-          },
+          }
         );
       } else {
         const level = 2;

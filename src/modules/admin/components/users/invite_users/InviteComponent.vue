@@ -2,29 +2,36 @@
   <div class="">
     <div class="inv-container inv-justify">
       <div class="inv-inputs">
-        <div v-for="element in elements" class="side-flex inp">
+        <div
+          v-for="element in elements"
+          class="side-flex inp"
+        >
           <input
+            v-model="element.email"
             class="form-control"
             type="text"
-            v-model="element.email"
             name="email"
             placeholder="name@example.com"
-          />
+          >
           <input
+            v-model="element.name"
             class="form-control"
             type="text"
-            v-model="element.name"
             name="name"
             placeholder="Full Name (Optional)"
-          />
-          <el-select class="addUser--select" v-model="element.department" placeholder="Department">
+          >
+          <el-select
+            v-model="element.department"
+            class="addUser--select"
+            placeholder="Department"
+            filterable
+          >
             <el-option
               v-for="department in departments"
               :key="department.department_id"
               :label="department.department_name"
               :value="department.department_id"
-            >
-            </el-option>
+            />
           </el-select>
         </div>
       </div>
@@ -32,15 +39,25 @@
     <div class="side-flex add-user-submit">
       <div class="column-flex pad-flex alleft">
         <div class="addUser--link">
-          <a v-on:click="addElement" class="add-anchor"
-            ><i class="el-icon-circle-plus-outline"></i>&nbsp;Add another</a
-          >
+          <a
+            class="add-anchor"
+            @click="addElement"
+          ><i class="el-icon-circle-plus-outline" />&nbsp;Add another</a>
           <span> or </span>
-          <a v-on:click="invite_many" class="add-anchor" href="#">add many at once</a>
+          <a
+            class="add-anchor"
+            href="#"
+            @click="invite_many"
+          >add many at once</a>
         </div>
       </div>
       <div class="addUser--submit">
-        <button v-on:click="postInvites" class="button-primary" type="submit" name="action">
+        <button
+          class="button-primary"
+          type="submit"
+          name="action"
+          @click="postInvites"
+        >
           {{ button }}
         </button>
       </div>
@@ -49,9 +66,10 @@
     <div class="side-flex add-user-submit">
       <div class="column-flex pad-flex inv-link">
         <div class="flex">
-          <a v-on:click="getInviteLink" class="add-anchor inviteMany--anchor"
-            ><i class="el-icon-share"></i><span>&nbsp;Get an invite link to share</span></a
-          >
+          <a
+            class="add-anchor inviteMany--anchor"
+            @click="getInviteLink"
+          ><i class="el-icon-share" /><span>&nbsp;Get an invite link to share</span></a>
         </div>
       </div>
     </div>
@@ -62,7 +80,7 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
-  name: 'invite-component',
+  name: 'InviteComponent',
   components: {},
   data() {
     return {
@@ -89,7 +107,7 @@ export default {
     };
   },
   mounted() {
-    let number = this.getAdds;
+    const number = this.getAdds;
     if (number > 3) {
       for (let i = 3; i < number; i++) {
         this.elements.push({ value: '' });
@@ -120,127 +138,121 @@ export default {
       inviteNewUsers: '$_admin/inviteNewUsers',
       createInviteLink: '$_admin/createInviteLink',
     }),
-    populate: function() {
-      let set = this.getInvites;
+    populate() {
+      const set = this.getInvites;
       for (let i = 0; i < set.length; i += 1) {
         this.elements[i].email = set[i][0];
       }
     },
-    get_link: function() {
+    get_link() {
       this.updateViewState(5);
     },
-    invite_many: function() {
+    invite_many() {
       this.updateViewState(3);
     },
-    postInvites: function() {
+    postInvites() {
       for (let i = 0, iLen = this.elements.length; i < iLen; i += 1) {
-        let email = this.elements[0].email;
+        const { email } = this.elements[0];
         if (email !== '') {
           this.button = 'Sending...';
-          let session = this.$store.getters.getSession;
+          const session = this.$store.getters.getSession;
           let cop_id = 0;
           if (session.default === 'biz') {
-            cop_id = session[session.default]['cop_id'];
+            cop_id = session[session.default].cop_id;
           }
 
           if (this.elements[i].email !== '') {
-            let email = this.elements[i].email;
-            let name = this.elements[i].name;
-            let department = this.elements[i].department;
+            const { email } = this.elements[i];
+            const { name } = this.elements[i];
+            const { department } = this.elements[i];
             this.invitees.push({
-              cop_id: cop_id,
-              email: email,
+              cop_id,
+              email,
               password: '',
-              name: name,
+              name,
               department_id: department,
             });
           }
         } else {
           this.button = 'Send Invites';
-          let level = 2;
-          let notification = {
+          const level = 2;
+          const notification = {
             title: '',
-            level: level,
+            level,
             message: 'Please enter at least one valid email address.',
-          }; //notification object
+          }; // notification object
           this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); //activate notification
+          this.$store.commit('setNotificationStatus', true); // activate notification
         }
       }
-      let payload = this.invitees;
-      let full_payload = {
+      const payload = this.invitees;
+      const full_payload = {
         values: payload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'invite_user',
       };
       this.$store.dispatch('$_admin/inviteNewUsers', full_payload).then(
-        response => {
+        (response) => {
           this.button = 'Send Invites';
-          let level = 1; //success
-          let notification = {
-            title: '',
-            level: level,
-            message: 'Invitations sent!',
-          }; //notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); //activate notification
-          this.updateViewState(4);
+          if (response.status) {
+            const level = 1;
+            const notification = {
+              title: 'Add Users',
+              level,
+              message: 'Invitations sent successfully',
+            };
+            this.$store.commit('setNotification', notification);
+            this.$store.commit('setNotificationStatus', true);
+            this.updateViewState(4);
+          }
         },
-        error => {
-          this.button = 'Send Invites';
-          let level = 3;
-          let notification = {
-            title: '',
-            level: level,
-            message: 'Something went wrong.',
-          }; //notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); //activate notification
-        }
+        (error) => {
+          // ...
+        },
       );
     },
-    addElement: function() {
+    addElement() {
       this.elements.push({ value: '' });
     },
-    getInviteLink: function() {
-      let session = this.$store.getters.getSession;
+    getInviteLink() {
+      const session = this.$store.getters.getSession;
       let cop_id = 0;
       if (session.default === 'biz') {
-        cop_id = session[session.default]['cop_id'];
+        cop_id = session[session.default].cop_id;
         cop_id = cop_id.toString();
       }
-      let payload = {
-        cop_id: cop_id,
+      const payload = {
+        cop_id,
       };
-      let full_payload = {
+      const full_payload = {
         values: payload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'create_invite',
       };
       this.$store.dispatch('$_admin/createInviteLink', full_payload).then(
-        response => {
+        (response) => {
           this.updateViewState(5);
-          let level = 1; //success
-          let notification = {
+          const level = 1; // success
+          const notification = {
             title: 'Invite Link',
-            level: level,
+            level,
             message: 'Link created!',
-          }; //notification object
+          }; // notification object
           this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); //activate notification
+          this.$store.commit('setNotificationStatus', true); // activate notification
         },
-        error => {
-          let level = 2;
-          let notification = {
+        (error) => {
+          const level = 2;
+          const notification = {
             title: 'Invite Link',
-            level: level,
+            level,
             message: 'An error occurred.',
-          }; //notification object
+          }; // notification object
           this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); //activate notification
-        }
+          this.$store.commit('setNotificationStatus', true); // activate notification
+        },
       );
     },
   },
