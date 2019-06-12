@@ -61,6 +61,8 @@
 import { mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
 
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+
 export default {
   name: 'CompanyDetails',
   mixins: [SessionMxn],
@@ -98,11 +100,10 @@ export default {
         this.contact_email !== '' &&
         this.contact_name !== ''
       ) {
-        const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
         const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
 
         if (phoneValid) {
-          const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+          const phone = this.phone.replace(/[()\-\s]+/g, '');
 
           const session = this.$store.getters.getSession;
 
@@ -114,13 +115,13 @@ export default {
             cop_phone: phone,
           };
 
-          const full_payload = {
+          const fullPayload = {
             values,
             app: 'NODE_PRIVATE_API',
             endpoint: 'update_cop',
           };
 
-          this.requestCopInfo(full_payload).then(
+          this.requestCopInfo(fullPayload).then(
             response => {
               if (response.status) {
                 const updatedSession = session;

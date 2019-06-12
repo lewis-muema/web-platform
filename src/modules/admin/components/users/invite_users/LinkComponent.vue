@@ -18,12 +18,6 @@
             :value="item.value"
           />
         </el-select>
-        <!--<select>-->
-        <!--<option value="0" selected>Expires in 7 days</option>-->
-        <!--<option value="1">Expires in 24 hours</option>-->
-        <!--<option value="2">Expires in 30 days</option>-->
-        <!--<option value="3">Never Expires</option>-->
-        <!--</select>-->
       </div>
       <div class="input-spaced">
         <el-select
@@ -53,7 +47,7 @@
       </div>
     </div>
     <div class="side-flex side-desc">
-      Anyone can use this link to join {{ this.getBizName }} on Sendy
+      Anyone can use this link to join {{ getBizName }} on Sendy
     </div>
   </div>
 </template>

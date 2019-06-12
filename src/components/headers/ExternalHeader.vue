@@ -4,7 +4,7 @@
       class="external-header__img"
       src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
       onclick="location.href='https://sendyit.com/';"
-    >
+    />
   </div>
 </template>
 

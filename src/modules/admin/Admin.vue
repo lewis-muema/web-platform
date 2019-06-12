@@ -1,34 +1,18 @@
 <template lang="html">
   <div class="">
     <main-header />
-    <div
-      id="admin_container"
-      class="container adm
-n-container"
-    >
+    <div id="admin_container" class="container admn-container">
       <div class="section">
-        <router-link
-          class="section__link"
-          to="/admin/users"
-        >
+        <router-link class="section__link" to="/admin/users">
           Users
         </router-link>
-        <router-link
-          class="section__link"
-          to="/admin/department"
-        >
+        <router-link class="section__link" to="/admin/department">
           Department
         </router-link>
-        <router-link
-          class="section__link"
-          to="/admin/api"
-        >
+        <router-link class="section__link" to="/admin/api">
           API
         </router-link>
-        <router-link
-          class="section__link"
-          to="/admin/company_details"
-        >
+        <router-link class="section__link" to="/admin/company_details">
           Company details
         </router-link>
       </div>
@@ -48,13 +32,14 @@ import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
 import adminStore from './_store';
 
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+
 Vue.use(VueTelInput);
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
   getMessage: field => 'The phone number not valid',
-  validate: (value) => {
-    const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+  validate: value => {
     let validity = false;
     try {
       const number = phoneUtil.format(value);
@@ -70,10 +55,6 @@ export default {
   name: 'Admin',
   components: { MainHeader },
   mixins: [RegisterStoreModule],
-  created() {
-    const STORE_KEY = '$_admin';
-    this.$store.registerModule(STORE_KEY, adminStore);
-  },
   computed: {
     ...mapGetters({
       getSession: 'getSession',
@@ -81,11 +62,15 @@ export default {
   },
   watch: {
     getSession: {
-      handler(val, oldVal) {
+      handler() {
         this.$router.push('/orders');
       },
       deep: true,
     },
+  },
+  created() {
+    const STORE_KEY = '$_admin';
+    this.$store.registerModule(STORE_KEY, adminStore);
   },
   destroyed() {
     // TO DO:  destroy store?
