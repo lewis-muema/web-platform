@@ -1,11 +1,11 @@
 <template lang="html">
   <div
-    v-if="!this.loading"
+    v-if="!loading"
     class="dashboard"
   >
     <iframe
       class="iframe"
-      :src="this.showBoard()"
+      :src="showBoard()"
       frameborder="0"
       width="100%"
       height="100%"
@@ -41,7 +41,7 @@ export default {
       const METABASE_SECRET_KEY = 'baddc28e2149d570c8967cd8c6589e13d7356cd6a1c71e50f07d5f08d6b3bdc6';
 
       const payload = {
-        resource: { dashboard: parseInt('100015'.substring(4)) },
+        resource: { dashboard: parseInt('100015'.substring(4), 10) },
         params: {
           acc_no: this.account,
         },
