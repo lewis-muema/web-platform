@@ -11,13 +11,6 @@
         Sign up for Sendy
       </div>
 
-      <!-- <div class="sign-button" onclick="" id="sign-in-v2-logging-in-1">
-  <img class="sign-buttom__img" src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
-  </div>
-  <div class="sign-text">
-     or
-  </div> -->
-
       <p class="sign-up-error">
         {{ message }}
       </p>
@@ -189,6 +182,8 @@
 import { mapMutations, mapActions, mapGetters } from 'vuex';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+
 export default {
   name: 'SignUp',
   data() {
@@ -230,31 +225,30 @@ export default {
     }),
     sign_up() {
       if (this.name !== '' && this.email !== '' && this.phone !== '' && this.password !== '') {
-        const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-        const phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+        const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
         const phoneNumber = parsePhoneNumberFromString(this.phone);
         this.setUserCountryCode(phoneNumber.country);
-        let email_valid = true;
+        let emailValid = true;
         for (let i = 0; i < this.errors.items.length; i++) {
           if (this.errors.items[i].field === 'email') {
-            email_valid = false;
+            emailValid = false;
             break;
           }
         }
-        if (phone_valid && email_valid && this.pass_validation) {
+        if (phoneValid && emailValid && this.pass_validation) {
           if (this.u_terms) {
-            const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+            const phone = this.phone.replace(/[()\-\s]+/g, '');
             this.phone = phone;
             const values = {};
             values.phone = phone;
             values.email = this.email;
-            const full_payload = {
+            const fullPayload = {
               values,
               vm: this,
               app: 'NODE_PRIVATE_API',
               endpoint: 'sign_up_check',
             };
-            this.requestSignUpCheck(full_payload).then(
+            this.requestSignUpCheck(fullPayload).then(
               (response) => {
                 if (response.length > 0) {
                   response = response[0];
@@ -322,13 +316,13 @@ export default {
       const values = {};
       values.code = this.code;
       values.request_id = this.getVerificationRequestId();
-      const full_payload = {
+      const fullPayload = {
         values,
         vm: this,
         app: 'PRIVATE_API',
         endpoint: 'check_verification',
       };
-      this.requestSignUpVerificationVerify(full_payload).then(
+      this.requestSignUpVerificationVerify(fullPayload).then(
         (response) => {
           if (response.status) {
             this.doNotification(2, 'Phone Verification', 'Phone verification successful !');
@@ -349,16 +343,16 @@ export default {
     },
 
     sendVerificationCode() {
-      const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+      const phone = this.phone.replace(/[()\-\s]+/g, '');
       const values = {};
       values.phone_no = phone;
-      const full_payload = {
+      const fullPayload = {
         values,
         vm: this,
         app: 'PRIVATE_API',
         endpoint: 'verify_phone',
       };
-      this.requestSignUpPhoneVerification(full_payload).then(
+      this.requestSignUpPhoneVerification(fullPayload).then(
         (response) => {
           if (response.status) {
             this.setVerificationRequestId(response.request_id);

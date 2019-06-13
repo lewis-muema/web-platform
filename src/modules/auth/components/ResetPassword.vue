@@ -51,7 +51,7 @@
                     type="submit"
                     class="btn btn-primary reset-pass-input"
                     value="Change Password"
-                    :disabled="!this.is_valid"
+                    :disabled="!is_valid"
                     @click="reset_pass"
                   >
                 </td>
@@ -69,7 +69,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import SessionMxn from '../../../mixins/session_mixin.js';
+import SessionMxn from '../../../mixins/session_mixin';
 
 export default {
   mixins: [SessionMxn],
@@ -79,6 +79,11 @@ export default {
       new_password: '',
       confirm_password: '',
     };
+  },
+  computed: {
+    is_valid() {
+      return this.confirm_password !== '' && this.new_password !== '';
+    },
   },
   mounted() {
     this.check_content();
@@ -93,13 +98,13 @@ export default {
 
       const values = {};
       values.token = token;
-      const full_payload = {
+      const fullPayload = {
         values,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'forgot_token',
       };
-      this.requestCheckToken(full_payload).then(
+      this.requestCheckToken(fullPayload).then(
         (response) => {
           // console.log(response);
           if (response.length > 0) {
@@ -133,23 +138,21 @@ export default {
         payload.password = this.new_password;
         payload.token = this.$route.params.content;
 
-        const full_payload = {
+        const fullPayload = {
           values: payload,
-          vm: this,
           app: 'NODE_PRIVATE_API',
           endpoint: 'update_pass',
         };
-        const that = this;
-        this.requestResetPassword(full_payload).then(
+        this.requestResetPassword(fullPayload).then(
           (response) => {
             if (response.length > 0) {
               response = response[0];
             }
             if (response.status) {
-              const session_data = response.data;
-              const json_session = JSON.stringify(session_data);
-              this.setSession(json_session);
-              this.$store.commit('setSession', session_data);
+              const sessionData = response.data;
+              const jsonSession = JSON.stringify(sessionData);
+              this.setSession(jsonSession);
+              this.$store.commit('setSession', sessionData);
               this.$router.push('/orders');
             } else {
               this.doNotification(
@@ -170,11 +173,6 @@ export default {
       const notification = { title, level, message };
       this.$store.commit('setNotification', notification);
       this.$store.commit('setNotificationStatus', true);
-    },
-  },
-  computed: {
-    is_valid() {
-      return this.confirm_password !== '' && this.new_password !== '';
     },
   },
 };
