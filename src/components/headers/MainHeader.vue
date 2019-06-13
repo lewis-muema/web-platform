@@ -50,8 +50,6 @@
                   Orders
                 </a>
               </li>
-              <!--<li><a  @click="linkRoute('/user/free_deliveries')">Free Deliveries</a></li>-->
-              <!--<li><a  @click="linkRoute('/payment/promo')">Promotions</a></li>-->
               <li v-if="admin_user">
                 <a @click="linkRoute('/admin/users')">
                   Settings
@@ -171,10 +169,10 @@ export default {
       this.$router.push(route);
     },
     linkPayments() {
-      let session = this.$store.getters.getSession;
-      let phone = session[session.default]['user_phone'];
-      let int_value = phone.substring(0, 4);
-      if (int_value === '+254') {
+      const session = this.$store.getters.getSession;
+      const phone = session[session.default].user_phone;
+      const intValue = phone.substring(0, 4);
+      if (intValue === '+254') {
         this.mpesa_valid = true;
       } else {
         this.mpesa_valid = false;

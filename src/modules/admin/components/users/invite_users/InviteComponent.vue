@@ -106,6 +106,15 @@ export default {
       invitees: [],
     };
   },
+  computed: {
+    ...mapGetters({
+      departments: '$_admin/getDepartmentsList',
+      getViewState: '$_admin/getViewState',
+      getBizName: '$_admin/getBizName',
+      getAdds: '$_admin/getAdds',
+      getInvites: '$_admin/getInvites',
+    }),
+  },
   mounted() {
     const number = this.getAdds;
     if (number > 3) {
@@ -116,15 +125,6 @@ export default {
     } else if (number === 3 && this.getInvites !== null) {
       this.populate();
     }
-  },
-  computed: {
-    ...mapGetters({
-      departments: '$_admin/getDepartmentsList',
-      getViewState: '$_admin/getViewState',
-      getBizName: '$_admin/getBizName',
-      getAdds: '$_admin/getAdds',
-      getInvites: '$_admin/getInvites',
-    }),
   },
   methods: {
     ...mapMutations({
@@ -186,13 +186,13 @@ export default {
         }
       }
       const payload = this.invitees;
-      const full_payload = {
+      const fullPayload = {
         values: payload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'invite_user',
       };
-      this.$store.dispatch('$_admin/inviteNewUsers', full_payload).then(
+      this.$store.dispatch('$_admin/inviteNewUsers', fullPayload).then(
         (response) => {
           this.button = 'Send Invites';
           if (response.status) {
@@ -225,13 +225,13 @@ export default {
       const payload = {
         cop_id,
       };
-      const full_payload = {
+      const fullPayload = {
         values: payload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'create_invite',
       };
-      this.$store.dispatch('$_admin/createInviteLink', full_payload).then(
+      this.$store.dispatch('$_admin/createInviteLink', fullPayload).then(
         (response) => {
           this.updateViewState(5);
           const level = 1; // success

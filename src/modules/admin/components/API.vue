@@ -134,6 +134,11 @@ export default {
       button_name: '',
     };
   },
+  computed: {
+    ...mapGetters({
+      fetchedData: '$_admin/getKeysList',
+    }),
+  },
   mounted() {
     const session = this.$store.getters.getSession;
     let cop_id = 0;
@@ -152,11 +157,6 @@ export default {
     this.$store
       .dispatch('$_admin/requestKeysList', apikeyFullPayload)
       .then((response) => {}, (error) => {});
-  },
-  computed: {
-    ...mapGetters({
-      fetchedData: '$_admin/getKeysList',
-    }),
   },
   methods: {
     ...mapActions({

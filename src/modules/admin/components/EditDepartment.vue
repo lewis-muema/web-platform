@@ -97,9 +97,14 @@ export default {
       app: 'NODE_PRIVATE_API',
       endpoint: 'cop_users',
     };
-    this.$store
-      .dispatch('$_admin/requestUsersList', usersFullPayload)
-      .then((response) => {}, (error) => {});
+    this.$store.dispatch('$_admin/requestUsersList', usersFullPayload).then(
+      (response) => {
+        // ...
+      },
+      (error) => {
+        // ...
+      },
+    );
   },
   methods: {
     ...mapActions({
@@ -120,8 +125,8 @@ export default {
       this.$store.dispatch('$_admin/editAdminDepartment', editDeptFullPayload).then(
         (response) => {
           const level = 1; // success
-          this.message = 'Edit Successful!';
-          const notification = { title: '', level, message: this.message }; // notification object
+          this.message = 'Details updated successfully';
+          const notification = { title: 'Edit Department', level, message: this.message }; // notification object
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true); // activate notification
         },
