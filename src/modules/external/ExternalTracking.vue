@@ -1,24 +1,21 @@
 <template lang="html">
-  <div class="">
+  <div
+    id="orders_container"
+    class="box"
+  >
     <external-header />
-
-    <div
-      id="orders_container"
-      class="box"
+    <map-component />
+    <transition
+      name="fade"
+      mode="out-in"
     >
-      <map-component />
-      <transition
-        name="fade"
-        mode="out-in"
-      >
-        <router-view />
-      </transition>
-    </div>
+      <router-view />
+    </transition>
   </div>
 </template>
 
 <script>
-import order_store from '../orders/_store';
+import orderStore from '../orders/_store';
 import ExternalHeader from '../../components/headers/ExternalHeader.vue';
 import MapComponent from '../orders/_components/MapComponent.vue';
 
@@ -41,7 +38,7 @@ export default {
     registerOrdersStore() {
       const moduleIsRegistered = this.$store._modules.root._children.$_orders !== undefined;
       if (!moduleIsRegistered) {
-        this.$store.registerModule('$_orders', order_store);
+        this.$store.registerModule('$_orders', orderStore);
       }
     },
   },
