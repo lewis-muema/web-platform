@@ -444,67 +444,7 @@
     <div>
       <transition name="fade" mode="out-in">
         <div v-if="!this.truckMoreInfo">
-          <div v-if="!loading" class="mobile-inforbar--outer">
-            <div class="mobile-inforbar--inner">
-              <div class="mobile-inforbar-details">
-                <div class="mobile-inforbar-img">
-                  <img :src="tracking_data.rider.rider_photo" class="mobile-img" />
-                </div>
-                <div class="mobile-inforbar-rider-name">
-                  <div class="mobile-rider-name-inner">
-                    <span class="mobile-rider-name">
-                      {{ tracking_data.rider.rider_name }}
-                    </span>
-                    <span class="">
-                      {{ tracking_data.rider.rider_phone }}
-                    </span>
-                  </div>
-                  <div class="">
-                    {{ tracking_data.rider.vehicle_name }} {{ tracking_data.rider.number_plate }}
-                  </div>
-                </div>
-              </div>
-              <div class="">
-                <div class="mobile-order-amount">
-                  <div v-if="this.getStatus === 'Pending'" class="">
-                    <div
-                      v-if="
-                        [20].includes(tracking_data.rider.vendor_id) &&
-                          'customer_min_amount' in this.tracking_data.package_details &&
-                          !this.tracking_data.fixed_cost
-                      "
-                    >
-                      Minimum Amount : {{ tracking_data.price_tier.currency }}
-                      {{ tracking_data.package_details.customer_min_amount }}
-                    </div>
-                    <div v-else>
-                      Cost : {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
-                    </div>
-                  </div>
-                  <div v-else>
-                    Cost: {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
-                  </div>
-                </div>
-                <div class="mobile-order-status">Status : {{ getStatus }}</div>
-                <div class="">
-                  <div
-                    v-if="tracking_data.delivery_status < 2 && this.user_state"
-                    class="infobar--actions-hover"
-                    @click="canceldialog()"
-                  >
-                    <div class="infobar--actions-icon">
-                      <i class="el-icon-circle-close-outline" />
-                      <span class="infobar--actions-text">
-                        Cancel Order
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div v-if="!loading" class="infobar--outer exceed_mobile">
+          <div v-if="!loading" class="infobar--outer">
             <div class="infobar--content infobar--content-padded">
               <div class="infobar--photo infobar--content infobar--item infobar--item-bordered">
                 <img class="rimg" :src="tracking_data.rider.rider_photo" />
@@ -529,6 +469,7 @@
               </div>
               <div
                 class="infobar--content infobar--item infobar--order infobar--item-bordered infobar--order-align"
+                v-if="!externalTracking"
               >
                 <div v-if="this.getStatus === 'Pending'" class="">
                   <div
@@ -554,7 +495,7 @@
               </div>
 
               <div
-                v-if="[1, 23].includes(tracking_data.rider.vendor_id)"
+                v-if="[1, 23].includes(tracking_data.rider.vendor_id) && !externalTracking"
                 class="infobar--content infobar--item infobar--status infobar--item-bordered"
               >
                 <el-steps
@@ -750,6 +691,7 @@ export default {
       isSaved: false,
       shareOption: false,
       recipientPhone: '',
+      externalTracking: false,
     };
   },
   computed: {
@@ -863,6 +805,13 @@ export default {
         return '';
       }
     },
+    checkPreviousRoute() {
+      console.log(window.location);
+      if (window.location.pathname === `/external/tracking/${this.$route.params.order_no}`) {
+        this.truckMoreInfo = false;
+        this.externalTracking = true;
+      }
+    },
   },
   watch: {
     '$route.params.order_no': function trackedOrder(from) {
@@ -890,6 +839,7 @@ export default {
   },
   created() {
     this.order_number = this.$route.params.order_no;
+    this.checkPreviousRoute();
   },
   methods: {
     moment() {
@@ -1167,7 +1117,7 @@ export default {
     shareETASms() {
       if (this.recipientPhone !== '' && this.recipientPhone.length > 9) {
         const payload = {};
-        const track = window.location.href;
+        const track = `${window.location.origin}/external/tracking/${this.$route.params.order_no}`;
         const session = this.$store.getters.getSession;
         let user_name = session[session.default].user_name;
         payload.phone = this.recipientPhone;
