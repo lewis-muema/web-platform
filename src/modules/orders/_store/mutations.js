@@ -49,7 +49,6 @@ const setVendorMarkers = (state, payload) => {
     }
   }
   */
-
   let visible = false;
   if ('page' in state) {
     // order placement
@@ -60,7 +59,6 @@ const setVendorMarkers = (state, payload) => {
       visible = true;
     }
   }
-
   const id = payload.rider_id;
   const value = {
     position: {
@@ -69,6 +67,8 @@ const setVendorMarkers = (state, payload) => {
     },
     vendor_type: payload.vendor_type,
     rotation: payload.bearing,
+    time: payload.time,
+    speed: payload.speed,
     visible,
   };
 
