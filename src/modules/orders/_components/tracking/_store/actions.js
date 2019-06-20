@@ -207,6 +207,26 @@ const requestETASms = function requestETASms({ dispatch }, data) {
   });
 };
 
+const requestRiderLastPosition = function requestRiderLastPosition({ dispatch }, data) {
+  const payload = {
+    values: data,
+    app: 'NODE_PRIVATE_API',
+    endpoint: 'last_partner_position',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   getTrackingData,
   cancelOrder,
@@ -214,4 +234,5 @@ export default {
   runningBalance,
   saveOrderDetails,
   requestETASms,
+  requestRiderLastPosition,
 };

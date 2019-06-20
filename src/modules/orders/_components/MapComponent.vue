@@ -4,7 +4,7 @@
       <GmapMap
         ref="map"
         :center="mapCentreLocation"
-        :zoom="13"
+        :zoom="14"
         map-type-id="roadmap"
         class="content"
         :options="mapOptions"
@@ -18,12 +18,11 @@
           :icon="path_icon(m.icon)"
         />
         <gmap-polyline
-          v-if="typeof polyline === 'object' && this.mapLoaded"
+          v-if="typeof polyline === 'object' && mapLoaded"
           ref="polyline"
           :path="decode_path(polyline.path)"
           :options="polyline.options"
         />
-        <!-- <gmap-marker v-for="v in vendors" :position="v.position" :key="index" :ref="`marker${index}`" :icon="draw_rotated(v.vendor_type,v.rotation)" :visible="v.visible"></gmap-marker> -->
         <gmap-marker
           v-for="v in vendors"
           :key="v.rider_id"
@@ -84,12 +83,60 @@ export default {
       infoDescription: '',
       iconLabel: '',
       vendor_icon_id: '',
-      pick_up_eta: '',
-      delivery_eta: '',
+      pickUpEta: '',
+      deliveryEta: '',
       vendor_name: '',
       destination_waiting: false,
       rider_online_status: false,
+      riderId: '',
+      vehicleRegistration: '',
+      speedData: '',
+      riderLastSeen: '',
+      trackers: [6, 10, 13, 14, 17, 18, 19, 20],
+      extraNotificationInfo: '',
     };
+  },
+  computed: {
+    ...mapGetters({
+      markers: '$_orders/getMarkers',
+      vendors: '$_orders/getVendors',
+      polyline: '$_orders/getPolyline',
+      tracking_data: '$_orders/$_tracking/getTrackingData',
+      isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
+    }),
+  },
+  watch: {
+    markers(markers) {
+      if (this.mapLoaded && markers.length > 0) {
+        const bounds = new google.maps.LatLngBounds();
+        for (const m of this.markers) {
+          bounds.extend(m.position);
+        }
+        this.$refs.map.$mapObject.fitBounds(bounds);
+        this.$refs.map.$mapObject.setZoom(this.$refs.map.$mapObject.zoom - 1);
+        this.activeState();
+        this.activeMarker();
+      }
+    },
+    '$route.params.order_no': function trackedOrder(order) {
+      this.$store.dispatch('$_orders/getOrderData', { order_no: order }).then((response) => {
+        if (response.status) {
+          this.orderStatus(response.data);
+        } else {
+          this.infoWinOpen = false;
+        }
+      });
+    },
+  },
+  mounted() {
+    this.$gmapApiPromiseLazy().then(() => {
+      this.mapLoaded = true;
+    });
+    this.$store.dispatch('$_orders/connectMqtt');
+    this.activeState();
+    this.activeMarker();
+    this.checkUserLocation();
+    this.removeStoredMarkers();
   },
   methods: {
     ...mapActions({
@@ -150,12 +197,11 @@ export default {
     get_position(literal) {
       return new google.maps.LatLng(literal);
     },
-    activeMarker() {
+    activeMarker(data) {
       const size = Object.keys(this.markers).length;
       if (this.iconLabel !== '' && size > 0 && this.polyline.path !== '') {
         const main = this.markers.find(location => location.icon === this.iconLabel);
-        const index = this.markers.findIndex(location => location.icon === this.iconLabel);
-        this.toggleInfoWindow(main, index);
+        this.toggleInfoWindow(main, data);
       } else {
         this.infoWinOpen = false;
       }
@@ -163,8 +209,13 @@ export default {
     orderStatus(data) {
       this.checkRiderPosition();
       if (data.status) {
+        if (data.confirm_status > 0) {
+          this.riderId = data.rider.rider_id;
+        }
+
         const waiting = data.delivery_log.find(position => position.log_type === 10);
         const waitingIndex = data.delivery_log.findIndex(position => position.log_type === 10);
+
         if (waitingIndex !== -1) {
           const string = data.delivery_log[waitingIndex].description;
           if (string.includes('is ready to deliver your order')) {
@@ -173,17 +224,20 @@ export default {
             this.destination_waiting = false;
           }
         }
-        const rider_locations = this.rider_online_status;
+
+        const riderLocations = this.rider_online_status;
         if (data.rider.vendor_id === 23) {
           this.vendor_icon_id = 1;
         } else {
           this.vendor_icon_id = data.rider.vendor_id;
         }
+
         if (data.rider.vendor_id === 23 || data.rider.vendor_id === 1) {
           this.vendor_name = 'rider';
         } else {
           this.vendor_name = 'driver';
         }
+
         if (data.delivery_status === 3) {
           // return 'Delivered';
           this.infoHeader = '';
@@ -201,7 +255,7 @@ export default {
           this.infoDescription = '';
         } else if (data.delivery_status === 2) {
           // return 'In Transit';
-          if (!rider_locations) {
+          if (!riderLocations) {
             this.infoHeader = `Your delivery is still in progress. We are working to restore the ${
               this.vendor_name
             }'s location.`;
@@ -210,7 +264,7 @@ export default {
             this.vendor_icon_id = 'location';
           } else {
             this.infoHeader = 'Your delivery is in progress.';
-            this.infoDescription = `Order arrival time ${this.delivery_eta}`;
+            this.infoDescription = `Order arrival time ${this.deliveryEta}`;
             this.iconLabel = 'destination';
           }
         } else if (
@@ -226,7 +280,7 @@ export default {
           this.iconLabel = 'pickup';
         } else if (data.delivery_status === 0 && data.confirm_status === 1) {
           // return 'Confirmed';
-          if (!rider_locations) {
+          if (!riderLocations) {
             this.infoHeader = `Your ${
               this.vendor_name
             } is still on the way. We are working to restore the ${this.vendor_name}'s location`;
@@ -235,7 +289,7 @@ export default {
             this.vendor_icon_id = 'location';
           } else {
             this.infoHeader = `Your ${this.vendor_name} is on the way.`;
-            this.infoDescription = `Order pickup time ${this.pick_up_eta}`;
+            this.infoDescription = `Order pickup time ${this.pickUpEta}`;
             this.iconLabel = 'pickup';
           }
         } else {
@@ -244,36 +298,39 @@ export default {
           this.infoDescription = '';
           this.iconLabel = 'pickup';
         }
-        this.activeMarker();
+        this.activeMarker(data);
         this.orderETA(data);
       } else {
         this.infoWinOpen = false;
       }
     },
     orderETA(data) {
-      if (data.confirm_status === 1 && data.delivery_status === 0) {
-        const pick_up_eta = data.eta_data.etp;
-        const eta_split = pick_up_eta.split('to');
-        const start = eta_split[0].replace(/\s+/g, '');
-        const end = eta_split[1].replace(/\s+/g, '');
+      if (data.eta_data.status) {
+        if (data.confirm_status === 1 && data.delivery_status === 0) {
+          const pickUpEta = data.eta_data.etp;
+          const etaSplit = pickUpEta.split('to');
+          const start = etaSplit[0].replace(/\s+/g, '');
+          const end = etaSplit[1].replace(/\s+/g, '');
 
-        const start_eta = moment(start, moment.ISO_8601).format('h:mm a');
-        const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
+          const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+          const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-        this.pick_up_eta = `${start_eta}-${end_eta}`;
-        this.delivery_eta = '';
-      } else if (data.delivery_status === 2) {
-        const delivery_eta = data.eta_data.etd;
-        const eta_split = delivery_eta.split('to');
-        const start = eta_split[0].replace(/\s+/g, '');
-        const end = eta_split[1].replace(/\s+/g, '');
+          this.pickUpEta = `${startEta}-${endEta}`;
+          this.deliveryEta = '';
+        } else if (data.delivery_status === 2) {
+          const deliveryEta = data.eta_data.etd;
+          const etaSplit = deliveryEta.split('to');
+          const start = etaSplit[0].replace(/\s+/g, '');
+          const end = etaSplit[1].replace(/\s+/g, '');
 
-        const start_eta = moment(start, moment.ISO_8601).format('h:mm a');
-        const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
+          const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+          const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-        this.delivery_eta = `${start_eta}-${end_eta}`;
-        this.pick_up_eta = '';
-      } else {
+          this.deliveryEta = `${startEta}-${endEta}`;
+          this.pickUpEta = '';
+        } else {
+          // ...
+        }
       }
     },
     activeState() {
@@ -296,12 +353,84 @@ export default {
       }
     },
 
-    toggleInfoWindow(marker, idx) {
-      this.infoWindowPos = marker.position;
-      this.infoContent = this.getInfoWindowContent(marker);
+    toggleInfoWindow(marker, data) {
+      if (data.confirm_status > 0 && !this.trackers.includes(data.rider.vendor_id)) {
+        const size = Object.keys(this.vendors).length;
+        if (size > 0) {
+          this.handleTrackersNotification(data);
+          this.setTrackersInfoWindow(data);
+        } else {
+          this.infoWindowPos = marker.position;
+          this.infoContent = this.getInfoWindowContent(marker);
+          this.infoWinOpen = true;
+        }
+      } else {
+        this.infoWindowPos = marker.position;
+        this.infoContent = this.getInfoWindowContent(marker);
+        this.infoWinOpen = true;
+      }
+    },
+    handleTrackersNotification(data) {
+      const riderId = data.rider.rider_id;
+      const riderLocationDetails = this.vendors[riderId];
+      const onlineTime = moment(riderLocationDetails.time);
+      const currentTime = moment();
+      const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
+
+      if (riderOnlineTimeRange <= 30) {
+        this.vehicleRegistration = `Vehicle : ${data.rider.number_plate}`;
+        this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
+        this.riderLastSeen = '';
+        this.extraNotificationInfo = '';
+      } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
+        this.vehicleRegistration = `Vehicle : ${data.rider.number_plate}`;
+        this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
+        this.riderLastSeen = `Tracker : Last signal sent ${moment(
+          riderLocationDetails.time,
+        ).fromNow()}`;
+        this.extraNotificationInfo = '';
+      } else {
+        this.vehicleRegistration = `Vehicle : ${data.rider.number_plate}`;
+        this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
+        this.riderLastSeen = 'Tracker : No Signal';
+        this.extraNotificationInfo = '(This could be due to network issues)';
+      }
+    },
+    setTrackersInfoWindow(data) {
+      const riderId = data.rider.rider_id;
+      const riderLocationDetails = this.vendors[riderId];
+      const riderMarkerLocation = riderLocationDetails.position;
+
+      this.mapCentreLocation.lat = riderMarkerLocation.lat;
+      this.mapCentreLocation.lng = riderMarkerLocation.lng;
+
+      this.infoWindowPos = riderMarkerLocation;
+      this.infoContent = this.getTrackerInfoWindowContent();
       this.infoWinOpen = true;
     },
-    getInfoWindowContent(marker) {
+    getTrackerInfoWindowContent() {
+      return `<div class="" style="width:204px">
+               <div style ="display: inline-block;
+                 width: 40px;
+                 object-fit: contain;
+                 float: left;">
+          <img style ="height: 45px;" src="https://images.sendyit.com/web_platform/vendor_type/top/${
+  this.vendor_icon_id
+}.png"></img>
+                 </div>
+                 <div style="  width: 75%;
+                   display: inline-block;
+                   float: left;
+                   padding-left: 10px;
+                   padding-top: 10px;">
+                   <div>${this.vehicleRegistration}</div>
+                   <div>${this.speedData}</div>
+                   <div>${this.riderLastSeen}</div>
+                   <div style = "font-size:9px;padding-top:5px;">${this.extraNotificationInfo}</div>
+                   </div>
+              </div>`;
+    },
+    getInfoWindowContent() {
       return `<div class="" style="width:275px">
                <div style ="display: inline-block;
                  width: 70px;
@@ -337,20 +466,22 @@ export default {
     getCode(position) {
       const payload = {};
       payload.coordinates = position;
-      const full_payload = {
+      const fullPayload = {
         values: payload,
         app: 'PRIVATE_API',
         endpoint: 'geocountry',
       };
-      this.requestCountryCode(full_payload).then(
+      this.requestCountryCode(fullPayload).then(
         (response) => {
           const code = response.country_code;
           this.$store.commit('setCountryCode', code);
-          const country_code_data = currencyConversion.getCountryByCode(code);
-          this.$store.commit('setDefaultCurrency', country_code_data.currencyCode);
+          const countryCodeData = currencyConversion.getCountryByCode(code);
+          this.$store.commit('setDefaultCurrency', countryCodeData.currencyCode);
           this.setMapCentreLocation(code);
         },
-        (error) => {},
+        (error) => {
+          // ...
+        },
       );
     },
     setMapCentreLocation(code) {
@@ -367,48 +498,6 @@ export default {
       this.$store.commit('$_orders/removeMarkers', []);
       this.$store.commit('$_orders/$_tracking/setTrackedOrder', '');
     },
-  },
-  computed: {
-    ...mapGetters({
-      markers: '$_orders/getMarkers',
-      vendors: '$_orders/getVendors',
-      polyline: '$_orders/getPolyline',
-      tracking_data: '$_orders/$_tracking/getTrackingData',
-      isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
-    }),
-  },
-  watch: {
-    markers(markers) {
-      if (this.mapLoaded && markers.length > 0) {
-        const bounds = new google.maps.LatLngBounds();
-        for (const m of this.markers) {
-          bounds.extend(m.position);
-        }
-        this.$refs.map.$mapObject.fitBounds(bounds);
-        this.$refs.map.$mapObject.setZoom(this.$refs.map.$mapObject.zoom - 1);
-        this.activeState();
-        this.activeMarker();
-      }
-    },
-    '$route.params.order_no': function trackedOrder(order) {
-      this.$store.dispatch('$_orders/getOrderData', { order_no: order }).then((response) => {
-        if (response.status) {
-          this.orderStatus(response.data);
-        } else {
-          this.infoWinOpen = false;
-        }
-      });
-    },
-  },
-  mounted() {
-    this.$gmapApiPromiseLazy().then(() => {
-      this.mapLoaded = true;
-    });
-    this.$store.dispatch('$_orders/connectMqtt');
-    this.activeState();
-    this.activeMarker();
-    this.checkUserLocation();
-    this.removeStoredMarkers();
   },
 };
 </script>

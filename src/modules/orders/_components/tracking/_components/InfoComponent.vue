@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <div v-if="this.truckMoreInfo" class="truck-info-component">
+    <div v-if="truckMoreInfo" class="truck-info-component">
       <transition name="fade" mode="out-in">
         <div v-if="!loading" class="infobar--outer">
           <div key="prime" class="infobar-content infobar--content-padded">
@@ -39,11 +39,11 @@
                 <div class="info-text-transform">
                   <div class="topbar-text">
                     <font-awesome-icon icon="wallet" class="top-bar-info infobar-truck-img" />
-                    <span v-if="this.getStatus === 'Pending'">
+                    <span v-if="getStatus === 'Pending'">
                       <span
                         v-if="
-                          'customer_min_amount' in this.tracking_data.package_details &&
-                            !this.tracking_data.fixed_cost
+                          'customer_min_amount' in tracking_data.package_details &&
+                            !tracking_data.fixed_cost
                         "
                       >
                         <span class="infor-top-bar-text">
@@ -83,7 +83,7 @@
               </el-col>
               <el-col :span="1" class="minimise-icon">
                 <div
-                  v-if="this.truckMoreInfo"
+                  v-if="truckMoreInfo"
                   class="infobar--actions-hover"
                   @click="minimiseInfoDetails()"
                 >
@@ -136,16 +136,16 @@
                     </div>
                     <div class="tracking-loader-inner">
                       <img
-                        :src="getVendorIcon(this.tracking_data.rider.vendor_id)"
+                        :src="getVendorIcon(tracking_data.rider.vendor_id)"
                         alt=""
                         class="infobar-truck-img inforbar-vendor-icon"
                       />
                       <span class="info-text-transform">
-                        {{ this.vendorName }}
+                        {{ vendorName }}
                       </span>
                     </div>
                   </div>
-                  <div class="tracking-loader" v-if="this.scheduled_time">
+                  <div class="tracking-loader" v-if="scheduled_time">
                     <div class="">
                       <img
                         src="https://images.sendyit.com/web_platform/tracking/calendar.svg"
@@ -252,7 +252,7 @@
 
                       <!-- Pricing check -->
                       <li
-                        v-if="this.truck_orders.includes(tracking_data.rider.vendor_id)"
+                        v-if="truck_orders.includes(tracking_data.rider.vendor_id)"
                         id="timeline_right"
                         v-bind:class="{ timelinePay: isPayed, payedReached: setPayed }"
                       >
@@ -263,17 +263,17 @@
                           >
                             Price Confirmation
                           </p>
-                          <div class="" v-if="this.getStatus === 'Pending'"></div>
+                          <div class="" v-if="getStatus === 'Pending'"></div>
                           <div v-else>
                             <div class="">
-                              <div v-if="this.accType === 1" class="">
+                              <div v-if="accType === 1" class="">
                                 <p>
                                   Price has been confirmed to be
                                   {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
                                 </p>
                               </div>
                               <div v-else class="">
-                                <div v-if="this.myRb <= 0">
+                                <div v-if="myRb <= 0">
                                   <p>
                                     Price has been confirmed to be
                                     {{ tracking_data.price_tier.currency }}
@@ -330,10 +330,10 @@
                             <p>
                               Your Order has been confirmed by {{ tracking_data.rider.rider_name }}
                             </p>
-                            <p>{{ this.confirm_eta }}</p>
+                            <p>{{ confirmEta }}</p>
                           </div>
                           <div v-else>
-                            <p>{{ this.confirm_eta }}</p>
+                            <p>{{ confirmEta }}</p>
                           </div>
                         </div>
                       </li>
@@ -350,7 +350,7 @@
                           >
                             Order Picked
                           </p>
-                          <p>{{ this.pick_up_eta }}</p>
+                          <p>{{ pickUpEta }}</p>
                         </div>
                       </li>
 
@@ -369,7 +369,7 @@
                           >
                             Delivered
                           </p>
-                          <p>{{ this.delivery_eta }}</p>
+                          <p>{{ deliveryEta }}</p>
                         </div>
                       </li>
                     </ul>
@@ -377,7 +377,7 @@
                 </div>
               </el-col>
             </el-row>
-            <div v-if="this.getStatus === 'Pending'" class="save-option">
+            <div v-if="getStatus === 'Pending'" class="save-option">
               <el-row
                 :gutter="20"
                 class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top infobar--item-truck-cancel"
@@ -390,7 +390,7 @@
               </el-col> -->
                 <el-col :span="6" class="cancel-text-option">
                   <div
-                    v-if="tracking_data.delivery_status < 2 && this.user_state"
+                    v-if="tracking_data.delivery_status < 2 && user_state"
                     class="info-text-transform info-text-cursor "
                     @click="canceldialog()"
                   >
@@ -401,10 +401,7 @@
               </el-row>
             </div>
 
-            <div
-              v-if="this.getStatus !== 'Pending'"
-              class="rider-info infobar--item-truck-bordered-top"
-            >
+            <div v-if="getStatus !== 'Pending'" class="rider-info infobar--item-truck-bordered-top">
               <el-row
                 :gutter="20"
                 class="infobar-content infobar--truck-item   infobar--item-truck-options"
@@ -443,7 +440,7 @@
 
     <div>
       <transition name="fade" mode="out-in">
-        <div v-if="!this.truckMoreInfo">
+        <div v-if="!truckMoreInfo">
           <div v-if="!loading" class="infobar--outer">
             <div class="infobar--content infobar--content-padded">
               <div class="infobar--photo infobar--content infobar--item infobar--item-bordered">
@@ -471,12 +468,12 @@
                 class="infobar--content infobar--item infobar--order infobar--item-bordered infobar--order-align"
                 v-if="!externalTracking"
               >
-                <div v-if="this.getStatus === 'Pending'" class="">
+                <div v-if="getStatus === 'Pending'" class="">
                   <div
                     v-if="
                       [20].includes(tracking_data.rider.vendor_id) &&
-                        'customer_min_amount' in this.tracking_data.package_details &&
-                        !this.tracking_data.fixed_cost
+                        'customer_min_amount' in tracking_data.package_details &&
+                        !tracking_data.fixed_cost
                     "
                   >
                     Minimum Amount : {{ tracking_data.price_tier.currency }}
@@ -500,13 +497,13 @@
               >
                 <el-steps
                   :space="200"
-                  :active="this.getStatusCode"
+                  :active="getStatusCode"
                   finish-status="success"
                   style="font-size:10px !important"
                 >
-                  <el-step title="Rider allocation" :description="this.confirm_eta" />
-                  <el-step title="Pick up" :description="this.pick_up_eta" />
-                  <el-step title="Delivery" :description="this.delivery_eta" />
+                  <el-step title="Rider allocation" :description="confirmEta" />
+                  <el-step title="Pick up" :description="pickUpEta" />
+                  <el-step title="Delivery" :description="deliveryEta" />
                 </el-steps>
               </div>
               <div
@@ -538,7 +535,7 @@
                   </div>
                 </div>
                 <div
-                  v-if="tracking_data.delivery_status < 2 && this.user_state"
+                  v-if="tracking_data.delivery_status < 2 && user_state"
                   class="infobar--actions-hover"
                   @click="canceldialog()"
                 >
@@ -674,9 +671,9 @@ export default {
       truckMoreInfo: true,
       myRb: '',
       accType: '',
-      pick_up_eta: 'Awaiting Confirmation',
-      delivery_eta: 'Awaiting Pickup',
-      confirm_eta: '',
+      pickUpEta: 'Awaiting Confirmation',
+      deliveryEta: 'Awaiting Pickup',
+      confirmEta: '',
       scheduled_time: false,
       isConfirmed: false,
       isPicked: false,
@@ -699,63 +696,15 @@ export default {
       tracking_data: '$_orders/$_tracking/getTrackingData',
       tracked_order: '$_orders/$_tracking/getTrackedOrder',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
+      vendors: '$_orders/getVendors',
     }),
-    order_eta() {
+    initiateOrderData() {
+      this.setRiderLocationToStore();
       this.checkVendorName();
       this.checkScheduler();
       this.setTimeLineIconState();
       this.confirmUser();
-      if (this.tracking_data.confirm_status === 0) {
-        const confirm_eta = this.tracking_data.eta_data.etc;
-        const eta_split = confirm_eta.split('to');
-        const start = eta_split[0].replace(/\s+/g, '');
-        const end = eta_split[1].replace(/\s+/g, '');
-
-        const start_eta = moment(start, moment.ISO_8601).format('h:mm a');
-        const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
-
-        this.confirm_eta = `${start_eta}-${end_eta}`;
-        this.pick_up_eta = 'Awaiting Confirmation';
-        this.delivery_eta = 'Awaiting Pickup';
-      } else if (
-        this.tracking_data.confirm_status === 1 &&
-        this.tracking_data.delivery_status === 0
-      ) {
-        const pick_up_eta = this.tracking_data.eta_data.etp;
-        const confirmed_eta = this.tracking_data.eta_data.confirmed;
-        const eta_split = pick_up_eta.split('to');
-        const start = eta_split[0].replace(/\s+/g, '');
-        const end = eta_split[1].replace(/\s+/g, '');
-
-        const start_eta = moment(start, moment.ISO_8601).format('h:mm a');
-        const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
-
-        this.pick_up_eta = `${start_eta}-${end_eta}`;
-        this.confirm_eta = moment(confirmed_eta, moment.ISO_8601).format('h:mm a');
-      } else if (this.tracking_data.delivery_status === 2) {
-        const delivery_eta = this.tracking_data.eta_data.etd;
-        const confirmed_eta = this.tracking_data.eta_data.confirmed;
-        const picked_eta = this.tracking_data.eta_data.picked;
-        const eta_split = delivery_eta.split('to');
-        const start = eta_split[0].replace(/\s+/g, '');
-        const end = eta_split[1].replace(/\s+/g, '');
-
-        const start_eta = moment(start, moment.ISO_8601).format('h:mm a');
-        const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
-
-        this.delivery_eta = `${start_eta}-${end_eta}`;
-        this.confirm_eta = moment(confirmed_eta, moment.ISO_8601).format('h:mm a');
-        this.pick_up_eta = moment(picked_eta, moment.ISO_8601).format('h:mm a');
-      } else if (this.tracking_data.delivery_status === 3) {
-        const delivery_eta = this.tracking_data.eta_data.delivered;
-        const confirmed_eta = this.tracking_data.eta_data.confirmed;
-        const picked_eta = this.tracking_data.eta_data.picked;
-
-        this.delivery_eta = moment(delivery_eta, moment.ISO_8601).format('h:mm a');
-        this.confirm_eta = moment(confirmed_eta, moment.ISO_8601).format('h:mm a');
-        this.pick_up_eta = moment(picked_eta, moment.ISO_8601).format('h:mm a');
-      } else {
-      }
+      this.orderETA();
     },
     getStatus() {
       if (!this.loading) {
@@ -806,7 +755,6 @@ export default {
       }
     },
     checkPreviousRoute() {
-      console.log(window.location);
       if (window.location.pathname === `/external/tracking/${this.$route.params.order_no}`) {
         this.truckMoreInfo = false;
         this.externalTracking = true;
@@ -819,23 +767,22 @@ export default {
       this.loading = true;
       this.$store.commit('$_orders/$_tracking/setTrackedOrder', from);
       this.poll(from);
-      this.order_eta();
+      this.initiateOrderData();
     },
 
     tracking_data(data) {
       if (data.confirm_status === 1) {
         this.reCheckMQTTConnection();
       }
-      this.order_eta();
+      this.initiateOrderData();
     },
   },
   mounted() {
     this.loading = true;
     this.$store.commit('$_orders/$_tracking/setTrackedOrder', this.$route.params.order_no);
-    this.$store.dispatch('$_orders/$_tracking/trackMQTT');
     this.poll(this.$route.params.order_no);
     this.checkRunningBalance();
-    this.order_eta();
+    this.initiateOrderData();
   },
   created() {
     this.order_number = this.$route.params.order_no;
@@ -969,10 +916,10 @@ export default {
     },
     confirmUser() {
       const session = this.$store.getters.getSession;
-      let session_user_email = session[session.default].user_email;
-      let order_user_email = this.tracking_data.user.email;
+      let sessionUserEmail = session[session.default].user_email;
+      let orderUserEmail = this.tracking_data.user.email;
 
-      if (session_user_email === order_user_email) {
+      if (sessionUserEmail === orderUserEmail) {
         this.user_state = true;
       } else {
         this.user_state = false;
@@ -1119,9 +1066,9 @@ export default {
         const payload = {};
         const track = `${window.location.origin}/external/tracking/${this.$route.params.order_no}`;
         const session = this.$store.getters.getSession;
-        let user_name = session[session.default].user_name;
+        let userName = session[session.default].user_name;
         payload.phone = this.recipientPhone;
-        payload.message = `Hi! ${user_name} wants you to track their Sendy order here: ${track}`;
+        payload.message = `Hi! ${userName} wants you to track their Sendy order here: ${track}`;
 
         this.$store.dispatch('$_orders/$_tracking/requestETASms', payload).then(
           response => {
@@ -1138,6 +1085,83 @@ export default {
         );
       } else {
         this.doNotification(2, 'Share ETA failed !', 'Please enter a valid phone number');
+      }
+    },
+    setRiderLocationToStore() {
+      const payload = {};
+      payload.rider_id = [this.tracking_data.rider.rider_id];
+      this.$store.dispatch('$_orders/$_tracking/requestRiderLastPosition', payload).then(
+        response => {
+          if (response.status === 'true') {
+            let riderOnlineData = response.partnerArray[0];
+            const size = Object.keys(this.vendors).length;
+            if (size > 0) {
+              this.$store.dispatch('$_orders/$_tracking/trackMQTT');
+            } else {
+              riderOnlineData.overide_visible = true;
+              this.$store.commit('$_orders/setVendorMarkers', riderOnlineData);
+            }
+          } else {
+            this.$store.dispatch('$_orders/$_tracking/trackMQTT');
+          }
+        },
+        error => {
+          // ...
+        }
+      );
+    },
+    orderETA() {
+      if (this.tracking_data.confirm_status === 0) {
+        const confirmEta = this.tracking_data.eta_data.etc;
+        const etaSplit = confirmEta.split('to');
+        const start = etaSplit[0].replace(/\s+/g, '');
+        const end = etaSplit[1].replace(/\s+/g, '');
+
+        const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+        const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+
+        this.confirmEta = `${startEta}-${endEta}`;
+        this.pickUpEta = 'Awaiting Confirmation';
+        this.deliveryEta = 'Awaiting Pickup';
+      } else if (
+        this.tracking_data.confirm_status === 1 &&
+        this.tracking_data.delivery_status === 0
+      ) {
+        const pickUpEta = this.tracking_data.eta_data.etp;
+        const confirmedEta = this.tracking_data.eta_data.confirmed;
+        const etaSplit = pickUpEta.split('to');
+        const start = etaSplit[0].replace(/\s+/g, '');
+        const end = etaSplit[1].replace(/\s+/g, '');
+
+        const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+        const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+
+        this.pickUpEta = `${startEta}-${endEta}`;
+        this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
+      } else if (this.tracking_data.delivery_status === 2) {
+        const deliveryEta = this.tracking_data.eta_data.etd;
+        const confirmedEta = this.tracking_data.eta_data.confirmed;
+        const pickedEta = this.tracking_data.eta_data.picked;
+        const etaSplit = deliveryEta.split('to');
+        const start = etaSplit[0].replace(/\s+/g, '');
+        const end = etaSplit[1].replace(/\s+/g, '');
+
+        const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+        const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+
+        this.deliveryEta = `${startEta}-${endEta}`;
+        this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
+        this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
+      } else if (this.tracking_data.delivery_status === 3) {
+        const deliveryEta = this.tracking_data.eta_data.delivered;
+        const confirmedEta = this.tracking_data.eta_data.confirmed;
+        const pickedEta = this.tracking_data.eta_data.picked;
+
+        this.deliveryEta = moment(deliveryEta, moment.ISO_8601).format('h:mm a');
+        this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
+        this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
+      } else {
+        // ...
       }
     },
   },
