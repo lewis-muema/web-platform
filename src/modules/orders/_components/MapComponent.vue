@@ -354,7 +354,7 @@ export default {
     },
 
     toggleInfoWindow(marker, data) {
-      if (data.confirm_status > 0 && !this.trackers.includes(data.rider.vendor_id)) {
+      if (data.confirm_status > 0 && this.trackers.includes(data.rider.vendor_id)) {
         const size = Object.keys(this.vendors).length;
         if (size > 0) {
           this.handleTrackersNotification(data);
