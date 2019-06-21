@@ -1,11 +1,24 @@
 <template lang="html">
-  <div v-if="!loading && get_orders.length > 0" class="ongoing--outer">
-    <div class="ongoing--count" @click="toggle_ongoing()">
+  <div
+    v-if="!loading && get_orders.length > 0"
+    class="ongoing--outer"
+  >
+    <div
+      class="ongoing--count"
+      @click="toggle_ongoing()"
+    >
       <span>{{ num_ongoing }} ongoing orders</span>
-      <font-awesome-icon icon="chevron-up" :class="classObject" width="15px" />
+      <font-awesome-icon
+        icon="chevron-up"
+        :class="classObject"
+        width="15px"
+      />
     </div>
     <transition name="fade">
-      <div v-if="showing" class="ongoing--column">
+      <div
+        v-if="showing"
+        class="ongoing--column"
+      >
         <template v-for="order in get_orders">
           <div
             class="ongoing--card"
@@ -117,7 +130,7 @@ export default {
     poll() {
       try {
         const that = this;
-        this.$store.dispatch('$_orders/fetchOngoingOrders').then(response => {
+        this.$store.dispatch('$_orders/fetchOngoingOrders').then((response) => {
           if (['order_placement', 'tracking'].includes(that.$router.currentRoute.name)) {
             setTimeout(() => {
               that.poll();

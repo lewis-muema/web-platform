@@ -9,7 +9,6 @@
         <div class="rate-rider-middle">
           <div id="rateriderreuse">
             <RateDriver v-if="getStep === 1" />
-            <!--<CommentsComponent v-if="getStep == 2"></CommentsComponent>-->
           </div>
         </div>
       </div>
@@ -21,16 +20,14 @@
 import getYear from 'date-fns/get_year';
 import { mapGetters, mapMutations } from 'vuex';
 import RateDriver from './components/RateDriver.vue';
-import CommentsComponent from './components/Comments.vue';
 import PostRateComponent from './components/PostRate.vue';
 import PostRateComponentBusiness from './components/PostRateBusiness.vue';
-import rating_store from './_store';
+import ratingStore from './_store';
 import RegisterStoreModule from '../../../../mixins/register_store_module';
 
 export default {
   name: 'Rating',
   components: {
-    CommentsComponent,
     PostRateComponent,
     PostRateComponentBusiness,
     RateDriver,
@@ -38,7 +35,7 @@ export default {
   mixins: [RegisterStoreModule],
   created() {
     const STORE_KEY = '$_rating';
-    this.$store.registerModule(STORE_KEY, rating_store);
+    this.$store.registerModule(STORE_KEY, ratingStore);
     this.updateScore(0);
     this.updateBaseUrl();
     this.updatePackageID();

@@ -1,10 +1,6 @@
 <template lang="html">
   <span>
-    <div
-      id="rated"
-      class="rider2-rate"
-      :class="class_full_comments"
-    />
+    <div id="rated" class="rider2-rate" :class="class_full_comments" />
     <div class="row describe-rider">
       {{ getCommentsTitle() }}
     </div>
@@ -15,7 +11,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img :src="cards_background"><span class="card-title .center-align">
+                <img :src="cards_background" /><span class="card-title .center-align">
                   Timeliness
                 </span>
               </div>
@@ -38,7 +34,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img :src="cards_background"><span class="card-title">
+                <img :src="cards_background" /><span class="card-title">
                   Politeness
                 </span>
               </div>
@@ -62,7 +58,7 @@
           <div class="col s12 m4">
             <div class="card ">
               <div class="card-image">
-                <img :src="cards_background"><span class="card-title">
+                <img :src="cards_background" /><span class="card-title">
                   Pricing
                 </span>
               </div>
@@ -85,7 +81,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img :src="cards_background"><span class="card-title">
+                <img :src="cards_background" /><span class="card-title">
                   Payment
                 </span>
               </div>
@@ -109,7 +105,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img :src="cards_background"><span class="card-title">
+                <img :src="cards_background" /><span class="card-title">
                   App
                 </span>
               </div>
@@ -132,7 +128,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img :src="cards_background"><span class="card-title">
+                <img :src="cards_background" /><span class="card-title">
                   Directions
                 </span>
               </div>
@@ -157,7 +153,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img :src="cards_background"><span class="card-title .center-align">
+                <img :src="cards_background" /><span class="card-title .center-align">
                   Timeliness
                 </span>
               </div>
@@ -180,7 +176,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img :src="cards_background"><span class="card-title">
+                <img :src="cards_background" /><span class="card-title">
                   Payment
                 </span>
               </div>
@@ -204,7 +200,7 @@
           <div class="col s12 m4">
             <div class="card ">
               <div class="card-image">
-                <img :src="cards_background"><span class="card-title">
+                <img :src="cards_background" /><span class="card-title">
                   Directions
                 </span>
               </div>
@@ -229,7 +225,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img :src="cards_background"><span class="card-title .center-align">
+                <img :src="cards_background" /><span class="card-title .center-align">
                   Timeliness
                 </span>
               </div>
@@ -237,12 +233,7 @@
                 <p>Speedy delivery</p>
               </div>
               <div class="card-action">
-                <a
-                  data-card="1"
-                  href="#writecomment"
-                  class="fancybox"
-                  @click="selectReason(1)"
-                >
+                <a data-card="1" href="#writecomment" class="fancybox" @click="selectReason(1)">
                   Comment
                 </a>
               </div>
@@ -251,7 +242,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img :src="cards_background"><span class="card-title">
+                <img :src="cards_background" /><span class="card-title">
                   Politeness
                 </span>
               </div>
@@ -260,12 +251,7 @@
                 <p>Polite riders</p>
               </div>
               <div class="card-action">
-                <a
-                  data-card="2"
-                  href="#writecomment"
-                  class="fancybox"
-                  @click="selectReason(5)"
-                >
+                <a data-card="2" href="#writecomment" class="fancybox" @click="selectReason(5)">
                   Comment
                 </a>
               </div>
@@ -274,7 +260,7 @@
           <div class="col s12 m4">
             <div class="card ">
               <div class="card-image">
-                <img :src="cards_background"><span class="card-title">
+                <img :src="cards_background" /><span class="card-title">
                   Directions
                 </span>
               </div>
@@ -282,12 +268,7 @@
                 <p>Clear directions</p>
               </div>
               <div class="card-action">
-                <a
-                  data-card="3"
-                  href="#writecomment"
-                  class="fancybox"
-                  @click="selectReason(3)"
-                >
+                <a data-card="3" href="#writecomment" class="fancybox" @click="selectReason(3)">
                   Comment
                 </a>
               </div>
@@ -295,79 +276,27 @@
           </div>
         </span>
         <span class="rider-space" />
-        <div
-          id="writecomment"
-          style="display:none"
-        >
+        <div id="writecomment" style="display:none">
           <div class="rate-rider-thank">
             Thank You
           </div>
-          <div
-            id="rated1"
-            class="rider3-rate"
-          />
+          <div id="rated1" class="rider3-rate" />
           <div class="rate-rider-tell">
             Please take a moment to share your experience with us
           </div>
-          <form
-            action=""
-            method="post"
-            @submit.prevent="submitRating()"
-          >
-            <input
-              id="form-timeliness"
-              v-model="timeliness"
-              type="hidden"
-              name="timeliness"
-            >
-            <input
-              id="form-payment"
-              v-model="payment"
-              type="hidden"
-              name="payment"
-            >
-            <input
-              id="form-directions"
-              v-model="directions"
-              type="hidden"
-              name="directions"
-            >
-            <input
-              id="form-cleanliness"
-              v-model="cleanliness"
-              type="hidden"
-              name="cleanliness"
-            >
-            <input
-              id="form-politeness"
-              v-model="politeness"
-              type="hidden"
-              name="politeness"
-            >
-            <input
-              id="form-app"
-              v-model="app"
-              type="hidden"
-              name="app"
-            >
-            <input
-              id="form-pricing"
-              v-model="pricing"
-              type="hidden"
-              name="pricing"
-            >
+          <form action="" method="post" @submit.prevent="submitRating()">
+            <input id="form-timeliness" v-model="timeliness" type="hidden" name="timeliness" />
+            <input id="form-payment" v-model="payment" type="hidden" name="payment" />
+            <input id="form-directions" v-model="directions" type="hidden" name="directions" />
+            <input id="form-cleanliness" v-model="cleanliness" type="hidden" name="cleanliness" />
+            <input id="form-politeness" v-model="politeness" type="hidden" name="politeness" />
+            <input id="form-app" v-model="app" type="hidden" name="app" />
+            <input id="form-pricing" v-model="pricing" type="hidden" name="pricing" />
             <div class="rate-rider-feedback">
-              <textarea
-                id="form-comment"
-                v-model="comment"
-                name="comment"
-              />
+              <textarea id="form-comment" v-model="comment" name="comment" />
             </div>
             <div class="rate-rider-submit">
-              <input
-                type="submit"
-                value="Submit"
-              >
+              <input type="submit" value="Submit" />
             </div>
           </form>
         </div>
@@ -378,72 +307,23 @@
           <div class="rate-rider-thank">
             Thank You
           </div>
-          <div
-            id="rated1"
-            class="rider3-rate"
-          />
+          <div id="rated1" class="rider3-rate" />
           <div class="rate-rider-tell">
             Please take a moment to share your experience with us
           </div>
-          <form
-            action=""
-            method="post"
-            @submit.prevent="submitRating()"
-          >
-            <input
-              id="form-timeliness"
-              v-model="timeliness"
-              type="hidden"
-              name="timeliness"
-            >
-            <input
-              id="form-payment"
-              v-model="payment"
-              type="hidden"
-              name="payment"
-            >
-            <input
-              id="form-directions"
-              v-model="directions"
-              type="hidden"
-              name="directions"
-            >
-            <input
-              id="form-cleanliness"
-              v-model="cleanliness"
-              type="hidden"
-              name="cleanliness"
-            >
-            <input
-              id="form-politeness"
-              v-model="politeness"
-              type="hidden"
-              name="politeness"
-            >
-            <input
-              id="form-app"
-              v-model="app"
-              type="hidden"
-              name="app"
-            >
-            <input
-              id="form-pricing"
-              v-model="pricing"
-              type="hidden"
-              name="pricing"
-            >
+          <form action="" method="post" @submit.prevent="submitRating()">
+            <input id="form-timeliness" v-model="timeliness" type="hidden" name="timeliness" />
+            <input id="form-payment" v-model="payment" type="hidden" name="payment" />
+            <input id="form-directions" v-model="directions" type="hidden" name="directions" />
+            <input id="form-cleanliness" v-model="cleanliness" type="hidden" name="cleanliness" />
+            <input id="form-politeness" v-model="politeness" type="hidden" name="politeness" />
+            <input id="form-app" v-model="app" type="hidden" name="app" />
+            <input id="form-pricing" v-model="pricing" type="hidden" name="pricing" />
             <div class="rate-rider-feedback">
-              <textarea
-                id="form-comment"
-                v-model="comment"
-                name="comment"
-              />
+              <textarea id="form-comment" v-model="comment" name="comment" />
             </div>
             <div class="rate-rider-submit">
-              <input
-                type="submit"
-                value="Submit"
-              >
+              <input type="submit" value="Submit" />
             </div>
           </form>
         </div>
@@ -454,7 +334,6 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
-import axios from 'axios';
 
 export default {
   name: 'Comments',
@@ -506,7 +385,6 @@ export default {
     },
     submitRating() {
       this.postRating();
-      // this.closeFancyBox();
       this.moveNext();
     },
     postRating() {
@@ -524,20 +402,17 @@ export default {
         comment: this.comment,
       };
       this.$store.dispatch('$_rating/requestRatingUpdate', payload).then(
-        (response) => {},
-        (error) => {
-          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+        response => {},
+        error => {
+          const notification = { title: '', level: 2, message: 'Something went wrong.' }; // notification object
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true);
-        },
+        }
       );
     },
     moveNext() {
       this.updateStep(3);
     },
-    // closeFancyBox() {
-    //     parent.$.fancybox.close();
-    // },
     resetSelectReasons() {
       this.timeliness = false;
       this.payment = false;
