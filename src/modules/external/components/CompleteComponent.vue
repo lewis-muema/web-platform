@@ -16,14 +16,14 @@
         <p>Login at any time to your two account profiles using the emails below.</p>
       </div>
       <div class="complete-pair">
-        <p>{{ this.getBizName }}: {{ this.getBizEmail }}</p>
-        <p>Personal: {{ this.getPerEmail }}</p>
+        <p>{{ getBizName }}: {{ getBizEmail }}</p>
+        <p>Personal: {{ getPerEmail }}</p>
       </div>
     </div>
     <div class="complete-continue">
       <a
         class="btn-submit mid"
-        :href="this.getBaseUrl"
+        :href="getBaseUrl"
       >
         Continue to App
       </a>
