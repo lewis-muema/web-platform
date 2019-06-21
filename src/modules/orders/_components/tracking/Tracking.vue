@@ -18,14 +18,13 @@ import { faArrowLeft, faWallet } from '@fortawesome/free-solid-svg-icons';
 import TrackingStore from './_store';
 import InfoWindow from './_components/InfoComponent.vue';
 import RegisterStoreModule from '../../../../mixins/register_store_module';
-import ExternalHeader from '../../../../components/headers/ExternalHeader.vue';
 
 library.add(faArrowLeft);
 library.add(faWallet);
 
 export default {
   name: 'Tracking',
-  components: { InfoWindow, ExternalHeader },
+  components: { InfoWindow },
   mixins: [RegisterStoreModule],
   watch: {
     $route() {
