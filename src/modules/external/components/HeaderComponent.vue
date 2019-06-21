@@ -4,7 +4,7 @@
     <div class="progress">
       <div
         class="determinate"
-        :style="this.progress_width"
+        :style="progress_width"
       />
     </div>
   </div>
@@ -37,11 +37,6 @@ export default {
 </script>
 
 <style lang="css">
-/* .user-invite-header
-{
-  margin: 10px auto;
-  width: 100%;
-} */
 .header-logo {
   max-height: 50px;
 }
@@ -65,11 +60,4 @@ export default {
   margin: 0 0 1rem 0;
   overflow: hidden;
 }
-/* .progress.determinate{
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  transition: width .3s linear;
-} */
 </style>

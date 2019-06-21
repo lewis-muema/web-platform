@@ -6,7 +6,7 @@
           <form-panel-component />
         </div>
         <div
-          v-if="this.getViewState != 4"
+          v-if="getViewState != 4"
           class="help-card"
         >
           <help-panel-component />

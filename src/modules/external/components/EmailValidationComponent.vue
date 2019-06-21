@@ -41,7 +41,7 @@
         class="btn-submit"
         style="width:30% !important;"
         name="next"
-        :disabled="!this.is_valid"
+        :disabled="!is_valid"
         @click="next_view"
       >
         Next
@@ -61,6 +61,14 @@ export default {
       message: '',
     };
   },
+  computed: {
+    ...mapGetters({
+      getBizEmail: '$_external/getBizEmail',
+    }),
+    is_valid() {
+      return this.peerEmail !== '';
+    },
+  },
   methods: {
     ...mapMutations({
       setViewState: '$_external/setViewState',
@@ -68,15 +76,15 @@ export default {
       updatePerEmail: '$_external/updatePerEmail',
     }),
     next_view() {
-      let email_valid = true;
+      let emailValid = true;
       for (let i = 0; i < this.errors.items.length; i++) {
-        if (this.errors.items[i].field == 'email') {
-          email_valid = false;
+        if (this.errors.items[i].field === 'email') {
+          emailValid = false;
           break;
         }
       }
 
-      if (email_valid) {
+      if (emailValid) {
         if (this.getBizEmail !== this.peerEmail) {
           this.updatePerEmail(this.peerEmail);
           this.updateViewStep(0);
@@ -93,14 +101,6 @@ export default {
     },
     setCurrentStep(step) {
       this.updateViewStep(step);
-    },
-  },
-  computed: {
-    ...mapGetters({
-      getBizEmail: '$_external/getBizEmail',
-    }),
-    is_valid() {
-      return this.peerEmail !== '';
     },
   },
 };
