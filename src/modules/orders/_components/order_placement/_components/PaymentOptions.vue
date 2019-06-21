@@ -51,8 +51,8 @@
         <span v-else-if="getPriceRequestObject.payment_option !== 2">
           <div v-if="mpesa_valid && default_currency === 'KES'">
             <div
-              class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
               v-if="mpesa_valid"
+              class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
             >
               <div class="home-view-notes-wrapper--item__option">
                 <div class="home-view-notes-wrapper--item__option-div">
@@ -146,13 +146,11 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import NoSSR from 'vue-no-ssr';
 import numeral from 'numeral';
-import payment_store from '../../../../payment/_store';
-import order_store from '../../../_store';
-import home_store from '../_store';
-import Mcrypt from '../../../../../mixins/mcrypt_mixin.js';
-import PaymentMxn from '../../../../../mixins/payment_mixin.js';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import Mcrypt from '../../../../../mixins/mcrypt_mixin';
+import PaymentMxn from '../../../../../mixins/payment_mixin';
+
 library.add(faChevronDown);
 
 // const TRUCK_VENDORS = [6,10,13,14,17,18,19,20];
@@ -235,7 +233,7 @@ export default {
       }
       return '';
     },
-    revertIcon: function() {
+    revertIcon() {
       return {
         'sendy-blue': true,
         'rotate-transform': true,
@@ -298,16 +296,12 @@ export default {
       let text = 'Payment Options';
       if (this.getPriceRequestObject.payment_option === 2) {
         text = 'Post Pay';
+      } else if (this.getRunningBalance < 0) {
+        text = 'Payment Options';
+      } else if (this.default_currency === 'KES' && this.mpesa_valid) {
+        text = 'Cash on delivery';
       } else {
-        if (this.getRunningBalance < 0) {
-          text = 'Payment Options';
-        } else {
-          if (this.default_currency === 'KES' && this.mpesa_valid) {
-            text = 'Cash on delivery';
-          } else {
-            text = 'Card Payment';
-          }
-        }
+        text = 'Card Payment';
       }
 
       return text;
@@ -425,26 +419,25 @@ export default {
     },
 
     checkIfTruckOrder() {
-      let is_truck = false;
+      let isTruck = false;
       if (
         TRUCK_VENDORS.includes(this.activeVendorPriceData.vendor_id) &&
         !this.getPriceRequestObject.fixed_cost
       ) {
-        is_truck = true;
+        isTruck = true;
       }
 
-      return is_truck;
+      return isTruck;
     },
 
     isValidateCustomerMinAmount() {
-      const customer_min_amount_is_filled = false;
-      let min_amount = 0;
+      let minAmount = 0;
       try {
-        min_amount = Number(this.getCustomerMinAmount);
+        minAmount = Number(this.getCustomerMinAmount);
       } catch (er) {
         //
       }
-      if (min_amount <= 0) {
+      if (minAmount <= 0) {
         this.doNotification(
           '2',
           'Missing Minimum Order Amount',
@@ -697,7 +690,7 @@ export default {
       return new Promise((resolve, reject) => {
         const session = this.$store.getters.getSession;
 
-        const running_balance_payload = {
+        const runningBalancePayload = {
           cop_id: 'cop_id' in session[session.default] ? session[session.default].cop_id : 0,
           phone: session[session.default].user_phone,
           default_currency: this.default_currency,
@@ -705,7 +698,7 @@ export default {
         };
 
         const payload = {
-          values: running_balance_payload,
+          values: runningBalancePayload,
           app: 'NODE_PRIVATE_API',
           endpoint: 'running_balance',
         };
@@ -756,25 +749,31 @@ export default {
     },
 
     identifyMixpanelUser(email) {
-      let analytics_env = '';
+      let analyticsEnv = '';
       try {
-        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {}
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
       try {
-        if (analytics_env === 'production') {
+        if (analyticsEnv === 'production') {
           mixpanel.identify(email);
         }
-      } catch (er) {}
+      } catch (er) {
+        // ...
+      }
     },
 
     trackMixpanelEvent(name) {
-      let analytics_env = '';
+      let analyticsEnv = '';
       try {
-        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {}
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
 
       try {
-        if (analytics_env === 'production') {
+        if (analyticsEnv === 'production') {
           mixpanel.track(name);
           // this.$ga.event({
           //   eventCategory: 'Orders',
@@ -783,7 +782,9 @@ export default {
           //   eventValue: 15,
           // });
         }
-      } catch (er) {}
+      } catch (er) {
+        // ...
+      }
     },
 
     /* start mpesa */
@@ -807,7 +808,7 @@ export default {
         user_phone = session.peer.user_phone;
       }
 
-      const mpesa_payload = {
+      const mpesaPayload = {
         amount: this.raw_pending_amount,
         sourceMobile: user_phone,
         referenceNumber,
@@ -817,15 +818,15 @@ export default {
         email: user_email,
         currency: this.activeVendorPriceData.currency,
       };
-      const full_payload = {
-        values: mpesa_payload,
+      const fullPayload = {
+        values: mpesaPayload,
         app: 'NODE_PRIVATE_API',
         endpoint: 'initiate_mpesa',
       };
       this.payment_state = 1;
       this.loading = true;
 
-      this.requestMpesaPaymentAction(full_payload).then(
+      this.requestMpesaPaymentAction(fullPayload).then(
         response => {
           if (response.length > 0) {
             response = response[0];
@@ -871,7 +872,7 @@ export default {
       window.clearTimeout(this.mpesa_poll_timer_id);
     },
 
-    requestMpesaPaymentPoll(poll_limit_value = 6) {
+    requestMpesaPaymentPoll(pollLimitValue = 6) {
       this.clearMpesaPollCounter();
       const session = this.$store.getters.getSession;
       let cop_id = 0;
@@ -879,10 +880,9 @@ export default {
         cop_id = session.biz.cop_id;
       }
 
-      const old_rb = this.$store.getters.getRunningBalance;
-      const requested_amount = this.raw_pending_amount;
+      const oldRb = this.$store.getters.getRunningBalance;
 
-      const running_balance_payload = {
+      const runningBalancePayload = {
         values: {
           cop_id,
           user_phone: session[session.default].user_phone,
@@ -890,21 +890,21 @@ export default {
       };
 
       const payload = {
-        params: running_balance_payload,
+        params: runningBalancePayload,
         app: 'PRIVATE_API',
         endpoint: 'running_balance',
       };
 
-      const poll_limit = poll_limit_value; // 10secs * 6  = 60sec = 1min
+      const pollLimit = pollLimitValue; // 10secs * 6  = 60sec = 1min
       // poll the dispatch
-      for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
+      for (let pollCount = 0; pollCount < pollLimit; pollCount++) {
         // wait 10 seconds
         const that = this;
-        (function(poll_count) {
+        (function(pollCount) {
           that.mpesa_poll_timer_id = window.setTimeout(() => {
-            const res = that.checkRunningBalance(old_rb, payload);
+            const res = that.checkRunningBalance(oldRb, payload);
             if (res) {
-              poll_count = poll_limit;
+              pollCount = pollLimit;
               that.payment_state = 0;
               that.loading = false;
               that.doNotification('1', 'Payment successful', 'Completing your order...');
@@ -912,8 +912,8 @@ export default {
               return true;
             }
 
-            if (poll_limit_value === 6) {
-              if (poll_count === 5) {
+            if (pollLimitValue === 6) {
+              if (pollCount === 5) {
                 that.doNotification(
                   '0',
                   'Payment not received',
@@ -924,12 +924,12 @@ export default {
                 that.requestMpesaPaymentPoll(60);
               }
             }
-          }, 10000 * poll_count);
-        })(poll_count);
+          }, 10000 * pollCount);
+        })(pollCount);
       }
     },
 
-    checkRunningBalance(old_rb, payload) {
+    checkRunningBalance(oldRb, payload) {
       this.requestRunningBalanceFromAPI(payload).then(
         response => {
           if (response.length > 0) {
@@ -937,9 +937,9 @@ export default {
           }
 
           if (response.status === 200) {
-            const new_rb = response.data.running_balance;
+            const newRb = response.data.running_balance;
 
-            if (new_rb < old_rb) {
+            if (newRb < oldRb) {
               this.completeMpesaPaymentRequest({});
               return true;
             }
@@ -986,21 +986,21 @@ export default {
         user_id = session.peer.user_id;
       }
 
-      let card_payload = {
+      let cardPayload = {
         user_id,
         cop_id,
       };
 
       // encrypt card payload here
-      card_payload = Mcrypt.encrypt(card_payload);
+      cardPayload = Mcrypt.encrypt(cardPayload);
 
-      const full_payload = {
-        values: card_payload,
+      const fullPayload = {
+        values: cardPayload,
         app: 'PRIVATE_API',
         endpoint: 'get_card',
       };
 
-      this.requestSavedCards(full_payload).then(
+      this.requestSavedCards(fullPayload).then(
         response => {
           // decrypt response here
           response = JSON.parse(Mcrypt.decrypt(response));
@@ -1051,14 +1051,14 @@ export default {
     },
     getUserDefaultCurrency() {
       const session = this.$store.getters.getSession;
-      const default_user_currency = session[session.default].default_currency;
-      this.default_currency = default_user_currency;
+      const defaultUserCurrency = session[session.default].default_currency;
+      this.default_currency = defaultUserCurrency;
     },
     checkUserPhone() {
-      let session = this.$store.getters.getSession;
-      let phone = session[session.default]['user_phone'];
-      let int_value = phone.substring(0, 4);
-      if (int_value === '+256') {
+      const session = this.$store.getters.getSession;
+      const phone = session[session.default].user_phone;
+      const intValue = phone.substring(0, 4);
+      if (intValue === '+256') {
         this.mpesa_valid = false;
       } else {
         this.mpesa_valid = true;
