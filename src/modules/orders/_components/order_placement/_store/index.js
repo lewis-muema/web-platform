@@ -6,7 +6,6 @@ export default {
   namespaced: true,
   state() {
     return {
-      // waypoints: 1,
       active_package_class: '',
       active_vendor_name: '',
       active_vendor_details: {},

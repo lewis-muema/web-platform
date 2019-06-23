@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    v-if="!this.loading && this.get_orders.length > 0"
+    v-if="!loading && get_orders.length > 0"
     class="ongoing--outer"
   >
     <div
@@ -16,10 +16,10 @@
     </div>
     <transition name="fade">
       <div
-        v-if="this.showing"
+        v-if="showing"
         class="ongoing--column"
       >
-        <template v-for="(order, index) in this.get_orders">
+        <template v-for="order in get_orders">
           <div
             class="ongoing--card"
             :class="{ active: active_card(order.order_no) }"
@@ -50,8 +50,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { mapMutations } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
@@ -64,6 +63,35 @@ export default {
       loading: true,
       showing: 1,
     };
+  },
+  computed: {
+    ...mapGetters({
+      get_orders: '$_orders/getOngoingOrders',
+      show: '$_orders/showOngoing',
+      getSession: 'getSession',
+    }),
+    num_ongoing() {
+      return this.get_orders.length;
+    },
+    classObject() {
+      return {
+        'sendy-blue': true,
+        'rotate-transform': true,
+        rotate: this.showing === 0,
+      };
+    },
+  },
+  watch: {
+    getSession: {
+      handler() {
+        this.$store.dispatch('$_orders/fetchOngoingOrders');
+      },
+      deep: true,
+    },
+  },
+  mounted() {
+    this.loading = true;
+    this.poll();
   },
   methods: {
     ...mapMutations({
@@ -82,15 +110,13 @@ export default {
       this.$router.push({ path: `/orders/tracking/${order}` });
       this.change_page(1);
     },
-    active_card(order_no) {
-      if (this.$route.params.order_no === order_no) {
+    active_card(orderNo) {
+      if (this.$route.params.order_no === orderNo) {
         return true;
       }
       return false;
     },
     date_format(date) {
-      const from_now = this.moment(date).fromNow();
-
       return this.moment(date).calendar(null, {
         lastWeek: 'MMM-D hh:mm a',
         sameDay: '[Today] hh:mm a',
@@ -144,35 +170,6 @@ export default {
         return '';
       }
     },
-  },
-  computed: {
-    ...mapGetters({
-      get_orders: '$_orders/getOngoingOrders',
-      show: '$_orders/showOngoing',
-      getSession: 'getSession',
-    }),
-    num_ongoing() {
-      return this.get_orders.length;
-    },
-    classObject() {
-      return {
-        'sendy-blue': true,
-        'rotate-transform': true,
-        rotate: this.showing === 0,
-      };
-    },
-  },
-  watch: {
-    getSession: {
-      handler(val, oldVal) {
-        this.$store.dispatch('$_orders/fetchOngoingOrders');
-      },
-      deep: true,
-    },
-  },
-  mounted() {
-    this.loading = true;
-    this.poll();
   },
 };
 </script>

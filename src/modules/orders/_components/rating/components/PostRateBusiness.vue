@@ -1,10 +1,7 @@
 <template lang="html">
   <span>
     <div class="rating-top-fix" />
-    <div
-      class="rating-submitted-wrapper"
-      :style="wrapper_background"
-    >
+    <div class="rating-submitted-wrapper" :style="wrapper_background">
       <div class="container">
         <div class="post-rate">
           <div class="rating-submitted">
@@ -14,7 +11,7 @@
               "
               alt="submitted"
               class="rating-submitted-image"
-            >
+            />
           </div>
           <div class="rate-rider-thank">
             Rating submitted

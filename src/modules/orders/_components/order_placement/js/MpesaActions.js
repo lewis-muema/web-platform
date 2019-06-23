@@ -71,8 +71,6 @@ export default {
       copId = session.biz.cop_id;
     }
     const oldRb = this.$store.getters.getRunningBalance;
-    // const requestedAmount = this.order_cost;
-
     const runningBalancePayload = {
       values: {
         copId,

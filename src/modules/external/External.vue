@@ -1,20 +1,21 @@
 <template lang="html">
   <div class="user-invite-outer">
     <header-component />
-    <bod-component v-if="this.received_response" />
+    <bod-component v-if="received_response" />
   </div>
 </template>
 
 <script>
 import Vue from 'vue';
-import { mapGetters, mapMutations, mapActions } from 'vuex';
-import VeeValidate from 'vee-validate';
-import { Validator } from 'vee-validate';
+import { mapMutations, mapActions } from 'vuex';
+import VeeValidate, { Validator } from 'vee-validate';
 import VueTelInput from 'vue-tel-input';
-import external_store from './_store';
+import externalStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import HeaderComponent from './components/HeaderComponent.vue';
 import BodComponent from './components/BodComponent.vue';
+
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 Vue.use(VueTelInput);
 Vue.use(VeeValidate);
@@ -22,7 +23,6 @@ Vue.use(VeeValidate);
 Validator.extend('check_phone', {
   getMessage: field => 'The phone number not valid',
   validate: (value) => {
-    const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
     let validity = false;
     try {
       const number = phoneUtil.parse(value);
@@ -44,7 +44,7 @@ export default {
     };
   },
   created() {
-    this.$store.registerModule('$_external', external_store);
+    this.$store.registerModule('$_external', externalStore);
   },
   mounted() {
     this.check_validity();
@@ -76,38 +76,39 @@ export default {
       values.type = type;
       values.content = content;
       values.tag = tag;
-      const full_payload = {
+      const fullPayload = {
         values,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'onboard_details',
       };
-      this.requestTokenValidation(full_payload).then(
+      this.requestTokenValidation(fullPayload).then(
         (response) => {
           if (response.length > 0) {
             response = response[0];
           }
 
           if (response.status) {
-            let dept_id = 1;
+            let deptId = 1;
             if (response.data.department_id) {
-              dept_id = response.data.department_id;
+              deptId = response.data.department_id;
             }
 
             this.updateCopID(response.data.cop_id);
             this.updateBizName(response.data.cop_name);
-            this.updateDeptID(dept_id);
+            this.updateDeptID(deptId);
             this.updatePerEmail(response.data.email);
             this.updateName(response.data.name);
             this.updateCopUserID(response.data.cop_user_id);
             this.updateInviteType(type);
             this.received_response = true;
-            // this.$router.push("");
           } else {
             this.$router.push('/auth');
           }
         },
-        (error) => {},
+        (error) => {
+          // ...
+        },
       );
     },
   },
