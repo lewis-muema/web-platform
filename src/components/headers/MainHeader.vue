@@ -23,6 +23,7 @@
           <li class="nav--menu-dropdown">
             <a class="nav--menu-dropdown-link">
               Menu
+              <i class="el-icon-arrow-down" />
             </a>
             <ul class="nav--menu-dropdown-list">
               <li v-if="switchValid">
