@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 <template lang="html">
-  <payment_loading v-if="show_loading" />
-  <payment_success v-else-if="show_mpesa_success" />
-  <payment_fail v-else-if="show_mpesa_fail" />
+  <paymentLoading v-if="show_loading" />
+  <paymentSuccess v-else-if="show_mpesa_success" />
+  <paymentFail v-else-if="show_mpesa_fail" />
 
   <div v-else class="paymentbody--form">
     <div class="paymentbody--input-wrap">
@@ -43,15 +43,15 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import payment_loading from './LoadingComponent.vue';
-import payment_success from './SuccessComponent.vue';
-import payment_fail from './FailComponent.vue';
+import paymentLoading from './LoadingComponent.vue';
+import paymentSuccess from './SuccessComponent.vue';
+import paymentFail from './FailComponent.vue';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'MpesaComponent',
-  components: { payment_loading, payment_success, payment_fail },
+  components: { paymentLoading, paymentSuccess, paymentFail },
   data() {
     return {
       mpesa_payment_data: {
@@ -61,6 +61,35 @@ export default {
       payment_state: 'Mpesa Payment Not Initiated',
       mpesa_number_invalid: false,
     };
+  },
+  computed: {
+    ...mapGetters({
+      mpesa_fail_status: '$_payment/getMpesaFailStatus',
+      mpesa_loading_status: '$_payment/getMpesaLoadingStatus',
+      mpesa_success_status: '$_payment/getMpesaSuccessStatus',
+    }),
+    show_loading() {
+      return this.mpesa_loading_status;
+    },
+    show_mpesa_success() {
+      return this.mpesa_success_status;
+    },
+    show_mpesa_fail() {
+      return this.mpesa_fail_status;
+    },
+    valid_payment() {
+      // validate amount
+      // validate mpesa number
+      return (
+        this.mpesa_payment_data.amount !== '' &&
+        this.mpesa_payment_data.amount !== 0 &&
+        this.mpesa_payment_data.phone_number !== '' &&
+        this.valid_phone
+      );
+    },
+    valid_phone() {
+      return this.validatePhone(this.mpesa_payment_data.phone_number);
+    },
   },
   mounted() {
     this.prepareMpesaPayment();
@@ -73,20 +102,24 @@ export default {
       _terminateMpesaPaymentRequest: '$_payment/terminateMpesaPaymentRequest',
     }),
     trackMixpanelEvent(name) {
-      let analytics_env = '';
+      let analyticsEnv = '';
       try {
-        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {}
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
 
       try {
-        if (analytics_env === 'production') {
+        if (analyticsEnv === 'production') {
           mixpanel.track(name);
         }
-      } catch (er) {}
+      } catch (er) {
+        // ...
+      }
     },
     prepareMpesaPayment() {
       const session = this.$store.getters.getSession;
-      const user_phone = session[session.default].user_phone;
+      const { user_phone } = session[session.default];
 
       this.mpesa_payment_data.phone_number = user_phone;
       // pass amount here
@@ -123,10 +156,9 @@ export default {
       if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
       }
-      const old_rb = this.$store.getters.getRunningBalance;
-      const requested_amount = this.order_cost;
+      const oldRb = this.$store.getters.getRunningBalance;
 
-      const running_balance_payload = {
+      const runningBalancePayload = {
         values: {
           cop_id,
           user_phone: session[session.default].user_phone,
@@ -134,7 +166,7 @@ export default {
       };
 
       const payload = {
-        params: running_balance_payload,
+        params: runningBalancePayload,
         app: 'PRIVATE_API',
         endpoint: 'running_balance',
       };
@@ -146,7 +178,7 @@ export default {
         const that = this;
         (function(poll_count) {
           setTimeout(() => {
-            const res = that.checkRunningBalance(old_rb, payload);
+            const res = that.checkRunningBalance(oldRb, payload);
 
             if (res) {
               poll_count = poll_limit;
@@ -178,7 +210,7 @@ export default {
       }
     },
 
-    checkRunningBalance(old_rb, payload) {
+    checkRunningBalance(oldRb, payload) {
       const that = this;
       this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
         response => {
@@ -187,9 +219,9 @@ export default {
           }
           if (response.status === 200) {
             // check if rb has changed
-            const new_rb = response.data.running_balance;
+            const newRb = response.data.running_balance;
 
-            if (new_rb < old_rb) {
+            if (newRb < oldRb) {
               that._completeMpesaPaymentRequest({});
               return true;
             }
@@ -197,9 +229,7 @@ export default {
           // commit  to the global store here
           return false;
         },
-        error => {
-          return false;
-        }
+        error => false
       );
     },
 
@@ -221,7 +251,7 @@ export default {
       }
       // TOOD: add cop_id to refrence if cop account
       // pass the phone no if peer
-      const mpesa_payload = {
+      const mpesaPayload = {
         amount: this.mpesa_payment_data.amount,
         sourceMobile: this.mpesa_payment_data.phone_number,
         referenceNumber,
@@ -229,13 +259,13 @@ export default {
         cop_id,
         phone: this.mpesa_payment_data.phone_number, // confirm about this later
         email: user_email,
-        currency: session[session.default]['default_currency'],
+        currency: session[session.default].default_currency,
       };
 
       // TODO: implement the discount bundles if needed
 
-      const full_payload = {
-        values: mpesa_payload,
+      const fullPayload = {
+        values: mpesaPayload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'initiate_mpesa',
@@ -243,7 +273,7 @@ export default {
 
       this.payment_state = 'requesting Mpesa Payment';
 
-      this._requestMpesaPayment(full_payload).then(
+      this._requestMpesaPayment(fullPayload).then(
         response => {
           if (response.status === 200) {
             // request poll here
@@ -261,35 +291,6 @@ export default {
           this.payment_state = 'Mpesa Payment Failed';
         }
       );
-    },
-  },
-  computed: {
-    ...mapGetters({
-      mpesa_fail_status: '$_payment/getMpesaFailStatus',
-      mpesa_loading_status: '$_payment/getMpesaLoadingStatus',
-      mpesa_success_status: '$_payment/getMpesaSuccessStatus',
-    }),
-    show_loading() {
-      return this.mpesa_loading_status;
-    },
-    show_mpesa_success() {
-      return this.mpesa_success_status;
-    },
-    show_mpesa_fail() {
-      return this.mpesa_fail_status;
-    },
-    valid_payment() {
-      // validate amount
-      // validate mpesa number
-      return (
-        this.mpesa_payment_data.amount !== '' &&
-        this.mpesa_payment_data.amount !== 0 &&
-        this.mpesa_payment_data.phone_number !== '' &&
-        this.valid_phone
-      );
-    },
-    valid_phone() {
-      return this.validatePhone(this.mpesa_payment_data.phone_number);
     },
   },
 };

@@ -34,14 +34,9 @@ export default {
     ...mapActions(['$_payment/resetMpesaPaymentRequest']),
     backToPaymentRequest() {
       let payload = {};
-      this.$store.dispatch('$_payment/resetMpesaPaymentRequest', payload).then(
-        response => {
-
-        },
-        error => {
-
-        },
-      );
+      this.$store
+        .dispatch('$_payment/resetMpesaPaymentRequest', payload)
+        .then(response => {}, error => {});
     },
     requestRB() {
       //this will request from the api and update the store
@@ -64,14 +59,9 @@ export default {
         endpoint: 'running_balance',
       };
 
-      this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
-        response => {
-
-        },
-        error => {
-
-        },
-      );
+      this.$store
+        .dispatch('requestRunningBalance', payload, { root: true })
+        .then(response => {}, error => {});
     },
   },
   computed: {
