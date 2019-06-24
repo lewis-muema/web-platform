@@ -33,7 +33,7 @@
           <div class="show-txt">
             <input
               readonly
-              :value="this.getInviteLink"
+              :value="getInviteLink"
               type="text"
               class="my_field_section delivery-link"
             >

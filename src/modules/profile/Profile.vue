@@ -1,27 +1,15 @@
 <template lang="html">
-  <div
-    id="auth_container"
-    class=""
-  >
+  <div id="auth_container" class="">
     <main-header />
     <div class="container">
-      <div
-        class="new-card"
-        style="margin-top:5%;margin-left:20%;border-right:5px solid #1782C5;height:400px;"
-      >
+      <div class="new-card new-card__inner">
         <a class="my-profile__adj">
-          <router-link
-            class="profile--link"
-            to="/profile/personal_information"
-          >
+          <router-link class="profile--link" to="/profile/personal_information">
             Personal Information
           </router-link>
         </a>
         <div class="my-profile__adj">
-          <router-link
-            class="profile--link"
-            to="/profile/change_password"
-          >
+          <router-link class="profile--link" to="/profile/change_password">
             Change Password
           </router-link>
         </div>
@@ -120,7 +108,10 @@ export default {
 
   /* background-color: red; */
 }
-/* .new-card .my-profile__adj .router-link-active{
-  background-color: red !important;
-} */
+.new-card__inner{
+  margin-top:5%;
+  margin-left:20%;
+  border-right:5px solid #1782C5;
+  height:400px;
+}
 </style>
