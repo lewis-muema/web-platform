@@ -1,9 +1,6 @@
 <template lang="html">
   <div class="new-card2">
-    <div
-      class="help-card"
-      style="width:400px;margin-left:30%;margin-top:30px;"
-    >
+    <div class="help-card" style="width:400px;margin-left:30%;margin-top:30px;">
       <p class="personal-info-padding">
         <label class="input-descript">
           <span>Name</span>
@@ -13,7 +10,7 @@
           type="text"
           name="user_name"
           class="form-control profile1-dimen"
-        >
+        />
       </p>
       <p class="personal-info-padding">
         <label class="input-descript">
@@ -24,7 +21,7 @@
           type="text"
           name="user_email"
           class="form-control profile1-dimen"
-        >
+        />
       </p>
       <p class="personal-info-padding">
         <label class="input-descript">
@@ -42,7 +39,7 @@
         />
       </p>
       <p>
-        <br>
+        <br />
 
         <input
           id="save_personal"
@@ -50,7 +47,7 @@
           class="button-primary btn-content"
           value="Save"
           @click="save_personal"
-        >
+        />
       </p>
     </div>
   </div>
@@ -58,7 +55,9 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import SessionMxn from '../../../mixins/session_mixin.js';
+import SessionMxn from '../../../mixins/session_mixin';
+
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'PersonalInfo',
@@ -70,9 +69,6 @@ export default {
       user_email: '',
       phone: '',
     };
-  },
-  mounted() {
-    this.set_data();
   },
   computed: {
     ...mapGetters({
@@ -87,6 +83,10 @@ export default {
       deep: true,
     },
   },
+  mounted() {
+    this.set_data();
+  },
+
   methods: {
     set_data() {
       const session = this.$store.getters.getSession;
@@ -102,10 +102,9 @@ export default {
     }),
     save_personal() {
       if (this.user_name !== '' && this.user_email !== '' && this.phone !== '') {
-        const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-        const phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+        const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
 
-        if (phone_valid) {
+        if (phoneValid) {
           const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
 
           const session = this.$store.getters.getSession;
@@ -118,22 +117,22 @@ export default {
               user_phone: phone,
             };
 
-            const full_payload = {
+            const fullPayload = {
               values,
               app: 'NODE_PRIVATE_API',
               endpoint: 'update_user',
             };
 
-            this.requestPersonalInfo(full_payload).then(
-              (response) => {
+            this.requestPersonalInfo(fullPayload).then(
+              response => {
                 if (response.status) {
-                  const updated_session = session;
-                  updated_session[session.default].user_name = this.user_name;
-                  updated_session[session.default].user_phone = phone;
-                  updated_session[session.default].user_email = this.user_email;
+                  const updatedSession = session;
+                  updatedSession[session.default].user_name = this.user_name;
+                  updatedSession[session.default].user_phone = phone;
+                  updatedSession[session.default].user_email = this.user_email;
 
-                  const new_session = JSON.stringify(updated_session);
-                  this.setSession(new_session);
+                  const newSession = JSON.stringify(updatedSession);
+                  this.setSession(newSession);
                   const level = 1; // success
                   this.message = 'Details Saved!';
                   const notification = { title: '', level, message: this.message }; // notification object
@@ -147,13 +146,13 @@ export default {
                   this.$store.commit('setNotificationStatus', true); // activate notification
                 }
               },
-              (error) => {
+              error => {
                 const level = 3;
                 this.message = 'Something went wrong.';
                 const notification = { title: '', level, message: this.message }; // notification object
                 this.$store.commit('setNotification', notification);
                 this.$store.commit('setNotificationStatus', true);
-              },
+              }
             );
           } else if (session.default === 'peer') {
             const values = {
@@ -163,23 +162,23 @@ export default {
               user_phone: phone,
             };
 
-            const full_payload = {
+            const fullPayload = {
               values,
               app: 'NODE_PRIVATE_API',
               endpoint: 'update_user',
             };
 
-            this.requestPersonalInfo(full_payload).then(
-              (response) => {
+            this.requestPersonalInfo(fullPayload).then(
+              response => {
                 if (response.status) {
-                  const updated_session = session;
-                  updated_session[session.default].user_name = this.user_name;
-                  updated_session[session.default].user_phone = phone;
-                  updated_session[session.default].user_email = this.user_email;
+                  const updatedSession = session;
+                  updatedSession[session.default].user_name = this.user_name;
+                  updatedSession[session.default].user_phone = phone;
+                  updatedSession[session.default].user_email = this.user_email;
 
-                  const new_session = JSON.stringify(updated_session);
-                  this.setSession(new_session);
-                  this.$store.commit('setSession', updated_session);
+                  const newSession = JSON.stringify(updatedSession);
+                  this.setSession(newSession);
+                  this.$store.commit('setSession', updatedSession);
 
                   const level = 1; // success
                   this.message = 'Details Saved!';
@@ -194,13 +193,13 @@ export default {
                   this.$store.commit('setNotificationStatus', true); // activate notification
                 }
               },
-              (error) => {
+              error => {
                 const level = 3;
                 this.message = 'Something went wrong.';
                 const notification = { title: '', level, message: this.message }; // notification object
                 this.$store.commit('setNotification', notification);
                 this.$store.commit('setNotificationStatus', true); // activate notification
-              },
+              }
             );
           } else {
             this.$router.push('/auth');
