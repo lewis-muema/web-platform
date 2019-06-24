@@ -5,6 +5,8 @@ import axios from 'axios';
 
 export default {
   requestAxiosPost({ state, commit }, payload) {
+    const baseUrl = window.location.origin;
+    const loginUrl = `${baseUrl}/sign_in`;
     const url = state.ENV[payload.app];
     // add api key - if request is going to the backend
     if (payload.app === 'BACKEND_CUSTOMERS_APP') {
@@ -66,10 +68,15 @@ export default {
         const notification = {
           title: 'Your session has expired!',
           level: 2,
-          message: 'Please log out and log in again.',
+          message: 'You will be redirected to the login page after 5 seconds.',
         };
         commit('setNotification', notification);
         commit('setNotificationStatus', true);
+        setTimeout(() => {
+          localStorage.removeItem('_sessionSnack');
+          localStorage.removeItem('jwtToken');
+          window.location.href = loginUrl;
+        }, 5000);
         return true;
       }
     } else {
@@ -95,10 +102,15 @@ export default {
         const notification = {
           title: 'Your session has expired!',
           level: 2,
-          message: 'Please log out and log in again.',
+          message: 'You will be redirected to the login page after 5 seconds.',
         };
         commit('setNotification', notification);
         commit('setNotificationStatus', true);
+        setTimeout(() => {
+          localStorage.removeItem('_sessionSnack');
+          localStorage.removeItem('jwtToken');
+          window.location.href = loginUrl;
+        }, 5000);
         return true;
       }
     }
