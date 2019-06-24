@@ -1,8 +1,5 @@
 <template>
-  <div
-    id="app"
-    class="box app app-overflow"
-  >
+  <div id="app" class="box app app-overflow">
     <!-- Global component responsible for flashing notifications -->
     <sendy-flash details="" />
 
@@ -71,12 +68,12 @@ export default {
       } else if (notification.level === 3) {
         // error
         notification.title,
-        this.$notify({
-          type: 'error',
-          message: notification.message,
-          offset: 20,
-          duration: 5000,
-        });
+          this.$notify({
+            type: 'error',
+            message: notification.message,
+            offset: 20,
+            duration: 5000,
+          });
       } else {
         // default
         // check to make sure that either title or message is set

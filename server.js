@@ -1,4 +1,3 @@
-const Vue = require('vue');
 const express = require('express');
 const favicon = require('serve-favicon');
 const compression = require('compression');

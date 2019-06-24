@@ -139,9 +139,6 @@ export default {
       );
     },
     payment_total() {
-      // if(this.filterState == true){
-      //   return this.filteredData.length;
-      // }
       return this.paymentData.length;
     },
   },
@@ -209,8 +206,6 @@ export default {
       this.empty_payments_state = 'Searching Payments';
 
       let { from_date: fromDate, to_date: toDate } = this.filterData;
-      // let from_date = this.filterData.from_date;
-      // let to_date = this.filterData.to_date;
 
       fromDate = moment(fromDate).format('YYYY-MM-DD');
       toDate = moment(toDate).format('YYYY-MM-DD');
@@ -237,14 +232,6 @@ export default {
 
       this.filteredPaymentData = this.paymentData;
       this.filterState = true;
-
-      // this.filteredPaymentData = this.payment_data;
-      // this.filteredPaymentData = this.filteredPaymentData.filter(function (payment) {
-      /* return moment(payment.date_time).isSameOrAfter(from_date) && moment(payment.date_time)
-      .isSameOrBefore(to_date); */
-      // });
-      // this.filterState = true;
-      // this.empty_orders_state = "Payments Not Found";
     },
 
     requestPayments(payload) {
