@@ -193,6 +193,22 @@
                 />
               </div>
             </div>
+            <div
+              v-if="isTestAccount()"
+              class="home-view-truck-options-inner-wrapper"
+            >
+              <div class="home-view-truck-options-label">
+                Test Specifications
+              </div>
+              <div>
+                <el-input
+                  v-model.trim="test_specifications"
+                  autocomplete="true"
+                  placeholder="Specifications ..."
+                  @change="dispatchTestSpecs"
+                />
+              </div>
+            </div>
             <div v-if="small_vendors.includes(activeVendorPriceData.vendor_id)">
               <div
                 v-if="!vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)"
@@ -560,6 +576,7 @@ export default {
       triger: false,
       searchOption: false,
       failure_text: '',
+      test_specifications: '',
     };
   },
   computed: {
@@ -697,6 +714,7 @@ export default {
       setOuterActiveVendorDetails: '$_orders/setOuterActiveVendorDetails',
       setOuterActivePackageClass: '$_orders/setOuterActivePackageClass',
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
+      setTestSpecs: '$_orders/$_home/setTestSpecs',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -744,6 +762,9 @@ export default {
     },
     dispatchDeliveryItem() {
       this.setDeliveryItem(this.delivery_item);
+    },
+    dispatchTestSpecs() {
+      this.setTestSpecs(this.test_specifications);
     },
 
     dispatchLoadWeight(val) {
@@ -1041,6 +1062,14 @@ export default {
         return 'In 2 to 4 hours';
       }
       return vendorObject.vendor_description;
+    },
+    isTestAccount() {
+      const session = this.$store.getters.getSession;
+      const testAccount = session.test_account;
+      if (testAccount) {
+        return true;
+      }
+      return false;
     },
   },
 };
