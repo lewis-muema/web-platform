@@ -173,4 +173,7 @@ export default {
   setDefaultCurrency(state, val) {
     state.default_currency = val;
   },
+  setTestSpecs(state, val) {
+    state.test_specs = val;
+  },
 };
