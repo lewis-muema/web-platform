@@ -30,4 +30,5 @@ export default {
   getPairRiderPhone: state => state.pair_rider_phone,
   getCountryCode: state => state.country_code,
   getDefaultCurrency: state => state.default_currency,
+  getTestSpecs: state => state.test_specs,
 };
