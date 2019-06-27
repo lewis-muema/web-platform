@@ -845,7 +845,7 @@ export default {
       }
 
       const mpesaPayload = {
-        amount: this.raw_pending_amount,
+        amount: this.raw_pending_amount.replace(',', ''),
         sourceMobile: user_phone,
         referenceNumber,
         user_id,
