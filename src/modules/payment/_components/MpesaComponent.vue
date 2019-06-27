@@ -4,7 +4,10 @@
   <paymentSuccess v-else-if="show_mpesa_success" />
   <paymentFail v-else-if="show_mpesa_fail" />
 
-  <div v-else class="paymentbody--form">
+  <div
+    v-else
+    class="paymentbody--form"
+  >
     <div class="paymentbody--input-wrap">
       <input
         v-model="mpesa_payment_data.amount"
@@ -12,7 +15,7 @@
         name="amount"
         placeholder="Amount"
         class="input-control paymentbody--input"
-      />
+      >
     </div>
     <div class="paymentbody--input-wrap">
       <input
@@ -22,7 +25,7 @@
         name="phone_no"
         placeholder="Safaricom Phone Number"
         class="input-control paymentbody--input"
-      />
+      >
     </div>
     <div class="paymentbody--input-wrap">
       <button
@@ -81,10 +84,10 @@ export default {
       // validate amount
       // validate mpesa number
       return (
-        this.mpesa_payment_data.amount !== '' &&
-        this.mpesa_payment_data.amount !== 0 &&
-        this.mpesa_payment_data.phone_number !== '' &&
-        this.valid_phone
+        this.mpesa_payment_data.amount !== ''
+        && this.mpesa_payment_data.amount !== 0
+        && this.mpesa_payment_data.phone_number !== ''
+        && this.valid_phone
       );
     },
     valid_phone() {
@@ -176,7 +179,7 @@ export default {
       for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
         // wait 10 seconds
         const that = this;
-        (function(poll_count) {
+        (function (poll_count) {
           setTimeout(() => {
             const res = that.checkRunningBalance(oldRb, payload);
 
@@ -206,14 +209,14 @@ export default {
               that._terminateMpesaPaymentRequest({});
             }
           }, 10000 * poll_count);
-        })(poll_count);
+        }(poll_count));
       }
     },
 
     checkRunningBalance(oldRb, payload) {
       const that = this;
       this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
-        response => {
+        (response) => {
           if (response.length > 0) {
             response = response[0];
           }
@@ -229,7 +232,7 @@ export default {
           // commit  to the global store here
           return false;
         },
-        error => false
+        error => false,
       );
     },
 
@@ -274,7 +277,7 @@ export default {
       this.payment_state = 'requesting Mpesa Payment';
 
       this._requestMpesaPayment(fullPayload).then(
-        response => {
+        (response) => {
           if (response.status === 200) {
             // request poll here
             this.requestMpesaPaymentPoll();
@@ -287,9 +290,9 @@ export default {
             'Client Type': 'Web Platform',
           });
         },
-        error => {
+        (error) => {
           this.payment_state = 'Mpesa Payment Failed';
-        }
+        },
       );
     },
   },
