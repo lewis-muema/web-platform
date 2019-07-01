@@ -445,20 +445,13 @@ export default {
               </div>`;
     },
     getInfoWindowContent() {
-      return `<div class="" style="width:275px">
-               <div style ="display: inline-block;
-                 width: 70px;
-                 object-fit: contain;
-                 float: left;">
-          <img style ="height: 45px;" src="https://images.sendyit.com/web_platform/vendor_type/top/${
+      return `<div class="outer_info_content">
+               <div class="outer_inner_content">
+          <img class="info_window_img" src="https://images.sendyit.com/web_platform/vendor_type/top/${
   this.vendor_icon_id
 }.png"></img>
                  </div>
-                 <div style="  width: 70%;
-                   display: inline-block;
-                   float: left;
-                   padding-left: 10px;
-                   padding-top: 10px;">
+                 <div class="info_window_descript">
                    <div>${this.infoHeader}</div>
                    <div>${this.infoDescription}</div>
                    </div>
@@ -516,4 +509,24 @@ export default {
 };
 </script>
 
-<style lang="css"></style>
+<style lang="css">
+.outer_info_content {
+  width: 275px;
+}
+.outer_inner_content{
+  display: inline-block;
+  width: 70px;
+  object-fit: contain;
+  float: left;
+}
+.info_window_img{
+  height: 45px;
+}
+.info_window_descript{
+  width: 70%;
+  display: inline-block;
+  float: left;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+</style>
