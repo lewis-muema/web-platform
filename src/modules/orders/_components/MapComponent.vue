@@ -92,8 +92,10 @@ export default {
       vehicleRegistration: '',
       speedData: '',
       riderLastSeen: '',
-      trackers: [6, 10, 13, 14, 17, 18, 19, 20],
+      trackers: [2, 3, 6, 10, 13, 14, 17, 18, 19, 20],
       extraNotificationInfo: '',
+      activeStateIcon: '',
+      vendorStatus: 'active',
     };
   },
   computed: {
@@ -119,7 +121,7 @@ export default {
       }
     },
     '$route.params.order_no': function trackedOrder(order) {
-      this.$store.dispatch('$_orders/getOrderData', { order_no: order }).then(response => {
+      this.$store.dispatch('$_orders/getOrderData', { order_no: order }).then((response) => {
         if (response.status) {
           this.orderStatus(response.data);
         } else {
@@ -155,12 +157,18 @@ export default {
       };
     },
     vendor_icon(id) {
+      if (this.vendorStatus === 'offline') {
+        return {
+          url: `https://images.sendyit.com/web_platform/vendor_type/top/${id}_offline.png`,
+          scaledSize: new google.maps.Size(50, 50),
+        };
+      }
       return {
         url: `https://images.sendyit.com/web_platform/vendor_type/top/${id}.png`,
         scaledSize: new google.maps.Size(50, 50),
       };
     },
-    draw_rotated(vendor_type, rotation) {
+    draw_rotated(vendorType, rotation) {
       const canvas = document.createElement('canvas');
       canvas.setAttribute('id', 'rot_canvas');
       const ctx = canvas.getContext('2d');
@@ -170,8 +178,8 @@ export default {
 
       const image = document.createElement('img');
       image.crossOrigin = 'anonymous';
-      image.src = `https://images.sendyit.com/web_platform/vendor_type/top/${vendor_type}.svg`;
-      const imageLoadPromise = new Promise(resolve => {
+      image.src = `https://images.sendyit.com/web_platform/vendor_type/top/${vendorType}.svg`;
+      const imageLoadPromise = new Promise((resolve) => {
         image.onload = resolve;
       }).then(() => {
         ctx.drawImage(image, 0, 0);
@@ -243,9 +251,9 @@ export default {
           this.infoHeader = '';
           this.infoDescription = '';
         } else if (
-          data.delivery_status === 2 &&
-          waiting !== undefined &&
-          this.destination_waiting
+          data.delivery_status === 2
+          && waiting !== undefined
+          && this.destination_waiting
         ) {
           // return 'Waiting at destination'
           this.infoHeader = `Your ${
@@ -268,9 +276,9 @@ export default {
             this.iconLabel = 'destination';
           }
         } else if (
-          data.delivery_status === 0 &&
-          data.confirm_status === 1 &&
-          waiting !== undefined
+          data.delivery_status === 0
+          && data.confirm_status === 1
+          && waiting !== undefined
         ) {
           // return 'Waiting at pick up location';
           this.infoHeader = `Your ${
@@ -336,7 +344,7 @@ export default {
     activeState() {
       this.$store
         .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
-        .then(response => {
+        .then((response) => {
           if (response.data.status) {
             this.orderStatus(response.data);
           } else {
@@ -382,18 +390,24 @@ export default {
         this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
         this.riderLastSeen = '';
         this.extraNotificationInfo = '';
+        this.activeStateIcon = this.vendor_icon_id;
+        this.vendorStatus = 'active';
       } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
         this.vehicleRegistration = `Vehicle : ${data.rider.number_plate}`;
         this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
         this.riderLastSeen = `Tracker : Last signal sent ${moment(
-          riderLocationDetails.time
+          riderLocationDetails.time,
         ).fromNow()}`;
         this.extraNotificationInfo = '';
+        this.activeStateIcon = this.vendor_icon_id;
+        this.vendorStatus = 'active';
       } else {
         this.vehicleRegistration = `Vehicle : ${data.rider.number_plate}`;
         this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
         this.riderLastSeen = 'Tracker : No Signal';
         this.extraNotificationInfo = '(This could be due to network issues)';
+        this.activeStateIcon = `${this.vendor_icon_id}_offline`;
+        this.vendorStatus = 'offline';
       }
     },
     setTrackersInfoWindow(data) {
@@ -414,9 +428,9 @@ export default {
                  width: 40px;
                  object-fit: contain;
                  float: left;">
-          <img style ="height: 45px;" src="https://images.sendyit.com/web_platform/vendor_type/top/${
-            this.vendor_icon_id
-          }.png"></img>
+          <img style ="height: 45px;padding-top: 10px;" src="https://images.sendyit.com/web_platform/vendor_type/top/${
+  this.activeStateIcon
+}.png"></img>
                  </div>
                  <div style="  width: 75%;
                    display: inline-block;
@@ -437,8 +451,8 @@ export default {
                  object-fit: contain;
                  float: left;">
           <img style ="height: 45px;" src="https://images.sendyit.com/web_platform/vendor_type/top/${
-            this.vendor_icon_id
-          }.png"></img>
+  this.vendor_icon_id
+}.png"></img>
                  </div>
                  <div style="  width: 70%;
                    display: inline-block;
@@ -453,7 +467,7 @@ export default {
     checkUserLocation() {
       let markedCoords = '';
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
+        navigator.geolocation.getCurrentPosition((position) => {
           const lat = position.coords.latitude;
           const long = position.coords.longitude;
 
@@ -472,16 +486,16 @@ export default {
         endpoint: 'geocountry',
       };
       this.requestCountryCode(fullPayload).then(
-        response => {
+        (response) => {
           const code = response.country_code;
           this.$store.commit('setCountryCode', code);
           const countryCodeData = currencyConversion.getCountryByCode(code);
           this.$store.commit('setDefaultCurrency', countryCodeData.currencyCode);
           this.setMapCentreLocation(code);
         },
-        error => {
+        (error) => {
           // ...
-        }
+        },
       );
     },
     setMapCentreLocation(code) {
