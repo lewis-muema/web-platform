@@ -94,6 +94,8 @@ export default {
       riderLastSeen: '',
       trackers: [2, 3, 6, 10, 13, 14, 17, 18, 19, 20],
       extraNotificationInfo: '',
+      activeStateIcon: '',
+      vendorStatus: 'active',
     };
   },
   computed: {
@@ -155,6 +157,12 @@ export default {
       };
     },
     vendor_icon(id) {
+      if (this.vendorStatus === 'offline') {
+        return {
+          url: `https://images.sendyit.com/web_platform/vendor_type/top/${id}_offline.png`,
+          scaledSize: new google.maps.Size(50, 50),
+        };
+      }
       return {
         url: `https://images.sendyit.com/web_platform/vendor_type/top/${id}.png`,
         scaledSize: new google.maps.Size(50, 50),
@@ -382,6 +390,8 @@ export default {
         this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
         this.riderLastSeen = '';
         this.extraNotificationInfo = '';
+        this.activeStateIcon = this.vendor_icon_id;
+        this.vendorStatus = 'active';
       } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
         this.vehicleRegistration = `Vehicle : ${data.rider.number_plate}`;
         this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
@@ -389,11 +399,15 @@ export default {
           riderLocationDetails.time,
         ).fromNow()}`;
         this.extraNotificationInfo = '';
+        this.activeStateIcon = this.vendor_icon_id;
+        this.vendorStatus = 'active';
       } else {
         this.vehicleRegistration = `Vehicle : ${data.rider.number_plate}`;
         this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
         this.riderLastSeen = 'Tracker : No Signal';
         this.extraNotificationInfo = '(This could be due to network issues)';
+        this.activeStateIcon = `${this.vendor_icon_id}_offline`;
+        this.vendorStatus = 'offline';
       }
     },
     setTrackersInfoWindow(data) {
@@ -414,8 +428,8 @@ export default {
                  width: 40px;
                  object-fit: contain;
                  float: left;">
-          <img style ="height: 45px;" src="https://images.sendyit.com/web_platform/vendor_type/top/${
-  this.vendor_icon_id
+          <img style ="height: 45px;padding-top: 10px;" src="https://images.sendyit.com/web_platform/vendor_type/top/${
+  this.activeStateIcon
 }.png"></img>
                  </div>
                  <div style="  width: 75%;
