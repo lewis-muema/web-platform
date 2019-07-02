@@ -424,11 +424,6 @@ export default {
     },
     getTrackerInfoWindowContent() {
       return `<div class="outer_info_content_trackers">
-               <div class="outer_inner_content_trackers">
-          <img class="info_window_img" src="https://images.sendyit.com/web_platform/vendor_type/top/${
-  this.activeStateIcon
-}.png"></img>
-                 </div>
                  <div class="info_window_descript">
                    <div>${this.vehicleRegistration}</div>
                    <div>${this.speedData}</div>
