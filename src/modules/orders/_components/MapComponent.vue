@@ -394,25 +394,25 @@ export default {
       const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
 
       if (riderOnlineTimeRange <= 30) {
-        this.vehicleRegistration = `Vehicle : ${data.rider.number_plate}`;
-        this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
+        this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
+        this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
         this.riderLastSeen = '';
         this.extraNotificationInfo = '';
         this.activeStateIcon = this.vendor_icon_id;
         this.vendorStatus = 'active';
       } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
-        this.vehicleRegistration = `Vehicle : ${data.rider.number_plate}`;
-        this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = `Tracker : Last signal sent ${moment(
+        this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
+        this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
+        this.riderLastSeen = `Tracker \u00A0:\u00A0 Last signal sent ${moment(
           riderLocationDetails.time,
         ).fromNow()}`;
         this.extraNotificationInfo = '';
         this.activeStateIcon = this.vendor_icon_id;
         this.vendorStatus = 'active';
       } else {
-        this.vehicleRegistration = `Vehicle : ${data.rider.number_plate}`;
-        this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = 'Tracker : No Signal';
+        this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
+        this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
+        this.riderLastSeen = 'Tracker \u00A0:\u00A0 No Signal';
         this.extraNotificationInfo = '(This could be due to network issues)';
         this.activeStateIcon = `${this.vendor_icon_id}_offline`;
         this.vendorStatus = 'offline';
@@ -426,25 +426,25 @@ export default {
       const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
 
       if (riderOnlineTimeRange <= 30) {
-        this.vehicleRegistration = `Vehicle : ${data.rider.number_plate}`;
-        this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
+        this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
+        this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
         this.riderLastSeen = '';
         this.extraNotificationInfo = '';
         this.activeStateIcon = this.vendor_icon_id;
         this.vendorStatus = 'active';
       } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
-        this.vehicleRegistration = `Vehicle : ${data.rider.number_plate}`;
-        this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = `Tracker : Last signal sent ${moment(
+        this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
+        this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
+        this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${moment(
           riderLocationDetails.time,
         ).fromNow()}`;
         this.extraNotificationInfo = '';
         this.activeStateIcon = this.vendor_icon_id;
         this.vendorStatus = 'active';
       } else {
-        this.vehicleRegistration = `Vehicle : ${data.rider.number_plate}`;
-        this.speedData = `Speed : ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = 'Tracker : No Signal';
+        this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
+        this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
+        this.riderLastSeen = 'Tracker \u00A0\u00A0:\u00A0\u00A0 No Signal';
         this.extraNotificationInfo = '(This could be due to network issues)';
         this.activeStateIcon = `${this.vendor_icon_id}_offline`;
         this.vendorStatus = 'offline';
