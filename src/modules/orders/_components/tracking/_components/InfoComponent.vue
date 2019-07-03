@@ -1239,11 +1239,17 @@ export default {
 }
 .infobar--photo img
 {
-  margin-top: -29px;
+  /* margin-top: -29px;
   height: 72px;
   width: auto !important;
   margin-bottom: -29px;
+  border-radius: 50%; */
+  /* border: 1px solid #1782c5; */
   border-radius: 50%;
+  padding: 4px;
+  max-height: 80px;
+  min-height: 75px;
+  width: 75px;
 }
 .infobar--driver-details
 {
