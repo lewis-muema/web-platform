@@ -1239,7 +1239,7 @@ export default {
 }
 .infobar--photo img
 {
-  /* margin-top: -29px;
+ /* margin-top: -29px;
   height: 72px;
   width: auto !important;
   margin-bottom: -29px;
@@ -1593,9 +1593,15 @@ ul.timeline > li#timeline_right.payedReached:before{
   cursor: pointer;
 }
 .rimg-disp{
-  vertical-align: middle;
+  /* vertical-align: middle;
   max-width: 16%;
-  border-radius: 15%;
+  border-radius: 15%; */
+  border-radius: 50%;
+    padding: 4px;
+    max-height: 70px;
+    min-height: 50px;
+    width: 75px;
+    vertical-align: middle;
 }
 .infobar--item-truck-options{
   padding-bottom: 5px;
