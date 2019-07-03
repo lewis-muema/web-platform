@@ -403,9 +403,7 @@ export default {
       } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
         this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
         this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = `Tracker \u00A0:\u00A0 Last signal sent ${moment(
-          riderLocationDetails.time,
-        ).fromNow()}`;
+        this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${riderOnlineTimeRange} minutes ago`;
         this.extraNotificationInfo = '';
         this.activeStateIcon = this.vendor_icon_id;
         this.vendorStatus = 'active';
@@ -435,9 +433,7 @@ export default {
       } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
         this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
         this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${moment(
-          riderLocationDetails.time,
-        ).fromNow()}`;
+        this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${riderOnlineTimeRange} minutes ago`;
         this.extraNotificationInfo = '';
         this.activeStateIcon = this.vendor_icon_id;
         this.vendorStatus = 'active';
@@ -542,7 +538,8 @@ export default {
   width: 275px;
 }
 .outer_info_content_trackers {
-  width: 204px;
+  max-width: 245px;
+  min-height: 80px;
 }
 .outer_inner_content{
   display: inline-block;
@@ -561,7 +558,7 @@ export default {
   padding-top: 10px;
 }
 .info_window_descript{
-  width: 70%;
+  width: 100%;
   display: inline-block;
   float: left;
   padding-left: 10px;
