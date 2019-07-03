@@ -475,7 +475,7 @@ export default {
   this.vendor_icon_id
 }.png"></img>
                  </div>
-                 <div class="info_window_descript">
+                 <div class="info_window_descript_inner">
                    <div>${this.infoHeader}</div>
                    <div>${this.infoDescription}</div>
                    </div>
@@ -538,7 +538,7 @@ export default {
   width: 275px;
 }
 .outer_info_content_trackers {
-  max-width: 245px;
+  max-width: 265px;
   min-height: 80px;
 }
 .outer_inner_content{
@@ -555,6 +555,13 @@ export default {
 }
 .info_window_img{
   height: 45px;
+  padding-top: 10px;
+}
+.info_window_descript_inner{
+  width: 70%;
+  display: inline-block;
+  float: left;
+  padding-left: 10px;
   padding-top: 10px;
 }
 .info_window_descript{
