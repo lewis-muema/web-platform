@@ -24,4 +24,7 @@ export default {
   setDefaultCurrency(state, defaultCurrency) {
     state.default_currency = defaultCurrency;
   },
+  deleteSession(state) {
+    state.session = {};
+  },
 };
