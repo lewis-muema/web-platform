@@ -1,16 +1,19 @@
 <template lang="html">
-  <div
-    id="orders_container"
-    class="box"
-  >
+  <div class="">
     <external-header />
-    <map-component />
-    <transition
-      name="fade"
-      mode="out-in"
+
+    <div
+      id="orders_container"
+      class="box"
     >
-      <router-view />
-    </transition>
+      <map-component />
+      <transition
+        name="fade"
+        mode="out-in"
+      >
+        <router-view />
+      </transition>
+    </div>
   </div>
 </template>
 
