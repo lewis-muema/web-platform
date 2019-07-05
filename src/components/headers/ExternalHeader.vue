@@ -1,10 +1,15 @@
 <template lang="html">
-  <div class="external-header">
-    <img
-      class="external-header__img"
-      src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
-      onclick="location.href='https://sendyit.com/';"
-    />
+  <div class="header">
+    <div class="header--item external-header__img">
+      <div class="header--item__left">
+        <img
+          src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
+          alt="logo"
+          class="logo"
+          onclick="location.href='https://sendyit.com/';"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -15,14 +20,10 @@ export default {
 </script>
 
 <style lang="css">
-.external-header{
-    background-color: #1782c5;
-    display: block;
-    text-align: center;
-    padding: 10px;
-}
+@import "../../assets/styles/internal_header.css";
 .external-header__img{
-    height: 60px;
     cursor: pointer;
+    width: 60%;
+    padding-left: 40%;
 }
 </style>
