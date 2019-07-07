@@ -4,7 +4,7 @@
       <GmapMap
         ref="map"
         :center="mapCentreLocation"
-        :zoom="13"
+        :zoom="14"
         map-type-id="roadmap"
         class="content"
         :options="mapOptions"
@@ -18,12 +18,11 @@
           :icon="path_icon(m.icon)"
         />
         <gmap-polyline
-          v-if="typeof polyline === 'object' && this.mapLoaded"
+          v-if="typeof polyline === 'object' && mapLoaded"
           ref="polyline"
           :path="decode_path(polyline.path)"
           :options="polyline.options"
         />
-        <!-- <gmap-marker v-for="v in vendors" :position="v.position" :key="index" :ref="`marker${index}`" :icon="draw_rotated(v.vendor_type,v.rotation)" :visible="v.visible"></gmap-marker> -->
         <gmap-marker
           v-for="v in vendors"
           :key="v.rider_id"
@@ -84,289 +83,21 @@ export default {
       infoDescription: '',
       iconLabel: '',
       vendor_icon_id: '',
-      pick_up_eta: '',
-      delivery_eta: '',
+      pickUpEta: '',
+      deliveryEta: '',
       vendor_name: '',
       destination_waiting: false,
       rider_online_status: false,
+      riderId: '',
+      vehicleRegistration: '',
+      speedData: '',
+      riderLastSeen: '',
+      trackers: [1, 2, 3, 6, 10, 13, 14, 17, 18, 19, 20, 23],
+      extraNotificationInfo: '',
+      activeStateIcon: '',
+      vendorStatus: 'active',
+      small_vendors: [1, 23],
     };
-  },
-  methods: {
-    ...mapActions({
-      requestCountryCode: '$_orders/$_home/requestCountryCode',
-    }),
-    path_icon(icon) {
-      if (icon === 'pickup') {
-        return {
-          url: 'https://images.sendyit.com/web_platform/orders/pickup_placeholder.png',
-          scaledSize: new google.maps.Size(23, 40),
-        };
-      }
-      return {
-        url: 'https://images.sendyit.com/web_platform/orders/destination_placeholder.png',
-        scaledSize: new google.maps.Size(23, 40),
-      };
-    },
-    vendor_icon(id) {
-      return {
-        url: `https://images.sendyit.com/web_platform/vendor_type/top/${id}.png`,
-        scaledSize: new google.maps.Size(50, 50),
-      };
-    },
-    draw_rotated(vendor_type, rotation) {
-      const canvas = document.createElement('canvas');
-      canvas.setAttribute('id', 'rot_canvas');
-      const ctx = canvas.getContext('2d');
-
-      canvas.width = 100;
-      canvas.height = 100;
-
-      const image = document.createElement('img');
-      image.crossOrigin = 'anonymous';
-      image.src = `https://images.sendyit.com/web_platform/vendor_type/top/${vendor_type}.svg`;
-      const imageLoadPromise = new Promise((resolve) => {
-        image.onload = resolve;
-      }).then(() => {
-        ctx.drawImage(image, 0, 0);
-      });
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.save();
-      ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate((rotation * Math.PI) / 180);
-      ctx.drawImage(image, -canvas.width / 2, -canvas.height / 2);
-
-      const rotated = canvas.toDataURL();
-      ctx.restore();
-
-      return {
-        url: rotated,
-        scaledSize: new google.maps.Size(50, 50),
-      };
-    },
-    decode_path(path) {
-      return google.maps.geometry.encoding.decodePath(path);
-    },
-    get_position(literal) {
-      return new google.maps.LatLng(literal);
-    },
-    activeMarker() {
-      const size = Object.keys(this.markers).length;
-      if (this.iconLabel !== '' && size > 0 && this.polyline.path !== '') {
-        const main = this.markers.find(location => location.icon === this.iconLabel);
-        const index = this.markers.findIndex(location => location.icon === this.iconLabel);
-        this.toggleInfoWindow(main, index);
-      } else {
-        this.infoWinOpen = false;
-      }
-    },
-    orderStatus(data) {
-      this.checkRiderPosition();
-      if (data.status) {
-        const waiting = data.delivery_log.find(position => position.log_type === 10);
-        const waitingIndex = data.delivery_log.findIndex(position => position.log_type === 10);
-        if (waitingIndex !== -1) {
-          const string = data.delivery_log[waitingIndex].description;
-          if (string.includes('is ready to deliver your order')) {
-            this.destination_waiting = true;
-          } else {
-            this.destination_waiting = false;
-          }
-        }
-        const rider_locations = this.rider_online_status;
-        if (data.rider.vendor_id === 23) {
-          this.vendor_icon_id = 1;
-        } else {
-          this.vendor_icon_id = data.rider.vendor_id;
-        }
-        if (data.rider.vendor_id === 23 || data.rider.vendor_id === 1) {
-          this.vendor_name = 'rider';
-        } else {
-          this.vendor_name = 'driver';
-        }
-        if (data.delivery_status === 3) {
-          // return 'Delivered';
-          this.infoHeader = '';
-          this.infoDescription = '';
-        } else if (
-          data.delivery_status === 2
-          && waiting !== undefined
-          && this.destination_waiting
-        ) {
-          // return 'Waiting at destination'
-          this.infoHeader = `Your ${
-            this.vendor_name
-          }has arrived and is waiting at the destination.`;
-          this.iconLabel = 'destination';
-          this.infoDescription = '';
-        } else if (data.delivery_status === 2) {
-          // return 'In Transit';
-          if (!rider_locations) {
-            this.infoHeader = `Your delivery is still in progress. We are working to restore the ${
-              this.vendor_name
-            }'s location.`;
-            this.infoDescription = '';
-            this.iconLabel = 'destination';
-            this.vendor_icon_id = 'location';
-          } else {
-            this.infoHeader = 'Your delivery is in progress.';
-            this.infoDescription = `Order arrival time ${this.delivery_eta}`;
-            this.iconLabel = 'destination';
-          }
-        } else if (
-          data.delivery_status === 0
-          && data.confirm_status === 1
-          && waiting !== undefined
-        ) {
-          // return 'Waiting at pick up location';
-          this.infoHeader = `Your ${
-            this.vendor_name
-          } has arrived and is waiting at the pickup location.`;
-          this.infoDescription = '';
-          this.iconLabel = 'pickup';
-        } else if (data.delivery_status === 0 && data.confirm_status === 1) {
-          // return 'Confirmed';
-          if (!rider_locations) {
-            this.infoHeader = `Your ${
-              this.vendor_name
-            } is still on the way. We are working to restore the ${this.vendor_name}'s location`;
-            this.infoDescription = '';
-            this.iconLabel = 'pickup';
-            this.vendor_icon_id = 'location';
-          } else {
-            this.infoHeader = `Your ${this.vendor_name} is on the way.`;
-            this.infoDescription = `Order pickup time ${this.pick_up_eta}`;
-            this.iconLabel = 'pickup';
-          }
-        } else {
-          // return 'Pending';
-          this.infoHeader = `We are matching your order with a ${this.vendor_name}. `;
-          this.infoDescription = '';
-          this.iconLabel = 'pickup';
-        }
-        this.activeMarker();
-        this.orderETA(data);
-      } else {
-        this.infoWinOpen = false;
-      }
-    },
-    orderETA(data) {
-      if (data.confirm_status === 1 && data.delivery_status === 0) {
-        const pick_up_eta = data.eta_data.etp;
-        const eta_split = pick_up_eta.split('to');
-        const start = eta_split[0].replace(/\s+/g, '');
-        const end = eta_split[1].replace(/\s+/g, '');
-
-        const start_eta = moment(start, moment.ISO_8601).format('h:mm a');
-        const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
-
-        this.pick_up_eta = `${start_eta}-${end_eta}`;
-        this.delivery_eta = '';
-      } else if (data.delivery_status === 2) {
-        const delivery_eta = data.eta_data.etd;
-        const eta_split = delivery_eta.split('to');
-        const start = eta_split[0].replace(/\s+/g, '');
-        const end = eta_split[1].replace(/\s+/g, '');
-
-        const start_eta = moment(start, moment.ISO_8601).format('h:mm a');
-        const end_eta = moment(end, moment.ISO_8601).format('h:mm a');
-
-        this.delivery_eta = `${start_eta}-${end_eta}`;
-        this.pick_up_eta = '';
-      } else {
-      }
-    },
-    activeState() {
-      this.$store
-        .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
-        .then((response) => {
-          if (response.data.status) {
-            this.orderStatus(response.data);
-          } else {
-            this.infoWinOpen = false;
-          }
-        });
-    },
-    checkRiderPosition() {
-      const size = Object.keys(this.vendors).length;
-      if (size > 0) {
-        this.rider_online_status = true;
-      } else {
-        this.rider_online_status = false;
-      }
-    },
-
-    toggleInfoWindow(marker, idx) {
-      this.infoWindowPos = marker.position;
-      this.infoContent = this.getInfoWindowContent(marker);
-      this.infoWinOpen = true;
-    },
-    getInfoWindowContent(marker) {
-      return `<div class="" style="width:275px">
-               <div style ="display: inline-block;
-                 width: 70px;
-                 object-fit: contain;
-                 float: left;">
-          <img style ="height: 45px;" src="https://images.sendyit.com/web_platform/vendor_type/top/${
-  this.vendor_icon_id
-}.png"></img>
-                 </div>
-                 <div style="  width: 70%;
-                   display: inline-block;
-                   float: left;
-                   padding-left: 10px;
-                   padding-top: 10px;">
-                   <div>${this.infoHeader}</div>
-                   <div>${this.infoDescription}</div>
-                   </div>
-              </div>`;
-    },
-    checkUserLocation() {
-      let markedCoords = '';
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          const lat = position.coords.latitude;
-          const long = position.coords.longitude;
-
-          markedCoords = `${lat},${long}`;
-          // markedCoords = '0.3130284,32.4590386'; (Uganda coordinates for test)
-          this.getCode(markedCoords);
-        });
-      }
-    },
-    getCode(position) {
-      const payload = {};
-      payload.coordinates = position;
-      const full_payload = {
-        values: payload,
-        app: 'PRIVATE_API',
-        endpoint: 'geocountry',
-      };
-      this.requestCountryCode(full_payload).then(
-        (response) => {
-          const code = response.country_code;
-          this.$store.commit('setCountryCode', code);
-          const country_code_data = currencyConversion.getCountryByCode(code);
-          this.$store.commit('setDefaultCurrency', country_code_data.currencyCode);
-          this.setMapCentreLocation(code);
-        },
-        (error) => {},
-      );
-    },
-    setMapCentreLocation(code) {
-      if (code === 'UG') {
-        this.mapCentreLocation.lat = 0.3355622;
-        this.mapCentreLocation.lng = 32.5801543;
-      } else {
-        this.mapCentreLocation.lat = -1.3084143;
-        this.mapCentreLocation.lng = 36.7658132;
-      }
-    },
-    removeStoredMarkers() {
-      this.$store.commit('$_orders/removePolyline', []);
-      this.$store.commit('$_orders/removeMarkers', []);
-      this.$store.commit('$_orders/$_tracking/setTrackedOrder', '');
-    },
   },
   computed: {
     ...mapGetters({
@@ -410,7 +141,438 @@ export default {
     this.checkUserLocation();
     this.removeStoredMarkers();
   },
+  methods: {
+    ...mapActions({
+      requestCountryCode: '$_orders/$_home/requestCountryCode',
+    }),
+    path_icon(icon) {
+      if (icon === 'pickup') {
+        return {
+          url: 'https://images.sendyit.com/web_platform/orders/pickup_placeholder.png',
+          scaledSize: new google.maps.Size(23, 40),
+        };
+      }
+      return {
+        url: 'https://images.sendyit.com/web_platform/orders/destination_placeholder.png',
+        scaledSize: new google.maps.Size(23, 40),
+      };
+    },
+    vendor_icon(id) {
+      if (this.vendorStatus === 'offline') {
+        return {
+          url: `https://images.sendyit.com/web_platform/vendor_type/top/${id}_offline.png`,
+          scaledSize: new google.maps.Size(50, 50),
+        };
+      }
+      return {
+        url: `https://images.sendyit.com/web_platform/vendor_type/top/${id}.png`,
+        scaledSize: new google.maps.Size(50, 50),
+      };
+    },
+    draw_rotated(vendorType, rotation) {
+      const canvas = document.createElement('canvas');
+      canvas.setAttribute('id', 'rot_canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = 100;
+      canvas.height = 100;
+
+      const image = document.createElement('img');
+      image.crossOrigin = 'anonymous';
+      image.src = `https://images.sendyit.com/web_platform/vendor_type/top/${vendorType}.svg`;
+      const imageLoadPromise = new Promise((resolve) => {
+        image.onload = resolve;
+      }).then(() => {
+        ctx.drawImage(image, 0, 0);
+      });
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate((rotation * Math.PI) / 180);
+      ctx.drawImage(image, -canvas.width / 2, -canvas.height / 2);
+
+      const rotated = canvas.toDataURL();
+      ctx.restore();
+
+      return {
+        url: rotated,
+        scaledSize: new google.maps.Size(50, 50),
+      };
+    },
+    decode_path(path) {
+      return google.maps.geometry.encoding.decodePath(path);
+    },
+    get_position(literal) {
+      return new google.maps.LatLng(literal);
+    },
+    activeMarker(data) {
+      const size = Object.keys(this.markers).length;
+      if (this.iconLabel !== '' && size > 0 && this.polyline.path !== '') {
+        const main = this.markers.find(location => location.icon === this.iconLabel);
+        this.toggleInfoWindow(main, data);
+      } else {
+        this.infoWinOpen = false;
+      }
+    },
+    orderStatus(data) {
+      this.checkRiderPosition();
+      if (data.status) {
+        if (data.confirm_status > 0) {
+          this.riderId = data.rider.rider_id;
+        }
+
+        const waiting = data.delivery_log.find(position => position.log_type === 10);
+        const waitingIndex = data.delivery_log.findIndex(position => position.log_type === 10);
+
+        if (waitingIndex !== -1) {
+          const string = data.delivery_log[waitingIndex].description;
+          if (string.includes('is ready to deliver your order')) {
+            this.destination_waiting = true;
+          } else {
+            this.destination_waiting = false;
+          }
+        }
+
+        const riderLocations = this.rider_online_status;
+        if (data.rider.vendor_id === 23) {
+          this.vendor_icon_id = 1;
+        } else {
+          this.vendor_icon_id = data.rider.vendor_id;
+        }
+
+        if (data.rider.vendor_id === 23 || data.rider.vendor_id === 1) {
+          this.vendor_name = 'rider';
+        } else {
+          this.vendor_name = 'driver';
+        }
+
+        if (data.delivery_status === 3) {
+          // return 'Delivered';
+          this.infoHeader = '';
+          this.infoDescription = '';
+        } else if (
+          data.delivery_status === 2
+          && waiting !== undefined
+          && this.destination_waiting
+        ) {
+          // return 'Waiting at destination'
+          this.infoHeader = `Your ${
+            this.vendor_name
+          }has arrived and is waiting at the destination.`;
+          this.iconLabel = 'destination';
+          this.infoDescription = '';
+        } else if (data.delivery_status === 2) {
+          // return 'In Transit';
+          if (!riderLocations) {
+            this.infoHeader = `Your delivery is still in progress. We are working to restore the ${
+              this.vendor_name
+            }'s location.`;
+            this.infoDescription = '';
+            this.iconLabel = 'destination';
+            this.vendor_icon_id = 'location';
+          } else {
+            this.infoHeader = 'Your delivery is in progress.';
+            this.infoDescription = `Order arrival time ${this.deliveryEta}`;
+            this.iconLabel = 'destination';
+          }
+        } else if (
+          data.delivery_status === 0
+          && data.confirm_status === 1
+          && waiting !== undefined
+        ) {
+          // return 'Waiting at pick up location';
+          this.infoHeader = `Your ${
+            this.vendor_name
+          } has arrived and is waiting at the pickup location.`;
+          this.infoDescription = '';
+          this.iconLabel = 'pickup';
+        } else if (data.delivery_status === 0 && data.confirm_status === 1) {
+          // return 'Confirmed';
+          if (!riderLocations) {
+            this.infoHeader = `Your ${
+              this.vendor_name
+            } is still on the way. We are working to restore the ${this.vendor_name}'s location`;
+            this.infoDescription = '';
+            this.iconLabel = 'pickup';
+            this.vendor_icon_id = 'location';
+          } else {
+            this.infoHeader = `Your ${this.vendor_name} is on the way.`;
+            this.infoDescription = `Order pickup time ${this.pickUpEta}`;
+            this.iconLabel = 'pickup';
+          }
+        } else {
+          // return 'Pending';
+          this.infoHeader = `We are matching your order with a ${this.vendor_name}. `;
+          this.infoDescription = '';
+          this.iconLabel = 'pickup';
+        }
+        this.activeMarker(data);
+        this.orderETA(data);
+      } else {
+        this.infoWinOpen = false;
+      }
+    },
+    orderETA(data) {
+      if (data.eta_data.status) {
+        if (data.confirm_status === 1 && data.delivery_status === 0) {
+          const pickUpEta = data.eta_data.etp;
+          const etaSplit = pickUpEta.split('to');
+          const start = etaSplit[0].replace(/\s+/g, '');
+          const end = etaSplit[1].replace(/\s+/g, '');
+
+          const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+          const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+
+          this.pickUpEta = `${startEta}-${endEta}`;
+          this.deliveryEta = '';
+        } else if (data.delivery_status === 2) {
+          const deliveryEta = data.eta_data.etd;
+          const etaSplit = deliveryEta.split('to');
+          const start = etaSplit[0].replace(/\s+/g, '');
+          const end = etaSplit[1].replace(/\s+/g, '');
+
+          const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+          const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+
+          this.deliveryEta = `${startEta}-${endEta}`;
+          this.pickUpEta = '';
+        } else {
+          // ...
+        }
+      }
+    },
+    activeState() {
+      this.$store
+        .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
+        .then((response) => {
+          if (response.data.status) {
+            this.orderStatus(response.data);
+          } else {
+            this.infoWinOpen = false;
+          }
+        });
+    },
+    checkRiderPosition() {
+      const size = Object.keys(this.vendors).length;
+      if (size > 0) {
+        this.rider_online_status = true;
+      } else {
+        this.rider_online_status = false;
+      }
+    },
+
+    toggleInfoWindow(marker, data) {
+      if (data.confirm_status > 0 && this.trackers.includes(data.rider.vendor_id)) {
+        const size = Object.keys(this.vendors).length;
+        if (size > 0) {
+          this.handleTrackersNotification(data);
+          this.setTrackersInfoWindow(data);
+        } else {
+          this.infoWindowPos = marker.position;
+          this.infoContent = this.getInfoWindowContent(marker);
+          this.infoWinOpen = true;
+        }
+      } else {
+        this.infoWindowPos = marker.position;
+        this.infoContent = this.getInfoWindowContent(marker);
+        this.infoWinOpen = true;
+      }
+    },
+    handleTrackersNotification(data) {
+      if (this.small_vendors.includes(data.rider.vendor_id)) {
+        this.handleSmallVendorsTrackers(data);
+      } else {
+        this.handleLargeVendorsTrackers(data);
+      }
+    },
+    handleSmallVendorsTrackers(data) {
+      const riderId = data.rider.rider_id;
+      const riderLocationDetails = this.vendors[riderId];
+      const onlineTime = moment(riderLocationDetails.time);
+      const currentTime = moment();
+      const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
+
+      if (riderOnlineTimeRange <= 30) {
+        this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
+        this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
+        this.riderLastSeen = '';
+        this.extraNotificationInfo = '';
+        this.activeStateIcon = this.vendor_icon_id;
+        this.vendorStatus = 'active';
+      } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
+        this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
+        this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
+        this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${riderOnlineTimeRange} minutes ago`;
+        this.extraNotificationInfo = '';
+        this.activeStateIcon = this.vendor_icon_id;
+        this.vendorStatus = 'active';
+      } else {
+        this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
+        this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
+        this.riderLastSeen = 'Tracker \u00A0:\u00A0 No Signal';
+        this.extraNotificationInfo = '(This could be due to network issues)';
+        this.activeStateIcon = `${this.vendor_icon_id}_offline`;
+        this.vendorStatus = 'offline';
+      }
+    },
+    handleLargeVendorsTrackers(data) {
+      const riderId = data.rider.rider_id;
+      const riderLocationDetails = this.vendors[riderId];
+      const onlineTime = moment(riderLocationDetails.time);
+      const currentTime = moment();
+      const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
+
+      if (riderOnlineTimeRange <= 30) {
+        this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
+        this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
+        this.riderLastSeen = '';
+        this.extraNotificationInfo = '';
+        this.activeStateIcon = this.vendor_icon_id;
+        this.vendorStatus = 'active';
+      } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
+        this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
+        this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
+        this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${riderOnlineTimeRange} minutes ago`;
+        this.extraNotificationInfo = '';
+        this.activeStateIcon = this.vendor_icon_id;
+        this.vendorStatus = 'active';
+      } else {
+        this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
+        this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
+        this.riderLastSeen = 'Tracker \u00A0\u00A0:\u00A0\u00A0 No Signal';
+        this.extraNotificationInfo = '(This could be due to network issues)';
+        this.activeStateIcon = `${this.vendor_icon_id}_offline`;
+        this.vendorStatus = 'offline';
+      }
+    },
+    setTrackersInfoWindow(data) {
+      const riderId = data.rider.rider_id;
+      const riderLocationDetails = this.vendors[riderId];
+      const riderMarkerLocation = riderLocationDetails.position;
+
+      this.mapCentreLocation.lat = riderMarkerLocation.lat;
+      this.mapCentreLocation.lng = riderMarkerLocation.lng;
+
+      this.infoWindowPos = riderMarkerLocation;
+      this.infoContent = this.getTrackerInfoWindowContent();
+      this.infoWinOpen = true;
+    },
+    getTrackerInfoWindowContent() {
+      return `<div class="outer_info_content_trackers">
+                 <div class="info_window_descript">
+                   <div>${this.vehicleRegistration}</div>
+                   <div>${this.speedData}</div>
+                   <div>${this.riderLastSeen}</div>
+                   <div class="info_window_trackers_extra">${this.extraNotificationInfo}</div>
+                   </div>
+              </div>`;
+    },
+    getInfoWindowContent() {
+      return `<div class="outer_info_content">
+               <div class="outer_inner_content">
+          <img class="info_window_img" src="https://images.sendyit.com/web_platform/vendor_type/top/${
+  this.vendor_icon_id
+}.png"></img>
+                 </div>
+                 <div class="info_window_descript_inner">
+                   <div>${this.infoHeader}</div>
+                   <div>${this.infoDescription}</div>
+                   </div>
+              </div>`;
+    },
+    checkUserLocation() {
+      let markedCoords = '';
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const lat = position.coords.latitude;
+          const long = position.coords.longitude;
+
+          markedCoords = `${lat},${long}`;
+          // markedCoords = '0.3130284,32.4590386'; (Uganda coordinates for test)
+          this.getCode(markedCoords);
+        });
+      }
+    },
+    getCode(position) {
+      const payload = {};
+      payload.coordinates = position;
+      const fullPayload = {
+        values: payload,
+        app: 'PRIVATE_API',
+        endpoint: 'geocountry',
+      };
+      this.requestCountryCode(fullPayload).then(
+        (response) => {
+          const code = response.country_code;
+          this.$store.commit('setCountryCode', code);
+          const countryCodeData = currencyConversion.getCountryByCode(code);
+          this.$store.commit('setDefaultCurrency', countryCodeData.currencyCode);
+          this.setMapCentreLocation(code);
+        },
+        (error) => {
+          // ...
+        },
+      );
+    },
+    setMapCentreLocation(code) {
+      if (code === 'UG') {
+        this.mapCentreLocation.lat = 0.3355622;
+        this.mapCentreLocation.lng = 32.5801543;
+      } else {
+        this.mapCentreLocation.lat = -1.3084143;
+        this.mapCentreLocation.lng = 36.7658132;
+      }
+    },
+    removeStoredMarkers() {
+      this.$store.commit('$_orders/removePolyline', []);
+      this.$store.commit('$_orders/removeMarkers', []);
+      this.$store.commit('$_orders/$_tracking/setTrackedOrder', '');
+    },
+  },
 };
 </script>
 
-<style lang="css"></style>
+<style lang="css">
+.outer_info_content {
+  width: 275px;
+}
+.outer_info_content_trackers {
+  max-width: 265px;
+  min-height: 80px;
+}
+.outer_inner_content{
+  display: inline-block;
+  width: 70px;
+  object-fit: contain;
+  float: left;
+}
+.outer_inner_content_trackers{
+  display: inline-block;
+  width: 40px;
+  object-fit: contain;
+  float: left;
+}
+.info_window_img{
+  height: 45px;
+  padding-top: 10px;
+}
+.info_window_descript_inner{
+  width: 70%;
+  display: inline-block;
+  float: left;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+.info_window_descript{
+  width: 100%;
+  display: inline-block;
+  float: left;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+.info_window_trackers_extra{
+  font-size:9px;
+  padding-top:5px;
+}
+</style>

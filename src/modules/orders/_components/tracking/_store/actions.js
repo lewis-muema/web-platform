@@ -187,10 +187,52 @@ const saveOrderDetails = function saveOrderDetails({ dispatch }, data) {
   });
 };
 
+const requestETASms = function requestETASms({ dispatch }, data) {
+  const payload = {
+    values: data,
+    app: 'PRIVATE_API',
+    endpoint: 'send_sms',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
+const requestRiderLastPosition = function requestRiderLastPosition({ dispatch }, data) {
+  const payload = {
+    values: data,
+    app: 'NODE_PRIVATE_API',
+    endpoint: 'last_partner_position',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   getTrackingData,
   cancelOrder,
   trackMQTT,
   runningBalance,
   saveOrderDetails,
+  requestETASms,
+  requestRiderLastPosition,
 };
