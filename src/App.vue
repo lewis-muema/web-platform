@@ -13,11 +13,6 @@ import Vue from 'vue';
 
 const ENV = process.env.CONFIGS_ENV;
 
-Sentry.init({
-  dsn: ENV.SENTRY_DSN,
-  integrations: [new Sentry.Integrations.Vue({ Vue })],
-});
-
 export default {
   name: 'App',
   computed: {
@@ -25,6 +20,12 @@ export default {
       // this is never always fired :-(
       return this.$store.getters.getNotificationStatus;
     },
+  },
+  beforeMount() {
+    Sentry.init({
+      dsn: ENV.SENTRY_DSN,
+      integrations: [new Sentry.Integrations.Vue({ Vue })],
+    });
   },
   watch: {
     notification_status(val, oldVal) {
