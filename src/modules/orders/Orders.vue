@@ -34,6 +34,7 @@ export default {
 
   created() {
     this.registerOrdersStore();
+    this.checkSession();
     // const STORE_KEY = '$_orders';
     // this.register_store_module(STORE_KEY, order_store);
   },
@@ -43,6 +44,24 @@ export default {
       const moduleIsRegistered = this.$store._modules.root._children.$_orders !== undefined;
       if (!moduleIsRegistered) {
         this.$store.registerModule('$_orders', order_store);
+      }
+    },
+    checkSession() {
+      const session = this.$store.getters.getSession;
+      const sessionData = Object.keys(session).length;
+      if (sessionData === 0) {
+        const notification = {
+          title: 'Your session has expired!',
+          level: 2,
+          message: 'You will be redirected to the login page after 5 seconds.',
+        };
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
+        setTimeout(() => {
+          localStorage.removeItem('_sessionSnack');
+          localStorage.removeItem('jwtToken');
+          this.$router.replace({ name: 'sign_in' });
+        }, 5000);
       }
     },
   },
