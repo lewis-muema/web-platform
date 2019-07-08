@@ -2,12 +2,15 @@
   <div class="header">
     <div class="header--item">
       <div class="header--item__left">
-        <a class="header--item__left" @click="linkRoute('/orders')">
+        <a
+          class="header--item__left"
+          @click="linkRoute('/orders')"
+        >
           <img
             src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
             alt="logo"
             class="logo"
-          />
+          >
         </a>
       </div>
     </div>
@@ -28,8 +31,7 @@
               <li v-if="switchValid">
                 <a @click="switchAccount()">
                   Switch to
-                  <span v-if="this.$store.getters.getSession.default === 'peer'"> Business </span
-                  ><span v-else>
+                  <span v-if="this.$store.getters.getSession.default === 'peer'"> Business </span><span v-else>
                     Personal
                   </span>
                   account
@@ -68,7 +70,10 @@
                 </a>
               </li>
               <li class="menu--last-child">
-                <a class="menu--last-child-link" @click="logOut">
+                <a
+                  class="menu--last-child-link"
+                  @click="logOut"
+                >
                   Log Out
                 </a>
               </li>
@@ -135,14 +140,13 @@ export default {
     },
     logOut() {
       try {
-        this.$store.commit('setSession', {});
-        this.deleteSession();
+        this.$store.commit('deleteSession');
         // clear orders to avoid marker persistance
         this.$store.unregisterModule('$_orders');
       } catch (er) {
         // orders was not registered
       } finally {
-        this.$router.push({ name: 'sign_in' });
+        this.$router.replace({ name: 'sign_in' });
       }
     },
     switchOption() {
