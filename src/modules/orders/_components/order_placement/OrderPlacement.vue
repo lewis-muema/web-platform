@@ -111,10 +111,17 @@
             class="sendy-blue homeview--row__font-awesome"
             width="10px"
           />
-          <a class="homeview--add" @click="addExtraDestinationWrapper()">Add Destination</a>
+          <a
+            class="homeview--add"
+            @click="addExtraDestinationWrapper()"
+          >Add Destination</a>
         </div>
       </div>
-      <div v-if="loading" v-loading="loading" class="orders-loading-container" />
+      <div
+        v-if="loading"
+        v-loading="loading"
+        class="orders-loading-container"
+      />
     </div>
     <div>
       <div v-if="show_vendor_view && !loading">
@@ -124,7 +131,10 @@
         v-if="!show_vendor_view && !loading"
         class="home-view--seperator home-view--form__seperator"
       >
-        <button type="button" class="button--primary-inactive home-view--place-order">
+        <button
+          type="button"
+          class="button--primary-inactive home-view--place-order"
+        >
           Confirm Order
         </button>
       </div>
@@ -164,7 +174,7 @@ library.add(
   faMobileAlt,
   faStar,
   faCcVisa,
-  faCcMastercard
+  faCcMastercard,
 );
 
 export default {
@@ -224,21 +234,31 @@ export default {
 
     allow_add_destination() {
       return (
-        !this.loading &&
-        Array.isArray(this.get_order_path) &&
-        this.get_order_path.length - 1 <= this.get_max_destinations &&
-        this.get_order_path.length > 1 &&
-        this.get_extra_destinations <= this.get_order_path.length - 2
+        !this.loading
+        && Array.isArray(this.get_order_path)
+        && this.get_order_path.length - 1 <= this.get_max_destinations
+        && this.get_order_path.length > 1
+        && this.get_extra_destinations <= this.get_order_path.length - 2
       );
     },
 
     show_vendor_view() {
       return (
-        Array.isArray(this.getStoreOrderPath) &&
-        this.getStoreOrderPath.length > 1 &&
-        Object.prototype.hasOwnProperty.call(this.getOuterPriceRequestData, 'economy_price_tiers')
+        Array.isArray(this.getStoreOrderPath)
+        && this.getStoreOrderPath.length > 1
+        && Object.prototype.hasOwnProperty.call(this.getOuterPriceRequestData, 'economy_price_tiers')
       );
     },
+  },
+  created() {
+    this.instantiateHomeComponent();
+    this.initializeOrderFlow();
+  },
+  mounted() {
+    this.checkSessionData();
+  },
+  destroyed() {
+    this.destroyOrderPlacement();
   },
   methods: {
     ...mapMutations({
@@ -334,9 +354,7 @@ export default {
         // console.log('not a place', index);
         return;
       }
-      const countryIndex = place.address_components.findIndex(country_code =>
-        country_code.types.includes('country')
-      );
+      const countryIndex = place.address_components.findIndex(country_code => country_code.types.includes('country'));
       const pathObj = {
         name: place.name,
         coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
@@ -376,9 +394,9 @@ export default {
     },
     attemptPriceRequest() {
       if (
-        Array.isArray(this.locations) &&
-        this.locations.length > 1 &&
-        this.get_pickup_filled === true
+        Array.isArray(this.locations)
+        && this.locations.length > 1
+        && this.get_pickup_filled === true
       ) {
         this.clearOuterPriceRequestObject();
         this.clearOuterActiveVendorDetails();
@@ -460,7 +478,7 @@ export default {
       const previousActiveVendor = this.get_active_vendor_name;
       const definedLocations = this.locations;
       this.requestPriceQuote(payload).then(
-        response => {
+        (response) => {
           this.setOrderState(1);
           this.setHomeLocations(definedLocations);
           this.setOuterPriceRequestObject(response.values);
@@ -474,19 +492,19 @@ export default {
             'Client Type': 'Web Platform',
           });
         },
-        error => {
+        (error) => {
           if (Object.prototype.hasOwnProperty.call(error, 'crisis_notification')) {
             this.doNotification(3, error.reason, error.crisis_notification.msg);
           } else {
             this.doNotification(
               3,
               'Price request failed',
-              'Price request failed. Please try again after a few minutes.'
+              'Price request failed. Please try again after a few minutes.',
             );
           }
 
           this.loading = false;
-        }
+        },
       );
     },
 
@@ -519,15 +537,13 @@ export default {
       if (this.get_active_vendor_name === '') {
         this.doSetDefaultVendorType();
       } else {
-        const result = this.get_price_request_object.economy_price_tiers.filter(pack =>
-          pack.price_tiers.some(vendor => vendor.vendor_name === previous)
-        );
+        const result = this.get_price_request_object.economy_price_tiers.filter(pack => pack.price_tiers.some(vendor => vendor.vendor_name === previous));
 
         if (result.length == 0) {
           this.doSetDefaultVendorType();
         } else {
           const newActivePriceObject = result[0].price_tiers.find(
-            vendor => vendor.vendor_name === previous
+            vendor => vendor.vendor_name === previous,
           );
           this.set_active_vendor_details(newActivePriceObject);
         }
@@ -540,7 +556,7 @@ export default {
       } else {
         const self = this;
         const _package = this.get_price_request_object.economy_price_tiers.filter(
-          pack => pack.tier_group === self.get_active_package_class
+          pack => pack.tier_group === self.get_active_package_class,
         );
         if (_package.length === 0) {
           this.doSetDefaultPackageClass();
@@ -595,8 +611,7 @@ export default {
     registerOrderPlacementModule() {
       let moduleIsRegistered = false;
       try {
-        moduleIsRegistered =
-          this.$store._modules.root._children.$_orders._children.$_home !== undefined;
+        moduleIsRegistered = this.$store._modules.root._children.$_orders._children.$_home !== undefined;
       } catch (er) {
         //
       }
@@ -634,15 +649,6 @@ export default {
         this.clearOuterActiveVendorDetails();
       }
     },
-  },
-
-  created() {
-    this.instantiateHomeComponent();
-    this.initializeOrderFlow();
-    this.checkSessionData();
-  },
-  destroyed() {
-    this.destroyOrderPlacement();
   },
 };
 </script>

@@ -2,11 +2,17 @@
   <div class="">
     <main-header />
 
-    <div id="orders_container" class="box">
+    <div
+      id="orders_container"
+      class="box"
+    >
       <map-component />
       <ongoing-component />
 
-      <transition name="fade" mode="out-in">
+      <transition
+        name="fade"
+        mode="out-in"
+      >
         <router-view />
       </transition>
     </div>
@@ -35,9 +41,11 @@ export default {
 
   created() {
     this.registerOrdersStore();
-    this.checkSession();
     // const STORE_KEY = '$_orders';
     // this.register_store_module(STORE_KEY, orderStore);
+  },
+  mounted() {
+    this.checkSession();
   },
 
   methods: {
