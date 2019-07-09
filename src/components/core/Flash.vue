@@ -1,34 +1,32 @@
-<template></template>
+<template />
 
 <script>
-  export default {
-    props: [
-      'details'
-    ],
+export default {
+  props: ['details'],
 
-    data(){
-      return {
-        codes: {
-          '0': 'success',
-          '1': 'success',
-          '2': 'warning',
-          '3': 'error',
-        }
-      }
-    },
-
-    methods: {
-      flash(details){
-        let data = Object.assign({}, details);
-        data['type'] = this.codes[details.type];
-        this.$notify(data);
+  data() {
+    return {
+      codes: {
+        0: 'success',
+        1: 'success',
+        2: 'warning',
+        3: 'error',
       },
-    },
+    };
+  },
 
-    created(){
-      window.events.$on('flash', details => {
-          this.flash(details)
-      });
-    }
-  }
+  beforeMount() {
+    window.events.$on('flash', details => {
+      this.flash(details);
+    });
+  },
+
+  methods: {
+    flash(details) {
+      const data = Object.assign({}, details);
+      data.type = this.codes[details.type];
+      this.$notify(data);
+    },
+  },
+};
 </script>

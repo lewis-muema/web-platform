@@ -84,6 +84,7 @@ export default {
   },
   mounted() {
     this.landOnSignInPage();
+    this.clearSession();
   },
   methods: {
     ...mapActions({
@@ -95,6 +96,11 @@ export default {
         page: location.pathname,
         title: 'View Page - Sign In - Web Platform',
       });
+    },
+    clearSession() {
+      this.$store.commit('deleteSession');
+      localStorage.removeItem('_sessionSnack');
+      localStorage.removeItem('jwtToken');
     },
     sign_in() {
       if (this.email !== '' && this.password !== '') {
