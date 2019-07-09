@@ -134,6 +134,9 @@ const clearOuterActiveVendorDetails = (state) => {
 const setOuterActivePackageClass = (state, payload) => {
   state.outer_active_package_data = payload;
 };
+const clearVendorMarkers = (state) => {
+  state.map.vendors = {};
+};
 export default {
   setPage,
   toggleOngoing,
@@ -156,4 +159,5 @@ export default {
   clearOuterPriceRequestObject,
   clearOuterActiveVendorDetails,
   unsetStorePath,
+  clearVendorMarkers,
 };
