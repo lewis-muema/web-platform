@@ -1,11 +1,8 @@
 <template>
-  <div
-    id="app"
-    class="box app app-overflow"
-  >
+  <div id="app" class="box app app-overflow">
     <!-- Global component responsible for flashing notifications -->
     <sendy-flash details="" />
-    
+
     <router-view class="box" />
   </div>
 </template>
@@ -16,11 +13,6 @@ import Vue from 'vue';
 
 const ENV = process.env.CONFIGS_ENV;
 
-Sentry.init({
-  dsn: ENV.SENTRY_DSN,
-  integrations: [new Sentry.Integrations.Vue({ Vue })],
-});
-
 export default {
   name: 'App',
   computed: {
@@ -28,6 +20,12 @@ export default {
       // this is never always fired :-(
       return this.$store.getters.getNotificationStatus;
     },
+  },
+  beforeMount() {
+    Sentry.init({
+      dsn: ENV.SENTRY_DSN,
+      integrations: [new Sentry.Integrations.Vue({ Vue })],
+    });
   },
   watch: {
     notification_status(val, oldVal) {
@@ -48,7 +46,7 @@ export default {
           title: notification.title,
           message: notification.message,
           offset: 20,
-          duration: 10000,
+          duration: 5000,
         });
       } else if (notification.level === 1) {
         // success
@@ -57,7 +55,7 @@ export default {
           title: notification.title,
           message: notification.message,
           offset: 20,
-          duration: 10000,
+          duration: 5000,
         });
       } else if (notification.level === 2) {
         // warning
@@ -66,17 +64,17 @@ export default {
           message: notification.message,
           type: 'warning',
           offset: 20,
-          duration: 10000,
+          duration: 5000,
         });
       } else if (notification.level === 3) {
         // error
         notification.title,
-        this.$notify({
-          type: 'error',
-          message: notification.message,
-          offset: 20,
-          duration: 10000,
-        });
+          this.$notify({
+            type: 'error',
+            message: notification.message,
+            offset: 20,
+            duration: 5000,
+          });
       } else {
         // default
         // check to make sure that either title or message is set
