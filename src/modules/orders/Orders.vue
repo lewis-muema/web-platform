@@ -2,10 +2,17 @@
   <div class="">
     <main-header />
 
-    <div id="orders_container" class="box">
+    <div
+      id="orders_container"
+      class="box"
+    >
       <map-component />
       <ongoing-component />
-      <transition name="fade" mode="out-in">
+
+      <transition
+        name="fade"
+        mode="out-in"
+      >
         <router-view />
       </transition>
     </div>
@@ -13,7 +20,7 @@
 </template>
 
 <script>
-import order_store from './_store';
+import orderStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
@@ -34,16 +41,18 @@ export default {
 
   created() {
     this.registerOrdersStore();
-    this.checkSession();
     // const STORE_KEY = '$_orders';
-    // this.register_store_module(STORE_KEY, order_store);
+    // this.register_store_module(STORE_KEY, orderStore);
+  },
+  mounted() {
+    this.checkSession();
   },
 
   methods: {
     registerOrdersStore() {
       const moduleIsRegistered = this.$store._modules.root._children.$_orders !== undefined;
       if (!moduleIsRegistered) {
-        this.$store.registerModule('$_orders', order_store);
+        this.$store.registerModule('$_orders', orderStore);
       }
     },
     checkSession() {
