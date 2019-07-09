@@ -755,7 +755,7 @@ export default {
       }
     },
     checkPreviousRoute() {
-      if (window.location.pathname === `/external/tracking/${this.$route.params.order_no}`) {
+      if (this.$route.path === `/external/tracking/${this.$route.params.order_no}`) {
         this.truckMoreInfo = false;
         this.externalTracking = true;
       }
