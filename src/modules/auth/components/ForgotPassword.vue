@@ -1,12 +1,21 @@
 <template lang="html">
-  <div id="forgot_pass" class="log-item hiddenyy">
+  <div
+    id="forgot_pass"
+    class="log-item hiddenyy"
+  >
     <div class="sign-inner">
       <div class="sign-top">
         Forgot your password?
       </div>
-      <div v-if="this.option" class="reset-link-details">
+      <div
+        v-if="this.option"
+        class="reset-link-details"
+      >
         You have a pending password change request sent to your email awaiting your confirmation
-        <a class="reset-pass-link" @click="resend_link">
+        <a
+          class="reset-pass-link"
+          @click="resend_link"
+        >
           Resend?
         </a>
       </div>
@@ -28,23 +37,32 @@
             data-vv-validate-on="blur"
             name="email"
             placeholder="Enter Email"
-          />
-          <br />
+          >
+          <br>
           <span class="sign-up-email-error">
             {{ errors.first('email') }}
           </span>
         </div>
 
-        <div v-if="this.two_accnts === true" class="">
+        <div
+          v-if="this.two_accnts === true"
+          class=""
+        >
           <span class="forgot-paswword-moreinfo">
             Looks like you have two accounts with us. Select one.
           </span>
 
           <div style="margin-top: 3%;">
-            <el-radio v-model="radio" label="1">
+            <el-radio
+              v-model="radio"
+              label="1"
+            >
               Business
             </el-radio>
-            <el-radio v-model="radio" label="2">
+            <el-radio
+              v-model="radio"
+              label="2"
+            >
               Peer
             </el-radio>
           </div>
@@ -57,10 +75,13 @@
             value="Reset Password"
             :disabled="!this.is_valid"
             @click="request_pass"
-          />
+          >
         </div>
         <div class=" sign-holder ">
-          <router-link class="sign-holder__link" to="/auth/sign_in">
+          <router-link
+            class="sign-holder__link"
+            to="/auth/sign_in"
+          >
             Sign In
           </router-link>
         </div>
@@ -152,7 +173,7 @@ export default {
         };
 
         this.requestForgotPassword(fullPayload).then(
-          response => {
+          (response) => {
             // check when response is dual
             if (response.length > 0) {
               response = response[0];
@@ -179,9 +200,9 @@ export default {
               this.message = 'Invalid Request';
             }
           },
-          error => {
-            this.message = 'Sign Up Failed, Kindly retry again';
-          }
+          (error) => {
+            this.message = 'Password reset request failed, Kindly retry again';
+          },
         );
       } else {
         const level = 3;

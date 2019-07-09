@@ -97,6 +97,7 @@ export default {
     ...mapMutations({
       change_page: '$_orders/setPage',
       hide_vendors: '$_orders/hideVendors',
+      clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
     toggle_ongoing() {
       if (this.showing) {
@@ -107,6 +108,7 @@ export default {
     },
     track(order) {
       this.hide_vendors();
+      this.clearVendorMarkers();
       this.$router.push({ path: `/orders/tracking/${order}` });
       this.change_page(1);
     },
