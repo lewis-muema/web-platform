@@ -754,12 +754,6 @@ export default {
         return '';
       }
     },
-    checkPreviousRoute() {
-      if (window.location.pathname === `/external/tracking/${this.$route.params.order_no}`) {
-        this.truckMoreInfo = false;
-        this.externalTracking = true;
-      }
-    },
   },
   watch: {
     '$route.params.order_no': function trackedOrder(from) {
@@ -811,6 +805,12 @@ export default {
           break;
         }
         default:
+      }
+    },
+    checkPreviousRoute() {
+      if (this.$route.path === `/external/tracking/${this.$route.params.order_no}`) {
+        this.truckMoreInfo = false;
+        this.externalTracking = true;
       }
     },
     poll(from) {
