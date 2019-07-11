@@ -1,7 +1,10 @@
 <template lang="html">
   <span>
     <div class="rating-top-fix" />
-    <div class="rating-submitted-wrapper" :style="wrapper_background">
+    <div
+      class="rating-submitted-wrapper"
+      :style="wrapper_background"
+    >
       <div class="container">
         <div class="post-rate">
           <div class="rating-submitted">
@@ -11,7 +14,7 @@
               "
               alt="submitted"
               class="rating-submitted-image"
-            />
+            >
           </div>
           <div class="rate-rider-thank">
             Rating submitted
@@ -26,7 +29,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'PostRate',
@@ -42,7 +45,14 @@ export default {
       return { 'background-image': uri };
     },
   },
+  mounted() {
+    this.handleRedirect();
+  },
   methods: {
+    ...mapMutations({
+      updateScore: '$_rating/updateScore',
+      updateStep: '$_rating/updateStep',
+    }),
     NewDelivery() {
       // window.ga('send', {
       //     hitType: 'event',
@@ -51,6 +61,20 @@ export default {
       //     eventLabel: "New delivery - vendors | Rating Page | Web Platform"
       // });
       // window.location = this.getBaseUrl;
+    },
+    handleRedirect() {
+      const notification = {
+        title: 'Rating submitted!',
+        level: 1,
+        message: 'Thank You for using Sendy.You will be redirected to the home page.',
+      };
+      this.$store.commit('setNotification', notification);
+      this.$store.commit('setNotificationStatus', true);
+      setTimeout(() => {
+        this.updateScore(0);
+        this.updateStep(1);
+        this.$router.replace({ name: 'order_placement' });
+      }, 5000);
     },
   },
 };
