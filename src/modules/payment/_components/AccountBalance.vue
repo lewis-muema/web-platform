@@ -43,8 +43,6 @@ export default {
   },
   mounted() {
     this.requestRB();
-  },
-  created() {
     this.checkUserLocation();
   },
   methods: {
@@ -74,14 +72,14 @@ export default {
       };
 
       this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
-        response => {
+        (response) => {
           const resp = response.data;
           const balance = resp.data.running_balance;
           this.$store.commit('setRunningBalance', balance);
         },
-        error => {
+        (error) => {
           // ...
-        }
+        },
       );
     },
     checkDefaultCurrency() {
@@ -96,7 +94,7 @@ export default {
     checkUserLocation() {
       let markedCoords = '';
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
+        navigator.geolocation.getCurrentPosition((position) => {
           const lat = position.coords.latitude;
           const long = position.coords.longitude;
 
@@ -115,16 +113,16 @@ export default {
         endpoint: 'geocountry',
       };
       this.requestCountryCode(fullPayload).then(
-        response => {
+        (response) => {
           const code = response.country_code;
           this.$store.commit('setCountryCode', code);
           const countryCodeData = currencyConversion.getCountryByCode(code);
           this.$store.commit('setDefaultCurrency', countryCodeData.currencyCode);
           this.requestRB();
         },
-        error => {
+        (error) => {
           // ...
-        }
+        },
       );
     },
   },
