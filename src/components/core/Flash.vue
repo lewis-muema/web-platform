@@ -15,18 +15,18 @@ export default {
     };
   },
 
+  beforeMount() {
+    window.events.$on('flash', details => {
+      this.flash(details);
+    });
+  },
+
   methods: {
     flash(details) {
       let data = Object.assign({}, details);
       data['type'] = this.codes[details.type];
       this.$notify(data);
     },
-  },
-
-  created() {
-    window.events.$on('flash', details => {
-      this.flash(details);
-    });
   },
 };
 </script>
