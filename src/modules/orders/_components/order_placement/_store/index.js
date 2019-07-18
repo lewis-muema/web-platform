@@ -38,6 +38,8 @@ export default {
       country_code: '',
       default_currency: '',
       test_specs: '',
+      load_weight_val: 0,
+      load_weight_status: false,
     };
   },
   actions,

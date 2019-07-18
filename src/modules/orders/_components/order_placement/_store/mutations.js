@@ -176,4 +176,10 @@ export default {
   setTestSpecs(state, val) {
     state.test_specs = val;
   },
+  setLoadWeightValue(state, val) {
+    state.load_weight_val = val;
+  },
+  setLoadWeightStatus(state, val) {
+    state.load_weight_status = val;
+  },
 };
