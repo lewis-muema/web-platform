@@ -268,6 +268,30 @@
                 </div>
               </div>
             </div>
+            <div
+              v-if="activeVendorPriceData.vendor_id === 25"
+              class="home-view-truck-options-inner-wrapper load-weight-outer"
+            >
+              <div class="home-view-truck-options-label">
+                What is the weight of your load?
+              </div>
+              <div>
+                <input
+                  v-model.trim="load_weight"
+                  class="input-control load-weight"
+                  type="number"
+                  placeholder="From 18.0 to 33.0"
+                  autocomplete="on"
+                  min="18"
+                  max="33"
+                  @keyup="dispatchLoadWeight"
+                >
+                <span class="tonage-value-text">Tonnes</span>
+              </div>
+              <p class="tonnage-validate-error">
+                {{ pass_msg }}
+              </p>
+            </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
                 Pick up time for your order
@@ -529,7 +553,6 @@ export default {
       number_of_loaders: 1,
       max_temperature: 4,
       delivery_item: '',
-      load_weight: '',
       load_units: '',
       customer_min_amount: '',
       vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
@@ -558,11 +581,33 @@ export default {
           label: 'Bike without box',
         },
       ],
+      freightVendorOptions: [
+        {
+          value: '1',
+          label: 'Closed/Boxed body',
+        },
+        {
+          value: '4',
+          label: 'Flatbed/Skeleton',
+        },
+        {
+          value: '5',
+          label: 'Tipper',
+        },
+        {
+          value: '6',
+          label: 'Refeer',
+        },
+        {
+          value: '7',
+          label: 'Highside',
+        },
+      ],
       schedule_time: '',
       order_notes: '',
       small_vendors: [1, 22, 21, 23],
       medium_vendors: [2, 3],
-      large_vendors: [6, 10, 13, 14, 17, 18, 19, 20],
+      large_vendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
       pair_status: '',
       vehicle_plate: '',
       pair_rider: '',
@@ -577,6 +622,9 @@ export default {
       searchOption: false,
       failure_text: '',
       test_specifications: '',
+      pass_msg: '',
+      load_weight: '',
+      loadWeightSet: false,
     };
   },
   computed: {
@@ -630,20 +678,23 @@ export default {
       return customVendorOptions.concat(this.baseTruckOptions);
     },
     largeOptions() {
-      const customVendorOptions = {};
-      if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'available_options')) {
-        if (this.activeVendorPriceData.available_options.refrigerated) {
-          customVendorOptions.value = '3';
-          customVendorOptions.label = 'Refrigerated';
+      if (this.activeVendorPriceData.vendor_id !== 25) {
+        const customVendorOptions = {};
+        if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'available_options')) {
+          if (this.activeVendorPriceData.available_options.refrigerated) {
+            customVendorOptions.value = '3';
+            customVendorOptions.label = 'Refrigerated';
+          }
+
+          if (this.activeVendorPriceData.available_options.flatbed) {
+            customVendorOptions.value = '4';
+            customVendorOptions.label = 'Flatbed';
+          }
         }
 
-        if (this.activeVendorPriceData.available_options.flatbed) {
-          customVendorOptions.value = '4';
-          customVendorOptions.label = 'Flatbed';
-        }
+        return this.baseTruckOptions.concat(customVendorOptions);
       }
-
-      return this.baseTruckOptions.concat(customVendorOptions);
+      return this.freightVendorOptions;
     },
 
     getVendorNameOnCarrierType() {
@@ -715,6 +766,8 @@ export default {
       setOuterActivePackageClass: '$_orders/setOuterActivePackageClass',
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
       setTestSpecs: '$_orders/$_home/setTestSpecs',
+      setLoadWeightStatus: '$_orders/$_home/setLoadWeightStatus',
+      setLoadWeightValue: '$_orders/$_home/setLoadWeightValue',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -766,24 +819,31 @@ export default {
     dispatchTestSpecs() {
       this.setTestSpecs(this.test_specifications);
     },
-
-    dispatchLoadWeight(val) {
-      val = Number(val);
-      let dispatchValue = val;
-      if (val > this.getMaxAllowedWeight) {
-        this.doNotification(
-          '2',
-          'The weight of the load exceeds the truck capacity',
-          `The weight of the load exceeds the capacity of the truck you selected, please select a truck that fits ${val} ${
-            this.getLoadUnits
-          }.`,
-        );
-        dispatchValue = this.getMaxAllowedWeight;
-        this.load_weight = dispatchValue;
+    dispatchLoadWeight() {
+      const val = this.load_weight;
+      this.setLoadWeightStatus(false);
+      if (val === '') {
+        this.pass_msg = 'Please enter the weight of your load';
+      } else if (val >= 18.0 && val <= 33.0) {
+        this.handleLoadweight(val);
+        this.setLoadWeightStatus(true);
+        this.pass_msg = '';
+      } else {
+        this.setLoadWeightStatus(false);
+        this.pass_msg = 'The input should be between 18.0 and 33.0 Tonnes';
       }
-      this.setLoadWeight(dispatchValue);
     },
-
+    handleLoadweight(val) {
+      this.setLoadWeightStatus(true);
+      const floatVal = parseFloat(val);
+      if (floatVal == Math.floor(floatVal)) {
+        const newValue = `${floatVal}.00`;
+        this.setLoadWeightValue(newValue);
+      } else {
+        const newValue = floatVal.toFixed(2);
+        this.setLoadWeightValue(newValue);
+      }
+    },
     dispatchLoadUnits(val) {
       this.setLoadUnits(val);
     },
@@ -938,7 +998,7 @@ export default {
     },
 
     isFixedCost(vendorObject) {
-      if (vendorObject.vendor_id === 20 && !this.getPriceRequestObject.fixed_cost) {
+      if (vendorObject.vendor_id === 25 && !this.getPriceRequestObject.fixed_cost) {
         return false;
       }
       return true;
@@ -1060,6 +1120,9 @@ export default {
       const standardOrders = [22, 24];
       if (standardOrders.includes(vendorObject.vendor_id)) {
         return 'In 2 to 4 hours';
+      }
+      if (vendorObject.vendor_id === 25) {
+        return 'From 18 Tonnes';
       }
       return vendorObject.vendor_description;
     },

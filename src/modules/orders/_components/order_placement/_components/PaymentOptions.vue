@@ -258,6 +258,8 @@ export default {
       getPairRiderPhone: '$_orders/$_home/getPairRiderPhone',
       getCountryCode: 'getCountryCode',
       getTestSpecs: '$_orders/$_home/getTestSpecs',
+      getLoadWeightStatus: '$_orders/$_home/getLoadWeightStatus',
+      getLoadWeightValue: '$_orders/$_home/getLoadWeightValue',
     }),
 
     active_price_tier_data() {
@@ -485,29 +487,33 @@ export default {
     },
 
     preCheckPaymentDetails() {
-      this.loading = true;
-      this.refreshRunningBalance().then(
-        (response) => {
-          this.loading = false;
-          if (this.checkIfTruckOrder()) {
-            if (this.isValidateCustomerMinAmount()) {
-              this.handlePostPaidPayments();
-              return true;
+      if (this.activeVendorPriceData.vendor_id === 25 && !this.getLoadWeightStatus) {
+        this.doNotification(2, 'Invalid Load Weight', 'Kindly provide a valid load weight');
+      } else {
+        this.loading = true;
+        this.refreshRunningBalance().then(
+          (response) => {
+            this.loading = false;
+            if (this.checkIfTruckOrder()) {
+              if (this.isValidateCustomerMinAmount()) {
+                this.handlePostPaidPayments();
+                return true;
+              }
+              return false;
             }
-            return false;
-          }
-          this.checkPaymentDetails();
-          return true;
-        },
-        (error) => {
-          this.doNotification(
-            '2',
-            'Running balance check',
-            'Running balance check has failed, please try again.',
-          );
-          this.loading = false;
-        },
-      );
+            this.checkPaymentDetails();
+            return true;
+          },
+          (error) => {
+            this.doNotification(
+              2,
+              'Running balance check',
+              'Running balance check has failed, please try again.',
+            );
+            this.loading = false;
+          },
+        );
+      }
     },
 
     checkPaymentDetails() {
@@ -679,7 +685,7 @@ export default {
         package_details: {
           max_temperature: Number(this.getMaxTemperature),
           delivery_item: this.getDeliveryItem,
-          load_weight: Number(this.getLoadWeight),
+          load_weight: this.getLoadWeightStatus ? this.getLoadWeightValue : 0,
           load_units: this.getLoadUnits,
           additional_loader: Boolean(this.getAdditionalLoaderStatus),
           no_of_loaders: Number(this.getNOOfLoaders),
