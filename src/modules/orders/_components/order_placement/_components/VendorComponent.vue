@@ -280,7 +280,7 @@
                   v-model.trim="load_weight"
                   class="input-control load-weight"
                   type="number"
-                  placeholder="From 18.0 to 33.0"
+                  placeholder="From 18.00 to 33.00"
                   autocomplete="on"
                   min="18"
                   max="33"
@@ -820,23 +820,29 @@ export default {
       this.setTestSpecs(this.test_specifications);
     },
     dispatchLoadWeight() {
-      const val = this.load_weight;
       this.setLoadWeightStatus(false);
+      const val = this.load_weight;
       if (val === '') {
         this.pass_msg = 'Please enter the weight of your load';
-      } else if (val >= 18.0 && val <= 33.0) {
-        this.handleLoadweight(val);
-        this.setLoadWeightStatus(true);
-        this.pass_msg = '';
       } else {
-        this.setLoadWeightStatus(false);
-        this.pass_msg = 'The input should be between 18.0 and 33.0 Tonnes';
+        const match = /(\d{0,2})[^.]*((?:\.\d{0,2})?)/g.exec(
+          this.load_weight.replace(/[^\d.]/g, ''),
+        );
+        this.load_weight = match[1] + match[2];
+        if (val >= 18.0 && val <= 33.0) {
+          this.handleLoadweight(val);
+          this.setLoadWeightStatus(true);
+          this.pass_msg = '';
+        } else {
+          this.setLoadWeightStatus(false);
+          this.pass_msg = 'The input should be between 18.00 and 33.00 Tonnes';
+        }
       }
     },
     handleLoadweight(val) {
       this.setLoadWeightStatus(true);
       const floatVal = parseFloat(val);
-      if (floatVal == Math.floor(floatVal)) {
+      if (floatVal === Math.floor(floatVal)) {
         const newValue = `${floatVal}.00`;
         this.setLoadWeightValue(newValue);
       } else {
