@@ -499,7 +499,7 @@
                 <div v-if="getStatus === 'Pending'" class="">
                   <div
                     v-if="
-                      [20].includes(tracking_data.rider.vendor_id) &&
+                      [20, 25].includes(tracking_data.rider.vendor_id) &&
                         'customer_min_amount' in tracking_data.package_details &&
                         !tracking_data.fixed_cost
                     "
@@ -711,7 +711,7 @@ export default {
       setDelivered: false,
       setPayed: false,
       vendorName: '',
-      truck_orders: [20],
+      truck_orders: [20, 25],
       user_state: false,
       isSaved: false,
       shareOption: false,
