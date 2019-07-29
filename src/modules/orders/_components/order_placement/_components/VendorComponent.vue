@@ -278,8 +278,9 @@
               <div>
                 <input
                   v-model.trim="load_weight"
+                  v-mask="loadWeightMask"
                   class="input-control load-weight"
-                  type="number"
+                  type="text"
                   placeholder="From 18.00 to 33.00"
                   autocomplete="on"
                   min="18"
@@ -625,6 +626,7 @@ export default {
       pass_msg: '',
       load_weight: '',
       loadWeightSet: false,
+      loadWeightMask: '##.##',
     };
   },
   computed: {
@@ -824,19 +826,13 @@ export default {
       const val = this.load_weight;
       if (val === '') {
         this.pass_msg = 'Please enter the weight of your load';
+      } else if (val >= 18.0 && val <= 33.0) {
+        this.handleLoadweight(val);
+        this.setLoadWeightStatus(true);
+        this.pass_msg = '';
       } else {
-        const match = /(\d{0,2})[^.]*((?:\.\d{0,2})?)/g.exec(
-          this.load_weight.replace(/[^\d.]/g, ''),
-        );
-        this.load_weight = match[1] + match[2];
-        if (val >= 18.0 && val <= 33.0) {
-          this.handleLoadweight(val);
-          this.setLoadWeightStatus(true);
-          this.pass_msg = '';
-        } else {
-          this.setLoadWeightStatus(false);
-          this.pass_msg = 'The input should be between 18.00 and 33.00 Tonnes';
-        }
+        this.setLoadWeightStatus(false);
+        this.pass_msg = 'The input should be between 18.00 and 33.00 Tonnes';
       }
     },
     handleLoadweight(val) {
