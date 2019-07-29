@@ -60,7 +60,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import SessionMxn from '../../../mixins/session_mixin.js';
+import SessionMxn from '../../../mixins/session_mixin';
 
 const currencyConversion = require('country-tz-currency');
 
@@ -100,30 +100,29 @@ export default {
       values.platform = 'web';
       values.country_code = this.getUserCountryCode();
       values.default_currency = this.currency;
-      const full_payload = {
+      const fullPayload = {
         values,
-        vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'sign_up_submit',
       };
-
-      const that = this;
-      this.requestSignUpSegmentation(full_payload).then(
+      this.requestSignUpSegmentation(fullPayload).then(
         (response) => {
           if (response.length > 0) {
             response = response[0];
           }
 
           if (response.status) {
-            const session_data = response.data;
-            const json_session = JSON.stringify(session_data);
-            this.setSession(json_session);
-            let analytics_env = '';
+            const sessionData = response.data;
+            const jsonSession = JSON.stringify(sessionData);
+            this.setSession(jsonSession);
+            let analyticsEnv = '';
             try {
-              analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-            } catch (er) {}
-            if ('default' in session_data && analytics_env === 'production') {
-              const acc = session_data[session_data.default];
+              analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+            } catch (er) {
+              // ...
+            }
+            if ('default' in sessionData && analyticsEnv === 'production') {
+              const acc = sessionData[sessionData.default];
 
               mixpanel.alias(acc.user_email);
 
@@ -175,30 +174,28 @@ export default {
         values.type = 'biz';
         values.country_code = this.getUserCountryCode();
         values.default_currency = this.currency;
-        const full_payload = {
+        const fullPayload = {
           values,
-          vm: this,
           app: 'NODE_PRIVATE_API',
           endpoint: 'sign_up_submit',
         };
-
-        const that = this;
-
-        this.requestSignUpSegmentation(full_payload).then(
+        this.requestSignUpSegmentation(fullPayload).then(
           (response) => {
             if (response.length > 0) {
               response = response[0];
             }
             if (response.status) {
-              const session_data = response.data;
-              const json_session = JSON.stringify(session_data);
-              this.setSession(json_session);
-              let analytics_env = '';
+              const sessionData = response.data;
+              const jsonSession = JSON.stringify(sessionData);
+              this.setSession(jsonSession);
+              let analyticsEnv = '';
               try {
-                analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-              } catch (er) {}
-              if ('default' in session_data && analytics_env === 'production') {
-                const acc = session_data[session_data.default];
+                analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+              } catch (er) {
+                // ...
+              }
+              if ('default' in sessionData && analyticsEnv === 'production') {
+                const acc = sessionData[sessionData.default];
 
                 mixpanel.alias(acc.user_email);
 
@@ -242,8 +239,8 @@ export default {
       }
     },
     checkUserLocation() {
-      const country_code_data = currencyConversion.getCountryByCode(this.getUserCountryCode());
-      this.currency = country_code_data.currencyCode;
+      const countryCodeData = currencyConversion.getCountryByCode(this.getUserCountryCode());
+      this.currency = countryCodeData.currencyCode;
     },
     directSignInViaAuth() {
       this.deleteSession();
@@ -251,14 +248,14 @@ export default {
         email: this.Email(),
         password: this.Password(),
       };
-      const full_payload = {
+      const fullPayload = {
         values: params,
         app: 'NODE_PRIVATE_API',
         endpoint: 'sign_in',
       };
-      this.authSignIn(full_payload).then(
+      this.authSignIn(fullPayload).then(
         (response) => {
-          if (response.hasOwnProperty('status')) {
+          if (Object.prototype.hasOwnProperty.call(response, 'status')) {
             const errorResponse = response.data;
             if (errorResponse.code === 1) {
               this.login_text = 'Login';
@@ -281,16 +278,18 @@ export default {
             const data = atob(middleString);
             const { payload } = JSON.parse(data);
             if (response) {
-              const session_data = payload;
-              const json_session = JSON.stringify(session_data);
-              this.setSession(json_session);
-              this.$store.commit('setSession', session_data);
-              let analytics_env = '';
+              const sessionData = payload;
+              const jsonSession = JSON.stringify(sessionData);
+              this.setSession(jsonSession);
+              this.$store.commit('setSession', sessionData);
+              let analyticsEnv = '';
               try {
-                analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-              } catch (er) {}
-              if ('default' in session_data && analytics_env === 'production') {
-                const acc = session_data[session_data.default];
+                analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+              } catch (er) {
+                // ...
+              }
+              if ('default' in sessionData && analyticsEnv === 'production') {
+                const acc = sessionData[sessionData.default];
 
                 // track login
                 mixpanel.track('User Login', {
@@ -370,12 +369,6 @@ export default {
 }
 
 .btn-sign-up-check {
-  /* bottom: 5px;
-  position:absolute;
-  left: 2px;
-  width: 50px;
-  font-size: 13px !important;
-  border: #fff; */
   width: 28%;
   border-width: 0px !important;
 }

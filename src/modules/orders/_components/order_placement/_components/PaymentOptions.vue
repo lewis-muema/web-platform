@@ -1,5 +1,8 @@
 <template lang="html">
-  <div class="" style="width:150% ">
+  <div
+    class=""
+    style="width:150% "
+  >
     <div class="">
       <div class="home-view-vendor-classes--label">
         <div
@@ -13,20 +16,30 @@
             <span class="home-view-actions--items__span">
               {{ pay_order_text }}
             </span>
-            <font-awesome-icon icon="chevron-down" :class="revertIcon" width="15px" />
+            <font-awesome-icon
+              icon="chevron-down"
+              :class="revertIcon"
+              width="15px"
+            />
           </a>
         </div>
       </div>
     </div>
 
-    <div v-if="get_active_order_option === 'payment'" class="home-view-actions--note">
+    <div
+      v-if="get_active_order_option === 'payment'"
+      class="home-view-actions--note"
+    >
       <div class="" />
       <div class="home-view-notes-wrapper">
         <div
           v-show="show_payment"
           class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
         >
-          <div v-show="show_payment_label" class="home-view-payments-wrapper">
+          <div
+            v-show="show_payment_label"
+            class="home-view-payments-wrapper"
+          >
             <div class="home-view-payments-wrapper--left">
               <div class="home-view-payments-wrapper--left__amount-label">
                 Total Payment
@@ -51,12 +64,15 @@
         <span v-else-if="getPriceRequestObject.payment_option !== 2">
           <div v-if="mpesa_valid && default_currency === 'KES'">
             <div
-              class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
               v-if="mpesa_valid"
+              class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
             >
               <div class="home-view-notes-wrapper--item__option">
                 <div class="home-view-notes-wrapper--item__option-div">
-                  <el-radio v-model="payment_method" label="1">
+                  <el-radio
+                    v-model="payment_method"
+                    label="1"
+                  >
                     M-Pesa
                   </el-radio>
                 </div>
@@ -67,7 +83,10 @@
               <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
                 <div class="home-view-notes-wrapper--item__option">
                   <div class="home-view-notes-wrapper--item__option-div">
-                    <el-radio v-model="payment_method" label="3">
+                    <el-radio
+                      v-model="payment_method"
+                      label="3"
+                    >
                       Cash on delivery
                     </el-radio>
                   </div>
@@ -76,16 +95,25 @@
               </div>
             </span>
           </div>
-          <div v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0" class="">
+          <div
+            v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0"
+            class=""
+          >
             <div
               v-for="card in get_saved_cards"
               class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
             >
               <div class="home-view-notes-wrapper--item__option">
                 <div class="home-view-notes-wrapper--item__option-div">
-                  <el-radio v-model="payment_method" :label="getCardValue(card.last4)">
+                  <el-radio
+                    v-model="payment_method"
+                    :label="getCardValue(card.last4)"
+                  >
                     **** **** **** {{ card.last4 }}
-                    <font-awesome-icon :icon="getCardIcon(card)" class="payments-orange" />
+                    <font-awesome-icon
+                      :icon="getCardIcon(card)"
+                      class="payments-orange"
+                    />
                   </el-radio>
                 </div>
               </div>
@@ -95,7 +123,10 @@
           <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
             <div class="home-view-notes-wrapper--item__option">
               <div class="home-view-notes-wrapper--item__option-div">
-                <div class="home-view-notes-wrapper--item__link" @click="takeMeToAddNewCard()">
+                <div
+                  class="home-view-notes-wrapper--item__link"
+                  @click="takeMeToAddNewCard()"
+                >
                   + &nbsp;&nbsp; Visa/Mastercard
                 </div>
               </div>
@@ -128,7 +159,10 @@
           {{ place_order_text }}
         </button>
       </div>
-      <div v-if="loading && payment_state === 1" class="home-view-place-order--mpesa-cancel">
+      <div
+        v-if="loading && payment_state === 1"
+        class="home-view-place-order--mpesa-cancel"
+      >
         <button
           type="button"
           class="button-primary home-view--place-order"
@@ -146,13 +180,11 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import NoSSR from 'vue-no-ssr';
 import numeral from 'numeral';
-import payment_store from '../../../../payment/_store';
-import order_store from '../../../_store';
-import home_store from '../_store';
-import Mcrypt from '../../../../../mixins/mcrypt_mixin.js';
-import PaymentMxn from '../../../../../mixins/payment_mixin.js';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import Mcrypt from '../../../../../mixins/mcrypt_mixin';
+import PaymentMxn from '../../../../../mixins/payment_mixin';
+
 library.add(faChevronDown);
 
 // const TRUCK_VENDORS = [6,10,13,14,17,18,19,20];
@@ -225,17 +257,20 @@ export default {
       getPairSerialNumber: '$_orders/$_home/getPairSerialNumber',
       getPairRiderPhone: '$_orders/$_home/getPairRiderPhone',
       getCountryCode: 'getCountryCode',
+      getTestSpecs: '$_orders/$_home/getTestSpecs',
+      getLoadWeightStatus: '$_orders/$_home/getLoadWeightStatus',
+      getLoadWeightValue: '$_orders/$_home/getLoadWeightValue',
     }),
 
     active_price_tier_data() {
       if (this.get_active_package_class != '') {
         return this.getPriceRequestObject.economy_price_tiers.find(
-          pack => pack.tier_group === this.get_active_package_class
+          pack => pack.tier_group === this.get_active_package_class,
         );
       }
       return '';
     },
-    revertIcon: function() {
+    revertIcon() {
       return {
         'sendy-blue': true,
         'rotate-transform': true,
@@ -249,8 +284,8 @@ export default {
       if (typeof this.activeVendorPriceData !== 'undefined') {
         if ('cost' in this.activeVendorPriceData) {
           if (
-            !this.getIsReturn ||
-            this.vendors_without_return.includes(this.get_active_vendor_name)
+            !this.getIsReturn
+            || this.vendors_without_return.includes(this.get_active_vendor_name)
           ) {
             cost = this.activeVendorPriceData.cost - this.activeVendorPriceData.discountAmount;
             return cost;
@@ -274,8 +309,8 @@ export default {
 
     hide_payment() {
       return (
-        this.getPriceRequestObject.payment_option === 2 ||
-        this.getRunningBalance - this.order_cost >= 0
+        this.getPriceRequestObject.payment_option === 2
+        || this.getRunningBalance - this.order_cost >= 0
       );
     },
 
@@ -298,16 +333,12 @@ export default {
       let text = 'Payment Options';
       if (this.getPriceRequestObject.payment_option === 2) {
         text = 'Post Pay';
+      } else if (this.getRunningBalance < 0) {
+        text = 'Payment Options';
+      } else if (this.default_currency === 'KES' && this.mpesa_valid) {
+        text = 'Cash on delivery';
       } else {
-        if (this.getRunningBalance < 0) {
-          text = 'Payment Options';
-        } else {
-          if (this.default_currency === 'KES' && this.mpesa_valid) {
-            text = 'Cash on delivery';
-          } else {
-            text = 'Card Payment';
-          }
-        }
+        text = 'Card Payment';
       }
 
       return text;
@@ -325,7 +356,7 @@ export default {
 
     scheduled_time() {
       return this.moment(this.get_schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format(
-        'YYYY-MM-DD HH:mm:ss'
+        'YYYY-MM-DD HH:mm:ss',
       );
     },
 
@@ -415,9 +446,9 @@ export default {
 
     checkAccountPaymentOption() {
       if (
-        (this.getPriceRequestObject.payment_option === 1 &&
-          this.getRunningBalance - this.order_cost >= 0) ||
-        this.getPriceRequestObject.payment_option === 2
+        (this.getPriceRequestObject.payment_option === 1
+          && this.getRunningBalance - this.order_cost >= 0)
+        || this.getPriceRequestObject.payment_option === 2
       ) {
         return true;
       }
@@ -425,30 +456,29 @@ export default {
     },
 
     checkIfTruckOrder() {
-      let is_truck = false;
+      let isTruck = false;
       if (
-        TRUCK_VENDORS.includes(this.activeVendorPriceData.vendor_id) &&
-        !this.getPriceRequestObject.fixed_cost
+        TRUCK_VENDORS.includes(this.activeVendorPriceData.vendor_id)
+        && !this.getPriceRequestObject.fixed_cost
       ) {
-        is_truck = true;
+        isTruck = true;
       }
 
-      return is_truck;
+      return isTruck;
     },
 
     isValidateCustomerMinAmount() {
-      const customer_min_amount_is_filled = false;
-      let min_amount = 0;
+      let minAmount = 0;
       try {
-        min_amount = Number(this.getCustomerMinAmount);
+        minAmount = Number(this.getCustomerMinAmount);
       } catch (er) {
         //
       }
-      if (min_amount <= 0) {
+      if (minAmount <= 0) {
         this.doNotification(
           '2',
           'Missing Minimum Order Amount',
-          'The minimum order amount is missing, please fill it to enable the drivers bid effectively.'
+          'The minimum order amount is missing, please fill it to enable the drivers bid effectively.',
         );
         return false;
       }
@@ -457,29 +487,33 @@ export default {
     },
 
     preCheckPaymentDetails() {
-      this.loading = true;
-      this.refreshRunningBalance().then(
-        response => {
-          this.loading = false;
-          if (this.checkIfTruckOrder()) {
-            if (this.isValidateCustomerMinAmount()) {
-              this.handlePostPaidPayments();
-              return true;
+      if (this.activeVendorPriceData.vendor_id === 25 && !this.getLoadWeightStatus) {
+        this.doNotification(2, 'Invalid Load Weight', 'Kindly provide a valid load weight');
+      } else {
+        this.loading = true;
+        this.refreshRunningBalance().then(
+          (response) => {
+            this.loading = false;
+            if (this.checkIfTruckOrder()) {
+              if (this.isValidateCustomerMinAmount()) {
+                this.handlePostPaidPayments();
+                return true;
+              }
+              return false;
             }
-            return false;
-          }
-          this.checkPaymentDetails();
-          return true;
-        },
-        error => {
-          this.doNotification(
-            '2',
-            'Running balance check',
-            'Running balance check has failed, please try again.'
-          );
-          this.loading = false;
-        }
-      );
+            this.checkPaymentDetails();
+            return true;
+          },
+          (error) => {
+            this.doNotification(
+              2,
+              'Running balance check',
+              'Running balance check has failed, please try again.',
+            );
+            this.loading = false;
+          },
+        );
+      }
     },
 
     checkPaymentDetails() {
@@ -487,7 +521,7 @@ export default {
         this.doNotification(
           '2',
           'Select a vehicle type',
-          'The vehicle type not been set, please set and try again.'
+          'The vehicle type not been set, please set and try again.',
         );
         return false;
       }
@@ -499,7 +533,7 @@ export default {
           this.doNotification(
             '2',
             'Choose a payment method',
-            'Please select a payment method and try again.'
+            'Please select a payment method and try again.',
           );
           return false;
         }
@@ -513,7 +547,7 @@ export default {
           this.handlePromoCodePayments();
         } else if (this.payment_method.startsWith('2_')) {
           const card = this.get_saved_cards.find(
-            card_details => card_details.last4 === this.payment_method.slice(2)
+            card_details => card_details.last4 === this.payment_method.slice(2),
           );
           const setCurrency = this.activeVendorPriceData.currency;
           this.handleSavedCard(setCurrency, card, true);
@@ -568,7 +602,7 @@ export default {
       };
       this.loading = true;
       this.requestOrderCompletion(payload).then(
-        response => {
+        (response) => {
           this.loading = false;
           if (response.length > 0) {
             response = response[0];
@@ -590,18 +624,18 @@ export default {
             this.doNotification(
               2,
               'Order completion failed',
-              'Price request failed. Please try again'
+              'Price request failed. Please try again',
             );
           }
         },
-        error => {
+        (error) => {
           this.doNotification(
             3,
             'Order completion failed',
-            'Order completion failed. Please check your internet connection and try again.'
+            'Order completion failed. Please check your internet connection and try again.',
           );
           this.loading = false;
-        }
+        },
       );
     },
 
@@ -636,8 +670,8 @@ export default {
         payment_mode: this.payment_method.startsWith('2')
           ? 2
           : this.payment_method === ''
-          ? 0
-          : Number(this.payment_method),
+            ? 0
+            : Number(this.payment_method),
         schedule_time: this.order_is_scheduled ? this.scheduled_time : this.eta_time,
         tier_tag: this.activeVendorPriceData.tier_tag,
         tier_name: this.activeVendorPriceData.tier_name,
@@ -651,12 +685,13 @@ export default {
         package_details: {
           max_temperature: Number(this.getMaxTemperature),
           delivery_item: this.getDeliveryItem,
-          load_weight: Number(this.getLoadWeight),
+          load_weight: this.getLoadWeightStatus ? this.getLoadWeightValue : 0,
           load_units: this.getLoadUnits,
           additional_loader: Boolean(this.getAdditionalLoaderStatus),
           no_of_loaders: Number(this.getNOOfLoaders),
           customer_min_amount: Number(this.getCustomerMinAmount),
         },
+        test_specs: this.getTestSpecs,
       };
       if (this.getPairWithRiderStatus) {
         payload.rider_details = {
@@ -697,7 +732,7 @@ export default {
       return new Promise((resolve, reject) => {
         const session = this.$store.getters.getSession;
 
-        const running_balance_payload = {
+        const runningBalancePayload = {
           cop_id: 'cop_id' in session[session.default] ? session[session.default].cop_id : 0,
           phone: session[session.default].user_phone,
           default_currency: this.default_currency,
@@ -705,12 +740,12 @@ export default {
         };
 
         const payload = {
-          values: running_balance_payload,
+          values: runningBalancePayload,
           app: 'NODE_PRIVATE_API',
           endpoint: 'running_balance',
         };
         this.requestRunningBalanceFromAPI(payload).then(
-          response => {
+          (response) => {
             if (response.length > 0) {
               response = response[0];
             }
@@ -723,9 +758,9 @@ export default {
               reject(response.data);
             }
           },
-          error => {
+          (error) => {
             reject(response.data);
-          }
+          },
         );
       });
     },
@@ -756,25 +791,31 @@ export default {
     },
 
     identifyMixpanelUser(email) {
-      let analytics_env = '';
+      let analyticsEnv = '';
       try {
-        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {}
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
       try {
-        if (analytics_env === 'production') {
+        if (analyticsEnv === 'production') {
           mixpanel.identify(email);
         }
-      } catch (er) {}
+      } catch (er) {
+        // ...
+      }
     },
 
     trackMixpanelEvent(name) {
-      let analytics_env = '';
+      let analyticsEnv = '';
       try {
-        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {}
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
 
       try {
-        if (analytics_env === 'production') {
+        if (analyticsEnv === 'production') {
           mixpanel.track(name);
           // this.$ga.event({
           //   eventCategory: 'Orders',
@@ -783,7 +824,9 @@ export default {
           //   eventValue: 15,
           // });
         }
-      } catch (er) {}
+      } catch (er) {
+        // ...
+      }
     },
 
     /* start mpesa */
@@ -807,8 +850,8 @@ export default {
         user_phone = session.peer.user_phone;
       }
 
-      const mpesa_payload = {
-        amount: this.raw_pending_amount,
+      const mpesaPayload = {
+        amount: this.raw_pending_amount.replace(',', ''),
         sourceMobile: user_phone,
         referenceNumber,
         user_id,
@@ -817,16 +860,16 @@ export default {
         email: user_email,
         currency: this.activeVendorPriceData.currency,
       };
-      const full_payload = {
-        values: mpesa_payload,
+      const fullPayload = {
+        values: mpesaPayload,
         app: 'NODE_PRIVATE_API',
         endpoint: 'initiate_mpesa',
       };
       this.payment_state = 1;
       this.loading = true;
 
-      this.requestMpesaPaymentAction(full_payload).then(
-        response => {
+      this.requestMpesaPaymentAction(fullPayload).then(
+        (response) => {
           if (response.length > 0) {
             response = response[0];
           }
@@ -835,7 +878,7 @@ export default {
             this.doNotification(
               '0',
               'M-Pesa Payment',
-              `Request for payment sent to ${user_phone}.`
+              `Request for payment sent to ${user_phone}.`,
             );
             this.requestMpesaPaymentPoll();
           } else {
@@ -845,24 +888,24 @@ export default {
               'M-Pesa Payment',
               `M-Pesa request to ${user_phone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
                 this.pending_amount
-              }.`
+              }.`,
             );
             this.payment_state = 0;
             this.loading = false;
           }
         },
-        error => {
+        (error) => {
           this.refreshRunningBalance();
           this.doNotification(
             '0',
             'M-Pesa Payment',
             `M-Pesa request to ${user_phone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
               this.pending_amount
-            }.`
+            }.`,
           );
           this.payment_state = 0;
           this.loading = false;
-        }
+        },
       );
     },
 
@@ -871,7 +914,7 @@ export default {
       window.clearTimeout(this.mpesa_poll_timer_id);
     },
 
-    requestMpesaPaymentPoll(poll_limit_value = 6) {
+    requestMpesaPaymentPoll(pollLimitValue = 6) {
       this.clearMpesaPollCounter();
       const session = this.$store.getters.getSession;
       let cop_id = 0;
@@ -879,10 +922,9 @@ export default {
         cop_id = session.biz.cop_id;
       }
 
-      const old_rb = this.$store.getters.getRunningBalance;
-      const requested_amount = this.raw_pending_amount;
+      const oldRb = this.$store.getters.getRunningBalance;
 
-      const running_balance_payload = {
+      const runningBalancePayload = {
         values: {
           cop_id,
           user_phone: session[session.default].user_phone,
@@ -890,21 +932,21 @@ export default {
       };
 
       const payload = {
-        params: running_balance_payload,
+        params: runningBalancePayload,
         app: 'PRIVATE_API',
         endpoint: 'running_balance',
       };
 
-      const poll_limit = poll_limit_value; // 10secs * 6  = 60sec = 1min
+      const pollLimit = pollLimitValue; // 10secs * 6  = 60sec = 1min
       // poll the dispatch
-      for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
+      for (let pollCount = 0; pollCount < pollLimit; pollCount++) {
         // wait 10 seconds
         const that = this;
-        (function(poll_count) {
+        (function (pollCount) {
           that.mpesa_poll_timer_id = window.setTimeout(() => {
-            const res = that.checkRunningBalance(old_rb, payload);
+            const res = that.checkRunningBalance(oldRb, payload);
             if (res) {
-              poll_count = poll_limit;
+              pollCount = pollLimit;
               that.payment_state = 0;
               that.loading = false;
               that.doNotification('1', 'Payment successful', 'Completing your order...');
@@ -912,34 +954,34 @@ export default {
               return true;
             }
 
-            if (poll_limit_value === 6) {
-              if (poll_count === 5) {
+            if (pollLimitValue === 6) {
+              if (pollCount === 5) {
                 that.doNotification(
                   '0',
                   'Payment not received',
-                  "We'll keep retrying to check your payment status and complete your order once the payment is received."
+                  "We'll keep retrying to check your payment status and complete your order once the payment is received.",
                 );
                 that.payment_state = 0;
                 that.loading = false;
                 that.requestMpesaPaymentPoll(60);
               }
             }
-          }, 10000 * poll_count);
-        })(poll_count);
+          }, 10000 * pollCount);
+        }(pollCount));
       }
     },
 
-    checkRunningBalance(old_rb, payload) {
+    checkRunningBalance(oldRb, payload) {
       this.requestRunningBalanceFromAPI(payload).then(
-        response => {
+        (response) => {
           if (response.length > 0) {
             response = response[0];
           }
 
           if (response.status === 200) {
-            const new_rb = response.data.running_balance;
+            const newRb = response.data.running_balance;
 
-            if (new_rb < old_rb) {
+            if (newRb < oldRb) {
               this.completeMpesaPaymentRequest({});
               return true;
             }
@@ -947,7 +989,7 @@ export default {
 
           return false;
         },
-        error => false
+        error => false,
       );
     },
 
@@ -957,7 +999,7 @@ export default {
       this.doNotification(
         '2',
         'M-Pesa Payment cancelled',
-        'M-Pesa payment has been cancelled, please try again.'
+        'M-Pesa payment has been cancelled, please try again.',
       );
       this.requestMpesaPaymentPoll(60);
     },
@@ -986,22 +1028,22 @@ export default {
         user_id = session.peer.user_id;
       }
 
-      let card_payload = {
+      let cardPayload = {
         user_id,
         cop_id,
       };
 
       // encrypt card payload here
-      card_payload = Mcrypt.encrypt(card_payload);
+      cardPayload = Mcrypt.encrypt(cardPayload);
 
-      const full_payload = {
-        values: card_payload,
+      const fullPayload = {
+        values: cardPayload,
         app: 'PRIVATE_API',
         endpoint: 'get_card',
       };
 
-      this.requestSavedCards(full_payload).then(
-        response => {
+      this.requestSavedCards(fullPayload).then(
+        (response) => {
           // decrypt response here
           response = JSON.parse(Mcrypt.decrypt(response));
           if (response.status) {
@@ -1011,12 +1053,12 @@ export default {
             // console.log('failed to get saved cards');
           }
         },
-        error => false
+        error => false,
       );
     },
     setDefaultPaymentOptions() {
       this.refreshRunningBalance().then(
-        response => {
+        (response) => {
           if (this.default_currency === 'KES' && this.mpesa_valid) {
             if (this.allowCash) {
               if (this.checkAccountPaymentOption()) {
@@ -1031,14 +1073,14 @@ export default {
             this.payment_method = '';
           }
         },
-        error => {
+        (error) => {
           this.doNotification(
             '2',
             'Running balance check',
-            'Running balance check has failed, please try again.'
+            'Running balance check has failed, please try again.',
           );
           this.loading = false;
-        }
+        },
       );
     },
 
@@ -1051,14 +1093,14 @@ export default {
     },
     getUserDefaultCurrency() {
       const session = this.$store.getters.getSession;
-      const default_user_currency = session[session.default].default_currency;
-      this.default_currency = default_user_currency;
+      const defaultUserCurrency = session[session.default].default_currency;
+      this.default_currency = defaultUserCurrency;
     },
     checkUserPhone() {
-      let session = this.$store.getters.getSession;
-      let phone = session[session.default]['user_phone'];
-      let int_value = phone.substring(0, 4);
-      if (int_value === '+256') {
+      const session = this.$store.getters.getSession;
+      const phone = session[session.default].user_phone;
+      const intValue = phone.substring(0, 4);
+      if (intValue === '+256') {
         this.mpesa_valid = false;
       } else {
         this.mpesa_valid = true;

@@ -24,8 +24,6 @@ export default {
     });
   },
   requestOnboardingPhoneVerification({ dispatch }, payload) {
-    // console.log("payload", payload);
-
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
@@ -38,8 +36,6 @@ export default {
     });
   },
   requestOnboardingVerificationVerify({ dispatch }, payload) {
-    // console.log("payload", payload);
-
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {

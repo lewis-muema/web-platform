@@ -1,6 +1,6 @@
 <template lang="html">
   <payment_loading v-if="card_loading_status" pay_method="card" />
-  <add_card v-else-if="card_add_status" />
+  <addCard v-else-if="card_add_status" />
   <div v-else class="paymentbody--form">
     <div v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0" class="">
       <div class="paymentbody--input-wrap">
@@ -17,7 +17,6 @@
             <div class="card--delete" @click="deleteSavedCard(card)">
               <font-awesome-icon icon="trash" /> Remove
             </div>
-            <!--<div class="card&#45;&#45;saved-expiry">Exp: {{ card.exp_month }}/{{ card.exp_year }}</div>-->
           </el-radio>
         </div>
       </div>
@@ -137,9 +136,9 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import payment_loading from './LoadingComponent.vue';
 import payment_success from './SuccessComponent.vue';
 import payment_fail from './FailComponent.vue';
-import add_card from './AddCard.vue';
-import Mcrypt from '../../../mixins/mcrypt_mixin.js';
-import PaymentMxn from '../../../mixins/payment_mixin.js';
+import addCard from './AddCard.vue';
+import Mcrypt from '../../../mixins/mcrypt_mixin';
+import PaymentMxn from '../../../mixins/payment_mixin';
 
 export default {
   name: 'CardComponent',
@@ -147,7 +146,7 @@ export default {
     payment_loading,
     payment_success,
     payment_fail,
-    add_card,
+    addCard,
   },
   mixins: [Mcrypt, PaymentMxn],
   data() {
@@ -212,7 +211,7 @@ export default {
     },
     card_add_status() {
       if (typeof this.$route.query.action !== 'undefined') {
-        const action = this.$route.query.action;
+        const { action } = this.$route.query;
         if (action === 'add') {
           return true;
         }
@@ -248,7 +247,7 @@ export default {
     }),
     getPaymentCard() {
       const session = this.$store.getters.getSession;
-      const setCurrency = session[session.default]['default_currency'];
+      const setCurrency = session[session.default].default_currency;
       if (this.payment_card.startsWith('2_')) {
         const card = this.get_saved_cards.find(
           card_details => card_details.last4 === this.payment_card.slice(2)
@@ -260,20 +259,20 @@ export default {
     },
 
     creditCardMask() {
-      const current_val = this.card_payment_data.card_no;
-      const new_cur = current_val.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
-      this.card_payment_data.card_no = new_cur.trim();
+      const currentVal = this.card_payment_data.card_no;
+      const newCur = currentVal.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
+      this.card_payment_data.card_no = newCur.trim();
     },
     creditCExpiryMask($event) {
-      const current_val = this.card_payment_data.card_expiry;
-      let new_cur = current_val;
+      const currentVal = this.card_payment_data.card_expiry;
+      let newCur = currentVal;
       if ($event.code !== 'Backspace') {
-        new_cur = current_val.replace(/\W/gi, '').replace(/(.{2})/g, '$1/');
-        if (new_cur.length > 5) {
-          new_cur = new_cur.slice(0, 5);
+        newCur = currentVal.replace(/\W/gi, '').replace(/(.{2})/g, '$1/');
+        if (newCur.length > 5) {
+          newCur = newCur.slice(0, 5);
         }
       }
-      this.card_payment_data.card_expiry = new_cur.trim();
+      this.card_payment_data.card_expiry = newCur.trim();
     },
     getUserCards() {
       const session = this.$store.getters.getSession;
@@ -287,21 +286,21 @@ export default {
         user_id = session.peer.user_id;
       }
 
-      let card_payload = {
+      let cardPayload = {
         user_id,
         cop_id,
       };
 
       // encrypt card payload here
-      card_payload = Mcrypt.encrypt(card_payload);
+      cardPayload = Mcrypt.encrypt(cardPayload);
 
-      const full_payload = {
-        values: card_payload,
+      const fullPayload = {
+        values: cardPayload,
         app: 'PRIVATE_API',
         endpoint: 'get_card',
       };
 
-      this.requestSavedCards(full_payload).then(
+      this.requestSavedCards(fullPayload).then(
         response => {
           // decrypt response here
           response = JSON.parse(Mcrypt.decrypt(response));
@@ -325,18 +324,18 @@ export default {
       return year.slice(-2);
     },
     deleteSavedCard(card) {
-      let card_payload = {
+      let cardPayload = {
         card_id: card.card_id,
         stripe_user_id: this.get_stripe_user_id,
       };
-      card_payload = Mcrypt.encrypt(card_payload);
+      cardPayload = Mcrypt.encrypt(cardPayload);
 
-      const full_payload = {
-        values: card_payload,
+      const fullPayload = {
+        values: cardPayload,
         app: 'PRIVATE_API',
         endpoint: 'remove_card',
       };
-      this.removeSavedCard(full_payload).then(
+      this.removeSavedCard(fullPayload).then(
         response => {
           if (response.length > 0) {
             this.isHidden = false;

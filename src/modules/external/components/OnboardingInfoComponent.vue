@@ -1,8 +1,6 @@
 <template lang="html">
   <div class="screen-one">
-    <div class="onboarding-user-header">
-      Join the {{ getBizName }} business account on Sendy
-    </div>
+    <div class="onboarding-user-header">Join the {{ getBizName }} business account on Sendy</div>
 
     <p class="onboard-error">
       {{ message }}
@@ -21,7 +19,7 @@
             type="text"
             name="name"
             @focus="setCurrentStep(1)"
-          >
+          />
         </div>
       </div>
       <div class="row">
@@ -38,8 +36,8 @@
             name="email"
             type="email"
             @focus="setCurrentStep(2)"
-          >
-          <br>
+          />
+          <br />
           <span class="onboarding-email-error">
             {{ errors.first('email') }}
           </span>
@@ -50,8 +48,6 @@
           <label class="input-descript">
             <span>Phone Number</span>
           </label>
-          <!-- <input class="form-control" v-validate="'required|check_phone'" data-vv-validate-on="blur" placeholder="07XXXXXXX" name="phone" value="" type="text" v-model="phone" @focus="setCurrentStep(3)">
-          <span v-show="errors.has('phone')">{{ errors.first('phone') }}</span> -->
           <vue-tel-input
             v-model="phone"
             v-validate="'required|check_phone'"
@@ -63,10 +59,7 @@
             @onBlur="validate_phone"
             @focus="setCurrentStep(3)"
           />
-          <span
-            v-show="errors.has('phone')"
-            class="sign-up-phone-error"
-          >
+          <span v-show="errors.has('phone')" class="sign-up-phone-error">
             {{ errors.first('phone') }}
           </span>
         </div>
@@ -82,22 +75,19 @@
         class="btn-submit"
         style="width:30% !important;"
         name="next"
-        :disabled="!this.is_valid"
+        :disabled="!is_valid"
         @click="next_view"
       >
         Next
       </button>
     </div>
 
-    <el-dialog
-      :visible.sync="phoneVerification"
-      class="onboarding-phone-validation"
-    >
+    <el-dialog :visible.sync="phoneVerification" class="onboarding-phone-validation">
       <span slot="title">
         <img
           src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
           style="width:85px;"
-        >
+        />
       </span>
       <div>
         <div class="onboarding-validation-description">
@@ -111,22 +101,14 @@
             v-model="code"
             type="text"
             placeholder="Enter Verification Code"
-          >
+          />
         </div>
       </div>
       <div class="onboarding-verif-button">
-        <button
-          type="button"
-          class="onboarding-cancel "
-          @click="onboardingVerificationCancel"
-        >
+        <button type="button" class="onboarding-cancel " @click="onboardingVerificationCancel">
           Cancel
         </button>
-        <button
-          type="button"
-          class="onboarding-verify"
-          @click="onboardingVerificationVerify"
-        >
+        <button type="button" class="onboarding-verify" @click="onboardingVerificationVerify">
           Verify
         </button>
       </div>
@@ -136,6 +118,8 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'OnboardingInfoComponent',
@@ -149,6 +133,24 @@ export default {
       code: '',
       requestId: '',
     };
+  },
+  computed: {
+    ...mapGetters({
+      getType: '$_external/getType',
+      getBizEmail: '$_external/getBizEmail',
+      getBizName: '$_external/getBizName',
+      getPerEmail: '$_external/getPerEmail',
+      getName: '$_external/getName',
+    }),
+    is_valid() {
+      return this.f_name !== '' && this.phone !== '' && this.email !== '';
+    },
+    is_type() {
+      if (this.getType === 0) {
+        return true;
+      }
+      return false;
+    },
   },
   mounted() {
     this.name = this.getName;
@@ -170,17 +172,16 @@ export default {
       requestOnboardingPhoneVerification: '$_external/requestOnboardingPhoneVerification',
     }),
     next_view() {
-      const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-      const phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
-      let email_valid = true;
+      const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+      let emailValid = true;
       for (let i = 0; i < this.errors.items.length; i += 1) {
         if (this.errors.items[i].field === 'email') {
-          email_valid = false;
+          emailValid = false;
           break;
         }
       }
 
-      if (phone_valid && email_valid) {
+      if (phoneValid && emailValid) {
         this.phoneVerification = true;
         this.sendVerificationCode();
       } else {
@@ -189,14 +190,13 @@ export default {
     },
     setCurrentStep(step) {
       this.updateViewStep(step);
-      // this.$store.commit('updateViewStep', num);
     },
     onboardingVerificationCancel() {
       this.phoneVerification = false;
       this.doNotification(
         2,
         'Phone Verification',
-        'Phone Verification Failed . Retry to complete Onboarding process',
+        'Phone Verification Failed . Retry to complete Onboarding process'
       );
     },
 
@@ -204,21 +204,21 @@ export default {
       const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
       const values = {};
       values.phone_no = phone;
-      const full_payload = {
+      const fullPayload = {
         values,
         vm: this,
         app: 'PRIVATE_API',
         endpoint: 'verify_phone',
       };
-      this.requestOnboardingPhoneVerification(full_payload).then(
-        (response) => {
+      this.requestOnboardingPhoneVerification(fullPayload).then(
+        response => {
           if (response.status) {
             this.requestId = response.request_id;
           } else {
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
-        (error) => {},
+        error => {}
       );
     },
 
@@ -226,14 +226,14 @@ export default {
       const values = {};
       values.code = this.code;
       values.request_id = this.requestId;
-      const full_payload = {
+      const fullPayload = {
         values,
         vm: this,
         app: 'PRIVATE_API',
         endpoint: 'check_verification',
       };
-      this.requestOnboardingVerificationVerify(full_payload).then(
-        (response) => {
+      this.requestOnboardingVerificationVerify(fullPayload).then(
+        response => {
           if (response.status) {
             this.doNotification(2, 'Phone Verification', 'Phone verification successful !');
 
@@ -248,7 +248,7 @@ export default {
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
-        (error) => {},
+        error => {}
       );
     },
 
@@ -260,24 +260,6 @@ export default {
       };
       this.$store.commit('setNotification', notification);
       this.$store.commit('setNotificationStatus', true);
-    },
-  },
-  computed: {
-    ...mapGetters({
-      getType: '$_external/getType',
-      getBizEmail: '$_external/getBizEmail',
-      getBizName: '$_external/getBizName',
-      getPerEmail: '$_external/getPerEmail',
-      getName: '$_external/getName',
-    }),
-    is_valid() {
-      return this.f_name !== '' && this.phone !== '' && this.email !== '';
-    },
-    is_type() {
-      if (this.getType === 0) {
-        return true;
-      }
-      return false;
     },
   },
 };

@@ -5,10 +5,6 @@ import Vue from 'vue';
 import { sync } from 'vuex-router-sync';
 
 import moment from 'moment';
-
-// import Element from "element-ui";
-// import "element-ui/lib/theme-chalk/index.css";
-
 import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
 import VueGeolocation from 'vue-browser-geolocation';

@@ -180,12 +180,40 @@
                         v-if="'delivery_item' in tracking_data.package_details"
                         class="tracking-loader-inner"
                       >
-                        {{ tracking_data.package_details.delivery_item }}
+                        <div v-if="tracking_data.package_details.delivery_item === ''">
+                          Not Indicated
+                        </div>
+                        <div v-else>
+                          {{ tracking_data.package_details.delivery_item }}
+                        </div>
                       </div>
                       <div v-else class="tracking-loader-inner">
                         Not Indicated
                       </div>
                     </div>
+                    <div class="tracking-loader">
+                      <div class="">
+                        <img
+                          src="https://images.sendyit.com/web_platform/tracking/load_weight.svg"
+                          alt=""
+                          class="infobar-truck-img"
+                        />
+                        <span class="info-text-transform">
+                          Weight of Load
+                        </span>
+                      </div>
+                      <div
+                        v-if="'load_weight' in tracking_data.package_details"
+                        class="tracking-loader-inner"
+                      >
+                        {{ tracking_data.package_details.load_weight }}
+                        {{ tracking_data.package_details.load_units }}
+                      </div>
+                      <div v-else class="tracking-loader-inner">
+                        Not Indicated
+                      </div>
+                    </div>
+
                     <div class="tracking-loader">
                       <div class="">
                         <img
@@ -471,7 +499,7 @@
                 <div v-if="getStatus === 'Pending'" class="">
                   <div
                     v-if="
-                      [20].includes(tracking_data.rider.vendor_id) &&
+                      [20, 25].includes(tracking_data.rider.vendor_id) &&
                         'customer_min_amount' in tracking_data.package_details &&
                         !tracking_data.fixed_cost
                     "
@@ -683,7 +711,7 @@ export default {
       setDelivered: false,
       setPayed: false,
       vendorName: '',
-      truck_orders: [20],
+      truck_orders: [20, 25],
       user_state: false,
       isSaved: false,
       shareOption: false,
