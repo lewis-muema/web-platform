@@ -116,9 +116,13 @@ export default {
     }
 
     return new Promise((resolve, reject) => {
-      axios.post(`${url}${payload.endpoint}`, payload.values, config).then(
-        (response) => {
-          if (response.data === 401 || response.data === 403) {
+      axios
+        .post(`${url}${payload.endpoint}`, payload.values, config)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          if (error.response.status === 403 || error.response.status === 401) {
             const notification = {
               title: 'Something went wrong!',
               level: 2,
@@ -127,13 +131,9 @@ export default {
             commit('setNotification', notification);
             commit('setNotificationStatus', true);
           } else {
-            resolve(response);
+            reject(error);
           }
-        },
-        (error) => {
-          reject(error);
-        },
-      );
+        });
     });
   },
 
