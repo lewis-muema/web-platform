@@ -124,7 +124,7 @@ export default {
         .catch((error) => {
           if (error.response.status === 403 || error.response.status === 401) {
             const notification = {
-              title: 'Something went wrong!',
+              title: 'Your session has expired!',
               level: 2,
               message: 'Please log out and log in again.',
             };

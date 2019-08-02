@@ -487,9 +487,7 @@ export default {
     },
 
     preCheckPaymentDetails() {
-      if (this.activeVendorPriceData.vendor_id === 25 && !this.getLoadWeightStatus) {
-        this.doNotification(2, 'Invalid Load Weight', 'Kindly provide a valid load weight');
-      } else {
+      if (this.isValidateLoadWeightStatus() && this.isValidateScheduleTime()) {
         this.loading = true;
         this.refreshRunningBalance().then(
           (response) => {
@@ -1105,6 +1103,61 @@ export default {
       } else {
         this.mpesa_valid = true;
       }
+    },
+    isValidateLoadWeightStatus() {
+      if (this.activeVendorPriceData.vendor_id === 25 && !this.getLoadWeightStatus) {
+        this.doNotification('2', 'Invalid Load Weight', 'Kindly provide a valid load weight');
+        return false;
+      }
+      return true;
+    },
+    isValidateScheduleTime() {
+      let dateTime = '';
+      if (this.get_schedule_time === '' || this.get_schedule_time === null) {
+        dateTime = this.eta_time;
+      } else {
+        dateTime = this.scheduled_time;
+      }
+      const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
+      const timeHrs = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
+
+      const standardOptions = [21, 22];
+      if (standardOptions.includes(this.activeVendorPriceData.vendor_id)) {
+        if (day === 'Sunday' && timeHrs >= '17') {
+          this.doNotification(
+            2,
+            'Standard option is unavailable right now',
+            'Kindly schedule for tommorow 8AM',
+          );
+          return false;
+        }
+        if (day === 'Saturday' && timeHrs >= '17') {
+          this.doNotification(
+            2,
+            'Standard option is unavailable right now',
+            'Kindly schedule for Monday 8AM',
+          );
+          return false;
+        }
+        if (timeHrs < '08') {
+          this.doNotification(
+            2,
+            'Standard option is unavailable right now',
+            'Kindly schedule for 8AM',
+          );
+          return false;
+        }
+        if (timeHrs > '17') {
+          this.doNotification(
+            2,
+            'Standard option is unavailable right now',
+            'Kindly schedule for tommorow 8AM',
+          );
+          return false;
+        }
+        return true;
+      }
+      return true;
     },
   },
 
