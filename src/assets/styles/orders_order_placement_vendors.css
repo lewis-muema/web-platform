@@ -38,6 +38,7 @@
 }
 .vendor_component-actions__element-date {
   width: 100% !important;
+  background-color: white !important;
 }
 .pair_rider_section{
   width:100%;
@@ -354,5 +355,26 @@
 }
 .load-weight-outer{
   padding-bottom: 0px;
+}
+.el-picker-panel__body-wrapper{
+  background-color: white !important;
+}
+.home-view-vendor-types--item__unavailable {
+  background: rgba(234, 234, 234, 0.17);
+  border: 2px solid rgba(0, 0, 0, 0.46);
+  color : #383131;
+}
+.home-view-vendor-types--icon__unavailable{
+  filter: grayscale(100%);
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  color : #383131 !important;
+}
+.home-view-vendor-types-item--cost-wrapper-right > span > span{
+  background-color: inherit;
+}
+.home-view-vendor-types--extra__unavailable{
+  background: rgba(173, 173, 173, 0.97) !important;
+  color: #FFFFFF !important;
 }
 /* end transitions */
