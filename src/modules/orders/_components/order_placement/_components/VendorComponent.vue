@@ -48,7 +48,10 @@
           >
             <div
               class="home-view-vendor-types--item home-view-vendor-types-item-wrap"
-              :class="getCurrentActiveTendorTypeClass(j.vendor_name)"
+              :class="[
+                getScheduledVendorTypeClass(j, 1),
+                getCurrentActiveTendorTypeClass(j.vendor_name),
+              ]"
             >
               <!-- start vendor wrapper -->
               <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
@@ -56,6 +59,7 @@
                   <img
                     class="home-view-vendor-types-item__image"
                     :src="getVendorIcon(j.vendor_id)"
+                    :class="getScheduledVendorTypeClass(j, 2)"
                     alt=""
                   >
                 </div>
@@ -82,7 +86,10 @@
                     <span v-else> {{ getVendorCurrency(j) }} {{ getVendorPrice(j) }} </span>
                   </div>
                   <div class="home-view-vendor-types-item--cost-wrapper_time">
-                    Pickup by {{ transformDate(j) }}
+                    <span v-if="isStandardUnavailable(j)">
+                      {{ scheduleTimeFrame(j) }}
+                    </span>
+                    <span v-else> Pickup by {{ transformDate(j) }} </span>
                   </div>
                 </div>
 
@@ -102,7 +109,10 @@
                       slot="reference"
                       class="extra_info_background"
                     >
-                      <i class="el-icon-info" />
+                      <i
+                        class="el-icon-info"
+                        :class="getScheduledVendorTypeClass(j, 2)"
+                      />
                     </span>
                   </el-popover>
                 </div>
@@ -137,7 +147,10 @@
     <!-- start carrier type transition -->
     <transition name="home-carrier-type-fade">
       <div class="home-view-vendor-types-item-wrap home-next-step">
-        <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
+        <div
+          class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper"
+          :class="getScheduledVendorTypeClass(activeVendorPriceData, 2)"
+        >
           <div
             class=""
             @click="goBackToHome"
@@ -171,7 +184,10 @@
                 </span>
               </div>
               <div class="home-view-vendor-types-item--cost-wrapper_time">
-                Pickup by {{ transformDate(activeVendorPriceData) }}
+                <span v-if="isStandardUnavailable(activeVendorPriceData)">
+                  {{ scheduleTimeFrame(activeVendorPriceData) }}
+                </span>
+                <span v-else> Pickup by {{ transformDate(activeVendorPriceData) }}</span>
               </div>
             </div>
           </div>
@@ -305,6 +321,7 @@
                   format="dd-MM-yyyy h:mm a"
                   placeholder="As soon as possible"
                   prefix-icon="el-icon-date"
+                  :picker-options="dueDatePickerOptions"
                   @change="dispatchScheduleTime"
                 />
               </div>
@@ -627,6 +644,10 @@ export default {
       load_weight: '',
       loadWeightSet: false,
       loadWeightMask: '##.##',
+      dueDatePickerOptions: {
+        disabledDate: this.disabledDueDate,
+      },
+      standardOptions: [21, 22],
     };
   },
   computed: {
@@ -798,6 +819,7 @@ export default {
       this.setDefaultCarrierType();
       this.setOrderState(2);
       this.setExtendOptions(true);
+      this.handleScheduledTime();
     },
     setDefaultCarrierType() {
       if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
@@ -966,7 +988,20 @@ export default {
         'home-view-vendor-types--item__active': name === this.get_active_vendor_name,
       };
     },
-
+    getScheduledVendorTypeClass(vendorObject, code) {
+      if (this.standardOptions.includes(vendorObject.vendor_id) && !vendorObject.available) {
+        if (code === 1) {
+          return ['home-view-vendor-types--item__unavailable'];
+        }
+        if (code === 2) {
+          return ['home-view-vendor-types--icon__unavailable'];
+        }
+        if (code === 3) {
+          return ['home-view-vendor-types--extra__unavailable'];
+        }
+      }
+      return '';
+    },
     transformDate(vendorDetails) {
       if (Object.prototype.hasOwnProperty.call(vendorDetails, 'customer_eta')) {
         return this.moment(vendorDetails.customer_eta, 'YYYY-MM-DD HH:mm:ss').format('hh.mm a');
@@ -1004,6 +1039,31 @@ export default {
         return false;
       }
       return true;
+    },
+    isStandardUnavailable(vendorObject) {
+      if (this.standardOptions.includes(vendorObject.vendor_id) && !vendorObject.available) {
+        return true;
+      }
+      return false;
+    },
+    scheduleTimeFrame(vendorObject) {
+      const dateTime = vendorObject.current_time;
+      const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
+      const timeHrs = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
+
+      if (day === 'Sunday' && timeHrs >= '17') {
+        return 'Schedule for tommorow';
+      }
+      if (day === 'Saturday' && timeHrs >= '17') {
+        return 'Schedule for Monday 8:00 AM';
+      }
+      if (timeHrs < '08') {
+        return 'Schedule for 8:00 AM';
+      }
+      if (timeHrs >= '17') {
+        return 'Schedule for tommorow';
+      }
+      return '';
     },
 
     setFirstTimeUser() {
@@ -1120,6 +1180,9 @@ export default {
 
     getVendorDescription(vendorObject) {
       const standardOrders = [22, 24];
+      if (this.standardOptions.includes(vendorObject.vendor_id) && !vendorObject.available) {
+        return 'Unavailable right now';
+      }
       if (standardOrders.includes(vendorObject.vendor_id)) {
         return 'In 2 to 4 hours';
       }
@@ -1135,6 +1198,52 @@ export default {
         return true;
       }
       return false;
+    },
+    disabledDueDate(date) {
+      if (this.standardOptions.includes(this.activeVendorPriceData.vendor_id)) {
+        return date.getDay() === 0;
+      }
+      return false;
+    },
+    handleScheduledTime() {
+      if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'current_time')) {
+        const dateTime = this.activeVendorPriceData.current_time;
+        const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
+        const timeHrs = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
+
+        if (this.standardOptions.includes(this.activeVendorPriceData.vendor_id)) {
+          if (day === 'Sunday' && timeHrs >= '17') {
+            const newDate = `${this.moment(dateTime)
+              .add(1, 'days')
+              .format('YYYY-DD-MM')} 08:00`;
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
+              'YYYY-MM-DD HH:mm:ss Z',
+            );
+          } else if (day === 'Saturday' && timeHrs >= '17') {
+            const newDate = `${this.moment(dateTime)
+              .add(2, 'days')
+              .format('YYYY-DD-MM')} 08:00`;
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
+              'YYYY-MM-DD HH:mm:ss Z',
+            );
+          } else if (timeHrs < '08') {
+            const newDate = `${this.moment(dateTime).format('YYYY-DD-MM')} 08:00`;
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
+              'YYYY-MM-DD HH:mm:ss Z',
+            );
+          } else if (timeHrs >= '17') {
+            const newDate = `${this.moment(dateTime)
+              .add(1, 'days')
+              .format('YYYY-DD-MM')} 08:00`;
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
+              'YYYY-MM-DD HH:mm:ss Z',
+            );
+          } else {
+            this.schedule_time = '';
+          }
+        }
+      }
+      this.schedule_time = '';
     },
   },
 };
