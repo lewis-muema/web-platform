@@ -361,7 +361,7 @@
 }
 .home-view-vendor-types--item__unavailable {
   background: rgba(234, 234, 234, 0.17);
-  border: 2px solid rgba(0, 0, 0, 0.46);
+  /* border: 2px solid rgba(0, 0, 0, 0.46); */
   color : #383131;
 }
 .home-view-vendor-types--icon__unavailable{
@@ -376,5 +376,9 @@
 .home-view-vendor-types--extra__unavailable{
   background: rgba(173, 173, 173, 0.97) !important;
   color: #FFFFFF !important;
+}
+.vendor_component-schedule{
+  font-size: 10px;
+  color: #212120;
 }
 /* end transitions */
