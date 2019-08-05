@@ -311,7 +311,7 @@
             </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
-                Pick up time for your order
+                {{ getPickUpDescriptText(activeVendorPriceData) }}
               </div>
               <div class="block">
                 <el-date-picker
@@ -325,6 +325,12 @@
                   @change="dispatchScheduleTime"
                 />
               </div>
+              <span
+                v-if="isStandardUnavailable(activeVendorPriceData)"
+                class="vendor_component-schedule"
+              >
+                Delivery is in 2 to 4 hours from the scheduled time
+              </span>
             </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
@@ -1190,6 +1196,12 @@ export default {
         return 'From 18 Tonnes';
       }
       return vendorObject.vendor_description;
+    },
+    getPickUpDescriptText(vendorObject) {
+      if (this.standardOptions.includes(vendorObject.vendor_id) && !vendorObject.available) {
+        return 'Schedule time';
+      }
+      return 'Pick up time for your order';
     },
     isTestAccount() {
       const session = this.$store.getters.getSession;
