@@ -1219,6 +1219,7 @@ export default {
       return false;
     },
     handleScheduledTime() {
+      this.schedule_time = '';
       if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'current_time')) {
         const dateTime = this.activeVendorPriceData.current_time;
         const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
@@ -1256,7 +1257,6 @@ export default {
           }
         }
       }
-      this.schedule_time = '';
     },
   },
 };
