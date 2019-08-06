@@ -653,7 +653,7 @@ export default {
       dueDatePickerOptions: {
         disabledDate: this.disabledDueDate,
       },
-      standardOptions: [21, 22],
+      standardOptions: [21, 22, 24],
     };
   },
   computed: {
