@@ -67,7 +67,10 @@
                   <div class="home-view-vendor-types-item-vendor--vendor-formal-name">
                     {{ j.vendor_name }}
                   </div>
-                  <div class="home-view-vendor-types-item-vendor--vendor-local-name">
+                  <div
+                    class="home-view-vendor-types-item-vendor--vendor-local-name"
+                    :class="getScheduledVendorTypeClass(j, 1)"
+                  >
                     {{ getVendorDescription(j) }}
                   </div>
                 </div>
