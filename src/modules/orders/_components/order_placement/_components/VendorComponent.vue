@@ -1041,7 +1041,8 @@ export default {
     },
 
     isFixedCost(vendorObject) {
-      if (vendorObject.vendor_id === 25 && !this.getPriceRequestObject.fixed_cost) {
+      const bidVendors = [20, 25];
+      if (bidVendors.includes(vendorObject.vendor_id) && !this.getPriceRequestObject.fixed_cost) {
         return false;
       }
       return true;
