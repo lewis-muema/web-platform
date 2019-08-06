@@ -360,15 +360,15 @@
   background-color: white !important;
 }
 .home-view-vendor-types--item__unavailable {
-  background: rgba(234, 234, 234, 0.17);
-  /* border: 2px solid rgba(0, 0, 0, 0.46); */
-  color : #383131;
+  background: #FBFBFB;
+  color : #808080;
+  font-weight: 400 !important;
 }
 .home-view-vendor-types--icon__unavailable{
   filter: grayscale(100%);
   -webkit-filter: grayscale(100%);
   -moz-filter: grayscale(100%);
-  color : #383131 !important;
+  color : #808080 !important;
 }
 .home-view-vendor-types-item--cost-wrapper-right > span > span{
   background-color: inherit;
