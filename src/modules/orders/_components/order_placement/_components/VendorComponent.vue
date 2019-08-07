@@ -1217,9 +1217,9 @@ export default {
     },
     disabledDueDate(date) {
       if (this.standardOptions.includes(this.activeVendorPriceData.vendor_id)) {
-        return date.getDay() === 0;
+        return date.getDay() === 0 || date.getTime() < Date.now() - 8.64e7;
       }
-      return false;
+      return date.getTime() < Date.now() - 8.64e7;
     },
     handleScheduledTime() {
       this.schedule_time = '';
