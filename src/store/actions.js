@@ -138,6 +138,7 @@ export default {
             return true;
           }
           reject(error);
+          return false;
         });
     });
   },
