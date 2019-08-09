@@ -126,13 +126,18 @@ export default {
             const notification = {
               title: 'Your session has expired!',
               level: 2,
-              message: 'Please log out and log in again.',
+              message: 'You will be redirected to the login page after 5 seconds.',
             };
             commit('setNotification', notification);
             commit('setNotificationStatus', true);
-          } else {
-            reject(error);
+            setTimeout(() => {
+              localStorage.removeItem('_sessionSnack');
+              localStorage.removeItem('jwtToken');
+              window.location.href = loginUrl;
+            }, 5000);
+            return true;
           }
+          reject(error);
         });
     });
   },
