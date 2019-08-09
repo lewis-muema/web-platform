@@ -1114,7 +1114,7 @@ export default {
     isValidateScheduleTime() {
       let dateTime = '';
       if (this.get_schedule_time === '' || this.get_schedule_time === null) {
-        dateTime = this.eta_time;
+        dateTime = this.moment();
       } else {
         dateTime = this.scheduled_time;
       }
