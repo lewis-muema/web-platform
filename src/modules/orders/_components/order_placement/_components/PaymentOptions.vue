@@ -1121,7 +1121,7 @@ export default {
       const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
       const timeHrs = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
 
-      const standardOptions = [21, 22];
+      const standardOptions = [21, 22, 24];
       if (standardOptions.includes(this.activeVendorPriceData.vendor_id)) {
         if (day === 'Sunday' && timeHrs >= '17') {
           this.doNotification(
