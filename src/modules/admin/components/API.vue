@@ -158,6 +158,11 @@ export default {
       .dispatch('$_admin/requestKeysList', apikeyFullPayload)
       .then((response) => {}, (error) => {});
   },
+  computed: {
+    ...mapGetters({
+      fetchedData: '$_admin/getKeysList',
+    }),
+  },
   methods: {
     ...mapActions({
       requestKeysList: '$_admin/requestKeysList',
