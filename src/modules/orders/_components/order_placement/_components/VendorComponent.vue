@@ -1258,6 +1258,7 @@ export default {
           } else {
             this.schedule_time = '';
           }
+          this.dispatchScheduleTime();
         }
       }
     },
