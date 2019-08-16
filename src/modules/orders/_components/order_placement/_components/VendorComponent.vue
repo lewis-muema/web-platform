@@ -1067,7 +1067,7 @@ export default {
       if (day === 'Saturday' && timeHrs >= '17') {
         return 'Schedule for Monday 8:00 AM';
       }
-      if (timeHrs < '08') {
+      if (timeHrs < '07') {
         return 'Schedule for 8:00 AM';
       }
       if (timeHrs >= '17') {
@@ -1232,26 +1232,26 @@ export default {
           if (day === 'Sunday' && timeHrs >= '17') {
             const newDate = `${this.moment(dateTime)
               .add(1, 'days')
-              .format('YYYY-DD-MM')} 08:00`;
+              .format('YYYY-DD-MM')} 07:00`;
             this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
               'YYYY-MM-DD HH:mm:ss Z',
             );
           } else if (day === 'Saturday' && timeHrs >= '17') {
             const newDate = `${this.moment(dateTime)
               .add(2, 'days')
-              .format('YYYY-DD-MM')} 08:00`;
+              .format('YYYY-DD-MM')} 07:00`;
             this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
               'YYYY-MM-DD HH:mm:ss Z',
             );
-          } else if (timeHrs < '08') {
-            const newDate = `${this.moment(dateTime).format('YYYY-DD-MM')} 08:00`;
+          } else if (timeHrs < '07') {
+            const newDate = `${this.moment(dateTime).format('YYYY-DD-MM')} 07:00`;
             this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
               'YYYY-MM-DD HH:mm:ss Z',
             );
           } else if (timeHrs >= '17') {
             const newDate = `${this.moment(dateTime)
               .add(1, 'days')
-              .format('YYYY-DD-MM')} 08:00`;
+              .format('YYYY-DD-MM')} 07:00`;
             this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
               'YYYY-MM-DD HH:mm:ss Z',
             );
