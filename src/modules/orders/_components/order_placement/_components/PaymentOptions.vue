@@ -1137,7 +1137,7 @@ export default {
           );
           return false;
         }
-        if (timeHrs < '08') {
+        if (timeHrs < '07') {
           this.doNotification(
             2,
             'Standard option is unavailable right now',

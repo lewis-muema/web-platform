@@ -164,7 +164,7 @@
                   </div>
 
                   <!-- Show for truck orders  -->
-                  <div class="" v-if="![1, 2, 3, 23].includes(tracking_data.rider.vendor_id)">
+                  <div class="" v-if="![1, 2, 3, 23, 21].includes(tracking_data.rider.vendor_id)">
                     <div class="tracking-loader">
                       <div class="">
                         <img
