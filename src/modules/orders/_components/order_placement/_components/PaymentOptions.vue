@@ -304,7 +304,7 @@ export default {
     },
 
     allowCash() {
-      return this.getPriceRequestObject.payment_option === 2 || this.getRunningBalance >= 0;
+      return this.getPriceRequestObject.payment_option === 1 && this.getRunningBalance >= 0;
     },
 
     hide_payment() {
@@ -487,9 +487,7 @@ export default {
     },
 
     preCheckPaymentDetails() {
-      if (this.activeVendorPriceData.vendor_id === 25 && !this.getLoadWeightStatus) {
-        this.doNotification(2, 'Invalid Load Weight', 'Kindly provide a valid load weight');
-      } else {
+      if (this.isValidateLoadWeightStatus() && this.isValidateScheduleTime()) {
         this.loading = true;
         this.refreshRunningBalance().then(
           (response) => {
@@ -848,6 +846,7 @@ export default {
         referenceNumber = session.peer.user_phone;
         user_id = session.peer.user_id;
         user_phone = session.peer.user_phone;
+        user_email = session.peer.user_email;
       }
 
       const mpesaPayload = {
@@ -923,17 +922,16 @@ export default {
       }
 
       const oldRb = this.$store.getters.getRunningBalance;
-
       const runningBalancePayload = {
-        values: {
-          cop_id,
-          user_phone: session[session.default].user_phone,
-        },
+        cop_id,
+        phone: session[session.default].user_phone,
+        default_currency: session[session.default].default_currency,
+        rb_currency: session[session.default].default_currency,
       };
 
       const payload = {
         params: runningBalancePayload,
-        app: 'PRIVATE_API',
+        app: 'NODE_PRIVATE_API',
         endpoint: 'running_balance',
       };
 
@@ -979,8 +977,7 @@ export default {
           }
 
           if (response.status === 200) {
-            const newRb = response.data.running_balance;
-
+            const newRb = response.data.data.running_balance;
             if (newRb < oldRb) {
               this.completeMpesaPaymentRequest({});
               return true;
@@ -1060,13 +1057,12 @@ export default {
       this.refreshRunningBalance().then(
         (response) => {
           if (this.default_currency === 'KES' && this.mpesa_valid) {
-            if (this.allowCash) {
-              if (this.checkAccountPaymentOption()) {
-                this.payment_method = '';
-              } else {
+            if (this.checkAccountPaymentOption()) {
+              this.payment_method = '';
+            } else {
+              if (this.allowCash) {
                 this.payment_method = '3';
               }
-            } else {
               this.payment_method = '1';
             }
           } else {
@@ -1105,6 +1101,61 @@ export default {
       } else {
         this.mpesa_valid = true;
       }
+    },
+    isValidateLoadWeightStatus() {
+      if (this.activeVendorPriceData.vendor_id === 25 && !this.getLoadWeightStatus) {
+        this.doNotification('2', 'Invalid Load Weight', 'Kindly provide a valid load weight');
+        return false;
+      }
+      return true;
+    },
+    isValidateScheduleTime() {
+      let dateTime = '';
+      if (this.get_schedule_time === '' || this.get_schedule_time === null) {
+        dateTime = this.moment();
+      } else {
+        dateTime = this.scheduled_time;
+      }
+      const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
+      const timeHrs = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
+
+      const standardOptions = [21, 22, 24];
+      if (standardOptions.includes(this.activeVendorPriceData.vendor_id)) {
+        if (day === 'Sunday' && timeHrs >= '17') {
+          this.doNotification(
+            2,
+            'Standard option is unavailable right now',
+            'Kindly schedule for tommorow 8AM',
+          );
+          return false;
+        }
+        if (day === 'Saturday' && timeHrs >= '17') {
+          this.doNotification(
+            2,
+            'Standard option is unavailable right now',
+            'Kindly schedule for Monday 8AM',
+          );
+          return false;
+        }
+        if (timeHrs < '07') {
+          this.doNotification(
+            2,
+            'Standard option is unavailable right now',
+            'Kindly schedule for 8AM',
+          );
+          return false;
+        }
+        if (timeHrs >= '17') {
+          this.doNotification(
+            2,
+            'Standard option is unavailable right now',
+            'Kindly schedule for tommorow 8AM',
+          );
+          return false;
+        }
+        return true;
+      }
+      return true;
     },
   },
 

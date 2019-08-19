@@ -48,7 +48,10 @@
           >
             <div
               class="home-view-vendor-types--item home-view-vendor-types-item-wrap"
-              :class="getCurrentActiveTendorTypeClass(j.vendor_name)"
+              :class="[
+                getScheduledVendorTypeClass(j, 1),
+                getCurrentActiveTendorTypeClass(j.vendor_name),
+              ]"
             >
               <!-- start vendor wrapper -->
               <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
@@ -56,6 +59,7 @@
                   <img
                     class="home-view-vendor-types-item__image"
                     :src="getVendorIcon(j.vendor_id)"
+                    :class="getScheduledVendorTypeClass(j, 2)"
                     alt=""
                   >
                 </div>
@@ -63,7 +67,10 @@
                   <div class="home-view-vendor-types-item-vendor--vendor-formal-name">
                     {{ j.vendor_name }}
                   </div>
-                  <div class="home-view-vendor-types-item-vendor--vendor-local-name">
+                  <div
+                    class="home-view-vendor-types-item-vendor--vendor-local-name"
+                    :class="getScheduledVendorTypeClass(j, 1)"
+                  >
                     {{ getVendorDescription(j) }}
                   </div>
                 </div>
@@ -82,7 +89,10 @@
                     <span v-else> {{ getVendorCurrency(j) }} {{ getVendorPrice(j) }} </span>
                   </div>
                   <div class="home-view-vendor-types-item--cost-wrapper_time">
-                    Pickup by {{ transformDate(j) }}
+                    <span v-if="isStandardUnavailable(j)">
+                      {{ scheduleTimeFrame(j) }}
+                    </span>
+                    <span v-else> Pickup by {{ transformDate(j) }} </span>
                   </div>
                 </div>
 
@@ -102,7 +112,10 @@
                       slot="reference"
                       class="extra_info_background"
                     >
-                      <i class="el-icon-info" />
+                      <i
+                        class="el-icon-info"
+                        :class="getScheduledVendorTypeClass(j, 2)"
+                      />
                     </span>
                   </el-popover>
                 </div>
@@ -137,7 +150,10 @@
     <!-- start carrier type transition -->
     <transition name="home-carrier-type-fade">
       <div class="home-view-vendor-types-item-wrap home-next-step">
-        <div class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper">
+        <div
+          class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper"
+          :class="getScheduledVendorTypeClass(activeVendorPriceData, 2)"
+        >
           <div
             class=""
             @click="goBackToHome"
@@ -171,7 +187,10 @@
                 </span>
               </div>
               <div class="home-view-vendor-types-item--cost-wrapper_time">
-                Pickup by {{ transformDate(activeVendorPriceData) }}
+                <span v-if="isStandardUnavailable(activeVendorPriceData)">
+                  {{ scheduleTimeFrame(activeVendorPriceData) }}
+                </span>
+                <span v-else> Pickup by {{ transformDate(activeVendorPriceData) }}</span>
               </div>
             </div>
           </div>
@@ -278,8 +297,9 @@
               <div>
                 <input
                   v-model.trim="load_weight"
+                  v-mask="loadWeightMask"
                   class="input-control load-weight"
-                  type="number"
+                  type="text"
                   placeholder="From 18.00 to 33.00"
                   autocomplete="on"
                   min="18"
@@ -294,7 +314,7 @@
             </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
-                Pick up time for your order
+                {{ getPickUpDescriptText(activeVendorPriceData) }}
               </div>
               <div class="block">
                 <el-date-picker
@@ -304,9 +324,16 @@
                   format="dd-MM-yyyy h:mm a"
                   placeholder="As soon as possible"
                   prefix-icon="el-icon-date"
+                  :picker-options="dueDatePickerOptions"
                   @change="dispatchScheduleTime"
                 />
               </div>
+              <span
+                v-if="isStandardUnavailable(activeVendorPriceData)"
+                class="vendor_component-schedule"
+              >
+                Delivery is in 2 to 4 hours from the scheduled time
+              </span>
             </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
@@ -625,6 +652,11 @@ export default {
       pass_msg: '',
       load_weight: '',
       loadWeightSet: false,
+      loadWeightMask: '##.##',
+      dueDatePickerOptions: {
+        disabledDate: this.disabledDueDate,
+      },
+      standardOptions: [21, 22, 24],
     };
   },
   computed: {
@@ -796,6 +828,7 @@ export default {
       this.setDefaultCarrierType();
       this.setOrderState(2);
       this.setExtendOptions(true);
+      this.handleScheduledTime();
     },
     setDefaultCarrierType() {
       if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
@@ -824,19 +857,13 @@ export default {
       const val = this.load_weight;
       if (val === '') {
         this.pass_msg = 'Please enter the weight of your load';
+      } else if (val >= 18.0 && val <= 33.0) {
+        this.handleLoadweight(val);
+        this.setLoadWeightStatus(true);
+        this.pass_msg = '';
       } else {
-        const match = /(\d{0,2})[^.]*((?:\.\d{0,2})?)/g.exec(
-          this.load_weight.replace(/[^\d.]/g, ''),
-        );
-        this.load_weight = match[1] + match[2];
-        if (val >= 18.0 && val <= 33.0) {
-          this.handleLoadweight(val);
-          this.setLoadWeightStatus(true);
-          this.pass_msg = '';
-        } else {
-          this.setLoadWeightStatus(false);
-          this.pass_msg = 'The input should be between 18.00 and 33.00 Tonnes';
-        }
+        this.setLoadWeightStatus(false);
+        this.pass_msg = 'The input should be between 18.00 and 33.00 Tonnes';
       }
     },
     handleLoadweight(val) {
@@ -970,7 +997,20 @@ export default {
         'home-view-vendor-types--item__active': name === this.get_active_vendor_name,
       };
     },
-
+    getScheduledVendorTypeClass(vendorObject, code) {
+      if (this.standardOptions.includes(vendorObject.vendor_id) && !vendorObject.available) {
+        if (code === 1) {
+          return ['home-view-vendor-types--item__unavailable'];
+        }
+        if (code === 2) {
+          return ['home-view-vendor-types--icon__unavailable'];
+        }
+        if (code === 3) {
+          return ['home-view-vendor-types--extra__unavailable'];
+        }
+      }
+      return '';
+    },
     transformDate(vendorDetails) {
       if (Object.prototype.hasOwnProperty.call(vendorDetails, 'customer_eta')) {
         return this.moment(vendorDetails.customer_eta, 'YYYY-MM-DD HH:mm:ss').format('hh.mm a');
@@ -1004,10 +1044,36 @@ export default {
     },
 
     isFixedCost(vendorObject) {
-      if (vendorObject.vendor_id === 25 && !this.getPriceRequestObject.fixed_cost) {
+      const bidVendors = [20, 25];
+      if (bidVendors.includes(vendorObject.vendor_id) && !this.getPriceRequestObject.fixed_cost) {
         return false;
       }
       return true;
+    },
+    isStandardUnavailable(vendorObject) {
+      if (this.standardOptions.includes(vendorObject.vendor_id) && !vendorObject.available) {
+        return true;
+      }
+      return false;
+    },
+    scheduleTimeFrame(vendorObject) {
+      const dateTime = vendorObject.current_time;
+      const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
+      const timeHrs = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
+
+      if (day === 'Sunday' && timeHrs >= '17') {
+        return 'Schedule for tommorow';
+      }
+      if (day === 'Saturday' && timeHrs >= '17') {
+        return 'Schedule for Monday 8:00 AM';
+      }
+      if (timeHrs < '07') {
+        return 'Schedule for 8:00 AM';
+      }
+      if (timeHrs >= '17') {
+        return 'Schedule for tommorow';
+      }
+      return '';
     },
 
     setFirstTimeUser() {
@@ -1124,6 +1190,9 @@ export default {
 
     getVendorDescription(vendorObject) {
       const standardOrders = [22, 24];
+      if (this.standardOptions.includes(vendorObject.vendor_id) && !vendorObject.available) {
+        return 'Unavailable right now';
+      }
       if (standardOrders.includes(vendorObject.vendor_id)) {
         return 'In 2 to 4 hours';
       }
@@ -1132,6 +1201,12 @@ export default {
       }
       return vendorObject.vendor_description;
     },
+    getPickUpDescriptText(vendorObject) {
+      if (this.standardOptions.includes(vendorObject.vendor_id) && !vendorObject.available) {
+        return 'Schedule time';
+      }
+      return 'Pick up time for your order';
+    },
     isTestAccount() {
       const session = this.$store.getters.getSession;
       const testAccount = session.test_account;
@@ -1139,6 +1214,53 @@ export default {
         return true;
       }
       return false;
+    },
+    disabledDueDate(date) {
+      if (this.standardOptions.includes(this.activeVendorPriceData.vendor_id)) {
+        return date.getDay() === 0 || date.getTime() < Date.now() - 8.64e7;
+      }
+      return date.getTime() < Date.now() - 8.64e7;
+    },
+    handleScheduledTime() {
+      this.schedule_time = '';
+      if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'current_time')) {
+        const dateTime = this.activeVendorPriceData.current_time;
+        const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
+        const timeHrs = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
+
+        if (this.standardOptions.includes(this.activeVendorPriceData.vendor_id)) {
+          if (day === 'Sunday' && timeHrs >= '17') {
+            const newDate = `${this.moment(dateTime)
+              .add(1, 'days')
+              .format('YYYY-DD-MM')} 07:00`;
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
+              'YYYY-MM-DD HH:mm:ss Z',
+            );
+          } else if (day === 'Saturday' && timeHrs >= '17') {
+            const newDate = `${this.moment(dateTime)
+              .add(2, 'days')
+              .format('YYYY-DD-MM')} 07:00`;
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
+              'YYYY-MM-DD HH:mm:ss Z',
+            );
+          } else if (timeHrs < '07') {
+            const newDate = `${this.moment(dateTime).format('YYYY-DD-MM')} 07:00`;
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
+              'YYYY-MM-DD HH:mm:ss Z',
+            );
+          } else if (timeHrs >= '17') {
+            const newDate = `${this.moment(dateTime)
+              .add(1, 'days')
+              .format('YYYY-DD-MM')} 07:00`;
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
+              'YYYY-MM-DD HH:mm:ss Z',
+            );
+          } else {
+            this.schedule_time = '';
+          }
+          this.dispatchScheduleTime();
+        }
+      }
     },
   },
 };

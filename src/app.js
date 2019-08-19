@@ -44,6 +44,7 @@ import {
 } from 'element-ui';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import VueMask from 'v-mask';
 import { createStore } from './store';
 import { createRouter } from './router';
 import App from './App.vue';
@@ -81,6 +82,7 @@ Vue.use(Popover);
 Vue.use(Autocomplete);
 Vue.use(Loading.directive);
 Vue.use(VueGeolocation);
+Vue.use(VueMask);
 // Vue.use(exportFromJSON);
 
 Vue.prototype.$loading = Loading.service;
