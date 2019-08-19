@@ -1,16 +1,12 @@
 <template lang="html">
-  <div id="log_in" class="log-item">
+  <div
+    id="log_in"
+    class="log-item"
+  >
     <div class="sign-inner">
       <div class="sign-top">
         Log in to Sendy
       </div>
-
-      <!-- <div class="sign-in-button" @click="" id="sign-in-v2-logging-in-1">
-            <img  class="sign-buttom__img"src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
-            </div>
-            <div class="sign-text">
-               or
-            </div> -->
 
       <p class="sign-in-error">
         {{ message }}
@@ -18,7 +14,10 @@
 
       <div @keyup.enter="sign_in">
         <div class="sign-holder dimen">
-          <span id="log_in_warn" class="sign-holder__error" />
+          <span
+            id="log_in_warn"
+            class="sign-holder__error"
+          />
         </div>
         <div class="sign-holder dimen">
           <input
@@ -28,7 +27,7 @@
             name="email"
             placeholder="Enter Email"
             autocomplete="on"
-          />
+          >
         </div>
 
         <div class="sign-holder dimen">
@@ -38,7 +37,7 @@
             type="password"
             name="password"
             placeholder="Password"
-          />
+          >
         </div>
 
         <div class="sign-holder">
@@ -48,16 +47,22 @@
             type="submit"
             name="login_text"
             @click="sign_in"
-          />
+          >
         </div>
         <div class=" sign-holder sign-forgot-pass sign-smaller">
-          <router-link class="sign-holder__link" to="/auth/forgot_password">
+          <router-link
+            class="sign-holder__link"
+            to="/auth/forgot_password"
+          >
             Forgot password?
           </router-link>
         </div>
         <div class="sign-holder sign-sign-up sign-smaller">
           Don't have an Account?
-          <router-link class="sign-holder__link" to="/auth/sign_up">
+          <router-link
+            class="sign-holder__link"
+            to="/auth/sign_up"
+          >
             Sign Up
           </router-link>
         </div>
@@ -68,7 +73,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import SessionMxn from '../../../mixins/session_mixin.js';
+import SessionMxn from '../../../mixins/session_mixin';
 
 export default {
   name: 'SignIn',
@@ -111,17 +116,15 @@ export default {
           email: this.email,
           password: this.password,
         };
-        const full_payload = {
+        const fullPayload = {
           values: params,
-          vm: this,
           app: 'NODE_PRIVATE_API',
           endpoint: 'sign_in',
         };
-        const that = this;
-        this.authSignIn(full_payload).then(
-          response => {
-            if (response.hasOwnProperty('status')) {
-              let errorResponse = response.data;
+        this.authSignIn(fullPayload).then(
+          (response) => {
+            if (Object.prototype.hasOwnProperty.call(response, 'status')) {
+              const errorResponse = response.data;
               if (errorResponse.code === 1) {
                 this.login_text = 'Login';
                 this.doNotification(2, 'Login failed', 'Wrong password or email.');
@@ -130,7 +133,7 @@ export default {
                 this.doNotification(2, 'Login failed', 'Account deactivated');
               }
             } else {
-              try{
+              try {
                 if (response) {
                   let partsOfToken = '';
                   if (Array.isArray(response)) {
@@ -148,16 +151,18 @@ export default {
                   // set session
                   // commit everything to the store
                   // redirect to orders
-                  const session_data = payload;
-                  const json_session = JSON.stringify(session_data);
-                  this.setSession(json_session);
-                  this.$store.commit('setSession', session_data);
-                  let analytics_env = '';
+                  const sessionData = payload;
+                  const jsonSession = JSON.stringify(sessionData);
+                  this.setSession(jsonSession);
+                  this.$store.commit('setSession', sessionData);
+                  let analyticsEnv = '';
                   try {
-                    analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-                  } catch (er) {}
-                  if ('default' in session_data && analytics_env === 'production') {
-                    const acc = session_data[session_data.default];
+                    analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+                  } catch (er) {
+                    // ...
+                  }
+                  if ('default' in sessionData && analyticsEnv === 'production') {
+                    const acc = sessionData[sessionData.default];
 
                     mixpanel.people.set_once({
                       $email: acc.user_email,
@@ -180,14 +185,14 @@ export default {
                   this.$router.push('/orders');
                 }
               } catch (error) {
-                //@todo Log the error (central logging)
+                // @todo Log the error (central logging)
                 this.login_text = 'Login';
               }
             }
           },
-          error => {
+          (error) => {
             this.doNotification(2, 'Login failed', 'Login failed. Please try again');
-          }
+          },
         );
       } else {
         this.message = 'Provide all values';

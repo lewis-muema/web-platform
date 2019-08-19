@@ -17,12 +17,12 @@
     <meta name="theme-color" content="#f60" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self' *.sendyit.com 'unsafe-inline' 'unsafe-eval';  
-        child-src 'none'; font-src 'self' *.googleapis.com *.gstatic.com data:; 
-        script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com *.helpscout.net cdn4.mxpnl.com  *.hotjar.com *.google-analytics.com data:; 
+      content="default-src 'self' *.sendyit.com 'unsafe-inline' 'unsafe-eval';
+        child-src 'none'; font-src 'self' *.googleapis.com *.gstatic.com data:;
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com *.helpscout.net cdn4.mxpnl.com  *.hotjar.com *.google-analytics.com data:;
         style-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com;
-        img-src 'self' *.sendyit.com s3-eu-west-1.amazonaws.com  images.mxpnl.com cdn.mxpnl.com *.gstatic.com *.googleapis.com *.cloudfront.net *.googleusercontent.com *.google-analytics.com stats.g.doubleclick.net data:; 
-        connect-src 'self' *.sendyit.com d3hb14vkzrxvla.cloudfront.net sentry.io api.mixpanel.com *.helpscout.net *.pusher.com *.hotjar.com wss://chat.sendyit.com; 
+        img-src 'self' *.sendyit.com s3-eu-west-1.amazonaws.com  images.mxpnl.com cdn.mxpnl.com *.gstatic.com *.googleapis.com *.cloudfront.net *.googleusercontent.com *.google-analytics.com stats.g.doubleclick.net data:;
+        connect-src 'self' *.sendyit.com d3hb14vkzrxvla.cloudfront.net sentry.io api.mixpanel.com *.helpscout.net *.pusher.com *.hotjar.com wss://chat.sendyit.com;
         frame-src 'self' *.sendyit.com *.hotjar.com *.youtube.com;"
     />
     <link rel="manifest" href="/manifest.json" />
@@ -200,14 +200,19 @@
     ><!-- end Mixpanel -->
     <!-- Hotjar Tracking Code for app.sendyit.com -->
     <script>
-        (function(h,o,t,j,a,r){
-            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-            h._hjSettings={hjid:1232147,hjsv:6};
-            a=o.getElementsByTagName('head')[0];
-            r=o.createElement('script');r.async=1;
-            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-            a.appendChild(r);
-        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+      (function(h, o, t, j, a, r) {
+        h.hj =
+          h.hj ||
+          function() {
+            (h.hj.q = h.hj.q || []).push(arguments);
+          };
+        h._hjSettings = { hjid: 1232147, hjsv: 6 };
+        a = o.getElementsByTagName('head')[0];
+        r = o.createElement('script');
+        r.async = 1;
+        r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+        a.appendChild(r);
+      })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
     </script>
   </body>
 </html>

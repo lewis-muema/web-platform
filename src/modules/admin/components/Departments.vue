@@ -1,5 +1,8 @@
 <template lang="html">
-  <div id="departments_container" class="departments_container">
+  <div
+    id="departments_container"
+    class="departments_container"
+  >
     <div class="section--filter-wrap">
       <div class="section--filter-input-wrap">
         <el-input
@@ -22,24 +25,37 @@
         </button>
       </div>
       <div class="section--filter-action-wrap">
-        <button class="button-primary section--filter-action btn-dprts" @click="addDepartment">
+        <button
+          class="button-primary section--filter-action btn-dprts"
+          @click="addDepartment"
+        >
           Add Department
         </button>
       </div>
     </div>
-    <el-table :data="departments_data" style="width: 100%" :border="true" :stripe="true">
+    <el-table
+      :data="departments_data"
+      style="width: 100%"
+      :border="true"
+      :stripe="true"
+    >
       <template slot="empty">
         {{ empty_departments_state }}
       </template>
-      <el-table-column label="Name" prop="department_name" />
-      <el-table-column label="Admin" prop="department_admin" />
+      <el-table-column
+        label="Name"
+        prop="department_name"
+      />
+      <el-table-column
+        label="Admin"
+        prop="department_admin"
+      />
       <el-table-column label="Action">
         <template slot-scope="scope">
           <a
             class="btn-dpt-edit"
             @click="edit_department(departments_data[scope.$index]['department_id'])"
-            >Edit</a
-          >
+          >Edit</a>
         </template>
       </el-table-column>
     </el-table>
@@ -95,7 +111,7 @@ export default {
     };
     this.$store
       .dispatch('$_admin/requestDepartmentsList', usersFullPayload)
-      .then(response => {}, error => {});
+      .then((response) => {}, (error) => {});
     this.filteredUserData = this.deptData;
   },
   computed: {
@@ -109,7 +125,7 @@ export default {
     departments_data() {
       const from = (this.pagination_page - 1) * this.pagination_limit;
       const to = this.pagination_page * this.pagination_limit;
-      if (this.filterState == true) {
+      if (this.filterState === true) {
         if (Array.isArray(this.filteredUserData)) {
           return this.filteredUserData.slice(from, to);
         }
@@ -155,8 +171,7 @@ export default {
         // department filter
         const vm = this;
         this.filteredUserData = this.filteredUserData.filter(
-          user =>
-            user.department_name.toLowerCase().indexOf(vm.filterData.department.toLowerCase()) >= 0
+          user => user.department_name.toLowerCase().indexOf(vm.filterData.department.toLowerCase()) >= 0,
         );
         this.filterState = true;
       }

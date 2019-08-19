@@ -1,9 +1,5 @@
 export default {
   requestSignIn({ dispatch }, payload) {
-    // let root_state = rootState;
-    // console.log(root_state);
-
-    // console.log("payload", payload);
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
@@ -16,8 +12,6 @@ export default {
     });
   },
   requestForgotPassword(context, payload) {
-    // console.log("payload", payload);
-
     return new Promise((resolve, reject) => {
       payload.vm.$store.dispatch('requestAxiosPost', payload).then(
         (response) => {
@@ -30,8 +24,6 @@ export default {
     });
   },
   requestResetPassword(context, payload) {
-    // console.log("payload", payload);
-
     return new Promise((resolve, reject) => {
       payload.vm.$store.dispatch('requestAxiosPost', payload).then(
         (response) => {
@@ -44,8 +36,6 @@ export default {
     });
   },
   requestSignUpCheck(context, payload) {
-    // console.log("payload", payload);
-
     return new Promise((resolve, reject) => {
       payload.vm.$store.dispatch('requestAxiosPost', payload).then(
         (response) => {
@@ -58,8 +48,6 @@ export default {
     });
   },
   requestCheckToken(context, payload) {
-    // console.log("payload", payload);
-
     return new Promise((resolve, reject) => {
       payload.vm.$store.dispatch('requestAxiosPost', payload).then(
         (response) => {
@@ -84,8 +72,6 @@ export default {
     });
   },
   requestSignUpPhoneVerification({ dispatch }, payload) {
-    // console.log("payload", payload);
-
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
@@ -98,8 +84,6 @@ export default {
     });
   },
   requestSignUpVerificationVerify({ dispatch }, payload) {
-    // console.log("payload", payload);
-
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {

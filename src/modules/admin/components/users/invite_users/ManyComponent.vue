@@ -4,7 +4,11 @@
       <form class="col s12">
         <div class="row textarea--row">
           <div class="input-field col s12 inviteMany--textarea">
-            <textarea id="email_area" v-model="emailSet" class="inviteMany--textareabox"></textarea>
+            <textarea
+              id="email_area"
+              v-model="emailSet"
+              class="inviteMany--textareabox"
+            />
             <div class="active inviteMany--text">
               Enter multiple email addresses separated by a comma
             </div>
@@ -13,10 +17,18 @@
       </form>
       <div class="side-flex many-flex many-action-buttons">
         <div class="column-flex space-right">
-          <a v-on:click="get_inv" class="show-link-justify">Cancel</a>
+          <a
+            class="show-link-justify"
+            @click="get_inv"
+          >Cancel</a>
         </div>
         <div class="column-flex">
-          <button v-on:click="inv_many" class="button-primary" type="submit" name="action">
+          <button
+            class="button-primary"
+            type="submit"
+            name="action"
+            @click="inv_many"
+          >
             Add Invitees
           </button>
         </div>
@@ -29,7 +41,7 @@
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
-  name: 'many-component',
+  name: 'ManyComponent',
   components: {},
   data() {
     return {
@@ -49,16 +61,16 @@ export default {
       newAdds: '$_admin/newAdds',
       updateInvites: '$_admin/updateInvites',
     }),
-    get_inv: function() {
+    get_inv() {
       this.updateViewState(1);
       this.cancelInvite = true;
     },
-    inv_many: function() {
+    inv_many() {
       if (this.emailSet !== '') {
-        let set = this.emailSet;
-        let emails = set.split(',');
-        let number = emails.length;
-        let data = new Array();
+        const set = this.emailSet;
+        const emails = set.split(',');
+        const number = emails.length;
+        const data = new Array();
         for (let x = 0; x < number; x += 1) {
           data[x] = new Array(emails[x], '', '');
         }
@@ -67,14 +79,14 @@ export default {
         this.updateViewState(1);
         this.inviteMany = true;
       } else {
-        let level = 2;
-        let notification = {
+        const level = 2;
+        const notification = {
           title: '',
-          level: level,
+          level,
           message: 'Please enter valid email address separated by a comma.',
-        }; //notification object
+        }; // notification object
         this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true); //activate notification
+        this.$store.commit('setNotificationStatus', true); // activate notification
       }
     },
   },

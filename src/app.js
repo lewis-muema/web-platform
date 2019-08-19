@@ -5,10 +5,6 @@ import Vue from 'vue';
 import { sync } from 'vuex-router-sync';
 
 import moment from 'moment';
-
-// import Element from "element-ui";
-// import "element-ui/lib/theme-chalk/index.css";
-
 import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
 import VueGeolocation from 'vue-browser-geolocation';
@@ -48,6 +44,7 @@ import {
 } from 'element-ui';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import VueMask from 'v-mask';
 import { createStore } from './store';
 import { createRouter } from './router';
 import App from './App.vue';
@@ -85,6 +82,7 @@ Vue.use(Popover);
 Vue.use(Autocomplete);
 Vue.use(Loading.directive);
 Vue.use(VueGeolocation);
+Vue.use(VueMask);
 // Vue.use(exportFromJSON);
 
 Vue.prototype.$loading = Loading.service;

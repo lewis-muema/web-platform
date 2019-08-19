@@ -5,9 +5,6 @@
       id="analytics_container"
       class="module-container"
     >
-      <!-- <div class="title">
-                <h3 class="title__text">Analytics</h3>
-            </div> -->
       <div class="section">
         <router-link
           class="section__link"
@@ -31,7 +28,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import analytics_store from './_store';
+import analyticsStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
 
@@ -39,10 +36,6 @@ export default {
   name: 'Analytics',
   components: { MainHeader },
   mixins: [RegisterStoreModule],
-  created() {
-    const STORE_KEY = '$_analytics';
-    this.register_store_module(STORE_KEY, analytics_store);
-  },
   computed: {
     ...mapGetters({
       getSession: 'getSession',
@@ -50,11 +43,15 @@ export default {
   },
   watch: {
     getSession: {
-      handler(val, oldVal) {
+      handler() {
         this.$router.push('/orders');
       },
       deep: true,
     },
+  },
+  created() {
+    const STORE_KEY = '$_analytics';
+    this.register_store_module(STORE_KEY, analyticsStore);
   },
   destroyed() {
     // TO DO:  destroy store?

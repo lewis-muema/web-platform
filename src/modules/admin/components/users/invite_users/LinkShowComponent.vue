@@ -4,42 +4,45 @@
       <div class="show-txt">
         <label class="inviteUser--text">Invite link for {{ bizName }}</label>
         <input
-          readonly
-          :value="this.getInviteLink"
           id="in_link"
+          readonly
+          :value="getInviteLink"
           type="text"
           class="form-control show--input"
-        />
+        >
       </div>
       <div class="inviteUser--button">
-        <button v-on:click="copy_link" class="button-primary">{{ button }}</button>
+        <button
+          class="button-primary"
+          @click="copy_link"
+        >
+          {{ button }}
+        </button>
       </div>
       <div class="inviteUser--button show-button-justify">
-        <a v-on:click="back" class="show-link-justify">BACK</a>
+        <a
+          class="show-link-justify"
+          @click="back"
+        >BACK</a>
       </div>
     </div>
-    <div class="show-in">Anyone can use this link to join {{ this.getBizName }} on Sendy</div>
+    <div class="show-in">
+      Anyone can use this link to join {{ getBizName }} on Sendy
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
-  name: 'link-show-component',
+  name: 'LinkShowComponent',
   data() {
     return {
       button: 'Copy to clipboard',
       bizName: '',
     };
   },
-  mounted() {
-    let session = this.$store.getters.getSession;
-    if (session.default === 'biz') {
-      this.bizName = session[session.default]['cop_name'];
-    }
-  },
-
   computed: {
     ...mapGetters({
       getState: '$_admin/getViewState',
@@ -47,18 +50,24 @@ export default {
       getInviteLink: '$_admin/getInviteLink',
     }),
   },
+  mounted() {
+    const session = this.$store.getters.getSession;
+    if (session.default === 'biz') {
+      this.bizName = session[session.default].cop_name;
+    }
+  },
   methods: {
     ...mapMutations({
       updateViewState: '$_admin/updateViewState',
     }),
 
-    copy_link: function() {
-      let copyText = document.getElementById('in_link');
+    copy_link() {
+      const copyText = document.getElementById('in_link');
       copyText.select();
       document.execCommand('Copy');
       this.button = 'Copied';
     },
-    back: function() {
+    back() {
       this.updateViewState(1);
     },
   },

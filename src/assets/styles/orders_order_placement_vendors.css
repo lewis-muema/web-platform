@@ -38,6 +38,7 @@
 }
 .vendor_component-actions__element-date {
   width: 100% !important;
+  background-color: white !important;
 }
 .pair_rider_section{
   width:100%;
@@ -336,5 +337,48 @@
 }
 .extra_info_background{
   background-color: #fff;
+}
+.load-weight{
+  width: 50% !important;
+  font-style: italic;
+}
+.tonage-value-text{
+  color: #555 !important;
+  padding-left: 10px;
+}
+.tonnage-validate-error {
+  color: #e08445;
+  font-family: "Rubik", sans-serif;
+  text-align: left;
+  font-size: 13px;
+  width: 320px;
+}
+.load-weight-outer{
+  padding-bottom: 0px;
+}
+.el-picker-panel__body-wrapper{
+  background-color: white !important;
+}
+.home-view-vendor-types--item__unavailable {
+  background: #FBFBFB;
+  color : #808080;
+  font-weight: 400 !important;
+}
+.home-view-vendor-types--icon__unavailable{
+  filter: grayscale(100%);
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  color : #808080 !important;
+}
+.home-view-vendor-types-item--cost-wrapper-right > span > span{
+  background-color: inherit;
+}
+.home-view-vendor-types--extra__unavailable{
+  background: rgba(173, 173, 173, 0.97) !important;
+  color: #FFFFFF !important;
+}
+.vendor_component-schedule{
+  font-size: 10px;
+  color: #212120;
 }
 /* end transitions */

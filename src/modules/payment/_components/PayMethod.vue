@@ -36,21 +36,21 @@ export default {
       getCountryCode: 'getCountryCode',
     }),
   },
+  created() {
+    this.checkUserPhone();
+  },
   methods: {
     checkUserPhone() {
-      let session = this.$store.getters.getSession;
-      let phone = session[session.default]['user_phone'];
-      this.currency = session[session.default]['default_currency'];
-      let int_value = phone.substring(0, 4);
-      if (int_value === '+256') {
+      const session = this.$store.getters.getSession;
+      const phone = session[session.default].user_phone;
+      this.currency = session[session.default].default_currency;
+      const intValue = phone.substring(0, 4);
+      if (intValue === '+256') {
         this.mpesa_valid = false;
       } else {
         this.mpesa_valid = true;
       }
     },
-  },
-  created() {
-    this.checkUserPhone();
   },
 };
 </script>

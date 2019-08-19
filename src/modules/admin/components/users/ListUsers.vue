@@ -203,11 +203,11 @@ export default {
       // reset filter
       const vm = this;
       this.filterState = false;
-      const user_id = this.filterData.user;
+      const userId = this.filterData.user;
       const { department } = this.filterData;
       this.filteredUserData = this.userData;
       // check if both are filled
-      if (user_id !== '' && department !== '') {
+      if (userId !== '' && department !== '') {
         const vm = this;
         this.filteredUserData = this.filteredUserData.filter(user => {
           if (
@@ -222,7 +222,7 @@ export default {
           vm.empty_users_state = 'Could not find users for the department.';
         });
         this.filterState = true;
-      } else if (user_id !== '') {
+      } else if (userId !== '') {
         // user filter
         const vm = this;
         this.filteredUserData = this.filteredUserData.filter(
@@ -238,7 +238,6 @@ export default {
           }
           vm.empty_users_state = 'Could not find users for the department.';
         });
-        // this.filteredUserData = this.filteredUserData.filter( user => user.department_id ==  department);
         this.filterState = true;
       }
     },
@@ -249,9 +248,8 @@ export default {
       updateUserPhone: '$_admin/updateUserPhone',
       updateType: '$_admin/updateType',
     }),
-    edit_user(cop_user_id) {
-      const cop_user_details = cop_user_id;
-      this.$router.push(`/admin/users/edit_user/${cop_user_id}`);
+    edit_user(copUserId) {
+      this.$router.push(`/admin/users/edit_user/${copUserId}`);
     },
   },
 };
@@ -259,7 +257,6 @@ export default {
 
 <style lang="css" scoped>
 @import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons';
-/* @import "../../../../assets/styles/datatable.css"; */
 .btn_users {
     border-width: 0px !important;
 }

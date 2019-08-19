@@ -1,35 +1,41 @@
 <template lang="html">
-  <payment_loading v-if="card_loading_status" pay_method="add_card"></payment_loading>
-  <div class="paymentbody--form" v-else>
+  <payment_loading
+    v-if="card_loading_status"
+    pay_method="add_card"
+  />
+  <div
+    v-else
+    class="paymentbody--form"
+  >
     <div class="paymentbody--input-wrap">
       <input
+        v-model="add_card_payment_data.card_no"
         type="text"
         name="card_payment_card_no"
-        @change="creditCardMask()"
-        @keyup="creditCardMask()"
-        v-model="add_card_payment_data.card_no"
         placeholder="Card Number"
         class="input-control paymentbody--input"
-      />
+        @change="creditCardMask()"
+        @keyup="creditCardMask()"
+      >
     </div>
 
     <div class="paymentbody--input-wrap paymentbody--input-spaced">
       <div class="input-control-big">
         <input
+          v-model="add_card_payment_data.card_expiry"
           type="text"
           name="card_payment_month"
-          v-model="add_card_payment_data.card_expiry"
           value=""
           placeholder="MM/YY"
           class="input-control paymentbody--input"
           @change="creditCExpiryMask"
           @keyup="creditCExpiryMask"
-        />
+        >
       </div>
       <div class="input-control-small">
         <el-input
-          placeholder="CVV"
           v-model="add_card_payment_data.cvv"
+          placeholder="CVV"
           type="number"
           name="card_payment_cvv"
           class="paymentbody--input"
@@ -41,9 +47,12 @@
             @click="showCvv"
             @mouseover.native="showCvv"
             @mouseleave.native="showCvv"
-          ></el-button>
+          />
         </el-input>
-        <div class="payment--cvv-info-wrap" v-show="cvv_state">
+        <div
+          v-show="cvv_state"
+          class="payment--cvv-info-wrap"
+        >
           <div class="sendy_payments_form_cvv_title">
             CVV
           </div>
@@ -55,7 +64,7 @@
             <img
               src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/cvv.png"
               alt="CVV"
-            />
+            >
           </div>
         </div>
       </div>
@@ -83,10 +92,10 @@ import { mapActions, mapGetters } from 'vuex';
 import payment_loading from './LoadingComponent.vue';
 import payment_success from './SuccessComponent.vue';
 import payment_fail from './FailComponent.vue';
-import Mcrypt from '../../../mixins/mcrypt_mixin.js';
+import Mcrypt from '../../../mixins/mcrypt_mixin';
 
 export default {
-  name: 'add_card',
+  name: 'AddCard',
   components: { payment_loading, payment_success, payment_fail },
   mixins: [Mcrypt],
   data() {
@@ -109,23 +118,23 @@ export default {
     },
     valid_card() {
       return (
-        this.add_card_payment_data.card_expiry !== '' &&
-        this.add_card_payment_data.card_no !== '' &&
-        this.add_card_payment_data.cvv !== ''
+        this.add_card_payment_data.card_expiry !== ''
+        && this.add_card_payment_data.card_no !== ''
+        && this.add_card_payment_data.cvv !== ''
       );
     },
     cvv_state() {
       return this.show_cvv;
     },
     card_expiry_month() {
-      let exp = this.add_card_payment_data.card_expiry;
+      const exp = this.add_card_payment_data.card_expiry;
       if (exp.length === 5) {
         return exp.slice(0, 2);
       }
       return '';
     },
     card_expiry_year() {
-      let exp = this.add_card_payment_data.card_expiry;
+      const exp = this.add_card_payment_data.card_expiry;
       if (exp.length === 5) {
         return exp.slice(3);
       }
@@ -140,22 +149,26 @@ export default {
       }
     },
     trackMixpanelEvent(name) {
-      let analytics_env = '';
+      let analyticsEnv = '';
       try {
-        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {}
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
 
       try {
-        if (analytics_env === 'production') {
+        if (analyticsEnv === 'production') {
           mixpanel.track(name);
         }
-      } catch (er) {}
+      } catch (er) {
+        // ...
+      }
     },
     ...mapActions({ requestAddNewCardAction: '$_payment/requestAddNewCard' }),
 
     handleAddCard() {
-      //sort encryption
-      let session = this.$store.getters.getSession;
+      // sort encryption
+      const session = this.$store.getters.getSession;
 
       let user_id = 0;
       let cop_id = 0;
@@ -178,31 +191,31 @@ export default {
 
       user_name = user_name.toString().split(' ');
 
-      let user_fname = user_name[0];
-      let user_lname = user_name[user_name.length - 1];
-      let card_payload = {
+      const user_fname = user_name[0];
+      const user_lname = user_name[user_name.length - 1];
+      let cardPayload = {
         exp_month: this.card_expiry_month,
         exp_year: this.card_expiry_year,
         card_no: this.add_card_payment_data.card_no,
         cvc: this.add_card_payment_data.cvv,
-        user_email: user_email,
-        cop_id: cop_id,
-        user_id: user_id,
-        user_phone: user_phone,
-        user_lname: user_lname,
-        user_fname: user_fname,
+        user_email,
+        cop_id,
+        user_id,
+        user_phone,
+        user_lname,
+        user_fname,
       };
 
-      card_payload = Mcrypt.encrypt(card_payload);
+      cardPayload = Mcrypt.encrypt(cardPayload);
 
-      let full_payload = {
-        values: card_payload,
+      const fullPayload = {
+        values: cardPayload,
         vm: this,
         app: 'PRIVATE_API',
         endpoint: 'add_card',
       };
-      this.requestAddNewCardAction(full_payload).then(
-        response => {
+      this.requestAddNewCardAction(fullPayload).then(
+        (response) => {
           response.data = Mcrypt.decrypt(response.data);
           response.data = response.data
             .replace(/\\n/g, '\\n')
@@ -216,10 +229,10 @@ export default {
           // remove non-printable and other non-valid JSON chars
           response.data = response.data.replace(/[\u0000-\u0019]+/g, '');
           response.data = JSON.parse(response.data);
-          let that = this;
+          const that = this;
 
           if (response.data.status) {
-            let notification = {
+            const notification = {
               title: 'Add Card Success',
               level: 1,
               message: 'card was added successfully',
@@ -241,7 +254,7 @@ export default {
               root: true,
             });
           } else {
-            let notification = {
+            const notification = {
               title: 'Add Card Failed',
               level: 2,
               message: response.data.message,
@@ -251,34 +264,34 @@ export default {
             });
           }
         },
-        error => {
-          let notification = {
+        (error) => {
+          const notification = {
             title: 'Add Card Failed',
             level: 2,
             message: 'something went wrong while adding new card',
           };
-          that.$store.dispatch('show_notification', notification, {
+          this.$store.dispatch('show_notification', notification, {
             root: true,
           });
-        }
+        },
       );
     },
 
     creditCardMask() {
-      let current_val = this.add_card_payment_data.card_no;
-      let new_cur = current_val.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
-      this.add_card_payment_data.card_no = new_cur.trim();
+      const currentVal = this.add_card_payment_data.card_no;
+      const newCur = currentVal.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
+      this.add_card_payment_data.card_no = newCur.trim();
     },
     creditCExpiryMask($event) {
-      let current_val = this.add_card_payment_data.card_expiry;
-      let new_cur = current_val;
+      const currentVal = this.add_card_payment_data.card_expiry;
+      let newCur = currentVal;
       if ($event.code !== 'Backspace') {
-        new_cur = current_val.replace(/\W/gi, '').replace(/(.{2})/g, '$1/');
-        if (new_cur.length > 5) {
-          new_cur = new_cur.slice(0, 5);
+        newCur = currentVal.replace(/\W/gi, '').replace(/(.{2})/g, '$1/');
+        if (newCur.length > 5) {
+          newCur = newCur.slice(0, 5);
         }
       }
-      this.add_card_payment_data.card_expiry = new_cur.trim();
+      this.add_card_payment_data.card_expiry = newCur.trim();
     },
   },
 };

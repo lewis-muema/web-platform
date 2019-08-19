@@ -31,7 +31,7 @@ export default {
     // TOOD: add cop_id to refrence if cop account
     // pass the phone no if peer
     const mpesaPayload = {
-      amount: this.order_cost,
+      amount: this.order_cost.replace(',', ''),
       sourceMobile: userPhone,
       referenceNumber,
       userId,
@@ -71,8 +71,6 @@ export default {
       copId = session.biz.cop_id;
     }
     const oldRb = this.$store.getters.getRunningBalance;
-    // const requestedAmount = this.order_cost;
-
     const runningBalancePayload = {
       values: {
         copId,
