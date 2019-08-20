@@ -102,6 +102,7 @@ export default {
       values.default_currency = this.currency;
       const fullPayload = {
         values,
+        vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'sign_up_submit',
       };
@@ -176,6 +177,7 @@ export default {
         values.default_currency = this.currency;
         const fullPayload = {
           values,
+          vm: this,
           app: 'NODE_PRIVATE_API',
           endpoint: 'sign_up_submit',
         };

@@ -188,7 +188,7 @@ import PaymentMxn from '../../../../../mixins/payment_mixin';
 library.add(faChevronDown);
 
 // const TRUCK_VENDORS = [6,10,13,14,17,18,19,20];
-const TRUCK_VENDORS = [20];
+const TRUCK_VENDORS = [20, 25];
 
 export default {
   name: 'OrderOptions',
