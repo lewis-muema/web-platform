@@ -40,6 +40,7 @@ export default {
       'verify_phone',
       'check_verification',
       'geocountry',
+      'last_partner_position',
     ];
     if (
       /^[\],:{}\s]*$/.test(
