@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import orderStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
@@ -36,6 +37,7 @@ export default {
       this.$store.commit('$_orders/removePolyline', []);
       this.$store.commit('$_orders/removeMarkers', []);
       this.$store.commit('$_orders/$_tracking/setTrackedOrder', '');
+      this.clearVendorMarkers();
     },
   },
 
@@ -49,6 +51,9 @@ export default {
   },
 
   methods: {
+    ...mapMutations({
+      clearVendorMarkers: '$_orders/clearVendorMarkers',
+    }),
     registerOrdersStore() {
       const moduleIsRegistered = this.$store._modules.root._children.$_orders !== undefined;
       if (!moduleIsRegistered) {
