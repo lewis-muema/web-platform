@@ -343,15 +343,20 @@ export default {
       }
     },
     activeState() {
-      this.$store
-        .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
-        .then((response) => {
-          if (response.data.status) {
-            this.orderStatus(response.data);
-          } else {
-            this.infoWinOpen = false;
-          }
-        });
+      const namePath = ['tracking', 'tracking_external'];
+      if (namePath.includes(this.$route.name)) {
+        this.$store
+          .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
+          .then((response) => {
+            if (response.data.status) {
+              this.orderStatus(response.data);
+            } else {
+              this.infoWinOpen = false;
+            }
+          });
+      } else {
+        this.infoWinOpen = false;
+      }
     },
     checkRiderPosition() {
       const size = Object.keys(this.vendors).length;
