@@ -65,34 +65,8 @@ const cancelOrder = function cancelOrder({ dispatch }, data) {
 const trackMQTT = function trackMQTT({ commit, state }) {
   if (state.tracking_data.confirm_status > 0) {
     const trackingNo = state.tracking_data.rider.phone_no_1;
-    const cityId = state.tracking_data.city_id;
     let cityCode = '';
-
-    switch (cityId) {
-      case 1:
-        cityCode = 'ke-nairobi';
-        break;
-      case 2:
-        cityCode = 'ke-mombasa';
-        break;
-      case 3:
-        cityCode = 'ke-thika';
-        break;
-      case 4:
-        cityCode = 'ke-nakuru';
-        break;
-      case 5:
-        cityCode = 'ke-kisumu';
-        break;
-      case 6:
-        cityCode = 'ke-eldoret';
-        break;
-      case 7:
-        cityCode = 'ug-kampala';
-        break;
-      default:
-        cityCode = 'ke-nairobi';
-    }
+    cityCode = state.tracking_data.city_code;
 
     const uri = `${cityCode}/${trackingNo}`;
 
