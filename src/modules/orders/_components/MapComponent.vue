@@ -46,7 +46,7 @@
 
 <script>
 import NoSSR from 'vue-no-ssr';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 
 const currencyConversion = require('country-tz-currency');
 const moment = require('moment');
@@ -130,6 +130,9 @@ export default {
         }
       });
     },
+    $route(to, from) {
+      this.infoWinOpen = false;
+    },
   },
   mounted() {
     this.$gmapApiPromiseLazy().then(() => {
@@ -144,6 +147,9 @@ export default {
   methods: {
     ...mapActions({
       requestCountryCode: '$_orders/$_home/requestCountryCode',
+    }),
+    ...mapMutations({
+      clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
     path_icon(icon) {
       if (icon === 'pickup') {
@@ -343,15 +349,20 @@ export default {
       }
     },
     activeState() {
-      this.$store
-        .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
-        .then((response) => {
-          if (response.data.status) {
-            this.orderStatus(response.data);
-          } else {
-            this.infoWinOpen = false;
-          }
-        });
+      const namePath = ['tracking', 'tracking_external'];
+      if (namePath.includes(this.$route.name)) {
+        this.$store
+          .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
+          .then((response) => {
+            if (response.data.status) {
+              this.orderStatus(response.data);
+            } else {
+              this.infoWinOpen = false;
+            }
+          });
+      } else {
+        this.infoWinOpen = false;
+      }
     },
     checkRiderPosition() {
       const size = Object.keys(this.vendors).length;
