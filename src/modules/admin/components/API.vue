@@ -27,9 +27,9 @@
     </div>
     <el-table
       :data="fetchedData.sandbox"
-      style="width: 100%"
       :border="true"
       :stripe="true"
+      class="fetchedDataLayout"
     >
       <template slot="empty">
         {{ empty_payments_state }}
@@ -306,5 +306,9 @@ export default {
 }
 .btn-api {
   border-width: 0px;
+}
+.fetchedDataLayout{
+  width: 100%;
+  margin-bottom: 2%;
 }
 </style>
