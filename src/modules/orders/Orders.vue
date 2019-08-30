@@ -67,7 +67,7 @@ export default {
         const notification = {
           title: 'Your session has expired!',
           level: 2,
-          message: 'You will be redirected to the login page after 5 seconds.',
+          message: 'You will be redirected to the login page within 5 seconds.',
         };
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);

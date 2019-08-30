@@ -99,7 +99,7 @@ export default {
               (response) => {
                 if (response.status) {
                   const level = 1; // success
-                  this.message = 'Password Changed. You will be redirected to the login page after 5 seconds';
+                  this.message = 'Password Changed. You will be redirected to the login page within 5 seconds';
                   const notification = { title: 'Password Change', level, message: this.message }; // notification object
                   this.$store.commit('setNotification', notification);
                   this.$store.commit('setNotificationStatus', true); // activate notification
@@ -141,7 +141,7 @@ export default {
               (response) => {
                 if (response.status) {
                   const level = 1; // success
-                  this.message = 'Password Changed. You will be redirected to the login page after 5 seconds';
+                  this.message = 'Password Changed. You will be redirected to the login page within 5 seconds';
                   const notification = { title: 'Password Change', level, message: this.message }; // notification object
                   this.$store.commit('setNotification', notification);
                   this.$store.commit('setNotificationStatus', true); // activate notification
