@@ -69,7 +69,7 @@ export default {
         const notification = {
           title: 'Your session has expired!',
           level: 2,
-          message: 'You will be redirected to the login page after 5 seconds.',
+          message: 'You will be redirected to the login page within 5 seconds.',
         };
         commit('setNotification', notification);
         commit('setNotificationStatus', true);
@@ -103,7 +103,7 @@ export default {
         const notification = {
           title: 'Your session has expired!',
           level: 2,
-          message: 'You will be redirected to the login page after 5 seconds.',
+          message: 'You will be redirected to the login page within 5 seconds.',
         };
         commit('setNotification', notification);
         commit('setNotificationStatus', true);
@@ -127,7 +127,7 @@ export default {
             const notification = {
               title: 'Your session has expired!',
               level: 2,
-              message: 'You will be redirected to the login page after 5 seconds.',
+              message: 'You will be redirected to the login page within 5 seconds.',
             };
             commit('setNotification', notification);
             commit('setNotificationStatus', true);

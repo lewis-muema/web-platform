@@ -60,7 +60,7 @@ export default {
           resolve(response.data);
         })
         .catch((error) => {
-          if (error.response.status === 404 || error.response.status === 400) {
+          if (error.response.status === 400) {
             const notification = {
               title: 'Rider Pairing Failure!',
               level: 2,
