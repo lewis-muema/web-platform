@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import orderStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
@@ -36,6 +37,7 @@ export default {
       this.$store.commit('$_orders/removePolyline', []);
       this.$store.commit('$_orders/removeMarkers', []);
       this.$store.commit('$_orders/$_tracking/setTrackedOrder', '');
+      this.clearVendorMarkers();
     },
   },
 
@@ -49,6 +51,9 @@ export default {
   },
 
   methods: {
+    ...mapMutations({
+      clearVendorMarkers: '$_orders/clearVendorMarkers',
+    }),
     registerOrdersStore() {
       const moduleIsRegistered = this.$store._modules.root._children.$_orders !== undefined;
       if (!moduleIsRegistered) {
@@ -62,7 +67,7 @@ export default {
         const notification = {
           title: 'Your session has expired!',
           level: 2,
-          message: 'You will be redirected to the login page after 5 seconds.',
+          message: 'You will be redirected to the login page within 5 seconds.',
         };
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);

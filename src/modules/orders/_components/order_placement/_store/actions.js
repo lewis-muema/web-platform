@@ -53,16 +53,24 @@ export default {
     });
   },
 
-  requestPairRider({ dispatch }, payload) {
+  requestPairRider({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
-      dispatch('requestAxiosPost', payload, { root: true }).then(
-        (response) => {
+      dispatch('requestAxiosPost', payload, { root: true })
+        .then((response) => {
           resolve(response.data);
-        },
-        (error) => {
+        })
+        .catch((error) => {
+          if (error.response.status === 400) {
+            const notification = {
+              title: 'Rider Pairing Failure!',
+              level: 2,
+              message: error.response.data.message,
+            };
+            commit('setNotification', notification, { root: true });
+            commit('setNotificationStatus', true, { root: true });
+          }
           reject(error);
-        },
-      );
+        });
     });
   },
   requestCountryCode({ dispatch }, payload) {

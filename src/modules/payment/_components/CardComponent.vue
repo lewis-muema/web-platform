@@ -3,7 +3,7 @@
   <addCard v-else-if="card_add_status" />
   <div v-else class="paymentbody--form">
     <div v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0" class="">
-      <div class="paymentbody--input-wrap">
+      <div class="paymentbody--input-wrap-saved-cards">
         <div v-for="card in get_saved_cards" class="card--saved-card-width">
           <el-radio
             v-model="payment_card"
@@ -408,5 +408,9 @@ export default {
 }
 .card--delete {
   float: right;
+}
+.paymentbody--input-wrap-saved-cards{
+  min-height: 4rem;
+  margin: .5em;
 }
 </style>
