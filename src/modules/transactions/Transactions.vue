@@ -2,27 +2,15 @@
   <div class="">
     <main-header />
 
-    <div
-      id="transactions_container"
-      class="container"
-    >
+    <div id="transactions_container" class="container">
       <div class="section">
-        <router-link
-          class="section__link"
-          to="/transactions/order_history"
-        >
+        <router-link class="section__link" to="/transactions/order_history">
           Orders
         </router-link>
-        <router-link
-          class="section__link"
-          to="/transactions/statement"
-        >
+        <router-link class="section__link" to="/transactions/statement">
           Statement
         </router-link>
-        <router-link
-          class="section__link"
-          to="/transactions/payments"
-        >
+        <router-link class="section__link" to="/transactions/payments">
           Payments
         </router-link>
       </div>
@@ -34,11 +22,10 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
-import trans_store from './_store';
+import transStore from './_store';
 import MainHeader from '../../components/headers/MainHeader.vue';
 
 library.add(faStar);
@@ -47,9 +34,6 @@ export default {
   name: 'Transactions',
   // mixins: [ RegisterStoreModule ],
   components: { MainHeader },
-  created() {
-    this.$store.registerModule('$_transactions', trans_store);
-  },
   computed: {
     ...mapGetters({
       getSession: 'getSession',
@@ -58,12 +42,15 @@ export default {
   watch: {
     getSession: {
       handler(val, oldVal) {
-        if (oldVal != val) {
+        if (oldVal !== val) {
           this.$router.push('/orders');
         }
       },
       deep: true,
     },
+  },
+  created() {
+    this.$store.registerModule('$_transactions', transStore);
   },
 };
 </script>

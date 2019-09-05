@@ -1,16 +1,15 @@
 <template lang="html">
-  <div id="log_in" class="log-item">
-    <div id="sign-up-v2-container" class="sign-inner">
+  <div
+    id="log_in"
+    class="log-item"
+  >
+    <div
+      id="sign-up-v2-container"
+      class="sign-inner"
+    >
       <div class="sign-text">
         Sign up for Sendy
       </div>
-
-      <!-- <div class="sign-button" onclick="" id="sign-in-v2-logging-in-1">
-  <img class="sign-buttom__img" src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
-  </div>
-  <div class="sign-text">
-     or
-  </div> -->
 
       <p class="sign-up-error">
         {{ message }}
@@ -25,7 +24,7 @@
             name="name"
             placeholder="Your Name"
             value=""
-          />
+          >
         </div>
 
         <div class="sign-holder dimen">
@@ -37,8 +36,8 @@
             name="email"
             placeholder="Your Email"
             value=""
-          />
-          <br />
+          >
+          <br>
           <p class="sign-up-email-error">
             {{ errors.first('email') }}
           </p>
@@ -55,11 +54,17 @@
             :preferred-countries="['ke', 'ug', 'tz']"
             @onBlur="validate_phone"
           />
-          <p v-show="errors.has('phone')" class="sign-up-phone-error">
+          <p
+            v-show="errors.has('phone')"
+            class="sign-up-phone-error"
+          >
             {{ errors.first('phone') }}
           </p>
         </div>
-        <div id="outer_u_pass" class="sign-holder dimen">
+        <div
+          id="outer_u_pass"
+          class="sign-holder dimen"
+        >
           <span>
             <input
               v-model="password"
@@ -68,19 +73,30 @@
               name="password"
               placeholder="Password"
               @keyup="validate_pass"
-            />
-            <br />
+            >
+            <br>
             <p class="pass-validate-error">
               {{ pass_msg }}
             </p>
           </span>
         </div>
 
-        <div class="sign-holder" style="text-align:center;">
-          <input v-model="u_terms" type="checkbox" name="u_terms" class="hiddeny" />
+        <div
+          class="sign-holder"
+          style="text-align:center;"
+        >
+          <input
+            v-model="u_terms"
+            type="checkbox"
+            name="u_terms"
+            class="hiddeny"
+          >
           <span class="sign-holder__smaller">
             By creating a Sendy account you’re agreeing to the
-            <a class=" sign-holder__grey" href="https://sendyit.com/terms">
+            <a
+              class=" sign-holder__grey"
+              href="https://sendyit.com/terms"
+            >
               terms and conditions
             </a>
           </span>
@@ -94,28 +110,37 @@
             name="sign_up_text"
             aria-invalid="false"
             @click="sign_up"
-          />
+          >
         </div>
 
         <div class=" sign-holder sign-forgot-pass sign-smaller">
           Do you already have an account?
-          <router-link class="sign-holder__link" to="/auth/sign_in">
+          <router-link
+            class="sign-holder__link"
+            to="/auth/sign_in"
+          >
             Login
           </router-link>
         </div>
         <div class=" sign-holder sign-forgot-pass sign-smaller driver-sign-up">
           Want to drive for Sendy?
-          <a class="sign-holder__link2" href="https://partner.sendyit.com/onboarding_portal/">
+          <a
+            class="sign-holder__link2"
+            href="https://partner.sendyit.com/onboarding_portal/"
+          >
             Click here
           </a>
         </div>
       </div>
-      <el-dialog :visible.sync="phoneVerification" class="sign-up-phone-validation">
+      <el-dialog
+        :visible.sync="phoneVerification"
+        class="sign-up-phone-validation"
+      >
         <span slot="title">
           <img
             src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
             class="signup-sendy-logo"
-          />
+          >
         </span>
         <div>
           <div class="signup-validation-description">
@@ -129,14 +154,22 @@
               v-model="code"
               type="text"
               placeholder="Enter Verification Code"
-            />
+            >
           </div>
         </div>
         <div class="signup-verif-button">
-          <button type="button" class="signup-cancel" @click="signUpVerificationCancel">
+          <button
+            type="button"
+            class="signup-cancel"
+            @click="signUpVerificationCancel"
+          >
             Cancel
           </button>
-          <button type="button" class="signup-verify" @click="signUpVerificationVerify">
+          <button
+            type="button"
+            class="signup-verify"
+            @click="signUpVerificationVerify"
+          >
             Verify
           </button>
         </div>
@@ -148,6 +181,8 @@
 <script>
 import { mapMutations, mapActions, mapGetters } from 'vuex';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
+
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'SignUp',
@@ -190,32 +225,31 @@ export default {
     }),
     sign_up() {
       if (this.name !== '' && this.email !== '' && this.phone !== '' && this.password !== '') {
-        const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-        const phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+        const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
         const phoneNumber = parsePhoneNumberFromString(this.phone);
         this.setUserCountryCode(phoneNumber.country);
-        let email_valid = true;
+        let emailValid = true;
         for (let i = 0; i < this.errors.items.length; i++) {
           if (this.errors.items[i].field === 'email') {
-            email_valid = false;
+            emailValid = false;
             break;
           }
         }
-        if (phone_valid && email_valid && this.pass_validation) {
+        if (phoneValid && emailValid && this.pass_validation) {
           if (this.u_terms) {
-            const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+            const phone = this.phone.replace(/[()\-\s]+/g, '');
             this.phone = phone;
             const values = {};
             values.phone = phone;
             values.email = this.email;
-            const full_payload = {
+            const fullPayload = {
               values,
               vm: this,
               app: 'NODE_PRIVATE_API',
               endpoint: 'sign_up_check',
             };
-            this.requestSignUpCheck(full_payload).then(
-              response => {
+            this.requestSignUpCheck(fullPayload).then(
+              (response) => {
                 if (response.length > 0) {
                   response = response[0];
                 }
@@ -231,9 +265,9 @@ export default {
                   this.doNotification(2, 'Sign Up failed', response.data.reason);
                 }
               },
-              error => {
+              (error) => {
                 this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
-              }
+              },
             );
           } else {
             this.message = 'Agree to Terms and Conditions';
@@ -262,8 +296,7 @@ export default {
       const patt = new RegExp('^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9@#$%^&+=]*$');
       const res = patt.test(this.password);
       if (!res) {
-        this.pass_msg =
-          'Password must be at least 8 characters long, contain at least one number and have a mixture of uppercase and lowercase letters.';
+        this.pass_msg = 'Password must be at least 8 characters long, contain at least one number and have a mixture of uppercase and lowercase letters.';
       } else {
         this.pass_msg = '';
         this.pass_validation = true;
@@ -275,7 +308,7 @@ export default {
       this.doNotification(
         2,
         'Phone Verification',
-        'Phone Verification Failed . Retry to complete SignUp process'
+        'Phone Verification Failed . Retry to complete SignUp process',
       );
     },
 
@@ -283,14 +316,14 @@ export default {
       const values = {};
       values.code = this.code;
       values.request_id = this.getVerificationRequestId();
-      const full_payload = {
+      const fullPayload = {
         values,
         vm: this,
         app: 'PRIVATE_API',
         endpoint: 'check_verification',
       };
-      this.requestSignUpVerificationVerify(full_payload).then(
-        response => {
+      this.requestSignUpVerificationVerify(fullPayload).then(
+        (response) => {
           if (response.status) {
             this.doNotification(2, 'Phone Verification', 'Phone verification successful !');
             this.$router.push('/auth/sign_up_verification');
@@ -299,41 +332,41 @@ export default {
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
-        error => {
+        (error) => {
           this.doNotification(
             2,
             'Phone Verification Error ',
-            'Check Internet connection and retry'
+            'Check Internet connection and retry',
           );
-        }
+        },
       );
     },
 
     sendVerificationCode() {
-      const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+      const phone = this.phone.replace(/[()\-\s]+/g, '');
       const values = {};
       values.phone_no = phone;
-      const full_payload = {
+      const fullPayload = {
         values,
         vm: this,
         app: 'PRIVATE_API',
         endpoint: 'verify_phone',
       };
-      this.requestSignUpPhoneVerification(full_payload).then(
-        response => {
+      this.requestSignUpPhoneVerification(fullPayload).then(
+        (response) => {
           if (response.status) {
             this.setVerificationRequestId(response.request_id);
           } else {
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
-        error => {
+        (error) => {
           this.doNotification(
             2,
             'Phone Verification Error ',
-            'Check Internet connection and retry'
+            'Check Internet connection and retry',
           );
-        }
+        },
       );
     },
   },

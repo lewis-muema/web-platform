@@ -1,53 +1,62 @@
 <template lang="html">
   <div class="inv-container">
     <div class="up-flex">
-      <div class="input-spaced" style="display: none;">
-        <el-select class="addUser--select" v-model="value" placeholder="Select">
+      <div
+        class="input-spaced"
+        style="display: none;"
+      >
+        <el-select
+          v-model="value"
+          class="addUser--select"
+          filterable
+          placeholder="Select"
+        >
           <el-option
             v-for="item in options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          >
-          </el-option>
+          />
         </el-select>
-        <!--<select>-->
-        <!--<option value="0" selected>Expires in 7 days</option>-->
-        <!--<option value="1">Expires in 24 hours</option>-->
-        <!--<option value="2">Expires in 30 days</option>-->
-        <!--<option value="3">Never Expires</option>-->
-        <!--</select>-->
       </div>
       <div class="input-spaced">
-        <el-select class="addUser--select" v-model="value" placeholder="Select">
+        <el-select
+          v-model="value"
+          class="addUser--select"
+          filterable
+          placeholder="Select"
+        >
           <el-option
             v-for="item in options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          >
-          </el-option>
+          />
         </el-select>
       </div>
       <div class="side-flex mid-btn">
-        <a v-on:click="get_inv">Cancel</a>
-        <button v-on:click="get_link" class="button-primary" type="submit" name="action">
+        <a @click="get_inv">Cancel</a>
+        <button
+          class="button-primary"
+          type="submit"
+          name="action"
+          @click="get_link"
+        >
           Create Link
         </button>
       </div>
     </div>
     <div class="side-flex side-desc">
-      Anyone can use this link to join {{ this.getBizName }} on Sendy
+      Anyone can use this link to join {{ getBizName }} on Sendy
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import axios from 'axios';
 
 export default {
-  name: 'link-component',
+  name: 'LinkComponent',
   components: {},
   data() {
     return {
@@ -76,9 +85,6 @@ export default {
       value: '',
     };
   },
-  mounted() {
-    // this.init_select()
-  },
   computed: {
     ...mapGetters({
       getState: '$_admin/getViewState',
@@ -92,7 +98,7 @@ export default {
       updateViewState: '$_admin/setViewState',
       updateInviteLink: '$_admin/updateInviteLink',
     }),
-    get_inv: function() {
+    get_inv() {
       this.updateViewState(1);
     },
   },

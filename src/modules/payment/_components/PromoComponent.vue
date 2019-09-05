@@ -95,7 +95,7 @@ export default {
         },
         error => {
           this.payment_state = 'Promocode Redeeem Failed';
-        },
+        }
       );
     },
   },

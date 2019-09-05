@@ -5,6 +5,8 @@ import axios from 'axios';
 
 export default {
   requestAxiosPost({ state, commit }, payload) {
+    const baseUrl = window.location.origin;
+    const loginUrl = `${baseUrl}/sign_in`;
     const url = state.ENV[payload.app];
     // add api key - if request is going to the backend
     if (payload.app === 'BACKEND_CUSTOMERS_APP') {
@@ -38,6 +40,7 @@ export default {
       'verify_phone',
       'check_verification',
       'geocountry',
+      'last_partner_position',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -66,10 +69,15 @@ export default {
         const notification = {
           title: 'Your session has expired!',
           level: 2,
-          message: 'Please log out and log in again.',
+          message: 'You will be redirected to the login page within 5 seconds.',
         };
         commit('setNotification', notification);
         commit('setNotificationStatus', true);
+        setTimeout(() => {
+          localStorage.removeItem('_sessionSnack');
+          localStorage.removeItem('jwtToken');
+          window.location.href = loginUrl;
+        }, 5000);
         return true;
       }
     } else {
@@ -95,33 +103,44 @@ export default {
         const notification = {
           title: 'Your session has expired!',
           level: 2,
-          message: 'Please log out and log in again.',
+          message: 'You will be redirected to the login page within 5 seconds.',
         };
         commit('setNotification', notification);
         commit('setNotificationStatus', true);
+        setTimeout(() => {
+          localStorage.removeItem('_sessionSnack');
+          localStorage.removeItem('jwtToken');
+          window.location.href = loginUrl;
+        }, 5000);
         return true;
       }
     }
 
     return new Promise((resolve, reject) => {
-      axios.post(`${url}${payload.endpoint}`, payload.values, config).then(
-        (response) => {
-          if (response.data === 401 || response.data === 403) {
+      axios
+        .post(`${url}${payload.endpoint}`, payload.values, config)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          if (error.response.status === 403 || error.response.status === 401) {
             const notification = {
-              title: 'Something went wrong!',
+              title: 'Your session has expired!',
               level: 2,
-              message: 'Please log out and log in again.',
+              message: 'You will be redirected to the login page within 5 seconds.',
             };
             commit('setNotification', notification);
             commit('setNotificationStatus', true);
-          } else {
-            resolve(response);
+            setTimeout(() => {
+              localStorage.removeItem('_sessionSnack');
+              localStorage.removeItem('jwtToken');
+              window.location.href = loginUrl;
+            }, 5000);
+            return true;
           }
-        },
-        (error) => {
           reject(error);
-        },
-      );
+          return false;
+        });
     });
   },
 

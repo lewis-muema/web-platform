@@ -5,8 +5,8 @@
      </div> -->
     <div v-if="!get_extended_options">
       <div
-        class="homeview--form homeview--row homeview--form__scrollable"
         ref="scrollable_locations"
+        class="homeview--form homeview--row homeview--form__scrollable"
       >
         <div class="homeview--input-bundler">
           <no-ssr placeholder="">
@@ -17,15 +17,15 @@
               width="10px"
             />
             <gmap-autocomplete
-              @place_changed="setLocation($event, 0)"
-              @keyup="checkChangeEvents($event, 0)"
-              @change="checkChangeEvents($event, 0)"
-              :options="map_options"
               v-model="locations[0]"
+              :options="map_options"
               placeholder="Enter a pickup location"
               :select-first-on-enter="true"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
-            ></gmap-autocomplete>
+              @place_changed="setLocation($event, 0)"
+              @keyup="checkChangeEvents($event, 0)"
+              @change="checkChangeEvents($event, 0)"
+            />
             <font-awesome-icon
               icon="times"
               size="xs"
@@ -45,15 +45,15 @@
                 width="10px"
               />
               <gmap-autocomplete
-                @place_changed="setLocation($event, 1)"
-                @keyup="checkChangeEvents($event, 1)"
-                @change="checkChangeEvents($event, 1)"
-                :options="map_options"
                 v-model="locations[1]"
+                :options="map_options"
                 placeholder="Enter a destination location"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
-              ></gmap-autocomplete>
+                @place_changed="setLocation($event, 1)"
+                @keyup="checkChangeEvents($event, 1)"
+                @change="checkChangeEvents($event, 1)"
+              />
               <font-awesome-icon
                 icon="times"
                 size="xs"
@@ -65,10 +65,10 @@
           </div>
         </div>
         <div
-          class="homeview--destinations"
           v-for="n in get_extra_destinations"
           :key="n + 1"
-          v-bind:data-index="n + 1"
+          class="homeview--destinations"
+          :data-index="n + 1"
         >
           <div class="homeview--input-bundler">
             <no-ssr placeholder="">
@@ -79,15 +79,15 @@
                 width="10px"
               />
               <gmap-autocomplete
-                @place_changed="setLocation($event, n + 1)"
-                @keyup="checkChangeEvents($event, (n = 1))"
-                @change="checkChangeEvents($event, n + 1)"
-                :options="map_options"
                 v-model="locations[n + 1]"
+                :options="map_options"
                 placeholder="Enter a destination location"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
-              ></gmap-autocomplete>
+                @place_changed="setLocation($event, n + 1)"
+                @keyup="checkChangeEvents($event, (n = 1))"
+                @change="checkChangeEvents($event, n + 1)"
+              />
               <font-awesome-icon
                 icon="times"
                 size="xs"
@@ -101,8 +101,8 @@
       </div>
 
       <div
-        class="homeview--row homeview--row__more-destinations homeview-locations-options"
         v-if="allow_add_destination"
+        class="homeview--row homeview--row__more-destinations homeview-locations-options"
       >
         <div class="homeview-locations-options--add-destination">
           <font-awesome-icon
@@ -111,20 +111,30 @@
             class="sendy-blue homeview--row__font-awesome"
             width="10px"
           />
-          <a class="homeview--add" @click="addExtraDestinationWrapper()">Add Destination</a>
+          <a
+            class="homeview--add"
+            @click="addExtraDestinationWrapper()"
+          >Add Destination</a>
         </div>
       </div>
-      <div class="orders-loading-container" v-loading="loading" v-if="loading"></div>
+      <div
+        v-if="loading"
+        v-loading="loading"
+        class="orders-loading-container"
+      />
     </div>
     <div>
       <div v-if="show_vendor_view && !loading">
-        <vendor-view v-on:vendorComponentDestroyed="destroyOrderPlacement()"></vendor-view>
+        <vendor-view @vendorComponentDestroyed="destroyOrderPlacement()" />
       </div>
       <div
         v-if="!show_vendor_view && !loading"
         class="home-view--seperator home-view--form__seperator"
       >
-        <button type="button" class="button--primary-inactive home-view--place-order">
+        <button
+          type="button"
+          class="button--primary-inactive home-view--place-order"
+        >
           Confirm Order
         </button>
       </div>
@@ -135,13 +145,8 @@
 <script>
 import NoSSR from 'vue-no-ssr';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
-import order_placement_store from './_store';
-import orders_module_store from '../../_store';
-import payments_module_store from '../../../payment/_store';
-import VendorComponent from './_components/VendorComponent.vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCcVisa, faCcMastercard } from '@fortawesome/free-brands-svg-icons';
-import SessionMxn from '../../../../mixins/session_mixin.js';
 import {
   faPlus,
   faMapMarkerAlt,
@@ -153,8 +158,10 @@ import {
   faMobileAlt,
   faStar,
 } from '@fortawesome/free-solid-svg-icons';
-
-const currencyConversion = require('country-tz-currency');
+import orderPlacementStore from './_store';
+import paymentsModuleStore from '../../../payment/_store';
+import VendorComponent from './_components/VendorComponent.vue';
+import SessionMxn from '../../../../mixins/session_mixin';
 
 library.add(
   faPlus,
@@ -167,24 +174,32 @@ library.add(
   faMobileAlt,
   faStar,
   faCcVisa,
-  faCcMastercard
+  faCcMastercard,
 );
 
 export default {
   name: 'OrderPlacement',
-  mixins: [SessionMxn],
-  data: function() {
-    return {
-      show_destinations: false,
-      loading: false,
-      locations: [],
-      map_options: {},
-    };
-  },
 
   components: {
     'no-ssr': NoSSR,
     'vendor-view': VendorComponent,
+  },
+  mixins: [SessionMxn],
+  data() {
+    return {
+      show_destinations: false,
+      loading: false,
+      locations: [],
+      map_options: {
+        bounds: {
+          north: 35.6,
+          east: 59.4,
+          south: -28.3,
+          west: -19.1,
+        },
+        strictBounds: true,
+      },
+    };
   },
   watch: {
     get_session: {
@@ -198,7 +213,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      // get_waypoints : '$_orders/$_home/get_waypoints',
       get_map_markers: '$_orders/getMarkers',
       get_max_destinations: '$_orders/$_home/getMaxDestinations',
       get_order_path: '$_orders/$_home/getOrderPath',
@@ -220,21 +234,31 @@ export default {
 
     allow_add_destination() {
       return (
-        !this.loading &&
-        Array.isArray(this.get_order_path) &&
-        this.get_order_path.length - 1 <= this.get_max_destinations &&
-        this.get_order_path.length > 1 &&
-        this.get_extra_destinations <= this.get_order_path.length - 2
+        !this.loading
+        && Array.isArray(this.get_order_path)
+        && this.get_order_path.length - 1 <= this.get_max_destinations
+        && this.get_order_path.length > 1
+        && this.get_extra_destinations <= this.get_order_path.length - 2
       );
     },
 
     show_vendor_view() {
       return (
-        Array.isArray(this.getStoreOrderPath) &&
-        this.getStoreOrderPath.length > 1 &&
-        this.getOuterPriceRequestData.hasOwnProperty('economy_price_tiers')
+        Array.isArray(this.getStoreOrderPath)
+        && this.getStoreOrderPath.length > 1
+        && Object.prototype.hasOwnProperty.call(this.getOuterPriceRequestData, 'economy_price_tiers')
       );
     },
+  },
+  created() {
+    this.instantiateHomeComponent();
+    this.initializeOrderFlow();
+  },
+  mounted() {
+    this.checkSessionData();
+  },
+  destroyed() {
+    this.destroyOrderPlacement();
   },
   methods: {
     ...mapMutations({
@@ -292,16 +316,20 @@ export default {
     },
 
     trackMixpanelEvent(name) {
-      let analytics_env = '';
+      let analyticsEnv = '';
       try {
-        analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {}
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
 
       try {
-        if (analytics_env === 'production') {
+        if (analyticsEnv === 'production') {
           mixpanel.track(name);
         }
-      } catch (er) {}
+      } catch (er) {
+        // ...
+      }
     },
 
     clearLocation(index) {
@@ -323,13 +351,11 @@ export default {
 
     setLocation(place, index) {
       if (!place) {
-        //console.log('not a place', index);
+        // console.log('not a place', index);
         return;
       }
-      const countryIndex = place.address_components.findIndex(country_code =>
-        country_code.types.includes('country')
-      );
-      let path_obj = {
+      const countryIndex = place.address_components.findIndex(country_code => country_code.types.includes('country'));
+      const pathObj = {
         name: place.name,
         coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
         waypoint_details_status: true,
@@ -347,20 +373,20 @@ export default {
           Address: 'Not Indicated',
         },
       };
-      let path_payload = {
-        index: index,
-        path: path_obj,
+      const pathPayload = {
+        index,
+        path: pathObj,
       };
-      let location_name_payload = {
-        index: index,
+      const locationNamePayload = {
+        index,
         name: place.name,
       };
       this.resetLocation(index);
       this.setMarker(place.geometry.location.lat(), place.geometry.location.lng(), index);
-      this.set_order_path(path_payload);
-      this.setStorePath(path_payload);
+      this.set_order_path(pathPayload);
+      this.setStorePath(pathPayload);
       this.setLocationInModel(index, place.name);
-      this.set_location_name(location_name_payload);
+      this.set_location_name(locationNamePayload);
       if (index === 0) {
         this.setPickupFilled(true);
       }
@@ -368,9 +394,9 @@ export default {
     },
     attemptPriceRequest() {
       if (
-        Array.isArray(this.locations) &&
-        this.locations.length > 1 &&
-        this.get_pickup_filled === true
+        Array.isArray(this.locations)
+        && this.locations.length > 1
+        && this.get_pickup_filled === true
       ) {
         this.clearOuterPriceRequestObject();
         this.clearOuterActiveVendorDetails();
@@ -391,27 +417,27 @@ export default {
     },
 
     setMarker(lat, lng, index) {
-      let mark = {
-        position: { lat: lat, lng: lng, icon: 'destination' },
+      const mark = {
+        position: { lat, lng, icon: 'destination' },
       };
       if (index === 0) {
         mark.icon = 'pickup';
       }
-      let marker_payload = {
-        index: index,
+      const markerPayload = {
+        index,
         marker: mark,
       };
-      this.set_location_marker(marker_payload);
+      this.set_location_marker(markerPayload);
     },
 
     createPriceRequestObject() {
-      let obj = { path: this.getStoreOrderPath };
+      const obj = { path: this.getStoreOrderPath };
       let acc = {};
-      let session = this.$store.getters.getSession;
+      const session = this.$store.getters.getSession;
       if ('default' in session) {
         acc = session[session.default];
       }
-      let infor = {
+      const infor = {
         email: acc.user_email,
         client_mode: 'cop_id' in acc ? acc.cop_id : 0,
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
@@ -436,29 +462,29 @@ export default {
         default_currency: this.getDefaultCurrency,
         preffered_currency: this.getDefaultCurrency,
       };
-      let json_decoded_path = JSON.stringify(obj);
-      infor.path = json_decoded_path;
-      let final_obj = { values: infor };
-      return final_obj;
+      const jsonDecodedPath = JSON.stringify(obj);
+      infor.path = jsonDecodedPath;
+      const finalObj = { values: infor };
+      return finalObj;
     },
     doPriceRequest() {
       this.setOuterPriceRequestObject('');
-      let payload = {
+      const payload = {
         values: this.createPriceRequestObject(),
         app: 'PRIVATE_API',
         endpoint: 'pricing_multiple',
       };
       this.loading = true;
-      let previous_active_vendor = this.get_active_vendor_name;
-      let defined_locations = this.locations;
+      const previousActiveVendor = this.get_active_vendor_name;
+      const definedLocations = this.locations;
       this.requestPriceQuote(payload).then(
-        response => {
+        (response) => {
           this.setOrderState(1);
-          this.setHomeLocations(defined_locations);
+          this.setHomeLocations(definedLocations);
           this.setOuterPriceRequestObject(response.values);
           this.loading = false;
           this.setDefaultPackageClass();
-          this.setDefaultVendorType(previous_active_vendor);
+          this.setDefaultVendorType(previousActiveVendor);
           const acc = this.$store.getters.getSession;
 
           this.trackMixpanelEvent('Make Price Request', {
@@ -466,68 +492,60 @@ export default {
             'Client Type': 'Web Platform',
           });
         },
-        error => {
-          if (error.hasOwnProperty('crisis_notification')) {
+        (error) => {
+          if (Object.prototype.hasOwnProperty.call(error, 'crisis_notification')) {
             this.doNotification(3, error.reason, error.crisis_notification.msg);
           } else {
             this.doNotification(
               3,
               'Price request failed',
-              'Price request failed. Please try again after a few minutes.'
+              'Price request failed. Please try again after a few minutes.',
             );
           }
 
           this.loading = false;
-        }
+        },
       );
     },
 
     doNotification(level, title, message) {
       this.$store.commit('setNotificationStatus', true);
-      let notification = { title: title, level: level, message: message };
+      const notification = { title, level, message };
       this.$store.commit('setNotification', notification);
     },
 
     doSetDefaultPackageClass() {
       try {
-        let default_package_class = this.get_price_request_object.economy_price_tiers[0][
-          'tier_group'
-        ];
-        this.set_active_package_class(default_package_class);
+        const defaultPackageClass = this.get_price_request_object.economy_price_tiers[0].tier_group;
+        this.set_active_package_class(defaultPackageClass);
       } catch (er) {
-        //console.log(er);
+        // console.log(er);
       }
     },
 
     doSetDefaultVendorType() {
       try {
-        let default_vendor_details = this.get_price_request_object.economy_price_tiers[0][
-          'price_tiers'
-        ][0];
-        this.set_active_vendor_name(default_vendor_details.vendor_name);
-        this.set_active_vendor_details(default_vendor_details);
+        const defaultVendorDetails = this.get_price_request_object.economy_price_tiers[0]
+          .price_tiers[0];
+        this.set_active_vendor_name(defaultVendorDetails.vendor_name);
+        this.set_active_vendor_details(defaultVendorDetails);
       } catch (er) {
-        //console.log(er);
+        // console.log(er);
       }
     },
     setDefaultVendorType(previous) {
       if (this.get_active_vendor_name === '') {
         this.doSetDefaultVendorType();
       } else {
-        let self = this;
-        let result = this.get_price_request_object.economy_price_tiers.filter(function(pack) {
-          return pack.price_tiers.some(function(vendor) {
-            return vendor.vendor_name === previous;
-          });
-        });
+        const result = this.get_price_request_object.economy_price_tiers.filter(pack => pack.price_tiers.some(vendor => vendor.vendor_name === previous));
 
         if (result.length == 0) {
           this.doSetDefaultVendorType();
         } else {
-          let new_active_price_object = result[0].price_tiers.find(
-            vendor => vendor.vendor_name === previous
+          const newActivePriceObject = result[0].price_tiers.find(
+            vendor => vendor.vendor_name === previous,
           );
-          this.set_active_vendor_details(new_active_price_object);
+          this.set_active_vendor_details(newActivePriceObject);
         }
       }
     },
@@ -536,10 +554,10 @@ export default {
       if (this.get_active_package_class === '') {
         this.doSetDefaultPackageClass();
       } else {
-        let self = this;
-        let _package = this.get_price_request_object.economy_price_tiers.filter(function(pack) {
-          return pack.tier_group === self.get_active_package_class;
-        });
+        const self = this;
+        const _package = this.get_price_request_object.economy_price_tiers.filter(
+          pack => pack.tier_group === self.get_active_package_class,
+        );
         if (_package.length === 0) {
           this.doSetDefaultPackageClass();
         }
@@ -547,7 +565,7 @@ export default {
     },
 
     scrollToBottom() {
-      let container = this.$refs.scrollable_locations;
+      const container = this.$refs.scrollable_locations;
       container.scrollTop = container.scrollHeight;
     },
 
@@ -567,7 +585,7 @@ export default {
       try {
         this.$store.unregisterModule(['$_orders', '$_home']);
       } catch (er) {
-        //console.log('failed to unregisterModule $_orders $_home on order placement home', er);
+        // console.log('failed to unregisterModule $_orders $_home on order placement home', er);
       }
 
       // do not unregister payments module since we do not expect any conflicts with the payment page state
@@ -583,24 +601,23 @@ export default {
     },
 
     registerPaymentModule() {
-      const moduleIsRegistered = this.$store._modules.root._children['$_payment'] !== undefined;
+      const moduleIsRegistered = this.$store._modules.root._children.$_payment !== undefined;
 
       if (!moduleIsRegistered) {
-        this.$store.registerModule('$_payment', payments_module_store);
+        this.$store.registerModule('$_payment', paymentsModuleStore);
       }
     },
 
     registerOrderPlacementModule() {
       let moduleIsRegistered = false;
       try {
-        moduleIsRegistered =
-          this.$store._modules.root._children['$_orders']._children['$_home'] !== undefined;
+        moduleIsRegistered = this.$store._modules.root._children.$_orders._children.$_home !== undefined;
       } catch (er) {
         //
       }
 
       if (!moduleIsRegistered) {
-        this.$store.registerModule(['$_orders', '$_home'], order_placement_store);
+        this.$store.registerModule(['$_orders', '$_home'], orderPlacementStore);
       }
     },
 
@@ -609,8 +626,8 @@ export default {
       this.registerOrderPlacementModule();
     },
     checkSessionData() {
-      let session = this.$store.getters.getSession;
-      let acc = session[session.default];
+      const session = this.$store.getters.getSession;
+      const acc = session[session.default];
       if (!acc.hasOwnProperty('country_code')) {
         this.deleteSession();
         this.$router.push({ path: '/auth/sign_in' });
@@ -618,9 +635,9 @@ export default {
     },
     initializeOrderFlow() {
       if (this.$route.path === '/orders/') {
-        const stored_location = this.getHomeLocations;
-        if (stored_location.length > 1) {
-          this.locations = stored_location;
+        const storedLocation = this.getHomeLocations;
+        if (storedLocation.length > 1) {
+          this.locations = storedLocation;
           this.setPickupFilled(true);
           this.setPickupFilled(true);
           this.attemptPriceRequest();
@@ -632,15 +649,6 @@ export default {
         this.clearOuterActiveVendorDetails();
       }
     },
-  },
-
-  created() {
-    this.instantiateHomeComponent();
-    this.initializeOrderFlow();
-    this.checkSessionData();
-  },
-  destroyed() {
-    this.destroyOrderPlacement();
   },
 };
 </script>
@@ -655,7 +663,6 @@ export default {
 }
 /* Track */
 ::-webkit-scrollbar-track {
-  /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); */
   -webkit-border-radius: 5px;
   border-radius: 5px;
   background-color: rgba(0, 0, 0, 0.1);
@@ -665,7 +672,6 @@ export default {
   -webkit-border-radius: 5px;
   border-radius: 5px;
   background: #1782c5;
-  /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); */
 }
 ::-webkit-scrollbar-thumb:window-inactive {
   background-color: rgba(0, 0, 0, 0.2);

@@ -6,7 +6,6 @@ export default {
   namespaced: true,
   state() {
     return {
-      // waypoints: 1,
       active_package_class: '',
       active_vendor_name: '',
       active_vendor_details: {},
@@ -38,6 +37,9 @@ export default {
       pair_rider_phone: '',
       country_code: '',
       default_currency: '',
+      test_specs: '',
+      load_weight_val: 0,
+      load_weight_status: false,
     };
   },
   actions,

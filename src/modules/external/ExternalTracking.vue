@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import order_store from '../orders/_store';
+import orderStore from '../orders/_store';
 import ExternalHeader from '../../components/headers/ExternalHeader.vue';
 import MapComponent from '../orders/_components/MapComponent.vue';
 
@@ -41,7 +41,7 @@ export default {
     registerOrdersStore() {
       const moduleIsRegistered = this.$store._modules.root._children.$_orders !== undefined;
       if (!moduleIsRegistered) {
-        this.$store.registerModule('$_orders', order_store);
+        this.$store.registerModule('$_orders', orderStore);
       }
     },
   },

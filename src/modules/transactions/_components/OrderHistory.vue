@@ -1,5 +1,8 @@
 <template lang="html">
-  <div id="order_hist_container" class="">
+  <div
+    id="order_hist_container"
+    class=""
+  >
     <div class="section--filter-wrap">
       <div class="section--filter-input-wrap">
         <el-select
@@ -8,7 +11,10 @@
           class="section--filter-input"
           placeholder="Users"
         >
-          <el-option label="All Users" value="-1" />
+          <el-option
+            label="All Users"
+            value="-1"
+          />
           <el-option
             v-for="user in copUsers"
             :key="user.cop_user_id"
@@ -52,13 +58,28 @@
     </div>
     <div class="bg-grey">
       <div class="download_history">
-        <el-dropdown @command="handleCommand" align="right">
-          <el-button class="download_history" type="primary" size="mini">
-            Download<i class="el-icon-arrow-down el-icon--right"></i>
+        <el-dropdown
+          align="right"
+          @command="handleCommand"
+        >
+          <el-button
+            class="download_history"
+            type="primary"
+            size="mini"
+          >
+            Download<i class="el-icon-arrow-down el-icon--right" />
           </el-button>
-          <el-dropdown-menu class="export_dropdown" slot="dropdown">
-            <el-dropdown-item command="a">Excel</el-dropdown-item>
-            <el-dropdown-item command="b">PDF</el-dropdown-item>
+          <el-dropdown-menu
+            id="order_hist"
+            slot="dropdown"
+            class="export_dropdown"
+          >
+            <el-dropdown-item command="a">
+              Excel
+            </el-dropdown-item>
+            <el-dropdown-item command="b">
+              PDF
+            </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -83,8 +104,15 @@
           <router-view />
         </template>
       </el-table-column>
-      <el-table-column label="Txn" prop="order_no" width="180" />
-      <el-table-column label="Date" prop="order_date">
+      <el-table-column
+        label="Txn"
+        prop="order_no"
+        width="180"
+      />
+      <el-table-column
+        label="Date"
+        prop="order_date"
+      >
         <template slot-scope="props">
           {{ order_history_data[props.$index]['order_date'] | moment }}
         </template>
@@ -104,9 +132,15 @@
         align="center"
         :formatter="formatAmount"
       >
-        <template slot-scope="scope" class="order_cost_amount">
+        <template
+          slot-scope="scope"
+          class="order_cost_amount"
+        >
           <div class="order_cost_amount">
-            <span v-if="order_history_data[scope.$index]['fixed_cost']" class="">
+            <span
+              v-if="order_history_data[scope.$index]['fixed_cost']"
+              class=""
+            >
               {{ order_history_data[scope.$index]['order_currency'] }}
               {{ formatCurrency(order_history_data[scope.$index]['order_cost']) }}
             </span>
@@ -139,12 +173,18 @@
           {{ order_history_data[scope.$index]['path'].length - 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="From" prop="path">
+      <el-table-column
+        label="From"
+        prop="path"
+      >
         <template slot-scope="scope">
           {{ getOrderFromName(order_history_data[scope.$index]['path']) }}
         </template>
       </el-table-column>
-      <el-table-column label="To" prop="path">
+      <el-table-column
+        label="To"
+        prop="path"
+      >
         <template slot-scope="scope">
           {{ getOrderToName(order_history_data[scope.$index]['path']) }}
         </template>
@@ -171,11 +211,12 @@ import { mapActions, mapGetters } from 'vuex';
 import { Printd } from 'printd';
 import * as _ from 'lodash';
 import exportFromJSON from 'export-from-json';
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
 
 import numeral from 'numeral';
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const moment = require('moment');
 
@@ -245,8 +286,8 @@ export default {
     }),
     inactive_filter() {
       return (
-        this.filterData.user === '' &&
-        (this.filterData.from_date === '' || this.filterData.to_date === '')
+        this.filterData.user === ''
+        && (this.filterData.from_date === '' || this.filterData.to_date === '')
       );
     },
     order_history_data() {
@@ -429,7 +470,7 @@ export default {
         () => {
           this.order_history_text = 'Search';
           this.empty_orders_state = 'Order History Failed to Fetch';
-        }
+        },
       );
     },
     requestCopUsers() {
@@ -449,16 +490,16 @@ export default {
         },
         () => {
           this.empty_users_state = 'Cop Users Failed to Fetch';
-        }
+        },
       );
     },
     handleCommand(command) {
-      if (command == 'a') {
+      if (command === 'a') {
         let data;
-        let data2 = [];
+        const data2 = [];
 
         for (let i = 0; i < this.orderHistoryData.length; i++) {
-          let arr = {};
+          const arr = {};
           arr.OrderNumber = this.orderHistoryData[i].order_no;
           arr.OrderAmount = this.orderHistoryData[i].order_cost;
           arr.OrderDate = this.orderHistoryData[i].order_date;
@@ -470,60 +511,66 @@ export default {
           arr.RiderPhone = this.orderHistoryData[i].rider.rider_phone;
           data2.push(arr);
         }
-        data = _.map(data2, row => {
-          return _.pick(
-            row,
-            'OrderNumber',
-            'OrderAmount',
-            'OrderDate',
-            'User',
-            'OrderDistanceKM',
-            'From',
-            'To',
-            'RiderName',
-            'RiderPhone'
-          );
-        });
+        data = _.map(data2, row => _.pick(
+          row,
+          'OrderNumber',
+          'OrderAmount',
+          'OrderDate',
+          'User',
+          'OrderDistanceKM',
+          'From',
+          'To',
+          'RiderName',
+          'RiderPhone',
+        ));
         const fileName = 'Order History';
         const exportType = 'csv';
 
         exportFromJSON({ data, fileName, exportType });
       } else {
-       let pdfBdy = [
-         ['Order Number',
-         'Order Amount',
+        const pdfBdy = [
+          [
+            'Order Number',
+            'Order Amount',
             'Order Date',
             'Order Distance in KM',
             'User',
             'From',
             'To',
             'Riders Name',
-            'Riders Phone']
-       ];
-       this.orderHistoryData.forEach(item => {
-         pdfBdy.push([
-           item.order_no, item.order_cost,item.order_date,
-          item.order_details.distance,item.user_details.name,
-          item.path[0].name,item.path[1].name,item.rider.rider_name,item.rider.rider_phone
-         ])
-       });
-       var docDefinition = {
-                  pageSize: 'A3',
-            widths: [ '*', 'auto', 100, '*' ],
-              footer:  function(currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
+            'Riders Phone',
+          ],
+        ];
+        this.orderHistoryData.forEach((item) => {
+          pdfBdy.push([
+            item.order_no,
+            item.order_cost,
+            item.order_date,
+            item.order_details.distance,
+            item.user_details.name,
+            item.path[0].name,
+            item.path[1].name,
+            item.rider.rider_name,
+            item.rider.rider_phone,
+          ]);
+        });
+        const docDefinition = {
+          pageSize: 'A3',
+          widths: ['*', 'auto', 100, '*'],
+          footer(currentPage, pageCount) {
+            return `${currentPage.toString()} of ${pageCount}`;
+          },
 
-
-                  content: [
-              {
-                table: {
-                  body: pdfBdy
-                }
-              }]
-                };
-          pdfMake.createPdf(docDefinition).download('Order History.pdf');
-                }
-
-      
+          content: [
+            {
+              table: {
+                body: pdfBdy,
+              },
+            },
+          ],
+        };
+        pdfMake.createPdf(docDefinition).download('Order History.pdf');
+      }
     },
     formatCurrency(currency) {
       return numeral(currency).format('0,0');
@@ -538,5 +585,19 @@ export default {
 }
 .el-dropdown{
   float: right;
+}
+.body > div.el-picker-panel.el-date-picker.el-popper{
+background-color: #fff !important;
+}
+#order_hist{
+  color: #ecf0f1 !important;
+  background-color: #ffffff !important;
+  font-size: 13px;
+  width: 10.5% !important;
+}
+
+.body > div.el-select-dropdown.el-popper > div.el-scrollbar > div.el-select-dropdown__wrap.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default > ul > li{
+background-color: #fff !important;
+color:dimgray !important;
 }
 </style>

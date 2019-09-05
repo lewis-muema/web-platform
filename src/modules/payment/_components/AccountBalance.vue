@@ -4,9 +4,7 @@
       Top up your Sendy account
     </div>
     <div class="payinfo">
-      <div class="payinfo--icon">
-        <!-- <font-awesome-icon icon="wallet" /> -->
-      </div>
+      <div class="payinfo--icon" />
       <div class="payinfo--balance">
         Balance <span class="payinfo--balance-el">{{ running_balance }}</span>
         {{ default_currency }}
@@ -17,17 +15,35 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+
 const currencyConversion = require('country-tz-currency');
 
 export default {
-  name: 'account-balance',
+  name: 'AccountBalance',
   data() {
     return {
       default_currency: 'KES',
     };
   },
+  computed: {
+    ...mapGetters({
+      getDefaultCurrency: 'getDefaultCurrency',
+    }),
+    // this just gets what is on the store
+    running_balance() {
+      // format the amount
+      const value = this.$store.getters.getRunningBalance;
+      if (value !== null && value !== '' && typeof value !== 'undefined') {
+        let val = value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        val = val.split('.');
+        return val[0];
+      }
+      return value;
+    },
+  },
   mounted() {
     this.requestRB();
+    this.checkUserLocation();
   },
   methods: {
     ...mapActions({
@@ -36,32 +52,34 @@ export default {
     }),
     requestRB() {
       this.checkDefaultCurrency();
-      //this will request from the api and update the store
-      let session = this.$store.getters.getSession;
+      // this will request from the api and update the store
+      const session = this.$store.getters.getSession;
       let cop_id = 0;
       if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
       }
-      let running_balance_payload = {
-        cop_id: cop_id,
-        phone: session[session.default]['user_phone'],
+      const runningBalancePayload = {
+        cop_id,
+        phone: session[session.default].user_phone,
         default_currency: session[session.default].default_currency,
         rb_currency: session[session.default].default_currency,
       };
-      let payload = {
-        values: running_balance_payload,
+      const payload = {
+        values: runningBalancePayload,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'running_balance',
       };
 
       this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
-        response => {
+        (response) => {
           const resp = response.data;
-          let balance = resp.data.running_balance;
+          const balance = resp.data.running_balance;
           this.$store.commit('setRunningBalance', balance);
         },
-        error => {}
+        (error) => {
+          // ...
+        },
       );
     },
     checkDefaultCurrency() {
@@ -76,9 +94,9 @@ export default {
     checkUserLocation() {
       let markedCoords = '';
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          let lat = position.coords.latitude;
-          let long = position.coords.longitude;
+        navigator.geolocation.getCurrentPosition((position) => {
+          const lat = position.coords.latitude;
+          const long = position.coords.longitude;
 
           markedCoords = `${lat},${long}`;
           // markedCoords = '0.3130284,32.4590386'; (Uganda coordinates for test)
@@ -89,42 +107,24 @@ export default {
     getCode(position) {
       const payload = {};
       payload.coordinates = position;
-      let full_payload = {
+      const fullPayload = {
         values: payload,
         app: 'PRIVATE_API',
         endpoint: 'geocountry',
       };
-      this.requestCountryCode(full_payload).then(
-        response => {
-          let code = response.country_code;
+      this.requestCountryCode(fullPayload).then(
+        (response) => {
+          const code = response.country_code;
           this.$store.commit('setCountryCode', code);
-          let country_code_data = currencyConversion.getCountryByCode(code);
-          this.$store.commit('setDefaultCurrency', country_code_data.currencyCode);
+          const countryCodeData = currencyConversion.getCountryByCode(code);
+          this.$store.commit('setDefaultCurrency', countryCodeData.currencyCode);
           this.requestRB();
         },
-        error => {}
+        (error) => {
+          // ...
+        },
       );
     },
-  },
-  computed: {
-    ...mapGetters({
-      getDefaultCurrency: 'getDefaultCurrency',
-    }),
-    //this just gets what is on the store
-    running_balance() {
-      //format the amount
-      let value = this.$store.getters.getRunningBalance;
-      if (value !== null && value !== '' && typeof value !== 'undefined') {
-        let val = value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-        val = val.split('.');
-        return val[0];
-      } else {
-        return value;
-      }
-    },
-  },
-  created() {
-    this.checkUserLocation();
   },
 };
 </script>

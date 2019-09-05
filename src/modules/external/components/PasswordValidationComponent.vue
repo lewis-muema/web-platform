@@ -16,7 +16,7 @@
             type="password"
             placeholder="Enter your password"
             @focus="setCurrentStep(1)"
-          >
+          />
         </div>
       </div>
       <div class="row">
@@ -31,23 +31,20 @@
             type="password"
             placeholder="Confirm your password"
             @focus="setCurrentStep(2)"
-          >
+          />
         </div>
       </div>
     </div>
     <div class="divide" />
     <div class="form-submits">
-      <a
-        class="waves-effect waves-teal btn-flat"
-        @click="last_view"
-      >
+      <a class="waves-effect waves-teal btn-flat" @click="last_view">
         Back
       </a>
       <button
         class="btn-submit"
         style="width:30% !important;"
         name="next"
-        :disabled="!this.is_valid"
+        :disabled="!is_valid"
         @click="next_view"
       >
         Next
@@ -114,7 +111,6 @@ export default {
           const phone = this.getPhone;
           const type = this.getType;
           const department_id = this.getDeptId;
-          // let cop_user_id = this.getCopUserId ;
 
           payload = {
             cop_id,
@@ -125,21 +121,18 @@ export default {
             phone,
             type,
             department_id,
-            // cop_user_id : cop_user_id
           };
         }
 
-        // this.updatePassPlain(this.cpassword);
-
-        const full_payload = {
+        const fullPayload = {
           values: payload,
           vm: this,
           app: 'NODE_PRIVATE_API',
           endpoint: 'onboard_user',
         };
 
-        this.requestInvitation(full_payload).then(
-          (response) => {
+        this.requestInvitation(fullPayload).then(
+          response => {
             if (response.length > 0) {
               response = response[0];
             }
@@ -151,11 +144,11 @@ export default {
               this.$router.push('/auth');
             }
           },
-          (error) => {
-            const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+          error => {
+            const notification = { title: '', level: 3, message: 'Something went wrong.' }; // notification object
             this.$store.commit('setNotification', notification);
             this.$store.commit('setNotificationStatus', true);
-          },
+          }
         );
       }
     },
@@ -180,7 +173,6 @@ export default {
   },
   computed: {
     is_valid() {
-      // return this.password != '' && this.cpassword !='' && this.password === this.cpassword;
       return this.cpassword != '' && this.password != '';
     },
     ...mapGetters({

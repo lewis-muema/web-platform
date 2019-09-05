@@ -14,8 +14,7 @@
 <script>
 import { mapMutations } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { faWallet } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faWallet } from '@fortawesome/free-solid-svg-icons';
 import TrackingStore from './_store';
 import InfoWindow from './_components/InfoComponent.vue';
 import RegisterStoreModule from '../../../../mixins/register_store_module';

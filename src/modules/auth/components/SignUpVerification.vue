@@ -1,12 +1,15 @@
 <template lang="html">
-  <div id="log_in" class="sign-up-verification">
+  <div
+    id="log_in"
+    class="sign-up-verification"
+  >
     <div class="sign-up-verification-inner">
       <div class="sign-up-verification-top">
         Do you work for a Business?
       </div>
 
       <div class="sign-up-verification-text">
-        We'd like to offer you the best experience possible. <br />
+        We'd like to offer you the best experience possible. <br>
         We'll create a dedicated account for you.
       </div>
 
@@ -16,7 +19,10 @@
 
       <div>
         <div class="sign-up-verification-holder dimen-sign-up2">
-          <span id="log_in_warn" class="sign-up-verification-holder__error" />
+          <span
+            id="log_in_warn"
+            class="sign-up-verification-holder__error"
+          />
         </div>
         <div class="sign-up-verification-holder dimen-sign-up2">
           <input
@@ -26,7 +32,7 @@
             name="cop_name"
             placeholder="Business name"
             autocomplete="on"
-          />
+          >
         </div>
 
         <div
@@ -38,14 +44,14 @@
             type="submit"
             value="No"
             @click="peer_set"
-          />
+          >
 
           <input
             class="button-primary btn-sign-up-check"
             type="submit"
             value="Done"
             @click="cop_set"
-          />
+          >
         </div>
       </div>
     </div>
@@ -54,7 +60,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import SessionMxn from '../../../mixins/session_mixin.js';
+import SessionMxn from '../../../mixins/session_mixin';
+
 const currencyConversion = require('country-tz-currency');
 
 export default {
@@ -67,9 +74,13 @@ export default {
       currency: '',
     };
   },
+  mounted() {
+    this.checkUserLocation();
+  },
   methods: {
     ...mapActions({
       requestSignUpSegmentation: '$_auth/requestSignUpSegmentation',
+      authSignIn: '$_auth/requestSignIn',
     }),
     ...mapGetters({
       Password: '$_auth/requestPassword',
@@ -89,30 +100,30 @@ export default {
       values.platform = 'web';
       values.country_code = this.getUserCountryCode();
       values.default_currency = this.currency;
-      const full_payload = {
+      const fullPayload = {
         values,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'sign_up_submit',
       };
-
-      const that = this;
-      this.requestSignUpSegmentation(full_payload).then(
-        response => {
+      this.requestSignUpSegmentation(fullPayload).then(
+        (response) => {
           if (response.length > 0) {
             response = response[0];
           }
 
           if (response.status) {
-            const session_data = response.data;
-            const json_session = JSON.stringify(session_data);
-            this.setSession(json_session);
-            let analytics_env = '';
+            const sessionData = response.data;
+            const jsonSession = JSON.stringify(sessionData);
+            this.setSession(jsonSession);
+            let analyticsEnv = '';
             try {
-              analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-            } catch (er) {}
-            if ('default' in session_data && analytics_env === 'production') {
-              const acc = session_data[session_data.default];
+              analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+            } catch (er) {
+              // ...
+            }
+            if ('default' in sessionData && analyticsEnv === 'production') {
+              const acc = sessionData[sessionData.default];
 
               mixpanel.alias(acc.user_email);
 
@@ -129,7 +140,7 @@ export default {
               // login identify
               mixpanel.identify(acc.user_email);
 
-              // track login
+              // track new Account
               mixpanel.track('New Account Created', {
                 'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
                 'Last Login': new Date(),
@@ -140,17 +151,16 @@ export default {
                 $name: acc.user_name,
               });
             }
-            this.$store.commit('setSession', session_data);
-            this.$router.push('/orders');
+            this.directSignInViaAuth();
           } else {
             // failed to login
             // show some sort of error
             this.doNotification(2, 'Sign Up Error ', response.message);
           }
         },
-        error => {
+        (error) => {
           this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
-        }
+        },
       );
     },
     cop_set() {
@@ -165,45 +175,141 @@ export default {
         values.type = 'biz';
         values.country_code = this.getUserCountryCode();
         values.default_currency = this.currency;
-        const full_payload = {
+        const fullPayload = {
           values,
           vm: this,
           app: 'NODE_PRIVATE_API',
           endpoint: 'sign_up_submit',
         };
-
-        const that = this;
-
-        this.requestSignUpSegmentation(full_payload).then(
-          response => {
+        this.requestSignUpSegmentation(fullPayload).then(
+          (response) => {
             if (response.length > 0) {
               response = response[0];
             }
             if (response.status) {
-              const session_data = response.data;
-              const json_session = JSON.stringify(session_data);
-              this.setSession(json_session);
-              this.$store.commit('setSession', session_data);
-              this.$router.push('/orders');
+              const sessionData = response.data;
+              const jsonSession = JSON.stringify(sessionData);
+              this.setSession(jsonSession);
+              let analyticsEnv = '';
+              try {
+                analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+              } catch (er) {
+                // ...
+              }
+              if ('default' in sessionData && analyticsEnv === 'production') {
+                const acc = sessionData[sessionData.default];
+
+                mixpanel.alias(acc.user_email);
+
+                mixpanel.people.set_once({
+                  $email: acc.user_email,
+                  $phone: acc.user_phone,
+                  'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                  $name: acc.user_name,
+                  $created: new Date(),
+                  'Client Type': 'Web Platform',
+                  'Business Name': acc.default === 'biz' ? acc.cop_name : '',
+                });
+
+                // login identify
+                mixpanel.identify(acc.user_email);
+
+                // track New Account
+                mixpanel.track('New Account Created', {
+                  'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                  'Last Login': new Date(),
+                  'Client Type': 'Web Platform',
+                  'Business Name': acc.default === 'biz' ? acc.cop_name : '',
+                  $email: acc.user_email,
+                  $phone: acc.user_phone,
+                  $name: acc.user_name,
+                });
+              }
+              this.directSignInViaAuth();
             } else {
               // failed to login
               // show some sort of error
               this.doNotification(2, 'Sign Up Error ', response.message);
             }
           },
-          error => {
+          (error) => {
             this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
-          }
+          },
         );
       } else {
         this.message = 'Provide Business Name';
       }
     },
     checkUserLocation() {
-      let country_code_data = currencyConversion.getCountryByCode(this.getUserCountryCode());
-      this.currency = country_code_data.currencyCode;
+      const countryCodeData = currencyConversion.getCountryByCode(this.getUserCountryCode());
+      this.currency = countryCodeData.currencyCode;
     },
+    directSignInViaAuth() {
+      this.deleteSession();
+      const params = {
+        email: this.Email(),
+        password: this.Password(),
+      };
+      const fullPayload = {
+        values: params,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'sign_in',
+      };
+      this.authSignIn(fullPayload).then(
+        (response) => {
+          if (Object.prototype.hasOwnProperty.call(response, 'status')) {
+            const errorResponse = response.data;
+            if (errorResponse.code === 1) {
+              this.login_text = 'Login';
+              this.doNotification(2, 'Login failed', 'Wrong password or email.');
+            } else {
+              this.login_text = 'Login';
+              this.doNotification(2, 'Login failed', 'Account deactivated');
+            }
+          } else {
+            let partsOfToken = '';
+            if (Array.isArray(response)) {
+              const res = response[1];
+              localStorage.setItem('jwtToken', res);
+              partsOfToken = res.toString().split('.');
+            } else {
+              localStorage.setItem('jwtToken', response);
+              partsOfToken = response.split('.');
+            }
+            const middleString = partsOfToken[1];
+            const data = atob(middleString);
+            const { payload } = JSON.parse(data);
+            if (response) {
+              const sessionData = payload;
+              const jsonSession = JSON.stringify(sessionData);
+              this.setSession(jsonSession);
+              this.$store.commit('setSession', sessionData);
+              let analyticsEnv = '';
+              try {
+                analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+              } catch (er) {
+                // ...
+              }
+              if ('default' in sessionData && analyticsEnv === 'production') {
+                const acc = sessionData[sessionData.default];
 
+                // track login
+                mixpanel.track('User Login', {
+                  'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                  'Last Login': new Date(),
+                  'Client Type': 'Web Platform',
+                });
+              }
+              this.$router.push('/orders');
+            }
+          }
+        },
+        (error) => {
+          this.doNotification(2, 'Login failed', 'Login failed. Please try again');
+          this.$router.push('/auth/sign_in');
+        },
+      );
+    },
     doNotification(level, title, message) {
       const notification = {
         title,
@@ -213,9 +319,6 @@ export default {
       this.$store.commit('setNotification', notification);
       this.$store.commit('setNotificationStatus', true);
     },
-  },
-  mounted() {
-    this.checkUserLocation();
   },
 };
 </script>
@@ -268,12 +371,6 @@ export default {
 }
 
 .btn-sign-up-check {
-  /* bottom: 5px;
-  position:absolute;
-  left: 2px;
-  width: 50px;
-  font-size: 13px !important;
-  border: #fff; */
   width: 28%;
   border-width: 0px !important;
 }

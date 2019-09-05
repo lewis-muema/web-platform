@@ -1,12 +1,15 @@
 <template lang="html">
-  <div class="departments_container" id="departments_container">
+  <div
+    id="departments_container"
+    class="departments_container"
+  >
     <div class="section--filter-wrap">
       <div class="section--filter-input-wrap">
         <el-input
-          class="section--filter-input"
           v-model="filterData.department"
+          class="section--filter-input"
           placeholder="Search Department"
-        ></el-input>
+        />
 
         <button
           type="button"
@@ -22,24 +25,37 @@
         </button>
       </div>
       <div class="section--filter-action-wrap">
-        <button class="button-primary section--filter-action btn-dprts" @click="addDepartment">
+        <button
+          class="button-primary section--filter-action btn-dprts"
+          @click="addDepartment"
+        >
           Add Department
         </button>
       </div>
     </div>
-    <el-table :data="departments_data" style="width: 100%" :border="true" :stripe="true">
+    <el-table
+      :data="departments_data"
+      style="width: 100%"
+      :border="true"
+      :stripe="true"
+    >
       <template slot="empty">
         {{ empty_departments_state }}
       </template>
-      <el-table-column label="Name" prop="department_name"> </el-table-column>
-      <el-table-column label="Admin" prop="department_admin"> </el-table-column>
+      <el-table-column
+        label="Name"
+        prop="department_name"
+      />
+      <el-table-column
+        label="Admin"
+        prop="department_admin"
+      />
       <el-table-column label="Action">
         <template slot-scope="scope">
           <a
-            @click="edit_department(departments_data[scope.$index]['department_id'])"
             class="btn-dpt-edit"
-            >Edit</a
-          >
+            @click="edit_department(departments_data[scope.$index]['department_id'])"
+          >Edit</a>
         </template>
       </el-table-column>
     </el-table>
@@ -50,12 +66,11 @@
         :total="filteredUserData.length"
         :page-size="pagination_limit"
         :current-page.sync="pagination_page"
-        @current-change="changePage"
         :page-sizes="[10, 20, 50, 100]"
-        @size-change="changeSize"
         class="section--pagination-item"
-      >
-      </el-pagination>
+        @current-change="changePage"
+        @size-change="changeSize"
+      />
     </div>
   </div>
 </template>
@@ -65,27 +80,7 @@ import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Departments',
-  mounted() {
-    let session = this.$store.getters.getSession;
-    let cop_id = 0;
-    if (session.default === 'biz') {
-      cop_id = session[session.default]['cop_id'];
-    }
-    let payload = {
-      cop_id: cop_id,
-    };
-    let users_full_payload = {
-      values: payload,
-      vm: this,
-      app: 'NODE_PRIVATE_API',
-      endpoint: 'cop_departments',
-    };
-    this.$store
-      .dispatch('$_admin/requestDepartmentsList', users_full_payload)
-      .then(response => {}, error => {});
-    this.filteredUserData = this.deptData;
-  },
-  data: function() {
+  data() {
     return {
       empty_departments_state: 'Fetching Departments',
       pagination_limit: 10,
@@ -99,6 +94,26 @@ export default {
       },
     };
   },
+  mounted() {
+    const session = this.$store.getters.getSession;
+    let cop_id = 0;
+    if (session.default === 'biz') {
+      cop_id = session[session.default].cop_id;
+    }
+    const payload = {
+      cop_id,
+    };
+    const usersFullPayload = {
+      values: payload,
+      vm: this,
+      app: 'NODE_PRIVATE_API',
+      endpoint: 'cop_departments',
+    };
+    this.$store
+      .dispatch('$_admin/requestDepartmentsList', usersFullPayload)
+      .then((response) => {}, (error) => {});
+    this.filteredUserData = this.deptData;
+  },
   computed: {
     ...mapGetters({
       deptData: '$_admin/getDepartmentsList',
@@ -108,20 +123,19 @@ export default {
       requestDepartmentsList: '$_admin/requestDepartmentsList',
     }),
     departments_data() {
-      let from = (this.pagination_page - 1) * this.pagination_limit;
-      let to = this.pagination_page * this.pagination_limit;
-      if (this.filterState) {
+      const from = (this.pagination_page - 1) * this.pagination_limit;
+      const to = this.pagination_page * this.pagination_limit;
+      if (this.filterState === true) {
         if (Array.isArray(this.filteredUserData)) {
           return this.filteredUserData.slice(from, to);
         }
         return [];
-      } else {
-        this.filteredUserData = this.deptData;
-        if (Array.isArray(this.deptData)) {
-          return this.deptData.slice(from, to);
-        }
-        return [];
       }
+      this.filteredUserData = this.deptData;
+      if (Array.isArray(this.deptData)) {
+        return this.deptData.slice(from, to);
+      }
+      return [];
     },
 
     active_filter() {
@@ -130,7 +144,7 @@ export default {
   },
   methods: {
     addDepartment() {
-      //TODO:route to add department
+      // TODO:route to add department
       this.$router.push('/admin/department/add_department');
     },
     changeSize(val) {
@@ -138,29 +152,27 @@ export default {
       this.pagination_limit = val;
     },
     changePage() {
-      let from = (this.pagination_page - 1) * this.pagination_limit;
-      let to = this.pagination_page * this.pagination_limit;
-      let departments_data = this.deptData.slice(from, to);
+      const from = (this.pagination_page - 1) * this.pagination_limit;
+      const to = this.pagination_page * this.pagination_limit;
+      const departments_data = this.deptData.slice(from, to);
     },
     edit_department(department) {
       this.$router.push(`/admin/department/edit_department/${department}`);
     },
     filterUserTableData() {
-      //reset filter
+      // reset filter
       this.filterState = false;
-      let user = this.filterData.user;
-      let department = this.filterData.department;
+      const { user } = this.filterData;
+      const { department } = this.filterData;
 
       this.filteredUserData = this.deptData;
-      //check if both are filled
+      // check if both are filled
       if (department !== '') {
-        //department filter
-        let vm = this;
-        this.filteredUserData = this.filteredUserData.filter(function(user) {
-          return (
-            user.department_name.toLowerCase().indexOf(vm.filterData.department.toLowerCase()) >= 0
-          );
-        });
+        // department filter
+        const vm = this;
+        this.filteredUserData = this.filteredUserData.filter(
+          user => user.department_name.toLowerCase().indexOf(vm.filterData.department.toLowerCase()) >= 0,
+        );
         this.filterState = true;
       }
     },

@@ -48,6 +48,7 @@ const PaymentMxn = {
           : Mcrypt.encrypt(this.card_payment_data.amount),
         last4: Mcrypt.encrypt(card.last4),
         stripe_user_id: this.get_stripe_user_id,
+        card_id: Mcrypt.encrypt(card.card_id),
         complete_payment: true,
         user_id: userId,
         cop_id: copId,

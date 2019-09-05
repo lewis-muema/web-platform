@@ -104,7 +104,11 @@ export default {
       message: '',
     };
   },
-
+  computed: {
+    is_valid() {
+      return this.email !== '';
+    },
+  },
   methods: {
     ...mapActions({
       requestForgotPassword: '$_auth/requestForgotPassword',
@@ -113,14 +117,14 @@ export default {
       this.request_pass();
     },
     request_pass() {
-      let email_valid = true;
+      let emailValid = true;
       for (let i = 0; i < this.errors.items.length; i++) {
         if (this.errors.items[i].field === 'email') {
-          email_valid = false;
+          emailValid = false;
           break;
         }
       }
-      if (email_valid) {
+      if (emailValid) {
         let payload = {};
 
         // Check for one account
@@ -161,14 +165,14 @@ export default {
           };
         }
 
-        const full_payload = {
+        const fullPayload = {
           values: payload,
           vm: this,
           app: 'NODE_PRIVATE_API',
           endpoint: 'forgot_pass',
         };
 
-        this.requestForgotPassword(full_payload).then(
+        this.requestForgotPassword(fullPayload).then(
           (response) => {
             // check when response is dual
             if (response.length > 0) {
@@ -197,7 +201,7 @@ export default {
             }
           },
           (error) => {
-            this.message = 'Sign Up Failed, Kindly retry again';
+            this.message = 'Password reset request failed, Kindly retry again';
           },
         );
       } else {
@@ -206,11 +210,6 @@ export default {
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
       }
-    },
-  },
-  computed: {
-    is_valid() {
-      return this.email !== '';
     },
   },
 };

@@ -112,7 +112,13 @@ export default {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
           if (response.status === 200) {
-            const rb = response.data.running_balance;
+            const { data } = response;
+            let rb = 0;
+            if ('running_balance' in data) {
+              rb = response.data.running_balance;
+            } else {
+              rb = response.data.data.running_balance;
+            }
             dispatch('updateRunningBalance', rb, { root: true });
           }
           resolve(response);
