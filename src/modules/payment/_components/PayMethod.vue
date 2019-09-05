@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'PayMethod',
@@ -23,25 +23,12 @@ export default {
       payment_methods: [],
     };
   },
-  computed: {
-    ...mapGetters({
-      getCountryCode: 'getCountryCode',
-    }),
-  },
   created() {
-    this.checkUserPhone();
     this.getPaymentOptions();
   },
   methods: {
     ...mapActions({ requestPaymentOptionsAction: '$_payment/requestPaymentOptions' }),
 
-    checkUserPhone() {
-      const session = this.$store.getters.getSession;
-      const phone = session[session.default].user_phone;
-      this.currency = session[session.default].default_currency;
-      const intValue = phone.substring(0, 4);
-      this.mpesa_valid = intValue !== '+256';
-    },
     getPaymentOptions() {
       const session = this.$store.getters.getSession;
       const countryCode = session[session.default].country_code;
