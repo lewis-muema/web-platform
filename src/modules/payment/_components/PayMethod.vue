@@ -1,37 +1,26 @@
 <template lang="html">
-  <div class="paymethod">
-    <router-link
-      v-if="getCountryCode === 'KE' && mpesa_valid"
-      class="paymethod--link"
-      to="/payment/mpesa"
+  <div class="paymethod paymethod--menu">
+    <div
+      v-for="method in payment_methods"
+      :key="method.payment_method_id"
     >
-      M-Pesa
-    </router-link>
-    <router-link
-      class="paymethod--link"
-      to="/payment/card"
-    >
-      Card
-    </router-link>
-    <router-link
-      v-if="getCountryCode === 'KE' && mpesa_valid && currency === 'KES'"
-      class="paymethod--link"
-      to="/payment/promo"
-    >
-      Promo Code
-    </router-link>
+      <a
+        href="#"
+        class="paymethod--link"
+        @click="setCurrentRoute(method.name)"
+      > {{ method.name }} </a>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'PayMethod',
   data() {
     return {
-      mpesa_valid: false,
-      currency: 'KES',
+      payment_methods: [],
     };
   },
   computed: {
@@ -55,7 +44,6 @@ export default {
     },
     getPaymentOptions() {
       const session = this.$store.getters.getSession;
-      console.log('tete', session);
       const countryCode = session[session.default].country_code;
       let accountType = '';
       const payOption = session[session.default].pay_option;
@@ -77,29 +65,32 @@ export default {
         values: payload,
         vm: this,
         app: 'PAYMENT_SERVICE',
-        endpoint: 'accounts/pay_method',
+        endpoint: 'accounts/pay_methods',
       };
-      // const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-      // axios
-      // eslint-disable-next-line max-len
-      //   .post(`${proxyurl}${process.env.VUE_APP_PAYMENT_SERVICE}getaccounttypepaymentmethods`, payload, this.service_config)
-      //   .then((response) => {
-      //     this.payment_methods = JSON.parse(JSON.stringify(response.data.payment_methods));
-      //   })
-      //   .catch((error) => {
-      //     this.errorObj = error.response;
-      //   });
       this.requestPaymentOptionsAction(fullPayload).then(
         (response) => {
-          console.log('response', response);
+          if (response.status) {
+            this.payment_methods = response.payment_methods;
+          }
         },
         (error) => {
           console.log('error', error);
         },
       );
     },
+    setCurrentRoute(method) {
+      const paymentMethod = method.replace(/-/g, '');
+      this.$router.push(`/payment/${paymentMethod.toLowerCase()}`);
+    },
   },
 };
 </script>
 
-<style lang="css"></style>
+<style lang="css">
+  .paymethod--menu {
+    padding-bottom: 11px !important;
+  }
+  a:focus{
+    border-bottom: 3px solid #1782c5 !important;
+  }
+</style>
