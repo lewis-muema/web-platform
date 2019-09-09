@@ -202,6 +202,7 @@ export default {
               level,
               message: 'Invitations sent successfully',
             };
+            this.inviteLog(payload);
             this.$store.commit('setNotification', notification);
             this.$store.commit('setNotificationStatus', true);
             this.updateViewState(4);
@@ -211,6 +212,26 @@ export default {
           // ...
         },
       );
+    },
+    inviteLog(invitees) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      for (let i = 0, iLen = invitees.length; i < iLen; i += 1) {
+        if (analyticsEnv === 'production') {
+          // track invitees
+
+          mixpanel.track('User Invite', {
+            'Account Type': 'Business',
+            'Last Login': new Date(),
+            'Client Type': 'Web Platform',
+            'Invitee Email': invitees[i].email,
+          });
+        }
+      }
     },
     addElement() {
       this.elements.push({ value: '' });
