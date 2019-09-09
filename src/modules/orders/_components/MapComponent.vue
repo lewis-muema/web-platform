@@ -544,46 +544,6 @@ export default {
 };
 </script>
 
-<style lang="css">
-.outer_info_content {
-  width: 275px;
-}
-.outer_info_content_trackers {
-  max-width: 265px;
-  min-height: 80px;
-}
-.outer_inner_content{
-  display: inline-block;
-  width: 70px;
-  object-fit: contain;
-  float: left;
-}
-.outer_inner_content_trackers{
-  display: inline-block;
-  width: 40px;
-  object-fit: contain;
-  float: left;
-}
-.info_window_img{
-  height: 45px;
-  padding-top: 10px;
-}
-.info_window_descript_inner{
-  width: 70%;
-  display: inline-block;
-  float: left;
-  padding-left: 10px;
-  padding-top: 10px;
-}
-.info_window_descript{
-  width: 100%;
-  display: inline-block;
-  float: left;
-  padding-left: 10px;
-  padding-top: 10px;
-}
-.info_window_trackers_extra{
-  font-size:9px;
-  padding-top:5px;
-}
+<style lang="css" scoped>
+@import "../../../assets/styles/map_component.css";
 </style>
