@@ -282,7 +282,7 @@ export function createRouter() {
             name: 'card_payment',
           },
           {
-            path: 'promo',
+            path: 'promocode',
             component: () => import('../modules/payment/_components/PromoComponent.vue'),
             name: 'promo_payment',
           },
