@@ -191,6 +191,7 @@ export default {
             }
           },
           (error) => {
+            this.login_text = 'Login';
             this.doNotification(2, 'Login failed', 'Login failed. Please try again');
           },
         );

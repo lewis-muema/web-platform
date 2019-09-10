@@ -620,7 +620,7 @@ export default {
             const { order_no } = this.activeVendorPriceData;
             this.should_destroy = true;
             this.$store.dispatch('$_orders/fetchOngoingOrders');
-            this.trackMixpanelEvent('Place Order');
+            this.trackMixpanelEvent(payload.values);
             this.$router.push({
               name: 'tracking',
               params: {
@@ -814,6 +814,9 @@ export default {
     },
 
     trackMixpanelEvent(name) {
+      const data = JSON.parse(name).values;
+      const session = this.$store.getters.getSession;
+      const acc = session.default;
       let analyticsEnv = '';
       try {
         analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
@@ -823,14 +826,15 @@ export default {
 
       try {
         if (analyticsEnv === 'production') {
-          // eslint-disable-next-line no-undef
-          mixpanel.track(name);
-          // this.$ga.event({
-          //   eventCategory: 'Orders',
-          //   eventAction: 'Order Placement',
-          //   eventLabel: name,
-          //   eventValue: 15,
-          // });
+          mixpanel.track('Place Order', {
+            'Account ': data.type,
+            'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+            'Client Type': 'Web Platform',
+            'Order Number': data.trans_no,
+            'Payment Mode': this.payment_method,
+            'User Email': data.user_email,
+            'User Phone': data.user_phone,
+          });
         }
       } catch (er) {
         // ...
