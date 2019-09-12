@@ -353,6 +353,9 @@ export default {
         .add(this.activeVendorPriceData.eta, 'second')
         .format('YYYY-MM-DD HH:mm:ss');
     },
+    current_time() {
+      return this.moment().format('YYYY-MM-DD HH:mm:ss');
+    },
 
     scheduled_time() {
       return this.moment(this.get_schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format(
@@ -665,12 +668,8 @@ export default {
         destination_paid_status: false,
         delivery_points: this.get_order_path.length - 1,
         sendy_coupon: '0',
-        payment_mode: this.payment_method.startsWith('2')
-          ? 2
-          : this.payment_method === ''
-            ? 0
-            : Number(this.payment_method),
-        schedule_time: this.order_is_scheduled ? this.scheduled_time : this.eta_time,
+        payment_mode: this.payment_method === '' ? 0 : Number(this.payment_method),
+        schedule_time: this.order_is_scheduled ? this.scheduled_time : this.current_time,
         tier_tag: this.activeVendorPriceData.tier_tag,
         tier_name: this.activeVendorPriceData.tier_name,
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
