@@ -340,6 +340,9 @@ export default {
         .add(this.activeVendorPriceData.eta, 'second')
         .format('YYYY-MM-DD HH:mm:ss');
     },
+    current_time() {
+      return this.moment().format('YYYY-MM-DD HH:mm:ss');
+    },
 
     scheduled_time() {
       return this.moment(this.get_schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format(
