@@ -283,6 +283,23 @@
                         </div>
                       </li>
 
+                      <!-- Order Scheduled State -->
+
+                      <li
+                        id="timeline_right"
+                        v-if="tracking_data.eta_data.scheduled"
+                        v-bind:class="{
+                          confirmedScheduled: true,
+                        }"
+                      >
+                        <div class="">
+                          <p class="infor-top-bar-text stagePassed">
+                            Your Order has been scheduled
+                          </p>
+                          <p class="eta_data">{{ tracking_data.date_time | moment }}</p>
+                        </div>
+                      </li>
+
                       <!-- Order Confirmation State -->
 
                       <li
@@ -821,6 +838,7 @@ export default {
       externalTracking: false,
       setComplete: false,
       small_vendors: [1],
+      setScheduled: false,
     };
   },
   computed: {
@@ -1039,43 +1057,62 @@ export default {
       }
     },
     setTimeLineIconState() {
-      if (this.tracking_data.confirm_status === 0) {
+      if (
+        Object.prototype.hasOwnProperty.call(this.tracking_data.eta_data, 'scheduled') &&
+        this.tracking_data.eta_data.scheduled
+      ) {
         this.isPayed = false;
         this.setDelivered = false;
         this.isDelivered = false;
         this.isPicked = false;
         this.setPicked = false;
-        this.setConfirmed = true;
-        this.setPayed = true;
-        this.setComplete = false;
-      } else if (
-        this.tracking_data.confirm_status === 1 &&
-        this.tracking_data.delivery_status === 0
-      ) {
         this.setConfirmed = false;
         this.setPayed = false;
-        this.setDelivered = false;
-        this.isDelivered = false;
-        this.setPicked = true;
-        this.isConfirmed = true;
-        this.isPayed = true;
         this.setComplete = false;
-      } else if (this.tracking_data.delivery_status === 2) {
-        this.setPicked = false;
-        this.isDelivered = false;
-        this.setDelivered = true;
-        this.isConfirmed = true;
-        this.isPayed = true;
-        this.isPicked = true;
-        this.setComplete = false;
-      } else if (this.tracking_data.delivery_status === 3) {
-        this.setDelivered = false;
-        this.isDelivered = true;
-        this.isConfirmed = true;
-        this.isPayed = true;
-        this.isPicked = true;
-        this.setComplete = true;
+        this.setScheduled = true;
       } else {
+        if (this.tracking_data.confirm_status === 0) {
+          this.isPayed = false;
+          this.setDelivered = false;
+          this.isDelivered = false;
+          this.isPicked = false;
+          this.setPicked = false;
+          this.setConfirmed = true;
+          this.setPayed = true;
+          this.setComplete = false;
+          this.setScheduled = false;
+        } else if (
+          this.tracking_data.confirm_status === 1 &&
+          this.tracking_data.delivery_status === 0
+        ) {
+          this.setConfirmed = false;
+          this.setPayed = false;
+          this.setDelivered = false;
+          this.isDelivered = false;
+          this.setPicked = true;
+          this.isConfirmed = true;
+          this.isPayed = true;
+          this.setComplete = false;
+          this.setScheduled = false;
+        } else if (this.tracking_data.delivery_status === 2) {
+          this.setPicked = false;
+          this.isDelivered = false;
+          this.setDelivered = true;
+          this.isConfirmed = true;
+          this.isPayed = true;
+          this.isPicked = true;
+          this.setComplete = false;
+          this.setScheduled = false;
+        } else if (this.tracking_data.delivery_status === 3) {
+          this.setDelivered = false;
+          this.isDelivered = true;
+          this.isConfirmed = true;
+          this.isPayed = true;
+          this.isPicked = true;
+          this.setComplete = true;
+          this.setScheduled = false;
+        } else {
+        }
       }
     },
     confirmUser() {
