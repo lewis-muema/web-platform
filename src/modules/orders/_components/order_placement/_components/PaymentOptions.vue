@@ -680,7 +680,7 @@ export default {
         payment_mode: this.payment_method === ''
           ? 0
           : Number(this.payment_method),
-        schedule_time: this.order_is_scheduled ? this.scheduled_time : this.eta_time,
+        schedule_time: this.order_is_scheduled ? this.scheduled_time : this.current_time,
         tier_tag: this.activeVendorPriceData.tier_tag,
         tier_name: this.activeVendorPriceData.tier_name,
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
