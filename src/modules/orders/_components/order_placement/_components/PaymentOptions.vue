@@ -668,11 +668,7 @@ export default {
         destination_paid_status: false,
         delivery_points: this.get_order_path.length - 1,
         sendy_coupon: '0',
-        payment_mode: this.payment_method.startsWith('2')
-          ? 2
-          : this.payment_method === ''
-            ? 0
-            : Number(this.payment_method),
+        payment_mode: this.payment_method === '' ? 0 : Number(this.payment_method),
         schedule_time: this.order_is_scheduled ? this.scheduled_time : this.current_time,
         tier_tag: this.activeVendorPriceData.tier_tag,
         tier_name: this.activeVendorPriceData.tier_name,
