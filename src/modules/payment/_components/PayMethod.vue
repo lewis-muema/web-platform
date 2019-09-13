@@ -22,7 +22,7 @@ export default {
       payment_methods: [],
     };
   },
-  created() {
+  mounted() {
     this.getPaymentOptions();
   },
   methods: {
