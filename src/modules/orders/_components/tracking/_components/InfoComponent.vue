@@ -843,7 +843,7 @@ export default {
     delayState() {
       let deliveryState = this.tracking_data.eta_data.delayed;
       if (deliveryState) {
-        return `Sorry we haven't found a ${this.partnerName} for your ${
+        return `Sorry, we haven't found a ${this.partnerName} for your ${
           this.packageName
         }. We are working to find you one as soon as possible`;
       }
