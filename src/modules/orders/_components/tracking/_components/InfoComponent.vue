@@ -993,6 +993,7 @@ export default {
         this.setPayed = false;
         this.setComplete = false;
         this.setScheduled = true;
+        this.isPayed = false;
       } else {
         if (this.tracking_data.confirm_status === 0) {
           this.isPayed = false;
@@ -1004,6 +1005,7 @@ export default {
           this.setPayed = true;
           this.setComplete = false;
           this.setScheduled = false;
+          this.isConfirmed = false;
         } else if (
           this.tracking_data.confirm_status === 1 &&
           this.tracking_data.delivery_status === 0
@@ -1017,7 +1019,10 @@ export default {
           this.isPayed = true;
           this.setComplete = false;
           this.setScheduled = false;
+          this.isPicked = false;
         } else if (this.tracking_data.delivery_status === 2) {
+          this.setConfirmed = false;
+          this.setPayed = false;
           this.setPicked = false;
           this.isDelivered = false;
           this.setDelivered = true;
@@ -1034,6 +1039,9 @@ export default {
           this.isPicked = true;
           this.setComplete = true;
           this.setScheduled = false;
+          this.setConfirmed = false;
+          this.setPayed = false;
+          this.setPicked = false;
         } else {
         }
       }
