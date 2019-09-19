@@ -540,7 +540,7 @@
                   <div class="">
                     {{ tracking_data.description_head }}
                   </div>
-                  <div class="">
+                  <div class="marketing-message-align">
                     {{ tracking_data.marketing_message }}
                   </div>
                 </div>
@@ -737,8 +737,8 @@ export default {
       truckMoreInfo: true,
       myRb: '',
       accType: '',
-      pickUpEta: 'Awaiting Confirmation',
-      deliveryEta: 'Awaiting Pickup',
+      pickUpEta: '',
+      deliveryEta: '',
       confirmEta: '',
       scheduled_time: false,
       isConfirmed: false,
@@ -1246,8 +1246,8 @@ export default {
 
         this.confirmEta = `${startEta} - ${endEta}`;
 
-        this.pickUpEta = 'Awaiting Confirmation';
-        this.deliveryEta = 'Awaiting Pickup';
+        this.pickUpEta = '';
+        this.deliveryEta = '';
       } else if (
         this.tracking_data.confirm_status === 1 &&
         this.tracking_data.delivery_status === 0
