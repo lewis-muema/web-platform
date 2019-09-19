@@ -537,7 +537,7 @@
                   </div>
                 </div>
                 <div v-else class="infobar--driver-details">
-                  <div class="">
+                  <div class="" v-if="!tracking_data.eta_data.delayed">
                     {{ tracking_data.description_head }}
                   </div>
                   <div class="marketing-message-align">
