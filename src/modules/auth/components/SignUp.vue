@@ -561,7 +561,7 @@ export default {
   margin: 1em;
 }
 .sign-holder-next {
-    margin: 35% 1em -9% -4% !important;
+    margin: 24% 1em -9% -4% !important;
 }
 .sign-holder input:not([type="checkbox"]) {
   width: 100%;
