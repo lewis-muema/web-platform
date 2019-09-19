@@ -536,7 +536,7 @@ export default {
   font-size: 1.3rem;
   line-height: 1.7em;
   font-weight: 500;
-  text-align: center;
+  /*text-align: center;*/
   color: #666;
   padding-top: 5px;
   padding-bottom: 5px;
