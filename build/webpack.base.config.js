@@ -11,11 +11,11 @@ const isProd = process.env.NODE_ENV !== 'development';
 
 
 switch (process.env.DOCKER_ENV) {
-    case "testing":
+    case 'testing':
         env = require('../configs/test.env')
-    case "production":
+    case 'production':
         env = require('../configs/prod.env')
-    case "staging":
+    case 'staging':
         env = require('../configs/staging.env')
     default:
         env = require('../configs/dev.env')
