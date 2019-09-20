@@ -9,11 +9,16 @@ process.env.NODE_ENV = process.env.DOCKER_ENV || 'development';
 process.env.DOCKER_ENV = process.env.DOCKER_ENV || 'development';
 const isProd = process.env.NODE_ENV !== 'development';
 
-const env = process.env.DOCKER_ENV === 'testing'
-  ? require('../configs/test.env')
-  : process.env.DOCKER_ENV === 'production'
-    ? require('../configs/prod.env')
-    : require('../configs/dev.env');
+switch (process.env.DOCKER_ENV) {
+    case "testing":
+        env = require('../configs/test.env')
+    case "production":
+        env = require('../configs/prod.env')
+    case "staging":
+        env = require('../configs/staging.env')
+    default:
+        env = require('../configs/dev.env')
+}
 
 module.exports = {
   devtool: isProd ? false : '#cheap-module-source-map',
