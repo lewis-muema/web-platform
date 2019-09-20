@@ -9,6 +9,7 @@ process.env.NODE_ENV = process.env.DOCKER_ENV || 'development';
 process.env.DOCKER_ENV = process.env.DOCKER_ENV || 'development';
 const isProd = process.env.NODE_ENV !== 'development';
 
+
 switch (process.env.DOCKER_ENV) {
     case "testing":
         env = require('../configs/test.env')
