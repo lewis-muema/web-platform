@@ -994,6 +994,7 @@ export default {
         this.setComplete = false;
         this.setScheduled = true;
         this.isPayed = false;
+        this.isConfirmed = false;
       } else {
         if (this.tracking_data.confirm_status === 0) {
           this.isPayed = false;
