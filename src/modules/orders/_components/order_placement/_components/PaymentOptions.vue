@@ -199,7 +199,6 @@ export default {
       user_balance: 0,
       mpesa_poll_timer_id: null,
       loading: false,
-      cash_status: false,
       card_token: '',
       customer_token: '',
       payment_type: 'prepay',
@@ -584,7 +583,6 @@ export default {
     },
 
     handleCashPayments() {
-      this.cash_status = true;
       this.doCompleteOrder();
     },
 
@@ -613,7 +611,7 @@ export default {
         (response) => {
           this.loading = false;
           if (response.length > 0) {
-            // eslint-disable-next-line no-param-reassign
+            // eslint-disable-next-line no-param-reassign,prefer-destructuring
             response = response[0];
           }
 
@@ -662,7 +660,6 @@ export default {
         user_phone: acc.user_phone,
         no_charge_status: false,
         insurance_amount: 10,
-        cash_status: this.cash_status,
         note_status:
           typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
         last_digit: 'none',
@@ -677,7 +674,7 @@ export default {
         destination_paid_status: false,
         delivery_points: this.get_order_path.length - 1,
         sendy_coupon: '0',
-        payment_mode: this.payment_method === ''
+        payment_method: this.payment_method === ''
           ? 0
           : Number(this.payment_method),
         schedule_time: this.order_is_scheduled ? this.scheduled_time : this.current_time,
