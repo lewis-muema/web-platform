@@ -100,8 +100,8 @@
               :gutter="20"
               class="infobar-content infobar--truck-cont-item infobar--truck-cont-padding"
             >
-              <el-col :span="5" class="inforbar_left_scrollable">
-                <div class="inforbar--item-scrollable">
+              <el-col :span="4" class="inforbar_left_scrollable">
+                <div class="locations--item-scrollable">
                   <ul class="timeline inforbar_route_timeline">
                     <li>
                       <p class="info-text-transform infor-top-bar-text">
@@ -110,18 +110,18 @@
                       <p>{{ tracking_data.path[0].name }}</p>
                     </li>
 
-                    <li>
+                    <li v-for="(val, index) in tracking_data.path" v-if="index > 0">
                       <p class="info-text-transform infor-top-bar-text">
                         Destination
                       </p>
-                      <p v-for="(val, index) in tracking_data.path" v-if="index > 0">
+                      <p>
                         {{ val.name }}
                       </p>
                     </li>
                   </ul>
                 </div>
               </el-col>
-              <el-col :span="5">
+              <el-col :span="6" class="inforbar_order_content">
                 <div class="tracking-loader-outer">
                   <div class="tracking-loader">
                     <div class="">
@@ -267,28 +267,44 @@
               </el-col>
               <el-col :span="6" class="">
                 <div class="">
+                  <!-- Tracking Timeline for Small Vendors  -->
+
                   <div class="inforbar--item-scrollable">
                     <ul class="timeline inforbar_order_timeline">
                       <li>
                         <div class="">
-                          <p class="info-text-transform infor-top-bar-text">
-                            Order Placed
+                          <p class="infor-top-bar-text stagePassed">
+                            {{ orderPlaced }}
                           </p>
-                          <p>{{ tracking_data.eta_data.placed | moment }}</p>
+                          <p class="eta_data">{{ tracking_data.eta_data.placed | moment }}</p>
                         </div>
                       </li>
 
-                      <!-- Pricing check -->
+                      <!-- Order Scheduled State -->
+
+                      <li
+                        id="timeline_right"
+                        v-if="tracking_data.eta_data.scheduled"
+                        v-bind:class="{
+                          confirmedScheduled: true,
+                        }"
+                      >
+                        <div class="">
+                          <p class="infor-top-bar-text stagePassed">
+                            Your Order has been scheduled
+                          </p>
+                          <p class="eta_data">{{ tracking_data.date_time | moment }}</p>
+                        </div>
+                      </li>
+
+                      <!-- Pricing check for Truck Orders-->
                       <li
                         v-if="truck_orders.includes(tracking_data.rider.vendor_id)"
                         id="timeline_right"
                         v-bind:class="{ timelinePay: isPayed, payedReached: setPayed }"
                       >
                         <div class="">
-                          <p
-                            class="info-text-transform infor-top-bar-text"
-                            v-bind:class="{ payedActive: setPayed }"
-                          >
+                          <p class="infor-top-bar-text" v-bind:class="{ payedActive: setPayed }">
                             Price Confirmation
                           </p>
                           <div class="" v-if="getStatus === 'Pending'"></div>
@@ -338,66 +354,103 @@
                           </div>
                         </div>
                       </li>
-                      <!-- Confirmed -->
+
+                      <!-- Order Confirmation State -->
 
                       <li
                         id="timeline_right"
                         v-bind:class="{
                           timelineConfirmed: isConfirmed,
-                          confirmedReached: setConfirmed,
+                          confirmedExpressReached: setConfirmed,
                         }"
                       >
-                        <div class="">
-                          <p
-                            class="info-text-transform infor-top-bar-text"
-                            v-bind:class="{ confirmedActive: setConfirmed }"
-                          >
-                            Order Confirmed
-                          </p>
-                          <div v-if="tracking_data.confirm_status > 0">
-                            <p>
-                              Your Order has been confirmed by {{ tracking_data.rider.rider_name }}
+                        <div
+                          class="infor-top-bar-text"
+                          v-bind:class="{ confirmedActive: setConfirmed }"
+                        >
+                          <span v-if="tracking_data.confirm_status > 0">
+                            <p class="stagePassed">
+                              We have matched a {{ partnerName }} to your {{ packageName }}
                             </p>
-                            <p>{{ confirmEta }}</p>
-                          </div>
-                          <div v-else>
-                            <p>{{ confirmEta }}</p>
-                          </div>
+                            <p class="eta_data">{{ confirmEta }}</p>
+                          </span>
+                          <span v-else>
+                            <p class="stagePending">
+                              We are finding a {{ partnerName }} for your {{ packageName }}
+                            </p>
+                            <p class="eta_data" :class="toConfirmationStateClass()">
+                              {{ delayState }}
+                            </p>
+                          </span>
                         </div>
                       </li>
 
-                      <!-- In Transit  -->
-                      <li
-                        id="timeline_right"
-                        v-bind:class="{ timelinePicked: isPicked, pickedReached: setPicked }"
-                      >
-                        <div class="">
-                          <p
-                            class="info-text-transform infor-top-bar-text"
-                            v-bind:class="{ pickedActive: setPicked }"
-                          >
-                            Order Picked
-                          </p>
-                          <p>{{ pickUpEta }}</p>
-                        </div>
-                      </li>
-
-                      <!-- Delivered -->
+                      <!-- Order In-Transit State  -->
                       <li
                         id="timeline_right"
                         v-bind:class="{
-                          timelineDelivered: isDelivered,
-                          deliveredReached: setDelivered,
+                          timelinePicked: isPicked,
+                          pickedExpressReached: setPicked,
                         }"
                       >
-                        <div class="">
-                          <p
-                            class="info-text-transform infor-top-bar-text"
-                            v-bind:class="{ deliveredActive: setDelivered }"
-                          >
-                            Delivered
-                          </p>
-                          <p>{{ deliveryEta }}</p>
+                        <div class="infor-top-bar-text" v-bind:class="{ pickedActive: setPicked }">
+                          <span v-if="tracking_data.delivery_status > 0">
+                            <p class="stagePassed">
+                              Your {{ partnerName }} {{ tracking_data.rider.rider_name }} has picked
+                              your
+                              {{ packageName }}
+                            </p>
+                            <p class="eta_data">{{ pickUpEta }}</p>
+                          </span>
+                          <span v-else>
+                            <p class="stagePending">
+                              Your {{ partnerName }} is on the way to pick your {{ packageName }}
+                            </p>
+                            <p class="eta_data">{{ pickUpEta }}</p>
+                          </span>
+                        </div>
+                      </li>
+
+                      <!-- Order towards Delivery Points State -->
+                      <li
+                        id="timeline_right"
+                        v-for="(val, index) in tracking_data.path"
+                        v-if="index > 0"
+                        :class="toDeliveryTypeClass(val, index)"
+                      >
+                        <div
+                          class="infor-top-bar-text"
+                          v-bind:class="{ deliveredActive: setDelivered }"
+                        >
+                          <span v-if="tracking_data.delivery_status < 3 && !val.visited">
+                            <p class="stagePending">
+                              Your {{ packageName }} is on the way to {{ val.name }}
+                            </p>
+                          </span>
+                          <span v-else>
+                            <p class="stagePassed">
+                              Your {{ packageName }} has been delivered to {{ val.name }}
+                            </p>
+                          </span>
+                        </div>
+                      </li>
+
+                      <!-- Order Delivery State-->
+                      <li
+                        id="timeline_right"
+                        v-bind:class="{
+                          timelineDeliveredExpress: setComplete,
+                        }"
+                      >
+                        <div
+                          class="infor-top-bar-text"
+                          v-bind:class="{ deliveredActive: setComplete }"
+                        >
+                          <span>
+                            <p v-bind:class="{ stagePassed: setComplete }">
+                              Delivery complete
+                            </p>
+                          </span>
                         </div>
                       </li>
                     </ul>
@@ -484,10 +537,10 @@
                   </div>
                 </div>
                 <div v-else class="infobar--driver-details">
-                  <div class="">
+                  <div class="" v-if="!tracking_data.eta_data.delayed">
                     {{ tracking_data.description_head }}
                   </div>
-                  <div class="">
+                  <div class="marketing-message-align">
                     {{ tracking_data.marketing_message }}
                   </div>
                 </div>
@@ -519,21 +572,6 @@
                 </div>
               </div>
 
-              <div
-                v-if="[1, 23].includes(tracking_data.rider.vendor_id) && !externalTracking"
-                class="infobar--content infobar--item infobar--status infobar--item-bordered"
-              >
-                <el-steps
-                  :space="200"
-                  :active="getStatusCode"
-                  finish-status="success"
-                  style="font-size:10px !important"
-                >
-                  <el-step title="Rider allocation" :description="confirmEta" />
-                  <el-step title="Pick up" :description="pickUpEta" />
-                  <el-step title="Delivery" :description="deliveryEta" />
-                </el-steps>
-              </div>
               <div
                 v-if="this.$route.name !== 'tracking_external'"
                 class="infobar--content infobar--item infobar--actions"
@@ -699,8 +737,8 @@ export default {
       truckMoreInfo: true,
       myRb: '',
       accType: '',
-      pickUpEta: 'Awaiting Confirmation',
-      deliveryEta: 'Awaiting Pickup',
+      pickUpEta: '',
+      deliveryEta: '',
       confirmEta: '',
       scheduled_time: false,
       isConfirmed: false,
@@ -717,6 +755,11 @@ export default {
       shareOption: false,
       recipientPhone: '',
       externalTracking: false,
+      setComplete: false,
+      small_vendors: [1],
+      setScheduled: false,
+      partnerName: '',
+      packageName: '',
     };
   },
   computed: {
@@ -781,6 +824,30 @@ export default {
       } else {
         return '';
       }
+    },
+    orderPlaced() {
+      let text = 'Your order has been received';
+
+      return text;
+    },
+    deliveryStatus(name) {
+      let status = this.tracking_data.delivery_status;
+      let text = '';
+      if (status < 3) {
+        text = `Your package is on the way to ${name}`;
+      } else {
+        text = 'Your package has been delivered';
+      }
+      return text;
+    },
+    delayState() {
+      let deliveryState = this.tracking_data.eta_data.delayed;
+      if (deliveryState) {
+        return `Sorry, we haven't found a ${this.partnerName} for your ${
+          this.packageName
+        }. We are working to find you one as soon as possible`;
+      }
+      return this.confirmEta;
     },
   },
   watch: {
@@ -884,6 +951,8 @@ export default {
     },
     checkVendorName() {
       if (this.tracking_data.rider.vendor_name === 'Bike') {
+        this.partnerName = 'rider';
+        this.packageName = 'package';
         if (this.tracking_data.price_type === 3) {
           this.vendorName = 'Standard';
         } else {
@@ -891,8 +960,12 @@ export default {
         }
       } else if (this.tracking_data.rider.vendor_name === 'Economy Bike') {
         this.vendorName = 'Standard';
+        this.partnerName = 'rider';
+        this.packageName = 'package';
       } else {
         this.vendorName = this.tracking_data.rider.vendor_name;
+        this.partnerName = 'driver';
+        this.packageName = 'load';
       }
     },
     checkScheduler() {
@@ -907,39 +980,71 @@ export default {
       }
     },
     setTimeLineIconState() {
-      if (this.tracking_data.confirm_status === 0) {
+      if (
+        Object.prototype.hasOwnProperty.call(this.tracking_data.eta_data, 'scheduled') &&
+        this.tracking_data.eta_data.scheduled
+      ) {
         this.isPayed = false;
         this.setDelivered = false;
         this.isDelivered = false;
         this.isPicked = false;
         this.setPicked = false;
-        this.setConfirmed = true;
-        this.setPayed = true;
-      } else if (
-        this.tracking_data.confirm_status === 1 &&
-        this.tracking_data.delivery_status === 0
-      ) {
         this.setConfirmed = false;
         this.setPayed = false;
-        this.setDelivered = false;
-        this.isDelivered = false;
-        this.setPicked = true;
-        this.isConfirmed = true;
-        this.isPayed = true;
-      } else if (this.tracking_data.delivery_status === 2) {
-        this.setPicked = false;
-        this.isDelivered = false;
-        this.setDelivered = true;
-        this.isConfirmed = true;
-        this.isPayed = true;
-        this.isPicked = true;
-      } else if (this.tracking_data.delivery_status === 3) {
-        this.setDelivered = false;
-        this.isDelivered = true;
-        this.isConfirmed = true;
-        this.isPayed = true;
-        this.isPicked = true;
+        this.setComplete = false;
+        this.setScheduled = true;
+        this.isPayed = false;
+        this.isConfirmed = false;
       } else {
+        if (this.tracking_data.confirm_status === 0) {
+          this.isPayed = false;
+          this.setDelivered = false;
+          this.isDelivered = false;
+          this.isPicked = false;
+          this.setPicked = false;
+          this.setConfirmed = true;
+          this.setPayed = true;
+          this.setComplete = false;
+          this.setScheduled = false;
+          this.isConfirmed = false;
+        } else if (
+          this.tracking_data.confirm_status === 1 &&
+          this.tracking_data.delivery_status === 0
+        ) {
+          this.setConfirmed = false;
+          this.setPayed = false;
+          this.setDelivered = false;
+          this.isDelivered = false;
+          this.setPicked = true;
+          this.isConfirmed = true;
+          this.isPayed = true;
+          this.setComplete = false;
+          this.setScheduled = false;
+          this.isPicked = false;
+        } else if (this.tracking_data.delivery_status === 2) {
+          this.setConfirmed = false;
+          this.setPayed = false;
+          this.setPicked = false;
+          this.isDelivered = false;
+          this.setDelivered = true;
+          this.isConfirmed = true;
+          this.isPayed = true;
+          this.isPicked = true;
+          this.setComplete = false;
+          this.setScheduled = false;
+        } else if (this.tracking_data.delivery_status === 3) {
+          this.setDelivered = false;
+          this.isDelivered = true;
+          this.isConfirmed = true;
+          this.isPayed = true;
+          this.isPicked = true;
+          this.setComplete = true;
+          this.setScheduled = false;
+          this.setConfirmed = false;
+          this.setPayed = false;
+          this.setPicked = false;
+        } else {
+        }
       }
     },
     confirmUser() {
@@ -1148,9 +1253,10 @@ export default {
         const startEta = moment(start, moment.ISO_8601).format('h:mm a');
         const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-        this.confirmEta = `${startEta}-${endEta}`;
-        this.pickUpEta = 'Awaiting Confirmation';
-        this.deliveryEta = 'Awaiting Pickup';
+        this.confirmEta = `${startEta} - ${endEta}`;
+
+        this.pickUpEta = '';
+        this.deliveryEta = '';
       } else if (
         this.tracking_data.confirm_status === 1 &&
         this.tracking_data.delivery_status === 0
@@ -1192,653 +1298,29 @@ export default {
         // ...
       }
     },
+    toDeliveryTypeClass(val, index) {
+      let nextPoint = this.tracking_data.path[index - 1].visited;
+      if (this.tracking_data.delivery_status >= 2) {
+        if (val.visited) {
+          return ['timelineDeliveredExpress'];
+        } else {
+          if (nextPoint) {
+            return ['deliveryEnrouteReached'];
+          }
+        }
+      }
+      return '';
+    },
+    toConfirmationStateClass() {
+      if (this.tracking_data.eta_data.delayed) {
+        return ['confirmationDelayActive'];
+      }
+      return '';
+    },
   },
 };
 </script>
 
-<style lang="css">
-@media only screen and (max-width: 599px){
-  .exceed_mobile{
-    display: none !important;
-  }
-  .mobile-inforbar--outer{
-    display: flex !important;
-  }
-  .cancelOptions > div {
-    margin-top: 25vh !important;
-    width: 95% !important;
-  }
-  .cancel-reason-text{
-    padding-left: 25% !important;
-  }
-}
-.mobile-inforbar--outer
-{
-  display: none;
-  position: fixed;
-  bottom: 5px;
-  width: 90%;
-  margin: 0 5%;
-  background-color: #fff;
-  color: #555;
-  font-size: 13px;
-  max-height: 100px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
-  border-radius: 3px;
-  overflow: scroll;
-}
-.infobar--outer
-{
-  display: flex;
-  position: fixed;
-  bottom: 20px;
-  width: 90%;
-  margin: 0 5%;
-  background-color: #fff;
-  color: #555;
-  font-size: 13px;
-  min-height: 90px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
-  border-radius: 3px;
-
-}
-.infobar--content
-{
-  display: flex;
-  flex: 1 1 auto;
-}
-.infobar--content-padded
-{
-  padding: 15px 0;
-}
-.infobar--item
-{
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-}
-.infobar--item-bordered
-{
-  border-right: 1px solid #74696942;
-}
-.infobar--item-start
-{
-  align-items: flex-start;
-}
-.infobar--photo img
-{
- /* margin-top: -29px;
-  height: 72px;
-  width: auto !important;
-  margin-bottom: -29px;
-  border-radius: 50%; */
-  /* border: 1px solid #1782c5; */
-  border-radius: 50%;
-  padding: 4px;
-  max-height: 80px;
-  min-height: 75px;
-  width: 75px;
-}
-.infobar--driver-details
-{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  flex: 1;
-}
-.infobar--driver a
-{
-  color: #1782c5;
-  text-decoration: none;
-  font-size: 80%;
-}
-.infobar--actions
-{
-  flex-direction: row;
-  padding: 0 1rem;
-  text-transform: capitalize;
-  justify-content: space-around;
-  text-align: center;
-  position: relative;
-}
-.infobar--actions img
-{
-  display: block;
-  text-align: center;
-  width: 30px;
-  height: 30px;
-  margin: 0 auto;
-}
-.infobar--actions-hover:hover
-{
-  cursor: pointer;
-  color:#1782C5;
-}
-.infobar--action-slide
-{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #74696929;
-  position: absolute;
-  background-color: #fff;
-  top: -255px;
-  width: 100%;
-  min-width: 215px;
-  border-radius: 3px;
-}
-.actions--caret
-{
-  width: 20px;
-  height: 20px;
-  z-index: 50;
-  background-color: #fff;
-  position: absolute;
-  bottom: -11px;
-  border-bottom: 1px solid #74696942;
-  border-right: 1px solid #74696942;
-  transform: rotate(45deg);
-}
-.infobar--terms
-{
-  display: flex;
-  flex: 1;
-}
-.infobar--actions-text
-{
-  font-size: 13px;
-  font-weight: 400;
-  padding-top: 11px;
-}
-.action--slide-text
-{
-  padding: 10px 0px;
-  line-height: 1.5;
-  text-transform: none;
-}
-.action--slide-text:hover
-{
-  color: #333;
-  cursor: auto;
-}
-.action--slide-desc
-{
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-.action--slide-button
-{
-  margin: 0px 10px 10px 10px;
-    text-transform: capitalize;
-    font-size: 14px;
-    letter-spacing: 1.1px;
-    background-color: #1782c5;
-    color: #fff;
-    width: 100%;
-    height: 30px;
-    cursor: pointer;
-    border: 0px solid;
-    border-radius: 2px;
-}
-.infobar--actions-icon
-{
-  font-size: 23px;
-  margin-bottom: -10px;
-
-}
-
-.carets
-{
-  width: 10px;
-  margin-right: 4px;
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition-duration: 0.3s;
-  transition-property: opacity;
-  transition-timing-function: ease;
-}
-
-.fade-enter,
-.fade-leave-active {
-  opacity: 0
-}
-.infobar--action-slide .el-radio
-{
-  padding: 10px 0px;
-  margin: 0px;
-}
-.infobar--action-slide .el-radio-group
-{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-}
-.infobar--truck-content{
-  display: flex;
-  flex: 1 1 auto;
-}
-.infobar--truck-content-padded{
-  padding: 15px 0;
-}
-.infobar--truck-item{
-  flex-direction: row;
-  justify-content: space-evenly;
-  padding-left: 8%;
-}
-.infobar-content{
-  flex: 1 1 auto;
-}
-.infobar--item-truck-bordered{
-  border-bottom: 1px solid #74696942;
-}
-.infobar--item-truck-bordered-top{
-  border-top: 1px solid #74696942;
-}
-.infobar-content{
-  flex: 1 1 auto;
-}
-.infobar--truck-cont-item{
-  flex-direction: row;
-  justify-content: space-evenly;
-  padding-left: 8%;
-}
-.infobar--item-truck-cont-bordered{
-  border-left: 1px solid #74696942;
-}
-.el-row {
-  margin-bottom: 20px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-.el-col {
-  border-radius: 4px;
-}
-ul.timeline {
-    list-style-type: none;
-    position: relative;
-}
-ul.timeline:before {
-    content: ' ';
-    background: #d4d9df;
-    display: inline-block;
-    position: absolute;
-    left: 29px;
-    width: 2px;
-    height: 100%;
-    z-index: 400;
-}
-ul.timeline > li {
-    margin: 20px 0;
-    padding-left: 20px;
-    max-height: 300px;
-}
-ul.timeline > li:before {
-    /* content: ' '; */
-    background: #1B7FC3;
-    display: inline-block;
-    position: absolute;
-    border-radius: 50%;
-    border: 3px solid #1B7FC3;
-    left: 20px;
-    width: 14px;
-    height: 14px;
-    z-index: 400;
-    content: '';
-    font-size: 16px;
-    color: white ;
-
-}
-ul.timeline > li#timeline_right:before{
-  content : '';
-  background: #8A8A8A;
-  border: 4px solid #8A8A8A;
-}
-ul.timeline > li#timeline_right.timelineConfirmed:before{
-  background: #51A65B;
-  border: 4px solid #51A65B;
-  content: '✓';
-  font-size: 11px;
-  padding-left: 3px;
-}
-ul.timeline > li#timeline_right.timelinePicked:before{
-  background: #51A65B;
-  border: 4px solid #51A65B;
-  content: '✓';
-  font-size: 11px;
-  padding-left: 3px;
-}
-ul.timeline > li#timeline_right.timelineDelivered:before{
-  background: #51A65B;
-  border: 4px solid #51A65B;
-  content: '✓';
-  font-size: 11px;
-  padding-left: 3px;
-}
-ul.timeline > li#timeline_right.timelinePay:before{
-  background: #51A65B;
-  border: 4px solid #51A65B;
-  content: '✓';
-  font-size: 11px;
-  padding-left: 3px;
-}
-ul.timeline > li#timeline_right.confirmedReached:before{
-  background: #F57F20;
-  border: 4px solid #F57F20;
-  content: '';
-}
-ul.timeline > li#timeline_right.pickedReached:before{
-  background: #F57F20;
-  border: 4px solid #F57F20;
-  content: '';
-}
-ul.timeline > li#timeline_right.deliveredReached:before{
-  background: #F57F20;
-  border: 4px solid #F57F20;
-  content: '';
-}
-ul.timeline > li#timeline_right.payedReached:before{
-  background: #F57F20;
-  border: 4px solid #F57F20;
-  content: '';
-}
-.inforbar_route_timeline li:first-child:before {
-    background: #F57F20;
-    border: 4px solid #F57F20;
-    content : '';
-}
-.inforbar_order_timeline li:first-child:before {
-    background: #51A65B;
-    border: 4px solid #51A65B;
-    content: '✓';
-    font-size: 11px;
-    padding-left: 3px;
-}
-.cancelOptions > div
-{
-  margin-top: 25vh !important;
-  width: 30%;
-}
-.v-modal{
-  opacity: 0 !important;
-}
-.infobar-truck-pstn{
-  margin-left: 0px !important;
-  margin-right: 0px !important;
-}
-.topbar-text{
-  padding-bottom: 10px;
-}
-.top-bar-info{
-  color: #1782C5;
-  font-size: 15px;
-}
-.top-bar-img{
-  height:15px;
-  vertical-align:middle;
-}
-.inforbar--item-scrollable{
-  overflow-y: scroll;
-  height: 190px;
-  width: 130%;
-  font-size: 12px;
-}
-.infobar-truck-img{
-  height:16px;
-  vertical-align:middle;
-  margin-bottom: 7px;
-}
-.timeline-date-disp{
-  padding-left: 30px;
-}
-.info-text-transform{
-  text-transform: uppercase;
-}
-.info-text-cursor{
-  padding-top:4px;
-  cursor:pointer;
-  text-decoration: underline;
-  color: #8A8A8A;
-}
-.infobar--truck-cont-item{
-  padding-bottom: 5px;
-}
-.cancel-reason-option{
-  text-align:center;
-}
-.cancel-reason-text{
-  padding-left: 30%;
-  margin-bottom: 10px;
-  margin-top: 10px;
-}
-.share-option{
-  padding-top: 20px;
-  cursor: pointer;
-}
-.rimg-disp{
-  /* vertical-align: middle;
-  max-width: 16%;
-  border-radius: 15%; */
-  border-radius: 50%;
-    padding: 4px;
-    max-height: 70px;
-    min-height: 50px;
-    width: 75px;
-    vertical-align: middle;
-}
-.infobar--item-truck-options{
-  padding-bottom: 5px;
-  padding-top: 10px;
-  text-align:center;
-  max-width:85%
-}
-.infobar--item-truck-cancel{
-  padding-bottom: 5px;
-  padding-top: 10px;
-  text-align:center;
-  max-width:70%;
-  margin-left: -35px;
-}
-.info-payment-button{
-  padding-left: 5px;
-  padding-top: 10px;
-}
-.button-tracking-payment{
-  width:200px;
-}
-.tracking-notes{
-  padding-top: 12px;
-  padding-bottom: 10px;
-  padding-left: 30px;
-}
-.tracking-loader{
-  padding-bottom: 10px;
-  width: 120%;
-}
-.tracking-loader-inner{
-  padding-left:19px;
-}
-.tracking-loader-outer{
-  padding-left: 58px;
-  padding-top: 12px;
-}
-.tracking-notes-inner{
-  padding-left: 19px;
-  padding-top: 5px;
-  max-width: 80%!important;
-}
-.mobile-inforbar--inner{
-  width:100%;
-}
-.mobile-inforbar-details{
-  width: 100%;
-  float: right;
-  display: inline-block;
-  padding-left: 20px;
-  padding-bottom :16px;
-}
-.mobile-inforbar-img{
-  display: inline-block;
-  width: 70px;
-  object-fit: contain;
-  float: left;
-}
-.mobile-img{
-  height:60px
-}
-.mobile-inforbar-rider-name{
-  width: 70%;
-  display: inline-block;
-  float: left;
-  font-size: 15px;
-  padding-left: 10px;
-  padding-top: 10px;
-}
-.mobile-rider-name-inner{
-  padding-bottom: 10px;
-}
-.mobile-rider-name{
-  padding-right:25px
-}
-.mobile-order-amount{
-  padding-left: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #74696942;
-  padding-top: 10px;
-}
-.mobile-order-status{
-  padding-left: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #74696942;
-  padding-top: 10px;
-}
-.infobar--item-bordered > div{
-  width: 77%;
-}
-.infobar--order-align{
-  text-align: center;
-}
-.infobar--item-bordered > div > div:nth-child(3){
-  max-width: 18.3333% !important;
-}
-.el-step__title {
-    font-size: 12px !important;
-  }
-.el-step__description{
-    font-size: 10px !important;
-    /* width: 103px!important; */
-  }
-/* .infobar--status{
-  width: 23% !important;
-} */
-.el-step.is-horizontal {
-  flex-basis: 160px !important;
-}
-.el-step__head.is-success{
-  color: #c0c4cc !important;
-  border-color: #c0c4cc !important;
-}
-.el-step__title.is-success{
-  color: #c0c4cc !important;
-}
-.el-step__description.is-success{
-  color: #c0c4cc !important;
-}
-.el-step__title.is-process{
-  font-weight: 400 !important;
-}
-.el-step__head.is-process {
-  color: #f57f20 !important;
-  border-color: #f57f20 !important;
-}
-.infor-top-bar-text{
-  color: #8A8A8A;
-}
-.cancel-text-option{
-  width: 23% !important;
-}
-.steps-inner{
-  font-size:10px !important;
-}
-.el-step.is-vertical .el-step__title {
-  font-size: 15px !important;
-}
-.el-step.is-vertical .el-step__description{
-  font-size: 12px !important;
-  /* width: 103px!important; */
-}
-.confirmedActive{
-  color: #1B7FC3;
-}
-.pickedActive {
-  color: #1B7FC3;
-}
-.deliveredActive {
-  color: #1B7FC3;
-}
-.payedActive{
-  color: #1B7FC3;
-}
-ul.inforbar_route_timeline:before{
-  background: #1B7FC3 !important;
-  height: 75% !important;
-}
-ul.inforbar_order_timeline:before{
-  height : 90% !important;
-  width: 2px ;
-  background: #8A8A8A !important;
-  margin-left: 2px;
-}
-.inforbar_left_scrollable{
-  padding-left: 0px !important;
-}
-.inforbar-vendor-icon{
-  margin-bottom: 0px !important;
-}
-.status-text{
-  width: 234px !important;
-}
-.minimise-icon{
-  padding-left: 6% !important;
-}
-.saveDetailsDisable{
-  display: none;
-}
-.share-order-option{
-  line-height: 20px;
-}
-.share-text-option{
-  text-align: left;
-  margin: 0px 10px 10px 10px;
-}
-.input-phone{
-  height: 40px !important;
-  width: 30% ;
-}
-.el-dialog__body{
-  padding-top: 0px !important;
-  padding-left : 0px !important;
-  padding-right : 0px !important;
-}
-.share-notification-extend{
-  padding-right: 20px;
-  padding-left: 20px;
-}
-.share-eta-divider{
-  border-bottom: 1px solid #74696942;
-}
-.share-eta-input-header{
-  padding-top: 20px;
-}
-.share-eta-input{
-  margin: 0px 10px 10px 10px;
-}
-.eta-button-align{
-  text-align: right;
-}
+<style lang="css" scoped>
+@import "../../../../../assets/styles/info_window_component.css";
 </style>
