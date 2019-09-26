@@ -763,6 +763,7 @@ export default {
     this.setFirstTimeUser();
     this.initializeVendorComponent();
     this.initiateStoreData();
+    this.reCheckCarrierType();
   },
 
   methods: {
@@ -891,6 +892,7 @@ export default {
     setActivePackageClassWrapper(name) {
       this.setActivePackageClass(name);
       this.setOuterActivePackageClass(name);
+      this.reCheckCarrierType();
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
     },
 
@@ -1104,7 +1106,6 @@ export default {
       this.setActiveVendorName(vendorObject.vendor_name);
       this.setActiveVendorDetails(vendorObject);
       this.setOuterActiveVendorDetails(vendorObject);
-      this.reCheckCarrierType();
       this.trackMixpanelEvent(`Select Vendor: ${vendorObject.vendor_name}`);
     },
 
