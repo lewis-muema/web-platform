@@ -758,20 +758,11 @@ export default {
       return displayPairName.toLowerCase();
     },
   },
-  watch: {
-    get_active_package_class(new_val, old_val) {
-      this.reCheckCarrierType();
-    },
-  },
 
   created() {
     this.setFirstTimeUser();
     this.initializeVendorComponent();
     this.initiateStoreData();
-  },
-
-  mounted() {
-    this.reCheckCarrierType();
   },
 
   methods: {
