@@ -269,7 +269,7 @@ export function createRouter() {
         children: [
           {
             path: '/',
-            component: () => import('../modules/payment/_components/MpesaComponent.vue'),
+            component: () => import('../modules/payment/_components/CardComponent.vue'),
           },
           {
             path: 'mpesa',
