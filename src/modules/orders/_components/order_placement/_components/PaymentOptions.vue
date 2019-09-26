@@ -62,6 +62,25 @@
           <!-- Nothing displayed -->
         </span>
         <span v-else-if="getPriceRequestObject.payment_option !== 2">
+          <div v-if="show_payment">
+            <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
+              <div class="home-view-notes-wrapper--item__option">
+                <div class="home-view-notes-wrapper--item__option-div payment__radio-button-label">
+                  <input
+                    v-model="payment_method"
+                    type="radio"
+                    :value="11"
+                    name="running_balance"
+                    class="payment__radio-button"
+                  >
+                  <span>
+                    <p class="no-margin">Charge Balance</p>
+                  </span>
+                </div>
+              </div>
+              <div class="home-view-notes-wrapper--item__value" />
+            </div>
+          </div>
           <div
             v-for="method in payment_methods"
             :key="method.payment_method_id"
@@ -553,6 +572,8 @@ export default {
           this.handleCashPayments();
         } else if (Number(this.payment_method) === 3) {
           this.handlePromoCodePayments();
+        } else if (Number(this.payment_method) === 11) {
+          this.handleRunningBalancePayments();
         } else if (Number(this.payment_method) === 2) {
           const card = this.get_saved_cards.find(
             // eslint-disable-next-line camelcase
@@ -585,6 +606,10 @@ export default {
     },
 
     handleCashPayments() {
+      this.doCompleteOrder();
+    },
+
+    handleRunningBalancePayments() {
       this.doCompleteOrder();
     },
 
@@ -677,7 +702,7 @@ export default {
         delivery_points: this.get_order_path.length - 1,
         sendy_coupon: '0',
         payment_method: this.payment_method === ''
-          ? 0
+          ? 12
           : Number(this.payment_method),
         schedule_time: this.order_is_scheduled ? this.scheduled_time : this.current_time,
         tier_tag: this.activeVendorPriceData.tier_tag,
