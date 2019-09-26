@@ -1106,6 +1106,7 @@ export default {
       this.setActiveVendorName(vendorObject.vendor_name);
       this.setActiveVendorDetails(vendorObject);
       this.setOuterActiveVendorDetails(vendorObject);
+      this.reCheckCarrierType();
       this.trackMixpanelEvent(`Select Vendor: ${vendorObject.vendor_name}`);
     },
 
