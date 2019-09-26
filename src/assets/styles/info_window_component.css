@@ -720,3 +720,6 @@ ul.inforbar_order_timeline:before{
 .confirmationDelayActive{
    color: #555 !important;
 }
+.marketing-message-align{
+  text-align: center;
+}

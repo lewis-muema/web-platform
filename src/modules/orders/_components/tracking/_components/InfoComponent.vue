@@ -269,10 +269,7 @@
                 <div class="">
                   <!-- Tracking Timeline for Small Vendors  -->
 
-                  <div
-                    class="inforbar--item-scrollable"
-                    v-if="small_vendors.includes(tracking_data.rider.vendor_id)"
-                  >
+                  <div class="inforbar--item-scrollable">
                     <ul class="timeline inforbar_order_timeline">
                       <li>
                         <div class="">
@@ -297,114 +294,6 @@
                             Your Order has been scheduled
                           </p>
                           <p class="eta_data">{{ tracking_data.date_time | moment }}</p>
-                        </div>
-                      </li>
-
-                      <!-- Order Confirmation State -->
-
-                      <li
-                        id="timeline_right"
-                        v-bind:class="{
-                          timelineConfirmed: isConfirmed,
-                          confirmedExpressReached: setConfirmed,
-                        }"
-                      >
-                        <div
-                          class="infor-top-bar-text"
-                          v-bind:class="{ confirmedActive: setConfirmed }"
-                        >
-                          <span v-if="tracking_data.confirm_status > 0">
-                            <p class="stagePassed">We have matched a rider to your package</p>
-                            <p class="eta_data">{{ confirmEta }}</p>
-                          </span>
-                          <span v-else>
-                            <p class="stagePending">We are finding a rider for your package</p>
-                            <p class="eta_data" :class="toConfirmationStateClass()">
-                              {{ delayState }}
-                            </p>
-                          </span>
-                        </div>
-                      </li>
-
-                      <!-- Order In-Transit State  -->
-                      <li
-                        id="timeline_right"
-                        v-bind:class="{
-                          timelinePicked: isPicked,
-                          pickedExpressReached: setPicked,
-                        }"
-                        v-if="tracking_data.price_tier.vendor_id === 1"
-                      >
-                        <div class="infor-top-bar-text" v-bind:class="{ pickedActive: setPicked }">
-                          <span v-if="tracking_data.delivery_status > 0">
-                            <p class="stagePassed">
-                              Your rider {{ tracking_data.rider.rider_name }} has picked your
-                              package
-                            </p>
-                            <p class="eta_data">{{ pickUpEta }}</p>
-                          </span>
-                          <span v-else>
-                            <p class="stagePending">
-                              Your rider is on the way to pick your package
-                            </p>
-                            <p class="eta_data">{{ pickUpEta }}</p>
-                          </span>
-                        </div>
-                      </li>
-
-                      <!-- Order towards Delivery Points State -->
-                      <li
-                        id="timeline_right"
-                        v-for="(val, index) in tracking_data.path"
-                        v-if="index > 0 && tracking_data.price_tier.vendor_id === 1"
-                        :class="toDeliveryTypeClass(val)"
-                      >
-                        <div
-                          class="infor-top-bar-text"
-                          v-bind:class="{ deliveredActive: setDelivered }"
-                        >
-                          <span v-if="tracking_data.delivery_status < 3 && !val.visited">
-                            <p class="stagePending">Your package is on the way to {{ val.name }}</p>
-                          </span>
-                          <span v-else>
-                            <p class="stagePassed">
-                              Your package has been delivered to {{ val.name }}
-                            </p>
-                          </span>
-                        </div>
-                      </li>
-
-                      <!-- Order Delivery State-->
-                      <li
-                        id="timeline_right"
-                        v-bind:class="{
-                          timelineDeliveredExpress: setComplete,
-                        }"
-                      >
-                        <div
-                          class="infor-top-bar-text"
-                          v-bind:class="{ deliveredActive: setComplete }"
-                        >
-                          <span>
-                            <p v-bind:class="{ stagePassed: setComplete }">
-                              Delivery complete
-                            </p>
-                          </span>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <!-- Tracking Timeline for Medium and Large Vendors  -->
-
-                  <div class="inforbar--item-scrollable" v-else>
-                    <ul class="timeline inforbar_order_timeline">
-                      <li>
-                        <div class="">
-                          <p class="infor-top-bar-text stagePassed">
-                            {{ orderPlaced }}
-                          </p>
-                          <p class="eta_data">{{ tracking_data.eta_data.placed | moment }}</p>
                         </div>
                       </li>
 
@@ -467,56 +356,101 @@
                       </li>
 
                       <!-- Order Confirmation State -->
+
                       <li
                         id="timeline_right"
                         v-bind:class="{
                           timelineConfirmed: isConfirmed,
-                          confirmedReached: setConfirmed,
+                          confirmedExpressReached: setConfirmed,
                         }"
                       >
-                        <div class="">
-                          <p
-                            class="infor-top-bar-text"
-                            v-bind:class="{ confirmedActive: setConfirmed }"
-                          >
-                            Order Confirmed
-                          </p>
-                          <div v-if="tracking_data.confirm_status > 0">
-                            <p>
-                              Your Order has been confirmed by
-                              {{ tracking_data.rider.rider_name }}
+                        <div
+                          class="infor-top-bar-text"
+                          v-bind:class="{ confirmedActive: setConfirmed }"
+                        >
+                          <span v-if="tracking_data.confirm_status > 0">
+                            <p class="stagePassed">
+                              We have matched a {{ partnerName }} to your {{ packageName }}
                             </p>
-                            <p>{{ confirmEta }}</p>
-                          </div>
-                          <div v-else>
-                            <p>{{ confirmEta }}</p>
-                          </div>
+                            <p class="eta_data">{{ confirmEta }}</p>
+                          </span>
+                          <span v-else>
+                            <p class="stagePending">
+                              We are finding a {{ partnerName }} for your {{ packageName }}
+                            </p>
+                            <p class="eta_data" :class="toConfirmationStateClass()">
+                              {{ delayState }}
+                            </p>
+                          </span>
                         </div>
                       </li>
 
-                      <!-- Order In-Transit State -->
+                      <!-- Order In-Transit State  -->
                       <li
                         id="timeline_right"
-                        v-bind:class="{ timelinePicked: isPicked, pickedReached: setPicked }"
+                        v-bind:class="{
+                          timelinePicked: isPicked,
+                          pickedExpressReached: setPicked,
+                        }"
                       >
-                        <div class="">
-                          <p class="infor-top-bar-text" v-bind:class="{ pickedActive: setPicked }">
-                            Order Picked
-                          </p>
-                          <p>{{ pickUpEta }}</p>
+                        <div class="infor-top-bar-text" v-bind:class="{ pickedActive: setPicked }">
+                          <span v-if="tracking_data.delivery_status > 0">
+                            <p class="stagePassed">
+                              Your {{ partnerName }} {{ tracking_data.rider.rider_name }} has picked
+                              your
+                              {{ packageName }}
+                            </p>
+                            <p class="eta_data">{{ pickUpEta }}</p>
+                          </span>
+                          <span v-else>
+                            <p class="stagePending">
+                              Your {{ partnerName }} is on the way to pick your {{ packageName }}
+                            </p>
+                            <p class="eta_data">{{ pickUpEta }}</p>
+                          </span>
+                        </div>
+                      </li>
+
+                      <!-- Order towards Delivery Points State -->
+                      <li
+                        id="timeline_right"
+                        v-for="(val, index) in tracking_data.path"
+                        v-if="index > 0"
+                        :class="toDeliveryTypeClass(val, index)"
+                      >
+                        <div
+                          class="infor-top-bar-text"
+                          v-bind:class="{ deliveredActive: setDelivered }"
+                        >
+                          <span v-if="tracking_data.delivery_status < 3 && !val.visited">
+                            <p class="stagePending">
+                              Your {{ packageName }} is on the way to {{ val.name }}
+                            </p>
+                          </span>
+                          <span v-else>
+                            <p class="stagePassed">
+                              Your {{ packageName }} has been delivered to {{ val.name }}
+                            </p>
+                          </span>
                         </div>
                       </li>
 
                       <!-- Order Delivery State-->
-                      <li>
-                        <div class="">
-                          <p
-                            class="infor-top-bar-text"
-                            v-bind:class="{ deliveredActive: setDelivered }"
-                          >
-                            Delivered
-                          </p>
-                          <p>{{ deliveryEta }}</p>
+                      <li
+                        id="timeline_right"
+                        v-bind:class="{
+                          timelineDeliveredExpress: setComplete,
+                        }"
+                      >
+                        <div
+                          class="infor-top-bar-text"
+                          v-bind:class="{ deliveredActive: setComplete }"
+                        >
+                          <span>
+                            <p v-bind:class="{ stagePassed: setComplete }">
+                              Delivery complete
+                            </p>
+                          </span>
                         </div>
                       </li>
                     </ul>
@@ -606,7 +540,7 @@
                   <div class="" v-if="!tracking_data.eta_data.delayed">
                     {{ tracking_data.description_head }}
                   </div>
-                  <div class="">
+                  <div class="marketing-message-align">
                     {{ tracking_data.marketing_message }}
                   </div>
                 </div>
@@ -638,21 +572,6 @@
                 </div>
               </div>
 
-              <div
-                v-if="[1, 23].includes(tracking_data.rider.vendor_id) && !externalTracking"
-                class="infobar--content infobar--item infobar--status infobar--item-bordered"
-              >
-                <el-steps
-                  :space="200"
-                  :active="getStatusCode"
-                  finish-status="success"
-                  style="font-size:10px !important"
-                >
-                  <el-step title="Rider allocation" :description="confirmEta" />
-                  <el-step title="Pick up" :description="pickUpEta" />
-                  <el-step title="Delivery" :description="deliveryEta" />
-                </el-steps>
-              </div>
               <div
                 v-if="this.$route.name !== 'tracking_external'"
                 class="infobar--content infobar--item infobar--actions"
@@ -818,8 +737,8 @@ export default {
       truckMoreInfo: true,
       myRb: '',
       accType: '',
-      pickUpEta: 'Awaiting Confirmation',
-      deliveryEta: 'Awaiting Pickup',
+      pickUpEta: '',
+      deliveryEta: '',
       confirmEta: '',
       scheduled_time: false,
       isConfirmed: false,
@@ -839,6 +758,8 @@ export default {
       setComplete: false,
       small_vendors: [1],
       setScheduled: false,
+      partnerName: '',
+      packageName: '',
     };
   },
   computed: {
@@ -905,13 +826,7 @@ export default {
       }
     },
     orderPlaced() {
-      let vendorId = this.tracking_data.price_tier.vendor_id;
-      let text = 'Order Placed';
-      if (vendorId === 1) {
-        text = 'Your order has been received';
-      } else {
-        text = 'Order Placed';
-      }
+      let text = 'Your order has been received';
 
       return text;
     },
@@ -928,7 +843,9 @@ export default {
     delayState() {
       let deliveryState = this.tracking_data.eta_data.delayed;
       if (deliveryState) {
-        return "Sorry we haven't found a rider for your package. We are working to find you one as soon as possible";
+        return `Sorry, we haven't found a ${this.partnerName} for your ${
+          this.packageName
+        }. We are working to find you one as soon as possible`;
       }
       return this.confirmEta;
     },
@@ -1034,6 +951,8 @@ export default {
     },
     checkVendorName() {
       if (this.tracking_data.rider.vendor_name === 'Bike') {
+        this.partnerName = 'rider';
+        this.packageName = 'package';
         if (this.tracking_data.price_type === 3) {
           this.vendorName = 'Standard';
         } else {
@@ -1041,8 +960,12 @@ export default {
         }
       } else if (this.tracking_data.rider.vendor_name === 'Economy Bike') {
         this.vendorName = 'Standard';
+        this.partnerName = 'rider';
+        this.packageName = 'package';
       } else {
         this.vendorName = this.tracking_data.rider.vendor_name;
+        this.partnerName = 'driver';
+        this.packageName = 'load';
       }
     },
     checkScheduler() {
@@ -1332,8 +1255,8 @@ export default {
 
         this.confirmEta = `${startEta} - ${endEta}`;
 
-        this.handlePickupETA(start, end);
-        this.handleDeliveryETA(start, end);
+        this.pickUpEta = '';
+        this.deliveryEta = '';
       } else if (
         this.tracking_data.confirm_status === 1 &&
         this.tracking_data.delivery_status === 0
@@ -1375,34 +1298,15 @@ export default {
         // ...
       }
     },
-    handlePickupETA(start, end) {
-      let pickUpEstimate = this.tracking_data.eta_data.eta.pick_up_time;
-
-      const startEta = moment(start, moment.ISO_8601)
-        .add(pickUpEstimate, 'seconds')
-        .format('h:mm a');
-      const endEta = moment(end, moment.ISO_8601)
-        .add(pickUpEstimate, 'seconds')
-        .format('h:mm a');
-      this.pickUpEta = `${startEta} - ${endEta}`;
-    },
-    handleDeliveryETA(start, end) {
-      let deliveryEstimate = this.tracking_data.eta_data.eta.delivery_time;
-
-      const startEta = moment(start, moment.ISO_8601)
-        .add(deliveryEstimate, 'seconds')
-        .format('h:mm a');
-      const endEta = moment(end, moment.ISO_8601)
-        .add(deliveryEstimate, 'seconds')
-        .format('h:mm a');
-      this.deliveryEta = `${startEta} - ${endEta}`;
-    },
-    toDeliveryTypeClass(val) {
+    toDeliveryTypeClass(val, index) {
+      let nextPoint = this.tracking_data.path[index - 1].visited;
       if (this.tracking_data.delivery_status >= 2) {
         if (val.visited) {
           return ['timelineDeliveredExpress'];
         } else {
-          return ['deliveryEnrouteReached'];
+          if (nextPoint) {
+            return ['deliveryEnrouteReached'];
+          }
         }
       }
       return '';
