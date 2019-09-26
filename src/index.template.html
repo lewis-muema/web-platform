@@ -17,14 +17,13 @@
     <meta name="theme-color" content="#f60" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self' *.sendyit.com 'unsafe-inline' 'unsafe-eval';
-        worker-src 'self' blob:;
-        child-src 'none'; font-src 'self' *.googleapis.com *.gstatic.com data: blob:;
-        script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com *.helpscout.net cdn4.mxpnl.com  *.hotjar.com  https://fullstory.com *.google-analytics.com data:;
+      content="default-src 'self' *.sendyit.com *.google-analytics.com *.www.googletagmanager.com 'unsafe-inline' 'unsafe-eval';
+        child-src 'none'; font-src 'self' *.googleapis.com *.gstatic.com data:;
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com *.helpscout.net cdn4.mxpnl.com  *.hotjar.com *.google-analytics.com data:;
         style-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com;
-        img-src 'self' *.sendyit.com s3-eu-west-1.amazonaws.com  images.mxpnl.com cdn.mxpnl.com *.gstatic.com *.googleapis.com *.cloudfront.net *.googleusercontent.com *.google-analytics.com stats.g.doubleclick.net data:;
-        connect-src 'self' *.sendyit.com d3hb14vkzrxvla.cloudfront.net sentry.io api.mixpanel.com *.helpscout.net *.pusher.com *.hotjar.com  wss://chat.sendyit.com https://rs.fullstory.com;
-        frame-src 'self' *.sendyit.com *.hotjar.com *.youtube.com;"
+        img-src 'self' *.sendyit.com s3-eu-west-1.amazonaws.com  images.mxpnl.com cdn.mxpnl.com *.gstatic.com *.googleapis.com *.cloudfront.net *.googleusercontent.com *.google-analytics.com www.google-analytics.com *.stats.g.doubleclick.net data:;
+        connect-src 'self' *.sendyit.com d3hb14vkzrxvla.cloudfront.net sentry.io api.mixpanel.com *.helpscout.net *.pusher.com *.hotjar.com wss://chat.sendyit.com;
+        frame-src 'self' *.sendyit.com *.hotjar.com *.youtube.com *.google-analytics.com www.google-analytics.com *.stats.g.doubleclick.net;"
     />
     <link rel="manifest" href="/manifest.json" />
 
@@ -64,7 +63,7 @@
         a.async = 1;
         a.src = g;
         m.parentNode.insertBefore(a, m);
-      })(window, document, 'script', '//google-analytics.com/analytics.js', 'ga');
+      })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
       ga('create', 'UA-50235468-1', 'auto', { allowLinker: true });
       ga('require', 'linker');
       ga('linker:autoLink', [
