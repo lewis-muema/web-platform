@@ -5,6 +5,7 @@
       :key="method.payment_method_id"
     >
       <a
+        href="#"
         class="paymethod--link"
         @click="setCurrentRoute(method.name)"
       > {{ method.name }} </a>
@@ -22,7 +23,7 @@ export default {
       payment_methods: [],
     };
   },
-  created() {
+  mounted() {
     this.getPaymentOptions();
   },
   methods: {
