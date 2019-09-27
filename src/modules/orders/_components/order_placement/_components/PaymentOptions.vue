@@ -830,6 +830,21 @@ export default {
             'User Email': data.user_email,
             'User Phone': data.user_phone,
           });
+          mixpanel.track('Order Completion Log', {
+            'Account ': data.type,
+            'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+            'Client Type': 'Web Platform',
+            'Payment Mode': this.payment_method,
+            'Cash Status': data.cash_status,
+            'User Email': data.user_email,
+            'User Phone': data.user_phone,
+            'Order Number': data.trans_no,
+            'Order Amount': data.amount,
+            'Schedule Time': data.schedule_time,
+            'Schedule Status': data.schedule_status,
+            'Carrier Type ID': data.carrier_type,
+            'Vendor Type ID': data.vendor_type,
+          });
         }
       } catch (er) {
         // ...

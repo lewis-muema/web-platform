@@ -763,6 +763,7 @@ export default {
     this.setFirstTimeUser();
     this.initializeVendorComponent();
     this.initiateStoreData();
+    this.reCheckCarrierType();
   },
 
   methods: {
@@ -891,6 +892,7 @@ export default {
     setActivePackageClassWrapper(name) {
       this.setActivePackageClass(name);
       this.setOuterActivePackageClass(name);
+      this.reCheckCarrierType();
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
     },
 
@@ -1109,18 +1111,14 @@ export default {
     },
 
     reCheckCarrierType() {
-      if (this.get_active_package_class === 'large' && Number(this.carrier_type) === 2) {
+      if (this.get_active_package_class === 'large') {
         this.carrier_type = '1';
-        this.dispatchCarrierType();
-      } else if (this.get_active_package_class !== 'large') {
-        const allowedCarrierTypes = ['0', '1', '2'];
-        if (!allowedCarrierTypes.includes(this.carrier_type)) {
-          this.carrier_type = '2';
-          this.dispatchCarrierType();
-        }
+      } else if (this.get_active_package_class === 'medium') {
+        this.carrier_type = '2';
       } else {
-        // ...
+        this.carrier_type = '1';
       }
+      this.dispatchCarrierType();
     },
 
     trackMixpanelEvent(name) {
