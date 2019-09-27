@@ -9,6 +9,8 @@ stages:
 eslint:
   # tell eslint what stage it is. (This could also be build or test for example)
   stage: lint
+  tags:
+    - docker
   # What scripts do we want to run?
   script:
     # install eslint
@@ -20,6 +22,8 @@ eslint:
 unitTest:
   # tell eslint what stage it is. (This could also be build or test for example)
   stage: test
+  tags:
+    - docker
   # What scripts do we want to run?
   script:
     # install mocha-webpack
