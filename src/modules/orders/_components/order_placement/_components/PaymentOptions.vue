@@ -1006,9 +1006,9 @@ export default {
               this.completeMpesaPaymentRequest({});
               this.mpesa_payment = true;
             }
+          } else {
+            this.mpesa_payment = false;
           }
-
-          this.mpesa_payment = false;
         },
         (error) => {
           this.mpesa_payment = false;
