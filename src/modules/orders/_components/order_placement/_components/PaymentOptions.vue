@@ -1002,7 +1002,7 @@ export default {
 
           if (response.status === 200) {
             const newRb = response.data.data.running_balance;
-            if (newRb < oldRb) {
+            if (newRb <= oldRb) {
               this.completeMpesaPaymentRequest({});
               return true;
             }
