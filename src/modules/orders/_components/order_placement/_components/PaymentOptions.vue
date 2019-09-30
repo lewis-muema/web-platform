@@ -226,6 +226,7 @@ export default {
       default_currency: 'KES',
       rb_currency: 'KES',
       mpesa_valid: false,
+      mpesa_payment: false,
     };
   },
 
@@ -966,8 +967,8 @@ export default {
         const that = this;
         (function (pollCount) {
           that.mpesa_poll_timer_id = window.setTimeout(() => {
-            const res = that.checkRunningBalance(oldRb, payload);
-            if (res) {
+            that.checkRunningBalance(oldRb, payload);
+            if (that.mpesa_payment) {
               pollCount = pollLimit;
               that.payment_state = 0;
               that.loading = false;
@@ -999,18 +1000,19 @@ export default {
           if (response.length > 0) {
             response = response[0];
           }
-
           if (response.status === 200) {
             const newRb = response.data.data.running_balance;
             if (newRb >= oldRb) {
               this.completeMpesaPaymentRequest({});
-              return true;
+              this.mpesa_payment = true;
             }
           }
 
-          return false;
+          this.mpesa_payment = false;
         },
-        error => false,
+        (error) => {
+          this.mpesa_payment = false;
+        },
       );
     },
 
