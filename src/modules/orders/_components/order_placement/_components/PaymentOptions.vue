@@ -1005,6 +1005,8 @@ export default {
             if (newRb >= oldRb) {
               this.completeMpesaPaymentRequest({});
               this.mpesa_payment = true;
+            } else {
+              this.mpesa_payment = false;
             }
           } else {
             this.mpesa_payment = false;
