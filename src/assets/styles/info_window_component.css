@@ -723,3 +723,6 @@ ul.inforbar_order_timeline:before{
 .marketing-message-align{
   text-align: center;
 }
+.confirmedExpressReached{
+  padding-bottom: 5%;
+}
