@@ -33,8 +33,8 @@
       <div class="" />
       <div class="home-view-notes-wrapper">
         <div
-          v-show="show_payment"
-          class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
+          v-if="show_payment"
+          class=""
         >
           <div
             v-show="show_payment_label"
@@ -57,81 +57,86 @@
               </div>
             </div>
           </div>
-        </div>
-        <span v-if="checkIfTruckOrder()">
+          <span v-if="checkIfTruckOrder()">
           <!-- Nothing displayed -->
-        </span>
-        <span v-else-if="getPriceRequestObject.payment_option !== 2">
-          <div
-            v-for="method in payment_methods"
-            :key="method.payment_method_id"
-            class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
-          >
-            <div class="home-view-notes-wrapper--item__option">
-              <div class="home-view-notes-wrapper--item__option-div payment__radio-button-label">
-                <input
-                  v-model="payment_method"
-                  type="radio"
-                  :value="method.payment_method_id"
-                  name="paymentOptions"
-                  class="payment__radio-button"
-                >
-                <span>
-                  <p class="no-margin">{{ method.name }}</p>
-                </span>
-              </div>
-            </div>
-            <div class="home-view-notes-wrapper--item__value" />
-          </div>
-          <div
-            v-if="display_cards"
-            class="card-accounts-list"
-          >
+          </span>
+          <span v-else-if="getPriceRequestObject.payment_option === 1">
             <div
-              v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0"
-              class=""
+              v-for="method in payment_methods"
+              :key="method.payment_method_id"
+              class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
+            >
+              <div class="home-view-notes-wrapper--item__option">
+                <div class="home-view-notes-wrapper--item__option-div payment__radio-button-label">
+                  <input
+                    v-model="payment_method"
+                    type="radio"
+                    :value="method.payment_method_id"
+                    name="paymentOptions"
+                    class="payment__radio-button"
+                  >
+                  <span>
+                    <p class="no-margin">{{ method.name }}</p>
+                  </span>
+                </div>
+              </div>
+              <div class="home-view-notes-wrapper--item__value" />
+            </div>
+            <div
+              v-if="display_cards"
+              class="card-accounts-list"
             >
               <div
-                v-for="card in get_saved_cards"
-                :key="card.last4"
-                class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
+                v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0"
+                class=""
               >
+                <div
+                  v-for="card in get_saved_cards"
+                  :key="card.last4"
+                  class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
+                >
+                  <div class="home-view-notes-wrapper--item__option">
+                    <div class="home-view-notes-wrapper--item__option-div">
+                      <el-radio
+                        v-model="payment_account"
+                        :label="getCardValue(card.last4)"
+                      >
+                        **** **** **** {{ card.last4 }}
+                        <font-awesome-icon
+                          :icon="getCardIcon(card)"
+                          class="payments-orange"
+                        />
+                      </el-radio>
+                    </div>
+                  </div>
+                  <div class="home-view-notes-wrapper--item__value" />
+                </div>
+              </div>
+              <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
                 <div class="home-view-notes-wrapper--item__option">
                   <div class="home-view-notes-wrapper--item__option-div">
-                    <el-radio
-                      v-model="payment_account"
-                      :label="getCardValue(card.last4)"
+                    <div
+                      class="home-view-notes-wrapper--item__link"
+                      @click="takeMeToAddNewCard()"
                     >
-                      **** **** **** {{ card.last4 }}
-                      <font-awesome-icon
-                        :icon="getCardIcon(card)"
-                        class="payments-orange"
-                      />
-                    </el-radio>
+                      + &nbsp;&nbsp; Visa/Mastercard
+                    </div>
                   </div>
                 </div>
                 <div class="home-view-notes-wrapper--item__value" />
               </div>
             </div>
-            <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
-              <div class="home-view-notes-wrapper--item__option">
-                <div class="home-view-notes-wrapper--item__option-div">
-                  <div
-                    class="home-view-notes-wrapper--item__link"
-                    @click="takeMeToAddNewCard()"
-                  >
-                    + &nbsp;&nbsp; Visa/Mastercard
-                  </div>
-                </div>
-              </div>
-              <div class="home-view-notes-wrapper--item__value" />
-            </div>
+          </span>
+        </div>
+        <span v-else-if="getPriceRequestObject.payment_option === 2">
+          <div class="home-view-payments--postpay">
+            <p>This is a postpay account</p>
+            <p>The delivery costs will be added to your balance.</p>
           </div>
         </span>
         <span v-else>
           <div class="home-view-payments--postpay">
-            <p>This is a postpay account</p>
-            <p>The delivery costs will be added to your balance.</p>
+            <p>The delivery costs will be charged from your balance.</p>
           </div>
         </span>
       </div>
@@ -199,7 +204,6 @@ export default {
       user_balance: 0,
       mpesa_poll_timer_id: null,
       loading: false,
-      cash_status: false,
       card_token: '',
       customer_token: '',
       payment_type: 'prepay',
@@ -326,6 +330,8 @@ export default {
       let text = 'Payment Options';
       if (this.getPriceRequestObject.payment_option === 2) {
         text = 'Post Pay';
+      } else if (this.getRunningBalance - this.order_cost >= 0) {
+        text = 'Running Balance';
       }
 
       return text;
@@ -459,9 +465,11 @@ export default {
     },
 
     checkAccountPaymentOption() {
-      return (this.getPriceRequestObject.payment_option === 1
-              && this.getRunningBalance - this.order_cost >= 0)
-              || this.getPriceRequestObject.payment_option === 2;
+      return (
+        (this.getPriceRequestObject.payment_option === 1
+          && this.getRunningBalance - this.order_cost >= 0)
+        || this.getPriceRequestObject.payment_option === 2
+      );
     },
 
     checkIfTruckOrder() {
@@ -584,7 +592,6 @@ export default {
     },
 
     handleCashPayments() {
-      this.cash_status = true;
       this.doCompleteOrder();
     },
 
@@ -613,7 +620,7 @@ export default {
         (response) => {
           this.loading = false;
           if (response.length > 0) {
-            // eslint-disable-next-line no-param-reassign
+            // eslint-disable-next-line no-param-reassign,prefer-destructuring
             response = response[0];
           }
 
@@ -655,6 +662,12 @@ export default {
       if ('default' in session) {
         acc = session[session.default];
       }
+      if (this.getPriceRequestObject.payment_option === 1
+              && this.getRunningBalance - this.order_cost >= 0) {
+        this.payment_method = 11;
+      } else if (this.getPriceRequestObject.payment_option === 2){
+        this.payment_method = 12;
+      }
       let payload = {
         note: this.get_order_notes,
         trans_no: this.activeVendorPriceData.order_no,
@@ -662,7 +675,6 @@ export default {
         user_phone: acc.user_phone,
         no_charge_status: false,
         insurance_amount: 10,
-        cash_status: this.cash_status,
         note_status:
           typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
         last_digit: 'none',
@@ -677,10 +689,8 @@ export default {
         destination_paid_status: false,
         delivery_points: this.get_order_path.length - 1,
         sendy_coupon: '0',
-        payment_mode: this.payment_method === ''
-          ? 0
-          : Number(this.payment_method),
-        schedule_time: this.order_is_scheduled ? this.scheduled_time : this.eta_time,
+        payment_method: Number(this.payment_method),
+        schedule_time: this.order_is_scheduled ? this.scheduled_time : this.current_time,
         tier_tag: this.activeVendorPriceData.tier_tag,
         tier_name: this.activeVendorPriceData.tier_name,
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
@@ -838,6 +848,21 @@ export default {
             'User Email': data.user_email,
             'User Phone': data.user_phone,
           });
+          mixpanel.track('Order Completion Log', {
+            'Account ': data.type,
+            'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+            'Client Type': 'Web Platform',
+            'Payment Mode': this.payment_method,
+            'Cash Status': data.cash_status,
+            'User Email': data.user_email,
+            'User Phone': data.user_phone,
+            'Order Number': data.trans_no,
+            'Order Amount': data.amount,
+            'Schedule Time': data.schedule_time,
+            'Schedule Status': data.schedule_status,
+            'Carrier Type ID': data.carrier_type,
+            'Vendor Type ID': data.vendor_type,
+          });
         }
       } catch (er) {
         // ...
@@ -892,11 +917,7 @@ export default {
           }
 
           if (response.status === 200) {
-            this.doNotification(
-              '0',
-              'M-Pesa Payment',
-              `Request for payment sent to ${userPhone}.`,
-            );
+            this.doNotification('0', 'M-Pesa Payment', `Request for payment sent to ${userPhone}.`);
             this.requestMpesaPaymentPoll();
           } else {
             this.refreshRunningBalance();
