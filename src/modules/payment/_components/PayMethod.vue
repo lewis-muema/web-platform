@@ -1,14 +1,7 @@
 <template lang="html">
   <div class="paymethod paymethod--menu">
-    <div
-      v-for="method in payment_methods"
-      :key="method.payment_method_id"
-    >
-      <a
-        href="#"
-        class="paymethod--link"
-        @click="setCurrentRoute(method.name)"
-      > {{ method.name }} </a>
+    <div v-for="method in payment_methods" :key="method.payment_method_id">
+      <a class="paymethod--link" @click="setCurrentRoute(method.name)"> {{ method.name }} </a>
     </div>
   </div>
 </template>
@@ -55,14 +48,14 @@ export default {
         endpoint: 'accounts/pay_methods',
       };
       this.requestPaymentOptionsAction(fullPayload).then(
-        (response) => {
+        response => {
           if (response.status) {
             this.payment_methods = response.payment_methods;
           }
         },
-        (error) => {
+        error => {
           console.log('error', error);
-        },
+        }
       );
     },
     setCurrentRoute(method) {
@@ -74,10 +67,10 @@ export default {
 </script>
 
 <style lang="css">
-  .paymethod--menu {
-    padding-bottom: 11px !important;
-  }
-  a:focus{
-    border-bottom: 3px solid #1782c5 !important;
-  }
+.paymethod--menu {
+  padding-bottom: 11px !important;
+}
+a:focus{
+  border-bottom: 3px solid #1782c5 !important;
+}
 </style>
