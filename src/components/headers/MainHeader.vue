@@ -138,6 +138,7 @@ export default {
       }
     },
     logOut() {
+      FS.clearUserCookie();
       try {
         this.$store.commit('deleteSession');
         // clear orders to avoid marker persistance
@@ -174,19 +175,7 @@ export default {
       this.$router.push(route);
     },
     linkPayments() {
-      const session = this.$store.getters.getSession;
-      const phone = session[session.default].user_phone;
-      const intValue = phone.substring(0, 4);
-      if (intValue === '+254') {
-        this.mpesa_valid = true;
-      } else {
-        this.mpesa_valid = false;
-      }
-      if (this.getCountryCode === 'KE' && this.mpesa_valid) {
-        this.$router.push('/payment/mpesa');
-      } else {
-        this.$router.push('/payment/card');
-      }
+      this.$router.push('/payment/card');
     },
   },
 };
