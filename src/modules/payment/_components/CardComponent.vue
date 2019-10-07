@@ -165,7 +165,9 @@ export default {
       show_cvv: false,
     };
   },
-  mounted() {},
+  mounted() {
+    this.getUserCards();
+  },
   computed: {
     ...mapGetters({
       card_fail_status: '$_payment/getCardFailStatus',
@@ -347,6 +349,7 @@ export default {
             this.$store.dispatch('show_notification', notification, {
               root: true,
             });
+            this.getUserCards();
           } else {
             const notification = {
               title: 'Remove Card Failed',
@@ -370,9 +373,14 @@ export default {
         }
       );
     },
+    clearCardData() {
+      this.card_payment_data.card_no = '';
+      this.card_payment_data.card_expiry = '';
+      this.card_payment_data.cvv = '';
+      this.card_payment_data.amount = '';
+    },
   },
   created() {
-    this.getUserCards();
     if (this.get_saved_cards.length === 0) {
       this.isHidden = false;
     } else {
