@@ -560,6 +560,8 @@ export default {
           this.handleCashPayments();
         } else if (Number(this.payment_method) === 3) {
           this.handlePromoCodePayments();
+        } else if (Number(this.payment_method) === 11) {
+          this.handleRunningBalancePayments();
         } else if (Number(this.payment_method) === 2) {
           const card = this.get_saved_cards.find(
             // eslint-disable-next-line camelcase
@@ -592,6 +594,10 @@ export default {
     },
 
     handleCashPayments() {
+      this.doCompleteOrder();
+    },
+
+    handleRunningBalancePayments() {
       this.doCompleteOrder();
     },
 
