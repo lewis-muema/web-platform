@@ -182,4 +182,7 @@ export default {
   setLoadWeightStatus(state, val) {
     state.load_weight_status = val;
   },
+  setVendorPrice(state, val) {
+    state.active_vendor_details.cost = val;
+  },
 };

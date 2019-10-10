@@ -4,6 +4,7 @@ const prodEnv = require('./prod.env');
 module.exports = merge(prodEnv, {
   ENVIRONMENT: '"development"',
   DEBUG_MODE: true,
+  AUTH: '"https://authtest.sendyit.com/"',
   NODE_PRIVATE_API: '"https://authtest.sendyit.com/v1/"',
   PRIVATE_API: '"https://apitest.sendyit.com/parcel/index.php/api/v11/"',
   BACKEND_CUSTOMERS_APP: '"https://customerstest.sendyit.com/customers/"',
