@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 import orderStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
@@ -84,9 +84,6 @@ export default {
   },
 
   methods: {
-    ...mapGetters({
-      getDiscountLoadingStatus: '$_orders/$_components/$_home/getDiscountLoadingStatus',
-    }),
     ...mapMutations({
       clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
