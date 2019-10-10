@@ -259,7 +259,7 @@ export default {
     formatAmount(row) {
       let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
       value = value.split('.');
-      return value[0];
+      return value[0].replace('-', '');
     },
   },
 };
