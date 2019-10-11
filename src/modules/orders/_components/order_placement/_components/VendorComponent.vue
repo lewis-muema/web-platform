@@ -286,6 +286,7 @@
                 <el-date-picker
                   v-model="schedule_time"
                   class="vendor_component-actions__element-date"
+                  :class="discountInputWidth"
                   type="datetime"
                   format="dd-MM-yyyy h:mm a"
                   placeholder="As soon as possible"
@@ -293,7 +294,7 @@
                   :picker-options="dueDatePickerOptions"
                   @change="dispatchScheduleTime"
                 />
-                <span class="">
+                <span v-if="showDiscountsInfoPopup()" class="">
                   <i
                     slot="suffix"
                     class="el-icon-info el-input__icon"
@@ -307,7 +308,7 @@
                     trigger="manual"
                     popper-class="pop-over-layout home-view-truck-options-discounts-popup"
                   >
-                    <p class="home-view-truck-options-schedule-discounts">We now offer discounts for scheduled orders! This applies to all orders whose pick up time is 24hours to 31days into the future. It applies for 5T, 10T and 14T trucks</p>
+                    <p class="home-view-truck-options-schedule-discounts">We now offer discounts for scheduled orders! This applies to all 5T, 10T and 14T truck orders whose pick up time is 24hours to 31days into the future.</p>
                   </el-popover>
                 </span>
               </div>
@@ -615,6 +616,7 @@ export default {
         disabledDate: this.disabledDueDate,
       },
       standardOptions: [21, 22, 24],
+      discountInputWidth: '',
     };
   },
   computed: {
@@ -762,7 +764,7 @@ export default {
     },
     dispatchScheduleTime() {
       this.setScheduleTime(this.schedule_time);
-      if (this.activeVendorPriceData.vendor_id >= 10) {
+      if ([10, 14, 17].includes(this.activeVendorPriceData.vendor_id)) {
         this.getDiscounts();
       }
     },
@@ -900,6 +902,14 @@ export default {
           this.$root.$emit('Discount loading status', '', '', true, false);
         });
       }
+    },
+    showDiscountsInfoPopup() {
+      if ([10, 14, 17].includes(this.activeVendorPriceData.vendor_id)) {
+        this.discountInputWidth = 'discount-input-width--discounted';
+        return true;
+      }
+      this.discountInputWidth = 'discount-input-width--nondiscounted';
+      return false;
     },
     clearVehicleDetails() {
       this.vehicle_plate = '';
@@ -1217,7 +1227,7 @@ export default {
       if (this.standardOptions.includes(this.activeVendorPriceData.vendor_id)) {
         return date.getDay() === 0 || date.getTime() < Date.now() - 8.64e7;
       }
-      return date.getTime() < Date.now() + 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
+      return date.getTime() < Date.now() + 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 30;
     },
     handleScheduledTime() {
       this.schedule_time = '';
