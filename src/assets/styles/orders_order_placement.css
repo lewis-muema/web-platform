@@ -276,6 +276,9 @@
   background-color: #00000070;
   z-index: 1000;
 }
+.el-date-table td.disabled div {
+  background-color: #00000040 !important;
+}
 .el-popper[x-placement^='bottom'] {
   margin-top: 0px !important;
   background-color: #1782c5 !important;

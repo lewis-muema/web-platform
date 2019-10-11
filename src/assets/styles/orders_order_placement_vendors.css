@@ -36,8 +36,13 @@
   cursor: pointer;
 }
 .vendor_component-actions__element-date {
-  width: 90% !important;
   background-color: white !important;
+}
+.discount-input-width--discounted {
+  width: 90% !important;
+}
+.discount-input-width--nondiscounted {
+  width: 100% !important;
 }
 .pair_rider_section {
   width: 100%;
