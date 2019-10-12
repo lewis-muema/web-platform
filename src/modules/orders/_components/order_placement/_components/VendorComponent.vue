@@ -312,6 +312,7 @@
                     <p class="home-view-truck-options-schedule-discounts">We now offer discounts for scheduled orders! This applies to all 5T, 10T and 14T truck orders whose pick up time is 24hours to 31days into the future.</p>
                   </el-popover>
                 </span>
+                <p v-if="orderDiscountStatus" class="discount-applied-text">(We have applied a {{ discountPercentage }}% discount for your order!)</p>
               </div>
               <span
                 v-if="isStandardUnavailable(activeVendorPriceData)"
@@ -619,6 +620,7 @@ export default {
       standardOptions: [21, 22, 24],
       discountInputWidth: '',
       orderDiscountStatus: false,
+      discountPercentage: 0,
       fullPayload: {},
     };
   },
@@ -903,6 +905,7 @@ export default {
               clearTimeout(timeout);
               if (response.percentage_discount > 0 || response.discounted_amount !== response.original_amount) {
                 this.setVendorPrice(response.discounted_amount);
+                this.discountPercentage = response.percentage_discount;
                 this.orderDiscountStatus = true;
                 this.$root.$emit('Discount loading status', 'el-icon-circle-check-outline', `A discount of ${response.percentage_discount}% has been applied to your order`, false, true);
               } else {
@@ -1297,5 +1300,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../../../assets/styles/orders_order_placement_vendors.css';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
 </style>
