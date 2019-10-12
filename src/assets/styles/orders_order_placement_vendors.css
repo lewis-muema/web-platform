@@ -44,6 +44,10 @@
 .discount-input-width--nondiscounted {
   width: 100% !important;
 }
+.discount-applied-text {
+  font-size: 11px;
+  font-style: italic;
+}
 .pair_rider_section {
   width: 100%;
 }

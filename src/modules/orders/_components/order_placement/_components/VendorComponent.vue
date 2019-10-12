@@ -291,6 +291,7 @@
                   format="dd-MM-yyyy h:mm a"
                   placeholder="As soon as possible"
                   prefix-icon="el-icon-date"
+                  :default-time="moment().format('HH:mm:ss')"
                   :picker-options="dueDatePickerOptions"
                   @change="dispatchScheduleTime"
                 />
@@ -311,6 +312,7 @@
                     <p class="home-view-truck-options-schedule-discounts">We now offer discounts for scheduled orders! This applies to all 5T, 10T and 14T truck orders whose pick up time is 24hours to 31days into the future.</p>
                   </el-popover>
                 </span>
+                <p v-if="orderDiscountStatus" class="discount-applied-text">(We have applied a {{ discountPercentage }}% discount for your order!)</p>
               </div>
               <span
                 v-if="isStandardUnavailable(activeVendorPriceData)"
@@ -617,6 +619,9 @@ export default {
       },
       standardOptions: [21, 22, 24],
       discountInputWidth: '',
+      orderDiscountStatus: false,
+      discountPercentage: 0,
+      fullPayload: {},
     };
   },
   computed: {
@@ -763,6 +768,10 @@ export default {
       this.setCarrierType(this.carrier_type);
     },
     dispatchScheduleTime() {
+      const dateTime = new Date();
+      if (this.schedule_time && dateTime > this.schedule_time) {
+        this.schedule_time = new Date();
+      }
       this.setScheduleTime(this.schedule_time);
       if ([10, 14, 17].includes(this.activeVendorPriceData.vendor_id)) {
         this.getDiscounts();
@@ -797,6 +806,8 @@ export default {
       }
     },
     goBackToHome() {
+      this.schedule_time = '';
+      this.revertDiscount();
       this.setOrderState(1);
       this.setExtendOptions(false);
       this.pair_rider = '';
@@ -865,43 +876,57 @@ export default {
       const rect = document.querySelector('.el-icon-info').getBoundingClientRect();
       document.querySelector('.home-view-truck-options-discounts-popup').style.setProperty('top', `${rect.top - 80}px`, 'important');
     },
-    getDiscounts() {
-      this.discount_timed_out = false;
+    defineDiscountsPayload() {
       const time = this.moment(this.schedule_time).format('YYYY-MM-DD HH:mm:ss');
       const payload = JSON.stringify({
         date_time: time,
         order_no: this.activeVendorPriceData.order_no,
       });
-      const fullPayload = {
+      this.fullPayload = {
         app: 'AUTH',
         endpoint: 'orders/discount',
         values: payload,
       };
+    },
+    getDiscounts() {
+      this.discount_timed_out = false;
+      this.defineDiscountsPayload();
+      const dateTime = new Date();
+      dateTime.setHours(dateTime.getHours() + 24);
       if (this.schedule_time) {
-        this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait, we are applying a discount to your order', true, true);
-        const timeout = setTimeout(() => {
-          this.discount_timed_out = true;
-          this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
-        }, 10000);
-        this.requestDiscount(fullPayload).then((response) => {
-          if (!this.discount_timed_out) {
-            clearTimeout(timeout);
-            if (response.percentage_discount > 0 || response.discounted_amount !== response.original_amount) {
-              this.setVendorPrice(response.discounted_amount);
-              this.$root.$emit('Discount loading status', 'el-icon-circle-check-outline', `A discount of ${response.percentage_discount}% has been applied to your order`, false, true);
-            } else {
-              this.setVendorPrice(response.discounted_amount);
-              this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
+        if (this.schedule_time > dateTime) {
+          this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait, we are applying a discount to your order', true, true);
+          const timeout = setTimeout(() => {
+            this.discount_timed_out = true;
+            this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
+          }, 10000);
+          this.requestDiscount(this.fullPayload).then((response) => {
+            if (!this.discount_timed_out) {
+              clearTimeout(timeout);
+              if (response.percentage_discount > 0 || response.discounted_amount !== response.original_amount) {
+                this.setVendorPrice(response.discounted_amount);
+                this.discountPercentage = response.percentage_discount;
+                this.orderDiscountStatus = true;
+                this.$root.$emit('Discount loading status', 'el-icon-circle-check-outline', `A discount of ${response.percentage_discount}% has been applied to your order`, false, true);
+              } else {
+                this.setVendorPrice(response.discounted_amount);
+                this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
+              }
             }
-          }
-        });
-      } else {
+          });
+        }
+      } else if (this.orderDiscountStatus) {
         this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait while we adjust the pricing', true, true);
-        this.requestDiscount(fullPayload).then((response) => {
-          this.setVendorPrice(response.discounted_amount);
-          this.$root.$emit('Discount loading status', '', '', true, false);
-        });
+        this.revertDiscount();
       }
+    },
+    revertDiscount() {
+      this.defineDiscountsPayload();
+      this.requestDiscount(this.fullPayload).then((response) => {
+        this.setVendorPrice(response.discounted_amount);
+        this.orderDiscountStatus = false;
+        this.$root.$emit('Discount loading status', '', '', true, false);
+      });
     },
     showDiscountsInfoPopup() {
       if ([10, 14, 17].includes(this.activeVendorPriceData.vendor_id)) {
@@ -1227,7 +1252,7 @@ export default {
       if (this.standardOptions.includes(this.activeVendorPriceData.vendor_id)) {
         return date.getDay() === 0 || date.getTime() < Date.now() - 8.64e7;
       }
-      return date.getTime() < Date.now() + 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 30;
+      return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
     },
     handleScheduledTime() {
       this.schedule_time = '';
@@ -1275,5 +1300,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../../../assets/styles/orders_order_placement_vendors.css';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
 </style>

@@ -654,7 +654,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../../assets/styles/orders_order_placement.css";
+@import "../../../../assets/styles/orders_order_placement.css?v=1";
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */
