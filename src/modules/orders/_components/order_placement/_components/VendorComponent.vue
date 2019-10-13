@@ -914,6 +914,9 @@ export default {
               }
             }
           });
+        } else if (this.orderDiscountStatus) {
+          this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait while we adjust the pricing', true, true);
+          this.revertDiscount();
         }
       } else if (this.orderDiscountStatus) {
         this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait while we adjust the pricing', true, true);
