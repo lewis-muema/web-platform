@@ -530,7 +530,7 @@ export default {
   border-radius: 4px;
   margin: 2rem auto;
   padding: 2rem;
-  font-family: "Helvetica Nueu", "Helvetica", "Arial", "sans-serif";
+  font-family: "Helvetica Nueu",ac "Helvetica", "Arial", "sans-serif";
 }
 .sign-text {
   font-size: 1.3rem;
