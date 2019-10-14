@@ -333,30 +333,31 @@
                   v-if="showDiscountsInfoPopup()"
                   class=""
                 >
-                  <span class="">
-                    <i
-                      slot="suffix"
-                      class="el-icon-info el-input__icon"
-                      @mouseover="toggleDiscountsPopover(true)"
-                      @mouseout="toggleDiscountsPopover(false)"
-                    />
-                    <el-popover
-                      v-model="showScheduledDiscountsMessage"
-                      placement="right"
-                      width="200"
-                      trigger="manual"
-                      popper-class="pop-over-layout home-view-truck-options-discounts-popup"
-                    >
-                      <p class="home-view-truck-options-schedule-discounts">We now offer discounts for scheduled orders! This applies to all 5T, 10T and 14T truck orders whose pick up time is 24hours to 31days into the future.</p>
-                    </el-popover>
-                  </span>
-                  <p
-                    v-if="orderDiscountStatus"
-                    class="discount-applied-text"
-                  >(We have applied a {{ discountPercentage }}% discount for your order!)</p>
-                  <p class="home-view-truck-options-schedule-discounts">We now offer discounts for scheduled orders! This applies to all orders whose pick up time is 24hours to 31days into the future. It applies for 5T, 10T and 14T trucks</p>
+                  <i
+                    slot="suffix"
+                    class="el-icon-info el-input__icon"
+                    @mouseover="toggleDiscountsPopover(true)"
+                    @mouseout="toggleDiscountsPopover(false)"
+                  />
+                  <el-popover
+                    v-model="showScheduledDiscountsMessage"
+                    placement="right"
+                    width="200"
+                    trigger="manual"
+                    popper-class="pop-over-layout home-view-truck-options-discounts-popup"
+                  >
+                    <p class="home-view-truck-options-schedule-discounts">
+                      We now offer discounts for scheduled orders! This applies to all 5T, 10T and
+                      14T truck orders whose pick up time is 24hours to 31days into the future.
+                    </p>
                   </el-popover>
                 </span>
+                <p
+                  v-if="orderDiscountStatus"
+                  class="discount-applied-text"
+                >
+                  (We have applied a {{ discountPercentage }}% discount for your order!)
+                </p>
               </div>
               <span
                 v-if="isStandardUnavailable(activeVendorPriceData)"
@@ -722,7 +723,9 @@ export default {
 
     activePackageClassPriceData() {
       if (this.get_active_package_class !== '') {
-        return this.getPriceRequestObject.economy_price_tiers.find(pack => pack.tier_group === this.get_active_package_class);
+        return this.getPriceRequestObject.economy_price_tiers.find(
+          pack => pack.tier_group === this.get_active_package_class,
+        );
       }
       return '';
     },
@@ -943,7 +946,9 @@ export default {
     toggleDiscountsPopover(state) {
       this.showScheduledDiscountsMessage = state;
       const rect = document.querySelector('.el-icon-info').getBoundingClientRect();
-      document.querySelector('.home-view-truck-options-discounts-popup').style.setProperty('top', `${rect.top - 80}px`, 'important');
+      document
+        .querySelector('.home-view-truck-options-discounts-popup')
+        .style.setProperty('top', `${rect.top - 80}px`, 'important');
     },
     defineDiscountsPayload() {
       const time = this.moment(this.schedule_time).format('YYYY-MM-DD HH:mm:ss');
@@ -963,28 +968,61 @@ export default {
       const dateTime = new Date();
       dateTime.setHours(dateTime.getHours() + 24);
       if (this.schedule_time) {
-        this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait, we are applying a discount to your order', true, true);
+        this.$root.$emit(
+          'Discount loading status',
+          'el-icon-loading',
+          'Please wait, we are applying a discount to your order',
+          true,
+          true,
+        );
         const timeout = setTimeout(() => {
           this.discount_timed_out = true;
-          this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
+          this.$root.$emit(
+            'Discount loading status',
+            'el-icon-close',
+            'We are unable to process your discount at this moment',
+            false,
+            true,
+          );
         }, 10000);
         this.requestDiscount(this.fullPayload).then((response) => {
           if (!this.discount_timed_out) {
             clearTimeout(timeout);
-            if (response.percentage_discount > 0 || response.discounted_amount !== response.original_amount) {
+            if (
+              response.percentage_discount > 0
+              || response.discounted_amount !== response.original_amount
+            ) {
               this.setVendorPrice(response.discounted_amount);
               this.discountPercentage = response.percentage_discount;
               this.orderDiscountStatus = true;
-              this.$root.$emit('Discount loading status', 'el-icon-circle-check-outline', `A discount of ${response.percentage_discount}% has been applied to your order`, false, true);
+              this.$root.$emit(
+                'Discount loading status',
+                'el-icon-circle-check-outline',
+                `A discount of ${response.percentage_discount}% has been applied to your order`,
+                false,
+                true,
+              );
             } else {
               this.setVendorPrice(response.discounted_amount);
               this.orderDiscountStatus = false;
-              this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
+              this.$root.$emit(
+                'Discount loading status',
+                'el-icon-close',
+                'We are unable to process your discount at this moment',
+                false,
+                true,
+              );
             }
           }
         });
       } else if (this.orderDiscountStatus) {
-        this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait while we adjust the pricing', true, true);
+        this.$root.$emit(
+          'Discount loading status',
+          'el-icon-loading',
+          'Please wait while we adjust the pricing',
+          true,
+          true,
+        );
         this.revertDiscount();
       }
     },
@@ -1013,7 +1051,11 @@ export default {
     checkVehicleDetails() {
       const vehicleDetails = this.vehicle_plate;
       if (vehicleDetails === '') {
-        this.doNotification('2', 'Vehicle number plate is not provided', 'Please provide the vehicle details to pair');
+        this.doNotification(
+          '2',
+          'Vehicle number plate is not provided',
+          'Please provide the vehicle details to pair',
+        );
         this.setPairWithRiderStatus(false);
         this.visible2 = false;
         this.searchOption = false;
@@ -1202,7 +1244,10 @@ export default {
     },
 
     expandVendorOptions(vendor) {
-      return !this.vendors_with_fixed_carrier_type.includes(vendor.vendor_name) && vendor.vendor_name === this.get_active_vendor_name;
+      return (
+        !this.vendors_with_fixed_carrier_type.includes(vendor.vendor_name)
+        && vendor.vendor_name === this.get_active_vendor_name
+      );
     },
 
     setVendorDetails(vendorObject) {
@@ -1325,20 +1370,28 @@ export default {
             const newDate = `${this.moment(dateTime)
               .add(1, 'days')
               .format('YYYY-DD-MM')} 07:00`;
-            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format('YYYY-MM-DD HH:mm:ss Z');
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
+              'YYYY-MM-DD HH:mm:ss Z',
+            );
           } else if (day === 'Saturday' && timeHrs >= '17') {
             const newDate = `${this.moment(dateTime)
               .add(2, 'days')
               .format('YYYY-DD-MM')} 07:00`;
-            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format('YYYY-MM-DD HH:mm:ss Z');
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
+              'YYYY-MM-DD HH:mm:ss Z',
+            );
           } else if (timeHrs < '07') {
             const newDate = `${this.moment(dateTime).format('YYYY-DD-MM')} 07:00`;
-            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format('YYYY-MM-DD HH:mm:ss Z');
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
+              'YYYY-MM-DD HH:mm:ss Z',
+            );
           } else if (timeHrs >= '17') {
             const newDate = `${this.moment(dateTime)
               .add(1, 'days')
               .format('YYYY-DD-MM')} 07:00`;
-            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format('YYYY-MM-DD HH:mm:ss Z');
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
+              'YYYY-MM-DD HH:mm:ss Z',
+            );
           } else {
             this.schedule_time = '';
           }
