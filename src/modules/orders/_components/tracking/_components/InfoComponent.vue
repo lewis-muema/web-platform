@@ -841,13 +841,16 @@ export default {
       return text;
     },
     delayState() {
-      let deliveryState = this.tracking_data.eta_data.delayed;
-      if (deliveryState) {
-        return `Sorry, we haven't found a ${this.partnerName} for your ${
-          this.packageName
-        }. We are working to find you one as soon as possible`;
+      if (
+        Object.prototype.hasOwnProperty.call(this.tracking_data.eta_data, 'cancelled') &&
+        this.tracking_data.eta_data.cancelled
+      ) {
+        return this.tracking_data.eta_data.cancelled_message;
+      } else if (this.tracking_data.eta_data.delayed) {
+        return this.tracking_data.eta_data.delayed_message;
+      } else {
+        return this.confirmEta;
       }
-      return this.confirmEta;
     },
   },
   watch: {
