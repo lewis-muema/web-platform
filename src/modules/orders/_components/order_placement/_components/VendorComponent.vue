@@ -894,30 +894,26 @@ export default {
       const dateTime = new Date();
       dateTime.setHours(dateTime.getHours() + 24);
       if (this.schedule_time) {
-        if (this.schedule_time > dateTime) {
-          this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait, we are applying a discount to your order', true, true);
-          const timeout = setTimeout(() => {
-            this.discount_timed_out = true;
-            this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
-          }, 10000);
-          this.requestDiscount(this.fullPayload).then((response) => {
-            if (!this.discount_timed_out) {
-              clearTimeout(timeout);
-              if (response.percentage_discount > 0 || response.discounted_amount !== response.original_amount) {
-                this.setVendorPrice(response.discounted_amount);
-                this.discountPercentage = response.percentage_discount;
-                this.orderDiscountStatus = true;
-                this.$root.$emit('Discount loading status', 'el-icon-circle-check-outline', `A discount of ${response.percentage_discount}% has been applied to your order`, false, true);
-              } else {
-                this.setVendorPrice(response.discounted_amount);
-                this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
-              }
+        this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait, we are applying a discount to your order', true, true);
+        const timeout = setTimeout(() => {
+          this.discount_timed_out = true;
+          this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
+        }, 10000);
+        this.requestDiscount(this.fullPayload).then((response) => {
+          if (!this.discount_timed_out) {
+            clearTimeout(timeout);
+            if (response.percentage_discount > 0 || response.discounted_amount !== response.original_amount) {
+              this.setVendorPrice(response.discounted_amount);
+              this.discountPercentage = response.percentage_discount;
+              this.orderDiscountStatus = true;
+              this.$root.$emit('Discount loading status', 'el-icon-circle-check-outline', `A discount of ${response.percentage_discount}% has been applied to your order`, false, true);
+            } else {
+              this.setVendorPrice(response.discounted_amount);
+              this.orderDiscountStatus = false;
+              this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
             }
-          });
-        } else if (this.orderDiscountStatus) {
-          this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait while we adjust the pricing', true, true);
-          this.revertDiscount();
-        }
+          }
+        });
       } else if (this.orderDiscountStatus) {
         this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait while we adjust the pricing', true, true);
         this.revertDiscount();
