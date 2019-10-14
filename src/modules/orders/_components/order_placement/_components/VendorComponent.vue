@@ -329,14 +329,11 @@
                   :picker-options="dueDatePickerOptions"
                   @change="dispatchScheduleTime"
                 />
-                <<<<<<< HEAD
                 <span
                   v-if="showDiscountsInfoPopup()"
                   class=""
                 >
-                  =======
                   <span class="">
-                    >>>>>>> edfb82b9271c35aec377d3dca5b811c6f412041d
                     <i
                       slot="suffix"
                       class="el-icon-info el-input__icon"
@@ -350,7 +347,6 @@
                       trigger="manual"
                       popper-class="pop-over-layout home-view-truck-options-discounts-popup"
                     >
-                      <<<<<<< HEAD
                       <p class="home-view-truck-options-schedule-discounts">We now offer discounts for scheduled orders! This applies to all 5T, 10T and 14T truck orders whose pick up time is 24hours to 31days into the future.</p>
                     </el-popover>
                   </span>
@@ -358,11 +354,9 @@
                     v-if="orderDiscountStatus"
                     class="discount-applied-text"
                   >(We have applied a {{ discountPercentage }}% discount for your order!)</p>
-                  =======
                   <p class="home-view-truck-options-schedule-discounts">We now offer discounts for scheduled orders! This applies to all orders whose pick up time is 24hours to 31days into the future. It applies for 5T, 10T and 14T trucks</p>
                   </el-popover>
                 </span>
-                >>>>>>> edfb82b9271c35aec377d3dca5b811c6f412041d
               </div>
               <span
                 v-if="isStandardUnavailable(activeVendorPriceData)"
