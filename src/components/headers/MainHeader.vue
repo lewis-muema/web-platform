@@ -182,5 +182,5 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../assets/styles/internal_header.css";
+@import "../../assets/styles/internal_header.css?v=1";
 </style>
