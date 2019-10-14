@@ -1,5 +1,8 @@
 <template lang="html">
-  <div v-if="getOrderState === 1" class="home-view-vendor-and-optins-wrappper">
+  <div
+    v-if="getOrderState === 1"
+    class="home-view-vendor-and-optins-wrappper"
+  >
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
       Load Size And Delivery Type
@@ -23,7 +26,7 @@
                   :src="getPackageIcon(vendor_class.tier_group)"
                   class="home-view-vendor-classes-menu--img"
                   alt="vendor_class.tier_group"
-                />
+                >
                 <span class="home-view-vendor-classes-menu--span">
                   {{ vendor_class.tier_group }}
                 </span>
@@ -33,7 +36,10 @@
         </div>
 
         <!-- start vendor types wrapper -->
-        <div v-if="activePackageClassPriceData !== ''" class="home-view-vendor-types">
+        <div
+          v-if="activePackageClassPriceData !== ''"
+          class="home-view-vendor-types"
+        >
           <!-- start vendor types loop -->
           <div
             v-for="j in activePackageClassPriceData.price_tiers"
@@ -55,7 +61,7 @@
                     :src="getVendorIcon(j.vendor_id)"
                     :class="getScheduledVendorTypeClass(j, 2)"
                     alt=""
-                  />
+                  >
                 </div>
                 <div class="home-view-vendor-types-item--vendor-wrapper__vendor">
                   <div class="home-view-vendor-types-item-vendor--vendor-formal-name">
@@ -93,10 +99,23 @@
                 <div
                   class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right"
                 >
-                  <el-popover placement="right" width="350" trigger="hover">
-                    <div class="reset-font" v-html="j.tier_description" />
-                    <span slot="reference" class="extra_info_background">
-                      <i class="el-icon-info" :class="getScheduledVendorTypeClass(j, 2)" />
+                  <el-popover
+                    placement="right"
+                    width="350"
+                    trigger="hover"
+                  >
+                    <div
+                      class="reset-font"
+                      v-html="j.tier_description"
+                    />
+                    <span
+                      slot="reference"
+                      class="extra_info_background"
+                    >
+                      <i
+                        class="el-icon-info"
+                        :class="getScheduledVendorTypeClass(j, 2)"
+                      />
                     </span>
                   </el-popover>
                 </div>
@@ -109,7 +128,10 @@
         <!-- end vendor types wrapper -->
       </div>
     </div>
-    <div v-if="get_active_package_class !== ''" class="">
+    <div
+      v-if="get_active_package_class !== ''"
+      class=""
+    >
       <button
         type="button"
         class="button-primary home-view--place-order"
@@ -121,7 +143,10 @@
     </div>
   </div>
 
-  <div v-else-if="getOrderState === 2" class="extended-options-wrappper">
+  <div
+    v-else-if="getOrderState === 2"
+    class="extended-options-wrappper"
+  >
     <!-- start carrier type transition -->
     <transition name="home-carrier-type-fade">
       <div class="home-view-vendor-types-item-wrap home-next-step">
@@ -129,7 +154,10 @@
           class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper"
           :class="getScheduledVendorTypeClass(activeVendorPriceData, 2)"
         >
-          <div class="" @click="goBackToHome">
+          <div
+            class=""
+            @click="goBackToHome"
+          >
             <i class="el-icon-back back-to-home-btn" />
           </div>
           <div class="home-view-vendor-types-item--vendor-wrapper__img vendor__img_pstn">
@@ -137,7 +165,7 @@
               class="home-view-vendor-types-item__image"
               :src="getVendorIcon(activeVendorPriceData.vendor_id)"
               alt=""
-            />
+            >
           </div>
           <div class="home-view-vendor-types-item--vendor-wrapper__vendor">
             <div class="home-view-vendor-types-item-vendor--vendor-formal-name">
@@ -184,7 +212,10 @@
                 />
               </div>
             </div>
-            <div v-if="isTestAccount()" class="home-view-truck-options-inner-wrapper">
+            <div
+              v-if="isTestAccount()"
+              class="home-view-truck-options-inner-wrapper"
+            >
               <div class="home-view-truck-options-label">
                 Test Specifications
               </div>
@@ -233,7 +264,10 @@
                 >
                   What type of truck do you want?
                 </div>
-                <div v-else class="home-view-truck-options-label">
+                <div
+                  v-else
+                  class="home-view-truck-options-label"
+                >
                   What type of {{ getVendorNameOnCarrierType }} do you want?
                 </div>
                 <div class="home-view-truck-options-inner--full-select">
@@ -271,7 +305,7 @@
                   min="18"
                   max="33"
                   @keyup="dispatchLoadWeight"
-                />
+                >
                 <span class="tonage-value-text">Tonnes</span>
               </div>
               <p class="tonnage-validate-error">
@@ -295,24 +329,40 @@
                   :picker-options="dueDatePickerOptions"
                   @change="dispatchScheduleTime"
                 />
-                <span v-if="showDiscountsInfoPopup()" class="">
-                  <i
-                    slot="suffix"
-                    class="el-icon-info el-input__icon"
-                    @mouseover="toggleDiscountsPopover(true)"
-                    @mouseout="toggleDiscountsPopover(false)"
-                  />
-                  <el-popover
-                    v-model="showScheduledDiscountsMessage"
-                    placement="right"
-                    width="200"
-                    trigger="manual"
-                    popper-class="pop-over-layout home-view-truck-options-discounts-popup"
-                  >
-                    <p class="home-view-truck-options-schedule-discounts">We now offer discounts for scheduled orders! This applies to all 5T, 10T and 14T truck orders whose pick up time is 24hours to 31days into the future.</p>
+                <<<<<<< HEAD
+                <span
+                  v-if="showDiscountsInfoPopup()"
+                  class=""
+                >
+                  =======
+                  <span class="">
+                    >>>>>>> edfb82b9271c35aec377d3dca5b811c6f412041d
+                    <i
+                      slot="suffix"
+                      class="el-icon-info el-input__icon"
+                      @mouseover="toggleDiscountsPopover(true)"
+                      @mouseout="toggleDiscountsPopover(false)"
+                    />
+                    <el-popover
+                      v-model="showScheduledDiscountsMessage"
+                      placement="right"
+                      width="200"
+                      trigger="manual"
+                      popper-class="pop-over-layout home-view-truck-options-discounts-popup"
+                    >
+                      <<<<<<< HEAD
+                      <p class="home-view-truck-options-schedule-discounts">We now offer discounts for scheduled orders! This applies to all 5T, 10T and 14T truck orders whose pick up time is 24hours to 31days into the future.</p>
+                    </el-popover>
+                  </span>
+                  <p
+                    v-if="orderDiscountStatus"
+                    class="discount-applied-text"
+                  >(We have applied a {{ discountPercentage }}% discount for your order!)</p>
+                  =======
+                  <p class="home-view-truck-options-schedule-discounts">We now offer discounts for scheduled orders! This applies to all orders whose pick up time is 24hours to 31days into the future. It applies for 5T, 10T and 14T trucks</p>
                   </el-popover>
                 </span>
-                <p v-if="orderDiscountStatus" class="discount-applied-text">(We have applied a {{ discountPercentage }}% discount for your order!)</p>
+                >>>>>>> edfb82b9271c35aec377d3dca5b811c6f412041d
               </div>
               <span
                 v-if="isStandardUnavailable(activeVendorPriceData)"
@@ -326,7 +376,10 @@
                 Additional Instructions
               </div>
               <div class="" />
-              <div class="" @change="dispatchOrderNotes">
+              <div
+                class=""
+                @change="dispatchOrderNotes"
+              >
                 <textarea
                   v-model="order_notes"
                   name="name"
@@ -339,7 +392,10 @@
 
             <!-- show large and medium extended options -->
             <div v-if="large_vendors.includes(activeVendorPriceData.vendor_id)">
-              <div v-if="Number(carrier_type) === 3" class="home-view-truck-options-inner-wrapper">
+              <div
+                v-if="Number(carrier_type) === 3"
+                class="home-view-truck-options-inner-wrapper"
+              >
                 <div class="home-view-truck-options-label">
                   Temperature shouldn't exceed? (°C)
                 </div>
@@ -425,12 +481,21 @@
                     filterable
                     @change="dispatchPairStatus"
                   >
-                    <el-option label="Yes" value="1" />
-                    <el-option label="No" value="2" />
+                    <el-option
+                      label="Yes"
+                      value="1"
+                    />
+                    <el-option
+                      label="No"
+                      value="2"
+                    />
                   </el-select>
                 </div>
               </div>
-              <div v-if="pair_rider === '1'" class="home-view-truck-options-inner-wrapper">
+              <div
+                v-if="pair_rider === '1'"
+                class="home-view-truck-options-inner-wrapper"
+              >
                 <div class="home-view-truck-options-label">
                   <div v-if="[21].includes(activeVendorPriceData.vendor_id)">
                     Enter their phone number to pair
@@ -455,7 +520,11 @@
                       autocomplete="true"
                       @input="checkVehicleDetails"
                     >
-                      <i v-if="searchOption" slot="suffix" class="el-icon-loading el-input__icon" />
+                      <i
+                        v-if="searchOption"
+                        slot="suffix"
+                        class="el-icon-loading el-input__icon"
+                      />
                       <i
                         v-if="pair_status !== ''"
                         slot="suffix"
@@ -465,18 +534,23 @@
                     </el-input>
                     <div class="pair_info_text_content">
                       <div v-if="pair_status === '1'">
-                        <p class="upper_scope_pair_text">{{ riderNameDisplay }} not found</p>
+                        <p class="upper_scope_pair_text">
+                          {{ riderNameDisplay }} not found
+                        </p>
                         <p>{{ failure_text }}</p>
                       </div>
                       <div v-if="pair_status === '2'">
                         <el-row :gutter="20">
-                          <el-col :span="8" class="display_rider_inline">
+                          <el-col
+                            :span="8"
+                            class="display_rider_inline"
+                          >
                             <div class="">
                               <img
                                 align="middle"
                                 class="display_paired_rider_img"
                                 :src="pair_rider_image"
-                              />
+                              >
                               <div class="pair-rider-name">
                                 {{ pair_rider_name }}
                               </div>
@@ -490,7 +564,10 @@
                               </div>
                             </div>
                           </el-col>
-                          <el-col :span="6" class="pair_right_more_info">
+                          <el-col
+                            :span="6"
+                            class="pair_right_more_info"
+                          >
                             <div class="share-option">
                               <div class="pair-model-info">
                                 {{ pair_rider_make }} {{ pair_rider_model }}
@@ -651,9 +728,7 @@ export default {
 
     activePackageClassPriceData() {
       if (this.get_active_package_class !== '') {
-        return this.getPriceRequestObject.economy_price_tiers.find(
-          pack => pack.tier_group === this.get_active_package_class
-        );
+        return this.getPriceRequestObject.economy_price_tiers.find(pack => pack.tier_group === this.get_active_package_class);
       }
       return '';
     },
@@ -944,11 +1019,7 @@ export default {
     checkVehicleDetails() {
       const vehicleDetails = this.vehicle_plate;
       if (vehicleDetails === '') {
-        this.doNotification(
-          '2',
-          'Vehicle number plate is not provided',
-          'Please provide the vehicle details to pair'
-        );
+        this.doNotification('2', 'Vehicle number plate is not provided', 'Please provide the vehicle details to pair');
         this.setPairWithRiderStatus(false);
         this.visible2 = false;
         this.searchOption = false;
@@ -995,7 +1066,7 @@ export default {
         endpoint: 'pair_order_rider_details',
       };
       this.requestPairRider(fullPayload).then(
-        response => {
+        (response) => {
           if (response.status) {
             this.updateData(response.data);
           } else {
@@ -1005,7 +1076,7 @@ export default {
             this.setPairWithRiderStatus(false);
           }
         },
-        error => false
+        error => false,
       );
       this.searchOption = false;
     },
@@ -1065,14 +1136,12 @@ export default {
       return vendorObject.currency;
     },
     getMinVendorPrice(vendorObject) {
-      const price =
-        this.getPlainVendorPrice(vendorObject) * ((100 - vendorObject.price_variance) / 100);
+      const price = this.getPlainVendorPrice(vendorObject) * ((100 - vendorObject.price_variance) / 100);
       return numeral(price).format('0');
     },
 
     getMaxVendorPrice(vendorObject) {
-      const price =
-        this.getPlainVendorPrice(vendorObject) * ((100 + vendorObject.price_variance) / 100);
+      const price = this.getPlainVendorPrice(vendorObject) * ((100 + vendorObject.price_variance) / 100);
       return numeral(price).format('0');
     },
 
@@ -1139,10 +1208,7 @@ export default {
     },
 
     expandVendorOptions(vendor) {
-      return (
-        !this.vendors_with_fixed_carrier_type.includes(vendor.vendor_name) &&
-        vendor.vendor_name === this.get_active_vendor_name
-      );
+      return !this.vendors_with_fixed_carrier_type.includes(vendor.vendor_name) && vendor.vendor_name === this.get_active_vendor_name;
     },
 
     setVendorDetails(vendorObject) {
@@ -1265,28 +1331,20 @@ export default {
             const newDate = `${this.moment(dateTime)
               .add(1, 'days')
               .format('YYYY-DD-MM')} 07:00`;
-            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
-              'YYYY-MM-DD HH:mm:ss Z'
-            );
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format('YYYY-MM-DD HH:mm:ss Z');
           } else if (day === 'Saturday' && timeHrs >= '17') {
             const newDate = `${this.moment(dateTime)
               .add(2, 'days')
               .format('YYYY-DD-MM')} 07:00`;
-            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
-              'YYYY-MM-DD HH:mm:ss Z'
-            );
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format('YYYY-MM-DD HH:mm:ss Z');
           } else if (timeHrs < '07') {
             const newDate = `${this.moment(dateTime).format('YYYY-DD-MM')} 07:00`;
-            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
-              'YYYY-MM-DD HH:mm:ss Z'
-            );
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format('YYYY-MM-DD HH:mm:ss Z');
           } else if (timeHrs >= '17') {
             const newDate = `${this.moment(dateTime)
               .add(1, 'days')
               .format('YYYY-DD-MM')} 07:00`;
-            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
-              'YYYY-MM-DD HH:mm:ss Z'
-            );
+            this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format('YYYY-MM-DD HH:mm:ss Z');
           } else {
             this.schedule_time = '';
           }
