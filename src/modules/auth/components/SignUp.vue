@@ -541,7 +541,7 @@ export default {
   padding-top: 5px;
   padding-bottom: 5px;
   font-size: large;
-  margin-bottom: 10px;
+  margin-bottom: 50px;
 }
 .sign-button {
   width: 91.9%;
@@ -775,5 +775,7 @@ input{
 }
 .radio-box-positioning{
   /*margin-left: -38% !important;*/
+  font-size: 14px !important;
+  color: #606266 !important;
 }
 </style>
