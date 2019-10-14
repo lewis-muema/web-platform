@@ -245,7 +245,11 @@ export default {
     formatRunningBalance(row) {
       let value = row.running_balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
       value = value.split('.');
-      return value[0];
+      const updatedRunningBalance = Number(value[0].replace(/,/g, '')) * -1;
+      const formattedRunningBalance = updatedRunningBalance
+        .toString()
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+      return formattedRunningBalance;
     },
     formatDebitAmount(row) {
       if (Math.sign(row.amount) > 0) {
@@ -253,15 +257,15 @@ export default {
         value = value.split('.');
         return value[0];
       }
-      return row.amount;
+      return '';
     },
     formatCreditAmount(row) {
       if (Math.sign(row.amount) < 0) {
         let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         value = value.split('.');
-        return value[0];
+        return value[0].replace('-', '');
       }
-      return row.amount;
+      return '';
     },
     filterStatementData() {
       // reset filter

@@ -1,104 +1,114 @@
 <template lang="html">
-  <div
-    id="log_in"
-    class="log-item"
-  >
-    <div
-      v-if="canDisplaySecondScreen"
-      id="sign-up-v2-container"
-      class="sign-inner"
-    >
-      <div class="sign-text font-control-title">
-        Welcome to Sendy
-      </div>
+  <div id="log_in" class="log-item">
+    <div id="sign-up-v2-container" class="sign-inner">
       <div class="sign-text">
-        Please fill in the details below to create your new Sendy account.
+        Sign up for Sendy
       </div>
+
+      <p class="sign-up-error">
+        {{ message }}
+      </p>
+
       <div>
-        <div class="sign-holder dimen">
-          <vue-tel-input
-            v-model.trim="phone"
-            v-validate="'required|check_phone'"
-            class="input-control sign-up-form font-control tel-input-control"
-            name="phone"
-            value=""
-            data-vv-validate-on="blur"
-            :preferred-countries="['ke', 'ug', 'tz']"
-            @onBlur="validate_phone"
-          />
-          <p
-            v-show="errors.has('phone')"
-            class="sign-up-phone-error"
-          >
-            {{ errors.first('phone') }}
-          </p>
-        </div>
         <div class="sign-holder dimen">
           <input
             v-model="name"
-            class="input-control sign-up-form tel-input-control"
+            class="input-control sign-up-form"
             type="text"
             name="name"
-            placeholder="Name"
+            placeholder="Your Name"
             value=""
-          >
+          />
         </div>
 
         <div class="sign-holder dimen">
           <input
             v-model="email"
             v-validate="'required|email'"
-            class="input-control sign-up-form tel-input-control"
+            class="input-control sign-up-form"
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder="Your Email"
             value=""
-          >
-          <br>
+          />
+          <br />
           <p class="sign-up-email-error">
             {{ errors.first('email') }}
           </p>
         </div>
-        <div
-          id="outer_u_pass"
-          class="sign-holder dimen"
-        >
+
+        <div class="sign-holder dimen">
+          <vue-tel-input
+            v-model.trim="phone"
+            v-validate="'required|check_phone'"
+            class="input-control sign-up-form"
+            name="phone"
+            value=""
+            data-vv-validate-on="blur"
+            :preferred-countries="['ke', 'ug', 'tz']"
+            @onBlur="validate_phone"
+          />
+          <p v-show="errors.has('phone')" class="sign-up-phone-error">
+            {{ errors.first('phone') }}
+          </p>
+        </div>
+        <div id="outer_u_pass" class="sign-holder dimen">
           <span>
             <input
               v-model="password"
-              class="input-control sign-up-form tel-input-control"
+              class="input-control sign-up-form"
               type="password"
               name="password"
-              placeholder="Create a password"
+              placeholder="Password"
               @keyup="validate_pass"
-            >
-            <br>
+            />
+            <br />
             <p class="pass-validate-error">
               {{ pass_msg }}
             </p>
           </span>
         </div>
-        <div class="">
+
+        <div class="sign-holder" style="text-align:center;">
+          <input v-model="u_terms" type="checkbox" name="u_terms" class="hiddeny" />
+          <span class="sign-holder__smaller">
+            By creating a Sendy account you’re agreeing to the
+            <a class=" sign-holder__grey" href="https://sendyit.com/terms">
+              terms and conditions
+            </a>
+          </span>
+        </div>
+        <div class="sign-holder">
           <input
             id="signup"
             v-model="sign_up_text"
-            class="continue-submit-button"
+            class="button-primary signup-submit"
             type="submit"
             name="sign_up_text"
             aria-invalid="false"
-            @click="getCurrency"
-          >
+            @click="sign_up"
+          />
+        </div>
+
+        <div class=" sign-holder sign-forgot-pass sign-smaller">
+          Do you already have an account?
+          <router-link class="sign-holder__link" to="/auth/sign_in">
+            Login
+          </router-link>
+        </div>
+        <div class=" sign-holder sign-forgot-pass sign-smaller driver-sign-up">
+          Want to drive for Sendy?
+          <a class="sign-holder__link2" href="https://partner.sendyit.com/onboarding_portal/">
+            Click here
+          </a>
         </div>
       </div>
-      <el-dialog
-        :visible.sync="phoneVerification"
-        class="sign-up-phone-validation"
-      >
+      <el-dialog :visible.sync="phoneVerification" class="sign-up-phone-validation">
         <span slot="title">
           <img
             src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
             class="signup-sendy-logo"
-          >
+          />
         </span>
         <div>
           <div class="signup-validation-description">
@@ -112,141 +122,18 @@
               v-model="code"
               type="text"
               placeholder="Enter Verification Code"
-            >
+            />
           </div>
         </div>
         <div class="signup-verif-button">
-          <button
-            type="button"
-            class="signup-cancel"
-            @click="signUpVerificationCancel"
-          >
+          <button type="button" class="signup-cancel" @click="signUpVerificationCancel">
             Cancel
           </button>
-          <button
-            type="button"
-            class="signup-verify"
-            @click="signUpVerificationVerify"
-          >
+          <button type="button" class="signup-verify" @click="signUpVerificationVerify">
             Verify
           </button>
         </div>
       </el-dialog>
-    </div>
-    <div
-      v-if="showingFirstPage"
-      class="sign-inner"
-    >
-      <div class="sign-text">
-        Welcome to Sendy
-      </div>
-      <div>
-        <template>
-          <country-select
-            v-model="country"
-            class="country-select-input"
-            :country="country"
-          />
-          <!--          <region-select v-model="region" :country="country" :region="region" />-->
-        </template>
-      </div>
-      <div class="continue-holder">
-        <input
-          id="continue"
-          v-model="sign_up_text"
-          class="continue-submit-button"
-          type="submit"
-          name="Continue"
-          aria-invalid="false"
-          @click="checkCountry"
-        >
-      </div>
-    </div>
-    <div
-      v-if="showingCurrencyPage"
-      class="sign-inner"
-    >
-      <div class="sign-text">
-        Select your account currency
-      </div>
-      <div
-        v-for="currency in countryCurrencies"
-        :key="currency.id"
-        class="radio-box-positioning"
-      >
-        <input
-          v-model="defaultCurrency"
-          type="radio"
-          name="profileImg"
-          class=""
-          :value="currency.id"
-        >
-        <span class="statement__column-10">
-          <p class="no-margin small-font currency--raadio">{{ currency.currency_name }}</p>
-          <p class="no-margin small-font currency-radio-desc">{{ currency.description }}</p>
-        </span>
-      </div>
-      <div
-        class="sign-holder sign-holder-next"
-        style="text-align:center;"
-      >
-        <input
-          v-model="u_terms"
-          type="checkbox"
-          name="u_terms"
-          class="hiddeny"
-        >
-        <span class="sign-holder__smaller">
-          By creating a Sendy account you’re agreeing to the
-          <a
-            class=" sign-holder__grey"
-            href="https://sendyit.com/terms"
-          >
-            terms and conditions
-          </a>
-        </span>
-      </div>
-      <div class="continue-holder">
-        <input
-          id="countryCurrency"
-          v-model="sign_up_text"
-          class="submit-button"
-          type="submit"
-          name="Submit"
-          aria-invalid="false"
-          @click="sign_up"
-        >
-      </div>
-    </div>
-    <div
-      v-if="!countrySupported"
-      class="sign-inner"
-    >
-      <p
-        class="sign-up-error"
-      >
-        Sorry! We are not yet in your country.
-      </p>
-    </div>
-    <div v-if="canDisplaySecondScreen">
-      <div class=" sign-holder sign-forgot-pass sign-smaller">
-        Do you already have an account?
-        <router-link
-          class="sign-holder__link"
-          to="/auth/sign_in"
-        >
-          Login
-        </router-link>
-      </div>
-      <div class=" sign-holder sign-forgot-pass sign-smaller driver-sign-up">
-        Want to drive for Sendy?
-        <a
-          class="sign-holder__link2"
-          href="https://partner.sendyit.com/onboarding_portal/"
-        >
-          Click here
-        </a>
-      </div>
     </div>
   </div>
 </template>
@@ -264,33 +151,10 @@ export default {
       name: '',
       phone: '',
       email: '',
-      countrySupported: true,
-      showingFirstPage: true,
-      defaultCurrency: '',
       password: '',
-      canDisplaySecondScreen: false,
-      showingCurrencyPage: false,
       u_terms: '',
-      country: '',
-      placeholder: {
-        type: String,
-        default: 'Select Your Country',
-      },
-      countryCurrencies: [
-        {
-          currency_id: 1,
-          currency_name: 'KES - Kenya Shillings',
-          description: 'I want to move goods locally.',
-        },
-        {
-          currency_id: 2,
-          currency_name: 'USD - US Dollars',
-          description: 'I want to export and import goods',
-        },
-      ],
-      region: '',
       pass_validation: 'false',
-      sign_up_text: 'Continue',
+      sign_up_text: 'Sign Up',
       message: '',
       pass_msg: '',
       phoneVerification: false,
@@ -345,7 +209,7 @@ export default {
               endpoint: 'sign_up_check',
             };
             this.requestSignUpCheck(fullPayload).then(
-              (response) => {
+              response => {
                 if (response.length > 0) {
                   response = response[0];
                 }
@@ -361,9 +225,9 @@ export default {
                   this.doNotification(2, 'Sign Up failed', response.data.reason);
                 }
               },
-              (error) => {
+              error => {
                 this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
-              },
+              }
             );
           } else {
             this.message = 'Agree to Terms and Conditions';
@@ -392,7 +256,8 @@ export default {
       const patt = new RegExp('^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9@#$%^&+=]*$');
       const res = patt.test(this.password);
       if (!res) {
-        this.pass_msg = 'Password must be at least 8 characters long, contain at least one number and have a mixture of uppercase and lowercase letters.';
+        this.pass_msg =
+          'Password must be at least 8 characters long, contain at least one number and have a mixture of uppercase and lowercase letters.';
       } else {
         this.pass_msg = '';
         this.pass_validation = true;
@@ -404,7 +269,7 @@ export default {
       this.doNotification(
         2,
         'Phone Verification',
-        'Phone Verification Failed . Retry to complete SignUp process',
+        'Phone Verification Failed . Retry to complete SignUp process'
       );
     },
 
@@ -419,7 +284,7 @@ export default {
         endpoint: 'check_verification',
       };
       this.requestSignUpVerificationVerify(fullPayload).then(
-        (response) => {
+        response => {
           if (response.status) {
             this.doNotification(2, 'Phone Verification', 'Phone verification successful !');
             this.$router.push('/auth/sign_up_verification');
@@ -428,13 +293,13 @@ export default {
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
-        (error) => {
+        error => {
           this.doNotification(
             2,
             'Phone Verification Error ',
-            'Check Internet connection and retry',
+            'Check Internet connection and retry'
           );
-        },
+        }
       );
     },
 
@@ -449,61 +314,21 @@ export default {
         endpoint: 'verify_phone',
       };
       this.requestSignUpPhoneVerification(fullPayload).then(
-        (response) => {
+        response => {
           if (response.status) {
             this.setVerificationRequestId(response.request_id);
           } else {
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
-        (error) => {
+        error => {
           this.doNotification(
             2,
             'Phone Verification Error ',
-            'Check Internet connection and retry',
+            'Check Internet connection and retry'
           );
-        },
+        }
       );
-    },
-    checkCountry() {
-      const sendyCountries = [
-        {
-          country_id: 1,
-          country_name: 'Kenya',
-          country_code: 'KE',
-          supported: true,
-        },
-        {
-          country_id: 2,
-          country_name: 'Uganda',
-          country_code: 'UG',
-          supported: true,
-        },
-        {
-          country_id: 3,
-          country_name: 'Tanzania',
-          country_code: 'TZ',
-          supported: true,
-        },
-        {
-          country_id: 4,
-          country_name: 'Nigeria',
-          country_code: 'NG',
-          supported: true,
-        },
-      ];
-      if (sendyCountries.some(item => item.country_code === this.country) === true) {
-        this.countrySupported = true;
-        this.showingFirstPage = false;
-        this.canDisplaySecondScreen = true;
-      } else {
-        this.countrySupported = false;
-        this.showingFirstPage = false;
-      }
-    },
-    getCurrency() {
-      this.showingCurrencyPage = true;
-      this.canDisplaySecondScreen = false;
     },
   },
 };
@@ -520,7 +345,7 @@ export default {
 }
 
 .log-item {
-  /*text-align: center;*/
+  text-align: center;
   border: 0px solid #ccc;
   margin: 5px;
 }
@@ -536,7 +361,7 @@ export default {
   font-size: 1.3rem;
   line-height: 1.7em;
   font-weight: 500;
-  /*text-align: center;*/
+  text-align: center;
   color: #666;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -557,11 +382,8 @@ export default {
   cursor: pointer;
 }
 .sign-holder {
-  display: block;
   margin: 1em;
-}
-.sign-holder-next {
-    margin: 24% 1em -9% -4% !important;
+  display: block;
 }
 .sign-holder input:not([type="checkbox"]) {
   width: 100%;
@@ -609,8 +431,7 @@ export default {
   width: 110% !important;
 }
 .sign-up-error {
-  color: #1782c5;
-  padding: 2em;
+  color: #e08445;
   font-family: "Rubik", sans-serif;
 }
 .sign-up-email-error {
