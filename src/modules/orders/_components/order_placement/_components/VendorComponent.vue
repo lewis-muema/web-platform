@@ -957,8 +957,8 @@ export default {
         order_no: this.activeVendorPriceData.order_no,
       });
       this.fullPayload = {
-        app: 'AUTH',
-        endpoint: 'orders/discount',
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'discount',
         values: payload,
       };
     },
