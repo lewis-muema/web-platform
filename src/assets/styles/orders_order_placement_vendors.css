@@ -1,5 +1,4 @@
-.reset-font
-{
+.reset-font {
   font-family: 'Rubik', sans-serif;
 }
 .home-view--seperator {
@@ -24,31 +23,40 @@
   flex: 1;
   align-items: center;
 }
-.vendor__img_pstn{
+.vendor__img_pstn {
   flex-basis: 11% !important;
 }
-.home-next-step{
-  color :#1782C5;
+.home-next-step {
+  color: #1782c5;
 }
-.back-to-home-btn{
+.back-to-home-btn {
   padding-left: 6px;
   color: #000000;
   font-size: 25px;
   cursor: pointer;
 }
 .vendor_component-actions__element-date {
-  width: 100% !important;
   background-color: white !important;
 }
-.pair_rider_section{
-  width:100%;
+.discount-input-width--discounted {
+  width: 90% !important;
+}
+.discount-input-width--nondiscounted {
+  width: 100% !important;
+}
+.discount-applied-text {
+  font-size: 11px;
+  font-style: italic;
+}
+.pair_rider_section {
+  width: 100%;
 }
 .home-view-vendor-classes--label {
   padding: 5px 0px;
   margin-top: 5px;
   padding-bottom: 1px;
 }
-.home-view--outline{
+.home-view--outline {
   border-bottom: 2px solid #ebeef5;
 }
 .home-view-vendor-classes-menu.section__link.router-link-active {
@@ -75,7 +83,7 @@
   border-radius: 5px;
   margin: 13px 0;
   cursor: pointer;
-  border: 2px solid #E1E3E8;
+  border: 2px solid #e1e3e8;
   padding-top: 4px;
   padding-bottom: 4px;
   background-color: transparent;
@@ -91,7 +99,8 @@
 .home-view-vendor-types--item,
 .home-view-vendor-types-item,
 .home-view-vendor-types-item--cost-wrapper,
-.home-view-vendor-types-item--vendor-wrapper,.home-view-carrier-type {
+.home-view-vendor-types-item--vendor-wrapper,
+.home-view-carrier-type {
   display: flex;
 }
 .home-view-vendor-types-item {
@@ -118,7 +127,7 @@
   min-width: 30px;
 }
 .home-view-vendor-types-item--cost-wrapper_time,
-.home-view-vendor-types-item-vendor--vendor-local-name{
+.home-view-vendor-types-item-vendor--vendor-local-name {
   font-size: xx-small;
 }
 .home-view-vendor-types-item--cost-wrapper__cost {
@@ -141,15 +150,15 @@
   justify-content: flex-end;
   flex-basis: 10%;
 }
-.home-view-vendor-types-item-wrap{
+.home-view-vendor-types-item-wrap {
   flex-wrap: wrap;
 }
-.home-view-carrier-type{
+.home-view-carrier-type {
   width: 100%;
-  justify-content:space-evenly;
+  justify-content: space-evenly;
   padding: 10px 0 10px 0;
 }
-.home-view-carrier-type--left-aligned{
+.home-view-carrier-type--left-aligned {
   justify-content: space-around;
 }
 
@@ -186,7 +195,7 @@
   font-size: small;
   margin-top: 20px;
 }
-.home-view-section__link{
+.home-view-section__link {
   color: #555 !important;
   text-transform: capitalize !important;
   font-size: 14px;
@@ -196,10 +205,10 @@
 }
 
 .home-view-section__link:hover {
-    color: #1782c5 !important;
-    cursor: pointer;
+  color: #1782c5 !important;
+  cursor: pointer;
 }
-.home-view-section__link-active{
+.home-view-section__link-active {
   font-weight: normal !important;
   color: #1782c5 !important;
   margin-bottom: -3px;
@@ -270,48 +279,48 @@
 .pair_confirm_btn {
   margin: 20px 0px 0px 0px;
 }
-.pop-over-layout{
+.pop-over-layout {
   /* top: 250px !important; */
   height: 133px;
   background-color: white !important;
   width: 20% !important;
   /* min-height: 90px !important; */
 }
-.pair-rider-name{
+.pair-rider-name {
   padding: 8px;
   font-size: 13px;
 }
-.el-popper[x-placement^=right] .popper__arrow::after{
+.el-popper[x-placement^='right'] .popper__arrow::after {
   bottom: 0px;
-  border-right-color: #FFFFFF !important;
+  border-right-color: #ffffff !important;
 }
-.display_paired_rider_img{
+.display_paired_rider_img {
   height: 55px;
   vertical-align: middle;
   border-radius: 15%;
 }
-.display_rider_inline{
+.display_rider_inline {
   border-right: 1px solid #74696942;
-  width:58% !important;
+  width: 58% !important;
   text-align: center;
   padding-top: 14px;
 }
-.upper_scope_pair_text{
+.upper_scope_pair_text {
   color: rgba(0, 0, 0, 0.5);
   padding-bottom: 10px;
   text-transform: capitalize;
 }
-.pair_info_text_content{
+.pair_info_text_content {
   font-family: 'Rubik', sans-serif;
   color: #555;
   font-weight: 300;
 }
-.pair_right_more_info{
+.pair_right_more_info {
   width: 40% !important;
   text-align: center;
   padding-top: 20%;
 }
-.pair-model-info{
+.pair-model-info {
   font-size: 12px;
 }
 
@@ -323,61 +332,61 @@
 }
 /* end order actions */
 
-
-
 /* start transitions */
-.home-carrier-type-fade-enter-active, .home-carrier-type-fade-leave-active{
+.home-carrier-type-fade-enter-active,
+.home-carrier-type-fade-leave-active {
   opacity: 0;
 }
-.home-carrier-type-fade-enter, .home-carrier-type-fade-leave-to {
+.home-carrier-type-fade-enter,
+.home-carrier-type-fade-leave-to {
   opacity: 0;
 }
-.tier_description_background{
-  background-color: #1782C5 ;
+.tier_description_background {
+  background-color: #1782c5;
 }
-.extra_info_background{
+.extra_info_background {
   background-color: #fff;
 }
-.load-weight{
+.load-weight {
   width: 50% !important;
   font-style: italic;
 }
-.tonage-value-text{
+.tonage-value-text {
   color: #555 !important;
   padding-left: 10px;
 }
 .tonnage-validate-error {
   color: #e08445;
-  font-family: "Rubik", sans-serif;
+  font-family: 'Rubik', sans-serif;
   text-align: left;
   font-size: 13px;
   width: 320px;
 }
-.load-weight-outer{
+.load-weight-outer {
   padding-bottom: 0px;
 }
-.el-picker-panel__body-wrapper{
+.el-picker-panel__body-wrapper {
   background-color: white !important;
 }
 .home-view-vendor-types--item__unavailable {
-  background: #FBFBFB;
-  color : #808080;
+  background: #fbfbfb;
+  color: #808080;
   font-weight: 400 !important;
 }
-.home-view-vendor-types--icon__unavailable{
+.home-view-vendor-types--icon__unavailable {
   filter: grayscale(100%);
   -webkit-filter: grayscale(100%);
   -moz-filter: grayscale(100%);
-  color : #808080 !important;
+  color: #808080 !important;
 }
-.home-view-vendor-types-item--cost-wrapper-right > span > span{
+.home-view-vendor-types-item--cost-wrapper-right > span > span {
   background-color: inherit;
 }
-.home-view-vendor-types--extra__unavailable{
+.home-view-vendor-types--extra__unavailable {
   background: rgba(173, 173, 173, 0.97) !important;
-  color: #FFFFFF !important;
+  color: #ffffff !important;
 }
-.vendor_component-schedule{
+.vendor_component-schedule {
   font-size: 10px;
   color: #212120;
 }
