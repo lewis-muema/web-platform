@@ -346,10 +346,7 @@
                     trigger="manual"
                     popper-class="pop-over-layout home-view-truck-options-discounts-popup"
                   >
-                    <p class="home-view-truck-options-schedule-discounts">
-                      We now offer discounts for scheduled orders! This applies to all 5T, 10T and
-                      14T truck orders whose pick up time is 24hours to 31days into the future.
-                    </p>
+                    <p class="home-view-truck-options-schedule-discounts">We now offer discounts for scheduled orders! This applies to all 5T, 10T and 14T truck orders whose pick up time is 24hours to 31days into the future.</p>
                   </el-popover>
                 </span>
                 <p
@@ -946,9 +943,7 @@ export default {
     toggleDiscountsPopover(state) {
       this.showScheduledDiscountsMessage = state;
       const rect = document.querySelector('.el-icon-info').getBoundingClientRect();
-      document
-        .querySelector('.home-view-truck-options-discounts-popup')
-        .style.setProperty('top', `${rect.top - 80}px`, 'important');
+      document.querySelector('.home-view-truck-options-discounts-popup').style.setProperty('top', `${rect.top - 80}px`, 'important');
     },
     defineDiscountsPayload() {
       const time = this.moment(this.schedule_time).format('YYYY-MM-DD HH:mm:ss');
@@ -957,8 +952,8 @@ export default {
         order_no: this.activeVendorPriceData.order_no,
       });
       this.fullPayload = {
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'discount',
+        app: 'AUTH',
+        endpoint: 'orders/discount',
         values: payload,
       };
     },
@@ -968,61 +963,28 @@ export default {
       const dateTime = new Date();
       dateTime.setHours(dateTime.getHours() + 24);
       if (this.schedule_time) {
-        this.$root.$emit(
-          'Discount loading status',
-          'el-icon-loading',
-          'Please wait, we are applying a discount to your order',
-          true,
-          true,
-        );
+        this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait, we are applying a discount to your order', true, true);
         const timeout = setTimeout(() => {
           this.discount_timed_out = true;
-          this.$root.$emit(
-            'Discount loading status',
-            'el-icon-close',
-            'We are unable to process your discount at this moment',
-            false,
-            true,
-          );
+          this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
         }, 10000);
         this.requestDiscount(this.fullPayload).then((response) => {
           if (!this.discount_timed_out) {
             clearTimeout(timeout);
-            if (
-              response.percentage_discount > 0
-              || response.discounted_amount !== response.original_amount
-            ) {
+            if (response.percentage_discount > 0 || response.discounted_amount !== response.original_amount) {
               this.setVendorPrice(response.discounted_amount);
               this.discountPercentage = response.percentage_discount;
               this.orderDiscountStatus = true;
-              this.$root.$emit(
-                'Discount loading status',
-                'el-icon-circle-check-outline',
-                `A discount of ${response.percentage_discount}% has been applied to your order`,
-                false,
-                true,
-              );
+              this.$root.$emit('Discount loading status', 'el-icon-circle-check-outline', `A discount of ${response.percentage_discount}% has been applied to your order`, false, true);
             } else {
               this.setVendorPrice(response.discounted_amount);
               this.orderDiscountStatus = false;
-              this.$root.$emit(
-                'Discount loading status',
-                'el-icon-close',
-                'We are unable to process your discount at this moment',
-                false,
-                true,
-              );
+              this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
             }
           }
         });
       } else if (this.orderDiscountStatus) {
-        this.$root.$emit(
-          'Discount loading status',
-          'el-icon-loading',
-          'Please wait while we adjust the pricing',
-          true,
-          true,
-        );
+        this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait while we adjust the pricing', true, true);
         this.revertDiscount();
       }
     },

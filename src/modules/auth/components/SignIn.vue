@@ -161,20 +161,6 @@ export default {
                   } catch (er) {
                     // ...
                   }
-
-                  // Full Story Identifier
-                  if ('default' in sessionData) {
-                    const acc = sessionData[sessionData.default];
-                    FS.identify(acc.user_id.toString(), {
-                      displayName: acc.user_name,
-                      email: acc.user_email,
-                    });
-                    FS.event('User Login', {
-                      'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-                      'Last Login': new Date(),
-                      'Client Type': 'Web Platform',
-                    });
-                  }
                   if ('default' in sessionData && analyticsEnv === 'production') {
                     const acc = sessionData[sessionData.default];
 
