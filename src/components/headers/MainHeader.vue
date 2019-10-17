@@ -138,7 +138,6 @@ export default {
       }
     },
     logOut() {
-      FS.clearUserCookie();
       try {
         this.$store.commit('deleteSession');
         // clear orders to avoid marker persistance
