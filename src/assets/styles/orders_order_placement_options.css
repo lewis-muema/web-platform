@@ -78,3 +78,13 @@
 .home-view-place-order--mpesa-cancel {
   margin-top: 20px;
 }
+.payment__radio-button {
+  margin-top: 7% !important;
+  margin-right: 7% !important;
+}
+.payment__radio-button-label {
+  width: 100% !important;
+}
+.card-accounts-list {
+  background: aliceblue !important;
+}

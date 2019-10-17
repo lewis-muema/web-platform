@@ -245,7 +245,7 @@ export default {
     formatRunningBalance(row) {
       let value = row.running_balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
       value = value.split('.');
-      const updatedRunningBalance = Number(value[0].replace(',', '')) * -1;
+      const updatedRunningBalance = Number(value[0].replace(/,/g, '')) * -1;
       const formattedRunningBalance = updatedRunningBalance
         .toString()
         .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
