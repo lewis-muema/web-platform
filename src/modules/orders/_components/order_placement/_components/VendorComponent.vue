@@ -454,7 +454,7 @@
                 <div class="home-view-truck-options-inner--number-of-loaders">
                   <el-input-number
                     v-model="number_of_loaders"
-                    :min="1"
+                    :min="0"
                     :max="10"
                     @change="handleChangeInNumberOfLoaders"
                   />
