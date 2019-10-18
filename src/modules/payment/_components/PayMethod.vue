@@ -1,8 +1,8 @@
 <template lang="html">
-  <div class="paymethod paymethod--menu">
-    <div v-for="method in payment_methods" :key="method.payment_method_id">
-      <a class="paymethod--link" @click="setCurrentRoute(method.name)"> {{ method.name }} </a>
-    </div>
+  <div class="paymethod">
+    <router-link class="paymethod--link menu-links" v-for="method in payment_methods" :to="`/payment/${method.name.replace(/-/g, '')}`">
+    {{ method.name }}
+</router-link>
   </div>
 </template>
 
@@ -58,19 +58,15 @@ export default {
         }
       );
     },
-    setCurrentRoute(method) {
-      const paymentMethod = method.replace(/-/g, '');
-      this.$router.push(`/payment/${paymentMethod.toLowerCase()}`);
-    },
   },
 };
 </script>
 
 <style lang="css">
-.paymethod--menu {
-  padding-bottom: 11px !important;
+.menu-links{
+  margin-bottom: -0.2rem !important;
 }
-a:focus{
-  border-bottom: 3px solid #1782c5 !important;
+a:hover {
+ cursor: pointer;
 }
 </style>
