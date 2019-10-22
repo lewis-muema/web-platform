@@ -145,10 +145,10 @@
 }
 .tracking-back-button{
 
-  top: 67px;
-      position: relative;
-      left: 20%;
-      display: flex;
+    top: 25%;
+    position: absolute;
+    left: 20%;
+    display: flex;
 
 }
 
