@@ -20,7 +20,7 @@ const getDefaultState = () => ({
   load_weight: '',
   load_units: 'kgs',
   additional_loader: '',
-  no_of_loaders: 1,
+  no_of_loaders: 0,
 });
 
 /* eslint no-param-reassign: "error" */
