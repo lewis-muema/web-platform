@@ -191,6 +191,8 @@ const PaymentMxn = {
             this.$store.dispatch('show_notification', notification, {
               root: true,
             });
+            this.getUserCards();
+            this.clearCardData();
             // request running balance
             const runningBalancePayload = {
               values: {

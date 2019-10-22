@@ -1,58 +1,72 @@
 <template lang="html">
   <div class="paymethod">
-    <router-link
-      v-if="getCountryCode === 'KE' && mpesa_valid"
-      class="paymethod--link"
-      to="/payment/mpesa"
-    >
-      M-Pesa
-    </router-link>
-    <router-link class="paymethod--link" to="/payment/card">
-      Card
-    </router-link>
-    <router-link
-      v-if="getCountryCode === 'KE' && mpesa_valid && currency === 'KES'"
-      class="paymethod--link"
-      to="/payment/promo"
-    >
-      Promo Code
-    </router-link>
+    <router-link class="paymethod--link menu-links" :key="method.Payment_method_id" v-for="method in payment_methods" :to="`/payment/${method.name.replace(/-/g, '').toLowerCase()}`">
+    {{ method.name }}
+</router-link>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'PayMethod',
   data() {
     return {
-      mpesa_valid: false,
-      currency: 'KES',
+      payment_methods: [],
     };
   },
-  computed: {
-    ...mapGetters({
-      getCountryCode: 'getCountryCode',
-    }),
-  },
-  created() {
-    this.checkUserPhone();
+  mounted() {
+    this.getPaymentOptions();
   },
   methods: {
-    checkUserPhone() {
+    ...mapActions({ requestPaymentOptionsAction: '$_payment/requestPaymentOptions' }),
+
+    getPaymentOptions() {
       const session = this.$store.getters.getSession;
-      const phone = session[session.default].user_phone;
-      this.currency = session[session.default].default_currency;
-      const intValue = phone.substring(0, 4);
-      if (intValue === '+256') {
-        this.mpesa_valid = false;
-      } else {
-        this.mpesa_valid = true;
+      const countryCode = session[session.default].country_code;
+      let accountType = '';
+      const payOption = session[session.default].pay_option;
+      if (session.default === 'biz') {
+        if (payOption === 1) {
+          accountType = 'Business Pre-Pay';
+        } else if (payOption === 2) {
+          accountType = 'Business Post-Pay';
+        }
+      } else if (session.default === 'peer') {
+        accountType = 'Individual';
       }
+      const payload = {
+        country_code: countryCode,
+        account_type: accountType,
+        entry_point: 'Customer App Top Up',
+      };
+      const fullPayload = {
+        values: payload,
+        vm: this,
+        app: 'PAYMENT_SERVICE',
+        endpoint: 'accounts/pay_methods',
+      };
+      this.requestPaymentOptionsAction(fullPayload).then(
+        response => {
+          if (response.status) {
+            this.payment_methods = response.payment_methods;
+          }
+        },
+        error => {
+          console.log('error', error);
+        }
+      );
     },
   },
 };
 </script>
 
-<style lang="css"></style>
+<style lang="css">
+.menu-links{
+  margin-bottom: -0.2rem !important;
+}
+a:hover {
+ cursor: pointer;
+}
+</style>
