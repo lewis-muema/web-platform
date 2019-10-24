@@ -995,13 +995,16 @@ export default {
               this.setVendorPrice(response.discounted_amount);
               this.discountPercentage = response.percentage_discount;
               this.orderDiscountStatus = true;
-              this.$root.$emit(
-                'Discount loading status',
-                'el-icon-circle-check-outline',
-                `A discount of ${response.percentage_discount}% has been applied to your order`,
-                false,
-                true,
-              );
+              this.$root.$emit('Discount loading status', 'el-icon-circle-check-outline', `A discount of ${response.percentage_discount}% has been applied to your order`, false, true);
+              const endAddress = this.getPriceRequestObject.end_address.split(',');
+              this.trackScheduleEvent('Schedule Discounted Order', {
+                'Order time': this.moment().format('YYYY-MM-DD hh:mm:ss a'),
+                'Scheduled time': this.moment(response.date_time).format('YYYY-MM-DD hh:mm:ss a'),
+                'Original price': `${this.activeVendorPriceData.currency} ${response.original_amount}`,
+                'Discounted price': `${this.activeVendorPriceData.currency} ${response.discounted_amount}`,
+                'Percentage discount': `${response.percentage_discount} %`,
+                Destination: endAddress[endAddress.length - 2],
+              });
             } else {
               this.setVendorPrice(response.discounted_amount);
               this.orderDiscountStatus = false;
@@ -1291,7 +1294,21 @@ export default {
         // ...
       }
     },
-
+    trackScheduleEvent(name, event) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name, event);
+        }
+      } catch (er) {
+        // ...
+      }
+    },
     initializeVendorComponent() {
       this.carrier_type = this.get_vendor_carrier_type;
       this.number_of_loaders = this.getNOOfLoaders;
