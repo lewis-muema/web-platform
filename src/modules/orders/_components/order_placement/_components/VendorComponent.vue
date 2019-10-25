@@ -922,6 +922,9 @@ export default {
               this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
             }
           }
+        }).catch(() => {
+          this.orderDiscountStatus = false;
+          this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
         });
       } else if (this.orderDiscountStatus) {
         this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait while we adjust the pricing', true, true);
