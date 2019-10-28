@@ -783,6 +783,8 @@ export default {
       this.setScheduleTime(this.schedule_time);
       if ([10, 14, 17].includes(this.activeVendorPriceData.vendor_id)) {
         this.getDiscounts();
+      } else {
+        this.trackScheduleEvent('Schedule Order', {});
       }
     },
     dispatchOrderNotes() {
@@ -915,21 +917,25 @@ export default {
               this.discountPercentage = response.percentage_discount;
               this.orderDiscountStatus = true;
               this.$root.$emit('Discount loading status', 'el-icon-circle-check-outline', `A discount of ${response.percentage_discount}% has been applied to your order`, false, true);
-              const endAddress = this.getPriceRequestObject.end_address.split(',');
-              this.trackScheduleEvent('Schedule Discounted Order', {
+              this.trackScheduleEvent('Schedule Order', {
+                'Order Number': this.activeVendorPriceData.order_no,
                 'Order time': this.moment().format('YYYY-MM-DD hh:mm:ss a'),
                 'Scheduled time': this.moment(response.date_time).format('YYYY-MM-DD hh:mm:ss a'),
                 'Original price': `${this.activeVendorPriceData.currency} ${response.original_amount}`,
                 'Discounted price': `${this.activeVendorPriceData.currency} ${response.discounted_amount}`,
                 'Percentage discount': `${response.percentage_discount} %`,
-                Destination: endAddress[endAddress.length - 2],
               });
             } else {
               this.setVendorPrice(response.discounted_amount);
               this.orderDiscountStatus = false;
               this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
+              this.trackScheduleEvent('Schedule Order', {});
             }
           }
+        }).catch(() => {
+          this.orderDiscountStatus = false;
+          this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
+          this.trackScheduleEvent('Schedule Order', {});
         });
       } else if (this.orderDiscountStatus) {
         this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait while we adjust the pricing', true, true);
