@@ -15,7 +15,9 @@
               class="close el-input__icon el-icon-error"
               @click="closeDiscountPopup()"
             />
+            <img src="https://images.sendyit.com/web_platform/orders/Frown.svg" class="frown-icon-class" v-if="icon_class === 'el-icon-close'">
             <i
+              v-else
               id="icon_override"
               slot="suffix"
               class="el-input__icon"

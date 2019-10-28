@@ -276,6 +276,10 @@
   background-color: #00000070;
   z-index: 1000;
 }
+.frown-icon-class {
+  height: 85px;
+  margin-top: 20px;
+}
 .el-date-table td.disabled div {
   background-color: #00000040 !important;
 }
