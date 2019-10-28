@@ -135,13 +135,12 @@ export default {
             } else {
               try {
                 if (response) {
-                  const refreshToken = response.refresh_token;
-                  const accessToken = response.access_token;
+                  const refreshToken = response.data.refresh_token;
+                  const accessToken = response.data.access_token;
                   // eslint-disable-next-line max-len
                   // TODO change from using local storage as session trust store. malicious js will read the data
                   localStorage.setItem('jwtToken', accessToken);
                   localStorage.setItem('refreshToken', refreshToken);
-                  // localStorage.setItem('jwtToken', response);
                   const partsOfToken = accessToken.split('.');
                   const middleString = partsOfToken[1];
                   const data = atob(middleString);
