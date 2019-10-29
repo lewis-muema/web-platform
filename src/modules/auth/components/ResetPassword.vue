@@ -96,6 +96,7 @@ export default {
       values.token = token;
       const fullPayload = {
         values,
+        vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'forgot_token',
       };
