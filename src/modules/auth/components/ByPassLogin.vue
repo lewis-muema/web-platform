@@ -48,7 +48,7 @@
         <div class="sign-holder dimen">
           <el-select
             v-model="account_type"
-            class="section--filter-input sign-form"
+            class="sign-form"
             placeholder="Select Account Type"
             @change="dispatchAccountType"
           >
