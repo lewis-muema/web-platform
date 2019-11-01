@@ -223,6 +223,8 @@ export default {
       default_currency: 'KES',
       rb_currency: 'KES',
       mpesa_valid: false,
+      mpesa_payment: false,
+      mpesa_payment_state: false,
     };
   },
 
@@ -346,6 +348,10 @@ export default {
         .add(this.activeVendorPriceData.eta, 'second')
         .format('YYYY-MM-DD HH:mm:ss');
     },
+    current_time() {
+      return this.moment().format('YYYY-MM-DD HH:mm:ss');
+    },
+
     current_time() {
       return this.moment().format('YYYY-MM-DD HH:mm:ss');
     },
@@ -1024,7 +1030,24 @@ export default {
                 );
                 that.payment_state = 0;
                 that.loading = false;
-                that.requestMpesaPaymentPoll(60);
+                that.mpesa_payment_state = true;
+                that.doNotification('1', 'Payment successful', 'Completing your order...');
+                that.doCompleteOrder();
+                return true;
+              }
+
+              if (pollLimitValue === 6) {
+                if (pollCount === 5) {
+                  that.doNotification(
+                    '0',
+                    'Payment not received',
+                    "We'll keep retrying to check your payment status and complete your order once the payment is received.",
+                  );
+                  that.payment_state = 0;
+                  that.loading = false;
+                  that.requestMpesaPaymentPoll(60);
+                  that.mpesa_payment_state = false;
+                }
               }
             }
           }, 10000 * pollCount);
@@ -1039,16 +1062,17 @@ export default {
             // eslint-disable-next-line no-param-reassign,prefer-destructuring
             response = response[0];
           }
-
           if (response.status === 200) {
             const newRb = response.data.data.running_balance;
-            if (newRb < oldRb) {
+            if (newRb > oldRb) {
               this.completeMpesaPaymentRequest({});
-              return true;
+              this.mpesa_payment = true;
+            } else {
+              this.mpesa_payment = false;
             }
+          } else {
+            this.mpesa_payment = false;
           }
-
-          return false;
         },
         // eslint-disable-next-line no-unused-vars
         error => false,
