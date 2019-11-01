@@ -318,6 +318,7 @@ export function createRouter() {
           {
             path: '/orders/rating/:order_no',
             component: () => import('../modules/orders/_components/rating/Rating.vue'),
+            name: 'rating',
             meta: { innerTrack: 'Rating Page' },
           },
         ],
