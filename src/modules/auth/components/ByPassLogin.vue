@@ -381,7 +381,6 @@ export default {
       this.loading = 'success';
       setTimeout(() => {
         this.$router.push('/orders');
-        this.loading = false;
       }, 5000);
     },
     doNotification(level, title, message) {
