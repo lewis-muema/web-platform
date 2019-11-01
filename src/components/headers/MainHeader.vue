@@ -29,45 +29,48 @@
               <i class="el-icon-arrow-down" />
             </a>
             <ul class="nav--menu-dropdown-list">
-              <li v-if="switchValid">
-                <a @click="switchAccount()">
-                  Switch to
-                  <span v-if="this.$store.getters.getSession.default === 'peer'"> Business </span><span v-else>
-                    Personal
-                  </span>
-                  account
-                </a>
-              </li>
-              <li>
-                <a @click="linkRoute('/orders')">
-                  New Delivery
-                </a>
-              </li>
-              <li>
-                <a @click="linkPayments()">
-                  Payment
-                </a>
-              </li>
-              <li>
-                <a @click="linkRoute('/transactions/order_history')">
-                  Orders
-                </a>
-              </li>
-              <li v-if="admin_user">
-                <a @click="linkRoute('/admin/users')">
-                  Settings
-                </a>
-              </li>
-              <li v-if="admin_user">
-                <a @click="linkRoute('/analytics/weekly')">
-                  Analytics
-                </a>
-              </li>
-              <li>
-                <a @click="linkRoute('/user/profile/personal_information')">
-                  Profile
-                </a>
-              </li>
+              <div v-if="!admin_details">
+                <li v-if="switchValid">
+                  <a @click="switchAccount()">
+                    Switch to
+                    <span v-if="this.$store.getters.getSession.default === 'peer'"> Business </span>
+                    <span v-else>
+                      Personal
+                    </span>
+                    account
+                  </a>
+                </li>
+                <li>
+                  <a @click="linkRoute('/orders')">
+                    New Delivery
+                  </a>
+                </li>
+                <li>
+                  <a @click="linkPayments()">
+                    Payment
+                  </a>
+                </li>
+                <li>
+                  <a @click="linkRoute('/transactions/order_history')">
+                    Orders
+                  </a>
+                </li>
+                <li v-if="admin_user">
+                  <a @click="linkRoute('/admin/users')">
+                    Settings
+                  </a>
+                </li>
+                <li v-if="admin_user">
+                  <a @click="linkRoute('/analytics/weekly')">
+                    Analytics
+                  </a>
+                </li>
+                <li>
+                  <a @click="linkRoute('/user/profile/personal_information')">
+                    Profile
+                  </a>
+                </li>
+              </div>
               <li class="menu--last-child">
                 <a
                   class="menu--last-child-link"
@@ -98,6 +101,7 @@ export default {
       logged_user: '',
       mpesa_valid: false,
       helpline_contact: '',
+      admin_details: false,
     };
   },
   computed: {
@@ -117,6 +121,7 @@ export default {
   mounted() {
     this.switchOption();
     this.loggedUser();
+    this.superUserCheck();
   },
   methods: {
     loggedUser() {
@@ -137,8 +142,15 @@ export default {
         this.logged_user = `${firstName} (Personal Acc)`;
       }
     },
+    superUserCheck() {
+      const session = this.$store.getters.getSession;
+      if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
+        this.admin_details = true;
+      } else {
+        this.admin_details = false;
+      }
+    },
     logOut() {
-      FS.clearUserCookie();
       try {
         this.$store.commit('deleteSession');
         // clear orders to avoid marker persistance

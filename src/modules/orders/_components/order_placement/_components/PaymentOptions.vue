@@ -671,7 +671,7 @@ export default {
       if (this.getPriceRequestObject.payment_option === 1
               && this.getRunningBalance - this.order_cost >= 0) {
         this.payment_method = 11;
-      } else if (this.getPriceRequestObject.payment_option === 2){
+      } else if (this.getPriceRequestObject.payment_option === 2) {
         this.payment_method = 12;
       }
       let payload = {
@@ -832,6 +832,7 @@ export default {
       }
     },
 
+    /* global mixpanel */
     trackMixpanelEvent(name) {
       const data = JSON.parse(name).values;
       const session = this.$store.getters.getSession;
@@ -845,15 +846,29 @@ export default {
 
       try {
         if (analyticsEnv === 'production') {
-          mixpanel.track('Place Order', {
-            'Account ': data.type,
-            'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-            'Client Type': 'Web Platform',
-            'Order Number': data.trans_no,
-            'Payment Mode': this.payment_method,
-            'User Email': data.user_email,
-            'User Phone': data.user_phone,
-          });
+          if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
+            mixpanel.track('Place Order', {
+              'Account ': data.type,
+              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+              'Client Type': 'Web Platform',
+              'Order Number': data.trans_no,
+              'Payment Mode': this.payment_method,
+              'User Email': data.user_email,
+              'User Phone': data.user_phone,
+              'Super User Id': session.admin_details.admin_id,
+            });
+          } else {
+            mixpanel.track('Place Order', {
+              'Account ': data.type,
+              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+              'Client Type': 'Web Platform',
+              'Order Number': data.trans_no,
+              'Payment Mode': this.payment_method,
+              'User Email': data.user_email,
+              'User Phone': data.user_phone,
+            });
+          }
+
           mixpanel.track('Order Completion Log', {
             'Account ': data.type,
             'Account Type': acc === 'peer' ? 'Personal' : 'Business',

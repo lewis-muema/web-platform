@@ -6,7 +6,10 @@
       id="orders_container"
       class="box"
     >
-      <div v-if="blinder_status" class="blinder">
+      <div
+        v-if="blinder_status"
+        class="blinder"
+      >
         <div class="discounts_popup">
           <div class="discount-status">
             <i
@@ -15,7 +18,11 @@
               class="close el-input__icon el-icon-error"
               @click="closeDiscountPopup()"
             />
-            <img src="https://images.sendyit.com/web_platform/orders/Frown.svg" class="frown-icon-class" v-if="icon_class === 'el-icon-close'">
+            <img
+              v-if="icon_class === 'el-icon-close'"
+              src="https://images.sendyit.com/web_platform/orders/Frown.svg"
+              class="frown-icon-class"
+            >
             <i
               v-else
               id="icon_override"
@@ -29,7 +36,10 @@
             <button
               v-if="!loading_status"
               class="discount-popup-dismiss"
-              @click="closeDiscountPopup()">OK</button>
+              @click="closeDiscountPopup()"
+            >
+              OK
+            </button>
           </div>
         </div>
       </div>
@@ -84,7 +94,12 @@ export default {
     this.checkSession();
     this.rootListener();
   },
-
+  destroyed() {
+    const session = this.$store.getters.getSession;
+    if (localStorage.jwtToken && Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
+      this.$router.push('/orders');
+    }
+  },
   methods: {
     ...mapGetters({
       getDiscountLoadingStatus: '$_orders/$_components/$_home/getDiscountLoadingStatus',
