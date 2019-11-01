@@ -769,14 +769,6 @@ export default {
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
       vendors: '$_orders/getVendors',
     }),
-    initiateOrderData() {
-      this.setRiderLocationToStore();
-      this.checkVendorName();
-      this.checkScheduler();
-      this.setTimeLineIconState();
-      this.confirmUser();
-      this.orderETA();
-    },
     getStatus() {
       if (!this.loading) {
         switch (this.tracking_data.delivery_status) {
@@ -863,8 +855,10 @@ export default {
     },
 
     tracking_data(data) {
-      if (data.confirm_status === 1) {
-        this.reCheckMQTTConnection();
+      if (Object.prototype.hasOwnProperty.call(data, 'confirm_status')) {
+        if (data.confirm_status === 1) {
+          this.reCheckMQTTConnection();
+        }
       }
       this.initiateOrderData();
     },
@@ -904,6 +898,14 @@ export default {
         }
         default:
       }
+    },
+    initiateOrderData() {
+      this.setRiderLocationToStore();
+      this.checkVendorName();
+      this.checkScheduler();
+      this.setTimeLineIconState();
+      this.confirmUser();
+      this.orderETA();
     },
     checkPreviousRoute() {
       if (this.$route.path === `/external/tracking/${this.$route.params.order_no}`) {
