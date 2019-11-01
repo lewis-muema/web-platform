@@ -204,13 +204,9 @@ export default {
         this.authByPassSignIn(fullPayload).then(
           (response) => {
             if (Object.prototype.hasOwnProperty.call(response, 'status')) {
-              const errorResponse = response.data;
-              if (errorResponse.code === 1) {
-                this.login_text = 'Login';
-                this.doNotification(2, 'Login failed', 'Wrong password or email.');
-              } else {
-                this.login_text = 'Login';
-                this.doNotification(2, 'Login failed', 'Account deactivated');
+              if (!response.status) {
+                this.login_text = 'Log In';
+                this.doNotification(2, 'Login failed', response.message);
               }
             } else {
               try {
@@ -230,10 +226,12 @@ export default {
 
                   this.sessionDataObject = sessionData;
                   this.validateSuperUser(sessionData.admin_details);
+                } else {
+
                 }
               } catch (error) {
                 // @todo Log the error (central logging)
-                this.login_text = 'Login';
+                this.login_text = 'Log In';
               }
             }
           },
@@ -316,7 +314,7 @@ export default {
       this.requestByPassVerificationVerify(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.doNotification(2, 'Phone Verification', 'Phone verification successful !');
+            this.doNotification(1, 'Phone Verification', 'Phone verification successful !');
             this.loading = true;
             setTimeout(() => {
               this.directToOrdersPage();
