@@ -154,6 +154,13 @@ export function createRouter() {
             beforeEnter: loginGuard,
             meta: { login: 'Sign Up Verification Page' },
           },
+          {
+            path: '/auth/by_pass',
+            name: 'by_pass',
+            component: () => import('../modules/auth/components/ByPassLogin.vue'),
+            beforeEnter: loginGuard,
+            meta: { login: 'By Pass Login Page' },
+          },
         ],
       },
       {
