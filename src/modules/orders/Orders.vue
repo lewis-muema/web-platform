@@ -96,7 +96,7 @@ export default {
   },
   destroyed() {
     const session = this.$store.getters.getSession;
-    if (localStorage.jwtToken && Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
+    if (localStorage.jwtToken && !['order_placement', 'by_pass', 'rating', 'tracking'].includes(this.$route.name) && Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
       this.$router.push('/orders');
     }
   },
