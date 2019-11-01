@@ -158,7 +158,11 @@ export default {
       } catch (er) {
         // orders was not registered
       } finally {
-        this.$router.replace({ name: 'sign_in' });
+        if (this.admin_details) {
+          this.$router.replace({ name: 'by_pass' });
+        } else {
+          this.$router.replace({ name: 'sign_in' });
+        }
       }
     },
     switchOption() {
