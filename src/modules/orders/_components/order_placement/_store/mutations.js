@@ -20,7 +20,7 @@ const getDefaultState = () => ({
   load_weight: '',
   load_units: 'kgs',
   additional_loader: '',
-  no_of_loaders: 1,
+  no_of_loaders: 0,
 });
 
 /* eslint no-param-reassign: "error" */
@@ -181,5 +181,8 @@ export default {
   },
   setLoadWeightStatus(state, val) {
     state.load_weight_status = val;
+  },
+  setVendorPrice(state, val) {
+    state.active_vendor_details.cost = val;
   },
 };

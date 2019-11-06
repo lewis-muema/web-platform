@@ -41,6 +41,7 @@ export default {
       'check_verification',
       'geocountry',
       'last_partner_position',
+      'admin_bypass',
     ];
     if (
       /^[\],:{}\s]*$/.test(

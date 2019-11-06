@@ -267,40 +267,60 @@ export default {
               this.doNotification(2, 'Login failed', 'Account deactivated');
             }
           } else {
-            let partsOfToken = '';
-            if (Array.isArray(response)) {
-              const res = response[1];
-              localStorage.setItem('jwtToken', res);
-              partsOfToken = res.toString().split('.');
-            } else {
-              localStorage.setItem('jwtToken', response);
-              partsOfToken = response.split('.');
-            }
-            const middleString = partsOfToken[1];
-            const data = atob(middleString);
-            const { payload } = JSON.parse(data);
-            if (response) {
-              const sessionData = payload;
-              const jsonSession = JSON.stringify(sessionData);
-              this.setSession(jsonSession);
-              this.$store.commit('setSession', sessionData);
-              let analyticsEnv = '';
-              try {
-                analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-              } catch (er) {
-                // ...
-              }
-              if ('default' in sessionData && analyticsEnv === 'production') {
-                const acc = sessionData[sessionData.default];
+            try {
+              if (response) {
+                const refreshToken = response.refresh_token;
+                const accessToken = response.access_token;
+                // eslint-disable-next-line max-len
+                // TODO change from using local storage as session trust store. malicious js will read the data
+                localStorage.setItem('jwtToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
+                const partsOfToken = accessToken.split('.');
+                const middleString = partsOfToken[1];
+                const data = atob(middleString);
+                const { payload } = JSON.parse(data);
 
-                // track login
-                mixpanel.track('User Login', {
-                  'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-                  'Last Login': new Date(),
-                  'Client Type': 'Web Platform',
-                });
+                // set session
+                // commit everything to the store
+                // redirect to orders
+                const sessionData = payload;
+                const jsonSession = JSON.stringify(sessionData);
+                this.setSession(jsonSession);
+                this.$store.commit('setSession', sessionData);
+                let analyticsEnv = '';
+                try {
+                  analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+                } catch (er) {
+                  // ...
+                }
+
+                /* global mixpanel */
+
+                if ('default' in sessionData && analyticsEnv === 'production') {
+                  const acc = sessionData[sessionData.default];
+
+                  mixpanel.people.set_once({
+                    $email: acc.user_email,
+                    $phone: acc.user_phone,
+                    'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                    $name: acc.user_name,
+                    'Client Type': 'Web Platform',
+                  });
+
+                  // login identify
+                  mixpanel.identify(acc.user_email);
+
+                  // track login
+                  mixpanel.track('User Login', {
+                    'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                    'Last Login': new Date(),
+                    'Client Type': 'Web Platform',
+                  });
+                }
+                this.$router.push('/orders');
               }
-              this.$router.push('/orders');
+            } catch (error) {
+              // @todo Log the error (central logging)
             }
           }
         },

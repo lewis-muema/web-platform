@@ -154,6 +154,13 @@ export function createRouter() {
             beforeEnter: loginGuard,
             meta: { login: 'Sign Up Verification Page' },
           },
+          {
+            path: '/auth/by_pass',
+            name: 'by_pass',
+            component: () => import('../modules/auth/components/ByPassLogin.vue'),
+            beforeEnter: loginGuard,
+            meta: { login: 'By Pass Login Page' },
+          },
         ],
       },
       {
@@ -269,7 +276,7 @@ export function createRouter() {
         children: [
           {
             path: '/',
-            component: () => import('../modules/payment/_components/MpesaComponent.vue'),
+            component: () => import('../modules/payment/_components/CardComponent.vue'),
           },
           {
             path: 'mpesa',
@@ -282,7 +289,7 @@ export function createRouter() {
             name: 'card_payment',
           },
           {
-            path: 'promo',
+            path: 'promocode',
             component: () => import('../modules/payment/_components/PromoComponent.vue'),
             name: 'promo_payment',
           },
@@ -311,6 +318,7 @@ export function createRouter() {
           {
             path: '/orders/rating/:order_no',
             component: () => import('../modules/orders/_components/rating/Rating.vue'),
+            name: 'rating',
             meta: { innerTrack: 'Rating Page' },
           },
         ],

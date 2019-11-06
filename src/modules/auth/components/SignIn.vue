@@ -135,15 +135,13 @@ export default {
             } else {
               try {
                 if (response) {
-                  let partsOfToken = '';
-                  if (Array.isArray(response)) {
-                    const res = response[1];
-                    localStorage.setItem('jwtToken', res);
-                    partsOfToken = res.toString().split('.');
-                  } else {
-                    localStorage.setItem('jwtToken', response);
-                    partsOfToken = response.split('.');
-                  }
+                  const refreshToken = response.refresh_token;
+                  const accessToken = response.access_token;
+                  // eslint-disable-next-line max-len
+                  // TODO change from using local storage as session trust store. malicious js will read the data
+                  localStorage.setItem('jwtToken', accessToken);
+                  localStorage.setItem('refreshToken', refreshToken);
+                  const partsOfToken = accessToken.split('.');
                   const middleString = partsOfToken[1];
                   const data = atob(middleString);
                   const { payload } = JSON.parse(data);
@@ -160,6 +158,20 @@ export default {
                     analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
                   } catch (er) {
                     // ...
+                  }
+
+                  // Full Story Identifier
+                  if ('default' in sessionData) {
+                    const acc = sessionData[sessionData.default];
+                    FS.identify(acc.user_id.toString(), {
+                      displayName: acc.user_name,
+                      email: acc.user_email,
+                    });
+                    FS.event('User Login', {
+                      'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                      'Last Login': new Date(),
+                      'Client Type': 'Web Platform',
+                    });
                   }
                   if ('default' in sessionData && analyticsEnv === 'production') {
                     const acc = sessionData[sessionData.default];

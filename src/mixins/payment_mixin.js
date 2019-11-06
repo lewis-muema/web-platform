@@ -44,7 +44,7 @@ const PaymentMxn = {
       }
       let cardPayload = {
         amount: orderOptions
-          ? Mcrypt.encrypt(this.raw_pending_amount)
+          ? Mcrypt.encrypt(this.raw_pending_amount.replace(/,/g, ''))
           : Mcrypt.encrypt(this.card_payment_data.amount),
         last4: Mcrypt.encrypt(card.last4),
         stripe_user_id: this.get_stripe_user_id,
@@ -191,6 +191,8 @@ const PaymentMxn = {
             this.$store.dispatch('show_notification', notification, {
               root: true,
             });
+            this.getUserCards();
+            this.clearCardData();
             // request running balance
             const runningBalancePayload = {
               values: {

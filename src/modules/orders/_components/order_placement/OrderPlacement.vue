@@ -486,11 +486,21 @@ export default {
           this.setDefaultPackageClass();
           this.setDefaultVendorType(previousActiveVendor);
           const acc = this.$store.getters.getSession;
+          const accDefault = acc[acc.default];
 
-          this.trackMixpanelEvent('Make Price Request', {
-            'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-            'Client Type': 'Web Platform',
-          });
+          if (Object.prototype.hasOwnProperty.call(acc, 'admin_details')) {
+            this.trackMixpanelEvent('Make Price Request', {
+              'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+              'Client Type': 'Web Platform',
+              'Super User Id': acc.admin_details.admin_id,
+              'Client Account': accDefault.user_email,
+            });
+          } else {
+            this.trackMixpanelEvent('Make Price Request', {
+              'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+              'Client Type': 'Web Platform',
+            });
+          }
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error, 'crisis_notification')) {
@@ -539,7 +549,7 @@ export default {
       } else {
         const result = this.get_price_request_object.economy_price_tiers.filter(pack => pack.price_tiers.some(vendor => vendor.vendor_name === previous));
 
-        if (result.length == 0) {
+        if (result.length === 0) {
           this.doSetDefaultVendorType();
         } else {
           const newActivePriceObject = result[0].price_tiers.find(
@@ -569,7 +579,7 @@ export default {
       container.scrollTop = container.scrollHeight;
     },
 
-    initial_destination_css(n) {
+    initial_destination_css() {
       return {
         'homeview--input-bundler__destination-short-input': false,
       };
@@ -654,7 +664,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../../assets/styles/orders_order_placement.css";
+@import "../../../../assets/styles/orders_order_placement.css?v=1";
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */

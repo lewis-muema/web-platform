@@ -29,7 +29,7 @@ export default {
       load_weight: '',
       load_units: 'tonnes',
       additional_loader: '',
-      no_of_loaders: 1,
+      no_of_loaders: 0,
       order_state: 1,
       extended_options: false,
       pair_rider_status: false,
