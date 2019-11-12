@@ -400,6 +400,11 @@ export default {
         ? 2
         : Number(this.get_carrier_type);
     },
+
+    order_no() {
+      return this.activeVendorPriceData.order_no === undefined
+        ? this.activeVendorPriceData.id : this.activeVendorPriceData.order_no;
+    },
   },
 
   created() {
@@ -631,9 +636,14 @@ export default {
           }
 
           if (response.status) {
+            let order_no;
             this.setPickupFilled(false);
             // eslint-disable-next-line camelcase
-            const { order_no } = this.activeVendorPriceData;
+            if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'order_no')) {
+              ({ order_no } = this.activeVendorPriceData);
+            } else {
+              ({ order_no } = response.respond);
+            }
             this.should_destroy = true;
             this.$store.dispatch('$_orders/fetchOngoingOrders');
             this.trackMixpanelEvent(payload.values);
@@ -676,7 +686,7 @@ export default {
       }
       let payload = {
         note: this.get_order_notes,
-        trans_no: this.activeVendorPriceData.order_no,
+        trans_no: this.order_no,
         user_email: acc.user_email,
         user_phone: acc.user_phone,
         no_charge_status: false,
@@ -704,7 +714,7 @@ export default {
         isreturn:
           this.getIsReturn && !this.vendors_without_return.includes(this.get_active_vendor_name),
         vendor_type: this.activeVendorPriceData.vendor_id,
-        rider_phone: this.activeVendorPriceData.order_no,
+        rider_phone: this.order_no,
         type: this.payment_type,
         package_details: {
           max_temperature: Number(this.getMaxTemperature),
@@ -721,8 +731,12 @@ export default {
         payload.rider_details = {
           sim_card_sn: this.getPairSerialNumber,
           rider_phone: this.getPairRiderPhone,
-          order_no: this.activeVendorPriceData.order_no,
+          order_no: this.order_no,
         };
+      }
+      // support new pricing
+      if (this.activeVendorPriceData.order_no === undefined) {
+        payload.pricing_uuid = this.activeVendorPriceData.id;
       }
       payload = {
         values: payload,
