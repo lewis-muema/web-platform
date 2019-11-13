@@ -1182,7 +1182,7 @@ export default {
       } else if (this.get_active_package_class === 'medium') {
         this.carrier_type = '2';
       } else {
-        this.carrier_type = '1';
+        this.carrier_type = '2';
       }
       this.dispatchCarrierType();
     },
