@@ -1,21 +1,12 @@
 <template lang="html">
   <div class="log_cont">
-    <div
-      id="change_con"
-      class="change_cont"
-    >
-      <div
-        id="forgot_pass"
-        class="log-item "
-      >
+    <div id="change_con" class="change_cont">
+      <div id="forgot_pass" class="log-item ">
         <p>&nbsp;</p>
         <p class="reset-pass-text">
           Enter new password
         </p>
-        <p
-          id="pass_change_info"
-          class="reset-pass-inner-text"
-        />
+        <p id="pass_change_info" class="reset-pass-inner-text" />
         <p class="sign-up-error">
           {{ message }}
         </p>
@@ -30,7 +21,7 @@
                     placeholder="New Password"
                     type="password"
                     name="new_password"
-                  >
+                  />
                 </td>
               </tr>
               <tr>
@@ -41,7 +32,7 @@
                     placeholder="Confirm New Password"
                     type="password"
                     name="confirm password"
-                  >
+                  />
                 </td>
               </tr>
 
@@ -53,7 +44,7 @@
                     value="Change Password"
                     :disabled="!this.is_valid"
                     @click="reset_pass"
-                  >
+                  />
                 </td>
               </tr>
             </table>
@@ -101,7 +92,7 @@ export default {
         endpoint: 'forgot_token',
       };
       this.requestCheckToken(fullPayload).then(
-        (response) => {
+        response => {
           // console.log(response);
           if (response.length > 0) {
             response = response[0];
@@ -116,14 +107,14 @@ export default {
             this.doNotification(
               2,
               'Invalid Link',
-              'Invalid Password Reset Link. Redirected to Login Page',
+              'Invalid Password Reset Link. Redirected to Login Page'
             );
             this.$router.push('/auth');
           }
         },
-        (error) => {
+        error => {
           this.message = 'Reset Password Failed, Kindly retry again';
-        },
+        }
       );
     },
     reset_pass() {
@@ -141,29 +132,31 @@ export default {
           endpoint: 'update_pass',
         };
         const that = this;
-        this.requestResetPassword(fullPayload).then(
-          (response) => {
+        this.requestResetPassword(fullPayload)
+          .then(response => {
             if (response.length > 0) {
               response = response[0];
             }
             if (response.status) {
-              const session_data = response.data;
-              const { user_email } = session_data[session_data.default];
+              const sessionData = response.data;
+              const { user_email } = session_data[sessionData.default];
               const pass = this.new_password;
               this.handleNewSession(user_email, pass);
             } else {
               this.doNotification(
                 2,
                 'Password Reset Failed',
-                'Password Reset failed. Please try again',
+                'Password Reset failed. Please try again'
               );
               // this.$router.push("/auth");
             }
-          },
-          (error) => {
-            this.message = 'Reset Password Failed, Kindly retry again';
-          },
-        );
+          })
+          .catch(err => {
+            const e = {
+              ...err,
+            };
+            this.doNotification(2, 'Password Reset Failed', e.response.data.reason);
+          });
       }
     },
     handleNewSession(email, pass) {
@@ -178,7 +171,7 @@ export default {
         endpoint: 'sign_in',
       };
       this.authNewSignIn(fullPayload).then(
-        (response) => {
+        response => {
           if (Object.prototype.hasOwnProperty.call(response, 'status')) {
             const errorResponse = response.data;
             if (errorResponse.code === 1) {
@@ -240,7 +233,7 @@ export default {
                 this.doNotification(
                   1,
                   'Password Reset Successfull',
-                  'Password Reset Successfull. You will automatically be logged in',
+                  'Password Reset Successfull. You will automatically be logged in'
                 );
                 setTimeout(() => {
                   this.$router.push('/orders');
@@ -251,13 +244,17 @@ export default {
             }
           }
         },
-        (error) => {
+        error => {
           this.doNotification(2, 'Login failed', 'Login failed. Please try again');
-        },
+        }
       );
     },
     doNotification(level, title, message) {
-      const notification = { title, level, message };
+      const notification = {
+        title,
+        level,
+        message,
+      };
       this.$store.commit('setNotification', notification);
       this.$store.commit('setNotificationStatus', true);
     },
