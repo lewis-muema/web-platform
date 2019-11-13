@@ -68,7 +68,9 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import {
+  mapActions,
+} from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
 
 export default {
@@ -141,14 +143,16 @@ export default {
           endpoint: 'update_pass',
         };
         const that = this;
-        this.requestResetPassword(fullPayload).then(
-          (response) => {
+        this.requestResetPassword(fullPayload)
+          .then((response) => {
             if (response.length > 0) {
               response = response[0];
             }
             if (response.status) {
-              const session_data = response.data;
-              const { user_email } = session_data[session_data.default];
+              const sessionData = response.data;
+              const {
+                user_email,
+              } = session_data[sessionData.default];
               const pass = this.new_password;
               this.handleNewSession(user_email, pass);
             } else {
@@ -159,11 +163,17 @@ export default {
               );
               // this.$router.push("/auth");
             }
-          },
-          (error) => {
-            this.message = 'Reset Password Failed, Kindly retry again';
-          },
-        );
+          })
+          .catch((err) => {
+            const e = {
+              ...err,
+            };
+            this.doNotification(
+              2,
+              'Password Reset Failed',
+              e.response.data.reason,
+            );
+          });
       }
     },
     handleNewSession(email, pass) {
@@ -200,7 +210,9 @@ export default {
                 }
                 const middleString = partsOfToken[1];
                 const data = atob(middleString);
-                const { payload } = JSON.parse(data);
+                const {
+                  payload,
+                } = JSON.parse(data);
 
                 // set session
                 // commit everything to the store
@@ -257,7 +269,11 @@ export default {
       );
     },
     doNotification(level, title, message) {
-      const notification = { title, level, message };
+      const notification = {
+        title,
+        level,
+        message,
+      };
       this.$store.commit('setNotification', notification);
       this.$store.commit('setNotificationStatus', true);
     },
