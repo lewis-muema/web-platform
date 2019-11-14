@@ -886,7 +886,7 @@ export default {
           mixpanel.identify(email);
         }
       } catch (er) {
-        // ...
+        this.doNotification('3', 'Something went wrong', '');
       }
     },
 
