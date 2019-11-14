@@ -1,5 +1,8 @@
 <template lang="html">
-  <div v-if="getOrderState === 1" class="home-view-vendor-and-optins-wrappper">
+  <div
+    v-if="getOrderState === 1"
+    class="home-view-vendor-and-optins-wrappper"
+  >
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
       Load Size And Delivery Type
@@ -23,7 +26,7 @@
                   :src="getPackageIcon(vendor_class.tier_group)"
                   class="home-view-vendor-classes-menu--img"
                   alt="vendor_class.tier_group"
-                />
+                >
                 <span class="home-view-vendor-classes-menu--span">
                   {{ vendor_class.tier_group }}
                 </span>
@@ -33,7 +36,10 @@
         </div>
 
         <!-- start vendor types wrapper -->
-        <div v-if="activePackageClassPriceData !== ''" class="home-view-vendor-types">
+        <div
+          v-if="activePackageClassPriceData !== ''"
+          class="home-view-vendor-types"
+        >
           <!-- start vendor types loop -->
           <div
             v-for="j in activePackageClassPriceData.price_tiers"
@@ -55,7 +61,7 @@
                     :src="getVendorIcon(j.vendor_id)"
                     :class="getScheduledVendorTypeClass(j, 2)"
                     alt=""
-                  />
+                  >
                 </div>
                 <div class="home-view-vendor-types-item--vendor-wrapper__vendor">
                   <div class="home-view-vendor-types-item-vendor--vendor-formal-name">
@@ -93,10 +99,23 @@
                 <div
                   class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right"
                 >
-                  <el-popover placement="right" width="350" trigger="hover">
-                    <div class="reset-font" v-html="j.tier_description" />
-                    <span slot="reference" class="extra_info_background">
-                      <i class="el-icon-info" :class="getScheduledVendorTypeClass(j, 2)" />
+                  <el-popover
+                    placement="right"
+                    width="350"
+                    trigger="hover"
+                  >
+                    <div
+                      class="reset-font"
+                      v-html="j.tier_description"
+                    />
+                    <span
+                      slot="reference"
+                      class="extra_info_background"
+                    >
+                      <i
+                        class="el-icon-info"
+                        :class="getScheduledVendorTypeClass(j, 2)"
+                      />
                     </span>
                   </el-popover>
                 </div>
@@ -109,7 +128,10 @@
         <!-- end vendor types wrapper -->
       </div>
     </div>
-    <div v-if="get_active_package_class !== ''" class="">
+    <div
+      v-if="get_active_package_class !== ''"
+      class=""
+    >
       <button
         type="button"
         class="button-primary home-view--place-order"
@@ -121,7 +143,10 @@
     </div>
   </div>
 
-  <div v-else-if="getOrderState === 2" class="extended-options-wrappper">
+  <div
+    v-else-if="getOrderState === 2"
+    class="extended-options-wrappper"
+  >
     <!-- start carrier type transition -->
     <transition name="home-carrier-type-fade">
       <div class="home-view-vendor-types-item-wrap home-next-step">
@@ -129,7 +154,10 @@
           class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper"
           :class="getScheduledVendorTypeClass(activeVendorPriceData, 2)"
         >
-          <div class="" @click="goBackToHome">
+          <div
+            class=""
+            @click="goBackToHome"
+          >
             <i class="el-icon-back back-to-home-btn" />
           </div>
           <div class="home-view-vendor-types-item--vendor-wrapper__img vendor__img_pstn">
@@ -137,7 +165,7 @@
               class="home-view-vendor-types-item__image"
               :src="getVendorIcon(activeVendorPriceData.vendor_id)"
               alt=""
-            />
+            >
           </div>
           <div class="home-view-vendor-types-item--vendor-wrapper__vendor">
             <div class="home-view-vendor-types-item-vendor--vendor-formal-name">
@@ -184,7 +212,10 @@
                 />
               </div>
             </div>
-            <div v-if="isTestAccount()" class="home-view-truck-options-inner-wrapper">
+            <div
+              v-if="isTestAccount()"
+              class="home-view-truck-options-inner-wrapper"
+            >
               <div class="home-view-truck-options-label">
                 Test Specifications
               </div>
@@ -233,7 +264,10 @@
                 >
                   What type of truck do you want?
                 </div>
-                <div v-else class="home-view-truck-options-label">
+                <div
+                  v-else
+                  class="home-view-truck-options-label"
+                >
                   What type of {{ getVendorNameOnCarrierType }} do you want?
                 </div>
                 <div class="home-view-truck-options-inner--full-select">
@@ -271,7 +305,7 @@
                   min="18"
                   max="33"
                   @keyup="dispatchLoadWeight"
-                />
+                >
                 <span class="tonage-value-text">Tonnes</span>
               </div>
               <p class="tonnage-validate-error">
@@ -312,7 +346,10 @@
                     trigger="manual"
                     popper-class="pop-over-layout home-view-truck-options-discounts-popup"
                   >
-                    <p class="home-view-truck-options-schedule-discounts">We now offer discounts for scheduled orders! This applies to all 5T, 10T and 14T truck orders whose pick up time is 24hours to 31days into the future.</p>
+                    <p class="home-view-truck-options-schedule-discounts">
+                      We now offer discounts for scheduled orders! This applies to all 5T, 10T and
+                      14T truck orders whose pick up time is 24hours to 31days into the future.
+                    </p>
                   </el-popover>
                 </span>
                 <p
@@ -334,7 +371,10 @@
                 Additional Instructions
               </div>
               <div class="" />
-              <div class="" @change="dispatchOrderNotes">
+              <div
+                class=""
+                @change="dispatchOrderNotes"
+              >
                 <textarea
                   v-model="order_notes"
                   name="name"
@@ -347,7 +387,10 @@
 
             <!-- show large and medium extended options -->
             <div v-if="large_vendors.includes(activeVendorPriceData.vendor_id)">
-              <div v-if="Number(carrier_type) === 3" class="home-view-truck-options-inner-wrapper">
+              <div
+                v-if="Number(carrier_type) === 3"
+                class="home-view-truck-options-inner-wrapper"
+              >
                 <div class="home-view-truck-options-label">
                   Temperature shouldn't exceed? (°C)
                 </div>
@@ -433,12 +476,21 @@
                     filterable
                     @change="dispatchPairStatus"
                   >
-                    <el-option label="Yes" value="1" />
-                    <el-option label="No" value="2" />
+                    <el-option
+                      label="Yes"
+                      value="1"
+                    />
+                    <el-option
+                      label="No"
+                      value="2"
+                    />
                   </el-select>
                 </div>
               </div>
-              <div v-if="pair_rider === '1'" class="home-view-truck-options-inner-wrapper">
+              <div
+                v-if="pair_rider === '1'"
+                class="home-view-truck-options-inner-wrapper"
+              >
                 <div class="home-view-truck-options-label">
                   <div v-if="[21].includes(activeVendorPriceData.vendor_id)">
                     Enter their phone number to pair
@@ -463,7 +515,11 @@
                       autocomplete="true"
                       @input="checkVehicleDetails"
                     >
-                      <i v-if="searchOption" slot="suffix" class="el-icon-loading el-input__icon" />
+                      <i
+                        v-if="searchOption"
+                        slot="suffix"
+                        class="el-icon-loading el-input__icon"
+                      />
                       <i
                         v-if="pair_status !== ''"
                         slot="suffix"
@@ -473,18 +529,23 @@
                     </el-input>
                     <div class="pair_info_text_content">
                       <div v-if="pair_status === '1'">
-                        <p class="upper_scope_pair_text">{{ riderNameDisplay }} not found</p>
+                        <p class="upper_scope_pair_text">
+                          {{ riderNameDisplay }} not found
+                        </p>
                         <p>{{ failure_text }}</p>
                       </div>
                       <div v-if="pair_status === '2'">
                         <el-row :gutter="20">
-                          <el-col :span="8" class="display_rider_inline">
+                          <el-col
+                            :span="8"
+                            class="display_rider_inline"
+                          >
                             <div class="">
                               <img
                                 align="middle"
                                 class="display_paired_rider_img"
                                 :src="pair_rider_image"
-                              />
+                              >
                               <div class="pair-rider-name">
                                 {{ pair_rider_name }}
                               </div>
@@ -498,7 +559,10 @@
                               </div>
                             </div>
                           </el-col>
-                          <el-col :span="6" class="pair_right_more_info">
+                          <el-col
+                            :span="6"
+                            class="pair_right_more_info"
+                          >
                             <div class="share-option">
                               <div class="pair-model-info">
                                 {{ pair_rider_make }} {{ pair_rider_model }}
@@ -660,7 +724,7 @@ export default {
     activePackageClassPriceData() {
       if (this.get_active_package_class !== '') {
         return this.getPriceRequestObject.economy_price_tiers.find(
-          pack => pack.tier_group === this.get_active_package_class
+          pack => pack.tier_group === this.get_active_package_class,
         );
       }
       return '';
@@ -812,7 +876,7 @@ export default {
       } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
         this.carrier_type = '2';
       } else {
-        this.carrier_type = '1';
+        this.carrier_type = '2';
       }
     },
     goBackToHome() {
@@ -884,7 +948,9 @@ export default {
     toggleDiscountsPopover(state) {
       this.showScheduledDiscountsMessage = state;
       const rect = document.querySelector('.el-icon-info').getBoundingClientRect();
-      document.querySelector('.home-view-truck-options-discounts-popup').style.setProperty('top', `${rect.top - 80}px`, 'important');
+      document
+        .querySelector('.home-view-truck-options-discounts-popup')
+        .style.setProperty('top', `${rect.top - 80}px`, 'important');
     },
     defineDiscountsPayload() {
       const time = this.moment(this.schedule_time).format('YYYY-MM-DD HH:mm:ss');
@@ -904,41 +970,86 @@ export default {
       const dateTime = new Date();
       dateTime.setHours(dateTime.getHours() + 24);
       if (this.schedule_time) {
-        this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait, we are applying a discount to your order', true, true);
+        this.$root.$emit(
+          'Discount loading status',
+          'el-icon-loading',
+          'Please wait, we are applying a discount to your order',
+          true,
+          true,
+        );
         const timeout = setTimeout(() => {
           this.discount_timed_out = true;
-          this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
+          this.$root.$emit(
+            'Discount loading status',
+            'el-icon-close',
+            'We are unable to process your discount at this moment',
+            false,
+            true,
+          );
         }, 10000);
-        this.requestDiscount(this.fullPayload).then((response) => {
-          if (!this.discount_timed_out) {
-            clearTimeout(timeout);
-            if (response.percentage_discount > 0 || response.discounted_amount !== response.original_amount) {
-              this.setVendorPrice(response.discounted_amount);
-              this.discountPercentage = response.percentage_discount;
-              this.orderDiscountStatus = true;
-              this.$root.$emit('Discount loading status', 'el-icon-circle-check-outline', `A discount of ${response.percentage_discount}% has been applied to your order`, false, true);
-              this.trackScheduleEvent('Schedule Order', {
-                'Order Number': this.activeVendorPriceData.order_no,
-                'Order time': this.moment().format('YYYY-MM-DD hh:mm:ss a'),
-                'Scheduled time': this.moment(response.date_time).format('YYYY-MM-DD hh:mm:ss a'),
-                'Original price': `${this.activeVendorPriceData.currency} ${response.original_amount}`,
-                'Discounted price': `${this.activeVendorPriceData.currency} ${response.discounted_amount}`,
-                'Percentage discount': `${response.percentage_discount} %`,
-              });
-            } else {
-              this.setVendorPrice(response.discounted_amount);
-              this.orderDiscountStatus = false;
-              this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
-              this.trackScheduleEvent('Schedule Order', {});
+        this.requestDiscount(this.fullPayload)
+          .then((response) => {
+            if (!this.discount_timed_out) {
+              clearTimeout(timeout);
+              if (
+                response.percentage_discount > 0
+                || response.discounted_amount !== response.original_amount
+              ) {
+                this.setVendorPrice(response.discounted_amount);
+                this.discountPercentage = response.percentage_discount;
+                this.orderDiscountStatus = true;
+                this.$root.$emit(
+                  'Discount loading status',
+                  'el-icon-circle-check-outline',
+                  `A discount of ${response.percentage_discount}% has been applied to your order`,
+                  false,
+                  true,
+                );
+                this.trackScheduleEvent('Schedule Order', {
+                  'Order Number': this.activeVendorPriceData.order_no,
+                  'Order time': this.moment().format('YYYY-MM-DD hh:mm:ss a'),
+                  'Scheduled time': this.moment(response.date_time).format('YYYY-MM-DD hh:mm:ss a'),
+                  'Original price': `${this.activeVendorPriceData.currency} ${
+                    response.original_amount
+                  }`,
+                  'Discounted price': `${this.activeVendorPriceData.currency} ${
+                    response.discounted_amount
+                  }`,
+                  'Percentage discount': `${response.percentage_discount} %`,
+                });
+              } else {
+                this.setVendorPrice(response.discounted_amount);
+                this.orderDiscountStatus = false;
+                this.$root.$emit(
+                  'Discount loading status',
+                  'el-icon-close',
+                  'We are unable to process your discount at this moment',
+                  false,
+                  true,
+                );
+                this.trackScheduleEvent('Schedule Order', {});
+              }
             }
-          }
-        }).catch(() => {
-          this.orderDiscountStatus = false;
-          this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
-          this.trackScheduleEvent('Schedule Order', {});
-        });
+          })
+          .catch(() => {
+            this.orderDiscountStatus = false;
+            this.$root.$emit(
+              'Discount loading status',
+              'el-icon-close',
+              'We are unable to process your discount at this moment',
+              false,
+              true,
+            );
+            this.trackScheduleEvent('Schedule Order', {});
+          });
       } else if (this.orderDiscountStatus) {
-        this.$root.$emit('Discount loading status', 'el-icon-loading', 'Please wait while we adjust the pricing', true, true);
+        this.$root.$emit(
+          'Discount loading status',
+          'el-icon-loading',
+          'Please wait while we adjust the pricing',
+          true,
+          true,
+        );
         this.revertDiscount();
       }
     },
@@ -970,7 +1081,7 @@ export default {
         this.doNotification(
           '2',
           'Vehicle number plate is not provided',
-          'Please provide the vehicle details to pair'
+          'Please provide the vehicle details to pair',
         );
         this.setPairWithRiderStatus(false);
         this.visible2 = false;
@@ -1018,7 +1129,7 @@ export default {
         endpoint: 'pair_order_rider_details',
       };
       this.requestPairRider(fullPayload).then(
-        response => {
+        (response) => {
           if (response.status) {
             this.updateData(response.data);
           } else {
@@ -1028,7 +1139,7 @@ export default {
             this.setPairWithRiderStatus(false);
           }
         },
-        error => false
+        error => false,
       );
       this.searchOption = false;
     },
@@ -1088,14 +1199,12 @@ export default {
       return vendorObject.currency;
     },
     getMinVendorPrice(vendorObject) {
-      const price =
-        this.getPlainVendorPrice(vendorObject) * ((100 - vendorObject.price_variance) / 100);
+      const price = this.getPlainVendorPrice(vendorObject) * ((100 - vendorObject.price_variance) / 100);
       return numeral(price).format('0');
     },
 
     getMaxVendorPrice(vendorObject) {
-      const price =
-        this.getPlainVendorPrice(vendorObject) * ((100 + vendorObject.price_variance) / 100);
+      const price = this.getPlainVendorPrice(vendorObject) * ((100 + vendorObject.price_variance) / 100);
       return numeral(price).format('0');
     },
 
@@ -1163,8 +1272,8 @@ export default {
 
     expandVendorOptions(vendor) {
       return (
-        !this.vendors_with_fixed_carrier_type.includes(vendor.vendor_name) &&
-        vendor.vendor_name === this.get_active_vendor_name
+        !this.vendors_with_fixed_carrier_type.includes(vendor.vendor_name)
+        && vendor.vendor_name === this.get_active_vendor_name
       );
     },
 
@@ -1303,26 +1412,26 @@ export default {
               .add(1, 'days')
               .format('YYYY-DD-MM')} 07:00`;
             this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
-              'YYYY-MM-DD HH:mm:ss Z'
+              'YYYY-MM-DD HH:mm:ss Z',
             );
           } else if (day === 'Saturday' && timeHrs >= '17') {
             const newDate = `${this.moment(dateTime)
               .add(2, 'days')
               .format('YYYY-DD-MM')} 07:00`;
             this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
-              'YYYY-MM-DD HH:mm:ss Z'
+              'YYYY-MM-DD HH:mm:ss Z',
             );
           } else if (timeHrs < '07') {
             const newDate = `${this.moment(dateTime).format('YYYY-DD-MM')} 07:00`;
             this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
-              'YYYY-MM-DD HH:mm:ss Z'
+              'YYYY-MM-DD HH:mm:ss Z',
             );
           } else if (timeHrs >= '17') {
             const newDate = `${this.moment(dateTime)
               .add(1, 'days')
               .format('YYYY-DD-MM')} 07:00`;
             this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
-              'YYYY-MM-DD HH:mm:ss Z'
+              'YYYY-MM-DD HH:mm:ss Z',
             );
           } else {
             this.schedule_time = '';
