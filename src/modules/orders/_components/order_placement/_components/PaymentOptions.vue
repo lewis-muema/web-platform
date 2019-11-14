@@ -58,7 +58,7 @@
             </div>
           </div>
           <span v-if="checkIfTruckOrder()">
-          <!-- Nothing displayed -->
+            <!-- Nothing displayed -->
           </span>
           <span v-else-if="getPriceRequestObject.payment_option === 1">
             <div
@@ -208,7 +208,7 @@ export default {
       customer_token: '',
       payment_type: 'prepay',
       payment_state: 0, // 0- initial 1- loading 2- success 3- cancelled
-      should_destroy: false,
+      shouldDestroy: false,
       schedule_picker_options: {
         disabledDate(time) {
           return time.getTime() < Date.now();
@@ -403,7 +403,8 @@ export default {
 
     order_no() {
       return this.activeVendorPriceData.order_no === undefined
-        ? this.activeVendorPriceData.id : this.activeVendorPriceData.order_no;
+        ? this.activeVendorPriceData.id
+        : this.activeVendorPriceData.order_no;
     },
   },
 
@@ -421,7 +422,7 @@ export default {
   },
 
   destroyed() {
-    if (this.should_destroy) {
+    if (this.shouldDestroy) {
       this.$emit('destroyOrderOptions');
     } else {
       this.saveInfoToStore();
@@ -634,7 +635,7 @@ export default {
             // eslint-disable-next-line no-param-reassign,prefer-destructuring
             response = response[0];
           }
-
+          /* eslint camelcase: ["error", {ignoreDestructuring: true}] */
           if (response.status) {
             let order_no;
             this.setPickupFilled(false);
@@ -644,9 +645,50 @@ export default {
             } else {
               ({ order_no } = response.respond);
             }
-            this.should_destroy = true;
+            this.shouldDestroy = true;
             this.$store.dispatch('$_orders/fetchOngoingOrders');
-            this.trackMixpanelEvent(payload.values);
+
+            const data = JSON.parse(payload.values).values;
+            const session = this.$store.getters.getSession;
+            const acc = session.default;
+            if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
+              this.trackMixpanelEvent('Place Order', {
+                'Account ': data.type,
+                'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+                'Client Type': 'Web Platform',
+                'Order Number': data.trans_no,
+                'Payment Mode': this.payment_method,
+                'User Email': data.user_email,
+                'User Phone': data.user_phone,
+                'Super User Id': session.admin_details.admin_id,
+              });
+            } else {
+              this.trackMixpanelEvent('Place Order', {
+                'Account ': data.type,
+                'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+                'Client Type': 'Web Platform',
+                'Order Number': data.trans_no,
+                'Payment Mode': this.payment_method,
+                'User Email': data.user_email,
+                'User Phone': data.user_phone,
+              });
+            }
+
+            this.trackMixpanelEvent('Order Completion Log', {
+              'Account ': data.type,
+              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+              'Client Type': 'Web Platform',
+              'Payment Mode': this.payment_method,
+              'Cash Status': data.cash_status,
+              'User Email': data.user_email,
+              'User Phone': data.user_phone,
+              'Order Number': data.trans_no,
+              'Order Amount': data.amount,
+              'Schedule Time': data.schedule_time,
+              'Schedule Status': data.schedule_status,
+              'Carrier Type ID': data.carrier_type,
+              'Vendor Type ID': data.vendor_type,
+            });
             this.$router.push({
               name: 'tracking',
               params: {
@@ -678,8 +720,10 @@ export default {
       if ('default' in session) {
         acc = session[session.default];
       }
-      if (this.getPriceRequestObject.payment_option === 1
-              && this.getRunningBalance - this.order_cost >= 0) {
+      if (
+        this.getPriceRequestObject.payment_option === 1
+        && this.getRunningBalance - this.order_cost >= 0
+      ) {
         this.payment_method = 11;
       } else if (this.getPriceRequestObject.payment_option === 2) {
         this.payment_method = 12;
@@ -842,62 +886,22 @@ export default {
           mixpanel.identify(email);
         }
       } catch (er) {
-        // ...
+        this.doNotification('3', 'Something went wrong', '');
       }
     },
 
     /* global mixpanel */
-    trackMixpanelEvent(name) {
-      const data = JSON.parse(name).values;
-      const session = this.$store.getters.getSession;
-      const acc = session.default;
+
+    trackMixpanelEvent(name, event) {
       let analyticsEnv = '';
       try {
         analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
       } catch (er) {
         // ...
       }
-
       try {
         if (analyticsEnv === 'production') {
-          if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
-            mixpanel.track('Place Order', {
-              'Account ': data.type,
-              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-              'Client Type': 'Web Platform',
-              'Order Number': data.trans_no,
-              'Payment Mode': this.payment_method,
-              'User Email': data.user_email,
-              'User Phone': data.user_phone,
-              'Super User Id': session.admin_details.admin_id,
-            });
-          } else {
-            mixpanel.track('Place Order', {
-              'Account ': data.type,
-              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-              'Client Type': 'Web Platform',
-              'Order Number': data.trans_no,
-              'Payment Mode': this.payment_method,
-              'User Email': data.user_email,
-              'User Phone': data.user_phone,
-            });
-          }
-
-          mixpanel.track('Order Completion Log', {
-            'Account ': data.type,
-            'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-            'Client Type': 'Web Platform',
-            'Payment Mode': this.payment_method,
-            'Cash Status': data.cash_status,
-            'User Email': data.user_email,
-            'User Phone': data.user_phone,
-            'Order Number': data.trans_no,
-            'Order Amount': data.amount,
-            'Schedule Time': data.schedule_time,
-            'Schedule Status': data.schedule_status,
-            'Carrier Type ID': data.carrier_type,
-            'Vendor Type ID': data.vendor_type,
-          });
+          mixpanel.track(name, event);
         }
       } catch (er) {
         // ...
