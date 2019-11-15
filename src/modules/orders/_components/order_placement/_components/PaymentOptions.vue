@@ -176,10 +176,18 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import {
+  mapActions,
+  mapGetters,
+  mapMutations,
+} from 'vuex';
 import numeral from 'numeral';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import {
+  library,
+} from '@fortawesome/fontawesome-svg-core';
+import {
+  faChevronDown,
+} from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
 
@@ -208,7 +216,7 @@ export default {
       customer_token: '',
       payment_type: 'prepay',
       payment_state: 0, // 0- initial 1- loading 2- success 3- cancelled
-      shouldDestroy: false,
+      should_destroy: false,
       schedule_picker_options: {
         disabledDate(time) {
           return time.getTime() < Date.now();
@@ -223,6 +231,8 @@ export default {
       default_currency: 'KES',
       rb_currency: 'KES',
       mpesa_valid: false,
+      mpesa_payment: false,
+      mpesa_payment_state: false,
     };
   },
 
@@ -355,6 +365,11 @@ export default {
         'YYYY-MM-DD HH:mm:ss',
       );
     },
+    order_no() {
+      return this.activeVendorPriceData.order_no === undefined
+        ? this.activeVendorPriceData.id
+        : this.activeVendorPriceData.order_no;
+    },
 
     getRB() {
       return numeral(this.getRunningBalance).format('0,0');
@@ -400,12 +415,6 @@ export default {
         ? 2
         : Number(this.get_carrier_type);
     },
-
-    order_no() {
-      return this.activeVendorPriceData.order_no === undefined
-        ? this.activeVendorPriceData.id
-        : this.activeVendorPriceData.order_no;
-    },
   },
 
   created() {
@@ -422,7 +431,7 @@ export default {
   },
 
   destroyed() {
-    if (this.shouldDestroy) {
+    if (this.should_destroy) {
       this.$emit('destroyOrderOptions');
     } else {
       this.saveInfoToStore();
@@ -635,18 +644,25 @@ export default {
             // eslint-disable-next-line no-param-reassign,prefer-destructuring
             response = response[0];
           }
-          /* eslint camelcase: ["error", {ignoreDestructuring: true}] */
+
           if (response.status) {
             let order_no;
             this.setPickupFilled(false);
             // eslint-disable-next-line camelcase
+
             if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'order_no')) {
-              ({ order_no } = this.activeVendorPriceData);
+              ({
+                order_no,
+              } = this.activeVendorPriceData);
             } else {
-              ({ order_no } = response.respond);
+              ({
+                order_no,
+              } = response.respond);
               this.mixpanelTrackPricingServiceCompletion(order_no);
             }
             this.shouldDestroy = true;
+
+            this.should_destroy = true;
             this.$store.dispatch('$_orders/fetchOngoingOrders');
 
             const data = JSON.parse(payload.values).values;
@@ -690,6 +706,7 @@ export default {
               'Carrier Type ID': data.carrier_type,
               'Vendor Type ID': data.vendor_type,
             });
+
             this.$router.push({
               name: 'tracking',
               params: {
@@ -736,8 +753,7 @@ export default {
         user_phone: acc.user_phone,
         no_charge_status: false,
         insurance_amount: 10,
-        note_status:
-          typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
+        note_status: typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
         last_digit: 'none',
         insurance_id: 1,
         platform: 'corporate',
@@ -756,8 +772,7 @@ export default {
         tier_name: this.activeVendorPriceData.tier_name,
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
         carrier_type: this.final_carrier_type,
-        isreturn:
-          this.getIsReturn && !this.vendors_without_return.includes(this.get_active_vendor_name),
+        isreturn: this.getIsReturn && !this.vendors_without_return.includes(this.get_active_vendor_name),
         vendor_type: this.activeVendorPriceData.vendor_id,
         rider_phone: this.order_no,
         type: this.payment_type,
@@ -783,6 +798,7 @@ export default {
       if (this.activeVendorPriceData.order_no === undefined) {
         payload.pricing_uuid = this.activeVendorPriceData.id;
       }
+
       payload = {
         values: payload,
       };
@@ -891,11 +907,7 @@ export default {
       }
     },
 
-    mixpanelTrackPricingServiceCompletion(orderNo) {
-      this.trackMixpanelEvent('Place Order - Pricing Service', { 'Order No': orderNo });
-    },
     /* global mixpanel */
-
     trackMixpanelEvent(name, event) {
       let analyticsEnv = '';
       try {
@@ -1046,7 +1058,24 @@ export default {
                 );
                 that.payment_state = 0;
                 that.loading = false;
-                that.requestMpesaPaymentPoll(60);
+                that.mpesa_payment_state = true;
+                that.doNotification('1', 'Payment successful', 'Completing your order...');
+                that.doCompleteOrder();
+                return true;
+              }
+
+              if (pollLimitValue === 6) {
+                if (pollCount === 5) {
+                  that.doNotification(
+                    '0',
+                    'Payment not received',
+                    "We'll keep retrying to check your payment status and complete your order once the payment is received.",
+                  );
+                  that.payment_state = 0;
+                  that.loading = false;
+                  that.requestMpesaPaymentPoll(60);
+                  that.mpesa_payment_state = false;
+                }
               }
             }
           }, 10000 * pollCount);
@@ -1061,16 +1090,17 @@ export default {
             // eslint-disable-next-line no-param-reassign,prefer-destructuring
             response = response[0];
           }
-
           if (response.status === 200) {
             const newRb = response.data.data.running_balance;
-            if (newRb < oldRb) {
+            if (newRb > oldRb) {
               this.completeMpesaPaymentRequest({});
-              return true;
+              this.mpesa_payment = true;
+            } else {
+              this.mpesa_payment = false;
             }
+          } else {
+            this.mpesa_payment = false;
           }
-
-          return false;
         },
         // eslint-disable-next-line no-unused-vars
         error => false,
