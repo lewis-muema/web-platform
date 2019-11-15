@@ -644,6 +644,7 @@ export default {
               ({ order_no } = this.activeVendorPriceData);
             } else {
               ({ order_no } = response.respond);
+              this.mixpanelTrackPricingServiceCompletion(order_no);
             }
             this.shouldDestroy = true;
             this.$store.dispatch('$_orders/fetchOngoingOrders');
@@ -656,7 +657,7 @@ export default {
                 'Account ': data.type,
                 'Account Type': acc === 'peer' ? 'Personal' : 'Business',
                 'Client Type': 'Web Platform',
-                'Order Number': data.trans_no,
+                'Order Number': order_no,
                 'Payment Mode': this.payment_method,
                 'User Email': data.user_email,
                 'User Phone': data.user_phone,
@@ -667,7 +668,7 @@ export default {
                 'Account ': data.type,
                 'Account Type': acc === 'peer' ? 'Personal' : 'Business',
                 'Client Type': 'Web Platform',
-                'Order Number': data.trans_no,
+                'Order Number': order_no,
                 'Payment Mode': this.payment_method,
                 'User Email': data.user_email,
                 'User Phone': data.user_phone,
@@ -682,7 +683,7 @@ export default {
               'Cash Status': data.cash_status,
               'User Email': data.user_email,
               'User Phone': data.user_phone,
-              'Order Number': data.trans_no,
+              'Order Number': order_no,
               'Order Amount': data.amount,
               'Schedule Time': data.schedule_time,
               'Schedule Status': data.schedule_status,
@@ -890,6 +891,9 @@ export default {
       }
     },
 
+    mixpanelTrackPricingServiceCompletion(orderNo) {
+      this.trackMixpanelEvent('Place Order - Pricing Service', { 'Order No': orderNo });
+    },
     /* global mixpanel */
 
     trackMixpanelEvent(name, event) {
