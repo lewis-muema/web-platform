@@ -58,7 +58,7 @@
             </div>
           </div>
           <span v-if="checkIfTruckOrder()">
-          <!-- Nothing displayed -->
+            <!-- Nothing displayed -->
           </span>
           <span v-else-if="getPriceRequestObject.payment_option === 1">
             <div
@@ -208,7 +208,7 @@ export default {
       customer_token: '',
       payment_type: 'prepay',
       payment_state: 0, // 0- initial 1- loading 2- success 3- cancelled
-      should_destroy: false,
+      shouldDestroy: false,
       schedule_picker_options: {
         disabledDate(time) {
           return time.getTime() < Date.now();
@@ -223,8 +223,6 @@ export default {
       default_currency: 'KES',
       rb_currency: 'KES',
       mpesa_valid: false,
-      mpesa_payment: false,
-      mpesa_payment_state: false,
     };
   },
 
@@ -352,10 +350,6 @@ export default {
       return this.moment().format('YYYY-MM-DD HH:mm:ss');
     },
 
-    current_time() {
-      return this.moment().format('YYYY-MM-DD HH:mm:ss');
-    },
-
     scheduled_time() {
       return this.moment(this.get_schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format(
         'YYYY-MM-DD HH:mm:ss',
@@ -406,6 +400,12 @@ export default {
         ? 2
         : Number(this.get_carrier_type);
     },
+
+    order_no() {
+      return this.activeVendorPriceData.order_no === undefined
+        ? this.activeVendorPriceData.id
+        : this.activeVendorPriceData.order_no;
+    },
   },
 
   created() {
@@ -422,7 +422,7 @@ export default {
   },
 
   destroyed() {
-    if (this.should_destroy) {
+    if (this.shouldDestroy) {
       this.$emit('destroyOrderOptions');
     } else {
       this.saveInfoToStore();
@@ -635,14 +635,61 @@ export default {
             // eslint-disable-next-line no-param-reassign,prefer-destructuring
             response = response[0];
           }
-
+          /* eslint camelcase: ["error", {ignoreDestructuring: true}] */
           if (response.status) {
+            let order_no;
             this.setPickupFilled(false);
             // eslint-disable-next-line camelcase
-            const { order_no } = this.activeVendorPriceData;
-            this.should_destroy = true;
+            if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'order_no')) {
+              ({ order_no } = this.activeVendorPriceData);
+            } else {
+              ({ order_no } = response.respond);
+              this.mixpanelTrackPricingServiceCompletion(order_no);
+            }
+            this.shouldDestroy = true;
             this.$store.dispatch('$_orders/fetchOngoingOrders');
-            this.trackMixpanelEvent(payload.values);
+
+            const data = JSON.parse(payload.values).values;
+            const session = this.$store.getters.getSession;
+            const acc = session.default;
+            if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
+              this.trackMixpanelEvent('Place Order', {
+                'Account ': data.type,
+                'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+                'Client Type': 'Web Platform',
+                'Order Number': order_no,
+                'Payment Mode': this.payment_method,
+                'User Email': data.user_email,
+                'User Phone': data.user_phone,
+                'Super User Id': session.admin_details.admin_id,
+              });
+            } else {
+              this.trackMixpanelEvent('Place Order', {
+                'Account ': data.type,
+                'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+                'Client Type': 'Web Platform',
+                'Order Number': order_no,
+                'Payment Mode': this.payment_method,
+                'User Email': data.user_email,
+                'User Phone': data.user_phone,
+              });
+            }
+
+            this.trackMixpanelEvent('Order Completion Log', {
+              'Account ': data.type,
+              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+              'Client Type': 'Web Platform',
+              'Payment Mode': this.payment_method,
+              'Cash Status': data.cash_status,
+              'User Email': data.user_email,
+              'User Phone': data.user_phone,
+              'Order Number': order_no,
+              'Order Amount': data.amount,
+              'Schedule Time': data.schedule_time,
+              'Schedule Status': data.schedule_status,
+              'Carrier Type ID': data.carrier_type,
+              'Vendor Type ID': data.vendor_type,
+            });
             this.$router.push({
               name: 'tracking',
               params: {
@@ -674,15 +721,17 @@ export default {
       if ('default' in session) {
         acc = session[session.default];
       }
-      if (this.getPriceRequestObject.payment_option === 1
-              && this.getRunningBalance - this.order_cost >= 0) {
+      if (
+        this.getPriceRequestObject.payment_option === 1
+        && this.getRunningBalance - this.order_cost >= 0
+      ) {
         this.payment_method = 11;
       } else if (this.getPriceRequestObject.payment_option === 2) {
         this.payment_method = 12;
       }
       let payload = {
         note: this.get_order_notes,
-        trans_no: this.activeVendorPriceData.order_no,
+        trans_no: this.order_no,
         user_email: acc.user_email,
         user_phone: acc.user_phone,
         no_charge_status: false,
@@ -710,7 +759,7 @@ export default {
         isreturn:
           this.getIsReturn && !this.vendors_without_return.includes(this.get_active_vendor_name),
         vendor_type: this.activeVendorPriceData.vendor_id,
-        rider_phone: this.activeVendorPriceData.order_no,
+        rider_phone: this.order_no,
         type: this.payment_type,
         package_details: {
           max_temperature: Number(this.getMaxTemperature),
@@ -727,8 +776,12 @@ export default {
         payload.rider_details = {
           sim_card_sn: this.getPairSerialNumber,
           rider_phone: this.getPairRiderPhone,
-          order_no: this.activeVendorPriceData.order_no,
+          order_no: this.order_no,
         };
+      }
+      // support new pricing
+      if (this.activeVendorPriceData.order_no === undefined) {
+        payload.pricing_uuid = this.activeVendorPriceData.id;
       }
       payload = {
         values: payload,
@@ -834,62 +887,25 @@ export default {
           mixpanel.identify(email);
         }
       } catch (er) {
-        // ...
+        this.doNotification('3', 'Something went wrong', '');
       }
     },
 
+    mixpanelTrackPricingServiceCompletion(orderNo) {
+      this.trackMixpanelEvent('Place Order - Pricing Service', { 'Order No': orderNo });
+    },
     /* global mixpanel */
-    trackMixpanelEvent(name) {
-      const data = JSON.parse(name).values;
-      const session = this.$store.getters.getSession;
-      const acc = session.default;
+
+    trackMixpanelEvent(name, event) {
       let analyticsEnv = '';
       try {
         analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
       } catch (er) {
         // ...
       }
-
       try {
         if (analyticsEnv === 'production') {
-          if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
-            mixpanel.track('Place Order', {
-              'Account ': data.type,
-              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-              'Client Type': 'Web Platform',
-              'Order Number': data.trans_no,
-              'Payment Mode': this.payment_method,
-              'User Email': data.user_email,
-              'User Phone': data.user_phone,
-              'Super User Id': session.admin_details.admin_id,
-            });
-          } else {
-            mixpanel.track('Place Order', {
-              'Account ': data.type,
-              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-              'Client Type': 'Web Platform',
-              'Order Number': data.trans_no,
-              'Payment Mode': this.payment_method,
-              'User Email': data.user_email,
-              'User Phone': data.user_phone,
-            });
-          }
-
-          mixpanel.track('Order Completion Log', {
-            'Account ': data.type,
-            'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-            'Client Type': 'Web Platform',
-            'Payment Mode': this.payment_method,
-            'Cash Status': data.cash_status,
-            'User Email': data.user_email,
-            'User Phone': data.user_phone,
-            'Order Number': data.trans_no,
-            'Order Amount': data.amount,
-            'Schedule Time': data.schedule_time,
-            'Schedule Status': data.schedule_status,
-            'Carrier Type ID': data.carrier_type,
-            'Vendor Type ID': data.vendor_type,
-          });
+          mixpanel.track(name, event);
         }
       } catch (er) {
         // ...
@@ -1030,24 +1046,7 @@ export default {
                 );
                 that.payment_state = 0;
                 that.loading = false;
-                that.mpesa_payment_state = true;
-                that.doNotification('1', 'Payment successful', 'Completing your order...');
-                that.doCompleteOrder();
-                return true;
-              }
-
-              if (pollLimitValue === 6) {
-                if (pollCount === 5) {
-                  that.doNotification(
-                    '0',
-                    'Payment not received',
-                    "We'll keep retrying to check your payment status and complete your order once the payment is received.",
-                  );
-                  that.payment_state = 0;
-                  that.loading = false;
-                  that.requestMpesaPaymentPoll(60);
-                  that.mpesa_payment_state = false;
-                }
+                that.requestMpesaPaymentPoll(60);
               }
             }
           }, 10000 * pollCount);
@@ -1062,17 +1061,16 @@ export default {
             // eslint-disable-next-line no-param-reassign,prefer-destructuring
             response = response[0];
           }
+
           if (response.status === 200) {
             const newRb = response.data.data.running_balance;
-            if (newRb > oldRb) {
+            if (newRb < oldRb) {
               this.completeMpesaPaymentRequest({});
-              this.mpesa_payment = true;
-            } else {
-              this.mpesa_payment = false;
+              return true;
             }
-          } else {
-            this.mpesa_payment = false;
           }
+
+          return false;
         },
         // eslint-disable-next-line no-unused-vars
         error => false,
