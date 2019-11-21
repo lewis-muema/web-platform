@@ -495,7 +495,7 @@ export default {
           this.setDefaultVendorType(previousActiveVendor);
           const acc = this.$store.getters.getSession;
           const accDefault = acc[acc.default];
-          mixpanelTrackPricingServiceRequest(response);
+          this.mixpanelTrackPricingServiceRequest(response);
           if (Object.prototype.hasOwnProperty.call(acc, 'admin_details')) {
             this.trackMixpanelEvent('Make Price Request', {
               'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
