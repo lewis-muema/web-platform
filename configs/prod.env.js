@@ -9,7 +9,5 @@ module.exports = {
   DOMAIN: '"webapp.sendyit.com"',
   SENTRY_DSN: '"https://f399dc8511c14d6ea9022d28a8955641@sentry.io/1336627"',
   IMAGES_BASE: '"https://images.sendyit.com/"',
-  GOOGLE_API_KEY: '"AIzaSyBQMADIJhz5ckM28Zt0eWKbZfQyzsHXYCI"',
+  GOOGLE_API_KEY: "'AIzaSyChEOAbj_2URQWRkL8N0p07vk6foBfHXGI'",
 };
-
-

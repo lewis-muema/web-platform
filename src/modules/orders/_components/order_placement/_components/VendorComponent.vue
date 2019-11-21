@@ -876,7 +876,7 @@ export default {
       } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
         this.carrier_type = '2';
       } else {
-        this.carrier_type = '1';
+        this.carrier_type = '2';
       }
     },
     goBackToHome() {
@@ -987,37 +987,61 @@ export default {
             true,
           );
         }, 10000);
-        this.requestDiscount(this.fullPayload).then((response) => {
-          if (!this.discount_timed_out) {
-            clearTimeout(timeout);
-            if (
-              response.percentage_discount > 0
-              || response.discounted_amount !== response.original_amount
-            ) {
-              this.setVendorPrice(response.discounted_amount);
-              this.discountPercentage = response.percentage_discount;
-              this.orderDiscountStatus = true;
-              this.$root.$emit('Discount loading status', 'el-icon-circle-check-outline', `A discount of ${response.percentage_discount}% has been applied to your order`, false, true);
-              this.trackScheduleEvent('Schedule Order', {
-                'Order Number': this.activeVendorPriceData.order_no,
-                'Order time': this.moment().format('YYYY-MM-DD hh:mm:ss a'),
-                'Scheduled time': this.moment(response.date_time).format('YYYY-MM-DD hh:mm:ss a'),
-                'Original price': `${this.activeVendorPriceData.currency} ${response.original_amount}`,
-                'Discounted price': `${this.activeVendorPriceData.currency} ${response.discounted_amount}`,
-                'Percentage discount': `${response.percentage_discount} %`,
-              });
-            } else {
-              this.setVendorPrice(response.discounted_amount);
-              this.orderDiscountStatus = false;
-              this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
-              this.trackScheduleEvent('Schedule Order', {});
+        this.requestDiscount(this.fullPayload)
+          .then((response) => {
+            if (!this.discount_timed_out) {
+              clearTimeout(timeout);
+              if (
+                response.percentage_discount > 0
+                || response.discounted_amount !== response.original_amount
+              ) {
+                this.setVendorPrice(response.discounted_amount);
+                this.discountPercentage = response.percentage_discount;
+                this.orderDiscountStatus = true;
+                this.$root.$emit(
+                  'Discount loading status',
+                  'el-icon-circle-check-outline',
+                  `A discount of ${response.percentage_discount}% has been applied to your order`,
+                  false,
+                  true,
+                );
+                this.trackScheduleEvent('Schedule Order', {
+                  'Order Number': this.activeVendorPriceData.order_no,
+                  'Order time': this.moment().format('YYYY-MM-DD hh:mm:ss a'),
+                  'Scheduled time': this.moment(response.date_time).format('YYYY-MM-DD hh:mm:ss a'),
+                  'Original price': `${this.activeVendorPriceData.currency} ${
+                    response.original_amount
+                  }`,
+                  'Discounted price': `${this.activeVendorPriceData.currency} ${
+                    response.discounted_amount
+                  }`,
+                  'Percentage discount': `${response.percentage_discount} %`,
+                });
+              } else {
+                this.setVendorPrice(response.discounted_amount);
+                this.orderDiscountStatus = false;
+                this.$root.$emit(
+                  'Discount loading status',
+                  'el-icon-close',
+                  'We are unable to process your discount at this moment',
+                  false,
+                  true,
+                );
+                this.trackScheduleEvent('Schedule Order', {});
+              }
             }
-          }
-        }).catch(() => {
-          this.orderDiscountStatus = false;
-          this.$root.$emit('Discount loading status', 'el-icon-close', 'We are unable to process your discount at this moment', false, true);
-          this.trackScheduleEvent('Schedule Order', {});
-        });
+          })
+          .catch(() => {
+            this.orderDiscountStatus = false;
+            this.$root.$emit(
+              'Discount loading status',
+              'el-icon-close',
+              'We are unable to process your discount at this moment',
+              false,
+              true,
+            );
+            this.trackScheduleEvent('Schedule Order', {});
+          });
       } else if (this.orderDiscountStatus) {
         this.$root.$emit(
           'Discount loading status',
@@ -1267,7 +1291,7 @@ export default {
       } else if (this.get_active_package_class === 'medium') {
         this.carrier_type = '2';
       } else {
-        this.carrier_type = '1';
+        this.carrier_type = '2';
       }
       this.dispatchCarrierType();
     },

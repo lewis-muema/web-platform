@@ -315,6 +315,14 @@ export default {
       // TO DO research implementation of native input events
     },
 
+    mixpanelTrackPricingServiceRequest(data) {
+      if (!Object.prototype.hasOwnProperty.call(data, 'order_no')) {
+        this.trackMixpanelEvent('Make Price Request - Pricing Service', {
+          'Cop ID': data.client_id,
+        });
+      }
+    },
+
     trackMixpanelEvent(name) {
       let analyticsEnv = '';
       try {
@@ -487,7 +495,7 @@ export default {
           this.setDefaultVendorType(previousActiveVendor);
           const acc = this.$store.getters.getSession;
           const accDefault = acc[acc.default];
-
+          this.mixpanelTrackPricingServiceRequest(response);
           if (Object.prototype.hasOwnProperty.call(acc, 'admin_details')) {
             this.trackMixpanelEvent('Make Price Request', {
               'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
