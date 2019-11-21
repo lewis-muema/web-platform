@@ -1,7 +1,8 @@
 <template>
-  <div id="app" class="box app app-overflow">
+  <div id="app"
+class="box app app-overflow">
     <!-- Global component responsible for flashing notifications -->
-    <sendy-flash details="" />
+    <sendy-flash details />
 
     <router-view class="box" />
   </div>
@@ -10,15 +11,37 @@
 <script>
 import * as Sentry from '@sentry/browser';
 import Vue from 'vue';
+import firebase from 'firebase/app';
+import { mapGetters } from 'vuex';
 
 const ENV = process.env.CONFIGS_ENV;
 
 export default {
   name: 'App',
+  data() {
+    return {
+      fcmToken: '',
+    };
+  },
   computed: {
-    notification_status() {
-      // this is never always fired :-(
-      return this.$store.getters.getNotificationStatus;
+    ...mapGetters({
+      getSession: 'getSession',
+      getNotificationStatus: 'getNotificationStatus',
+    }),
+  },
+  watch: {
+    getNotificationStatus: {
+      handler() {
+        this.showNotification();
+      },
+      deep: true,
+    },
+    // watch session so as to only update token on session
+    getSession: {
+      handler() {
+        this.updateFirebaseToken();
+      },
+      deep: true,
     },
   },
   beforeMount() {
@@ -27,17 +50,73 @@ export default {
       integrations: [new Sentry.Integrations.Vue({ Vue })],
     });
   },
-  watch: {
-    notification_status(val, oldVal) {
-      if (val) {
-        this.showNotification();
-      }
-    },
-  },
   created() {
     this.$store.commit('setENV', ENV);
+    if (process.browser) {
+      // initilize firebase on load
+      this.initializeFirebase();
+    }
   },
   methods: {
+    updateFirebaseToken() {
+      const session = this.getSession;
+      const fcmPayload = {
+        client_type: 'corporate',
+      };
+      if (session.default === 'biz') {
+        fcmPayload.cop_user_id = session[session.default].user_id;
+      } else {
+        fcmPayload.user_id = session[session.default].user_id;
+      }
+
+      fcmPayload.token = this.$store.getters.getFCMToken;
+
+      const payload = {
+        values: fcmPayload,
+        app: 'NODE_PRIVATE_API',
+        vm: this,
+        endpoint: 'firebase_token',
+      };
+
+      this.$store
+        .dispatch('requestAxiosPost', payload)
+        .then(response => response)
+        .catch(err => err);
+    },
+    initializeFirebase() {
+      this.$messaging
+        .requestPermission()
+        .then(() => firebase.messaging().getToken())
+        .then((token) => {
+          this.fcmToken = token;
+          this.$store.commit('setFCMToken', token);
+
+          // check if session exists and if so update
+          const session = this.getSession;
+          // eslint-disable-next-line no-prototype-builtins
+          if ({}.hasOwnProperty.call(session, 'default')) {
+            this.updateFirebaseToken();
+          }
+        })
+        .catch((err) => {
+          console.log('Unable to get permission to notify.', err);
+        });
+
+      this.$messaging.onMessage((payload) => {
+        // fire internal notification
+        const level = 1;
+        const notification = {
+          title: payload.notification.title,
+          level,
+          message: payload.notification.body,
+        };
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
+
+        // TODO: fire events to act on message recieved
+        // proposed central notifications actor class to process different types of notifiacations
+      });
+    },
     showNotification() {
       const notification = this.$store.getters.getNotification;
       if (notification.level === 0) {
@@ -68,24 +147,25 @@ export default {
         });
       } else if (notification.level === 3) {
         // error
-        notification.title,
-          this.$notify({
-            type: 'error',
-            message: notification.message,
-            offset: 20,
-            duration: 5000,
-          });
+        this.$notify({
+          type: 'error',
+          message: notification.message,
+          offset: 20,
+          duration: 5000,
+        });
       } else {
         // default
         // check to make sure that either title or message is set
         // reset notification status
 
+        // eslint-disable-next-line no-lonely-if
         if (notification.title !== '' || notification.message !== '') {
           this.$notify({
             title: notification.title,
             message: notification.message,
+            offset: 20,
+            duration: 5000,
           });
-          20;
         }
       }
       // reset notification status
@@ -96,7 +176,7 @@ export default {
 </script>
 
 <style lang="css">
-@import url("https://fonts.googleapis.com/css?family=Rubik:300,400,500,700");
-@import "./assets/styles/app.css";
-@import "./assets/styles/overide.css";
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,500,700');
+@import './assets/styles/app.css';
+@import './assets/styles/overide.css';
 </style>

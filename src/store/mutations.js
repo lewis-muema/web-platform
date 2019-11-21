@@ -27,4 +27,7 @@ export default {
   deleteSession(state) {
     state.session = {};
   },
+  setFCMToken(state, token) {
+    state.fcm_token = token;
+  },
 };

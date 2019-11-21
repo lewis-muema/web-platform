@@ -33,6 +33,9 @@ export default {
   getDefaultCurrency(state) {
     return state.default_currency;
   },
+  getFCMToken(state) {
+    return state.fcm_token;
+  },
 };
 
 function isEmpty(obj) {
