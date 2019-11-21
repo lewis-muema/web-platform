@@ -4,22 +4,50 @@
     class="log-item"
   >
     <div
-      v-if="canDisplaySecondScreen"
       id="sign-up-v2-container"
       class="sign-inner"
     >
-      <div class="sign-text font-control-title">
-        Welcome to Sendy
-      </div>
       <div class="sign-text">
-        Please fill in the details below to create your new Sendy account.
+        Sign up for Sendy
       </div>
+
+      <p class="sign-up-error">
+        {{ message }}
+      </p>
+
       <div>
+        <div class="sign-holder dimen">
+          <input
+            v-model="name"
+            class="input-control sign-up-form"
+            type="text"
+            name="name"
+            placeholder="Your Name"
+            value=""
+          >
+        </div>
+
+        <div class="sign-holder dimen">
+          <input
+            v-model="email"
+            v-validate="'required|email'"
+            class="input-control sign-up-form"
+            type="email"
+            name="email"
+            placeholder="Your Email"
+            value=""
+          >
+          <br>
+          <p class="sign-up-email-error">
+            {{ errors.first('email') }}
+          </p>
+        </div>
+
         <div class="sign-holder dimen">
           <vue-tel-input
             v-model.trim="phone"
             v-validate="'required|check_phone'"
-            class="input-control sign-up-form font-control tel-input-control"
+            class="input-control sign-up-form"
             name="phone"
             value=""
             data-vv-validate-on="blur"
@@ -33,32 +61,6 @@
             {{ errors.first('phone') }}
           </p>
         </div>
-        <div class="sign-holder dimen">
-          <input
-            v-model="name"
-            class="input-control sign-up-form tel-input-control"
-            type="text"
-            name="name"
-            placeholder="Name"
-            value=""
-          >
-        </div>
-
-        <div class="sign-holder dimen">
-          <input
-            v-model="email"
-            v-validate="'required|email'"
-            class="input-control sign-up-form tel-input-control"
-            type="email"
-            name="email"
-            placeholder="Email"
-            value=""
-          >
-          <br>
-          <p class="sign-up-email-error">
-            {{ errors.first('email') }}
-          </p>
-        </div>
         <div
           id="outer_u_pass"
           class="sign-holder dimen"
@@ -66,10 +68,10 @@
           <span>
             <input
               v-model="password"
-              class="input-control sign-up-form tel-input-control"
+              class="input-control sign-up-form"
               type="password"
               name="password"
-              placeholder="Create a password"
+              placeholder="Password"
               @keyup="validate_pass"
             >
             <br>
@@ -78,16 +80,56 @@
             </p>
           </span>
         </div>
-        <div class="">
+
+        <div
+          class="sign-holder"
+          style="text-align:center;"
+        >
+          <input
+            v-model="u_terms"
+            type="checkbox"
+            name="u_terms"
+            class="hiddeny"
+          >
+          <span class="sign-holder__smaller">
+            By creating a Sendy account you’re agreeing to the
+            <a
+              class=" sign-holder__grey"
+              href="https://sendyit.com/terms"
+            >
+              terms and conditions
+            </a>
+          </span>
+        </div>
+        <div class="sign-holder">
           <input
             id="signup"
             v-model="sign_up_text"
-            class="continue-submit-button"
+            class="button-primary signup-submit"
             type="submit"
             name="sign_up_text"
             aria-invalid="false"
-            @click="getCurrency"
+            @click="sign_up"
           >
+        </div>
+
+        <div class=" sign-holder sign-forgot-pass sign-smaller">
+          Do you already have an account?
+          <router-link
+            class="sign-holder__link"
+            to="/auth/sign_in"
+          >
+            Login
+          </router-link>
+        </div>
+        <div class=" sign-holder sign-forgot-pass sign-smaller driver-sign-up">
+          Want to drive for Sendy?
+          <a
+            class="sign-holder__link2"
+            href="https://partner.sendyit.com/onboarding_portal/"
+          >
+            Click here
+          </a>
         </div>
       </div>
       <el-dialog
@@ -133,121 +175,6 @@
         </div>
       </el-dialog>
     </div>
-    <div
-      v-if="showingFirstPage"
-      class="sign-inner"
-    >
-      <div class="sign-text">
-        Welcome to Sendy
-      </div>
-      <div>
-        <template>
-          <country-select
-            v-model="country"
-            class="country-select-input"
-            :country="country"
-          />
-          <!--          <region-select v-model="region" :country="country" :region="region" />-->
-        </template>
-      </div>
-      <div class="continue-holder">
-        <input
-          id="continue"
-          v-model="sign_up_text"
-          class="continue-submit-button"
-          type="submit"
-          name="Continue"
-          aria-invalid="false"
-          @click="checkCountry"
-        >
-      </div>
-    </div>
-    <div
-      v-if="showingCurrencyPage"
-      class="sign-inner"
-    >
-      <div class="sign-text">
-        Select your account currency
-      </div>
-      <div
-        v-for="currency in countryCurrencies"
-        :key="currency.id"
-        class="radio-box-positioning"
-      >
-        <input
-          v-model="defaultCurrency"
-          type="radio"
-          name="profileImg"
-          class=""
-          :value="currency.id"
-        >
-        <span class="statement__column-10">
-          <p class="no-margin small-font currency--raadio">{{ currency.currency_name }}</p>
-          <p class="no-margin small-font currency-radio-desc">{{ currency.description }}</p>
-        </span>
-      </div>
-      <div
-        class="sign-holder sign-holder-next"
-        style="text-align:center;"
-      >
-        <input
-          v-model="u_terms"
-          type="checkbox"
-          name="u_terms"
-          class="hiddeny"
-        >
-        <span class="sign-holder__smaller">
-          By creating a Sendy account you’re agreeing to the
-          <a
-            class=" sign-holder__grey"
-            href="https://sendyit.com/terms"
-          >
-            terms and conditions
-          </a>
-        </span>
-      </div>
-      <div class="continue-holder">
-        <input
-          id="countryCurrency"
-          v-model="sign_up_text"
-          class="submit-button"
-          type="submit"
-          name="Submit"
-          aria-invalid="false"
-          @click="sign_up"
-        >
-      </div>
-    </div>
-    <div
-      v-if="!countrySupported"
-      class="sign-inner"
-    >
-      <p
-        class="sign-up-error"
-      >
-        Sorry! We are not yet in your country.
-      </p>
-    </div>
-    <div v-if="canDisplaySecondScreen">
-      <div class=" sign-holder sign-forgot-pass sign-smaller">
-        Do you already have an account?
-        <router-link
-          class="sign-holder__link"
-          to="/auth/sign_in"
-        >
-          Login
-        </router-link>
-      </div>
-      <div class=" sign-holder sign-forgot-pass sign-smaller driver-sign-up">
-        Want to drive for Sendy?
-        <a
-          class="sign-holder__link2"
-          href="https://partner.sendyit.com/onboarding_portal/"
-        >
-          Click here
-        </a>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -264,33 +191,10 @@ export default {
       name: '',
       phone: '',
       email: '',
-      countrySupported: true,
-      showingFirstPage: true,
-      defaultCurrency: '',
       password: '',
-      canDisplaySecondScreen: false,
-      showingCurrencyPage: false,
       u_terms: '',
-      country: '',
-      placeholder: {
-        type: String,
-        default: 'Select Your Country',
-      },
-      countryCurrencies: [
-        {
-          currency_id: 1,
-          currency_name: 'KES - Kenya Shillings',
-          description: 'I want to move goods locally.',
-        },
-        {
-          currency_id: 2,
-          currency_name: 'USD - US Dollars',
-          description: 'I want to export and import goods',
-        },
-      ],
-      region: '',
       pass_validation: 'false',
-      sign_up_text: 'Continue',
+      sign_up_text: 'Sign Up',
       message: '',
       pass_msg: '',
       phoneVerification: false,
@@ -465,46 +369,6 @@ export default {
         },
       );
     },
-    checkCountry() {
-      const sendyCountries = [
-        {
-          country_id: 1,
-          country_name: 'Kenya',
-          country_code: 'KE',
-          supported: true,
-        },
-        {
-          country_id: 2,
-          country_name: 'Uganda',
-          country_code: 'UG',
-          supported: true,
-        },
-        {
-          country_id: 3,
-          country_name: 'Tanzania',
-          country_code: 'TZ',
-          supported: true,
-        },
-        {
-          country_id: 4,
-          country_name: 'Nigeria',
-          country_code: 'NG',
-          supported: true,
-        },
-      ];
-      if (sendyCountries.some(item => item.country_code === this.country) === true) {
-        this.countrySupported = true;
-        this.showingFirstPage = false;
-        this.canDisplaySecondScreen = true;
-      } else {
-        this.countrySupported = false;
-        this.showingFirstPage = false;
-      }
-    },
-    getCurrency() {
-      this.showingCurrencyPage = true;
-      this.canDisplaySecondScreen = false;
-    },
   },
 };
 </script>
@@ -520,7 +384,7 @@ export default {
 }
 
 .log-item {
-  /*text-align: center;*/
+  text-align: center;
   border: 0px solid #ccc;
   margin: 5px;
 }
@@ -530,18 +394,18 @@ export default {
   border-radius: 4px;
   margin: 2rem auto;
   padding: 2rem;
-  font-family: "Helvetica Nueu",ac "Helvetica", "Arial", "sans-serif";
+  font-family: "Helvetica Nueu", "Helvetica", "Arial", "sans-serif";
 }
 .sign-text {
   font-size: 1.3rem;
   line-height: 1.7em;
   font-weight: 500;
-  /*text-align: center;*/
+  text-align: center;
   color: #666;
   padding-top: 5px;
   padding-bottom: 5px;
   font-size: large;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
 }
 .sign-button {
   width: 91.9%;
@@ -557,11 +421,8 @@ export default {
   cursor: pointer;
 }
 .sign-holder {
-  display: block;
   margin: 1em;
-}
-.sign-holder-next {
-    margin: 24% 1em -9% -4% !important;
+  display: block;
 }
 .sign-holder input:not([type="checkbox"]) {
   width: 100%;
@@ -609,8 +470,7 @@ export default {
   width: 110% !important;
 }
 .sign-up-error {
-  color: #1782c5;
-  padding: 2em;
+  color: #e08445;
   font-family: "Rubik", sans-serif;
 }
 .sign-up-email-error {
@@ -695,87 +555,5 @@ export default {
 }
 .signup-sendy-logo{
     width:85px;
-}
-.country-select-input{
-  height: 42px !important;
-  width: 100% !important;
-  background-color: #fff;
-  border-radius: 4px;
-  border: 1px solid #dcdfe6;
-  color: #606266;
-  line-height: 40px;
-  padding: 0 15px;
-  font-size: 13px;
-  text-align: center;
-  margin-top: 10%;
-}
-.continue-submit-button{
-  color: #ecf0f1;
-  background-color: #1782c5;
-  border-color: #1b7fc3;
-  cursor: pointer;
-  position: relative;
-  display: block;
-   border-radius: 40px;
-  height: 40px;
-  transition: background-color 0.3s;
-  padding-left: 20px;
-  padding-right: 20px;
-  font-size: 13px;
-  width: 35% !important;
-  text-transform: uppercase;
-  margin-left: 60% !important;
-}
-.submit-button{
-  color: #ecf0f1;
-  background-color: #1782c5;
-  border-color: #1b7fc3;
-  cursor: pointer;
-  position: relative;
-  display: block;
-   border-radius: 40px;
-  height: 40px;
-  transition: background-color 0.3s;
-  padding-left: 20px;
-  padding-right: 20px;
-  font-size: 13px;
-  width: 50% !important;
-  text-transform: uppercase;
-  margin-left: 26% !important;
-}
-.continue-holder{
-  margin-top: 20%;
-}
-.font-control{
-  font-size: 14px !important;
-}
-.tel-input-control{
-  border: none !important;
-  font-size: 14px !important;
-  border-radius: 0 !important;
-  border-bottom: 1px solid #dcdfe6 !important;
-}
-.font-control-title{
-  font-size: 21px !important;
-}
-ul{
-  z-index: 3;
-  width: 300px !important;
-}
-input{
-  font-size: 14px !important;
-}
-.currency--raadio{
-  display: inline-block;
-  text-align: left !important;
-}
-.currency-radio-desc{
-  margin-left: 20%;
-  margin-top: -1%;
-}
-.radio-box-positioning{
-  /*margin-left: -38% !important;*/
-  font-size: 14px !important;
-  color: #606266 !important;
 }
 </style>

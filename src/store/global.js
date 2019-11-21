@@ -16,6 +16,7 @@ const state = {
   notification_status: false,
   country_code: 'KE',
   default_currency: 'KES',
+  fcm_token: null,
 };
 
 export default {
