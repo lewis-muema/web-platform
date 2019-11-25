@@ -30,18 +30,16 @@ export default {
     }),
   },
   watch: {
-    getNotificationStatus: {
-      handler() {
+    getNotificationStatus(val) {
+      if (val) {
         this.showNotification();
-      },
-      deep: true,
+      }
     },
     // watch session so as to only update token on session
-    getSession: {
-      handler() {
+    getSession(val) {
+      if (val) {
         this.updateFirebaseToken();
-      },
-      deep: true,
+      }
     },
   },
   beforeMount() {
@@ -100,6 +98,7 @@ export default {
         })
         .catch((err) => {
           console.log('Unable to get permission to notify.', err);
+          // TOOD: we could update this to force the user to give us notification permissions
         });
 
       this.$messaging.onMessage((payload) => {
