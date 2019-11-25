@@ -216,7 +216,7 @@ export default {
       customer_token: '',
       payment_type: 'prepay',
       payment_state: 0, // 0- initial 1- loading 2- success 3- cancelled
-      should_destroy: false,
+      shouldDestroy: false,
       schedule_picker_options: {
         disabledDate(time) {
           return time.getTime() < Date.now();
@@ -431,7 +431,7 @@ export default {
   },
 
   destroyed() {
-    if (this.should_destroy) {
+    if (this.shouldDestroy) {
       this.$emit('destroyOrderOptions');
     } else {
       this.saveInfoToStore();
@@ -644,7 +644,7 @@ export default {
             // eslint-disable-next-line no-param-reassign,prefer-destructuring
             response = response[0];
           }
-
+          /* eslint camelcase: ["error", {ignoreDestructuring: true}] */
           if (response.status) {
             let order_no;
             this.setPickupFilled(false);
@@ -907,6 +907,9 @@ export default {
       }
     },
 
+    mixpanelTrackPricingServiceCompletion(orderNo) {
+      this.trackMixpanelEvent('Place Order - Pricing Service', { 'Order No': orderNo });
+    },
     /* global mixpanel */
     trackMixpanelEvent(name, event) {
       let analyticsEnv = '';
