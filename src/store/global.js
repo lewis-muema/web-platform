@@ -17,6 +17,7 @@ const state = {
   country_code: 'KE',
   default_currency: 'KES',
   fcm_token: null,
+  fcm_data: {},
 };
 
 export default {
