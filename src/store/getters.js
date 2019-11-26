@@ -36,6 +36,9 @@ export default {
   getFCMToken(state) {
     return state.fcm_token;
   },
+  getFCMData(state) {
+    return state.fcm_data;
+  },
 };
 
 function isEmpty(obj) {
