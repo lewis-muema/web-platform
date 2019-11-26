@@ -30,4 +30,7 @@ export default {
   setFCMToken(state, token) {
     state.fcm_token = token;
   },
+  setFCMData(state, data) {
+    state.fcm_data = data;
+  },
 };
