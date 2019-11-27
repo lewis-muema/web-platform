@@ -45,7 +45,11 @@ export default {
   beforeMount() {
     Sentry.init({
       dsn: ENV.SENTRY_DSN,
-      integrations: [new Sentry.Integrations.Vue({ Vue })],
+      integrations: [
+        new Sentry.Integrations.Vue({
+          Vue,
+        }),
+      ],
     });
   },
   created() {
@@ -102,8 +106,6 @@ export default {
         });
 
       this.$messaging.onMessage((payload) => {
-        console.log('on message recieved', payload);
-
         const notificationData = payload.data;
         const orderNo = notificationData.order_no;
 
