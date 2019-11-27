@@ -117,6 +117,7 @@ export function createApp() {
         Vue.prototype.$messaging.useServiceWorker(registration);
       })
       .catch((err) => {
+        // eslint-disable-next-line no-console
         console.log(err);
       });
   }
