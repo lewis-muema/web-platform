@@ -260,12 +260,8 @@ export function createRouter() {
             component: () => import('../modules/analytics/components/Weekly.vue'),
           },
           {
-            path: '/analytics/weekly',
+            path: '/analytics/report',
             component: () => import('../modules/analytics/components/Weekly.vue'),
-          },
-          {
-            path: '/analytics/monthly',
-            component: () => import('../modules/analytics/components/Monthly.vue'),
           },
         ],
       },
