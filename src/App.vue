@@ -135,15 +135,15 @@ export default {
         this.$store.commit('setNotificationStatus', true);
 
         // redirect to tracking page when order no has been provided
-
-        if (orderNo !== undefined) {
-          this.$router.push({
-            name: 'tracking',
-            params: {
-              order_no: orderNo,
-            },
-          });
-        }
+        // TODO : create new logic for internal redirects
+        // if (orderNo !== undefined) {
+        //   this.$router.push({
+        //     name: 'tracking',
+        //     params: {
+        //       order_no: orderNo,
+        //     },
+        //   });
+        // }
 
         // TODO: fire different events to act on message recieved
         // proposed central notifications actor class to process different types of notifiacations
