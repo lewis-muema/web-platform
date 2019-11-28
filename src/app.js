@@ -112,7 +112,7 @@ export function createApp() {
   if (process.browser) {
     // initialize firebase
     navigator.serviceWorker
-      .register('./firebase-messaging-sw.js')
+      .register('./firebase-messaging-sw.js', { scope: './' })
       .then((registration) => {
         Vue.prototype.$messaging.useServiceWorker(registration);
       })
