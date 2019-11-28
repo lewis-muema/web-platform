@@ -61,7 +61,7 @@
                   </a>
                 </li>
                 <li v-if="admin_user">
-                  <a @click="linkRoute('/analytics/weekly')">
+                  <a @click="linkRoute('/analytics/report')">
                     Analytics
                   </a>
                 </li>
