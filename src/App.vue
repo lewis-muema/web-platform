@@ -57,6 +57,19 @@ export default {
     if (process.browser) {
       // initilize firebase on load
       this.initializeFirebase();
+
+      const channel = new BroadcastChannel('sw-messages');
+      channel.addEventListener('message', (event) => {
+        const orderNo = event.data.focusOrder;
+        if (orderNo !== undefined) {
+          this.$router.push({
+            name: 'tracking',
+            params: {
+              order_no: orderNo,
+            },
+          });
+        }
+      });
     }
   },
   methods: {
@@ -122,15 +135,7 @@ export default {
         this.$store.commit('setNotificationStatus', true);
 
         // redirect to tracking page when order no has been provided
-
-        if (orderNo !== undefined) {
-          this.$router.push({
-            name: 'tracking',
-            params: {
-              order_no: orderNo,
-            },
-          });
-        }
+        // TODO : create new logic for internal redirects
 
         // TODO: fire different events to act on message recieved
         // proposed central notifications actor class to process different types of notifiacations
