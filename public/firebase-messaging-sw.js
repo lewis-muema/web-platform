@@ -42,10 +42,17 @@ self.addEventListener('notificationclick', (event) => {
       for (const client of allClients) {
         const url = new URL(client.url);
         if (url.origin === `${origin}`) {
-          client
-            .navigate(`${origin}/orders/tracking/${orderNo}`)
-            .then(webClient => webClient.focus());
+          // Send a message to the client.
+          client.focus();
           sendyClient = true;
+
+          // From service-worker.js:
+          const channel = new BroadcastChannel('sw-messages');
+          channel.postMessage({
+            focusStatus: true,
+            focusOrder: orderNo,
+          });
+
           event.notification.close();
           break;
         }

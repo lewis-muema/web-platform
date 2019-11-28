@@ -57,6 +57,19 @@ export default {
     if (process.browser) {
       // initilize firebase on load
       this.initializeFirebase();
+
+      const channel = new BroadcastChannel('sw-messages');
+      channel.addEventListener('message', (event) => {
+        const orderNo = event.data.focusOrder;
+        if (orderNo !== undefined) {
+          this.$router.push({
+            name: 'tracking',
+            params: {
+              order_no: orderNo,
+            },
+          });
+        }
+      });
     }
   },
   methods: {
