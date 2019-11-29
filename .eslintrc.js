@@ -24,6 +24,6 @@ module.exports = {
     },
   },
   globals: {
-    mixpanel: readonly,
+    mixpanel: 'readonly',
   },
 };

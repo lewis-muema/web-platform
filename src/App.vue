@@ -1,5 +1,6 @@
 <template>
-  <div id="app" class="box app app-overflow">
+  <div id="app"
+class="box app app-overflow">
     <!-- Global component responsible for flashing notifications -->
     <sendy-flash details />
 
@@ -62,7 +63,7 @@ export default {
   methods: {
     loadFCMListeners() {
       const channel = new BroadcastChannel('sw-messages');
-      channel.addEventListener('message', event => {
+      channel.addEventListener('message', (event) => {
         const orderNo = event.data.focusOrder;
         if (orderNo !== undefined) {
           this.$router.push({
@@ -75,7 +76,7 @@ export default {
       });
 
       const logsChannel = new BroadcastChannel('sw-logs');
-      logsChannel.addEventListener('message', event => {
+      logsChannel.addEventListener('message', (event) => {
         const { logAction, logData } = event.data;
         const session = this.getSession;
         // eslint-disable-next-line no-prototype-builtins
@@ -98,7 +99,7 @@ export default {
             });
           }
         } else {
-          //no session
+          // no session
           if (logAction === 'notification') {
             // add log for notification recieved
             this.trackMixpanelEvent('FCM Notification Recieved - Web', {
@@ -107,7 +108,7 @@ export default {
           }
 
           if (logAction === 'click') {
-            //store redirect details for after login use
+            // store redirect details for after login use
             this.$store.commit('setRedirectStatus', true);
             this.$store.commit('setRedirectOrder', logData.order_no);
 
@@ -164,7 +165,7 @@ export default {
       this.$messaging
         .requestPermission()
         .then(() => firebase.messaging().getToken())
-        .then(token => {
+        .then((token) => {
           this.fcmToken = token;
           this.$store.commit('setFCMToken', token);
 
@@ -175,12 +176,12 @@ export default {
             this.updateFirebaseToken();
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log('Unable to get permission to notify.', err);
           // TOOD: we could update this to force the user to give us notification permissions
         });
 
-      this.$messaging.onMessage(payload => {
+      this.$messaging.onMessage((payload) => {
         const notificationData = payload.data;
         const orderNo = notificationData.order_no;
 
