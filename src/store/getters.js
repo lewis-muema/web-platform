@@ -39,6 +39,12 @@ export default {
   getFCMData(state) {
     return state.fcm_data;
   },
+  getRedirectStatus(state) {
+    return state.redirect_status;
+  },
+  getRedirectOrder(state) {
+    return state.redirect_order;
+  },
 };
 
 function isEmpty(obj) {
