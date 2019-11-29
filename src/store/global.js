@@ -18,6 +18,8 @@ const state = {
   default_currency: 'KES',
   fcm_token: null,
   fcm_data: {},
+  redirect_status: false,
+  redirect_order: ' ',
 };
 
 export default {

@@ -12,15 +12,22 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 let notificationData = {};
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', event => {
   event.waitUntil(self.skipWaiting());
 });
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', event => {
   event.waitUntil(self.clients.claim());
 });
 
-self.addEventListener('push', (event) => {
+self.addEventListener('push', event => {
   notificationData = JSON.parse(event.data.text());
+
+  const channel = new BroadcastChannel('sw-logs');
+  channel.postMessage({
+    logStatus: true,
+    logAction: 'notification',
+    logData: notificationData.data,
+  });
 
   const { title } = notificationData.notification;
   const options = {
@@ -31,12 +38,19 @@ self.addEventListener('push', (event) => {
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', event => {
   const { origin } = event.currentTarget.location;
   const orderNo = notificationData.data.order_no;
 
+  const logsChannel = new BroadcastChannel('sw-logs');
+  logsChannel.postMessage({
+    logStatus: true,
+    logAction: 'click',
+    logData: notificationData.data,
+  });
+
   event.waitUntil(
-    self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then((allClients) => {
+    self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then(allClients => {
       let sendyClient = false;
 
       for (const client of allClients) {
@@ -46,7 +60,6 @@ self.addEventListener('notificationclick', (event) => {
           client.focus();
           sendyClient = true;
 
-          // From service-worker.js:
           const channel = new BroadcastChannel('sw-messages');
           channel.postMessage({
             focusStatus: true,
@@ -62,6 +75,6 @@ self.addEventListener('notificationclick', (event) => {
         event.waitUntil(clients.openWindow(`${origin}/orders/tracking/${orderNo}`));
       }
       event.notification.close();
-    }),
+    })
   );
 });

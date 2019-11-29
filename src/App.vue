@@ -57,7 +57,11 @@ export default {
     if (process.browser) {
       // initilize firebase on load
       this.initializeFirebase();
-
+      this.loadFCMListeners();
+    }
+  },
+  methods: {
+    loadFCMListeners() {
       const channel = new BroadcastChannel('sw-messages');
       channel.addEventListener('message', (event) => {
         const orderNo = event.data.focusOrder;
@@ -70,9 +74,68 @@ export default {
           });
         }
       });
-    }
-  },
-  methods: {
+
+      const logsChannel = new BroadcastChannel('sw-logs');
+      logsChannel.addEventListener('message', (event) => {
+        const { logAction, logData } = event.data;
+        const session = this.getSession;
+        // eslint-disable-next-line no-prototype-builtins
+        if ({}.hasOwnProperty.call(session, 'default')) {
+          if (logAction === 'notification') {
+            // add log for notification recieved
+            this.trackMixpanelEvent('FCM Notification Recieved - Web', {
+              'Order No': logData.order_no,
+              'Cop Id': session[session.default].cop_id,
+              'User Id': session[session.default].user_id,
+            });
+          }
+
+          if (logAction === 'click') {
+            // add log for notification clicked
+            this.trackMixpanelEvent('FCM Notification Clicked - Web', {
+              'Order No': logData.order_no,
+              'Cop Id': session[session.default].cop_id,
+              'User Id': session[session.default].user_id,
+            });
+          }
+        } else {
+          // no session
+          if (logAction === 'notification') {
+            // add log for notification recieved
+            this.trackMixpanelEvent('FCM Notification Recieved - Web', {
+              'Order No': logData.order_no,
+            });
+          }
+
+          if (logAction === 'click') {
+            // store redirect details for after login use
+            this.$store.commit('setRedirectStatus', true);
+            this.$store.commit('setRedirectOrder', logData.order_no);
+
+            // add log for notification clicked
+            this.trackMixpanelEvent('FCM Notification Clicked - Web', {
+              'Order No': logData.order_no,
+            });
+          }
+        }
+      });
+    },
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+        }
+      } catch (er) {
+        // ...
+      }
+    },
     updateFirebaseToken() {
       const session = this.getSession;
       const fcmPayload = {
