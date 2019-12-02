@@ -65,4 +65,7 @@ export default {
 .dashboard{
     height: auto;
 }
+.body--grey{
+  background-color: #F9FBFC !important;
+}
 </style>
