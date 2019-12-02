@@ -22,14 +22,15 @@ export default {
   data() {
     return {
       loading: true,
-      resource: 17,
+      resource_id: 15,
     };
   },
   computed: {
     account() {
       if (typeof this.$store.getters.getSession.biz !== undefined) {
-        return `SENDY${this.$store.getters.getSession.biz.cop_id}`;
+        return this.$store.getters.getSession.biz.cop_id;
       }
+      return 0;
     },
   },
   mounted() {
@@ -41,14 +42,15 @@ export default {
       const METABASE_SECRET_KEY = 'baddc28e2149d570c8967cd8c6589e13d7356cd6a1c71e50f07d5f08d6b3bdc6';
 
       const payload = {
-        resource: { dashboard: parseInt('100015'.substring(4), 10) },
+        resource: { dashboard: this.resource_id },
         params: {
-          acc_no: this.account,
+          business_id: this.account,
         },
+        exp: Math.round(Date.now() / 1000) + (10 * 60), // 10 minute expiration
       };
       const token = jwt.sign(payload, METABASE_SECRET_KEY);
 
-      const iframeUrl = `${METABASE_SITE_URL}/embed/dashboard/${token}#bordered=false&titled=false`;
+      const iframeUrl = `${METABASE_SITE_URL}/embed/dashboard/${token}#bordered=true&titled=true`;
 
       return iframeUrl;
     },
@@ -62,5 +64,8 @@ export default {
 }
 .dashboard{
     height: auto;
+}
+.body--grey{
+  background-color: #F9FBFC !important;
 }
 </style>
