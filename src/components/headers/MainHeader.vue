@@ -152,6 +152,9 @@ export default {
     },
     logOut() {
       try {
+        localStorage.removeItem('_sessionSnack');
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('refreshToken');
         this.$store.commit('deleteSession');
         // clear orders to avoid marker persistance
         this.$store.unregisterModule('$_orders');
