@@ -1178,7 +1178,7 @@ export default {
             this.requestPaymentOptionsAction(fullPayload).then(
               (response) => {
                 if (response.status) {
-                  this.payment_methods = response.payment_methods;
+                  this.determinePaymentOptions(response);
                 }
               },
               (error) => {
@@ -1196,6 +1196,27 @@ export default {
           this.loading = false;
         },
       );
+    },
+
+    determinePaymentOptions(data) {
+      let payment = [];
+      payment = data.payment_methods;
+
+      const exist = data.payment_methods.find(available => available.name === 'Cash');
+
+      if (exist === undefined || exist === null) {
+        payment = data.payment_methods;
+      } else {
+        const runningBalance = this.getRB;
+        if (runningBalance >= 0) {
+          payment = data.payment_methods;
+        } else {
+          const cashIndex = data.payment_methods.findIndex(index => index.name === 'Cash');
+          payment = data.payment_methods.splice(cashIndex, 1);
+        }
+      }
+
+      this.payment_methods = data.payment_methods;
     },
 
     /* end card */
