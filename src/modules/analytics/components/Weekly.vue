@@ -50,7 +50,7 @@ export default {
       };
       const token = jwt.sign(payload, METABASE_SECRET_KEY);
 
-      const iframeUrl = `${METABASE_SITE_URL}/embed/dashboard/${token}#bordered=true&titled=true`;
+      const iframeUrl = `${METABASE_SITE_URL}/embed/dashboard/${token}#bordered=false&titled=true`;
 
       return iframeUrl;
     },
@@ -66,6 +66,6 @@ export default {
     height: auto;
 }
 .body--grey{
-  background-color: #F9FBFC !important;
+  background-color: #FFFFFF !important;
 }
 </style>
