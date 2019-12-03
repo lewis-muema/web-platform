@@ -1058,24 +1058,8 @@ export default {
                 );
                 that.payment_state = 0;
                 that.loading = false;
-                that.mpesa_payment_state = true;
-                that.doNotification('1', 'Payment successful', 'Completing your order...');
-                that.doCompleteOrder();
-                return true;
-              }
-
-              if (pollLimitValue === 6) {
-                if (pollCount === 5) {
-                  that.doNotification(
-                    '0',
-                    'Payment not received',
-                    "We'll keep retrying to check your payment status and complete your order once the payment is received.",
-                  );
-                  that.payment_state = 0;
-                  that.loading = false;
-                  that.requestMpesaPaymentPoll(60);
-                  that.mpesa_payment_state = false;
-                }
+                that.requestMpesaPaymentPoll(60);
+                that.mpesa_payment_state = false;
               }
             }
           }, 10000 * pollCount);
