@@ -106,6 +106,7 @@ export default {
       this.$store.commit('deleteSession');
       localStorage.removeItem('_sessionSnack');
       localStorage.removeItem('jwtToken');
+      localStorage.removeItem('refreshToken');
     },
     sign_in() {
       if (this.email !== '' && this.password !== '') {
@@ -135,13 +136,21 @@ export default {
             } else {
               try {
                 if (response) {
-                  const refreshToken = response.refresh_token;
-                  const accessToken = response.access_token;
+                  let partsOfToken = '';
+                  if (Array.isArray(response)) {
+                    const res = response[1];
+                    localStorage.setItem('jwtToken', res);
+                    localStorage.setItem('jwtToken', res.access_token);
+                    localStorage.setItem('refreshToken', res.refresh_token);
+                    partsOfToken = res.access_token.toString().split('.');
+                  } else {
+                    localStorage.setItem('jwtToken', response);
+                    localStorage.setItem('jwtToken', response.access_token);
+                    localStorage.setItem('refreshToken', response.refresh_token);
+                    partsOfToken = response.access_token.split('.');
+                  }
                   // eslint-disable-next-line max-len
                   // TODO change from using local storage as session trust store. malicious js will read the data
-                  localStorage.setItem('jwtToken', accessToken);
-                  localStorage.setItem('refreshToken', refreshToken);
-                  const partsOfToken = accessToken.split('.');
                   const middleString = partsOfToken[1];
                   const data = atob(middleString);
                   const { payload } = JSON.parse(data);
