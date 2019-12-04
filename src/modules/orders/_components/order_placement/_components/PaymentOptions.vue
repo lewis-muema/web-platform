@@ -1207,8 +1207,8 @@ export default {
       if (exist === undefined || exist === null) {
         payment = data.payment_methods;
       } else {
-        const runningBalance = this.getRB;
-        if (runningBalance >= 0) {
+        const runningBalance = this.getRunningBalance;
+        if ((runningBalance >= 0) && (runningBalance - this.order_cost >= 0)) {
           payment = data.payment_methods;
         } else {
           const cashIndex = data.payment_methods.findIndex(index => index.name === 'Cash');
