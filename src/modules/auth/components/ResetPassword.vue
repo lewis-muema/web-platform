@@ -141,15 +141,16 @@ export default {
           endpoint: 'update_pass',
         };
         const that = this;
-        this.requestResetPassword(fullPayload).then(
-          (response) => {
+        this.requestResetPassword(fullPayload)
+          .then((response) => {
             if (response.length > 0) {
               response = response[0];
             }
             if (response.status) {
-              const session_data = response.data;
-              const { user_email } = session_data[session_data.default];
+              const sessionData = response.data;
+              const { user_email } = sessionData[sessionData.default];
               const pass = this.new_password;
+
               this.handleNewSession(user_email, pass);
             } else {
               this.doNotification(
@@ -159,11 +160,13 @@ export default {
               );
               // this.$router.push("/auth");
             }
-          },
-          (error) => {
-            this.message = 'Reset Password Failed, Kindly retry again';
-          },
-        );
+          })
+          .catch((err) => {
+            const e = {
+              ...err,
+            };
+            this.doNotification(2, 'Password Reset Failed', e.response.data.message);
+          });
       }
     },
     handleNewSession(email, pass) {
@@ -189,15 +192,13 @@ export default {
           } else {
             try {
               if (response) {
-                let partsOfToken = '';
-                if (Array.isArray(response)) {
-                  const res = response[1];
-                  localStorage.setItem('jwtToken', res);
-                  partsOfToken = res.toString().split('.');
-                } else {
-                  localStorage.setItem('jwtToken', response);
-                  partsOfToken = response.split('.');
-                }
+                const refreshToken = response.refresh_token;
+                const accessToken = response.access_token;
+                // eslint-disable-next-line max-len
+                // TODO change from using local storage as session trust store. malicious js will read the data
+                localStorage.setItem('jwtToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
+                const partsOfToken = accessToken.split('.');
                 const middleString = partsOfToken[1];
                 const data = atob(middleString);
                 const { payload } = JSON.parse(data);
@@ -257,7 +258,11 @@ export default {
       );
     },
     doNotification(level, title, message) {
-      const notification = { title, level, message };
+      const notification = {
+        title,
+        level,
+        message,
+      };
       this.$store.commit('setNotification', notification);
       this.$store.commit('setNotificationStatus', true);
     },

@@ -48,7 +48,7 @@
 }
 .rider_details_image img {
     width: 100%;
-    height: auto;
+    max-height: 165%;
 }
 .rider_details_items {
     width: 70%;

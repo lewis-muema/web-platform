@@ -66,7 +66,7 @@
                   </a>
                 </li>
                 <li v-if="admin_user">
-                  <a @click="linkRoute('/analytics/weekly')">
+                  <a @click="linkRoute('/analytics/report')">
                     Analytics
                   </a>
                 </li>
@@ -157,6 +157,9 @@ export default {
     },
     logOut() {
       try {
+        localStorage.removeItem('_sessionSnack');
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('refreshToken');
         this.$store.commit('deleteSession');
         // clear orders to avoid marker persistance
         this.$store.unregisterModule('$_orders');
