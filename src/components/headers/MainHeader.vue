@@ -55,6 +55,11 @@
                     Orders
                   </a>
                 </li>
+                <li>
+                  <a @click="linkRoute('/orders/freight')">
+                    Freight
+                  </a>
+                </li>
                 <li v-if="admin_user">
                   <a @click="linkRoute('/admin/users')">
                     Settings
@@ -198,5 +203,5 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../assets/styles/internal_header.css?v=1";
+@import '../../assets/styles/internal_header.css?v=1';
 </style>

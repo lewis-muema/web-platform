@@ -1,4 +1,4 @@
-//configs for the staging env (the pre-prod environment)
+// configs for the staging env (the pre-prod environment)
 module.exports = {
   ENVIRONMENT: '"staging"',
   DEBUG_MODE: true,

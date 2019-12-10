@@ -1018,7 +1018,7 @@ export default {
         endpoint: 'pair_order_rider_details',
       };
       this.requestPairRider(fullPayload).then(
-        response => {
+        (response) => {
           if (response.status) {
             this.updateData(response.data);
           } else {
