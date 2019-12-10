@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 const express = require('express');
 const favicon = require('serve-favicon');
 const compression = require('compression');
@@ -30,8 +31,8 @@ function createRenderer(bundle, options) {
 }
 
 const serve = (path, cache) => express.static(resolve(path), {
-  maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 30 : 0,
-});
+    maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 30 : 0,
+  });
 
 app.use(compression({ threshold: 0 }));
 app.use(favicon('./public/logo_120.png'));
@@ -39,6 +40,8 @@ app.use('/dist', serve('./dist', true));
 app.use('/public', serve('./public', true));
 app.use('/manifest.json', serve('./manifest.json', true));
 app.use('/service-worker.js', serve('./dist/service-worker.js'));
+app.use('/firebase-messaging-sw.js', serve('./public/firebase-messaging-sw.js'));
+app.use('/notification-logo.png', serve('./public/notification-logo.png'));
 
 let renderer;
 let readyPromise;
