@@ -97,8 +97,30 @@ Vue.prototype.$message = Message;
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 require('./views');
+const firebase = require('firebase/app');
+require('firebase/messaging');
+
+const config = process.env.CONFIGS_ENV.FIREBASE_CONFIG;
+
+if (process.browser) {
+  firebase.initializeApp(config);
+
+  Vue.prototype.$messaging = firebase.messaging();
+}
 
 export function createApp() {
+  if (process.browser) {
+    // initialize firebase
+    navigator.serviceWorker
+      .register('./firebase-messaging-sw.js', { scope: './' })
+      .then((registration) => {
+        Vue.prototype.$messaging.useServiceWorker(registration);
+      })
+      .catch((err) => {
+        // eslint-disable-next-line no-console
+        console.log(err);
+      });
+  }
   // create router and store instances
   const router = createRouter();
   const store = createStore();
