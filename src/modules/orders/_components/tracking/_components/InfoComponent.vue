@@ -932,7 +932,7 @@ export default {
             } else if (this.tracked_order === from) {
               setTimeout(() => {
                 that.poll(from);
-              }, 15000);
+              }, 30000);
             }
           } else {
             that.place();
