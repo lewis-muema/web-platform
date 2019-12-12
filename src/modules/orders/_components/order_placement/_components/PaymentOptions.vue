@@ -658,7 +658,11 @@ export default {
               ({
                 order_no,
               } = response.respond);
-              this.mixpanelTrackPricingServiceCompletion(order_no);
+              try {
+                this.mixpanelTrackPricingServiceCompletion(order_no);
+              } catch (er) {
+                // catch er
+              }
             }
             this.shouldDestroy = true;
 
