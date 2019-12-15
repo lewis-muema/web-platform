@@ -1,7 +1,7 @@
 <template lang="html">
   <div
     v-if="!loading && get_orders.length > 0"
-    class="ongoing--outer homeview--outer-override"
+    class="ongoing--outer"
   >
     <div
       class="ongoing--count"
@@ -19,40 +19,27 @@
         v-if="showing"
         class="ongoing--column"
       >
-        <template v-for="(order, index) in childOrders">
+        <template v-for="order in filter_orders">
           <div
-            :key="index"
             class="ongoing--card"
-            :class="{ active: active_card(order.container_no) }"
-            @click="checkDetails(index)"
+            :class="{ active: active_card(order.order_no) }"
+            @click="track(order.order_no)"
           >
-            <table class="ongoing--card-location ongoing--card-override">
-              <tr class="">
-                <td class="homeview--heading__container-ongoing">
-                  Container Number
-                </td>
-                <td class="homeview--heading__container-ongoing">
-                  Empty Container Destination
-                </td>
-                <td class="homeview--heading__container-ongoing">
-                  Truck Size
-                </td>
-              </tr>
-              <tr class="">
-                <td class="homeview--body__container-ongoing">
-                  {{ order.container_no }}
-                </td>
-                <td class="homeview--body__container-ongoing">
-                  {{ order.container_destination }}
-                </td>
-                <td class="homeview--body__container-ongoing">
-                  {{ order.truck_size }} Feet
-                </td>
-              </tr>
-            </table>
+            <div class="ongoing--card-location">
+              <div class="ongoing--card-padded">
+                <span>{{ order.from_name }}</span>
+              </div>
+              <div class="">
+                <span>{{ order.to_name }}</span>
+              </div>
+            </div>
             <div class="ongoing--card-status">
-              <div class="ongoing--card-text">
+              <div class="">
                 {{ getStatus(order) }}
+              </div>
+              <div class="">
+                <i class="el-icon-time" />
+                {{ date_format(order.date_time) }}
               </div>
             </div>
           </div>
@@ -63,7 +50,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
@@ -75,22 +62,6 @@ export default {
     return {
       loading: true,
       showing: 1,
-      childOrders: [
-        {
-          container_no: 'AKND4323539',
-          container_destination: 'Thika ICD',
-          truck_size: '20',
-          delivery_status: 3,
-          confirm_status: 0,
-        },
-        {
-          container_no: 'AKND4323538',
-          container_destination: 'Thika ICD',
-          truck_size: '40',
-          delivery_status: 1,
-          confirm_status: 0,
-        },
-      ],
     };
   },
   computed: {
@@ -100,7 +71,16 @@ export default {
       getSession: 'getSession',
     }),
     num_ongoing() {
-      return this.childOrders.length;
+      return this.filter_orders.length;
+    },
+    filter_orders() {
+      const orders = [];
+      this.get_orders.forEach((row) => {
+        if (Object.prototype.hasOwnProperty.call(row, 'freight_order')) {
+          orders.push(row);
+        }
+      });
+      return orders;
     },
     classObject() {
       return {
@@ -119,6 +99,7 @@ export default {
     },
   },
   mounted() {
+    this.$store.dispatch('$_orders/fetchOngoingOrders');
     this.loading = true;
     this.poll();
   },
@@ -127,6 +108,9 @@ export default {
       change_page: '$_orders/setPage',
       hide_vendors: '$_orders/hideVendors',
       clearVendorMarkers: '$_orders/clearVendorMarkers',
+    }),
+    ...mapActions({
+      fetchOngoingOrders: '$_orders/fetchOngoingOrders',
     }),
     toggle_ongoing() {
       if (this.showing) {
@@ -138,11 +122,19 @@ export default {
     track(order) {
       // this.hide_vendors();
       // this.clearVendorMarkers();
-      // this.$router.push({ path: `/orders/tracking/${order}` });
+      this.$router.push({ path: `/orders/freight/tracking/${order}` });
       // this.change_page(1);
     },
-    checkDetails(index) {
-      this.$root.$emit('FBU track bar', this.childOrders[index]);
+    date_format(date) {
+      return this.moment(date).calendar(null, {
+        lastWeek: 'MMM-D hh:mm a',
+        sameDay: '[Today] hh:mm a',
+        nextDay: '[Tomorrow] hh:mm a',
+        nextWeek: 'ddd',
+        sameElse() {
+          return 'MMM D, hh:mm a';
+        },
+      });
     },
     active_card(orderNo) {
       if (this.$route.params.order_no === orderNo) {

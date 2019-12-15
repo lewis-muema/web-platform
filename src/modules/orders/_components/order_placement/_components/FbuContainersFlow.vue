@@ -93,7 +93,7 @@
               </div>
             </div>
             <div class="homeview--return-input">
-              <input type="checkbox" @change="resetDestination()" v-model="returnStatus"> Return empty containers to pick up location
+              <input type="checkbox" v-model="returnStatus" @change="resetDestination()"> Return empty containers to pick up location
             </div>
             <gmap-autocomplete
               v-if="returnStatus"
@@ -163,177 +163,179 @@
           </td>
         </tr>
       </table>
-      <div
-        ref="scrollable_locations"
-        class="homeview--form homeview--row homeview--form__scrollable homeview--input-freight-containers"
-      >
-        <input
-          v-model="cont_no"
-          type="text"
-          class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
-          placeholder="Container Number"
-        >
-        <input
-          v-model.number="cont_weight"
-          type="number"
-          class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
-          placeholder="Container Weight in Tonnes"
-        >
-        <gmap-autocomplete
-          v-model="destination.name"
-          :options="map_options"
-          placeholder="Empty Container Destination"
-          :select-first-on-enter="true"
-          class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
-          @place_changed="setReturnDestination($event, 2)"
-          @keyup="checkChangeEvents($event, 2)"
-          @change="checkChangeEvents($event, 2)"
-        />
-        <select
-          v-model.number="size"
-          class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
-        >
-          <option
-            class=""
-            value="none"
-          >
-            Container Size
-          </option>
-          <option
-            class=""
-            value="20"
-          >
-            20 Feet
-          </option>
-          <option
-            class=""
-            value="40"
-          >
-            40 Feet
-          </option>
-        </select>
-        <input
-          v-model="consignee"
-          type="text"
-          class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
-          placeholder="Consignee (name)"
-        >
-        <button
-          v-if="selectedContainer === null"
-          class="homeview--button-add-container"
-          :class="buttonStatus"
-          :disabled="buttonStatus === 'button--primary-inactive'"
-          @click="addContainer()"
-        >
-          Add Container Details
-        </button>
-        <button
-          v-else
-          class="button-primary homeview--button-add-container bg-button-orange"
-          @click="applyContainerChanges()"
-        >
-          Edit container details
-        </button>
-        <button
-          class="homeview--button-add-container"
-          :class="placeOrderStatus"
-          :disabled="placeOrderStatus === 'button--primary-inactive'"
-          @click="getQuote()"
-        >
-          Place Order
-        </button>
-      </div>
-      <div
-        v-if="!editingStatus"
-        class="homeview--section"
-      >
+      <div v-loading="loading">
         <div
-          v-for="(container, index) in containers"
-          :key="container.length" class="homeview--section__container"
-          :class="`container${index}`"
+          ref="scrollable_locations"
+          class="homeview--form homeview--row homeview--form__scrollable homeview--input-freight-containers"
         >
-          <div class="homeview--heading">
-            <div
-              class="homeview--remove__icon"
-              @click="removeContainer(index)"
+          <input
+            v-model="cont_no"
+            type="text"
+            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
+            placeholder="Container Number"
+          >
+          <input
+            v-model.number="cont_weight"
+            type="number"
+            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
+            placeholder="Container Weight in Tonnes"
+          >
+          <gmap-autocomplete
+            v-model="destination.name"
+            :options="map_options"
+            placeholder="Empty Container Destination"
+            :select-first-on-enter="true"
+            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
+            @place_changed="setReturnDestination($event, 2)"
+            @keyup="checkChangeEvents($event, 2)"
+            @change="checkChangeEvents($event, 2)"
+          />
+          <select
+            v-model.number="size"
+            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
+          >
+            <option
+              class=""
+              value="none"
             >
-              <p class="homeview--edit__text">
-                Remove
-              </p>
-              <i class="el-icon-delete" />
-            </div>
-            <div
-              class="homeview--edit__icon"
-              @click="editContainer(index)"
+              Container Size
+            </option>
+            <option
+              class=""
+              value="20"
             >
-              <p class="homeview--edit__text">
-                Edit
-              </p>
-              <i class="el-icon-edit" />
+              20 Feet
+            </option>
+            <option
+              class=""
+              value="40"
+            >
+              40 Feet
+            </option>
+          </select>
+          <input
+            v-model="consignee"
+            type="text"
+            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
+            placeholder="Consignee (name)"
+          >
+          <button
+            v-if="selectedContainer === null"
+            class="homeview--button-add-container"
+            :class="buttonStatus"
+            :disabled="buttonStatus === 'button--primary-inactive'"
+            @click="addContainer()"
+          >
+            Add Container Details
+          </button>
+          <button
+            v-else
+            class="button-primary homeview--button-add-container bg-button-orange"
+            @click="applyContainerChanges()"
+          >
+            Edit container details
+          </button>
+          <button
+            class="homeview--button-add-container"
+            :class="placeOrderStatus"
+            :disabled="placeOrderStatus === 'button--primary-inactive'"
+            @click="getQuote()"
+          >
+            Place Order
+          </button>
+        </div>
+        <div
+          v-if="!editingStatus"
+          class="homeview--section"
+        >
+          <div
+            v-for="(container, index) in containers"
+            :key="container.length" class="homeview--section__container"
+            :class="`container${index}`"
+          >
+            <div class="homeview--heading">
+              <div
+                class="homeview--remove__icon"
+                @click="removeContainer(index)"
+              >
+                <p class="homeview--edit__text">
+                  Remove
+                </p>
+                <i class="el-icon-delete" />
+              </div>
+              <div
+                class="homeview--edit__icon"
+                @click="editContainer(index)"
+              >
+                <p class="homeview--edit__text">
+                  Edit
+                </p>
+                <i class="el-icon-edit" />
+              </div>
             </div>
+            <table class="homeview--container-table">
+              <tr>
+                <td class="homeview--container-card">
+                  <p class="homeview--heading__container">
+                    Container Number
+                  </p>
+                  <p class="homeview--heading__container-details">
+                    {{ container.container_number }}
+                  </p>
+                </td>
+                <td class="homeview--container-card">
+                  <p class="homeview--heading__container">
+                    Empty Container Destination
+                  </p>
+                  <p class="homeview--heading__container-details">
+                    {{ container.container_destination.name }}
+                  </p>
+                </td>
+                <td class="homeview--container-card">
+                  <p class="homeview--heading__container">
+                    Container size
+                  </p>
+                  <p class="homeview--heading__container-details">
+                    {{ container.container_size_feet }} Feet
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td class="homeview--container-card">
+                  <p class="homeview--heading__container">
+                    Consignee
+                  </p>
+                  <p class="homeview--heading__container-details">
+                    {{ container.consignee }}
+                  </p>
+                </td>
+                <td class="homeview--container-card">
+                  <p class="homeview--heading__container">
+                    Container weight
+                  </p>
+                  <p class="homeview--heading__container-details">
+                    {{ container.container_weight_tonnes }}T
+                  </p>
+                </td>
+                <td class="homeview--container-card">
+                  <p class="homeview--heading__container" />
+                  <p class="homeview--heading__container-details" />
+                </td>
+              </tr>
+            </table>
           </div>
-          <table class="homeview--container-table">
-            <tr>
-              <td class="homeview--container-card">
-                <p class="homeview--heading__container">
-                  Container Number
-                </p>
-                <p class="homeview--heading__container-details">
-                  {{ container.container_number }}
-                </p>
-              </td>
-              <td class="homeview--container-card">
-                <p class="homeview--heading__container">
-                  Empty Container Destination
-                </p>
-                <p class="homeview--heading__container-details">
-                  {{ container.container_destination.name }}
-                </p>
-              </td>
-              <td class="homeview--container-card">
-                <p class="homeview--heading__container">
-                  Container size
-                </p>
-                <p class="homeview--heading__container-details">
-                  {{ container.container_size_feet }} Feet
-                </p>
-              </td>
-            </tr>
-            <tr>
-              <td class="homeview--container-card">
-                <p class="homeview--heading__container">
-                  Consignee
-                </p>
-                <p class="homeview--heading__container-details">
-                  {{ container.consignee }}
-                </p>
-              </td>
-              <td class="homeview--container-card">
-                <p class="homeview--heading__container">
-                  Container weight
-                </p>
-                <p class="homeview--heading__container-details">
-                  {{ container.container_weight_tonnes }}T
-                </p>
-              </td>
-              <td class="homeview--container-card">
-                <p class="homeview--heading__container" />
-                <p class="homeview--heading__container-details" />
-              </td>
-            </tr>
-          </table>
         </div>
       </div>
     </div>
-    <div class="" v-if="phase === 3">
+    <div v-if="phase === 3 && getOuterPriceRequestData" class="">
       <div
         ref="scrollable_locations"
-        class="homeview--form homeview--row homeview--form__scrollable homeview--input-freight-containers"
+        class="homeview--form homeview--row homeview--form__scrollable homeview--input-freight-complete"
       >
         <table class="homeview--order-confirm">
           <tr>
             <td class="homeview--order-confirm-row__top color-blue">Order Status: Pending</td>
-            <td class="homeview--order-confirm-row__top color-orange">Cost: KES 200,000</td>
+            <td class="homeview--order-confirm-row__top color-orange">Cost: {{ getEconomicPriceTiers.currency }} {{ getEconomicPriceTiers.cost }}</td>
           </tr>
           <tr>
             <td class="homeview--order-confirm-row__middle">Order Details</td>
@@ -342,25 +344,29 @@
           <tr>
             <td class="homeview--order-confirm-row__middle">
               <p class="homeview--order-confirm-header">Pick Up</p>
-              <p class="homeview--order-confirm-body">{{ locations[0] }}</p>
+              <p class="homeview--order-confirm-body">{{ getOuterPriceRequestData.from_name }}</p>
             </td>
             <td class="homeview--order-confirm-row__middle">
               <p class="homeview--order-confirm-header">20 Feet</p>
-              <p class="homeview--order-confirm-body">2 Flatbed trucks</p>
+              <p class="homeview--order-confirm-body">{{ twentyfoot }} Flatbed trucks</p>
             </td>
           </tr>
           <tr>
             <td class="homeview--order-confirm-row__bottom">
               <p class="homeview--order-confirm-header">Drop Off</p>
-              <p class="homeview--order-confirm-body">{{ locations[1] }}</p>
+              <p class="homeview--order-confirm-body">{{ getOuterPriceRequestData.to_name }}</p>
             </td>
             <td class="homeview--order-confirm-row__bottom">
               <p class="homeview--order-confirm-header">40 Feet</p>
-              <p class="homeview--order-confirm-body">12 Flatbed trucks</p>
+              <p class="homeview--order-confirm-body">{{ fourtyfoot }} Flatbed trucks</p>
             </td>
           </tr>
         </table>
-        <button class="button-primary homeview--order-confirm__button">Confirm Order</button>
+        <div class="home-view-truck-options-inner-wrapper">
+          <div class="home-view-vendor-classes--label">
+            <payment-options @destroyOrderOptions="destroyVendorComponent()" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -385,6 +391,7 @@ import {
 import orderPlacementStore from '../_store';
 import paymentsModuleStore from '../../../../payment/_store';
 import SessionMxn from '../../../../../mixins/session_mixin';
+import PaymentOptions from './PaymentOptions.vue';
 
 library.add(
   faPlus,
@@ -405,6 +412,7 @@ export default {
 
   components: {
     'no-ssr': NoSSR,
+    PaymentOptions,
   },
   mixins: [SessionMxn],
   data() {
@@ -425,6 +433,8 @@ export default {
       loadingStatus: true,
       containers: [],
       categories: [],
+      twentyfoot: 0,
+      fourtyfoot: 0,
       attachedFile: null,
       selectedContainer: null,
       editingStatus: false,
@@ -496,7 +506,7 @@ export default {
       );
     },
     buttonStatus() {
-      if (this.cont_no && this.destination !== 'none' && this.size !== 'none' && this.cont_weight && this.containers.length < this.noOfContainers && this.consignee) {
+      if (this.destination !== 'none' && this.size !== 'none' && this.cont_weight && this.containers.length < this.noOfContainers && this.consignee) {
         return 'button-primary bg-button-orange';
       }
       return 'button--primary-inactive';
@@ -518,7 +528,10 @@ export default {
         return true;
       }
       return false;
-    }
+    },
+    getEconomicPriceTiers() {
+      return this.getOuterPriceRequestData.economy_price_tiers[0].price_tiers[0];
+    },
   },
   created() {
     this.instantiateHomeComponent();
@@ -593,6 +606,9 @@ export default {
         // ...
       }
     },
+    destroyVendorComponent() {
+      this.$destroy();
+    },
     clearLocation(index) {
       this.resetLocation(index);
       this.attemptPriceRequest();
@@ -614,7 +630,7 @@ export default {
       this.$emit('clicked', phase);
     },
     resetDestination() {
-      if(!this.returnStatus) {
+      if (!this.returnStatus) {
         this.deleteLocationInModel(2);
         this.destination = '';
       }
@@ -731,6 +747,7 @@ export default {
     },
 
     createPriceRequestObject() {
+      const obj = { path: this.getStoreOrderPath };
       let acc = {};
       const session = this.$store.getters.getSession;
       if ('default' in session) {
@@ -767,8 +784,9 @@ export default {
           product_category_id: this.getProductId,
         },
       };
-      infor.path = this.getStoreOrderPath;
-      const finalObj = infor;
+      const jsonDecodedPath = JSON.stringify(obj);
+      infor.path = jsonDecodedPath;
+      const finalObj = { values: infor };
       return finalObj;
     },
     disabledDueDate(date) {
@@ -835,9 +853,23 @@ export default {
       this.size = 'none';
       this.consignee = '';
     },
+    getContainerSizeNumbers() {
+      this.twentyfoot = 0;
+      this.fourtyfoot = 0;
+      this.containers.forEach((row, i) => {
+        if (row.container_size_feet === 20) {
+          ++this.twentyfoot;
+        }
+        if (row.container_size_feet === 40) {
+          ++this.fourtyfoot;
+        }
+      });
+    },
     getQuote() {
-      this.productPhase(3);
-      console.log(JSON.stringify(this.createPriceRequestObject()));
+      this.getContainerSizeNumbers();
+      this.clearOuterPriceRequestObject();
+      this.clearOuterActiveVendorDetails();
+      this.doPriceRequest();
     },
     doPriceRequest() {
       this.setOuterPriceRequestObject('');
@@ -847,42 +879,42 @@ export default {
         endpoint: 'pricing_multiple',
       };
       this.loading = true;
-      const previousActiveVendor = this.get_active_vendor_name;
       const definedLocations = this.locations;
       this.requestPriceQuote(payload).then(
         (response) => {
           this.setOrderState(1);
           this.setHomeLocations(definedLocations);
-          this.setOuterPriceRequestObject(response.values);
           this.loading = false;
+          this.productPhase(3);
+          this.set_active_vendor_name(response.values.economy_price_tiers[0].price_tiers[0].vendor_name);
+          const previousActiveVendor = this.get_active_vendor_name;
+          response.values.freight = true;
+          this.setOuterPriceRequestObject(response.values);
           this.setDefaultPackageClass();
           this.setDefaultVendorType(previousActiveVendor);
-          const acc = this.$store.getters.getSession;
-          const accDefault = acc[acc.default];
+          // const acc = this.$store.getters.getSession;
+          // const accDefault = acc[acc.default];
 
-          if (Object.prototype.hasOwnProperty.call(acc, 'admin_details')) {
-            this.trackMixpanelEvent('Make Price Request', {
-              'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-              'Client Type': 'Web Platform',
-              'Super User Id': acc.admin_details.admin_id,
-              'Client Account': accDefault.user_email,
-            });
-          } else {
-            this.trackMixpanelEvent('Make Price Request', {
-              'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-              'Client Type': 'Web Platform',
-            });
-          }
+          // if (Object.prototype.hasOwnProperty.call(acc, 'admin_details')) {
+          //   this.trackMixpanelEvent('Make Price Request', {
+          //     'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+          //     'Client Type': 'Web Platform',
+          //     'Super User Id': acc.admin_details.admin_id,
+          //     'Client Account': accDefault.user_email,
+          //   });
+          // } else {
+          //   this.trackMixpanelEvent('Make Price Request', {
+          //     'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+          //     'Client Type': 'Web Platform',
+          //   });
+          // }
         },
         (error) => {
-          if (Object.prototype.hasOwnProperty.call(error, 'crisis_notification')) {
+          this.productPhase(2);
+          if (Object.prototype.hasOwnProperty.call(error, 'crisis_notification') && error.crisis_notification.msg) {
             this.doNotification(3, error.reason, error.crisis_notification.msg);
           } else {
-            this.doNotification(
-              3,
-              'Price request failed',
-              'Price request failed. Please try again after a few minutes.',
-            );
+            this.doNotification(3, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
           }
 
           this.loading = false;
@@ -971,9 +1003,7 @@ export default {
       } catch (er) {
         // console.log('failed to unregisterModule $_orders $_home on order placement home', er);
       }
-
       // do not unregister payments module since we do not expect any conflicts with the payment page state
-
       this.clear_order_path();
       this.remove_markers();
       this.remove_polyline();
