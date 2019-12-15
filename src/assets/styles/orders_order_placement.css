@@ -10,13 +10,14 @@
   padding: 18px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
 }
-.homeview--bottom {
-  bottom: 0;
+.homeview--child-orders {
   position: absolute;
   margin-bottom: 10px;
-  display: flex;
+  display: block;
   justify-content: center;
-  width: 100%;
+  width: max-content;
+  right: 25px;
+  overflow-y: hidden;
 }
 .homeview--input-bundler {
   padding-bottom: 15px;
@@ -24,8 +25,6 @@
 }
 .homeview--freight {
   position: absolute;
-  width: 100%;
-  height: 100%;
 }
 .homeview--input-freight {
   display: block;
@@ -158,7 +157,12 @@
 }
 .ongoing--card-override {
   padding: 15px;
-  width: 100%;
+}
+.card--override {
+  max-width: max-content !important;
+}
+.ongoing--card-row {
+  display: flex;
 }
 .homeview--heading__container-ongoing {
   margin-top: 0;
@@ -463,6 +467,14 @@
   width: 140px;
   margin-top: 30px;
 }
+.upload-link {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #1782c5;
+}
+.upload-link:hover {
+  color: #0d517b;
+}
 .upload-par {
   padding-top: 20px;
   font-size: 14px;
@@ -578,11 +590,37 @@
   flex-direction: row;
   flex-wrap: nowrap;
 }
+.homeview--childinfo {
+  z-index: 10;
+  width: 50%;
+  left: 25%;
+  position: absolute;
+  bottom: 10px;
+}
+.homeview--childinfo-row {
+  display: flex;
+}
+.homeview--childinfo-col-1 {
+  margin-right: 5%;
+  width: 55%;
+  margin-bottom: 20px;
+}
+.homeview--childinfo-col-2 {
+  margin-right: 5%;
+  width: 35%;
+}
 .homeview--childinfo-card {
   display: flex;
   background: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
-  width: 50%;
+  width: 100%;
+  margin: auto;
+}
+.homeview--childinfo-cancel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 25%;
 }
 .homeview--childinfo-order-status {
   font-weight: 500;
@@ -590,11 +628,20 @@
   line-height: 16px;
   color: #F57F20;
 }
-.homeview--childinfo-order-details, .homeview--childinfo-order-details {
+.homeview--childinfo-order-details {
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
   color: #1B7FC3;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+.homeview--childinfo-rider-details {
+  display: flex;
+  align-items: center;
+}
+.homeview--childinfo-rider-col {
+  width: 33%;
 }
 .homeview--childinfo-order-actions {
   display: flex;
@@ -634,7 +681,7 @@
 }
 .homeview--field {
   color: #969494;
-  margin-top: 4px;
+  margin-top: 5px;
 }
 .homeview--return-input {
   margin-top: 10px;
@@ -652,5 +699,15 @@
 }
 .homeview--return-destination {
   margin-top: 15px;
+}
+.homeview--input-freight-complete {
+  padding-bottom: 0px !important;
+  max-height: max-content !important;
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+  margin-right: 0px !important;
+}
+.loading-override {
+  height: 50px;
 }
 

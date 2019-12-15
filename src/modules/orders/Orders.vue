@@ -49,7 +49,7 @@
             @click="closeDiscountPopup()"
           />
           <img src="https://images.sendyit.com/web_platform/orders/upload.png" class="upload-photo" />
-          <p class="no-margin upload-par">Drag and drop your file or <span @click="simulateClick()">click here</span> to upload</p>
+          <p class="no-margin upload-par">Drag and drop your file or <span class="upload-link" @click="simulateClick()">click here</span> to upload</p>
           <p class="no-margin upload-text">(We support .csv .xlsx .xml and .ods)</p>
           <input type="file" id="upload-input" accept=".xls,.xlsx,.csv,.xml" @change="attachUpload" ref="uploadbttn">
           <button @click="upload()" class="upload-csv-button" :class="uploadBtn" :disabled="uploadBtn === 'button--primary-inactive'" id="upload-button">Upload CSV</button>
@@ -66,6 +66,7 @@
       </div>
       <map-component />
       <FbuChildOrders v-if="this.$route.path === '/orders/freight'" />
+      <FbuChildOrderTracking v-else-if="this.$route.name === 'freight_order_tracking'" />
       <ongoing-component v-else />
       <transition
         name="fade"
@@ -86,10 +87,11 @@ import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
 import OngoingComponent from './_components/OngoingComponent.vue';
 import FbuChildOrders from './_components/FbuChildOrders.vue';
+import FbuChildOrderTracking from './_components/tracking/_components/FbuChildOrderTracking.vue';
 
 export default {
   name: 'Orders',
-  components: { MainHeader, MapComponent, OngoingComponent, FbuChildOrders },
+  components: { MainHeader, MapComponent, OngoingComponent, FbuChildOrders, FbuChildOrderTracking },
   mixins: [RegisterStoreModule],
   data() {
     return {
@@ -182,7 +184,7 @@ export default {
         s3Url: '', /* optional */
       };
       const S3Client = new S3(config);
-      const fileName = new Date().getTime() + this.uploadButton.name.split('.')[0].toLowerCase().replace(/\s/g, '');
+      const fileName = `${new Date().getTime()}_${this.uploadButton.name.split('.')[0].toLowerCase().replace(/\s/g, '')}`;
       S3Client
         .uploadFile(this.uploadButton, fileName)
         .then((data) => {
