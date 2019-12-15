@@ -44,22 +44,6 @@ export default {
     return {
       showing: false,
       actionCount: 0,
-      childOrders: [
-        {
-          container_no: 'AKND4323539',
-          container_destination: 'Thika ICD',
-          truck_size: '20',
-          delivery_status: 3,
-          confirm_status: 0,
-        },
-        {
-          container_no: 'AKND4323538',
-          container_destination: 'Thika ICD',
-          truck_size: '40',
-          delivery_status: 1,
-          confirm_status: 0,
-        },
-      ],
       actions: [
         {
           actionClass: 'homeview--icon-pending',
