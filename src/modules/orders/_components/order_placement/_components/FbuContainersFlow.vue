@@ -150,7 +150,7 @@
               class="homeview--row__font-awesome homeview--input-bundler__img .homeview--input-bundler__destination-input sendy-orange"
               width="10px"
             /> Pick-Up <br>
-            Nairobi
+            {{ locations[0] }}
           </td>
           <td class="homeview--bottom-details-right col-right">
             <font-awesome-icon
@@ -159,7 +159,7 @@
               class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue"
               width="10px"
             /> Destination <br>
-            Kisumu
+            {{ locations[1] }}
           </td>
         </tr>
       </table>
