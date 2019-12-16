@@ -55,6 +55,11 @@
                     Orders
                   </a>
                 </li>
+                <li>
+                  <a @click="linkRoute('/orders/freight')">
+                    Freight
+                  </a>
+                </li>
                 <li v-if="admin_user">
                   <a @click="linkRoute('/admin/users')">
                     Settings
@@ -152,6 +157,9 @@ export default {
     },
     logOut() {
       try {
+        localStorage.removeItem('_sessionSnack');
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('refreshToken');
         this.$store.commit('deleteSession');
         // clear orders to avoid marker persistance
         this.$store.unregisterModule('$_orders');
@@ -198,5 +206,5 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../assets/styles/internal_header.css?v=1";
+@import '../../assets/styles/internal_header.css?v=1';
 </style>
