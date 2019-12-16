@@ -364,7 +364,7 @@
         </table>
         <div class="home-view-truck-options-inner-wrapper">
           <div class="home-view-vendor-classes--label">
-            <payment-options @destroyOrderOptions="destroyVendorComponent()" />
+            <payment-options />
           </div>
         </div>
       </div>
@@ -605,9 +605,6 @@ export default {
       } catch (er) {
         // ...
       }
-    },
-    destroyVendorComponent() {
-      this.$destroy();
     },
     clearLocation(index) {
       this.resetLocation(index);
