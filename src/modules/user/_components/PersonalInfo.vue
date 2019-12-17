@@ -152,7 +152,6 @@ export default {
       requestPersonalInfo: '$_user/requestPersonalInfo',
       requestPhoneVerification: '$_user/requestPhoneVerification',
       requestPhoneVerificationVerify: '$_user/requestPhoneVerificationVerify',
-
     }),
     save_personal() {
       if (this.user_name !== '' && this.user_email !== '' && this.phone !== '') {
@@ -165,7 +164,7 @@ export default {
 
           const oldPhone = session[session.default].user_phone;
 
-          if (oldPhone === phone) {
+          if (oldPhone !== phone) {
             this.validate = true;
             this.proceed_update = false;
             this.doNotification(1, 'Phone Verification', 'Phone verification code sent !');

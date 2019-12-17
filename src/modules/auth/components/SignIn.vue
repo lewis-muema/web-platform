@@ -106,6 +106,7 @@ export default {
       this.$store.commit('deleteSession');
       localStorage.removeItem('_sessionSnack');
       localStorage.removeItem('jwtToken');
+      localStorage.removeItem('refreshToken');
     },
     sign_in() {
       if (this.email !== '' && this.password !== '') {
@@ -122,7 +123,7 @@ export default {
           endpoint: 'sign_in',
         };
         this.authSignIn(fullPayload).then(
-          (response) => {
+          response => {
             if (Object.prototype.hasOwnProperty.call(response, 'status')) {
               const errorResponse = response.data;
               if (errorResponse.code === 1) {
@@ -135,13 +136,21 @@ export default {
             } else {
               try {
                 if (response) {
-                  const refreshToken = response.refresh_token;
-                  const accessToken = response.access_token;
+                  let partsOfToken = '';
+                  if (Array.isArray(response)) {
+                    const res = response[1];
+                    localStorage.setItem('jwtToken', res);
+                    localStorage.setItem('jwtToken', res.access_token);
+                    localStorage.setItem('refreshToken', res.refresh_token);
+                    partsOfToken = res.access_token.toString().split('.');
+                  } else {
+                    localStorage.setItem('jwtToken', response);
+                    localStorage.setItem('jwtToken', response.access_token);
+                    localStorage.setItem('refreshToken', response.refresh_token);
+                    partsOfToken = response.access_token.split('.');
+                  }
                   // eslint-disable-next-line max-len
                   // TODO change from using local storage as session trust store. malicious js will read the data
-                  localStorage.setItem('jwtToken', accessToken);
-                  localStorage.setItem('refreshToken', refreshToken);
-                  const partsOfToken = accessToken.split('.');
                   const middleString = partsOfToken[1];
                   const data = atob(middleString);
                   const { payload } = JSON.parse(data);
@@ -180,7 +189,17 @@ export default {
                       'Client Type': 'Web Platform',
                     });
                   }
-                  this.$router.push('/orders');
+                  //check for redirect status before push
+                  let redirectStatus = this.$store.getters.getRedirectStatus;
+                  let redirectOrder = this.$store.getters.getRedirectOrder;
+                  if (redirectStatus) {
+                    //reset redirect status
+                    this.$store.commit('setRedirectStatus', false);
+                    this.$store.commit('setRedirectOrder', '');
+                    this.$router.push(`/orders/tracking/${redirectOrder}`);
+                  } else {
+                    this.$router.push('/orders');
+                  }
                 }
               } catch (error) {
                 // @todo Log the error (central logging)
@@ -188,10 +207,10 @@ export default {
               }
             }
           },
-          (error) => {
+          error => {
             this.login_text = 'Login';
             this.doNotification(2, 'Login failed', 'Login failed. Please try again');
-          },
+          }
         );
       } else {
         this.message = 'Provide all values';
@@ -212,108 +231,108 @@ export default {
 
 <style lang="css">
 .log-item {
-    text-align: center;
-    border: 0px solid #ccc;
-    margin: 5px;
+  text-align: center;
+  border: 0px solid #ccc;
+  margin: 5px;
 }
 
 .sign-inner {
-    max-width: 22rem;
-    border: 1px solid #d8dfe6;
-    border-radius: 4px;
-    margin: 2rem auto;
-    padding: 2rem;
-    font-family: "Helvetica Nueu", "Helvetica", "Arial", "sans-serif";
+  max-width: 22rem;
+  border: 1px solid #d8dfe6;
+  border-radius: 4px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
 }
 
 .sign-top {
-    font-size: 1.3rem;
-    line-height: 1.7em;
-    font-weight: 500;
-    text-align: center;
-    color: #666;
+  font-size: 1.3rem;
+  line-height: 1.7em;
+  font-weight: 500;
+  text-align: center;
+  color: #666;
 }
 
 .sign-in-button {
-    width: 90%;
-    margin: 1em;
-    background-color: #30487b;
-    color: #fff;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font-size: initial;
-    letter-spacing: 1.1px;
-    border-radius: 5px;
-    text-align: center;
-    cursor: pointer;
+  width: 90%;
+  margin: 1em;
+  background-color: #30487b;
+  color: #fff;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: initial;
+  letter-spacing: 1.1px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
 }
 
 .sign-text {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    font-size: large;
-    margin-bottom: 10px;
-    text-align: center;
-    color: #666;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: large;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #666;
 }
 
 .sign-holder {
-    margin: 1em;
-    display: block;
+  margin: 1em;
+  display: block;
 }
 
-.sign-holder input:not([type="checkbox"]) {
-    width: 100%;
+.sign-holder input:not([type='checkbox']) {
+  width: 100%;
 }
 
 .sign-holder .sign-holder__input {
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    height: 30px;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  height: 30px;
 }
 
 .sign-smaller {
-    font-size: 14px;
-    color: #999999;
+  font-size: 14px;
+  color: #999999;
 }
 
 .sign-forgot-pass,
 .sign-in-sign-up {
-    text-align: center;
+  text-align: center;
 }
 
 .sign-buttom__img {
-    vertical-align: middle;
-    width: 14px;
-    padding-bottom: 3px;
-    margin-right: 10px;
+  vertical-align: middle;
+  width: 14px;
+  padding-bottom: 3px;
+  margin-right: 10px;
 }
 
 .sign-holder__link {
-    color: #1782c5;
-    text-decoration: none;
+  color: #1782c5;
+  text-decoration: none;
 }
 
 .dimen {
-    width: 83%;
+  width: 83%;
 }
 
 .sign-holder__pointer {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .sign-form {
-    height: 42px !important;
-    width: 110% !important;
+  height: 42px !important;
+  width: 110% !important;
 }
 
 .sign-in-error {
-    color: #e08445;
-    font-family: "Rubik", sans-serif;
+  color: #e08445;
+  font-family: 'Rubik', sans-serif;
 }
 
 .sign-btn-color {
-    border-width: 0px !important;
+  border-width: 0px !important;
 }
 </style>

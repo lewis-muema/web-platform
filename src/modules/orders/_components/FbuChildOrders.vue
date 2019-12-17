@@ -7,7 +7,7 @@
       class="ongoing--count"
       @click="toggle_ongoing()"
     >
-      <span>{{ num_ongoing }} ongoing orders</span>
+      <span>{{ num_ongoing }} ongoing FBU orders</span>
       <font-awesome-icon
         icon="chevron-up"
         :class="classObject"
@@ -76,7 +76,7 @@ export default {
     filter_orders() {
       const orders = [];
       this.get_orders.forEach((row) => {
-        if (!Object.prototype.hasOwnProperty.call(row, 'freight_order')) {
+        if (Object.prototype.hasOwnProperty.call(row, 'freight_order')) {
           orders.push(row);
         }
       });
@@ -120,16 +120,10 @@ export default {
       }
     },
     track(order) {
-      this.hide_vendors();
-      this.clearVendorMarkers();
-      this.$router.push({ path: `/orders/tracking/${order}` });
-      this.change_page(1);
-    },
-    active_card(orderNo) {
-      if (this.$route.params.order_no === orderNo) {
-        return true;
-      }
-      return false;
+      // this.hide_vendors();
+      // this.clearVendorMarkers();
+      this.$router.push({ path: `/orders/freight/tracking/${order}` });
+      // this.change_page(1);
     },
     date_format(date) {
       return this.moment(date).calendar(null, {
@@ -141,6 +135,12 @@ export default {
           return 'MMM D, hh:mm a';
         },
       });
+    },
+    active_card(orderNo) {
+      if (this.$route.params.order_no === orderNo) {
+        return true;
+      }
+      return false;
     },
     poll() {
       try {
@@ -162,21 +162,17 @@ export default {
         switch (order.delivery_status) {
           case 3: {
             return 'Delivered';
-            break;
           }
           case 2: {
             return 'In Transit';
-            break;
           }
           default: {
             switch (order.confirm_status) {
               case 1: {
                 return 'Confirmed';
-                break;
               }
               default: {
                 return 'Pending';
-                break;
               }
             }
           }

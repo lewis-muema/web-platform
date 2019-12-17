@@ -27,4 +27,16 @@ export default {
   deleteSession(state) {
     state.session = {};
   },
+  setFCMToken(state, token) {
+    state.fcm_token = token;
+  },
+  setFCMData(state, data) {
+    state.fcm_data = data;
+  },
+  setRedirectStatus(state, status) {
+    state.redirect_status = status;
+  },
+  setRedirectOrder(state, order) {
+    state.redirect_order = order;
+  },
 };

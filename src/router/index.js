@@ -60,7 +60,9 @@ function guard(to, from, next) {
           if (details !== 'undefined') {
             mixpanel.track(details, {
               'Client Type': 'Web Platform',
-              'Account Type': session.default === 'peer' ? 'Personal' : 'Business',
+              'Account Type': session.default === 'peer'
+                ? 'Personal'
+                : 'Business',
             });
           }
         }
@@ -182,7 +184,9 @@ export function createRouter() {
               {
                 path: 'details/:id',
                 name: 'order-details',
-                component: () => import('../modules/transactions/_components/OrderDetails.vue'),
+                component: () => import(
+                  '../modules/transactions/_components/OrderDetails.vue',
+                ),
               },
             ],
           },
@@ -260,12 +264,8 @@ export function createRouter() {
             component: () => import('../modules/analytics/components/Weekly.vue'),
           },
           {
-            path: '/analytics/weekly',
+            path: '/analytics/report',
             component: () => import('../modules/analytics/components/Weekly.vue'),
-          },
-          {
-            path: '/analytics/monthly',
-            component: () => import('../modules/analytics/components/Monthly.vue'),
           },
         ],
       },
@@ -307,6 +307,22 @@ export function createRouter() {
             alias: '/orders/home',
             name: 'order_placement',
             meta: { innerTrack: 'Order Placement Page' },
+          },
+          {
+            path: '/orders/freight',
+            component: () => import(
+              '../modules/orders/_components/order_placement/Freight.vue',
+            ),
+            name: 'freight_order_placement',
+            meta: { innerTrack: 'Freight Order Placement Page' },
+          },
+          {
+            path: '/orders/freight/tracking/:order',
+            component: () => import(
+              '../modules/orders/_components/tracking/_components/FbuTrackBar.vue',
+            ),
+            name: 'freight_order_tracking',
+            meta: { innerTrack: 'Freight Order Tracking Page' },
           },
           {
             path: '/orders/tracking/:order_no',

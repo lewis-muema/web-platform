@@ -8,15 +8,9 @@
       <div class="section">
         <router-link
           class="section__link"
-          to="/analytics/weekly"
+          to="/analytics/report"
         >
-          Weekly
-        </router-link>
-        <router-link
-          class="section__link"
-          to="/analytics/monthly"
-        >
-          Monthly
+          Report
         </router-link>
       </div>
       <div class="">

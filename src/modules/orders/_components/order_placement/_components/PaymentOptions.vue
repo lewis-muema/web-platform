@@ -58,7 +58,7 @@
             </div>
           </div>
           <span v-if="checkIfTruckOrder()">
-          <!-- Nothing displayed -->
+            <!-- Nothing displayed -->
           </span>
           <span v-else-if="getPriceRequestObject.payment_option === 1">
             <div
@@ -142,7 +142,7 @@
       </div>
     </div>
 
-    <div class="home-view-place-order">
+    <div class="home-view-place-order" :class="loader_class">
       <div
         v-if="loading"
         v-loading="loading"
@@ -176,10 +176,18 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import {
+  mapActions,
+  mapGetters,
+  mapMutations,
+} from 'vuex';
 import numeral from 'numeral';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import {
+  library,
+} from '@fortawesome/fontawesome-svg-core';
+import {
+  faChevronDown,
+} from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
 
@@ -208,7 +216,7 @@ export default {
       customer_token: '',
       payment_type: 'prepay',
       payment_state: 0, // 0- initial 1- loading 2- success 3- cancelled
-      should_destroy: false,
+      shouldDestroy: false,
       schedule_picker_options: {
         disabledDate(time) {
           return time.getTime() < Date.now();
@@ -281,7 +289,7 @@ export default {
     order_cost() {
       let cost = 0;
       if (typeof this.activeVendorPriceData !== 'undefined') {
-        if ('cost' in this.activeVendorPriceData) {
+        if ('cost' in this.activeVendorPriceData && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
           if (
             !this.getIsReturn
             || this.vendors_without_return.includes(this.get_active_vendor_name)
@@ -292,6 +300,8 @@ export default {
           cost = this.activeVendorPriceData.return_cost - this.activeVendorPriceData.discountAmount;
           return cost;
         }
+        cost = this.activeVendorPriceData.cost - this.activeVendorPriceData.discount_amount;
+        return cost;
       }
 
       return cost;
@@ -299,6 +309,9 @@ export default {
 
     // order cost including discounts
     full_order_cost() {
+      if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+        return this.order_cost + this.activeVendorPriceData.discount_amount;
+      }
       return this.order_cost + this.activeVendorPriceData.discountAmount;
     },
 
@@ -352,14 +365,15 @@ export default {
       return this.moment().format('YYYY-MM-DD HH:mm:ss');
     },
 
-    current_time() {
-      return this.moment().format('YYYY-MM-DD HH:mm:ss');
-    },
-
     scheduled_time() {
       return this.moment(this.get_schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format(
         'YYYY-MM-DD HH:mm:ss',
       );
+    },
+    order_no() {
+      return this.activeVendorPriceData.order_no === undefined
+        ? this.activeVendorPriceData.id
+        : this.activeVendorPriceData.order_no;
     },
 
     getRB() {
@@ -406,10 +420,11 @@ export default {
         ? 2
         : Number(this.get_carrier_type);
     },
-
-    order_no() {
-      return this.activeVendorPriceData.order_no === undefined
-        ? this.activeVendorPriceData.id : this.activeVendorPriceData.order_no;
+    loader_class() {
+      if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+        return 'loading-override';
+      }
+      return '';
     },
   },
 
@@ -427,7 +442,7 @@ export default {
   },
 
   destroyed() {
-    if (this.should_destroy) {
+    if (this.shouldDestroy) {
       this.$emit('destroyOrderOptions');
     } else {
       this.saveInfoToStore();
@@ -502,7 +517,7 @@ export default {
       } catch (er) {
         //
       }
-      if (minAmount <= 0) {
+      if (minAmount <= 0 && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
         this.doNotification(
           '2',
           'Missing Minimum Order Amount',
@@ -640,25 +655,81 @@ export default {
             // eslint-disable-next-line no-param-reassign,prefer-destructuring
             response = response[0];
           }
-
+          /* eslint camelcase: ["error", {ignoreDestructuring: true}] */
           if (response.status) {
             let order_no;
             this.setPickupFilled(false);
             // eslint-disable-next-line camelcase
             if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'order_no')) {
-              ({ order_no } = this.activeVendorPriceData);
+              ({
+                order_no,
+              } = this.activeVendorPriceData);
             } else {
-              ({ order_no } = response.respond);
+              ({
+                order_no,
+              } = response.respond);
+              try {
+                this.mixpanelTrackPricingServiceCompletion(order_no);
+              } catch (er) {
+                // catch er
+              }
             }
+            if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+              this.doNotification(1, 'Successfully placed freight order', '');
+            }
+            this.shouldDestroy = true;
             this.should_destroy = true;
             this.$store.dispatch('$_orders/fetchOngoingOrders');
-            this.trackMixpanelEvent(payload.values);
-            this.$router.push({
-              name: 'tracking',
-              params: {
-                order_no,
-              },
+            this.$root.$emit('Order Placement Force Update');
+            const data = JSON.parse(payload.values).values;
+            const session = this.$store.getters.getSession;
+            const acc = session.default;
+            if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
+              this.trackMixpanelEvent('Place Order', {
+                'Account ': data.type,
+                'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+                'Client Type': 'Web Platform',
+                'Order Number': order_no,
+                'Payment Mode': this.payment_method,
+                'User Email': data.user_email,
+                'User Phone': data.user_phone,
+                'Super User Id': session.admin_details.admin_id,
+              });
+            } else {
+              this.trackMixpanelEvent('Place Order', {
+                'Account ': data.type,
+                'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+                'Client Type': 'Web Platform',
+                'Order Number': order_no,
+                'Payment Mode': this.payment_method,
+                'User Email': data.user_email,
+                'User Phone': data.user_phone,
+              });
+            }
+
+            this.trackMixpanelEvent('Order Completion Log', {
+              'Account ': data.type,
+              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+              'Client Type': 'Web Platform',
+              'Payment Mode': this.payment_method,
+              'Cash Status': data.cash_status,
+              'User Email': data.user_email,
+              'User Phone': data.user_phone,
+              'Order Number': order_no,
+              'Order Amount': data.amount,
+              'Schedule Time': data.schedule_time,
+              'Schedule Status': data.schedule_status,
+              'Carrier Type ID': data.carrier_type,
+              'Vendor Type ID': data.vendor_type,
             });
+            if (!Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+              this.$router.push({
+                name: 'tracking',
+                params: {
+                  order_no,
+                },
+              });
+            }
           } else {
             this.doNotification(
               2,
@@ -684,8 +755,10 @@ export default {
       if ('default' in session) {
         acc = session[session.default];
       }
-      if (this.getPriceRequestObject.payment_option === 1
-              && this.getRunningBalance - this.order_cost >= 0) {
+      if (
+        this.getPriceRequestObject.payment_option === 1
+        && this.getRunningBalance - this.order_cost >= 0
+      ) {
         this.payment_method = 11;
       } else if (this.getPriceRequestObject.payment_option === 2) {
         this.payment_method = 12;
@@ -697,8 +770,7 @@ export default {
         user_phone: acc.user_phone,
         no_charge_status: false,
         insurance_amount: 10,
-        note_status:
-          typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
+        note_status: typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
         last_digit: 'none',
         insurance_id: 1,
         platform: 'corporate',
@@ -717,8 +789,7 @@ export default {
         tier_name: this.activeVendorPriceData.tier_name,
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
         carrier_type: this.final_carrier_type,
-        isreturn:
-          this.getIsReturn && !this.vendors_without_return.includes(this.get_active_vendor_name),
+        isreturn: this.getIsReturn && !this.vendors_without_return.includes(this.get_active_vendor_name),
         vendor_type: this.activeVendorPriceData.vendor_id,
         rider_phone: this.order_no,
         type: this.payment_type,
@@ -744,6 +815,7 @@ export default {
       if (this.activeVendorPriceData.order_no === undefined) {
         payload.pricing_uuid = this.activeVendorPriceData.id;
       }
+
       payload = {
         values: payload,
       };
@@ -848,62 +920,24 @@ export default {
           mixpanel.identify(email);
         }
       } catch (er) {
-        // ...
+        this.doNotification('3', 'Something went wrong', '');
       }
     },
 
+    mixpanelTrackPricingServiceCompletion(orderNo) {
+      this.trackMixpanelEvent('Place Order - Pricing Service', { 'Order No': orderNo });
+    },
     /* global mixpanel */
-    trackMixpanelEvent(name) {
-      const data = JSON.parse(name).values;
-      const session = this.$store.getters.getSession;
-      const acc = session.default;
+    trackMixpanelEvent(name, event) {
       let analyticsEnv = '';
       try {
         analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
       } catch (er) {
         // ...
       }
-
       try {
         if (analyticsEnv === 'production') {
-          if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
-            mixpanel.track('Place Order', {
-              'Account ': data.type,
-              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-              'Client Type': 'Web Platform',
-              'Order Number': data.trans_no,
-              'Payment Mode': this.payment_method,
-              'User Email': data.user_email,
-              'User Phone': data.user_phone,
-              'Super User Id': session.admin_details.admin_id,
-            });
-          } else {
-            mixpanel.track('Place Order', {
-              'Account ': data.type,
-              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-              'Client Type': 'Web Platform',
-              'Order Number': data.trans_no,
-              'Payment Mode': this.payment_method,
-              'User Email': data.user_email,
-              'User Phone': data.user_phone,
-            });
-          }
-
-          mixpanel.track('Order Completion Log', {
-            'Account ': data.type,
-            'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-            'Client Type': 'Web Platform',
-            'Payment Mode': this.payment_method,
-            'Cash Status': data.cash_status,
-            'User Email': data.user_email,
-            'User Phone': data.user_phone,
-            'Order Number': data.trans_no,
-            'Order Amount': data.amount,
-            'Schedule Time': data.schedule_time,
-            'Schedule Status': data.schedule_status,
-            'Carrier Type ID': data.carrier_type,
-            'Vendor Type ID': data.vendor_type,
-          });
+          mixpanel.track(name, event);
         }
       } catch (er) {
         // ...
@@ -1044,24 +1078,8 @@ export default {
                 );
                 that.payment_state = 0;
                 that.loading = false;
-                that.mpesa_payment_state = true;
-                that.doNotification('1', 'Payment successful', 'Completing your order...');
-                that.doCompleteOrder();
-                return true;
-              }
-
-              if (pollLimitValue === 6) {
-                if (pollCount === 5) {
-                  that.doNotification(
-                    '0',
-                    'Payment not received',
-                    "We'll keep retrying to check your payment status and complete your order once the payment is received.",
-                  );
-                  that.payment_state = 0;
-                  that.loading = false;
-                  that.requestMpesaPaymentPoll(60);
-                  that.mpesa_payment_state = false;
-                }
+                that.requestMpesaPaymentPoll(60);
+                that.mpesa_payment_state = false;
               }
             }
           }, 10000 * pollCount);
@@ -1180,7 +1198,7 @@ export default {
             this.requestPaymentOptionsAction(fullPayload).then(
               (response) => {
                 if (response.status) {
-                  this.payment_methods = response.payment_methods;
+                  this.determinePaymentOptions(response);
                 }
               },
               (error) => {
@@ -1198,6 +1216,27 @@ export default {
           this.loading = false;
         },
       );
+    },
+
+    determinePaymentOptions(data) {
+      let payment = [];
+      payment = data.payment_methods;
+
+      const exist = data.payment_methods.find(available => available.name === 'Cash');
+
+      if (exist === undefined || exist === null) {
+        payment = data.payment_methods;
+      } else {
+        const runningBalance = this.getRunningBalance;
+        if ((runningBalance >= 0) && (runningBalance - this.order_cost < 0)) {
+          payment = data.payment_methods;
+        } else {
+          const cashIndex = data.payment_methods.findIndex(index => index.name === 'Cash');
+          payment = data.payment_methods.splice(cashIndex, 1);
+        }
+      }
+
+      this.payment_methods = data.payment_methods;
     },
 
     /* end card */
@@ -1219,7 +1258,7 @@ export default {
       this.mpesa_valid = intValue !== '+256';
     },
     isValidateLoadWeightStatus() {
-      if (this.activeVendorPriceData.vendor_id === 25 && !this.getLoadWeightStatus) {
+      if (this.activeVendorPriceData.vendor_id === 25 && !this.getLoadWeightStatus && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
         this.doNotification('2', 'Invalid Load Weight', 'Kindly provide a valid load weight');
         return false;
       }

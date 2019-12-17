@@ -150,10 +150,9 @@ export default {
             }
             if (response.status) {
               const sessionData = response.data;
-              const {
-                user_email,
-              } = session_data[sessionData.default];
+              const { user_email } = sessionData[sessionData.default];
               const pass = this.new_password;
+
               this.handleNewSession(user_email, pass);
             } else {
               this.doNotification(
@@ -199,15 +198,13 @@ export default {
           } else {
             try {
               if (response) {
-                let partsOfToken = '';
-                if (Array.isArray(response)) {
-                  const res = response[1];
-                  localStorage.setItem('jwtToken', res);
-                  partsOfToken = res.toString().split('.');
-                } else {
-                  localStorage.setItem('jwtToken', response);
-                  partsOfToken = response.split('.');
-                }
+                const refreshToken = response.refresh_token;
+                const accessToken = response.access_token;
+                // eslint-disable-next-line max-len
+                // TODO change from using local storage as session trust store. malicious js will read the data
+                localStorage.setItem('jwtToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
+                const partsOfToken = accessToken.split('.');
                 const middleString = partsOfToken[1];
                 const data = atob(middleString);
                 const {
