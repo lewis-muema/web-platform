@@ -23,16 +23,53 @@
       <div class="section--filter-action-wrap">
         <button
           type="button"
-          :class="valid_filter ? 'button-primary section--filter-action btn-statement'
-            : 'button-primary section--filter-action-inactive btn-statement'"
+          :class="
+            valid_filter
+              ? 'button-primary section--filter-action btn-statement'
+              : 'button-primary section--filter-action-inactive btn-statement'
+          "
           name="order_statement_text"
-          :disabled="valid_filter == true ? false : true"
+          :disabled="valid_filter === true ? false : true"
           @click="filterStatementData"
         >
           {{ order_statement_text }}
         </button>
       </div>
     </div>
+    <div class="bg-grey">
+      <div class="download_history">
+        <el-dropdown
+          align="right"
+          @command="handleCommand"
+        >
+          <el-button
+            class="download_history"
+            type="primary"
+            size="mini"
+          >
+            Download<i class="el-icon-arrow-down el-icon--right" />
+          </el-button>
+          <el-dropdown-menu
+            slot="dropdown"
+            class="export_dropdown"
+          >
+            <el-dropdown-item command="a">
+              Excel
+            </el-dropdown-item>
+            <el-dropdown-item command="b">
+              PDF
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+    </div>
+
+    <el-table
+      :data="statement_data"
+      style="width: 100%"
+      :border="true"
+      :stripe="true"
+    />
 
     <el-table
       :data="statement_data"
@@ -46,35 +83,37 @@
       <el-table-column
         label="Txn"
         prop="txn"
+        min-width="80"
       />
       <el-table-column
         label="Date"
         prop="date_time"
         :formatter="formatDate"
+        width="170"
       />
       <el-table-column
         label="Description"
         prop="description"
-        width="180"
+        min-width="80"
       />
       <el-table-column
         label="Debit"
         prop="amount"
-        width="180"
+        width="110"
         :formatter="formatDebitAmount"
         class-name="amount--table-format"
       />
       <el-table-column
         label="Credit"
         prop="amount"
-        width="180"
+        width="110"
         :formatter="formatCreditAmount"
         class-name="amount--table-format"
       />
       <el-table-column
         label="Running Balance"
         prop="running_balance"
-        width="180"
+        width="125"
         :formatter="formatRunningBalance"
         class-name="amount--table-format"
       />
@@ -86,7 +125,7 @@
         :total="statement_total"
         :page-size="pagination_limit"
         :current-page.sync="pagination_page"
-        :page-sizes="[5,10, 20, 50, 100]"
+        :page-sizes="[5, 10, 20, 50, 100]"
         class="section--pagination-item"
         @current-change="changePage"
         @size-change="changeSize"
@@ -97,6 +136,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { Printd } from 'printd';
+import * as _ from 'lodash';
+import exportFromJSON from 'export-from-json';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const moment = require('moment');
 
@@ -114,7 +160,6 @@ export default {
         to_date: '',
       },
       filteredStatementData: [],
-
     };
   },
   computed: {
@@ -129,9 +174,6 @@ export default {
       const from = (this.pagination_page - 1) * this.pagination_limit;
       const to = this.pagination_page * this.pagination_limit;
 
-      // if(this.filterState == true){
-      //   return this.filteredStatementData.slice(from, to);
-      // }
       return this.statementData.slice(from, to);
     },
     statement_total() {
@@ -163,7 +205,6 @@ export default {
           cop_id: sessionData.biz.cop_id,
           user_type: sessionData.biz.user_type,
           user_id: sessionData.biz.user_id,
-
         };
       } else {
         // create peer payload
@@ -179,15 +220,16 @@ export default {
         endpoint: 'statement',
       };
 
-      this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(() => {
-        this.empty_statement_state = 'Statement Not Found';
-      }, () => {
-        this.empty_statement_state = 'Statement Failed to Fetch';
-      });
+      this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(
+        () => {
+          this.empty_statement_state = 'Statement Not Found';
+        },
+        () => {
+          this.empty_statement_state = 'Statement Failed to Fetch';
+        },
+      );
     },
-    ...mapActions([
-      '$_transactions/requestStatement',
-    ]),
+    ...mapActions(['$_transactions/requestStatement']),
     changeSize(val) {
       this.pagination_page = 1;
       this.pagination_limit = val;
@@ -201,25 +243,29 @@ export default {
       return moment(row.date_time).format('MMM Do YYYY, h:mm a');
     },
     formatRunningBalance(row) {
-      let value = (row.running_balance).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+      let value = row.running_balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
       value = value.split('.');
-      return value[0];
+      const updatedRunningBalance = Number(value[0].replace(/,/g, '')) * -1;
+      const formattedRunningBalance = updatedRunningBalance
+        .toString()
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+      return formattedRunningBalance;
     },
     formatDebitAmount(row) {
       if (Math.sign(row.amount) > 0) {
-        let value = (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         value = value.split('.');
         return value[0];
       }
-      return row.amount;
+      return '';
     },
     formatCreditAmount(row) {
       if (Math.sign(row.amount) < 0) {
-        let value = (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         value = value.split('.');
-        return value[0];
+        return value[0].replace('-', '');
       }
-      return row.amount;
+      return '';
     },
     filterStatementData() {
       // reset filter
@@ -229,8 +275,6 @@ export default {
       this.empty_statement_state = 'Searching Payments';
 
       let { from_date: fromDate, to_date: toDate } = this.filterData;
-      // let from_date = this.filterData.from_date;
-      // let to_date = this.filterData.to_date;
 
       fromDate = moment(fromDate).format('YYYY-MM-DD');
       toDate = moment(toDate).format('YYYY-MM-DD');
@@ -242,7 +286,6 @@ export default {
           user_type: sessionData.biz.user_type,
           from: fromDate,
           to: toDate,
-
         };
       } else {
         // create peer payload
@@ -253,7 +296,6 @@ export default {
         };
       }
 
-
       this.order_statement_text = 'Searching...';
       this.requestStatement(payload);
       // console.log(this.statementData);
@@ -261,21 +303,6 @@ export default {
       this.filteredStatementData = this.statementData;
 
       this.filterState = true;
-
-      // this.filteredStatementData = this.statement_data;
-      //
-      // console.log(this.filteredStatementData);
-      // console.log(to_date);
-      // if (from_date !== '' && to_date !== '') {
-      //
-      //   this.filteredStatementData = this.filteredStatementData.filter(function (statement) {
-      /* return moment(statement.date_time).isSameOrAfter(from_date)
-      && moment(statement.date_time).isSameOrBefore(to_date); */
-      //   });
-      //   this.filterState = true;
-      //
-      // }
-      // this.empty_statement_state = "Statement Not Found";
     },
 
     requestStatement(payload) {
@@ -285,16 +312,76 @@ export default {
         app: 'NODE_PRIVATE_API',
         endpoint: 'statement',
       };
-      this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(() => {
-        this.order_statement_text = 'Search';
-        this.empty_statement_state = 'Statement Not Found';
-      }, () => {
-        this.order_statement_text = 'Search';
-        this.empty_statement_state = 'Statement Failed to Fetch';
-      });
+      this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(
+        () => {
+          this.order_statement_text = 'Search';
+          this.empty_statement_state = 'Statement Not Found';
+        },
+        () => {
+          this.order_statement_text = 'Search';
+          this.empty_statement_state = 'Statement Failed to Fetch';
+        },
+      );
     },
+    handleCommand(command) {
+      if (command === 'a') {
+        let data;
+        const data2 = [];
 
+        for (let i = 0; i < this.statementData.length; i++) {
+          const arr = {};
+          arr.Amount = this.statementData[i].amount;
+          arr.Date = this.statementData[i].date_time;
+          arr.Description = this.statementData[i].description;
+          arr.PaymentMethod = this.statementData[i].pay_method_name;
+          arr.RunningBalance = this.statementData[i].running_balance;
+          arr.Transaction = this.statementData[i].txn;
+          data2.push(arr);
+        }
+        data = _.map(data2, row => _.pick(
+          row,
+          'Amount',
+          'Date',
+          'Description',
+          'PaymentMethod',
+          'RunningBalance',
+          'Transaction',
+        ));
+        const fileName = 'Statement';
+        const exportType = 'csv';
 
+        exportFromJSON({ data, fileName, exportType });
+      } else {
+        const pdfBody = [
+          ['Amount', 'Date', 'Description', 'Payment Method', 'Running Balance', 'Transaction'],
+        ];
+
+        this.statementData.forEach((item) => {
+          pdfBody.push([
+            item.amount,
+            item.date_time,
+            item.description,
+            item.pay_method_name,
+            item.running_balance,
+            item.txn,
+          ]);
+        });
+
+        const docDefinition = {
+          pageSize: 'A3',
+          widths: ['*', 'auto', 100, '*'],
+
+          content: [
+            {
+              table: {
+                body: pdfBody,
+              },
+            },
+          ],
+        };
+        pdfMake.createPdf(docDefinition).download('Statement.pdf');
+      }
+    },
   },
 };
 </script>
@@ -302,5 +389,11 @@ export default {
 <style lang="css">
 .btn-statement{
   border-width:0px !important;
+}
+.btn-order-hstry{
+  border-width:0px !important;
+}
+.el-dropdown{
+  float: right;
 }
 </style>

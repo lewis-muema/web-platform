@@ -1,15 +1,29 @@
-const get_page = state => state.page;
-const show_ongoing = state => state.ongoing_show;
-const get_ongoing_orders = state => state.ongoing_orders;
-const get_markers = state => state.map.markers;
-const get_polyline = state => state.map.polyline;
-const get_vendors = state => state.map.vendors;
+const getPage = state => state.page;
+const showOngoing = state => state.ongoing_show;
+const getOngoingOrders = state => state.ongoing_orders;
+const getMarkers = state => state.map.markers;
+const getPolyline = state => state.map.polyline;
+const getVendors = state => state.map.vendors;
+const getHomeLocations = state => state.home_locations;
+const getStorePath = state => state.location_path;
+const getOuterPriceRequestData = state => state.outer_price_request;
+const getOuterActiveVendorDetails = state => state.outer_active_vendor_data;
+const getOuterActivePackageClass = state => state.outer_active_package_data;
+const getChildOrders = state => state.child_orders;
+const getSelectedChild = state => state.selected_child;
 
 export default {
-  get_page,
-  show_ongoing,
-  get_ongoing_orders,
-  get_markers,
-  get_polyline,
-  get_vendors
+  getPage,
+  showOngoing,
+  getOngoingOrders,
+  getMarkers,
+  getPolyline,
+  getVendors,
+  getHomeLocations,
+  getStorePath,
+  getOuterPriceRequestData,
+  getOuterActiveVendorDetails,
+  getOuterActivePackageClass,
+  getChildOrders,
+  getSelectedChild,
 };

@@ -4,8 +4,7 @@
       <div class="rate-rider-image">
         <img
           class="rider-photo"
-          :src="this.driver_photo"
-          alt=""
+          :src="driver_photo"
         >
       </div>
     </div>
@@ -14,9 +13,7 @@
       id="rate-rider-content"
       class="rate-rider-content"
     >
-      <div class="rate-rider-please">
-        Please Rate {{ driver_name }}
-      </div>
+      <div class="rate-rider-please">Please Rate {{ driver_name }}</div>
 
       <div class="rate-rider-star">
         <div class="submit-stars">
@@ -50,42 +47,6 @@ import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'RateDriverComponent',
-  mounted() {
-    const order_id = this.$route.params.order_no;
-    this.order = order_id;
-    const payload = {
-      order_no: order_id,
-    };
-    const users_full_payload = {
-      values: payload,
-      app: 'NODE_PRIVATE_API',
-      endpoint: 'pending_delivery',
-    };
-    this.$store.dispatch('$_rating/requestOrder', users_full_payload).then(
-      (response) => {
-        this.driver_name = response.rider.rider_name;
-        this.driver_photo = response.rider.rider_photo;
-        this.user_email = response.user.email;
-      },
-      (error) => {
-        console.log(error);
-      },
-    );
-  },
-  computed: {
-    ...mapGetters({
-      getOrder: '$_rating/getOrder',
-      getDriverName: '$_rating/getDriverName',
-      getRiderImage: '$_rating/getRiderImage',
-      getBaseUrl: '$_rating/getBaseUrl',
-      getUserEmail: '$_rating/getUserEmail',
-      getPackageID: '$_rating/getPackageID',
-    }),
-    driver_background() {
-      const uri = `url(${this.getRiderImage})`;
-      return { background: `white ${uri}` };
-    },
-  },
   data() {
     return {
       rated_score: 1,
@@ -104,6 +65,45 @@ export default {
       app: false,
     };
   },
+  computed: {
+    ...mapGetters({
+      getOrder: '$_rating/getOrder',
+      getDriverName: '$_rating/getDriverName',
+      getRiderImage: '$_rating/getRiderImage',
+      getBaseUrl: '$_rating/getBaseUrl',
+      getUserEmail: '$_rating/getUserEmail',
+      getPackageID: '$_rating/getPackageID',
+    }),
+    driver_background() {
+      const uri = `url(${this.getRiderImage})`;
+      return { background: `white ${uri}` };
+    },
+  },
+  mounted() {
+    const orderId = this.$route.params.order_no;
+    this.order = orderId;
+    const payload = {
+      order_no: orderId,
+    };
+    const usersFullPayload = {
+      values: payload,
+      vm: this,
+      app: 'NODE_PRIVATE_API',
+      endpoint: 'pending_delivery',
+    };
+    this.$store.dispatch('$_rating/requestOrder', usersFullPayload).then(
+      (response) => {
+        this.driver_name = response.rider.rider_name;
+        this.driver_photo = response.rider.rider_photo;
+        this.user_email = response.user.email;
+      },
+      (error) => {
+        const notification = { title: '', level: 2, message: 'Something went wrong.' }; // notification object
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
+      },
+    );
+  },
   methods: {
     ...mapMutations({
       updateScore: '$_rating/updateScore',
@@ -118,19 +118,21 @@ export default {
           comment: this.rating_comment,
         },
       };
-      const rating_status_full_payload = {
+      const ratingStatusFullPayload = {
         values: payload,
+        vm: this,
         app: 'PRIVATE_API',
         endpoint: 'insert_rate',
       };
-      this.$store.dispatch('$_rating/requestRatingStatus', rating_status_full_payload).then(
+      this.$store.dispatch('$_rating/requestRatingStatus', ratingStatusFullPayload).then(
         (response) => {
-          console.log(response);
           this.updateStep(3);
           this.updateScore(this.rated_score);
         },
         (error) => {
-          console.log(error);
+          const notification = { title: '', level: 2, message: 'Something went wrong.' }; // notification object
+          this.$store.commit('setNotification', notification);
+          this.$store.commit('setNotificationStatus', true);
         },
       );
     },

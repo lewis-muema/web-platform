@@ -52,27 +52,71 @@
           @click="save_personal"
         >
       </p>
+      <el-dialog
+        :visible.sync="validate"
+        class="personal-info-phone-validation"
+      >
+        <span slot="title">
+          <img
+            src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
+            class="signup-sendy-logo"
+          >
+        </span>
+        <div>
+          <div class="phone-validation-description">
+            For your security, Sendy wants to make sure it's really you. We will send a message with
+            your verification code.
+          </div>
+
+          <div class="phone-verification-input">
+            <input
+              id="phone-validation-verify--input"
+              v-model="code"
+              type="text"
+              placeholder="Enter Verification Code"
+            >
+          </div>
+        </div>
+        <div class="phone-validation-verify--button">
+          <button
+            type="button"
+            class="phone-validation-cancel"
+            @click="phoneVerificationCancel"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="phone-validation-verify"
+            @click="phoneVerificationVerify"
+          >
+            Verify
+          </button>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import SessionMxn from '../../../mixins/session_mixin.js';
+import SessionMxn from '../../../mixins/session_mixin';
+
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'PersonalInfo',
   mixins: [SessionMxn],
   data() {
     return {
-      // user_id: '',
       user_name: '',
       user_email: '',
       phone: '',
+      validate: false,
+      code: '',
+      proceed_update: true,
+      request_id: '',
     };
-  },
-  mounted() {
-    this.set_data();
   },
   computed: {
     ...mapGetters({
@@ -87,6 +131,10 @@ export default {
       deep: true,
     },
   },
+  mounted() {
+    this.set_data();
+  },
+
   methods: {
     set_data() {
       const session = this.$store.getters.getSession;
@@ -99,126 +147,249 @@ export default {
     },
     ...mapActions({
       requestPersonalInfo: '$_user/requestPersonalInfo',
+      requestPhoneVerification: '$_user/requestPhoneVerification',
+      requestPhoneVerificationVerify: '$_user/requestPhoneVerificationVerify',
     }),
     save_personal() {
       if (this.user_name !== '' && this.user_email !== '' && this.phone !== '') {
-        const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-        const phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+        const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
 
-        if (phone_valid) {
-          const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+        if (phoneValid) {
+          const phone = this.phone.replace(/[()\-\s]+/g, '');
 
           const session = this.$store.getters.getSession;
 
-          if (session.default === 'biz') {
-            const values = {
-              cop_user_id: session[session.default].user_id,
-              user_name: this.user_name,
-              user_email: this.user_email,
-              user_phone: phone,
-            };
+          const oldPhone = session[session.default].user_phone;
 
-            const full_payload = {
-              values,
-              vm: this,
-              app: 'NODE_PRIVATE_API',
-              endpoint: 'update_user',
-            };
-
-            this.requestPersonalInfo(full_payload).then(
-              (response) => {
-                if (response.status) {
-                  const updated_session = session;
-                  updated_session[session.default].user_name = this.user_name;
-                  updated_session[session.default].user_phone = phone;
-                  updated_session[session.default].user_email = this.user_email;
-
-                  const new_session = JSON.stringify(updated_session);
-                  this.setSession(new_session);
-                  const level = 1; // success
-                  this.message = 'Details Saved!';
-                  const notification = { title: '', level, message: this.message }; // notification object
-                  this.$store.commit('setNotification', notification);
-                  this.$store.commit('setNotificationStatus', true); // activate notification
-                } else {
-                  console.warn('Cop user details Update Failed');
-                  const level = 3;
-                  this.message = 'Something went wrong.';
-                  const notification = { title: '', level, message: this.message }; // notification object
-                  this.$store.commit('setNotification', notification);
-                  this.$store.commit('setNotificationStatus', true); // activate notification
-                }
-              },
-              (error) => {
-                console.log(error);
-              },
-            );
-          } else if (session.default === 'peer') {
-            const values = {
-              user_id: session[session.default].user_id,
-              user_name: this.user_name,
-              user_email: this.user_email,
-              user_phone: phone,
-            };
-
-            const full_payload = {
-              values,
-              app: 'NODE_PRIVATE_API',
-              endpoint: 'update_user',
-            };
-
-            this.requestPersonalInfo(full_payload).then(
-              (response) => {
-                if (response.status) {
-                  const updated_session = session;
-                  updated_session[session.default].user_name = this.user_name;
-                  updated_session[session.default].user_phone = phone;
-                  updated_session[session.default].user_email = this.user_email;
-
-                  const new_session = JSON.stringify(updated_session);
-                  this.setSession(new_session);
-                  this.$store.commit('setSession', updated_session);
-
-                  const level = 1; // success
-                  this.message = 'Details Saved!';
-                  const notification = { title: '', level, message: this.message }; // notification object
-                  this.$store.commit('setNotification', notification);
-                  this.$store.commit('setNotificationStatus', true); // activate notification
-                } else {
-                  console.warn('Peer details Update Failed');
-                  const level = 3;
-                  this.message = 'Something went wrong.';
-                  const notification = { title: '', level, message: this.message }; // notification object
-                  this.$store.commit('setNotification', notification);
-                  this.$store.commit('setNotificationStatus', true); // activate notification
-                }
-              },
-              (error) => {
-                console.log(error);
-                const level = 3;
-                this.message = 'Something went wrong.';
-                const notification = { title: '', level, message: this.message }; // notification object
-                this.$store.commit('setNotification', notification);
-                this.$store.commit('setNotificationStatus', true); // activate notification
-              },
-            );
-          } else {
-            this.$router.push('/auth');
+          if (oldPhone !== phone) {
+            this.validate = true;
+            this.proceed_update = false;
+            this.doNotification(1, 'Phone Verification', 'Phone verification code sent !');
+            this.sendVerificationCode(phone);
+          }
+          if (this.proceed_update) {
+            this.updateSessionData();
           }
         } else {
           const level = 3;
           this.message = 'Invalid Phone Number';
-          const notification = { title: '', level, message: this.message }; // notification object
+          const notification = {
+            title: '',
+            level,
+            message: this.message,
+          }; // notification object
           this.$store.commit('setNotification', notification);
           this.$store.commit('setNotificationStatus', true);
         }
       } else {
         const level = 3;
         this.message = 'Provide all details';
-        const notification = { title: '', level, message: this.message }; // notification object
+        const notification = {
+          title: '',
+          level,
+          message: this.message,
+        }; // notification object
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
       }
+    },
+    phoneVerificationCancel() {
+      this.proceed_update = false;
+      this.validate = false;
+      this.doNotification(
+        2,
+        'Phone Verification',
+        'Phone Verification Failed . Retry to again after 15 minutes',
+      );
+    },
+    phoneVerificationVerify() {
+      const values = {};
+      values.code = this.code;
+      values.request_id = this.request_id;
+      const fullPayload = {
+        values,
+        vm: this,
+        app: 'PRIVATE_API',
+        endpoint: 'check_verification',
+      };
+      this.requestPhoneVerificationVerify(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.doNotification(1, 'Phone Verification', 'Phone verification successful !');
+            this.proceed_update = true;
+            this.validate = false;
+            this.updateSessionData();
+          } else {
+            this.doNotification(3, 'Phone Verification', response.message);
+          }
+        },
+        (error) => {
+          this.doNotification(
+            2,
+            'Phone Verification Error ',
+            'Check Internet connection and retry',
+          );
+        },
+      );
+    },
+    sendVerificationCode(phone) {
+      const values = {};
+      values.phone_no = phone;
+      const fullPayload = {
+        values,
+        vm: this,
+        app: 'PRIVATE_API',
+        endpoint: 'verify_phone',
+      };
+      this.requestPhoneVerification(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.request_id = response.request_id;
+          } else {
+            this.doNotification(3, 'Phone Verification', response.message);
+          }
+        },
+        (error) => {
+          this.doNotification(
+            2,
+            'Phone Verification Error ',
+            'Check Internet connection and retry',
+          );
+        },
+      );
+    },
+    updateSessionData() {
+      const phone = this.phone.replace(/[()\-\s]+/g, '');
+
+      const session = this.$store.getters.getSession;
+      if (session.default === 'biz') {
+        const values = {
+          cop_user_id: session[session.default].user_id,
+          user_name: this.user_name,
+          user_email: this.user_email,
+          user_phone: phone,
+        };
+
+        const fullPayload = {
+          values,
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'update_user',
+        };
+
+        this.requestPersonalInfo(fullPayload).then(
+          (response) => {
+            if (response.status) {
+              const updatedSession = session;
+              updatedSession[session.default].user_name = this.user_name;
+              updatedSession[session.default].user_phone = phone;
+              updatedSession[session.default].user_email = this.user_email;
+
+              const newSession = JSON.stringify(updatedSession);
+              this.setSession(newSession);
+              const level = 1; // success
+              this.message = 'Details Saved!';
+              const notification = {
+                title: '',
+                level,
+                message: this.message,
+              }; // notification object
+              this.$store.commit('setNotification', notification);
+              this.$store.commit('setNotificationStatus', true); // activate notification
+            } else {
+              const level = 3;
+              this.message = 'Something went wrong.';
+              const notification = {
+                title: '',
+                level,
+                message: this.message,
+              }; // notification object
+              this.$store.commit('setNotification', notification);
+              this.$store.commit('setNotificationStatus', true); // activate notification
+            }
+          },
+          (error) => {
+            const level = 3;
+            this.message = 'Something went wrong.';
+            const notification = {
+              title: '',
+              level,
+              message: this.message,
+            }; // notification object
+            this.$store.commit('setNotification', notification);
+            this.$store.commit('setNotificationStatus', true);
+          },
+        );
+      } else if (session.default === 'peer') {
+        const values = {
+          user_id: session[session.default].user_id,
+          user_name: this.user_name,
+          user_email: this.user_email,
+          user_phone: phone,
+        };
+
+        const fullPayload = {
+          values,
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'update_user',
+        };
+
+        this.requestPersonalInfo(fullPayload).then(
+          (response) => {
+            if (response.status) {
+              const updatedSession = session;
+              updatedSession[session.default].user_name = this.user_name;
+              updatedSession[session.default].user_phone = phone;
+              updatedSession[session.default].user_email = this.user_email;
+
+              const newSession = JSON.stringify(updatedSession);
+              this.setSession(newSession);
+              this.$store.commit('setSession', updatedSession);
+
+              const level = 1;
+              this.message = 'Details Saved!';
+              const notification = {
+                title: '',
+                level,
+                message: this.message,
+              };
+              this.$store.commit('setNotification', notification);
+              this.$store.commit('setNotificationStatus', true);
+            } else {
+              const level = 3;
+              this.message = 'Something went wrong.';
+              const notification = {
+                title: '',
+                level,
+                message: this.message,
+              };
+              this.$store.commit('setNotification', notification);
+              this.$store.commit('setNotificationStatus', true);
+            }
+          },
+          (error) => {
+            const level = 3;
+            this.message = 'Something went wrong.';
+            const notification = {
+              title: '',
+              level,
+              message: this.message,
+            };
+            this.$store.commit('setNotification', notification);
+            this.$store.commit('setNotificationStatus', true);
+          },
+        );
+      } else {
+        this.$router.push('/auth');
+      }
+    },
+    doNotification(level, title, message) {
+      const notification = {
+        title,
+        level,
+        message,
+      };
+      this.$store.commit('setNotification', notification);
+      this.$store.commit('setNotificationStatus', true);
     },
   },
 };
@@ -391,5 +562,65 @@ export default {
     }
     .personal-info-padding{
       margin-bottom: 20px;
+    }
+    .personal-info-phone-validation > div
+    {
+      margin-top: 12em !important;
+      margin-right: 23em !important;
+      width: 35% !important;
+    }
+    .phone-validation-description{
+      text-align: left;
+      line-height: 1.5;
+      padding: 10px 0px;
+      font-family: "Rubik", sans-serif;
+    }
+    .phone-verification-input{
+      display: flex;
+      margin-top: 25px;
+    }
+    #phone-validation-verify--input{
+      border: none;
+      padding: 2px;
+      border-bottom: 1px solid #ccc;
+      width: 50%;
+      font-family: "Rubik", sans-serif;
+      font-size: 16px;
+    }
+    .phone-validation-verify--button{
+      padding: 19px 20px 20px;
+      margin-top: 33px;
+      text-align: right;
+      border-top: 1px solid #e5e5e5;
+    }
+    .phone-validation-verify{
+      color: #ecf0f1;
+        background-color: #1782c5;
+        border-color: #1b7fc3;
+        cursor: pointer;
+        border-radius: 4px;
+        height: 40px;
+        transition: background-color 0.3s;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 13px;
+    }
+    .phone-validation-cancel{
+      color: #ecf0f1;
+        background-color: #1782c5;
+        border-color: #1b7fc3;
+        cursor: pointer;
+        border-radius: 4px;
+        height: 40px;
+        transition: background-color 0.3s;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 13px;
+    }
+    .signup-sendy-logo{
+        width:85px;
+    }
+    #auth_container > div > div:nth-child(2) > div > div > div > div > div.el-dialog__header{
+      background-color: #1782c5;
     }
 </style>

@@ -1,52 +1,52 @@
-const webpack = require("webpack");
-const merge = require("webpack-merge");
-const base = require("./webpack.base.config");
-const SWPrecachePlugin = require("sw-precache-webpack-plugin");
-const VueSSRClientPlugin = require("vue-server-renderer/client-plugin");
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const SWPrecachePlugin = require('sw-precache-webpack-plugin');
+const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
+const base = require('./webpack.base.config');
 // const nodeExternals = require('webpack-node-externals')
 
 const config = merge(base, {
   entry: {
-    app: "./src/entry-client.js"
+    app: './src/entry-client.js',
   },
   resolve: {
     alias: {
       // 'create-api': './create-api-client.js'
-    }
+    },
   },
   // externals: [nodeExternals()],
   plugins: [
     // strip dev-only code in Vue source
     new webpack.DefinePlugin({
-      "process.env.VUE_ENV": '"client"'
+      'process.env.VUE_ENV': '"client"',
     }),
-    new VueSSRClientPlugin()
+    new VueSSRClientPlugin(),
   ],
   optimization: {
     runtimeChunk: {
-      name: "manifest"
+      name: 'manifest',
     },
     // extract webpack runtime & manifest to avoid vendor chunk hash changing
     // on every build.
     // extract vendor chunks for better caching
     splitChunks: {
-      chunks: "initial",
+      chunks: 'initial',
       cacheGroups: {
         vendors: {
           test(module, chunks) {
-            //...
+            // ...
             // return module.type === 'javascript/auto';
             return (
               // it's inside node_modules
-              /node_modules/.test(module.context) &&
+              /node_modules/.test(module.context)
               // and not a CSS file (due to extract-text-webpack-plugin limitation)
-              !/\.css$/.test(module.request)
+              && !/\.css$/.test(module.request)
             );
-          }
-        }
-      }
-    }
-  }
+          },
+        },
+      },
+    },
+  },
 });
 
 // if (process.env.NODE_ENV === 'production') {

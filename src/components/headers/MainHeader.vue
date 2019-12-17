@@ -18,7 +18,7 @@
       <nav>
         <ul>
           <li class="nav--menu-inactive">
-            <a> Helpline : 0709 779 779</a>
+            <a> Helpline : {{ helpline_contact }}</a>
           </li>
           <li class="nav--menu-inactive">
             <a>Hi {{ logged_user }}</a>
@@ -26,51 +26,56 @@
           <li class="nav--menu-dropdown">
             <a class="nav--menu-dropdown-link">
               Menu
+              <i class="el-icon-arrow-down" />
             </a>
             <ul class="nav--menu-dropdown-list">
-              <li v-if="switchValid">
-                <a @click="switchAccount()">
-                  Switch to
-                  <span v-if="this.$store.getters.getSession.default === 'peer'">
-                    Business
-                  </span><span v-else>
-                    Personal
-                  </span>
-                  account
-                </a>
-              </li>
-              <li>
-                <a @click="linkRoute('/orders')">
-                  New Delivery
-                </a>
-              </li>
-              <li>
-                <a @click="linkRoute('/payment/mpesa')">
-                  Payment
-                </a>
-              </li>
-              <li>
-                <a @click="linkRoute('/transactions/order_history')">
-                  Orders
-                </a>
-              </li>
-              <!--<li><a  @click="linkRoute('/user/free_deliveries')">Free Deliveries</a></li>-->
-              <!--<li><a  @click="linkRoute('/payment/promo')">Promotions</a></li>-->
-              <li v-if="admin_user">
-                <a @click="linkRoute('/admin/users')">
-                  Settings
-                </a>
-              </li>
-              <li v-if="admin_user">
-                <a @click="linkRoute('/analytics/weekly')">
-                  Analytics
-                </a>
-              </li>
-              <li>
-                <a @click="linkRoute('/user/profile/personal_information')">
-                  Profile
-                </a>
-              </li>
+              <div v-if="!admin_details">
+                <li v-if="switchValid">
+                  <a @click="switchAccount()">
+                    Switch to
+                    <span v-if="this.$store.getters.getSession.default === 'peer'"> Business </span>
+                    <span v-else>
+                      Personal
+                    </span>
+                    account
+                  </a>
+                </li>
+                <li>
+                  <a @click="linkRoute('/orders')">
+                    New Delivery
+                  </a>
+                </li>
+                <li>
+                  <a @click="linkPayments()">
+                    Payment
+                  </a>
+                </li>
+                <li>
+                  <a @click="linkRoute('/transactions/order_history')">
+                    Orders
+                  </a>
+                </li>
+                <li>
+                  <a @click="linkRoute('/orders/freight')">
+                    Freight
+                  </a>
+                </li>
+                <li v-if="admin_user">
+                  <a @click="linkRoute('/admin/users')">
+                    Settings
+                  </a>
+                </li>
+                <li v-if="admin_user">
+                  <a @click="linkRoute('/analytics/report')">
+                    Analytics
+                  </a>
+                </li>
+                <li>
+                  <a @click="linkRoute('/user/profile/personal_information')">
+                    Profile
+                  </a>
+                </li>
+              </div>
               <li class="menu--last-child">
                 <a
                   class="menu--last-child-link"
@@ -99,11 +104,15 @@ export default {
       switchValid: false,
       admin_user: false,
       logged_user: '',
+      mpesa_valid: false,
+      helpline_contact: '',
+      admin_details: false,
     };
   },
   computed: {
     ...mapGetters({
       getSess: 'getSession',
+      getCountryCode: 'getCountryCode',
     }),
   },
   watch: {
@@ -117,13 +126,14 @@ export default {
   mounted() {
     this.switchOption();
     this.loggedUser();
+    this.superUserCheck();
   },
   methods: {
     loggedUser() {
       const session = this.$store.getters.getSession;
       const fullName = session[session.default].user_name.split(' ');
       const firstName = fullName[0];
-
+      this.helpline_contact = session.customer_care_number;
       if (session.default === 'biz') {
         // Admin
         if (session[session.default].user_type === 2) {
@@ -137,16 +147,30 @@ export default {
         this.logged_user = `${firstName} (Personal Acc)`;
       }
     },
+    superUserCheck() {
+      const session = this.$store.getters.getSession;
+      if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
+        this.admin_details = true;
+      } else {
+        this.admin_details = false;
+      }
+    },
     logOut() {
       try {
-        this.$store.commit('setSession', {});
-        this.deleteSession();
+        localStorage.removeItem('_sessionSnack');
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('refreshToken');
+        this.$store.commit('deleteSession');
         // clear orders to avoid marker persistance
         this.$store.unregisterModule('$_orders');
       } catch (er) {
         // orders was not registered
       } finally {
-        this.$router.push({ name: 'sign_in' });
+        if (this.admin_details) {
+          this.$router.replace({ name: 'by_pass' });
+        } else {
+          this.$router.replace({ name: 'sign_in' });
+        }
       }
     },
     switchOption() {
@@ -174,10 +198,13 @@ export default {
     linkRoute(route) {
       this.$router.push(route);
     },
+    linkPayments() {
+      this.$router.push('/payment/card');
+    },
   },
 };
 </script>
 
 <style lang="css">
-@import "../../assets/styles/internal_header.css";
+@import '../../assets/styles/internal_header.css?v=1';
 </style>

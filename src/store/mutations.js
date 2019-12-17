@@ -1,3 +1,4 @@
+/* eslint no-param-reassign: "error" */
 export default {
   setENV(state, ENV) {
     state.ENV = ENV;
@@ -5,16 +6,37 @@ export default {
   setSession(state, session) {
     state.session = session;
   },
-  setRunningBalance(state, running_balance) {
-    state.running_balance = running_balance;
+  setRunningBalance(state, runningBalance) {
+    state.running_balance = runningBalance;
   },
   setNotification(state, notification) {
     state.notification = notification;
   },
-  setNotificationStatus(state, notification_status) {
-    state.notification_status = notification_status;
+  setNotificationStatus(state, notificationStatus) {
+    state.notification_status = notificationStatus;
   },
   setSessDefault(state, type) {
     state.session.default = type;
-  }
+  },
+  setCountryCode(state, code) {
+    state.country_code = code;
+  },
+  setDefaultCurrency(state, defaultCurrency) {
+    state.default_currency = defaultCurrency;
+  },
+  deleteSession(state) {
+    state.session = {};
+  },
+  setFCMToken(state, token) {
+    state.fcm_token = token;
+  },
+  setFCMData(state, data) {
+    state.fcm_data = data;
+  },
+  setRedirectStatus(state, status) {
+    state.redirect_status = status;
+  },
+  setRedirectOrder(state, order) {
+    state.redirect_order = order;
+  },
 };

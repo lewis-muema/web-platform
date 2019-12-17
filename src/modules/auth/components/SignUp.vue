@@ -11,13 +11,6 @@
         Sign up for Sendy
       </div>
 
-      <!-- <div class="sign-button" onclick="" id="sign-in-v2-logging-in-1">
-  <img class="sign-buttom__img" alt= "" src="https://apptest.sendyit.com/biz/image/facebook_logo_white.png" > Continue with Facebook</span>
-  </div>
-  <div class="sign-text">
-     or
-  </div> -->
-
       <p class="sign-up-error">
         {{ message }}
       </p>
@@ -102,7 +95,7 @@
             By creating a Sendy account you’re agreeing to the
             <a
               class=" sign-holder__grey"
-              href="https://sendyit.com/terms/show"
+              href="https://sendyit.com/terms"
             >
               terms and conditions
             </a>
@@ -186,7 +179,10 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapMutations, mapActions, mapGetters } from 'vuex';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
+
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'SignUp',
@@ -205,50 +201,54 @@ export default {
       phoneVerificationForm: {},
       code: '',
       verificationState: false,
-      requestId: '',
     };
   },
   methods: {
     validate_phone() {
       this.$validator.validate();
     },
-
     ...mapMutations({
       setPassword: '$_auth/setPassword',
       setPhone: '$_auth/setPhone',
       setEmail: '$_auth/setEmail',
       setName: '$_auth/setName',
+      setUserCountryCode: '$_auth/setUserCountryCode',
+      setVerificationRequestId: '$_auth/setVerificationRequestId',
     }),
     ...mapActions({
       requestSignUpCheck: '$_auth/requestSignUpCheck',
       requestSignUpPhoneVerification: '$_auth/requestSignUpPhoneVerification',
       requestSignUpVerificationVerify: '$_auth/requestSignUpVerificationVerify',
     }),
+    ...mapGetters({
+      getVerificationRequestId: '$_auth/getVerificationRequestId',
+    }),
     sign_up() {
       if (this.name !== '' && this.email !== '' && this.phone !== '' && this.password !== '') {
-        const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-        const phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
-        let email_valid = true;
+        const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+        const phoneNumber = parsePhoneNumberFromString(this.phone);
+        this.setUserCountryCode(phoneNumber.country);
+        let emailValid = true;
         for (let i = 0; i < this.errors.items.length; i++) {
           if (this.errors.items[i].field === 'email') {
-            email_valid = false;
+            emailValid = false;
             break;
           }
         }
-        if (phone_valid && email_valid && this.pass_validation) {
+        if (phoneValid && emailValid && this.pass_validation) {
           if (this.u_terms) {
-            const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+            const phone = this.phone.replace(/[()\-\s]+/g, '');
             this.phone = phone;
             const values = {};
             values.phone = phone;
             values.email = this.email;
-            const full_payload = {
+            const fullPayload = {
               values,
               vm: this,
               app: 'NODE_PRIVATE_API',
               endpoint: 'sign_up_check',
             };
-            this.requestSignUpCheck(full_payload).then(
+            this.requestSignUpCheck(fullPayload).then(
               (response) => {
                 if (response.length > 0) {
                   response = response[0];
@@ -266,7 +266,7 @@ export default {
                 }
               },
               (error) => {
-                console.log(error);
+                this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
               },
             );
           } else {
@@ -315,14 +315,14 @@ export default {
     signUpVerificationVerify() {
       const values = {};
       values.code = this.code;
-      values.request_id = this.requestId;
-      const full_payload = {
+      values.request_id = this.getVerificationRequestId();
+      const fullPayload = {
         values,
         vm: this,
         app: 'PRIVATE_API',
         endpoint: 'check_verification',
       };
-      this.requestSignUpVerificationVerify(full_payload).then(
+      this.requestSignUpVerificationVerify(fullPayload).then(
         (response) => {
           if (response.status) {
             this.doNotification(2, 'Phone Verification', 'Phone verification successful !');
@@ -333,32 +333,39 @@ export default {
           }
         },
         (error) => {
-          console.error('Check Internet Connection');
-          console.log(error);
+          this.doNotification(
+            2,
+            'Phone Verification Error ',
+            'Check Internet connection and retry',
+          );
         },
       );
     },
 
     sendVerificationCode() {
-      const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
+      const phone = this.phone.replace(/[()\-\s]+/g, '');
       const values = {};
       values.phone_no = phone;
-      const full_payload = {
+      const fullPayload = {
         values,
         vm: this,
         app: 'PRIVATE_API',
         endpoint: 'verify_phone',
       };
-      this.requestSignUpPhoneVerification(full_payload).then(
+      this.requestSignUpPhoneVerification(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.requestId = response.request_id;
+            this.setVerificationRequestId(response.request_id);
           } else {
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
         (error) => {
-          console.log(error);
+          this.doNotification(
+            2,
+            'Phone Verification Error ',
+            'Check Internet connection and retry',
+          );
         },
       );
     },
@@ -480,7 +487,7 @@ export default {
   text-align: left;
 }
 .signup-submit {
-  width: 110% !important;
+  width: 100% !important;
   border-width: 0px !important;
 }
 .pass-validate-error {

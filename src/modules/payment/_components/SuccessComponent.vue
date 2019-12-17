@@ -4,10 +4,7 @@
       {{ payment_loading_title }}
     </div>
     <div class="payment--mpesa-image">
-      <img
-        src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/success.png"
-        alt=""
-      >
+      <img src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/success.png">
     </div>
     <div class="paymemt--mpesa-loader-actions">
       <button
@@ -38,14 +35,9 @@ export default {
     ...mapActions(['$_payment/resetMpesaPaymentRequest']),
     backToPaymentRequest() {
       const payload = {};
-      this.$store.dispatch('$_payment/resetMpesaPaymentRequest', payload).then(
-        (response) => {
-          console.log(response);
-        },
-        (error) => {
-          console.log(error);
-        },
-      );
+      this.$store
+        .dispatch('$_payment/resetMpesaPaymentRequest', payload)
+        .then((response) => {}, (error) => {});
     },
     requestRB() {
       // this will request from the api and update the store
@@ -63,18 +55,14 @@ export default {
 
       const payload = {
         values: running_balance_payload,
+        vm: this,
         app: 'PRIVATE_API',
         endpoint: 'running_balance',
       };
 
-      this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
-        (response) => {
-          console.log(response);
-        },
-        (error) => {
-          console.log(error);
-        },
-      );
+      this.$store
+        .dispatch('requestRunningBalance', payload, { root: true })
+        .then((response) => {}, (error) => {});
     },
   },
   computed: {

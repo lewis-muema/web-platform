@@ -3,11 +3,9 @@
     <main-header />
     <div
       id="admin_container"
-      class="container admin-container"
+      class="container adm
+n-container"
     >
-      <!--<div class="title">-->
-      <!--<h3 class="title__text">Admin Settings</h3>-->
-      <!--</div>-->
       <div class="section">
         <router-link
           class="section__link"
@@ -21,7 +19,6 @@
         >
           Department
         </router-link>
-        <!--<router-link class="section__link" to="/admin/preferences">Preferences</router-link>-->
         <router-link
           class="section__link"
           to="/admin/api"
@@ -45,26 +42,25 @@
 <script>
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
-import VeeValidate from 'vee-validate';
-import { Validator } from 'vee-validate';
+import VeeValidate, { Validator } from 'vee-validate';
 import VueTelInput from 'vue-tel-input';
-import MainHeader from '../../components/headers/MainHeader.vue';
 import RegisterStoreModule from '../../mixins/register_store_module';
-import admin_store from './_store';
+import MainHeader from '../../components/headers/MainHeader.vue';
+import adminStore from './_store';
+
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 Vue.use(VueTelInput);
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
   getMessage: field => 'The phone number not valid',
-  validate: (value) => {
-    const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+  validate: value => {
     let validity = false;
     try {
-      const number = phoneUtil.parse(value);
+      const number = phoneUtil.format(value);
       validity = phoneUtil.isValidNumber(number);
     } catch (e) {
-      console.log(e);
       validity = false;
     }
     return validity;
@@ -75,10 +71,6 @@ export default {
   name: 'Admin',
   components: { MainHeader },
   mixins: [RegisterStoreModule],
-  created() {
-    const STORE_KEY = '$_admin';
-    this.$store.registerModule(STORE_KEY, admin_store);
-  },
   computed: {
     ...mapGetters({
       getSession: 'getSession',
@@ -86,11 +78,15 @@ export default {
   },
   watch: {
     getSession: {
-      handler(val, oldVal) {
+      handler() {
         this.$router.push('/orders');
       },
       deep: true,
     },
+  },
+  created() {
+    const STORE_KEY = '$_admin';
+    this.$store.registerModule(STORE_KEY, adminStore);
   },
   destroyed() {
     // TO DO:  destroy store?

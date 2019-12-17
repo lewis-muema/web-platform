@@ -5,11 +5,18 @@
         Invites Sent
       </div>
       <div class="end-text">
-        The invites have been sent successfully. They will show up on your users page when they accept the invite.
+        The invites have been sent successfully. They will show up on your users page when they
+        accept the invite.
       </div>
       <div class="end-btn">
-        <a v-on:click="back_btn" class="end--back-link">Back</a>
-        <a v-bind:href="this.getBaseUrl + '/admin/users'" class="button-primary end--button-return">Return to Users</a>
+        <a
+          class="end--back-link"
+          @click="back_btn"
+        >Back</a>
+        <a
+          :href="getBaseUrl + '/admin/users'"
+          class="button-primary end--button-return"
+        >Return to Users</a>
       </div>
     </div>
   </div>
@@ -19,33 +26,27 @@
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
-  name: 'end-component',
-  methods:
-  {
-      ...mapMutations(
-          {
-              updateViewState: '$_admin/setViewState',
-              updateInvites: '$_admin/updateInvites',
-              updateAddedStatus: '$_admin/updateAddedStatus',
-              newAdds: '$_admin/newAdds',
-          }
-      ),
-    back_btn: function() {
-      this.updateViewState(1);
-      this.updateInvites ([]);
-      this.updateAddedStatus ('');
-      this.newAdds (3);
-    }
-  },
+  name: 'EndComponent',
   computed: {
-      ...mapGetters(
-          {
-              getBaseUrl: '$_admin/getBaseUrl',
-
-          }
-      ),
+    ...mapGetters({
+      getBaseUrl: '$_admin/getBaseUrl',
+    }),
   },
-}
+  methods: {
+    ...mapMutations({
+      updateViewState: '$_admin/setViewState',
+      updateInvites: '$_admin/updateInvites',
+      updateAddedStatus: '$_admin/updateAddedStatus',
+      newAdds: '$_admin/newAdds',
+    }),
+    back_btn() {
+      this.updateViewState(1);
+      this.updateInvites([]);
+      this.updateAddedStatus('');
+      this.newAdds(3);
+    },
+  },
+};
 </script>
 
 <style lang="css">

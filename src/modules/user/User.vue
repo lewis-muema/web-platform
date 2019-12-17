@@ -11,12 +11,13 @@
 <script>
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
-import VeeValidate from 'vee-validate';
-import { Validator } from 'vee-validate';
+import VeeValidate, { Validator } from 'vee-validate';
 import VueTelInput from 'vue-tel-input';
-import user_store from './_store';
+import userStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
+
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 Vue.use(VueTelInput);
 Vue.use(VeeValidate);
@@ -24,13 +25,11 @@ Vue.use(VeeValidate);
 Validator.extend('check_phone', {
   getMessage: field => 'The phone number not valid',
   validate: (value) => {
-    const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
     let validity = false;
     try {
       const number = phoneUtil.parse(value);
       validity = phoneUtil.isValidNumber(number);
     } catch (e) {
-      console.log(e);
       validity = false;
     }
     return validity;
@@ -41,10 +40,6 @@ export default {
   name: 'User',
   components: { MainHeader },
   mixins: [RegisterStoreModule],
-  created() {
-    const STORE_KEY = '$_user';
-    this.$store.registerModule(STORE_KEY, user_store);
-  },
   computed: {
     ...mapGetters({
       getSession: 'getSession',
@@ -53,12 +48,16 @@ export default {
   watch: {
     getSession: {
       handler(val, oldVal) {
-        if (oldVal != val) {
+        if (oldVal !== val) {
           this.$router.push('/orders');
         }
       },
       deep: true,
     },
+  },
+  created() {
+    const STORE_KEY = '$_user';
+    this.$store.registerModule(STORE_KEY, userStore);
   },
 };
 </script>

@@ -1,109 +1,182 @@
-import Vue from 'vue'
+/* eslint no-param-reassign: "error" */
+/* eslint no-restricted-syntax: ["error","WithStatement"] */
+import Vue from 'vue';
 
-const set_page = (state, payload) => {
+const setPage = (state, payload) => {
   state.page = payload;
 };
 
-const toggle_ongoing = (state) => {
-  if (state.ongoing_show == 0) {
+const toggleOngoing = (state) => {
+  if (state.ongoing_show === 0) {
     state.ongoing_show = 1;
-  }
-  else {
+  } else {
     state.ongoing_show = 0;
   }
-
 };
 
-const set_ongoing_orders = (state, payload) => {
+const setOngoingOrders = (state, payload) => {
   state.ongoing_orders = payload;
 };
 
-const set_markers = (state, payload) => {
-  payload.forEach(function (value, i) {
-
-    var icon = 'destination'
-    if (i == 0) {
-      icon = 'pickup'
+const setMarkers = (state, payload) => {
+  payload.forEach((value, i) => {
+    let icon = 'destination';
+    if (i === 0) {
+      icon = 'pickup';
     }
-    var marker = {
+    const marker = {
       position: {
         lat: Number(value.coordinates.split(',')[0]),
-        lng: Number(value.coordinates.split(',')[1])
+        lng: Number(value.coordinates.split(',')[1]),
       },
-      icon: icon
-    }
+      icon,
+    };
     state.map.markers.push(marker);
-  })
+  });
 };
 
-const set_polyline = (state, payload) => {
+const setPolyline = (state, payload) => {
   state.map.polyline.path = payload;
 };
 
-const set_vendor_markers = (state, payload) => {
+const setVendorMarkers = (state, payload) => {
+  /*
+  TO DO re-enable when we start busing live locations on the home page
 
   if('busy' in payload){
     if(payload.busy == true){
-      return
+      return false;
     }
   }
-
-  var visible = false
-  if (state.page == 0) {
-    visible = true
+  */
+  let visible = false;
+  if ('page' in state) {
+    // order placement
+    if (state.page === 0) {
+      visible = true;
+    } else if ('overide_visible' in payload) {
+      // tracking
+      visible = true;
+    }
   }
-  var id = payload.rider_id
-  var value= {
+  const id = payload.rider_id;
+  const value = {
     position: {
       lat: payload.lat,
-      lng: payload.lng
+      lng: payload.lng,
     },
     vendor_type: payload.vendor_type,
     rotation: payload.bearing,
-    visible: visible
-  }
+    time: payload.time,
+    speed: payload.speed,
+    visible,
+  };
 
-  Vue.set(state.map.vendors, id, value)
+  Vue.set(state.map.vendors, id, value);
 };
 
-const hide_vendors = (state, payload) => {
-  for (var key in state.map.vendors) {
-    if (!state.map.vendors.hasOwnProperty(key)) continue;
-    var obj = state.map.vendors[key];
+const hideVendors = (state) => {
+  for (const key in state.map.vendors) {
+    if (Object.prototype.hasOwnProperty.call(!state.map.vendors, key)) {
+      const obj = state.map.vendors[key];
 
-    obj.visible = false
+      obj.visible = false;
+    }
   }
 };
 
-const remove_markers = (state) => {
-  state.map.markers = []
-}
+const removeMarkers = (state) => {
+  state.map.markers = [];
+};
 
-const remove_polyline = (state) => {
-  state.map.polyline.path = ""
-}
+const removePolyline = (state) => {
+  state.map.polyline.path = '';
+};
 
-const set_location_marker = (state,payload) => {
-    state.map.markers.splice(payload.index,0,payload.marker);
-}
-const unset_location_marker = (state,index) => {
-    state.map.markers.splice(index,1);
-}
-const unsetMap = (state) => {
-    state.map.markers.splice(0);
-    state.map.vendors.splice(0);
-    state.map.polyline.path = ""
-}
+const setLocationMarker = (state, payload) => {
+  state.map.markers.splice(payload.index, 0, payload.marker);
+};
+const unsetLocationMarker = (state, index) => {
+  state.map.markers.splice(index, 1);
+};
+// const unsetMap = (state) => {
+//   state.map.markers.splice(0);
+//   state.map.vendors.splice(0);
+//   state.map.polyline.path = '';
+// };
+const setHomeLocations = (state, payload) => {
+  state.home_locations = payload;
+};
+const clearHomeLocation = (state) => {
+  state.home_locations = [];
+};
+const setStorePath = (state, val) => {
+  state.location_path.splice(val.index, val.index === 0 ? 0 : 1, val.path);
+};
+const clearStorePath = (state) => {
+  state.location_path = [];
+};
+const unsetStorePath = (state, index) => {
+  state.location_path.splice(index, 1);
+};
+const setOuterPriceRequestObject = (state, payload) => {
+  state.outer_price_request = payload;
+};
+const clearOuterPriceRequestObject = (state) => {
+  state.outer_price_request = {};
+};
+const setOuterActiveVendorDetails = (state, payload) => {
+  state.outer_active_vendor_data = payload;
+};
+const clearOuterActiveVendorDetails = (state) => {
+  state.outer_active_vendor_data = {};
+};
+const setOuterActivePackageClass = (state, payload) => {
+  state.outer_active_package_data = payload;
+};
+const clearVendorMarkers = (state) => {
+  state.map.vendors = {};
+};
+const setChildOrders = (state, val) => {
+  state.child_orders.splice(val.index, val.index === 0 ? 0 : 1, val.vals);
+};
+const clearChildOrders = (state) => {
+  state.child_orders = [];
+};
+const selectChildOrders = (state, val) => {
+  state.selected_child = '';
+  setTimeout(() => {
+    state.selected_child = val;
+  }, 100);
+};
+const clearSelectedChild = (state) => {
+  state.selected_child = '';
+};
 export default {
-  set_page,
-  toggle_ongoing,
-  set_ongoing_orders,
-  set_markers,
-  set_polyline,
-  set_vendor_markers,
-  hide_vendors,
-  remove_markers,
-  remove_polyline,
-  set_location_marker,
-  unset_location_marker
+  setPage,
+  toggleOngoing,
+  setOngoingOrders,
+  setMarkers,
+  setPolyline,
+  setVendorMarkers,
+  hideVendors,
+  removeMarkers,
+  removePolyline,
+  setLocationMarker,
+  unsetLocationMarker,
+  setHomeLocations,
+  setStorePath,
+  setOuterPriceRequestObject,
+  setOuterActiveVendorDetails,
+  setOuterActivePackageClass,
+  clearHomeLocation,
+  clearStorePath,
+  clearOuterPriceRequestObject,
+  clearOuterActiveVendorDetails,
+  unsetStorePath,
+  clearVendorMarkers,
+  setChildOrders,
+  clearChildOrders,
+  selectChildOrders,
+  clearSelectedChild,
 };

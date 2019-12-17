@@ -11,4 +11,10 @@ export default {
   requestName(state) {
     return state.name;
   },
+  getUserCountryCode(state) {
+    return state.country_code;
+  },
+  getVerificationRequestId(state) {
+    return state.request_id;
+  },
 };

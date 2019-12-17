@@ -1,160 +1,211 @@
-import mqtt from 'mqtt'
+/* eslint consistent-return: "error" */
+/* eslint no-unused-vars: "error" */
+/* eslint consistent-return: ["error", { "treatUndefinedAsUnspecified": true }] */
 
-const get_tracking_data = function({commit,dispatch,state}, data) {
-	var payload = {
-		"app": "NODE_PRIVATE_API",
-		"endpoint": "pending_delivery",
-		"values": data
-	}
+import mqtt from 'mqtt';
 
-	return new Promise((resolve, reject) => {
-		dispatch("requestAxiosPost", payload, {
-				root: true
-			})
-			.then(response => {
-				if (response.status) {
-					if (state.tracked_order == data.order_no) {
-						commit('set_tracking_data', response.data)
-						commit('$_orders/set_polyline', response.data.polyline, {
-							root: true
-						})
-						commit('$_orders/set_markers', response.data.path, {
-							root: true
-						})
-					}
-					resolve(true);
-				}
-				else {
-					resolve(false)
-				}
-			}, error => {
-				reject(error);
-				console.log('failed to dispatch to global store')
-			});
-	})
-}
+const getTrackingData = function getTrackingData({ commit, dispatch, state }, data) {
+  const payload = {
+    app: 'NODE_PRIVATE_API',
+    endpoint: 'pending_delivery',
+    values: data,
+  };
 
-const cancel_order = function({commit, dispatch}, data)
-{
-  var payload = {
-    "app":"PRIVATE_API",
-    "endpoint":"cancel_order",
-    "values":data
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        if (response.status) {
+          if (state.tracked_order === data.order_no) {
+            commit('setTrackingData', response.data);
+            commit('$_orders/setPolyline', response.data.polyline, {
+              root: true,
+            });
+            commit('$_orders/setMarkers', response.data.path, {
+              root: true,
+            });
+          }
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      },
+      (error) => {
+        reject(error);
+        // handle failure to dispatch to global store
+      },
+    );
+  });
+};
+
+const cancelOrder = function cancelOrder({ dispatch }, data) {
+  const payload = {
+    app: 'PRIVATE_API',
+    endpoint: 'cancel_order',
+    values: data,
+  };
+
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+        // handle failure to dispatch to global store
+      },
+    );
+  });
+};
+
+// eslint consistent-return: "error"
+const trackMQTT = function trackMQTT({ commit, state }) {
+  if (state.tracking_data.confirm_status > 0) {
+    const trackingNo = state.tracking_data.rider.phone_no_1;
+    const cityCode = state.tracking_data.city_code;
+
+    const uri = `${cityCode}/${trackingNo}`;
+
+    const clientId = `mqttjs_wtp_${Math.random()
+      .toString(16)
+      .substr(2, 8)}_${Math.random()}_${new Date().getTime()}`;
+    const host = 'wss://chat.sendyit.com:443';
+    const options = {
+      keepalive: 10,
+      clientId,
+      protocolId: 'MQTT',
+      protocolVersion: 4,
+      clean: true,
+      reconnectPeriod: 1000,
+      connectTimeout: 30 * 1000,
+      will: {
+        topic: 'WillMsg',
+        payload: 'Connection Closed abnormally..!',
+        qos: 0,
+        retain: false,
+      },
+      username: 'sendy',
+      password: '93a3a43dbac9ddd362702fb525b42a2d',
+      rejectUnauthorized: false,
+    };
+    const client = mqtt.connect(host, options);
+
+    client.on('error', () => {
+      // handle error
+      client.end();
+    });
+
+    client.on('connect', () => {
+      commit('setIsMQTTConnected', true);
+    });
+
+    client.subscribe(`partner_app_positions/${uri}`, {
+      qos: 0,
+    });
+
+    client.on('message', (topic, message) => {
+      const vendor = JSON.parse(message.toString());
+      vendor.overide_visible = true;
+      commit('$_orders/setVendorMarkers', vendor, { root: true });
+    });
+
+    client.on('close', () => {
+      // closed
+    });
   }
+};
 
-	return new Promise((resolve, reject) => {
-		dispatch("requestAxiosPost", payload, {
-				root: true
-			})
-			.then(response => {
-				resolve(response.data);
-			}, error => {
-				reject(error);
-				console.log('failed to dispatch to global store')
-			});
-	})
-}
+const runningBalance = function runningBalance({ dispatch }, data) {
+  const payload = {
+    app: 'PRIVATE_API',
+    endpoint: 'running_balance',
+    values: data,
+  };
 
-const track_mqtt = function({commit, state})
-{
-	if (!state.tracking_data.confirm_status > 0) {
-		return false
-	}
-	var tracking_no = state.tracking_data.rider.phone_no_1;
-	var city_id = state.tracking_data.city_id;
-	var city_code = '';
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+        // handle failure to dispatch to global store'
+      },
+    );
+  });
+};
 
-	switch (city_id) {
-		case 1:
-			city_code = 'ke-nairobi';
-			break;
-		case 2:
-			city_code = 'ke-mombasa';
-			break;
-		case 3:
-			city_code = 'ke-thika';
-			break;
-		case 4:
-			city_code = 'ke-nakuru';
-			break;
-		case 5:
-			city_code = 'ke-kisumu';
-			break;
-		default:
-			city_code = 'ke-nairobi';
-	}
+const saveOrderDetails = function saveOrderDetails({ dispatch }, data) {
+  const payload = {
+    values: data,
+    app: 'NODE_PRIVATE_API',
+    endpoint: 'remember_order',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
-	var uri = city_code + '/' + tracking_no;
+const requestETASms = function requestETASms({ dispatch }, data) {
+  const payload = {
+    values: data,
+    app: 'PRIVATE_API',
+    endpoint: 'send_sms',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
-	var clientId = 'mqttjs_wtp_' + Math.random().toString(16).substr(2, 8) + '_' + Math.random() + '_' + new Date().getTime()
-	var host = 'wss://chat.sendyit.com:443'
-	var options = {
-		keepalive: 10,
-		clientId: clientId,
-		protocolId: 'MQTT',
-		protocolVersion: 4,
-		clean: true,
-		reconnectPeriod: 1000,
-		connectTimeout: 30 * 1000,
-		will: {
-			topic: 'WillMsg',
-			payload: 'Connection Closed abnormally..!',
-			qos: 0,
-			retain: false
-		},
-		username: 'sendy',
-		password: '93a3a43dbac9ddd362702fb525b42a2d',
-		rejectUnauthorized: false
-	}
-	var client = mqtt.connect(host, options)
-
-	client.on('error', function(err) {
-		console.log(err)
-		client.end()
-	})
-
-	client.on('connect', function() {
-		console.log('client connected:' + clientId)
-	})
-
-	client.subscribe('partner_app_positions/' + uri, {
-		qos: 0
-	})
-
-	client.on('message', function(topic, message, packet) {
-		var vendor = JSON.parse(message.toString());
-		console.log(vendor)
-		commit('$_orders/set_vendor_markers', vendor)
-	})
-
-	client.on('close', function() {
-		console.log(clientId + ' disconnected')
-	})
-}
-const running_balance = function({commit, dispatch}, data)
-{
-  var payload = {
-    "app":"PRIVATE_API",
-    "endpoint":"running_balance",
-    "values":data
-  }
-
-	return new Promise((resolve, reject) => {
-		dispatch("requestAxiosPost", payload, {
-				root: true
-			})
-			.then(response => {
-				resolve(response.data);
-			}, error => {
-				reject(error);
-				console.log('failed to dispatch to global store')
-			});
-	})
-}
+const requestRiderLastPosition = function requestRiderLastPosition({ dispatch }, data) {
+  const payload = {
+    values: data,
+    app: 'NODE_PRIVATE_API',
+    endpoint: 'last_partner_position',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
 export default {
-	get_tracking_data,
-	cancel_order,
-	track_mqtt,
-  running_balance,
+  getTrackingData,
+  cancelOrder,
+  trackMQTT,
+  runningBalance,
+  saveOrderDetails,
+  requestETASms,
+  requestRiderLastPosition,
 };

@@ -6,14 +6,24 @@
   >
     <div class="order-details-wrapper">
       <div class="order_details_map">
-        <Img
-          :src="createStaticMapUrl(order_details.path)"
-          alt=""
-        />
+        <Img :src="createStaticMapUrl(order_details.path)" />
       </div>
       <div class="order_details_desc">
-        <div class="order_details_price">
-          KES {{ order_details.order_cost }}
+        <div v-if="order_details.fixed_cost" class="order_details_price">
+          {{ order_details.order_currency }} {{ formatCurrency(order_details.order_cost) }}
+        </div>
+        <div v-else class="order_details_price">
+          <div
+            v-if="
+              order_details.order_details.delivery_status === 0 && order_details.customer_min_amount
+            "
+          >
+            {{ order_details.order_currency }}
+            {{ formatCurrency(order_details.customer_min_amount) }}
+          </div>
+          <div v-else>
+            {{ order_details.order_currency }} {{ formatCurrency(order_details.order_cost) }}
+          </div>
         </div>
 
         <div class="order_details_desc_item">
@@ -62,10 +72,7 @@
               alt=""
             >
             <span>{{ order_details.path[index].name }}</span>
-            <div
-              v-if="order_details.rider_deliver_img !== null"
-              class="recepient-padded"
-            >
+            <div v-if="order_details.rider_deliver_img !== null" class="recepient-padded">
               Recieved by {{ order_details.rider_deliver_img[index - 1].name }}
             </div>
           </div>
@@ -100,10 +107,7 @@
         <div class="rider_details_item">
           {{ order_details.rider.number_plate }}
         </div>
-        <div
-          v-if="order_details.order_details.delivery_status === 3"
-          class="rider_details_item"
-        >
+        <div v-if="order_details.order_details.delivery_status === 3" class="rider_details_item">
           <div v-if="order_details.rider.rider_rating !== null">
             <el-rate
               v-model="order_details.rider.rider_rating"
@@ -164,20 +168,10 @@
                     v-for="(val, index) in order_details.rider_deliver_img"
                     v-if="index >= 0"
                   >
-                    <div
-                      v-if="val.delivery_image.length > 0"
-                      class="delivery_documents_img"
-                    >
+                    <div v-if="val.delivery_image.length > 0" class="delivery_documents_img">
                       <div style="width: 166%">
-                        <div
-                          v-for="(val, index) in val.delivery_image[0].images"
-                          v-if="index >= 0"
-                        >
-                          <img
-                            class="delivery-image-content"
-                            :src="deliveryImagePath(val)"
-                            alt=""
-                          >
+                        <div v-for="(val, index) in val.delivery_image[0].images" v-if="index >= 0">
+                          <img class="delivery-image-content" :src="deliveryImagePath(val)" />
                         </div>
                       </div>
                     </div>
@@ -293,6 +287,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import numeral from 'numeral';
 
 const moment = require('moment');
 
@@ -312,6 +307,7 @@ export default {
       disputeType: '',
       disputeReason: '',
       disputeDescription: '',
+      default_currency: '',
     };
   },
   methods: {
@@ -324,18 +320,18 @@ export default {
     }),
     createStaticMapUrl(path) {
       // TODO:get google_key from configs
-      const google_key = 'AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc';
-      const from_cordinates = path[0].coordinates;
-      const to_cordinates = path[path.length - 1].coordinates;
-      return `https://maps.googleapis.com/maps/api/staticmap?path=color:0x2c82c5|weight:5|${from_cordinates}|${to_cordinates}&size=257x257&markers=color:0xF17F3A%7Clabel:P%7C
-        ${from_cordinates}&markers=color:0x2c82c5%7Clabel:D%7C${to_cordinates}&key=${google_key}`;
+      const googleKey = 'AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc';
+      const fromCordinates = path[0].coordinates;
+      const toCordinates = path[path.length - 1].coordinates;
+      return `https://maps.googleapis.com/maps/api/staticmap?path=color:0x2c82c5|weight:5|${fromCordinates}|${toCordinates}&size=257x257&markers=color:0xF17F3A%7Clabel:P%7C
+        ${fromCordinates}&markers=color:0x2c82c5%7Clabel:D%7C${toCordinates}&key=${googleKey}`;
     },
     getOrderFromName(path) {
       return path[0].name;
     },
     getOrderToName(path) {
-      const path_length = path.length;
-      return path[path_length - 1].name;
+      const pathLength = path.length;
+      return path[pathLength - 1].name;
     },
 
     activateRating() {
@@ -344,14 +340,16 @@ export default {
     rateOrder() {
       this.show_rating = false;
     },
-    trackOrder(order_no) {
-      this.$router.push({ name: 'tracking', params: { order_no } });
+    trackOrder(orderNo) {
+      this.$router.push({ name: 'tracking', params: { orderNo } });
     },
     getDeliveryDocsSrc(order) {
       let env = '';
       try {
         env = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {}
+      } catch (er) {
+        // ...
+      }
       if (env !== 'production') {
         return `https://apptest.sendyit.com/biz/sendyconnect/verify/${order}`;
       }
@@ -381,14 +379,14 @@ export default {
         const values = {
           order_no: this.order_details.order_no,
         };
-        const full_payload = {
+        const fullPayload = {
           values,
           app: 'NODE_PRIVATE_API',
           endpoint: 'check_dispute',
         };
 
-        this.requestDisputeStatus(full_payload).then(
-          (response) => {
+        this.requestDisputeStatus(fullPayload).then(
+          response => {
             if (!response.status) {
               this.dialogFormVisible = true;
             } else {
@@ -399,9 +397,9 @@ export default {
               );
             }
           },
-          (error) => {
-            console.log(error);
-          },
+          error => {
+            this.doNotification(2, 'Delivery dispute', 'Something went wrong, please retry .');
+          }
         );
       } else {
         this.doNotification(
@@ -423,13 +421,13 @@ export default {
           email: session[session.default].user_email,
           phone: session[session.default].user_phone,
         };
-        const full_payload = {
+        const fullPayload = {
           values,
           app: 'PRIVATE_API',
           endpoint: 'dispute_order',
         };
-        this.requestDisputeDeliveryDocs(full_payload).then(
-          (response) => {
+        this.requestDisputeDeliveryDocs(fullPayload).then(
+          response => {
             if (response.status) {
               this.doNotification(2, 'Delivery dispute', 'Delivery dispute successful !');
               this.closeDialog();
@@ -437,9 +435,9 @@ export default {
               this.doNotification(2, 'Delivery dispute', response.message);
             }
           },
-          (error) => {
-            console.log(error);
-          },
+          error => {
+            this.doNotification(2, 'Delivery dispute', 'Something went wrong, please retry .');
+          }
         );
       } else {
         this.message = 'Please provide all details';
@@ -455,6 +453,13 @@ export default {
       this.$store.commit('setNotification', notification);
       this.$store.commit('setNotificationStatus', true);
     },
+    setUserDefaultCurrency() {
+      const sessionData = this.$store.getters.getSession;
+      this.default_currency = sessionData[sessionData.default].default_currency;
+    },
+    formatCurrency(currency) {
+      return numeral(currency).format('0,0');
+    },
   },
   computed: {
     ...mapGetters({
@@ -464,7 +469,9 @@ export default {
       return this.getOrderDetails.find(order => order.order_id === this.$route.params.id);
     },
   },
-  mounted() {},
+  mounted() {
+    this.setUserDefaultCurrency();
+  },
   created() {
     this.order_id = this.$route.params.id;
   },

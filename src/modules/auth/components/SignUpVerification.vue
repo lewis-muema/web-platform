@@ -60,7 +60,9 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import SessionMxn from '../../../mixins/session_mixin.js';
+import SessionMxn from '../../../mixins/session_mixin';
+
+const currencyConversion = require('country-tz-currency');
 
 export default {
   mixins: [SessionMxn],
@@ -69,19 +71,26 @@ export default {
       cop_name: '',
       phone: '',
       message: '',
+      currency: '',
     };
+  },
+  mounted() {
+    this.checkUserLocation();
   },
   methods: {
     ...mapActions({
       requestSignUpSegmentation: '$_auth/requestSignUpSegmentation',
+      authSignIn: '$_auth/requestSignIn',
     }),
     ...mapGetters({
       Password: '$_auth/requestPassword',
       Email: '$_auth/requestEmail',
       Phone: '$_auth/requestPhone',
       Name: '$_auth/requestName',
+      getUserCountryCode: '$_auth/getUserCountryCode',
     }),
     peer_set() {
+      this.checkUserLocation();
       const values = {};
       values.name = this.Name();
       values.phone = this.Phone();
@@ -89,32 +98,32 @@ export default {
       values.password = this.Password();
       values.type = 'peer';
       values.platform = 'web';
-      console.log(values);
-      const full_payload = {
+      values.country_code = this.getUserCountryCode();
+      values.default_currency = this.currency;
+      const fullPayload = {
         values,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'sign_up_submit',
       };
-
-      const that = this;
-      this.requestSignUpSegmentation(full_payload).then(
+      this.requestSignUpSegmentation(fullPayload).then(
         (response) => {
-          console.log(response);
           if (response.length > 0) {
             response = response[0];
           }
 
           if (response.status) {
-            const session_data = response.data;
-            const json_session = JSON.stringify(session_data);
-            this.setSession(json_session);
-            let analytics_env = '';
+            const sessionData = response.data;
+            const jsonSession = JSON.stringify(sessionData);
+            this.setSession(jsonSession);
+            let analyticsEnv = '';
             try {
-              analytics_env = process.env.CONFIGS_ENV.ENVIRONMENT;
-            } catch (er) {}
-            if ('default' in session_data && analytics_env === 'production') {
-              const acc = session_data[session_data.default];
+              analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+            } catch (er) {
+              // ...
+            }
+            if ('default' in sessionData && analyticsEnv === 'production') {
+              const acc = sessionData[sessionData.default];
 
               mixpanel.alias(acc.user_email);
 
@@ -131,7 +140,7 @@ export default {
               // login identify
               mixpanel.identify(acc.user_email);
 
-              // track login
+              // track new Account
               mixpanel.track('New Account Created', {
                 'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
                 'Last Login': new Date(),
@@ -142,20 +151,20 @@ export default {
                 $name: acc.user_name,
               });
             }
-            this.$store.commit('setSession', session_data);
-            this.$router.push('/orders');
+            this.directSignInViaAuth();
           } else {
             // failed to login
             // show some sort of error
-            console.log(response);
+            this.doNotification(2, 'Sign Up Error ', response.message);
           }
         },
         (error) => {
-          console.log(error);
+          this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
         },
       );
     },
     cop_set() {
+      this.checkUserLocation();
       if (this.cop_name !== '') {
         const values = {};
         values.cop_name = this.cop_name;
@@ -164,40 +173,171 @@ export default {
         values.email = this.Email();
         values.password = this.Password();
         values.type = 'biz';
-        const full_payload = {
+        values.country_code = this.getUserCountryCode();
+        values.default_currency = this.currency;
+        const fullPayload = {
           values,
           vm: this,
           app: 'NODE_PRIVATE_API',
           endpoint: 'sign_up_submit',
         };
-
-        const that = this;
-
-        this.requestSignUpSegmentation(full_payload).then(
+        this.requestSignUpSegmentation(fullPayload).then(
           (response) => {
-            console.log(response);
             if (response.length > 0) {
               response = response[0];
             }
             if (response.status) {
-              const session_data = response.data;
-              const json_session = JSON.stringify(session_data);
-              this.setSession(json_session);
-              this.$store.commit('setSession', session_data);
-              this.$router.push('/orders');
+              const sessionData = response.data;
+              const jsonSession = JSON.stringify(sessionData);
+              this.setSession(jsonSession);
+              let analyticsEnv = '';
+              try {
+                analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+              } catch (er) {
+                // ...
+              }
+              if ('default' in sessionData && analyticsEnv === 'production') {
+                const acc = sessionData[sessionData.default];
+
+                mixpanel.alias(acc.user_email);
+
+                mixpanel.people.set_once({
+                  $email: acc.user_email,
+                  $phone: acc.user_phone,
+                  'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                  $name: acc.user_name,
+                  $created: new Date(),
+                  'Client Type': 'Web Platform',
+                  'Business Name': acc.default === 'biz' ? acc.cop_name : '',
+                });
+
+                // login identify
+                mixpanel.identify(acc.user_email);
+
+                // track New Account
+                mixpanel.track('New Account Created', {
+                  'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                  'Last Login': new Date(),
+                  'Client Type': 'Web Platform',
+                  'Business Name': acc.default === 'biz' ? acc.cop_name : '',
+                  $email: acc.user_email,
+                  $phone: acc.user_phone,
+                  $name: acc.user_name,
+                });
+              }
+              this.directSignInViaAuth();
             } else {
               // failed to login
               // show some sort of error
-              console.log(response);
+              this.doNotification(2, 'Sign Up Error ', response.message);
             }
           },
           (error) => {
-            console.log(error);
+            this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
           },
         );
       } else {
         this.message = 'Provide Business Name';
       }
+    },
+    checkUserLocation() {
+      const countryCodeData = currencyConversion.getCountryByCode(this.getUserCountryCode());
+      this.currency = countryCodeData.currencyCode;
+    },
+    directSignInViaAuth() {
+      this.deleteSession();
+      const params = {
+        email: this.Email(),
+        password: this.Password(),
+      };
+      const fullPayload = {
+        values: params,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'sign_in',
+      };
+      this.authSignIn(fullPayload).then(
+        (response) => {
+          if (Object.prototype.hasOwnProperty.call(response, 'status')) {
+            const errorResponse = response.data;
+            if (errorResponse.code === 1) {
+              this.login_text = 'Login';
+              this.doNotification(2, 'Login failed', 'Wrong password or email.');
+            } else {
+              this.login_text = 'Login';
+              this.doNotification(2, 'Login failed', 'Account deactivated');
+            }
+          } else {
+            try {
+              if (response) {
+                const refreshToken = response.refresh_token;
+                const accessToken = response.access_token;
+                // eslint-disable-next-line max-len
+                // TODO change from using local storage as session trust store. malicious js will read the data
+                localStorage.setItem('jwtToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
+                const partsOfToken = accessToken.split('.');
+                const middleString = partsOfToken[1];
+                const data = atob(middleString);
+                const { payload } = JSON.parse(data);
+
+                // set session
+                // commit everything to the store
+                // redirect to orders
+                const sessionData = payload;
+                const jsonSession = JSON.stringify(sessionData);
+                this.setSession(jsonSession);
+                this.$store.commit('setSession', sessionData);
+                let analyticsEnv = '';
+                try {
+                  analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+                } catch (er) {
+                  // ...
+                }
+
+                /* global mixpanel */
+
+                if ('default' in sessionData && analyticsEnv === 'production') {
+                  const acc = sessionData[sessionData.default];
+
+                  mixpanel.people.set_once({
+                    $email: acc.user_email,
+                    $phone: acc.user_phone,
+                    'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                    $name: acc.user_name,
+                    'Client Type': 'Web Platform',
+                  });
+
+                  // login identify
+                  mixpanel.identify(acc.user_email);
+
+                  // track login
+                  mixpanel.track('User Login', {
+                    'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                    'Last Login': new Date(),
+                    'Client Type': 'Web Platform',
+                  });
+                }
+                this.$router.push('/orders');
+              }
+            } catch (error) {
+              // @todo Log the error (central logging)
+            }
+          }
+        },
+        (error) => {
+          this.doNotification(2, 'Login failed', 'Login failed. Please try again');
+          this.$router.push('/auth/sign_in');
+        },
+      );
+    },
+    doNotification(level, title, message) {
+      const notification = {
+        title,
+        level,
+        message,
+      };
+      this.$store.commit('setNotification', notification);
+      this.$store.commit('setNotificationStatus', true);
     },
   },
 };
@@ -251,12 +391,6 @@ export default {
 }
 
 .btn-sign-up-check {
-  /* bottom: 5px;
-  position:absolute;
-  left: 2px;
-  width: 50px;
-  font-size: 13px !important;
-  border: #fff; */
   width: 28%;
   border-width: 0px !important;
 }

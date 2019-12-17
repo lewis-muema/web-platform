@@ -1,34 +1,40 @@
 <template>
-  <div class="" id="auth_container">
-      <!-- <main-header></main-header> -->
-      <div class="profile-container">
-        <div class="new-card" style="margin-top:5%;margin-left:20%;border-right:5px solid #1782C5;height:400px;">
-          <a class="my-profile__adj">
-              <router-link class="profile--link" to="/user/profile/personal_information">Personal Information</router-link>
-          </a>
-          <div class="my-profile__adj">
-              <router-link class="profile--link" to="/user/profile/change_password">Change Password</router-link>
-          </div>
+  <div id="auth_container" class="">
+    <!-- <main-header></main-header> -->
+    <div class="profile-container">
+      <div
+        class="new-card"
+        style="margin-top:5%;margin-left:20%;border-right:5px solid #1782C5;height:400px;"
+      >
+        <a class="my-profile__adj">
+          <router-link class="profile--link" to="/user/profile/personal_information">
+            Personal Information
+          </router-link>
+        </a>
+        <div class="my-profile__adj">
+          <router-link class="profile--link" to="/user/profile/change_password">
+            Change Password
+          </router-link>
         </div>
+      </div>
 
-   <div class="">
-      <router-view></router-view>
+      <div class="">
+        <router-view />
+      </div>
+    </div>
   </div>
-</div>
-  </div>
-
 </template>
 
 <script>
-  // import MainHeader from '../../../components/headers/MainHeader.vue'
+// import MainHeader from '../../../components/headers/MainHeader.vue'
 
-    export default {
-        name: "Profile",
-        // components : {MainHeader},
-    }
+export default {
+  name: 'Profile',
+  // components : {MainHeader},
+};
 </script>
 
-<style lang="css"scoped>
+<style lang="css" scoped>
 .my-profile__adj{
   font-size: 22px;
   padding-bottom: 0px;
@@ -85,5 +91,4 @@
 
   /* background-color: red; */
 }
-
 </style>

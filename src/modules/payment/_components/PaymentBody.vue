@@ -1,19 +1,19 @@
 <template lang="html">
   <div class="paymentbody">
-    <pay-method/>
+    <pay-method />
     <div class="">
-      <router-view></router-view>
+      <router-view />
     </div>
   </div>
 </template>
 
 <script>
-import PayMethod from './PayMethod.vue'
+import PayMethod from './PayMethod.vue';
 
 export default {
-  name: 'payment-body',
-  components: {PayMethod}
-}
+  name: 'PaymentBody',
+  components: { PayMethod },
+};
 </script>
 
 <style lang="css">
@@ -27,8 +27,7 @@ export default {
   margin: .5em;
 }
 .paymentbody--input {
-    height: 45px;
-    margin-top: 20px;
+  margin-top: 20px;
 }
 .paymentbody--input-spaced
 {

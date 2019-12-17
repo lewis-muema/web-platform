@@ -15,10 +15,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img
-                  :src="cards_background"
-                  alt=""
-                ><span class="card-title .center-align">
+                <img :src="cards_background"><span class="card-title .center-align">
                   Timeliness
                 </span>
               </div>
@@ -41,10 +38,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img
-                  :src="cards_background"
-                  alt=""
-                ><span class="card-title">
+                <img :src="cards_background"><span class="card-title">
                   Politeness
                 </span>
               </div>
@@ -68,10 +62,7 @@
           <div class="col s12 m4">
             <div class="card ">
               <div class="card-image">
-                <img
-                  :src="cards_background"
-                  alt=""
-                ><span class="card-title">
+                <img :src="cards_background"><span class="card-title">
                   Pricing
                 </span>
               </div>
@@ -94,10 +85,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img
-                  :src="cards_background"
-                  alt=""
-                ><span class="card-title">
+                <img :src="cards_background"><span class="card-title">
                   Payment
                 </span>
               </div>
@@ -121,10 +109,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img
-                  :src="cards_background"
-                  alt=""
-                ><span class="card-title">
+                <img :src="cards_background"><span class="card-title">
                   App
                 </span>
               </div>
@@ -147,10 +132,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img
-                  :src="cards_background"
-                  alt=""
-                ><span class="card-title">
+                <img :src="cards_background"><span class="card-title">
                   Directions
                 </span>
               </div>
@@ -175,10 +157,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img
-                  :src="cards_background"
-                  alt=""
-                ><span class="card-title .center-align">
+                <img :src="cards_background"><span class="card-title .center-align">
                   Timeliness
                 </span>
               </div>
@@ -201,10 +180,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img
-                  :src="cards_background"
-                  alt=""
-                ><span class="card-title">
+                <img :src="cards_background"><span class="card-title">
                   Payment
                 </span>
               </div>
@@ -228,10 +204,7 @@
           <div class="col s12 m4">
             <div class="card ">
               <div class="card-image">
-                <img
-                  :src="cards_background"
-                  alt=""
-                ><span class="card-title">
+                <img :src="cards_background"><span class="card-title">
                   Directions
                 </span>
               </div>
@@ -256,10 +229,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img
-                  :src="cards_background"
-                  alt=""
-                ><span class="card-title .center-align">
+                <img :src="cards_background"><span class="card-title .center-align">
                   Timeliness
                 </span>
               </div>
@@ -281,10 +251,7 @@
           <div class="col s12 m4">
             <div class="card">
               <div class="card-image">
-                <img
-                  :src="cards_background"
-                  alt=""
-                ><span class="card-title">
+                <img :src="cards_background"><span class="card-title">
                   Politeness
                 </span>
               </div>
@@ -307,10 +274,7 @@
           <div class="col s12 m4">
             <div class="card ">
               <div class="card-image">
-                <img
-                  :src="cards_background"
-                  alt=""
-                ><span class="card-title">
+                <img :src="cards_background"><span class="card-title">
                   Directions
                 </span>
               </div>
@@ -490,7 +454,6 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
-import axios from 'axios';
 
 export default {
   name: 'Comments',
@@ -542,7 +505,6 @@ export default {
     },
     submitRating() {
       this.postRating();
-      // this.closeFancyBox();
       this.moveNext();
     },
     postRating() {
@@ -560,20 +522,17 @@ export default {
         comment: this.comment,
       };
       this.$store.dispatch('$_rating/requestRatingUpdate', payload).then(
-        (response) => {
-          console.log(response);
-        },
+        (response) => {},
         (error) => {
-          console.log(error);
+          const notification = { title: '', level: 2, message: 'Something went wrong.' }; // notification object
+          this.$store.commit('setNotification', notification);
+          this.$store.commit('setNotificationStatus', true);
         },
       );
     },
     moveNext() {
       this.updateStep(3);
     },
-    // closeFancyBox() {
-    //     parent.$.fancybox.close();
-    // },
     resetSelectReasons() {
       this.timeliness = false;
       this.payment = false;

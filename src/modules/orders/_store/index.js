@@ -4,25 +4,33 @@ import mutations from './mutations';
 
 export default {
   namespaced: true,
-  state () {
-      return {
-          page: 0, //0 - Order Placement, 1 - Tracking, 2 - Rating
-          ongoing_orders: {},
-          map: {
-            markers: [],
-            polyline: {
-              path: "",
-              options: {
-                strokeColor: '#1782c5',
-                strokeOpacity: 1.0,
-                strokeWeight: 2
-              }
-            },
-            vendors: {}
+  state() {
+    return {
+      page: 0, // 0 - Order Placement, 1 - Tracking, 2 - Rating
+      ongoing_orders: {},
+      map: {
+        markers: [],
+        polyline: {
+          path: '',
+          options: {
+            strokeColor: '#1782c5',
+            strokeOpacity: 1.0,
+            strokeWeight: 2,
           },
-          ongoing_show :1,
-      }
-    },
+        },
+        vendors: {},
+      },
+      ongoing_show: 1,
+      home_locations: [],
+      order_path: [],
+      location_path: [],
+      outer_price_request: {},
+      outer_active_vendor_data: {},
+      outer_active_package_data: 'small',
+      child_orders: [],
+      selected_child: '',
+    };
+  },
   actions,
   getters,
   mutations,

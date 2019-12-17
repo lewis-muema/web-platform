@@ -1,5 +1,5 @@
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-import Mcrypt from './mcrypt_mixin.js';
+import { mapActions } from 'vuex';
+import Mcrypt from './mcrypt_mixin';
 
 const PaymentMxn = {
   methods: {
@@ -8,12 +8,12 @@ const PaymentMxn = {
       requestCardPaymentAction: '$_payment/requestCardPayment',
     }),
     sanitizeCardDualResponses(response) {
-      let repsonseData;
+      let repsonseData = '';
       let i;
       if (response.length > 0) {
-        for (i = 0; i < response.length; i++) {
+        for (i = 0; i < response.length; i += 1) {
           repsonseData = Mcrypt.decrypt(response[i].data);
-          repsonseData = JSON.parse(responseData);
+          repsonseData = JSON.parse(repsonseData);
 
           if (repsonseData.status) {
             // this is the correct one
@@ -28,11 +28,7 @@ const PaymentMxn = {
       return repsonseData;
     },
     // this function will complete transactions for card payments already in the system
-    handleSavedCard(card, orderOptions = false) {
-      if (!this.payment_is_to_be_requested) {
-        this.doCompleteOrder();
-        return false;
-      }
+    handleSavedCard(setCurrency, card, orderOptions = false) {
       const session = this.$store.getters.getSession;
       let userId = 0;
       let copId = 0;
@@ -48,14 +44,16 @@ const PaymentMxn = {
       }
       let cardPayload = {
         amount: orderOptions
-          ? Mcrypt.encrypt(this.raw_pending_amount)
+          ? Mcrypt.encrypt(this.raw_pending_amount.replace(/,/g, ''))
           : Mcrypt.encrypt(this.card_payment_data.amount),
         last4: Mcrypt.encrypt(card.last4),
         stripe_user_id: this.get_stripe_user_id,
+        card_id: Mcrypt.encrypt(card.card_id),
         complete_payment: true,
         user_id: userId,
         cop_id: copId,
         user_phone: userPhone,
+        currency: setCurrency,
       };
       // encrypt the card payload
       cardPayload = Mcrypt.encrypt(cardPayload);
@@ -95,7 +93,7 @@ const PaymentMxn = {
 
             const self = this;
 
-            this.requestRunningBalanceFromAPI(payload).then((response) => {
+            this.requestRunningBalanceFromAPI(payload).then(() => {
               this.payment_state = 0;
               this.loading = 0;
               if (orderOptions) {
@@ -116,7 +114,7 @@ const PaymentMxn = {
             this.loading = 0;
           }
         },
-        (error) => {
+        () => {
           const notification = {
             title: 'card payment failed',
             level: 2,
@@ -131,7 +129,7 @@ const PaymentMxn = {
       );
       return true;
     },
-    handleNewCardPayment() {
+    handleNewCardPayment(setCurrency) {
       // sort encryption
       const session = this.$store.getters.getSession;
 
@@ -168,6 +166,7 @@ const PaymentMxn = {
         user_phone: userPhone,
         user_name: userName,
         complete_payment: true,
+        currency: setCurrency,
       };
 
       cardPayload = Mcrypt.encrypt(cardPayload);
@@ -181,7 +180,6 @@ const PaymentMxn = {
       this.requestCardPaymentAction(fullPayload).then(
         (response) => {
           response.data = this.sanitizeCardDualResponses(response);
-          const that = this;
 
           if (response.data.status) {
             const notification = {
@@ -193,6 +191,8 @@ const PaymentMxn = {
             this.$store.dispatch('show_notification', notification, {
               root: true,
             });
+            this.getUserCards();
+            this.clearCardData();
             // request running balance
             const runningBalancePayload = {
               values: {
@@ -206,7 +206,7 @@ const PaymentMxn = {
               app: 'PRIVATE_API',
               endpoint: 'running_balance',
             };
-            this.requestRunningBalanceFromAPI(payload).then((response) => {
+            this.requestRunningBalanceFromAPI(payload).then(() => {
               this.payment_state = 0;
               this.loading = 0;
             });
@@ -222,7 +222,7 @@ const PaymentMxn = {
             });
           }
         },
-        (error) => {
+        () => {
           this.payment_state = 'Payment Failed';
           const notification = {
             title: 'card payment failed',

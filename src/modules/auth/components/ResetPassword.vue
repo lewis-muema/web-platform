@@ -69,7 +69,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import SessionMxn from '../../../mixins/session_mixin.js';
+import SessionMxn from '../../../mixins/session_mixin';
 
 export default {
   mixins: [SessionMxn],
@@ -87,19 +87,20 @@ export default {
     ...mapActions({
       requestResetPassword: '$_auth/requestResetPassword',
       requestCheckToken: '$_auth/requestCheckToken',
+      authNewSignIn: '$_auth/requestSignIn',
     }),
     check_content() {
       const token = this.$route.params.content;
 
       const values = {};
       values.token = token;
-      const full_payload = {
+      const fullPayload = {
         values,
         vm: this,
         app: 'NODE_PRIVATE_API',
         endpoint: 'forgot_token',
       };
-      this.requestCheckToken(full_payload).then(
+      this.requestCheckToken(fullPayload).then(
         (response) => {
           // console.log(response);
           if (response.length > 0) {
@@ -121,39 +122,36 @@ export default {
           }
         },
         (error) => {
-          console.error('Check Internet Connection');
-          console.log(error);
+          this.message = 'Reset Password Failed, Kindly retry again';
         },
       );
     },
     reset_pass() {
       if (this.new_password !== this.confirm_password) {
-        console.log('Password does not match!');
         this.doNotification(2, 'Password Failed', 'Password does not match. Please try again');
       } else {
         const payload = {};
         payload.password = this.new_password;
         payload.token = this.$route.params.content;
 
-        const full_payload = {
+        const fullPayload = {
           values: payload,
           vm: this,
           app: 'NODE_PRIVATE_API',
           endpoint: 'update_pass',
         };
         const that = this;
-        this.requestResetPassword(full_payload).then(
-          (response) => {
+        this.requestResetPassword(fullPayload)
+          .then((response) => {
             if (response.length > 0) {
               response = response[0];
             }
-            console.log('Update Password', response);
             if (response.status) {
-              const session_data = response.data;
-              const json_session = JSON.stringify(session_data);
-              this.setSession(json_session);
-              this.$store.commit('setSession', session_data);
-              this.$router.push('/orders');
+              const sessionData = response.data;
+              const { user_email } = sessionData[sessionData.default];
+              const pass = this.new_password;
+
+              this.handleNewSession(user_email, pass);
             } else {
               this.doNotification(
                 2,
@@ -162,16 +160,109 @@ export default {
               );
               // this.$router.push("/auth");
             }
-          },
-          (error) => {
-            this.message = 'Login failed';
-            console.log(error);
-          },
-        );
+          })
+          .catch((err) => {
+            const e = {
+              ...err,
+            };
+            this.doNotification(2, 'Password Reset Failed', e.response.data.message);
+          });
       }
     },
+    handleNewSession(email, pass) {
+      this.deleteSession();
+      const params = {
+        email,
+        password: pass,
+      };
+      const fullPayload = {
+        values: params,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'sign_in',
+      };
+      this.authNewSignIn(fullPayload).then(
+        (response) => {
+          if (Object.prototype.hasOwnProperty.call(response, 'status')) {
+            const errorResponse = response.data;
+            if (errorResponse.code === 1) {
+              this.doNotification(2, 'Login Attempt failed', '');
+            } else {
+              this.doNotification(2, 'Login Attempt failed', 'Account deactivated');
+            }
+          } else {
+            try {
+              if (response) {
+                const refreshToken = response.refresh_token;
+                const accessToken = response.access_token;
+                // eslint-disable-next-line max-len
+                // TODO change from using local storage as session trust store. malicious js will read the data
+                localStorage.setItem('jwtToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
+                const partsOfToken = accessToken.split('.');
+                const middleString = partsOfToken[1];
+                const data = atob(middleString);
+                const { payload } = JSON.parse(data);
+
+                // set session
+                // commit everything to the store
+                // redirect to orders
+
+                const sessionData = payload;
+                const jsonSession = JSON.stringify(sessionData);
+                this.setSession(jsonSession);
+                this.$store.commit('setSession', sessionData);
+                let analyticsEnv = '';
+                try {
+                  analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+                } catch (er) {
+                  // ...
+                }
+                if ('default' in sessionData && analyticsEnv === 'production') {
+                  const acc = sessionData[sessionData.default];
+
+                  mixpanel.people.set_once({
+                    $email: acc.user_email,
+                    $phone: acc.user_phone,
+                    'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                    $name: acc.user_name,
+                    'Client Type': 'Web Platform',
+                  });
+
+                  // login identify
+                  mixpanel.identify(acc.user_email);
+
+                  // track login
+                  mixpanel.track('User Login', {
+                    'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                    'Last Login': new Date(),
+                    'Client Type': 'Web Platform',
+                  });
+                }
+                this.doNotification(
+                  1,
+                  'Password Reset Successfull',
+                  'Password Reset Successfull. You will automatically be logged in',
+                );
+                setTimeout(() => {
+                  this.$router.push('/orders');
+                }, 5000);
+              }
+            } catch (error) {
+              // @todo Log the error (central logging)
+            }
+          }
+        },
+        (error) => {
+          this.doNotification(2, 'Login failed', 'Login failed. Please try again');
+        },
+      );
+    },
     doNotification(level, title, message) {
-      const notification = { title, level, message };
+      const notification = {
+        title,
+        level,
+        message,
+      };
       this.$store.commit('setNotification', notification);
       this.$store.commit('setNotificationStatus', true);
     },

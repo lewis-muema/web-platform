@@ -1,126 +1,146 @@
 <template lang="html">
-    <div class="inv-container">
-        <div class="up-flex">
-            <div class="input-spaced" style="display: none;">
-                <el-select class="addUser--select" v-model="value" placeholder="Select">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option>
-                </el-select>
-                <!--<select>-->
-                <!--<option value="0" selected>Expires in 7 days</option>-->
-                <!--<option value="1">Expires in 24 hours</option>-->
-                <!--<option value="2">Expires in 30 days</option>-->
-                <!--<option value="3">Never Expires</option>-->
-                <!--</select>-->
-            </div>
-            <div class="input-spaced">
-                <el-select class="addUser--select" v-model="value" placeholder="Select">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option>
-                </el-select>
-            </div>
-            <div class="side-flex mid-btn">
-                <a v-on:click="get_inv">Cancel</a>
-                <button v-on:click="get_link" class="button-primary" type="submit" name="action">Create Link</button>
-            </div>
-        </div>
-        <div class="side-flex side-desc">
-            Anyone can use this link to join {{this.getBizName}} on Sendy
-        </div>
+  <div class="inv-container">
+    <div class="up-flex">
+      <div
+        class="input-spaced"
+        style="display: none;"
+      >
+        <el-select
+          v-model="value"
+          class="addUser--select"
+          filterable
+          placeholder="Select"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </div>
+      <div class="input-spaced">
+        <el-select
+          v-model="value"
+          class="addUser--select"
+          filterable
+          placeholder="Select"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </div>
+      <div class="side-flex mid-btn">
+        <a @click="get_inv">Cancel</a>
+        <button
+          class="button-primary"
+          type="submit"
+          name="action"
+          @click="get_link"
+        >
+          Create Link
+        </button>
+      </div>
     </div>
+    <div class="side-flex side-desc">
+      Anyone can use this link to join {{ getBizName }} on Sendy
+    </div>
+  </div>
 </template>
 
 <script>
-    import {mapGetters, mapMutations} from 'vuex'
-    import axios from 'axios'
+import { mapGetters, mapMutations } from 'vuex';
 
-    export default {
-        name: 'link-component',
-        components: {},
-        data() {
-            return {
-                options: [{
-                    value: 'Option1',
-                    label: 'Option1'
-                }, {
-                    value: 'Option2',
-                    label: 'Option2'
-                }, {
-                    value: 'Option3',
-                    label: 'Option3'
-                }, {
-                    value: 'Option4',
-                    label: 'Option4'
-                }, {
-                    value: 'Option5',
-                    label: 'Option5'
-                }],
-                value: ''
-            }
+export default {
+  name: 'LinkComponent',
+  components: {},
+  data() {
+    return {
+      options: [
+        {
+          value: 'Option1',
+          label: 'Option1',
         },
-        mounted() {
-            // this.init_select()
+        {
+          value: 'Option2',
+          label: 'Option2',
         },
-        computed: {
-            ...mapGetters(
-                {
-                    getState: '$_admin/getViewState',
-                    getDepartmentsList: '$_admin/getDepartmentsList',
-                    getBaseUrl: '$_admin/getBaseUrl',
-                    getBizName: '$_admin/getBizName'
-                }
-            )
+        {
+          value: 'Option3',
+          label: 'Option3',
         },
-        methods: {
-            ...mapMutations(
-                {
-                    updateViewState: '$_admin/setViewState',
-                    updateInviteLink: '$_admin/updateInviteLink'
-                }
-            ),
-            get_inv: function () {
-                this.updateViewState(1);
-            }
-        }
-    }
+        {
+          value: 'Option4',
+          label: 'Option4',
+        },
+        {
+          value: 'Option5',
+          label: 'Option5',
+        },
+      ],
+      value: '',
+    };
+  },
+  computed: {
+    ...mapGetters({
+      getState: '$_admin/getViewState',
+      getDepartmentsList: '$_admin/getDepartmentsList',
+      getBaseUrl: '$_admin/getBaseUrl',
+      getBizName: '$_admin/getBizName',
+    }),
+  },
+  methods: {
+    ...mapMutations({
+      updateViewState: '$_admin/setViewState',
+      updateInviteLink: '$_admin/updateInviteLink',
+    }),
+    get_inv() {
+      this.updateViewState(1);
+    },
+  },
+};
 </script>
 
 <style lang="css">
-    .end-btn {
-        justify-content: center;
-        align-items: flex-end;
-        padding-right: 0px !important;
-        flex: .5 !important;
-    }
+.end-btn {
+    justify-content: center;
+    align-items: flex-end;
+    padding-right: 0px !important;
+    flex: .5 !important;
+}
 
-    .cancel-btn {
-        min-width: 124px;
-    }
+.cancel-btn {
+    min-width: 124px;
+}
 
-    .mid-btn {
-        flex: .5 !important;
-        justify-content: space-evenly;
-        align-items: center;
-    }
+.mid-btn {
+    flex: .5 !important;
+    justify-content: space-evenly;
+    align-items: center;
+}
 
-    .input-spaced {
-        margin: 30px 0px 30px 0px;
-    }
+.input-spaced {
+    margin: 30px 0px 30px 0px;
+}
 
-    .up-flex {
-        margin: 0 auto;
-        width: 70%;
-    }
+.up-flex {
+    margin: 0 auto;
+    width: 70%;
+}
 
-    .side-desc {
-        font-size: initial;
-        justify-content: center;
-        align-items: center;
-        margin-top: 50px;
-        font-size: 14px !important;
-        color: #9e9e9e !important;
-    }
-    .many--link{
-        margin-top: -1rem !important;
-    }
+.side-desc {
+    font-size: initial;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    font-size: 14px !important;
+    color: #9e9e9e !important;
+}
+.many--link{
+    margin-top: -1rem !important;
+}
 </style>

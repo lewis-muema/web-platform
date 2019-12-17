@@ -1,44 +1,41 @@
 <template lang="html">
-    <span class="rating">
-        <span v-if="getStep === 3">
-            <PostRateComponent v-if="getPostRatingComponent == 0"></PostRateComponent>
-            <PostRateComponentBusiness v-if="getPostRatingComponent == 1"></PostRateComponentBusiness>
-        </span>
-        <span v-else>
-            <div class="container">
-          		<div class="rate-rider-middle">
-          			<div id="rateriderreuse">
-                        <RateDriver v-if="getStep == 1"></RateDriver>
-                        <!--<CommentsComponent v-if="getStep == 2"></CommentsComponent>-->
-                    </div>
-                </div>
-            </div>
-        </span>
+  <span class="rating">
+    <span v-if="getStep === 3">
+      <PostRateComponent v-if="getPostRatingComponent === 0" />
+      <PostRateComponentBusiness v-if="getPostRatingComponent == 1" />
     </span>
+    <span v-else>
+      <div class="container">
+        <div class="rate-rider-middle">
+          <div id="rateriderreuse">
+            <RateDriver v-if="getStep === 1" />
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
 </template>
 
 <script>
-import RateDriver from "./components/RateDriver.vue";
-import CommentsComponent from "./components/Comments.vue";
-import PostRateComponent from "./components/PostRate.vue";
-import PostRateComponentBusiness from "./components/PostRateBusiness.vue";
-import getYear from "date-fns/get_year";
-import { mapGetters, mapMutations } from "vuex";
-import rating_store from "./_store";
-import RegisterStoreModule from "../../../../mixins/register_store_module";
+import getYear from 'date-fns/get_year';
+import { mapGetters, mapMutations } from 'vuex';
+import RateDriver from './components/RateDriver.vue';
+import PostRateComponent from './components/PostRate.vue';
+import PostRateComponentBusiness from './components/PostRateBusiness.vue';
+import ratingStore from './_store';
+import RegisterStoreModule from '../../../../mixins/register_store_module';
 
 export default {
-  name: "rating",
-  mixins: [RegisterStoreModule],
+  name: 'Rating',
   components: {
-    CommentsComponent,
     PostRateComponent,
     PostRateComponentBusiness,
-    RateDriver
+    RateDriver,
   },
+  mixins: [RegisterStoreModule],
   created() {
-    const STORE_KEY = "$_rating";
-    this.$store.registerModule(STORE_KEY, rating_store);
+    const STORE_KEY = '$_rating';
+    this.$store.registerModule(STORE_KEY, ratingStore);
     this.updateScore(0);
     this.updateBaseUrl();
     this.updatePackageID();
@@ -54,38 +51,38 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getState: "$_rating/getViewState",
-      getStep: "$_rating/getStep",
-      getPostRatingComponent: "$_rating/getPostRatingComponent",
-      getImagesBaseUrl: "$_rating/getImagesBaseUrl"
+      getState: '$_rating/getViewState',
+      getStep: '$_rating/getStep',
+      getPostRatingComponent: '$_rating/getPostRatingComponent',
+      getImagesBaseUrl: '$_rating/getImagesBaseUrl',
     }),
     current_year() {
-      let today = new Date();
+      const today = new Date();
       return getYear(today);
     },
     wrapper_background() {
-      let uri = "url(" + this.getImagesBaseUrl + "rating/waves_bg.png)";
-      return { "background-image": uri };
-    }
+      const uri = `url(${this.getImagesBaseUrl}rating/waves_bg.png)`;
+      return { 'background-image': uri };
+    },
   },
   methods: {
     ...mapMutations({
-      updateViewState: "$_rating/setViewState",
-      updateScore: "$_rating/updateScore",
-      updateBaseUrl: "$_rating/updateBaseUrl",
-      updateImagesBaseUrl: "$_rating/updateImagesBaseUrl",
-      updateDriverName: "$_rating/updateDriverName",
-      updateDriverBaseImage: "$_rating/updateDriverBaseImage",
-      updateRiderImage: "$_rating/updateRiderImage",
-      updateUserEmail: "$_rating/updateUserEmail",
-      updatePackageID: "$_rating/updatePackageID",
-      updatePostRatingComponent: "$_rating/updatePostRatingComponent"
+      updateViewState: '$_rating/setViewState',
+      updateScore: '$_rating/updateScore',
+      updateBaseUrl: '$_rating/updateBaseUrl',
+      updateImagesBaseUrl: '$_rating/updateImagesBaseUrl',
+      updateDriverName: '$_rating/updateDriverName',
+      updateDriverBaseImage: '$_rating/updateDriverBaseImage',
+      updateRiderImage: '$_rating/updateRiderImage',
+      updateUserEmail: '$_rating/updateUserEmail',
+      updatePackageID: '$_rating/updatePackageID',
+      updatePostRatingComponent: '$_rating/updatePostRatingComponent',
     }),
     getRandomNo(max) {
       return Math.floor(Math.random() * Math.floor(max));
     },
     setPostRatingComponent() {
-      let component = this.getRandomNo(2);
+      const component = this.getRandomNo(2);
       this.updatePostRatingComponent(component);
     },
     landOnRatingPage() {
@@ -94,8 +91,8 @@ export default {
       //     page: location.pathname,
       //     title: "View Page - Rating Page - Web Platform"
       // });
-    }
-  }
+    },
+  },
 };
 </script>
 

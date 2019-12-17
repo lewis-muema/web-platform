@@ -45,7 +45,7 @@
         </div>
 
         <div
-          v-if="this.two_accnts == true"
+          v-if="this.two_accnts === true"
           class=""
         >
           <span class="forgot-paswword-moreinfo">
@@ -104,31 +104,34 @@ export default {
       message: '',
     };
   },
-
+  computed: {
+    is_valid() {
+      return this.email !== '';
+    },
+  },
   methods: {
     ...mapActions({
       requestForgotPassword: '$_auth/requestForgotPassword',
     }),
     resend_link() {
-      console.log('Reset Password request');
       this.request_pass();
     },
     request_pass() {
-      let email_valid = true;
+      let emailValid = true;
       for (let i = 0; i < this.errors.items.length; i++) {
         if (this.errors.items[i].field === 'email') {
-          email_valid = false;
+          emailValid = false;
           break;
         }
       }
-      if (email_valid) {
+      if (emailValid) {
         let payload = {};
 
         // Check for one account
         if (!this.two_accnts) {
           // If password reset request does not exist
           if (!this.option) {
-            const email = this.email;
+            const { email } = this;
 
             payload = {
               email,
@@ -137,8 +140,8 @@ export default {
 
           // If password reset request exist
           else if (this.option) {
-            const email = this.email;
-            const nonce = this.nonce;
+            const { email } = this;
+            const { nonce } = this;
             const resend = true;
 
             payload = {
@@ -151,8 +154,8 @@ export default {
 
         // Check for two accounts
         else if (this.two_accnts) {
-          const email = this.email;
-          const nonce = this.nonce;
+          const { email } = this;
+          const { nonce } = this;
           const type = this.radio;
 
           payload = {
@@ -162,16 +165,15 @@ export default {
           };
         }
 
-        const full_payload = {
+        const fullPayload = {
           values: payload,
           vm: this,
           app: 'NODE_PRIVATE_API',
           endpoint: 'forgot_pass',
         };
 
-        this.requestForgotPassword(full_payload).then(
+        this.requestForgotPassword(fullPayload).then(
           (response) => {
-            console.log(response);
             // check when response is dual
             if (response.length > 0) {
               response = response[0];
@@ -187,7 +189,6 @@ export default {
               // update nonce data
             } else if (response.status === false) {
               // Account does not exist
-              console.log('Account does not exist');
               this.message = 'Account does not exist.Please sign-up to create a sendy account';
             } else if (response.status === 'exists') {
               // Existing password reset option
@@ -196,12 +197,11 @@ export default {
               this.option = true;
             } else {
               // Invalid request
-              console.log('Invalid Request');
+              this.message = 'Invalid Request';
             }
           },
           (error) => {
-            console.error('Check Internet Connection');
-            console.log(error);
+            this.message = 'Password reset request failed, Kindly retry again';
           },
         );
       } else {
@@ -210,11 +210,6 @@ export default {
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
       }
-    },
-  },
-  computed: {
-    is_valid() {
-      return this.email !== '';
     },
   },
 };

@@ -22,10 +22,13 @@
 
         <button
           type="button"
-          :class="active_filter?'button-primary section--filter-action align-left btn-payment'
-            :'button-primary section--filter-action-inactive align-left btn-payment'"
+          :class="
+            active_filter
+              ? 'button-primary section--filter-action align-left btn-payment'
+              : 'button-primary section--filter-action-inactive align-left btn-payment'
+          "
           name="order_payments_text"
-          :disabled="active_filter == true ? false : true"
+          :disabled="active_filter === true ? false : true"
           @click="filterPaymentData"
         >
           {{ order_payments_text }}
@@ -54,26 +57,28 @@
       <el-table-column
         label="Reciept Number"
         prop="txn"
+        min-width="80"
       />
       <el-table-column
         label="Date"
         prop="date_time"
         :formatter="formatDate"
+        width="170"
       />
       <el-table-column
         label="Method"
         prop="pay_method_name"
-        width="220"
+        width="125"
       />
       <el-table-column
         label="Description"
         prop="description"
-        width="220"
+        min-width="80"
       />
       <el-table-column
         label="Amount"
         prop="amount"
-        width="220"
+        width="125"
         :formatter="formatAmount"
         class-name="amount--table-format"
       />
@@ -85,7 +90,7 @@
         :total="payment_total"
         :page-size="pagination_limit"
         :current-page.sync="pagination_page"
-        :page-sizes="[5,10, 20, 50, 100]"
+        :page-sizes="[5, 10, 20, 50, 100]"
         class="section--pagination-item"
         @current-change="changePage"
         @size-change="changeSize"
@@ -127,12 +132,13 @@ export default {
       return this.paymentData.slice(from, to);
     },
     active_filter() {
-      return (this.filterData.from_date !== '' && this.filterData.from_date !== null) && (this.filterData.to_date !== '' && this.filterData.to_date !== null);
+      return (
+        this.filterData.from_date !== ''
+        && this.filterData.from_date !== null
+        && (this.filterData.to_date !== '' && this.filterData.to_date !== null)
+      );
     },
     payment_total() {
-      // if(this.filterState == true){
-      //   return this.filteredData.length;
-      // }
       return this.paymentData.length;
     },
   },
@@ -200,8 +206,6 @@ export default {
       this.empty_payments_state = 'Searching Payments';
 
       let { from_date: fromDate, to_date: toDate } = this.filterData;
-      // let from_date = this.filterData.from_date;
-      // let to_date = this.filterData.to_date;
 
       fromDate = moment(fromDate).format('YYYY-MM-DD');
       toDate = moment(toDate).format('YYYY-MM-DD');
@@ -228,14 +232,6 @@ export default {
 
       this.filteredPaymentData = this.paymentData;
       this.filterState = true;
-
-      // this.filteredPaymentData = this.payment_data;
-      // this.filteredPaymentData = this.filteredPaymentData.filter(function (payment) {
-      /* return moment(payment.date_time).isSameOrAfter(from_date) && moment(payment.date_time)
-      .isSameOrBefore(to_date); */
-      // });
-      // this.filterState = true;
-      // this.empty_orders_state = "Payments Not Found";
     },
 
     requestPayments(payload) {
@@ -263,7 +259,7 @@ export default {
     formatAmount(row) {
       let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
       value = value.split('.');
-      return value[0];
+      return value[0].replace('-', '');
     },
   },
 };

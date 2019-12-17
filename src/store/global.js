@@ -1,10 +1,11 @@
-import Vue from "vue";
-import Vuex from "vuex";
-Vue.use(Vuex);
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-import actions from "./actions";
-import getters from "./getters";
-import mutations from "./mutations";
+import actions from './actions';
+import getters from './getters';
+import mutations from './mutations';
+
+Vue.use(Vuex);
 const plugins = [];
 
 const state = {
@@ -12,7 +13,13 @@ const state = {
   ENV: {},
   running_balance: 0,
   notification: {},
-  notification_status: false
+  notification_status: false,
+  country_code: 'KE',
+  default_currency: 'KES',
+  fcm_token: null,
+  fcm_data: {},
+  redirect_status: false,
+  redirect_order: ' ',
 };
 
 export default {
@@ -21,5 +28,5 @@ export default {
   actions,
   getters,
   mutations,
-  plugins: plugins
+  plugins,
 };

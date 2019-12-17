@@ -1,27 +1,45 @@
 <template lang="html">
-  <div class="ongoing--outer" v-if="!this.loading && this.get_orders.length > 0">
-    <div class="ongoing--count" @click="toggle_ongoing()">
-      <span>{{num_ongoing}} ongoing orders</span>
-      <font-awesome-icon icon="chevron-up" :class="classObject" width="15px" />
+  <div
+    v-if="!loading && get_orders.length > 0"
+    class="ongoing--outer"
+  >
+    <div
+      class="ongoing--count"
+      @click="toggle_ongoing()"
+    >
+      <span>{{ num_ongoing }} ongoing orders</span>
+      <font-awesome-icon
+        icon="chevron-up"
+        :class="classObject"
+        width="15px"
+      />
     </div>
     <transition name="fade">
-      <div class="ongoing--column" v-if="this.showing">
-        <template v-for="(order, index) in this.get_orders">
-          <div class="ongoing--card" @click="track(order.order_no)" :class="{ active: active_card(order.order_no) }">
+      <div
+        v-if="showing"
+        class="ongoing--column"
+      >
+        <template v-for="order in filter_orders">
+          <div
+            class="ongoing--card"
+            :class="{ active: active_card(order.order_no) }"
+            @click="track(order.order_no)"
+          >
             <div class="ongoing--card-location">
               <div class="ongoing--card-padded">
-                <span>{{order.from_name}}</span>
+                <span>{{ order.from_name }}</span>
               </div>
               <div class="">
-                <span>{{order.to_name}}</span>
+                <span>{{ order.to_name }}</span>
               </div>
             </div>
             <div class="ongoing--card-status">
               <div class="">
-                {{getStatus(order)}}
+                {{ getStatus(order) }}
               </div>
-              <div class=""><i class="el-icon-time"></i>
-                {{date_format(order.date_time)}}
+              <div class="">
+                <i class="el-icon-time" />
+                {{ date_format(order.date_time) }}
               </div>
             </div>
           </div>
@@ -32,141 +50,143 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { mapMutations } from 'vuex'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faChevronUp } from '@fortawesome/free-solid-svg-icons'
-library.add(faChevronUp)
+import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
+library.add(faChevronUp);
 
 export default {
-  name: 'ongoing-component',
-  data: function() {
+  name: 'OngoingComponent',
+  data() {
     return {
       loading: true,
-      showing: 1
-    }
+      showing: 1,
+    };
   },
-  methods: {
-    ...mapMutations({
-      change_page : '$_orders/set_page',
-      hide_vendors: '$_orders/hide_vendors'
-    }),
-    toggle_ongoing: function() {
-      if (this.showing) {
-        this.showing = 0
-      }
-      else {
-        this.showing = 1
-      }
-    },
-    track: function(order) {
-      this.hide_vendors()
-      this.$router.push({ path: `/orders/tracking/${order}` })
-      this.change_page(1)
-    },
-    active_card: function(order_no) {
-      if (this.$route.params.order_no == order_no) {
-        return true
-      }
-      else {
-        return false
-      }
-    },
-    date_format: function( date ) {
-      var from_now = this.moment( date ).fromNow();
-
-      return this.moment( date ).calendar( null, {
-          lastWeek: 'MMM-D hh:mm a',
-          sameDay:  '[Today] hh:mm a',
-          nextDay:  '[Tomorrow] hh:mm a',
-          nextWeek: 'ddd',
-          sameElse: function () {
-              return "MMM D, hh:mm a";
-          }
-      });
-    },
-    poll: function () {
-      try {
-        var that = this
-        this.$store.dispatch('$_orders/fetch_ongoing_orders')
-        .then(response => {
-          if (["order_placement", "tracking"].includes(that.$router.currentRoute.name)) {
-            setTimeout(function() {
-              that.poll()
-            }, 15000);
-          }
-          that.loading = false
-        })
-      } catch (e) {
-        Sentry.captureException(e);
-      }
-    },
-    getStatus: function(order) {
-      if (this.loading == false) {
-        switch(order.delivery_status) {
-            case 3:
-            {
-              return 'Delivered'
-              break;
-            }
-            case 2:
-            {
-              return 'In Transit'
-              break;
-            }
-            default:
-            {
-              switch (order.confirm_status) {
-                case 1:
-                {
-                  return 'Confirmed'
-                  break;
-                }
-                default:
-                {
-                  return 'Pending'
-                  break;
-                }
-              }
-            }
-        }
-      }
-      else {
-        return "";
-      }
-    },
-  },
-  computed : {
+  computed: {
     ...mapGetters({
-      get_orders: '$_orders/get_ongoing_orders',
-      show : '$_orders/show_ongoing',
-      getSession : 'getSession'
+      get_orders: '$_orders/getOngoingOrders',
+      show: '$_orders/showOngoing',
+      getSession: 'getSession',
     }),
-    num_ongoing: function () {
-      return this.get_orders.length
+    num_ongoing() {
+      return this.filter_orders.length;
     },
-    classObject: function() {
+    filter_orders() {
+      const orders = [];
+      this.get_orders.forEach((row) => {
+        if (!Object.prototype.hasOwnProperty.call(row, 'freight_order')) {
+          orders.push(row);
+        }
+      });
+      return orders;
+    },
+    classObject() {
       return {
         'sendy-blue': true,
         'rotate-transform': true,
-        'rotate': this.showing == 0
-      }
+        rotate: this.showing === 0,
+      };
     },
   },
   watch: {
     getSession: {
-      handler(val, oldVal){
-        this.$store.dispatch('$_orders/fetch_ongoing_orders')
+      handler() {
+        this.$store.dispatch('$_orders/fetchOngoingOrders');
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   mounted() {
-    this.loading = true
-    this.poll()
-  }
-}
+    this.$store.dispatch('$_orders/fetchOngoingOrders');
+    this.loading = true;
+    this.poll();
+  },
+  methods: {
+    ...mapMutations({
+      change_page: '$_orders/setPage',
+      hide_vendors: '$_orders/hideVendors',
+      clearVendorMarkers: '$_orders/clearVendorMarkers',
+    }),
+    ...mapActions({
+      fetchOngoingOrders: '$_orders/fetchOngoingOrders',
+    }),
+    toggle_ongoing() {
+      if (this.showing) {
+        this.showing = 0;
+      } else {
+        this.showing = 1;
+      }
+    },
+    track(order) {
+      this.hide_vendors();
+      this.clearVendorMarkers();
+      this.$router.push({ path: `/orders/tracking/${order}` });
+      this.change_page(1);
+    },
+    active_card(orderNo) {
+      if (this.$route.params.order_no === orderNo) {
+        return true;
+      }
+      return false;
+    },
+    date_format(date) {
+      return this.moment(date).calendar(null, {
+        lastWeek: 'MMM-D hh:mm a',
+        sameDay: '[Today] hh:mm a',
+        nextDay: '[Tomorrow] hh:mm a',
+        nextWeek: 'ddd',
+        sameElse() {
+          return 'MMM D, hh:mm a';
+        },
+      });
+    },
+    poll() {
+      try {
+        const that = this;
+        this.$store.dispatch('$_orders/fetchOngoingOrders').then((response) => {
+          if (['order_placement', 'tracking'].includes(that.$router.currentRoute.name)) {
+            setTimeout(() => {
+              that.poll();
+            }, 15000);
+          }
+          that.loading = false;
+        });
+      } catch (e) {
+        Sentry.captureException(e);
+      }
+    },
+    getStatus(order) {
+      if (!this.loading) {
+        switch (order.delivery_status) {
+          case 3: {
+            return 'Delivered';
+            break;
+          }
+          case 2: {
+            return 'In Transit';
+            break;
+          }
+          default: {
+            switch (order.confirm_status) {
+              case 1: {
+                return 'Confirmed';
+                break;
+              }
+              default: {
+                return 'Pending';
+                break;
+              }
+            }
+          }
+        }
+      } else {
+        return '';
+      }
+    },
+  },
+};
 </script>
 
 <style lang="css">

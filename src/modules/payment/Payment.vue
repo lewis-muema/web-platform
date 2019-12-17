@@ -12,16 +12,18 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faWallet, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCcVisa, faCcMastercard } from '@fortawesome/free-brands-svg-icons';
-import payment_store from './_store';
+import paymentStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
 import AccountBalance from './_components/AccountBalance.vue';
 import OrderCost from './_components/OrderCost.vue';
 import PaymentBody from './_components/PaymentBody.vue';
+
+const currencyConversion = require('country-tz-currency');
 
 library.add(faWallet, faCcVisa, faCcMastercard, faTrash);
 
@@ -53,7 +55,14 @@ export default {
   created() {
     this.registerPaymentModule();
   },
+  mounted() {
+    this.checkUserLocation();
+  },
   methods: {
+    ...mapActions({
+      requestCountryCode: '$_payment/requestCountryCode',
+    }),
+
     go_back() {
       this.$router.go(-1);
     },
@@ -61,8 +70,41 @@ export default {
     registerPaymentModule() {
       const moduleIsRegistered = this.$store._modules.root._children.$_payment !== undefined;
       if (!moduleIsRegistered) {
-        this.$store.registerModule('$_payment', payment_store);
+        this.$store.registerModule('$_payment', paymentStore);
       }
+    },
+    checkUserLocation() {
+      let markedCoords = '';
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const lat = position.coords.latitude;
+          const long = position.coords.longitude;
+
+          markedCoords = `${lat},${long}`;
+          // markedCoords = '0.3130284,32.4590386'; (Uganda coordinates for test)
+          this.getCode(markedCoords);
+        });
+      }
+    },
+    getCode(position) {
+      const payload = {};
+      payload.coordinates = position;
+      const fullPayload = {
+        values: payload,
+        app: 'PRIVATE_API',
+        endpoint: 'geocountry',
+      };
+      this.requestCountryCode(fullPayload).then(
+        response => {
+          const code = response.country_code;
+          this.$store.commit('setCountryCode', code);
+          const countryCodeData = currencyConversion.getCountryByCode(code);
+          this.$store.commit('setDefaultCurrency', countryCodeData.currencyCode);
+        },
+        error => {
+          // ...
+        }
+      );
     },
   },
 };

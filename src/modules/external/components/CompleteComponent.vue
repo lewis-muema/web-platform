@@ -9,36 +9,42 @@
         <p>Woah - that’s double the convenience!</p>
       </div>
       <div class="complete-pair">
-        <p>Your two accounts have now been connected and you can access either account with your one selected password.</p>
+        <p>
+          Your two accounts have now been connected and you can access either account with your one
+          selected password.
+        </p>
         <p>Login at any time to your two account profiles using the emails below.</p>
       </div>
       <div class="complete-pair">
-        <p>{{this.getBizName}}: {{this.getBizEmail}}</p>
-        <p>Personal: {{this.getPerEmail}}</p>
+        <p>{{ getBizName }}: {{ getBizEmail }}</p>
+        <p>Personal: {{ getPerEmail }}</p>
       </div>
     </div>
     <div class="complete-continue">
-      <a class="btn-submit mid" :href="this.getBaseUrl">Continue to App</a>
+      <a
+        class="btn-submit mid"
+        :href="getBaseUrl"
+      >
+        Continue to App
+      </a>
     </div>
   </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex';
 
 export default {
-  name: 'complete-component',
+  name: 'CompleteComponent',
   computed: {
-    ...mapGetters(
-      {
-         getBizName:'$_external/getBizName',
-         getBizEmail:'$_external/getBizEmail',
-         getBaseUrl:'$_external/getBaseUrl',
-         getPerEmail:'$_external/getPerEmail'
-      }
-    )
-  }
-}
+    ...mapGetters({
+      getBizName: '$_external/getBizName',
+      getBizEmail: '$_external/getBizEmail',
+      getBaseUrl: '$_external/getBaseUrl',
+      getPerEmail: '$_external/getPerEmail',
+    }),
+  },
+};
 </script>
 
 <style lang="css">

@@ -43,10 +43,13 @@
       <div class="section--filter-action-wrap">
         <button
           type="button"
-          :class="inactive_filter ? 'button-primary section--filter-action-inactive btn-order-hstry'
-            :'button-primary section--filter-action btn-order-hstry'"
+          :class="
+            inactive_filter
+              ? 'button-primary section--filter-action-inactive btn-order-hstry'
+              : 'button-primary section--filter-action btn-order-hstry'
+          "
           name="order_history_text"
-          :disabled="inactive_filter === true ? true : false"
+          :disabled="inactive_filter ? true : false"
           @click="filterTableData"
         >
           {{ order_history_text }}
@@ -54,14 +57,32 @@
       </div>
     </div>
     <div class="bg-grey">
-      <button
-        type="button"
-        class=" btn-order-hstry btn-save"
-        name="order_history_text"
-        @click="exportPDF"
-      >
-        PRINT
-      </button>
+      <div class="download_history">
+        <el-dropdown
+          align="right"
+          @command="handleCommand"
+        >
+          <el-button
+            class="download_history"
+            type="primary"
+            size="mini"
+          >
+            Download<i class="el-icon-arrow-down el-icon--right" />
+          </el-button>
+          <el-dropdown-menu
+            id="order_hist"
+            slot="dropdown"
+            class="export_dropdown"
+          >
+            <el-dropdown-item command="a">
+              Excel
+            </el-dropdown-item>
+            <el-dropdown-item command="b">
+              PDF
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </div>
     <el-table
       id="save-pdf"
@@ -106,12 +127,41 @@
       />
       <el-table-column
         label="Amount"
-        prop="order_cost"
-        width="80"
+        width="150"
         header-align="center"
         align="center"
         :formatter="formatAmount"
-      />
+      >
+        <template
+          slot-scope="scope"
+          class="order_cost_amount"
+        >
+          <div class="order_cost_amount">
+            <span
+              v-if="order_history_data[scope.$index]['fixed_cost']"
+              class=""
+            >
+              {{ order_history_data[scope.$index]['order_currency'] }}
+              {{ formatCurrency(order_history_data[scope.$index]['order_cost']) }}
+            </span>
+            <span v-else>
+              <span
+                v-if="
+                  order_history_data[scope.$index]['confirm_status'] === 0 &&
+                    order_history_data[scope.$index]['customer_min_amount']
+                "
+              >
+                {{ order_history_data[scope.$index]['order_currency'] }}
+                {{ formatCurrency(order_history_data[scope.$index]['customer_min_amount']) }}
+              </span>
+              <span v-else>
+                {{ order_history_data[scope.$index]['order_currency'] }}
+                {{ formatCurrency(order_history_data[scope.$index]['order_cost']) }}
+              </span>
+            </span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="Deliveries"
         prop="path"
@@ -120,7 +170,7 @@
         align="center"
       >
         <template slot-scope="scope">
-          {{ order_history_data[scope.$index]['path'].length-1 }}
+          {{ order_history_data[scope.$index]['path'].length - 1 }}
         </template>
       </el-table-column>
       <el-table-column
@@ -141,14 +191,13 @@
       </el-table-column>
     </el-table>
 
-
     <div class="section--pagination-wrap">
       <el-pagination
         layout="total, sizes, prev, pager, next, jumper"
         :total="order_history_total"
         :page-size="pagination_limit"
         :current-page.sync="pagination_page"
-        :page-sizes="[5,10, 20, 50, 100]"
+        :page-sizes="[5, 10, 20, 50, 100]"
         class="section--pagination-item"
         @current-change="changePage"
         @size-change="changeSize"
@@ -160,6 +209,14 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { Printd } from 'printd';
+import * as _ from 'lodash';
+import exportFromJSON from 'export-from-json';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+
+import numeral from 'numeral';
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const moment = require('moment');
 
@@ -194,7 +251,6 @@ const cssText = `
   }
 `;
 
-
 export default {
   filters: {
     moment(date) {
@@ -219,6 +275,7 @@ export default {
       loading: false,
       savepdf: 'save-pdf',
       sessionData: {},
+      default_currency: '',
     };
   },
   computed: {
@@ -252,6 +309,7 @@ export default {
   },
   mounted() {
     this.populateOrders();
+    this.setUserDefaultCurrency();
   },
   methods: {
     populateOrders() {
@@ -279,6 +337,10 @@ export default {
         this.requestCopUsers();
       }
     },
+    setUserDefaultCurrency() {
+      const sessionData = this.$store.getters.getSession;
+      this.default_currency = sessionData[sessionData.default].default_currency;
+    },
     filterTableData() {
       this.loading = true;
 
@@ -304,16 +366,16 @@ export default {
         // const user_type = session.biz.user_type;
 
         payload = {
-          cop_id:copId,
-          user_type:userType,
+          cop_id: copId,
+          user_type: userType,
           from: fromDate,
           to: toDate,
         };
 
-        if (user !== '' && user != null && user !== 0) {
+        if (user && user !== 0) {
           payload = {
-            cop_id:copId,
-            user_id:userId,
+            cop_id: copId,
+            user_id: userId,
             from: fromDate,
             to: toDate,
           };
@@ -322,7 +384,7 @@ export default {
         const userId = session[session.default].user_id;
 
         payload = {
-          user_id:userId,
+          user_id: userId,
           from: fromDate,
           to: toDate,
         };
@@ -340,10 +402,7 @@ export default {
       const to = this.pagination_page * this.pagination_limit;
       this.orderHistoryData.slice(from, to);
     },
-    ...mapActions([
-      '$_transactions/requestOrderHistoryOrders',
-      '$_transactions/requestCopUsers',
-    ]),
+    ...mapActions(['$_transactions/requestOrderHistoryOrders', '$_transactions/requestCopUsers']),
     moment() {
       return moment();
     },
@@ -391,9 +450,7 @@ export default {
     },
     formatAmount(row) {
       if (typeof row.order_cost !== 'undefined') {
-        let value = row.order_cost
-          .toFixed(2)
-          .replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        let value = row.order_cost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         value = value.split('.');
         return value[0];
       }
@@ -405,18 +462,16 @@ export default {
         app: 'NODE_PRIVATE_API',
         endpoint: 'order_history',
       };
-      this.$store
-        .dispatch('$_transactions/requestOrderHistoryOrders', fullPayload)
-        .then(
-          () => {
-            this.order_history_text = 'Search';
-            this.empty_orders_state = 'Order History Not Found';
-          },
-          () => {
-            this.order_history_text = 'Search';
-            this.empty_orders_state = 'Order History Failed to Fetch';
-          },
-        );
+      this.$store.dispatch('$_transactions/requestOrderHistoryOrders', fullPayload).then(
+        () => {
+          this.order_history_text = 'Search';
+          this.empty_orders_state = 'Order History Not Found';
+        },
+        () => {
+          this.order_history_text = 'Search';
+          this.empty_orders_state = 'Order History Failed to Fetch';
+        },
+      );
     },
     requestCopUsers() {
       // let cop_id = 0;
@@ -429,22 +484,96 @@ export default {
         app: 'NODE_PRIVATE_API',
         endpoint: 'cop_users',
       };
-      this.$store
-        .dispatch('$_transactions/requestCopUsers', fullUsersPayload)
-        .then(
-          () => {
-            this.empty_users_state = 'Cop Users Not Found';
-          },
-          () => {
-            this.empty_users_state = 'Cop Users Failed to Fetch';
-          },
-        );
+      this.$store.dispatch('$_transactions/requestCopUsers', fullUsersPayload).then(
+        () => {
+          this.empty_users_state = 'Cop Users Not Found';
+        },
+        () => {
+          this.empty_users_state = 'Cop Users Failed to Fetch';
+        },
+      );
     },
-    exportPDF() {
-      const d = new Printd();
+    handleCommand(command) {
+      if (command === 'a') {
+        let data;
+        const data2 = [];
 
-      // opens the "print dialog" of your browser to print the element
-      d.print(document.getElementById('save-pdf'), cssText);
+        for (let i = 0; i < this.orderHistoryData.length; i++) {
+          const arr = {};
+          arr.OrderNumber = this.orderHistoryData[i].order_no;
+          arr.OrderAmount = this.orderHistoryData[i].order_cost;
+          arr.OrderDate = this.orderHistoryData[i].order_date;
+          arr.OrderDistanceKM = this.orderHistoryData[i].order_details.distance;
+          arr.User = this.orderHistoryData[i].user_details.name;
+          arr.From = this.orderHistoryData[i].path[0].name;
+          arr.To = this.orderHistoryData[i].path[1].name;
+          arr.RiderName = this.orderHistoryData[i].rider.rider_name;
+          arr.RiderPhone = this.orderHistoryData[i].rider.rider_phone;
+          data2.push(arr);
+        }
+        data = _.map(data2, row => _.pick(
+          row,
+          'OrderNumber',
+          'OrderAmount',
+          'OrderDate',
+          'User',
+          'OrderDistanceKM',
+          'From',
+          'To',
+          'RiderName',
+          'RiderPhone',
+        ));
+        const fileName = 'Order History';
+        const exportType = 'csv';
+
+        exportFromJSON({ data, fileName, exportType });
+      } else {
+        const pdfBdy = [
+          [
+            'Order Number',
+            'Order Amount',
+            'Order Date',
+            'Order Distance in KM',
+            'User',
+            'From',
+            'To',
+            'Riders Name',
+            'Riders Phone',
+          ],
+        ];
+        this.orderHistoryData.forEach((item) => {
+          pdfBdy.push([
+            item.order_no,
+            item.order_cost,
+            item.order_date,
+            item.order_details.distance,
+            item.user_details.name,
+            item.path[0].name,
+            item.path[1].name,
+            item.rider.rider_name,
+            item.rider.rider_phone,
+          ]);
+        });
+        const docDefinition = {
+          pageSize: 'A3',
+          widths: ['*', 'auto', 100, '*'],
+          footer(currentPage, pageCount) {
+            return `${currentPage.toString()} of ${pageCount}`;
+          },
+
+          content: [
+            {
+              table: {
+                body: pdfBdy,
+              },
+            },
+          ],
+        };
+        pdfMake.createPdf(docDefinition).download('Order History.pdf');
+      }
+    },
+    formatCurrency(currency) {
+      return numeral(currency).format('0,0');
     },
   },
 };
@@ -454,5 +583,21 @@ export default {
 .btn-order-hstry{
   border-width:0px !important;
 }
+.el-dropdown{
+  float: right;
+}
+.body > div.el-picker-panel.el-date-picker.el-popper{
+background-color: #fff !important;
+}
+#order_hist{
+  color: #ecf0f1 !important;
+  background-color: #ffffff !important;
+  font-size: 13px;
+  width: 10.5% !important;
+}
 
+.body > div.el-select-dropdown.el-popper > div.el-scrollbar > div.el-select-dropdown__wrap.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default > ul > li{
+background-color: #fff !important;
+color:dimgray !important;
+}
 </style>

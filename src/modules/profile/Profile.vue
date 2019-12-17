@@ -1,37 +1,41 @@
 <template lang="html">
-  <div class="" id="auth_container">
-      <main-header></main-header>
-      <div class="container">
-        <div class="new-card" style="margin-top:5%;margin-left:20%;border-right:5px solid #1782C5;height:400px;">
-          <a class="my-profile__adj">
-              <router-link class="profile--link" to="/profile/personal_information">Personal Information</router-link>
-          </a>
-          <div class="my-profile__adj">
-              <router-link class="profile--link" to="/profile/change_password">Change Password</router-link>
-          </div>
+  <div id="auth_container" class="">
+    <main-header />
+    <div class="container">
+      <div class="new-card new-card__inner">
+        <a class="my-profile__adj">
+          <router-link class="profile--link" to="/profile/personal_information">
+            Personal Information
+          </router-link>
+        </a>
+        <div class="my-profile__adj">
+          <router-link class="profile--link" to="/profile/change_password">
+            Change Password
+          </router-link>
         </div>
+      </div>
 
-   <div class="">
-      <router-view></router-view>
-  </div>
-</div>
+      <div class="">
+        <router-view />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import profile_store from './_store';
-import RegisterStoreModule from '../../mixins/register_store_module'
-import MainHeader from '../../components/headers/MainHeader.vue'
+import RegisterStoreModule from '../../mixins/register_store_module';
+import MainHeader from '../../components/headers/MainHeader.vue';
 
 export default {
-  name:'Profile',
-  mixins: [ RegisterStoreModule ],
-  components : {MainHeader},
+  name: 'Profile',
+  components: { MainHeader },
+  mixins: [RegisterStoreModule],
   created() {
     const STORE_KEY = '$_profile';
     this.$store.registerModule(STORE_KEY, profile_store);
   },
-}
+};
 </script>
 
 <style lang="css" scoped>
@@ -104,8 +108,10 @@ export default {
 
   /* background-color: red; */
 }
-/* .new-card .my-profile__adj .router-link-active{
-  background-color: red !important;
-} */
-
+.new-card__inner{
+  margin-top:5%;
+  margin-left:20%;
+  border-right:5px solid #1782C5;
+  height:400px;
+}
 </style>

@@ -50,8 +50,6 @@
           <label class="input-descript">
             <span>Phone Number</span>
           </label>
-          <!-- <input class="form-control" v-validate="'required|check_phone'" data-vv-validate-on="blur" placeholder="07XXXXXXX" name="phone" value="" type="text" v-model="phone" @focus="setCurrentStep(3)">
-          <span v-show="errors.has('phone')">{{ errors.first('phone') }}</span> -->
           <vue-tel-input
             v-model="phone"
             v-validate="'required|check_phone'"
@@ -82,7 +80,7 @@
         class="btn-submit"
         style="width:30% !important;"
         name="next"
-        :disabled="!this.is_valid"
+        :disabled="!is_valid"
         @click="next_view"
       >
         Next
@@ -96,7 +94,6 @@
       <span slot="title">
         <img
           src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
-          alt=""
           style="width:85px;"
         >
       </span>
@@ -138,6 +135,8 @@
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+
 export default {
   name: 'OnboardingInfoComponent',
   data() {
@@ -150,6 +149,24 @@ export default {
       code: '',
       requestId: '',
     };
+  },
+  computed: {
+    ...mapGetters({
+      getType: '$_external/getType',
+      getBizEmail: '$_external/getBizEmail',
+      getBizName: '$_external/getBizName',
+      getPerEmail: '$_external/getPerEmail',
+      getName: '$_external/getName',
+    }),
+    is_valid() {
+      return this.f_name !== '' && this.phone !== '' && this.email !== '';
+    },
+    is_type() {
+      if (this.getType === 0) {
+        return true;
+      }
+      return false;
+    },
   },
   mounted() {
     this.name = this.getName;
@@ -171,17 +188,16 @@ export default {
       requestOnboardingPhoneVerification: '$_external/requestOnboardingPhoneVerification',
     }),
     next_view() {
-      const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-      const phone_valid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
-      let email_valid = true;
-      for (let i = 0; i < this.errors.items.length; i++) {
+      const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+      let emailValid = true;
+      for (let i = 0; i < this.errors.items.length; i += 1) {
         if (this.errors.items[i].field === 'email') {
-          email_valid = false;
+          emailValid = false;
           break;
         }
       }
 
-      if (phone_valid && email_valid) {
+      if (phoneValid && emailValid) {
         this.phoneVerification = true;
         this.sendVerificationCode();
       } else {
@@ -190,7 +206,6 @@ export default {
     },
     setCurrentStep(step) {
       this.updateViewStep(step);
-      // this.$store.commit('updateViewStep', num);
     },
     onboardingVerificationCancel() {
       this.phoneVerification = false;
@@ -205,13 +220,13 @@ export default {
       const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
       const values = {};
       values.phone_no = phone;
-      const full_payload = {
+      const fullPayload = {
         values,
         vm: this,
         app: 'PRIVATE_API',
         endpoint: 'verify_phone',
       };
-      this.requestOnboardingPhoneVerification(full_payload).then(
+      this.requestOnboardingPhoneVerification(fullPayload).then(
         (response) => {
           if (response.status) {
             this.requestId = response.request_id;
@@ -219,10 +234,7 @@ export default {
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
-        (error) => {
-          console.error('Check Internet Connection');
-          console.log(error);
-        },
+        (error) => {},
       );
     },
 
@@ -230,13 +242,13 @@ export default {
       const values = {};
       values.code = this.code;
       values.request_id = this.requestId;
-      const full_payload = {
+      const fullPayload = {
         values,
         vm: this,
         app: 'PRIVATE_API',
         endpoint: 'check_verification',
       };
-      this.requestOnboardingVerificationVerify(full_payload).then(
+      this.requestOnboardingVerificationVerify(fullPayload).then(
         (response) => {
           if (response.status) {
             this.doNotification(2, 'Phone Verification', 'Phone verification successful !');
@@ -252,10 +264,7 @@ export default {
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
-        (error) => {
-          console.error('Check Internet Connection');
-          console.log(error);
-        },
+        (error) => {},
       );
     },
 
@@ -267,24 +276,6 @@ export default {
       };
       this.$store.commit('setNotification', notification);
       this.$store.commit('setNotificationStatus', true);
-    },
-  },
-  computed: {
-    ...mapGetters({
-      getType: '$_external/getType',
-      getBizEmail: '$_external/getBizEmail',
-      getBizName: '$_external/getBizName',
-      getPerEmail: '$_external/getPerEmail',
-      getName: '$_external/getName',
-    }),
-    is_valid() {
-      return this.f_name !== '' && this.phone !== '' && this.email !== '';
-    },
-    is_type() {
-      if (this.getType === 0) {
-        return true;
-      }
-      return false;
     },
   },
 };

@@ -1,3 +1,4 @@
+/* eslint no-param-reassign: "error" */
 export default {
   setMpesaFailStatus(state, status) {
     state.mpesa_fail_status = status;
