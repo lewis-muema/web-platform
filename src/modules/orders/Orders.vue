@@ -61,7 +61,7 @@
             @click="closeDiscountPopup()"
           />
           <img src="https://images.sendyit.com/web_platform/orders/OrderConfirmation.svg" class="upload-photo" />
-          <p class="no-margin upload-par">Your file has been uploaded, and an order as been generated!</p>
+          <p class="no-margin upload-par">Your file has been uploaded! An order will be generated shortly.</p>
         </div>        
       </div>
       <map-component />

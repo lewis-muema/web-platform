@@ -4,7 +4,7 @@
       <div class="homeview--childinfo-card" v-if="get_selected_child !== ''">
         <div class="homeview--childinfo-card-left">
           <div class="">
-            <p class="homeview--childinfo-order-status">Order Status: In-transit</p>
+            <p class="homeview--childinfo-order-status">Order Status: {{ getStatus(orderData) }}</p>
           </div>
           <div class="">
             <div class="full-width">
