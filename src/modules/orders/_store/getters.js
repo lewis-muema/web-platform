@@ -9,6 +9,8 @@ const getStorePath = state => state.location_path;
 const getOuterPriceRequestData = state => state.outer_price_request;
 const getOuterActiveVendorDetails = state => state.outer_active_vendor_data;
 const getOuterActivePackageClass = state => state.outer_active_package_data;
+const getChildOrders = state => state.child_orders;
+const getSelectedChild = state => state.selected_child;
 
 export default {
   getPage,
@@ -22,4 +24,6 @@ export default {
   getOuterPriceRequestData,
   getOuterActiveVendorDetails,
   getOuterActivePackageClass,
+  getChildOrders,
+  getSelectedChild,
 };

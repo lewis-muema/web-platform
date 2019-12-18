@@ -27,6 +27,8 @@ export default {
       outer_price_request: {},
       outer_active_vendor_data: {},
       outer_active_package_data: 'small',
+      child_orders: [],
+      selected_child: '',
     };
   },
   actions,

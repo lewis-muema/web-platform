@@ -33,4 +33,7 @@ export default {
   getTestSpecs: state => state.test_specs,
   getLoadWeightStatus: state => state.load_weight_status,
   getLoadWeightValue: state => state.load_weight_val,
+  getProductCategories: state => state.product_categories,
+  getProductPhase: state => state.product_phase,
+  getProductId: state => state.product_id,
 };
