@@ -68,7 +68,7 @@
 }
 .homeview--input-freight-containers {
   padding-bottom: 0px !important;
-  max-height: 22rem !important;
+  max-height: max-content !important;
   padding-left: 30px !important;
   padding-right: 30px !important;
   margin-right: 0px !important;
@@ -106,6 +106,20 @@
 }
 .ongoing--card-text {
   margin: auto;
+}
+.ongoing--order-count {
+  padding: 10px 25px 10px 25px;
+  border-bottom: 0.5px solid #BDBDBD;
+  width: 80%;
+  margin: auto;
+  font-size: 11px;
+  color: #757575;
+}
+.card-location-override {
+  padding-top: 15px;
+}
+.bg-white {
+  background: #ffffff;
 }
 .homeview--section {
   max-height: 13.5rem;
@@ -213,11 +227,14 @@
 .homeview---top-details-left, .homeview---top-details-right {
   color: #1782c5;
 }
-.homeview--bottom-details, .homeview---top-details-right {
+.homeview---top-details-right {
   font-size: 13px;
 }
+.homeview--bottom-details {
+  font-size: 11px;
+}
 .col-right {
-  padding-left: 80px;
+  padding-left: 50px;
 }
 .col-left {
   padding-left: 20px;
@@ -322,7 +339,9 @@
 .homeview--input-bundler__destination-short-input {
   margin-right: unset;
 }
-
+.homeview--top-locations {
+  color: grey;
+}
 .home-view-notes-wrapper {
   margin-bottom: 22px;
 }
@@ -651,6 +670,10 @@
 .no-margin {
   margin: 0;
 }
+.homeview--input-header {
+  color: #1682c5;
+  font-weight: 500;
+}
 .homeview--childinfo-card-right, .homeview--childinfo-card-left {
   font-size: 12px;
   line-height: 12px;
@@ -696,6 +719,7 @@
 .home-view--upload-button {
   font-size: 14px;
   text-decoration: underline;
+  cursor: pointer;
 }
 .homeview--return-destination {
   margin-top: 15px;
@@ -709,5 +733,12 @@
 }
 .loading-override {
   height: 50px;
+}
+.homeview--return-destination-input {
+  color: black;
+  font-weight: 600;
+}
+.homeview--return-destination-input::-webkit-input-placeholder {
+  font-weight: 400;
 }
 
