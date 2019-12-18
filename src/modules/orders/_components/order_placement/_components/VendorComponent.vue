@@ -491,7 +491,7 @@
                 v-if="pair_rider === '1' && activeVendorPriceData.vendor_id === 1"
                 class="home-view-truck-options-inner-wrapper disable-pairing"
               >
-              ( Sorry, pairing is unavailable at the moment, we are working to fix it. You can either proceed to place the order or contact support for help )
+                ( Sorry, pairing is unavailable at the moment, we are working to fix it. You can either proceed to place the order or contact support for help )
               </div>
 
               <div
@@ -869,6 +869,10 @@ export default {
       } else {
         // do not pair
         this.setPairWithRiderStatus(false);
+      }
+
+      if (status === 1 && this.activeVendorPriceData.vendor_id === 1) {
+        this.trackMixpanelEvent('Dissuaded rider pairing');
       }
     },
     goToNextStep() {
