@@ -139,7 +139,7 @@
             Order details
           </td>
           <td class="homeview---top-details-right col-right">
-            Total containers : {{ noOfContainers }}
+            Total containers  {{ noOfContainers }}
           </td>
         </tr>
         <tr class="homeview--bottom-details">
@@ -150,7 +150,7 @@
               class="homeview--row__font-awesome homeview--input-bundler__img .homeview--input-bundler__destination-input sendy-orange"
               width="10px"
             /> Pick-Up <br>
-            {{ locations[0] }}
+            <span class="homeview--top-locations">{{ locations[0] }}</span>
           </td>
           <td class="homeview--bottom-details-right col-right">
             <font-awesome-icon
@@ -159,7 +159,7 @@
               class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue"
               width="10px"
             /> Destination <br>
-            {{ locations[1] }}
+            <span class="homeview--top-locations">{{ locations[1] }}</span>
           </td>
         </tr>
       </table>
@@ -168,6 +168,7 @@
           ref="scrollable_locations"
           class="homeview--form homeview--row homeview--form__scrollable homeview--input-freight-containers"
         >
+          <p class="homeview--input-header">Container details</p>
           <input
             v-model="cont_no"
             type="text"
@@ -185,7 +186,7 @@
             :options="map_options"
             placeholder="Empty Container Destination"
             :select-first-on-enter="true"
-            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
+            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details homeview--return-destination-input"
             @place_changed="setReturnDestination($event, 2)"
             @keyup="checkChangeEvents($event, 2)"
             @change="checkChangeEvents($event, 2)"
@@ -364,7 +365,7 @@
         </table>
         <div class="home-view-truck-options-inner-wrapper">
           <div class="home-view-vendor-classes--label">
-            <payment-options @destroyOrderOptions="destroyVendorComponent()" />
+            <payment-options />
           </div>
         </div>
       </div>
@@ -506,7 +507,7 @@ export default {
       );
     },
     buttonStatus() {
-      if (this.destination !== 'none' && this.size !== 'none' && this.cont_weight && this.containers.length < this.noOfContainers && this.consignee) {
+      if (this.cont_no && this.destination !== 'none' && this.size !== 'none' && this.cont_weight && this.containers.length < this.noOfContainers && this.consignee) {
         return 'button-primary bg-button-orange';
       }
       return 'button--primary-inactive';
@@ -605,9 +606,6 @@ export default {
       } catch (er) {
         // ...
       }
-    },
-    destroyVendorComponent() {
-      this.$destroy();
     },
     clearLocation(index) {
       this.resetLocation(index);

@@ -49,7 +49,7 @@
             @click="closeDiscountPopup()"
           />
           <img src="https://images.sendyit.com/web_platform/orders/upload.png" class="upload-photo" />
-          <p class="no-margin upload-par">Drag and drop your file or <span class="upload-link" @click="simulateClick()">click here</span> to upload</p>
+          <p class="no-margin upload-par"><span class="upload-link" @click="simulateClick()">Click here</span> to upload</p>
           <p class="no-margin upload-text">(We support .csv .xlsx .xml and .ods)</p>
           <input type="file" id="upload-input" accept=".xls,.xlsx,.csv,.xml" @change="attachUpload" ref="uploadbttn">
           <button @click="upload()" class="upload-csv-button" :class="uploadBtn" :disabled="uploadBtn === 'button--primary-inactive'" id="upload-button">Upload CSV</button>
@@ -61,7 +61,7 @@
             @click="closeDiscountPopup()"
           />
           <img src="https://images.sendyit.com/web_platform/orders/OrderConfirmation.svg" class="upload-photo" />
-          <p class="no-margin upload-par">Your file has been uploaded, and an order as been generated!</p>
+          <p class="no-margin upload-par">Your file has been uploaded! An order will be generated shortly.</p>
         </div>        
       </div>
       <map-component />
@@ -188,6 +188,7 @@ export default {
       S3Client
         .uploadFile(this.uploadButton, fileName)
         .then((data) => {
+          this.uploadButton = '';
           this.succesfullUpload(data);
         })
         .catch(err => console.error(err));
