@@ -970,7 +970,7 @@ export default {
     },
     cancelToggle(cancelReason = 0) {
       if(cancelReason === '4'){
-        this.trackMixpanelEvent(`Dissuaded cancellation - I have placed wrong locations Order No: ${this.tracking_data.order_no}`);
+        this.trackMixpanelEvent(`Dissuaded Cancellation - Wrong Locations Order No: ${this.tracking_data.order_no}`);
       }
       if (this.cancel_popup === 1) {
         this.cancel_popup = 0;
