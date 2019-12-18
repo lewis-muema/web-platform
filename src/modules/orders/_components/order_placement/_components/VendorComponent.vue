@@ -488,7 +488,14 @@
                 </div>
               </div>
               <div
-                v-if="pair_rider === '1'"
+                v-if="pair_rider === '1' && activeVendorPriceData.vendor_id === 1"
+                class="home-view-truck-options-inner-wrapper disable-pairing"
+              >
+              ( Sorry, pairing is unavailable at the moment, we are working to fix it. You can either proceed to place the order or contact support for help )
+              </div>
+
+              <div
+                v-if="pair_rider === '1' && activeVendorPriceData.vendor_id !== 1"
                 class="home-view-truck-options-inner-wrapper"
               >
                 <div class="home-view-truck-options-label">
@@ -856,7 +863,7 @@ export default {
     },
     dispatchPairStatus() {
       const status = this.pair_rider;
-      if (status === 1) {
+      if (status === 1 && this.activeVendorPriceData.vendor_id !== 1) {
         // pair with rider
         this.setPairWithRiderStatus(true);
       } else {
@@ -1446,4 +1453,8 @@ export default {
 
 <style lang="css" scoped>
 @import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
+.home-view-truck-options-inner-wrapper.disable-pairing {
+    font-style: italic;
+    font-size: 12px;
+}
 </style>
