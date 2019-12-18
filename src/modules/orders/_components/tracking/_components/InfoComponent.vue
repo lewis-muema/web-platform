@@ -682,7 +682,7 @@
                   type="button"
                   name="button"
                   class="action--slide-button"
-                  @click="cancelToggle()"
+                  @click="cancelToggle(cancel_reason)"
                 >
                   Okay, I'll call the rider
                 </button>
@@ -968,7 +968,10 @@ export default {
           that.loading = false;
         });
     },
-    cancelToggle() {
+    cancelToggle(cancelReason = 0) {
+      if(cancelReason === '4'){
+        this.trackMixpanelEvent(`Dissuaded Cancellation - Wrong Locations Order No: ${this.tracking_data.order_no}`);
+      }
       if (this.cancel_popup === 1) {
         this.cancel_popup = 0;
       } else {
@@ -1173,6 +1176,28 @@ export default {
         });
       } else {
         this.doNotification(3, 'Order cancellation failed', 'Please select cancellation reason.');
+      }
+    },
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+          // this.$ga.event({
+          //   eventCategory: 'Orders',
+          //   eventAction: 'Price Request',
+          //   eventLabel: name,
+          //   eventValue: 14,
+          // });
+        }
+      } catch (er) {
+        // ...
       }
     },
     saveDetails() {
