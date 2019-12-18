@@ -622,54 +622,82 @@
       <transition name="fade" mode="out-in">
         <div class="">
           <el-dialog :visible.sync="cancelOption" class="cancelOptions">
-            <div class="">
-              <div class="cancel-reason-option">
-                Cancel this order?
+
+            <div class="cancelOptions--content-wrap" v-if="cancel_reason !== '4'">
+              <div class="">
+                <div class="cancel-reason-option">
+                  Cancel this order?
+                </div>
+                <div class="cancel-reason-option">
+                  You can place another one at any time.
+                </div>
               </div>
-              <div class="cancel-reason-option">
-                You can place another one at any time.
+              <div class="cancel-reason-text">
+                <div class="">
+                  <el-radio v-model="cancel_reason" label="4">
+                    I placed the wrong locations
+                  </el-radio>
+                </div>
+                <div class="">
+                  <el-radio v-model="cancel_reason" label="5">
+                    My order is not ready
+                  </el-radio>
+                </div>
+                <div class="">
+                  <el-radio v-model="cancel_reason" label="7">
+                    No driver has been allocated
+                  </el-radio>
+                </div>
+                <div class="">
+                  <el-radio v-model="cancel_reason" label="8">
+                    I placed this order twice
+                  </el-radio>
+                </div>
+              </div>
+              <div class="action--slide-desc">
+                <button
+                  type="button"
+                  name="button"
+                  class="action--slide-button"
+                  @click="cancelOrder()"
+                >
+                  Yes
+                </button>
+                <button
+                  type="button"
+                  name="button"
+                  class="action--slide-button"
+                  @click="cancelToggle()"
+                >
+                  No
+                </button>
               </div>
             </div>
-            <div class="cancel-reason-text">
-              <div class="">
-                <el-radio v-model="cancel_reason" label="4">
-                  I placed the wrong locations
-                </el-radio>
+            <div class="cancelOptions--content-wrap" v-if="cancel_reason === '4'">
+              <div class="cancelOptions--content-message">
+                You can call the rider to go to the correct destination and we shall adjust the price accordingly.
               </div>
-              <div class="">
-                <el-radio v-model="cancel_reason" label="5">
-                  My order is not ready
-                </el-radio>
-              </div>
-              <div class="">
-                <el-radio v-model="cancel_reason" label="7">
-                  No driver has been allocated
-                </el-radio>
-              </div>
-              <div class="">
-                <el-radio v-model="cancel_reason" label="8">
-                  I placed this order twice
-                </el-radio>
+              <div class="cancelOptions--content-buttons">
+                 <button
+                  type="button"
+                  name="button"
+                  class="action--slide-button"
+                  @click="cancelToggle()"
+                >
+                  Okay, I'll call the rider
+                </button>
+                <button
+                  type="button"
+                  name="button"
+                  class="default action--slide-button"
+                  @click="cancelOrder()"
+                >
+                  Cancel Order
+                </button>
+               
               </div>
             </div>
-            <div class="action--slide-desc">
-              <button
-                type="button"
-                name="button"
-                class="action--slide-button"
-                @click="cancelOrder()"
-              >
-                Yes
-              </button>
-              <button
-                type="button"
-                name="button"
-                class="action--slide-button"
-                @click="cancelToggle()"
-              >
-                No
-              </button>
-            </div>
+
           </el-dialog>
 
           <el-dialog :visible.sync="shareOption" class="cancelOptions">
@@ -947,6 +975,7 @@ export default {
         this.cancel_popup = 1;
       }
       this.cancelOption = false;
+      this.cancel_reason = '';
     },
     maximiseInfoDetails() {
       this.truckMoreInfo = true;
@@ -1090,6 +1119,7 @@ export default {
     },
     canceldialog() {
       this.cancelOption = true;
+      this.cancel_reason = '';
     },
     place() {
       if (this.$route.name !== 'tracking_external') {

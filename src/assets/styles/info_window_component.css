@@ -726,3 +726,23 @@ ul.inforbar_order_timeline:before{
 .confirmedExpressReached{
   padding-bottom: 5%;
 }
+
+.cancelOptions--content-message {
+    margin: 15px;
+    margin-bottom: 30px;
+}
+.cancelOptions--content-buttons {
+    text-align: center;
+}
+.cancelOptions--content-buttons button {
+    margin: 0px auto;
+    width: 80%;
+    position: relative;
+    text-align: center;
+    margin-bottom: 10px;
+        height: 35px;
+}
+button.default.action--slide-button {
+    color: #333;
+    background-color: #f2f2f2;
+}
