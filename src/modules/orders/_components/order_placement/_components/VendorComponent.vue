@@ -491,7 +491,7 @@
                 v-if="pair_rider === '1' && activeVendorPriceData.vendor_id === 1"
                 class="home-view-truck-options-inner-wrapper disable-pairing"
               >
-                ( Sorry, pairing is unavailable at the moment, we are working to fix it. You can either proceed to place the order or contact support for help )
+                ( Sorry, pairing is unavailable at the moment. We are working to fix it. You can either proceed to place the order, or contact support for help. )
               </div>
 
               <div
