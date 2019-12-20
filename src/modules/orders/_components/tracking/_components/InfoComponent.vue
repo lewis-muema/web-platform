@@ -675,7 +675,7 @@
             </div>
             <div class="cancelOptions--content-wrap" v-if="cancel_reason === '4'">
               <div class="cancelOptions--content-message">
-                You can call the rider to go to the correct destination and we shall adjust the price accordingly.
+                Did you know after your order is confirmed you can call your rider and give him the right destination? We will recalculate the cost and deliver your item.
               </div>
               <div class="cancelOptions--content-buttons">
                  <button
