@@ -1461,5 +1461,4 @@ export default {
     font-style: italic;
     font-size: 12px;
 }
-
 </style>
