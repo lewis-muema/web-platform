@@ -21,9 +21,6 @@ const getDefaultState = () => ({
   load_units: 'kgs',
   additional_loader: '',
   no_of_loaders: 0,
-  product_categories: [],
-  product_id: 1,
-  product_phase: 1,
 });
 
 /* eslint no-param-reassign: "error" */
@@ -187,14 +184,5 @@ export default {
   },
   setVendorPrice(state, val) {
     state.active_vendor_details.cost = val;
-  },
-  setProductCategories(state, val) {
-    state.product_categories.splice(val.index, val.index === 0 ? 0 : 1, val.data);
-  },
-  setProductId(state, val) {
-    state.product_id = val;
-  },
-  setProductPhase(state, val) {
-    state.product_phase = val;
   },
 };

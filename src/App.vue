@@ -83,7 +83,7 @@ export default {
         if ({}.hasOwnProperty.call(session, 'default')) {
           if (logAction === 'notification') {
             // add log for notification recieved
-            this.trackMixpanelEvent('FCM Notification Received - Web', {
+            this.trackMixpanelEvent('FCM Notification Recieved - Web', {
               'Order No': logData.order_no,
               'Cop Id': session[session.default].cop_id,
               'User Id': session[session.default].user_id,
@@ -102,7 +102,7 @@ export default {
           // no session
           if (logAction === 'notification') {
             // add log for notification recieved
-            this.trackMixpanelEvent('FCM Notification Received - Web', {
+            this.trackMixpanelEvent('FCM Notification Recieved - Web', {
               'Order No': logData.order_no,
             });
           }
