@@ -12,4 +12,6 @@ module.exports = {
   GOOGLE_API_KEY: "'AIzaSyBQMADIJhz5ckM28Zt0eWKbZfQyzsHXYCI'",
   FIREBASE_CONFIG:
     "{apiKey: 'AIzaSyAdX8pwL-CmC8srLn2LaCzhhnhwgJx9lXc',authDomain: 'sendymain.firebaseapp.com',databaseURL: 'https://sendymain.firebaseio.com', projectId: 'sendymain',storageBucket: 'sendymain.appspot.com',messagingSenderId: '1083459536124',appId: '1:1083459536124:web:c3706df9c3efc2cbe9c379'}",
+  ELASTIC_APM_SERVER_URL: '""https://staging-apm.sendyit.com:443"',
+  ELASTIC_APM_ENVIRONMENT: '"staging"',
 };
