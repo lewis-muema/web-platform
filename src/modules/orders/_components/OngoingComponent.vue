@@ -19,7 +19,7 @@
         v-if="showing"
         class="ongoing--column"
       >
-        <template v-for="order in filter_orders">
+        <template v-for="order in get_orders">
           <div
             class="ongoing--card"
             :class="{ active: active_card(order.order_no) }"
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
@@ -71,16 +71,7 @@ export default {
       getSession: 'getSession',
     }),
     num_ongoing() {
-      return this.filter_orders.length;
-    },
-    filter_orders() {
-      const orders = [];
-      this.get_orders.forEach((row) => {
-        if (!Object.prototype.hasOwnProperty.call(row, 'freight_order')) {
-          orders.push(row);
-        }
-      });
-      return orders;
+      return this.get_orders.length;
     },
     classObject() {
       return {
@@ -99,7 +90,6 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('$_orders/fetchOngoingOrders');
     this.loading = true;
     this.poll();
   },
@@ -108,9 +98,6 @@ export default {
       change_page: '$_orders/setPage',
       hide_vendors: '$_orders/hideVendors',
       clearVendorMarkers: '$_orders/clearVendorMarkers',
-    }),
-    ...mapActions({
-      fetchOngoingOrders: '$_orders/fetchOngoingOrders',
     }),
     toggle_ongoing() {
       if (this.showing) {

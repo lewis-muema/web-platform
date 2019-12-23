@@ -10,7 +10,7 @@
         v-if="blinder_status"
         class="blinder"
       >
-        <div class="discounts_popup" v-if="discount_status">
+        <div class="discounts_popup">
           <div class="discount-status">
             <i
               v-if="!loading_status"
@@ -42,32 +42,10 @@
             </button>
           </div>
         </div>
-        <div class="upload-popup" v-if="upload_status">
-          <i
-            slot="suffix"
-            class="close el-input__icon el-icon-error"
-            @click="closeDiscountPopup()"
-          />
-          <img src="https://images.sendyit.com/web_platform/orders/upload.png" class="upload-photo" />
-          <p class="no-margin upload-par"><span class="upload-link" @click="simulateClick()">Click here</span> to upload</p>
-          <p class="no-margin upload-text">(We support .csv .xlsx .xml and .ods)</p>
-          <input type="file" id="upload-input" accept=".xls,.xlsx,.csv,.xml" @change="attachUpload" ref="uploadbttn">
-          <button @click="upload()" class="upload-csv-button" :class="uploadBtn" :disabled="uploadBtn === 'button--primary-inactive'" id="upload-button">Upload CSV</button>
-        </div>
-        <div class="upload-popup" v-if="success_status">
-          <i
-            slot="suffix"
-            class="close el-input__icon el-icon-error"
-            @click="closeDiscountPopup()"
-          />
-          <img src="https://images.sendyit.com/web_platform/orders/OrderConfirmation.svg" class="upload-photo" />
-          <p class="no-margin upload-par">Your file has been uploaded! An order will be generated shortly.</p>
-        </div>        
       </div>
       <map-component />
-      <FbuChildOrders v-if="this.$route.path === '/orders/freight'" />
-      <FbuChildOrderTracking v-else-if="this.$route.name === 'freight_order_tracking'" />
-      <ongoing-component v-else />
+      <ongoing-component />
+
       <transition
         name="fade"
         mode="out-in"
@@ -80,18 +58,15 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import S3 from 'aws-s3';
 import orderStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
 import OngoingComponent from './_components/OngoingComponent.vue';
-import FbuChildOrders from './_components/FbuChildOrders.vue';
-import FbuChildOrderTracking from './_components/tracking/_components/FbuChildOrderTracking.vue';
 
 export default {
   name: 'Orders',
-  components: { MainHeader, MapComponent, OngoingComponent, FbuChildOrders, FbuChildOrderTracking },
+  components: { MainHeader, MapComponent, OngoingComponent },
   mixins: [RegisterStoreModule],
   data() {
     return {
@@ -99,19 +74,7 @@ export default {
       message: '',
       loading_status: false,
       blinder_status: false,
-      discount_status: false,
-      upload_status: false,
-      uploadButton: '',
-      success_status: false,
     };
-  },
-  computed: {
-    uploadBtn() {
-      if (this.uploadButton) {
-        return 'button-primary';
-      }
-      return 'button--primary-inactive';
-    },
   },
   watch: {
     $route(to, from) {
@@ -150,12 +113,6 @@ export default {
         this.message = arg2;
         this.loading_status = arg3;
         this.blinder_status = arg4;
-        this.discount_status = arg4;
-      });
-      this.$root.$on('Upload status', (arg1) => {
-        this.blinder_status = arg1;
-        this.upload_status = arg1;
-        this.success_status = false;
       });
     },
     registerOrdersStore() {
@@ -163,35 +120,6 @@ export default {
       if (!moduleIsRegistered) {
         this.$store.registerModule('$_orders', orderStore);
       }
-    },
-    simulateClick() {
-      this.$refs.uploadbttn.click();
-    },
-    attachUpload(event) {
-      this.uploadButton = event.target.files[0];
-    },
-    succesfullUpload() {
-      this.upload_status = false;
-      this.success_status = true;
-    },
-    upload() {
-      const config = {
-        bucketName: 'sendy-freight',
-        dirName: 'CSV', /* optional */
-        region: 'eu-west-1',
-        accessKeyId: 'AKIAWZQTKIQ27IYWPMFE',
-        secretAccessKey: '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',
-        s3Url: '', /* optional */
-      };
-      const S3Client = new S3(config);
-      const fileName = `${new Date().getTime()}_${this.uploadButton.name.split('.')[0].toLowerCase().replace(/\s/g, '')}`;
-      S3Client
-        .uploadFile(this.uploadButton, fileName)
-        .then((data) => {
-          this.uploadButton = '';
-          this.succesfullUpload(data);
-        })
-        .catch(err => console.error(err));
     },
     checkSession() {
       const session = this.$store.getters.getSession;
