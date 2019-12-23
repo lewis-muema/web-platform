@@ -168,7 +168,7 @@ export default {
                   } catch (er) {
                     // ...
                   }
-                  if ('default' in sessionData && analyticsEnv === 'production') {
+                  if ('default' in sessionData) {
                     const acc = sessionData[sessionData.default];
                     this.$apm.setUserContext({
                       id: acc.user_id,
