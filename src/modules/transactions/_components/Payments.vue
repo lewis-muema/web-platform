@@ -101,11 +101,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import timezone from '../../../mixins/timezone';
 
 const moment = require('moment');
 
 export default {
   name: 'Payments',
+  mixins: [timezone],
   data() {
     return {
       empty_payments_state: 'Fetching Payments',
@@ -254,7 +256,8 @@ export default {
     },
 
     formatDate(row) {
-      return moment(row.date_time).format('MMM Do YYYY, h:mm a');
+      const localTime = this.convertToUTCToLocal(row.date_time);
+      return moment(localTime).format('MMM Do YYYY, h:mm a');
     },
     formatAmount(row) {
       let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
