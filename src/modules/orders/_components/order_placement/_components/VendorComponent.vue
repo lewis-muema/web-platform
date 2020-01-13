@@ -856,7 +856,7 @@ export default {
     },
     dispatchPairStatus() {
       const status = this.pair_rider;
-      if (status === 1 && this.activeVendorPriceData.vendor_id !== 1) {
+      if (status === 1) {
         // pair with rider
         this.setPairWithRiderStatus(true);
       } else {
