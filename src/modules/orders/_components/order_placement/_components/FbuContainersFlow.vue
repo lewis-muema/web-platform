@@ -801,12 +801,14 @@ export default {
     },
     addContainer() {
       this.containers.push({
+        id: this.containers.length,
         container_number: this.cont_no,
         container_destination: this.destination,
         container_size_feet: this.size,
         container_weight_tonnes: this.cont_weight,
         consignee: this.consignee,
       });
+      console.log(this.containers);
       this.cont_no = '';
       this.cont_weight = '';
       this.consignee = '';

@@ -188,9 +188,10 @@
 .homeview--outer-override {
   min-width: 400px;
   z-index: 10;
-  max-height: fit-content;
+  min-height: fit-content;
   overflow-y: auto;
   overflow-x: hidden;
+  max-height: 80vh;
 }
 .homeview--heading__container-details {
   font-size: 14px;
