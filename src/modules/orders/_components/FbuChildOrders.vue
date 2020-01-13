@@ -26,7 +26,7 @@
             @click="track(order.order_no)"
           >
             <div class="ongoing--order-count">
-              Good Quantity: <b>{{ order.no_of_containers }} container{{ pluralize(order.no_of_containers) }}</b>
+              Goods Quantity: <b>{{ order.no_of_containers }} container{{ pluralize(order.no_of_containers) }}</b>
             </div>
             <div class="ongoing--card-location card-location-override">
               <span class="homeview--childinfo-order-details">Order Details</span><br>
