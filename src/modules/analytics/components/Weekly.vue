@@ -35,6 +35,7 @@ export default {
   },
   mounted() {
     this.loading = false;
+    this.trackMixpanelEvent('View Customer Analytics');
   },
   methods: {
     showBoard() {
@@ -50,9 +51,24 @@ export default {
       };
       const token = jwt.sign(payload, METABASE_SECRET_KEY);
 
-      const iframeUrl = `${METABASE_SITE_URL}/embed/dashboard/${token}#bordered=false&titled=true`;
+      const iframeUrl = `${METABASE_SITE_URL}/embed/dashboard/${token}#bordered=true&titled=true`;
 
       return iframeUrl;
+    },
+    trackMixpanelEvent(name, event) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name, event);
+        }
+      } catch (er) {
+        // ...
+      }
     },
   },
 };
@@ -66,6 +82,6 @@ export default {
     height: auto;
 }
 .body--grey{
-  background-color: #FFFFFF !important;
+  background-color: #F9FBFC !important;
 }
 </style>
