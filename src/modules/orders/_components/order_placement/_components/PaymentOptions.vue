@@ -142,7 +142,7 @@
       </div>
     </div>
 
-    <div class="home-view-place-order">
+    <div class="home-view-place-order" :class="loader_class">
       <div
         v-if="loading"
         v-loading="loading"
@@ -290,7 +290,7 @@ export default {
     order_cost() {
       let cost = 0;
       if (typeof this.activeVendorPriceData !== 'undefined') {
-        if ('cost' in this.activeVendorPriceData) {
+        if ('cost' in this.activeVendorPriceData && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
           if (
             !this.getIsReturn
             || this.vendors_without_return.includes(this.get_active_vendor_name)
@@ -301,6 +301,8 @@ export default {
           cost = this.activeVendorPriceData.return_cost - this.activeVendorPriceData.discountAmount;
           return cost;
         }
+        cost = this.activeVendorPriceData.cost - this.activeVendorPriceData.discount_amount;
+        return cost;
       }
 
       return cost;
@@ -308,6 +310,9 @@ export default {
 
     // order cost including discounts
     full_order_cost() {
+      if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+        return this.order_cost + this.activeVendorPriceData.discount_amount;
+      }
       return this.order_cost + this.activeVendorPriceData.discountAmount;
     },
 
@@ -416,6 +421,12 @@ export default {
         ? 2
         : Number(this.get_carrier_type);
     },
+    loader_class() {
+      if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+        return 'loading-override';
+      }
+      return '';
+    },
   },
 
   created() {
@@ -507,7 +518,7 @@ export default {
       } catch (er) {
         //
       }
-      if (minAmount <= 0) {
+      if (minAmount <= 0 && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
         this.doNotification(
           '2',
           'Missing Minimum Order Amount',
@@ -650,7 +661,6 @@ export default {
             let order_no;
             this.setPickupFilled(false);
             // eslint-disable-next-line camelcase
-
             if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'order_no')) {
               ({
                 order_no,
@@ -665,11 +675,13 @@ export default {
                 // catch er
               }
             }
+            if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+              this.doNotification(1, 'Successfully placed freight order', '');
+            }
             this.shouldDestroy = true;
-
             this.should_destroy = true;
             this.$store.dispatch('$_orders/fetchOngoingOrders');
-
+            this.$root.$emit('Order Placement Force Update');
             const data = JSON.parse(payload.values).values;
             const session = this.$store.getters.getSession;
             const acc = session.default;
@@ -711,13 +723,14 @@ export default {
               'Carrier Type ID': data.carrier_type,
               'Vendor Type ID': data.vendor_type,
             });
-
-            this.$router.push({
-              name: 'tracking',
-              params: {
-                order_no,
-              },
-            });
+            if (!Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+              this.$router.push({
+                name: 'tracking',
+                params: {
+                  order_no,
+                },
+              });
+            }
           } else {
             this.doNotification(
               2,
@@ -1246,7 +1259,7 @@ export default {
       this.mpesa_valid = intValue !== '+256';
     },
     isValidateLoadWeightStatus() {
-      if (this.activeVendorPriceData.vendor_id === 25 && !this.getLoadWeightStatus) {
+      if (this.activeVendorPriceData.vendor_id === 25 && !this.getLoadWeightStatus && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
         this.doNotification('2', 'Invalid Load Weight', 'Kindly provide a valid load weight');
         return false;
       }
