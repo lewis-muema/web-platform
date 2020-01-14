@@ -1,12 +1,33 @@
 <template lang="html">
-  <div class="homeview--outer-override" v-if="!loadingStatus">
-    <div class="homeview--input-products block" v-if="phase === 1">
-      <div class="homeview--input-categories">Goods Type</div>
-      <select class="homeview--input-categories" v-model="productCategoryId" @change="selectCategory()">
-        <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+  <div
+    v-if="!loadingStatus"
+    class="homeview--outer-override"
+  >
+    <div
+      v-if="phase === 1"
+      class="homeview--input-products block"
+    >
+      <div class="homeview--input-categories">
+        Goods Type
+      </div>
+      <select
+        v-model="productCategoryId"
+        class="homeview--input-categories"
+        @change="selectCategory()"
+      >
+        <option
+          v-for="category in categories"
+          :key="category.id"
+          :value="category.id"
+        >
+          {{ category.name }}
+        </option>
       </select>
     </div>
-    <fbu-containers v-if="productCategoryId === 1" @clicked="changePhase"/>
+    <fbu-containers
+      v-if="productCategoryId === 1"
+      @clicked="changePhase"
+    />
   </div>
 </template>
 
@@ -76,7 +97,6 @@ export default {
             };
             this.setProductCategories(productRows);
             this.setProductId(this.productCategoryId);
-
           });
         },
         (error) => {
@@ -122,8 +142,7 @@ export default {
     registerOrderPlacementModule() {
       let moduleIsRegistered = false;
       try {
-        moduleIsRegistered =
-          this.$store._modules.root._children.$_orders._children.$_home !== undefined;
+        moduleIsRegistered = this.$store._modules.root._children.$_orders._children.$_home !== undefined;
       } catch (er) {
         //
       }
