@@ -146,6 +146,7 @@ import * as _ from 'lodash';
 import exportFromJSON from 'export-from-json';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import timezone from '../../../mixins/timezone';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -153,6 +154,7 @@ const moment = require('moment');
 
 export default {
   name: 'Statement',
+  mixins: [timezone],
   data() {
     return {
       empty_statement_state: 'Fetching Statement',
@@ -245,7 +247,8 @@ export default {
       this.statementData.slice(from, to);
     },
     formatDate(row) {
-      return moment(row.date_time).format('MMM Do YYYY, h:mm a');
+      const localTime = this.convertToUTCToLocal(row.date_time);
+      return moment(localTime).format('MMM Do YYYY, h:mm a');
     },
     formatRunningBalance(row) {
       let value = row.running_balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
