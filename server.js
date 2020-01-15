@@ -1,4 +1,5 @@
 /* eslint-disable no-shadow */
+require('elastic-apm-node/start');
 const express = require('express');
 const favicon = require('serve-favicon');
 const compression = require('compression');
