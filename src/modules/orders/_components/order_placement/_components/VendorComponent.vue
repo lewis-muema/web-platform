@@ -696,6 +696,7 @@ export default {
       orderDiscountStatus: false,
       discountPercentage: 0,
       fullPayload: {},
+      activeClass: 'small',
     };
   },
   computed: {
@@ -867,6 +868,9 @@ export default {
       }
     },
     goToNextStep() {
+      this.setActivePackageClass(this.activeClass);
+      this.setActiveVendorDetails(this.activeVendorPriceData);
+      this.setOuterActiveVendorDetails(this.activeVendorPriceData);
       this.setDefaultCarrierType();
       this.setOrderState(2);
       this.setExtendOptions(true);
@@ -943,6 +947,7 @@ export default {
 
     setActivePackageClassWrapper(name) {
       this.setActivePackageClass(name);
+      this.activeClass = name;
       this.setOuterActivePackageClass(name);
       this.reCheckCarrierType();
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
