@@ -201,16 +201,6 @@ export default {
       },
     };
   },
-  watch: {
-    get_session: {
-      handler(val, oldVal) {
-        if (this.show_vendor_view || this.loading) {
-          this.doPriceRequest();
-        }
-      },
-      deep: true,
-    },
-  },
   computed: {
     ...mapGetters({
       get_map_markers: '$_orders/getMarkers',
@@ -248,6 +238,16 @@ export default {
         && this.getStoreOrderPath.length > 1
         && Object.prototype.hasOwnProperty.call(this.getOuterPriceRequestData, 'economy_price_tiers')
       );
+    },
+  },
+  watch: {
+    get_session: {
+      handler(val, oldVal) {
+        if (this.show_vendor_view || this.loading) {
+          this.doPriceRequest();
+        }
+      },
+      deep: true,
     },
   },
   created() {
@@ -407,7 +407,6 @@ export default {
         && this.get_pickup_filled === true
       ) {
         this.clearOuterPriceRequestObject();
-        this.clearOuterActiveVendorDetails();
         this.doPriceRequest();
       }
     },
@@ -660,6 +659,7 @@ export default {
     initializeOrderFlow() {
       if (this.$route.path === '/orders/') {
         const storedLocation = this.getHomeLocations;
+        this.set_order_path(this.getStoreOrderPath);
         if (storedLocation.length > 1) {
           this.locations = storedLocation;
           this.setPickupFilled(true);
@@ -676,7 +676,6 @@ export default {
     getSessionItem(itemName) {
       const session = this.$store.getters.getSession;
       return session[session.default][itemName];
-
     },
   },
 };
