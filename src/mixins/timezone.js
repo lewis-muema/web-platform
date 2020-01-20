@@ -1,9 +1,12 @@
-import * as moment from 'moment';
+const moment = require('moment-timezone');
 
 const timezone = {
   methods: {
     convertToUTCToLocal(date) {
-      const formated = moment.utc(date).local().format('YYYY-MM-DD HH:mm:ss');
+      const formated = moment
+        .utc(date)
+        .local()
+        .format('YYYY-MM-DD HH:mm:ss');
       return formated;
     },
     convertToLocalTime(date) {
@@ -13,7 +16,11 @@ const timezone = {
       return localTime;
     },
     convertToUTC(date) {
-      const UTCDate = moment.utc(date);
+      const tzDate = moment(date)
+        .tz('Etc/GMT+1')
+        .format('YYYY-MM-DD HH:mm ZZ');
+
+      const UTCDate = moment.utc(tzDate);
       return UTCDate;
     },
   },
