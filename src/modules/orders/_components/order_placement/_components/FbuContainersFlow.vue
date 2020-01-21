@@ -572,6 +572,7 @@ export default {
       resetState: '$_orders/$_home/resetState',
       setCountryCode: '$_orders/$_home/setCountryCode',
       setDefaultCurrency: '$_orders/$_home/setDefaultCurrency',
+      setScheduleTime: '$_orders/$_home/setScheduleTime',
       setHomeLocations: '$_orders/setHomeLocations',
       setStorePath: '$_orders/setStorePath',
       clearStorePath: '$_orders/clearStorePath',
@@ -790,17 +791,19 @@ export default {
     disabledDueDate(date) {
       return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
     },
-    dispatchScheduleTime() {
+    dispatchScheduleTime() {
       const dateTime = new Date();
-      if (this.schedule_time && dateTime > this.schedule_time) {
+      if (this.schedule_time && dateTime > this.schedule_time) {
         this.schedule_time = new Date();
       }
+      this.setScheduleTime(this.schedule_time);
     },
     initiateUpload() {
       this.$root.$emit('Upload status', true);
     },
     addContainer() {
       this.containers.push({
+        id: this.containers.length + 1,
         container_number: this.cont_no,
         container_destination: this.destination,
         container_size_feet: this.size,
@@ -821,6 +824,10 @@ export default {
     },
     removeContainer(id) {
       this.containers.splice(id, 1);
+      this.containers.forEach((row, i) => {
+        // eslint-disable-next-line no-param-reassign
+        row.id = i + 1;
+      });
     },
     editContainer(id) {
       this.editingStatus = true;
