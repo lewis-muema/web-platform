@@ -16,11 +16,12 @@ const timezone = {
       return localTime;
     },
     convertToUTC(date) {
-      const tzDate = moment(date)
-        .tz('Etc/GMT+1')
+      const userTZ = moment.tz.guess();
+      const gmtDate = moment
+        .tz(date, userTZ)
+        .tz('GMT')
         .format('YYYY-MM-DD HH:mm ZZ');
-
-      const UTCDate = moment.utc(tzDate);
+      const UTCDate = moment.utc(gmtDate);
       return UTCDate;
     },
   },
