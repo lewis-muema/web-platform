@@ -222,7 +222,7 @@ export default {
     transition: all .5s ease-in-out;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
     border-radius: 2px !important;
-    max-width: 90%;
+    max-width: 94.3%;
 }
 .ongoing--card:hover,.ongoing--card.active
 {
