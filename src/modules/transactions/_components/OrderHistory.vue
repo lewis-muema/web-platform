@@ -321,7 +321,15 @@ export default {
 
       let ordersPayload = {};
 
-      if (sessionData.default === 'biz') {
+      if (sessionData.default === 'biz' && sessionData.biz.user_type === 2) {
+        // create cop admin payload
+
+        ordersPayload = {
+          cop_id: sessionData.biz.cop_id,
+          user_type: sessionData.biz.user_type,
+          user_id: '-1',
+        };
+      } else if (sessionData.default === 'biz') {
         ordersPayload = {
           cop_id: sessionData.biz.cop_id,
           user_type: sessionData.biz.user_type,
