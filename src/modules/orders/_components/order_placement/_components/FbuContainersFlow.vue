@@ -117,7 +117,7 @@
             type="button"
             class="home-view--place-order"
             :class="nextStatus"
-            :disabled="nextStatus === 'button--primary-inactive'"
+            :disabled="nextStatus === 'button--primary-inactive inactive-1'"
             @click="productPhase(2)"
           >
             Continue
@@ -224,7 +224,7 @@
             v-if="selectedContainer === null"
             class="homeview--button-add-container"
             :class="buttonStatus"
-            :disabled="buttonStatus === 'button--primary-inactive'"
+            :disabled="buttonStatus === 'button--primary-inactive inactive-1'"
             @click="addContainer()"
           >
             Add Container Details
@@ -239,7 +239,7 @@
           <button
             class="homeview--button-add-container"
             :class="placeOrderStatus"
-            :disabled="placeOrderStatus === 'button--primary-inactive'"
+            :disabled="placeOrderStatus === 'button--primary-inactive inactive-2'"
             @click="getQuote()"
           >
             Place Order
@@ -510,19 +510,19 @@ export default {
       if (this.cont_no && this.destination !== 'none' && this.size !== 'none' && this.cont_weight && this.containers.length < this.noOfContainers && this.consignee) {
         return 'button-primary bg-button-orange';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive inactive-1';
     },
     nextStatus() {
       if (this.locations.length >= 2 && this.noOfContainers > 0) {
         return 'button-primary';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive inactive-1';
     },
     placeOrderStatus() {
       if (this.containers.length === this.noOfContainers) {
         return 'button-primary';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive  inactive-2';
     },
     scheduleStatus() {
       if (this.schedule_time) {
@@ -572,6 +572,7 @@ export default {
       resetState: '$_orders/$_home/resetState',
       setCountryCode: '$_orders/$_home/setCountryCode',
       setDefaultCurrency: '$_orders/$_home/setDefaultCurrency',
+      setScheduleTime: '$_orders/$_home/setScheduleTime',
       setHomeLocations: '$_orders/setHomeLocations',
       setStorePath: '$_orders/setStorePath',
       clearStorePath: '$_orders/clearStorePath',
@@ -795,6 +796,7 @@ export default {
       if (this.schedule_time && dateTime > this.schedule_time) {
         this.schedule_time = new Date();
       }
+      this.setScheduleTime(this.schedule_time);
     },
     initiateUpload() {
       this.$root.$emit('Upload status', true);
@@ -911,9 +913,9 @@ export default {
         (error) => {
           this.productPhase(2);
           if (Object.prototype.hasOwnProperty.call(error, 'crisis_notification') && error.crisis_notification.msg) {
-            this.doNotification(3, error.reason, error.crisis_notification.msg);
+            this.doNotification(2, `${error.reason}`, error.crisis_notification.msg);
           } else {
-            this.doNotification(3, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
+            this.doNotification(2, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
           }
 
           this.loading = false;

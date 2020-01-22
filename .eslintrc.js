@@ -23,4 +23,7 @@ module.exports = {
       },
     },
   },
+  globals: {
+    mixpanel: 'readonly',
+  },
 };

@@ -4,6 +4,7 @@
   "description": "Sendy Web Platform",
   "main": "index.js",
   "dependencies": {
+    "@elastic/apm-rum-vue": "^0.1.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.12",
     "@fortawesome/free-brands-svg-icons": "^5.6.3",
     "@fortawesome/free-regular-svg-icons": "^5.6.3",
@@ -11,9 +12,6 @@
     "@fortawesome/vue-fontawesome": "^0.1.5",
     "@sentry/browser": "^4.4.1",
     "acorn": "^6.1.1",
-    "aws": "0.0.3-2",
-    "aws-s3": "^2.0.5",
-    "aws-sdk": "^2.7.20",
     "axios": "^0.18.1",
     "babel-preset-es2015": "^6.24.1",
     "chai": "^4.2.0",
@@ -24,10 +22,12 @@
     "crypto-js": "^3.1.9-1",
     "currency-flags": "git+https://github.com/transferwise/currency-flags.git",
     "date-fns": "^1.29.0",
+    "elastic-apm-node": "^3.3.0",
     "element-ui": "^2.4.9",
     "eslint-plugin-html": "^5.0.0",
     "export-from-json": "^1.1.3",
     "express": "^4.16.4",
+    "firebase": "^7.4.0",
     "fs": "0.0.1-security",
     "google-libphonenumber": "^3.1.15",
     "intl-tel-input": "^14.0.6",
@@ -60,7 +60,8 @@
     "vue2-google-maps": "^0.10.2",
     "vuetify": "^1.3.5",
     "vuex": "^3.0.1",
-    "vuex-router-sync": "^5.0.0"
+    "vuex-router-sync": "^5.0.0",
+    "webpack-merge": "^4.2.2"
   },
   "devDependencies": {
     "@vue/test-utils": "^1.0.0-beta.28",
@@ -99,7 +100,6 @@
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
     "webpack-hot-middleware": "^2.24.3",
-    "webpack-merge": "^4.1.4",
     "webpack-node-externals": "^1.7.2"
   },
   "scripts": {
