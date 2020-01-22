@@ -808,7 +808,6 @@ export default {
         container_weight_tonnes: this.cont_weight,
         consignee: this.consignee,
       });
-      console.log(this.containers);
       this.cont_no = '';
       this.cont_weight = '';
       this.consignee = '';
