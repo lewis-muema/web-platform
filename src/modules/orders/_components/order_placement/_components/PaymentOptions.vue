@@ -673,8 +673,6 @@ export default {
             const session = this.$store.getters.getSession;
             const acc = session.default;
             accData = session[session.default];
-            console.log('acc', acc);
-            console.log('accccc', 'cop_id' in accData);
             if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
               this.trackMixpanelEvent('Place Order', {
                 'Account ': data.type,
