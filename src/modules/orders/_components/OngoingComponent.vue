@@ -182,9 +182,10 @@ export default {
   position: absolute;
   margin-top: 10px;
   right: 10px;
-  min-width: 345px;
+  min-width: 25%;
   max-height: 55%;
   overflow-x: hidden;
+  margin-right : 19px;
 }
 .ongoing--count
 {
@@ -198,7 +199,6 @@ export default {
   border: 0px solid #1782c5;
   border-radius: 2px;
   box-shadow: 0 3px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
-  max-width: 72%;
 }
 .ongoing--card
 {
@@ -209,7 +209,7 @@ export default {
     transition: all .5s ease-in-out;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
     border-radius: 2px !important;
-    max-width: 94.3%;
+    max-width: 100%;
 }
 .ongoing--card:hover,.ongoing--card.active
 {
