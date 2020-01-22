@@ -142,7 +142,10 @@
       </div>
     </div>
 
-    <div class="home-view-place-order" :class="loader_class">
+    <div
+      class="home-view-place-order"
+      :class="loader_class"
+    >
       <div
         v-if="loading"
         v-loading="loading"
@@ -682,14 +685,17 @@ export default {
             this.should_destroy = true;
             this.$store.dispatch('$_orders/fetchOngoingOrders');
             this.$root.$emit('Order Placement Force Update');
+            let accData = {};
             const data = JSON.parse(payload.values).values;
             const session = this.$store.getters.getSession;
             const acc = session.default;
+            accData = session[session.default];
             if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
               this.trackMixpanelEvent('Place Order', {
                 'Account ': data.type,
                 'Account Type': acc === 'peer' ? 'Personal' : 'Business',
                 'Client Type': 'Web Platform',
+                'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
                 'Order Number': order_no,
                 'Payment Mode': this.payment_method,
                 'User Email': data.user_email,
@@ -701,6 +707,7 @@ export default {
                 'Account ': data.type,
                 'Account Type': acc === 'peer' ? 'Personal' : 'Business',
                 'Client Type': 'Web Platform',
+                'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
                 'Order Number': order_no,
                 'Payment Mode': this.payment_method,
                 'User Email': data.user_email,
