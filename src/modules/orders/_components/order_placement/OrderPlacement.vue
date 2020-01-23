@@ -201,16 +201,6 @@ export default {
       },
     };
   },
-  watch: {
-    get_session: {
-      handler(val, oldVal) {
-        if (this.show_vendor_view || this.loading) {
-          this.doPriceRequest();
-        }
-      },
-      deep: true,
-    },
-  },
   computed: {
     ...mapGetters({
       get_map_markers: '$_orders/getMarkers',
@@ -248,6 +238,16 @@ export default {
         && this.getStoreOrderPath.length > 1
         && Object.prototype.hasOwnProperty.call(this.getOuterPriceRequestData, 'economy_price_tiers')
       );
+    },
+  },
+  watch: {
+    get_session: {
+      handler(val, oldVal) {
+        if (this.show_vendor_view || this.loading) {
+          this.doPriceRequest();
+        }
+      },
+      deep: true,
     },
   },
   created() {
@@ -407,7 +407,6 @@ export default {
         && this.get_pickup_filled === true
       ) {
         this.clearOuterPriceRequestObject();
-        this.clearOuterActiveVendorDetails();
         this.doPriceRequest();
       }
     },
@@ -451,9 +450,9 @@ export default {
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
         name: acc.user_name,
         phone: acc.user_phone,
-        date_time: this.moment().format('YYYY-MM-DD HH:mm:ss'),
+        date_time: this.moment.utc(),
         schedule_status: false,
-        schedule_time: this.moment().format('YYYY-MM-DD HH:mm:ss'),
+        schedule_time: this.moment.utc(),
         vendor_type: 1,
         group_id: 1,
         client_type: 'corporate',
@@ -466,9 +465,9 @@ export default {
         promotion_status: false,
         destination_paid_status: false,
         is_edit: false,
-        country_code: this.getCountryCode,
-        default_currency: this.getDefaultCurrency,
-        preffered_currency: this.getDefaultCurrency,
+        country_code: this.getSessionItem('country_code'),
+        default_currency: this.getSessionItem('default_currency'),
+        preffered_currency: this.getSessionItem('default_currency'),
       };
       const jsonDecodedPath = JSON.stringify(obj);
       infor.path = jsonDecodedPath;
@@ -649,11 +648,18 @@ export default {
       if (!acc.hasOwnProperty('country_code')) {
         this.deleteSession();
         this.$router.push({ path: '/auth/sign_in' });
+      } else {
+        this.$apm.setUserContext({
+          id: acc.user_id,
+          username: acc.user_name,
+          email: acc.user_email,
+        });
       }
     },
     initializeOrderFlow() {
       if (this.$route.path === '/orders/') {
         const storedLocation = this.getHomeLocations;
+        this.set_order_path(this.getStoreOrderPath);
         if (storedLocation.length > 1) {
           this.locations = storedLocation;
           this.setPickupFilled(true);
@@ -666,6 +672,10 @@ export default {
         this.clearOuterPriceRequestObject();
         this.clearOuterActiveVendorDetails();
       }
+    },
+    getSessionItem(itemName) {
+      const session = this.$store.getters.getSession;
+      return session[session.default][itemName];
     },
   },
 };

@@ -168,26 +168,32 @@ export default {
                   } catch (er) {
                     // ...
                   }
-                  if ('default' in sessionData && analyticsEnv === 'production') {
+                  if ('default' in sessionData) {
                     const acc = sessionData[sessionData.default];
-
-                    mixpanel.people.set_once({
-                      $email: acc.user_email,
-                      $phone: acc.user_phone,
-                      'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-                      $name: acc.user_name,
-                      'Client Type': 'Web Platform',
+                    this.$apm.setUserContext({
+                      id: acc.user_id,
+                      username: acc.user_name,
+                      email: acc.user_email,
                     });
+                    if (analyticsEnv === 'production') {
+                      mixpanel.people.set_once({
+                        $email: acc.user_email,
+                        $phone: acc.user_phone,
+                        'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                        $name: acc.user_name,
+                        'Client Type': 'Web Platform',
+                      });
 
-                    // login identify
-                    mixpanel.identify(acc.user_email);
+                      // login identify
+                      mixpanel.identify(acc.user_email);
 
-                    // track login
-                    mixpanel.track('User Login', {
-                      'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-                      'Last Login': new Date(),
-                      'Client Type': 'Web Platform',
-                    });
+                      // track login
+                      mixpanel.track('User Login', {
+                        'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                        'Last Login': new Date(),
+                        'Client Type': 'Web Platform',
+                      });
+                    }
                   }
                   //check for redirect status before push
                   let redirectStatus = this.$store.getters.getRedirectStatus;

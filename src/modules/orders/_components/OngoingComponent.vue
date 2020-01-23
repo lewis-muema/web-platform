@@ -53,11 +53,13 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import timezone from '../../../mixins/timezone';
 
 library.add(faChevronUp);
 
 export default {
   name: 'OngoingComponent',
+  mixins: [timezone],
   data() {
     return {
       loading: true,
@@ -132,7 +134,8 @@ export default {
       return false;
     },
     date_format(date) {
-      return this.moment(date).calendar(null, {
+      const localTime = this.convertToUTCToLocal(date);
+      return this.moment(localTime).calendar(null, {
         lastWeek: 'MMM-D hh:mm a',
         sameDay: '[Today] hh:mm a',
         nextDay: '[Tomorrow] hh:mm a',
@@ -222,7 +225,7 @@ export default {
     transition: all .5s ease-in-out;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
     border-radius: 2px !important;
-    max-width: 90%;
+    max-width: 94.3%;
 }
 .ongoing--card:hover,.ongoing--card.active
 {

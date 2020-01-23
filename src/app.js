@@ -3,6 +3,7 @@
 /* exported exportFromJSON */
 import Vue from 'vue';
 import { sync } from 'vuex-router-sync';
+import { ApmVuePlugin } from '@elastic/apm-rum-vue';
 
 import moment from 'moment';
 import lang from 'element-ui/lib/locale/lang/en';
@@ -127,6 +128,18 @@ export function createApp() {
 
   // sync so that route state is available as part of the store
   sync(store, router);
+
+  // apm plugin configuration
+  Vue.use(ApmVuePlugin, {
+    router,
+    config: {
+      serviceName: process.env.CONFIGS_ENV.ELASTIC_APM_SERVICE_NAME,
+      // agent configuration
+      serverUrl: process.env.CONFIGS_ENV.ELASTIC_APM_SERVER_URL,
+      serviceVersion: process.env.CONFIGS_ENV.ELASTIC_APM_SERVICE_VERSION,
+      environment: process.env.CONFIGS_ENV.ELASTIC_APM_ENVIRONMENT,
+    },
+  });
 
   // create the app instance, injecting both the router and the store
   const app = new Vue({

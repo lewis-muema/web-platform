@@ -1,6 +1,5 @@
 <template>
-  <div id="app"
-class="box app app-overflow">
+  <div id="app" class="box app app-overflow">
     <!-- Global component responsible for flashing notifications -->
     <sendy-flash details />
 
@@ -38,7 +37,7 @@ export default {
     // watch session so as to only update token on session
     getSession(val) {
       if (val) {
-        this.updateFirebaseToken();
+        this.initializeFirebase();
       }
     },
   },
@@ -83,7 +82,7 @@ export default {
         if ({}.hasOwnProperty.call(session, 'default')) {
           if (logAction === 'notification') {
             // add log for notification recieved
-            this.trackMixpanelEvent('FCM Notification Recieved - Web', {
+            this.trackMixpanelEvent('FCM Notification Received - Web', {
               'Order No': logData.order_no,
               'Cop Id': session[session.default].cop_id,
               'User Id': session[session.default].user_id,
@@ -102,7 +101,7 @@ export default {
           // no session
           if (logAction === 'notification') {
             // add log for notification recieved
-            this.trackMixpanelEvent('FCM Notification Recieved - Web', {
+            this.trackMixpanelEvent('FCM Notification Received - Web', {
               'Order No': logData.order_no,
             });
           }
@@ -156,10 +155,7 @@ export default {
         endpoint: 'firebase_token',
       };
 
-      this.$store
-        .dispatch('requestAxiosPost', payload)
-        .then(response => response)
-        .catch(err => err);
+      this.$store.dispatch('requestAxiosPost', payload);
     },
     initializeFirebase() {
       this.$messaging
@@ -167,13 +163,14 @@ export default {
         .then(() => firebase.messaging().getToken())
         .then((token) => {
           this.fcmToken = token;
-          this.$store.commit('setFCMToken', token);
-
-          // check if session exists and if so update
-          const session = this.getSession;
-          // eslint-disable-next-line no-prototype-builtins
-          if ({}.hasOwnProperty.call(session, 'default')) {
-            this.updateFirebaseToken();
+          if (token !== null) {
+            this.$store.commit('setFCMToken', token);
+            // check if session exists and if so update
+            const session = this.getSession;
+            // eslint-disable-next-line no-prototype-builtins
+            if ({}.hasOwnProperty.call(session, 'default')) {
+              this.updateFirebaseToken();
+            }
           }
         })
         .catch((err) => {
@@ -183,7 +180,6 @@ export default {
 
       this.$messaging.onMessage((payload) => {
         const notificationData = payload.data;
-        const orderNo = notificationData.order_no;
 
         this.$store.commit('setFCMData', notificationData);
 

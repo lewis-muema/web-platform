@@ -567,11 +567,13 @@
 import numeral from 'numeral';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PaymentOptions from './PaymentOptions.vue';
+import timezone from '../../../../../mixins/timezone';
 
 export default {
   components: {
     PaymentOptions,
   },
+  mixins: [timezone],
   data() {
     return {
       first_time: false,
@@ -663,6 +665,7 @@ export default {
       orderDiscountStatus: false,
       discountPercentage: 0,
       fullPayload: {},
+      activeClass: 'small',
     };
   },
   computed: {
@@ -828,6 +831,9 @@ export default {
       }
     },
     goToNextStep() {
+      this.setActivePackageClass(this.activeClass);
+      this.setActiveVendorDetails(this.activeVendorPriceData);
+      this.setOuterActiveVendorDetails(this.activeVendorPriceData);
       this.setDefaultCarrierType();
       this.setOrderState(2);
       this.setExtendOptions(true);
@@ -903,6 +909,7 @@ export default {
 
     setActivePackageClassWrapper(name) {
       this.setActivePackageClass(name);
+      this.activeClass = name;
       this.setOuterActivePackageClass(name);
       this.reCheckCarrierType();
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
@@ -1016,7 +1023,8 @@ export default {
     },
     transformDate(vendorDetails) {
       if (Object.prototype.hasOwnProperty.call(vendorDetails, 'customer_eta')) {
-        return this.moment(vendorDetails.customer_eta, 'YYYY-MM-DD HH:mm:ss').format('hh.mm a');
+        const localTime = this.convertToUTCToLocal(vendorDetails.customer_eta);
+        return this.moment(localTime, 'YYYY-MM-DD HH:mm:ss').format('hh.mm a');
       }
       return this.moment()
         .add(vendorDetails.eta, 'seconds')
@@ -1064,8 +1072,9 @@ export default {
     },
     scheduleTimeFrame(vendorObject) {
       const dateTime = vendorObject.current_time;
-      const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
-      const timeHrs = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
+      const localTime = this.convertToUTCToLocal(dateTime);
+      const day = this.moment(localTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
+      const timeHrs = this.moment(localTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
 
       if (day === 'Sunday' && timeHrs >= '17') {
         return 'Schedule for tommorow';

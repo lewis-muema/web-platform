@@ -66,7 +66,7 @@ export default {
         endpoint: 'vendors/freight_categories',
       };
       this.requestFreightProductCategories(payload).then(
-        (response) => {          
+        (response) => {
           this.loadingStatus = false;
           response.products.forEach((row, i) => {
             this.categories.push(row);
@@ -141,6 +141,12 @@ export default {
       const acc = session[session.default];
       if (!acc.hasOwnProperty('country_code')) {
         this.$router.push({ path: '/auth/sign_in' });
+      } else {
+        this.$apm.setUserContext({
+          id: acc.user_id,
+          username: acc.user_name,
+          email: acc.user_email,
+        });
       }
     },
   },

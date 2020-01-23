@@ -142,7 +142,10 @@
       </div>
     </div>
 
-    <div class="home-view-place-order" :class="loader_class">
+    <div
+      class="home-view-place-order"
+      :class="loader_class"
+    >
       <div
         v-if="loading"
         v-loading="loading"
@@ -190,6 +193,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
+import timezone from '../../../../../mixins/timezone';
 
 library.add(faChevronDown);
 
@@ -199,7 +203,7 @@ const TRUCK_VENDORS = [20, 25];
 export default {
   name: 'OrderOptions',
   components: {},
-  mixins: [Mcrypt, PaymentMxn],
+  mixins: [Mcrypt, PaymentMxn, timezone],
   data() {
     return {
       schedule_time: this.moment(),
@@ -681,14 +685,17 @@ export default {
             this.should_destroy = true;
             this.$store.dispatch('$_orders/fetchOngoingOrders');
             this.$root.$emit('Order Placement Force Update');
+            let accData = {};
             const data = JSON.parse(payload.values).values;
             const session = this.$store.getters.getSession;
             const acc = session.default;
+            accData = session[session.default];
             if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
               this.trackMixpanelEvent('Place Order', {
                 'Account ': data.type,
                 'Account Type': acc === 'peer' ? 'Personal' : 'Business',
                 'Client Type': 'Web Platform',
+                'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
                 'Order Number': order_no,
                 'Payment Mode': this.payment_method,
                 'User Email': data.user_email,
@@ -700,6 +707,7 @@ export default {
                 'Account ': data.type,
                 'Account Type': acc === 'peer' ? 'Personal' : 'Business',
                 'Client Type': 'Web Platform',
+                'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
                 'Order Number': order_no,
                 'Payment Mode': this.payment_method,
                 'User Email': data.user_email,
@@ -784,7 +792,7 @@ export default {
         delivery_points: this.get_order_path.length - 1,
         sendy_coupon: '0',
         payment_method: Number(this.payment_method),
-        schedule_time: this.order_is_scheduled ? this.scheduled_time : this.current_time,
+        schedule_time: this.order_is_scheduled ? this.convertToUTC(this.scheduled_time) : this.convertToUTC(this.current_time),
         tier_tag: this.activeVendorPriceData.tier_tag,
         tier_name: this.activeVendorPriceData.tier_name,
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,

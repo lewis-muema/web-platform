@@ -1051,6 +1051,12 @@ export default {
       if (!acc.hasOwnProperty('country_code')) {
         this.deleteSession();
         this.$router.push({ path: '/auth/sign_in' });
+      } else {
+        this.$apm.setUserContext({
+          id: acc.user_id,
+          username: acc.user_name,
+          email: acc.user_email,
+        });
       }
     },
     initializeOrderFlow() {

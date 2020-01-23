@@ -97,6 +97,11 @@
         min-width="80"
       />
       <el-table-column
+        label="Transaction Type"
+        prop="pay_narrative"
+        min-width="60"
+      />
+      <el-table-column
         label="Debit"
         prop="amount"
         width="110"
@@ -141,6 +146,7 @@ import * as _ from 'lodash';
 import exportFromJSON from 'export-from-json';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import timezone from '../../../mixins/timezone';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -148,6 +154,7 @@ const moment = require('moment');
 
 export default {
   name: 'Statement',
+  mixins: [timezone],
   data() {
     return {
       empty_statement_state: 'Fetching Statement',
@@ -240,7 +247,8 @@ export default {
       this.statementData.slice(from, to);
     },
     formatDate(row) {
-      return moment(row.date_time).format('MMM Do YYYY, h:mm a');
+      const localTime = this.convertToUTCToLocal(row.date_time);
+      return moment(localTime).format('MMM Do YYYY, h:mm a');
     },
     formatRunningBalance(row) {
       let value = row.running_balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
@@ -333,6 +341,7 @@ export default {
           arr.Amount = this.statementData[i].amount;
           arr.Date = this.statementData[i].date_time;
           arr.Description = this.statementData[i].description;
+          arr.TransactionType = this.statementData[i].pay_narrative;
           arr.PaymentMethod = this.statementData[i].pay_method_name;
           arr.RunningBalance = this.statementData[i].running_balance;
           arr.Transaction = this.statementData[i].txn;
@@ -343,6 +352,7 @@ export default {
           'Amount',
           'Date',
           'Description',
+          'TransactionType',
           'PaymentMethod',
           'RunningBalance',
           'Transaction',
@@ -353,7 +363,7 @@ export default {
         exportFromJSON({ data, fileName, exportType });
       } else {
         const pdfBody = [
-          ['Amount', 'Date', 'Description', 'Payment Method', 'Running Balance', 'Transaction'],
+          ['Amount', 'Date', 'Description','TransactionType ', 'Payment Method', 'Running Balance', 'Transaction'],
         ];
 
         this.statementData.forEach((item) => {
@@ -361,6 +371,7 @@ export default {
             item.amount,
             item.date_time,
             item.description,
+            item.pay_narrative,
             item.pay_method_name,
             item.running_balance,
             item.txn,
