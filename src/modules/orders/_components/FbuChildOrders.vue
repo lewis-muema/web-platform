@@ -11,7 +11,7 @@
       <font-awesome-icon
         icon="chevron-up"
         :class="classObject"
-        width="15px"
+        class="icon-width"
       />
     </div>
     <transition name="fade">
@@ -290,5 +290,8 @@ export default {
 .rotate
 {
   transform: rotate(180deg);
+}
+.icon-width {
+  width: 15px !important;
 }
 </style>
