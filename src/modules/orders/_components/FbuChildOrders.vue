@@ -7,11 +7,11 @@
       class="ongoing--count"
       @click="toggle_ongoing()"
     >
-      <span>{{ num_ongoing }} ongoing orders</span>
+      <span>{{ num_ongoing }} ongoing FBU orders</span>
       <font-awesome-icon
         icon="chevron-up"
         :class="classObject"
-        width="15px"
+        class="icon-width"
       />
     </div>
     <transition name="fade">
@@ -21,21 +21,30 @@
       >
         <template v-for="order in filter_orders">
           <div
-            class="ongoing--card"
+            class="ongoing--card bg-white"
             :class="{ active: active_card(order.order_no) }"
             @click="track(order.order_no)"
           >
-            <div class="ongoing--card-location">
-              <div class="ongoing--card-padded">
-                <span>{{ order.from_name }}</span>
-              </div>
-              <div class="">
-                <span>{{ order.to_name }}</span>
+            <div class="ongoing--order-count">
+              Goods Quantity: <b>{{ order.no_of_containers }} container{{ pluralize(order.no_of_containers) }}</b>
+            </div>
+            <div class="ongoing--card-location card-location-override">
+              <span class="homeview--childinfo-order-details">Order Details</span><br>
+              <div class="ongoing--card-parent-order-details">
+                <div class="ongoing--parent-locations">
+                  <span class="ongoing--parent-locations-header">Pick-Up</span><br>
+                  <span class="ongoing--parent-locations-body">{{ order.from_name }}</span>
+                </div>
+                <div class="ongoing--parent-locations">
+                  <span class="ongoing--parent-locations-header">Destination</span><br>
+                  <span class="ongoing--parent-locations-body">{{ order.to_name }}</span>
+                </div>
               </div>
             </div>
-            <div class="ongoing--card-status">
+            <div class="card-status-override" :class="getStatus(order)">
               <div class="">
-                {{ getStatus(order) }}
+                Order Status: <b>{{ getStatus(order) }}
+                </b>
               </div>
               <div class="">
                 <i class="el-icon-time" />
@@ -76,7 +85,7 @@ export default {
     filter_orders() {
       const orders = [];
       this.get_orders.forEach((row) => {
-        if (!Object.prototype.hasOwnProperty.call(row, 'freight_order')) {
+        if (Object.prototype.hasOwnProperty.call(row, 'freight_order')) {
           orders.push(row);
         }
       });
@@ -99,7 +108,6 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('$_orders/fetchOngoingOrders');
     this.loading = true;
     this.poll();
   },
@@ -120,16 +128,10 @@ export default {
       }
     },
     track(order) {
-      this.hide_vendors();
-      this.clearVendorMarkers();
-      this.$router.push({ path: `/orders/tracking/${order}` });
-      this.change_page(1);
-    },
-    active_card(orderNo) {
-      if (this.$route.params.order_no === orderNo) {
-        return true;
-      }
-      return false;
+      // this.hide_vendors();
+      // this.clearVendorMarkers();
+      this.$router.push({ path: `/orders/freight/tracking/${order}` });
+      // this.change_page(1);
     },
     date_format(date) {
       return this.moment(date).calendar(null, {
@@ -142,11 +144,17 @@ export default {
         },
       });
     },
+    active_card(orderNo) {
+      if (this.$route.params.order_no === orderNo) {
+        return true;
+      }
+      return false;
+    },
     poll() {
       try {
         const that = this;
         this.$store.dispatch('$_orders/fetchOngoingOrders').then((response) => {
-          if (['order_placement', 'tracking'].includes(that.$router.currentRoute.name)) {
+          if (['freight_order_placement'].includes(that.$router.currentRoute.name)) {
             setTimeout(() => {
               that.poll();
             }, 15000);
@@ -162,21 +170,17 @@ export default {
         switch (order.delivery_status) {
           case 3: {
             return 'Delivered';
-            break;
           }
           case 2: {
-            return 'In Transit';
-            break;
+            return 'Ongoing';
           }
           default: {
             switch (order.confirm_status) {
               case 1: {
-                return 'Confirmed';
-                break;
+                return 'Ongoing';
               }
               default: {
                 return 'Pending';
-                break;
               }
             }
           }
@@ -184,6 +188,12 @@ export default {
       } else {
         return '';
       }
+    },
+    pluralize(count) {
+      if (count > 1) {
+        return 's';
+      }
+      return '';
     },
   },
 };
@@ -195,10 +205,9 @@ export default {
   position: absolute;
   margin-top: 10px;
   right: 10px;
-  min-width: 25%;
+  min-width: 345px;
   max-height: 55%;
   overflow-x: hidden;
-  margin-right : 19px;
 }
 .ongoing--count
 {
@@ -212,6 +221,7 @@ export default {
   border: 0px solid #1782c5;
   border-radius: 2px;
   box-shadow: 0 3px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+  max-width: 72%;
 }
 .ongoing--card
 {
@@ -222,7 +232,7 @@ export default {
     transition: all .5s ease-in-out;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
     border-radius: 2px !important;
-    max-width: 100%;
+    max-width: 90%;
 }
 .ongoing--card:hover,.ongoing--card.active
 {
@@ -230,25 +240,44 @@ export default {
 }
 .ongoing--card-location
 {
-    padding: 25px 25px 11px 25px;
-    background-color: #fff;
-    border-radius: 3px 3px 0px 0px;
-    font-size: 13px;
-    line-height: 17px;
+  padding: 25px 25px 11px 25px;
+  background-color: #fff;
+  border-radius: 3px 3px 0px 0px;
+  font-size: 13px;
+  line-height: 17px;
 }
-.ongoing--card-status
-{
+.ongoing--card-parent-order-details {
   display: flex;
-justify-content: space-between;
-padding: 14px;
-background-color: #1782c5;
-color: #fff;
-transition: all .5s ease-in-out;
-border-radius: 0px 0px 3px 3px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
-.ongoing--card:hover .ongoing--card-status, .ongoing--card.active .ongoing--card-status
-{
+.ongoing--parent-locations-header {
+  font-size: 11px;
+  color: #757575;
+}
+.ongoing--parent-locations-body {
+}
+.card-status-override {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px;
+  color: #fff;
+  transition: all .5s ease-in-out;
+  border-radius: 0px 0px 3px 3px;
+  font-size: 11px;
+}
+.ongoing--parent-locations {
+  width: 160px;
+  margin-right: 10px;
+}
+.Pending {
   background-color: #f57f20;
+}
+.Ongoing {
+  background-color: #1782c5;
+}
+.Delivered {
+  background-color: #43A047;
 }
 .ongoing--card-padded
 {
@@ -261,5 +290,8 @@ border-radius: 0px 0px 3px 3px;
 .rotate
 {
   transform: rotate(180deg);
+}
+.icon-width {
+  width: 15px !important;
 }
 </style>

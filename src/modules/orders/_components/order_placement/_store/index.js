@@ -40,6 +40,9 @@ export default {
       test_specs: '',
       load_weight_val: 0,
       load_weight_status: false,
+      product_categories: [],
+      product_phase: 1,
+      product_id: 1,
     };
   },
   actions,
