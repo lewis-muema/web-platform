@@ -205,7 +205,7 @@ export default {
     get_session: {
       handler(val, oldVal) {
         if (this.show_vendor_view || this.loading) {
-          this.doPriceRequest();
+          this.handleStoredData();
         }
       },
       deep: true,
@@ -293,6 +293,7 @@ export default {
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
       setOuterPriceRequestObject: '$_orders/setOuterPriceRequestObject',
       setOrderState: '$_orders/$_home/setOrderState',
+      setExtendOptions: '$_orders/$_home/setExtendOptions',
     }),
 
     ...mapActions({
@@ -524,6 +525,12 @@ export default {
           this.loading = false;
         },
       );
+    },
+    handleStoredData() {
+      this.clearOuterPriceRequestObject();
+      this.clearOuterActiveVendorDetails();
+      this.setExtendOptions(false);
+      this.doPriceRequest();
     },
 
     doNotification(level, title, message) {
