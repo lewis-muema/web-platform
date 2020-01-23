@@ -93,7 +93,7 @@
               </div>
             </div>
             <div class="homeview--return-input">
-              <input type="checkbox" v-model="returnStatus" @change="resetDestination()"> Return empty containers to pick up location
+              <input type="checkbox" v-model="returnStatus" @change="resetDestination()"> Return empty containers to the same location
             </div>
             <gmap-autocomplete
               v-if="returnStatus"
