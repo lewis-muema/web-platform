@@ -79,11 +79,18 @@ export default {
 
           });
         },
+        // eslint-disable-next-line no-unused-vars
         (error) => {
-          console.log(error);
+          this.doNotification(2, 'Could not fetch freight categories', 'Please try again');
         },
       );
     },
+    doNotification(level, title, message) {
+      this.$store.commit('setNotificationStatus', true);
+      const notification = { title, level, message };
+      this.$store.commit('setNotification', notification);
+    },
+
     selectCategory() {
       this.setProductId(this.productCategoryId);
       // eslint-disable-next-line default-case
