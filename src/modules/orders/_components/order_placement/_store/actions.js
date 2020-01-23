@@ -73,17 +73,6 @@ export default {
         });
     });
   },
-  requestDiscount({ dispatch }, payload) {
-    return new Promise((resolve, reject) => {
-      dispatch('requestAxiosPost', payload, { root: true })
-        .then((response) => {
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  },
   requestCountryCode({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
