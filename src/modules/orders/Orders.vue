@@ -10,38 +10,6 @@
         v-if="blinder_status"
         class="blinder"
       >
-        <div class="discounts_popup">
-          <div class="discount-status">
-            <i
-              v-if="!loading_status"
-              slot="suffix"
-              class="close el-input__icon el-icon-error"
-              @click="closeDiscountPopup()"
-            />
-            <img
-              v-if="icon_class === 'el-icon-close'"
-              src="https://images.sendyit.com/web_platform/orders/Frown.svg"
-              class="frown-icon-class"
-            >
-            <i
-              v-else
-              id="icon_override"
-              slot="suffix"
-              class="el-input__icon"
-              :class="icon_class"
-            />
-            <p class="discounts-description">
-              {{ message }}
-            </p>
-            <button
-              v-if="!loading_status"
-              class="discount-popup-dismiss"
-              @click="closeDiscountPopup()"
-            >
-              OK
-            </button>
-          </div>
-        </div>
       </div>
       <map-component />
       <ongoing-component />
@@ -102,18 +70,11 @@ export default {
   },
   methods: {
     ...mapGetters({
-      getDiscountLoadingStatus: '$_orders/$_components/$_home/getDiscountLoadingStatus',
     }),
     ...mapMutations({
       clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
     rootListener() {
-      this.$root.$on('Discount loading status', (arg1, arg2, arg3, arg4) => {
-        this.icon_class = arg1;
-        this.message = arg2;
-        this.loading_status = arg3;
-        this.blinder_status = arg4;
-      });
     },
     registerOrdersStore() {
       const moduleIsRegistered = this.$store._modules.root._children.$_orders !== undefined;
@@ -138,9 +99,6 @@ export default {
           this.$router.replace({ name: 'sign_in' });
         }, 5000);
       }
-    },
-    closeDiscountPopup() {
-      this.blinder_status = false;
     },
   },
 };
