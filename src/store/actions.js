@@ -252,8 +252,12 @@ export default {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
         (response) => {
+          console.log('am here', payload.app);
           if (response.status === 200) {
-            const rb = response.data.running_balance;
+            let rb = response.data.running_balance;
+            if (payload.app === 'PRIVATE_API' && rb !== 0) {
+              rb = response.data.running_balance * -1;
+            }
             commit('setRunningBalance', rb);
           }
           resolve(response);
