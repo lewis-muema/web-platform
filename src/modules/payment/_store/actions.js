@@ -75,6 +75,7 @@ export default {
         (error) => {
           commit('setMpesaLoadingStatus', false);
           commit('setMpesaFailStatus', true);
+          commit('setMpesaSuccessStatus', false);
           reject(error);
         },
       );
