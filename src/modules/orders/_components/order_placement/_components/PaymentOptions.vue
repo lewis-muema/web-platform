@@ -819,7 +819,9 @@ export default {
       if (this.activeVendorPriceData.order_no === undefined) {
         payload.pricing_uuid = this.activeVendorPriceData.id;
       }
-
+      if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+        payload.freight = true;
+      }
       payload = {
         values: payload,
       };
