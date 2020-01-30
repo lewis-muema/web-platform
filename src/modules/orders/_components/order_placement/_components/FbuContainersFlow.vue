@@ -71,6 +71,8 @@
             <input
               v-model.number="noOfContainers"
               type="number"
+              min="5"
+              max="50"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input input-spacer"
               placeholder="No of containers"
             >
@@ -178,6 +180,8 @@
           <input
             v-model.number="cont_weight"
             type="number"
+            min="5"
+            max="50"
             class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
             placeholder="Container Weight in Tonnes"
           >
@@ -188,12 +192,11 @@
             :select-first-on-enter="true"
             class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details homeview--return-destination-input"
             @place_changed="setReturnDestination($event, 2)"
-            @keyup="checkChangeEvents($event, 2)"
-            @change="checkChangeEvents($event, 2)"
+            @keydown.native.capture="checkReturnDestination()"
           />
           <select
             v-model.number="size"
-            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
+            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details input-container--size"
           >
             <option
               class=""
@@ -232,11 +235,14 @@
           <button
             v-else
             class="button-primary homeview--button-add-container bg-button-orange"
+            :class="editStatus"
+            :disabled="editStatus === 'button--primary-inactive inactive-1'"
             @click="applyContainerChanges()"
           >
             Edit container details
           </button>
           <button
+            v-if="selectedContainer === null"
             class="homeview--button-add-container"
             :class="placeOrderStatus"
             :disabled="placeOrderStatus === 'button--primary-inactive'"
@@ -507,7 +513,13 @@ export default {
       );
     },
     buttonStatus() {
-      if (this.cont_no && this.destination !== 'none' && this.size !== 'none' && this.cont_weight && this.containers.length < this.noOfContainers && this.consignee) {
+      if (this.cont_no && this.destination.name && this.size !== 'none' && this.cont_weight && this.containers.length < this.noOfContainers && this.consignee) {
+        return 'button-primary bg-button-orange';
+      }
+      return 'button--primary-inactive inactive-1';
+    },
+    editStatus() {
+      if (this.cont_no && this.destination.name && this.size !== 'none' && this.cont_weight && this.consignee) {
         return 'button-primary bg-button-orange';
       }
       return 'button--primary-inactive';
@@ -591,6 +603,28 @@ export default {
       // console.log('index', index);
       // console.log('evt', evt);
       // TO DO research implementation of native input events
+    },
+    checkReturnDestination(evt, index) {
+      if (document.querySelector('.homeview--return-destination-input').value === '') {
+        this.destination = {
+          name: '',
+          coordinates: '',
+          waypoint_details_status: true,
+          type: 'coordinates',
+          country_code: '',
+          more: {
+            Estate: '',
+            FlatName: '',
+            place_idcustom: '',
+            Label: '',
+            HouseDoor: '',
+            Otherdescription: '',
+            Typed: '',
+            Vicinity: 'Not Indicated',
+            Address: 'Not Indicated',
+          },
+        };
+      }
     },
     trackMixpanelEvent(name) {
       let analyticsEnv = '';
