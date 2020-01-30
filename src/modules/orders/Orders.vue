@@ -152,7 +152,7 @@ export default {
           this.succesfullUpload(data);
         })
         .catch((err) => {
-          this.doNotification(2, 'Failed to upload file', 'Please check you connection and try again');
+          this.doNotification(2, 'Failed to upload file', 'Please check your connection and try again');
         });
     },
     checkSession() {
