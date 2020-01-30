@@ -40,6 +40,11 @@
                     account
                   </a>
                 </li>
+                <li v-if="isUpgradeValid">
+                  <a @click="linkRoute('/user/upgrade_acc')">
+                    Create Business Account
+                  </a>
+                </li>
                 <li>
                   <a @click="linkRoute('/orders')">
                     New Delivery
@@ -114,6 +119,15 @@ export default {
       getSess: 'getSession',
       getCountryCode: 'getCountryCode',
     }),
+    isUpgradeValid() {
+      const session = this.$store.getters.getSession;
+      let isValid = false;
+
+      if (Object.keys(session.biz).length === 0) {
+        isValid = true;
+      }
+      return isValid;
+    },
   },
   watch: {
     getSess: {
