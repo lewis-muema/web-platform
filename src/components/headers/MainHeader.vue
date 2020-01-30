@@ -123,7 +123,7 @@ export default {
       const session = this.$store.getters.getSession;
       let isValid = false;
 
-      if (Object.keys(session.biz).length === 0) {
+      if (!this.switchValid && session.default === 'peer') {
         isValid = true;
       }
       return isValid;
