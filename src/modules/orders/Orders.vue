@@ -14,19 +14,19 @@
           <i
             slot="suffix"
             class="close el-input__icon el-icon-error"
-            @click="closeDiscountPopup()"
+            @click="closePopup()"
           />
           <img src="https://images.sendyit.com/web_platform/orders/upload.png" class="upload-photo" />
           <p class="no-margin upload-par"><span class="upload-link" @click="simulateClick()">Click here</span> to upload</p>
-          <p class="no-margin upload-text">(We support .csv .xlsx .xml and .ods)</p>
+          <p class="no-margin upload-text">(We support .csv .xlsx and .xml)</p>
           <input type="file" id="upload-input" accept=".xls,.xlsx,.csv,.xml" @change="attachUpload" ref="uploadbttn">
-          <button @click="upload()" class="upload-csv-button" :class="uploadBtn" :disabled="uploadBtn === 'button--primary-inactive'" id="upload-button">Upload CSV</button>
+          <button @click="upload()" class="upload-csv-button" :class="uploadBtn" :disabled="uploadBtn === 'button--primary-inactive inactive-1'" id="upload-button">Upload CSV</button>
         </div>
         <div class="upload-popup" v-if="success_status">
           <i
             slot="suffix"
             class="close el-input__icon el-icon-error"
-            @click="closeDiscountPopup()"
+            @click="closePopup()"
           />
           <img src="https://images.sendyit.com/web_platform/orders/OrderConfirmation.svg" class="upload-photo" />
           <p class="no-margin upload-par">Your file has been uploaded! An order will be generated shortly.</p>
@@ -78,7 +78,7 @@ export default {
       if (this.uploadButton) {
         return 'button-primary';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive inactive-1';
     },
   },
   watch: {
@@ -151,7 +151,9 @@ export default {
           this.uploadButton = '';
           this.succesfullUpload(data);
         })
-        .catch(err => console.error(err));
+        .catch((err) => {
+          this.doNotification(2, 'Failed to upload file', 'Please check you connection and try again');
+        });
     },
     checkSession() {
       const session = this.$store.getters.getSession;
@@ -170,6 +172,14 @@ export default {
           this.$router.replace({ name: 'sign_in' });
         }, 5000);
       }
+    },
+    doNotification(level, title, message) {
+      this.$store.commit('setNotificationStatus', true);
+      const notification = { title, level, message };
+      this.$store.commit('setNotification', notification);
+    },
+    closePopup() {
+      this.blinder_status = false;
     },
   },
 };
