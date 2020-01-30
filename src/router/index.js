@@ -372,6 +372,10 @@ export function createRouter() {
             path: '/user/free_deliveries',
             component: () => import('../modules/user/_components/FreeDeliveries.vue'),
           },
+          {
+            path: '/user/upgrade_acc',
+            component: () => import('../modules/user/_components/UpgradeAccount.vue'),
+          },
         ],
       },
       {

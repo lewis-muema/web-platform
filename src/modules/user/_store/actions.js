@@ -47,4 +47,16 @@ export default {
       );
     });
   },
+  requestUpgradeAccount(context, payload) {
+    return new Promise((resolve, reject) => {
+      payload.vm.$store.dispatch('requestAxiosPost', payload).then(
+        (response) => {
+          resolve(response.data);
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
 };
