@@ -119,7 +119,7 @@
             type="button"
             class="home-view--place-order"
             :class="nextStatus"
-            :disabled="nextStatus === 'button--primary-inactive'"
+            :disabled="nextStatus === 'button--primary-inactive inactive-1'"
             @click="productPhase(2)"
           >
             Continue
@@ -227,7 +227,7 @@
             v-if="selectedContainer === null"
             class="homeview--button-add-container"
             :class="buttonStatus"
-            :disabled="buttonStatus === 'button--primary-inactive'"
+            :disabled="buttonStatus === 'button--primary-inactive inactive-1'"
             @click="addContainer()"
           >
             Add Container Details
@@ -245,7 +245,7 @@
             v-if="selectedContainer === null"
             class="homeview--button-add-container"
             :class="placeOrderStatus"
-            :disabled="placeOrderStatus === 'button--primary-inactive'"
+            :disabled="placeOrderStatus === 'button--primary-inactive inactive-2'"
             @click="getQuote()"
           >
             Place Order
@@ -522,19 +522,19 @@ export default {
       if (this.cont_no && this.destination.name && this.size !== 'none' && this.cont_weight && this.consignee) {
         return 'button-primary bg-button-orange';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive inactive-1';
     },
     nextStatus() {
       if (this.locations.length >= 2 && this.noOfContainers > 0) {
         return 'button-primary';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive inactive-1';
     },
     placeOrderStatus() {
       if (this.containers.length === this.noOfContainers) {
         return 'button-primary';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive inactive-2';
     },
     scheduleStatus() {
       if (this.schedule_time) {
