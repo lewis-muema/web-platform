@@ -534,7 +534,7 @@ export default {
       if (this.containers.length === this.noOfContainers) {
         return 'button-primary';
       }
-      return 'button--primary-inactive  inactive-2';
+      return 'button--primary-inactive inactive-2';
     },
     scheduleStatus() {
       if (this.schedule_time) {

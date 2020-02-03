@@ -93,6 +93,14 @@
 .color-orange {
   color: #F57F20;
 }
+.inactive-1, .inactive-1:hover {
+  background: #BDBDBD;
+  border-color: #BDBDBD;
+}
+.inactive-2, .inactive-2:hover {
+  background: #E1E1E1;
+  border-color: #E1E1E1;
+}
 .homeview--input-pickup {
   padding: 0 !important;
 }
