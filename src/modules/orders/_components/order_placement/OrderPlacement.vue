@@ -201,16 +201,6 @@ export default {
       },
     };
   },
-  watch: {
-    get_session: {
-      handler(val, oldVal) {
-        if (this.show_vendor_view || this.loading) {
-          this.handleStoredData();
-        }
-      },
-      deep: true,
-    },
-  },
   computed: {
     ...mapGetters({
       get_map_markers: '$_orders/getMarkers',
@@ -248,6 +238,16 @@ export default {
         && this.getStoreOrderPath.length > 1
         && Object.prototype.hasOwnProperty.call(this.getOuterPriceRequestData, 'economy_price_tiers')
       );
+    },
+  },
+  watch: {
+    get_session: {
+      handler(val, oldVal) {
+        if (this.show_vendor_view || this.loading) {
+          this.handleStoredData();
+        }
+      },
+      deep: true,
     },
   },
   created() {
