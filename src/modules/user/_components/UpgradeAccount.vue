@@ -21,9 +21,9 @@
           label="1"
           class="radio-options"
         >
-          Create a new business account using your existing account information
+          Use the same login details for your personal and business account
           <div class="upgrade-account-text--inner">
-            Use the same email address to login to both your personal and business account.
+            Use your current email address and password to login to both your accounts. You can easily switch between the accounts.
           </div>
         </el-radio>
         <el-radio
@@ -31,9 +31,9 @@
           label="2"
           class="radio-options"
         >
-          Create a new business account using new information
+          Use different login details for your personal and personal account
           <div class="upgrade-account-text--inner">
-            Use a different email address to login to your business account
+            Use a different email address and password to login to your business account
           </div>
         </el-radio>
       </div>
@@ -380,7 +380,7 @@ export default {
  font-weight: normal;
  font-size: 14px;
  line-height: 20px;
- color: #000000 !important;
+ color: rgba(0, 0, 0, 0.71) !important;
  white-space: initial;
  font-weight: 300;
 }
