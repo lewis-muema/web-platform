@@ -1,10 +1,13 @@
 <template>
   <div class="homeview--childinfo">
     <transition name="fade">
-      <div class="homeview--childinfo-card" v-if="get_selected_child !== ''">
+      <div
+        v-if="Object.prototype.hasOwnProperty.call(orderData, 'freight_order_details')"
+        class="homeview--childinfo-card"
+      >
         <div class="homeview--childinfo-card-left">
           <div class="">
-            <p class="homeview--childinfo-order-status">Order Status: {{ getStatus(orderData) }}</p>
+            <p class="homeview--childinfo-order-status">Order Status: {{ statusName(orderData.freight_order_details.freight_status) }}</p>
           </div>
           <div class="">
             <div class="full-width">
@@ -18,7 +21,7 @@
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">Order type</p>
-                  <p class="no-margin homeview--field">Container order, <br>{{ get_child_orders[get_selected_child].container_size_feet }}ft Container, {{ get_child_orders[get_selected_child].container_weight_tonnes }}T</p>
+                  <p class="no-margin homeview--field">Container order, <br>{{ orderData.freight_order_details.containers.container_details[0].container_size_feet }}ft Container, {{ orderData.freight_order_details.containers.container_details[0].container_weight_tonnes }}T</p>
                 </div>
               </div>
               <div class="homeview--childinfo-row">
@@ -28,27 +31,41 @@
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">Container number</p>
-                  <p class="no-margin homeview--field">{{ container_number }}</p>
+                  <p class="no-margin homeview--field">{{ orderData.freight_order_details.containers.container_details[0].container_number }}</p>
                 </div>
               </div>
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
                   <p class="no-margin">Empty Container Destination</p>
-                  <p class="no-margin homeview--field">{{ get_child_orders[get_selected_child].container_destination.name }}</p>
+                  <p class="no-margin homeview--field">{{ orderData.freight_order_details.containers.container_details[0].container_destination.name }}</p>
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">Consignee</p>
-                  <p class="no-margin homeview--field">{{ get_child_orders[get_selected_child].consignee }}</p>
+                  <p class="no-margin homeview--field">{{ orderData.freight_order_details.containers.container_details[0].consignee }}</p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="homeview--childinfo-cancel" v-if="orderData.confirm_status === 0">
-            <button class="button-primary">CANCEL ORDER</button>
+          <div
+            v-if="orderData.confirm_status === 0"
+            class="homeview--childinfo-cancel"
+          >
+            <button
+              class="button-primary"
+              @click="$emit('clicked', true)"
+            >
+              CANCEL ORDER
+            </button>
           </div>
-          <div class="full-width homeview--childinfo-rider-details" v-else>
-            <div class="homeview--childinfo-rider-col">
-              <img src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/tracking/contact.png" class="homeview--childinfo-contact">
+          <div
+            v-else
+            class="full-width homeview--childinfo-rider-details"
+          >
+            <div class="homeview--childinfo-rider-photo">
+              <img
+                :src="tracking_data.rider.rider_photo"
+                class="homeview--childinfo-contact"
+              >
             </div>
             <div class="homeview--childinfo-rider-col">
               <p class="no-margin">{{ orderData.rider.rider_name }}</p>
@@ -56,7 +73,10 @@
             </div>
             <div class="homeview--childinfo-rider-col">
               <p class="no-margin">{{ orderData.rider.number_plate }}</p>
-              <p class="no-margin">{{ orderData.rider.vehicle_name }}</p>
+              <p
+                v-if="orderData.rider.vehicle_name !== 'null'"
+                class="no-margin"
+              >{{ orderData.rider.vehicle_name }}</p>
             </div>
           </div>
         </div>
@@ -67,9 +87,19 @@
               Order Timeline
             </p>
           </div>
-          <div :key="action.actionText" class="homeview--childinfo-order-actions" v-for="action in actions">
-            <i :class="action.actionClass" class="el-icon-success" />
-            <p class="no-margin" :class="action.actionTextClass">{{ action.actionText }}</p>
+          <div
+            :key="action.actionText"
+            v-for="action in actions"
+            class="homeview--childinfo-order-actions"
+          >
+            <i
+              :class="action.actionClass"
+              class="el-icon-success"
+            />
+            <p
+              class="no-margin"
+              :class="action.actionTextClass"
+            >{{ action.actionText }}</p>
           </div>
         </div>
       </div>
@@ -88,98 +118,133 @@ export default {
     return {
       showing: false,
       actionCount: 0,
-      orderData: {},
+      orderData: {
+        to_details: 'None',
+      },
       actions: [
         {
           actionClass: 'homeview--icon-pending',
           actionText: 'Your rider is on the way',
           actionTextClass: 'homeview--field-inactive',
+          freight_status: 'confirmed',
         },
         {
           actionClass: 'homeview--icon-pending',
           actionText: 'Your truck has Gated-In',
           actionTextClass: 'homeview--field-inactive',
+          freight_status: 'gated_in',
         },
         {
           actionClass: 'homeview--icon-pending',
           actionText: 'Your truck has Gate-Out',
           actionTextClass: 'homeview--field-inactive',
+          freight_status: 'gated_out',
         },
         {
           actionClass: 'homeview--icon-pending',
-          actionText: 'Your cargo is on the way to Industrial Area',
+          actionText: 'Your cargo is on the way to the destination',
           actionTextClass: 'homeview--field-inactive',
+          freight_status: 'in_transit',
+        },
+        {
+          actionClass: 'homeview--icon-pending',
+          actionText: 'Your cargo has arrived at the destination',
+          actionTextClass: 'homeview--field-inactive',
+          freight_status: 'arrived',
         },
         {
           actionClass: 'homeview--icon-pending',
           actionText: 'Your cargo has been delivered and offloaded',
           actionTextClass: 'homeview--field-inactive',
+          freight_status: 'offloaded',
         },
         {
           actionClass: 'homeview--icon-pending',
-          actionText: 'The empty container is in-transit to Thika Depot ',
+          actionText: 'The empty container is in-transit to the empty container destination',
           actionTextClass: 'homeview--field-inactive',
+          freight_status: 'ec_returned',
         },
         {
           actionClass: 'homeview--icon-pending',
           actionText: 'The empty container has been delivered',
           actionTextClass: 'homeview--field-inactive',
+          freight_status: 'delivered',
         },
       ],
       container_no: '',
       truck_size: '',
-      container_destination: '',
+      destination: 'the destination',
+      container_destination: 'the empty container destination',
       delivery_status: 1,
+      order_number: '',
+      loading: false,
+      fcm: '',
     };
   },
   computed: {
     ...mapGetters({
-      get_child_orders: '$_orders/getChildOrders',
-      get_selected_child: '$_orders/getSelectedChild',
+      tracking_data: '$_orders/$_tracking/getTrackingData',
+      tracked_order: '$_orders/$_tracking/getTrackedOrder',
+      date_time: '$_orders/$_tracking/getDateTime',
+      isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
+      vendors: '$_orders/getVendors',
+      fcm_notification: 'getFCMData',
     }),
-    container_number() {
-      if (this.get_child_orders[this.get_selected_child].container_number) {
-        return this.get_child_orders[this.get_selected_child].container_number;
+  },
+  watch: {
+    fcm_notification(data) {
+      this.fcm = data;
+      this.poll(this.$route.params.order_no);
+    },
+    date_time() {
+      this.poll(this.$route.params.order_no);
+    },
+    '$route.params.order_no': function trackedOrder(from) {
+      this.order_number = from;
+      this.loading = true;
+      this.$store.commit('$_orders/$_tracking/setTrackedOrder', from);
+      this.poll(from);
+    },
+    tracking_data(data) {
+      if (Object.prototype.hasOwnProperty.call(data, 'confirm_status')) {
+        if (data.confirm_status === 1) {
+          this.reCheckMQTTConnection();
+        }
       }
-      return 'Not specified';
     },
   },
+  beforeDestroy() {
+    this.set_tracking_data({});
+  },
   created() {
+    this.order_number = this.$route.params.order_no;
     const STORE_PARENT = '$_orders';
     const STORE_KEY = '$_tracking';
     if (!this.$store.state[STORE_PARENT][STORE_KEY]) {
       this.$store.registerModule([STORE_PARENT, STORE_KEY], TrackingStore);
     }
-  },
-  mounted() {
-    this.$store
-      .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order })
-      .then((response) => {
-        if (response.data.status) {
-          this.orderData = response.data;
-          let data = {};
-          response.data.freight_order_details.containers.container_details.forEach((row, i) => {
-            data = {
-              index: i,
-              vals: row,
-            };
-            this.setChildOrders(data);
-          });
-        } else {
-          this.doNotification('2', 'Failed to fetch child orders', 'Please retry after a few minutes');
-        }
-      });
-  },
-  destroyed() {
-    this.clear_child_orders();
-    this.clear_selected_child();
+    this.loading = true;
+    this.poll(this.$route.params.order_no);
   },
   methods: {
     ...mapMutations({
-      setChildOrders: '$_orders/setChildOrders',
-      clear_child_orders: '$_orders/clearChildOrders',
-      clear_selected_child: '$_orders/clearSelectedChild',
+      set_tracked_order: '$_orders/$_tracking/setTrackedOrder',
+      set_tracking_data: '$_orders/$_tracking/setTrackingData',
+      set_polyline: '$_orders/setPolyline',
+      set_markers: '$_orders/setMarkers',
+      clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
+    statusName(status) {
+      let statusName = '';
+      status.split('_').forEach((name) => {
+        if (statusName === '') {
+          statusName = name;
+        } else {
+          statusName = `${statusName} ${name}`;
+        }
+      });
+      return statusName[0].toUpperCase() + statusName.slice(1);
+    },
     demo() {
       if (this.actionCount < this.actions.length) {
         if (this.actionCount > 0) {
@@ -219,28 +284,63 @@ export default {
       }
       return false;
     },
-    getStatus(order) {
-      if (!this.loading) {
-        switch (order.delivery_status) {
-          case 3: {
-            return 'Delivered';
-          }
-          case 2: {
-            return 'In Transit';
-          }
-          default: {
-            switch (order.confirm_status) {
-              case 1: {
-                return 'Confirmed';
+    poll(from) {
+      this.$store
+        .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
+        .then((response) => {
+          if (response.data.status) {
+            this.orderData = response.data;
+            this.actions[3].actionText = `Your cargo is on the way to ${this.orderData.to_details.to_name}`;
+            this.actions[4].actionText = `Your cargo has arrived at ${this.orderData.to_details.to_name}`;
+            this.actions[6].actionText = `The empty container is in-transit to ${this.orderData.freight_order_details.containers.container_details[0].container_destination.name}`;
+            this.set_tracked_order(this.$route.params.order_no);
+            this.set_tracking_data(response.data);
+            this.set_polyline(response.data.polyline);
+            this.set_markers(response.data.path);
+            let loopCount = 0;
+            this.actions.forEach((row, i) => {
+              if (loopCount === 0 && response.data.freight_order_details.freight_status !== 'pending') {
+                this.actions[i].actionClass = 'homeview--icon-success';
+                if (this.actions.length > (i + 1)) {
+                  this.actions[i + 1].actionClass = 'homeview--icon-ongoing';
+                }
+                if (response.data.freight_order_details.freight_status === row.freight_status) {
+                  loopCount = 1;
+                }
               }
-              default: {
-                return 'Pending';
-              }
+            });
+            const that = this;
+            if (this.tracking_data.delivery_status === 3) {
+              that.doNotification('1', 'Order delivered', 'Your order has been delivered.');
+              this.set_tracking_data({});
+              this.clearVendorMarkers();
+              this.$router.push('/orders/freight');
+            } else if (this.tracking_data.main_status === 2) {
+              that.doNotification('2', 'Order cancelled', 'Your order has been cancelled.');
+              this.set_tracking_data({});
+              this.clearVendorMarkers();
+              this.$router.push('/orders/freight');
+            } else if (this.tracked_order === from) {
+              setTimeout(() => {
+                that.poll(from);
+              }, 60000);
             }
+            that.loading = false;
+            let data = {};
+            response.data.freight_order_details.containers.container_details.forEach((row, i) => {
+              data = {
+                index: i,
+                vals: row,
+              };
+            });
+          } else {
+            this.doNotification('2', 'Failed to fetch child orders', 'Please retry after a few minutes');
           }
-        }
-      } else {
-        return '';
+        });
+    },
+    reCheckMQTTConnection() {
+      if (!this.isMQTTConnected) {
+        this.$store.dispatch('$_orders/$_tracking/trackMQTT');
       }
     },
     doNotification(level, title, message) {

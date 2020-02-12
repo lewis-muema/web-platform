@@ -137,20 +137,8 @@ const setOuterActivePackageClass = (state, payload) => {
 const clearVendorMarkers = (state) => {
   state.map.vendors = {};
 };
-const setChildOrders = (state, val) => {
-  state.child_orders.splice(val.index, val.index === 0 ? 0 : 1, val.vals);
-};
-const clearChildOrders = (state) => {
-  state.child_orders = [];
-};
-const selectChildOrders = (state, val) => {
-  state.selected_child = '';
-  setTimeout(() => {
-    state.selected_child = val;
-  }, 100);
-};
-const clearSelectedChild = (state) => {
-  state.selected_child = '';
+const setParentOrder = (state, payload) => {
+  state.parent_order = payload;
 };
 export default {
   setPage,
@@ -175,8 +163,5 @@ export default {
   clearOuterActiveVendorDetails,
   unsetStorePath,
   clearVendorMarkers,
-  setChildOrders,
-  clearChildOrders,
-  selectChildOrders,
-  clearSelectedChild,
+  setParentOrder,
 };
