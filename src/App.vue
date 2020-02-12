@@ -182,7 +182,6 @@ export default {
         const notificationData = payload.data;
 
         this.$store.commit('setFCMData', notificationData);
-
         // fire internal notification
         const level = 1;
         const notification = {

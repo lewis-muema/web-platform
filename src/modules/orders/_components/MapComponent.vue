@@ -133,6 +133,19 @@ export default {
     $route(to, from) {
       this.infoWinOpen = false;
     },
+    vendors(data) {
+      if (this.$route.name === 'freight_order_placement') {
+        const keys = Object.keys(data);
+        keys.forEach((row) => {
+          this.setTrackersInfoWindow({
+            rider: {
+              rider_id: row,
+            },
+          });
+          this.infoWinOpen = false;
+        });
+      }
+    },
   },
   mounted() {
     this.$gmapApiPromiseLazy().then(() => {
@@ -150,6 +163,7 @@ export default {
     }),
     ...mapMutations({
       clearVendorMarkers: '$_orders/clearVendorMarkers',
+      set_tracking_data: '$_orders/$_tracking/setTrackingData',
     }),
     path_icon(icon) {
       if (icon === 'pickup') {
@@ -349,7 +363,7 @@ export default {
       }
     },
     activeState() {
-      const namePath = ['tracking', 'tracking_external'];
+      const namePath = ['tracking', 'tracking_external', 'freight_order_tracking'];
       if (namePath.includes(this.$route.name)) {
         this.$store
           .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
@@ -461,7 +475,6 @@ export default {
       const riderId = data.rider.rider_id;
       const riderLocationDetails = this.vendors[riderId];
       const riderMarkerLocation = riderLocationDetails.position;
-
       this.mapCentreLocation.lat = riderMarkerLocation.lat;
       this.mapCentreLocation.lng = riderMarkerLocation.lng;
 
