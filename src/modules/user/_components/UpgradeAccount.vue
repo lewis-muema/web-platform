@@ -444,7 +444,7 @@ export default {
 .upgrade-submit{
   justify-content: space-between;
   width: 60%;
-  margin-left: 0% !important;
+  margin-left: 3% !important;
 }
 .upgrade-verification{
   border: 0px solid #ccc;
