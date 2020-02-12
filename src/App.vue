@@ -186,7 +186,6 @@ export default {
         const orderNo = notificationData.order_no;
 
         this.$store.commit('setFCMData', notificationData);
-
         // fire internal notification
         const level = 1;
         const notification = {

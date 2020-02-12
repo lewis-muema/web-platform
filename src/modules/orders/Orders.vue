@@ -30,12 +30,11 @@
           />
           <img src="https://images.sendyit.com/web_platform/orders/OrderConfirmation.svg" class="upload-photo" />
           <p class="no-margin upload-par">Your file has been uploaded! An order will be generated shortly.</p>
-        </div>        
+        </div>
       </div>
       <map-component />
-      <FbuChildOrders v-if="this.$route.path === '/orders/freight'" />
-      <FbuChildOrderTracking v-else-if="this.$route.name === 'freight_order_tracking'" />
-      <ongoing-component v-else />
+      <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
+      <ongoing-component v-if="this.$route.name !== 'freight_order_tracking' && this.$route.name !== 'freight_order_placement'" />
       <transition
         name="fade"
         mode="out-in"
@@ -55,11 +54,12 @@ import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
 import OngoingComponent from './_components/OngoingComponent.vue';
 import FbuChildOrders from './_components/FbuChildOrders.vue';
-import FbuChildOrderTracking from './_components/tracking/_components/FbuChildOrderTracking.vue';
 
 export default {
   name: 'Orders',
-  components: { MainHeader, MapComponent, OngoingComponent, FbuChildOrders, FbuChildOrderTracking },
+  components: {
+    MainHeader, MapComponent, OngoingComponent, FbuChildOrders,
+  },
   mixins: [RegisterStoreModule],
   data() {
     return {
