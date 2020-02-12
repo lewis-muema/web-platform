@@ -90,7 +90,7 @@
             </div>
             <div class="ongoing--card-status">
               <div class="ongoing--card-text">
-                {{ getStatus(order) }}
+                {{ statusName(order.freight_status) }}
               </div>
             </div>
           </div>
@@ -218,6 +218,17 @@ export default {
         }
       });
     },
+    statusName(status) {
+      let statusName = '';
+      status.split('_').forEach((name) => {
+        if (statusName === '') {
+          statusName = name;
+        } else {
+          statusName = `${statusName} ${name}`;
+        }
+      });
+      return statusName[0].toUpperCase() + statusName.slice(1);
+    },
     date_format(date) {
       return this.moment(date).calendar(null, {
         lastWeek: 'MMM-D hh:mm a',
@@ -251,28 +262,23 @@ export default {
       }
     },
     getStatus(order) {
-      if (!this.loading) {
-        switch (order.delivery_status) {
-          case 3: {
-            return 'Delivered';
-          }
-          case 2: {
-            return 'Ongoing';
-          }
-          default: {
-            switch (order.confirm_status) {
-              case 1: {
-                return 'Ongoing';
-              }
-              default: {
-                return 'Pending';
-              }
-            }
-          }
+      let pending = true;
+      let delivered = true;
+      order.child_orders.forEach((row) => {
+        if (row.freight_status !== 'pending') {
+          pending = false;
         }
-      } else {
-        return '';
+        if (row.freight_status !== 'delivered') {
+          delivered = false;
+        }
+      });
+      if (pending) {
+        return 'Pending';
       }
+      if (delivered) {
+        return 'Delivered';
+      }
+      return 'Ongoing';
     },
     validateChildOrders(children) {
       const childrenObject = [];
