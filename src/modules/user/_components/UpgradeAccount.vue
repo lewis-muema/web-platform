@@ -39,6 +39,20 @@
       </div>
 
       <div
+        v-if="deactivateOption"
+        class=""
+      >
+        <input
+          v-model="deactivate_acc"
+          type="checkbox"
+          class="hiddeny"
+        >
+        <span class="upgrade-account-text--inner deactivate-details">
+          Deactivate my personal account
+        </span>
+      </div>
+
+      <div
         class="upgrade-account-holder"
         style="display:flex;justify-content: space-between;"
       >
@@ -182,6 +196,7 @@ export default {
           label: 'No',
         },
       ],
+      deactivate_acc: false,
     };
   },
   computed: {
@@ -192,6 +207,23 @@ export default {
         return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
       }
       return true;
+    },
+    deactivateOption() {
+      let isValid = false;
+
+      if (this.radio !== '' && this.running_balance >= 0) {
+        isValid = true;
+      }
+      return isValid;
+    },
+    running_balance() {
+      const value = this.$store.getters.getRunningBalance;
+      if (value !== null && value !== '' && typeof value !== 'undefined') {
+        let val = value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        val = val.split('.');
+        return val[0];
+      }
+      return value;
     },
   },
   methods: {
@@ -227,6 +259,7 @@ export default {
         values.account_switch = true;
         values.vat_compliant = this.tax_compliance;
         values.tax_authority_pin = this.kra_pin;
+        values.deactivate_peer = this.deactivate_acc;
 
         if (this.radio === '2') {
           values.password = this.cop_password;
@@ -247,7 +280,6 @@ export default {
             if (response.length > 0) {
               response = response[0];
             }
-
             if (response.status) {
               const sessionData = response.data;
               const jsonSession = JSON.stringify(sessionData);
@@ -449,5 +481,10 @@ export default {
 .upgrade-verification{
   border: 0px solid #ccc;
   margin: 5px;
+}
+.deactivate-details{
+ color: #007ECB !important;
+ font-weight: 400;
+ padding-left: 1%;
 }
 </style>
