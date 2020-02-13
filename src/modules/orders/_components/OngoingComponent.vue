@@ -75,8 +75,25 @@ export default {
     },
     filter_orders() {
       const orders = [];
+      const childOrders = [];
+      const parentOrders = [];
       this.get_orders.forEach((row) => {
+        if (Object.prototype.hasOwnProperty.call(row, 'child_orders')) {
+          row.child_orders.forEach((child) => {
+            if (!childOrders.includes(child.order_no)) {
+              childOrders.push(child.order_no);
+            }
+          });
+        }
         if (!Object.prototype.hasOwnProperty.call(row, 'freight_order')) {
+          parentOrders.push(row);
+        }
+      });
+      if (childOrders.length === 0) {
+        return parentOrders;
+      }
+      parentOrders.forEach((row) => {
+        if (!childOrders.includes(row.order_no)) {
           orders.push(row);
         }
       });

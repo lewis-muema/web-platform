@@ -17,7 +17,7 @@
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
                   <p class="no-margin">Pick Up</p>
-                  <p class="no-margin homeview--field">{{ orderData.from_details.from_name }}</p>
+                  <p class="no-margin homeview--field">{{ orderData.path[0].name }}</p>
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">Order type</p>
@@ -27,7 +27,7 @@
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
                   <p class="no-margin">Drop-off</p>
-                  <p class="no-margin homeview--field">{{ orderData.to_details.to_name }}</p>
+                  <p class="no-margin homeview--field">{{ orderData.path[1].name }}</p>
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">Container number</p>
@@ -37,7 +37,7 @@
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
                   <p class="no-margin">Empty Container Destination</p>
-                  <p class="no-margin homeview--field">{{ orderData.freight_order_details.containers.container_details[0].container_destination.name }}</p>
+                  <p class="no-margin homeview--field">{{ orderData.path[2].name }}</p>
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">Consignee</p>
