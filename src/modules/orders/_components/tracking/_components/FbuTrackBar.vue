@@ -136,7 +136,7 @@ export default {
         },
         {
           actionClass: 'homeview--icon-pending',
-          actionText: 'Your truck has Gate-Out',
+          actionText: 'Your truck has Gated-Out',
           actionTextClass: 'homeview--field-inactive',
           freight_status: 'gated_out',
         },
@@ -290,9 +290,9 @@ export default {
         .then((response) => {
           if (response.data.status) {
             this.orderData = response.data;
-            this.actions[3].actionText = `Your cargo is on the way to ${this.orderData.to_details.to_name}`;
-            this.actions[4].actionText = `Your cargo has arrived at ${this.orderData.to_details.to_name}`;
-            this.actions[6].actionText = `The empty container is in-transit to ${this.orderData.freight_order_details.containers.container_details[0].container_destination.name}`;
+            this.actions[3].actionText = `Your cargo is on the way to ${this.orderData.path[1].name}`;
+            this.actions[4].actionText = `Your cargo has arrived at ${this.orderData.path[1].name}`;
+            this.actions[6].actionText = `The empty container is in-transit to ${this.orderData.path[2].name}`;
             this.set_tracked_order(this.$route.params.order_no);
             this.set_tracking_data(response.data);
             this.set_polyline(response.data.polyline);
