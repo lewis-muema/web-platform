@@ -317,11 +317,12 @@ export function createRouter() {
             meta: { innerTrack: 'Freight Order Placement Page' },
           },
           {
-            path: '/orders/freight/tracking/:order',
+            path: '/orders/freight/tracking/:order_no',
             component: () => import(
-              '../modules/orders/_components/tracking/_components/FbuTrackBar.vue',
+              '../modules/orders/_components/tracking/FBUTracking.vue',
             ),
             name: 'freight_order_tracking',
+            beforeEnter: guard,
             meta: { innerTrack: 'Freight Order Tracking Page' },
           },
           {

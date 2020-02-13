@@ -1,7 +1,7 @@
 <template lang="html">
   <div
     id="log_in"
-    class="sign-up-verification"
+    class="upgrade-verification"
   >
     <div
       v-if="!upgrade_details"
@@ -31,11 +31,25 @@
           label="2"
           class="radio-options"
         >
-          Use different login details for your personal and personal account
+          Use different login details for your personal and business account
           <div class="upgrade-account-text--inner">
             Use a different email address and password to login to your business account
           </div>
         </el-radio>
+      </div>
+
+      <div
+        v-if="deactivateOption"
+        class=""
+      >
+        <input
+          v-model="deactivate_acc"
+          type="checkbox"
+          class="hiddeny"
+        >
+        <span class="upgrade-account-text--inner deactivate-details">
+          Deactivate my personal account
+        </span>
       </div>
 
       <div
@@ -141,24 +155,23 @@
             Please enter a valid KRA PIN
           </span>
         </div>
-      </div>
-
-      <div
-        class="upgrade-account-holder upgrade-submit"
-      >
-        <input
-          class="button-primary btn-upgrade-acc-submit "
-          type="submit"
-          value="Submit"
-          @click="submit"
+        <div
+          class="upgrade-account-holder upgrade-submit"
         >
+          <input
+            class="button-primary btn-upgrade-acc-submit "
+            type="submit"
+            value="Submit"
+            @click="submit"
+          >
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
 
 
@@ -183,6 +196,7 @@ export default {
           label: 'No',
         },
       ],
+      deactivate_acc: false,
     };
   },
   computed: {
@@ -193,6 +207,23 @@ export default {
         return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
       }
       return true;
+    },
+    deactivateOption() {
+      let isValid = false;
+
+      if (this.radio !== '' && this.running_balance >= 0) {
+        isValid = true;
+      }
+      return isValid;
+    },
+    running_balance() {
+      const value = this.$store.getters.getRunningBalance;
+      if (value !== null && value !== '' && typeof value !== 'undefined') {
+        let val = value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        val = val.split('.');
+        return val[0];
+      }
+      return value;
     },
   },
   methods: {
@@ -228,6 +259,7 @@ export default {
         values.account_switch = true;
         values.vat_compliant = this.tax_compliance;
         values.tax_authority_pin = this.kra_pin;
+        values.deactivate_peer = this.deactivate_acc;
 
         if (this.radio === '2') {
           values.password = this.cop_password;
@@ -248,7 +280,6 @@ export default {
             if (response.length > 0) {
               response = response[0];
             }
-
             if (response.status) {
               const sessionData = response.data;
               const jsonSession = JSON.stringify(sessionData);
@@ -285,14 +316,23 @@ export default {
               this.doNotification(2, 'Upgrade Account Error ', response.message);
             }
           },
-          (error) => {
-            this.doNotification(2, 'Upgrade Account Error', error.message);
-          },
-        );
+        )
+          .catch((error) => {
+            const msg = error.response.data.message;
+            this.doNotification(2, 'Upgrade Account Error', msg);
+          });
       }
     },
     go_back() {
       this.upgrade_details = false;
+      this.clearStoredData();
+    },
+    clearStoredData() {
+      this.tax_compliance = '';
+      this.cop_name = '';
+      this.cop_email = '';
+      this.cop_password = '';
+      this.kra_pin = '';
     },
     doNotification(level, title, message) {
       const notification = {
@@ -363,7 +403,7 @@ export default {
 }
 .btn-upgrade-acc-submit {
   border-width: 0px !important;
-  width: 62%;
+  width: 100% !important;
 }
 .radio-options{
   width: 100%;
@@ -434,8 +474,17 @@ export default {
   margin-left: 6%;
 }
 .upgrade-submit{
-  display:flex;
   justify-content: space-between;
-  padding-left: 3%;
+  width: 60%;
+  margin-left: 3% !important;
+}
+.upgrade-verification{
+  border: 0px solid #ccc;
+  margin: 5px;
+}
+.deactivate-details{
+ color: #007ECB !important;
+ font-weight: 400;
+ padding-left: 1%;
 }
 </style>
