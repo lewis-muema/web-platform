@@ -66,12 +66,7 @@ export default {
       channel.addEventListener('message', (event) => {
         const orderNo = event.data.focusOrder;
         if (orderNo !== undefined) {
-          this.$router.push({
-            name: 'tracking',
-            params: {
-              order_no: orderNo,
-            },
-          });
+          this.$router.push(event.data.url);
         }
       });
 

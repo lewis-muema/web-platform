@@ -7,7 +7,7 @@
       class="ongoing--count"
       @click="toggle_ongoing()"
     >
-      <span v-if="showing === 1">{{ num_ongoing }} ongoing FBU orders</span>
+      <span v-if="!parent_order">{{ num_ongoing }} ongoing FBU orders</span>
       <span v-else>{{ child_orders.length }} containers</span>
       <font-awesome-icon
         icon="chevron-up"
