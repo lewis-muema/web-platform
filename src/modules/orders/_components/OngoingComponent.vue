@@ -282,4 +282,7 @@ border-radius: 0px 0px 3px 3px;
 {
   transform: rotate(180deg);
 }
+.ongoing--column{
+  width: 105%;
+}
 </style>
