@@ -35,11 +35,11 @@
               <div class="ongoing--card-parent-order-details">
                 <div class="ongoing--parent-locations">
                   <span class="ongoing--parent-locations-header">Pick-Up</span><br>
-                  <span class="ongoing--parent-locations-body">{{ order.from_name }}</span>
+                  <span class="ongoing--parent-locations-body">{{ order.path[0].name }}</span>
                 </div>
                 <div class="ongoing--parent-locations">
                   <span class="ongoing--parent-locations-header">Destination</span><br>
-                  <span class="ongoing--parent-locations-body">{{ order.to_name }}</span>
+                  <span class="ongoing--parent-locations-body">{{ order.path[1].name }}</span>
                 </div>
               </div>
             </div>
@@ -230,6 +230,11 @@ export default {
       return statusName[0].toUpperCase() + statusName.slice(1);
     },
     date_format(date) {
+      const offset = new Date().getTimezoneOffset() * -1;
+      date = this.moment(date, 'yyyy-mm-dd hh:mm:ss')
+        .add(0, 'seconds')
+        .add(offset, 'minutes')
+        .format('YYYY-MM-DD hh:mm:ss');
       return this.moment(date).calendar(null, {
         lastWeek: 'MMM-D hh:mm a',
         sameDay: '[Today] hh:mm a',
