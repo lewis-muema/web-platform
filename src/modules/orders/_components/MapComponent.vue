@@ -110,10 +110,12 @@ export default {
   },
   watch: {
     markers(markers) {
-      if (this.mapLoaded && markers.length > 0) {
-        const bounds = new google.maps.LatLngBounds();
-        for (const m of this.markers) {
-          bounds.extend(m.position);
+      if (markers !== undefined) {
+        if (this.mapLoaded && markers.length > 0) {
+          const bounds = new google.maps.LatLngBounds();
+          for (const m of this.markers) {
+            bounds.extend(m.position);
+          }
         }
         this.$refs.map.$mapObject.fitBounds(bounds);
         this.$refs.map.$mapObject.setZoom(this.$refs.map.$mapObject.zoom - 1);
@@ -230,7 +232,9 @@ export default {
       const size = Object.keys(this.markers).length;
       if (this.iconLabel !== '' && size > 0 && this.polyline.path !== '') {
         const main = this.markers.find(location => location.icon === this.iconLabel);
-        this.toggleInfoWindow(main, data);
+        if (data !== undefined) {
+          this.toggleInfoWindow(main, data);
+        }
       } else {
         this.infoWinOpen = false;
       }
@@ -388,20 +392,28 @@ export default {
     },
 
     toggleInfoWindow(marker, data) {
-      if (data.confirm_status > 0 && this.trackers.includes(data.rider.vendor_id)) {
-        const size = Object.keys(this.vendors).length;
-        if (size > 0) {
-          this.handleTrackersNotification(data);
-          this.setTrackersInfoWindow(data);
+      if (data !== undefined) {
+        if (Object.prototype.hasOwnProperty.call(data, 'confirm_status')) {
+          if (data.confirm_status > 0 && this.trackers.includes(data.rider.vendor_id)) {
+            const size = Object.keys(this.vendors).length;
+            if (size > 0) {
+              this.handleTrackersNotification(data);
+              this.setTrackersInfoWindow(data);
+            } else {
+              this.infoWindowPos = marker.position;
+              this.infoContent = this.getInfoWindowContent(marker);
+              this.infoWinOpen = true;
+            }
+          } else {
+            this.infoWindowPos = marker.position;
+            this.infoContent = this.getInfoWindowContent(marker);
+            this.infoWinOpen = true;
+          }
         } else {
           this.infoWindowPos = marker.position;
           this.infoContent = this.getInfoWindowContent(marker);
           this.infoWinOpen = true;
         }
-      } else {
-        this.infoWindowPos = marker.position;
-        this.infoContent = this.getInfoWindowContent(marker);
-        this.infoWinOpen = true;
       }
     },
     handleTrackersNotification(data) {
@@ -414,61 +426,65 @@ export default {
     handleSmallVendorsTrackers(data) {
       const riderId = data.rider.rider_id;
       const riderLocationDetails = this.vendors[riderId];
-      const onlineTime = moment(riderLocationDetails.time);
-      const currentTime = moment();
-      const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
+      if (Object.prototype.hasOwnProperty.call(riderLocationDetails, 'time')) {
+        const onlineTime = moment(riderLocationDetails.time);
+        const currentTime = moment();
+        const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
 
-      if (riderOnlineTimeRange <= 30) {
-        this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
-        this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = '';
-        this.extraNotificationInfo = '';
-        this.activeStateIcon = this.vendor_icon_id;
-        this.vendorStatus = 'active';
-      } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
-        this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
-        this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${riderOnlineTimeRange} minutes ago`;
-        this.extraNotificationInfo = '';
-        this.activeStateIcon = this.vendor_icon_id;
-        this.vendorStatus = 'active';
-      } else {
-        this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
-        this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = 'Tracker \u00A0:\u00A0 No Signal';
-        this.extraNotificationInfo = '(This could be due to network issues)';
-        this.activeStateIcon = `${this.vendor_icon_id}_offline`;
-        this.vendorStatus = 'offline';
+        if (riderOnlineTimeRange <= 30) {
+          this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
+          this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
+          this.riderLastSeen = '';
+          this.extraNotificationInfo = '';
+          this.activeStateIcon = this.vendor_icon_id;
+          this.vendorStatus = 'active';
+        } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
+          this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
+          this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
+          this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${riderOnlineTimeRange} minutes ago`;
+          this.extraNotificationInfo = '';
+          this.activeStateIcon = this.vendor_icon_id;
+          this.vendorStatus = 'active';
+        } else {
+          this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
+          this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
+          this.riderLastSeen = 'Tracker \u00A0:\u00A0 No Signal';
+          this.extraNotificationInfo = '(This could be due to network issues)';
+          this.activeStateIcon = `${this.vendor_icon_id}_offline`;
+          this.vendorStatus = 'offline';
+        }
       }
     },
     handleLargeVendorsTrackers(data) {
       const riderId = data.rider.rider_id;
       const riderLocationDetails = this.vendors[riderId];
-      const onlineTime = moment(riderLocationDetails.time);
-      const currentTime = moment();
-      const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
+      if (Object.prototype.hasOwnProperty.call(riderLocationDetails, 'time')) {
+        const onlineTime = moment(riderLocationDetails.time);
+        const currentTime = moment();
+        const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
 
-      if (riderOnlineTimeRange <= 30) {
-        this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
-        this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = '';
-        this.extraNotificationInfo = '';
-        this.activeStateIcon = this.vendor_icon_id;
-        this.vendorStatus = 'active';
-      } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
-        this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
-        this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${riderOnlineTimeRange} minutes ago`;
-        this.extraNotificationInfo = '';
-        this.activeStateIcon = this.vendor_icon_id;
-        this.vendorStatus = 'active';
-      } else {
-        this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
-        this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = 'Tracker \u00A0\u00A0:\u00A0\u00A0 No Signal';
-        this.extraNotificationInfo = '(This could be due to network issues)';
-        this.activeStateIcon = `${this.vendor_icon_id}_offline`;
-        this.vendorStatus = 'offline';
+        if (riderOnlineTimeRange <= 30) {
+          this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
+          this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
+          this.riderLastSeen = '';
+          this.extraNotificationInfo = '';
+          this.activeStateIcon = this.vendor_icon_id;
+          this.vendorStatus = 'active';
+        } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
+          this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
+          this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
+          this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${riderOnlineTimeRange} minutes ago`;
+          this.extraNotificationInfo = '';
+          this.activeStateIcon = this.vendor_icon_id;
+          this.vendorStatus = 'active';
+        } else {
+          this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
+          this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
+          this.riderLastSeen = 'Tracker \u00A0\u00A0:\u00A0\u00A0 No Signal';
+          this.extraNotificationInfo = '(This could be due to network issues)';
+          this.activeStateIcon = `${this.vendor_icon_id}_offline`;
+          this.vendorStatus = 'offline';
+        }
       }
     },
     setTrackersInfoWindow(data) {
