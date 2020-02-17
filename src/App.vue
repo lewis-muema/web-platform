@@ -1,5 +1,8 @@
 <template>
-  <div id="app" class="box app app-overflow">
+  <div
+    id="app"
+    class="box app app-overflow"
+  >
     <!-- Global component responsible for flashing notifications -->
     <sendy-flash details />
 
@@ -132,25 +135,30 @@ export default {
     },
     updateFirebaseToken() {
       const session = this.getSession;
-      const fcmPayload = {
-        client_type: 'corporate',
-      };
-      if (session.default === 'biz') {
-        fcmPayload.cop_user_id = session[session.default].user_id;
-      } else {
-        fcmPayload.user_id = session[session.default].user_id;
+      if (session !== undefined) {
+        if (Object.prototype.hasOwnProperty.call(session[session.default], 'user_id')) {
+          const fcmPayload = {
+            client_type: 'corporate',
+          };
+
+          if (session.default === 'biz') {
+            fcmPayload.cop_user_id = session[session.default].user_id;
+          } else {
+            fcmPayload.user_id = session[session.default].user_id;
+          }
+
+          fcmPayload.token = this.$store.getters.getFCMToken;
+
+          const payload = {
+            values: fcmPayload,
+            app: 'NODE_PRIVATE_API',
+            vm: this,
+            endpoint: 'firebase_token',
+          };
+
+          this.$store.dispatch('requestAxiosPost', payload);
+        }
       }
-
-      fcmPayload.token = this.$store.getters.getFCMToken;
-
-      const payload = {
-        values: fcmPayload,
-        app: 'NODE_PRIVATE_API',
-        vm: this,
-        endpoint: 'firebase_token',
-      };
-
-      this.$store.dispatch('requestAxiosPost', payload);
     },
     initializeFirebase() {
       this.$messaging
