@@ -694,7 +694,7 @@
                 >
                   Cancel Order
                 </button>
-               
+
               </div>
             </div>
 
@@ -1090,13 +1090,15 @@ export default {
     },
     confirmUser() {
       const session = this.$store.getters.getSession;
-      let sessionUserEmail = session[session.default].user_email;
-      let orderUserEmail = this.tracking_data.user.email;
+      if (Object.keys(session).length > 0) {
+        let sessionUserEmail = session[session.default].user_email;
+        let orderUserEmail = this.tracking_data.user.email;
 
-      if (sessionUserEmail === orderUserEmail) {
-        this.user_state = true;
-      } else {
-        this.user_state = false;
+        if (sessionUserEmail === orderUserEmail) {
+          this.user_state = true;
+        } else {
+          this.user_state = false;
+        }
       }
     },
     minimiseInfoDetails() {
@@ -1104,16 +1106,18 @@ export default {
     },
     checkRunningBalance() {
       const session = this.$store.getters.getSession;
-      const payload = {
-        cop_id: session[session.default].cop_id,
-        user_phone: session[session.default].user_phone,
-      };
-      this.$store.dispatch('$_orders/$_tracking/runningBalance', payload).then(response => {
-        if (response.status) {
-          this.myRb = response.running_balance;
-          this.accType = response.payment_plan;
-        }
-      });
+      if (Object.keys(session).length > 0) {
+        const payload = {
+          cop_id: session[session.default].cop_id,
+          user_phone: session[session.default].user_phone,
+        };
+        this.$store.dispatch('$_orders/$_tracking/runningBalance', payload).then(response => {
+          if (response.status) {
+            this.myRb = response.running_balance;
+            this.accType = response.payment_plan;
+          }
+        });
+      }
     },
     takeMeToPayment() {
       if (this.paymentOption === 1) {
@@ -1285,82 +1289,87 @@ export default {
       }
     },
     setRiderLocationToStore() {
-      const payload = {};
-      payload.rider_id = [this.tracking_data.rider.rider_id];
-      this.$store.dispatch('$_orders/$_tracking/requestRiderLastPosition', payload).then(
-        response => {
-          if (response.status === 'true') {
-            let riderOnlineData = response.partnerArray[0];
-            const size = Object.keys(this.vendors).length;
-            if (size > 0) {
-              this.$store.dispatch('$_orders/$_tracking/trackMQTT');
+      if (Object.prototype.hasOwnProperty.call(this.tracking_data, 'rider')) {
+        const payload = {};
+
+        payload.rider_id = [this.tracking_data.rider.rider_id];
+        this.$store.dispatch('$_orders/$_tracking/requestRiderLastPosition', payload).then(
+          response => {
+            if (response.status === 'true') {
+              let riderOnlineData = response.partnerArray[0];
+              const size = Object.keys(this.vendors).length;
+              if (size > 0) {
+                this.$store.dispatch('$_orders/$_tracking/trackMQTT');
+              } else {
+                riderOnlineData.overide_visible = true;
+                this.$store.commit('$_orders/setVendorMarkers', riderOnlineData);
+              }
             } else {
-              riderOnlineData.overide_visible = true;
-              this.$store.commit('$_orders/setVendorMarkers', riderOnlineData);
+              this.$store.dispatch('$_orders/$_tracking/trackMQTT');
             }
-          } else {
-            this.$store.dispatch('$_orders/$_tracking/trackMQTT');
+          },
+          error => {
+            // ...
           }
-        },
-        error => {
-          // ...
-        }
-      );
+        );
+      }
     },
     orderETA() {
-      if (this.tracking_data.confirm_status === 0) {
-        const confirmEta = this.tracking_data.eta_data.etc;
-        const etaSplit = confirmEta.split('to');
-        const start = etaSplit[0].replace(/\s+/g, '');
-        const end = etaSplit[1].replace(/\s+/g, '');
+       if (Object.keys(this.tracking_data).length > 0) {
+         if (this.tracking_data.confirm_status === 0) {
+           const confirmEta = this.tracking_data.eta_data.etc;
+           const etaSplit = confirmEta.split('to');
+           const start = etaSplit[0].replace(/\s+/g, '');
+           const end = etaSplit[1].replace(/\s+/g, '');
 
-        const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-        const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+           const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+           const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-        this.confirmEta = `${startEta} - ${endEta}`;
+           this.confirmEta = `${startEta} - ${endEta}`;
 
-        this.pickUpEta = '';
-        this.deliveryEta = '';
-      } else if (
-        this.tracking_data.confirm_status === 1 &&
-        this.tracking_data.delivery_status === 0
-      ) {
-        const pickUpEta = this.tracking_data.eta_data.etp;
-        const confirmedEta = this.tracking_data.eta_data.confirmed;
-        const etaSplit = pickUpEta.split('to');
-        const start = etaSplit[0].replace(/\s+/g, '');
-        const end = etaSplit[1].replace(/\s+/g, '');
+           this.pickUpEta = '';
+           this.deliveryEta = '';
+         } else if (
+           this.tracking_data.confirm_status === 1 &&
+           this.tracking_data.delivery_status === 0
+         ) {
+           const pickUpEta = this.tracking_data.eta_data.etp;
+           const confirmedEta = this.tracking_data.eta_data.confirmed;
+           const etaSplit = pickUpEta.split('to');
+           const start = etaSplit[0].replace(/\s+/g, '');
+           const end = etaSplit[1].replace(/\s+/g, '');
 
-        const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-        const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+           const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+           const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-        this.pickUpEta = `${startEta}-${endEta}`;
-        this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
-      } else if (this.tracking_data.delivery_status === 2) {
-        const deliveryEta = this.tracking_data.eta_data.etd;
-        const confirmedEta = this.tracking_data.eta_data.confirmed;
-        const pickedEta = this.tracking_data.eta_data.picked;
-        const etaSplit = deliveryEta.split('to');
-        const start = etaSplit[0].replace(/\s+/g, '');
-        const end = etaSplit[1].replace(/\s+/g, '');
+           this.pickUpEta = `${startEta}-${endEta}`;
+           this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
+         } else if (this.tracking_data.delivery_status === 2) {
+           const deliveryEta = this.tracking_data.eta_data.etd;
+           const confirmedEta = this.tracking_data.eta_data.confirmed;
+           const pickedEta = this.tracking_data.eta_data.picked;
+           const etaSplit = deliveryEta.split('to');
+           const start = etaSplit[0].replace(/\s+/g, '');
+           const end = etaSplit[1].replace(/\s+/g, '');
 
-        const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-        const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+           const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+           const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-        this.deliveryEta = `${startEta}-${endEta}`;
-        this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
-        this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
-      } else if (this.tracking_data.delivery_status === 3) {
-        const deliveryEta = this.tracking_data.eta_data.delivered;
-        const confirmedEta = this.tracking_data.eta_data.confirmed;
-        const pickedEta = this.tracking_data.eta_data.picked;
+           this.deliveryEta = `${startEta}-${endEta}`;
+           this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
+           this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
+         } else if (this.tracking_data.delivery_status === 3) {
+           const deliveryEta = this.tracking_data.eta_data.delivered;
+           const confirmedEta = this.tracking_data.eta_data.confirmed;
+           const pickedEta = this.tracking_data.eta_data.picked;
 
-        this.deliveryEta = moment(deliveryEta, moment.ISO_8601).format('h:mm a');
-        this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
-        this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
-      } else {
-        // ...
-      }
+           this.deliveryEta = moment(deliveryEta, moment.ISO_8601).format('h:mm a');
+           this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
+           this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
+         } else {
+           // ...
+         }
+       }
     },
     toDeliveryTypeClass(val, index) {
       let nextPoint = this.tracking_data.path[index - 1].visited;
