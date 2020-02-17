@@ -991,7 +991,7 @@ export default {
       return `https://images.sendyit.com/web_platform/vendor_type/side/${id}.svg`;
     },
     checkVendorName() {
-      if (Object.keys(this.tracking_data).length > 0) {
+      if (Object.keys(this.tracking_data).length > 0 && Object.prototype.hasOwnProperty.call(this.tracking_data.rider, 'vendor_name')) {
         if (this.tracking_data.rider.vendor_name === 'Bike') {
           this.partnerName = 'rider';
           this.packageName = 'package';
