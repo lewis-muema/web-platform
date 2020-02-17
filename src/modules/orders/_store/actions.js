@@ -79,10 +79,33 @@ const getOrderData = function getOrderData({ dispatch }, data) {
   });
 };
 
+const requestCountryCode = function requestCountryCode({ dispatch }, data) {
+  const payload = {
+    app: 'PRIVATE_API',
+    endpoint: 'geocountry',
+    values: data,
+  };
+
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+        // handle failure to dispatch to global store
+      },
+    );
+  });
+};
+
 export default {
   fetchOngoingOrders,
   connectMqtt,
   intializeMqtt,
   getOrderData,
   riderDetails,
+  requestCountryCode,
 };

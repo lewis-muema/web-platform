@@ -161,7 +161,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      requestCountryCode: '$_orders/$_home/requestCountryCode',
+      requestCountryCode: '$_orders/requestCountryCode',
     }),
     ...mapMutations({
       clearVendorMarkers: '$_orders/clearVendorMarkers',
@@ -530,30 +530,21 @@ export default {
 
           markedCoords = `${lat},${long}`;
           // markedCoords = '0.3130284,32.4590386'; (Uganda coordinates for test)
+
           this.getCode(markedCoords);
         });
       }
     },
     getCode(position) {
-      const payload = {};
-      payload.coordinates = position;
-      const fullPayload = {
-        values: payload,
-        app: 'PRIVATE_API',
-        endpoint: 'geocountry',
-      };
-      this.requestCountryCode(fullPayload).then(
-        (response) => {
-          const code = response.country_code;
+      this.requestCountryCode({ coordinates: position }).then((response) => {
+        if (response.data.status) {
+          const code = response.data.country_code;
           this.$store.commit('setCountryCode', code);
           const countryCodeData = currencyConversion.getCountryByCode(code);
           this.$store.commit('setDefaultCurrency', countryCodeData.currencyCode);
           this.setMapCentreLocation(code);
-        },
-        (error) => {
-          // ...
-        },
-      );
+        }
+      });
     },
     setMapCentreLocation(code) {
       if (code === 'UG') {
