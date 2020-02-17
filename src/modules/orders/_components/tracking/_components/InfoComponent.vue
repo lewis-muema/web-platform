@@ -991,22 +991,24 @@ export default {
       return `https://images.sendyit.com/web_platform/vendor_type/side/${id}.svg`;
     },
     checkVendorName() {
-      if (this.tracking_data.rider.vendor_name === 'Bike') {
-        this.partnerName = 'rider';
-        this.packageName = 'package';
-        if (this.tracking_data.price_type === 3) {
+      if (Object.keys(this.tracking_data).length > 0) {
+        if (this.tracking_data.rider.vendor_name === 'Bike') {
+          this.partnerName = 'rider';
+          this.packageName = 'package';
+          if (this.tracking_data.price_type === 3) {
+            this.vendorName = 'Standard';
+          } else {
+            this.vendorName = 'Express';
+          }
+        } else if (this.tracking_data.rider.vendor_name === 'Economy Bike') {
           this.vendorName = 'Standard';
+          this.partnerName = 'rider';
+          this.packageName = 'package';
         } else {
-          this.vendorName = 'Express';
+          this.vendorName = this.tracking_data.rider.vendor_name;
+          this.partnerName = 'driver';
+          this.packageName = 'load';
         }
-      } else if (this.tracking_data.rider.vendor_name === 'Economy Bike') {
-        this.vendorName = 'Standard';
-        this.partnerName = 'rider';
-        this.packageName = 'package';
-      } else {
-        this.vendorName = this.tracking_data.rider.vendor_name;
-        this.partnerName = 'driver';
-        this.packageName = 'load';
       }
     },
     checkScheduler() {
