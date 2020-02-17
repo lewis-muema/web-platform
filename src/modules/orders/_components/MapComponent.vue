@@ -116,11 +116,11 @@ export default {
           for (const m of this.markers) {
             bounds.extend(m.position);
           }
+          this.$refs.map.$mapObject.fitBounds(bounds);
+          this.$refs.map.$mapObject.setZoom(this.$refs.map.$mapObject.zoom - 1);
+          this.activeState();
+          this.activeMarker();
         }
-        this.$refs.map.$mapObject.fitBounds(bounds);
-        this.$refs.map.$mapObject.setZoom(this.$refs.map.$mapObject.zoom - 1);
-        this.activeState();
-        this.activeMarker();
       }
     },
     '$route.params.order_no': function trackedOrder(order) {
