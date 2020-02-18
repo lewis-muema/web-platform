@@ -227,6 +227,9 @@ export default {
           statusName = `${statusName} ${name}`;
         }
       });
+      if (statusName.includes('return')) {
+        statusName = 'container return';
+      }
       return statusName[0].toUpperCase() + statusName.slice(1);
     },
     date_format(date) {
