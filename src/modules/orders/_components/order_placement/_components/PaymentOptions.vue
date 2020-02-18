@@ -190,7 +190,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
-import timezone from '../../../../../mixins/timezone';
+import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 
 library.add(faChevronDown);
 
@@ -200,7 +200,7 @@ const TRUCK_VENDORS = [20, 25];
 export default {
   name: 'OrderOptions',
   components: {},
-  mixins: [Mcrypt, PaymentMxn, timezone],
+  mixins: [Mcrypt, PaymentMxn, TimezoneMxn],
   data() {
     return {
       schedule_time: this.moment(),

@@ -141,7 +141,7 @@ import * as _ from 'lodash';
 import exportFromJSON from 'export-from-json';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import timezone from '../../../mixins/timezone';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -149,7 +149,7 @@ const moment = require('moment');
 
 export default {
   name: 'Statement',
-  mixins: [timezone],
+  mixins: [TimezoneMxn],
   data() {
     return {
       empty_statement_state: 'Fetching Statement',

@@ -232,7 +232,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import numeral from 'numeral';
-import timezone from '../../../mixins/timezone';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
 
 const moment = require('moment');
 
@@ -243,7 +243,7 @@ export default {
       return moment(date).format('MMM Do YYYY, h:mm a');
     },
   },
-  mixins: [timezone],
+  mixins: [TimezoneMxn],
   data() {
     return {
       order_id: '',

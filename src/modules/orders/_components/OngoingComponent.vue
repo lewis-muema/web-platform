@@ -53,13 +53,13 @@
 import { mapGetters, mapMutations } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import timezone from '../../../mixins/timezone';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
 
 library.add(faChevronUp);
 
 export default {
   name: 'OngoingComponent',
-  mixins: [timezone],
+  mixins: [TimezoneMxn],
   data() {
     return {
       loading: true,

@@ -101,13 +101,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import timezone from '../../../mixins/timezone';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
 
 const moment = require('moment');
 
 export default {
   name: 'Payments',
-  mixins: [timezone],
+  mixins: [TimezoneMxn],
   data() {
     return {
       empty_payments_state: 'Fetching Payments',

@@ -604,13 +604,13 @@
 import numeral from 'numeral';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PaymentOptions from './PaymentOptions.vue';
-import timezone from '../../../../../mixins/timezone';
+import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 
 export default {
   components: {
     PaymentOptions,
   },
-  mixins: [timezone],
+  mixins: [TimezoneMxn],
   data() {
     return {
       first_time: false,

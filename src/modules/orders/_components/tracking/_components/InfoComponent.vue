@@ -739,13 +739,13 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import timezone from '../../../../../mixins/timezone';
+import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 
 const moment = require('moment');
 
 export default {
   name: 'InfoWindow',
-  mixins: [timezone],
+  mixins: [TimezoneMxn],
   filters: {
     moment(date) {
       return moment(date).format('MMM Do YYYY, h:mm a');
