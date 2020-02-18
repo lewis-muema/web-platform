@@ -937,14 +937,14 @@ export default {
       }
     },
     initiateOrderData() {
-      this.checkScheduler();
       if (this.tracking_data !== undefined) {
         this.setTimeLineIconState();
         this.setRiderLocationToStore();
         this.checkVendorName();
+        this.checkScheduler();
+        this.orderETA();
       }
       this.confirmUser();
-      this.orderETA();
     },
     checkPreviousRoute() {
       if (this.$route.path === `/external/tracking/${this.$route.params.order_no}`) {
@@ -1101,7 +1101,7 @@ export default {
     },
     confirmUser() {
       const session = this.$store.getters.getSession;
-      if (Object.keys(session).length > 0) {
+      if (Object.keys(session).length > 0 && Object.prototype.hasOwnProperty.call(session, 'default') ) {
         let sessionUserEmail = session[session.default].user_email;
         let orderUserEmail = this.tracking_data.user.email;
 
