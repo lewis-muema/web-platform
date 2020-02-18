@@ -392,18 +392,12 @@ export default {
     },
 
     toggleInfoWindow(marker, data) {
-      if (data !== undefined) {
-        if (Object.prototype.hasOwnProperty.call(data, 'confirm_status')) {
-          if (data.confirm_status > 0 && this.trackers.includes(data.rider.vendor_id)) {
-            const size = Object.keys(this.vendors).length;
-            if (size > 0) {
-              this.handleTrackersNotification(data);
-              this.setTrackersInfoWindow(data);
-            } else {
-              this.infoWindowPos = marker.position;
-              this.infoContent = this.getInfoWindowContent(marker);
-              this.infoWinOpen = true;
-            }
+      if (Object.prototype.hasOwnProperty.call(data, 'confirm_status')) {
+        if (data.confirm_status > 0 && this.trackers.includes(data.rider.vendor_id)) {
+          const size = Object.keys(this.vendors).length;
+          if (size > 0) {
+            this.handleTrackersNotification(data);
+            this.setTrackersInfoWindow(data);
           } else {
             this.infoWindowPos = marker.position;
             this.infoContent = this.getInfoWindowContent(marker);
@@ -414,6 +408,10 @@ export default {
           this.infoContent = this.getInfoWindowContent(marker);
           this.infoWinOpen = true;
         }
+      } else {
+        this.infoWindowPos = marker.position;
+        this.infoContent = this.getInfoWindowContent(marker);
+        this.infoWinOpen = true;
       }
     },
     handleTrackersNotification(data) {
@@ -426,7 +424,7 @@ export default {
     handleSmallVendorsTrackers(data) {
       const riderId = data.rider.rider_id;
       const riderLocationDetails = this.vendors[riderId];
-      if (Object.prototype.hasOwnProperty.call(riderLocationDetails, 'time')) {
+      if (riderLocationDetails !== undefined) {
         const onlineTime = moment(riderLocationDetails.time);
         const currentTime = moment();
         const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
@@ -458,7 +456,7 @@ export default {
     handleLargeVendorsTrackers(data) {
       const riderId = data.rider.rider_id;
       const riderLocationDetails = this.vendors[riderId];
-      if (Object.prototype.hasOwnProperty.call(riderLocationDetails, 'time')) {
+      if (riderLocationDetails !== undefined) {
         const onlineTime = moment(riderLocationDetails.time);
         const currentTime = moment();
         const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
@@ -490,13 +488,15 @@ export default {
     setTrackersInfoWindow(data) {
       const riderId = data.rider.rider_id;
       const riderLocationDetails = this.vendors[riderId];
-      const riderMarkerLocation = riderLocationDetails.position;
-      this.mapCentreLocation.lat = riderMarkerLocation.lat;
-      this.mapCentreLocation.lng = riderMarkerLocation.lng;
+      if (riderLocationDetails !== undefined) {
+        const riderMarkerLocation = riderLocationDetails.position;
+        this.mapCentreLocation.lat = riderMarkerLocation.lat;
+        this.mapCentreLocation.lng = riderMarkerLocation.lng;
 
-      this.infoWindowPos = riderMarkerLocation;
-      this.infoContent = this.getTrackerInfoWindowContent();
-      this.infoWinOpen = true;
+        this.infoWindowPos = riderMarkerLocation;
+        this.infoContent = this.getTrackerInfoWindowContent();
+        this.infoWinOpen = true;
+      }
     },
     getTrackerInfoWindowContent() {
       return `<div class="outer_info_content_trackers">
