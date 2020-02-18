@@ -1117,7 +1117,7 @@ export default {
     },
     checkRunningBalance() {
       const session = this.$store.getters.getSession;
-      if (Object.keys(session).length > 0) {
+      if (Object.keys(session).length > 0 && Object.prototype.hasOwnProperty.call(session, 'default') ) {
         const payload = {
           cop_id: session[session.default].cop_id,
           user_phone: session[session.default].user_phone,
