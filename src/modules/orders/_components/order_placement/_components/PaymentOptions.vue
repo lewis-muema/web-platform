@@ -867,7 +867,6 @@ export default {
           cop_id: 'cop_id' in session[session.default] ? session[session.default].cop_id : 0,
           phone: session[session.default].user_phone,
           default_currency: this.default_currency,
-          rb_currency: this.activeVendorPriceData.currency,
         };
 
         const payload = {
