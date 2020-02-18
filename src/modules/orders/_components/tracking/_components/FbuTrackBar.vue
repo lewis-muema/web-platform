@@ -9,7 +9,7 @@
           <div class="">
             <p class="homeview--childinfo-order-status">Order Status: {{ statusName(orderData.freight_order_details.freight_status) }}</p>
           </div>
-          <div class="">
+          <div class="childinfo-container">
             <div class="full-width">
               <div>
                 <p class="homeview--childinfo-order-details">Order details</p>
@@ -21,7 +21,7 @@
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">Order type</p>
-                  <p class="no-margin homeview--field">Container order, <br>{{ orderData.freight_order_details.containers.container_details[0].container_size_feet }}ft Container, {{ orderData.freight_order_details.containers.container_details[0].container_weight_tonnes }}T</p>
+                  <p class="no-margin homeview--field">Container order, {{ orderData.freight_order_details.containers.container_details[0].container_size_feet }}ft Container, {{ orderData.freight_order_details.containers.container_details[0].container_weight_tonnes }}T</p>
                 </div>
               </div>
               <div class="homeview--childinfo-row">
@@ -88,10 +88,11 @@
             </p>
           </div>
           <div
+            v-for="(action, index) in actions"
             :key="action.actionText"
-            v-for="action in actions"
             class="homeview--childinfo-order-actions"
           >
+            <div class="homeview-action-icon-divider" v-if="index < actions.length - 1"></div>
             <i
               :class="action.actionClass"
               class="el-icon-success"
@@ -243,6 +244,9 @@ export default {
           statusName = `${statusName} ${name}`;
         }
       });
+      if (statusName.includes('return')) {
+        statusName = 'container return';
+      }
       return statusName[0].toUpperCase() + statusName.slice(1);
     },
     demo() {
