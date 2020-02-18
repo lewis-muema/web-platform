@@ -144,7 +144,6 @@ export default {
       this.phase = value;
     },
     destroyOrderPlacement() {
-      this.clearLocationNamesModel();
       try {
         this.$store.unregisterModule(['$_orders', '$_home']);
       } catch (er) {
