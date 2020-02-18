@@ -863,14 +863,19 @@ export default {
       return text;
     },
     delayState() {
-      if (
-        Object.prototype.hasOwnProperty.call(this.tracking_data.eta_data, 'cancelled') &&
-        this.tracking_data.eta_data.cancelled
-      ) {
-        return this.tracking_data.eta_data.cancelled_message;
-      } else if (this.tracking_data.eta_data.delayed) {
-        return this.tracking_data.eta_data.delayed_message;
-      } else {
+      if (this.tracking_data !== undefined) {
+        if (
+          Object.prototype.hasOwnProperty.call(this.tracking_data.eta_data, 'cancelled') &&
+          this.tracking_data.eta_data.cancelled
+        ) {
+          return this.tracking_data.eta_data.cancelled_message;
+        } else if (this.tracking_data.eta_data.delayed) {
+          return this.tracking_data.eta_data.delayed_message;
+        } else {
+          return this.confirmEta;
+        }
+      }
+      else{
         return this.confirmEta;
       }
     },
@@ -885,9 +890,11 @@ export default {
     },
 
     tracking_data(data) {
-      if (Object.prototype.hasOwnProperty.call(data, 'confirm_status')) {
-        if (data.confirm_status === 1) {
-          this.reCheckMQTTConnection();
+      if (data !== undefined) {
+        if (Object.prototype.hasOwnProperty.call(data, 'confirm_status')) {
+          if (data.confirm_status === 1) {
+            this.reCheckMQTTConnection();
+          }
         }
       }
       this.initiateOrderData();
@@ -930,10 +937,12 @@ export default {
       }
     },
     initiateOrderData() {
-      this.setRiderLocationToStore();
-      this.checkVendorName();
       this.checkScheduler();
-      this.setTimeLineIconState();
+      if (this.tracking_data !== undefined) {
+        this.setTimeLineIconState();
+        this.setRiderLocationToStore();
+        this.checkVendorName();
+      }
       this.confirmUser();
       this.orderETA();
     },
