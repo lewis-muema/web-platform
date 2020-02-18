@@ -216,22 +216,24 @@ export default {
           resolve(response);
         })
         .catch((error) => {
-          if (error.response.status === 403 || error.response.status === 401) {
-            const notification = {
-              title: 'Your session has expired!',
-              level: 2,
-              message: 'You will be redirected to the login page within 5 seconds.',
-            };
-            commit('setNotification', notification);
-            commit('setNotificationStatus', true);
-            setTimeout(() => {
-              if (process.browser) {
-                localStorage.removeItem('_sessionSnack');
-                localStorage.removeItem('jwtToken');
-                window.location.href = loginUrl;
-              }
-            }, 5000);
-            return true;
+          if (Object.prototype.hasOwnProperty.call(error.response, 'status')) {
+            if (error.response.status === 403 || error.response.status === 401) {
+              const notification = {
+                title: 'Your session has expired!',
+                level: 2,
+                message: 'You will be redirected to the login page within 5 seconds.',
+              };
+              commit('setNotification', notification);
+              commit('setNotificationStatus', true);
+              setTimeout(() => {
+                if (process.browser) {
+                  localStorage.removeItem('_sessionSnack');
+                  localStorage.removeItem('jwtToken');
+                  window.location.href = loginUrl;
+                }
+              }, 5000);
+              return true;
+            }
           }
           reject(error);
           return false;
