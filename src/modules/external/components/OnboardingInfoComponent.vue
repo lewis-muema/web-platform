@@ -1,6 +1,8 @@
 <template lang="html">
   <div class="screen-one">
-    <div class="onboarding-user-header">Join the {{ getBizName }} business account on Sendy</div>
+    <div class="onboarding-user-header">
+      Join the {{ getBizName }} business account on Sendy
+    </div>
 
     <p class="onboard-error">
       {{ message }}
@@ -19,7 +21,7 @@
             type="text"
             name="name"
             @focus="setCurrentStep(1)"
-          />
+          >
         </div>
       </div>
       <div class="row">
@@ -36,8 +38,8 @@
             name="email"
             type="email"
             @focus="setCurrentStep(2)"
-          />
-          <br />
+          >
+          <br>
           <span class="onboarding-email-error">
             {{ errors.first('email') }}
           </span>
@@ -55,11 +57,14 @@
             name="phone"
             value=""
             data-vv-validate-on="blur"
-            :preferred-countries="['ke', 'ug', 'tz']"
+            v-bind="phoneInputProps"
             @onBlur="validate_phone"
             @focus="setCurrentStep(3)"
           />
-          <span v-show="errors.has('phone')" class="sign-up-phone-error">
+          <span
+            v-show="errors.has('phone')"
+            class="sign-up-phone-error"
+          >
             {{ errors.first('phone') }}
           </span>
         </div>
@@ -82,12 +87,15 @@
       </button>
     </div>
 
-    <el-dialog :visible.sync="phoneVerification" class="onboarding-phone-validation">
+    <el-dialog
+      :visible.sync="phoneVerification"
+      class="onboarding-phone-validation"
+    >
       <span slot="title">
         <img
           src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
           style="width:85px;"
-        />
+        >
       </span>
       <div>
         <div class="onboarding-validation-description">
@@ -101,14 +109,22 @@
             v-model="code"
             type="text"
             placeholder="Enter Verification Code"
-          />
+          >
         </div>
       </div>
       <div class="onboarding-verif-button">
-        <button type="button" class="onboarding-cancel " @click="onboardingVerificationCancel">
+        <button
+          type="button"
+          class="onboarding-cancel "
+          @click="onboardingVerificationCancel"
+        >
           Cancel
         </button>
-        <button type="button" class="onboarding-verify" @click="onboardingVerificationVerify">
+        <button
+          type="button"
+          class="onboarding-verify"
+          @click="onboardingVerificationVerify"
+        >
           Verify
         </button>
       </div>
@@ -132,6 +148,27 @@ export default {
       phoneVerification: false,
       code: '',
       requestId: '',
+      phoneInputProps: {
+        mode: 'international',
+        defaultCountry: 'ke',
+        disabledFetchingCountry: false,
+        disabled: false,
+        disabledFormatting: false,
+        placeholder: 'Enter a phone number',
+        required: false,
+        enabledCountryCode: false,
+        enabledFlags: true,
+        preferredCountries: ['ke', 'ug', 'tz'],
+        autocomplete: 'off',
+        name: 'telephone',
+        maxLen: 25,
+        dropdownOptions: {
+          disabledDialCode: false,
+        },
+        inputOptions: {
+          showDialCode: false,
+        },
+      },
     };
   },
   computed: {
@@ -196,7 +233,7 @@ export default {
       this.doNotification(
         2,
         'Phone Verification',
-        'Phone Verification Failed . Retry to complete Onboarding process'
+        'Phone Verification Failed . Retry to complete Onboarding process',
       );
     },
 
@@ -211,14 +248,14 @@ export default {
         endpoint: 'verify_phone',
       };
       this.requestOnboardingPhoneVerification(fullPayload).then(
-        response => {
+        (response) => {
           if (response.status) {
             this.requestId = response.request_id;
           } else {
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
-        error => {}
+        (error) => {},
       );
     },
 
@@ -233,7 +270,7 @@ export default {
         endpoint: 'check_verification',
       };
       this.requestOnboardingVerificationVerify(fullPayload).then(
-        response => {
+        (response) => {
           if (response.status) {
             this.doNotification(2, 'Phone Verification', 'Phone verification successful !');
 
@@ -248,7 +285,7 @@ export default {
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
-        error => {}
+        (error) => {},
       );
     },
 
@@ -267,7 +304,6 @@ export default {
 
 <style lang="css">
 
-@import '../../../../node_modules/vue-tel-input/dist/vue-tel-input.css';
 
 .form-inputs > div:nth-child(3) > div > div > div > ul {
     z-index: 9;

@@ -42,7 +42,7 @@
             name="phone"
             value=""
             data-vv-validate-on="blur"
-            :preferred-countries="['ke', 'ug', 'tz']"
+            v-bind="phoneInputProps"
             @onBlur="validate_phone"
           />
         </div>
@@ -73,6 +73,27 @@ export default {
       contact_email: '',
       contact_name: '',
       message: '',
+      phoneInputProps: {
+        mode: 'international',
+        defaultCountry: 'ke',
+        disabledFetchingCountry: false,
+        disabled: false,
+        disabledFormatting: false,
+        placeholder: 'Enter a phone number',
+        required: false,
+        enabledCountryCode: false,
+        enabledFlags: true,
+        preferredCountries: ['ke', 'ug', 'tz'],
+        autocomplete: 'off',
+        name: 'telephone',
+        maxLen: 25,
+        dropdownOptions: {
+          disabledDialCode: false,
+        },
+        inputOptions: {
+          showDialCode: false,
+        },
+      },
     };
   },
   mounted() {
@@ -194,7 +215,6 @@ export default {
 
 <style lang="css">
  @import "../../../assets/styles/datatable.css";
- @import "../../../../node_modules/vue-tel-input/dist/vue-tel-input.css";
 
  .company-edit2-details {
   font-size: 1.3rem;
