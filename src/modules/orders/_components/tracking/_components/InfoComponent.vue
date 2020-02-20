@@ -622,7 +622,6 @@
       <transition name="fade" mode="out-in">
         <div class="">
           <el-dialog :visible.sync="cancelOption" class="cancelOptions">
-
             <div class="cancelOptions--content-wrap" v-if="cancel_reason !== '4'">
               <div class="">
                 <div class="cancel-reason-option">
@@ -667,7 +666,7 @@
                   type="button"
                   name="button"
                   class="action--slide-button"
-                  @click="cancelToggle()"
+                  @click="cancelToggle(true)"
                 >
                   No
                 </button>
@@ -675,10 +674,11 @@
             </div>
             <div class="cancelOptions--content-wrap" v-if="cancel_reason === '4'">
               <div class="cancelOptions--content-message">
-                Did you know after your order is confirmed you can call your rider and give him the right destination? We will recalculate the cost and deliver your item.
+                Did you know after your order is confirmed you can call your rider and give him the
+                right destination? We will recalculate the cost and deliver your item.
               </div>
               <div class="cancelOptions--content-buttons">
-                 <button
+                <button
                   type="button"
                   name="button"
                   class="action--slide-button"
@@ -694,10 +694,8 @@
                 >
                   Cancel Order
                 </button>
-               
               </div>
             </div>
-
           </el-dialog>
 
           <el-dialog :visible.sync="shareOption" class="cancelOptions">
@@ -969,10 +967,29 @@ export default {
         });
     },
     cancelToggle(cancelReason = 0) {
-      if(cancelReason === '4') {
-          this.trackMixpanelEvent('Dissuaded Cancellation ', {
-              'Order No': this.tracking_data.order_no,
-          });
+      if (cancelReason === true) {
+        let analyticsEnv = '';
+        try {
+          analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+        } catch (er) {
+          // ...
+        }
+        try {
+          if (analyticsEnv === 'production') {
+            window.ga('send', 'event', {
+              eventCategory: 'Order Cancellation',
+              eventAction: 'Click',
+              eventLabel: 'No Button - Order Cancellation Page - WebApp',
+            });
+          }
+        } catch (er) {
+          // ...
+        }
+      }
+      if (cancelReason === '4') {
+        this.trackMixpanelEvent('Dissuaded Cancellation ', {
+          'Order No': this.tracking_data.order_no,
+        });
       }
       if (this.cancel_popup === 1) {
         this.cancel_popup = 0;
@@ -1147,6 +1164,24 @@ export default {
           client_type: this.$store.getters.getSession.default,
         };
         const that = this;
+
+        let analyticsEnv = '';
+        try {
+          analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+        } catch (er) {
+          // ...
+        }
+        try {
+          if (analyticsEnv === 'production') {
+            window.ga('send', 'event', {
+              eventCategory: 'Order Cancellation',
+              eventAction: 'Click',
+              eventLabel: 'Yes Button - Order Cancellation Page - WebApp',
+            });
+          }
+        } catch (er) {
+          // ...
+        }
         this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then(response => {
           if (response.status) {
             that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
