@@ -25,10 +25,10 @@
       content="worker-src 'self' *.sendyit.com;
       default-src 'self' *.sendyit.com *.google-analytics.com *.gstatic.com
       *.www.googletagmanager.com wss://*.hotjar.com 'unsafe-inline' 'unsafe-eval';
-      child-src 'none'; 
+      child-src 'none';
       font-src 'self' *.googleapis.com *.gstatic.com data:;
       script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com
-      *.gstatic.com *.google-analytics.com https://optimize.google.com 
+      *.gstatic.com *.google-analytics.com https://optimize.google.com
       *.stats.g.doubleclick.net *.amazonaws.com/ *.mixpanel.com/
       *.helpscout.net cdn4.mxpnl.com *.hotjar.com *.www.google-analytics.com *.www.googletagmanager.com
       *.google-analytics.com data:;
@@ -37,7 +37,9 @@
       cdn.mxpnl.com *.gstatic.com *.googleapis.com *.cloudfront.net https://optimize.google.com
       *.googleusercontent.com *.hotjar.io *.hotjar.com *.google-analytics.com www.google-analytics.com
       *.stats.g.doubleclick.net data:;
-      connect-src 'self' *.google-analytics.com *.hotjar.io *.mixpanel.com *.amazonaws.com/ *.sendyit.com d3hb14vkzrxvla.cloudfront.net sentry.io
+      connect-src 'self' localhost:8200 *.google-analytics.com *.hotjar.io *.mixpanel.com *.amazonaws.com/
+      *.sendyit.com d3hb14vkzrxvla.cloudfront.net sentry.io
+      https://ip2c.org/s
       *.googleapis.com api.mixpanel.com *.helpscout.net *.pusher.com *.hotjar.com wss://chat.sendyit.com;
       frame-src 'self' *.sendyit.com *.hotjar.com *.youtube.com https://optimize.google.com
       *.google-analytics.com www.google-analytics.com

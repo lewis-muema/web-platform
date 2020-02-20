@@ -37,7 +37,7 @@
           name="phone"
           value=""
           data-vv-validate-on="blur"
-          :preferred-countries="['ke', 'ug', 'tz']"
+          v-bind="phoneInputProps"
           @onBlur="validate_phone"
         />
       </p>
@@ -119,6 +119,27 @@ export default {
       code: '',
       proceed_update: true,
       request_id: '',
+      phoneInputProps: {
+        mode: 'international',
+        defaultCountry: 'ke',
+        disabledFetchingCountry: false,
+        disabled: false,
+        disabledFormatting: false,
+        placeholder: 'Enter a phone number',
+        required: false,
+        enabledCountryCode: false,
+        enabledFlags: true,
+        preferredCountries: ['ke', 'ug', 'tz'],
+        autocomplete: 'off',
+        name: 'telephone',
+        maxLen: 25,
+        dropdownOptions: {
+          disabledDialCode: false,
+        },
+        inputOptions: {
+          showDialCode: false,
+        },
+      },
     };
   },
   computed: {
@@ -399,7 +420,6 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../../node_modules/vue-tel-input/dist/vue-tel-input.css";
 
 #auth_container > div > div:nth-child(2) > div > div > p:nth-child(3) > div > div > ul{
       z-index: 9;
