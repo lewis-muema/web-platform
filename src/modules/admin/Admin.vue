@@ -55,10 +55,12 @@ Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
   getMessage: field => 'The phone number not valid',
-  validate: value => {
+  validate: (value) => {
     let validity = false;
     try {
-      const number = phoneUtil.format(value);
+      const rawNumber = phoneUtil.parseAndKeepRawInput(value);
+      const numberCode = phoneUtil.getRegionCodeForNumber(rawNumber);
+      const number = phoneUtil.parse(value, numberCode);
       validity = phoneUtil.isValidNumber(number);
     } catch (e) {
       validity = false;
