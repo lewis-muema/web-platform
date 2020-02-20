@@ -26,7 +26,9 @@ Validator.extend('check_phone', {
   validate: (value) => {
     let validity = false;
     try {
-      const number = phoneUtil.parse(value);
+      const rawNumber = phoneUtil.parseAndKeepRawInput(value);
+      const numberCode = phoneUtil.getRegionCodeForNumber(rawNumber);
+      const number = phoneUtil.parse(value, numberCode);
       validity = phoneUtil.isValidNumber(number);
     } catch (e) {
       validity = false;
