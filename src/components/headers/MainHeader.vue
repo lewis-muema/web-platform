@@ -81,6 +81,11 @@
                   </a>
                 </li>
               </div>
+              <li v-if="admin_details">
+                <a @click="linkRoute('/orders/freight')">
+                  Freight
+                </a>
+              </li>
               <li class="menu--last-child">
                 <a
                   class="menu--last-child-link"
