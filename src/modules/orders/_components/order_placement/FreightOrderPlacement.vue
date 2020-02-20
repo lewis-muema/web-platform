@@ -1,12 +1,40 @@
 <template lang="html">
-  <div class="homeview--outer-override" v-if="!loadingStatus">
-    <div class="homeview--input-products block" v-if="phase === 1">
-      <div class="homeview--input-categories">Goods Type</div>
-      <select class="homeview--input-categories" v-model="productCategoryId" @change="selectCategory()">
-        <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
-      </select>
+  <div>
+    <div
+      v-if="!loadingStatus && !parent_order"
+      class="homeview--outer-override"
+    >
+      <div
+        v-if="phase === 1"
+        class="homeview--input-products block"
+      >
+        <div class="homeview--input-categories">Goods Type</div>
+        <select
+          v-model="productCategoryId"
+          class="homeview--input-categories"
+          @change="selectCategory()"
+        >
+          <option
+            v-for="category in categories"
+            :key="category.id"
+            :value="category.id"
+          >{{ category.name }}</option>
+        </select>
+      </div>
+      <fbu-containers
+        v-if="productCategoryId === 1"
+        @clicked="changePhase"
+      />
     </div>
-    <fbu-containers v-if="productCategoryId === 1" @clicked="changePhase"/>
+    <div>
+      <a
+        v-if="parent_order"
+        class="back--button"
+        @click="set_parent_order('')"
+      >
+        <i class="el-icon-back" />
+      </a>
+    </div>
   </div>
 </template>
 
@@ -36,6 +64,7 @@ export default {
   computed: {
     ...mapGetters({
       getOuterPriceRequestData: '$_orders/getOuterPriceRequestData',
+      parent_order: '$_orders/getParentOrder',
     }),
   },
   created() {
@@ -54,6 +83,7 @@ export default {
     ...mapMutations({
       setProductCategories: '$_orders/$_home/setProductCategories',
       setProductId: '$_orders/$_home/setProductId',
+      set_parent_order: '$_orders/setParentOrder',
     }),
 
     ...mapActions({
@@ -79,11 +109,18 @@ export default {
 
           });
         },
+        // eslint-disable-next-line no-unused-vars
         (error) => {
-          console.log(error);
+          this.doNotification(2, 'Could not fetch freight categories', 'Please try again');
         },
       );
     },
+    doNotification(level, title, message) {
+      this.$store.commit('setNotificationStatus', true);
+      const notification = { title, level, message };
+      this.$store.commit('setNotification', notification);
+    },
+
     selectCategory() {
       this.setProductId(this.productCategoryId);
       // eslint-disable-next-line default-case
@@ -107,7 +144,6 @@ export default {
       this.phase = value;
     },
     destroyOrderPlacement() {
-      this.clearLocationNamesModel();
       try {
         this.$store.unregisterModule(['$_orders', '$_home']);
       } catch (er) {
@@ -175,5 +211,20 @@ export default {
 }
 ::-webkit-scrollbar-thumb:window-inactive {
   background-color: rgba(0, 0, 0, 0.2);
+}
+.back--button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  border: 1px solid #55555500;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 15px;
+  font-size: larger;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+  cursor: pointer;
+  color: #555;
 }
 </style>

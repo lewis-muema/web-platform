@@ -71,6 +71,8 @@
             <input
               v-model.number="noOfContainers"
               type="number"
+              min="5"
+              max="50"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input input-spacer"
               placeholder="No of containers"
             >
@@ -93,7 +95,7 @@
               </div>
             </div>
             <div class="homeview--return-input">
-              <input type="checkbox" v-model="returnStatus" @change="resetDestination()"> Return empty containers to pick up location
+              <input type="checkbox" v-model="returnStatus" @change="resetDestination()"> Return empty containers to the same location
             </div>
             <gmap-autocomplete
               v-if="returnStatus"
@@ -117,7 +119,7 @@
             type="button"
             class="home-view--place-order"
             :class="nextStatus"
-            :disabled="nextStatus === 'button--primary-inactive'"
+            :disabled="nextStatus === 'button--primary-inactive inactive-1'"
             @click="productPhase(2)"
           >
             Continue
@@ -178,6 +180,8 @@
           <input
             v-model.number="cont_weight"
             type="number"
+            min="5"
+            max="50"
             class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
             placeholder="Container Weight in Tonnes"
           >
@@ -188,12 +192,11 @@
             :select-first-on-enter="true"
             class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details homeview--return-destination-input"
             @place_changed="setReturnDestination($event, 2)"
-            @keyup="checkChangeEvents($event, 2)"
-            @change="checkChangeEvents($event, 2)"
+            @keydown.native.capture="checkReturnDestination()"
           />
           <select
             v-model.number="size"
-            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
+            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details input-container--size"
           >
             <option
               class=""
@@ -224,7 +227,7 @@
             v-if="selectedContainer === null"
             class="homeview--button-add-container"
             :class="buttonStatus"
-            :disabled="buttonStatus === 'button--primary-inactive'"
+            :disabled="buttonStatus === 'button--primary-inactive inactive-1'"
             @click="addContainer()"
           >
             Add Container Details
@@ -232,14 +235,17 @@
           <button
             v-else
             class="button-primary homeview--button-add-container bg-button-orange"
+            :class="editStatus"
+            :disabled="editStatus === 'button--primary-inactive inactive-1'"
             @click="applyContainerChanges()"
           >
             Edit container details
           </button>
           <button
+            v-if="selectedContainer === null"
             class="homeview--button-add-container"
             :class="placeOrderStatus"
-            :disabled="placeOrderStatus === 'button--primary-inactive'"
+            :disabled="placeOrderStatus === 'button--primary-inactive inactive-2'"
             @click="getQuote()"
           >
             Place Order
@@ -507,22 +513,28 @@ export default {
       );
     },
     buttonStatus() {
-      if (this.cont_no && this.destination !== 'none' && this.size !== 'none' && this.cont_weight && this.containers.length < this.noOfContainers && this.consignee) {
+      if (this.cont_no && this.destination.name && this.size !== 'none' && this.cont_weight && this.containers.length < this.noOfContainers && this.consignee) {
         return 'button-primary bg-button-orange';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive inactive-1';
+    },
+    editStatus() {
+      if (this.cont_no && this.destination.name && this.size !== 'none' && this.cont_weight && this.consignee) {
+        return 'button-primary bg-button-orange';
+      }
+      return 'button--primary-inactive inactive-1';
     },
     nextStatus() {
       if (this.locations.length >= 2 && this.noOfContainers > 0) {
         return 'button-primary';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive inactive-1';
     },
     placeOrderStatus() {
       if (this.containers.length === this.noOfContainers) {
         return 'button-primary';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive inactive-2';
     },
     scheduleStatus() {
       if (this.schedule_time) {
@@ -572,6 +584,7 @@ export default {
       resetState: '$_orders/$_home/resetState',
       setCountryCode: '$_orders/$_home/setCountryCode',
       setDefaultCurrency: '$_orders/$_home/setDefaultCurrency',
+      setScheduleTime: '$_orders/$_home/setScheduleTime',
       setHomeLocations: '$_orders/setHomeLocations',
       setStorePath: '$_orders/setStorePath',
       clearStorePath: '$_orders/clearStorePath',
@@ -590,6 +603,28 @@ export default {
       // console.log('index', index);
       // console.log('evt', evt);
       // TO DO research implementation of native input events
+    },
+    checkReturnDestination(evt, index) {
+      if (document.querySelector('.homeview--return-destination-input').value === '') {
+        this.destination = {
+          name: '',
+          coordinates: '',
+          waypoint_details_status: true,
+          type: 'coordinates',
+          country_code: '',
+          more: {
+            Estate: '',
+            FlatName: '',
+            place_idcustom: '',
+            Label: '',
+            HouseDoor: '',
+            Otherdescription: '',
+            Typed: '',
+            Vicinity: 'Not Indicated',
+            Address: 'Not Indicated',
+          },
+        };
+      }
     },
     trackMixpanelEvent(name) {
       let analyticsEnv = '';
@@ -790,17 +825,19 @@ export default {
     disabledDueDate(date) {
       return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
     },
-    dispatchScheduleTime() {
+    dispatchScheduleTime() {
       const dateTime = new Date();
-      if (this.schedule_time && dateTime > this.schedule_time) {
+      if (this.schedule_time && dateTime > this.schedule_time) {
         this.schedule_time = new Date();
       }
+      this.setScheduleTime(this.schedule_time);
     },
     initiateUpload() {
       this.$root.$emit('Upload status', true);
     },
     addContainer() {
       this.containers.push({
+        id: this.containers.length + 1,
         container_number: this.cont_no,
         container_destination: this.destination,
         container_size_feet: this.size,
@@ -821,6 +858,10 @@ export default {
     },
     removeContainer(id) {
       this.containers.splice(id, 1);
+      this.containers.forEach((row, i) => {
+        // eslint-disable-next-line no-param-reassign
+        row.id = i + 1;
+      });
     },
     editContainer(id) {
       this.editingStatus = true;

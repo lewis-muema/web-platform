@@ -256,6 +256,8 @@ export default {
   },
   mounted() {
     this.checkSessionData();
+    this.set_tracking_data({});
+    this.clearVendorMarkers();
   },
   destroyed() {
     this.destroyOrderPlacement();
@@ -293,6 +295,9 @@ export default {
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
       setOuterPriceRequestObject: '$_orders/setOuterPriceRequestObject',
       setOrderState: '$_orders/$_home/setOrderState',
+      setExtendOptions: '$_orders/$_home/setExtendOptions',
+      set_tracking_data: '$_orders/$_tracking/setTrackingData',
+      clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
 
     ...mapActions({

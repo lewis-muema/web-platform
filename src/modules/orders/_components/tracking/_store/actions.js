@@ -109,7 +109,12 @@ const trackMQTT = function trackMQTT({ commit, state }) {
     client.on('message', (topic, message) => {
       const vendor = JSON.parse(message.toString());
       vendor.overide_visible = true;
-      commit('$_orders/setVendorMarkers', vendor, { root: true });
+      if (Object.prototype.hasOwnProperty.call(state.tracking_data, 'confirm_status')) {
+        commit('$_orders/setVendorMarkers', vendor, { root: true });
+      }
+      if (Object.prototype.hasOwnProperty.call(state.tracking_data, 'freight_order_details')) {
+        commit('$_orders/$_tracking/setDateTime', new Date().toISOString(), { root: true });
+      }
     });
 
     client.on('close', () => {

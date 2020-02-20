@@ -7,7 +7,8 @@
       class="ongoing--count"
       @click="toggle_ongoing()"
     >
-      <span>{{ num_ongoing }} ongoing FBU orders</span>
+      <span v-if="!parent_order">{{ num_ongoing }} ongoing FBU orders</span>
+      <span v-else>{{ child_orders.length }} containers</span>
       <font-awesome-icon
         icon="chevron-up"
         :class="classObject"
@@ -16,32 +17,36 @@
     </div>
     <transition name="fade">
       <div
-        v-if="showing"
+        v-if="showing === 1"
         class="ongoing--column"
       >
-        <template v-for="order in filter_orders">
+        <template v-for="(order, index) in filter_orders">
           <div
+            :key="index"
             class="ongoing--card bg-white"
             :class="{ active: active_card(order.order_no) }"
-            @click="track(order.order_no)"
+            @click="toggle_parent(order.child_orders, order)"
           >
             <div class="ongoing--order-count">
-              Good Quantity: <b>{{ order.no_of_containers }} container{{ pluralize(order.no_of_containers) }}</b>
+              Goods Quantity: <b>{{ order.count }} container{{ pluralize(order.count) }}</b>
             </div>
             <div class="ongoing--card-location card-location-override">
               <span class="homeview--childinfo-order-details">Order Details</span><br>
               <div class="ongoing--card-parent-order-details">
                 <div class="ongoing--parent-locations">
                   <span class="ongoing--parent-locations-header">Pick-Up</span><br>
-                  <span class="ongoing--parent-locations-body">{{ order.from_name }}</span>
+                  <span class="ongoing--parent-locations-body">{{ order.path[0].name }}</span>
                 </div>
                 <div class="ongoing--parent-locations">
                   <span class="ongoing--parent-locations-header">Destination</span><br>
-                  <span class="ongoing--parent-locations-body">{{ order.to_name }}</span>
+                  <span class="ongoing--parent-locations-body">{{ order.path[1].name }}</span>
                 </div>
               </div>
             </div>
-            <div class="card-status-override" :class="getStatus(order)">
+            <div
+              class="card-status-override"
+              :class="getStatus(order)"
+            >
               <div class="">
                 Order Status: <b>{{ getStatus(order) }}
                 </b>
@@ -49,6 +54,43 @@
               <div class="">
                 <i class="el-icon-time" />
                 {{ date_format(order.date_time) }}
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </transition>
+    <transition name="fade">
+      <div
+        v-if="showing === 2"
+        class="ongoing--column"
+      >
+        <template v-for="(order, index) in child_orders">
+          <div
+            :key="index"
+            class="ongoing--card card--override"
+            :class="{ active: active_card(order.order_no) }"
+            @click="track(order.order_no)"
+          >
+            <div class="ongoing--card-location ongoing--card-override">
+              <div class="ongoing--card-row">
+                <div class="">
+                  <span class="homeview--heading__container-ongoing">Container Number</span><br>
+                  <span class="homeview--body__container-ongoing">{{ order.container_details.container_number }}</span>
+                </div>
+                <div class="">
+                  <span class="homeview--heading__container-ongoing">Empty Container Destination</span><br>
+                  <span class="homeview--body__container-ongoing">{{ order.container_details.container_destination.name }}</span>
+                </div>
+                <div class="">
+                  <span class="homeview--heading__container-ongoing">Truck Size</span><br>
+                  <span class="homeview--body__container-ongoing">{{ order.container_details.container_size_feet }} Feet</span>
+                </div>
+              </div>
+            </div>
+            <div class="ongoing--card-status">
+              <div class="ongoing--card-text">
+                {{ statusName(order.freight_status) }}
               </div>
             </div>
           </div>
@@ -71,11 +113,16 @@ export default {
     return {
       loading: true,
       showing: 1,
+      child_orders: [],
+      placeholder: 0,
+      riders: [],
+      count: 0,
     };
   },
   computed: {
     ...mapGetters({
       get_orders: '$_orders/getOngoingOrders',
+      parent_order: '$_orders/getParentOrder',
       show: '$_orders/showOngoing',
       getSession: 'getSession',
     }),
@@ -85,7 +132,8 @@ export default {
     filter_orders() {
       const orders = [];
       this.get_orders.forEach((row) => {
-        if (Object.prototype.hasOwnProperty.call(row, 'freight_order')) {
+        if (Object.prototype.hasOwnProperty.call(row, 'freight_order') && Object.prototype.hasOwnProperty.call(row, 'child_orders')) {
+          row.count = this.validateChildOrders(row.child_orders).length;
           orders.push(row);
         }
       });
@@ -106,34 +154,90 @@ export default {
       },
       deep: true,
     },
+    parent_order() {
+      this.initializeComponent();
+    },
   },
   mounted() {
-    this.loading = true;
-    this.poll();
+    this.initializeComponent();
   },
   methods: {
     ...mapMutations({
+      set_tracking_data: '$_orders/$_tracking/setTrackingData',
+      set_parent_order: '$_orders/setParentOrder',
       change_page: '$_orders/setPage',
       hide_vendors: '$_orders/hideVendors',
       clearVendorMarkers: '$_orders/clearVendorMarkers',
+      setVendorMarkers: '$_orders/setVendorMarkers',
     }),
     ...mapActions({
       fetchOngoingOrders: '$_orders/fetchOngoingOrders',
+      riderDetails: '$_orders/riderDetails',
     }),
     toggle_ongoing() {
       if (this.showing) {
+        this.placeholder = this.showing;
         this.showing = 0;
       } else {
+        this.showing = this.placeholder;
+      }
+    },
+    initializeComponent() {
+      if (!this.parent_order) {
         this.showing = 1;
+        this.loading = true;
+        this.poll();
+        this.clearVendorMarkers();
+        this.set_tracking_data({});
+      } else {
+        this.loading = false;
+        this.child_orders = [];
+        this.child_orders = this.validateChildOrders(this.parent_order.child_orders);
+        this.fetchRiderLocations();
+        this.showing = 2;
       }
     },
     track(order) {
-      // this.hide_vendors();
-      // this.clearVendorMarkers();
+      this.clearVendorMarkers();
       this.$router.push({ path: `/orders/freight/tracking/${order}` });
-      // this.change_page(1);
+    },
+    toggle_parent(children, order) {
+      this.set_parent_order(order);
+      this.child_orders = [];
+      this.child_orders = this.validateChildOrders(children);
+      this.fetchRiderLocations();
+      this.showing = 2;
+    },
+    fetchRiderLocations() {
+      this.riderDetails({ rider_id: this.riders }).then((response) => {
+        if (response.data.status) {
+          response.data.partnerArray.forEach((row) => {
+            row.overide_visible = true;
+            this.setVendorMarkers(row);
+          });
+        }
+      });
+    },
+    statusName(status) {
+      let statusName = '';
+      status.split('_').forEach((name) => {
+        if (statusName === '') {
+          statusName = name;
+        } else {
+          statusName = `${statusName} ${name}`;
+        }
+      });
+      if (statusName.includes('return')) {
+        statusName = 'container return';
+      }
+      return statusName[0].toUpperCase() + statusName.slice(1);
     },
     date_format(date) {
+      const offset = new Date().getTimezoneOffset() * -1;
+      date = this.moment(date, 'yyyy-mm-dd hh:mm:ss')
+        .add(0, 'seconds')
+        .add(offset, 'minutes')
+        .format('YYYY-MM-DD hh:mm:ss');
       return this.moment(date).calendar(null, {
         lastWeek: 'MMM-D hh:mm a',
         sameDay: '[Today] hh:mm a',
@@ -166,28 +270,36 @@ export default {
       }
     },
     getStatus(order) {
-      if (!this.loading) {
-        switch (order.delivery_status) {
-          case 3: {
-            return 'Delivered';
-          }
-          case 2: {
-            return 'Ongoing';
-          }
-          default: {
-            switch (order.confirm_status) {
-              case 1: {
-                return 'Ongoing';
-              }
-              default: {
-                return 'Pending';
-              }
-            }
-          }
+      let pending = true;
+      let delivered = true;
+      order.child_orders.forEach((row) => {
+        if (row.freight_status !== 'pending') {
+          pending = false;
         }
-      } else {
-        return '';
+        if (row.freight_status !== 'delivered') {
+          delivered = false;
+        }
+      });
+      if (pending) {
+        return 'Pending';
       }
+      if (delivered) {
+        return 'Delivered';
+      }
+      return 'Ongoing';
+    },
+    validateChildOrders(children) {
+      const childrenObject = [];
+      this.riders = [];
+      children.forEach((row) => {
+        if (row.order_no !== row.parent_order_no) {
+          if (row.confirm_status === 1) {
+            this.riders.push(row.rider_id);
+          }
+          childrenObject.push(row);
+        }
+      });
+      return childrenObject;
     },
     pluralize(count) {
       if (count > 1) {

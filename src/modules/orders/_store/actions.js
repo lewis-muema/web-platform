@@ -36,10 +36,53 @@ const intializeMqtt = function intializeMqtt() {
   return false;
 };
 
+const riderDetails = function riderDetails({ dispatch }, data) {
+  const payload = {
+    app: 'NODE_PRIVATE_API',
+    endpoint: 'last_partner_position',
+    values: data,
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+        // handle failure to dispatch to global store
+      },
+    );
+  });
+};
+
 const getOrderData = function getOrderData({ dispatch }, data) {
   const payload = {
     app: 'NODE_PRIVATE_API',
     endpoint: 'pending_delivery',
+    values: data,
+  };
+
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+        // handle failure to dispatch to global store
+      },
+    );
+  });
+};
+
+const requestCountryCode = function requestCountryCode({ dispatch }, data) {
+  const payload = {
+    app: 'PRIVATE_API',
+    endpoint: 'geocountry',
     values: data,
   };
 
@@ -63,4 +106,6 @@ export default {
   connectMqtt,
   intializeMqtt,
   getOrderData,
+  riderDetails,
+  requestCountryCode,
 };
