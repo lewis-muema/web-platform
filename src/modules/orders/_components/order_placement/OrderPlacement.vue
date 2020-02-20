@@ -467,9 +467,9 @@ export default {
         promotion_status: false,
         destination_paid_status: false,
         is_edit: false,
-        country_code: this.getCountryCode,
-        default_currency: this.getDefaultCurrency,
-        preffered_currency: this.getDefaultCurrency,
+        country_code: this.getSessionItem('country_code'),
+        default_currency: this.getSessionItem('default_currency'),
+        preffered_currency: this.getSessionItem('default_currency'),
       };
       const jsonDecodedPath = JSON.stringify(obj);
       infor.path = jsonDecodedPath;
@@ -679,6 +679,11 @@ export default {
         this.clearOuterPriceRequestObject();
         this.clearOuterActiveVendorDetails();
       }
+    },
+    getSessionItem(itemName) {
+      const session = this.$store.getters.getSession;
+      return session[session.default][itemName];
+
     },
   },
 };
