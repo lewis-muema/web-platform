@@ -77,6 +77,7 @@ export default {
     this.checkSessionData();
   },
   destroyed() {
+    this.$root.$emit('Countdown status', false);
     this.destroyOrderPlacement();
   },
   methods: {
@@ -106,12 +107,15 @@ export default {
             };
             this.setProductCategories(productRows);
             this.setProductId(this.productCategoryId);
-
           });
         },
         // eslint-disable-next-line no-unused-vars
         (error) => {
-          this.doNotification(2, 'Could not fetch freight categories', 'Please try again');
+          if (Object.prototype.hasOwnProperty.call(error, 'count_down')) {
+            this.$root.$emit('Countdown status', true, error.count_down);
+          } else {
+            this.doNotification(2, 'Could not fetch freight categories', 'Please try again');
+          }
         },
       );
     },
