@@ -51,7 +51,7 @@
             name="phone"
             value=""
             data-vv-validate-on="blur"
-            :preferred-countries="['ke', 'ug', 'tz']"
+            v-bind="phoneInputProps"
             @onBlur="validate_phone"
           />
           <p
@@ -201,6 +201,27 @@ export default {
       phoneVerificationForm: {},
       code: '',
       verificationState: false,
+      phoneInputProps: {
+        mode: 'international',
+        defaultCountry: 'ke',
+        disabledFetchingCountry: false,
+        disabled: false,
+        disabledFormatting: false,
+        placeholder: 'Enter a phone number',
+        required: false,
+        enabledCountryCode: false,
+        enabledFlags: true,
+        preferredCountries: ['ke', 'ug', 'tz'],
+        autocomplete: 'off',
+        name: 'telephone',
+        maxLen: 25,
+        dropdownOptions: {
+          disabledDialCode: false,
+        },
+        inputOptions: {
+          showDialCode: false,
+        },
+      },
     };
   },
   methods: {
@@ -374,7 +395,6 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../../node_modules/vue-tel-input/dist/vue-tel-input.css";
 
 #sign-up-v2-container > div:nth-child(3) > div:nth-child(3) > div > div > ul {
   z-index: 9;
