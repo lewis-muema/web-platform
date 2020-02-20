@@ -1081,10 +1081,11 @@ export default {
               that.doNotification('1', 'Payment successful', 'Completing your order...');
               that.doCompleteOrder();
               that.mpesa_payment = false;
+              that.mpesa_payment_state = true;
               return true;
             }
 
-            if (pollLimitValue === 6) {
+            if (pollLimitValue === 6 && !that.mpesa_payment_state) {
               if (pollCount === 5) {
                 that.doNotification(
                   '0',
