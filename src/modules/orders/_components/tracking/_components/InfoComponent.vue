@@ -667,7 +667,7 @@
                   type="button"
                   name="button"
                   class="action--slide-button"
-                  @click="cancelToggle()"
+                  @click="cancelToggle(true)"
                 >
                   No
                 </button>
@@ -969,6 +969,25 @@ export default {
         });
     },
     cancelToggle(cancelReason = 0) {
+      if (cancelReason === true) {
+        let analyticsEnv = '';
+        try {
+          analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+        } catch (er) {
+          // ...
+        }
+        try {
+          if (analyticsEnv === 'production') {
+            window.ga('send', 'event', {
+              eventCategory: 'Order Cancellation',
+              eventAction: 'Click',
+              eventLabel: 'No Button - Order Cancellation Page - WebApp',
+            });
+          }
+        } catch (er) {
+          // ...
+        }
+      }
       if(cancelReason === '4') {
           this.trackMixpanelEvent('Dissuaded Cancellation ', {
               'Order No': this.tracking_data.order_no,
@@ -1147,6 +1166,24 @@ export default {
           client_type: this.$store.getters.getSession.default,
         };
         const that = this;
+        let analyticsEnv = '';
+        try {
+          analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+        } catch (er) {
+          // ...
+        }
+        try {
+          if (analyticsEnv === 'production') {
+            window.ga('send', 'event', {
+              eventCategory: 'Order Cancellation',
+              eventAction: 'Click',
+              eventLabel: 'Yes Button - Order Cancellation Page - WebApp',
+            });
+          }
+        } catch (er) {
+          // ...
+        }
+
         this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then(response => {
           if (response.status) {
             that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
