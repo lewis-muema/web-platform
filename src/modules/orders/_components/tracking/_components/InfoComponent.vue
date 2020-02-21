@@ -967,6 +967,19 @@ export default {
         });
     },
     cancelToggle(cancelReason = 0) {
+      if (cancelReason === '4') {
+        this.trackMixpanelEvent('Dissuaded Cancellation ', {
+          'Order No': this.tracking_data.order_no,
+        });
+      }
+      if (this.cancel_popup === 1) {
+        this.cancel_popup = 0;
+      } else {
+        this.cancel_popup = 1;
+      }
+      this.cancelOption = false;
+      this.cancel_reason = '';
+
       if (cancelReason === true) {
         let analyticsEnv = '';
         try {
@@ -986,18 +999,6 @@ export default {
           // ...
         }
       }
-      if (cancelReason === '4') {
-        this.trackMixpanelEvent('Dissuaded Cancellation ', {
-          'Order No': this.tracking_data.order_no,
-        });
-      }
-      if (this.cancel_popup === 1) {
-        this.cancel_popup = 0;
-      } else {
-        this.cancel_popup = 1;
-      }
-      this.cancelOption = false;
-      this.cancel_reason = '';
     },
     maximiseInfoDetails() {
       this.truckMoreInfo = true;
@@ -1169,7 +1170,7 @@ export default {
         try {
           analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
         } catch (er) {
-          // ...
+          // ... TODO: handle error
         }
         try {
           if (analyticsEnv === 'production') {
@@ -1180,7 +1181,7 @@ export default {
             });
           }
         } catch (er) {
-          // ...
+           // ... TODO: handle error
         }
         this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then(response => {
           if (response.status) {
