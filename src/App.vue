@@ -45,14 +45,16 @@ export default {
     },
   },
   beforeMount() {
-    Sentry.init({
-      dsn: ENV.SENTRY_DSN,
-      integrations: [
-        new Sentry.Integrations.Vue({
-          Vue,
-        }),
-      ],
-    });
+    if (ENV.DOMAIN !== 'localhost') {
+      Sentry.init({
+        dsn: ENV.SENTRY_DSN,
+        integrations: [
+          new Sentry.Integrations.Vue({
+            Vue,
+          }),
+        ],
+      });
+    }
   },
   created() {
     this.$store.commit('setENV', ENV);
