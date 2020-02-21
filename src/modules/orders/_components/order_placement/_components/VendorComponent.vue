@@ -845,7 +845,6 @@ export default {
       } catch (er) {
         // ...
       }
-
       this.setDefaultCarrierType();
       this.setOrderState(2);
       this.setExtendOptions(true);

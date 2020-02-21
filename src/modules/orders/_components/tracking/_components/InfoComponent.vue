@@ -978,10 +978,29 @@ export default {
         });
     },
     cancelToggle(cancelReason = 0) {
-      if (cancelReason === '4') {
-        this.trackMixpanelEvent('Dissuaded Cancellation ', {
-          'Order No': this.tracking_data.order_no,
-        });
+      if (cancelReason === true) {
+        let analyticsEnv = '';
+        try {
+          analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+        } catch (er) {
+          // ...
+        }
+        try {
+          if (analyticsEnv === 'production') {
+            window.ga('send', 'event', {
+              eventCategory: 'Order Cancellation',
+              eventAction: 'Click',
+              eventLabel: 'No Button - Order Cancellation Page - WebApp',
+            });
+          }
+        } catch (er) {
+          // ...
+        }
+      }
+      if(cancelReason === '4') {
+          this.trackMixpanelEvent('Dissuaded Cancellation ', {
+              'Order No': this.tracking_data.order_no,
+          });
       }
       if (this.cancel_popup === 1) {
         this.cancel_popup = 0;
