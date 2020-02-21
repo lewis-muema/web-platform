@@ -9,7 +9,6 @@
 import Vue from 'vue';
 import { mapMutations, mapActions } from 'vuex';
 import VeeValidate, { Validator } from 'vee-validate';
-import VueTelInput from 'vue-tel-input';
 import externalStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import HeaderComponent from './components/HeaderComponent.vue';
@@ -17,7 +16,6 @@ import BodComponent from './components/BodComponent.vue';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
-Vue.use(VueTelInput);
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
