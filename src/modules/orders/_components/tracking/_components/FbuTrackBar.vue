@@ -1,8 +1,11 @@
 <template>
-  <div class="homeview--childinfo">
+  <div
+    class="homeview--childinfo"
+    :class="loading ? 'loading-parent' : ''"
+  >
     <transition name="fade">
       <div
-        v-if="Object.prototype.hasOwnProperty.call(orderData, 'freight_order_details')"
+        v-if="Object.prototype.hasOwnProperty.call(orderData, 'freight_order_details') && !loading"
         class="homeview--childinfo-card"
       >
         <div class="homeview--childinfo-card-left">
@@ -92,7 +95,10 @@
             :key="action.actionText"
             class="homeview--childinfo-order-actions"
           >
-            <div class="homeview-action-icon-divider" v-if="index < actions.length - 1"></div>
+            <div
+              class="homeview-action-icon-divider"
+              v-if="index < actions.length - 1"
+            ></div>
             <i
               :class="action.actionClass"
               class="el-icon-success"
@@ -105,6 +111,10 @@
         </div>
       </div>
     </transition>
+    <i
+      v-if="loading"
+      class="el-icon-loading tracking-loading-spinner"
+    />
   </div>
 </template>
 
@@ -358,6 +368,17 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../../../assets/styles/orders_order_placement.css?v=1';
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
+@import '../../../../../assets/styles/orders_order_placement.css?v=2';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=2';
+</style>
+<style lang="css">
+.tracking-loading-spinner {
+  font-size: 70px;
+}
+.loading-parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 </style>
