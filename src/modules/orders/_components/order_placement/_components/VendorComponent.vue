@@ -831,6 +831,24 @@ export default {
       }
     },
     goToNextStep() {
+       let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          window.ga('send', 'event', {
+            eventCategory: 'Order Placement',
+            eventAction: 'Click',
+            eventLabel: 'Continue Button - Order Placement Page - WebApp',
+          });
+        }
+      } catch (er) {
+        // ...
+      }
+
       this.setActivePackageClass(this.activeClass);
       this.setActiveVendorDetails(this.activeVendorPriceData);
       this.setOuterActiveVendorDetails(this.activeVendorPriceData);
