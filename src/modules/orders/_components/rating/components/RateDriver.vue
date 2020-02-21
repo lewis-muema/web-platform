@@ -93,9 +93,11 @@ export default {
     };
     this.$store.dispatch('$_rating/requestOrder', usersFullPayload).then(
       (response) => {
-        this.driver_name = response.rider.rider_name;
-        this.driver_photo = response.rider.rider_photo;
-        this.user_email = response.user.email;
+        if (response.status) {
+          this.driver_name = response.rider.rider_name;
+          this.driver_photo = response.rider.rider_photo;
+          this.user_email = response.user.email;
+        }
       },
       (error) => {
         const notification = { title: '', level: 2, message: 'Something went wrong.' }; // notification object

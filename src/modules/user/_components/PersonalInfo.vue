@@ -162,9 +162,11 @@ export default {
   methods: {
     set_data() {
       const session = this.$store.getters.getSession;
-      this.user_name = session[session.default].user_name;
-      this.user_email = session[session.default].user_email;
-      this.phone = session[session.default].user_phone;
+      if (Object.keys(session).length > 0) {
+        this.user_name = session[session.default].user_name;
+        this.user_email = session[session.default].user_email;
+        this.phone = session[session.default].user_phone;
+      }
     },
     validate_phone() {
       this.$validator.validate();
