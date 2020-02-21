@@ -180,6 +180,7 @@ export default {
     this.rootListener();
   },
   destroyed() {
+    clearInterval(this.countdown);
     const session = this.$store.getters.getSession;
     if (localStorage.jwtToken && !['order_placement', 'by_pass', 'rating', 'tracking'].includes(this.$route.name) && Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
       this.$router.push('/orders');
@@ -200,6 +201,7 @@ export default {
       this.$root.$on('Countdown status', (arg1, arg2) => {
         this.blinder_status = arg1;
         this.countdown_status = arg1;
+        clearInterval(this.countdown);
         this.start_countdown(arg2);
       });
     },
@@ -210,7 +212,12 @@ export default {
         this.hours = this.moment.duration(secs, 'seconds').get('hours');
         this.minutes = this.moment.duration(secs, 'seconds').get('minutes');
         this.seconds = this.moment.duration(secs, 'seconds').get('seconds');
-        secs -= 1;
+        if (secs === 0) {
+          this.blinder_status = false;
+          this.countdown_status = false;
+        } else {
+          secs -= 1;
+        }
       }, 1000);
     },
     registerOrdersStore() {
