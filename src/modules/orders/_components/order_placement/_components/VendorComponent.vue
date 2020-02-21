@@ -831,7 +831,7 @@ export default {
       }
     },
     goToNextStep() {
-       let analyticsEnv = '';
+      let analyticsEnv = '';
       try {
         analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
       } catch (er) {

@@ -11,6 +11,7 @@
         class="blinder"
         :class="countdown_status ? 'blinder-override' : ''"
       >
+        <<<<<<< HEAD
         <div
           v-if="upload_status"
           class="upload-popup"
@@ -105,6 +106,8 @@
             </div>
           </div>
         </div>
+        =======
+        >>>>>>> cb711c11eab1972bc7573e7112a55db0a0efde0a
       </div>
       <map-component />
       <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />

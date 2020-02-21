@@ -1,5 +1,8 @@
 <template lang="html">
-  <div id="cop_info_container" class="cop_info_container">
+  <div
+    id="cop_info_container"
+    class="cop_info_container"
+  >
     <div class="cop-edit-inner">
       <div class="company-edit2-details">
         Edit Company Details.
@@ -14,21 +17,29 @@
             class="input-control cop-edit-form"
             type="text"
             autocomplete="off"
-          />
+          >
         </div>
 
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
             <span>Name of contact person</span>
           </label>
-          <input v-model="contact_name" class="input-control cop-edit-form" type="text" />
+          <input
+            v-model="contact_name"
+            class="input-control cop-edit-form"
+            type="text"
+          >
         </div>
 
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
             <span>Email of Contact person</span>
           </label>
-          <input v-model="contact_email" class="input-control cop-edit-form" type="text" />
+          <input
+            v-model="contact_email"
+            class="input-control cop-edit-form"
+            type="text"
+          >
         </div>
 
         <div class="cop-edit-holder">
@@ -48,7 +59,11 @@
         </div>
 
         <div class="sign-holder">
-          <button class="button-primary btn-edit-cop-info" type="submit" @click="save_cop">
+          <button
+            class="button-primary btn-edit-cop-info"
+            type="submit"
+            @click="save_cop"
+          >
             Save
           </button>
         </div>
@@ -116,10 +131,10 @@ export default {
 
     save_cop() {
       if (
-        this.cop_name !== '' &&
-        this.phone !== '' &&
-        this.contact_email !== '' &&
-        this.contact_name !== ''
+        this.cop_name !== ''
+        && this.phone !== ''
+        && this.contact_email !== ''
+        && this.contact_name !== ''
       ) {
         const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
 
@@ -143,7 +158,7 @@ export default {
           };
 
           this.requestCopInfo(fullPayload).then(
-            response => {
+            (response) => {
               if (response.status) {
                 const updatedSession = session;
                 updatedSession[session.default].cop_name = this.cop_name;
@@ -177,12 +192,12 @@ export default {
                 this.$store.commit('setNotificationStatus', true);
               }
             },
-            error => {
+            (error) => {
               const level = 3;
               const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
               this.$store.commit('setNotification', notification);
               this.$store.commit('setNotificationStatus', true);
-            }
+            },
           );
         } else {
           const level = 3;

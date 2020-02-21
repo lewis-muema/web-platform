@@ -15,7 +15,11 @@ const fetchOngoingOrders = function fetchOngoingOrders({ commit, dispatch, rootS
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosPost', payload, { root: true }).then(
       (response) => {
-        commit('setOngoingOrders', response.data);
+        if (response.status) {
+          commit('setOngoingOrders', response.data);
+        } else {
+          commit('setOngoingOrders', []);
+        }
         resolve(response.data);
       },
       (error) => {
