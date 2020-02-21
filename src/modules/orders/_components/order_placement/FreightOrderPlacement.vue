@@ -59,6 +59,8 @@ export default {
       categories: [],
       loading: false,
       locations: [],
+      countdown: '',
+      timerStatus: true,
     };
   },
   computed: {
@@ -77,6 +79,7 @@ export default {
     this.checkSessionData();
   },
   destroyed() {
+    clearInterval(this.countdown);
     this.$root.$emit('Countdown status', false);
     this.destroyOrderPlacement();
   },
@@ -91,11 +94,13 @@ export default {
       requestFreightProductCategories: '$_orders/$_home/requestFreightProductCategories',
     }),
     requestCategories() {
+      const that = this;
       this.loadingStatus = true;
       const payload = {
         app: 'AUTH',
         endpoint: 'vendors/freight_categories',
       };
+      clearInterval(this.countdown);
       this.requestFreightProductCategories(payload).then(
         (response) => {
           this.loadingStatus = false;
@@ -111,7 +116,16 @@ export default {
         },
         // eslint-disable-next-line no-unused-vars
         (error) => {
-          if (Object.prototype.hasOwnProperty.call(error, 'count_down')) {
+          if (Object.prototype.hasOwnProperty.call(error, 'count_down') && error.count_down.show_count_down) {
+            // eslint-disable-next-line no-param-reassign
+            let secs = error.count_down.seconds;
+            this.countdown = setInterval(() => {
+              if (secs === 0) {
+                that.requestCategories();
+              } else {
+                secs -= 1;
+              }
+            }, 1000);
             this.$root.$emit('Countdown status', true, error.count_down);
           } else {
             this.doNotification(2, 'Could not fetch freight categories', 'Please try again');
@@ -194,7 +208,7 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../../assets/styles/orders_order_placement.css?v=1';
+@import '../../../../assets/styles/orders_order_placement.css?v=2';
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */

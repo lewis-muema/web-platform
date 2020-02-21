@@ -155,7 +155,15 @@ export default {
       deep: true,
     },
     parent_order() {
-      this.initializeComponent();
+      if (!this.parent_order) {
+        this.showing = 1;
+        this.clearVendorMarkers();
+        this.set_tracking_data({});
+      } else {
+        this.child_orders = [];
+        this.child_orders = this.validateChildOrders(this.parent_order.child_orders);
+        this.showing = 2;
+      }
     },
   },
   mounted() {
@@ -183,10 +191,10 @@ export default {
       }
     },
     initializeComponent() {
+      this.poll();
       if (!this.parent_order) {
         this.showing = 1;
         this.loading = true;
-        this.poll();
         this.clearVendorMarkers();
         this.set_tracking_data({});
       } else {
@@ -263,6 +271,11 @@ export default {
               that.poll();
             }, 15000);
           }
+          this.filter_orders.forEach((row, i) => {
+            if (this.parent_order && row.order_no === this.parent_order.order_no && row.parent_order_no === this.parent_order.parent_order_no) {
+              this.set_parent_order(row);
+            }
+          });
           that.loading = false;
         });
       } catch (e) {
