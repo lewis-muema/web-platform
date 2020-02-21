@@ -11,14 +11,12 @@
 <script>
 import Vue from 'vue';
 import VeeValidate, { Validator } from 'vee-validate';
-import VueTelInput from 'vue-tel-input';
 import authStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import ExternalHeader from '../../components/headers/ExternalHeader.vue';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
-Vue.use(VueTelInput);
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
