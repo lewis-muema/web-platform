@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
 import Vue from 'vue';
 import * as VueGoogleMaps from 'vue2-google-maps';
+import VueTelInput from 'vue-tel-input';
 import { createApp } from './app';
 
 // client-specific bootstrapping logic...
@@ -13,6 +14,7 @@ Vue.use(VueGoogleMaps, {
     key: process.env.CONFIGS_ENV.GOOGLE_API_KEY,
   },
 });
+Vue.use(VueTelInput);
 if (window.__INITIAL_STATE__) {
   store.replaceState(window.__INITIAL_STATE__);
 }
