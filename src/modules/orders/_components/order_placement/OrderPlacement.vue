@@ -255,7 +255,10 @@ export default {
     this.initializeOrderFlow();
   },
   mounted() {
-    this.checkSessionData();
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0) {
+      this.checkSessionData();
+    }
   },
   destroyed() {
     this.destroyOrderPlacement();
