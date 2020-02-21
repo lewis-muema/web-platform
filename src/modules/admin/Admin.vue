@@ -43,14 +43,12 @@ n-container"
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import VeeValidate, { Validator } from 'vee-validate';
-import VueTelInput from 'vue-tel-input';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
 import adminStore from './_store';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
-Vue.use(VueTelInput);
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
