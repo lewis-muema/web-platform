@@ -7,7 +7,7 @@ export default {
   state() {
     return {
       page: 0, // 0 - Order Placement, 1 - Tracking, 2 - Rating
-      ongoing_orders: {},
+      ongoing_orders: [],
       map: {
         markers: [],
         polyline: {

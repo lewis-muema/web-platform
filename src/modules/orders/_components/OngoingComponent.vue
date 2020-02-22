@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    v-if="!loading && get_orders.length > 0"
+    v-if="!loading && ongoing_data > 0"
     class="ongoing--outer"
   >
     <div
@@ -71,7 +71,14 @@ export default {
       getSession: 'getSession',
     }),
     num_ongoing() {
-      return this.get_orders.length;
+      return Object.keys(this.get_orders).length;
+    },
+    ongoing_data() {
+      let length = 0;
+      if (this.get_orders !== undefined) {
+        length = this.get_orders.length;
+      }
+      return length;
     },
     classObject() {
       return {
@@ -84,14 +91,20 @@ export default {
   watch: {
     getSession: {
       handler() {
-        this.$store.dispatch('$_orders/fetchOngoingOrders');
+        const session = this.$store.getters.getSession;
+        if (Object.keys(session).length > 0) {
+          this.$store.dispatch('$_orders/fetchOngoingOrders');
+        }
       },
       deep: true,
     },
   },
   mounted() {
     this.loading = true;
-    this.poll();
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0 && this.get_orders !== undefined) {
+      this.poll();
+    }
   },
   methods: {
     ...mapMutations({
@@ -141,7 +154,7 @@ export default {
           that.loading = false;
         });
       } catch (e) {
-        Sentry.captureException(e);
+        this.loading = false;
       }
     },
     getStatus(order) {
