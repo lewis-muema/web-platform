@@ -244,7 +244,7 @@ export default {
     get_session: {
       handler(val, oldVal) {
         if (this.show_vendor_view || this.loading) {
-          this.doPriceRequest();
+          this.handleStoredData();
         }
       },
       deep: true,
@@ -255,9 +255,10 @@ export default {
     this.initializeOrderFlow();
   },
   mounted() {
-    this.checkSessionData();
-    this.set_tracking_data({});
-    this.clearVendorMarkers();
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0) {
+      this.checkSessionData();
+    }
   },
   destroyed() {
     this.destroyOrderPlacement();
@@ -296,8 +297,6 @@ export default {
       setOuterPriceRequestObject: '$_orders/setOuterPriceRequestObject',
       setOrderState: '$_orders/$_home/setOrderState',
       setExtendOptions: '$_orders/$_home/setExtendOptions',
-      set_tracking_data: '$_orders/$_tracking/setTrackingData',
-      clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
 
     ...mapActions({
@@ -528,6 +527,12 @@ export default {
           this.loading = false;
         },
       );
+    },
+    handleStoredData() {
+      this.clearOuterPriceRequestObject();
+      this.clearOuterActiveVendorDetails();
+      this.setExtendOptions(false);
+      this.doPriceRequest();
     },
 
     doNotification(level, title, message) {

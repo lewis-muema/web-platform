@@ -576,4 +576,9 @@ export default {
 .signup-sendy-logo{
     width:85px;
 }
+vue-tel-input > div > ul{
+  width: 587% !important;
+  margin-left: -25% !important;
+  margin-top: 7px !important;
+}
 </style>
