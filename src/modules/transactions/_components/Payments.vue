@@ -157,35 +157,37 @@ export default {
     ...mapActions(['$_transactions/requestPayments']),
     loadPayments() {
       const sessionData = this.$store.getters.getSession;
-      let paymentPayload = {};
+      if (Object.keys(sessionData).length > 0) {
+        let paymentPayload = {};
 
-      if (sessionData.default === 'biz') {
-        paymentPayload = {
-          cop_id: sessionData.biz.cop_id,
-          user_type: sessionData.biz.user_type,
-          user_id: sessionData.biz.user_id,
+        if (sessionData.default === 'biz') {
+          paymentPayload = {
+            cop_id: sessionData.biz.cop_id,
+            user_type: sessionData.biz.user_type,
+            user_id: sessionData.biz.user_id,
+          };
+        } else {
+          // create peer payload
+          paymentPayload = {
+            user_id: sessionData[sessionData.default].user_id,
+          };
+        }
+
+        const fullPayload = {
+          values: paymentPayload,
+          vm: this,
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'payments',
         };
-      } else {
-        // create peer payload
-        paymentPayload = {
-          user_id: sessionData[sessionData.default].user_id,
-        };
+        this.$store.dispatch('$_transactions/requestPayments', fullPayload).then(
+          () => {
+            this.empty_payments_state = 'Payments Not Found';
+          },
+          () => {
+            this.empty_payments_state = 'Payments Failed to Fetch';
+          },
+        );
       }
-
-      const fullPayload = {
-        values: paymentPayload,
-        vm: this,
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'payments',
-      };
-      this.$store.dispatch('$_transactions/requestPayments', fullPayload).then(
-        () => {
-          this.empty_payments_state = 'Payments Not Found';
-        },
-        () => {
-          this.empty_payments_state = 'Payments Failed to Fetch';
-        },
-      );
     },
     take_to_payment() {
       this.$router.push('/payment/mpesa');
