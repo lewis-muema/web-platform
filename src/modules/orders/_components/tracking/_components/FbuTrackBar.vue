@@ -96,9 +96,9 @@
             class="homeview--childinfo-order-actions"
           >
             <div
-              class="homeview-action-icon-divider"
               v-if="index < actions.length - 1"
-            ></div>
+              class="homeview-action-icon-divider"
+            />
             <i
               :class="action.actionClass"
               class="el-icon-success"

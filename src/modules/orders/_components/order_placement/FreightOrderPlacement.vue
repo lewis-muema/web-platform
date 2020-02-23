@@ -60,7 +60,6 @@ export default {
       loading: false,
       locations: [],
       countdown: '',
-      timerStatus: true,
     };
   },
   computed: {
