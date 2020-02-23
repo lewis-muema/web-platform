@@ -202,7 +202,9 @@ export default {
         this.blinder_status = arg1;
         this.countdown_status = arg1;
         clearInterval(this.countdown);
-        this.start_countdown(arg2);
+        if (arg1) {
+          this.start_countdown(arg2);
+        }
       });
     },
     start_countdown(time) {
