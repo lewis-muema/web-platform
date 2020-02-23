@@ -2,6 +2,7 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
+/* eslint-disable */
 importScripts('https://www.gstatic.com/firebasejs/7.4.0/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/7.4.0/firebase-messaging.js');
 
@@ -28,7 +29,6 @@ self.addEventListener('push', event => {
     logAction: 'notification',
     logData: notificationData.data,
   });
-
   const { title } = notificationData.notification;
   const options = {
     body: notificationData.notification.body,
@@ -52,7 +52,12 @@ self.addEventListener('notificationclick', event => {
   event.waitUntil(
     self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then(allClients => {
       let sendyClient = false;
-
+      let appUrl = '';
+      if(Object.prototype.hasOwnProperty.call(notificationData.data, 'freight_status') == false) {
+        appUrl = `/orders/tracking/${orderNo}`;
+      } else {
+        appUrl = `/orders/freight/tracking/${orderNo}`;
+      }
       for (const client of allClients) {
         const url = new URL(client.url);
         if (url.origin === `${origin}`) {
@@ -64,15 +69,14 @@ self.addEventListener('notificationclick', event => {
           channel.postMessage({
             focusStatus: true,
             focusOrder: orderNo,
+            url: appUrl,
           });
-
           event.notification.close();
           break;
         }
       }
-
       if (!sendyClient) {
-        event.waitUntil(clients.openWindow(`${origin}/orders/tracking/${orderNo}`));
+        event.waitUntil(clients.openWindow(`${origin}${appUrl}`));
       }
       event.notification.close();
     })

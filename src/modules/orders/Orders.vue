@@ -9,33 +9,106 @@
       <div
         v-if="blinder_status"
         class="blinder"
+        :class="countdown_status ? 'blinder-override' : ''"
       >
-        <div class="upload-popup" v-if="upload_status">
+        <div
+          v-if="upload_status"
+          class="upload-popup"
+        >
           <i
             slot="suffix"
             class="close el-input__icon el-icon-error"
             @click="closePopup()"
           />
-          <img src="https://images.sendyit.com/web_platform/orders/upload.png" class="upload-photo" />
-          <p class="no-margin upload-par"><span class="upload-link" @click="simulateClick()">Click here</span> to upload</p>
-          <p class="no-margin upload-text">(We support .csv .xlsx and .xml)</p>
-          <input type="file" id="upload-input" accept=".xls,.xlsx,.csv,.xml" @change="attachUpload" ref="uploadbttn">
-          <button @click="upload()" class="upload-csv-button" :class="uploadBtn" :disabled="uploadBtn === 'button--primary-inactive inactive-1'" id="upload-button">Upload CSV</button>
+          <img
+            src="https://images.sendyit.com/web_platform/orders/upload.png"
+            class="upload-photo"
+          >
+          <p class="no-margin upload-par">
+            <span
+              class="upload-link"
+              @click="simulateClick()"
+            >Click here</span> to upload
+          </p>
+          <p class="no-margin upload-text">
+            (We support .csv .xlsx and .xml)
+          </p>
+          <input
+            id="upload-input"
+            ref="uploadbttn"
+            type="file"
+            accept=".xls,.xlsx,.csv,.xml"
+            @change="attachUpload"
+          >
+          <button
+            id="upload-button"
+            class="upload-csv-button"
+            :class="uploadBtn"
+            :disabled="uploadBtn === 'button--primary-inactive inactive-1'"
+            @click="upload()"
+          >
+            Upload CSV
+          </button>
         </div>
-        <div class="upload-popup" v-if="success_status">
+        <div
+          v-if="success_status"
+          class="upload-popup"
+        >
           <i
             slot="suffix"
             class="close el-input__icon el-icon-error"
             @click="closePopup()"
           />
-          <img src="https://images.sendyit.com/web_platform/orders/OrderConfirmation.svg" class="upload-photo" />
-          <p class="no-margin upload-par">Your file has been uploaded! An order will be generated shortly.</p>
-        </div>        
+          <img
+            src="https://images.sendyit.com/web_platform/orders/OrderConfirmation.svg"
+            class="upload-photo"
+          >
+          <p class="no-margin upload-par">
+            Your file has been uploaded! An order will be generated shortly.
+          </p>
+        </div>
+        <div
+          v-if="countdown_status"
+          class="countdown-popup"
+        >
+          <img
+            class="countdown-img"
+            src="https://images.sendyit.com/web_platform/orders/countdown.png"
+          >
+          <div class="countdown-container">
+            <p class="countdown-heading">
+              SENDY FREIGHT
+            </p>
+            <p class="countdown-par">
+              LAUNCHING SOON
+            </p>
+            <div class="timer">
+              <span class="countdown-time">
+                <p class="timer-digits">{{ days }}</p>
+                <p class="timer-description">DAYS</p>
+              </span>
+              <span class="countdown-divider">:</span>
+              <span class="countdown-time">
+                <p class="timer-digits">{{ hours }}</p>
+                <p class="timer-description">HOURS</p>
+              </span>
+              <span class="countdown-divider">:</span>
+              <span class="countdown-time">
+                <p class="timer-digits">{{ minutes }}</p>
+                <p class="timer-description">MINUTES</p>
+              </span>
+              <span class="countdown-divider">:</span>
+              <span class="countdown-time">
+                <p class="timer-digits">{{ seconds }}</p>
+                <p class="timer-description">SECONDS</p>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
       <map-component />
-      <FbuChildOrders v-if="this.$route.path === '/orders/freight'" />
-      <FbuChildOrderTracking v-else-if="this.$route.name === 'freight_order_tracking'" />
-      <ongoing-component v-else />
+      <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
+      <ongoing-component v-if="this.$route.name !== 'freight_order_tracking' && this.$route.name !== 'freight_order_placement'" />
       <transition
         name="fade"
         mode="out-in"
@@ -55,11 +128,12 @@ import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
 import OngoingComponent from './_components/OngoingComponent.vue';
 import FbuChildOrders from './_components/FbuChildOrders.vue';
-import FbuChildOrderTracking from './_components/tracking/_components/FbuChildOrderTracking.vue';
 
 export default {
   name: 'Orders',
-  components: { MainHeader, MapComponent, OngoingComponent, FbuChildOrders, FbuChildOrderTracking },
+  components: {
+    MainHeader, MapComponent, OngoingComponent, FbuChildOrders,
+  },
   mixins: [RegisterStoreModule],
   data() {
     return {
@@ -67,10 +141,16 @@ export default {
       message: '',
       loading_status: false,
       blinder_status: false,
+      countdown_status: false,
       discount_status: false,
       upload_status: false,
       uploadButton: '',
       success_status: false,
+      countdown: '',
+      days: '00',
+      hours: '00',
+      minutes: '00',
+      seconds: '00',
     };
   },
   computed: {
@@ -100,6 +180,7 @@ export default {
     this.rootListener();
   },
   destroyed() {
+    clearInterval(this.countdown);
     const session = this.$store.getters.getSession;
     if (localStorage.jwtToken && !['order_placement', 'by_pass', 'rating', 'tracking'].includes(this.$route.name) && Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
       this.$router.push('/orders');
@@ -117,6 +198,27 @@ export default {
         this.upload_status = arg1;
         this.success_status = false;
       });
+      this.$root.$on('Countdown status', (arg1, arg2) => {
+        this.blinder_status = arg1;
+        this.countdown_status = arg1;
+        clearInterval(this.countdown);
+        this.start_countdown(arg2);
+      });
+    },
+    start_countdown(time) {
+      let secs = time.seconds;
+      this.countdown = setInterval(() => {
+        this.days = this.moment.duration(secs, 'seconds').get('days');
+        this.hours = this.moment.duration(secs, 'seconds').get('hours');
+        this.minutes = this.moment.duration(secs, 'seconds').get('minutes');
+        this.seconds = this.moment.duration(secs, 'seconds').get('seconds');
+        if (secs === 0) {
+          this.blinder_status = false;
+          this.countdown_status = false;
+        } else {
+          secs -= 1;
+        }
+      }, 1000);
     },
     registerOrdersStore() {
       const moduleIsRegistered = this.$store._modules.root._children.$_orders !== undefined;
@@ -215,5 +317,69 @@ export default {
 .fade-enter,
 .fade-leave-active {
   opacity: 0;
+}
+.blinder-override {
+  background: white !important;
+}
+.countdown-popup {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  height: inherit;
+}
+.countdown-img {
+  width: 80vw;
+  display: block;
+  position: absolute;
+  margin: auto;
+  bottom: -100%;
+  left: -100%;
+  top: -100%;
+  right: -100%;
+}
+.countdown-container {
+  background: white;
+  width: 30%;
+  z-index: 80;
+  padding: 40px;
+  border-radius: 25px;
+  text-align: center;
+  margin-top: -50px;
+}
+.countdown-heading {
+  font-weight: 500;
+  font-size: 25px;
+}
+.countdown-par {
+  font-size: 15px;
+}
+.countdown-par, .countdown-heading {
+  text-align: center;
+  color: #1B7FC3;
+  margin: 10px;
+}
+.timer {
+  display: flex;
+  color: #1a7fc3;
+}
+.countdown-time {
+  width: 25%;
+}
+.timer-digits {
+  font-size: 50px;
+  margin: 0;
+  font-weight: 500;
+  text-shadow: 0px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.timer-description {
+  margin: 0px;
+  font-size: 10px;
+  text-shadow: 0px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.countdown-divider {
+  margin-top: 10px;
+  font-size: 25px;
+  font-weight: 500;
+  text-shadow: 0px 3px 1px rgba(0, 0, 0, 0.2);
 }
 </style>

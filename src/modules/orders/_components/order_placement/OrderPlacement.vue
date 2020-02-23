@@ -297,6 +297,8 @@ export default {
       setOuterPriceRequestObject: '$_orders/setOuterPriceRequestObject',
       setOrderState: '$_orders/$_home/setOrderState',
       setExtendOptions: '$_orders/$_home/setExtendOptions',
+      set_tracking_data: '$_orders/$_tracking/setTrackingData',
+      clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
 
     ...mapActions({
@@ -692,7 +694,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../../assets/styles/orders_order_placement.css?v=1";
+@import "../../../../assets/styles/orders_order_placement.css?v=2";
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */
