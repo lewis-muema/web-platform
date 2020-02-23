@@ -1,6 +1,8 @@
 <template>
-  <div id="app"
-class="box app app-overflow">
+  <div
+    id="app"
+    class="box app app-overflow"
+  >
     <!-- Global component responsible for flashing notifications -->
     <sendy-flash details />
 
@@ -43,14 +45,16 @@ export default {
     },
   },
   beforeMount() {
-    Sentry.init({
-      dsn: ENV.SENTRY_DSN,
-      integrations: [
-        new Sentry.Integrations.Vue({
-          Vue,
-        }),
-      ],
-    });
+    if (ENV.DOMAIN !== 'localhost') {
+      Sentry.init({
+        dsn: ENV.SENTRY_DSN,
+        integrations: [
+          new Sentry.Integrations.Vue({
+            Vue,
+          }),
+        ],
+      });
+    }
   },
   created() {
     this.$store.commit('setENV', ENV);
@@ -133,42 +137,46 @@ export default {
     },
     updateFirebaseToken() {
       const session = this.getSession;
-      const fcmPayload = {
-        client_type: 'corporate',
-      };
-      if (session.default === 'biz') {
-        fcmPayload.cop_user_id = session[session.default].user_id;
-      } else {
-        fcmPayload.user_id = session[session.default].user_id;
+      if (Object.keys(session).length > 0) {
+        const fcmPayload = {
+          client_type: 'corporate',
+        };
+        if (session.default === 'biz') {
+          fcmPayload.cop_user_id = session[session.default].user_id;
+        } else {
+          fcmPayload.user_id = session[session.default].user_id;
+        }
+
+        fcmPayload.token = this.$store.getters.getFCMToken;
+
+        const payload = {
+          values: fcmPayload,
+          app: 'NODE_PRIVATE_API',
+          vm: this,
+          endpoint: 'firebase_token',
+        };
+
+        this.$store
+          .dispatch('requestAxiosPost', payload)
+          .then(response => response)
+          .catch(err => err);
       }
-
-      fcmPayload.token = this.$store.getters.getFCMToken;
-
-      const payload = {
-        values: fcmPayload,
-        app: 'NODE_PRIVATE_API',
-        vm: this,
-        endpoint: 'firebase_token',
-      };
-
-      this.$store
-        .dispatch('requestAxiosPost', payload)
-        .then(response => response)
-        .catch(err => err);
     },
     initializeFirebase() {
       this.$messaging
         .requestPermission()
         .then(() => firebase.messaging().getToken())
         .then((token) => {
-          this.fcmToken = token;
-          this.$store.commit('setFCMToken', token);
+          if (token !== null) {
+            this.fcmToken = token;
+            this.$store.commit('setFCMToken', token);
 
-          // check if session exists and if so update
-          const session = this.getSession;
-          // eslint-disable-next-line no-prototype-builtins
-          if ({}.hasOwnProperty.call(session, 'default')) {
-            this.updateFirebaseToken();
+            // check if session exists and if so update
+            const session = this.getSession;
+            // eslint-disable-next-line no-prototype-builtins
+            if ({}.hasOwnProperty.call(session, 'default')) {
+              this.updateFirebaseToken();
+            }
           }
         })
         .catch((err) => {

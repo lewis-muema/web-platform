@@ -129,27 +129,32 @@ export default {
     },
   },
   mounted() {
-    this.switchOption();
-    this.loggedUser();
-    this.superUserCheck();
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0) {
+      this.switchOption();
+      this.loggedUser();
+      this.superUserCheck();
+    }
   },
   methods: {
     loggedUser() {
       const session = this.$store.getters.getSession;
-      const fullName = session[session.default].user_name.split(' ');
-      const firstName = fullName[0];
-      this.helpline_contact = session.customer_care_number;
-      if (session.default === 'biz') {
-        // Admin
-        if (session[session.default].user_type === 2) {
-          this.admin_user = true;
-          this.logged_user = `${firstName} (Business Acc)`;
-        } else if (session[session.default].user_type === 1) {
-          this.logged_user = `${firstName} (Business Acc)`;
+      if (Object.keys(session).length > 0) {
+        const fullName = session[session.default].user_name.split(' ');
+        const firstName = fullName[0];
+        this.helpline_contact = session.customer_care_number;
+        if (session.default === 'biz') {
+          // Admin
+          if (session[session.default].user_type === 2) {
+            this.admin_user = true;
+            this.logged_user = `${firstName} (Business Acc)`;
+          } else if (session[session.default].user_type === 1) {
+            this.logged_user = `${firstName} (Business Acc)`;
+          }
+        } else {
+          this.admin_user = false;
+          this.logged_user = `${firstName} (Personal Acc)`;
         }
-      } else {
-        this.admin_user = false;
-        this.logged_user = `${firstName} (Personal Acc)`;
       }
     },
     superUserCheck() {

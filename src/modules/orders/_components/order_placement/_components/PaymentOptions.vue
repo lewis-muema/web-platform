@@ -1072,18 +1072,20 @@ export default {
         (function (pollCount) {
           // eslint-disable-next-line consistent-return
           that.mpesa_poll_timer_id = window.setTimeout(() => {
-            const res = that.checkRunningBalance(oldRb, payload);
-            if (res) {
+            that.checkRunningBalance(oldRb, payload);
+            if (that.mpesa_payment) {
               // eslint-disable-next-line no-param-reassign
               pollCount = pollLimit;
               that.payment_state = 0;
               that.loading = false;
               that.doNotification('1', 'Payment successful', 'Completing your order...');
               that.doCompleteOrder();
+              that.mpesa_payment = false;
+              that.mpesa_payment_state = true;
               return true;
             }
 
-            if (pollLimitValue === 6) {
+            if (pollLimitValue === 6 && !that.mpesa_payment_state) {
               if (pollCount === 5) {
                 that.doNotification(
                   '0',
@@ -1094,6 +1096,7 @@ export default {
                 that.loading = false;
                 that.requestMpesaPaymentPoll(60);
                 that.mpesa_payment_state = false;
+                that.mpesa_payment = false;
               }
             }
           }, 10000 * pollCount);

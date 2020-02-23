@@ -201,16 +201,6 @@ export default {
       },
     };
   },
-  watch: {
-    get_session: {
-      handler(val, oldVal) {
-        if (this.show_vendor_view || this.loading) {
-          this.handleStoredData();
-        }
-      },
-      deep: true,
-    },
-  },
   computed: {
     ...mapGetters({
       get_map_markers: '$_orders/getMarkers',
@@ -250,14 +240,25 @@ export default {
       );
     },
   },
+  watch: {
+    get_session: {
+      handler(val, oldVal) {
+        if (this.show_vendor_view || this.loading) {
+          this.handleStoredData();
+        }
+      },
+      deep: true,
+    },
+  },
   created() {
     this.instantiateHomeComponent();
     this.initializeOrderFlow();
   },
   mounted() {
-    this.checkSessionData();
-    this.set_tracking_data({});
-    this.clearVendorMarkers();
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0) {
+      this.checkSessionData();
+    }
   },
   destroyed() {
     this.destroyOrderPlacement();
@@ -687,7 +688,6 @@ export default {
     getSessionItem(itemName) {
       const session = this.$store.getters.getSession;
       return session[session.default][itemName];
-
     },
   },
 };
