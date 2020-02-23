@@ -1127,4 +1127,12 @@ export default {
 ::-webkit-scrollbar-thumb:window-inactive {
   background-color: rgba(0, 0, 0, 0.2);
 }
+.homeview--return-destination-input, .homeview--input-bundler__destination-input {
+  color: black;
+  font-weight: 600;
+}
+.homeview--return-destination-input::-webkit-input-placeholder,
+.homeview--input-bundler__destination-input::-webkit-input-placeholder {
+  font-weight: 400;
+}
 </style>
