@@ -1085,8 +1085,8 @@ export default {
               return true;
             }
 
-            if (pollLimitValue === 6 && !that.mpesa_payment_state) {
-              if (pollCount === 5) {
+            if (pollLimitValue === 6) {
+              if (pollCount === 5 && !that.mpesa_payment_state) {
                 that.doNotification(
                   '0',
                   'Payment not received',
