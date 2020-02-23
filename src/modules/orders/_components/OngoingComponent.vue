@@ -19,7 +19,7 @@
         v-if="showing"
         class="ongoing--column"
       >
-        <template v-for="order in get_orders">
+        <template v-for="order in filter_orders">
           <div
             class="ongoing--card"
             :class="{ active: active_card(order.order_no) }"
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
@@ -71,7 +71,33 @@ export default {
       getSession: 'getSession',
     }),
     num_ongoing() {
-      return Object.keys(this.get_orders).length;
+      return this.filter_orders.length;
+    },
+    filter_orders() {
+      const orders = [];
+      const childOrders = [];
+      const parentOrders = [];
+      this.get_orders.forEach((row) => {
+        if (Object.prototype.hasOwnProperty.call(row, 'child_orders')) {
+          row.child_orders.forEach((child) => {
+            if (!childOrders.includes(child.order_no)) {
+              childOrders.push(child.order_no);
+            }
+          });
+        }
+        if (!Object.prototype.hasOwnProperty.call(row, 'freight_order')) {
+          parentOrders.push(row);
+        }
+      });
+      if (childOrders.length === 0) {
+        return parentOrders;
+      }
+      parentOrders.forEach((row) => {
+        if (!childOrders.includes(row.order_no)) {
+          orders.push(row);
+        }
+      });
+      return orders;
     },
     ongoing_data() {
       let length = 0;
@@ -100,6 +126,7 @@ export default {
     },
   },
   mounted() {
+    this.$store.dispatch('$_orders/fetchOngoingOrders');
     this.loading = true;
     const session = this.$store.getters.getSession;
     if (Object.keys(session).length > 0 && this.get_orders !== undefined) {
@@ -111,6 +138,9 @@ export default {
       change_page: '$_orders/setPage',
       hide_vendors: '$_orders/hideVendors',
       clearVendorMarkers: '$_orders/clearVendorMarkers',
+    }),
+    ...mapActions({
+      fetchOngoingOrders: '$_orders/fetchOngoingOrders',
     }),
     toggle_ongoing() {
       if (this.showing) {

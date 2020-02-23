@@ -137,6 +137,9 @@ const setOuterActivePackageClass = (state, payload) => {
 const clearVendorMarkers = (state) => {
   state.map.vendors = {};
 };
+const setParentOrder = (state, payload) => {
+  state.parent_order = payload;
+};
 export default {
   setPage,
   toggleOngoing,
@@ -160,4 +163,5 @@ export default {
   clearOuterActiveVendorDetails,
   unsetStorePath,
   clearVendorMarkers,
+  setParentOrder,
 };

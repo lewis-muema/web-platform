@@ -297,6 +297,8 @@ export default {
       setOuterPriceRequestObject: '$_orders/setOuterPriceRequestObject',
       setOrderState: '$_orders/$_home/setOrderState',
       setExtendOptions: '$_orders/$_home/setExtendOptions',
+      set_tracking_data: '$_orders/$_tracking/setTrackingData',
+      clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
 
     ...mapActions({
@@ -470,9 +472,9 @@ export default {
         promotion_status: false,
         destination_paid_status: false,
         is_edit: false,
-        country_code: this.getCountryCode,
-        default_currency: this.getDefaultCurrency,
-        preffered_currency: this.getDefaultCurrency,
+        country_code: this.getSessionItem('country_code'),
+        default_currency: this.getSessionItem('default_currency'),
+        preffered_currency: this.getSessionItem('default_currency'),
       };
       const jsonDecodedPath = JSON.stringify(obj);
       infor.path = jsonDecodedPath;
@@ -683,12 +685,16 @@ export default {
         this.clearOuterActiveVendorDetails();
       }
     },
+    getSessionItem(itemName) {
+      const session = this.$store.getters.getSession;
+      return session[session.default][itemName];
+    },
   },
 };
 </script>
 
 <style lang="css">
-@import "../../../../assets/styles/orders_order_placement.css?v=1";
+@import "../../../../assets/styles/orders_order_placement.css?v=2";
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */

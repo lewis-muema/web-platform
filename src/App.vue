@@ -70,12 +70,7 @@ export default {
       channel.addEventListener('message', (event) => {
         const orderNo = event.data.focusOrder;
         if (orderNo !== undefined) {
-          this.$router.push({
-            name: 'tracking',
-            params: {
-              order_no: orderNo,
-            },
-          });
+          this.$router.push(event.data.url);
         }
       });
 
@@ -194,7 +189,6 @@ export default {
         const orderNo = notificationData.order_no;
 
         this.$store.commit('setFCMData', notificationData);
-
         // fire internal notification
         const level = 1;
         const notification = {
