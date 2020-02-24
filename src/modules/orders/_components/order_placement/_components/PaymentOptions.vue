@@ -686,7 +686,10 @@ export default {
               }
               this.shouldDestroy = true;
               this.should_destroy = true;
-              this.$store.dispatch('$_orders/fetchOngoingOrders');
+              if (Object.keys(this.$store.getters.getSession).length > 0) {
+                this.$store.dispatch('$_orders/fetchOngoingOrders');
+              }
+
               this.$root.$emit('Order Placement Force Update');
               let accData = {};
               const data = JSON.parse(payload.values).values;

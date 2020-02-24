@@ -5,7 +5,8 @@
   >
     <transition name="fade">
       <div
-        v-if="Object.prototype.hasOwnProperty.call(orderData, 'freight_order_details') && !loading"
+        v-if="Object.prototype.hasOwnProperty.call(orderData, 'freight_order_details') && !loading
+        && tracking_data !== undefined"
         class="homeview--childinfo-card"
       >
         <div class="homeview--childinfo-card-left">
