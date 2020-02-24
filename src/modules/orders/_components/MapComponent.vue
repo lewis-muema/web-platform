@@ -136,7 +136,7 @@ export default {
       this.infoWinOpen = false;
     },
     vendors(data) {
-      if (this.$route.name === 'freight_order_placement') {
+      if (this.$route.name === 'freight_order_placement' && data !== undefined) {
         const keys = Object.keys(data);
         keys.forEach((row) => {
           this.setTrackersInfoWindow({

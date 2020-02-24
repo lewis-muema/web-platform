@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    v-if="!loading && get_orders.length > 0"
+    v-if="!loading && get_orders !== undefined && get_orders.length > 0"
     class="ongoing--outer"
   >
     <div
