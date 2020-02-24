@@ -30,7 +30,9 @@
                     Duration : {{order_details.order_details.duration}}
               </div>-->
         <div class="order_details_desc_item--wrapper">
-          <div class="order_details_desc_item">Date : {{ order_details.order_date | moment }}</div>
+          <div class="order_details_desc_item">
+            Date : {{ convertToUTCToLocal(order_details.order_date) | moment }}
+          </div>
           <span v-for="j in order_details.logs">
             <div v-if="j.log_type === 3" class="order_details_desc_item">
               Picked : {{ j.log_time | moment }}
@@ -230,6 +232,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import numeral from 'numeral';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
 
 const moment = require('moment');
 
@@ -240,6 +243,7 @@ export default {
       return moment(date).format('MMM Do YYYY, h:mm a');
     },
   },
+  mixins: [TimezoneMxn],
   data() {
     return {
       order_id: '',

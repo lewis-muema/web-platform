@@ -567,11 +567,13 @@
 import numeral from 'numeral';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PaymentOptions from './PaymentOptions.vue';
+import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 
 export default {
   components: {
     PaymentOptions,
   },
+  mixins: [TimezoneMxn],
   data() {
     return {
       first_time: false,
@@ -1033,7 +1035,8 @@ export default {
     },
     transformDate(vendorDetails) {
       if (Object.prototype.hasOwnProperty.call(vendorDetails, 'customer_eta')) {
-        return this.moment(vendorDetails.customer_eta, 'YYYY-MM-DD HH:mm:ss').format('hh.mm a');
+        const localTime = this.convertToUTCToLocal(vendorDetails.customer_eta);
+        return this.moment(localTime, 'YYYY-MM-DD HH:mm:ss').format('hh.mm a');
       }
       return this.moment()
         .add(vendorDetails.eta, 'seconds')
@@ -1081,8 +1084,9 @@ export default {
     },
     scheduleTimeFrame(vendorObject) {
       const dateTime = vendorObject.current_time;
-      const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
-      const timeHrs = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
+      const localTime = this.convertToUTCToLocal(dateTime);
+      const day = this.moment(localTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
+      const timeHrs = this.moment(localTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
 
       if (day === 'Sunday' && timeHrs >= '17') {
         return 'Schedule for tommorow';

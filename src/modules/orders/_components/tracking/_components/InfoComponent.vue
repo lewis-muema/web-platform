@@ -158,7 +158,7 @@
                     </div>
                     <div class="tracking-loader-inner">
                       <span class="info-text-transform">
-                        {{ tracking_data.date_time | moment }}
+                       {{ convertToUTCToLocal(tracking_data.date_time) | moment }}
                       </span>
                     </div>
                   </div>
@@ -276,7 +276,7 @@
                           <p class="infor-top-bar-text stagePassed">
                             {{ orderPlaced }}
                           </p>
-                          <p class="eta_data">{{ tracking_data.eta_data.placed | moment }}</p>
+                          <p class="eta_data">{{ convertToLocalTime(tracking_data.eta_data.placed) | moment }}</p>
                         </div>
                       </li>
 
@@ -293,7 +293,7 @@
                           <p class="infor-top-bar-text stagePassed">
                             Your Order has been scheduled
                           </p>
-                          <p class="eta_data">{{ tracking_data.date_time | moment }}</p>
+                          <p class="eta_data">{{ convertToUTCToLocal(tracking_data.date_time) | moment }}</p>
                         </div>
                       </li>
 
@@ -737,11 +737,13 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 
 const moment = require('moment');
 
 export default {
   name: 'InfoWindow',
+  mixins: [TimezoneMxn],
   filters: {
     moment(date) {
       return moment(date).format('MMM Do YYYY, h:mm a');
