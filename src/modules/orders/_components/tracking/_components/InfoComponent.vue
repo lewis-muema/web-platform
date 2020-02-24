@@ -1176,7 +1176,7 @@ export default {
       this.$store.commit('setNotification', notification);
     },
     cancelOrder() {
-      if (this.cancel_reason !== '') {
+      if (this.cancel_reason !== '' && Object.keys(this.$store.getters.getSession).length > 0) {
         const payload = {
           order_no: this.tracking_data.order_no,
           cancel_reason_id: this.cancel_reason,

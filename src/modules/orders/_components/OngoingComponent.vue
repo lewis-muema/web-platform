@@ -119,8 +119,7 @@ export default {
   watch: {
     getSession: {
       handler() {
-        const session = this.$store.getters.getSession;
-        if (Object.keys(session).length > 0) {
+        if (Object.keys(this.$store.getters.getSession).length > 0) {
           this.$store.dispatch('$_orders/fetchOngoingOrders');
         }
       },
@@ -128,11 +127,10 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('$_orders/fetchOngoingOrders');
-    this.loading = true;
-    const session = this.$store.getters.getSession;
-    if (Object.keys(session).length > 0 && this.get_orders !== undefined) {
+    if (Object.keys(this.$store.getters.getSession).length > 0) {
+      this.$store.dispatch('$_orders/fetchOngoingOrders');
       this.poll();
+      this.loading = true;
     }
   },
   methods: {
