@@ -624,14 +624,14 @@
           <el-dialog :visible.sync="cancelOption" class="cancelOptions">
             <div class="cancelOptions--content-wrap" v-if="cancel_reason !== '4'">
               <div class="">
-                <div class="cancel-reason-option">
+                <div class="cancel-reason-option" id="cancel-reason-title">
                   Cancel this order?
                 </div>
-                <div class="cancel-reason-option">
+                <div class="cancel-reason-option" id="cancel-reason-subtitle">
                   You can place another one at any time.
                 </div>
               </div>
-              <div class="cancel-reason-text">
+              <div class="cancel-reason-text" id="cancel-reason-text">
                 <div class="">
                   <el-radio v-model="cancel_reason" label="4">
                     I placed the wrong locations
