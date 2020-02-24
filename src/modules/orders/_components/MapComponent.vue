@@ -232,7 +232,7 @@ export default {
       const size = Object.keys(this.markers).length;
       if (this.iconLabel !== '' && size > 0 && this.polyline.path !== '') {
         const main = this.markers.find(location => location.icon === this.iconLabel);
-        if (data !== undefined) {
+        if (data !== undefined && data.confirm_status !== undefined) {
           this.toggleInfoWindow(main, data);
         }
       } else {
@@ -338,31 +338,33 @@ export default {
       }
     },
     orderETA(data) {
-      if (data.eta_data.status) {
-        if (data.confirm_status === 1 && data.delivery_status === 0) {
-          const pickUpEta = data.eta_data.etp;
-          const etaSplit = pickUpEta.split('to');
-          const start = etaSplit[0].replace(/\s+/g, '');
-          const end = etaSplit[1].replace(/\s+/g, '');
+      if (data !== undefined) {
+        if (data.eta_data.status) {
+          if (data.confirm_status === 1 && data.delivery_status === 0) {
+            const pickUpEta = data.eta_data.etp;
+            const etaSplit = pickUpEta.split('to');
+            const start = etaSplit[0].replace(/\s+/g, '');
+            const end = etaSplit[1].replace(/\s+/g, '');
 
-          const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-          const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+            const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+            const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-          this.pickUpEta = `${startEta}-${endEta}`;
-          this.deliveryEta = '';
-        } else if (data.delivery_status === 2) {
-          const deliveryEta = data.eta_data.etd;
-          const etaSplit = deliveryEta.split('to');
-          const start = etaSplit[0].replace(/\s+/g, '');
-          const end = etaSplit[1].replace(/\s+/g, '');
+            this.pickUpEta = `${startEta}-${endEta}`;
+            this.deliveryEta = '';
+          } else if (data.delivery_status === 2) {
+            const deliveryEta = data.eta_data.etd;
+            const etaSplit = deliveryEta.split('to');
+            const start = etaSplit[0].replace(/\s+/g, '');
+            const end = etaSplit[1].replace(/\s+/g, '');
 
-          const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-          const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+            const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+            const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-          this.deliveryEta = `${startEta}-${endEta}`;
-          this.pickUpEta = '';
-        } else {
-          // ...
+            this.deliveryEta = `${startEta}-${endEta}`;
+            this.pickUpEta = '';
+          } else {
+            // ...
+          }
         }
       }
     },
@@ -424,7 +426,7 @@ export default {
     handleSmallVendorsTrackers(data) {
       const riderId = data.rider.rider_id;
       const riderLocationDetails = this.vendors[riderId];
-      if (riderLocationDetails !== undefined) {
+      if (riderLocationDetails !== undefined && riderLocationDetails.time !== undefined) {
         const onlineTime = moment(riderLocationDetails.time);
         const currentTime = moment();
         const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
@@ -456,7 +458,7 @@ export default {
     handleLargeVendorsTrackers(data) {
       const riderId = data.rider.rider_id;
       const riderLocationDetails = this.vendors[riderId];
-      if (riderLocationDetails !== undefined) {
+      if (riderLocationDetails !== undefined && riderLocationDetails.time !== undefined) {
         const onlineTime = moment(riderLocationDetails.time);
         const currentTime = moment();
         const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
