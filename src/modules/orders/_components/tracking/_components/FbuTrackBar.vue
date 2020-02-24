@@ -205,10 +205,14 @@ export default {
   watch: {
     fcm_notification(data) {
       this.fcm = data;
-      this.poll(this.$route.params.order_no);
+      if (this.$route.name === 'freight_order_tracking') {
+        this.poll(this.$route.params.order_no);
+      }
     },
     date_time() {
-      this.poll(this.$route.params.order_no);
+      if (this.$route.name === 'freight_order_tracking') {
+        this.poll(this.$route.params.order_no);
+      }
     },
     '$route.params.order_no': function trackedOrder(from) {
       this.order_number = from;
