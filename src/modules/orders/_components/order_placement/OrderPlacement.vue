@@ -542,11 +542,13 @@ export default {
     },
 
     doSetDefaultPackageClass() {
-      try {
-        const defaultPackageClass = this.get_price_request_object.economy_price_tiers[0].tier_group;
-        this.set_active_package_class(defaultPackageClass);
-      } catch (er) {
-        // console.log(er);
+      if (this.get_price_request_object !== undefined && this.get_price_request_object.economy_price_tiers !== undefined) {
+        try {
+          const defaultPackageClass = this.get_price_request_object.economy_price_tiers[0].tier_group;
+          this.set_active_package_class(defaultPackageClass);
+        } catch (er) {
+          // console.log(er);
+        }
       }
     },
 
@@ -580,7 +582,7 @@ export default {
     setDefaultPackageClass() {
       if (this.get_active_package_class === '') {
         this.doSetDefaultPackageClass();
-      } else {
+      } else if (this.get_price_request_object !== undefined && this.get_price_request_object.economy_price_tiers !== undefined) {
         const self = this;
         const _package = this.get_price_request_object.economy_price_tiers.filter(
           pack => pack.tier_group === self.get_active_package_class,
