@@ -143,9 +143,12 @@ export default {
     },
   },
   mounted() {
-    this.switchOption();
-    this.loggedUser();
-    this.superUserCheck();
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0) {
+      this.switchOption();
+      this.loggedUser();
+      this.superUserCheck();
+    }
   },
   methods: {
     loggedUser() {

@@ -1114,8 +1114,8 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../../../assets/styles/orders_order_placement.css?v=1';
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
+@import '../../../../../assets/styles/orders_order_placement.css?v=2';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=2';
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */
@@ -1136,5 +1136,13 @@ export default {
 }
 ::-webkit-scrollbar-thumb:window-inactive {
   background-color: rgba(0, 0, 0, 0.2);
+}
+.homeview--return-destination-input, .homeview--input-bundler__destination-input {
+  color: black;
+  font-weight: 600;
+}
+.homeview--return-destination-input::-webkit-input-placeholder,
+.homeview--input-bundler__destination-input::-webkit-input-placeholder {
+  font-weight: 400;
 }
 </style>

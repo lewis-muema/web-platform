@@ -244,7 +244,7 @@ export default {
     get_session: {
       handler(val, oldVal) {
         if (this.show_vendor_view || this.loading) {
-          this.doPriceRequest();
+          this.handleStoredData();
         }
       },
       deep: true,
@@ -255,9 +255,10 @@ export default {
     this.initializeOrderFlow();
   },
   mounted() {
-    this.checkSessionData();
-    this.set_tracking_data({});
-    this.clearVendorMarkers();
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0) {
+      this.checkSessionData();
+    }
   },
   destroyed() {
     this.destroyOrderPlacement();
@@ -296,8 +297,6 @@ export default {
       setOuterPriceRequestObject: '$_orders/setOuterPriceRequestObject',
       setOrderState: '$_orders/$_home/setOrderState',
       setExtendOptions: '$_orders/$_home/setExtendOptions',
-      set_tracking_data: '$_orders/$_tracking/setTrackingData',
-      clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
 
     ...mapActions({
@@ -529,6 +528,12 @@ export default {
         },
       );
     },
+    handleStoredData() {
+      this.clearOuterPriceRequestObject();
+      this.clearOuterActiveVendorDetails();
+      this.setExtendOptions(false);
+      this.doPriceRequest();
+    },
 
     doNotification(level, title, message) {
       this.$store.commit('setNotificationStatus', true);
@@ -687,7 +692,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../../assets/styles/orders_order_placement.css?v=1";
+@import "../../../../assets/styles/orders_order_placement.css?v=2";
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */
