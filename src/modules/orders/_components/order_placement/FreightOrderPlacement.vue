@@ -96,8 +96,8 @@ export default {
       const that = this;
       this.loadingStatus = true;
       const payload = {
-        app: 'AUTH',
-        endpoint: 'vendors/freight_categories',
+        app: 'VENDORS_SERVICE',
+        endpoint: '/freight_categories',
       };
       clearInterval(this.countdown);
       this.requestFreightProductCategories(payload).then(
