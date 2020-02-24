@@ -114,7 +114,7 @@
         prop="order_date"
       >
         <template slot-scope="props">
-          {{ order_history_data[props.$index]['order_date'] | moment }}
+          {{ convertToUTCToLocal(order_history_data[props.$index]['order_date']) | moment }}
         </template>
       </el-table-column>
 
@@ -213,8 +213,9 @@ import * as _ from 'lodash';
 import exportFromJSON from 'export-from-json';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-
 import numeral from 'numeral';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
+
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -257,6 +258,7 @@ export default {
       return moment(date).format('MMM Do YYYY, h:mm a');
     },
   },
+  mixins: [TimezoneMxn],
   data() {
     return {
       empty_orders_state: 'Fetching Order History',
