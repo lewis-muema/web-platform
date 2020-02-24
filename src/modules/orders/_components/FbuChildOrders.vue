@@ -193,12 +193,12 @@ export default {
       }
     },
     initializeComponent() {
+      if (Object.keys(this.$store.getters.getSession).length > 0) {
+        this.poll();
+      }
       if (!this.parent_order) {
         this.showing = 1;
         this.loading = true;
-        if (Object.keys(this.$store.getters.getSession).length > 0) {
-          this.poll();
-        }
         this.clearVendorMarkers();
         this.set_tracking_data({});
       } else {
