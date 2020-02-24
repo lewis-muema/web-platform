@@ -2,7 +2,6 @@
 module.exports = {
   ENVIRONMENT: '"staging"',
   DEBUG_MODE: true,
-  VENDORS_SERVICE: '"https://pricingtest.sendyit.com/vendors"',
   NODE_PRIVATE_API: '"https://auth.staging.sendyit.com/v1/"',
   PRIVATE_API: '"https://api.staging.sendyit.com/parcel/index.php/api/v11/"',
   BACKEND_CUSTOMERS_APP: '"https://customers.staging.sendyit.com/customers/"',
