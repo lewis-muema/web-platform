@@ -112,15 +112,19 @@ export default {
   watch: {
     getSession: {
       handler() {
-        this.$store.dispatch('$_orders/fetchOngoingOrders');
+        if (Object.keys(this.$store.getters.getSession).length > 0) {
+          this.$store.dispatch('$_orders/fetchOngoingOrders');
+        }
       },
       deep: true,
     },
   },
   mounted() {
-    this.$store.dispatch('$_orders/fetchOngoingOrders');
-    this.loading = true;
-    this.poll();
+    if (Object.keys(this.$store.getters.getSession).length > 0) {
+      this.$store.dispatch('$_orders/fetchOngoingOrders');
+      this.poll();
+      this.loading = true;
+    }
   },
   methods: {
     ...mapMutations({

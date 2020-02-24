@@ -150,7 +150,9 @@ export default {
   watch: {
     getSession: {
       handler() {
-        this.$store.dispatch('$_orders/fetchOngoingOrders');
+        if (Object.keys(this.$store.getters.getSession).length > 0) {
+          this.$store.dispatch('$_orders/fetchOngoingOrders');
+        }
       },
       deep: true,
     },
@@ -186,7 +188,9 @@ export default {
       if (!this.parent_order) {
         this.showing = 1;
         this.loading = true;
-        this.poll();
+        if (Object.keys(this.$store.getters.getSession).length > 0) {
+          this.poll();
+        }
         this.clearVendorMarkers();
         this.set_tracking_data({});
       } else {
