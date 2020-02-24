@@ -38,6 +38,7 @@
     "memory-fs": "^0.4.1",
     "moment": "^2.22.2",
     "moment-duration-format": "^2.2.2",
+    "moment-timezone": "^0.5.28",
     "mqtt": "^2.18.8",
     "numeral": "^2.0.6",
     "path": "^0.12.7",
