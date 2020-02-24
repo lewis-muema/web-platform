@@ -283,7 +283,7 @@ export default {
           that.loading = false;
         });
       } catch (e) {
-        Sentry.captureException(e);
+        this.loading = false;
       }
     },
     getStatus(order) {
