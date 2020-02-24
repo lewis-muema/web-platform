@@ -7,7 +7,7 @@ const state = {
   phone: '',
   email: '',
   name: '',
-  country_code: '',
+  country_code: 'KE',
   request_id: '',
 };
 
