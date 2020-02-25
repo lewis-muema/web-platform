@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    v-if="!loading && get_orders.length > 0"
+    v-if="!loading && get_orders !== undefined && get_orders.length > 0"
     class="ongoing--outer"
   >
     <div
@@ -150,7 +150,9 @@ export default {
   watch: {
     getSession: {
       handler() {
-        this.$store.dispatch('$_orders/fetchOngoingOrders');
+        if (Object.keys(this.$store.getters.getSession).length > 0) {
+          this.$store.dispatch('$_orders/fetchOngoingOrders');
+        }
       },
       deep: true,
     },
@@ -191,7 +193,9 @@ export default {
       }
     },
     initializeComponent() {
-      this.poll();
+      if (Object.keys(this.$store.getters.getSession).length > 0) {
+        this.poll();
+      }
       if (!this.parent_order) {
         this.showing = 1;
         this.loading = true;
@@ -279,7 +283,7 @@ export default {
           that.loading = false;
         });
       } catch (e) {
-        Sentry.captureException(e);
+        this.loading = false;
       }
     },
     getStatus(order) {

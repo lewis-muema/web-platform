@@ -5,7 +5,8 @@
   >
     <transition name="fade">
       <div
-        v-if="Object.prototype.hasOwnProperty.call(orderData, 'freight_order_details') && !loading"
+        v-if="Object.prototype.hasOwnProperty.call(orderData, 'freight_order_details') && !loading
+        && tracking_data !== undefined"
         class="homeview--childinfo-card"
       >
         <div class="homeview--childinfo-card-left">
@@ -205,10 +206,14 @@ export default {
   watch: {
     fcm_notification(data) {
       this.fcm = data;
-      this.poll(this.$route.params.order_no);
+      if (this.$route.name === 'freight_order_tracking') {
+        this.poll(this.$route.params.order_no);
+      }
     },
     date_time() {
-      this.poll(this.$route.params.order_no);
+      if (this.$route.name === 'freight_order_tracking') {
+        this.poll(this.$route.params.order_no);
+      }
     },
     '$route.params.order_no': function trackedOrder(from) {
       this.order_number = from;

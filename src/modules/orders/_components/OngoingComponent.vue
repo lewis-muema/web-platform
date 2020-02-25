@@ -128,11 +128,11 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('$_orders/fetchOngoingOrders');
-    this.loading = true;
     const session = this.$store.getters.getSession;
     if (Object.keys(session).length > 0 && this.get_orders !== undefined) {
       this.poll();
+      this.$store.dispatch('$_orders/fetchOngoingOrders');
+      this.loading = true;
     }
   },
   methods: {
