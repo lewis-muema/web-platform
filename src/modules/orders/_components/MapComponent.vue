@@ -110,15 +110,17 @@ export default {
   },
   watch: {
     markers(markers) {
-      if (this.mapLoaded && markers.length > 0) {
-        const bounds = new google.maps.LatLngBounds();
-        for (const m of this.markers) {
-          bounds.extend(m.position);
+      if (markers !== undefined) {
+        if (this.mapLoaded && markers.length > 0) {
+          const bounds = new google.maps.LatLngBounds();
+          for (const m of this.markers) {
+            bounds.extend(m.position);
+          }
+          this.$refs.map.$mapObject.fitBounds(bounds);
+          this.$refs.map.$mapObject.setZoom(this.$refs.map.$mapObject.zoom - 1);
+          this.activeState();
+          this.activeMarker();
         }
-        this.$refs.map.$mapObject.fitBounds(bounds);
-        this.$refs.map.$mapObject.setZoom(this.$refs.map.$mapObject.zoom - 1);
-        this.activeState();
-        this.activeMarker();
       }
     },
     '$route.params.order_no': function trackedOrder(order) {
@@ -133,6 +135,19 @@ export default {
     $route(to, from) {
       this.infoWinOpen = false;
     },
+    vendors(data) {
+      if (this.$route.name === 'freight_order_placement') {
+        const keys = Object.keys(data);
+        keys.forEach((row) => {
+          this.setTrackersInfoWindow({
+            rider: {
+              rider_id: row,
+            },
+          });
+          this.infoWinOpen = false;
+        });
+      }
+    },
   },
   mounted() {
     this.$gmapApiPromiseLazy().then(() => {
@@ -146,10 +161,11 @@ export default {
   },
   methods: {
     ...mapActions({
-      requestCountryCode: '$_orders/$_home/requestCountryCode',
+      requestCountryCode: '$_orders/requestCountryCode',
     }),
     ...mapMutations({
       clearVendorMarkers: '$_orders/clearVendorMarkers',
+      set_tracking_data: '$_orders/$_tracking/setTrackingData',
     }),
     path_icon(icon) {
       if (icon === 'pickup') {
@@ -216,7 +232,9 @@ export default {
       const size = Object.keys(this.markers).length;
       if (this.iconLabel !== '' && size > 0 && this.polyline.path !== '') {
         const main = this.markers.find(location => location.icon === this.iconLabel);
-        this.toggleInfoWindow(main, data);
+        if (data !== undefined) {
+          this.toggleInfoWindow(main, data);
+        }
       } else {
         this.infoWinOpen = false;
       }
@@ -349,7 +367,7 @@ export default {
       }
     },
     activeState() {
-      const namePath = ['tracking', 'tracking_external'];
+      const namePath = ['tracking', 'tracking_external', 'freight_order_tracking'];
       if (namePath.includes(this.$route.name)) {
         this.$store
           .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
@@ -374,11 +392,17 @@ export default {
     },
 
     toggleInfoWindow(marker, data) {
-      if (data.confirm_status > 0 && this.trackers.includes(data.rider.vendor_id)) {
-        const size = Object.keys(this.vendors).length;
-        if (size > 0) {
-          this.handleTrackersNotification(data);
-          this.setTrackersInfoWindow(data);
+      if (Object.prototype.hasOwnProperty.call(data, 'confirm_status')) {
+        if (data.confirm_status > 0 && this.trackers.includes(data.rider.vendor_id)) {
+          const size = Object.keys(this.vendors).length;
+          if (size > 0) {
+            this.handleTrackersNotification(data);
+            this.setTrackersInfoWindow(data);
+          } else {
+            this.infoWindowPos = marker.position;
+            this.infoContent = this.getInfoWindowContent(marker);
+            this.infoWinOpen = true;
+          }
         } else {
           this.infoWindowPos = marker.position;
           this.infoContent = this.getInfoWindowContent(marker);
@@ -400,74 +424,79 @@ export default {
     handleSmallVendorsTrackers(data) {
       const riderId = data.rider.rider_id;
       const riderLocationDetails = this.vendors[riderId];
-      const onlineTime = moment(riderLocationDetails.time);
-      const currentTime = moment();
-      const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
+      if (riderLocationDetails !== undefined) {
+        const onlineTime = moment(riderLocationDetails.time);
+        const currentTime = moment();
+        const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
 
-      if (riderOnlineTimeRange <= 30) {
-        this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
-        this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = '';
-        this.extraNotificationInfo = '';
-        this.activeStateIcon = this.vendor_icon_id;
-        this.vendorStatus = 'active';
-      } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
-        this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
-        this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${riderOnlineTimeRange} minutes ago`;
-        this.extraNotificationInfo = '';
-        this.activeStateIcon = this.vendor_icon_id;
-        this.vendorStatus = 'active';
-      } else {
-        this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
-        this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = 'Tracker \u00A0:\u00A0 No Signal';
-        this.extraNotificationInfo = '(This could be due to network issues)';
-        this.activeStateIcon = `${this.vendor_icon_id}_offline`;
-        this.vendorStatus = 'offline';
+        if (riderOnlineTimeRange <= 30) {
+          this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
+          this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
+          this.riderLastSeen = '';
+          this.extraNotificationInfo = '';
+          this.activeStateIcon = this.vendor_icon_id;
+          this.vendorStatus = 'active';
+        } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
+          this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
+          this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
+          this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${riderOnlineTimeRange} minutes ago`;
+          this.extraNotificationInfo = '';
+          this.activeStateIcon = this.vendor_icon_id;
+          this.vendorStatus = 'active';
+        } else {
+          this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
+          this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed}kmph`;
+          this.riderLastSeen = 'Tracker \u00A0:\u00A0 No Signal';
+          this.extraNotificationInfo = '(This could be due to network issues)';
+          this.activeStateIcon = `${this.vendor_icon_id}_offline`;
+          this.vendorStatus = 'offline';
+        }
       }
     },
     handleLargeVendorsTrackers(data) {
       const riderId = data.rider.rider_id;
       const riderLocationDetails = this.vendors[riderId];
-      const onlineTime = moment(riderLocationDetails.time);
-      const currentTime = moment();
-      const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
+      if (riderLocationDetails !== undefined) {
+        const onlineTime = moment(riderLocationDetails.time);
+        const currentTime = moment();
+        const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
 
-      if (riderOnlineTimeRange <= 30) {
-        this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
-        this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = '';
-        this.extraNotificationInfo = '';
-        this.activeStateIcon = this.vendor_icon_id;
-        this.vendorStatus = 'active';
-      } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
-        this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
-        this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${riderOnlineTimeRange} minutes ago`;
-        this.extraNotificationInfo = '';
-        this.activeStateIcon = this.vendor_icon_id;
-        this.vendorStatus = 'active';
-      } else {
-        this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
-        this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
-        this.riderLastSeen = 'Tracker \u00A0\u00A0:\u00A0\u00A0 No Signal';
-        this.extraNotificationInfo = '(This could be due to network issues)';
-        this.activeStateIcon = `${this.vendor_icon_id}_offline`;
-        this.vendorStatus = 'offline';
+        if (riderOnlineTimeRange <= 30) {
+          this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
+          this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
+          this.riderLastSeen = '';
+          this.extraNotificationInfo = '';
+          this.activeStateIcon = this.vendor_icon_id;
+          this.vendorStatus = 'active';
+        } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
+          this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
+          this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
+          this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${riderOnlineTimeRange} minutes ago`;
+          this.extraNotificationInfo = '';
+          this.activeStateIcon = this.vendor_icon_id;
+          this.vendorStatus = 'active';
+        } else {
+          this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
+          this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed}kmph`;
+          this.riderLastSeen = 'Tracker \u00A0\u00A0:\u00A0\u00A0 No Signal';
+          this.extraNotificationInfo = '(This could be due to network issues)';
+          this.activeStateIcon = `${this.vendor_icon_id}_offline`;
+          this.vendorStatus = 'offline';
+        }
       }
     },
     setTrackersInfoWindow(data) {
       const riderId = data.rider.rider_id;
       const riderLocationDetails = this.vendors[riderId];
-      const riderMarkerLocation = riderLocationDetails.position;
+      if (riderLocationDetails !== undefined) {
+        const riderMarkerLocation = riderLocationDetails.position;
+        this.mapCentreLocation.lat = riderMarkerLocation.lat;
+        this.mapCentreLocation.lng = riderMarkerLocation.lng;
 
-      this.mapCentreLocation.lat = riderMarkerLocation.lat;
-      this.mapCentreLocation.lng = riderMarkerLocation.lng;
-
-      this.infoWindowPos = riderMarkerLocation;
-      this.infoContent = this.getTrackerInfoWindowContent();
-      this.infoWinOpen = true;
+        this.infoWindowPos = riderMarkerLocation;
+        this.infoContent = this.getTrackerInfoWindowContent();
+        this.infoWinOpen = true;
+      }
     },
     getTrackerInfoWindowContent() {
       return `<div class="outer_info_content_trackers">
@@ -506,25 +535,15 @@ export default {
       }
     },
     getCode(position) {
-      const payload = {};
-      payload.coordinates = position;
-      const fullPayload = {
-        values: payload,
-        app: 'PRIVATE_API',
-        endpoint: 'geocountry',
-      };
-      this.requestCountryCode(fullPayload).then(
-        (response) => {
-          const code = response.country_code;
+      this.requestCountryCode({ coordinates: position }).then((response) => {
+        if (response.data.status) {
+          const code = response.data.country_code;
           this.$store.commit('setCountryCode', code);
           const countryCodeData = currencyConversion.getCountryByCode(code);
           this.$store.commit('setDefaultCurrency', countryCodeData.currencyCode);
           this.setMapCentreLocation(code);
-        },
-        (error) => {
-          // ...
-        },
-      );
+        }
+      });
     },
     setMapCentreLocation(code) {
       if (code === 'UG') {

@@ -18,7 +18,22 @@ export default {
       );
     });
   },
-
+  requestFreightProductCategories({ dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosGet', payload, { root: true }).then(
+        (response) => {
+          if (response.data.status) {
+            resolve(response.data);
+          } else {
+            reject(response.data);
+          }
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
   requestOrderCompletion({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
@@ -69,17 +84,6 @@ export default {
             commit('setNotification', notification, { root: true });
             commit('setNotificationStatus', true, { root: true });
           }
-          reject(error);
-        });
-    });
-  },
-  requestDiscount({ dispatch }, payload) {
-    return new Promise((resolve, reject) => {
-      dispatch('requestAxiosPost', payload, { root: true })
-        .then((response) => {
-          resolve(response.data);
-        })
-        .catch((error) => {
           reject(error);
         });
     });

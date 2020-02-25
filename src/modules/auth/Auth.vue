@@ -11,14 +11,12 @@
 <script>
 import Vue from 'vue';
 import VeeValidate, { Validator } from 'vee-validate';
-import VueTelInput from 'vue-tel-input';
 import authStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import ExternalHeader from '../../components/headers/ExternalHeader.vue';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
-Vue.use(VueTelInput);
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
@@ -26,7 +24,9 @@ Validator.extend('check_phone', {
   validate: (value) => {
     let validity = false;
     try {
-      const number = phoneUtil.parse(value);
+      const rawNumber = phoneUtil.parseAndKeepRawInput(value);
+      const numberCode = phoneUtil.getRegionCodeForNumber(rawNumber);
+      const number = phoneUtil.parse(value, numberCode);
       validity = phoneUtil.isValidNumber(number);
     } catch (e) {
       validity = false;

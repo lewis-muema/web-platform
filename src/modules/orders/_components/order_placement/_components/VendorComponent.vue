@@ -320,7 +320,6 @@
                 <el-date-picker
                   v-model="schedule_time"
                   class="vendor_component-actions__element-date"
-                  :class="discountInputWidth"
                   type="datetime"
                   format="dd-MM-yyyy h:mm a"
                   placeholder="As soon as possible"
@@ -329,35 +328,6 @@
                   :picker-options="dueDatePickerOptions"
                   @change="dispatchScheduleTime"
                 />
-                <span
-                  v-if="showDiscountsInfoPopup()"
-                  class=""
-                >
-                  <i
-                    slot="suffix"
-                    class="el-icon-info el-input__icon"
-                    @mouseover="toggleDiscountsPopover(true)"
-                    @mouseout="toggleDiscountsPopover(false)"
-                  />
-                  <el-popover
-                    v-model="showScheduledDiscountsMessage"
-                    placement="right"
-                    width="200"
-                    trigger="manual"
-                    popper-class="pop-over-layout home-view-truck-options-discounts-popup"
-                  >
-                    <p class="home-view-truck-options-schedule-discounts">
-                      We now offer discounts for scheduled orders! This applies to all 5T, 10T and
-                      14T truck orders whose pick up time is 24hours to 31days into the future.
-                    </p>
-                  </el-popover>
-                </span>
-                <p
-                  v-if="orderDiscountStatus"
-                  class="discount-applied-text"
-                >
-                  (We have applied a {{ discountPercentage }}% discount for your order!)
-                </p>
               </div>
               <span
                 v-if="isStandardUnavailable(activeVendorPriceData)"
@@ -488,14 +458,7 @@
                 </div>
               </div>
               <div
-                v-if="pair_rider === '1' && activeVendorPriceData.vendor_id === 1"
-                class="home-view-truck-options-inner-wrapper disable-pairing"
-              >
-                ( Sorry, pairing is unavailable at the moment. We are working to fix it. You can either proceed to place the order, or contact support for help. )
-              </div>
-
-              <div
-                v-if="pair_rider === '1' && activeVendorPriceData.vendor_id !== 1"
+                v-if="pair_rider === '1'"
                 class="home-view-truck-options-inner-wrapper"
               >
                 <div class="home-view-truck-options-label">
@@ -699,7 +662,6 @@ export default {
         disabledDate: this.disabledDueDate,
       },
       standardOptions: [21, 22, 24],
-      discountInputWidth: '',
       orderDiscountStatus: false,
       discountPercentage: 0,
       fullPayload: {},
@@ -842,7 +804,6 @@ export default {
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
-      requestDiscount: '$_orders/$_home/requestDiscount',
     }),
 
     dispatchCarrierType() {
@@ -854,30 +815,38 @@ export default {
         this.schedule_time = new Date();
       }
       this.setScheduleTime(this.schedule_time);
-      if ([10, 14, 17].includes(this.activeVendorPriceData.vendor_id)) {
-        this.getDiscounts();
-      } else {
-        this.trackScheduleEvent('Schedule Order', {});
-      }
     },
     dispatchOrderNotes() {
       this.setOrderNotes(this.order_notes);
     },
     dispatchPairStatus() {
       const status = this.pair_rider;
-      if (status === 1 && this.activeVendorPriceData.vendor_id !== 1) {
+      if (status === 1) {
         // pair with rider
         this.setPairWithRiderStatus(true);
       } else {
         // do not pair
         this.setPairWithRiderStatus(false);
       }
-
-      if (status === 1 && this.activeVendorPriceData.vendor_id === 1) {
-        this.trackMixpanelEvent('Dissuaded rider pairing');
-      }
     },
     goToNextStep() {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          window.ga('send', 'event', {
+            eventCategory: 'Order Placement',
+            eventAction: 'Click',
+            eventLabel: 'Continue Button - Order Placement Page - WebApp',
+          });
+        }
+      } catch (er) {
+        // ...
+      }
       this.setDefaultCarrierType();
       this.setOrderState(2);
       this.setExtendOptions(true);
@@ -894,7 +863,6 @@ export default {
     },
     goBackToHome() {
       this.schedule_time = '';
-      this.revertDiscount();
       this.setOrderState(1);
       this.setExtendOptions(false);
       this.pair_rider = '';
@@ -957,130 +925,6 @@ export default {
       this.setOuterActivePackageClass(name);
       this.reCheckCarrierType();
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
-    },
-    toggleDiscountsPopover(state) {
-      this.showScheduledDiscountsMessage = state;
-      const rect = document.querySelector('.el-icon-info').getBoundingClientRect();
-      document
-        .querySelector('.home-view-truck-options-discounts-popup')
-        .style.setProperty('top', `${rect.top - 80}px`, 'important');
-    },
-    defineDiscountsPayload() {
-      const time = this.moment.utc(this.schedule_time);
-      const payload = JSON.stringify({
-        date_time: time,
-        order_no: this.activeVendorPriceData.order_no,
-      });
-      this.fullPayload = {
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'discount',
-        values: payload,
-      };
-    },
-    getDiscounts() {
-      this.discount_timed_out = false;
-      this.defineDiscountsPayload();
-      const dateTime = new Date();
-      dateTime.setHours(dateTime.getHours() + 24);
-      if (this.schedule_time) {
-        this.$root.$emit(
-          'Discount loading status',
-          'el-icon-loading',
-          'Please wait, we are applying a discount to your order',
-          true,
-          true,
-        );
-        const timeout = setTimeout(() => {
-          this.discount_timed_out = true;
-          this.$root.$emit(
-            'Discount loading status',
-            'el-icon-close',
-            'We are unable to process your discount at this moment',
-            false,
-            true,
-          );
-        }, 10000);
-        this.requestDiscount(this.fullPayload)
-          .then((response) => {
-            if (!this.discount_timed_out) {
-              clearTimeout(timeout);
-              if (
-                response.percentage_discount > 0
-                || response.discounted_amount !== response.original_amount
-              ) {
-                this.setVendorPrice(response.discounted_amount);
-                this.discountPercentage = response.percentage_discount;
-                this.orderDiscountStatus = true;
-                this.$root.$emit(
-                  'Discount loading status',
-                  'el-icon-circle-check-outline',
-                  `A discount of ${response.percentage_discount}% has been applied to your order`,
-                  false,
-                  true,
-                );
-                this.trackScheduleEvent('Schedule Order', {
-                  'Order Number': this.activeVendorPriceData.order_no,
-                  'Order time': this.moment().format('YYYY-MM-DD hh:mm:ss a'),
-                  'Scheduled time': this.moment(response.date_time).format('YYYY-MM-DD hh:mm:ss a'),
-                  'Original price': `${this.activeVendorPriceData.currency} ${
-                    response.original_amount
-                  }`,
-                  'Discounted price': `${this.activeVendorPriceData.currency} ${
-                    response.discounted_amount
-                  }`,
-                  'Percentage discount': `${response.percentage_discount} %`,
-                });
-              } else {
-                this.setVendorPrice(response.discounted_amount);
-                this.orderDiscountStatus = false;
-                this.$root.$emit(
-                  'Discount loading status',
-                  'el-icon-close',
-                  'We are unable to process your discount at this moment',
-                  false,
-                  true,
-                );
-                this.trackScheduleEvent('Schedule Order', {});
-              }
-            }
-          })
-          .catch(() => {
-            this.orderDiscountStatus = false;
-            this.$root.$emit(
-              'Discount loading status',
-              'el-icon-close',
-              'We are unable to process your discount at this moment',
-              false,
-              true,
-            );
-            this.trackScheduleEvent('Schedule Order', {});
-          });
-      } else if (this.orderDiscountStatus) {
-        this.$root.$emit(
-          'Discount loading status',
-          'el-icon-loading',
-          'Please wait while we adjust the pricing',
-          true,
-          true,
-        );
-        this.revertDiscount();
-      }
-    },
-    revertDiscount() {
-      this.defineDiscountsPayload();
-      this.requestDiscount(this.fullPayload).then((response) => {
-        this.setVendorPrice(response.discounted_amount);
-        this.orderDiscountStatus = false;
-        this.$root.$emit('Discount loading status', '', '', true, false);
-      });
-    },
-    showDiscountsInfoPopup() {
-      if ([10, 14, 17].includes(this.activeVendorPriceData.vendor_id)) {
-        this.discountInputWidth = 'discount-input-width--discounted';
-        return true;
-      }
-      this.discountInputWidth = 'discount-input-width--nondiscounted';
-      return false;
     },
     clearVehicleDetails() {
       this.vehicle_plate = '';
@@ -1333,21 +1177,6 @@ export default {
         // ...
       }
     },
-    trackScheduleEvent(name, event) {
-      let analyticsEnv = '';
-      try {
-        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {
-        // ...
-      }
-      try {
-        if (analyticsEnv === 'production') {
-          mixpanel.track(name, event);
-        }
-      } catch (er) {
-        // ...
-      }
-    },
     initializeVendorComponent() {
       this.carrier_type = this.get_vendor_carrier_type;
       this.number_of_loaders = this.getNOOfLoaders;
@@ -1461,9 +1290,4 @@ export default {
 
 <style lang="css" scoped>
 @import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
-.home-view-truck-options-inner-wrapper.disable-pairing {
-    font-style: italic;
-    font-size: 12px;
-}
-
 </style>
