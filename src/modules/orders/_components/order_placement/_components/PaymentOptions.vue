@@ -193,6 +193,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
+import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 
 library.add(faChevronDown);
 
@@ -202,7 +203,7 @@ const TRUCK_VENDORS = [20, 25];
 export default {
   name: 'OrderOptions',
   components: {},
-  mixins: [Mcrypt, PaymentMxn],
+  mixins: [Mcrypt, PaymentMxn, TimezoneMxn],
   data() {
     return {
       schedule_time: this.moment(),
@@ -799,7 +800,7 @@ export default {
         delivery_points: this.get_order_path.length - 1,
         sendy_coupon: '0',
         payment_method: Number(this.payment_method),
-        schedule_time: this.order_is_scheduled ? this.scheduled_time : this.current_time,
+        schedule_time: this.order_is_scheduled ? this.convertToUTC(this.scheduled_time) : this.convertToUTC(this.current_time),
         tier_tag: this.activeVendorPriceData.tier_tag,
         tier_name: this.activeVendorPriceData.tier_name,
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
