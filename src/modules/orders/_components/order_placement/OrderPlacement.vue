@@ -545,11 +545,14 @@ export default {
     },
 
     doSetDefaultPackageClass() {
-      try {
-        const defaultPackageClass = this.get_price_request_object.economy_price_tiers[0].tier_group;
-        this.set_active_package_class(defaultPackageClass);
-      } catch (er) {
-        // console.log(er);
+      if (this.get_price_request_object !== undefined
+        && this.get_price_request_object.economy_price_tiers !== undefined) {
+        try {
+          const defaultPackageClass = this.get_price_request_object.economy_price_tiers[0].tier_group;
+          this.set_active_package_class(defaultPackageClass);
+        } catch (er) {
+          // console.log(er);
+        }
       }
     },
 
@@ -566,7 +569,8 @@ export default {
     setDefaultVendorType(previous) {
       if (this.get_active_vendor_name === '') {
         this.doSetDefaultVendorType();
-      } else {
+      } else if (this.get_price_request_object !== undefined
+          && this.get_price_request_object.economy_price_tiers !== undefined) {
         const result = this.get_price_request_object.economy_price_tiers.filter(pack => pack.price_tiers.some(vendor => vendor.vendor_name === previous));
 
         if (result.length === 0) {
