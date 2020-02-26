@@ -104,13 +104,13 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import TimezoneMxn from '../../../mixins/timezone_mixin';
+import timezone from '../../../mixins/timezone';
 
 library.add(faChevronUp);
 
 export default {
   name: 'OngoingComponent',
-  mixins: [TimezoneMxn],
+  mixins: [timezone],
   data() {
     return {
       loading: true,
