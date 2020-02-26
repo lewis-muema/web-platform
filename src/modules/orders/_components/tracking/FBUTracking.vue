@@ -143,6 +143,7 @@ export default {
       tracking_data: '$_orders/$_tracking/getTrackingData',
       tracked_order: '$_orders/$_tracking/getTrackedOrder',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
+      parent_order: '$_orders/getParentOrder',
       vendors: '$_orders/getVendors',
     }),
   },
@@ -170,6 +171,7 @@ export default {
       hide_vendors: '$_orders/hideVendors',
       change_page: '$_orders/setPage',
       clearVendorMarkers: '$_orders/clearVendorMarkers',
+      set_parent_order: '$_orders/setParentOrder',
     }),
     cancelToggle(cancelReason = 0) {
       if (cancelReason === '4') {
@@ -198,6 +200,7 @@ export default {
           if (response.status) {
             that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
             that.cancelToggle();
+            that.set_parent_order('');
             that.$router.push('/orders/freight');
           } else {
             const payload2 = {
@@ -210,6 +213,7 @@ export default {
               if (response2.status) {
                 that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
                 that.cancelToggle();
+                that.set_parent_order('');
                 that.$router.push('/orders/freight');
               } else {
                 that.doNotification(

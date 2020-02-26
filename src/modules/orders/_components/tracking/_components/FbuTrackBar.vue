@@ -196,6 +196,7 @@ export default {
     ...mapGetters({
       tracking_data: '$_orders/$_tracking/getTrackingData',
       tracked_order: '$_orders/$_tracking/getTrackedOrder',
+      parent_order: '$_orders/getParentOrder',
       date_time: '$_orders/$_tracking/getDateTime',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
       vendors: '$_orders/getVendors',
@@ -241,6 +242,7 @@ export default {
     ...mapMutations({
       set_tracked_order: '$_orders/$_tracking/setTrackedOrder',
       set_tracking_data: '$_orders/$_tracking/setTrackingData',
+      set_parent_order: '$_orders/setParentOrder',
       set_polyline: '$_orders/setPolyline',
       set_markers: '$_orders/setMarkers',
       clearVendorMarkers: '$_orders/clearVendorMarkers',
@@ -326,13 +328,15 @@ export default {
             const that = this;
             if (this.tracking_data.delivery_status === 3) {
               that.doNotification('1', 'Order delivered', 'Your order has been delivered.');
-              this.set_tracking_data({});
-              this.clearVendorMarkers();
+              that.set_tracking_data({});
+              that.clearVendorMarkers();
+              this.set_parent_order('');
               this.$router.push('/orders/freight');
             } else if (this.tracking_data.main_status === 2) {
               that.doNotification('2', 'Order cancelled', 'Your order has been cancelled.');
-              this.set_tracking_data({});
-              this.clearVendorMarkers();
+              that.set_tracking_data({});
+              that.clearVendorMarkers();
+              this.set_parent_order('');
               this.$router.push('/orders/freight');
             } else if (this.tracked_order === from) {
               setTimeout(() => {
