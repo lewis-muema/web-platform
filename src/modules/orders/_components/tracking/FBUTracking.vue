@@ -145,7 +145,6 @@ export default {
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
       parent_order: '$_orders/getParentOrder',
       vendors: '$_orders/getVendors',
-      
     }),
   },
   watch: {
