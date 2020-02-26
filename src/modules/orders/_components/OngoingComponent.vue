@@ -187,6 +187,7 @@ export default {
           that.loading = false;
         });
       } catch (e) {
+        this.$store.commit('setOngoingOrders', []);
         this.loading = false;
       }
     },
