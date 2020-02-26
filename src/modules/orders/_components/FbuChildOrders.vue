@@ -104,11 +104,13 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
 
 library.add(faChevronUp);
 
 export default {
   name: 'OngoingComponent',
+  mixins: [TimezoneMxn],
   data() {
     return {
       loading: true,
@@ -150,9 +152,7 @@ export default {
   watch: {
     getSession: {
       handler() {
-        if (Object.keys(this.$store.getters.getSession).length > 0) {
-          this.$store.dispatch('$_orders/fetchOngoingOrders');
-        }
+        this.$store.dispatch('$_orders/fetchOngoingOrders');
       },
       deep: true,
     },
@@ -167,6 +167,11 @@ export default {
         this.showing = 2;
       }
     },
+    get_orders() {
+      if (this.get_orders.length > 0) {
+        this.loading = false;
+      }
+    },
   },
   mounted() {
     this.initializeComponent();
@@ -174,6 +179,7 @@ export default {
   methods: {
     ...mapMutations({
       set_tracking_data: '$_orders/$_tracking/setTrackingData',
+      set_ongoing_orders: '$_orders/setOngoingOrders',
       set_parent_order: '$_orders/setParentOrder',
       change_page: '$_orders/setPage',
       hide_vendors: '$_orders/hideVendors',
@@ -193,9 +199,8 @@ export default {
       }
     },
     initializeComponent() {
-      if (Object.keys(this.$store.getters.getSession).length > 0) {
-        this.poll();
-      }
+      this.set_ongoing_orders([]);
+      this.poll();
       if (!this.parent_order) {
         this.showing = 1;
         this.loading = true;
@@ -245,12 +250,8 @@ export default {
       return statusName[0].toUpperCase() + statusName.slice(1);
     },
     date_format(date) {
-      const offset = new Date().getTimezoneOffset() * -1;
-      date = this.moment(date, 'yyyy-mm-dd hh:mm:ss')
-        .add(0, 'seconds')
-        .add(offset, 'minutes')
-        .format('YYYY-MM-DD hh:mm:ss');
-      return this.moment(date).calendar(null, {
+      const localTime = this.convertToUTCToLocal(date);
+      return this.moment(localTime).calendar(null, {
         lastWeek: 'MMM-D hh:mm a',
         sameDay: '[Today] hh:mm a',
         nextDay: '[Tomorrow] hh:mm a',
@@ -284,6 +285,7 @@ export default {
         });
       } catch (e) {
         this.loading = false;
+        Sentry.captureException(e);
       }
     },
     getStatus(order) {
