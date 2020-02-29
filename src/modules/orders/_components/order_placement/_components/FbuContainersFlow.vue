@@ -917,16 +917,26 @@ export default {
       const definedLocations = this.locations;
       this.requestPriceQuote(payload).then(
         (response) => {
-          this.setOrderState(1);
-          this.setHomeLocations(definedLocations);
-          this.loading = false;
-          this.productPhase(3);
-          this.set_active_vendor_name(response.values.economy_price_tiers[0].price_tiers[0].vendor_name);
-          const previousActiveVendor = this.get_active_vendor_name;
-          response.values.freight = true;
-          this.setOuterPriceRequestObject(response.values);
-          this.setDefaultPackageClass();
-          this.setDefaultVendorType(previousActiveVendor);
+          if (response.status) {
+            this.setOrderState(1);
+            this.setHomeLocations(definedLocations);
+            this.loading = false;
+            this.productPhase(3);
+            this.set_active_vendor_name(response.values.economy_price_tiers[0].price_tiers[0].vendor_name);
+            const previousActiveVendor = this.get_active_vendor_name;
+            response.values.freight = true;
+            this.setOuterPriceRequestObject(response.values);
+            this.setDefaultPackageClass();
+            this.setDefaultVendorType(previousActiveVendor);
+          } else {
+            this.productPhase(2);
+            if (Object.prototype.hasOwnProperty.call(response, 'crisis_notification') && response.crisis_notification.msg) {
+              this.doNotification(2, `${response.reason}`, response.crisis_notification.msg);
+            } else {
+              this.doNotification(2, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
+            }
+            this.loading = false;
+          }
           // const acc = this.$store.getters.getSession;
           // const accDefault = acc[acc.default];
 
