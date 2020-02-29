@@ -21,4 +21,5 @@ module.exports = merge(prodEnv, {
   ELASTIC_APM_SERVICE_VERSION: '"1.0.0"',
   ELASTIC_APM_SERVER_URL: '"http://localhost:8200"',
   ELASTIC_APM_ENVIRONMENT: '"dev"',
+  HUBSPOT_URL: '"https://api.hsforms.com/submissions/v3/integration/submit/"',
 });
