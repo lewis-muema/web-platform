@@ -281,6 +281,9 @@
   padding: 8px;
   font-size: 13px;
 }
+.bottom-spacer {
+  margin-bottom: 10px;
+}
 .el-popper[x-placement^='right'] .popper__arrow::after {
   bottom: 0px;
   border-right-color: #ffffff !important;
