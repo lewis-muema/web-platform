@@ -931,9 +931,9 @@ export default {
           } else {
             this.productPhase(2);
             if (Object.prototype.hasOwnProperty.call(response, 'crisis_notification') && response.crisis_notification.msg) {
-              this.doNotification(2, `${response.reason}`, response.crisis_notification.msg);
+              this.doNotification(3, `${response.reason}`, response.crisis_notification.msg);
             } else {
-              this.doNotification(2, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
+              this.doNotification(3, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
             }
             this.loading = false;
           }
