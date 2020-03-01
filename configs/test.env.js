@@ -18,4 +18,5 @@ module.exports = {
   ELASTIC_APM_SERVER_URL: '"https://staging-apm.sendyit.com:443"',
   ELASTIC_APM_ENVIRONMENT: '"test"',
   ELASTIC_APM_DISTRIBUTED_TRACING_ORIGINS: '"https://authtest.sendyit.com"',
+  HUBSPOT_URL: '"https://api.hsforms.com/submissions/v3/integration/submit/"',
 };
