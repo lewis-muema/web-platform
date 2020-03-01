@@ -346,7 +346,7 @@
               >
               <input
                 v-model="recipientPhone"
-                type="text"
+                type="number"
                 placeholder="Phone number"
                 class="el-input__inner"
               >
