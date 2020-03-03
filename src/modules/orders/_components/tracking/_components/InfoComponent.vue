@@ -886,7 +886,28 @@ export default {
       this.poll(from);
       this.initiateOrderData();
     },
-
+    'cancelOption': function cancelOption() {
+        if(this.cancelOption === false) {
+          //track analytics for closing the dialogi
+          let analyticsEnv = '';
+          try {
+            analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+          } catch (er) {
+            // ...
+          }
+          try {
+            if (analyticsEnv === 'production') {
+              window.ga('send', 'event', {
+                eventCategory: 'Order Cancellation',
+                eventAction: 'Click',
+                eventLabel: 'No Button - Order Cancellation Page - WebApp',
+              });
+            }
+          } catch (er) {
+            // ...
+          }
+        }
+    },   
     tracking_data(data) {
       if (data !== undefined) {
         if (Object.prototype.hasOwnProperty.call(data, 'confirm_status')) {
@@ -994,7 +1015,6 @@ export default {
       }
       this.cancelOption = false;
       this.cancel_reason = '';
-
       if (cancelReason === true) {
         let analyticsEnv = '';
         try {
