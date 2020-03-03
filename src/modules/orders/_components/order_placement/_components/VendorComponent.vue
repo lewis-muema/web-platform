@@ -343,12 +343,14 @@
                 type="text"
                 placeholder="Name"
                 class="el-input__inner bottom-spacer"
+                @focus="triggerGAEvent('name')"
               >
               <input
                 v-model="recipientPhone"
                 type="number"
                 placeholder="Phone number"
                 class="el-input__inner"
+                @focus="triggerGAEvent('name')"
               >
             </div>
             <div class="home-view-truck-options-inner-wrapper">
@@ -873,6 +875,33 @@ export default {
       this.setOrderState(2);
       this.setExtendOptions(true);
       this.handleScheduledTime();
+    },
+    triggerGAEvent(field) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          if (field === 'name') {
+            window.ga('send', 'event', {
+              eventCategory: 'Order Placement',
+              eventAction: 'Click',
+              eventLabel: 'Click recipient name input - Order Placement Page - WebApp',
+            });
+          } else {
+            window.ga('send', 'event', {
+              eventCategory: 'Order Placement',
+              eventAction: 'Click',
+              eventLabel: 'Click recipient phone number input - Order Placement Page - WebApp',
+            });
+          }
+        }
+      } catch (er) {
+        // ...
+      }
     },
     setDefaultCarrierType() {
       if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
