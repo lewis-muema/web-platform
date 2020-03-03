@@ -336,7 +336,7 @@
                 Delivery is in 2 to 4 hours from the scheduled time
               </span>
             </div>
-            <div class="home-view-truck-options-inner-wrapper">
+            <div class="home-view-truck-options-inner-wrapper recipient-section">
               <p class="home-view-truck-options-label no-margin">Recipient Details</p>
               <input
                 v-model="recipientName"
