@@ -336,6 +336,21 @@
                 Delivery is in 2 to 4 hours from the scheduled time
               </span>
             </div>
+            <div class="home-view-truck-options-inner-wrapper recipient-section">
+              <p class="home-view-truck-options-label no-margin">Recipient Details</p>
+              <input
+                v-model="recipientName"
+                type="text"
+                placeholder="Name"
+                class="el-input__inner bottom-spacer"
+              >
+              <input
+                v-model="recipientPhone"
+                type="number"
+                placeholder="Phone number"
+                class="el-input__inner"
+              >
+            </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
                 Additional Instructions
@@ -665,6 +680,9 @@ export default {
       orderDiscountStatus: false,
       discountPercentage: 0,
       fullPayload: {},
+      activeClass: 'small',
+      recipientName: '',
+      recipientPhone: '',
     };
   },
   computed: {
@@ -1114,6 +1132,9 @@ export default {
     },
 
     destroyVendorComponent() {
+      if (this.recipientPhone && this.recipientName) {
+        this.submitMail();
+      }
       this.setActiveVendorName('');
       this.setActiveVendorDetails({});
       this.setCarrierType(this.carrier_type);
@@ -1283,6 +1304,42 @@ export default {
           this.dispatchScheduleTime();
         }
       }
+    },
+    submitMail() {
+      // eslint-disable-next-line global-require
+      const portalId = '4951975';
+      const formId = 'c2ffd971-6f9b-43e0-a8b2-30fd94f29d4b';
+      const fields = {
+        fields: [
+          {
+            name: 'recipient_name',
+            value: this.recipientName,
+          },
+          {
+            name: 'firstname',
+            value: this.recipientName,
+          },
+          {
+            name: 'recipient_phone',
+            value: this.recipientPhone,
+          },
+          {
+            name: 'phone',
+            value: this.recipientPhone,
+          },
+        ],
+      };
+      const payload = {
+        values: fields,
+        app: 'HUBSPOT_URL',
+        vm: this,
+        endpoint: `${portalId}/${formId}`,
+      };
+
+      this.$store
+        .dispatch('requestAxiosPost', payload)
+        .then(response => response)
+        .catch(err => err);
     },
   },
 };
