@@ -11,7 +11,7 @@ export default {
       active_vendor_details: {},
       active_order_option: '',
       price_request_object: {},
-      max_destinations: 9,
+      max_destinations: 24,
       order_path: [],
       location_names: [],
       saved_cards: [],
