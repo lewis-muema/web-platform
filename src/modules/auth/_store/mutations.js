@@ -18,4 +18,10 @@ export default {
   setVerificationRequestId(state, val) {
     state.request_id = val;
   },
+  setActiveTab(state, val) {
+    state.activeTab = val;
+  },
+  setViewState(state, val) {
+    state.view_state = val;
+  },
 };

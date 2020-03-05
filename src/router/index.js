@@ -26,7 +26,7 @@ function guard(to, from, next) {
         // read ls here
         const _sessionSnack = localStorage.getItem('_sessionSnack');
 
-        if (isEmpty(_sessionSnack)) {
+        if (isEmpty(_sessionSnack) || _sessionSnack === null) {
           resolve(next('/auth/sign_in'));
         } else {
           session = JSON.parse(_sessionSnack);
@@ -79,8 +79,7 @@ function loginGuard(to, from, next) {
       if (process.browser) {
         // read ls here
         const _sessionSnack = localStorage.getItem('_sessionSnack');
-
-        if (isEmpty(_sessionSnack)) {
+        if (isEmpty(_sessionSnack) || _sessionSnack === null) {
           resolve(next());
           if ('login' in to.meta) {
             const details = to.meta.login;
