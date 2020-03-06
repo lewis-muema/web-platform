@@ -20,7 +20,7 @@
         >
           Business
           <div
-            class="upgrade-account-text--inner"
+            class="sign-up-text-inner"
             :class="{ descript_active: getActiveTab === 'Biz' }"
           >
             Lorem ipsum dolor sit amet, consectetur adipiscing elit,
@@ -39,7 +39,7 @@
         >
           Personal
           <div
-            class="upgrade-account-text--inner"
+            class="sign-up-text-inner"
             :class="{ descript_active: getActiveTab === 'Peer' }"
           >
             Lorem ipsum dolor sit amet, consectetur adipiscing elit,
@@ -60,7 +60,7 @@
       >
     </div>
     <div class="sign-up--info">
-      <div class="upgrade-account-text--inner">
+      <div class="sign-up-text-inner">
         Do you already have an account?
         <router-link
           class="signup-holder__link"
@@ -69,7 +69,7 @@
           Login
         </router-link>
       </div>
-      <div class="upgrade-account-text--inner">
+      <div class="sign-up-text-inner">
         Want to drive for Sendy?
         <a
           class="signup-holder__link"

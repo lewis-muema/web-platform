@@ -3,9 +3,9 @@
     class=""
   >
     <div v-if="peerState === 1">
-      <div class="tracking-back-button">
+      <div class="sign-up-outer-back-btn">
         <i
-          class="el-icon-back edit-back"
+          class="el-icon-back sign-up-back"
           @click="go_back(1)"
         />
       </div>
@@ -15,7 +15,7 @@
       </p>
 
       <div class="account-details--wrapper">
-        <div class="sign-holder">
+        <div class="">
           <p class="input--label">
             Your Name
           </p>
@@ -27,7 +27,7 @@
             value=""
           >
         </div>
-        <div class="sign-holder">
+        <div class="">
           <p class="input--label">
             Email
           </p>
@@ -43,7 +43,7 @@
             {{ errors.first('email') }}
           </p>
         </div>
-        <div class="sign-holder">
+        <div class="">
           <p class="input--label">
             Phone Number
           </p>
@@ -65,7 +65,7 @@
             {{ errors.first('phone') }}
           </p>
         </div>
-        <div class="sign-holder">
+        <div class="">
           <p class="input--label">
             Password
           </p>
@@ -83,7 +83,7 @@
         </div>
 
         <div
-          class="sign-holder sign-up-terms"
+          class="sign-up-terms"
         >
           <input
             v-model="u_terms"
@@ -103,7 +103,7 @@
         </div>
       </div>
       <div
-        class="sign-holder verify-acc-holder"
+        class="verify-acc-holder"
       >
         <input
           value="Verify Account"
@@ -115,9 +115,9 @@
       </div>
     </div>
     <div v-else>
-      <div class="tracking-back-button">
+      <div class="sign-up-outer-back-btn">
         <i
-          class="el-icon-back edit-back"
+          class="el-icon-back sign-up-back"
           @click="one_step()"
         />
       </div>
@@ -127,13 +127,13 @@
       </p>
 
       <div class="account-details--wrapper">
-        <div class="sign-holder ">
+        <div class="">
           <p class="verification-code-info">
             For your security, Sendy wants to make sure it's really you. We will send a message with
             your verification code.
           </p>
         </div>
-        <div class="sign-holder ">
+        <div class="">
           <p class="input--label">
             Enter verification code
           </p>
@@ -146,7 +146,7 @@
           >
         </div>
         <div
-          class="sign-holder verify-code-holder"
+          class="verify-code-holder"
         >
           <input
             value="Sign Up"
@@ -540,7 +540,7 @@ export default {
 <style lang="css" scoped>
 @import "../../../../src/assets/styles/sign_up.css";
 
-div.panel-card.cards--align > div > div:nth-child(3) > div:nth-child(3) > div > div > ul{
+div.sign-up-card.cards--align > div > div:nth-child(3) > div:nth-child(3) > div > div > ul{
   margin-top: 12%;
   margin-left: -25%;
   width: 664%;
