@@ -1,4 +1,4 @@
-.content
+.sign-up-content
 {
   display: flex;
   flex-direction: row !important;
@@ -17,7 +17,7 @@
   flex: 2;
   padding-right: 40px;
 }
-.panel-card{
+.sign-up-card{
   -webkit-box-flex: 2;
   flex: 1;
   padding-right: 11%;
@@ -27,7 +27,7 @@
   -webkit-box-direction: normal;
   border-right: 1px solid #d8dfe6;
 }
-.help-card{
+.sign-up-help-card{
   -webkit-box-flex: 1;
   flex: 1;
   -webkit-box-orient: vertical;
@@ -38,7 +38,7 @@
   padding-top: 8%;
 
 }
-.user-invite-body{
+.sign-up-main{
   border: 1px solid #d8dfe6;
   border-radius: 4px;
   margin: 4rem auto;
@@ -49,7 +49,7 @@
   padding-bottom: 0;
   margin-top: 3%;
 }
-.upgrade-account-text--inner{
+.sign-up-text-inner{
  padding-left: 8%;
  width: 88%;
  font-style: normal;
@@ -111,7 +111,7 @@
   color: #000000;
   font-weight: 300;
 }
-.edit-back {
+.sign-up-back {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -121,6 +121,7 @@
     border: 1px solid #555;
     text-align: center;
     font-size: 23px;
+    position: static;
 }
 .el-radio__input{
   border: none !important;
@@ -226,7 +227,7 @@
     opacity: 1;
   }
 }
-.sign-up--inner{
+.sign-up-main--inner{
   padding-top: 0%;
 }
 .cards--align{
@@ -246,7 +247,7 @@
   margin-left: 0;
 }
 .unit-submit{
-  width: 117% !important;
+  width: 112% !important;
 }
 .sign-up--info{
  width: 112%;
@@ -296,9 +297,14 @@
 .next-btn{
   width: 100%;
 }
-.account-details--wrapper{
-  width: 100% !important;
-}
 .sign-up-terms{
   text-align:center;
+}
+.sign-up-container {
+ width: 90%;
+ margin: 0px auto;
+ padding-top: 40px;
+ margin-bottom: 100px;
+ flex-direction: column;
+ display: flex;
 }

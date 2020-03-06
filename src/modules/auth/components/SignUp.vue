@@ -1,18 +1,18 @@
 <template lang="html">
-  <div class="user-invite-body">
+  <div class="sign-up-main">
     <div
-      class="container sign-up--inner"
+      class="sign-up-container sign-up-main--inner"
     >
-      <div class="content">
+      <div class="sign-up-content">
         <div
-          class="panel-card cards--align"
+          class="sign-up-card cards--align"
         >
           <sign-up-initial-component v-if="getViewState === 1" />
           <peer-details-component v-if="getViewState === 2" />
           <biz-details-component v-if="getViewState === 3" />
         </div>
         <div
-          class="help-card"
+          class="sign-up-help-card"
         >
           <div class="">
             <div
@@ -28,10 +28,10 @@
               <div
                 v-for="(info, key) in biz"
                 :key="key"
-                class="content align-benefits"
+                class="sign-up-content align-benefits"
               >
                 <div class="">
-                  <i class="el-icon-check edit-back" />
+                  <i class="el-icon-check sign-up-back" />
                 </div>
                 <div
                   class="benefits-text"
@@ -58,10 +58,10 @@
               <div
                 v-for="(info, key) in peer"
                 :key="key"
-                class="content align-benefits"
+                class="sign-up-content align-benefits"
               >
                 <div class="">
-                  <i class="el-icon-check edit-back" />
+                  <i class="el-icon-check sign-up-back" />
                 </div>
                 <div
                   class="benefits-text"

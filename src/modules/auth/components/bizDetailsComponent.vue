@@ -3,9 +3,9 @@
     class=""
   >
     <div v-if="bizState === 1">
-      <div class="tracking-back-button">
+      <div class="sign-up-outer-back-btn">
         <i
-          class="el-icon-back edit-back"
+          class="el-icon-back sign-up-back"
           @click="go_back(1)"
         />
       </div>
@@ -13,7 +13,7 @@
         Sign up for a Sendy business account
       </p>
       <div class="account-details--wrapper">
-        <div class="sign-holder">
+        <div class="">
           <p class="input--label">
             Your Name
           </p>
@@ -25,7 +25,7 @@
             value=""
           >
         </div>
-        <div class="sign-holder">
+        <div class="">
           <p class="input--label">
             Business Name
           </p>
@@ -37,7 +37,7 @@
             value=""
           >
         </div>
-        <div class="sign-holder ">
+        <div class=" ">
           <p class="input--label">
             Business Email
           </p>
@@ -53,7 +53,7 @@
             {{ errors.first('email') }}
           </p>
         </div>
-        <div class="sign-holder ">
+        <div class=" ">
           <p class="input--label">
             Phone number
           </p>
@@ -69,7 +69,7 @@
             @onBlur="validate_phone"
           />
         </div>
-        <div class="sign-holder ">
+        <div class=" ">
           <p class="input--label">
             Password
           </p>
@@ -86,7 +86,7 @@
           </p>
         </div>
         <div
-          class="sign-holder sign-up-terms"
+          class=" sign-up-terms"
         >
           <input
             v-model="u_terms"
@@ -106,7 +106,7 @@
         </div>
       </div>
       <div
-        class="sign-holder next-btn-holder"
+        class=" next-btn-holder"
       >
         <input
           value="Continue"
@@ -118,9 +118,9 @@
       </div>
     </div>
     <div v-else-if="bizState === 2">
-      <div class="tracking-back-button">
+      <div class="sign-up-outer-back-btn">
         <i
-          class="el-icon-back edit-back"
+          class="el-icon-back sign-up-back"
           @click="go_back_state(1)"
         />
       </div>
@@ -129,7 +129,7 @@
       </p>
       <div class="account-details--wrapper">
         <div
-          class="sign-holder"
+          class=""
         >
           <p class="input--label">
             Does your business file VAT returns? (optional)
@@ -149,7 +149,7 @@
         </div>
         <div
           v-if="tax_compliance"
-          class="sign-holder "
+          class=""
         >
           <p class="input--label">
             Enter your business KRA pin
@@ -170,7 +170,7 @@
           </span>
         </div>
         <div
-          class="sign-holder  primary-vehicle-details"
+          class="primary-vehicle-details"
         >
           <label> Select the primary type of vehicle you will use on Sendy</label>
           <p class="info">
@@ -214,7 +214,7 @@
           </div>
         </div>
         <div
-          class="sign-holder verify-acc-holder"
+          class="verify-acc-holder"
         >
           <input
             value="Verify Account"
@@ -227,9 +227,9 @@
       </div>
     </div>
     <div v-else>
-      <div class="tracking-back-button">
+      <div class="sign-up-outer-back-btn">
         <i
-          class="el-icon-back edit-back"
+          class="el-icon-back sign-up-back"
           @click="go_back_state(2)"
         />
       </div>
@@ -238,14 +238,14 @@
       </p>
 
       <div class="account-details--wrapper">
-        <div class="sign-holder ">
+        <div class=" ">
           <p class="verification-code-info">
             For your security, Sendy wants to make sure it's really you.
             We will send a message with
             your verification code.
           </p>
         </div>
-        <div class="sign-holder ">
+        <div class="">
           <p class="input--label">
             Enter verification code
           </p>
@@ -258,7 +258,7 @@
           >
         </div>
         <div
-          class="sign-holder verify-code-holder"
+          class=" verify-code-holder"
         >
           <input
             value="Sign Up"
