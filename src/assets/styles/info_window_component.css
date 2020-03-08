@@ -143,6 +143,21 @@
   justify-content: center;
   width: 100%;
 }
+.cancel-reason-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: max-content;
+}
+.cancel-reason-text-input {
+  display: none;
+  width: 180px;
+  height: 25px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #dbd8d8;
+  padding-left: 15px;
+}
 .action--slide-button {
   margin: 0px 10px 10px 10px;
   text-transform: capitalize;
