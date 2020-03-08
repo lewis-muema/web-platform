@@ -77,7 +77,11 @@
   border-radius: 6px;
   padding-top: 1%;
 }
-.el-checkbox__label, .el-radio__label {
+.sign-up-card.cards--align > div > div:nth-child(3) > div:nth-child(2) > label > span.el-radio__label{
+  font-size: 16px !important;
+  color: #979797;
+}
+.sign-up-card.cards--align > div > div:nth-child(3) > div:nth-child(1) > label > span.el-radio__label{
   font-size: 16px !important;
   color: #979797;
 }
