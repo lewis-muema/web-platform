@@ -299,13 +299,10 @@ export default {
             || this.vendors_without_return.includes(this.get_active_vendor_name)
           ) {
             cost = this.activeVendorPriceData.cost - this.activeVendorPriceData.discountAmount;
-            return cost;
           }
           cost = this.activeVendorPriceData.return_cost - this.activeVendorPriceData.discountAmount;
-          return cost;
         }
-        cost = this.activeVendorPriceData.cost - this.activeVendorPriceData.discount_amount;
-        return cost;
+        cost = this.activeVendorPriceData.cost - this.activeVendorPriceData.discountAmount;
       }
 
       return cost;
@@ -314,7 +311,7 @@ export default {
     // order cost including discounts
     full_order_cost() {
       if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
-        return this.order_cost + this.activeVendorPriceData.discount_amount;
+        return this.order_cost + this.activeVendorPriceData.discountAmount;
       }
       return this.order_cost + this.activeVendorPriceData.discountAmount;
     },
@@ -405,13 +402,13 @@ export default {
     },
 
     balance_quote_label() {
+      let text = '';
       if (this.getRunningBalance < 0) {
-        return 'You Owe';
+        text = 'You Owe';
+      } else {
+        text = 'Your Balance';
       }
-      if (this.getRunningBalance - this.order_cost < 0) {
-        return 'Your Balance';
-      }
-      return false;
+      return text;
     },
 
     // Disabled return orders - users to place the last pickup as the last destination
