@@ -343,14 +343,12 @@
                 type="text"
                 placeholder="Name"
                 class="el-input__inner bottom-spacer"
-                @focus="triggerGAEvent('name')"
               >
               <input
                 v-model="recipientPhone"
                 type="number"
                 placeholder="Phone number"
                 class="el-input__inner"
-                @focus="triggerGAEvent('name')"
               >
             </div>
             <div class="home-view-truck-options-inner-wrapper">
@@ -582,6 +580,7 @@
 
 <script>
 import numeral from 'numeral';
+import _ from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PaymentOptions from './PaymentOptions.vue';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
@@ -786,7 +785,14 @@ export default {
       return displayPairName.toLowerCase();
     },
   },
-
+  watch: {
+    recipientName(data) {
+      this.debounceRecipientName(data);
+    },
+    recipientPhone(data) {
+      this.debounceRecipientPhone(data);
+    },
+  },
   created() {
     this.setFirstTimeUser();
     this.initializeVendorComponent();
@@ -825,7 +831,14 @@ export default {
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
     }),
-
+    // eslint-disable-next-line func-names
+    debounceRecipientName: _.debounce(function (data) {
+      this.triggerGAEvent('Client recipient name input - Order Placement Page - WebApp', data);
+    }, 2000),
+    // eslint-disable-next-line func-names
+    debounceRecipientPhone: _.debounce(function (data) {
+      this.triggerGAEvent('Client recipient phone number input - Order Placement Page - WebApp', data);
+    }, 2000),
     dispatchCarrierType() {
       this.setCarrierType(this.carrier_type);
     },
@@ -872,7 +885,7 @@ export default {
       this.setExtendOptions(true);
       this.handleScheduledTime();
     },
-    triggerGAEvent(field) {
+    triggerGAEvent(field, value) {
       let analyticsEnv = '';
       try {
         analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
@@ -881,19 +894,12 @@ export default {
       }
       try {
         if (analyticsEnv === 'production') {
-          if (field === 'name') {
-            window.ga('send', 'event', {
-              eventCategory: 'Order Placement',
-              eventAction: 'Click',
-              eventLabel: 'Click recipient name input - Order Placement Page - WebApp',
-            });
-          } else {
-            window.ga('send', 'event', {
-              eventCategory: 'Order Placement',
-              eventAction: 'Click',
-              eventLabel: 'Click recipient phone number input - Order Placement Page - WebApp',
-            });
-          }
+          window.ga('send', 'event', {
+            eventCategory: 'Order Placement',
+            eventAction: 'Click',
+            eventLabel: field,
+            eventValue: value,
+          });
         }
       } catch (er) {
         // ...
@@ -1163,6 +1169,7 @@ export default {
     destroyVendorComponent() {
       if (this.recipientPhone && this.recipientName) {
         this.submitMail();
+        this.triggerGAEvent('Order Placement with Recipient Inputs - Order Placement Page - WebApp', '');
       }
       this.setActiveVendorName('');
       this.setActiveVendorDetails({});
