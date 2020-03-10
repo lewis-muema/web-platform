@@ -967,13 +967,13 @@ export default {
       let userEmail = '';
       let userPhone = '';
       if (session.default === 'biz') {
-        referenceNumber += session.biz.cop_id;
+        referenceNumber = this.order_no;
         copId = session.biz.cop_id;
         userId = session.biz.user_id;
         userEmail = session.biz.user_email;
         userPhone = session.biz.user_phone;
       } else {
-        referenceNumber = session.peer.user_phone;
+        referenceNumber = this.order_no;
         userId = session.peer.user_id;
         userPhone = session.peer.user_phone;
         userEmail = session.peer.user_email;
