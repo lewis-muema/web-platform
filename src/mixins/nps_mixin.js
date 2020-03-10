@@ -1,4 +1,4 @@
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 const NpsMxn = {
   data() {
@@ -14,13 +14,28 @@ const NpsMxn = {
   watch: {
     getNPSStatus(status) {
       this.nps_status = status;
-      console.log('this.nps_status', this.nps_status);
     },
   },
   methods: {
-    dismiss() {
-      console.log('cancelled');
-      this.nps_status = true;
+    ...mapMutations({
+      setNPSStatus: 'setNPSStatus',
+    }),
+
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+        }
+      } catch (er) {
+        // ...
+      }
     },
   },
 

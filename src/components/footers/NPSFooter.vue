@@ -1,5 +1,6 @@
 <template lang="html">
   <form
+    v-if="isValid"
     ref="form"
     class="form-inline"
     @submit.prevent="submitSurvey"
@@ -14,33 +15,41 @@
       >
         <div
           v-if="score === null"
-          class="tgl-radio-tabs"
         >
-          <span class="unlikely">0 Not Likely</span>
-          <span
-            v-for="(value, index) in scores"
-            :key="index"
-          >
-            <input
-              :id="`score_${index}`"
-              type="radio"
-              class="form-check-input tgl-radio-tab-child"
-              name="score"
-              @change="onChange($event, value)"
-            ><label
-              :for="`score_${index}`"
-              class="btn btn-default radio-inline"
-            >{{ value }}</label>
-          </span>
-          <span class="likely">10 Very Likely  </span>
-          <span
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            @click="dismiss()"
-          >
-            &times;
-          </span>
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-secondary likely side-btn"
+            >
+              0 Not Likely
+            </button>
+            <span class="score-holder">
+              <span
+                v-for="(value, index) in scores"
+                :key="index"
+              >
+                <button
+                  :id="`score_${index}`"
+                  type="button"
+                  class="btn btn-secondary btn-holder"
+                  @click="onChange($event, value)"
+                >{{ value }}</button>
+              </span>
+            </span>
+            <button
+              type="button"
+              class="btn btn-secondary unlikely side-btn"
+            >
+              10 Very Likely
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary dismiss"
+              @click="dismiss()"
+            >
+              &times;
+            </button>
+          </div>
         </div>
         <div v-if="score !== null">
           <div class="form-group">
@@ -73,7 +82,7 @@
   </form>
 </template>
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 import NpsMixin from '../../mixins/nps_mixin';
 
 export default {
@@ -86,29 +95,133 @@ export default {
       reason: '',
       heading: 'How likely are you to invite a friend or collegue to join Sendy?',
       submitted: false,
+      isValid: null,
     };
+  },
+  computed: {
+    session() {
+      const session = this.$store.getters.getSession;
+      return session;
+    },
+    userType() {
+      const userType = this.session.default;
+      return userType;
+    },
+    respondentType() {
+      return this.userType === 'biz' ? 'cop' : this.userType;
+    },
+    userID() {
+      return this.session[this.userType].user_id;
+    },
+    countryCode() {
+      return this.session[this.userType].country_code;
+    },
+  },
+  mounted() {
+    this.validateUser();
   },
 
   methods: {
     ...mapMutations({
       setNPSStatus: 'setNPSStatus',
     }),
+    ...mapActions({
+      verifyNpsUser: 'verifyNpsUser',
+      storeNpsSurvey: 'storeNpsSurvey',
+    }),
+    validateUser() {
+      const userDetails = {
+        respondent_type: this.respondentType,
+        respondent_id: this.userID,
+      };
+
+      const payload = {
+        values: userDetails,
+        vm: this,
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'nps/verify',
+      };
+      this.verifyNpsUser(payload).then(
+        (response) => {
+          const { valid } = response.data;
+          this.isValid = valid;
+        },
+        (error) => {
+          this.trackMixpanelEvent('Place Order', {
+            'Account ': this.userID,
+            'Account Type': this.userType === 'peer' ? 'Personal' : 'Business',
+            'Client Type': 'Web Platform',
+            'Response Error': error.response.data[0].message,
+          });
+        },
+      );
+    },
     onChange(event, score) {
       this.score = score;
       this.heading = 'What do you like most about Sendy? (Optional)';
     },
+    dismiss() {
+      const userDetails = {
+        respondent_type: this.respondentType,
+        respondent_id: this.userID,
+        business_unit_id: 1,
+        country_code: this.countryCode,
+        score: null,
+        reason: '',
+        dismissed: true,
+      };
+      const payload = {
+        values: userDetails,
+        vm: this,
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'nps/surveys',
+      };
+      this.storeNpsSurvey(payload).then(
+        (response) => {
+          if (response.success) {
+            this.submitted = true;
+            this.heading = 'Thank you. We will use your feedback to improve our service';
+            setTimeout(() => {
+              this.setNPSStatus(true);
+            }, 3000);
+          }
+        },
+        (error) => {
+          this.heading = error.response.data[0].message;
+        },
+      );
+    },
     submitSurvey() {
-      console.log('hapa');
-      let status = false;
-      status = true;
-      if (status) {
-        this.submitted = true;
+      const userDetails = {
+        respondent_type: this.respondentType,
+        respondent_id: this.userID,
+        business_unit_id: 1,
+        country_code: this.countryCode,
+        score: this.score,
+        reason: this.reason,
+        dismissed: false,
+      };
+      const payload = {
+        values: userDetails,
+        vm: this,
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'nps/surveys',
+      };
 
-        this.heading = 'Thank you. We will use your feedback to improve our service';
-        setTimeout(() => {
-          this.setNPSStatus(true);
-        }, 3000);
-      }
+      this.storeNpsSurvey(payload).then(
+        (response) => {
+          if (response.success) {
+            this.submitted = true;
+            this.heading = 'Thank you. We will use your feedback to improve our service';
+            setTimeout(() => {
+              this.setNPSStatus(true);
+            }, 3000);
+          }
+        },
+        (error) => {
+          this.heading = error.response.data[0].message;
+        },
+      );
     },
 
   },
@@ -120,7 +233,6 @@ export default {
     bottom: 0;
     width: 100%;
    left: 0;
-    /* margin: 0 2%; */
     background-color: #fff;
     color: #555;
     font-size: 13px;
@@ -132,66 +244,50 @@ export default {
 .nps-header {
     width: 100%;
     margin-top: 25px;
+    font-size: 15px;
 }
 .nps-info {
     width: 100%;
+    margin-bottom: 20px;
+    margin-left: 3em;
 }
-input.tgl-radio-tab-child {
-  position: absolute;
-  /* left: -99999em; */
-  top: -99999em;
-  opacity: 1;
-  z-index: 1;
-}
-
-input.tgl-radio-tab-child+label {
+.btn-holder {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    background: #FFFFFF;
+    border: 1px solid #BDBDBD;
+    box-sizing: border-box;
+    margin-right: 15px;
     cursor: pointer;
-    border: 1px solid #aaa;
-    margin-right: 14px;
-    padding: .3em .6em;
-    position: relative;
-    border-radius: 25px;
+    transition-duration: 0.4s;
 }
 
-input.tgl-radio-tab-child+label:hover {
-  background-color: #f57f20;
+.btn-holder:hover {
+  background-color: #F57F20;
+  color: white;
+  font-weight: 700;
+  border: none;
 }
-
-[type=radio]:checked+label {
-  background-color: #f57f20;
-  z-index: 1;
-}
-.unlikely {
-    margin-right: 3em;
-    margin-left: 4em;
-}
-.likely {
+.score-holder {
     margin-left: 2em;
-    margin-right: 4em;
+    margin-right: 2em;
+}
+.side-btn {
+    color: #474747;
+    border: none;
+    font-size: 12px;
+}
+.dismiss {
+    color: #041F38;
+    border: none;
+    font-size: 19px;
+    margin-left: 15px;
+    cursor: pointer;
 }
 .nps-header h3 {
-    color: #1782c5;
+    color: #064773;
     font-weight: 500;
-    /* margin-top: 30px; */
-    /* line-height: 30px; */
-}
-.close {
-    /* font-size: 24px; */
-    font-size: 28px;
-    border: none;
-    cursor: pointer;
-    float: none;
-}
-/* .radio-inline { */
-    /* width: 34px;
-    height: 34px;
-    border-radius: 23px;
-    font-size: 20px;
-    /* font-weight: 500; */
-    /* color: #606266;  */
-/* } */
-.tgl-radio-tabs {
-   margin-bottom: 30px;
 }
 .reason-box {
     width: 34%;
@@ -205,8 +301,6 @@ input.tgl-radio-tab-child+label:hover {
     color: #ffffff;
     border-radius: 4px;
     cursor: pointer;
-    /* margin-right: 13px; */
-    /* padding: 0px; */
     line-height: 30px;
     height: 36px;
 }
@@ -215,8 +309,16 @@ input.tgl-radio-tab-child+label:hover {
 }
 .reason-dismiss {
     background: #ffffff;
-    color: #555;
     border: none;
+    color: #041F38;
+    border: none;
+    font-size: 19px;
+    margin-left: 15px;
+    cursor: pointer;
+}
+button span {
+    display: block;
+    padding: 0;
 }
 .form-group {
     margin-bottom: .3em;
