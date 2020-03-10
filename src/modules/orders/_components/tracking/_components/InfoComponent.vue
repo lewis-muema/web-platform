@@ -653,6 +653,9 @@
                   </el-radio>
                 </div>
               </div>
+              <div class="cancel-reason-input">
+                <input type="text" v-model="inputCancelReason" class="cancel-reason-text-input" name="" placeholder="Enter cancel reason" />
+              </div>
               <div class="action--slide-desc">
                 <button
                   type="button"
@@ -761,6 +764,7 @@ export default {
       cancel_desc: '',
       maximiseInfo: 0,
       cancelOption: false,
+      inputCancelReason: '',
       paymentOption: '',
       truckMoreInfo: true,
       myRb: '',
@@ -917,6 +921,15 @@ export default {
         }
       }
       this.initiateOrderData();
+    },
+    inputCancelReason(data) {
+      if (data) {
+        this.cancel_reason = 11;
+        this.cancel_desc = data;
+      } else {
+        this.cancel_reason = -1;
+        this.cancel_desc = '';
+      }
     },
   },
   mounted() {
@@ -1225,7 +1238,9 @@ export default {
           client_type: this.$store.getters.getSession.default,
         };
         const that = this;
-
+        if (this.inputCancelReason) {
+          this.submitHubspotCancelReason();
+        }
         let analyticsEnv = '';
         try {
           analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
@@ -1479,6 +1494,43 @@ export default {
         return ['confirmationDelayActive'];
       }
       return '';
+    },
+    submitHubspotCancelReason() {
+      const session = this.$store.getters.getSession;
+      // eslint-disable-next-line global-require
+      const portalId = '4951975';
+      const formId = '396e6fb7-2bb9-4bae-a5e7-623983ecd97e';
+      const fields = {
+        fields: [
+          {
+            name: 'firstname',
+            value: session[session.default].user_name,
+          },
+          {
+            name: 'email',
+            value: session[session.default].user_email,
+          },
+          {
+            name: 'phone',
+            value: session[session.default].user_phone,
+          },
+          {
+            name: 'cancel_reason',
+            value: this.inputCancelReason,
+          },
+        ],
+      };
+      const payload = {
+        values: fields,
+        app: 'HUBSPOT_URL',
+        vm: this,
+        endpoint: `${portalId}/${formId}`,
+      };
+
+      this.$store
+        .dispatch('requestAxiosPost', payload)
+        .then(response => response)
+        .catch(err => err);
     },
   },
 };
