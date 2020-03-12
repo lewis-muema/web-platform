@@ -179,18 +179,10 @@
 </template>
 
 <script>
-import {
-  mapActions,
-  mapGetters,
-  mapMutations,
-} from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import numeral from 'numeral';
-import {
-  library,
-} from '@fortawesome/fontawesome-svg-core';
-import {
-  faChevronDown,
-} from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
@@ -293,7 +285,10 @@ export default {
     order_cost() {
       let cost = 0;
       if (typeof this.activeVendorPriceData !== 'undefined') {
-        if ('cost' in this.activeVendorPriceData && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+        if (
+          'cost' in this.activeVendorPriceData
+          && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')
+        ) {
           if (
             !this.getIsReturn
             || this.vendors_without_return.includes(this.get_active_vendor_name)
@@ -518,7 +513,10 @@ export default {
       } catch (er) {
         //
       }
-      if (minAmount <= 0 && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+      if (
+        minAmount <= 0
+        && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')
+      ) {
         this.doNotification(
           '2',
           'Missing Minimum Order Amount',
@@ -531,6 +529,24 @@ export default {
     },
 
     preCheckPaymentDetails() {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          window.ga('send', 'event', {
+            eventCategory: 'Order Placement',
+            eventAction: 'Click',
+            eventLabel: 'Order Confirmation Button - Order Placement Page - Web App',
+          });
+        }
+      } catch (er) {
+        // ...
+      }
+
       if (this.isValidateLoadWeightStatus() && this.isValidateScheduleTime()) {
         this.loading = true;
         this.refreshRunningBalance().then(
@@ -662,17 +678,30 @@ export default {
             }
             /* eslint camelcase: ["error", {ignoreDestructuring: true}] */
             if (response.status) {
+              let analyticsEnv = '';
+              try {
+                analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+              } catch (er) {
+                // ...
+              }
+              try {
+                if (analyticsEnv === 'production') {
+                  window.ga('send', 'event', {
+                    eventCategory: 'Order Placement',
+                    eventAction: 'Order Confirmation',
+                    eventLabel: 'Order Confirmed - Order Placement - Web App',
+                  });
+                }
+              } catch (er) {
+                // ...
+              }
               let order_no;
               this.setPickupFilled(false);
               // eslint-disable-next-line camelcase
               if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'order_no')) {
-                ({
-                  order_no,
-                } = this.activeVendorPriceData);
+                ({ order_no } = this.activeVendorPriceData);
               } else {
-                ({
-                  order_no,
-                } = response.respond);
+                ({ order_no } = response.respond);
                 try {
                   this.mixpanelTrackPricingServiceCompletion(order_no);
                 } catch (er) {
@@ -783,7 +812,8 @@ export default {
         user_phone: acc.user_phone,
         no_charge_status: false,
         insurance_amount: 10,
-        note_status: typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
+        note_status:
+          typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
         last_digit: 'none',
         insurance_id: 1,
         platform: 'corporate',
@@ -797,12 +827,15 @@ export default {
         delivery_points: this.get_order_path.length - 1,
         sendy_coupon: '0',
         payment_method: Number(this.payment_method),
-        schedule_time: this.order_is_scheduled ? this.convertToUTC(this.scheduled_time) : this.convertToUTC(this.current_time),
+        schedule_time: this.order_is_scheduled
+          ? this.convertToUTC(this.scheduled_time)
+          : this.convertToUTC(this.current_time),
         tier_tag: this.activeVendorPriceData.tier_tag,
         tier_name: this.activeVendorPriceData.tier_name,
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
         carrier_type: this.final_carrier_type,
-        isreturn: this.getIsReturn && !this.vendors_without_return.includes(this.get_active_vendor_name),
+        isreturn:
+          this.getIsReturn && !this.vendors_without_return.includes(this.get_active_vendor_name),
         vendor_type: this.activeVendorPriceData.vendor_id,
         rider_phone: this.order_no,
         type: this.payment_type,
@@ -1246,7 +1279,7 @@ export default {
         payment = data.payment_methods;
       } else {
         const runningBalance = this.getRunningBalance;
-        if ((runningBalance >= 0) && (runningBalance - this.order_cost < 0)) {
+        if (runningBalance >= 0 && runningBalance - this.order_cost < 0) {
           payment = data.payment_methods;
         } else {
           const cashIndex = data.payment_methods.findIndex(index => index.name === 'Cash');
@@ -1276,7 +1309,11 @@ export default {
       this.mpesa_valid = intValue !== '+256';
     },
     isValidateLoadWeightStatus() {
-      if (this.activeVendorPriceData.vendor_id === 25 && !this.getLoadWeightStatus && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+      if (
+        this.activeVendorPriceData.vendor_id === 25
+        && !this.getLoadWeightStatus
+        && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')
+      ) {
         this.doNotification('2', 'Invalid Load Weight', 'Kindly provide a valid load weight');
         return false;
       }
