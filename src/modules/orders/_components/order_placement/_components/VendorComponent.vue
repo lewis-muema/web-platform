@@ -858,10 +858,18 @@ export default {
       this.handleScheduledTime();
     },
     setDefaultCarrierType() {
+      const session = this.$store.getters.getSession;
+      let copStatus = false;
+      if (session.default === 'biz') {
+        copStatus = true;
+      }
+
       if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
         this.carrier_type = '1';
       } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
         this.carrier_type = '2';
+      } else if (copStatus) {
+        this.carrier_type = session[session.default].default_carrier_type.toString(10);
       } else {
         this.carrier_type = '2';
       }
