@@ -978,6 +978,10 @@ export default {
       this.setOuterActivePackageClass(name);
       this.reCheckCarrierType();
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
+      const activeData = this.activePackageClassPriceData.price_tiers[0];
+      this.setVendorDetails(activeData);
+      this.delivery_item = '';
+      this.order_notes = '';
     },
     clearVehicleDetails() {
       this.vehicle_plate = '';
