@@ -25,8 +25,12 @@ function guard(to, from, next) {
       if (process.browser) {
         // read ls here
         const _sessionSnack = localStorage.getItem('_sessionSnack');
+        let userState = true;
+        if (typeof _sessionSnack === 'string') {
+          userState = _sessionSnack.includes('peer');
+        }
 
-        if (isEmpty(_sessionSnack)) {
+        if (isEmpty(_sessionSnack) || _sessionSnack === null || !userState) {
           resolve(next('/auth/sign_in'));
         } else {
           session = JSON.parse(_sessionSnack);
@@ -77,8 +81,12 @@ function loginGuard(to, from, next) {
       if (process.browser) {
         // read ls here
         const _sessionSnack = localStorage.getItem('_sessionSnack');
+        let userState = true;
+        if (typeof _sessionSnack === 'string') {
+          userState = _sessionSnack.includes('peer');
+        }
 
-        if (isEmpty(_sessionSnack)) {
+        if (isEmpty(_sessionSnack) || _sessionSnack === null || !userState) {
           resolve(next());
           if ('login' in to.meta) {
             const details = to.meta.login;
