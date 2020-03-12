@@ -24,9 +24,7 @@
             v-model="email"
             class="input-control sign-form"
             type="text"
-            name="email"
             placeholder="Enter Email"
-            autocomplete="on"
           >
         </div>
 
