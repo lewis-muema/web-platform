@@ -343,7 +343,7 @@ export default {
       return value;
     },
   },
-  created() {
+  mounted() {
     this.verifyAccount();
   },
   methods: {
