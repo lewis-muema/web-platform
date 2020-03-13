@@ -337,7 +337,9 @@
               </span>
             </div>
             <div class="home-view-truck-options-inner-wrapper recipient-section">
-              <p class="home-view-truck-options-label no-margin">Recipient Details</p>
+              <p class="home-view-truck-options-label no-margin">
+                Recipient Details
+              </p>
               <input
                 v-model="recipientName"
                 type="text"
@@ -913,7 +915,11 @@ export default {
       const session = this.$store.getters.getSession;
       let copStatus = false;
       if (session.default === 'biz') {
-        copStatus = true;
+        const bizData = session[session.default];
+        const data = Object.prototype.hasOwnProperty.call(bizData, 'default_carrier_type');
+        if (data) {
+          copStatus = true;
+        }
       }
 
       if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
