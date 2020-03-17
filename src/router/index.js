@@ -64,7 +64,9 @@ function guard(to, from, next) {
           if (details !== 'undefined') {
             mixpanel.track(details, {
               'Client Type': 'Web Platform',
-              'Account Type': session.default === 'peer' ? 'Personal' : 'Business',
+              'Account Type': session.default === 'peer'
+                ? 'Personal'
+                : 'Business',
             });
           }
         }
@@ -85,7 +87,6 @@ function loginGuard(to, from, next) {
         if (typeof _sessionSnack === 'string') {
           userState = _sessionSnack.includes('peer');
         }
-
         if (isEmpty(_sessionSnack) || _sessionSnack === null || !userState) {
           resolve(next());
           if ('login' in to.meta) {
@@ -190,7 +191,9 @@ export function createRouter() {
               {
                 path: 'details/:id',
                 name: 'order-details',
-                component: () => import('../modules/transactions/_components/OrderDetails.vue'),
+                component: () => import(
+                  '../modules/transactions/_components/OrderDetails.vue',
+                ),
               },
             ],
           },
@@ -376,6 +379,10 @@ export function createRouter() {
           {
             path: '/user/free_deliveries',
             component: () => import('../modules/user/_components/FreeDeliveries.vue'),
+          },
+          {
+            path: '/user/upgrade_acc',
+            component: () => import('../modules/user/_components/UpgradeAccount.vue'),
           },
         ],
       },
