@@ -157,7 +157,7 @@
               Please enter a valid KRA PIN
             </span>
           </div>
-          <div class="">
+          <div class="primary-vehicle-outline">
             <label> Select the primary type of vehicle you will use on Sendy</label>
             <p class="extra-info">
               (This will not restrict you from using other vehicles)
@@ -733,6 +733,7 @@ export default {
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
   border-radius: 3px;
   width: 31% ;
+  margin-right: 7%;
 }
 .extra-info{
  margin-top: 0;
@@ -786,5 +787,8 @@ export default {
 }
 .primary-vehicle-name{
   margin-top: 8%;
+}
+.primary-vehicle-outline{
+  margin-left: 3%;
 }
 </style>
