@@ -1,7 +1,7 @@
 <template>
   <div id="auth_container" class="">
     <!-- <main-header></main-header> -->
-    <div class="profile-container" v-if="Object.keys(this.$store.getters.getSession).length > 0">
+    <div class="profile-container">
       <div
         class="new-card"
         style="margin-top:5%;margin-left:20%;border-right:5px solid #1782C5;height:400px;"
@@ -22,7 +22,6 @@
         <router-view />
       </div>
     </div>
-    <div v-else />
   </div>
 </template>
 
