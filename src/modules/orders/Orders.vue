@@ -128,6 +128,9 @@ import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
 import OngoingComponent from './_components/OngoingComponent.vue';
 import FbuChildOrders from './_components/FbuChildOrders.vue';
+import NPSFooter from '../../components/footers/NPSFooter.vue';
+import NpsMixin from '../../mixins/nps_mixin';
+
 
 export default {
   name: 'Orders',
