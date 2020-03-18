@@ -328,3 +328,7 @@
  color: #000000;
  font-weight: 400;
 }
+.el-checkbox__label,
+.el-radio__label {
+  font-size: 13px !important;
+}
