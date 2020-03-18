@@ -1,5 +1,6 @@
 <template lang="html">
   <div
+    v-if="sessionData"
     id="user_container"
     class=""
   >
@@ -40,6 +41,11 @@ export default {
   name: 'User',
   components: { MainHeader },
   mixins: [RegisterStoreModule],
+  data() {
+    return {
+      sessionData: false,
+    };
+  },
   computed: {
     ...mapGetters({
       getSession: 'getSession',
@@ -55,9 +61,22 @@ export default {
       deep: true,
     },
   },
+  mounted() {
+    this.checkSessionData();
+  },
   created() {
     const STORE_KEY = '$_user';
     this.$store.registerModule(STORE_KEY, userStore);
+  },
+  methods: {
+    checkSessionData() {
+      const session = this.$store.getters.getSession;
+      if (Object.keys(session).length > 0) {
+        this.sessionData = true;
+      } else {
+        this.$router.push('/orders');
+      }
+    },
   },
 };
 </script>
