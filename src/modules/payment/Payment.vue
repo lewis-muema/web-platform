@@ -7,6 +7,7 @@
     <div id="payment_container" class="container-small">
       <component :is="currentPageHeader" class="payment--header" />
       <payment-body />
+      <NPSFooter v-if="!nps_status" />
     </div>
   </div>
 </template>
@@ -22,6 +23,8 @@ import MainHeader from '../../components/headers/MainHeader.vue';
 import AccountBalance from './_components/AccountBalance.vue';
 import OrderCost from './_components/OrderCost.vue';
 import PaymentBody from './_components/PaymentBody.vue';
+import NPSFooter from '../../components/footers/NPSFooter.vue';
+import NpsMixin from '../../mixins/nps_mixin';
 
 const currencyConversion = require('country-tz-currency');
 
@@ -34,8 +37,9 @@ export default {
     AccountBalance,
     OrderCost,
     PaymentBody,
+    NPSFooter,
   },
-  mixins: [RegisterStoreModule],
+  mixins: [RegisterStoreModule, NpsMixin],
   computed: {
     ...mapGetters({
       getSession: 'getSession',
