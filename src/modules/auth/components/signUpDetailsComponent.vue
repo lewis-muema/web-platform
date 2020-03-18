@@ -2,18 +2,26 @@
   <div
     class=""
   >
-    <div v-if="peerState === 1">
-      <div class="sign-up-outer-back-btn">
-        <i
-          class="el-icon-back sign-up-back"
-          @click="go_back(1)"
-        />
-      </div>
-
+    <div v-if="setUpState === 1">
       <p class="sign-up--extra">
-        Sign up for a Sendy personal account
+        Sign up for a Sendy
       </p>
-
+      <div>
+        <el-radio
+          v-model="account"
+          label="biz"
+          border
+        >
+          Business
+        </el-radio>
+        <el-radio
+          v-model="account"
+          label="peer"
+          border
+        >
+          Personal
+        </el-radio>
+      </div>
       <div class="account-details--wrapper">
         <div class="">
           <p class="input--label">
@@ -27,7 +35,22 @@
             value=""
           >
         </div>
-        <div class="">
+        <div
+          v-show="account === 'biz'"
+          class=""
+        >
+          <p class="input--label">
+            Business Name
+          </p>
+          <input
+            v-model="cop_name"
+            class="input-control sign-up-form"
+            type="text"
+            name="name"
+            value=""
+          >
+        </div>
+        <div class=" ">
           <p class="input--label">
             Email
           </p>
@@ -43,9 +66,9 @@
             {{ errors.first('email') }}
           </p>
         </div>
-        <div class="">
+        <div class=" ">
           <p class="input--label">
-            Phone Number
+            Phone number
           </p>
           <vue-tel-input
             v-model.trim="phone"
@@ -58,14 +81,8 @@
             v-bind="phoneInputProps"
             @onBlur="validate_phone"
           />
-          <p
-            v-show="errors.has('phone')"
-            class="sign-up-data-error"
-          >
-            {{ errors.first('phone') }}
-          </p>
         </div>
-        <div class="">
+        <div class=" ">
           <p class="input--label">
             Password
           </p>
@@ -81,9 +98,8 @@
             {{ pass_msg }}
           </p>
         </div>
-
         <div
-          class="sign-up-terms"
+          class=" sign-up-terms"
         >
           <input
             v-model="u_terms"
@@ -94,7 +110,7 @@
           <span class="sign-holder__smaller">
             By creating a Sendy account you’re agreeing to the
             <a
-              class=" sign-holder__grey"
+              class="signup-holder__link"
               href="https://sendyit.com/terms"
             >
               terms and conditions
@@ -103,38 +119,58 @@
         </div>
       </div>
       <div
-        class="verify-acc-holder"
+        class=" next-btn-holder"
       >
         <input
-          value="Verify Account"
-          class="button-primary sign-btn-color verify-acc-btn"
+          value="SIGN UP"
+          class="button-primary sign-btn-color next-btn"
           type="submit"
           name="login_text"
-          @click="verify_acc"
+          @click="next"
         >
+      </div>
+      <div class="sign-up--info">
+        <div class="sign-up-text-inner">
+          Do you already have an account?
+          <router-link
+            class="signup-holder__link"
+            to="/auth/sign_in"
+          >
+            Login
+          </router-link>
+        </div>
+        <div class="sign-up-text-inner">
+          Want to drive for Sendy?
+          <a
+            class="signup-holder__link"
+            href="https://partner.sendyit.com/onboarding_portal/"
+          >
+            Click here
+          </a>
+        </div>
       </div>
     </div>
     <div v-else>
       <div class="sign-up-outer-back-btn">
         <i
           class="el-icon-back sign-up-back"
-          @click="one_step()"
+          @click="go_back_state(1)"
         />
       </div>
-
       <p class="sign-up--extra">
-        Sign up for a Sendy personal account
+        Verification
       </p>
 
       <div class="account-details--wrapper">
-        <div class="">
+        <div class=" ">
           <p class="verification-code-info">
-            For your security, Sendy wants to make sure it's really you. We will send a message with
-            your verification code.
+            For your security, Sendy wants to make sure it's really you.
+            An SMS with your verification code was sent to
+            <a class="verification-code-recepient">{{ phone }}</a>
           </p>
         </div>
         <div class="">
-          <p class="input--label">
+          <p class="input--label verify-code-header">
             Enter verification code
           </p>
           <input
@@ -146,10 +182,10 @@
           >
         </div>
         <div
-          class="verify-code-holder"
+          class=" verify-code-holder"
         >
           <input
-            value="Sign Up"
+            value="VERIFY CODE"
             class="button-primary sign-btn-color verify-code-btn"
             type="submit"
             name="login_text"
@@ -162,7 +198,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import SessionMxn from '../../../mixins/session_mixin';
 
@@ -170,22 +206,23 @@ const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 const currencyConversion = require('country-tz-currency');
 
 export default {
-  name: 'PeerDetailsComponent',
+  name: 'BizDetailsComponent',
   mixins: [SessionMxn],
   data() {
     return {
-      phone: '',
-      email: '',
-      password: '',
-      u_terms: '',
+      account: 'biz',
       name: '',
+      cop_name: '',
+      email: '',
+      phone: '',
+      password: '',
+      setUpState: 1,
       pass_msg: '',
-      countryCode: 'KE',
+      u_terms: '',
       pass_validation: false,
-      peerState: 1,
-      code: '',
-      request_id: '',
+      countryCode: 'KE',
       currency: 'KES',
+      code: '',
       phoneInputProps: {
         mode: 'international',
         defaultCountry: 'ke',
@@ -209,16 +246,7 @@ export default {
       },
     };
   },
-  computed: {
-    ...mapGetters({
-      getViewState: '$_auth/getViewState',
-    }),
-  },
   methods: {
-    ...mapMutations({
-      setViewState: '$_auth/setViewState',
-      setActiveTab: '$_auth/setActiveTab',
-    }),
     ...mapActions({
       requestSignUpPhoneVerification: '$_auth/requestSignUpPhoneVerification',
       requestSignUpVerificationVerify: '$_auth/requestSignUpVerificationVerify',
@@ -229,22 +257,20 @@ export default {
     validate_phone() {
       this.$validator.validate();
     },
-    go_back(code) {
-      this.setViewState(code);
-      this.setActiveTab('Peer');
-      this.phone = '';
-      this.email = '';
-      this.password = '';
-      this.u_terms = '';
-      this.name = '';
+    validateDetails() {
+      let valid = false;
+      if (this.account === 'biz' && (this.name !== '' && this.cop_name && this.email !== '' && this.phone !== '' && this.password !== '')) {
+        valid = true;
+      } else if (this.account === 'peer' && (this.name !== '' && this.email !== '' && this.phone !== '' && this.password !== '')) {
+        valid = true;
+      } else {
+        valid = false;
+      }
+
+      return valid;
     },
-    one_step() {
-      this.peerState = 1;
-      this.code = '';
-      this.request_id = '';
-    },
-    verify_acc() {
-      if (this.name !== '' && this.email !== '' && this.phone !== '' && this.password !== '') {
+    next() {
+      if (this.validateDetails()) {
         const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
         const phoneNumber = parsePhoneNumberFromString(this.phone);
         this.countryCode = phoneNumber.country;
@@ -301,17 +327,17 @@ export default {
     sendVerificationCode() {
       const phone = this.phone.replace(/[()\-\s]+/g, '');
       const values = {};
-      values.phone_no = phone;
+      values.number = phone;
       const fullPayload = {
         values,
         vm: this,
-        app: 'PRIVATE_API',
-        endpoint: 'verify_phone',
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'request_verification',
       };
       this.requestSignUpPhoneVerification(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.peerState = 2;
+            this.setUpState = 2;
             this.request_id = response.request_id;
             this.doNotification(1, 'Phone Verification', 'Phone verification code has been sent');
           } else {
@@ -334,7 +360,7 @@ export default {
       const fullPayload = {
         values,
         vm: this,
-        app: 'PRIVATE_API',
+        app: 'NODE_PRIVATE_API',
         endpoint: 'check_verification',
       };
       this.requestSignUpVerificationVerify(fullPayload).then(
@@ -361,10 +387,17 @@ export default {
       values.phone = this.phone;
       values.email = this.email;
       values.password = this.password;
-      values.type = 'peer';
-      values.platform = 'web';
       values.country_code = this.countryCode;
       values.default_currency = this.currency;
+
+      if (this.account === 'biz') {
+        values.type = 'biz';
+        values.cop_name = this.cop_name;
+      } else {
+        values.type = 'peer';
+        values.platform = 'web';
+      }
+
       const fullPayload = {
         values,
         vm: this,
@@ -376,7 +409,6 @@ export default {
           if (response.length > 0) {
             response = response[0];
           }
-
           if (response.status) {
             const sessionData = response.data;
             const jsonSession = JSON.stringify(sessionData);
@@ -405,7 +437,7 @@ export default {
               // login identify
               mixpanel.identify(acc.user_email);
 
-              // track new Account
+              // track New Account
               mixpanel.track('New Account Created', {
                 'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
                 'Last Login': new Date(),
@@ -428,6 +460,11 @@ export default {
         },
       );
     },
+    go_back_state(code) {
+      this.setUpState = code;
+      this.code = '';
+      this.request_id = '';
+    },
     validate_pass() {
       const patt = new RegExp('^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9@#$%^&+=]*$');
       const res = patt.test(this.password);
@@ -437,6 +474,15 @@ export default {
         this.pass_msg = '';
         this.pass_validation = true;
       }
+    },
+    doNotification(level, title, message) {
+      const notification = {
+        title,
+        level,
+        message,
+      };
+      this.$store.commit('setNotification', notification);
+      this.$store.commit('setNotificationStatus', true);
     },
     directSignInViaAuth() {
       this.deleteSession();
@@ -524,25 +570,16 @@ export default {
         },
       );
     },
-    doNotification(level, title, message) {
-      const notification = {
-        title,
-        level,
-        message,
-      };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
-    },
   },
 };
 </script>
 
 <style lang="css" scoped>
 @import "../../../../src/assets/styles/sign_up.css";
-
-div.sign-up-card.cards--align > div > div:nth-child(3) > div:nth-child(3) > div > div > ul{
-  margin-top: 12%;
-  margin-left: -25%;
-  width: 664%;
+.cards--align > div > div > div:nth-child(3) > div:nth-child(1) > div > div{
+  width: 182%;
+}
+body > div.el-select-dropdown.el-popper{
+  width: 25%;
 }
 </style>
