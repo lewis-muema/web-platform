@@ -18,7 +18,6 @@
         <router-view />
       </div>
     </div>
-    <NPSFooter v-if="!nps_status" />
   </div>
 </template>
 
@@ -28,16 +27,13 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import transStore from './_store';
 import MainHeader from '../../components/headers/MainHeader.vue';
-import NPSFooter from '../../components/footers/NPSFooter.vue';
-import NpsMixin from '../../mixins/nps_mixin';
 
 library.add(faStar);
 
 export default {
   name: 'Transactions',
   // mixins: [ RegisterStoreModule ],
-  components: { MainHeader, NPSFooter },
-  mixins: [NpsMixin],
+  components: { MainHeader },
   computed: {
     ...mapGetters({
       getSession: 'getSession',
