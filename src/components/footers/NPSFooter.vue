@@ -33,7 +33,7 @@
                   type="button"
                   class="btn btn-secondary btn-holder"
                   @click="onChange($event, value)"
-                >{{ value }}</button>
+                ><span class="score-value">{{ value }}</span></button>
               </span>
             </span>
             <button
@@ -248,19 +248,20 @@ export default {
 }
 .nps-info {
     width: 100%;
-    margin-bottom: 20px;
-    margin-left: 3em;
+    margin-bottom: 6px;
+    margin-left: 5em;
 }
 .btn-holder {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     border-radius: 100%;
     background: #FFFFFF;
     border: 1px solid #BDBDBD;
     box-sizing: border-box;
-    margin-right: 15px;
+    margin-right: 13px;
     cursor: pointer;
     transition-duration: 0.4s;
+    padding: 0;
 }
 
 .btn-holder:hover {
@@ -270,8 +271,8 @@ export default {
   border: none;
 }
 .score-holder {
-    margin-left: 2em;
-    margin-right: 2em;
+    margin-left: 10px;
+    margin-right: 20px;
 }
 .side-btn {
     color: #474747;
