@@ -109,6 +109,7 @@
       <map-component />
       <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
       <ongoing-component v-if="this.$route.name !== 'freight_order_tracking' && this.$route.name !== 'freight_order_placement'" />
+      <NPSFooter v-if="!nps_status" />
       <transition
         name="fade"
         mode="out-in"
@@ -135,9 +136,9 @@ import NpsMixin from '../../mixins/nps_mixin';
 export default {
   name: 'Orders',
   components: {
-    MainHeader, MapComponent, OngoingComponent, FbuChildOrders,
+    MainHeader, MapComponent, OngoingComponent, FbuChildOrders, NPSFooter,
   },
-  mixins: [RegisterStoreModule],
+  mixins: [RegisterStoreModule, NpsMixin],
   data() {
     return {
       icon_class: '',
@@ -157,6 +158,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      getNPSStatus: 'getNPSStatus',
+    }),
     uploadBtn() {
       if (this.uploadButton) {
         return 'button-primary';
