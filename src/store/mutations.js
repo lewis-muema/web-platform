@@ -39,7 +39,4 @@ export default {
   setRedirectOrder(state, order) {
     state.redirect_order = order;
   },
-  setNPSStatus(state, status) {
-    state.nps_status = status;
-  },
 };

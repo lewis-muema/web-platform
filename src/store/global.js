@@ -20,7 +20,6 @@ const state = {
   fcm_data: {},
   redirect_status: false,
   redirect_order: ' ',
-  nps_status: false,
 };
 
 export default {
