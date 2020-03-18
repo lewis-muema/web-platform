@@ -30,7 +30,7 @@
             </a>
             <ul class="nav--menu-dropdown-list">
               <div v-if="!admin_details">
-                <li v-if="switchValid">
+                <li v-show="switchValid">
                   <a @click="switchAccount()">
                     Switch to
                     <span v-if="this.$store.getters.getSession.default === 'peer'"> Business </span>
@@ -40,7 +40,7 @@
                     account
                   </a>
                 </li>
-                <li v-if="isUpgradeValid">
+                <li v-show="isUpgradeValid">
                   <a @click="linkRoute('/user/upgrade_acc')">
                     Create Business Account
                   </a>
