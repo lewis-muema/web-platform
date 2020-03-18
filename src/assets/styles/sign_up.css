@@ -34,20 +34,20 @@
   flex-direction: column;
   display: flex;
   -webkit-box-direction: normal;
-  padding-left: 5%;
-  padding-top: 8%;
+  padding-right: 9%;
+  padding-top: 10%;
 
 }
 .sign-up-main{
-  border: 1px solid #d8dfe6;
+  /* border: 1px solid #d8dfe6; */
   border-radius: 4px;
-  margin: 4rem auto;
+  margin: 1rem auto;
   padding: 2rem;
   font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
   width: 67% !important;
-  padding-top: 1%;
   padding-bottom: 0;
-  margin-top: 3%;
+  margin-top: 0;
+  padding-top: 1%;
 }
 .sign-up-text-inner{
  padding-left: 8%;
@@ -77,21 +77,10 @@
   border-radius: 6px;
   padding-top: 1%;
 }
-.sign-up-card.cards--align > div > div:nth-child(3) > div:nth-child(2) > label > span.el-radio__label{
-  font-size: 16px !important;
-  color: #979797;
-}
-.sign-up-card.cards--align > div > div:nth-child(3) > div:nth-child(1) > label > span.el-radio__label{
-  font-size: 16px !important;
-  color: #979797;
-}
-.el-radio__inner{
-  border: 1px solid #979797 ;
-}
 .sign-up--extra{
   font-size: 16px;
   color: #000000;
-  font-weight: 300;
+  font-weight: 400;
 }
 .sign-up--label{
  font-weight: 500;
@@ -178,7 +167,7 @@
 }
 .sign-up-terms{
   margin-bottom: 2%;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 200;
   display: flex;
   flex-direction: row;
@@ -254,8 +243,7 @@
   width: 112% !important;
 }
 .sign-up--info{
- width: 112%;
- text-align: center;
+ text-align: center !important;
  color: #827E7E;
  margin-top: 8%;
 }
@@ -273,14 +261,13 @@
 }
 .input--label{
   margin-bottom: 2%;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 200;
 }
 .verification-code-info{
   margin-bottom: 2%;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 200;
-  color:#1782C5;
   margin-bottom: 8%;
 }
 .verify-acc-btn{
@@ -307,8 +294,37 @@
 .sign-up-container {
  width: 90%;
  margin: 0px auto;
- padding-top: 40px;
- margin-bottom: 100px;
  flex-direction: column;
  display: flex;
+}
+.sign-up-details-section{
+ padding-left: 9%;
+ border: 1px solid #d8dfe6;
+ border-radius: 4px;
+ margin: 4rem auto;
+ padding: 3rem;
+ font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+ width: 67% !important;
+ padding-top: 1%;
+ margin-top: 3%;
+}
+.el-radio.is-bordered{
+ width: 47.5%;
+}
+.partners-brand-text{
+ color: #1782C5;
+}
+.logo-display{
+  height: 100px;
+  min-width: 67px;
+  margin-right: 1%;
+}
+.verify-code-header{
+ color: #000000;
+ font-weight: 400;
+ font-size: 13px;
+}
+.verification-code-recepient{
+ color: #000000;
+ font-weight: 400;
 }

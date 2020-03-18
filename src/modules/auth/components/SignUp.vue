@@ -5,77 +5,59 @@
     >
       <div class="sign-up-content">
         <div
-          class="sign-up-card cards--align"
-        >
-          <sign-up-initial-component v-if="getViewState === 1" />
-          <peer-details-component v-if="getViewState === 2" />
-          <biz-details-component v-if="getViewState === 3" />
-        </div>
-        <div
           class="sign-up-help-card"
         >
           <div class="">
-            <div
-              v-show="getActiveTab === 'Biz'"
-              :class="{ active_tab: getActiveTab === 'Biz' }"
-            >
+            <div>
               <p
                 class="sign-up--extra extra-text"
               >
-                Business account benefits
+                Join
+                <a class="partners-brand-text">5000+ Customers </a>who trust Sendy
               </p>
 
-              <div
-                v-for="(info, key) in biz"
-                :key="key"
-                class="sign-up-content align-benefits"
-              >
-                <div class="">
-                  <i class="el-icon-check sign-up-back" />
-                </div>
-                <div
-                  class="benefits-text"
+              <div class="row">
+                <img
+                  class="logo-display"
+                  :src="getPartnerLogo('safaricom')"
+                  alt=""
                 >
-                  <p class="business-benefits--header">
-                    {{ info.header }}
-                  </p>
-                  <p class="business-benefits--description">
-                    {{ info.description }}
-                  </p>
-                </div>
+                <img
+                  class="logo-display"
+                  :src="getPartnerLogo('highlands')"
+                  alt=""
+                >
+                <img
+                  class="logo-display"
+                  :src="getPartnerLogo('copia')"
+                  alt=""
+                >
               </div>
-            </div>
-            <div
-              v-show="getActiveTab === 'Peer'"
-              :class="{ active_tab: getActiveTab === 'Peer' }"
-            >
-              <p
-                class="sign-up--extra extra-text"
-              >
-                Personal account benefits
-              </p>
 
-              <div
-                v-for="(info, key) in peer"
-                :key="key"
-                class="sign-up-content align-benefits"
-              >
-                <div class="">
-                  <i class="el-icon-check sign-up-back" />
-                </div>
-                <div
-                  class="benefits-text"
+              <div class="row">
+                <img
+                  class="logo-display"
+                  :src="getPartnerLogo('crown')"
+                  alt=""
                 >
-                  <p class="business-benefits--header">
-                    {{ info.header }}
-                  </p>
-                  <p class="business-benefits--description">
-                    {{ info.description }}
-                  </p>
-                </div>
+                <img
+                  class="logo-display"
+                  :src="getPartnerLogo('kenafric')"
+                  alt=""
+                >
+                <img
+                  class="logo-display"
+                  :src="getPartnerLogo('unilever')"
+                  alt=""
+                >
               </div>
             </div>
           </div>
+        </div>
+        <div
+          class="sign-up-card cards--align sign-up-details-section"
+        >
+          <sign-up-details-component />
         </div>
       </div>
     </div>
@@ -84,54 +66,26 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import signUpInitialComponent from './signUpInitialComponent.vue';
-import peerDetailsComponent from './peerDetailsComponent.vue';
-import bizDetailsComponent from './bizDetailsComponent.vue';
+import signUpDetailsComponent from './signUpDetailsComponent.vue';
 
 export default {
   name: 'SignUp',
   components: {
-    signUpInitialComponent,
-    peerDetailsComponent,
-    bizDetailsComponent,
+    signUpDetailsComponent,
   },
   data() {
     return {
-      biz: [
-        {
-          header: 'Title 1',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
-        },
-        {
-          header: 'Title 2',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
-        },
-        {
-          header: 'Title 3',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
-        },
-      ],
-      peer: [
-        {
-          header: 'Title 4',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
-        },
-        {
-          header: 'Title 5',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
-        },
-        {
-          header: 'Title 6',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
-        },
-      ],
     };
   },
   computed: {
     ...mapGetters({
-      getViewState: '$_auth/getViewState',
-      getActiveTab: '$_auth/getActiveTab',
+
     }),
+  },
+  methods: {
+    getPartnerLogo(id) {
+      return `https://images.sendyit.com/web_platform/partners_logo/${id}.png`;
+    },
   },
 };
 </script>
