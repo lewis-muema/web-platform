@@ -243,7 +243,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations,mapGetters } from 'vuex';
 import S3 from 'aws-s3';
 import orderStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
