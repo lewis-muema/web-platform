@@ -126,8 +126,9 @@
             width="30%"
             class="updateCrmDialog"
             :before-close="handleClose"
+            :modal-append-to-body="false"
           >
-            <div class="">
+            <div class="finish-setup-outer">
               <p class="crm-setup">
                 Finish account set up
               </p>
@@ -703,5 +704,9 @@ cancel-pop-up > div > div > div.el-dialog__header{
 }
 .final-upper-padding{
   padding-top: 2%;
+}
+.finish-setup-outer{
+  margin-left: 6%;
+  margin-right: 6%;
 }
 </style>
