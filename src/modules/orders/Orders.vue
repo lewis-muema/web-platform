@@ -253,6 +253,7 @@ import OngoingComponent from './_components/OngoingComponent.vue';
 import FbuChildOrders from './_components/FbuChildOrders.vue';
 import NPSFooter from '../../components/footers/NPSFooter.vue';
 import NpsMixin from '../../mixins/nps_mixin';
+import SessionMxn from '../../mixins/session_mixin';
 
 
 export default {
@@ -260,7 +261,7 @@ export default {
   components: {
     MainHeader, MapComponent, OngoingComponent, FbuChildOrders, NPSFooter,
   },
-  mixins: [RegisterStoreModule, NpsMixin],
+  mixins: [RegisterStoreModule, NpsMixin, SessionMxn],
   data() {
     return {
       icon_class: '',
