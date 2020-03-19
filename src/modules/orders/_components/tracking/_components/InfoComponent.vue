@@ -112,7 +112,7 @@
 
                     <li v-for="(val, index) in tracking_data.path" v-if="index > 0">
                       <p class="info-text-transform infor-top-bar-text">
-                        Destination
+                         {{tracking_data.path[index].waypoint_type ? tracking_data.path[index].waypoint_type :  `Destination`}}
                       </p>
                       <p>
                         {{ val.name }}
