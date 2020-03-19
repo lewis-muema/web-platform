@@ -16,7 +16,7 @@
                 <a class="partners-brand-text">5000+ Customers </a>who trust Sendy
               </p>
 
-              <div class="row">
+              <div class="row logo-outer">
                 <img
                   class="logo-display"
                   :src="getPartnerLogo('safaricom')"
@@ -34,7 +34,7 @@
                 >
               </div>
 
-              <div class="row">
+              <div class="row logo-outer">
                 <img
                   class="logo-display"
                   :src="getPartnerLogo('crown')"

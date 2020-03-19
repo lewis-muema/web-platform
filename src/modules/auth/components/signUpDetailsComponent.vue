@@ -4,7 +4,7 @@
   >
     <div v-if="setUpState === 1">
       <p class="sign-up--extra">
-        Sign up for a Sendy
+        Sign up for Sendy
       </p>
       <div>
         <el-radio
@@ -218,7 +218,7 @@ export default {
       password: '',
       setUpState: 1,
       pass_msg: '',
-      u_terms: '',
+      u_terms: true,
       pass_validation: false,
       countryCode: 'KE',
       currency: 'KES',

@@ -29,7 +29,7 @@ export default {
 @media only screen and (max-width: 599px) {
   .external-header__img{
       cursor: pointer;
-      width: 60%;
+      width: 60% !important;
       padding-left: 23% !important;
   }
 }
