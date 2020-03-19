@@ -78,7 +78,7 @@
   padding-top: 1%;
 }
 .sign-up--extra{
-  font-size: 16px;
+  font-size: 19px;
   color: #000000;
   font-weight: 400;
 }
@@ -228,6 +228,7 @@
 }
 .extra-text{
   font-weight: 400;
+  font-size: 18px !important;
 }
 .benefits-text{
   padding-left: 5%;
@@ -263,6 +264,7 @@
   margin-bottom: 2%;
   font-size: 12px;
   font-weight: 200;
+  color: #000;
 }
 .verification-code-info{
   margin-bottom: 2%;
@@ -315,9 +317,13 @@
  color: #1782C5;
 }
 .logo-display{
-  height: 100px;
+  height: 80px;
   min-width: 67px;
   margin-right: 1%;
+}
+.logo-outer{
+  width: 87%;
+  margin-left: 9%;
 }
 .verify-code-header{
  color: #000000;
