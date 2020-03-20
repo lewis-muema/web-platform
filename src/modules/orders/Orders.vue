@@ -244,7 +244,7 @@
 </template>
 
 <script>
-import { mapMutations,mapGetters } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 import S3 from 'aws-s3';
 import orderStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
@@ -333,6 +333,7 @@ export default {
     this.checkSession();
     this.rootListener();
     this.isNewCopAcc();
+    this.sessionFrefill();
   },
   destroyed() {
     clearInterval(this.countdown);
@@ -357,6 +358,24 @@ export default {
         }
       }
       this.updateCrmData = isSet;
+    },
+    sessionFrefill() {
+      const session = this.$store.getters.getSession;
+      if (Object.keys(session).length > 0) {
+        if (session.default === 'biz'
+        && Object.prototype.hasOwnProperty.call(session[session.default], 'tax_authority_pin')) {
+          if (session[session.default].kra_pin) {
+            this.tax_compliance = true;
+            this.kra_pin = session[session.default].tax_authority_pin;
+          } else if (session[session.default].tax_authority_pin === '') {
+            this.tax_compliance = '';
+            this.kra_pin = '';
+          } else {
+            this.tax_compliance = false;
+            this.kra_pin = '';
+          }
+        }
+      }
     },
     rootListener() {
       this.$root.$on('Upload status', (arg1) => {
@@ -464,7 +483,7 @@ export default {
     submit() {
       if (this.primary_business_unit === '') {
         this.doNotification(2, 'Final set up error !', 'Please select primary type vehicle');
-      } else if ((this.tax_compliance !== '' && this.kra_pin === '') || !this.valid_kra_pin) {
+      } else if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
         this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
       } else {
         const session = this.$store.getters.getSession;
