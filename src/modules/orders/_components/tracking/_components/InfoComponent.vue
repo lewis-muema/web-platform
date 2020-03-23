@@ -422,6 +422,7 @@
                           class="infor-top-bar-text"
                           v-bind:class="{ deliveredActive: setDelivered }"
                         >
+                        <span v-if="!'waypoint_type' in val || val.waypoint_type.toLowerCase() === 'delivery'">
                           <span v-if="tracking_data.delivery_status < 3 && !val.visited">
                             <p class="stagePending">
                               Your {{ packageName }} is on the way to {{ val.name }}
@@ -432,6 +433,22 @@
                               Your {{ packageName }} has been delivered to {{ val.name }}
                             </p>
                           </span>
+                        </span>
+                        <span v-else>
+                          <span v-if="tracking_data.delivery_status < 3 && !val.visited">
+                            <p class="stagePending">
+                              Your {{ partnerName }} is on the way to  pick your {{ packageName }} at {{ val.name }}
+                            </p>
+                          </span>
+                          <span v-else>
+                            <p class="stagePassed">
+                              Your {{ packageName }} at {{ val.name }} has been picked. 
+                            </p>
+                          </span>
+                        </span>
+
+
+
                         </div>
                       </li>
 
