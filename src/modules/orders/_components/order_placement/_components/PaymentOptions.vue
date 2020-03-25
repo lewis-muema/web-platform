@@ -185,7 +185,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
-import timezone from '../../../../../mixins/timezone';
+import TimezoneMxn from '../../../../../mixins/timezone';
 import EventsMixin from '../../../../../mixins/events_mixin';
 
 library.add(faChevronDown);
