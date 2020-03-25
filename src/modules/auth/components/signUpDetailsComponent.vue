@@ -122,8 +122,12 @@
         class=" next-btn-holder"
       >
         <input
-          value="SIGN UP"
-          class="button-primary sign-btn-color next-btn"
+          v-model="sign_up_text"
+          :class="
+            next_step
+              ? 'button-primary sign-btn-color next-btn'
+              : 'button--signup-inactive sign-btn-color next-btn'
+          "
           type="submit"
           name="login_text"
           @click="next"
@@ -244,6 +248,8 @@ export default {
           showDialCode: false,
         },
       },
+      next_step: true,
+      sign_up_text: 'SIGN UP',
     };
   },
   methods: {
@@ -288,6 +294,8 @@ export default {
 
         if (phoneValid && emailValid && this.pass_validation) {
           if (this.u_terms) {
+            this.next_step = false;
+            this.sign_up_text = 'SIGNING UP ...';
             const phone = this.phone.replace(/[()\-\s]+/g, '');
             this.phone = phone;
             const values = {};
@@ -307,10 +315,14 @@ export default {
                 if (response.status) {
                   this.sendVerificationCode();
                 } else {
+                  this.sign_up_text = 'SIGN UP';
+                  this.next_step = true;
                   this.doNotification(2, 'Account Verification failed', response.data.reason);
                 }
               },
               (error) => {
+                this.sign_up_text = 'SIGN UP';
+                this.next_step = true;
                 this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
               },
             );
@@ -341,10 +353,13 @@ export default {
             this.request_id = response.request_id;
             this.doNotification(1, 'Phone Verification', 'Phone verification code has been sent');
           } else {
+            this.next_step = true;
             this.doNotification(2, 'Phone Verification', response.message);
           }
         },
         (error) => {
+          this.next_step = true;
+          this.sign_up_text = 'SIGN UP';
           this.doNotification(
             2,
             'Phone Verification Error ',
@@ -354,32 +369,40 @@ export default {
       );
     },
     verify_code() {
-      const values = {};
-      values.code = this.code;
-      values.request_id = this.request_id;
-      const fullPayload = {
-        values,
-        vm: this,
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'check_verification',
-      };
-      this.requestSignUpVerificationVerify(fullPayload).then(
-        (response) => {
-          if (response.status) {
-            this.doNotification(1, 'Phone Verification', 'Phone verification successful! Your Account will be created shortly ...');
-            this.create_account();
-          } else {
-            this.doNotification(2, 'Phone Verification', response.message);
-          }
-        },
-        (error) => {
-          this.doNotification(
-            2,
-            'Phone Verification Error ',
-            'Check Internet connection and retry',
-          );
-        },
-      );
+      if (this.code !== '') {
+        const values = {};
+        values.code = this.code;
+        values.request_id = this.request_id;
+        const fullPayload = {
+          values,
+          vm: this,
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'check_verification',
+        };
+        this.requestSignUpVerificationVerify(fullPayload).then(
+          (response) => {
+            if (response.status) {
+              this.doNotification(1, 'Phone Verification', 'Phone verification successful! Your Account will be created shortly ...');
+              this.create_account();
+            } else {
+              this.doNotification(2, 'Phone Verification', response.message);
+            }
+          },
+          (error) => {
+            this.doNotification(
+              2,
+              'Phone Verification Error ',
+              error.response.data.message,
+            );
+          },
+        );
+      } else {
+        this.doNotification(
+          2,
+          'Missing Verification Code',
+          'Please enter a verification code',
+        );
+      }
     },
     create_account() {
       const values = {};
@@ -581,5 +604,21 @@ export default {
 }
 body > div.el-select-dropdown.el-popper{
   width: 25%;
+}
+.button--signup-inactive {
+  cursor: not-allowed !important;
+  background: rgba(0,0,0,0.50) !important;
+  transition: background-color 0.3s !important;
+  color: #fff !important;
+  color: #ecf0f1;
+  cursor: pointer;
+  position: relative;
+  display: block;
+  border-radius: 4px;
+  height: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 13px;
+  pointer-events: none;
 }
 </style>
