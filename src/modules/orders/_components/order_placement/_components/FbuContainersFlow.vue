@@ -921,16 +921,26 @@ export default {
       const definedLocations = this.locations;
       this.requestPriceQuote(payload).then(
         (response) => {
-          this.setOrderState(1);
-          this.setHomeLocations(definedLocations);
-          this.loading = false;
-          this.productPhase(3);
-          this.set_active_vendor_name(response.values.economy_price_tiers[0].price_tiers[0].vendor_name);
-          const previousActiveVendor = this.get_active_vendor_name;
-          response.values.freight = true;
-          this.setOuterPriceRequestObject(response.values);
-          this.setDefaultPackageClass();
-          this.setDefaultVendorType(previousActiveVendor);
+          if (response.status) {
+            this.setOrderState(1);
+            this.setHomeLocations(definedLocations);
+            this.loading = false;
+            this.productPhase(3);
+            this.set_active_vendor_name(response.values.economy_price_tiers[0].price_tiers[0].vendor_name);
+            const previousActiveVendor = this.get_active_vendor_name;
+            response.values.freight = true;
+            this.setOuterPriceRequestObject(response.values);
+            this.setDefaultPackageClass();
+            this.setDefaultVendorType(previousActiveVendor);
+          } else {
+            this.productPhase(2);
+            if (Object.prototype.hasOwnProperty.call(response, 'crisis_notification') && response.crisis_notification.msg) {
+              this.doNotification(3, `${response.reason}`, response.crisis_notification.msg);
+            } else {
+              this.doNotification(3, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
+            }
+            this.loading = false;
+          }
           // const acc = this.$store.getters.getSession;
           // const accDefault = acc[acc.default];
 
@@ -1114,8 +1124,8 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../../../assets/styles/orders_order_placement.css?v=1';
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
+@import '../../../../../assets/styles/orders_order_placement.css?v=2';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=2';
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */
@@ -1136,5 +1146,13 @@ export default {
 }
 ::-webkit-scrollbar-thumb:window-inactive {
   background-color: rgba(0, 0, 0, 0.2);
+}
+.homeview--return-destination-input, .homeview--input-bundler__destination-input {
+  color: black;
+  font-weight: 600;
+}
+.homeview--return-destination-input::-webkit-input-placeholder,
+.homeview--input-bundler__destination-input::-webkit-input-placeholder {
+  font-weight: 400;
 }
 </style>

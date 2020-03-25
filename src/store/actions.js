@@ -42,6 +42,7 @@ export default {
       'geocountry',
       'last_partner_position',
       'admin_bypass',
+      'request_verification',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -173,6 +174,7 @@ export default {
       'pending_delivery',
       'insert_rate',
       'verify_phone',
+      'request_verification',
       'check_verification',
       'geocountry',
       'last_partner_position',
@@ -270,4 +272,29 @@ export default {
       );
     });
   },
+  verifyNpsUser({ dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosPost', payload, { root: true }).then(
+        (response) => {
+          resolve(response);
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
+  storeNpsSurvey({ dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosPost', payload, { root: true }).then(
+        (response) => {
+          resolve(response);
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
+
 };

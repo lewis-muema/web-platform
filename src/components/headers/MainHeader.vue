@@ -30,7 +30,7 @@
             </a>
             <ul class="nav--menu-dropdown-list">
               <div v-if="!admin_details">
-                <li v-if="switchValid">
+                <li v-show="switchValid">
                   <a @click="switchAccount()">
                     Switch to
                     <span v-if="this.$store.getters.getSession.default === 'peer'"> Business </span>
@@ -40,7 +40,7 @@
                     account
                   </a>
                 </li>
-                <li v-if="isUpgradeValid">
+                <li v-show="isUpgradeValid">
                   <a @click="linkRoute('/user/upgrade_acc')">
                     Create Business Account
                   </a>
@@ -81,6 +81,11 @@
                   </a>
                 </li>
               </div>
+              <li v-if="admin_details">
+                <a @click="linkRoute('/orders/freight')">
+                  Freight
+                </a>
+              </li>
               <li class="menu--last-child">
                 <a
                   class="menu--last-child-link"
@@ -138,9 +143,12 @@ export default {
     },
   },
   mounted() {
-    this.switchOption();
-    this.loggedUser();
-    this.superUserCheck();
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0) {
+      this.switchOption();
+      this.loggedUser();
+      this.superUserCheck();
+    }
   },
   methods: {
     loggedUser() {
@@ -213,9 +221,34 @@ export default {
     },
     linkRoute(route) {
       this.$router.push(route);
+      if (route === '/user/upgrade_acc') {
+        const session = this.$store.getters.getSession;
+        this.trackMixpanelEvent('Create Business Account Clicked', {
+          'Account Type': session.default === 'peer' ? 'Personal' : 'Business',
+          'Client Type': 'Web Platform',
+          'User Email': session[session.default].user_email,
+          'User Phone': session[session.default].user_phone,
+        });
+      }
     },
     linkPayments() {
       this.$router.push('/payment/card');
+    },
+    /* global mixpanel */
+    trackMixpanelEvent(name, event) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name, event);
+        }
+      } catch (er) {
+        // ...
+      }
     },
   },
 };

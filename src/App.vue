@@ -45,14 +45,16 @@ export default {
     },
   },
   beforeMount() {
-    Sentry.init({
-      dsn: ENV.SENTRY_DSN,
-      integrations: [
-        new Sentry.Integrations.Vue({
-          Vue,
-        }),
-      ],
-    });
+    if (ENV.DOMAIN !== 'localhost') {
+      Sentry.init({
+        dsn: ENV.SENTRY_DSN,
+        integrations: [
+          new Sentry.Integrations.Vue({
+            Vue,
+          }),
+        ],
+      });
+    }
   },
   created() {
     this.$store.commit('setENV', ENV);
@@ -135,29 +137,29 @@ export default {
     },
     updateFirebaseToken() {
       const session = this.getSession;
-      if (session !== undefined) {
-        if (Object.prototype.hasOwnProperty.call(session[session.default], 'user_id')) {
-          const fcmPayload = {
-            client_type: 'corporate',
-          };
-
-          if (session.default === 'biz') {
-            fcmPayload.cop_user_id = session[session.default].user_id;
-          } else {
-            fcmPayload.user_id = session[session.default].user_id;
-          }
-
-          fcmPayload.token = this.$store.getters.getFCMToken;
-
-          const payload = {
-            values: fcmPayload,
-            app: 'NODE_PRIVATE_API',
-            vm: this,
-            endpoint: 'firebase_token',
-          };
-
-          this.$store.dispatch('requestAxiosPost', payload);
+      if (Object.keys(session).length > 0) {
+        const fcmPayload = {
+          client_type: 'corporate',
+        };
+        if (session.default === 'biz') {
+          fcmPayload.cop_user_id = session[session.default].user_id;
+        } else {
+          fcmPayload.user_id = session[session.default].user_id;
         }
+
+        fcmPayload.token = this.$store.getters.getFCMToken;
+
+        const payload = {
+          values: fcmPayload,
+          app: 'NODE_PRIVATE_API',
+          vm: this,
+          endpoint: 'firebase_token',
+        };
+
+        this.$store
+          .dispatch('requestAxiosPost', payload)
+          .then(response => response)
+          .catch(err => err);
       }
     },
     initializeFirebase() {

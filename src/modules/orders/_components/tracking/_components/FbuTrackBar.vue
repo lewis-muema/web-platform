@@ -1,8 +1,11 @@
 <template>
-  <div class="homeview--childinfo">
+  <div
+    class="homeview--childinfo"
+    :class="loading ? 'loading-parent' : ''"
+  >
     <transition name="fade">
       <div
-        v-if="Object.prototype.hasOwnProperty.call(orderData, 'freight_order_details')"
+        v-if="Object.prototype.hasOwnProperty.call(orderData, 'freight_order_details') && !loading && tracking_data !== undefined"
         class="homeview--childinfo-card"
       >
         <div class="homeview--childinfo-card-left">
@@ -92,7 +95,10 @@
             :key="action.actionText"
             class="homeview--childinfo-order-actions"
           >
-            <div class="homeview-action-icon-divider" v-if="index < actions.length - 1"></div>
+            <div
+              class="homeview-action-icon-divider"
+              v-if="index < actions.length - 1"
+            ></div>
             <i
               :class="action.actionClass"
               class="el-icon-success"
@@ -105,6 +111,10 @@
         </div>
       </div>
     </transition>
+    <i
+      v-if="loading"
+      class="el-icon-loading tracking-loading-spinner"
+    />
   </div>
 </template>
 
@@ -186,6 +196,7 @@ export default {
     ...mapGetters({
       tracking_data: '$_orders/$_tracking/getTrackingData',
       tracked_order: '$_orders/$_tracking/getTrackedOrder',
+      parent_order: '$_orders/getParentOrder',
       date_time: '$_orders/$_tracking/getDateTime',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
       vendors: '$_orders/getVendors',
@@ -231,6 +242,7 @@ export default {
     ...mapMutations({
       set_tracked_order: '$_orders/$_tracking/setTrackedOrder',
       set_tracking_data: '$_orders/$_tracking/setTrackingData',
+      set_parent_order: '$_orders/setParentOrder',
       set_polyline: '$_orders/setPolyline',
       set_markers: '$_orders/setMarkers',
       clearVendorMarkers: '$_orders/clearVendorMarkers',
@@ -316,13 +328,15 @@ export default {
             const that = this;
             if (this.tracking_data.delivery_status === 3) {
               that.doNotification('1', 'Order delivered', 'Your order has been delivered.');
-              this.set_tracking_data({});
-              this.clearVendorMarkers();
+              that.set_tracking_data({});
+              that.clearVendorMarkers();
+              this.set_parent_order('');
               this.$router.push('/orders/freight');
             } else if (this.tracking_data.main_status === 2) {
               that.doNotification('2', 'Order cancelled', 'Your order has been cancelled.');
-              this.set_tracking_data({});
-              this.clearVendorMarkers();
+              that.set_tracking_data({});
+              that.clearVendorMarkers();
+              this.set_parent_order('');
               this.$router.push('/orders/freight');
             } else if (this.tracked_order === from) {
               setTimeout(() => {
@@ -358,6 +372,17 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../../../assets/styles/orders_order_placement.css?v=1';
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
+@import '../../../../../assets/styles/orders_order_placement.css?v=2';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=2';
+</style>
+<style lang="css">
+.tracking-loading-spinner {
+  font-size: 70px;
+}
+.loading-parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 </style>

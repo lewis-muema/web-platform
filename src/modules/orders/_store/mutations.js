@@ -20,7 +20,7 @@ const setOngoingOrders = (state, payload) => {
 
 const setMarkers = (state, payload) => {
   payload.forEach((value, i) => {
-    let icon = 'destination';
+    let icon = value.waypoint_type ? value.waypoint_type.toLowerCase() : 'destination';
     if (i === 0) {
       icon = 'pickup';
     }
