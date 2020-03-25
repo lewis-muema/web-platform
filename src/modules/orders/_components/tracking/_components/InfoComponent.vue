@@ -1238,6 +1238,9 @@ export default {
           client_type: this.$store.getters.getSession.default,
         };
         const that = this;
+        if (this.inputCancelReason) {
+          this.submitHubspotCancelReason();
+        }
         let eventPayload = {
           eventCategory: 'Order Cancellation',
           eventAction: 'Click',
