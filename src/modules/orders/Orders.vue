@@ -364,7 +364,6 @@ export default {
       if (Object.keys(session).length > 0) {
         if (session.default === 'biz'
         && Object.prototype.hasOwnProperty.call(session[session.default], 'tax_authority_pin')) {
-          console.log('type', session[session.default].tax_authority_pin);
           if (session[session.default].tax_authority_pin === null) {
             this.tax_compliance = '';
             this.kra_pin = '';
