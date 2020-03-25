@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <div v-if="truckMoreInfo" class="truck-info-component">
+    <div v-if="truckMoreInfo && tracking_data !== undefined" class="truck-info-component">
       <transition name="fade" mode="out-in">
         <div v-if="!loading" class="infobar--outer">
           <div key="prime" class="infobar-content infobar--content-padded">
@@ -112,7 +112,7 @@
 
                     <li v-for="(val, index) in tracking_data.path" v-if="index > 0">
                       <p class="info-text-transform infor-top-bar-text">
-                        Destination
+                         {{tracking_data.path[index].waypoint_type ? tracking_data.path[index].waypoint_type :  `Destination`}}
                       </p>
                       <p>
                         {{ val.name }}
@@ -426,6 +426,7 @@
                           class="infor-top-bar-text"
                           v-bind:class="{ deliveredActive: setDelivered }"
                         >
+                        <span v-if="!'waypoint_type' in val || val.waypoint_type.toLowerCase() === 'delivery'">
                           <span v-if="tracking_data.delivery_status < 3 && !val.visited">
                             <p class="stagePending">
                               Your {{ packageName }} is on the way to {{ val.name }}
@@ -436,6 +437,22 @@
                               Your {{ packageName }} has been delivered to {{ val.name }}
                             </p>
                           </span>
+                        </span>
+                        <span v-else>
+                          <span v-if="tracking_data.delivery_status < 3 && !val.visited">
+                            <p class="stagePending">
+                              Your {{ partnerName }} is on the way to  pick your {{ packageName }} at {{ val.name }}
+                            </p>
+                          </span>
+                          <span v-else>
+                            <p class="stagePassed">
+                              Your {{ packageName }} at {{ val.name }} has been picked. 
+                            </p>
+                          </span>
+                        </span>
+
+
+
                         </div>
                       </li>
 
@@ -525,7 +542,7 @@
 
     <div>
       <transition name="fade" mode="out-in">
-        <div v-if="!truckMoreInfo">
+        <div v-if="!truckMoreInfo && tracking_data !== undefined">
           <div v-if="!loading" class="infobar--outer">
             <div class="infobar--content infobar--content-padded">
               <div class="infobar--photo infobar--content infobar--item infobar--item-bordered">
@@ -628,14 +645,14 @@
           <el-dialog :visible.sync="cancelOption" class="cancelOptions">
             <div class="cancelOptions--content-wrap" v-if="cancel_reason !== '4'">
               <div class="">
-                <div class="cancel-reason-option">
+                <div class="cancel-reason-option" id="cancel-reason-title">
                   Cancel this order?
                 </div>
-                <div class="cancel-reason-option">
+                <div class="cancel-reason-option" id="cancel-reason-subtitle">
                   You can place another one at any time.
                 </div>
               </div>
-              <div class="cancel-reason-text">
+              <div class="cancel-reason-text" id="cancel-reason-text">
                 <div class="">
                   <el-radio v-model="cancel_reason" label="4">
                     I placed the wrong locations
@@ -656,6 +673,9 @@
                     I placed this order twice
                   </el-radio>
                 </div>
+              </div>
+              <div class="cancel-reason-input">
+                <input type="text" v-model="inputCancelReason" class="cancel-reason-text-input" name="" placeholder="Enter cancel reason" />
               </div>
               <div class="action--slide-desc">
                 <button
@@ -766,6 +786,7 @@ export default {
       cancel_desc: '',
       maximiseInfo: 0,
       cancelOption: false,
+      inputCancelReason: '',
       paymentOption: '',
       truckMoreInfo: true,
       myRb: '',
@@ -910,6 +931,15 @@ export default {
       }
       this.initiateOrderData();
     },
+    inputCancelReason(data) {
+      if (data) {
+        this.cancel_reason = 11;
+        this.cancel_desc = data;
+      } else {
+        this.cancel_reason = -1;
+        this.cancel_desc = '';
+      }
+    },
   },
   mounted() {
     this.loading = true;
@@ -949,13 +979,15 @@ export default {
     },
     initiateOrderData() {
       if (this.tracking_data !== undefined) {
-        this.setTimeLineIconState();
-        this.setRiderLocationToStore();
-        this.checkVendorName();
-        this.checkScheduler();
-        this.orderETA();
+        if (Object.keys(this.tracking_data).length > 0) {
+          this.setTimeLineIconState();
+          this.setRiderLocationToStore();
+          this.checkVendorName();
+          this.checkScheduler();
+          this.orderETA();
+          this.confirmUser();
+        }
       }
-      this.confirmUser();
     },
     checkPreviousRoute() {
       if (this.$route.path === `/external/tracking/${this.$route.params.order_no}`) {
@@ -993,6 +1025,18 @@ export default {
       }
     },
     cancelToggle(cancelReason = 0) {
+      if (cancelReason === '4') {
+        this.trackMixpanelEvent('Dissuaded Cancellation ', {
+          'Order No': this.tracking_data.order_no,
+        });
+      }
+      if (this.cancel_popup === 1) {
+        this.cancel_popup = 0;
+      } else {
+        this.cancel_popup = 1;
+      }
+      this.cancelOption = false;
+      this.cancel_reason = '';
       if (cancelReason === true) {
         let eventPayload = {
           eventCategory: 'Order Cancellation',
@@ -1186,7 +1230,7 @@ export default {
       this.$store.commit('setNotification', notification);
     },
     cancelOrder() {
-      if (this.cancel_reason !== '') {
+      if (this.cancel_reason !== '' && Object.keys(this.$store.getters.getSession).length > 0) {
         const payload = {
           order_no: this.tracking_data.order_no,
           cancel_reason_id: this.cancel_reason,
@@ -1437,6 +1481,43 @@ export default {
         return ['confirmationDelayActive'];
       }
       return '';
+    },
+    submitHubspotCancelReason() {
+      const session = this.$store.getters.getSession;
+      // eslint-disable-next-line global-require
+      const portalId = '4951975';
+      const formId = '396e6fb7-2bb9-4bae-a5e7-623983ecd97e';
+      const fields = {
+        fields: [
+          {
+            name: 'firstname',
+            value: session[session.default].user_name,
+          },
+          {
+            name: 'email',
+            value: session[session.default].user_email,
+          },
+          {
+            name: 'phone',
+            value: session[session.default].user_phone,
+          },
+          {
+            name: 'cancel_reason',
+            value: this.inputCancelReason,
+          },
+        ],
+      };
+      const payload = {
+        values: fields,
+        app: 'HUBSPOT_URL',
+        vm: this,
+        endpoint: `${portalId}/${formId}`,
+      };
+
+      this.$store
+        .dispatch('requestAxiosPost', payload)
+        .then(response => response)
+        .catch(err => err);
     },
   },
 };

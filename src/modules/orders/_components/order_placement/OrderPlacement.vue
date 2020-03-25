@@ -245,7 +245,7 @@ export default {
     get_session: {
       handler(val, oldVal) {
         if (this.show_vendor_view || this.loading) {
-          this.doPriceRequest();
+          this.handleStoredData();
         }
       },
       deep: true,
@@ -256,9 +256,10 @@ export default {
     this.initializeOrderFlow();
   },
   mounted() {
-    this.checkSessionData();
-    this.set_tracking_data({});
-    this.clearVendorMarkers();
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0) {
+      this.checkSessionData();
+    }
   },
   destroyed() {
     this.destroyOrderPlacement();
@@ -297,8 +298,6 @@ export default {
       setOuterPriceRequestObject: '$_orders/setOuterPriceRequestObject',
       setOrderState: '$_orders/$_home/setOrderState',
       setExtendOptions: '$_orders/$_home/setExtendOptions',
-      set_tracking_data: '$_orders/$_tracking/setTrackingData',
-      clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
 
     ...mapActions({
@@ -543,6 +542,12 @@ export default {
         },
       );
     },
+    handleStoredData() {
+      this.clearOuterPriceRequestObject();
+      this.clearOuterActiveVendorDetails();
+      this.setExtendOptions(false);
+      this.doPriceRequest();
+    },
 
     doNotification(level, title, message) {
       this.$store.commit('setNotificationStatus', true);
@@ -551,11 +556,13 @@ export default {
     },
 
     doSetDefaultPackageClass() {
-      try {
-        const defaultPackageClass = this.get_price_request_object.economy_price_tiers[0].tier_group;
-        this.set_active_package_class(defaultPackageClass);
-      } catch (er) {
-        // console.log(er);
+      if (this.get_price_request_object !== undefined && this.get_price_request_object.economy_price_tiers !== undefined) {
+        try {
+          const defaultPackageClass = this.get_price_request_object.economy_price_tiers[0].tier_group;
+          this.set_active_package_class(defaultPackageClass);
+        } catch (er) {
+          // console.log(er);
+        }
       }
     },
 
@@ -589,7 +596,7 @@ export default {
     setDefaultPackageClass() {
       if (this.get_active_package_class === '') {
         this.doSetDefaultPackageClass();
-      } else {
+      } else if (this.get_price_request_object !== undefined && this.get_price_request_object.economy_price_tiers !== undefined) {
         const self = this;
         const _package = this.get_price_request_object.economy_price_tiers.filter(
           pack => pack.tier_group === self.get_active_package_class,
@@ -701,7 +708,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../../assets/styles/orders_order_placement.css?v=1";
+@import "../../../../assets/styles/orders_order_placement.css?v=2";
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */

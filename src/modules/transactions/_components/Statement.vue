@@ -205,36 +205,39 @@ export default {
     populateStatement() {
       const sessionData = this.$store.getters.getSession;
 
-      let statementPayload = {};
+      if (Object.keys(sessionData).length > 0) {
+        let statementPayload = {};
 
-      if (sessionData.default === 'biz') {
-        statementPayload = {
-          cop_id: sessionData.biz.cop_id,
-          user_type: sessionData.biz.user_type,
-          user_id: sessionData.biz.user_id,
+
+        if (sessionData.default === 'biz') {
+          statementPayload = {
+            cop_id: sessionData.biz.cop_id,
+            user_type: sessionData.biz.user_type,
+            user_id: sessionData.biz.user_id,
+          };
+        } else {
+          // create peer payload
+          statementPayload = {
+            user_id: sessionData[sessionData.default].user_id,
+          };
+        }
+
+        const fullPayload = {
+          values: statementPayload,
+          vm: this,
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'statement',
         };
-      } else {
-        // create peer payload
-        statementPayload = {
-          user_id: sessionData[sessionData.default].user_id,
-        };
+
+        this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(
+          () => {
+            this.empty_statement_state = 'Statement Not Found';
+          },
+          () => {
+            this.empty_statement_state = 'Statement Failed to Fetch';
+          },
+        );
       }
-
-      const fullPayload = {
-        values: statementPayload,
-        vm: this,
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'statement',
-      };
-
-      this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(
-        () => {
-          this.empty_statement_state = 'Statement Not Found';
-        },
-        () => {
-          this.empty_statement_state = 'Statement Failed to Fetch';
-        },
-      );
     },
     ...mapActions(['$_transactions/requestStatement']),
     changeSize(val) {

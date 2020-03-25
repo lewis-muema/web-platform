@@ -17,4 +17,10 @@ export default {
   getVerificationRequestId(state) {
     return state.request_id;
   },
+  getViewState(state) {
+    return state.view_state;
+  },
+  getActiveTab(state) {
+    return state.activeTab;
+  },
 };

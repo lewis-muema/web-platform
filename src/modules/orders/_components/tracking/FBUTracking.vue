@@ -62,6 +62,15 @@
                 </el-radio>
               </div>
             </div>
+            <div class="cancel-reason-input">
+              <input
+                v-model="inputCancelReason"
+                type="text"
+                class="cancel-reason-text-input"
+                name=""
+                placeholder="Enter cancel reason"
+              >
+            </div>
             <div class="action--slide-desc">
               <button
                 type="button"
@@ -136,6 +145,8 @@ export default {
       cancel_reason: '',
       cancelOption: false,
       cancel_popup: '',
+      inputCancelReason: '',
+      cancel_desc: '',
     };
   },
   computed: {
@@ -143,6 +154,7 @@ export default {
       tracking_data: '$_orders/$_tracking/getTrackingData',
       tracked_order: '$_orders/$_tracking/getTrackedOrder',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
+      parent_order: '$_orders/getParentOrder',
       vendors: '$_orders/getVendors',
     }),
   },
@@ -152,6 +164,36 @@ export default {
       this.$store.commit('$_orders/removeMarkers', []);
       this.clearVendorMarkers();
       this.hide_vendors();
+    },
+    inputCancelReason(data) {
+      if (data) {
+        this.cancel_reason = 11;
+        this.cancel_desc = data;
+      } else {
+        this.cancel_reason = -1;
+        this.cancel_desc = '';
+      }
+    },
+    cancel_reason(reason) {
+      switch (reason) {
+        case 4: {
+          this.cancel_desc = 'I placed the wrong locations';
+          break;
+        }
+        case 5: {
+          this.cancel_desc = 'My order is not ready';
+          break;
+        }
+        case 7: {
+          this.cancel_desc = 'No driver has been allocated';
+          break;
+        }
+        case 8: {
+          this.cancel_desc = 'I placed this order twice';
+          break;
+        }
+        default:
+      }
     },
   },
   created() {
@@ -170,6 +212,7 @@ export default {
       hide_vendors: '$_orders/hideVendors',
       change_page: '$_orders/setPage',
       clearVendorMarkers: '$_orders/clearVendorMarkers',
+      set_parent_order: '$_orders/setParentOrder',
     }),
     cancelToggle(cancelReason = 0) {
       if (cancelReason === '4') {
@@ -190,14 +233,18 @@ export default {
         const payload = {
           order_no: this.tracking_data.order_no,
           cancel_reason_id: this.cancel_reason,
-          reason_description: '',
+          reason_description: this.cancel_desc,
           client_type: this.$store.getters.getSession.default,
         };
         const that = this;
+        if (this.inputCancelReason) {
+          this.submitHubspotCancelReason();
+        }
         this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then((response) => {
           if (response.status) {
             that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
             that.cancelToggle();
+            that.set_parent_order('');
             that.$router.push('/orders/freight');
           } else {
             const payload2 = {
@@ -210,6 +257,7 @@ export default {
               if (response2.status) {
                 that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
                 that.cancelToggle();
+                that.set_parent_order('');
                 that.$router.push('/orders/freight');
               } else {
                 that.doNotification(
@@ -245,6 +293,43 @@ export default {
       } catch (er) {
         // ...
       }
+    },
+    submitHubspotCancelReason() {
+      const session = this.$store.getters.getSession;
+      // eslint-disable-next-line global-require
+      const portalId = '4951975';
+      const formId = '396e6fb7-2bb9-4bae-a5e7-623983ecd97e';
+      const fields = {
+        fields: [
+          {
+            name: 'firstname',
+            value: session[session.default].user_name,
+          },
+          {
+            name: 'email',
+            value: session[session.default].user_email,
+          },
+          {
+            name: 'phone',
+            value: session[session.default].user_phone,
+          },
+          {
+            name: 'cancel_reason',
+            value: this.inputCancelReason,
+          },
+        ],
+      };
+      const payload = {
+        values: fields,
+        app: 'HUBSPOT_URL',
+        vm: this,
+        endpoint: `${portalId}/${formId}`,
+      };
+
+      this.$store
+        .dispatch('requestAxiosPost', payload)
+        .then(response => response)
+        .catch(err => err);
     },
   },
 };
