@@ -158,7 +158,7 @@
                     </div>
                     <div class="tracking-loader-inner">
                       <span class="info-text-transform">
-                       {{ convertToUTCToLocal(tracking_data.date_time) | moment }}
+                        {{ convertToUTCToLocal(tracking_data.date_time) | moment }}
                       </span>
                     </div>
                   </div>
@@ -276,7 +276,9 @@
                           <p class="infor-top-bar-text stagePassed">
                             {{ orderPlaced }}
                           </p>
-                          <p class="eta_data">{{ convertToLocalTime(tracking_data.eta_data.placed) | moment }}</p>
+                          <p class="eta_data">
+                            {{ convertToLocalTime(tracking_data.eta_data.placed) | moment }}
+                          </p>
                         </div>
                       </li>
 
@@ -293,7 +295,9 @@
                           <p class="infor-top-bar-text stagePassed">
                             Your Order has been scheduled
                           </p>
-                          <p class="eta_data">{{ convertToUTCToLocal(tracking_data.date_time) | moment }}</p>
+                          <p class="eta_data">
+                            {{ convertToUTCToLocal(tracking_data.date_time) | moment }}
+                          </p>
                         </div>
                       </li>
 
@@ -622,7 +626,6 @@
       <transition name="fade" mode="out-in">
         <div class="">
           <el-dialog :visible.sync="cancelOption" class="cancelOptions">
-
             <div class="cancelOptions--content-wrap" v-if="cancel_reason !== '4'">
               <div class="">
                 <div class="cancel-reason-option">
@@ -675,10 +678,11 @@
             </div>
             <div class="cancelOptions--content-wrap" v-if="cancel_reason === '4'">
               <div class="cancelOptions--content-message">
-                Did you know after your order is confirmed you can call your rider and give him the right destination? We will recalculate the cost and deliver your item.
+                Did you know after your order is confirmed you can call your rider and give him the
+                right destination? We will recalculate the cost and deliver your item.
               </div>
               <div class="cancelOptions--content-buttons">
-                 <button
+                <button
                   type="button"
                   name="button"
                   class="action--slide-button"
@@ -694,10 +698,8 @@
                 >
                   Cancel Order
                 </button>
-
               </div>
             </div>
-
           </el-dialog>
 
           <el-dialog :visible.sync="shareOption" class="cancelOptions">
@@ -740,12 +742,13 @@
 <script>
 import { mapGetters } from 'vuex';
 import timezone from '../../../../../mixins/timezone';
+import EventsMixin from '../../../../../mixins/events_mixin';
 
 const moment = require('moment');
 
 export default {
   name: 'InfoWindow',
-  mixins: [timezone],
+  mixins: [timezone, EventsMixin],
   filters: {
     moment(date) {
       return moment(date).format('MMM Do YYYY, h:mm a');
@@ -874,8 +877,7 @@ export default {
         } else {
           return this.confirmEta;
         }
-      }
-      else{
+      } else {
         return this.confirmEta;
       }
     },
@@ -888,7 +890,16 @@ export default {
       this.poll(from);
       this.initiateOrderData();
     },
-
+    cancelOption: function cancelOption() {
+      if (this.cancelOption === false) {
+        let eventPayload = {
+          eventCategory: 'Order Cancellation',
+          eventAction: 'Click',
+          eventLabel: 'No Button - Order Cancellation Page - WebApp',
+        };
+        this.fireGAEvent(eventPayload);
+      }
+    },
     tracking_data(data) {
       if (data !== undefined) {
         if (Object.prototype.hasOwnProperty.call(data, 'confirm_status')) {
@@ -956,7 +967,7 @@ export default {
       const that = this;
       this.$store
         .dispatch('$_orders/$_tracking/getTrackingData', { order_no: from })
-        .then(response => {
+        .then((response) => {
           if (response) {
             if (this.tracking_data.delivery_status === 3) {
               that.doNotification('1', 'Order delivered', 'Your order has been delivered.');
@@ -981,28 +992,17 @@ export default {
     },
     cancelToggle(cancelReason = 0) {
       if (cancelReason === true) {
-        let analyticsEnv = '';
-        try {
-          analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-        } catch (er) {
-          // ...
-        }
-        try {
-          if (analyticsEnv === 'production') {
-            window.ga('send', 'event', {
-              eventCategory: 'Order Cancellation',
-              eventAction: 'Click',
-              eventLabel: 'No Button - Order Cancellation Page - WebApp',
-            });
-          }
-        } catch (er) {
-          // ...
-        }
+        let eventPayload = {
+          eventCategory: 'Order Cancellation',
+          eventAction: 'Click',
+          eventLabel: 'No Button - Order Cancellation Page - WebApp',
+        };
+        this.fireGAEvent(eventPayload);
       }
-      if(cancelReason === '4') {
-          this.trackMixpanelEvent('Dissuaded Cancellation ', {
-              'Order No': this.tracking_data.order_no,
-          });
+      if (cancelReason === '4') {
+        this.trackMixpanelEvent('Dissuaded Cancellation ', {
+          'Order No': this.tracking_data.order_no,
+        });
       }
       if (this.cancel_popup === 1) {
         this.cancel_popup = 0;
@@ -1019,7 +1019,10 @@ export default {
       return `https://images.sendyit.com/web_platform/vendor_type/side/${id}.svg`;
     },
     checkVendorName() {
-      if (Object.keys(this.tracking_data).length > 0 && Object.prototype.hasOwnProperty.call(this.tracking_data.rider, 'vendor_name')) {
+      if (
+        Object.keys(this.tracking_data).length > 0 &&
+        Object.prototype.hasOwnProperty.call(this.tracking_data.rider, 'vendor_name')
+      ) {
         if (this.tracking_data.rider.vendor_name === 'Bike') {
           this.partnerName = 'rider';
           this.packageName = 'package';
@@ -1120,7 +1123,10 @@ export default {
     },
     confirmUser() {
       const session = this.$store.getters.getSession;
-      if (Object.keys(session).length > 0 && Object.prototype.hasOwnProperty.call(session, 'default') ) {
+      if (
+        Object.keys(session).length > 0 &&
+        Object.prototype.hasOwnProperty.call(session, 'default')
+      ) {
         let sessionUserEmail = session[session.default].user_email;
         let orderUserEmail = this.tracking_data.user.email;
 
@@ -1136,12 +1142,15 @@ export default {
     },
     checkRunningBalance() {
       const session = this.$store.getters.getSession;
-      if (Object.keys(session).length > 0 && Object.prototype.hasOwnProperty.call(session, 'default') ) {
+      if (
+        Object.keys(session).length > 0 &&
+        Object.prototype.hasOwnProperty.call(session, 'default')
+      ) {
         const payload = {
           cop_id: session[session.default].cop_id,
           user_phone: session[session.default].user_phone,
         };
-        this.$store.dispatch('$_orders/$_tracking/runningBalance', payload).then(response => {
+        this.$store.dispatch('$_orders/$_tracking/runningBalance', payload).then((response) => {
           if (response.status) {
             this.myRb = response.running_balance;
             this.accType = response.payment_plan;
@@ -1183,25 +1192,14 @@ export default {
           client_type: this.$store.getters.getSession.default,
         };
         const that = this;
-         let analyticsEnv = '';
-        try {
-          analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-        } catch (er) {
-          // ...
-        }
-        try {
-          if (analyticsEnv === 'production') {
-            window.ga('send', 'event', {
-              eventCategory: 'Order Cancellation',
-              eventAction: 'Click',
-              eventLabel: 'Yes Button - Order Cancellation Page - WebApp',
-            });
-          }
-        } catch (er) {
-          // ...
-        }
+        let eventPayload = {
+          eventCategory: 'Order Cancellation',
+          eventAction: 'Click',
+          eventLabel: 'Yes Button - Order Cancellation Page - WebApp',
+        };
+        this.fireGAEvent(eventPayload);
 
-        this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then(response => {
+        this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then((response) => {
           if (response.status) {
             that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
             that.cancelToggle();
@@ -1214,7 +1212,7 @@ export default {
               reason_description: 'I placed the wrong locations',
               client_type: that.$store.getters.getSession.default,
             };
-            this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then(response2 => {
+            this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then((response2) => {
               if (response2.status) {
                 that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
                 that.cancelToggle();
@@ -1277,7 +1275,7 @@ export default {
       }
 
       this.$store.dispatch('$_orders/$_tracking/saveOrderDetails', params).then(
-        response => {
+        (response) => {
           if (response.status) {
             this.doNotification(1, 'Save Details', 'Order Details saved successfully.');
             this.isSaved = true;
@@ -1285,7 +1283,7 @@ export default {
             this.doNotification(3, 'Save Details failed', 'Could not save details. Kindly retry.');
           }
         },
-        error => {
+        (error) => {
           this.doNotification(2, 'Save Details Error ', 'Check Internet connection and retry');
         }
       );
@@ -1320,7 +1318,7 @@ export default {
         payload.message = `Hi! ${userName} wants you to track their Sendy order here: ${track}`;
 
         this.$store.dispatch('$_orders/$_tracking/requestETASms', payload).then(
-          response => {
+          (response) => {
             if (response.status === 200) {
               this.doNotification(1, 'Share ETA', 'SMS sent successfully.');
               this.shareOption = false;
@@ -1328,7 +1326,7 @@ export default {
               this.doNotification(2, 'Share ETA failed', 'Could not send ETA sms. Kindly retry.');
             }
           },
-          error => {
+          (error) => {
             this.doNotification(2, 'Share ETA Error ', 'Check Internet connection and retry');
           }
         );
@@ -1342,7 +1340,7 @@ export default {
 
         payload.rider_id = [this.tracking_data.rider.rider_id];
         this.$store.dispatch('$_orders/$_tracking/requestRiderLastPosition', payload).then(
-          response => {
+          (response) => {
             if (response.status === 'true') {
               let riderOnlineData = response.partnerArray[0];
               const size = Object.keys(this.vendors).length;
@@ -1356,68 +1354,68 @@ export default {
               this.$store.dispatch('$_orders/$_tracking/trackMQTT');
             }
           },
-          error => {
+          (error) => {
             // ...
           }
         );
       }
     },
     orderETA() {
-       if (Object.keys(this.tracking_data).length > 0) {
-         if (this.tracking_data.confirm_status === 0) {
-           const confirmEta = this.tracking_data.eta_data.etc;
-           const etaSplit = confirmEta.split('to');
-           const start = etaSplit[0].replace(/\s+/g, '');
-           const end = etaSplit[1].replace(/\s+/g, '');
+      if (Object.keys(this.tracking_data).length > 0) {
+        if (this.tracking_data.confirm_status === 0) {
+          const confirmEta = this.tracking_data.eta_data.etc;
+          const etaSplit = confirmEta.split('to');
+          const start = etaSplit[0].replace(/\s+/g, '');
+          const end = etaSplit[1].replace(/\s+/g, '');
 
-           const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-           const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+          const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+          const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-           this.confirmEta = `${startEta} - ${endEta}`;
+          this.confirmEta = `${startEta} - ${endEta}`;
 
-           this.pickUpEta = '';
-           this.deliveryEta = '';
-         } else if (
-           this.tracking_data.confirm_status === 1 &&
-           this.tracking_data.delivery_status === 0
-         ) {
-           const pickUpEta = this.tracking_data.eta_data.etp;
-           const confirmedEta = this.tracking_data.eta_data.confirmed;
-           const etaSplit = pickUpEta.split('to');
-           const start = etaSplit[0].replace(/\s+/g, '');
-           const end = etaSplit[1].replace(/\s+/g, '');
+          this.pickUpEta = '';
+          this.deliveryEta = '';
+        } else if (
+          this.tracking_data.confirm_status === 1 &&
+          this.tracking_data.delivery_status === 0
+        ) {
+          const pickUpEta = this.tracking_data.eta_data.etp;
+          const confirmedEta = this.tracking_data.eta_data.confirmed;
+          const etaSplit = pickUpEta.split('to');
+          const start = etaSplit[0].replace(/\s+/g, '');
+          const end = etaSplit[1].replace(/\s+/g, '');
 
-           const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-           const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+          const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+          const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-           this.pickUpEta = `${startEta}-${endEta}`;
-           this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
-         } else if (this.tracking_data.delivery_status === 2) {
-           const deliveryEta = this.tracking_data.eta_data.etd;
-           const confirmedEta = this.tracking_data.eta_data.confirmed;
-           const pickedEta = this.tracking_data.eta_data.picked;
-           const etaSplit = deliveryEta.split('to');
-           const start = etaSplit[0].replace(/\s+/g, '');
-           const end = etaSplit[1].replace(/\s+/g, '');
+          this.pickUpEta = `${startEta}-${endEta}`;
+          this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
+        } else if (this.tracking_data.delivery_status === 2) {
+          const deliveryEta = this.tracking_data.eta_data.etd;
+          const confirmedEta = this.tracking_data.eta_data.confirmed;
+          const pickedEta = this.tracking_data.eta_data.picked;
+          const etaSplit = deliveryEta.split('to');
+          const start = etaSplit[0].replace(/\s+/g, '');
+          const end = etaSplit[1].replace(/\s+/g, '');
 
-           const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-           const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+          const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+          const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-           this.deliveryEta = `${startEta}-${endEta}`;
-           this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
-           this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
-         } else if (this.tracking_data.delivery_status === 3) {
-           const deliveryEta = this.tracking_data.eta_data.delivered;
-           const confirmedEta = this.tracking_data.eta_data.confirmed;
-           const pickedEta = this.tracking_data.eta_data.picked;
+          this.deliveryEta = `${startEta}-${endEta}`;
+          this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
+          this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
+        } else if (this.tracking_data.delivery_status === 3) {
+          const deliveryEta = this.tracking_data.eta_data.delivered;
+          const confirmedEta = this.tracking_data.eta_data.confirmed;
+          const pickedEta = this.tracking_data.eta_data.picked;
 
-           this.deliveryEta = moment(deliveryEta, moment.ISO_8601).format('h:mm a');
-           this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
-           this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
-         } else {
-           // ...
-         }
-       }
+          this.deliveryEta = moment(deliveryEta, moment.ISO_8601).format('h:mm a');
+          this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
+          this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
+        } else {
+          // ...
+        }
+      }
     },
     toDeliveryTypeClass(val, index) {
       let nextPoint = this.tracking_data.path[index - 1].visited;
