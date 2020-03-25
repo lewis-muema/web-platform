@@ -162,6 +162,7 @@ import orderPlacementStore from './_store';
 import paymentsModuleStore from '../../../payment/_store';
 import VendorComponent from './_components/VendorComponent.vue';
 import SessionMxn from '../../../../mixins/session_mixin';
+import EventsMixin from '../../../../mixins/events_mixin';
 
 library.add(
   faPlus,
@@ -179,12 +180,11 @@ library.add(
 
 export default {
   name: 'OrderPlacement',
-
   components: {
     'no-ssr': NoSSR,
     'vendor-view': VendorComponent,
   },
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, EventsMixin],
   data() {
     return {
       show_destinations: false,
@@ -403,6 +403,19 @@ export default {
       this.set_location_name(locationNamePayload);
       if (index === 0) {
         this.setPickupFilled(true);
+        const eventPayload = {
+          eventCategory: 'Order Placement',
+          eventAction: 'Click',
+          eventLabel: 'Pickup Location - Order Placement - Web App',
+        };
+        this.fireGAEvent(eventPayload);
+      } else {
+        const eventPayload = {
+          eventCategory: 'Order Placement',
+          eventAction: 'Click',
+          eventLabel: 'Destination Location - Order Placement - Web App',
+        };
+        this.fireGAEvent(eventPayload);
       }
       this.attemptPriceRequest();
     },
@@ -545,10 +558,13 @@ export default {
     },
 
     doSetDefaultPackageClass() {
-      if (this.get_price_request_object !== undefined
-        && this.get_price_request_object.economy_price_tiers !== undefined) {
+      if (
+        this.get_price_request_object !== undefined
+        && this.get_price_request_object.economy_price_tiers !== undefined
+      ) {
         try {
-          const defaultPackageClass = this.get_price_request_object.economy_price_tiers[0].tier_group;
+          const defaultPackageClass = this.get_price_request_object.economy_price_tiers[0]
+            .tier_group;
           this.set_active_package_class(defaultPackageClass);
         } catch (er) {
           // console.log(er);
@@ -569,8 +585,10 @@ export default {
     setDefaultVendorType(previous) {
       if (this.get_active_vendor_name === '') {
         this.doSetDefaultVendorType();
-      } else if (this.get_price_request_object !== undefined
-          && this.get_price_request_object.economy_price_tiers !== undefined) {
+      } else if (
+        this.get_price_request_object !== undefined
+        && this.get_price_request_object.economy_price_tiers !== undefined
+      ) {
         const result = this.get_price_request_object.economy_price_tiers.filter(pack => pack.price_tiers.some(vendor => vendor.vendor_name === previous));
 
         if (result.length === 0) {
