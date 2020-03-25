@@ -964,31 +964,33 @@ export default {
       }
     },
     poll(from) {
-      const that = this;
-      this.$store
-        .dispatch('$_orders/$_tracking/getTrackingData', { order_no: from })
-        .then((response) => {
-          if (response) {
-            if (this.tracking_data.delivery_status === 3) {
-              that.doNotification('1', 'Order delivered', 'Your order has been delivered.');
-              if (that.$route.name !== 'tracking_external') {
-                that.$router.push(`/orders/rating/${from}`);
-              } else {
-                that.$router.push(`/external/rating/${from}`);
+      if (this.tracking_data !== undefined) {
+        const that = this;
+        this.$store
+          .dispatch('$_orders/$_tracking/getTrackingData', { order_no: from })
+          .then((response) => {
+            if (response) {
+              if (this.tracking_data.delivery_status === 3) {
+                that.doNotification('1', 'Order delivered', 'Your order has been delivered.');
+                if (that.$route.name !== 'tracking_external') {
+                  that.$router.push(`/orders/rating/${from}`);
+                } else {
+                  that.$router.push(`/external/rating/${from}`);
+                }
+              } else if (this.tracking_data.main_status === 2) {
+                that.doNotification('2', 'Order cancelled', 'Your order has been cancelled.');
+                that.place();
+              } else if (this.tracked_order === from) {
+                setTimeout(() => {
+                  that.poll(from);
+                }, 30000);
               }
-            } else if (this.tracking_data.main_status === 2) {
-              that.doNotification('2', 'Order cancelled', 'Your order has been cancelled.');
+            } else {
               that.place();
-            } else if (this.tracked_order === from) {
-              setTimeout(() => {
-                that.poll(from);
-              }, 30000);
             }
-          } else {
-            that.place();
-          }
-          that.loading = false;
-        });
+            that.loading = false;
+          });
+      }
     },
     cancelToggle(cancelReason = 0) {
       if (cancelReason === true) {
