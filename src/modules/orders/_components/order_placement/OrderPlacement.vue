@@ -162,6 +162,7 @@ import orderPlacementStore from './_store';
 import paymentsModuleStore from '../../../payment/_store';
 import VendorComponent from './_components/VendorComponent.vue';
 import SessionMxn from '../../../../mixins/session_mixin';
+import EventsMixin from '../../../../mixins/events_mixin';
 
 library.add(
   faPlus,
@@ -184,7 +185,7 @@ export default {
     'no-ssr': NoSSR,
     'vendor-view': VendorComponent,
   },
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, EventsMixin],
   data() {
     return {
       show_destinations: false,
@@ -401,6 +402,19 @@ export default {
       this.set_location_name(locationNamePayload);
       if (index === 0) {
         this.setPickupFilled(true);
+        const eventPayload = {
+          eventCategory: 'Order Placement',
+          eventAction: 'Click',
+          eventLabel: 'Pickup Location - Order Placement - Web App',
+        };
+        this.fireGAEvent(eventPayload);
+      } else {
+        const eventPayload = {
+          eventCategory: 'Order Placement',
+          eventAction: 'Click',
+          eventLabel: 'Destination Location - Order Placement - Web App',
+        };
+        this.fireGAEvent(eventPayload);
       }
       this.attemptPriceRequest();
     },
