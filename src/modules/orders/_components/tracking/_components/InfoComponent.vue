@@ -741,12 +741,14 @@
 <script>
 import { mapGetters } from 'vuex';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
+import EventsMixin from '../../../../../mixins/events_mixin';
+
 
 const moment = require('moment');
 
 export default {
   name: 'InfoWindow',
-  mixins: [TimezoneMxn],
+  mixins: [TimezoneMxn, EventsMixin],
   filters: {
     moment(date) {
       return moment(date).format('MMM Do YYYY, h:mm a');
@@ -892,24 +894,12 @@ export default {
     },
     'cancelOption': function cancelOption() {
         if(this.cancelOption === false) {
-          //track analytics for closing the dialogi
-          let analyticsEnv = '';
-          try {
-            analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-          } catch (er) {
-            // ...
-          }
-          try {
-            if (analyticsEnv === 'production') {
-              window.ga('send', 'event', {
-                eventCategory: 'Order Cancellation',
+          let eventPayload = {
+             eventCategory: 'Order Cancellation',
                 eventAction: 'Click',
-                eventLabel: 'No Button - Order Cancellation Page - WebApp',
-              });
-            }
-          } catch (er) {
-            // ...
+                eventLabel: 'No Button - Order Cancellation Page - WebApp'
           }
+          this.fireGAEvent(eventPayload);
         }
     },   
     tracking_data(data) {
@@ -1017,23 +1007,13 @@ export default {
     },
     cancelToggle(cancelReason = 0) {
       if (cancelReason === true) {
-        let analyticsEnv = '';
-        try {
-          analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-        } catch (er) {
-          // ...
-        }
-        try {
-          if (analyticsEnv === 'production') {
-            window.ga('send', 'event', {
-              eventCategory: 'Order Cancellation',
+        let eventPayload = {
+             eventCategory: 'Order Cancellation',
               eventAction: 'Click',
               eventLabel: 'No Button - Order Cancellation Page - WebApp',
-            });
           }
-        } catch (er) {
-          // ...
-        }
+          this.fireGAEvent(eventPayload);
+        
       }
       if(cancelReason === '4') {
           this.trackMixpanelEvent('Dissuaded Cancellation ', {
@@ -1048,23 +1028,13 @@ export default {
       this.cancelOption = false;
       this.cancel_reason = '';
       if (cancelReason === true) {
-        let analyticsEnv = '';
-        try {
-          analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-        } catch (er) {
-          // ...
-        }
-        try {
-          if (analyticsEnv === 'production') {
-            window.ga('send', 'event', {
-              eventCategory: 'Order Cancellation',
+         let eventPayload = {
+          eventCategory: 'Order Cancellation',
               eventAction: 'Click',
               eventLabel: 'No Button - Order Cancellation Page - WebApp',
-            });
           }
-        } catch (er) {
-          // ...
-        }
+          this.fireGAEvent(eventPayload);
+       
       }
     },
     maximiseInfoDetails() {
@@ -1241,23 +1211,13 @@ export default {
         if (this.inputCancelReason) {
           this.submitHubspotCancelReason();
         }
-        let analyticsEnv = '';
-        try {
-          analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-        } catch (er) {
-          // ... TODO: handle error
-        }
-        try {
-          if (analyticsEnv === 'production') {
-            window.ga('send', 'event', {
-              eventCategory: 'Order Cancellation',
+        let eventPayload = {
+         eventCategory: 'Order Cancellation',
               eventAction: 'Click',
               eventLabel: 'Yes Button - Order Cancellation Page - WebApp',
-            });
           }
-        } catch (er) {
-           // ... TODO: handle error
-        }
+          this.fireGAEvent(eventPayload);
+        
         this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then(response => {
           if (response.status) {
             that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
