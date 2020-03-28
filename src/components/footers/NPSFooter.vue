@@ -178,16 +178,15 @@ export default {
       };
       this.storeNpsSurvey(payload).then(
         (response) => {
-          if (response.success) {
+          if (response.data.success) {
             this.submitted = true;
-            this.heading = 'Thank you. We will use your feedback to improve our service';
-            setTimeout(() => {
-              this.setNPSStatus(true);
-            }, 3000);
+            this.isValid = false;
           }
         },
         (error) => {
-          this.heading = error.response.data[0].message;
+          this.submitted = true;
+          this.isValid = false;
+          this.isValid = error.response.data[0].message;
         },
       );
     },
@@ -210,18 +209,24 @@ export default {
 
       this.storeNpsSurvey(payload).then(
         (response) => {
-          if (response.success) {
+          if (response.data.success) {
             this.submitted = true;
             this.heading = 'Thank you. We will use your feedback to improve our service';
-            setTimeout(() => {
-              this.setNPSStatus(true);
-            }, 3000);
+            this.hideForm();
           }
         },
         (error) => {
+          this.submitted = true;
           this.heading = error.response.data[0].message;
+          this.hideForm();
         },
       );
+    },
+    hideForm() {
+      return setTimeout(() => {
+        this.isValid = false;
+        this.setNPSStatus(true);
+      }, 2000);
     },
 
   },
