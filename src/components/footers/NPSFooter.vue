@@ -33,7 +33,7 @@
                   type="button"
                   class="btn btn-secondary btn-holder"
                   @click="onChange($event, value)"
-                >{{ value }}</button>
+                ><span class="score-value">{{ value }}</span></button>
               </span>
             </span>
             <button
@@ -178,16 +178,15 @@ export default {
       };
       this.storeNpsSurvey(payload).then(
         (response) => {
-          if (response.success) {
+          if (response.data.success) {
             this.submitted = true;
-            this.heading = 'Thank you. We will use your feedback to improve our service';
-            setTimeout(() => {
-              this.setNPSStatus(true);
-            }, 3000);
+            this.isValid = false;
           }
         },
         (error) => {
-          this.heading = error.response.data[0].message;
+          this.submitted = true;
+          this.isValid = false;
+          this.isValid = error.response.data[0].message;
         },
       );
     },
@@ -210,18 +209,24 @@ export default {
 
       this.storeNpsSurvey(payload).then(
         (response) => {
-          if (response.success) {
+          if (response.data.success) {
             this.submitted = true;
             this.heading = 'Thank you. We will use your feedback to improve our service';
-            setTimeout(() => {
-              this.setNPSStatus(true);
-            }, 3000);
+            this.hideForm();
           }
         },
         (error) => {
+          this.submitted = true;
           this.heading = error.response.data[0].message;
+          this.hideForm();
         },
       );
+    },
+    hideForm() {
+      return setTimeout(() => {
+        this.isValid = false;
+        this.setNPSStatus(true);
+      }, 2000);
     },
 
   },
@@ -248,19 +253,20 @@ export default {
 }
 .nps-info {
     width: 100%;
-    margin-bottom: 20px;
-    margin-left: 3em;
+    margin-bottom: 6px;
+    margin-left: 5em;
 }
 .btn-holder {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     border-radius: 100%;
     background: #FFFFFF;
     border: 1px solid #BDBDBD;
     box-sizing: border-box;
-    margin-right: 15px;
+    margin-right: 13px;
     cursor: pointer;
     transition-duration: 0.4s;
+    padding: 0;
 }
 
 .btn-holder:hover {
@@ -270,8 +276,8 @@ export default {
   border: none;
 }
 .score-holder {
-    margin-left: 2em;
-    margin-right: 2em;
+    margin-left: 10px;
+    margin-right: 20px;
 }
 .side-btn {
     color: #474747;
@@ -303,6 +309,9 @@ export default {
     cursor: pointer;
     line-height: 30px;
     height: 36px;
+    outline: 0;
+    padding: 0 15px;
+    border: 1px solid #dcdfe6;
 }
 .clearfix {
      margin-right: 7em;
@@ -312,9 +321,10 @@ export default {
     border: none;
     color: #041F38;
     border: none;
-    font-size: 19px;
+    font-size: 28px;
     margin-left: 15px;
     cursor: pointer;
+    width: 1%;
 }
 button span {
     display: block;
