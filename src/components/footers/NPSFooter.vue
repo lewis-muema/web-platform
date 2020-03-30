@@ -309,6 +309,9 @@ export default {
     cursor: pointer;
     line-height: 30px;
     height: 36px;
+    outline: 0;
+    padding: 0 15px;
+    border: 1px solid #dcdfe6;
 }
 .clearfix {
      margin-right: 7em;
@@ -318,9 +321,10 @@ export default {
     border: none;
     color: #041F38;
     border: none;
-    font-size: 19px;
+    font-size: 28px;
     margin-left: 15px;
     cursor: pointer;
+    width: 1%;
 }
 button span {
     display: block;
