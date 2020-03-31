@@ -45,6 +45,9 @@ export default {
   getRedirectOrder(state) {
     return state.redirect_order;
   },
+  getNPSStatus(state) {
+    return state.nps_status;
+  },
 };
 
 function isEmpty(obj) {

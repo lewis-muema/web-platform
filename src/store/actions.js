@@ -248,6 +248,30 @@ export default {
     commit('setRunningBalance', rb);
     return true;
   },
+  verifyNpsUser({ dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosPost', payload, { root: true }).then(
+        (response) => {
+          resolve(response);
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
+  storeNpsSurvey({ dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosPost', payload, { root: true }).then(
+        (response) => {
+          resolve(response);
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
   requestRunningBalance({ dispatch, commit }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(

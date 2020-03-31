@@ -762,14 +762,15 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import timezone from '../../../../../mixins/timezone';
+import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
+
 
 const moment = require('moment');
 
 export default {
   name: 'InfoWindow',
-  mixins: [timezone, EventsMixin],
+  mixins: [TimezoneMxn, EventsMixin],
   filters: {
     moment(date) {
       return moment(date).format('MMM Do YYYY, h:mm a');
@@ -1026,10 +1027,19 @@ export default {
       }
     },
     cancelToggle(cancelReason = 0) {
-      if (cancelReason === '4') {
-        this.trackMixpanelEvent('Dissuaded Cancellation ', {
-          'Order No': this.tracking_data.order_no,
-        });
+      if (cancelReason === true) {
+        let eventPayload = {
+             eventCategory: 'Order Cancellation',
+              eventAction: 'Click',
+              eventLabel: 'No Button - Order Cancellation Page - WebApp',
+          }
+          this.fireGAEvent(eventPayload);
+        
+      }
+      if(cancelReason === '4') {
+          this.trackMixpanelEvent('Dissuaded Cancellation ', {
+              'Order No': this.tracking_data.order_no,
+          });
       }
       if (this.cancel_popup === 1) {
         this.cancel_popup = 0;
