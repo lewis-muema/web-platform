@@ -112,7 +112,7 @@
 
                     <li v-for="(val, index) in tracking_data.path" v-if="index > 0">
                       <p class="info-text-transform infor-top-bar-text">
-                        {{tracking_data.path[index].waypoint_type ? tracking_data.path[index].waypoint_type :  `Destination`}}
+                         {{tracking_data.path[index].waypoint_type ? tracking_data.path[index].waypoint_type :  `Destination`}}
                       </p>
                       <p>
                         {{ val.name }}
@@ -158,7 +158,7 @@
                     </div>
                     <div class="tracking-loader-inner">
                       <span class="info-text-transform">
-                       {{ convertToUTCToLocal(tracking_data.date_time) | moment }}
+                        {{ convertToUTCToLocal(tracking_data.date_time) | moment }}
                       </span>
                     </div>
                   </div>
@@ -276,7 +276,9 @@
                           <p class="infor-top-bar-text stagePassed">
                             {{ orderPlaced }}
                           </p>
-                          <p class="eta_data">{{ convertToLocalTime(tracking_data.eta_data.placed) | moment }}</p>
+                          <p class="eta_data">
+                            {{ convertToLocalTime(tracking_data.eta_data.placed) | moment }}
+                          </p>
                         </div>
                       </li>
 
@@ -293,7 +295,9 @@
                           <p class="infor-top-bar-text stagePassed">
                             Your Order has been scheduled
                           </p>
-                          <p class="eta_data">{{ convertToUTCToLocal(tracking_data.date_time) | moment }}</p>
+                          <p class="eta_data">
+                            {{ convertToUTCToLocal(tracking_data.date_time) | moment }}
+                          </p>
                         </div>
                       </li>
 
@@ -422,6 +426,19 @@
                           class="infor-top-bar-text"
                           v-bind:class="{ deliveredActive: setDelivered }"
                         >
+                         <span v-if="'waypoint_type'in val && val.waypoint_type !== null && val.waypoint_type.toLowerCase() === 'pickup'">
+                          <span v-if="tracking_data.delivery_status < 3 && !val.visited">
+                            <p class="stagePending">
+                              Your {{ partnerName }} is on the way to  pick your {{ packageName }} at {{ val.name }}
+                            </p>
+                          </span>
+                          <span v-else>
+                            <p class="stagePassed">
+                              Your {{ packageName }} at {{ val.name }} has been picked. 
+                            </p>
+                          </span>
+                        </span>
+                        <span v-else>
                           <span v-if="tracking_data.delivery_status < 3 && !val.visited">
                             <p class="stagePending">
                               Your {{ packageName }} is on the way to {{ val.name }}
@@ -432,6 +449,11 @@
                               Your {{ packageName }} has been delivered to {{ val.name }}
                             </p>
                           </span>
+                        </span>
+                       
+
+
+
                         </div>
                       </li>
 
@@ -740,13 +762,14 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import TimezoneMxn from '../../../../../mixins/timezone_mixin';
+import timezone from '../../../../../mixins/timezone';
+import EventsMixin from '../../../../../mixins/events_mixin';
 
 const moment = require('moment');
 
 export default {
   name: 'InfoWindow',
-  mixins: [TimezoneMxn],
+  mixins: [timezone, EventsMixin],
   filters: {
     moment(date) {
       return moment(date).format('MMM Do YYYY, h:mm a');
@@ -876,8 +899,7 @@ export default {
         } else {
           return this.confirmEta;
         }
-      }
-      else{
+      } else {
         return this.confirmEta;
       }
     },
@@ -890,28 +912,16 @@ export default {
       this.poll(from);
       this.initiateOrderData();
     },
-    'cancelOption': function cancelOption() {
-        if(this.cancelOption === false) {
-          //track analytics for closing the dialogi
-          let analyticsEnv = '';
-          try {
-            analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-          } catch (er) {
-            // ...
-          }
-          try {
-            if (analyticsEnv === 'production') {
-              window.ga('send', 'event', {
-                eventCategory: 'Order Cancellation',
-                eventAction: 'Click',
-                eventLabel: 'No Button - Order Cancellation Page - WebApp',
-              });
-            }
-          } catch (er) {
-            // ...
-          }
-        }
-    },   
+    cancelOption: function cancelOption() {
+      if (this.cancelOption === false) {
+        let eventPayload = {
+          eventCategory: 'Order Cancellation',
+          eventAction: 'Click',
+          eventLabel: 'No Button - Order Cancellation Page - WebApp',
+        };
+        this.fireGAEvent(eventPayload);
+      }
+    },
     tracking_data(data) {
       if (data !== undefined) {
         if (Object.prototype.hasOwnProperty.call(data, 'confirm_status')) {
@@ -991,7 +1001,7 @@ export default {
         const that = this;
         this.$store
           .dispatch('$_orders/$_tracking/getTrackingData', { order_no: from })
-          .then(response => {
+          .then((response) => {
             if (response) {
               if (this.tracking_data.delivery_status === 3) {
                 that.doNotification('1', 'Order delivered', 'Your order has been delivered.');
@@ -1016,29 +1026,10 @@ export default {
       }
     },
     cancelToggle(cancelReason = 0) {
-      if (cancelReason === true) {
-        let analyticsEnv = '';
-        try {
-          analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-        } catch (er) {
-          // ...
-        }
-        try {
-          if (analyticsEnv === 'production') {
-            window.ga('send', 'event', {
-              eventCategory: 'Order Cancellation',
-              eventAction: 'Click',
-              eventLabel: 'No Button - Order Cancellation Page - WebApp',
-            });
-          }
-        } catch (er) {
-          // ...
-        }
-      }
-      if(cancelReason === '4') {
-          this.trackMixpanelEvent('Dissuaded Cancellation ', {
-              'Order No': this.tracking_data.order_no,
-          });
+      if (cancelReason === '4') {
+        this.trackMixpanelEvent('Dissuaded Cancellation ', {
+          'Order No': this.tracking_data.order_no,
+        });
       }
       if (this.cancel_popup === 1) {
         this.cancel_popup = 0;
@@ -1048,24 +1039,25 @@ export default {
       this.cancelOption = false;
       this.cancel_reason = '';
       if (cancelReason === true) {
-        let analyticsEnv = '';
-        try {
-          analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-        } catch (er) {
-          // ...
-        }
-        try {
-          if (analyticsEnv === 'production') {
-            window.ga('send', 'event', {
-              eventCategory: 'Order Cancellation',
-              eventAction: 'Click',
-              eventLabel: 'No Button - Order Cancellation Page - WebApp',
-            });
-          }
-        } catch (er) {
-          // ...
-        }
+        let eventPayload = {
+          eventCategory: 'Order Cancellation',
+          eventAction: 'Click',
+          eventLabel: 'No Button - Order Cancellation Page - WebApp',
+        };
+        this.fireGAEvent(eventPayload);
       }
+      if (cancelReason === '4') {
+        this.trackMixpanelEvent('Dissuaded Cancellation ', {
+          'Order No': this.tracking_data.order_no,
+        });
+      }
+      if (this.cancel_popup === 1) {
+        this.cancel_popup = 0;
+      } else {
+        this.cancel_popup = 1;
+      }
+      this.cancelOption = false;
+      this.cancel_reason = '';
     },
     maximiseInfoDetails() {
       this.truckMoreInfo = true;
@@ -1074,7 +1066,10 @@ export default {
       return `https://images.sendyit.com/web_platform/vendor_type/side/${id}.svg`;
     },
     checkVendorName() {
-      if (Object.keys(this.tracking_data).length > 0 && Object.prototype.hasOwnProperty.call(this.tracking_data.rider, 'vendor_name')) {
+      if (
+        Object.keys(this.tracking_data).length > 0 &&
+        Object.prototype.hasOwnProperty.call(this.tracking_data.rider, 'vendor_name')
+      ) {
         if (this.tracking_data.rider.vendor_name === 'Bike') {
           this.partnerName = 'rider';
           this.packageName = 'package';
@@ -1175,7 +1170,10 @@ export default {
     },
     confirmUser() {
       const session = this.$store.getters.getSession;
-      if (Object.keys(session).length > 0 && Object.prototype.hasOwnProperty.call(session, 'default') ) {
+      if (
+        Object.keys(session).length > 0 &&
+        Object.prototype.hasOwnProperty.call(session, 'default')
+      ) {
         let sessionUserEmail = session[session.default].user_email;
         let orderUserEmail = this.tracking_data.user.email;
 
@@ -1191,12 +1189,15 @@ export default {
     },
     checkRunningBalance() {
       const session = this.$store.getters.getSession;
-      if (Object.keys(session).length > 0 && Object.prototype.hasOwnProperty.call(session, 'default') ) {
+      if (
+        Object.keys(session).length > 0 &&
+        Object.prototype.hasOwnProperty.call(session, 'default')
+      ) {
         const payload = {
           cop_id: session[session.default].cop_id,
           user_phone: session[session.default].user_phone,
         };
-        this.$store.dispatch('$_orders/$_tracking/runningBalance', payload).then(response => {
+        this.$store.dispatch('$_orders/$_tracking/runningBalance', payload).then((response) => {
           if (response.status) {
             this.myRb = response.running_balance;
             this.accType = response.payment_plan;
@@ -1241,24 +1242,14 @@ export default {
         if (this.inputCancelReason) {
           this.submitHubspotCancelReason();
         }
-        let analyticsEnv = '';
-        try {
-          analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-        } catch (er) {
-          // ... TODO: handle error
-        }
-        try {
-          if (analyticsEnv === 'production') {
-            window.ga('send', 'event', {
-              eventCategory: 'Order Cancellation',
-              eventAction: 'Click',
-              eventLabel: 'Yes Button - Order Cancellation Page - WebApp',
-            });
-          }
-        } catch (er) {
-           // ... TODO: handle error
-        }
-        this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then(response => {
+        let eventPayload = {
+          eventCategory: 'Order Cancellation',
+          eventAction: 'Click',
+          eventLabel: 'Yes Button - Order Cancellation Page - WebApp',
+        };
+        this.fireGAEvent(eventPayload);
+
+        this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then((response) => {
           if (response.status) {
             that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
             that.cancelToggle();
@@ -1271,7 +1262,7 @@ export default {
               reason_description: 'I placed the wrong locations',
               client_type: that.$store.getters.getSession.default,
             };
-            this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then(response2 => {
+            this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then((response2) => {
               if (response2.status) {
                 that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
                 that.cancelToggle();
@@ -1334,7 +1325,7 @@ export default {
       }
 
       this.$store.dispatch('$_orders/$_tracking/saveOrderDetails', params).then(
-        response => {
+        (response) => {
           if (response.status) {
             this.doNotification(1, 'Save Details', 'Order Details saved successfully.');
             this.isSaved = true;
@@ -1342,7 +1333,7 @@ export default {
             this.doNotification(3, 'Save Details failed', 'Could not save details. Kindly retry.');
           }
         },
-        error => {
+        (error) => {
           this.doNotification(2, 'Save Details Error ', 'Check Internet connection and retry');
         }
       );
@@ -1377,7 +1368,7 @@ export default {
         payload.message = `Hi! ${userName} wants you to track their Sendy order here: ${track}`;
 
         this.$store.dispatch('$_orders/$_tracking/requestETASms', payload).then(
-          response => {
+          (response) => {
             if (response.status === 200) {
               this.doNotification(1, 'Share ETA', 'SMS sent successfully.');
               this.shareOption = false;
@@ -1385,7 +1376,7 @@ export default {
               this.doNotification(2, 'Share ETA failed', 'Could not send ETA sms. Kindly retry.');
             }
           },
-          error => {
+          (error) => {
             this.doNotification(2, 'Share ETA Error ', 'Check Internet connection and retry');
           }
         );
@@ -1399,7 +1390,7 @@ export default {
 
         payload.rider_id = [this.tracking_data.rider.rider_id];
         this.$store.dispatch('$_orders/$_tracking/requestRiderLastPosition', payload).then(
-          response => {
+          (response) => {
             if (response.status === 'true') {
               let riderOnlineData = response.partnerArray[0];
               const size = Object.keys(this.vendors).length;
@@ -1413,7 +1404,7 @@ export default {
               this.$store.dispatch('$_orders/$_tracking/trackMQTT');
             }
           },
-          error => {
+          (error) => {
             // ...
           }
         );
