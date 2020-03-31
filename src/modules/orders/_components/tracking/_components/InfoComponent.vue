@@ -426,7 +426,7 @@
                           class="infor-top-bar-text"
                           v-bind:class="{ deliveredActive: setDelivered }"
                         >
-                         <span v-if="'waypoint_type'in val && val.waypoint_type.toLowerCase() === 'pickup'">
+                         <span v-if="'waypoint_type'in val && val.waypoint_type !== null && val.waypoint_type.toLowerCase() === 'pickup'">
                           <span v-if="tracking_data.delivery_status < 3 && !val.visited">
                             <p class="stagePending">
                               Your {{ partnerName }} is on the way to  pick your {{ packageName }} at {{ val.name }}
