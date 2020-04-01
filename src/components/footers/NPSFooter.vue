@@ -93,7 +93,7 @@ export default {
       scores: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       score: null,
       reason: '',
-      heading: 'How likely are you to invite a friend or collegue to join Sendy?',
+      heading: 'How likely are you to invite a friend or colleague to join Sendy?',
       submitted: false,
       isValid: null,
     };
