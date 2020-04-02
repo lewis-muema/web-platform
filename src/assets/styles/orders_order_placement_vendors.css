@@ -284,6 +284,9 @@
 .bottom-spacer {
   margin-bottom: 10px;
 }
+.recipient-section {
+  display: none;
+}
 .el-popper[x-placement^='right'] .popper__arrow::after {
   bottom: 0px;
   border-right-color: #ffffff !important;

@@ -336,8 +336,10 @@
                 Delivery is in 2 to 4 hours from the scheduled time
               </span>
             </div>
-            <div class="home-view-truck-options-inner-wrapper">
-              <p class="home-view-truck-options-label no-margin">Recipient Details</p>
+            <div class="home-view-truck-options-inner-wrapper recipient-section">
+              <p class="home-view-truck-options-label no-margin">
+                Recipient Details
+              </p>
               <input
                 v-model="recipientName"
                 type="text"
@@ -580,6 +582,7 @@
 
 <script>
 import numeral from 'numeral';
+import _ from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PaymentOptions from './PaymentOptions.vue';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
@@ -784,7 +787,14 @@ export default {
       return displayPairName.toLowerCase();
     },
   },
-
+  watch: {
+    recipientName(data) {
+      this.debounceRecipientName(data);
+    },
+    recipientPhone(data) {
+      this.debounceRecipientPhone(data);
+    },
+  },
   created() {
     this.setFirstTimeUser();
     this.initializeVendorComponent();
@@ -823,7 +833,14 @@ export default {
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
     }),
-
+    // eslint-disable-next-line func-names
+    debounceRecipientName: _.debounce(function (data) {
+      this.triggerGAEvent('Client recipient name input - Order Placement Page - WebApp', data);
+    }, 2000),
+    // eslint-disable-next-line func-names
+    debounceRecipientPhone: _.debounce(function (data) {
+      this.triggerGAEvent('Client recipient phone number input - Order Placement Page - WebApp', data);
+    }, 2000),
     dispatchCarrierType() {
       this.setCarrierType(this.carrier_type);
     },
@@ -870,11 +887,43 @@ export default {
       this.setExtendOptions(true);
       this.handleScheduledTime();
     },
+    triggerGAEvent(field, value) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          window.ga('send', 'event', {
+            eventCategory: 'Order Placement',
+            eventAction: 'Click',
+            eventLabel: field,
+            eventValue: value,
+          });
+        }
+      } catch (er) {
+        // ...
+      }
+    },
     setDefaultCarrierType() {
+      const session = this.$store.getters.getSession;
+      let copStatus = false;
+      if (session.default === 'biz') {
+        const bizData = session[session.default];
+        const data = Object.prototype.hasOwnProperty.call(bizData, 'default_carrier_type');
+        if (data) {
+          copStatus = true;
+        }
+      }
+
       if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
         this.carrier_type = '1';
       } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
         this.carrier_type = '2';
+      } else if (copStatus) {
+        this.carrier_type = session[session.default].default_carrier_type.toString(10);
       } else {
         this.carrier_type = '2';
       }
@@ -943,6 +992,10 @@ export default {
       this.setOuterActivePackageClass(name);
       this.reCheckCarrierType();
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
+      const activeData = this.activePackageClassPriceData.price_tiers[0];
+      this.setVendorDetails(activeData);
+      this.delivery_item = '';
+      this.order_notes = '';
     },
     clearVehicleDetails() {
       this.vehicle_plate = '';
@@ -1134,6 +1187,7 @@ export default {
     destroyVendorComponent() {
       if (this.recipientPhone && this.recipientName) {
         this.submitMail();
+        this.triggerGAEvent('Order Placement with Recipient Inputs - Order Placement Page - WebApp', '');
       }
       this.setActiveVendorName('');
       this.setActiveVendorDetails({});

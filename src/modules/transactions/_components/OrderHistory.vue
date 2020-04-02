@@ -10,6 +10,7 @@
           v-model="filterData.user"
           class="section--filter-input"
           placeholder="Users"
+          filterable
         >
           <el-option
             label="All Users"
@@ -207,7 +208,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { Printd } from 'printd';
 import * as _ from 'lodash';
 import exportFromJSON from 'export-from-json';
@@ -314,6 +315,10 @@ export default {
     this.setUserDefaultCurrency();
   },
   methods: {
+    ...mapMutations({
+      setOrderHistoryOrders: '$_transactions/setOrderHistoryOrders',
+    }),
+
     populateOrders() {
       const sessionData = this.$store.getters.getSession;
 
@@ -479,9 +484,15 @@ export default {
           this.order_history_text = 'Search';
           this.empty_orders_state = 'Order History Not Found';
         },
-        () => {
+        (error) => {
+          this.setOrderHistoryOrders([]);
           this.order_history_text = 'Search';
-          this.empty_orders_state = 'Order History Failed to Fetch';
+
+          if (Object.prototype.hasOwnProperty.call(error.response.data, 'data')) {
+            this.empty_orders_state = 'No Order History for user';
+          } else {
+            this.empty_orders_state = 'Order History Failed to Fetch';
+          }
         },
       );
     },

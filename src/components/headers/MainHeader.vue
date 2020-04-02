@@ -30,7 +30,7 @@
             </a>
             <ul class="nav--menu-dropdown-list">
               <div v-if="!admin_details">
-                <li v-if="switchValid">
+                <li v-show="switchValid">
                   <a @click="switchAccount()">
                     Switch to
                     <span v-if="this.$store.getters.getSession.default === 'peer'"> Business </span>
@@ -38,6 +38,11 @@
                       Personal
                     </span>
                     account
+                  </a>
+                </li>
+                <li v-show="isUpgradeValid">
+                  <a @click="linkRoute('/user/upgrade_acc')">
+                    Create Business Account
                   </a>
                 </li>
                 <li>
@@ -119,6 +124,15 @@ export default {
       getSess: 'getSession',
       getCountryCode: 'getCountryCode',
     }),
+    isUpgradeValid() {
+      const session = this.$store.getters.getSession;
+      let isValid = false;
+
+      if (!this.switchValid && session.default === 'peer') {
+        isValid = true;
+      }
+      return isValid;
+    },
   },
   watch: {
     getSess: {
@@ -207,9 +221,34 @@ export default {
     },
     linkRoute(route) {
       this.$router.push(route);
+      if (route === '/user/upgrade_acc') {
+        const session = this.$store.getters.getSession;
+        this.trackMixpanelEvent('Create Business Account Clicked', {
+          'Account Type': session.default === 'peer' ? 'Personal' : 'Business',
+          'Client Type': 'Web Platform',
+          'User Email': session[session.default].user_email,
+          'User Phone': session[session.default].user_phone,
+        });
+      }
     },
     linkPayments() {
       this.$router.push('/payment/card');
+    },
+    /* global mixpanel */
+    trackMixpanelEvent(name, event) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name, event);
+        }
+      } catch (er) {
+        // ...
+      }
     },
   },
 };

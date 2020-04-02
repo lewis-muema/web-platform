@@ -25,8 +25,12 @@ function guard(to, from, next) {
       if (process.browser) {
         // read ls here
         const _sessionSnack = localStorage.getItem('_sessionSnack');
+        let userState = true;
+        if (typeof _sessionSnack === 'string') {
+          userState = _sessionSnack.includes('peer');
+        }
 
-        if (isEmpty(_sessionSnack)) {
+        if (isEmpty(_sessionSnack) || _sessionSnack === null || !userState) {
           resolve(next('/auth/sign_in'));
         } else {
           session = JSON.parse(_sessionSnack);
@@ -60,7 +64,9 @@ function guard(to, from, next) {
           if (details !== 'undefined') {
             mixpanel.track(details, {
               'Client Type': 'Web Platform',
-              'Account Type': session.default === 'peer' ? 'Personal' : 'Business',
+              'Account Type': session.default === 'peer'
+                ? 'Personal'
+                : 'Business',
             });
           }
         }
@@ -77,8 +83,11 @@ function loginGuard(to, from, next) {
       if (process.browser) {
         // read ls here
         const _sessionSnack = localStorage.getItem('_sessionSnack');
-
-        if (isEmpty(_sessionSnack)) {
+        let userState = true;
+        if (typeof _sessionSnack === 'string') {
+          userState = _sessionSnack.includes('peer');
+        }
+        if (isEmpty(_sessionSnack) || _sessionSnack === null || !userState) {
           resolve(next());
           if ('login' in to.meta) {
             const details = to.meta.login;
@@ -182,7 +191,9 @@ export function createRouter() {
               {
                 path: 'details/:id',
                 name: 'order-details',
-                component: () => import('../modules/transactions/_components/OrderDetails.vue'),
+                component: () => import(
+                  '../modules/transactions/_components/OrderDetails.vue',
+                ),
               },
             ],
           },
@@ -368,6 +379,10 @@ export function createRouter() {
           {
             path: '/user/free_deliveries',
             component: () => import('../modules/user/_components/FreeDeliveries.vue'),
+          },
+          {
+            path: '/user/upgrade_acc',
+            component: () => import('../modules/user/_components/UpgradeAccount.vue'),
           },
         ],
       },
