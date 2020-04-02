@@ -44,7 +44,8 @@
             </button>
             <button
               type="button"
-              class="btn btn-secondary dismiss"
+              :class="`btn btn-secondary dismiss ${disableClass}`"
+              :disabled="isDisabled"
               @click="dismiss()"
             >
               &times;
