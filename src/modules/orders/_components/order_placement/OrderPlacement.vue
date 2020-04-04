@@ -410,7 +410,7 @@ export default {
           eventLabel: 'Pickup Location - Order Placement - Web App',
         };
         this.fireGAEvent(eventPayload);
-        this.mixpanelTrackOrderLocations(eventPayload.eventLabel);
+        this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
       } else {
         const eventPayload = {
           eventCategory: 'Order Placement',
@@ -418,15 +418,11 @@ export default {
           eventLabel: 'Destination Location - Order Placement - Web App',
         };
         this.fireGAEvent(eventPayload);
-        this.mixpanelTrackOrderLocations(eventPayload.eventLabel);
+        this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
       }
       this.attemptPriceRequest();
     },
 
-    mixpanelTrackOrderLocations(locationtype) {
-      this.trackMixpanelEvent(`Successfully set Order ${locationtype}`);
-    },
-    
     attemptPriceRequest() {
       if (
         Array.isArray(this.locations)
