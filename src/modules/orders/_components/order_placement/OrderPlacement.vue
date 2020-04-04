@@ -311,8 +311,6 @@ export default {
     },
 
     addExtraDestinationWrapper() {
-      const extradestination = 'Extra Destination'; 
-      this.mixpanelTrackOrderLocations(extradestination)
       this.addExtraDestination();
       this.scrollToBottom();
     },
