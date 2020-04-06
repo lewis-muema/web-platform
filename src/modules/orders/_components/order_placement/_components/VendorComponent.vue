@@ -836,11 +836,11 @@ export default {
     // eslint-disable-next-line func-names
     debounceRecipientName: _.debounce(function (data) {
       this.triggerGAEvent('Client recipient name input - Order Placement Page - WebApp', data);
-    }, 2000),
+    }, 500),
     // eslint-disable-next-line func-names
     debounceRecipientPhone: _.debounce(function (data) {
       this.triggerGAEvent('Client recipient phone number input - Order Placement Page - WebApp', data);
-    }, 2000),
+    }, 500),
     dispatchCarrierType() {
       this.setCarrierType(this.carrier_type);
     },
