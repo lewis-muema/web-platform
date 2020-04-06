@@ -121,7 +121,7 @@ export default {
           endpoint: 'sign_in',
         };
         this.authSignIn(fullPayload).then(
-          response => {
+          (response) => {
             if (Object.prototype.hasOwnProperty.call(response, 'status')) {
               const errorResponse = response.data;
               if (errorResponse.code === 1) {
@@ -193,11 +193,11 @@ export default {
                       });
                     }
                   }
-                  //check for redirect status before push
-                  let redirectStatus = this.$store.getters.getRedirectStatus;
-                  let redirectOrder = this.$store.getters.getRedirectOrder;
+                  // check for redirect status before push
+                  const redirectStatus = this.$store.getters.getRedirectStatus;
+                  const redirectOrder = this.$store.getters.getRedirectOrder;
                   if (redirectStatus) {
-                    //reset redirect status
+                    // reset redirect status
                     this.$store.commit('setRedirectStatus', false);
                     this.$store.commit('setRedirectOrder', '');
                     this.$router.push(`/orders/tracking/${redirectOrder}`);
@@ -211,10 +211,10 @@ export default {
               }
             }
           },
-          error => {
+          (error) => {
             this.login_text = 'Login';
             this.doNotification(2, 'Login failed', 'Login failed. Please try again');
-          }
+          },
         );
       } else {
         this.message = 'Provide all values';
@@ -233,7 +233,7 @@ export default {
 };
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 .log-item {
   text-align: center;
   border: 0px solid #ccc;
