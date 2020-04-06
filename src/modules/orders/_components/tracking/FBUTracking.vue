@@ -126,12 +126,14 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import { mapGetters, mapMutations } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faArrowLeft, faWallet } from '@fortawesome/free-solid-svg-icons';
 import TrackingStore from './_store';
 import FbuTrackBar from './_components/FbuTrackBar.vue';
 import RegisterStoreModule from '../../../../mixins/register_store_module';
+import EventsMixin from '../../../../mixins/events_mixin';
 
 library.add(faArrowLeft);
 library.add(faWallet);
@@ -139,7 +141,7 @@ library.add(faWallet);
 export default {
   name: 'FBUTracking',
   components: { FbuTrackBar },
-  mixins: [RegisterStoreModule],
+  mixins: [RegisterStoreModule, EventsMixin],
   data() {
     return {
       cancel_reason: '',
@@ -169,6 +171,7 @@ export default {
       if (data) {
         this.cancel_reason = 11;
         this.cancel_desc = data;
+        this.debounceCancelReason(data);
       } else {
         this.cancel_reason = -1;
         this.cancel_desc = '';
@@ -214,6 +217,14 @@ export default {
       clearVendorMarkers: '$_orders/clearVendorMarkers',
       set_parent_order: '$_orders/setParentOrder',
     }),
+    // eslint-disable-next-line func-names
+    debounceCancelReason: _.debounce(function () {
+      this.fireGAEvent({
+        eventCategory: 'Order Cancellation',
+        eventAction: 'Click',
+        eventLabel: 'Enter cancel reason input - Order Cancellation Page - WebApp',
+      });
+    }, 500),
     cancelToggle(cancelReason = 0) {
       if (cancelReason === '4') {
         this.trackMixpanelEvent('Dissuaded Cancellation ', {
@@ -239,6 +250,11 @@ export default {
         const that = this;
         if (this.inputCancelReason) {
           this.submitHubspotCancelReason();
+          this.fireGAEvent({
+            eventCategory: 'Order Cancellation',
+            eventAction: 'Click',
+            eventLabel: 'Submit cancel reason input - Order Cancellation Page - WebApp',
+          });
         }
         this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then((response) => {
           if (response.status) {
@@ -377,5 +393,16 @@ export default {
   cursor: pointer;
   border: 0px solid;
   border-radius: 2px;
+}
+.cancel-reason-text-input {
+  display: none;
+  width: 180px;
+  height: 25px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #dbd8d8;
+  padding-left: 15px;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
