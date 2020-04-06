@@ -42,6 +42,7 @@ export default {
       'geocountry',
       'last_partner_position',
       'admin_bypass',
+      'request_verification',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -173,6 +174,7 @@ export default {
       'pending_delivery',
       'insert_rate',
       'verify_phone',
+      'request_verification',
       'check_verification',
       'geocountry',
       'last_partner_position',
@@ -216,22 +218,24 @@ export default {
           resolve(response);
         })
         .catch((error) => {
-          if (error.response.status === 403 || error.response.status === 401) {
-            const notification = {
-              title: 'Your session has expired!',
-              level: 2,
-              message: 'You will be redirected to the login page within 5 seconds.',
-            };
-            commit('setNotification', notification);
-            commit('setNotificationStatus', true);
-            setTimeout(() => {
-              if (process.browser) {
-                localStorage.removeItem('_sessionSnack');
-                localStorage.removeItem('jwtToken');
-                window.location.href = loginUrl;
-              }
-            }, 5000);
-            return true;
+          if (Object.prototype.hasOwnProperty.call(error.response, 'status')) {
+            if (error.response.status === 403 || error.response.status === 401) {
+              const notification = {
+                title: 'Your session has expired!',
+                level: 2,
+                message: 'You will be redirected to the login page within 5 seconds.',
+              };
+              commit('setNotification', notification);
+              commit('setNotificationStatus', true);
+              setTimeout(() => {
+                if (process.browser) {
+                  localStorage.removeItem('_sessionSnack');
+                  localStorage.removeItem('jwtToken');
+                  window.location.href = loginUrl;
+                }
+              }, 5000);
+              return true;
+            }
           }
           reject(error);
           return false;
@@ -281,6 +285,7 @@ export default {
             if (payload.app === 'PRIVATE_API' && rb !== 0) {
               rb = response.data.running_balance * -1;
             }
+
             commit('setRunningBalance', rb);
           }
           resolve(response);
@@ -291,4 +296,29 @@ export default {
       );
     });
   },
+  verifyNpsUser({ dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosPost', payload, { root: true }).then(
+        (response) => {
+          resolve(response);
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
+  storeNpsSurvey({ dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosPost', payload, { root: true }).then(
+        (response) => {
+          resolve(response);
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
+
 };
