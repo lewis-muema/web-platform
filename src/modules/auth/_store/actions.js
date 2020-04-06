@@ -71,9 +71,9 @@ export default {
       );
     });
   },
-  requestSignUpPhoneVerification({ dispatch }, payload) {
+  requestSignUpPhoneVerification(context, payload) {
     return new Promise((resolve, reject) => {
-      dispatch('requestAxiosPost', payload, { root: true }).then(
+      payload.vm.$store.dispatch('requestAxiosPost', payload).then(
         (response) => {
           resolve(response.data);
         },
