@@ -42,6 +42,7 @@ export default {
       'geocountry',
       'last_partner_position',
       'admin_bypass',
+      'request_verification',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -177,6 +178,7 @@ export default {
       'geocountry',
       'last_partner_position',
       'admin_bypass',
+      'request_verification',
     ];
     if (externalEndpoints.includes(requestedPayload)) {
       config = {
