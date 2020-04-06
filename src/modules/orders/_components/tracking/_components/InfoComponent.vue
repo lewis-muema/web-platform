@@ -761,6 +761,7 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import { mapGetters } from 'vuex';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
@@ -937,6 +938,7 @@ export default {
       if (data) {
         this.cancel_reason = 11;
         this.cancel_desc = data;
+        this.debounceCancelReason(data);
       } else {
         this.cancel_reason = -1;
         this.cancel_desc = '';
@@ -958,6 +960,14 @@ export default {
     moment() {
       return moment();
     },
+    // eslint-disable-next-line func-names
+    debounceCancelReason: _.debounce(function (data) {
+      this.fireGAEvent({
+        eventCategory: 'Order Cancellation',
+        eventAction: 'Click',
+        eventLabel: 'Enter cancel reason input - Order Cancellation Page - WebApp',
+      });
+    }, 500),
     cancelChange(reason) {
       switch (reason) {
         case 4: {
@@ -1251,6 +1261,11 @@ export default {
         const that = this;
         if (this.inputCancelReason) {
           this.submitHubspotCancelReason();
+          this.fireGAEvent({
+            eventCategory: 'Order Cancellation',
+            eventAction: 'Click',
+            eventLabel: 'Submit cancel reason input - Order Cancellation Page - WebApp',
+          });
         }
         let eventPayload = {
           eventCategory: 'Order Cancellation',
