@@ -351,9 +351,13 @@ export default {
       const session = this.$store.getters.getSession;
       if (Object.keys(session).length > 0) {
         if (session.default === 'biz') {
-          if (session[session.default].primary_business_unit === 0
-            || session[session.default].primary_business_unit === null) {
-            isSet = true;
+          // Admin
+
+          if (session[session.default].user_type === 2) {
+            if (session[session.default].primary_business_unit === 0
+              || session[session.default].primary_business_unit === null) {
+              isSet = true;
+            }
           }
         }
       }
