@@ -816,6 +816,7 @@ export default {
       setScheduled: false,
       partnerName: '',
       packageName: '',
+      hubspotStatus: true,
     };
   },
   computed: {
@@ -1249,7 +1250,7 @@ export default {
           client_type: this.$store.getters.getSession.default,
         };
         const that = this;
-        if (this.inputCancelReason) {
+        if (this.inputCancelReason && this.hubspotStatus) {
           this.submitHubspotCancelReason();
           this.fireGAEvent({
             eventCategory: 'Order Cancellation',
@@ -1502,6 +1503,7 @@ export default {
       return '';
     },
     submitHubspotCancelReason() {
+      this.hubspotStatus = false;
       const session = this.$store.getters.getSession;
       // eslint-disable-next-line global-require
       const portalId = '4951975';
