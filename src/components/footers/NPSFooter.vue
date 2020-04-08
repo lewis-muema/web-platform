@@ -44,7 +44,8 @@
             </button>
             <button
               type="button"
-              class="btn btn-secondary dismiss"
+              :class="`btn btn-secondary dismiss ${disableClass}`"
+              :disabled="isDisabled"
               @click="dismiss()"
             >
               &times;
@@ -61,15 +62,19 @@
               placeholder="Write your feedback here"
               class="form-control reason-box"
             />
-            <button class="btn btn-primary form-control action-button">
+            <button
+              :class="`btn btn-primary form-control action-button ${disableClass}`"
+              :disabled="isDisabled"
+            >
               Submit
             </button>
             <span class="clearfix">&nbsp;</span>
-            <button class="btn btn-primary form-control action-button reason-dismiss">
+            <button :class="`btn btn-primary form-control action-button reason-dismiss ${disableClass}`">
               <span
                 type="button"
                 class="close"
                 data-dismiss="modal"
+                :disabled="isDisabled"
                 @click="dismiss()"
               >
                 &times;
@@ -93,9 +98,11 @@ export default {
       scores: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       score: null,
       reason: '',
-      heading: 'How likely are you to invite a friend or collegue to join Sendy?',
+      heading: 'How likely are you to recommend a friend or colleague to use Sendy?',
       submitted: false,
       isValid: null,
+      disableClass: '',
+      isDisabled: false,
     };
   },
   computed: {
@@ -161,6 +168,8 @@ export default {
       this.heading = 'What do you like most about Sendy? (Optional)';
     },
     dismiss() {
+      this.disableClass = 'disabled';
+      this.isDisabled = true;
       const userDetails = {
         respondent_type: this.respondentType,
         respondent_id: this.userID,
@@ -191,6 +200,8 @@ export default {
       );
     },
     submitSurvey() {
+      this.disableClass = 'disabled';
+      this.isDisabled = true;
       const userDetails = {
         respondent_type: this.respondentType,
         respondent_id: this.userID,
@@ -301,7 +312,7 @@ export default {
 }
 .action-button {
     position: absolute;
-    width: 5%;
+    width: 7%;
     margin-top: 6px;
     background: #f57f20;
     color: #ffffff;
@@ -333,4 +344,9 @@ button span {
 .form-group {
     margin-bottom: .3em;
 }
+.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
 </style>

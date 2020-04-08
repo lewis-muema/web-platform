@@ -492,6 +492,8 @@ export default {
         (this.getPriceRequestObject.payment_option === 1
           && this.getRunningBalance - this.order_cost >= 0)
         || this.getPriceRequestObject.payment_option === 2
+        || (this.getPriceRequestObject.payment_option === 0
+            && this.getRunningBalance - this.order_cost >= 0)
       );
     },
 
@@ -1065,7 +1067,7 @@ export default {
 
       const oldRb = this.$store.getters.getRunningBalance;
       const runningBalancePayload = {
-        copId,
+        cop_id: copId,
         phone: session[session.default].user_phone,
         default_currency: session[session.default].default_currency,
         rb_currency: session[session.default].default_currency,
