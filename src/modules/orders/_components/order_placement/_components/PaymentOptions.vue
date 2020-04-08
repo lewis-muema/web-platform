@@ -185,7 +185,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
-import timezone from '../../../../../mixins/timezone';
+import TimezoneMxn from '../../../../../mixins/timezone';
 import EventsMixin from '../../../../../mixins/events_mixin';
 
 library.add(faChevronDown);
@@ -492,6 +492,8 @@ export default {
         (this.getPriceRequestObject.payment_option === 1
           && this.getRunningBalance - this.order_cost >= 0)
         || this.getPriceRequestObject.payment_option === 2
+        || (this.getPriceRequestObject.payment_option === 0
+            && this.getRunningBalance - this.order_cost >= 0)
       );
     },
 
@@ -536,6 +538,7 @@ export default {
         eventLabel: 'Order Confirmation Button - Order Placement Page - Web App',
       };
       this.fireGAEvent(eventPayload);
+
       if (this.isValidateLoadWeightStatus() && this.isValidateScheduleTime()) {
         this.loading = true;
         this.refreshRunningBalance().then(
@@ -695,6 +698,7 @@ export default {
               if (Object.keys(this.$store.getters.getSession).length > 0) {
                 this.$store.dispatch('$_orders/fetchOngoingOrders');
               }
+
               this.$root.$emit('Order Placement Force Update');
               let accData = {};
               const data = JSON.parse(payload.values).values;
@@ -878,6 +882,7 @@ export default {
           cop_id: 'cop_id' in session[session.default] ? session[session.default].cop_id : 0,
           phone: session[session.default].user_phone,
           default_currency: this.default_currency,
+          rb_currency: this.activeVendorPriceData.currency,
         };
 
         const payload = {
@@ -979,13 +984,13 @@ export default {
       let userEmail = '';
       let userPhone = '';
       if (session.default === 'biz') {
-        referenceNumber = this.order_no;
+        referenceNumber += session.biz.cop_id;
         copId = session.biz.cop_id;
         userId = session.biz.user_id;
         userEmail = session.biz.user_email;
         userPhone = session.biz.user_phone;
       } else {
-        referenceNumber = this.order_no;
+        referenceNumber = session.peer.user_phone;
         userId = session.peer.user_id;
         userPhone = session.peer.user_phone;
         userEmail = session.peer.user_email;
@@ -1083,19 +1088,21 @@ export default {
         (function (pollCount) {
           // eslint-disable-next-line consistent-return
           that.mpesa_poll_timer_id = window.setTimeout(() => {
-            const res = that.checkRunningBalance(oldRb, payload);
-            if (res) {
+            that.checkRunningBalance(oldRb, payload);
+            if (that.mpesa_payment) {
               // eslint-disable-next-line no-param-reassign
               pollCount = pollLimit;
               that.payment_state = 0;
               that.loading = false;
               that.doNotification('1', 'Payment successful', 'Completing your order...');
               that.doCompleteOrder();
+              that.mpesa_payment = false;
+              that.mpesa_payment_state = true;
               return true;
             }
 
             if (pollLimitValue === 6) {
-              if (pollCount === 5) {
+              if (pollCount === 5 && !that.mpesa_payment_state) {
                 that.doNotification(
                   '0',
                   'Payment not received',
@@ -1105,6 +1112,7 @@ export default {
                 that.loading = false;
                 that.requestMpesaPaymentPoll(60);
                 that.mpesa_payment_state = false;
+                that.mpesa_payment = false;
               }
             }
           }, 10000 * pollCount);
