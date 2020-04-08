@@ -313,7 +313,13 @@ export default {
                   response = response[0];
                 }
                 if (response.status) {
+                  this.setUpState = 2;
                   this.sendVerificationCode();
+                  this.trackMixpanelEvent('User verification initiated', {
+                    'Client Email ': this.email,
+                    'Client Type': 'Web Platform',
+                    'Client Phone': phone,
+                  });
                 } else {
                   this.sign_up_text = 'SIGN UP';
                   this.next_step = true;
@@ -323,7 +329,7 @@ export default {
               (error) => {
                 this.sign_up_text = 'SIGN UP';
                 this.next_step = true;
-                this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
+                this.doNotification(2, 'Sign Up Error ', 'Unable to connect to the server . Please try again');
               },
             );
           } else {
@@ -349,12 +355,23 @@ export default {
       this.requestSignUpPhoneVerification(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.setUpState = 2;
             this.request_id = response.request_id;
             this.doNotification(1, 'Phone Verification', 'Phone verification code has been sent');
+            this.trackMixpanelEvent('Verification Code Received', {
+              'Client Email ': this.email,
+              'Client Type': 'Web Platform',
+              'Client Phone': phone,
+              'Request ID': response.request_id,
+            });
           } else {
             this.next_step = true;
             this.doNotification(2, 'Phone Verification', response.message);
+            this.trackMixpanelEvent('Verification Code Failure', {
+              'Client Email ': this.email,
+              'Client Type': 'Web Platform',
+              'Client Phone': phone,
+              Reason: response.message,
+            });
           }
         },
         (error) => {
@@ -363,8 +380,14 @@ export default {
           this.doNotification(
             2,
             'Phone Verification Error ',
-            'Check Internet connection and retry',
+            'Unable to connect to the server . Please try again after 15 minutes .',
           );
+          this.trackMixpanelEvent('Verification Code Failure', {
+            'Client Email ': this.email,
+            'Client Type': 'Web Platform',
+            'Client Phone': phone,
+            Reason: 'Unable to connect to the server . Please try again after 15 minutes .',
+          });
         },
       );
     },
@@ -592,6 +615,22 @@ export default {
           this.$router.push('/auth/sign_in');
         },
       );
+    },
+    /* global mixpanel */
+    trackMixpanelEvent(name, event) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name, event);
+        }
+      } catch (er) {
+        // ...
+      }
     },
   },
 };
