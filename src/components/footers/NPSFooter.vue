@@ -173,7 +173,7 @@ export default {
       const userDetails = {
         respondent_type: this.respondentType,
         respondent_id: this.userID,
-        business_unit_id: 1,
+        business_unit_id: null,
         country_code: this.countryCode,
         score: null,
         reason: '',
@@ -205,7 +205,7 @@ export default {
       const userDetails = {
         respondent_type: this.respondentType,
         respondent_id: this.userID,
-        business_unit_id: 1,
+        business_unit_id: null,
         country_code: this.countryCode,
         score: this.score,
         reason: this.reason,
