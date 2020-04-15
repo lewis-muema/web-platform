@@ -181,11 +181,14 @@ ul.summary_timeline > li:before {
   color: #FF7900 !important;
   background: #F5F7FA !important;
   border-color: #FF7900 !important;
+  width: 45% !important;
+
 }
 .btn-submit-order{
   color: #FFFFFF !important;
   background: #F57F20 !important;
   border-color: #FF7900 !important;
+  width: 45% !important;
 }
 .confirm_button_outer{
   display:flex;
@@ -194,4 +197,10 @@ ul.summary_timeline > li:before {
 }
 .calender--icon{
   font-size: 30px;
+}
+.summary-button-outer{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10%;
+  margin: 1em;
 }
