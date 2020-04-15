@@ -175,6 +175,59 @@
         </button>
       </div>
     </div>
+    <transition
+      name="fade"
+      mode="out-in"
+    >
+      <div class="cancel-pop-up">
+        <el-dialog
+          :visible.sync="confirmFinal"
+          width="30%"
+          class=""
+          :before-close="handleClose"
+          :modal-append-to-body="false"
+        >
+          <div class="order_final_summary">
+            <p class="confirm-label">
+              Confirm your order details
+            </p>
+            <div class="">
+              <div class="">
+                <ul class="summary_timeline order_summary_timeline">
+                  <li>
+                    <p class="delivery_label">
+                      Pickup Location
+                    </p>
+                    <p class="delivery_points">
+                      {{ getHomeLocations[0] }}
+                    </p>
+                  </li>
+
+                  <li
+                    v-for="(val, index) in getHomeLocations"
+                    v-if="index > 0"
+                  >
+                    <p class="delivery_label">
+                      {{ `Destination ${index}` }}
+                    </p>
+                    <p class="delivery_points">
+                      {{ val }}
+                    </p>
+                  </li>
+                </ul>
+              </div>
+              <div class="">
+                <input
+                  class="button-primary final-step-submit"
+                  type="submit"
+                  value="Submit"
+                >
+              </div>
+            </div>
+          </div>
+        </el-dialog>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -230,6 +283,7 @@ export default {
       mpesa_valid: false,
       mpesa_payment: false,
       mpesa_payment_state: false,
+      confirmFinal: true,
     };
   },
 
@@ -264,6 +318,7 @@ export default {
       getTestSpecs: '$_orders/$_home/getTestSpecs',
       getLoadWeightStatus: '$_orders/$_home/getLoadWeightStatus',
       getLoadWeightValue: '$_orders/$_home/getLoadWeightValue',
+      getHomeLocations: '$_orders/getHomeLocations',
     }),
 
     active_price_tier_data() {
@@ -1375,10 +1430,73 @@ export default {
         location.reload();
       }, 4000);
     },
+    handleClose() {
+      // Do nothing ...
+    },
   },
 };
 </script>
 
 <style lang="css">
 @import '../../../../../assets/styles/orders_order_placement_options.css';
+.order_final_summary{
+  margin-left: 6%;
+  margin-right: 6%;
+}
+.confirm-label{
+  font-size: 19px;
+  font-weight: 400;
+  color: #1B7FC3;
+  letter-spacing: 0.02em;
+}
+ul.summary_timeline {
+  list-style-type: none;
+  position: relative;
+  margin-left: -7%;
+}
+ul.summary_timeline:before {
+  content: ' ';
+  background: #d4d9df;
+  display: inline-block;
+  position: absolute;
+  left: 29px;
+  width: 2px;
+  height: 82%;
+  z-index: 400;
+}
+ul.summary_timeline > li {
+  margin: 20px 0;
+  padding-left: 20px;
+  height: 35px;
+  margin-bottom: 30px !important;
+}
+ul.summary_timeline > li:before {
+  /* content: ' '; */
+  background: #1B7FC3;
+  display: inline-block;
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid #1B7FC3;
+  left: 20px;
+  width: 14px;
+  height: 14px;
+  z-index: 400;
+  content: '';
+  font-size: 16px;
+  color: white;
+}
+.order_summary_timeline li:first-child:before {
+    background: #f57f20;
+    border: 4px solid #f57f20;
+    content: '';
+}
+.delivery_label{
+  color: #3D5266;
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 2% !important;
+}
+.delivery_points{
+  margin-top: 0 !important;
+}
 </style>
