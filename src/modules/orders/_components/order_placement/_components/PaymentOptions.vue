@@ -697,6 +697,7 @@ export default {
         eventLabel: 'Order Confirmation Button - Order Placement Page - Web App',
       };
       this.fireGAEvent(eventPayload);
+      clearInterval(this.interval);
 
       if (this.isValidateLoadWeightStatus() && this.isValidateScheduleTime()) {
         this.loading = true;
