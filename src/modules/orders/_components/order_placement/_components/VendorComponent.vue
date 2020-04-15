@@ -846,14 +846,14 @@ export default {
     },
     dispatchScheduleTime() {
       const dateTime = new Date();
-        this.trackMixpanelEvent('Set Order Schedule Time', {'Scheduled Time':this.schedule_time});
+      this.trackMixpanelEvent('Set Order Schedule Time', { 'Scheduled Time': this.schedule_time });
       if (this.schedule_time && dateTime > this.schedule_time) {
         this.schedule_time = new Date();
       }
       this.setScheduleTime(this.schedule_time);
     },
     dispatchOrderNotes() {
-      this.trackMixpanelEvent('Set Order Notes', {'Order Notes':this.order_notes});
+      this.trackMixpanelEvent('Set Order Notes', { 'Order Notes': this.order_notes });
       this.setOrderNotes(this.order_notes);
     },
     dispatchPairStatus() {
@@ -933,6 +933,7 @@ export default {
       } else {
         this.carrier_type = '2';
       }
+      this.setCarrierType(this.carrier_type);
     },
     goBackToHome() {
       this.schedule_time = '';
@@ -978,8 +979,8 @@ export default {
     },
 
     dispatchAdditionalLoaderStatus(val) {
-      const track = this.additional_loader === 1 ? 
-      this.trackMixpanelEvent('Selected Loader For Order', {'Number of Loaders': val}) : '';
+      const track = this.additional_loader === 1
+        ? this.trackMixpanelEvent('Selected Loader For Order', { 'Number of Loaders': val }) : '';
       this.setAdditionalLoaderStatus(val);
     },
 
@@ -1068,7 +1069,7 @@ export default {
       this.requestPairRider(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.trackMixpanelEvent('Paired Order With Rider', {'Paired Rider':plate});
+            this.trackMixpanelEvent('Paired Order With Rider', { 'Paired Rider': plate });
             this.updateData(response.data);
           } else {
             this.pair_status = '1';
