@@ -662,6 +662,17 @@ export default {
         this.confirmFinal = true;
         this.isRunning = false;
         this.toggleTimer();
+        let accData = {};
+        const session = this.$store.getters.getSession;
+        const acc = session.default;
+        accData = session[session.default];
+        this.trackMixpanelEvent('Order Summary View', {
+          'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+          'Client Type': 'Web Platform',
+          'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+          'User Email': accData.user_email,
+          'User Phone': accData.user_phone,
+        });
       }
     },
     editOrder() {
@@ -669,10 +680,32 @@ export default {
       this.isRunning = true;
       this.time = 15;
       clearInterval(this.interval);
+      let accData = {};
+      const session = this.$store.getters.getSession;
+      const acc = session.default;
+      accData = session[session.default];
+      this.trackMixpanelEvent('Order Summary Edit Button - Clicked', {
+        'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+        'User Email': accData.user_email,
+        'User Phone': accData.user_phone,
+      });
     },
     confirmOrder() {
       this.confirmFinal = false;
       this.preCheckPaymentDetails();
+      let accData = {};
+      const session = this.$store.getters.getSession;
+      const acc = session.default;
+      accData = session[session.default];
+      this.trackMixpanelEvent('Order Summary Confirm Button - Clicked', {
+        'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+        'User Email': accData.user_email,
+        'User Phone': accData.user_phone,
+      });
     },
     toggleTimer() {
       if (this.isRunning) {
@@ -687,6 +720,17 @@ export default {
       if (this.time <= 1) {
         this.preCheckPaymentDetails();
         this.confirmFinal = false;
+        let accData = {};
+        const session = this.$store.getters.getSession;
+        const acc = session.default;
+        accData = session[session.default];
+        this.trackMixpanelEvent('Order Summary View Timeout', {
+          'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+          'Client Type': 'Web Platform',
+          'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+          'User Email': accData.user_email,
+          'User Phone': accData.user_phone,
+        });
       }
     },
 
