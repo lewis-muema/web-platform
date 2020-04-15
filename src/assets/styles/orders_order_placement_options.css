@@ -204,3 +204,14 @@ ul.summary_timeline > li:before {
   margin-top: 10%;
   margin: 1em;
 }
+.count_down_section{
+  font-size: 15px;
+  margin-top: 9%;
+  margin-bottom: 6%;
+}
+.timeout_text{
+  color: #000000;
+}
+.timeout_count{
+  color: #1B7FC3;
+}

@@ -234,13 +234,13 @@
 
               <div class="order_summary--outline">
                 <label class="delivery_label">
-                  Type of {{ activeVendorPriceData.vendor_name }}
+                  Type of {{ activeVendorPriceData.vendor_name.toLowerCase() }}
                 </label>
                 <p>{{ carrierTypeSummary() }}</p>
               </div>
 
               <div class="order_summary--outline">
-                <label class="delivery_label">Your order Pickup time</label>
+                <label class="delivery_label">Your order pick up time</label>
                 <div class="order_summary-types-item order_summary--vendor-wrapper">
                   <div class="order_summary__img">
                     <i
@@ -261,6 +261,13 @@
               >
                 <label class="delivery_label">Notes</label>
                 <p>{{ get_order_notes }}</p>
+              </div>
+
+              <div class="count_down_section">
+                <p class="timeout_text">
+                  Order will be placed in
+                  <a class="timeout_count">{{ time }} seconds</a>
+                </p>
               </div>
 
               <div
@@ -344,6 +351,9 @@ export default {
       smallVendors: [1, 22, 21, 23],
       mediumVendors: [2, 3],
       largeVendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
+      time: 15,
+      isRunning: false,
+      interval: null,
     };
   },
 
@@ -650,14 +660,34 @@ export default {
         this.preCheckPaymentDetails();
       } else {
         this.confirmFinal = true;
+        this.isRunning = false;
+        this.toggleTimer();
       }
     },
     editOrder() {
       this.confirmFinal = false;
+      this.isRunning = true;
+      this.time = 15;
+      clearInterval(this.interval);
     },
     confirmOrder() {
       this.confirmFinal = false;
       this.preCheckPaymentDetails();
+    },
+    toggleTimer() {
+      if (this.isRunning) {
+        clearInterval(this.interval);
+      } else {
+        this.interval = setInterval(this.incrementTime, 1000);
+      }
+      this.isRunning = !this.isRunning;
+    },
+    incrementTime() {
+      this.time = parseInt(this.time, 10) - 1;
+      if (this.time <= 1) {
+        this.preCheckPaymentDetails();
+        this.confirmFinal = false;
+      }
     },
 
     preCheckPaymentDetails() {
@@ -667,6 +697,7 @@ export default {
         eventLabel: 'Order Confirmation Button - Order Placement Page - Web App',
       };
       this.fireGAEvent(eventPayload);
+      clearInterval(this.interval);
 
       if (this.isValidateLoadWeightStatus() && this.isValidateScheduleTime()) {
         this.loading = true;
