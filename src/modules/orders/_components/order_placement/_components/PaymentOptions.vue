@@ -264,17 +264,17 @@
               </div>
 
               <div
-                class="sign-up-verification-holder confirm_button_outer"
+                class="summary-button-outer"
               >
                 <input
-                  class="button-primary btn-edit-order btn-sign-up-check style-sign-btn"
+                  class="button-primary btn-edit-order"
                   type="submit"
                   value="EDIT ORDER"
                   @click="editOrder"
                 >
 
                 <input
-                  class="button-primary btn-submit-order btn-sign-up-check"
+                  class="button-primary btn-submit-order "
                   type="submit"
                   value="CONFIRM ORDER"
                   @click="confirmOrder"
