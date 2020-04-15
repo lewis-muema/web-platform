@@ -264,9 +264,9 @@
               </div>
 
               <div class="count_down_section">
-                <p style="color: #000000;">
+                <p class="timeout_text">
                   Order will be placed in
-                  <a style="color: #1B7FC3;">{{ time }} seconds</a>
+                  <a class="timeout_count">{{ time }} seconds</a>
                 </p>
               </div>
 
@@ -1583,9 +1583,4 @@ export default {
 
 <style lang="css">
 @import '../../../../../assets/styles/orders_order_placement_options.css';
-.count_down_section{
-  font-size: 15px;
-  margin-top: 9%;
-  margin-bottom: 6%;
-}
 </style>
