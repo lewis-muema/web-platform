@@ -88,3 +88,110 @@
 .card-accounts-list {
   background: aliceblue !important;
 }
+.order_final_summary{
+  margin-left: 6%;
+  margin-right: 6%;
+}
+.confirm-label{
+  font-size: 19px;
+  font-weight: 400;
+  color: #1B7FC3;
+  letter-spacing: 0.02em;
+}
+ul.summary_timeline {
+  list-style-type: none;
+  position: relative;
+  margin-left: -7%;
+}
+ul.summary_timeline:before {
+  content: ' ';
+  background: #d4d9df;
+  display: inline-block;
+  position: absolute;
+  left: 29px;
+  width: 2px;
+  height: 82%;
+  z-index: 400;
+}
+ul.summary_timeline > li {
+  margin: 20px 0;
+  padding-left: 20px;
+  height: 35px;
+  margin-bottom: 30px !important;
+}
+ul.summary_timeline > li:before {
+  /* content: ' '; */
+  background: #1B7FC3;
+  display: inline-block;
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid #1B7FC3;
+  left: 20px;
+  width: 14px;
+  height: 14px;
+  z-index: 400;
+  content: '';
+  font-size: 16px;
+  color: white;
+}
+.order_summary_timeline li:first-child:before {
+    background: #f57f20;
+    border: 4px solid #f57f20;
+    content: '';
+}
+.delivery_label{
+  color: #3D5266;
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 2% !important;
+}
+.delivery_points{
+  margin-top: 0 !important;
+}
+.order_summary__img{
+  flex-basis: 11%;
+}
+.order_summary--vendor-wrapper{
+ flex-direction: row;
+ justify-content: flex-start;
+ align-items: center;
+ flex-basis: 43%;
+}
+.order_summary-types-item {
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  margin-top: 2%;
+}
+.order_summary-item__image {
+  height: 30px;
+  min-width: 30px;
+}
+.order_summary-wrapper__vendor {
+  flex-direction: column;
+  flex: 1;
+}
+.order_summary--vendor-formal-name{
+  padding: 3px;
+}
+.order_summary--outline{
+  margin-top: 3%;
+}
+.btn-edit-order{
+  color: #FF7900 !important;
+  background: #F5F7FA !important;
+  border-color: #FF7900 !important;
+}
+.btn-submit-order{
+  color: #FFFFFF !important;
+  background: #F57F20 !important;
+  border-color: #FF7900 !important;
+}
+.confirm_button_outer{
+  display:flex;
+  justify-content: space-between;
+  margin-top: 10%;
+}
+.calender--icon{
+  font-size: 30px;
+}

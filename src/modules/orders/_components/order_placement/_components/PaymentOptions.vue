@@ -156,7 +156,7 @@
           type="button"
           class="button-primary home-view--place-order"
           name="button"
-          @click="preCheckPaymentDetails()"
+          @click="displayOrderHistory()"
         >
           {{ place_order_text }}
         </button>
@@ -216,11 +216,68 @@
                   </li>
                 </ul>
               </div>
-              <div class="">
+              <label class="delivery_label">Type of order</label>
+              <div class="order_summary-types-item order_summary--vendor-wrapper">
+                <div class="order_summary__img">
+                  <img
+                    class="order_summary-item__image"
+                    :src="getVendorIcon(activeVendorPriceData.vendor_id)"
+                    alt=""
+                  >
+                </div>
+                <div class="order_summary-wrapper__vendor">
+                  <div class="order_summary--vendor-formal-name">
+                    {{ activeVendorPriceData.vendor_name }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="order_summary--outline">
+                <label class="delivery_label">
+                  Type of {{ activeVendorPriceData.vendor_name }}
+                </label>
+                <p>{{ carrierTypeSummary() }}</p>
+              </div>
+
+              <div class="order_summary--outline">
+                <label class="delivery_label">Your order Pickup time</label>
+                <div class="order_summary-types-item order_summary--vendor-wrapper">
+                  <div class="order_summary__img">
+                    <i
+                      class="el-icon-date order_summary-item__image calender--icon"
+                    />
+                  </div>
+                  <div class="order_summary-wrapper__vendor">
+                    <div class="order_summary--vendor-formal-name">
+                      {{ scheduleTimeSummary() }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                v-if="get_order_notes.length > 0"
+                class="order_summary--outline"
+              >
+                <label class="delivery_label">Notes</label>
+                <p>{{ get_order_notes }}</p>
+              </div>
+
+              <div
+                class="sign-up-verification-holder confirm_button_outer"
+              >
                 <input
-                  class="button-primary final-step-submit"
+                  class="button-primary btn-edit-order btn-sign-up-check style-sign-btn"
                   type="submit"
-                  value="Submit"
+                  value="EDIT ORDER"
+                  @click="editOrder"
+                >
+
+                <input
+                  class="button-primary btn-submit-order btn-sign-up-check"
+                  type="submit"
+                  value="CONFIRM ORDER"
+                  @click="confirmOrder"
                 >
               </div>
             </div>
@@ -283,7 +340,10 @@ export default {
       mpesa_valid: false,
       mpesa_payment: false,
       mpesa_payment_state: false,
-      confirmFinal: true,
+      confirmFinal: false,
+      smallVendors: [1, 22, 21, 23],
+      mediumVendors: [2, 3],
+      largeVendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
     };
   },
 
@@ -584,6 +644,20 @@ export default {
       }
 
       return true;
+    },
+    displayOrderHistory() {
+      if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+        this.preCheckPaymentDetails();
+      } else {
+        this.confirmFinal = true;
+      }
+    },
+    editOrder() {
+      this.confirmFinal = false;
+    },
+    confirmOrder() {
+      this.confirmFinal = false;
+      this.preCheckPaymentDetails();
     },
 
     preCheckPaymentDetails() {
@@ -1433,70 +1507,50 @@ export default {
     handleClose() {
       // Do nothing ...
     },
+    getVendorIcon(id) {
+      return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
+    },
+    scheduleTimeSummary() {
+      let resp = 'As soon as possible';
+      if (this.order_is_scheduled) {
+        resp = this.scheduled_time;
+      }
+      return resp;
+    },
+    carrierTypeSummary() {
+      const carrierType = this.final_carrier_type;
+      let resp = 'Any';
+      if (this.largeVendors.includes(this.activeVendorPriceData.vendor_id)) {
+        if (carrierType === 3) {
+          resp = 'Refrigerated';
+        } else if (carrierType === 4) {
+          resp = 'Flatbed/Skeleton';
+        } else if (carrierType === 5) {
+          resp = 'Tipper';
+        } else if (carrierType === 6) {
+          resp = 'Refeer';
+        } else if (carrierType === 7) {
+          resp = 'Highside';
+        } else {
+          resp = 'Closed/Boxed body';
+        }
+      } else if (carrierType === 0) {
+        resp = 'Open';
+      } else if (carrierType === 1) {
+        resp = 'Closed';
+      } else if (carrierType === 3) {
+        resp = 'Refrigerated';
+      } else if (carrierType === 4) {
+        resp = 'Flatbed';
+      } else {
+        resp = 'Any';
+      }
+      return resp;
+    },
   },
 };
 </script>
 
 <style lang="css">
 @import '../../../../../assets/styles/orders_order_placement_options.css';
-.order_final_summary{
-  margin-left: 6%;
-  margin-right: 6%;
-}
-.confirm-label{
-  font-size: 19px;
-  font-weight: 400;
-  color: #1B7FC3;
-  letter-spacing: 0.02em;
-}
-ul.summary_timeline {
-  list-style-type: none;
-  position: relative;
-  margin-left: -7%;
-}
-ul.summary_timeline:before {
-  content: ' ';
-  background: #d4d9df;
-  display: inline-block;
-  position: absolute;
-  left: 29px;
-  width: 2px;
-  height: 82%;
-  z-index: 400;
-}
-ul.summary_timeline > li {
-  margin: 20px 0;
-  padding-left: 20px;
-  height: 35px;
-  margin-bottom: 30px !important;
-}
-ul.summary_timeline > li:before {
-  /* content: ' '; */
-  background: #1B7FC3;
-  display: inline-block;
-  position: absolute;
-  border-radius: 50%;
-  border: 3px solid #1B7FC3;
-  left: 20px;
-  width: 14px;
-  height: 14px;
-  z-index: 400;
-  content: '';
-  font-size: 16px;
-  color: white;
-}
-.order_summary_timeline li:first-child:before {
-    background: #f57f20;
-    border: 4px solid #f57f20;
-    content: '';
-}
-.delivery_label{
-  color: #3D5266;
-  font-weight: 500;
-  font-size: 14px;
-  margin-bottom: 2% !important;
-}
-.delivery_points{
-  margin-top: 0 !important;
-}
 </style>
