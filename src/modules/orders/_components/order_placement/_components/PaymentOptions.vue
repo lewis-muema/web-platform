@@ -599,6 +599,9 @@ export default {
       setSavedCards: '$_orders/$_home/setSavedCards',
       setStripeUserId: '$_orders/$_home/setStripeUserId',
       setReturnStatus: '$_orders/$_home/setReturnStatus',
+      setOrderState: '$_orders/$_home/setOrderState',
+      setExtendOptions: '$_orders/$_home/setExtendOptions',
+      clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
     }),
 
     ...mapActions({
@@ -691,6 +694,9 @@ export default {
       this.isRunning = true;
       this.time = 15;
       clearInterval(this.interval);
+      this.setOrderState(1);
+      this.setExtendOptions(false);
+      this.clearOuterActiveVendorDetails();
       let accData = {};
       const session = this.$store.getters.getSession;
       const acc = session.default;
