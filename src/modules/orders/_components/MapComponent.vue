@@ -136,7 +136,7 @@ export default {
       this.infoWinOpen = false;
     },
     vendors(data) {
-      if (this.$route.name === 'freight_order_placement') {
+      if (this.$route.name === 'freight_order_placement' && data !== undefined) {
         const keys = Object.keys(data);
         keys.forEach((row) => {
           this.setTrackersInfoWindow({
@@ -458,7 +458,7 @@ export default {
     handleLargeVendorsTrackers(data) {
       const riderId = data.rider.rider_id;
       const riderLocationDetails = this.vendors[riderId];
-      if (riderLocationDetails !== undefined) {
+      if (riderLocationDetails !== undefined && riderLocationDetails.time !== undefined) {
         const onlineTime = moment(riderLocationDetails.time);
         const currentTime = moment();
         const riderOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');

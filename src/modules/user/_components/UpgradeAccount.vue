@@ -157,7 +157,7 @@
               Please enter a valid KRA PIN
             </span>
           </div>
-          <div class="">
+          <div class="primary-vehicle-outline">
             <label> Select the primary type of vehicle you will use on Sendy</label>
             <p class="extra-info">
               (This will not restrict you from using other vehicles)
@@ -266,7 +266,7 @@
                   :src="getVendorIcon(code)"
                   alt=""
                 >
-                <span class="user_details">{{ vendorName() }}</span>
+                <span class="user_details primary-vehicle-name">{{ vendorName() }}</span>
               </div>
             </div>
           </div>
@@ -452,7 +452,6 @@ export default {
         app: 'NODE_PRIVATE_API',
         endpoint: 'sign_up_submit',
       };
-
       this.requestUpgradeAccount(fullPayload).then(
         (response) => {
           if (response.length > 0) {
@@ -469,8 +468,27 @@ export default {
               // ...
             }
             if (analyticsEnv === 'production') {
-              mixpanel.track('Upgrade to Business', {
+              const identityEmail = this.radio === '2' ? this.cop_email : session.peer.user_email;
+
+              mixpanel.alias(identityEmail);
+
+              mixpanel.people.set_once({
+                $email: identityEmail,
+                $phone: session.peer.user_phone,
                 'Account Type': 'Business',
+                $name: session.peer.user_name,
+                $created: new Date(),
+                'Client Type': 'Web Platform',
+                'Business Name': this.cop_name,
+              });
+
+              // login identify
+              mixpanel.identify(identityEmail);
+
+              // track New Account
+              mixpanel.track('New Account Created - Upgrade', {
+                'Account Type': 'Business',
+                'Last Login': new Date(),
                 'Client Type': 'Web Platform',
                 'Business Name': this.cop_name,
                 'User Email': this.radio === '2' ? this.cop_email : session.peer.user_email,
@@ -494,11 +512,11 @@ export default {
             this.doNotification(2, 'Upgrade Account Error ', response.message);
           }
         },
-      )
-        .catch((error) => {
+        (error) => {
           const msg = error.response.data.message;
           this.doNotification(2, 'Upgrade Account Error', msg);
-        });
+        },
+      );
     },
     getVendorIcon(id) {
       return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
@@ -706,6 +724,7 @@ export default {
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
   border-radius: 3px;
   width: 31% ;
+  margin-right: 7%;
 }
 .extra-info{
  margin-top: 0;
@@ -747,7 +766,7 @@ export default {
   align-items:center;
 }
 .primary-vehicle-wrapper{
-  width: 31%;
+  width: 50%;
   margin: 0;
 }
 .upgrade-details-header{
@@ -756,5 +775,11 @@ export default {
 .upgrade-submit-wrapper{
   display:flex;
   justify-content: space-between;
+}
+.primary-vehicle-name{
+  margin-top: 8%;
+}
+.primary-vehicle-outline{
+  margin-left: 3%;
 }
 </style>

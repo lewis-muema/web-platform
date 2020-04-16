@@ -47,6 +47,14 @@ button span {
   border: 1px solid #69a6d8;
   border: 1px solid rgba(0,0,0,0.50);
 }
+.inactive-1 {
+  background: #BDBDBD !important;
+  border: 1px solid #BDBDBD !important;
+}
+.inactive-2 {
+  background: #dedbdb !important;
+  border: 1px solid #dedbdb !important;
+}
 .button-primary--naked {
   color: #1782c5;
   background-color: #fff;

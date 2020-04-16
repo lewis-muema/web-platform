@@ -53,13 +53,13 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import timezone from '../../../mixins/timezone';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
 
 library.add(faChevronUp);
 
 export default {
   name: 'OngoingComponent',
-  mixins: [timezone],
+  mixins: [TimezoneMxn],
   data() {
     return {
       loading: true,
@@ -127,9 +127,10 @@ export default {
     },
   },
   mounted() {
-    if (Object.keys(this.$store.getters.getSession).length > 0) {
-      this.$store.dispatch('$_orders/fetchOngoingOrders');
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0 && this.get_orders !== undefined) {
       this.poll();
+      this.$store.dispatch('$_orders/fetchOngoingOrders');
       this.loading = true;
     }
   },
@@ -185,6 +186,7 @@ export default {
           that.loading = false;
         });
       } catch (e) {
+        this.$store.commit('setOngoingOrders', []);
         this.loading = false;
       }
     },

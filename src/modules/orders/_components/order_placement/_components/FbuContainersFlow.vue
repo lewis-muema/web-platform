@@ -825,9 +825,9 @@ export default {
     disabledDueDate(date) {
       return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
     },
-    dispatchScheduleTime() {
+    dispatchScheduleTime() {
       const dateTime = new Date();
-      if (this.schedule_time && dateTime > this.schedule_time) {
+      if (this.schedule_time && dateTime > this.schedule_time) {
         this.schedule_time = new Date();
       }
       this.setScheduleTime(this.schedule_time);
@@ -837,7 +837,7 @@ export default {
     },
     addContainer() {
       this.containers.push({
-        id: this.containers.length + 1,
+        id: this.containers.length,
         container_number: this.cont_no,
         container_destination: this.destination,
         container_size_feet: this.size,
@@ -858,10 +858,6 @@ export default {
     },
     removeContainer(id) {
       this.containers.splice(id, 1);
-      this.containers.forEach((row, i) => {
-        // eslint-disable-next-line no-param-reassign
-        row.id = i + 1;
-      });
     },
     editContainer(id) {
       this.editingStatus = true;
@@ -961,9 +957,9 @@ export default {
         (error) => {
           this.productPhase(2);
           if (Object.prototype.hasOwnProperty.call(error, 'crisis_notification') && error.crisis_notification.msg) {
-            this.doNotification(3, error.reason, error.crisis_notification.msg);
+            this.doNotification(2, `${error.reason}`, error.crisis_notification.msg);
           } else {
-            this.doNotification(3, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
+            this.doNotification(2, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
           }
 
           this.loading = false;
@@ -1095,12 +1091,6 @@ export default {
       if (!acc.hasOwnProperty('country_code')) {
         this.deleteSession();
         this.$router.push({ path: '/auth/sign_in' });
-      } else {
-        this.$apm.setUserContext({
-          id: acc.user_id,
-          username: acc.user_name,
-          email: acc.user_email,
-        });
       }
     },
     initializeOrderFlow() {

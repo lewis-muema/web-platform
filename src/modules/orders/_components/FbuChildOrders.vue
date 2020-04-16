@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    v-if="!loading && get_orders.length > 0"
+    v-if="!loading && get_orders !== undefined && get_orders.length > 0"
     class="ongoing--outer"
   >
     <div
@@ -12,7 +12,7 @@
       <font-awesome-icon
         icon="chevron-up"
         :class="classObject"
-        width="15px"
+        class="icon-width"
       />
     </div>
     <transition name="fade">
@@ -104,13 +104,13 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import timezone from '../../../mixins/timezone';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
 
 library.add(faChevronUp);
 
 export default {
   name: 'OngoingComponent',
-  mixins: [timezone],
+  mixins: [TimezoneMxn],
   data() {
     return {
       loading: true,
@@ -425,5 +425,8 @@ export default {
 .rotate
 {
   transform: rotate(180deg);
+}
+.icon-width {
+  width: 15px !important;
 }
 </style>
