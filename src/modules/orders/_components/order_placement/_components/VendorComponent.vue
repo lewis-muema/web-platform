@@ -585,13 +585,13 @@ import numeral from 'numeral';
 import _ from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PaymentOptions from './PaymentOptions.vue';
-import timezone from '../../../../../mixins/timezone';
+import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 
 export default {
   components: {
     PaymentOptions,
   },
-  mixins: [timezone],
+  mixins: [TimezoneMxn],
   data() {
     return {
       first_time: false,
@@ -884,10 +884,6 @@ export default {
       } catch (er) {
         // ...
       }
-
-      this.setActivePackageClass(this.activeClass);
-      this.setActiveVendorDetails(this.activeVendorPriceData);
-      this.setOuterActiveVendorDetails(this.activeVendorPriceData);
       this.setDefaultCarrierType();
       this.setOrderState(2);
       this.setExtendOptions(true);

@@ -26,7 +26,6 @@
           </router-link>
         </div>
       </div>
-
       <div class="">
         <router-view />
       </div>

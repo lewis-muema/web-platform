@@ -302,7 +302,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
-import TimezoneMxn from '../../../../../mixins/timezone';
+import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
 
 library.add(faChevronDown);
@@ -1271,7 +1271,7 @@ export default {
 
       const oldRb = this.$store.getters.getRunningBalance;
       const runningBalancePayload = {
-        copId,
+        cop_id: copId,
         phone: session[session.default].user_phone,
         default_currency: session[session.default].default_currency,
         rb_currency: session[session.default].default_currency,

@@ -8,7 +8,9 @@
         v-if="phase === 1"
         class="homeview--input-products block"
       >
-        <div class="homeview--input-categories">Goods Type</div>
+        <div class="homeview--input-categories">
+          Goods Type
+        </div>
         <select
           v-model="productCategoryId"
           class="homeview--input-categories"
@@ -18,7 +20,9 @@
             v-for="category in categories"
             :key="category.id"
             :value="category.id"
-          >{{ category.name }}</option>
+          >
+            {{ category.name }}
+          </option>
         </select>
       </div>
       <fbu-containers
@@ -60,7 +64,6 @@ export default {
       loading: false,
       locations: [],
       countdown: '',
-      timerStatus: true,
     };
   },
   computed: {
@@ -176,8 +179,7 @@ export default {
     registerOrderPlacementModule() {
       let moduleIsRegistered = false;
       try {
-        moduleIsRegistered =
-          this.$store._modules.root._children.$_orders._children.$_home !== undefined;
+        moduleIsRegistered = this.$store._modules.root._children.$_orders._children.$_home !== undefined;
       } catch (er) {
         //
       }
@@ -195,12 +197,6 @@ export default {
       const acc = session[session.default];
       if (!acc.hasOwnProperty('country_code')) {
         this.$router.push({ path: '/auth/sign_in' });
-      } else {
-        this.$apm.setUserContext({
-          id: acc.user_id,
-          username: acc.user_name,
-          email: acc.user_email,
-        });
       }
     },
   },

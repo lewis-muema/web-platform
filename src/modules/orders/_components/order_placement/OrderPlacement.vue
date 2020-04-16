@@ -180,7 +180,6 @@ library.add(
 
 export default {
   name: 'OrderPlacement',
-
   components: {
     'no-ssr': NoSSR,
     'vendor-view': VendorComponent,
@@ -298,6 +297,8 @@ export default {
       setOuterPriceRequestObject: '$_orders/setOuterPriceRequestObject',
       setOrderState: '$_orders/$_home/setOrderState',
       setExtendOptions: '$_orders/$_home/setExtendOptions',
+      set_tracking_data: '$_orders/$_tracking/setTrackingData',
+      clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
 
     ...mapActions({
@@ -559,9 +560,13 @@ export default {
     },
 
     doSetDefaultPackageClass() {
-      if (this.get_price_request_object !== undefined && this.get_price_request_object.economy_price_tiers !== undefined) {
+      if (
+        this.get_price_request_object !== undefined
+        && this.get_price_request_object.economy_price_tiers !== undefined
+      ) {
         try {
-          const defaultPackageClass = this.get_price_request_object.economy_price_tiers[0].tier_group;
+          const defaultPackageClass = this.get_price_request_object.economy_price_tiers[0]
+            .tier_group;
           this.set_active_package_class(defaultPackageClass);
         } catch (er) {
           // console.log(er);
@@ -582,7 +587,10 @@ export default {
     setDefaultVendorType(previous) {
       if (this.get_active_vendor_name === '') {
         this.doSetDefaultVendorType();
-      } else {
+      } else if (
+        this.get_price_request_object !== undefined
+        && this.get_price_request_object.economy_price_tiers !== undefined
+      ) {
         const result = this.get_price_request_object.economy_price_tiers.filter(pack => pack.price_tiers.some(vendor => vendor.vendor_name === previous));
 
         if (result.length === 0) {
@@ -711,7 +719,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../../assets/styles/orders_order_placement.css?v=2";
+@import "../../../../assets/styles/orders_order_placement.css?v=3";
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */

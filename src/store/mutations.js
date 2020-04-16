@@ -42,5 +42,4 @@ export default {
   setNPSStatus(state, status) {
     state.nps_status = status;
   },
-
 };
