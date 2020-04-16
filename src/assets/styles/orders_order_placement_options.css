@@ -203,10 +203,12 @@ ul.summary_timeline > li:before {
   justify-content: space-between;
   margin-top: 10%;
   margin: 1em;
+  margin-right: 0;
+  margin-left: 0;
 }
 .count_down_section{
   font-size: 15px;
-  margin-top: 9%;
+  margin-top: 7%;
   margin-bottom: 6%;
 }
 .timeout_text{
@@ -214,4 +216,17 @@ ul.summary_timeline > li:before {
 }
 .timeout_count{
   color: #1B7FC3;
+}
+.summary-pop-up > div.el-dialog__wrapper > div > div.el-dialog__header{
+  padding-top: 0% !important;
+}
+.countdown_divider{
+  border-bottom: 1px solid #74696942;
+  margin-top: 6%;
+}
+.summary-pop-up > div.el-dialog__wrapper > div > div.el-dialog__body{
+  padding-top: 2% !important;
+}
+.summary-pop-up > div.el-dialog__wrapper > div > div.el-dialog__header > button > i{
+  display: none;
 }

@@ -179,7 +179,7 @@
       name="fade"
       mode="out-in"
     >
-      <div class="cancel-pop-up">
+      <div class="summary-pop-up">
         <el-dialog
           :visible.sync="confirmFinal"
           width="30%"
@@ -207,8 +207,17 @@
                     v-for="(val, index) in getHomeLocations"
                     v-if="index > 0"
                   >
-                    <p class="delivery_label">
+                    <p
+                      v-if="index > 1"
+                      class="delivery_label"
+                    >
                       {{ `Destination ${index}` }}
+                    </p>
+                    <p
+                      v-else
+                      class="delivery_label"
+                    >
+                      Destination
                     </p>
                     <p class="delivery_points">
                       {{ val }}
@@ -262,6 +271,8 @@
                 <label class="delivery_label">Notes</label>
                 <p>{{ get_order_notes }}</p>
               </div>
+
+              <div class="countdown_divider" />
 
               <div class="count_down_section">
                 <p class="timeout_text">
