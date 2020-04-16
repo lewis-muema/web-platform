@@ -203,8 +203,8 @@ ul.summary_timeline > li:before {
   justify-content: space-between;
   margin-top: 10%;
   margin: 1em;
-  margin-right: 0;
-  margin-left: 0;
+  margin-right: 0% !important;
+  margin-left: 0% !important;
 }
 .count_down_section{
   font-size: 15px;
