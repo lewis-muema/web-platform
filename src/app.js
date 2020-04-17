@@ -106,7 +106,9 @@ const config = process.env.CONFIGS_ENV.FIREBASE_CONFIG;
 if (process.browser) {
   firebase.initializeApp(config);
 
-  Vue.prototype.$messaging = firebase.messaging();
+  if (firebase.messaging.isSupported()) {
+    Vue.prototype.$messaging = firebase.messaging();
+  }
 }
 
 export function createApp() {
