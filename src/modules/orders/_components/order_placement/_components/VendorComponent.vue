@@ -707,6 +707,9 @@ export default {
       getPairRiderNextStep: '$_orders/$_home/getPairRiderNextStep',
       getOuterActiveVendorDetails: '$_orders/getOuterActiveVendorDetails',
       getOuterActivePackageClass: '$_orders/getOuterActivePackageClass',
+      getOrderNotes: '$_orders/$_home/getOrderNotes',
+      getPairWithRiderStatus: '$_orders/$_home/getPairWithRiderStatus',
+      getVehicleDetails: '$_orders/$_home/getVehicleDetails',
     }),
 
     vehicleDetailsPlaceholder() {
@@ -829,6 +832,7 @@ export default {
       setLoadWeightStatus: '$_orders/$_home/setLoadWeightStatus',
       setLoadWeightValue: '$_orders/$_home/setLoadWeightValue',
       setVendorPrice: '$_orders/$_home/setVendorPrice',
+      setVehicleDetails: '$_orders/$_home/setVehicleDetails',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -1043,6 +1047,7 @@ export default {
       this.setPairWithRiderStatus(true);
       this.setPairSerialNumber(val.sim_card_sn);
       this.setPairRiderPhone(val.rider_phone);
+      this.setVehicleDetails(this.vehicle_plate);
     },
     handlePairRequest(plate) {
       this.visible2 = false;
@@ -1268,6 +1273,9 @@ export default {
       this.load_units = this.getLoadUnits;
       this.additional_loader = this.getAdditionalLoaderStatus;
       this.customer_min_amount = this.getCustomerMinAmount;
+      this.order_notes = this.getOrderNotes;
+      this.pair_rider = this.getPairWithRiderStatus ? '1' : '';
+      this.vehicle_plate = this.getVehicleDetails;
     },
     initiateStoreData() {
       const activeVendorName = this.getOuterActiveVendorDetails;
