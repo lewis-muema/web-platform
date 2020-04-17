@@ -163,46 +163,48 @@ export default {
       }
     },
     initializeFirebase() {
-      this.$messaging
-        .requestPermission()
-        .then(() => firebase.messaging().getToken())
-        .then((token) => {
-          this.fcmToken = token;
-          if (token !== null) {
-            this.$store.commit('setFCMToken', token);
-            // check if session exists and if so update
-            const session = this.getSession;
-            // eslint-disable-next-line no-prototype-builtins
-            if ({}.hasOwnProperty.call(session, 'default')) {
-              this.updateFirebaseToken();
+      if (firebase.messaging.isSupported()) {
+        this.$messaging
+          .requestPermission()
+          .then(() => firebase.messaging().getToken())
+          .then((token) => {
+            this.fcmToken = token;
+            if (token !== null) {
+              this.$store.commit('setFCMToken', token);
+              // check if session exists and if so update
+              const session = this.getSession;
+              // eslint-disable-next-line no-prototype-builtins
+              if ({}.hasOwnProperty.call(session, 'default')) {
+                this.updateFirebaseToken();
+              }
             }
-          }
-        })
-        .catch((err) => {
-          console.log('Unable to get permission to notify.', err);
-          // TOOD: we could update this to force the user to give us notification permissions
+          })
+          .catch((err) => {
+            console.log('Unable to get permission to notify.', err);
+            // TOOD: we could update this to force the user to give us notification permissions
+          });
+
+        this.$messaging.onMessage((payload) => {
+          const notificationData = payload.data;
+
+          this.$store.commit('setFCMData', notificationData);
+          // fire internal notification
+          const level = 1;
+          const notification = {
+            title: payload.notification.title,
+            level,
+            message: payload.notification.body,
+          };
+          this.$store.commit('setNotification', notification);
+          this.$store.commit('setNotificationStatus', true);
+
+          // redirect to tracking page when order no has been provided
+          // TODO : create new logic for internal redirects
+
+          // TODO: fire different events to act on message recieved
+          // proposed central notifications actor class to process different types of notifiacations
         });
-
-      this.$messaging.onMessage((payload) => {
-        const notificationData = payload.data;
-
-        this.$store.commit('setFCMData', notificationData);
-        // fire internal notification
-        const level = 1;
-        const notification = {
-          title: payload.notification.title,
-          level,
-          message: payload.notification.body,
-        };
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true);
-
-        // redirect to tracking page when order no has been provided
-        // TODO : create new logic for internal redirects
-
-        // TODO: fire different events to act on message recieved
-        // proposed central notifications actor class to process different types of notifiacations
-      });
+      }
     },
     showNotification() {
       const notification = this.$store.getters.getNotification;
