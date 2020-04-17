@@ -324,7 +324,7 @@
                   format="dd-MM-yyyy h:mm a"
                   placeholder="As soon as possible"
                   prefix-icon="el-icon-date"
-                  :default-time="moment().format('HH:mm:ss')"
+                  :default-time="default_value"
                   :picker-options="dueDatePickerOptions"
                   @change="dispatchScheduleTime"
                 />
@@ -653,6 +653,7 @@ export default {
         },
       ],
       schedule_time: '',
+      default_value: this.moment().format('HH:mm:ss'),
       order_notes: '',
       small_vendors: [1, 22, 21, 23],
       medium_vendors: [2, 3],
@@ -712,6 +713,7 @@ export default {
       getPairWithRiderStatus: '$_orders/$_home/getPairWithRiderStatus',
       getVehicleDetails: '$_orders/$_home/getVehicleDetails',
       getCarrierType: '$_orders/$_home/getCarrierType',
+      getScheduleTime: '$_orders/$_home/getScheduleTime',
     }),
 
     vehicleDetailsPlaceholder() {
@@ -857,6 +859,7 @@ export default {
         this.schedule_time = new Date();
       }
       this.setScheduleTime(this.schedule_time);
+      this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
     },
     dispatchOrderNotes() {
       this.trackMixpanelEvent('Set Order Notes', { 'Order Notes': this.order_notes });
@@ -1342,7 +1345,6 @@ export default {
       return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
     },
     handleScheduledTime() {
-      this.schedule_time = '';
       if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'current_time')) {
         const dateTime = this.activeVendorPriceData.current_time;
         const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
@@ -1375,8 +1377,6 @@ export default {
             this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
               'YYYY-MM-DD HH:mm:ss Z',
             );
-          } else {
-            this.schedule_time = '';
           }
           this.dispatchScheduleTime();
         }
