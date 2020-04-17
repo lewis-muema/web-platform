@@ -1626,10 +1626,18 @@ export default {
         } else {
           resp = 'Closed/Boxed body';
         }
+      } else if (this.mediumVendors.includes(this.activeVendorPriceData.vendor_id)) {
+        if (carrierType === 0) {
+          resp = 'Open';
+        } else if (carrierType === 1) {
+          resp = 'Closed';
+        } else {
+          resp = 'Any';
+        }
       } else if (carrierType === 0) {
-        resp = 'Open';
+        resp = 'Bike without box';
       } else if (carrierType === 1) {
-        resp = 'Closed';
+        resp = 'Bike with box';
       } else if (carrierType === 3) {
         resp = 'Refrigerated';
       } else if (carrierType === 4) {

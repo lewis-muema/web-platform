@@ -686,6 +686,7 @@ export default {
       activeClass: 'small',
       recipientName: '',
       recipientPhone: '',
+      vendor_id: 0,
     };
   },
   computed: {
@@ -710,6 +711,7 @@ export default {
       getOrderNotes: '$_orders/$_home/getOrderNotes',
       getPairWithRiderStatus: '$_orders/$_home/getPairWithRiderStatus',
       getVehicleDetails: '$_orders/$_home/getVehicleDetails',
+      getCarrierType: '$_orders/$_home/getCarrierType',
     }),
 
     vehicleDetailsPlaceholder() {
@@ -924,16 +926,22 @@ export default {
         }
       }
 
-      if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
-        this.carrier_type = '1';
-      } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
-        this.carrier_type = '2';
-      } else if (copStatus) {
-        this.carrier_type = session[session.default].default_carrier_type.toString(10);
+
+      if (this.vendor_id !== this.activeVendorPriceData.vendor_id) {
+        if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+          this.carrier_type = '1';
+        } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+          this.carrier_type = '2';
+        } else if (copStatus) {
+          this.carrier_type = session[session.default].default_carrier_type.toString(10);
+        } else {
+          this.carrier_type = '2';
+        }
       } else {
-        this.carrier_type = '2';
+        this.carrier_type = this.getCarrierType;
       }
-      this.setCarrierType(this.carrier_type);
+
+      this.vendor_id = this.activeVendorPriceData.vendor_id;
     },
     goBackToHome() {
       this.schedule_time = '';
