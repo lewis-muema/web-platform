@@ -109,18 +109,142 @@
       <map-component />
       <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
       <ongoing-component v-if="this.$route.name !== 'freight_order_tracking' && this.$route.name !== 'freight_order_placement'" />
+      <NPSFooter v-if="!nps_status" />
       <transition
         name="fade"
         mode="out-in"
       >
         <router-view />
       </transition>
+      <transition
+        name="fade"
+        mode="out-in"
+      >
+        <div class="cancel-pop-up">
+          <el-dialog
+            :visible.sync="updateCrmData"
+            width="30%"
+            class="updateCrmDialog"
+            :before-close="handleClose"
+            :modal-append-to-body="false"
+          >
+            <div class="finish-setup-outer">
+              <p class="crm-setup">
+                Finish account set up
+              </p>
+              <div class="">
+                <div class="">
+                  <label class="final-label">Does your business file VAT returns? (optional)</label>
+                  <div
+                    class="final-upper-padding"
+                  >
+                    <el-select
+                      v-model="tax_compliance"
+                      placeholder="Select"
+                      class="compliance-select-final"
+                    >
+                      <el-option
+                        v-for="item in taxOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                </div>
+
+                <div
+                  v-if="tax_compliance"
+                  class="final-upper-padding"
+                >
+                  <label class="final-label">Enter your business KRA pin</label>
+                  <div
+                    class="final-upper-padding"
+                  >
+                    <input
+                      v-model="kra_pin"
+                      class="input-control upgrade-final"
+                      type="text"
+                      name="kra_pin"
+                      placeholder="KRA PIN"
+                      autocomplete="on"
+                    >
+                    <span
+                      v-show="!valid_kra_pin"
+                      class="invalid-kra"
+                    >
+                      Please enter a valid KRA PIN
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class="final-upper-padding"
+                >
+                  <label class="final-label">
+                    Select the primary vehicle you will be using for your business.
+                  </label>
+                  <p class="final-inner">
+                    (This will not restrict you from using other vehicles)
+                  </p>
+                  <div
+                    class="final-upper-padding"
+                  >
+                    <div class="vendors-final-outerline">
+                      <div
+                        class="vendor-final-cards"
+                        :class="{ vendor_active_final: activeTab === 'mbu' }"
+                        @click="selectCard('mbu',1)"
+                      >
+                        <img
+                          class="vendor-types-final"
+                          :src="getVendorIcon(1)"
+                          alt=""
+                        >
+                      </div>
+                      <div
+                        class="vendor-final-cards"
+                        :class="{ vendor_active_final: activeTab === 'ebu' }"
+                        @click="selectCard('ebu',2)"
+                      >
+                        <img
+                          class="vendor-types-final"
+                          :src="getVendorIcon(6)"
+                          alt=""
+                        >
+                      </div>
+                      <div
+                        class="vendor-final-cards"
+                        :class="{ vendor_active_final: activeTab === 'fbu' }"
+                        @click="selectCard('fbu',3)"
+                      >
+                        <img
+                          class="vendor-types-final"
+                          :src="getVendorIcon(25)"
+                          alt=""
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="">
+                  <input
+                    class="button-primary final-step-submit"
+                    type="submit"
+                    value="Submit"
+                    @click="submit"
+                  >
+                </div>
+              </div>
+            </div>
+          </el-dialog>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 import S3 from 'aws-s3';
 import orderStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
@@ -128,13 +252,17 @@ import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
 import OngoingComponent from './_components/OngoingComponent.vue';
 import FbuChildOrders from './_components/FbuChildOrders.vue';
+import NPSFooter from '../../components/footers/NPSFooter.vue';
+import NpsMixin from '../../mixins/nps_mixin';
+import SessionMxn from '../../mixins/session_mixin';
+
 
 export default {
   name: 'Orders',
   components: {
-    MainHeader, MapComponent, OngoingComponent, FbuChildOrders,
+    MainHeader, MapComponent, OngoingComponent, FbuChildOrders, NPSFooter,
   },
-  mixins: [RegisterStoreModule],
+  mixins: [RegisterStoreModule, NpsMixin, SessionMxn],
   data() {
     return {
       icon_class: '',
@@ -151,14 +279,40 @@ export default {
       hours: '00',
       minutes: '00',
       seconds: '00',
+      updateCrmData: false,
+      tax_compliance: '',
+      kra_pin: '',
+      activeTab: '',
+      primary_business_unit: '',
+      taxOptions: [
+        {
+          value: true,
+          label: 'Yes',
+        },
+        {
+          value: false,
+          label: 'No',
+        },
+      ],
     };
   },
   computed: {
+    ...mapGetters({
+      getNPSStatus: 'getNPSStatus',
+    }),
     uploadBtn() {
       if (this.uploadButton) {
         return 'button-primary';
       }
       return 'button--primary-inactive inactive-1';
+    },
+    valid_kra_pin() {
+      const pin = this.kra_pin;
+
+      if (pin !== '') {
+        return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+      }
+      return true;
     },
   },
   watch: {
@@ -178,6 +332,8 @@ export default {
   mounted() {
     this.checkSession();
     this.rootListener();
+    this.isNewCopAcc();
+    this.sessionFrefill();
   },
   destroyed() {
     clearInterval(this.countdown);
@@ -187,11 +343,44 @@ export default {
     }
   },
   methods: {
-    ...mapGetters({
-    }),
     ...mapMutations({
       clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
+    isNewCopAcc() {
+      let isSet = false;
+      const session = this.$store.getters.getSession;
+      if (Object.keys(session).length > 0) {
+        if (session.default === 'biz') {
+          // Admin
+
+          if (session[session.default].user_type === 2) {
+            if (session[session.default].primary_business_unit === 0
+              || session[session.default].primary_business_unit === null) {
+              isSet = true;
+            }
+          }
+        }
+      }
+      this.updateCrmData = isSet;
+    },
+    sessionFrefill() {
+      const session = this.$store.getters.getSession;
+      if (Object.keys(session).length > 0) {
+        if (session.default === 'biz'
+        && Object.prototype.hasOwnProperty.call(session[session.default], 'tax_authority_pin')) {
+          if (session[session.default].tax_authority_pin === null) {
+            this.tax_compliance = '';
+            this.kra_pin = '';
+          } else if (session[session.default].tax_authority_pin !== '') {
+            this.tax_compliance = true;
+            this.kra_pin = session[session.default].tax_authority_pin;
+          } else {
+            this.tax_compliance = false;
+            this.kra_pin = '';
+          }
+        }
+      }
+    },
     rootListener() {
       this.$root.$on('Upload status', (arg1) => {
         this.blinder_status = arg1;
@@ -285,12 +474,82 @@ export default {
     closePopup() {
       this.blinder_status = false;
     },
+    handleClose() {
+      // Do nothing ...
+    },
+    selectCard(tab, code) {
+      this.activeTab = tab;
+      this.primary_business_unit = code;
+    },
+    getVendorIcon(id) {
+      return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
+    },
+    submit() {
+      if (this.primary_business_unit === '') {
+        this.doNotification(2, 'Final set up error !', 'Please select primary type vehicle');
+      } else if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
+        this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
+      } else {
+        const session = this.$store.getters.getSession;
+        const values = {
+          cop_id: session[session.default].cop_id,
+          cop_name: session[session.default].cop_name,
+          cop_contact_person: session[session.default].cop_contact_person,
+          cop_email: session[session.default].cop_biz_email,
+          cop_phone: session[session.default].cop_biz_phone,
+          tax_authority_pin: this.kra_pin,
+          primary_business_unit: this.primary_business_unit,
+        };
+
+        this.$store
+          .dispatch('$_orders/requestCopInfo', values)
+          .then((response) => {
+            if (response.status) {
+              const updatedSession = session;
+              updatedSession[session.default].primary_business_unit = this.primary_business_unit;
+              updatedSession[session.default].tax_authority_pin = this.kra_pin;
+
+
+              const newSession = JSON.stringify(updatedSession);
+              this.setSession(newSession);
+
+              const level = 1; // success
+              const notification = {
+                title: 'Final set up complete!',
+                level,
+                message: 'Details saved successfully',
+              };
+              this.isNewCopAcc();
+
+              this.$store.commit('setNotification', notification);
+              this.$store.commit('setNotificationStatus', true);
+            } else {
+              const level = 3;
+              this.message = 'Something went wrong.';
+              const notification = {
+                title: '',
+                level,
+                message: this.message,
+              };
+
+              this.$store.commit('setNotification', notification);
+              this.$store.commit('setNotificationStatus', true);
+            }
+          },
+          (error) => {
+            const level = 3;
+            const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+            this.$store.commit('setNotification', notification);
+            this.$store.commit('setNotificationStatus', true);
+          });
+      }
+    },
   },
 };
 </script>
 
 <style lang="css">
-@import '../../assets/styles/section_headers.css?v=1';
+@import '../../assets/styles/section_headers.css';
 
 .module-container {
   margin: 8px;
@@ -383,5 +642,94 @@ export default {
   font-size: 25px;
   font-weight: 500;
   text-shadow: 0px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.cancel-pop-up > div > div > div.el-dialog__header > button{
+  display: none ;
+}
+.updateCrmDialog{
+
+}
+.cancel-pop-up > div > div > div.el-dialog__body{
+  padding-top: 0 !important;
+}
+.crm-setup{
+  font-size: 19px;
+  color: #000000;
+  font-weight: 400;
+}
+cancel-pop-up > div > div > div.el-dialog__header{
+  padding-top: 0 !important;
+}
+.compliance-select-final{
+  width: 100% !important;
+}
+.upgrade-final{
+  width: 100% !important;
+  margin-bottom: 2%;
+}
+.vendors-final-outerline{
+  display: flex;
+  justify-content: space-between;
+  width: 89% ;
+  margin-left: 2%;
+  margin-top: 2%;
+}
+.vendor-final-cards{
+  border: 1.0945px solid #D8D8D8;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+  width: 31% ;
+  margin-right: 7%;
+}
+.vendor-types-final {
+  height: 43px;
+  min-width: 63px;
+  padding: 20%;
+  cursor: pointer;
+}
+.vendor_active_final{
+  background: #EDF8FF;
+  border: 2px solid #1B7FC3;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
+  animation: flip-scale-down-diag-2 0.5s linear ;
+}
+@keyframes flip-scale-down-diag-2 {
+  0% {
+    transform: scale(1) rotate3d(-1, 1, 0, 0deg);
+  }
+  50% {
+    transform: scale(0.4) rotate3d(-1, 1, 0, -90deg);
+  }
+  100% {
+    transform: scale(1) rotate3d(-1, 1, 0, -180deg);
+  }
+}
+.final-step-submit{
+  margin-top: 6% !important;
+  width: 100% !important;
+}
+.final-label{
+ margin-bottom: 2%;
+ font-size: 14px;
+ font-weight: 200;
+ color: #000;
+}
+.final-inner{
+ font-size: 12px;
+ color: #8F8F8F;
+ margin-bottom: 0;
+}
+.invalid-kra {
+  display: block;
+  color: #f57f20;
+  font-size: 14px;
+}
+.final-upper-padding{
+  padding-top: 2%;
+}
+.finish-setup-outer{
+  margin-left: 6%;
+  margin-right: 6%;
 }
 </style>

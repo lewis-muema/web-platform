@@ -17,20 +17,22 @@
           </router-link>
         </div>
       </div>
-
       <div class="">
         <router-view />
       </div>
     </div>
+    <NPSFooter v-if="!nps_status" />
   </div>
 </template>
 
 <script>
-// import MainHeader from '../../../components/headers/MainHeader.vue'
+import NPSFooter from '../../../components/footers/NPSFooter.vue';
+import NpsMixin from '../../../mixins/nps_mixin';
 
 export default {
   name: 'Profile',
-  // components : {MainHeader},
+  components: { NPSFooter },
+  mixins: [NpsMixin],
 };
 </script>
 

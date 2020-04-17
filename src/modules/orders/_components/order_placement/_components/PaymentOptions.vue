@@ -186,6 +186,7 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
+import EventsMixin from '../../../../../mixins/events_mixin';
 
 library.add(faChevronDown);
 
@@ -195,7 +196,7 @@ const TRUCK_VENDORS = [20, 25];
 export default {
   name: 'OrderOptions',
   components: {},
-  mixins: [Mcrypt, PaymentMxn, TimezoneMxn],
+  mixins: [Mcrypt, PaymentMxn, TimezoneMxn, EventsMixin],
   data() {
     return {
       schedule_time: this.moment(),
@@ -531,23 +532,12 @@ export default {
     },
 
     preCheckPaymentDetails() {
-      let analyticsEnv = '';
-      try {
-        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {
-        // ...
-      }
-      try {
-        if (analyticsEnv === 'production') {
-          window.ga('send', 'event', {
-            eventCategory: 'Order Placement',
-            eventAction: 'Click',
-            eventLabel: 'Order Confirmation Button - Order Placement Page - Web App',
-          });
-        }
-      } catch (er) {
-        // ...
-      }
+      const eventPayload = {
+        eventCategory: 'Order Placement',
+        eventAction: 'Click',
+        eventLabel: 'Order Confirmation Button - Order Placement Page - Web App',
+      };
+      this.fireGAEvent(eventPayload);
 
       if (this.isValidateLoadWeightStatus() && this.isValidateScheduleTime()) {
         this.loading = true;
@@ -680,23 +670,13 @@ export default {
             }
             /* eslint camelcase: ["error", {ignoreDestructuring: true}] */
             if (response.status) {
-              let analyticsEnv = '';
-              try {
-                analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-              } catch (er) {
-                // ...
-              }
-              try {
-                if (analyticsEnv === 'production') {
-                  window.ga('send', 'event', {
-                    eventCategory: 'Order Placement',
-                    eventAction: 'Order Confirmation',
-                    eventLabel: 'Order Confirmed - Order Placement - Web App',
-                  });
-                }
-              } catch (er) {
-                // ...
-              }
+              const eventPayload = {
+                eventCategory: 'Order Placement',
+                eventAction: 'Order Confirmation',
+                eventLabel: 'Order Confirmed - Order Placement - Web App',
+              };
+              this.fireGAEvent(eventPayload);
+
               let order_no;
               this.setPickupFilled(false);
               // eslint-disable-next-line camelcase
