@@ -713,7 +713,6 @@ export default {
       getPairWithRiderStatus: '$_orders/$_home/getPairWithRiderStatus',
       getVehicleDetails: '$_orders/$_home/getVehicleDetails',
       getCarrierType: '$_orders/$_home/getCarrierType',
-      getScheduleTime: '$_orders/$_home/getScheduleTime',
     }),
 
     vehicleDetailsPlaceholder() {
