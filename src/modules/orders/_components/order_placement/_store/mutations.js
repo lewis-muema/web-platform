@@ -197,4 +197,8 @@ export default {
   setProductPhase(state, val) {
     state.product_phase = val;
   },
+  setVehicleDetails(state, val) {
+    state.vehicle_plate = val;
+  },
+
 };
