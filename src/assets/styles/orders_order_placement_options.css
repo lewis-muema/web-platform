@@ -230,3 +230,8 @@ ul.summary_timeline > li:before {
 .summary-pop-up > div.el-dialog__wrapper > div > div.el-dialog__header > button > i{
   display: none;
 }
+.summary-pop-up > div.v-modal{
+  opacity: .5 !important;
+  background: #000 !important;
+  z-index: 2000 !important;
+}
