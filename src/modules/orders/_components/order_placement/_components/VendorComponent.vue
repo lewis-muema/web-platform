@@ -324,7 +324,7 @@
                   format="dd-MM-yyyy h:mm a"
                   placeholder="As soon as possible"
                   prefix-icon="el-icon-date"
-                  :default-time="moment().format('HH:mm:ss')"
+                  :default-time="default_value"
                   :picker-options="dueDatePickerOptions"
                   @change="dispatchScheduleTime"
                 />
@@ -653,6 +653,7 @@ export default {
         },
       ],
       schedule_time: '',
+      default_value: this.moment().format('HH:mm:ss'),
       order_notes: '',
       small_vendors: [1, 22, 21, 23],
       medium_vendors: [2, 3],
@@ -686,6 +687,7 @@ export default {
       activeClass: 'small',
       recipientName: '',
       recipientPhone: '',
+      vendor_id: 0,
     };
   },
   computed: {
@@ -707,6 +709,11 @@ export default {
       getPairRiderNextStep: '$_orders/$_home/getPairRiderNextStep',
       getOuterActiveVendorDetails: '$_orders/getOuterActiveVendorDetails',
       getOuterActivePackageClass: '$_orders/getOuterActivePackageClass',
+      getOrderNotes: '$_orders/$_home/getOrderNotes',
+      getPairWithRiderStatus: '$_orders/$_home/getPairWithRiderStatus',
+      getVehicleDetails: '$_orders/$_home/getVehicleDetails',
+      getCarrierType: '$_orders/$_home/getCarrierType',
+
     }),
 
     vehicleDetailsPlaceholder() {
@@ -829,6 +836,7 @@ export default {
       setLoadWeightStatus: '$_orders/$_home/setLoadWeightStatus',
       setLoadWeightValue: '$_orders/$_home/setLoadWeightValue',
       setVendorPrice: '$_orders/$_home/setVendorPrice',
+      setVehicleDetails: '$_orders/$_home/setVehicleDetails',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -850,6 +858,7 @@ export default {
         this.schedule_time = new Date();
       }
       this.setScheduleTime(this.schedule_time);
+      this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
     },
     dispatchOrderNotes() {
       this.setOrderNotes(this.order_notes);
@@ -918,15 +927,21 @@ export default {
         }
       }
 
-      if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
-        this.carrier_type = '1';
-      } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
-        this.carrier_type = '2';
-      } else if (copStatus) {
-        this.carrier_type = session[session.default].default_carrier_type.toString(10);
+      if (this.vendor_id !== this.activeVendorPriceData.vendor_id) {
+        if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+          this.carrier_type = '1';
+        } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+          this.carrier_type = '2';
+        } else if (copStatus) {
+          this.carrier_type = session[session.default].default_carrier_type.toString(10);
+        } else {
+          this.carrier_type = '2';
+        }
       } else {
-        this.carrier_type = '2';
+        this.carrier_type = this.getCarrierType;
       }
+
+      this.vendor_id = this.activeVendorPriceData.vendor_id;
     },
     goBackToHome() {
       this.schedule_time = '';
@@ -1037,6 +1052,7 @@ export default {
       this.setPairWithRiderStatus(true);
       this.setPairSerialNumber(val.sim_card_sn);
       this.setPairRiderPhone(val.rider_phone);
+      this.setVehicleDetails(this.vehicle_plate);
     },
     handlePairRequest(plate) {
       this.visible2 = false;
@@ -1261,6 +1277,9 @@ export default {
       this.load_units = this.getLoadUnits;
       this.additional_loader = this.getAdditionalLoaderStatus;
       this.customer_min_amount = this.getCustomerMinAmount;
+      this.order_notes = this.getOrderNotes;
+      this.pair_rider = this.getPairWithRiderStatus ? '1' : '';
+      this.vehicle_plate = this.getVehicleDetails;
     },
     initiateStoreData() {
       const activeVendorName = this.getOuterActiveVendorDetails;
@@ -1319,7 +1338,6 @@ export default {
       return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
     },
     handleScheduledTime() {
-      this.schedule_time = '';
       if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'current_time')) {
         const dateTime = this.activeVendorPriceData.current_time;
         const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
@@ -1352,8 +1370,6 @@ export default {
             this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
               'YYYY-MM-DD HH:mm:ss Z',
             );
-          } else {
-            this.schedule_time = '';
           }
           this.dispatchScheduleTime();
         }

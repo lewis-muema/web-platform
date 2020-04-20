@@ -36,4 +36,5 @@ export default {
   getProductCategories: state => state.product_categories,
   getProductPhase: state => state.product_phase,
   getProductId: state => state.product_id,
+  getVehicleDetails: state => state.vehicle_plate,
 };
