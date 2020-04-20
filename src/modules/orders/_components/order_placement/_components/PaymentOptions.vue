@@ -365,6 +365,7 @@ export default {
       time: 15,
       isRunning: false,
       interval: null,
+
     };
   },
 
@@ -602,6 +603,7 @@ export default {
       setOrderState: '$_orders/$_home/setOrderState',
       setExtendOptions: '$_orders/$_home/setExtendOptions',
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
+
     }),
 
     ...mapActions({
@@ -669,6 +671,7 @@ export default {
 
       return true;
     },
+
     displayOrderHistory() {
       if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
         this.preCheckPaymentDetails();
@@ -753,6 +756,7 @@ export default {
         });
       }
     },
+
 
     preCheckPaymentDetails() {
       const eventPayload = {
@@ -1650,6 +1654,7 @@ export default {
       }
       return resp;
     },
+
   },
 };
 </script>

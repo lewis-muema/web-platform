@@ -713,6 +713,7 @@ export default {
       getPairWithRiderStatus: '$_orders/$_home/getPairWithRiderStatus',
       getVehicleDetails: '$_orders/$_home/getVehicleDetails',
       getCarrierType: '$_orders/$_home/getCarrierType',
+
     }),
 
     vehicleDetailsPlaceholder() {
@@ -927,7 +928,6 @@ export default {
           copStatus = true;
         }
       }
-
 
       if (this.vendor_id !== this.activeVendorPriceData.vendor_id) {
         if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
