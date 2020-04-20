@@ -1255,7 +1255,7 @@ export default {
       let payment = [];
       payment = data.payment_methods;
 
-      const exist = data.payment_methods.find(available => available.name === 'Cash');
+      const exist = data.payment_methods.find(available => available.payment_method_id === 5);
 
       if (exist === undefined || exist === null) {
         payment = data.payment_methods;
