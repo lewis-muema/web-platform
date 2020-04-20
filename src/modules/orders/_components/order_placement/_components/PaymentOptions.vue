@@ -1264,7 +1264,7 @@ export default {
         if (runningBalance >= 0 && runningBalance - this.order_cost < 0) {
           payment = data.payment_methods;
         } else {
-          const cashIndex = data.payment_methods.findIndex(index => index.name === 'Cash');
+          const cashIndex = data.payment_methods.findIndex(index => index.payment_method_id === 5);
           payment = data.payment_methods.splice(cashIndex, 1);
         }
       }
