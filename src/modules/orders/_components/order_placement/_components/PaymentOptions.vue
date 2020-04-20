@@ -249,7 +249,7 @@
               </div>
 
               <div class="order_summary--outline">
-                <label class="delivery_label">Your order pick up time</label>
+                <label class="delivery_label">The pickup time of your order</label>
                 <div class="order_summary-types-item order_summary--vendor-wrapper">
                   <div class="order_summary__img">
                     <i
