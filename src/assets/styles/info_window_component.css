@@ -377,9 +377,6 @@ ul.timeline > li#timeline_right.payedReached:before {
   margin-top: 25vh !important;
   width: 30%;
 }
-.v-modal {
-  opacity: 0 !important;
-}
 .infobar-truck-pstn {
   margin-left: 0px !important;
   margin-right: 0px !important;
