@@ -200,5 +200,4 @@ export default {
   setVehicleDetails(state, val) {
     state.vehicle_plate = val;
   },
-
 };
