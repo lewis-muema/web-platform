@@ -43,6 +43,7 @@ export default {
       product_categories: [],
       product_phase: 1,
       product_id: 1,
+      vehicle_plate: '',
     };
   },
   actions,

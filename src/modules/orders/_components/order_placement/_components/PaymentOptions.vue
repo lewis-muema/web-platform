@@ -156,7 +156,7 @@
           type="button"
           class="button-primary home-view--place-order"
           name="button"
-          @click="preCheckPaymentDetails()"
+          @click="displayOrderHistory()"
         >
           {{ place_order_text }}
         </button>
@@ -175,6 +175,134 @@
         </button>
       </div>
     </div>
+    <transition
+      name="fade"
+      mode="out-in"
+    >
+      <div class="summary-pop-up">
+        <el-dialog
+          :visible.sync="confirmFinal"
+          width="30%"
+          class=""
+          :before-close="handleClose"
+          :modal-append-to-body="false"
+        >
+          <div class="order_final_summary">
+            <p class="confirm-label">
+              Confirm your order details
+            </p>
+            <div class="">
+              <div class="">
+                <ul class="summary_timeline order_summary_timeline">
+                  <li>
+                    <p class="delivery_label">
+                      Pickup Location
+                    </p>
+                    <p class="delivery_points">
+                      {{ getHomeLocations[0] }}
+                    </p>
+                  </li>
+
+                  <li
+                    v-for="(val, index) in getHomeLocations"
+                    v-if="index > 0"
+                  >
+                    <p
+                      v-if="index > 1"
+                      class="delivery_label"
+                    >
+                      {{ `Destination ${index}` }}
+                    </p>
+                    <p
+                      v-else
+                      class="delivery_label"
+                    >
+                      Destination
+                    </p>
+                    <p class="delivery_points">
+                      {{ val }}
+                    </p>
+                  </li>
+                </ul>
+              </div>
+              <label class="delivery_label">Type of order</label>
+              <div class="order_summary-types-item order_summary--vendor-wrapper">
+                <div class="order_summary__img">
+                  <img
+                    class="order_summary-item__image"
+                    :src="getVendorIcon(activeVendorPriceData.vendor_id)"
+                    alt=""
+                  >
+                </div>
+                <div class="order_summary-wrapper__vendor">
+                  <div class="order_summary--vendor-formal-name">
+                    {{ activeVendorPriceData.vendor_name }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="order_summary--outline">
+                <label class="delivery_label">
+                  Type of {{ activeVendorPriceData.vendor_name.toLowerCase() }}
+                </label>
+                <p>{{ carrierTypeSummary() }}</p>
+              </div>
+
+              <div class="order_summary--outline">
+                <label class="delivery_label">The pickup time of your order</label>
+                <div class="order_summary-types-item order_summary--vendor-wrapper">
+                  <div class="order_summary__img">
+                    <i
+                      class="el-icon-date order_summary-item__image calender--icon"
+                    />
+                  </div>
+                  <div class="order_summary-wrapper__vendor">
+                    <div class="order_summary--vendor-formal-name">
+                      {{ scheduleTimeSummary() }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                v-if="get_order_notes.length > 0"
+                class="order_summary--outline"
+              >
+                <label class="delivery_label">Notes</label>
+                <p>{{ get_order_notes }}</p>
+              </div>
+
+              <div class="countdown_divider" />
+
+              <div class="count_down_section">
+                <p class="timeout_text">
+                  Order will be placed in
+                  <a class="timeout_count">{{ time }} seconds</a>
+                </p>
+              </div>
+
+              <div
+                class="summary-button-outer"
+              >
+                <input
+                  class="button-primary btn-edit-order"
+                  type="submit"
+                  value="EDIT ORDER"
+                  @click="editOrder"
+                >
+
+                <input
+                  class="button-primary btn-submit-order "
+                  type="submit"
+                  value="CONFIRM ORDER"
+                  @click="confirmOrder"
+                >
+              </div>
+            </div>
+          </div>
+        </el-dialog>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -230,6 +358,14 @@ export default {
       mpesa_valid: false,
       mpesa_payment: false,
       mpesa_payment_state: false,
+      confirmFinal: false,
+      smallVendors: [1, 22, 21, 23],
+      mediumVendors: [2, 3],
+      largeVendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
+      time: 15,
+      isRunning: false,
+      interval: null,
+
     };
   },
 
@@ -264,6 +400,7 @@ export default {
       getTestSpecs: '$_orders/$_home/getTestSpecs',
       getLoadWeightStatus: '$_orders/$_home/getLoadWeightStatus',
       getLoadWeightValue: '$_orders/$_home/getLoadWeightValue',
+      getHomeLocations: '$_orders/getHomeLocations',
     }),
 
     active_price_tier_data() {
@@ -463,6 +600,10 @@ export default {
       setSavedCards: '$_orders/$_home/setSavedCards',
       setStripeUserId: '$_orders/$_home/setStripeUserId',
       setReturnStatus: '$_orders/$_home/setReturnStatus',
+      setOrderState: '$_orders/$_home/setOrderState',
+      setExtendOptions: '$_orders/$_home/setExtendOptions',
+      clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
+
     }),
 
     ...mapActions({
@@ -530,6 +671,92 @@ export default {
 
       return true;
     },
+
+    displayOrderHistory() {
+      if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+        this.preCheckPaymentDetails();
+      } else {
+        this.confirmFinal = true;
+        this.isRunning = false;
+        this.toggleTimer();
+        let accData = {};
+        const session = this.$store.getters.getSession;
+        const acc = session.default;
+        accData = session[session.default];
+        this.trackMixpanelEvent('Order Summary View', {
+          'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+          'Client Type': 'Web Platform',
+          'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+          'User Email': accData.user_email,
+          'User Phone': accData.user_phone,
+        });
+      }
+    },
+    editOrder() {
+      this.confirmFinal = false;
+      this.isRunning = true;
+      this.time = 15;
+      clearInterval(this.interval);
+      this.setOrderState(1);
+      this.setExtendOptions(false);
+      this.clearOuterActiveVendorDetails();
+      let accData = {};
+      const session = this.$store.getters.getSession;
+      const acc = session.default;
+      accData = session[session.default];
+      this.trackMixpanelEvent('Order Summary Edit Button - Clicked', {
+        'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+        'User Email': accData.user_email,
+        'User Phone': accData.user_phone,
+      });
+    },
+    confirmOrder() {
+      this.confirmFinal = false;
+      this.preCheckPaymentDetails();
+      let accData = {};
+      const session = this.$store.getters.getSession;
+      const acc = session.default;
+      accData = session[session.default];
+      this.trackMixpanelEvent('Order Summary Confirm Button - Clicked', {
+        'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+        'User Email': accData.user_email,
+        'User Phone': accData.user_phone,
+      });
+    },
+    toggleTimer() {
+      if (this.isRunning) {
+        clearInterval(this.interval);
+      } else {
+        this.interval = setInterval(this.incrementTime, 1000);
+      }
+      this.isRunning = !this.isRunning;
+    },
+    incrementTime() {
+      this.time = parseInt(this.time, 10) - 1;
+      if (this.time <= 1) {
+        this.preCheckPaymentDetails();
+        this.confirmFinal = false;
+        this.isRunning = true;
+        clearInterval(this.interval);
+        this.time = 15;
+        let accData = {};
+        const session = this.$store.getters.getSession;
+        const acc = session.default;
+        accData = session[session.default];
+        this.trackMixpanelEvent('Order Summary View Timeout', {
+          'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+          'Client Type': 'Web Platform',
+          'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+          'User Email': accData.user_email,
+          'User Phone': accData.user_phone,
+        });
+      }
+    },
+
 
     preCheckPaymentDetails() {
       const eventPayload = {
@@ -1375,6 +1602,58 @@ export default {
         location.reload();
       }, 4000);
     },
+    handleClose() {
+      // Do nothing ...
+    },
+    getVendorIcon(id) {
+      return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
+    },
+    scheduleTimeSummary() {
+      let resp = 'As soon as possible';
+      if (this.order_is_scheduled) {
+        resp = this.scheduled_time;
+      }
+      return resp;
+    },
+    carrierTypeSummary() {
+      const carrierType = this.final_carrier_type;
+      let resp = 'Any';
+      if (this.largeVendors.includes(this.activeVendorPriceData.vendor_id)) {
+        if (carrierType === 3) {
+          resp = 'Refrigerated';
+        } else if (carrierType === 4) {
+          resp = 'Flatbed/Skeleton';
+        } else if (carrierType === 5) {
+          resp = 'Tipper';
+        } else if (carrierType === 6) {
+          resp = 'Refeer';
+        } else if (carrierType === 7) {
+          resp = 'Highside';
+        } else {
+          resp = 'Closed/Boxed body';
+        }
+      } else if (this.mediumVendors.includes(this.activeVendorPriceData.vendor_id)) {
+        if (carrierType === 0) {
+          resp = 'Open';
+        } else if (carrierType === 1) {
+          resp = 'Closed';
+        } else {
+          resp = 'Any';
+        }
+      } else if (carrierType === 0) {
+        resp = 'Bike without box';
+      } else if (carrierType === 1) {
+        resp = 'Bike with box';
+      } else if (carrierType === 3) {
+        resp = 'Refrigerated';
+      } else if (carrierType === 4) {
+        resp = 'Flatbed';
+      } else {
+        resp = 'Any';
+      }
+      return resp;
+    },
+
   },
 };
 </script>
