@@ -1255,7 +1255,7 @@ export default {
       let payment = [];
       payment = data.payment_methods;
 
-      const exist = data.payment_methods.find(available => available.name === 'Cash');
+      const exist = data.payment_methods.find(available => available.payment_method_id === 5);
 
       if (exist === undefined || exist === null) {
         payment = data.payment_methods;
@@ -1264,7 +1264,7 @@ export default {
         if (runningBalance >= 0 && runningBalance - this.order_cost < 0) {
           payment = data.payment_methods;
         } else {
-          const cashIndex = data.payment_methods.findIndex(index => index.name === 'Cash');
+          const cashIndex = data.payment_methods.findIndex(index => index.payment_method_id === 5);
           payment = data.payment_methods.splice(cashIndex, 1);
         }
       }
