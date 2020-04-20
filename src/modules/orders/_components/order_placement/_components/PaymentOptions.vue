@@ -737,6 +737,9 @@ export default {
       if (this.time <= 1) {
         this.preCheckPaymentDetails();
         this.confirmFinal = false;
+        this.isRunning = true;
+        clearInterval(this.interval);
+        this.time = 15;
         let accData = {};
         const session = this.$store.getters.getSession;
         const acc = session.default;
