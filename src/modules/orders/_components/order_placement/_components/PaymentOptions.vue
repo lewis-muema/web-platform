@@ -715,6 +715,7 @@ export default {
     confirmOrder() {
       this.confirmFinal = false;
       this.preCheckPaymentDetails();
+      clearInterval(this.interval);
       let accData = {};
       const session = this.$store.getters.getSession;
       const acc = session.default;
@@ -1316,7 +1317,9 @@ export default {
         (function (pollCount) {
           // eslint-disable-next-line consistent-return
           that.mpesa_poll_timer_id = window.setTimeout(() => {
-            that.checkRunningBalance(oldRb, payload);
+            if (!that.mpesa_payment_state) {
+              that.checkRunningBalance(oldRb, payload);
+            }
             if (that.mpesa_payment) {
               // eslint-disable-next-line no-param-reassign
               pollCount = pollLimit;
@@ -1355,16 +1358,20 @@ export default {
             // eslint-disable-next-line no-param-reassign,prefer-destructuring
             response = response[0];
           }
-          if (response.status === 200) {
-            const newRb = response.data.data.running_balance;
-            if (newRb > oldRb) {
-              this.completeMpesaPaymentRequest({});
-              this.mpesa_payment = true;
+          if (!this.mpesa_payment_state) {
+            if (response.status === 200) {
+              const newRb = response.data.data.running_balance;
+              if (newRb > oldRb) {
+                this.completeMpesaPaymentRequest({});
+                this.mpesa_payment = true;
+              } else {
+                this.mpesa_payment = false;
+              }
             } else {
               this.mpesa_payment = false;
             }
           } else {
-            this.mpesa_payment = false;
+            this.requestMpesaPaymentPoll(60);
           }
         },
         // eslint-disable-next-line no-unused-vars
