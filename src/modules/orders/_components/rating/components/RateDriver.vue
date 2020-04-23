@@ -17,10 +17,14 @@
 
       <div class="rate-rider-star">
         <div class="submit-stars">
-          <el-rate
-            v-model="rated_score"
-            :colors="['#99A9BF', '#F57f20', '#1782C5']"
-          />
+          <span class="submit-stars-container">
+            <p class="rate-text rate-text-right">Very Bad</p>
+            <el-rate
+              v-model="rated_score"
+              :colors="['#99A9BF', '#F57f20', '#1782C5']"
+            />
+            <p class="rate-text rate-text-left">Very Good</p>
+          </span>
           <textarea
             v-model="rating_comment"
             placeholder="Share your experience with us."
@@ -214,5 +218,19 @@ export default {
     -webkit-box-shadow: none !important;
     outline:none;
     box-shadow: none !important;
+}
+.submit-stars-container {
+    display: flex;
+    justify-content: center;
+}
+.rate-text {
+    font-size: 9px;
+    margin-top: 20px;
+}
+.rate-text-right {
+    margin-right: -22px;
+}
+.rate-text-left {
+    margin-left: -28px;
 }
 </style>
