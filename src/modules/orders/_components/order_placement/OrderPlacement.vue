@@ -395,7 +395,7 @@ export default {
         index,
         name: place.name,
       };
-      this.resetLocation(index);
+      this.resetPathLocation(index);
       this.setMarker(place.geometry.location.lat(), place.geometry.location.lng(), index);
       this.set_order_path(pathPayload);
       this.setStorePath(pathPayload);
@@ -713,6 +713,14 @@ export default {
     getSessionItem(itemName) {
       const session = this.$store.getters.getSession;
       return session[session.default][itemName];
+    },
+    resetPathLocation(index) {
+      if (index === 0) {
+        this.setPickupFilled(false);
+      }
+      this.unset_location_marker(index);
+      this.deleteLocationInModel(index);
+      this.unset_location_name(index);
     },
   },
 };
