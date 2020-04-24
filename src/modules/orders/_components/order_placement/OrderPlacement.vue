@@ -717,6 +717,8 @@ export default {
     resetPathLocation(index) {
       if (index === 0) {
         this.setPickupFilled(false);
+        this.unset_order_path(index);
+        this.unsetStorePath(index);
       }
       this.unset_location_marker(index);
       this.deleteLocationInModel(index);
