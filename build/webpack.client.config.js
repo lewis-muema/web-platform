@@ -30,7 +30,7 @@ const config = merge(base, {
     // on every build.
     // extract vendor chunks for better caching
     splitChunks: {
-      chunks: 'all',
+      chunks: 'initial',
       cacheGroups: {
         vendors: {
           test(module, chunks) {
