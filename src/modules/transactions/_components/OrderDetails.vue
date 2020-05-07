@@ -342,8 +342,6 @@ export default {
     }),
     createStaticMapUrl(path) {
       // TODO:get google_key from configs
-      console.log('dsdsdsds');
-      console.log('dsdsdsds', process.env.CONFIGS_ENV.GOOGLE_API_KEY);
       const googleKey = process.env.CONFIGS_ENV.GOOGLE_API_KEY;
       const fromCordinates = path[0].coordinates;
       const toCordinates = path[path.length - 1].coordinates;
