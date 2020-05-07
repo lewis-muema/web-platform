@@ -163,6 +163,7 @@
               </button>
             </div>
             <el-dialog
+              v-if="order_details.rider_deliver_img !== null"
               class="delivery_image_dialog"
               :visible.sync="dialogVisible"
             >
@@ -487,7 +488,7 @@ export default {
       getOrderDetails: '$_transactions/getOrderHistoryOrders',
     }),
     order_details() {
-      return this.getOrderDetails.find(order => order.order_id === this.$route.params.id);
+      return this.getOrderDetails.find(order => order.order_id === parseInt(this.$route.params.id, 10));
     },
   },
   mounted() {
