@@ -9,13 +9,12 @@
         >
           <div class="">
             <div>
-              <p
-                class="sign-up--extra extra-text"
+              <img
+                src="https://images.sendyit.com/web_platform/orders/Sign-Up-banner.svg"
+                class="sign-up-logo"
               >
-                Join
-                <a class="partners-brand-text">5000+ Customers </a>who trust Sendy
-              </p>
-
+            </div>
+            <div>
               <div class="row logo-outer">
                 <img
                   class="logo-display"
@@ -32,9 +31,6 @@
                   :src="getPartnerLogo('copia')"
                   alt=""
                 >
-              </div>
-
-              <div class="row logo-outer">
                 <img
                   class="logo-display"
                   :src="getPartnerLogo('crown')"
@@ -51,6 +47,12 @@
                   alt=""
                 >
               </div>
+              <p
+                class="sign-up--extra extra-text"
+              >
+                Join
+                <a class="partners-brand-text">5000+ Customers </a>who trust Sendy
+              </p>
             </div>
           </div>
         </div>

@@ -105,6 +105,26 @@
             </div>
           </div>
         </div>
+        <div
+          v-if="account_status"
+          class="upload-popup"
+        >
+          <i
+            slot="suffix"
+            class="close el-input__icon el-icon-error"
+            @click="closeAccountDialogue()"
+          />
+          <p class="account-dialog-text">
+            Hello! You are about to place a cross-border order.
+            This order will be processed in USD. You can view this transaction in your statements.
+          </p>
+          <button
+            id="upload-button"
+            class="upload-csv-button button-primary"
+          >
+            Continue
+          </button>
+        </div>
       </div>
       <map-component />
       <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
@@ -270,6 +290,7 @@ export default {
       loading_status: false,
       blinder_status: false,
       countdown_status: false,
+      account_status: false,
       discount_status: false,
       upload_status: false,
       uploadButton: '',
@@ -387,6 +408,10 @@ export default {
         this.upload_status = arg1;
         this.success_status = false;
       });
+      this.$root.$on('Account status', (arg1) => {
+        this.blinder_status = arg1;
+        this.account_status = arg1;
+      });
       this.$root.$on('Countdown status', (arg1, arg2) => {
         this.blinder_status = arg1;
         this.countdown_status = arg1;
@@ -473,6 +498,10 @@ export default {
     },
     closePopup() {
       this.blinder_status = false;
+    },
+    closeAccountDialogue() {
+      this.blinder_status = false;
+      this.account_status = false;
     },
     handleClose() {
       // Do nothing ...
@@ -587,6 +616,13 @@ export default {
   align-items: center;
   display: flex;
   height: inherit;
+}
+.account-dialog-text {
+  font-size: 14px;
+  text-align: center;
+  color: #828282;
+  width: 90%;
+  margin: auto;
 }
 .countdown-img {
   width: 80vw;
