@@ -82,6 +82,28 @@
             @onBlur="validate_phone"
           />
         </div>
+        <div
+          v-show="account === 'biz'"
+          class=" "
+        >
+          <p class="input--label">
+            Order type
+          </p>
+          <div class="sign-up-order-type">
+            <label class="input--label radio--label"><input
+              type="radio"
+              class="radio--label"
+            >Local</label>
+            <label class="input--label radio--label"><input
+              type="radio"
+              class="radio--label"
+            >Cross border</label>
+            <label class="input--label radio--label"><input
+              type="radio"
+              class="radio--label"
+            >Local & Cross border</label>
+          </div>
+        </div>
         <div class=" ">
           <p class="input--label">
             Password
