@@ -342,7 +342,7 @@ export default {
     }),
     createStaticMapUrl(path) {
       // TODO:get google_key from configs
-      const googleKey = 'AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc';
+      const googleKey = process.env.CONFIGS_ENV.GOOGLE_API_KEY;
       const fromCordinates = path[0].coordinates;
       const toCordinates = path[path.length - 1].coordinates;
       return `https://maps.googleapis.com/maps/api/staticmap?path=color:0x2c82c5|weight:5|${fromCordinates}|${toCordinates}&size=257x257&markers=color:0xF17F3A%7Clabel:P%7C
