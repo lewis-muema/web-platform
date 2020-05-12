@@ -777,3 +777,6 @@ button.default.action--slide-button {
   margin-right: auto;
   width: 14%;
 }
+.is-checked{
+  border: none;
+}
