@@ -667,7 +667,7 @@
                   type="textarea"
                   :autosize="{ minRows: 2, maxRows: 4}"
                   placeholder="Tell us why you want to cancel"
-                  v-model="other_notes">
+                  v-model="cancel_desc">
                 </el-input>
               </div>
               <div class="cancel-reason-input">
@@ -1286,7 +1286,7 @@ export default {
     },
     cancelOrder() {
       if (this.cancel_reason !== '' && Object.keys(this.$store.getters.getSession).length > 0) {
-        if (this.cancel_reason === 0 && this.other_notes === '') {
+        if (this.cancel_reason === 0 && this.cancel_desc === '') {
           this.doNotification(3, 'Order cancellation failed', 'Please provide reason for cancellation');
         }
         else {
