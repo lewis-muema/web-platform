@@ -93,4 +93,13 @@ export default {
 <style lang="css" scoped>
 
 @import "../../../../src/assets/styles/sign_up.css";
+@media (max-width: 500px) {
+  .sign-up-help-card {
+    display: none;
+  }
+  .logo {
+    margin: auto;
+    padding: 0px;
+  }
+}
 </style>
