@@ -378,7 +378,7 @@ ul.timeline > li#timeline_right.payedReached:before {
 }
 .cancelOptions > div {
   margin-top: 15vh !important;
-  width: 30%;
+  width: 30% !important;
 }
 .infobar-truck-pstn {
   margin-left: 0px !important;
@@ -776,4 +776,7 @@ button.default.action--slide-button {
   margin-left: auto;
   margin-right: auto;
   width: 14%;
+}
+.is-checked{
+  border: none;
 }
