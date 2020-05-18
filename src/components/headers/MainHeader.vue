@@ -105,10 +105,12 @@
 <script>
 import { mapGetters } from 'vuex';
 import SessionMxn from '../../mixins/session_mixin';
+import EventsMixin from '../../mixins/events_mixin';
+
 
 export default {
   name: 'MainHeader',
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, EventsMixin],
   data() {
     return {
       switchValid: false,
@@ -230,6 +232,38 @@ export default {
           'User Phone': session[session.default].user_phone,
         });
       }
+      let eventLabel;
+      switch (route) {
+        case '/user/upgrade_acc':
+          eventLabel = 'Create Business Account';
+          break;
+        case '/orders':
+          eventLabel = 'New Delivery';
+          break;
+        case '/transactions/order_history':
+          eventLabel = 'Orders';
+          break;
+        case '/orders/freight':
+          eventLabel = 'Freight';
+          break;
+        case '/admin/users':
+          eventLabel = 'Settings';
+          break;
+        case '/analytics/report':
+          eventLabel = 'Analytics';
+          break;
+        case '/user/profile/personal_information':
+          eventLabel = 'Profile';
+          break;
+        default:
+          eventLabel = route;
+      }
+      const eventPayload = {
+        eventCategory: 'Menu Navigation',
+        eventAction: 'Click',
+        eventLabel,
+      };
+      this.fireGAEvent(eventPayload);
     },
     linkPayments() {
       this.$router.push('/payment/card');
