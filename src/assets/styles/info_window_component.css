@@ -141,7 +141,7 @@
 .action--slide-desc {
   display: flex;
   justify-content: center;
-  width: 100%;
+  width: 94%;
 }
 .cancel-reason-input {
   width: 78%;
@@ -431,7 +431,7 @@ ul.timeline > li#timeline_right.payedReached:before {
   text-align: center;
 }
 .cancel-reason-text {
-  padding-left: 11%;
+  padding-left: 9%;
   margin-bottom: 10px;
   margin-top: 10px;
 }
@@ -732,7 +732,7 @@ button.default.action--slide-button {
 .cancel-reason-title{
   color: #000000;
   margin-left: 9%;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 3;
 }
 .cancel-reason-subtitle{
@@ -779,4 +779,14 @@ button.default.action--slide-button {
 }
 .is-checked{
   border: none;
+}
+.cancellation-submit{
+  margin-left: 9% !important;
+  font-size: 12px !important;
+  border-radius: 7px;
+}
+.accept-cancell-btn{
+  background: #FFFFFF !important;
+  color: #1B7FC3 !important;
+  border: 1px solid #1B7FC3 !important;
 }
