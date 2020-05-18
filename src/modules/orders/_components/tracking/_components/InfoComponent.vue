@@ -677,7 +677,7 @@
                 <button
                   type="button"
                   name="button"
-                  class="action--slide-button"
+                  class="action--slide-button cancellation-submit accept-cancell-btn"
                   @click="cancelOrder()"
                 >
                   YES , CANCEL
@@ -685,7 +685,7 @@
                 <button
                   type="button"
                   name="button"
-                  class="action--slide-button"
+                  class="action--slide-button cancellation-submit"
                   @click="cancelToggle(true)"
                 >
                   NO , DON'T CANCEL
