@@ -191,6 +191,11 @@ export default {
       loading: false,
       locations: [],
       map_options: {
+        componentRestrictions: {
+          country: [
+            'ke', 'ug', 'tz'
+          ],
+        },
         bounds: {
           north: 35.6,
           east: 59.4,
