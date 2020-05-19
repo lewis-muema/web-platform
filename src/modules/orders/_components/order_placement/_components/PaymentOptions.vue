@@ -990,12 +990,20 @@ export default {
               );
             }
           },
-          () => {
-            this.doNotification(
-              3,
-              'Order completion failed',
-              'Order completion failed. Please check your internet connection and try again.',
-            );
+          (error) => {
+            if (Object.prototype.hasOwnProperty.call(error, 'reason')) {
+              this.doNotification(
+                2,
+                'Order completion failed',
+                error.reason,
+              );
+            } else {
+              this.doNotification(
+                2,
+                'Order completion failed',
+                'Order completion failed. Please check your internet connection and try again.',
+              );
+            }
             this.loading = false;
           },
         );
