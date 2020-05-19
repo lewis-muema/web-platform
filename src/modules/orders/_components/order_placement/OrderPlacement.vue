@@ -191,6 +191,11 @@ export default {
       loading: false,
       locations: [],
       map_options: {
+        componentRestrictions: {
+          country: [
+            'ke', 'ug', 'tz'
+          ],
+        },
         bounds: {
           north: 35.6,
           east: 59.4,
@@ -409,6 +414,7 @@ export default {
           eventLabel: 'Pickup Location - Order Placement - Web App',
         };
         this.fireGAEvent(eventPayload);
+        this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
       } else {
         const eventPayload = {
           eventCategory: 'Order Placement',
@@ -416,9 +422,11 @@ export default {
           eventLabel: 'Destination Location - Order Placement - Web App',
         };
         this.fireGAEvent(eventPayload);
+        this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
       }
       this.attemptPriceRequest();
     },
+
     attemptPriceRequest() {
       if (
         Array.isArray(this.locations)
