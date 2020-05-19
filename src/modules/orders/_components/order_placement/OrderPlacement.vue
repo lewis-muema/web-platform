@@ -191,6 +191,11 @@ export default {
       loading: false,
       locations: [],
       map_options: {
+        componentRestrictions: {
+          country: [
+            'ke', 'ug', 'tz'
+          ],
+        },
         bounds: {
           north: 35.6,
           east: 59.4,
@@ -368,7 +373,7 @@ export default {
         // console.log('not a place', index);
         return;
       }
-      const countryIndex = place.address_components.findIndex(country_code => country_code.types.includes('country'));
+      const countryIndex = a.address_components.findIndex(country_code => country_code.types.includes('country'));
       const pathObj = {
         name: place.name,
         coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
