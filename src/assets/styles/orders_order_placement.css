@@ -23,6 +23,14 @@
   padding-bottom: 15px;
   display: flex;
 }
+.homeview--input-spacer {
+  width: 20px;
+  margin-left: -20px;
+}
+.homeview--row__enter-region .el-input__inner::placeholder {
+  color: #7a7a7a;
+  font-size: 13px;
+}
 .homeview--freight {
   position: absolute;
 }
@@ -409,6 +417,13 @@
 .homeview-locations-options {
   display: flex;
 }
+.homeview-locations-options-multi-destination-inactive {
+  pointer-events: none;
+  color: #BDBDBD;
+}
+.homeview-locations-options-multi-destination-active {
+  cursor: pointer;
+}
 .homeview-locations-options--add-destination {
   flex: 2 2 auto;
 }
@@ -434,6 +449,7 @@
 .home-view-vendor-types-item--cost-wrapper__cost,
 .home-view-vendor-types-item--cost-wrapper_time {
   padding: 3px;
+  width: max-content;
 }
 .home-view-truck-options-wrapper {
   width: 100%;
@@ -450,10 +466,56 @@
   border: 1px solid #e1e3e8;
   margin: 0 10px 10px 10px;
 }
+.home-view-truck-options-dedicated-notes {
+  border: 1px solid #dddfe7;
+  border-radius: 5px;
+  padding: 2% 7% 7% 7%;
+}
+.home-view-truck-options-dedicated-notes-icon {
+  width: 10px;
+  height: 10px;
+  background: #1B7FC3;
+  border-radius: 10px;
+  margin: 2px;
+  margin-right: 10px;
+}
+.home-view-truck-options-dedicated-notes-label {
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 .home-view-truck-options-label {
   color: #212120;
   font-weight: 300;
   padding: 5px 0;
+}
+.home-view-truck-options-vehicle-type {
+  border: solid 1px #dddfe7;
+  border-radius: 5px;
+  align-items: center;
+  padding-left: 5%;
+  font-weight: 400;
+}
+
+.home-view-truck-options-vehicle-type-title {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  cursor: pointer;
+}
+
+.home-view-truck-options-vehicle-arrow {
+  margin-left: 67%;
+  border-radius: 13px;
+  height: 15px;
+  width: 15px;
+  background: #1b7fc3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
 }
 .home-view-truck-options-schedule-discounts {
   color: black;
@@ -569,7 +631,7 @@
 }
 .el-popper[x-placement^='bottom'] {
   margin-top: 0px !important;
-  background-color: #1782c5 !important;
+  background-color: #1782c5;
   border: 0px solid #1782c5;
 }
 .el-popper[x-placement^='bottom'] .popper__arrow {
@@ -772,5 +834,35 @@
 }
 .input-container--size {
   font-weight: 400 !important;
+}
+.homeview--outer-selection-panel {
+  height: 48px;
+  border: solid 2px #1B7FC3;
+  display: flex;
+}
+.homeview--outer-selections {
+  width: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: #1B7FC3;
+}
+.homeview--outer-modes {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+.homeview--outer-mode-options {
+  text-align: center;
+  width: 35%;
+  color: #1b7fc3;
+}
+.homeview--outer-selections__active {
+  color: white !important;
+  background: #1B7FC3 !important;
 }
 
