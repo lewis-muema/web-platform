@@ -9,6 +9,7 @@ export default {
       active_package_class: '',
       active_vendor_name: '',
       active_vendor_details: {},
+      schedule_end_time: '',
       active_order_option: '',
       price_request_object: {},
       max_destinations: 24,

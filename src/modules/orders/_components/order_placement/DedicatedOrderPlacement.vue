@@ -38,16 +38,28 @@
         <div class="homeview--destinations">
           <div class="homeview--input-bundler">
             <no-ssr placeholder="">
+              <div class="homeview--input-spacer" />
               <font-awesome-icon
                 icon="circle"
                 size="xs"
                 class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue"
                 width="10px"
               />
+              <el-input
+                v-model="dropOffRegion"
+                class="homeview--row__enter-region"
+                placeholder="Enter region"
+              />
+            </no-ssr>
+          </div>
+        </div>
+        <div class="homeview--destinations">
+          <div class="homeview--input-bundler">
+            <no-ssr placeholder="">
               <gmap-autocomplete
                 v-model="locations[1]"
                 :options="map_options"
-                placeholder="Enter a destination location"
+                placeholder="Return location (Optional)"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
                 @place_changed="setLocation($event, 1)"
@@ -64,90 +76,19 @@
             </no-ssr>
           </div>
         </div>
-        <div
-          v-for="n in get_extra_destinations"
-          :key="n + 1"
-          class="homeview--destinations"
-          :data-index="n + 1"
-        >
-          <div class="homeview--input-bundler">
-            <no-ssr placeholder="">
-              <font-awesome-icon
-                icon="circle"
-                size="xs"
-                class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue"
-                width="10px"
-              />
-              <gmap-autocomplete
-                v-model="locations[n + 1]"
-                :options="map_options"
-                placeholder="Enter a destination location"
-                :select-first-on-enter="true"
-                class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
-                @place_changed="setLocation($event, n + 1)"
-                @keyup="checkChangeEvents($event, (n = 1))"
-                @change="checkChangeEvents($event, n + 1)"
-              />
-              <font-awesome-icon
-                icon="times"
-                size="xs"
-                class="homeview--row__font-awesome homeview--input-bundler__img-right "
-                width="10px"
-                @click="removeExtraDestinationWrapper(n + 1)"
-              />
-            </no-ssr>
-          </div>
+        <div>
+          <p class="home-view--upload-par">
+            OR
+          </p>
+          <p
+            class="home-view--upload-button"
+            @click="initiateUpload()"
+          >
+            Upload file
+          </p>
         </div>
       </div>
 
-      <div
-        v-if="allow_add_destination && $route.path === '/orders'"
-        class="homeview--row homeview--row__more-destinations homeview-locations-options"
-      >
-        <div class="homeview-locations-options--add-destination">
-          <font-awesome-icon
-            icon="plus"
-            size="xs"
-            class="sendy-blue homeview--row__font-awesome"
-            width="10px"
-          />
-          <a
-            class="homeview--add"
-            @click="addExtraDestinationWrapper()"
-          >Add Destination</a>
-        </div>
-      </div>
-      <div
-        v-if="$route.path === '/orders/dedicated/multi-destination'"
-        class="homeview--row homeview--row__more-destinations homeview-locations-options"
-        :class="allow_add_destination ? 'homeview-locations-options-multi-destination-active' : 'homeview-locations-options-multi-destination-inactive'"
-      >
-        <div class="homeview-locations-options--add-destination">
-          <font-awesome-icon
-            icon="plus"
-            size="xs"
-            class="sendy-blue homeview--row__font-awesome"
-            :class="allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'"
-            width="10px"
-          />
-          <a
-            class="homeview--add"
-            :class="allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'"
-            @click="addExtraDestinationWrapper()"
-          >Add Destination</a>
-        </div>
-      </div>
-      <div v-if="$route.path === '/orders/dedicated/multi-destination'">
-        <p class="home-view--upload-par">
-          OR
-        </p>
-        <p
-          class="home-view--upload-button"
-          @click="initiateUpload()"
-        >
-          Upload file
-        </p>
-      </div>
       <div
         v-if="loading"
         v-loading="loading"
@@ -166,7 +107,7 @@
           type="button"
           class="button--primary-inactive home-view--place-order"
         >
-          Confirm Order
+          Continue
         </button>
       </div>
     </div>
@@ -175,6 +116,7 @@
 
 <script>
 import NoSSR from 'vue-no-ssr';
+import _ from 'lodash';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCcVisa, faCcMastercard } from '@fortawesome/free-brands-svg-icons';
@@ -191,7 +133,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import orderPlacementStore from './_store';
 import paymentsModuleStore from '../../../payment/_store';
-import VendorComponent from './_components/VendorComponent.vue';
+import VendorComponent from './_components/DedicatedVendorComponent.vue';
 import SessionMxn from '../../../../mixins/session_mixin';
 import EventsMixin from '../../../../mixins/events_mixin';
 
@@ -230,6 +172,7 @@ export default {
         },
         strictBounds: true,
       },
+      dropOffRegion: '',
     };
   },
   computed: {
@@ -253,20 +196,10 @@ export default {
       getOuterPriceRequestData: '$_orders/getOuterPriceRequestData',
     }),
 
-    allow_add_destination() {
-      return (
-        !this.loading
-        && Array.isArray(this.get_order_path)
-        && this.get_order_path.length - 1 <= this.get_max_destinations
-        && this.get_order_path.length > 1
-        && this.get_extra_destinations <= this.get_order_path.length - 2
-      );
-    },
-
     show_vendor_view() {
       return (
         Array.isArray(this.getStoreOrderPath)
-        && this.getStoreOrderPath.length > 1
+        && this.getStoreOrderPath.length > 0
         && Object.prototype.hasOwnProperty.call(this.getOuterPriceRequestData, 'economy_price_tiers')
       );
     },
@@ -279,6 +212,11 @@ export default {
         }
       },
       deep: true,
+    },
+    dropOffRegion(val) {
+      if (val && this.getStoreOrderPath.length > 0) {
+        this.debounceAddRegion();
+      }
     },
   },
   created() {
@@ -331,6 +269,11 @@ export default {
       set_tracking_data: '$_orders/$_tracking/setTrackingData',
       clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
+
+    // eslint-disable-next-line func-names
+    debounceAddRegion: _.debounce(function () {
+      this.attemptPriceRequest();
+    }, 500),
 
     ...mapActions({
       requestPriceQuote: '$_orders/$_home/requestPriceQuote',
@@ -422,6 +365,9 @@ export default {
           Address: 'Not Indicated',
         },
       };
+      if (index === 1) {
+        pathObj.waypoint_type = 'RETURN';
+      }
       const pathPayload = {
         index,
         path: pathObj,
@@ -444,7 +390,6 @@ export default {
           eventLabel: 'Pickup Location - Order Placement - Web App',
         };
         this.fireGAEvent(eventPayload);
-        this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
       } else {
         const eventPayload = {
           eventCategory: 'Order Placement',
@@ -452,18 +397,18 @@ export default {
           eventLabel: 'Destination Location - Order Placement - Web App',
         };
         this.fireGAEvent(eventPayload);
-        this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
       }
       this.attemptPriceRequest();
     },
-
     attemptPriceRequest() {
       if (
         Array.isArray(this.locations)
-        && this.locations.length > 1
+        && this.locations.length > 0
+        && this.dropOffRegion
         && this.get_pickup_filled === true
       ) {
         this.clearOuterPriceRequestObject();
+        this.clearOuterActiveVendorDetails();
         this.doPriceRequest();
       }
     },
@@ -522,6 +467,8 @@ export default {
         promotion_status: false,
         destination_paid_status: false,
         is_edit: false,
+        drop_off_region: this.dropOffRegion,
+        order_type_tag: 'dedicated_order',
         country_code: this.getSessionItem('country_code'),
         default_currency: this.getSessionItem('default_currency'),
         preffered_currency: this.getSessionItem('default_currency'),
@@ -539,16 +486,20 @@ export default {
         endpoint: 'pricing_multiple',
       };
       this.loading = true;
-      const previousActiveVendor = this.get_active_vendor_name;
       const definedLocations = this.locations;
       this.requestPriceQuote(payload).then(
         (response) => {
           this.setOrderState(1);
           this.setHomeLocations(definedLocations);
+          response.values.economy_price_tiers.forEach((row) => {
+            row.price_tiers.forEach((row1) => {
+              // eslint-disable-next-line no-param-reassign
+              row1.tally = 0;
+            });
+          });
           this.setOuterPriceRequestObject(response.values);
           this.loading = false;
           this.setDefaultPackageClass();
-          this.setDefaultVendorType(previousActiveVendor);
           const acc = this.$store.getters.getSession;
           const accDefault = acc[acc.default];
           this.mixpanelTrackPricingServiceRequest(response);
@@ -609,40 +560,10 @@ export default {
       }
     },
 
-    doSetDefaultVendorType() {
-      try {
-        const defaultVendorDetails = this.get_price_request_object.economy_price_tiers[0]
-          .price_tiers[0];
-        this.set_active_vendor_name(defaultVendorDetails.vendor_name);
-        this.set_active_vendor_details(defaultVendorDetails);
-      } catch (er) {
-        // console.log(er);
-      }
-    },
-    setDefaultVendorType(previous) {
-      if (this.get_active_vendor_name === '') {
-        this.doSetDefaultVendorType();
-      } else if (
-        this.get_price_request_object !== undefined
-        && this.get_price_request_object.economy_price_tiers !== undefined
-      ) {
-        const result = this.get_price_request_object.economy_price_tiers.filter(pack => pack.price_tiers.some(vendor => vendor.vendor_name === previous));
-
-        if (result.length === 0) {
-          this.doSetDefaultVendorType();
-        } else {
-          const newActivePriceObject = result[0].price_tiers.find(
-            vendor => vendor.vendor_name === previous,
-          );
-          this.set_active_vendor_details(newActivePriceObject);
-        }
-      }
-    },
-
     setDefaultPackageClass() {
       if (this.get_active_package_class === '') {
         this.doSetDefaultPackageClass();
-      } else if (this.get_price_request_object !== undefined && this.get_price_request_object.economy_price_tiers !== undefined) {
+      } else {
         const self = this;
         const _package = this.get_price_request_object.economy_price_tiers.filter(
           pack => pack.tier_group === self.get_active_package_class,
@@ -731,8 +652,7 @@ export default {
     initializeOrderFlow() {
       if (this.$route.path === '/orders/') {
         const storedLocation = this.getHomeLocations;
-        this.set_order_path(this.getStoreOrderPath);
-        if (storedLocation.length > 1) {
+        if (storedLocation.length > 0) {
           this.locations = storedLocation;
           this.setPickupFilled(true);
           this.setPickupFilled(true);
