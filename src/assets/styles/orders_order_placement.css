@@ -840,6 +840,9 @@
   border: solid 2px #E4E9F2;
   display: flex;
 }
+.homeview--input-return-location {
+  margin-left: 20px;
+}
 .homeview--outer-selections {
   width: 50%;
   cursor: pointer;
@@ -858,7 +861,7 @@
 }
 .homeview--outer-mode-options {
   text-align: center;
-  width: 35%;
+  width: 45%;
   color: #1b7fc3;
 }
 .homeview--outer-selections__active {

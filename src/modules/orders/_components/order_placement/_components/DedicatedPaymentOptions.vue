@@ -483,7 +483,7 @@ export default {
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
       completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
       terminateMpesaPaymentRequest: '$_payment/terminateMpesaPaymentRequest',
-      requestOrderCompletion: '$_orders/$_home/requestOrderCompletion',
+      requestDedicatedOrderCompletion: '$_orders/$_home/requestDedicatedOrderCompletion',
       requestSavedCards: '$_orders/$_home/requestSavedCards',
       requestPaymentOptionsAction: '$_payment/requestPaymentOptions',
     }),
@@ -660,99 +660,88 @@ export default {
         const payload = {
           values: this.getCompleteOrderObject(),
           app: 'PRIVATE_API',
-          endpoint: 'pay',
+          endpoint: 'pay/no_destination',
         };
         this.loading = true;
-        this.requestOrderCompletion(payload).then(
+        this.requestDedicatedOrderCompletion(payload).then(
           (response) => {
             this.loading = false;
-            if (response.length > 0) {
-              // eslint-disable-next-line no-param-reassign,prefer-destructuring
-              response = response[0];
+            this.shouldDestroy = true;
+            this.should_destroy = true;
+            if (Object.keys(this.$store.getters.getSession).length > 0) {
+              this.$store.dispatch('$_orders/fetchOngoingOrders');
             }
-            /* eslint camelcase: ["error", {ignoreDestructuring: true}] */
-            if (response.status) {
-              const eventPayload = {
-                eventCategory: 'Order Placement',
-                eventAction: 'Order Confirmation',
-                eventLabel: 'Order Confirmed - Order Placement - Web App',
-              };
-              this.fireGAEvent(eventPayload);
-
-              let order_no;
-              this.setPickupFilled(false);
-              // eslint-disable-next-line camelcase
-              if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'order_no')) {
-                ({ order_no } = this.activeVendorPriceData);
-              } else {
-                ({ order_no } = response.respond);
-                try {
-                  this.mixpanelTrackPricingServiceCompletion(order_no);
-                } catch (er) {
-                  // catch er
+            const eventPayload = {
+              eventCategory: 'Order Placement',
+              eventAction: 'Order Confirmation',
+              eventLabel: 'Order Confirmed - Order Placement - Web App',
+            };
+            this.fireGAEvent(eventPayload);
+            this.setPickupFilled(false);
+            this.$root.$emit('Order Placement Force Update');
+            let order = '';
+            response.forEach((row) => {
+              /* eslint camelcase: ["error", {ignoreDestructuring: true}] */
+              if (row.status) {
+                if (!order) {
+                  order = row.respond.order_no;
+                };
+                this.mixpanelTrackPricingServiceCompletion(row.respond.order_no);
+                let accData = {};
+                const data = JSON.parse(payload.values).values;
+                const session = this.$store.getters.getSession;
+                const acc = session.default;
+                accData = session[session.default];
+                if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
+                  this.trackMixpanelEvent('Place Order', {
+                    'Account ': data.type,
+                    'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+                    'Client Type': 'Web Platform',
+                    'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+                    'Order Number': row.respond.order_no,
+                    'Payment Mode': this.payment_method,
+                    'User Email': data.user_email,
+                    'User Phone': data.user_phone,
+                    'Super User Id': session.admin_details.admin_id,
+                  });
+                } else {
+                  this.trackMixpanelEvent('Place Order', {
+                    'Account ': data.type,
+                    'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+                    'Client Type': 'Web Platform',
+                    'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+                    'Order Number': row.respond.order_no,
+                    'Payment Mode': this.payment_method,
+                    'User Email': data.user_email,
+                    'User Phone': data.user_phone,
+                  });
                 }
-              }
-              if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
-                this.doNotification(1, 'Successfully placed freight order', '');
-              }
-              this.shouldDestroy = true;
-              this.should_destroy = true;
-              if (Object.keys(this.$store.getters.getSession).length > 0) {
-                this.$store.dispatch('$_orders/fetchOngoingOrders');
-              }
 
-              this.$root.$emit('Order Placement Force Update');
-              let accData = {};
-              const data = JSON.parse(payload.values).values;
-              const session = this.$store.getters.getSession;
-              const acc = session.default;
-              accData = session[session.default];
-              if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
-                this.trackMixpanelEvent('Place Order', {
+                this.trackMixpanelEvent('Order Completion Log', {
                   'Account ': data.type,
                   'Account Type': acc === 'peer' ? 'Personal' : 'Business',
                   'Client Type': 'Web Platform',
-                  'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
-                  'Order Number': order_no,
                   'Payment Mode': this.payment_method,
+                  'Cash Status': data.cash_status,
                   'User Email': data.user_email,
                   'User Phone': data.user_phone,
-                  'Super User Id': session.admin_details.admin_id,
+                  'Order Number': row.respond.order_no,
+                  'Order Amount': data.amount,
+                  'Schedule Time': data.schedule_time,
+                  'Schedule Status': data.schedule_status,
+                  'Carrier Type ID': data.carrier_type,
+                  'Vendor Type ID': data.vendor_type,
                 });
               } else {
-                this.trackMixpanelEvent('Place Order', {
-                  'Account ': data.type,
-                  'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-                  'Client Type': 'Web Platform',
-                  'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
-                  'Order Number': order_no,
-                  'Payment Mode': this.payment_method,
-                  'User Email': data.user_email,
-                  'User Phone': data.user_phone,
-                });
+                this.doNotification(
+                  2,
+                  'Order completion failed',
+                  'Price request failed. Please try again',
+                );
               }
-
-              this.trackMixpanelEvent('Order Completion Log', {
-                'Account ': data.type,
-                'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-                'Client Type': 'Web Platform',
-                'Payment Mode': this.payment_method,
-                'Cash Status': data.cash_status,
-                'User Email': data.user_email,
-                'User Phone': data.user_phone,
-                'Order Number': order_no,
-                'Order Amount': data.amount,
-                'Schedule Time': data.schedule_time,
-                'Schedule Status': data.schedule_status,
-                'Carrier Type ID': data.carrier_type,
-                'Vendor Type ID': data.vendor_type,
-              });
-            } else {
-              this.doNotification(
-                2,
-                'Order completion failed',
-                'Price request failed. Please try again',
-              );
+            });
+            if (order) {
+              this.$router.push(`/orders/tracking/${order}`);
             }
           },
           () => {
@@ -802,7 +791,7 @@ export default {
           close_rider_id: 0,
           amount: this.individual_full_order_cost(row),
           schedule_status: this.order_is_scheduled,
-          destination_paid_status: false,
+          destination_paid_status: true,
           delivery_points: this.get_order_path.length - 1,
           sendy_coupon: '0',
           payment_method: Number(this.payment_method),
@@ -835,8 +824,7 @@ export default {
       });
       const data = {
         values: fullPayload,
-        mode: 'no-destination',
-      }
+      };
       this.identifyMixpanelUser(acc.user_email);
       return data;
     },

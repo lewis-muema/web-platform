@@ -1103,9 +1103,6 @@ export default {
       payload = {
         values: payload,
       };
-      if (this.$route.path === '/orders/dedicated/multi-destination') {
-        payload.mode = 'multi-destination';
-      }
       this.identifyMixpanelUser(acc.user_email);
       return payload;
     },
