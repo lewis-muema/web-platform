@@ -38,19 +38,30 @@
         <div class="homeview--destinations">
           <div class="homeview--input-bundler">
             <no-ssr placeholder="">
-              <div class="homeview--input-spacer" />
               <font-awesome-icon
                 icon="circle"
                 size="xs"
                 class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue"
                 width="10px"
               />
-              <el-input
+              <gmap-autocomplete
                 v-model="dropOffRegion"
-                class="homeview--row__enter-region"
+                :options="map_options"
                 placeholder="Enter region"
+                :select-first-on-enter="true"
+                class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
+                @place_changed="addRegion($event)"
+                @keyup="checkChangeEvents($event, 0)"
+                @change="checkChangeEvents($event, 0)"
               />
             </no-ssr>
+            <font-awesome-icon
+              icon="times"
+              size="xs"
+              class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup "
+              width="10px"
+              @click="clearLocation(1)"
+            />
           </div>
         </div>
         <div class="homeview--destinations">
@@ -61,7 +72,7 @@
                 :options="map_options"
                 placeholder="Return location (Optional)"
                 :select-first-on-enter="true"
-                class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
+                class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-return-location"
                 @place_changed="setLocation($event, 1)"
                 @keyup="checkChangeEvents($event, 1)"
                 @change="checkChangeEvents($event, 1)"
@@ -213,11 +224,6 @@ export default {
       },
       deep: true,
     },
-    dropOffRegion(val) {
-      if (val && this.getStoreOrderPath.length > 0) {
-        this.debounceAddRegion();
-      }
-    },
   },
   created() {
     this.instantiateHomeComponent();
@@ -271,9 +277,10 @@ export default {
     }),
 
     // eslint-disable-next-line func-names
-    debounceAddRegion: _.debounce(function () {
+    addRegion(place) {
+      this.dropOffRegion = place.name;
       this.attemptPriceRequest();
-    }, 500),
+    },
 
     ...mapActions({
       requestPriceQuote: '$_orders/$_home/requestPriceQuote',
