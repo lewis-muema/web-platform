@@ -814,7 +814,7 @@ export default {
           carrier_type: row.carrier_type,
           isreturn: false,
           vendor_type: row.vendor_id,
-          rider_phone: 'order_no' in row ? row.order_no : '',
+          rider_phone: 'order_no' in row ? row.order_no : row.id,
           type: this.payment_type,
           package_details: {
             max_temperature: Number(this.getMaxTemperature),
