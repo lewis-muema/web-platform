@@ -741,7 +741,7 @@ export default {
         this.setExtendOptions(true);
       } else {
         this.doNotification(
-          '2',
+          2,
           'No vendors have been selected',
           'Please select the number of vehicles you would like per vendor',
         );

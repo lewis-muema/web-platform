@@ -747,14 +747,6 @@ export default {
                 'Carrier Type ID': data.carrier_type,
                 'Vendor Type ID': data.vendor_type,
               });
-              if (!Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
-                this.$router.push({
-                  name: 'tracking',
-                  params: {
-                    order_no,
-                  },
-                });
-              }
             } else {
               this.doNotification(
                 2,
@@ -842,7 +834,7 @@ export default {
         fullPayload.push(payload);
       });
       const data = {
-        orders: fullPayload,
+        values: fullPayload,
         mode: 'no-destination',
       }
       this.identifyMixpanelUser(acc.user_email);
@@ -1330,58 +1322,6 @@ export default {
         location.reload();
       }, 4000);
     },
-    handleClose() {
-      // Do nothing ...
-    },
-    getVendorIcon(id) {
-      return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
-    },
-    scheduleTimeSummary() {
-      let resp = 'As soon as possible';
-      if (this.order_is_scheduled) {
-        resp = this.scheduled_time;
-      }
-      return resp;
-    },
-    carrierTypeSummary() {
-      const carrierType = this.final_carrier_type;
-      let resp = 'Any';
-      if (this.largeVendors.includes(this.activeVendorPriceData.vendor_id)) {
-        if (carrierType === 3) {
-          resp = 'Refrigerated';
-        } else if (carrierType === 4) {
-          resp = 'Flatbed/Skeleton';
-        } else if (carrierType === 5) {
-          resp = 'Tipper';
-        } else if (carrierType === 6) {
-          resp = 'Refeer';
-        } else if (carrierType === 7) {
-          resp = 'Highside';
-        } else {
-          resp = 'Closed/Boxed body';
-        }
-      } else if (this.mediumVendors.includes(this.activeVendorPriceData.vendor_id)) {
-        if (carrierType === 0) {
-          resp = 'Open';
-        } else if (carrierType === 1) {
-          resp = 'Closed';
-        } else {
-          resp = 'Any';
-        }
-      } else if (carrierType === 0) {
-        resp = 'Bike without box';
-      } else if (carrierType === 1) {
-        resp = 'Bike with box';
-      } else if (carrierType === 3) {
-        resp = 'Refrigerated';
-      } else if (carrierType === 4) {
-        resp = 'Flatbed';
-      } else {
-        resp = 'Any';
-      }
-      return resp;
-    },
-
   },
 };
 </script>
