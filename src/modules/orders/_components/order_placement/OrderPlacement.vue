@@ -524,6 +524,9 @@ export default {
         default_currency: this.getSessionItem('default_currency'),
         preffered_currency: this.getSessionItem('default_currency'),
       };
+      if (this.$route.path === '/orders/dedicated/multi-destination') {
+        infor.order_type_tag = 'dedicated_order';
+      }
       const jsonDecodedPath = JSON.stringify(obj);
       infor.path = jsonDecodedPath;
       const finalObj = { values: infor };
