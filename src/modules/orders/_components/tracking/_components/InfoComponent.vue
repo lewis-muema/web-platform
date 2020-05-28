@@ -994,9 +994,6 @@ export default {
     this.poll(this.$route.params.order_no);
     this.checkRunningBalance();
     this.initiateOrderData();
-    if (this.user_state) {
-      this.retrieveCancellationReasons();
-    }
   },
   created() {
     this.order_number = this.$route.params.order_no;
@@ -1234,6 +1231,7 @@ export default {
 
         if (sessionUserEmail === orderUserEmail) {
           this.user_state = true;
+          this.retrieveCancellationReasons();
         } else {
           this.user_state = false;
         }
