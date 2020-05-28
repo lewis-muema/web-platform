@@ -1259,6 +1259,7 @@ export default {
         phone: userPhone,
         email: userEmail,
         currency: this.activeVendorPriceData.currency,
+        vendorType: this.activeVendorPriceData.vendor_id,
       };
       const fullPayload = {
         values: mpesaPayload,
