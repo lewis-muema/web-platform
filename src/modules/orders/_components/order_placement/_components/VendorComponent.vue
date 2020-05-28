@@ -200,6 +200,35 @@
           <!-- start large /medium vendors -->
           <div class="home-view-truck-options-wrapper">
             <div class="home-view-truck-options-divider" />
+            <div
+              v-if="$route.path === '/orders/dedicated/multi-destination'"
+              class="home-view-truck-options-inner-wrapper"
+            >
+              <div class="home-view-truck-options-dedicated-notes">
+                <p>Add notes for each destination (optional)</p>
+                <div
+                  v-for="(path, index) in getStoreOrderPath"
+                  :key="index"
+                >
+                  <div 
+                    v-if="index > 0"
+                    class="home-view-truck-options-dedicated-notes-label"
+                  >
+                    <div class="home-view-truck-options-dedicated-notes-icon" />
+                    <p class="no-margin">
+                      {{ path.name }}
+                    </p>
+                  </div>
+                  <el-input
+                    v-if="index > 0"
+                    class=""
+                    autocomplete="true"
+                    placeholder="Notes"
+                    @input="addDestinationNotes($event, path, index)"
+                  />
+                </div>
+              </div>
+            </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
                 What do you want delivered?
@@ -713,7 +742,7 @@ export default {
       getPairWithRiderStatus: '$_orders/$_home/getPairWithRiderStatus',
       getVehicleDetails: '$_orders/$_home/getVehicleDetails',
       getCarrierType: '$_orders/$_home/getCarrierType',
-
+      getStoreOrderPath: '$_orders/getStorePath',
     }),
 
     vehicleDetailsPlaceholder() {
@@ -837,6 +866,10 @@ export default {
       setLoadWeightValue: '$_orders/$_home/setLoadWeightValue',
       setVendorPrice: '$_orders/$_home/setVendorPrice',
       setVehicleDetails: '$_orders/$_home/setVehicleDetails',
+      setStorePath: '$_orders/setStorePath',
+      clearStorePath: '$_orders/clearStorePath',
+      unsetStorePath: '$_orders/unsetStorePath',
+      setWaypointNotes: '$_orders/setWaypointNotes',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -860,6 +893,12 @@ export default {
       }
       this.setScheduleTime(this.schedule_time);
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
+    },
+    addDestinationNotes(note, pathObj, i) {
+      this.setWaypointNotes({
+        index: i,
+        notes: note,
+      });
     },
     dispatchOrderNotes() {
       this.trackMixpanelEvent('Set Order Notes', { 'Order Notes': this.order_notes });

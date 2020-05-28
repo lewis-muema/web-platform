@@ -25,6 +25,8 @@ export default {
       order_path: [],
       location_path: [],
       outer_price_request: {},
+      active_vendor_tally: [],
+      expanded_active_vendor_tally: [],
       outer_active_vendor_data: {},
       outer_active_package_data: 'small',
       parent_order: '',

@@ -7,6 +7,8 @@ const getVendors = state => state.map.vendors;
 const getHomeLocations = state => state.home_locations;
 const getStorePath = state => state.location_path;
 const getOuterPriceRequestData = state => state.outer_price_request;
+const getActiveVendorTally = state => state.active_vendor_tally;
+const getExpandedActiveVendorTally = state => state.expanded_active_vendor_tally;
 const getOuterActiveVendorDetails = state => state.outer_active_vendor_data;
 const getOuterActivePackageClass = state => state.outer_active_package_data;
 const getParentOrder = state => state.parent_order;
@@ -22,6 +24,8 @@ export default {
   getHomeLocations,
   getStorePath,
   getOuterPriceRequestData,
+  getActiveVendorTally,
+  getExpandedActiveVendorTally,
   getOuterActiveVendorDetails,
   getOuterActivePackageClass,
   getParentOrder,
