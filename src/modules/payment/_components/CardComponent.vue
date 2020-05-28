@@ -442,4 +442,7 @@ export default {
   min-height: 4rem;
   margin: .5em;
 }
+.el-radio.is-bordered{
+  width:100%;
+}
 </style>
