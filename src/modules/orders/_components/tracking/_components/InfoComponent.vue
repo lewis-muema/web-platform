@@ -994,7 +994,9 @@ export default {
     this.poll(this.$route.params.order_no);
     this.checkRunningBalance();
     this.initiateOrderData();
-    this.retrieveCancellationReasons();
+    if (this.user_state) {
+      this.retrieveCancellationReasons();
+    }
   },
   created() {
     this.order_number = this.$route.params.order_no;
