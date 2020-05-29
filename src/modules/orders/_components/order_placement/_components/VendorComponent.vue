@@ -210,7 +210,7 @@
                   v-for="(path, index) in getStoreOrderPath"
                   :key="index"
                 >
-                  <div 
+                  <div
                     v-if="index > 0"
                     class="home-view-truck-options-dedicated-notes-label"
                   >
@@ -545,10 +545,29 @@
                     </el-input>
                     <div class="pair_info_text_content">
                       <div v-if="pair_status === '1'">
-                        <p class="upper_scope_pair_text">
-                          {{ riderNameDisplay }} not found
-                        </p>
-                        <p>{{ failure_text }}</p>
+                        <el-row :gutter="20">
+                          <el-col
+                            :span="1"
+                            class="pairing-alert"
+                          >
+                            <div>
+                              <i class="el-icon-warning pairing-alert-icon" />
+                            </div>
+                          </el-col>
+                          <el-col
+                            :span="8"
+                            class="pairing-error-display"
+                          >
+                            <div class="share-option">
+                              <div class="pairing-error-header">
+                                {{ riderNameDisplay }} not found
+                              </div>
+                              <div class="pair-model-info">
+                                {{ failure_text }}
+                              </div>
+                            </div>
+                          </el-col>
+                        </el-row>
                       </div>
                       <div v-if="pair_status === '2'">
                         <el-row :gutter="20">
@@ -856,6 +875,7 @@ export default {
       setScheduleTime: '$_orders/$_home/setScheduleTime',
       setOrderNotes: '$_orders/$_home/setOrderNotes',
       setPairWithRiderStatus: '$_orders/$_home/setPairWithRiderStatus',
+      setPairWithRiderState: '$_orders/$_home/setPairWithRiderState',
       setPairSerialNumber: '$_orders/$_home/setPairSerialNumber',
       setPairRiderPhone: '$_orders/$_home/setPairRiderPhone',
       setOuterActiveVendorDetails: '$_orders/setOuterActiveVendorDetails',
@@ -906,12 +926,14 @@ export default {
     },
     dispatchPairStatus() {
       const status = this.pair_rider;
-      if (status === 1) {
+      if (status === '1') {
         // pair with rider
         this.setPairWithRiderStatus(true);
+        this.setPairWithRiderState(true);
       } else {
         // do not pair
         this.setPairWithRiderStatus(false);
+        this.setPairWithRiderState(false);
       }
     },
     goToNextStep() {
@@ -1064,6 +1086,7 @@ export default {
     },
     checkVehicleDetails() {
       const vehicleDetails = this.vehicle_plate;
+      this.setPairRiderPhone('');
       if (vehicleDetails === '') {
         this.doNotification(
           '2',
@@ -1461,5 +1484,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=2';
 </style>

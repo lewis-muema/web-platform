@@ -471,4 +471,22 @@
 .dedicated-vendor-items-select {
   padding-right: 3px !important;
 }
+.pairing-alert{
+  width: 20% !important;
+  margin-top: 17%;
+  border: none;
+  text-align: center;
+}
+.pairing-alert-icon{
+  font-size: 30px;
+  color: #f57e20;
+}
+.pairing-error-display{
+  width: 77% !important;
+  padding-top: 14%;
+}
+.pairing-error-header{
+  margin-bottom: 3%;
+  text-transform: capitalize;
+}
 /* end transitions */

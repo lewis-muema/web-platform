@@ -172,6 +172,9 @@ export default {
   setPairSerialNumber(state, val) {
     state.pair_serial_number = val;
   },
+  setPairWithRiderState(state, val) {
+    state.pair_rider_state = val;
+  },
   setPairRiderPhone(state, val) {
     state.pair_rider_phone = val;
   },
