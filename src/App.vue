@@ -38,7 +38,7 @@ export default {
         this.trackMixpanelEvent('Notification initiated');
       }
       this.trackMixpanelEvent('Notification state', {
-        Status: val,
+        'Notification Status': val,
       });
     },
     // watch session so as to only update token on session
