@@ -482,6 +482,10 @@ export default {
           value: '1',
           label: 'Closed',
         },
+        {
+          value: '2',
+          label: 'Any',
+        }
       ],
       smallVendorOptions: [        
         {
@@ -701,7 +705,11 @@ export default {
           if (row1.tally > 0) {
             this.activeVendorTally.push(row1);
             for (let i = 0; i < row1.tally; i++) {
-              row1.carrier_type = '0';
+              if (row1.vendor_id === 3) {
+                row1.carrier_type = '0';
+              } else {
+                row1.carrier_type = '';
+              }
               this.expandedActiveVendorTally.push(row1);
             }
           }
