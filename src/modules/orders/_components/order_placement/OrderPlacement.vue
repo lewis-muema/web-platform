@@ -137,7 +137,7 @@
           >Add Destination</a>
         </div>
       </div>
-      <div v-if="$route.path === '/orders/dedicated/multi-destination'">
+      <div v-if="$route.path === '/orders/dedicated/multi-destination' && fileUploadStatus">
         <p class="home-view--upload-par">
           OR
         </p>
@@ -229,6 +229,7 @@ export default {
           west: -19.1,
         },
         strictBounds: true,
+        fileUploadStatus: false,
       },
     };
   },

@@ -382,7 +382,10 @@
                 class="el-input__inner"
               >
             </div>
-            <div class="home-view-truck-options-inner-wrapper">
+            <div
+              v-if="$route.path !== '/orders/dedicated/multi-destination'"
+              class="home-view-truck-options-inner-wrapper"
+            >
               <div class="home-view-truck-options-label">
                 Additional Instructions
               </div>
