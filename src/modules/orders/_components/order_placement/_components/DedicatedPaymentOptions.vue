@@ -529,7 +529,17 @@ export default {
         eventLabel: 'Order Confirmation Button - Order Placement Page - Web App',
       };
       this.fireGAEvent(eventPayload);
-
+      const unsetCarriers = this.getExpandedActiveVendorTally.filter(
+        data => data.carrier_type === '',
+      );
+      if (unsetCarriers.length > 0) {
+        this.doNotification(
+          2,
+          'Vehicle type not set',
+          'Please set the vehicle type for all of the vehicles selected',
+        );
+        return false;
+      }
       if (this.isValidateScheduleTime() === 1) {
         this.loading = true;
         this.refreshRunningBalance().then(
