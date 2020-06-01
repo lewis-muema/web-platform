@@ -92,7 +92,7 @@
                     <span v-else> {{ getVendorCurrency(j) }} {{ getVendorPrice(j) }} </span>
                   </div>
                   <div class="home-view-vendor-types-item--cost-wrapper_time">
-                    <span>
+                    <span v-if="j.price_type">
                       Type: {{ formatPriceType(j.price_type) }}
                     </span>
                   </div>

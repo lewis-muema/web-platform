@@ -87,7 +87,7 @@
             </no-ssr>
           </div>
         </div>
-        <div>
+        <div v-if="fileUploadStatus">
           <p class="home-view--upload-par">
             OR
           </p>
@@ -184,6 +184,7 @@ export default {
         strictBounds: true,
       },
       dropOffRegion: '',
+      fileUploadStatus: false,
     };
   },
   computed: {
