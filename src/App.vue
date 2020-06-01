@@ -28,11 +28,13 @@ export default {
   computed: {
     ...mapGetters({
       getSession: 'getSession',
-      getNotificationStatus: 'getNotificationStatus',
     }),
+    notification_status() {
+      return this.$store.getters.getNotificationStatus;
+    },
   },
   watch: {
-    getNotificationStatus(val) {
+    notification_status(val) {
       this.trackMixpanelEvent('Notification state', {
         'Notification Status': val,
       });
