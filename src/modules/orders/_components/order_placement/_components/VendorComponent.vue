@@ -2,6 +2,7 @@
   <div
     v-if="getOrderState === 1"
     class="home-view-vendor-and-optins-wrappper"
+    :class="$route.path === '/orders/dedicated/multi-destination' ? 'dedicated-vendors-wrapper' : ''"
   >
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
