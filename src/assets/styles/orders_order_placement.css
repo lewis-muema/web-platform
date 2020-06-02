@@ -353,6 +353,9 @@
   margin-right: -20px;
   padding-right: 10px;
 }
+.dedicated-vendors-wrapper {
+  max-height: 44vh !important;
+}
 .homeview--input-bundler__destination-short-input {
   margin-right: unset;
 }
