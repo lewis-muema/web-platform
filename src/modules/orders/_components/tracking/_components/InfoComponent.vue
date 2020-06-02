@@ -110,12 +110,15 @@
                       <p>{{ tracking_data.path[0].name }}</p>
                     </li>
 
-                    <li v-for="(val, index) in tracking_data.path" v-if="index > 0">
+                    <li v-for="(val, index) in tracking_data.path" v-if="index > 0" :class="Object.prototype.hasOwnProperty.call(val, 'notes') && val.notes ? 'infor-top-bar-notes-section' : ''">
                       <p class="info-text-transform infor-top-bar-text">
                          {{tracking_data.path[index].waypoint_type ? tracking_data.path[index].waypoint_type :  `Destination`}}
                       </p>
                       <p>
                         {{ val.name }}
+                      </p>
+                      <p class="infor-top-bar-text-notes" v-if="Object.prototype.hasOwnProperty.call(val, 'notes') && val.notes">
+                        Notes: {{ val.notes }}
                       </p>
                     </li>
                   </ul>
