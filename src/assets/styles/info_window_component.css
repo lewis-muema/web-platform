@@ -572,6 +572,14 @@ ul.timeline > li#timeline_right.payedReached:before {
   color: #8a8a8a;
   margin-bottom: 7px;
 }
+.infor-top-bar-text-notes {
+  margin: -5px 0px -20px 0px;
+  font-style: italic;
+  font-weight: 500;
+}
+.infor-top-bar-notes-section {
+  height: max-content !important;
+}
 .cancel-text-option {
   width: 23% !important;
 }
