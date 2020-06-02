@@ -1,7 +1,7 @@
 <template lang="html">
   <div
     v-if="getOrderState === 1"
-    class="home-view-vendor-and-optins-wrappper dedicated-vendors-wrapper"
+    class="home-view-vendor-and-optins-wrappper"
   >
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
