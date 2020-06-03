@@ -102,17 +102,10 @@
         min-width="60"
       />
       <el-table-column
-        label="Debit"
+        label="Amount"
         prop="amount"
         width="110"
-        :formatter="formatDebitAmount"
-        class-name="amount--table-format"
-      />
-      <el-table-column
-        label="Credit"
-        prop="amount"
-        width="110"
-        :formatter="formatCreditAmount"
+        :formatter="formatAmount"
         class-name="amount--table-format"
       />
       <el-table-column
@@ -277,6 +270,11 @@ export default {
         return value[0].replace('-', '');
       }
       return '';
+    },
+    formatAmount(row) {
+      let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+      value = value.split('.');
+      return value[0];
     },
     filterStatementData() {
       // reset filter
