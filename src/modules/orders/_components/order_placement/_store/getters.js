@@ -39,4 +39,5 @@ export default {
   getProductId: state => state.product_id,
   getVehicleDetails: state => state.vehicle_plate,
   getPairWithRiderState: state => state.pair_rider_state,
+  getPairErrorMessage: state => state.pair_error_msg,
 };
