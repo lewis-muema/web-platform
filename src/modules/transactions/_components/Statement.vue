@@ -377,7 +377,7 @@ export default {
         });
 
         const docDefinition = {
-          pageSize: 'A4',
+          pageSize: 'A3',
           widths: ['*', 'auto', 100, '*'],
 
           content: [
