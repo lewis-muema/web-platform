@@ -208,4 +208,7 @@ export default {
   setVehicleDetails(state, val) {
     state.vehicle_plate = val;
   },
+  setPairErrorMessage(state, val) {
+    state.pair_error_msg = val;
+  },
 };

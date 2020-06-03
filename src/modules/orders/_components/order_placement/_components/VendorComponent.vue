@@ -894,6 +894,7 @@ export default {
       clearStorePath: '$_orders/clearStorePath',
       unsetStorePath: '$_orders/unsetStorePath',
       setWaypointNotes: '$_orders/setWaypointNotes',
+      setPairErrorMessage: '$_orders/$_home/setPairErrorMessage',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -1151,6 +1152,7 @@ export default {
           } else {
             this.pair_status = '1';
             this.failure_text = response.message;
+            this.setPairErrorMessage(response.message);
             this.visible2 = true;
             this.setPairWithRiderStatus(false);
           }
