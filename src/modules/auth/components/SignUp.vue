@@ -1,17 +1,11 @@
 <template lang="html">
   <div class="sign-up-main">
-    <div
-      class="sign-up-container sign-up-main--inner"
-    >
+    <div class="sign-up-container sign-up-main--inner">
       <div class="sign-up-content">
-        <div
-          class="sign-up-help-card"
-        >
+        <div class="sign-up-help-card">
           <div class="">
             <div>
-              <p
-                class="sign-up--extra extra-text"
-              >
+              <p class="sign-up--extra extra-text">
                 Join
                 <a class="partners-brand-text">5000+ Customers </a>who trust Sendy
               </p>
@@ -54,9 +48,7 @@
             </div>
           </div>
         </div>
-        <div
-          class="sign-up-card cards--align sign-up-details-section"
-        >
+        <div class="sign-up-card cards--align sign-up-details-section">
           <sign-up-details-component />
         </div>
       </div>
@@ -74,13 +66,10 @@ export default {
     signUpDetailsComponent,
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
-    ...mapGetters({
-
-    }),
+    ...mapGetters({}),
   },
   methods: {
     getPartnerLogo(id) {
@@ -93,13 +82,4 @@ export default {
 <style lang="css" scoped>
 
 @import "../../../../src/assets/styles/sign_up.css";
-@media (max-width: 500px) {
-  .sign-up-help-card {
-    display: none;
-  }
-  .logo {
-    margin: auto;
-    padding: 0px;
-  }
-}
 </style>
