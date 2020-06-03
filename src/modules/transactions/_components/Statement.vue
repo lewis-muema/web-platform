@@ -342,7 +342,7 @@ export default {
           arr.PaymentMethod = this.statementData[i].pay_method_name;
           arr.Debit = this.formatDebitAmount(this.statementData[i]);
           arr.Credit = this.formatCreditAmount(this.statementData[i]);
-          arr.RunningBalance = this.statementData[i].running_balance;
+          arr.RunningBalance = this.formatRunningBalance(this.statementData[i]);
           data2.push(arr);
         }
         data = _.map(data2, row => _.pick(
@@ -372,12 +372,12 @@ export default {
             item.pay_method_name,
             this.formatDebitAmount(item),
             this.formatCreditAmount(item),
-            item.running_balance,
+            this.formatRunningBalance(item),
           ]);
         });
 
         const docDefinition = {
-          pageSize: 'A3',
+          pageSize: 'A4',
           widths: ['*', 'auto', 100, '*'],
 
           content: [
