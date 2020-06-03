@@ -336,22 +336,24 @@ export default {
 
         for (let i = 0; i < this.statementData.length; i++) {
           const arr = {};
-          arr.Amount = this.statementData[i].amount;
+          arr.Transaction = this.statementData[i].txn;
           arr.Date = this.statementData[i].date_time;
           arr.Description = this.statementData[i].description;
           arr.PaymentMethod = this.statementData[i].pay_method_name;
-          arr.RunningBalance = this.statementData[i].running_balance;
-          arr.Transaction = this.statementData[i].txn;
+          arr.Debit = this.formatDebitAmount(this.statementData[i]);
+          arr.Credit = this.formatCreditAmount(this.statementData[i]);
+          arr.RunningBalance = this.formatRunningBalance(this.statementData[i]);
           data2.push(arr);
         }
         data = _.map(data2, row => _.pick(
           row,
-          'Amount',
+          'Transaction',
           'Date',
           'Description',
           'PaymentMethod',
+          'Debit',
+          'Credit',
           'RunningBalance',
-          'Transaction',
         ));
         const fileName = 'Statement';
         const exportType = 'csv';
@@ -359,17 +361,18 @@ export default {
         exportFromJSON({ data, fileName, exportType });
       } else {
         const pdfBody = [
-          ['Amount', 'Date', 'Description', 'Payment Method', 'Running Balance', 'Transaction'],
+          ['Transaction', 'Date', 'Description', 'Payment Method', 'Debit', 'Credit', 'Running Balance'],
         ];
 
         this.statementData.forEach((item) => {
           pdfBody.push([
-            item.amount,
+            item.txn,
             item.date_time,
             item.description,
             item.pay_method_name,
-            item.running_balance,
-            item.txn,
+            this.formatDebitAmount(item),
+            this.formatCreditAmount(item),
+            this.formatRunningBalance(item),
           ]);
         });
 
