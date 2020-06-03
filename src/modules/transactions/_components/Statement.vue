@@ -97,15 +97,17 @@
         min-width="80"
       />
       <el-table-column
-        label="Transaction Type"
-        prop="pay_narrative"
-        min-width="60"
-      />
-      <el-table-column
-        label="Amount"
+        label="Debit"
         prop="amount"
         width="110"
-        :formatter="formatAmount"
+        :formatter="formatDebitAmount"
+        class-name="amount--table-format"
+      />
+      <el-table-column
+        label="Credit"
+        prop="amount"
+        width="110"
+        :formatter="formatCreditAmount"
         class-name="amount--table-format"
       />
       <el-table-column
@@ -271,11 +273,6 @@ export default {
       }
       return '';
     },
-    formatAmount(row) {
-      let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-      value = value.split('.');
-      return value[0];
-    },
     filterStatementData() {
       // reset filter
       const sessionData = this.$store.getters.getSession;
@@ -339,24 +336,24 @@ export default {
 
         for (let i = 0; i < this.statementData.length; i++) {
           const arr = {};
-          arr.Amount = this.statementData[i].amount;
+          arr.Transaction = this.statementData[i].txn;
           arr.Date = this.statementData[i].date_time;
           arr.Description = this.statementData[i].description;
-          arr.TransactionType = this.statementData[i].pay_narrative;
           arr.PaymentMethod = this.statementData[i].pay_method_name;
+          arr.Debit = this.formatDebitAmount(this.statementData[i]);
+          arr.Credit = this.formatCreditAmount(this.statementData[i]);
           arr.RunningBalance = this.statementData[i].running_balance;
-          arr.Transaction = this.statementData[i].txn;
           data2.push(arr);
         }
         data = _.map(data2, row => _.pick(
           row,
-          'Amount',
+          'Transaction',
           'Date',
           'Description',
-          'TransactionType',
           'PaymentMethod',
+          'Debit',
+          'Credit',
           'RunningBalance',
-          'Transaction',
         ));
         const fileName = 'Statement';
         const exportType = 'csv';
@@ -364,18 +361,18 @@ export default {
         exportFromJSON({ data, fileName, exportType });
       } else {
         const pdfBody = [
-          ['Amount', 'Date', 'Description', 'TransactionType ', 'Payment Method', 'Running Balance', 'Transaction'],
+          ['Transaction', 'Date', 'Description', 'Payment Method', 'Debit', 'Credit', 'Running Balance'],
         ];
 
         this.statementData.forEach((item) => {
           pdfBody.push([
-            item.amount,
+            item.txn,
             item.date_time,
             item.description,
-            item.pay_narrative,
             item.pay_method_name,
+            this.formatDebitAmount(item),
+            this.formatCreditAmount(item),
             item.running_balance,
-            item.txn,
           ]);
         });
 
