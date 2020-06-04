@@ -1160,7 +1160,7 @@ export default {
           }
         },
         (error) => {
-          const msg = error.response.data.message;
+          const msg = error.message;
           this.pair_status = '1';
           this.failure_text = msg;
           this.setPairErrorMessage(msg);
