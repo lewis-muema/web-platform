@@ -89,9 +89,10 @@ export default {
         })
         .catch((error) => {
           if (error.response.status === 400) {
-            resolve(error);
+            resolve(error.response.data);
+          } else {
+            reject(error);
           }
-          reject(error);
         });
     });
   },
