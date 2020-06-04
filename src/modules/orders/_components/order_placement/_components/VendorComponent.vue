@@ -1159,7 +1159,14 @@ export default {
             this.setPairWithRiderStatus(false);
           }
         },
-        error => false,
+        (error) => {
+          const msg = error.response.data.message;
+          this.pair_status = '1';
+          this.failure_text = msg;
+          this.setPairErrorMessage(msg);
+          this.visible2 = true;
+          this.setPairWithRiderStatus(false);
+        },
       );
       this.searchOption = false;
     },
