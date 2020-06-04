@@ -939,6 +939,7 @@ export default {
         // do not pair
         this.setPairWithRiderStatus(false);
         this.setPairWithRiderState(false);
+        this.setPairErrorMessage('');
       }
     },
     goToNextStep() {
@@ -1092,6 +1093,7 @@ export default {
     checkVehicleDetails() {
       const vehicleDetails = this.vehicle_plate;
       this.setPairRiderPhone('');
+      this.setPairErrorMessage('');
       if (vehicleDetails === '') {
         this.doNotification(
           '2',
