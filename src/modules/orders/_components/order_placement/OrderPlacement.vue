@@ -221,6 +221,7 @@ export default {
       show_destinations: false,
       loading: false,
       locations: [],
+      fileUploadStatus: false,
       map_options: {
         bounds: {
           north: 35.6,
@@ -229,7 +230,6 @@ export default {
           west: -19.1,
         },
         strictBounds: true,
-        fileUploadStatus: false,
       },
     };
   },
