@@ -403,6 +403,7 @@ export default {
       getHomeLocations: '$_orders/getHomeLocations',
       getStoreOrderPath: '$_orders/getStorePath',
       getPairWithRiderState: '$_orders/$_home/getPairWithRiderState',
+      getPairErrorMessage: '$_orders/$_home/getPairErrorMessage',
     }),
 
     active_price_tier_data() {
@@ -676,16 +677,12 @@ export default {
 
     displayOrderHistory() {
       if (this.getPairWithRiderState && this.getPairRiderPhone === '') {
-        this.doNotification(
-          2,
-          'Pairing Failure',
-          'Kindly provide partner details while initiating pairing requests',
-        );
+        this.initiatePairingFailureNotification();
       } else if (this.getPairWithRiderState && !this.getPairWithRiderStatus) {
         this.doNotification(
           2,
           'Pairing Failure',
-          'Sorry, the partner you are trying to match to is either unavailable or offline, please call them to find when they will be available next.',
+          this.getPairErrorMessage,
         );
       } else if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
         this.preCheckPaymentDetails();
@@ -705,6 +702,20 @@ export default {
           'User Phone': accData.user_phone,
         });
       }
+    },
+    initiatePairingFailureNotification() {
+      let msg = '';
+      if (this.getPairErrorMessage !== '') {
+        msg = this.getPairErrorMessage;
+      } else {
+        msg = 'Kindly provide partner details while initiating pairing requests';
+      }
+
+      this.doNotification(
+        2,
+        'Pairing Failure',
+        msg,
+      );
     },
     editOrder() {
       this.confirmFinal = false;

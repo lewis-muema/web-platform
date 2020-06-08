@@ -894,6 +894,7 @@ export default {
       clearStorePath: '$_orders/clearStorePath',
       unsetStorePath: '$_orders/unsetStorePath',
       setWaypointNotes: '$_orders/setWaypointNotes',
+      setPairErrorMessage: '$_orders/$_home/setPairErrorMessage',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -938,6 +939,7 @@ export default {
         // do not pair
         this.setPairWithRiderStatus(false);
         this.setPairWithRiderState(false);
+        this.setPairErrorMessage('');
       }
     },
     goToNextStep() {
@@ -1091,6 +1093,7 @@ export default {
     checkVehicleDetails() {
       const vehicleDetails = this.vehicle_plate;
       this.setPairRiderPhone('');
+      this.setPairErrorMessage('');
       if (vehicleDetails === '') {
         this.doNotification(
           '2',
@@ -1151,11 +1154,19 @@ export default {
           } else {
             this.pair_status = '1';
             this.failure_text = response.message;
+            this.setPairErrorMessage(response.message);
             this.visible2 = true;
             this.setPairWithRiderStatus(false);
           }
         },
-        error => false,
+        (error) => {
+          const msg = error.response.data.message;
+          this.pair_status = '1';
+          this.failure_text = msg;
+          this.setPairErrorMessage(msg);
+          this.visible2 = true;
+          this.setPairWithRiderStatus(false);
+        },
       );
       this.searchOption = false;
     },

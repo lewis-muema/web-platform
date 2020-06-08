@@ -294,11 +294,9 @@
   margin: 20px 0px 0px 0px;
 }
 .pop-over-layout {
-  /* top: 250px !important; */
-  height: 133px;
   background-color: white !important;
   width: 20% !important;
-  /* min-height: 90px !important; */
+  min-height: 19% !important;
 }
 .pair-rider-name {
   padding: 8px;
@@ -473,7 +471,7 @@
 }
 .pairing-alert{
   width: 20% !important;
-  margin-top: 17%;
+  margin-top: 12%;
   border: none;
   text-align: center;
 }
@@ -483,7 +481,7 @@
 }
 .pairing-error-display{
   width: 77% !important;
-  padding-top: 14%;
+  padding-top: 4%;
 }
 .pairing-error-header{
   margin-bottom: 3%;

@@ -97,11 +97,6 @@
         min-width="80"
       />
       <el-table-column
-        label="Transaction Type"
-        prop="pay_narrative"
-        min-width="60"
-      />
-      <el-table-column
         label="Debit"
         prop="amount"
         width="110"
@@ -341,22 +336,22 @@ export default {
 
         for (let i = 0; i < this.statementData.length; i++) {
           const arr = {};
-          arr.Amount = this.statementData[i].amount;
           arr.Date = this.statementData[i].date_time;
           arr.Description = this.statementData[i].description;
-          arr.TransactionType = this.statementData[i].pay_narrative;
           arr.PaymentMethod = this.statementData[i].pay_method_name;
-          arr.RunningBalance = this.statementData[i].running_balance;
+          arr.Debit = this.formatDebitAmount(this.statementData[i]);
+          arr.Credit = this.formatCreditAmount(this.statementData[i]);
+          arr.RunningBalance = this.formatRunningBalance(this.statementData[i]);
           arr.Transaction = this.statementData[i].txn;
           data2.push(arr);
         }
         data = _.map(data2, row => _.pick(
           row,
-          'Amount',
           'Date',
           'Description',
-          'TransactionType',
           'PaymentMethod',
+          'Debit',
+          'Credit',
           'RunningBalance',
           'Transaction',
         ));
@@ -366,17 +361,17 @@ export default {
         exportFromJSON({ data, fileName, exportType });
       } else {
         const pdfBody = [
-          ['Amount', 'Date', 'Description', 'TransactionType ', 'Payment Method', 'Running Balance', 'Transaction'],
+          ['Date', 'Description', 'Payment Method', 'Debit', 'Credit', 'Running Balance', 'Transaction'],
         ];
 
         this.statementData.forEach((item) => {
           pdfBody.push([
-            item.amount,
             item.date_time,
             item.description,
-            item.pay_narrative,
             item.pay_method_name,
-            item.running_balance,
+            this.formatDebitAmount(item),
+            this.formatCreditAmount(item),
+            this.formatRunningBalance(item),
             item.txn,
           ]);
         });

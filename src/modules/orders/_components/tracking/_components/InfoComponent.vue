@@ -1016,6 +1016,7 @@ export default {
     }, 500),
     cancelChange(reason) {
       this.more_info = false ;
+      this.cancel_desc = '';
       const data = this.cancellation_reasons.find(position => position.cancel_reason_id === reason);
       if (reason === 0) {
         this.more_info = true ;

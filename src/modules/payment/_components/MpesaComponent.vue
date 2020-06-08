@@ -263,6 +263,7 @@ export default {
         phone: this.mpesa_payment_data.phone_number, // confirm about this later
         email: user_email,
         currency: session[session.default].default_currency,
+        vendorType: 1,
       };
 
       // TODO: implement the discount bundles if needed
