@@ -1531,6 +1531,10 @@ export default {
 
       const exist = data.payment_methods.find(available => available.payment_method_id === 5);
 
+      if (exist && (this.$route.path === '/orders/dedicated/multi-destination' || this.$route.path === '/orders/dedicated/no-destination')) {
+        data.payment_methods.splice(data.payment_methods.indexOf(exist), 1);
+      }
+
       if (exist === undefined || exist === null) {
         payment = data.payment_methods;
       } else {
