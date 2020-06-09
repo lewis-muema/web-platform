@@ -44,6 +44,8 @@ export default {
       product_phase: 1,
       product_id: 1,
       vehicle_plate: '',
+      pair_rider_state: false,
+      pair_error_msg: '',
     };
   },
   actions,

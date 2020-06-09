@@ -401,6 +401,8 @@ export default {
       getLoadWeightStatus: '$_orders/$_home/getLoadWeightStatus',
       getLoadWeightValue: '$_orders/$_home/getLoadWeightValue',
       getHomeLocations: '$_orders/getHomeLocations',
+      getPairWithRiderState: '$_orders/$_home/getPairWithRiderState',
+      getPairErrorMessage: '$_orders/$_home/getPairErrorMessage',
     }),
 
     active_price_tier_data() {
@@ -673,7 +675,15 @@ export default {
     },
 
     displayOrderHistory() {
-      if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+      if (this.getPairWithRiderState && this.getPairRiderPhone === '') {
+        this.initiatePairingFailureNotification();
+      } else if (this.getPairWithRiderState && !this.getPairWithRiderStatus) {
+        this.doNotification(
+          2,
+          'Pairing Failure',
+          this.getPairErrorMessage,
+        );
+      } else if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
         this.preCheckPaymentDetails();
       } else {
         this.confirmFinal = true;
@@ -691,6 +701,20 @@ export default {
           'User Phone': accData.user_phone,
         });
       }
+    },
+    initiatePairingFailureNotification() {
+      let msg = '';
+      if (this.getPairErrorMessage !== '') {
+        msg = this.getPairErrorMessage;
+      } else {
+        msg = 'Kindly provide partner details while initiating pairing requests';
+      }
+
+      this.doNotification(
+        2,
+        'Pairing Failure',
+        msg,
+      );
     },
     editOrder() {
       this.confirmFinal = false;

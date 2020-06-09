@@ -68,7 +68,7 @@ export default {
     });
   },
 
-  requestPairRider({ commit, dispatch }, payload) {
+  requestPairRider({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true })
         .then((response) => {
@@ -76,15 +76,10 @@ export default {
         })
         .catch((error) => {
           if (error.response.status === 400) {
-            const notification = {
-              title: 'Rider Pairing Failure!',
-              level: 2,
-              message: error.response.data.message,
-            };
-            commit('setNotification', notification, { root: true });
-            commit('setNotificationStatus', true, { root: true });
+            resolve(error.response.data);
+          } else {
+            reject(error);
           }
-          reject(error);
         });
     });
   },
