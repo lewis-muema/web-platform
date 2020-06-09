@@ -857,7 +857,8 @@ export default {
             card_details => card_details.last4 === this.payment_account.slice(2),
           );
           const setCurrency = this.activeVendorPriceData.currency;
-          this.handleSavedCard(setCurrency, card, true);
+          const vendorId = this.activeVendorPriceData.vendor_id;
+          this.handleSavedCard(vendorId, setCurrency, card, true);
         } else {
           // console.log('not handled payment method', this.payment_method);
         }
