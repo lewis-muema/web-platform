@@ -316,6 +316,18 @@ export function createRouter() {
             meta: { innerTrack: 'Order Placement Page' },
           },
           {
+            path: '/orders/dedicated/no-destination',
+            component: () => import('../modules/orders/_components/order_placement/DedicatedModelNoDestination.vue'),
+            name: 'dedicated_no_destination_order_placement',
+            meta: { innerTrack: 'Dedicated No Destination Order Placement Page' },
+          },
+          {
+            path: '/orders/dedicated/multi-destination',
+            component: () => import('../modules/orders/_components/order_placement/DedicatedModelMultiDestination.vue'),
+            name: 'dedicated_multi_destination_order_placement',
+            meta: { innerTrack: 'Dedicated Multi Destination Order Placement Page' },
+          },
+          {
             path: '/orders/freight',
             component: () => import(
               '../modules/orders/_components/order_placement/Freight.vue',

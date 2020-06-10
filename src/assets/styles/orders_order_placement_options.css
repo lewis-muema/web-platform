@@ -82,6 +82,9 @@
   margin-top: 7% !important;
   margin-right: 7% !important;
 }
+.payment__radio-button-dedicated {
+  margin-right: 7% !important;
+}
 .payment__radio-button-label {
   width: 100% !important;
 }

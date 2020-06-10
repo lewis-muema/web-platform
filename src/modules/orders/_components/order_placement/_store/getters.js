@@ -5,6 +5,7 @@ export default {
   getActiveVendorDetails: state => state.active_vendor_details,
   getActiveOrderOption: state => state.active_order_option,
   getScheduleTime: state => state.schedule_time,
+  getScheduleEndTime: state => state.schedule_end_time,
   getOrderNotes: state => state.order_notes,
   getOrderPath: state => state.order_path,
   getLocationNames: state => state.location_names,

@@ -39,6 +39,29 @@
   background-color: white !important;
   width: 100% !important;
 }
+.vendor_component-actions__input-time {
+  background-color: white !important;
+  width: 45% !important;
+  margin: auto;
+  font-size: 12px;
+}
+.vendor_component-actions__title {
+  text-align: center;
+  font-weight: 500;
+}
+.vendor_component-actions__element-time {
+  padding: 5%;
+  box-shadow: 1px 0px 9px rgba(0, 0, 0, 0.21);
+  margin-top: 10px;
+  border-radius: 5px;
+}
+.vendor_component-actions__divider {
+  margin-left: 3%;
+  margin-right: 2%;
+  color: #1782c5;
+  font-size: 16px;
+  font-weight: 600;
+}
 .pair_rider_section {
   width: 100%;
 }
@@ -363,10 +386,53 @@
 .el-picker-panel__body-wrapper {
   background-color: white !important;
 }
+.el-time-panel {
+  font-family: 'Rubik', sans-serif;
+}
 .home-view-vendor-types--item__unavailable {
   background: #fbfbfb;
   color: #808080;
   font-weight: 400 !important;
+}
+.home-view-vendor-types-carrier {
+  width: 60px;
+}
+.home-view-vendor-types-carrier-container {
+  display: -webkit-inline-box;
+  width: 180px;
+  overflow-x: hidden;
+}
+.home-view-vendor-types-item__image-dedicated {
+  display: block;
+  margin: auto;
+}
+.dedicated-vendor-select .el-input {
+  font-size: 12px;
+  width: 230px;
+  margin-bottom: 10px;
+}
+.dedicated-vendor-popper-class {
+  background: white !important;
+  font-size: 12px;
+  color: black;
+}
+.dedicated-vendor-icon {
+  display: block;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.dedicated-vendor-container {
+  padding-left: 10%;
+}
+.home-view-vendor-types-item-vendor--vendor-formal-name-dedicated {
+  font-size: 11px;
+  text-align: center;
+}
+.home-view-vendor-types--picker__unavailable {
+  background: #fbfbfb;
+  color: #808080;
+  font-weight: 400 !important;
+  pointer-events: none;
 }
 .home-view-vendor-types--icon__unavailable {
   filter: grayscale(100%);
@@ -377,6 +443,12 @@
 .home-view-vendor-types-item--cost-wrapper-right > span > span {
   background-color: inherit;
 }
+.home-view-vendor-select-vendor-number .el-input {
+  width: 70px;
+}
+.home-view-vendor-select-vendor-number .el-input__inner {
+  color: #1b7fc3;
+}
 .home-view-vendor-types--extra__unavailable {
   background: rgba(173, 173, 173, 0.97) !important;
   color: #ffffff !important;
@@ -384,6 +456,18 @@
 .vendor_component-schedule {
   font-size: 10px;
   color: #212120;
+}
+.dedicated-minus-icon, .dedicated-plus-icon {
+  font-size: 9px;
+  font-weight: 900;
+  margin: 5px;
+}
+.dedicated-vendor-items-divider {
+  border-right: solid 1px;
+  margin-right: 3px;
+}
+.dedicated-vendor-items-select {
+  padding-right: 3px !important;
 }
 .pairing-alert{
   width: 20% !important;
