@@ -638,12 +638,13 @@ import _ from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PaymentOptions from './PaymentOptions.vue';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 export default {
   components: {
     PaymentOptions,
   },
-  mixins: [TimezoneMxn],
+  mixins: [TimezoneMxn, NotificationMxn],
   data() {
     return {
       first_time: false,
@@ -1378,13 +1379,12 @@ export default {
     },
 
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = {
         title,
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
 
     getVendorDescription(vendorObject) {

@@ -194,6 +194,7 @@ import paymentsModuleStore from '../../../payment/_store';
 import VendorComponent from './_components/VendorComponent.vue';
 import SessionMxn from '../../../../mixins/session_mixin';
 import EventsMixin from '../../../../mixins/events_mixin';
+import NotificationMxn from '../../../../mixins/notification_mixin';
 
 library.add(
   faPlus,
@@ -215,7 +216,7 @@ export default {
     'no-ssr': NoSSR,
     'vendor-view': VendorComponent,
   },
-  mixins: [SessionMxn, EventsMixin],
+  mixins: [SessionMxn, EventsMixin, NotificationMxn],
   data() {
     return {
       show_destinations: false,
@@ -223,6 +224,11 @@ export default {
       locations: [],
       fileUploadStatus: false,
       map_options: {
+        componentRestrictions: {
+          country: [
+            'ke', 'ug', 'tz',
+          ],
+        },
         bounds: {
           north: 35.6,
           east: 59.4,
@@ -593,9 +599,8 @@ export default {
     },
 
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
 
     doSetDefaultPackageClass() {

@@ -134,6 +134,7 @@ import TrackingStore from './_store';
 import FbuTrackBar from './_components/FbuTrackBar.vue';
 import RegisterStoreModule from '../../../../mixins/register_store_module';
 import EventsMixin from '../../../../mixins/events_mixin';
+import NotificationMxn from '../../../../mixins/notification_mixin';
 
 library.add(faArrowLeft);
 library.add(faWallet);
@@ -141,7 +142,7 @@ library.add(faWallet);
 export default {
   name: 'FBUTracking',
   components: { FbuTrackBar },
-  mixins: [RegisterStoreModule, EventsMixin],
+  mixins: [RegisterStoreModule, EventsMixin, NotificationMxn],
   data() {
     return {
       cancel_reason: '',
@@ -290,9 +291,8 @@ export default {
       }
     },
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
     trackMixpanelEvent(name) {
       let analyticsEnv = '';

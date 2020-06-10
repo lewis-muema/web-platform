@@ -3,7 +3,10 @@
     <!-- <div class="homeview--form__header">
          New Delivery
      </div> -->
-    <div v-if="phase === 1" class="homeview--inputs-override">
+    <div
+      v-if="phase === 1"
+      class="homeview--inputs-override"
+    >
       <div
         ref="scrollable_locations"
         class="homeview--form homeview--row homeview--form__scrollable homeview--input-freight-locations"
@@ -95,7 +98,11 @@
               </div>
             </div>
             <div class="homeview--return-input">
-              <input type="checkbox" v-model="returnStatus" @change="resetDestination()"> Return empty containers to the same location
+              <input
+                v-model="returnStatus"
+                type="checkbox"
+                @change="resetDestination()"
+              > Return empty containers to the same location
             </div>
             <gmap-autocomplete
               v-if="returnStatus"
@@ -113,8 +120,15 @@
       </div>
       <div>
         <div class="homeview--proceed">
-          <p class="home-view--upload-par">OR</p>
-          <p class="home-view--upload-button" @click="initiateUpload()">Upload file</p>
+          <p class="home-view--upload-par">
+            OR
+          </p>
+          <p
+            class="home-view--upload-button"
+            @click="initiateUpload()"
+          >
+            Upload file
+          </p>
           <button
             type="button"
             class="home-view--place-order"
@@ -170,7 +184,9 @@
           ref="scrollable_locations"
           class="homeview--form homeview--row homeview--form__scrollable homeview--input-freight-containers"
         >
-          <p class="homeview--input-header">Container details</p>
+          <p class="homeview--input-header">
+            Container details
+          </p>
           <input
             v-model="cont_no"
             type="text"
@@ -257,7 +273,8 @@
         >
           <div
             v-for="(container, index) in containers"
-            :key="container.length" class="homeview--section__container"
+            :key="container.length"
+            class="homeview--section__container"
             :class="`container${index}`"
           >
             <div class="homeview--heading">
@@ -334,38 +351,65 @@
         </div>
       </div>
     </div>
-    <div v-if="phase === 3 && getOuterPriceRequestData" class="">
+    <div
+      v-if="phase === 3 && getOuterPriceRequestData"
+      class=""
+    >
       <div
         ref="scrollable_locations"
         class="homeview--form homeview--row homeview--form__scrollable homeview--input-freight-complete"
       >
         <table class="homeview--order-confirm">
           <tr>
-            <td class="homeview--order-confirm-row__top color-blue">Order Status: Pending</td>
-            <td class="homeview--order-confirm-row__top color-orange">Cost: {{ getEconomicPriceTiers.currency }} {{ getEconomicPriceTiers.cost }}</td>
-          </tr>
-          <tr>
-            <td class="homeview--order-confirm-row__middle">Order Details</td>
-            <td class="homeview--order-confirm-row__middle">Truck Size</td>
+            <td class="homeview--order-confirm-row__top color-blue">
+              Order Status: Pending
+            </td>
+            <td class="homeview--order-confirm-row__top color-orange">
+              Cost: {{ getEconomicPriceTiers.currency }} {{ getEconomicPriceTiers.cost }}
+            </td>
           </tr>
           <tr>
             <td class="homeview--order-confirm-row__middle">
-              <p class="homeview--order-confirm-header">Pick Up</p>
-              <p class="homeview--order-confirm-body">{{ getOuterPriceRequestData.from_name }}</p>
+              Order Details
             </td>
             <td class="homeview--order-confirm-row__middle">
-              <p class="homeview--order-confirm-header">20 Feet</p>
-              <p class="homeview--order-confirm-body">{{ twentyfoot }} Flatbed trucks</p>
+              Truck Size
+            </td>
+          </tr>
+          <tr>
+            <td class="homeview--order-confirm-row__middle">
+              <p class="homeview--order-confirm-header">
+                Pick Up
+              </p>
+              <p class="homeview--order-confirm-body">
+                {{ getOuterPriceRequestData.from_name }}
+              </p>
+            </td>
+            <td class="homeview--order-confirm-row__middle">
+              <p class="homeview--order-confirm-header">
+                20 Feet
+              </p>
+              <p class="homeview--order-confirm-body">
+                {{ twentyfoot }} Flatbed trucks
+              </p>
             </td>
           </tr>
           <tr>
             <td class="homeview--order-confirm-row__bottom">
-              <p class="homeview--order-confirm-header">Drop Off</p>
-              <p class="homeview--order-confirm-body">{{ getOuterPriceRequestData.to_name }}</p>
+              <p class="homeview--order-confirm-header">
+                Drop Off
+              </p>
+              <p class="homeview--order-confirm-body">
+                {{ getOuterPriceRequestData.to_name }}
+              </p>
             </td>
             <td class="homeview--order-confirm-row__bottom">
-              <p class="homeview--order-confirm-header">40 Feet</p>
-              <p class="homeview--order-confirm-body">{{ fourtyfoot }} Flatbed trucks</p>
+              <p class="homeview--order-confirm-header">
+                40 Feet
+              </p>
+              <p class="homeview--order-confirm-body">
+                {{ fourtyfoot }} Flatbed trucks
+              </p>
             </td>
           </tr>
         </table>
@@ -399,6 +443,7 @@ import orderPlacementStore from '../_store';
 import paymentsModuleStore from '../../../../payment/_store';
 import SessionMxn from '../../../../../mixins/session_mixin';
 import PaymentOptions from './PaymentOptions.vue';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 library.add(
   faPlus,
@@ -421,7 +466,7 @@ export default {
     'no-ssr': NoSSR,
     PaymentOptions,
   },
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
   data() {
     return {
       dueDatePickerOptions: {
@@ -497,19 +542,19 @@ export default {
 
     allow_add_destination() {
       return (
-        !this.loading &&
-        Array.isArray(this.get_order_path) &&
-        this.get_order_path.length - 1 <= this.get_max_destinations &&
-        this.get_order_path.length > 1 &&
-        this.get_extra_destinations <= this.get_order_path.length - 2
+        !this.loading
+        && Array.isArray(this.get_order_path)
+        && this.get_order_path.length - 1 <= this.get_max_destinations
+        && this.get_order_path.length > 1
+        && this.get_extra_destinations <= this.get_order_path.length - 2
       );
     },
 
     show_vendor_view() {
       return (
-        Array.isArray(this.getStoreOrderPath) &&
-        this.getStoreOrderPath.length > 1 &&
-        Object.prototype.hasOwnProperty.call(this.getOuterPriceRequestData, 'economy_price_tiers')
+        Array.isArray(this.getStoreOrderPath)
+        && this.getStoreOrderPath.length > 1
+        && Object.prototype.hasOwnProperty.call(this.getOuterPriceRequestData, 'economy_price_tiers')
       );
     },
     buttonStatus() {
@@ -743,9 +788,9 @@ export default {
     },
     attemptPriceRequest() {
       if (
-        Array.isArray(this.locations) &&
-        this.locations.length > 1 &&
-        this.get_pickup_filled === true
+        Array.isArray(this.locations)
+        && this.locations.length > 1
+        && this.get_pickup_filled === true
       ) {
         this.clearOuterPriceRequestObject();
         this.clearOuterActiveVendorDetails();
@@ -968,9 +1013,8 @@ export default {
     },
 
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
 
     doSetDefaultPackageClass() {
@@ -996,9 +1040,7 @@ export default {
       if (this.get_active_vendor_name === '') {
         this.doSetDefaultVendorType();
       } else {
-        const result = this.get_price_request_object.economy_price_tiers.filter(pack =>
-          pack.price_tiers.some(vendor => vendor.vendor_name === previous),
-        );
+        const result = this.get_price_request_object.economy_price_tiers.filter(pack => pack.price_tiers.some(vendor => vendor.vendor_name === previous));
 
         if (result.length === 0) {
           this.doSetDefaultVendorType();
@@ -1070,8 +1112,7 @@ export default {
     registerOrderPlacementModule() {
       let moduleIsRegistered = false;
       try {
-        moduleIsRegistered =
-          this.$store._modules.root._children.$_orders._children.$_home !== undefined;
+        moduleIsRegistered = this.$store._modules.root._children.$_orders._children.$_home !== undefined;
       } catch (er) {
         //
       }

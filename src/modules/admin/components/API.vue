@@ -120,9 +120,11 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
   name: 'API',
+  mixins: [NotificationMxn],
   data() {
     return {
       registered: false,
@@ -158,11 +160,6 @@ export default {
       .dispatch('$_admin/requestKeysList', apikeyFullPayload)
       .then((response) => {}, (error) => {});
   },
-  computed: {
-    ...mapGetters({
-      fetchedData: '$_admin/getKeysList',
-    }),
-  },
   methods: {
     ...mapActions({
       requestKeysList: '$_admin/requestKeysList',
@@ -189,16 +186,14 @@ export default {
           const level = 1; // success
           this.message = 'Key Updated!';
           const notification = { title: '', level, message: this.message }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
         },
         (error) => {
           this.update_api_text = 'Update API Key';
           const level = 3;
           this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
         },
       );
     },
@@ -224,16 +219,14 @@ export default {
           const level = 1; // success
           this.message = 'Key Generated!';
           const notification = { title: '', level, message: this.message }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
         },
         (error) => {
           this.generate_api_text = 'Generate API Key';
           const level = 3;
           this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
         },
       );
     },

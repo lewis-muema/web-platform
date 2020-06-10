@@ -1,8 +1,15 @@
 <template lang="html">
-  <div v-if="available" id="log_in" class="admin-edit-item">
+  <div
+    v-if="available"
+    id="log_in"
+    class="admin-edit-item"
+  >
     <div class="admin-edit-inner">
       <div class="">
-        <i class="el-icon-back edit-back" @click="one_step_back" />
+        <i
+          class="el-icon-back edit-back"
+          @click="one_step_back"
+        />
       </div>
 
       <div class="admin-edit2-details">
@@ -18,7 +25,7 @@
             name="name"
             placeholder="Name"
             autocomplete="off"
-          />
+          >
         </div>
 
         <div class="edit-holder edit-dimen">
@@ -28,7 +35,7 @@
             type="text"
             name="email"
             placeholder="Email"
-          />
+          >
         </div>
 
         <div class="edit-holder edit-dimen">
@@ -38,7 +45,7 @@
             type="text"
             name="phone"
             placeholder="Phone"
-          />
+          >
         </div>
 
         <div class="edit-holder">
@@ -106,9 +113,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import NotificationMxn from '../../../../mixins/notification_mixin';
 
 export default {
   name: 'EditUser',
+  mixins: [NotificationMxn],
   data() {
     return {
       userDetails: {},
@@ -174,23 +183,21 @@ export default {
         endpoint: 'update_user',
       };
       this.$store.dispatch('$_admin/editAdminUser', editUserFullPayload).then(
-        response => {
+        (response) => {
           const level = 1; // success
           this.message = 'Edit Successful!';
 
           const notification = { title: '', level, message: this.message }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
         },
-        error => {
+        (error) => {
           const level = 3;
           this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
 
           // vm.one_step_back()
-        }
+        },
       );
     },
     one_step_back() {

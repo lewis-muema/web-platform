@@ -161,9 +161,10 @@
 import { mapGetters, mapMutations } from 'vuex';
 import TrackingStore from '../_store';
 import RegisterStoreModule from '../../../../../mixins/register_store_module';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 export default {
-  mixins: [RegisterStoreModule],
+  mixins: [RegisterStoreModule, NotificationMxn],
   data() {
     return {
       showing: false,
@@ -405,9 +406,8 @@ export default {
       }
     },
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
   },
 };
