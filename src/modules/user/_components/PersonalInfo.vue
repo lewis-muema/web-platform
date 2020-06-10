@@ -319,8 +319,7 @@ export default {
                 level,
                 message: this.message,
               }; // notification object
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true); // activate notification
+              this.displayNotification(notification);
             } else {
               const level = 3;
               this.message = 'Something went wrong.';
@@ -329,8 +328,7 @@ export default {
                 level,
                 message: this.message,
               }; // notification object
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true); // activate notification
+              this.displayNotification(notification);
             }
           },
           (error) => {
@@ -341,8 +339,7 @@ export default {
               level,
               message: this.message,
             }; // notification object
-            this.$store.commit('setNotification', notification);
-            this.$store.commit('setNotificationStatus', true);
+            this.displayNotification(notification);
           },
         );
       } else if (session.default === 'peer') {
@@ -378,8 +375,7 @@ export default {
                 level,
                 message: this.message,
               };
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true);
+              this.displayNotification(notification);
             } else {
               const level = 3;
               this.message = 'Something went wrong.';
@@ -388,8 +384,7 @@ export default {
                 level,
                 message: this.message,
               };
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true);
+              this.displayNotification(notification);
             }
           },
           (error) => {
@@ -400,8 +395,7 @@ export default {
               level,
               message: this.message,
             };
-            this.$store.commit('setNotification', notification);
-            this.$store.commit('setNotificationStatus', true);
+            this.displayNotification(notification);
           },
         );
       } else {
@@ -414,8 +408,7 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
     },
   },
 };

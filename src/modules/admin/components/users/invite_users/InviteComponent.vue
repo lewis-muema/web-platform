@@ -78,10 +78,12 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 export default {
   name: 'InviteComponent',
   components: {},
+  mixins: [NotificationMxn],
   data() {
     return {
       value: '',
@@ -193,8 +195,7 @@ export default {
                     message: 'Invitations sent successfully',
                   };
                   this.inviteLog(payload);
-                  this.$store.commit('setNotification', notification);
-                  this.$store.commit('setNotificationStatus', true);
+                  this.displayNotification(notification);
                   this.updateViewState(4);
                 }
               },
@@ -210,8 +211,7 @@ export default {
               level,
               message: 'Please select a department',
             };
-            this.$store.commit('setNotification', notification);
-            this.$store.commit('setNotificationStatus', true);
+            this.displayNotification(notification);
           }
         } else {
           this.button = 'Send Invites';
@@ -221,8 +221,7 @@ export default {
             level,
             message: 'Please enter at least one valid email address.',
           }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
         }
       }
     },
@@ -274,8 +273,7 @@ export default {
             level,
             message: 'Link created!',
           }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
         },
         (error) => {
           const level = 2;
@@ -284,8 +282,7 @@ export default {
             level,
             message: 'An error occurred.',
           }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
         },
       );
     },
