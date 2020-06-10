@@ -402,6 +402,8 @@ export default {
       getLoadWeightValue: '$_orders/$_home/getLoadWeightValue',
       getHomeLocations: '$_orders/getHomeLocations',
       getStoreOrderPath: '$_orders/getStorePath',
+      getPairWithRiderState: '$_orders/$_home/getPairWithRiderState',
+      getPairErrorMessage: '$_orders/$_home/getPairErrorMessage',
     }),
 
     active_price_tier_data() {
@@ -674,7 +676,15 @@ export default {
     },
 
     displayOrderHistory() {
-      if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+      if (this.getPairWithRiderState && this.getPairRiderPhone === '') {
+        this.initiatePairingFailureNotification();
+      } else if (this.getPairWithRiderState && !this.getPairWithRiderStatus) {
+        this.doNotification(
+          2,
+          'Pairing Failure',
+          this.getPairErrorMessage,
+        );
+      } else if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
         this.preCheckPaymentDetails();
       } else {
         this.confirmFinal = true;
@@ -692,6 +702,20 @@ export default {
           'User Phone': accData.user_phone,
         });
       }
+    },
+    initiatePairingFailureNotification() {
+      let msg = '';
+      if (this.getPairErrorMessage !== '') {
+        msg = this.getPairErrorMessage;
+      } else {
+        msg = 'Kindly provide partner details while initiating pairing requests';
+      }
+
+      this.doNotification(
+        2,
+        'Pairing Failure',
+        msg,
+      );
     },
     editOrder() {
       this.confirmFinal = false;
@@ -990,12 +1014,20 @@ export default {
               );
             }
           },
-          () => {
-            this.doNotification(
-              3,
-              'Order completion failed',
-              'Order completion failed. Please check your internet connection and try again.',
-            );
+          (error) => {
+            if (Object.prototype.hasOwnProperty.call(error, 'reason')) {
+              this.doNotification(
+                2,
+                'Order completion failed',
+                error.reason,
+              );
+            } else {
+              this.doNotification(
+                2,
+                'Order completion failed',
+                'Order completion failed. Please check your internet connection and try again.',
+              );
+            }
             this.loading = false;
           },
         );
@@ -1250,6 +1282,7 @@ export default {
         phone: userPhone,
         email: userEmail,
         currency: this.activeVendorPriceData.currency,
+        vendorType: this.activeVendorPriceData.vendor_id,
       };
       const fullPayload = {
         values: mpesaPayload,

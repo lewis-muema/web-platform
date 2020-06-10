@@ -6,7 +6,7 @@
     display: flex !important;
   }
   .cancelOptions > div {
-    margin-top: 25vh !important;
+    margin-top: 12vh !important;
     width: 95% !important;
   }
   .cancel-reason-text {
@@ -141,9 +141,11 @@
 .action--slide-desc {
   display: flex;
   justify-content: center;
-  width: 100%;
+  width: 94%;
 }
 .cancel-reason-input {
+  width: 78%;
+  margin-left: 11%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -161,15 +163,16 @@
 .action--slide-button {
   margin: 0px 10px 10px 10px;
   text-transform: capitalize;
-  font-size: 14px;
+  font-size: 13px;
   letter-spacing: 1.1px;
   background-color: #1782c5;
   color: #fff;
   width: 100%;
-  height: 30px;
+  height: 46px;
   cursor: pointer;
   border: 0px solid;
   border-radius: 2px;
+  margin-top: 4%;
 }
 .infobar--actions-icon {
   font-size: 23px;
@@ -374,8 +377,8 @@ ul.timeline > li#timeline_right.payedReached:before {
   padding-left: 3px;
 }
 .cancelOptions > div {
-  margin-top: 25vh !important;
-  width: 30%;
+  margin-top: 15vh !important;
+  width: 30% !important;
 }
 .infobar-truck-pstn {
   margin-left: 0px !important;
@@ -428,7 +431,7 @@ ul.timeline > li#timeline_right.payedReached:before {
   text-align: center;
 }
 .cancel-reason-text {
-  padding-left: 30%;
+  padding-left: 9%;
   margin-bottom: 10px;
   margin-top: 10px;
 }
@@ -715,21 +718,82 @@ ul.inforbar_order_timeline:before {
 }
 
 .cancelOptions--content-message {
-  margin: 15px;
-  margin-bottom: 30px;
+    margin: 15px;
+    margin-bottom: 30px;
 }
 .cancelOptions--content-buttons {
-  text-align: center;
+    text-align: center;
 }
 .cancelOptions--content-buttons button {
-  margin: 0px auto;
-  width: 80%;
-  position: relative;
-  text-align: center;
-  margin-bottom: 10px;
-  height: 35px;
+    margin: 0px auto;
+    width: 80%;
+    position: relative;
+    text-align: center;
+    margin-bottom: 10px;
+        height: 35px;
 }
 button.default.action--slide-button {
-  color: #333;
-  background-color: #f2f2f2;
+    color: #333;
+    background-color: #f2f2f2;
+}
+.cancel-reason-title{
+  color: #000000;
+  margin-left: 9%;
+  font-size: 18px;
+  line-height: 3;
+}
+.cancel-reason-subtitle{
+  color: #000000;
+  margin-left: 9%;
+  font-size: 14px;
+  line-height: 25px;
+  font-weight: 300;
+}
+#cancel-reason-text > div > label > span.el-radio__label{
+  line-height: 23px;
+  color: #000000;
+  font-size: 15px !important;
+}
+#cancel-reason-text > div > label > span.el-radio__input > span{
+  border: 1px solid #000;
+}
+.action--slide-button:hover {
+  background-color: #008CBA;
+  color: white;
+}
+.pop_btn{
+   width: 24% !important;
+   background: #FFFFFF;
+   border: 1px solid #1B7FC3;
+   box-sizing: border-box;
+   border-radius: 3px;
+   color: #1B7FC3;
+}
+.pop-message{
+   font-size: 18px;
+   text-align: center;
+   color: #000000;
+}
+.warning-icon{
+  font-size: 57px !important;
+  color: #1B7FC3 !important;
+}
+.warning-icon-pstn{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 14%;
+}
+.is-checked{
+  border: none;
+}
+.cancellation-submit{
+  margin-left: 9% !important;
+  font-size: 12px !important;
+  border-radius: 7px;
+}
+.accept-cancell-btn{
+  background: #FFFFFF !important;
+  color: #1B7FC3 !important;
+  border: 1px solid #1B7FC3 !important;
 }

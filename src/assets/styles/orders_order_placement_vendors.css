@@ -294,11 +294,9 @@
   margin: 20px 0px 0px 0px;
 }
 .pop-over-layout {
-  /* top: 250px !important; */
-  height: 133px;
-  background-color: white !important;
+  background-color: #fff !important;
   width: 20% !important;
-  /* min-height: 90px !important; */
+  min-height: 19% !important;
 }
 .pair-rider-name {
   padding: 8px;
@@ -470,5 +468,23 @@
 }
 .dedicated-vendor-items-select {
   padding-right: 3px !important;
+}
+.pairing-alert{
+  width: 20% !important;
+  margin-top: 12%;
+  border: none;
+  text-align: center;
+}
+.pairing-alert-icon{
+  font-size: 30px;
+  color: #f57e20;
+}
+.pairing-error-display{
+  width: 77% !important;
+  padding-top: 4%;
+}
+.pairing-error-header{
+  margin-bottom: 3%;
+  text-transform: capitalize;
 }
 /* end transitions */
