@@ -75,12 +75,13 @@
 <script>
 import { mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'CompanyDetails',
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
   data() {
     return {
       cop_name: '',
@@ -177,8 +178,7 @@ export default {
                   message: this.message,
                 };
 
-                this.$store.commit('setNotification', notification);
-                this.$store.commit('setNotificationStatus', true);
+                this.displayNotification(notification);
               } else {
                 const level = 3;
                 this.message = 'Something went wrong.';
@@ -188,15 +188,13 @@ export default {
                   message: this.message,
                 };
 
-                this.$store.commit('setNotification', notification);
-                this.$store.commit('setNotificationStatus', true);
+                this.displayNotification(notification);
               }
             },
             (error) => {
               const level = 3;
               const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true);
+              this.displayNotification(notification);
             },
           );
         } else {
@@ -207,9 +205,7 @@ export default {
             level,
             message: this.message,
           };
-
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true);
+          this.displayNotification(notification);
         }
       } else {
         const level = 3;
@@ -219,9 +215,7 @@ export default {
           level,
           message: this.message,
         };
-
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true);
+        this.displayNotification(notification);
       }
     },
   },

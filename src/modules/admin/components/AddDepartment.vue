@@ -58,9 +58,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
   name: 'AddDepartment',
+  mixins: [NotificationMxn],
   data() {
     return {
       empty_departments_state: 'Adding Department',
@@ -128,8 +130,7 @@ export default {
               level,
               message: 'Department added successfully',
             };
-            this.$store.commit('setNotification', notification);
-            this.$store.commit('setNotificationStatus', true);
+            this.displayNotification(notification);
             setTimeout(() => {
               this.$router.push('/admin/department');
             }, 5000);
@@ -137,8 +138,7 @@ export default {
           (error) => {
             const level = 2;
             const notification = { title: '', level, message: 'Something went wrong.' };
-            this.$store.commit('setNotification', notification);
-            this.$store.commit('setNotificationStatus', true);
+            this.displayNotification(notification);
           },
         );
       } else {
@@ -148,8 +148,7 @@ export default {
           level,
           message: 'Please provide Department name and Admin',
         };
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true);
+        this.displayNotification(notification);
       }
     },
     go_back() {
