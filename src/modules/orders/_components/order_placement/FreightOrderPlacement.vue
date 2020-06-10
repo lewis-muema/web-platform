@@ -47,6 +47,7 @@ import { mapGetters, mapMutations, mapActions } from 'vuex';
 import orderPlacementStore from './_store';
 import SessionMxn from '../../../../mixins/session_mixin';
 import FbuContainersFlow from './_components/FbuContainersFlow.vue';
+import NotificationMxn from '../../../../mixins/notification_mixin';
 
 export default {
   name: 'OrderPlacement',
@@ -54,7 +55,7 @@ export default {
   components: {
     'fbu-containers': FbuContainersFlow,
   },
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
   data() {
     return {
       productCategoryId: 1,
@@ -137,9 +138,8 @@ export default {
       );
     },
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
 
     selectCategory() {

@@ -799,13 +799,14 @@ import _ from 'lodash';
 import { mapGetters } from 'vuex';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 
 const moment = require('moment');
 
 export default {
   name: 'InfoWindow',
-  mixins: [TimezoneMxn, EventsMixin],
+  mixins: [TimezoneMxn, EventsMixin,NotificationMxn],
   filters: {
     moment(date) {
       return moment(date).format('MMM Do YYYY, h:mm a');
@@ -1284,9 +1285,8 @@ export default {
       }
     },
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
     cancelOrder() {
       if (this.cancel_reason !== '' && Object.keys(this.$store.getters.getSession).length > 0) {

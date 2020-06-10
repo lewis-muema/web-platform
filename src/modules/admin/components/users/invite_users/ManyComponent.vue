@@ -39,10 +39,12 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 export default {
   name: 'ManyComponent',
   components: {},
+  mixins: [NotificationMxn],
   data() {
     return {
       emailSet: '',
@@ -85,8 +87,7 @@ export default {
           level,
           message: 'Please enter valid email address separated by a comma.',
         }; // notification object
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true); // activate notification
+        this.displayNotification(notification);
       }
     },
   },

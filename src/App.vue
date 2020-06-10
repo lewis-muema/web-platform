@@ -28,13 +28,20 @@ export default {
   computed: {
     ...mapGetters({
       getSession: 'getSession',
-      getNotificationStatus: 'getNotificationStatus',
     }),
+    notification_status() {
+      return this.$store.getters.getNotificationStatus;
+    },
   },
   watch: {
-    getNotificationStatus(val) {
+    notification_status(val) {
+      this.trackMixpanelEvent('Notification state', {
+        'Notification Status': val,
+      });
+
       if (val) {
         this.showNotification();
+        this.trackMixpanelEvent('Notification initiated');
       }
     },
     // watch session so as to only update token on session
@@ -267,5 +274,5 @@ export default {
 <style lang="css">
 @import 'https://fonts.googleapis.com/css?family=Rubik:300,400,500,700';
 @import './assets/styles/app.css';
-@import './assets/styles/overide.css';
+@import './assets/styles/overide.css?v=1';
 </style>

@@ -92,8 +92,10 @@
 
 <script>
 import { mapActions } from 'vuex';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
+  mixins: [NotificationMxn],
   data() {
     return {
       email: '',
@@ -207,8 +209,7 @@ export default {
       } else {
         const level = 3;
         const notification = { title: '', level, message: 'Invalid Email provided' }; // notification object
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true);
+        this.displayNotification(notification);
       }
     },
   },

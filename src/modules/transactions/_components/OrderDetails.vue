@@ -309,6 +309,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import numeral from 'numeral';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 const moment = require('moment');
 
@@ -319,7 +320,7 @@ export default {
       return moment(date).format('MMM Do YYYY, h:mm a');
     },
   },
-  mixins: [TimezoneMxn],
+  mixins: [TimezoneMxn, NotificationMxn],
   data() {
     return {
       order_id: '',
@@ -472,8 +473,7 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
     },
     setUserDefaultCurrency() {
       const sessionData = this.$store.getters.getSession;
