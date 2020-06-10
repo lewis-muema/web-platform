@@ -53,10 +53,11 @@
 <script>
 import { mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
   name: 'ChangePassword',
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
   data() {
     return {
       old_password: '',
@@ -75,8 +76,7 @@ export default {
           const level = 3;
           this.message = 'Password does not match. Please try again';
           const notification = { title: '', level, message: this.message }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true);
+          this.displayNotification(notification);
         } else {
           const session = this.$store.getters.getSession;
 
@@ -101,8 +101,7 @@ export default {
                   const level = 1; // success
                   this.message = 'Password Changed. You will be redirected to the login page within 5 seconds';
                   const notification = { title: 'Password Change', level, message: this.message }; // notification object
-                  this.$store.commit('setNotification', notification);
-                  this.$store.commit('setNotificationStatus', true); // activate notification
+                  this.displayNotification(notification);
                   setTimeout(() => {
                     this.deleteSession();
                     this.$router.push('/auth/sign_in');
@@ -111,16 +110,14 @@ export default {
                   const level = 3;
                   this.message = 'Something went wrong.';
                   const notification = { title: '', level, message: this.message }; // notification object
-                  this.$store.commit('setNotification', notification);
-                  this.$store.commit('setNotificationStatus', true); // activate notification
+                  this.displayNotification(notification);
                 }
               },
               (error) => {
                 const level = 3;
                 this.message = 'Something went wrong.';
                 const notification = { title: '', level, message: this.message }; // notification object
-                this.$store.commit('setNotification', notification);
-                this.$store.commit('setNotificationStatus', true); // activate notification
+                this.displayNotification(notification);
               },
             );
           } else if (session.peer.user_id > 0) {
@@ -143,8 +140,7 @@ export default {
                   const level = 1; // success
                   this.message = 'Password Changed. You will be redirected to the login page within 5 seconds';
                   const notification = { title: 'Password Change', level, message: this.message }; // notification object
-                  this.$store.commit('setNotification', notification);
-                  this.$store.commit('setNotificationStatus', true); // activate notification
+                  this.displayNotification(notification);
                   setTimeout(() => {
                     this.$router.push('/auth/sign_in');
                   }, 5000);
@@ -152,16 +148,14 @@ export default {
                   const level = 3;
                   this.message = 'Something went wrong.';
                   const notification = { title: '', level, message: this.message }; // notification object
-                  this.$store.commit('setNotification', notification);
-                  this.$store.commit('setNotificationStatus', true); // activate notification
+                  this.displayNotification(notification);
                 }
               },
               (error) => {
                 const level = 3;
                 this.message = 'Something went wrong.';
                 const notification = { title: '', level, message: this.message }; // notification object
-                this.$store.commit('setNotification', notification);
-                this.$store.commit('setNotificationStatus', true); // activate notification
+                this.displayNotification(notification);
               },
             );
           } else {
@@ -172,8 +166,7 @@ export default {
         const level = 3;
         this.message = 'Provide all values.';
         const notification = { title: '', level, message: this.message };
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true);
+        this.displayNotification(notification);
       }
     },
   },

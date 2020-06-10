@@ -56,9 +56,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
   name: 'EditDepartment',
+  mixins: [NotificationMxn],
   data() {
     return {
       message: '',
@@ -127,15 +129,13 @@ export default {
           const level = 1; // success
           this.message = 'Details updated successfully';
           const notification = { title: 'Edit Department', level, message: this.message }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
         },
         (error) => {
           const level = 2;
           this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
         },
       );
     },

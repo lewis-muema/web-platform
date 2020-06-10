@@ -315,6 +315,7 @@ import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 library.add(faChevronDown);
 
@@ -324,7 +325,7 @@ const TRUCK_VENDORS = [20, 25];
 export default {
   name: 'OrderOptions',
   components: {},
-  mixins: [Mcrypt, PaymentMxn, TimezoneMxn, EventsMixin],
+  mixins: [Mcrypt, PaymentMxn, TimezoneMxn, EventsMixin, NotificationMxn],
   data() {
     return {
       schedule_time: this.moment(),
@@ -1114,13 +1115,12 @@ export default {
     },
 
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = {
         title,
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
 
     saveInfoToStore() {

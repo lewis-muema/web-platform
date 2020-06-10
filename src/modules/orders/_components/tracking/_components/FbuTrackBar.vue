@@ -6,46 +6,74 @@
     <transition name="fade">
       <div
         v-if="Object.prototype.hasOwnProperty.call(orderData, 'freight_order_details') && !loading
-        && tracking_data !== undefined"
+          && tracking_data !== undefined"
         class="homeview--childinfo-card"
       >
         <div class="homeview--childinfo-card-left">
           <div class="">
-            <p class="homeview--childinfo-order-status">Order Status: {{ statusName(orderData.freight_order_details.freight_status) }}</p>
+            <p class="homeview--childinfo-order-status">
+              Order Status: {{ statusName(orderData.freight_order_details.freight_status) }}
+            </p>
           </div>
           <div class="childinfo-container">
             <div class="full-width">
               <div>
-                <p class="homeview--childinfo-order-details">Order details</p>
+                <p class="homeview--childinfo-order-details">
+                  Order details
+                </p>
               </div>
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
-                  <p class="no-margin">Pick Up</p>
-                  <p class="no-margin homeview--field">{{ orderData.path[0].name }}</p>
+                  <p class="no-margin">
+                    Pick Up
+                  </p>
+                  <p class="no-margin homeview--field">
+                    {{ orderData.path[0].name }}
+                  </p>
                 </div>
                 <div class="homeview--childinfo-col-2">
-                  <p class="no-margin">Order type</p>
-                  <p class="no-margin homeview--field">Container order, {{ orderData.freight_order_details.containers.container_details[0].container_size_feet }}ft Container, {{ orderData.freight_order_details.containers.container_details[0].container_weight_tonnes }}T</p>
+                  <p class="no-margin">
+                    Order type
+                  </p>
+                  <p class="no-margin homeview--field">
+                    Container order, {{ orderData.freight_order_details.containers.container_details[0].container_size_feet }}ft Container, {{ orderData.freight_order_details.containers.container_details[0].container_weight_tonnes }}T
+                  </p>
                 </div>
               </div>
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
-                  <p class="no-margin">Drop-off</p>
-                  <p class="no-margin homeview--field">{{ orderData.path[1].name }}</p>
+                  <p class="no-margin">
+                    Drop-off
+                  </p>
+                  <p class="no-margin homeview--field">
+                    {{ orderData.path[1].name }}
+                  </p>
                 </div>
                 <div class="homeview--childinfo-col-2">
-                  <p class="no-margin">Container number</p>
-                  <p class="no-margin homeview--field">{{ orderData.freight_order_details.containers.container_details[0].container_number }}</p>
+                  <p class="no-margin">
+                    Container number
+                  </p>
+                  <p class="no-margin homeview--field">
+                    {{ orderData.freight_order_details.containers.container_details[0].container_number }}
+                  </p>
                 </div>
               </div>
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
-                  <p class="no-margin">Empty Container Destination</p>
-                  <p class="no-margin homeview--field">{{ orderData.path[2].name }}</p>
+                  <p class="no-margin">
+                    Empty Container Destination
+                  </p>
+                  <p class="no-margin homeview--field">
+                    {{ orderData.path[2].name }}
+                  </p>
                 </div>
                 <div class="homeview--childinfo-col-2">
-                  <p class="no-margin">Consignee</p>
-                  <p class="no-margin homeview--field">{{ orderData.freight_order_details.containers.container_details[0].consignee }}</p>
+                  <p class="no-margin">
+                    Consignee
+                  </p>
+                  <p class="no-margin homeview--field">
+                    {{ orderData.freight_order_details.containers.container_details[0].consignee }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -72,20 +100,28 @@
               >
             </div>
             <div class="homeview--childinfo-rider-col">
-              <p class="no-margin">{{ orderData.rider.rider_name }}</p>
-              <p class="no-margin">{{ orderData.rider.rider_phone }}</p>
+              <p class="no-margin">
+                {{ orderData.rider.rider_name }}
+              </p>
+              <p class="no-margin">
+                {{ orderData.rider.rider_phone }}
+              </p>
             </div>
             <div class="homeview--childinfo-rider-col">
-              <p class="no-margin">{{ orderData.rider.number_plate }}</p>
+              <p class="no-margin">
+                {{ orderData.rider.number_plate }}
+              </p>
               <p
                 v-if="orderData.rider.vehicle_name !== 'null'"
                 class="no-margin"
-              >{{ orderData.rider.vehicle_name }}</p>
+              >
+                {{ orderData.rider.vehicle_name }}
+              </p>
             </div>
           </div>
         </div>
         <div class="homeview--childinfo-card-right">
-          <div class=""/>
+          <div class="" />
           <div class="">
             <p class="homeview--childinfo-order-details">
               Order Timeline
@@ -107,7 +143,9 @@
             <p
               class="no-margin"
               :class="action.actionTextClass"
-            >{{ action.actionText }}</p>
+            >
+              {{ action.actionText }}
+            </p>
           </div>
         </div>
       </div>
@@ -123,9 +161,10 @@
 import { mapGetters, mapMutations } from 'vuex';
 import TrackingStore from '../_store';
 import RegisterStoreModule from '../../../../../mixins/register_store_module';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 export default {
-  mixins: [RegisterStoreModule],
+  mixins: [RegisterStoreModule, NotificationMxn],
   data() {
     return {
       showing: false,
@@ -367,9 +406,8 @@ export default {
       }
     },
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
   },
 };

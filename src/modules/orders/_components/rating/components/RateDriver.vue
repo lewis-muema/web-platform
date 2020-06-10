@@ -48,9 +48,11 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 export default {
   name: 'RateDriverComponent',
+  mixins: [NotificationMxn],
   data() {
     return {
       rated_score: 1,
@@ -105,8 +107,7 @@ export default {
       },
       (error) => {
         const notification = { title: '', level: 2, message: 'Something went wrong.' }; // notification object
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true);
+        this.displayNotification(notification);
       },
     );
   },
@@ -137,8 +138,7 @@ export default {
         },
         (error) => {
           const notification = { title: '', level: 2, message: 'Something went wrong.' }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true);
+          this.displayNotification(notification);
         },
       );
     },
