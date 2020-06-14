@@ -104,12 +104,13 @@ import {
   mapActions,
 } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'PersonalInfo',
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
   data() {
     return {
       user_name: '',
