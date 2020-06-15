@@ -985,8 +985,25 @@ export default {
                   'User Phone': data.user_phone,
                 });
               }
-
-              this.trackMixpanelEvent('Order Completion Log', {
+              if (this.$route.path === '/orders/dedicated/multi-destination') {
+                this.trackMixpanelEvent('Multi destination order vendor type selected', {
+                  'Vendor ID': data.vendor_type,
+                  'Carrier type': this.carrierTypeName(data.carrier_type),
+                  'Client name': accData.user_name,
+                  'Client email': data.user_email,
+                  'Account type': acc === 'peer' ? 'Personal' : 'Business',
+                  'Client type': 'Web Platform',
+                });
+                this.trackMixpanelEvent('Multi destination order payment option', {
+                  'Payment option': this.payMethodName(data.payment_method),
+                  'Client name': accData.user_name,
+                  'Client email': data.user_email,
+                  'Account type': acc === 'peer' ? 'Personal' : 'Business',
+                  'Order no': order_no,
+                  'Client type': 'Web Platform',
+                });
+              }
+              this.trackMixpanelEvent(this.$route.path === '/orders/dedicated/multi-destination' ? 'Multi destination order completion log' : 'Order Completion Log', {
                 'Account ': data.type,
                 'Account Type': acc === 'peer' ? 'Personal' : 'Business',
                 'Client Type': 'Web Platform',
@@ -1151,6 +1168,38 @@ export default {
     retrieveFromStore() {
       this.schedule_time = this.get_schedule_time;
       this.payment_method = this.get_payment_method;
+    },
+
+    payMethodName(id) {
+      if (id === 1) {
+        return 'Mpesa';
+      }
+      if (id === 2) {
+        return 'Card';
+      }
+      if (id === 3) {
+        return 'Promo code';
+      }
+      if (id === 5) {
+        return 'Cash';
+      }
+      if (id === 11) {
+        return 'Running balance';
+      }
+      if (id === 12) {
+        return 'Post pay';
+      }
+      return 'Unknown payment method';
+    },
+
+    carrierTypeName(id) {
+      if (id === '0') {
+        return 'Open';
+      }
+      if (id === '1') {
+        return 'Closed';
+      }
+      return 'Any';
     },
 
     refreshRunningBalance() {
