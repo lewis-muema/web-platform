@@ -450,7 +450,11 @@ export default {
           eventLabel: 'Pickup Location - Order Placement - Web App',
         };
         this.fireGAEvent(eventPayload);
-        this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
+        if (this.$route.path === '/orders/dedicated/multi-destination') {
+          this.trackLocationSelect(place.name, index);
+        } else {
+          this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
+        }
       } else {
         const eventPayload = {
           eventCategory: 'Order Placement',
@@ -458,9 +462,45 @@ export default {
           eventLabel: 'Destination Location - Order Placement - Web App',
         };
         this.fireGAEvent(eventPayload);
-        this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
+        if (this.$route.path === '/orders/dedicated/multi-destination') {
+          this.trackLocationSelect(place.name, index);
+        } else {
+          this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
+        }
       }
       this.attemptPriceRequest();
+    },
+
+    trackLocationSelect(location, type) {
+      const acc = this.$store.getters.getSession;
+      const accDefault = acc[acc.default];
+      let eventName = '';
+      const eventData = {
+        'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Account': accDefault.user_email,
+        'Client name': accDefault.user_name,
+      };
+      if (type === 0) {
+        eventName = 'Enter pick-up location for multi-destination order';
+        eventData['Pick up location'] = location;
+      } else if (type > 0) {
+        eventName = 'Enter delivery location for multi-destination order';
+        eventData['Delivery location'] = location;
+      }
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(eventName, eventData);
+        }
+      } catch (er) {
+        // ...
+      }
     },
 
     attemptPriceRequest() {

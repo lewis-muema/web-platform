@@ -63,7 +63,7 @@ export default {
   },
   watch: {
     mode(val) {
-      this.switchRoute(val);
+      this.switchMode(val);
     },
   },
   created() {
@@ -71,10 +71,36 @@ export default {
   },
   methods: {
     switchMode(route) {
+      if (route === '/orders/dedicated/multi-destination') {
+        this.selectMultiDestnationOrder('Select multi-destination orders');
+      }
       this.$router.push(route);
     },
-    switchRoute(route) {
-      this.$router.push(route);
+    selectMultiDestnationOrder(name) {
+      const acc = this.$store.getters.getSession;
+      const accDefault = acc[acc.default];
+      this.trackMixpanelEvent(name, {
+        'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Account': accDefault.user_email,
+        'Client name': accDefault.user_name,
+      });
+    },
+    trackMixpanelEvent(name, event) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name, event);
+        }
+      } catch (er) {
+        // ...
+      }
     },
     registerOrderPlacementModule() {
       let moduleIsRegistered = false;
