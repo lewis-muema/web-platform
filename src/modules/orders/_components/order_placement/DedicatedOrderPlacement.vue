@@ -280,6 +280,7 @@ export default {
     // eslint-disable-next-line func-names
     addRegion(place) {
       this.dropOffRegion = place.name;
+      this.trackLocationSelect(place.name, 2);
       this.attemptPriceRequest();
     },
 
@@ -315,7 +316,30 @@ export default {
       }
     },
 
-    trackMixpanelEvent(name) {
+    trackLocationSelect(location, type) {
+      const acc = this.$store.getters.getSession;
+      const accDefault = acc[acc.default];
+      let eventName = '';
+      const eventData = {
+        'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Account': accDefault.user_email,
+        'Client name': accDefault.user_name,
+      };
+      if (type === 0) {
+        eventData['Pick up location'] = location;
+        eventName = 'Enter pick-up location for no-destination';
+      } else if (type === 2) {
+        eventData['Delivery region'] = location;
+        eventName = 'Enter delivery region for no-destination';
+      } else if (type === 1) {
+        eventData['Return location'] = location;
+        eventName = 'Enter return location for no-destination';
+      }
+      this.trackMixpanelEvent(eventName, eventData);
+    },
+
+    trackMixpanelEvent(name, event) {
       let analyticsEnv = '';
       try {
         analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
@@ -325,7 +349,7 @@ export default {
 
       try {
         if (analyticsEnv === 'production') {
-          mixpanel.track(name);
+          mixpanel.track(name, event);
         }
       } catch (er) {
         // ...
@@ -384,6 +408,7 @@ export default {
         index,
         name: place.name,
       };
+      this.trackLocationSelect(place.name, index);
       this.resetPathLocation(index);
       this.setMarker(place.geometry.location.lat(), place.geometry.location.lng(), index);
       this.set_order_path(pathPayload);
@@ -395,14 +420,14 @@ export default {
         const eventPayload = {
           eventCategory: 'Order Placement',
           eventAction: 'Click',
-          eventLabel: 'Pickup Location - Order Placement - Web App',
+          eventLabel: 'Pickup Location (No destination) - Order Placement - Web App',
         };
         this.fireGAEvent(eventPayload);
       } else {
         const eventPayload = {
           eventCategory: 'Order Placement',
           eventAction: 'Click',
-          eventLabel: 'Destination Location - Order Placement - Web App',
+          eventLabel: 'Return Location (No destination) - Order Placement - Web App',
         };
         this.fireGAEvent(eventPayload);
       }

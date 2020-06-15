@@ -32,7 +32,42 @@ export default {
   },
   methods: {
     switchMode(route) {
+      if (route === '/orders/dedicated/no-destination') {
+        this.selectDedicatedVehicles();
+      }
       this.$router.push(route);
+    },
+    selectDedicatedVehicles() {
+      const acc = this.$store.getters.getSession;
+      const accDefault = acc[acc.default];
+      this.trackMixpanelEvent('Select dedicated vehicles', {
+        'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Account': accDefault.user_email,
+        'Client name': accDefault.user_name,
+      });
+      this.trackMixpanelEvent('Select no-destination orders', {
+        'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Account': accDefault.user_email,
+        'Client name': accDefault.user_name,
+      });
+    },
+    trackMixpanelEvent(name, event) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name, event);
+        }
+      } catch (er) {
+        // ...
+      }
     },
   },
 };
