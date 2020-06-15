@@ -698,43 +698,35 @@ export default {
                 };
                 this.mixpanelTrackPricingServiceCompletion(row.respond.order_no);
                 let accData = {};
-                const data = JSON.parse(payload.values).values;
+                const data = row.original_data;
                 const session = this.$store.getters.getSession;
                 const acc = session.default;
                 accData = session[session.default];
-                if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
-                  this.trackMixpanelEvent('Place Order', {
-                    'Account ': data.type,
-                    'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-                    'Client Type': 'Web Platform',
-                    'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
-                    'Order Number': row.respond.order_no,
-                    'Payment Mode': this.payment_method,
-                    'User Email': data.user_email,
-                    'User Phone': data.user_phone,
-                    'Super User Id': session.admin_details.admin_id,
-                  });
-                } else {
-                  this.trackMixpanelEvent('Place Order', {
-                    'Account ': data.type,
-                    'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-                    'Client Type': 'Web Platform',
-                    'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
-                    'Order Number': row.respond.order_no,
-                    'Payment Mode': this.payment_method,
-                    'User Email': data.user_email,
-                    'User Phone': data.user_phone,
-                  });
-                }
-
-                this.trackMixpanelEvent('Order Completion Log', {
+                this.trackMixpanelEvent('No destination order vendor type selected', {
+                  'Vendor ID': data.vendor_type,
+                  'Carrier type': this.carrierTypeName(data.carrier_type),
+                  'Client name': accData.user_name,
+                  'Client email': data.user_email,
+                  'Account type': acc === 'peer' ? 'Personal' : 'Business',
+                  'Client type': 'Web Platform',
+                });
+                this.trackMixpanelEvent('No destination order payment option', {
+                  'Payment option': this.payMethodName(data.payment_method),
+                  'Client name': accData.user_name,
+                  'Client email': data.user_email,
+                  'Account type': acc === 'peer' ? 'Personal' : 'Business',
+                  'Order no': row.respond.order_no,
+                  'Client type': 'Web Platform',
+                });
+                this.trackMixpanelEvent('No destination order completion log', {
                   'Account ': data.type,
                   'Account Type': acc === 'peer' ? 'Personal' : 'Business',
                   'Client Type': 'Web Platform',
                   'Payment Mode': this.payment_method,
                   'Cash Status': data.cash_status,
-                  'User Email': data.user_email,
-                  'User Phone': data.user_phone,
+                  'Client Email': data.user_email,
+                  'Client Phone': data.user_phone,
+                  'Client name': accData.user_name,
                   'Order Number': row.respond.order_no,
                   'Order Amount': data.amount,
                   'Schedule Time': data.schedule_time,
@@ -853,6 +845,38 @@ export default {
       // save locations, notes & payment option
 
       this.setPaymentMethod(this.payment_method);
+    },
+
+    payMethodName(id) {
+      if (id === 1) {
+        return 'Mpesa';
+      }
+      if (id === 2) {
+        return 'Card';
+      }
+      if (id === 3) {
+        return 'Promo code';
+      }
+      if (id === 5) {
+        return 'Cash';
+      }
+      if (id === 11) {
+        return 'Running balance';
+      }
+      if (id === 12) {
+        return 'Post pay';
+      }
+      return 'Unknown payment method';
+    },
+
+    carrierTypeName(id) {
+      if (id === '0') {
+        return 'Open';
+      }
+      if (id === '1') {
+        return 'Closed';
+      }
+      return 'Any';
     },
 
     retrieveFromStore() {
