@@ -47,10 +47,12 @@
 import { mapGetters } from 'vuex';
 import orderPlacementStore from './_store';
 import OrderPlacement from './OrderPlacement.vue';
+import EventsMixin from '../../../../mixins/events_mixin';
 
 export default {
   name: 'DedicatedMultiDestinationModel',
   components: { OrderPlacement },
+  mixins: [EventsMixin],
   data() {
     return {
       mode: '/orders/dedicated/multi-destination',
@@ -85,6 +87,15 @@ export default {
         'Client Account': accDefault.user_email,
         'Client name': accDefault.user_name,
       });
+      this.trackGAEvent(name);
+    },
+    trackGAEvent(eventLabel) {
+      const eventPayload = {
+        eventCategory: 'Sendy Dedicated',
+        eventAction: 'Click',
+        eventLabel,
+      };
+      this.fireGAEvent(eventPayload);
     },
     trackMixpanelEvent(name, event) {
       let analyticsEnv = '';
