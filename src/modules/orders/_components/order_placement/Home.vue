@@ -11,7 +11,7 @@
         class="homeview--outer-selections"
         @click="switchMode('/orders/dedicated/no-destination')"
       >
-        Dedicated Vehicles
+        Dedicated
       </div>
     </div>
     <order-placement />
