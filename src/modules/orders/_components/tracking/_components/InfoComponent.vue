@@ -110,12 +110,15 @@
                       <p>{{ tracking_data.path[0].name }}</p>
                     </li>
 
-                    <li v-for="(val, index) in tracking_data.path" v-if="index > 0">
+                    <li v-for="(val, index) in tracking_data.path" v-if="index > 0" :class="Object.prototype.hasOwnProperty.call(val, 'notes') && val.notes ? 'infor-top-bar-notes-section' : ''">
                       <p class="info-text-transform infor-top-bar-text">
                          {{tracking_data.path[index].waypoint_type ? tracking_data.path[index].waypoint_type :  `Destination`}}
                       </p>
                       <p>
                         {{ val.name }}
+                      </p>
+                      <p class="infor-top-bar-text-notes" v-if="Object.prototype.hasOwnProperty.call(val, 'notes') && val.notes">
+                        Notes: {{ val.notes }}
                       </p>
                     </li>
                   </ul>
@@ -434,7 +437,7 @@
                           </span>
                           <span v-else>
                             <p class="stagePassed">
-                              Your {{ packageName }} at {{ val.name }} has been picked. 
+                              Your {{ packageName }} at {{ val.name }} has been picked.
                             </p>
                           </span>
                         </span>
@@ -450,7 +453,7 @@
                             </p>
                           </span>
                         </span>
-                       
+
 
 
 
@@ -480,7 +483,7 @@
                 </div>
               </el-col>
             </el-row>
-            <div v-if="getStatus === 'Pending'" class="save-option">
+            <div v-if="cancellationState()" class="save-option">
               <el-row
                 :gutter="20"
                 class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top infobar--item-truck-cancel"
@@ -493,7 +496,7 @@
               </el-col> -->
                 <el-col :span="6" class="cancel-text-option">
                   <div
-                    v-if="tracking_data.delivery_status < 2 && user_state"
+                    v-if="cancelBtnState()"
                     class="info-text-transform info-text-cursor "
                     @click="canceldialog()"
                   >
@@ -623,7 +626,7 @@
                   </div>
                 </div>
                 <div
-                  v-if="tracking_data.delivery_status < 2 && user_state"
+                  v-if="cancelBtnState()"
                   class="infobar--actions-hover"
                   @click="canceldialog()"
                 >
@@ -644,36 +647,31 @@
       <transition name="fade" mode="out-in">
         <div class="">
           <el-dialog :visible.sync="cancelOption" class="cancelOptions">
-            <div class="cancelOptions--content-wrap" v-if="cancel_reason !== '4'">
+            <div class="cancelOptions--content-wrap" v-if="extendedDialog()">
               <div class="">
-                <div class="cancel-reason-option" id="cancel-reason-title">
-                  Cancel this order?
+                <div class="cancel-reason-title" id="cancel-reason-title">
+                  Are you sure you want to cancel?
                 </div>
-                <div class="cancel-reason-option" id="cancel-reason-subtitle">
-                  You can place another one at any time.
+                <div class="cancel-reason-subtitle" id="cancel-reason-subtitle">
+                  You may incur cost on cancellation. Please confirm order details in future before placing an order
                 </div>
               </div>
-              <div class="cancel-reason-text" id="cancel-reason-text">
-                <div class="">
-                  <el-radio v-model="cancel_reason" label="4">
-                    I placed the wrong locations
-                  </el-radio>
+              <div v-for="reasons in cancellation_reasons">
+                <div class="cancel-reason-text" id="cancel-reason-text">
+                  <div class="">
+                    <el-radio v-model="cancel_reason" :label="reasons.cancel_reason_id">
+                      {{reasons.cancel_reason}}
+                    </el-radio>
+                  </div>
                 </div>
-                <div class="">
-                  <el-radio v-model="cancel_reason" label="5">
-                    My order is not ready
-                  </el-radio>
-                </div>
-                <div class="">
-                  <el-radio v-model="cancel_reason" label="7">
-                    No driver has been allocated
-                  </el-radio>
-                </div>
-                <div class="">
-                  <el-radio v-model="cancel_reason" label="8">
-                    I placed this order twice
-                  </el-radio>
-                </div>
+              </div>
+              <div class="cancel-reason-input" v-if="cancel_reason === 0">
+                <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                  placeholder="Tell us why you want to cancel"
+                  v-model="cancel_desc">
+                </el-input>
               </div>
               <div class="cancel-reason-input">
                 <input type="text" v-model="inputCancelReason" class="cancel-reason-text-input" name="" placeholder="Enter cancel reason" />
@@ -682,22 +680,22 @@
                 <button
                   type="button"
                   name="button"
-                  class="action--slide-button"
+                  class="action--slide-button cancellation-submit accept-cancell-btn"
                   @click="cancelOrder()"
                 >
-                  Yes
+                  YES , CANCEL
                 </button>
                 <button
                   type="button"
                   name="button"
-                  class="action--slide-button"
+                  class="action--slide-button cancellation-submit"
                   @click="cancelToggle(true)"
                 >
-                  No
+                  NO , DON'T CANCEL
                 </button>
               </div>
             </div>
-            <div class="cancelOptions--content-wrap" v-if="cancel_reason === '4'">
+            <div class="cancelOptions--content-wrap" v-if="cancel_reason === 4">
               <div class="cancelOptions--content-message">
                 Did you know after your order is confirmed you can call your rider and give him the
                 right destination? We will recalculate the cost and deliver your item.
@@ -718,6 +716,42 @@
                   @click="cancelOrder()"
                 >
                   Cancel Order
+                </button>
+              </div>
+            </div>
+            <div class="cancelOptions--content-wrap" v-if="pop_state === 5">
+              <div class="warning-icon-pstn">
+                <i class="el-icon-warning warning-icon"></i>
+              </div>
+              <div class="cancelOptions--content-message pop-message">
+                  In the future, ensure your order is ready
+              </div>
+              <div class="cancelOptions--content-buttons">
+                <button
+                  type="button"
+                  name="button"
+                  class="action--slide-button pop_btn"
+                  @click="disablePop()"
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+            <div class="cancelOptions--content-wrap" v-if="pop_state === 13">
+              <div class="warning-icon-pstn">
+                <i class="el-icon-warning warning-icon"></i>
+              </div>
+              <div class="cancelOptions--content-message pop-message">
+                  Your preferred rider is either offline or already busy
+              </div>
+              <div class="cancelOptions--content-buttons">
+                <button
+                  type="button"
+                  name="button"
+                  class="action--slide-button pop_btn"
+                  @click="disablePop()"
+                >
+                  OK
                 </button>
               </div>
             </div>
@@ -765,13 +799,14 @@ import _ from 'lodash';
 import { mapGetters } from 'vuex';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 
 const moment = require('moment');
 
 export default {
   name: 'InfoWindow',
-  mixins: [TimezoneMxn, EventsMixin],
+  mixins: [TimezoneMxn, EventsMixin,NotificationMxn],
   filters: {
     moment(date) {
       return moment(date).format('MMM Do YYYY, h:mm a');
@@ -818,6 +853,11 @@ export default {
       partnerName: '',
       packageName: '',
       hubspotStatus: true,
+      cancellation_reasons : [],
+      cancellation_state : false,
+      more_info : false ,
+      other_notes : '',
+      pop_state : -1 ,
     };
   },
   computed: {
@@ -945,6 +985,12 @@ export default {
         this.cancel_desc = '';
       }
     },
+    cancel_reason(value){
+      if (value !== '') {
+        this.cancelChange(value);
+      }
+
+    },
   },
   mounted() {
     this.loading = true;
@@ -970,24 +1016,14 @@ export default {
       });
     }, 500),
     cancelChange(reason) {
-      switch (reason) {
-        case 4: {
-          this.cancel_desc = 'I placed the wrong locations';
-          break;
-        }
-        case 5: {
-          this.cancel_desc = 'My order is not ready';
-          break;
-        }
-        case 7: {
-          this.cancel_desc = 'No driver has been allocated';
-          break;
-        }
-        case 8: {
-          this.cancel_desc = 'I placed this order twice';
-          break;
-        }
-        default:
+      this.more_info = false ;
+      this.cancel_desc = '';
+      const data = this.cancellation_reasons.find(position => position.cancel_reason_id === reason);
+      if (reason === 0) {
+        this.more_info = true ;
+      }
+      else {
+        this.cancel_desc = data.cancel_reason;
       }
     },
     initiateOrderData() {
@@ -1045,7 +1081,7 @@ export default {
               eventLabel: 'No Button - Order Cancellation Page - WebApp',
           }
           this.fireGAEvent(eventPayload);
-        
+
       }
       if(cancelReason === '4') {
           this.trackMixpanelEvent('Dissuaded Cancellation ', {
@@ -1200,6 +1236,7 @@ export default {
 
         if (sessionUserEmail === orderUserEmail) {
           this.user_state = true;
+          this.retrieveCancellationReasons();
         } else {
           this.user_state = false;
         }
@@ -1240,6 +1277,7 @@ export default {
       this.cancel_reason = '';
     },
     place() {
+      this.pop_state = false ;
       if (this.$route.name !== 'tracking_external') {
         this.$router.push('/orders');
       } else {
@@ -1247,63 +1285,71 @@ export default {
       }
     },
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
     cancelOrder() {
       if (this.cancel_reason !== '' && Object.keys(this.$store.getters.getSession).length > 0) {
-        const payload = {
-          order_no: this.tracking_data.order_no,
-          cancel_reason_id: this.cancel_reason,
-          reason_description: this.cancel_desc,
-          client_type: this.$store.getters.getSession.default,
-        };
-        const that = this;
-        if (this.inputCancelReason && this.hubspotStatus) {
-          this.submitHubspotCancelReason();
-          this.fireGAEvent({
-            eventCategory: 'Order Cancellation',
-            eventAction: 'Click',
-            eventLabel: 'Submit cancel reason input - Order Cancellation Page - WebApp',
-          });
+        if (this.cancel_reason === 0 && this.cancel_desc === '') {
+          this.doNotification(3, 'Order cancellation failed', 'Please provide reason for cancellation');
         }
-        let eventPayload = {
-          eventCategory: 'Order Cancellation',
-          eventAction: 'Click',
-          eventLabel: 'Yes Button - Order Cancellation Page - WebApp',
-        };
-        this.fireGAEvent(eventPayload);
-
-        this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then((response) => {
-          if (response.status) {
-            that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
-            that.cancelToggle();
-            this.$store.dispatch('$_orders/fetchOngoingOrders');
-            that.place();
-          } else {
-            const payload2 = {
-              order_no: that.$route.params.order_no,
-              cancel_reason_id: 4,
-              reason_description: 'I placed the wrong locations',
-              client_type: that.$store.getters.getSession.default,
-            };
-            this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then((response2) => {
-              if (response2.status) {
-                that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
-                that.cancelToggle();
-                this.$store.dispatch('$_orders/fetchOngoingOrders');
-                that.place();
-              } else {
-                that.doNotification(
-                  2,
-                  'Order cancellation failed',
-                  'Could not cancel the order. Please contact Customer Care at 0709779779.'
-                );
-              }
+        else {
+          this.pop_state = this.cancel_reason;
+          setTimeout(() => {
+           this.pop_state = false ;
+          }, 3000);
+          const payload = {
+            order_no: this.tracking_data.order_no,
+            cancel_reason_id: this.cancel_reason,
+            reason_description: this.cancel_desc,
+            client_type: this.$store.getters.getSession.default,
+          };
+          const that = this;
+          if (this.inputCancelReason && this.hubspotStatus) {
+            this.submitHubspotCancelReason();
+            this.fireGAEvent({
+              eventCategory: 'Order Cancellation',
+              eventAction: 'Click',
+              eventLabel: 'Submit cancel reason input - Order Cancellation Page - WebApp',
             });
           }
-        });
+          let eventPayload = {
+            eventCategory: 'Order Cancellation',
+            eventAction: 'Click',
+            eventLabel: 'Yes Button - Order Cancellation Page - WebApp',
+          };
+          this.fireGAEvent(eventPayload);
+
+          this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then((response) => {
+            if (response.status) {
+              that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+              that.cancelToggle();
+              this.$store.dispatch('$_orders/fetchOngoingOrders');
+              that.place();
+            } else {
+              const payload2 = {
+                order_no: that.$route.params.order_no,
+                cancel_reason_id: 4,
+                reason_description: 'I placed the wrong locations',
+                client_type: that.$store.getters.getSession.default,
+              };
+              this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then((response2) => {
+                if (response2.status) {
+                  that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+                  that.cancelToggle();
+                  this.$store.dispatch('$_orders/fetchOngoingOrders');
+                  that.place();
+                } else {
+                  that.doNotification(
+                    2,
+                    'Order cancellation failed',
+                    'Could not cancel the order. Please contact Customer Care at 0709779779.'
+                  );
+                }
+              });
+            }
+          });
+        }
       } else {
         this.doNotification(3, 'Order cancellation failed', 'Please select cancellation reason.');
       }
@@ -1550,6 +1596,50 @@ export default {
         .then(response => response)
         .catch(err => err);
     },
+    retrieveCancellationReasons(){
+      this.$store.dispatch('$_orders/$_tracking/requestCancellationReasons').then(
+        (response) => {
+         if (response.status) {
+           this.cancellation_reasons  = response.data ;
+           this.cancellation_state = true ;
+         }
+         else {
+            this.cancellation_state = false ;
+         }
+        },
+        (error) => {
+          this.cancellation_state = false ;
+        }
+      );
+    },
+    cancelBtnState(){
+      if (this.tracking_data.delivery_status < 2 && this.user_state &&  this.cancellation_state) {
+        return true ;
+      }
+      else {
+        return false ;
+      }
+    },
+    disablePop(){
+      this.cancelToggle();
+      this.pop_state = false ;
+    },
+    extendedDialog(){
+      if (this.cancel_reason === 4 || this.pop_state === 5 ||this.pop_state === 13) {
+        return false ;
+      }
+      else {
+        return true ;
+      }
+    },
+    cancellationState(){
+      if(this.getStatus === 'Delivered' || this.getStatus === 'In Transit' ){
+        return false ;
+      }
+      else {
+        return true ;
+      }
+    }
   },
 };
 </script>

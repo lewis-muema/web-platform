@@ -275,6 +275,7 @@ import FbuChildOrders from './_components/FbuChildOrders.vue';
 import NPSFooter from '../../components/footers/NPSFooter.vue';
 import NpsMixin from '../../mixins/nps_mixin';
 import SessionMxn from '../../mixins/session_mixin';
+import NotificationMxn from '../../mixins/notification_mixin';
 
 
 export default {
@@ -282,7 +283,7 @@ export default {
   components: {
     MainHeader, MapComponent, OngoingComponent, FbuChildOrders, NPSFooter,
   },
-  mixins: [RegisterStoreModule, NpsMixin, SessionMxn],
+  mixins: [RegisterStoreModule, NpsMixin, SessionMxn, NotificationMxn],
   data() {
     return {
       icon_class: '',
@@ -492,9 +493,8 @@ export default {
       }
     },
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
     closePopup() {
       this.blinder_status = false;

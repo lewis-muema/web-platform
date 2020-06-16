@@ -104,12 +104,13 @@ import {
   mapActions,
 } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'PersonalInfo',
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
   data() {
     return {
       user_name: '',
@@ -319,8 +320,7 @@ export default {
                 level,
                 message: this.message,
               }; // notification object
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true); // activate notification
+              this.displayNotification(notification);
             } else {
               const level = 3;
               this.message = 'Something went wrong.';
@@ -329,8 +329,7 @@ export default {
                 level,
                 message: this.message,
               }; // notification object
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true); // activate notification
+              this.displayNotification(notification);
             }
           },
           (error) => {
@@ -341,8 +340,7 @@ export default {
               level,
               message: this.message,
             }; // notification object
-            this.$store.commit('setNotification', notification);
-            this.$store.commit('setNotificationStatus', true);
+            this.displayNotification(notification);
           },
         );
       } else if (session.default === 'peer') {
@@ -378,8 +376,7 @@ export default {
                 level,
                 message: this.message,
               };
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true);
+              this.displayNotification(notification);
             } else {
               const level = 3;
               this.message = 'Something went wrong.';
@@ -388,8 +385,7 @@ export default {
                 level,
                 message: this.message,
               };
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true);
+              this.displayNotification(notification);
             }
           },
           (error) => {
@@ -400,8 +396,7 @@ export default {
               level,
               message: this.message,
             };
-            this.$store.commit('setNotification', notification);
-            this.$store.commit('setNotificationStatus', true);
+            this.displayNotification(notification);
           },
         );
       } else {
@@ -414,8 +409,7 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
     },
   },
 };

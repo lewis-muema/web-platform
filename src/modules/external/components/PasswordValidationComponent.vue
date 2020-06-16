@@ -16,7 +16,7 @@
             type="password"
             placeholder="Enter your password"
             @focus="setCurrentStep(1)"
-          />
+          >
         </div>
       </div>
       <div class="row">
@@ -31,13 +31,16 @@
             type="password"
             placeholder="Confirm your password"
             @focus="setCurrentStep(2)"
-          />
+          >
         </div>
       </div>
     </div>
     <div class="divide" />
     <div class="form-submits">
-      <a class="waves-effect waves-teal btn-flat" @click="last_view">
+      <a
+        class="waves-effect waves-teal btn-flat"
+        @click="last_view"
+      >
         Back
       </a>
       <button
@@ -55,9 +58,11 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
   name: 'PasswordValidationComponent',
+  mixins: [NotificationMxn],
   data() {
     return {
       password: '',
@@ -132,7 +137,7 @@ export default {
         };
 
         this.requestInvitation(fullPayload).then(
-          response => {
+          (response) => {
             if (response.length > 0) {
               response = response[0];
             }
@@ -144,11 +149,11 @@ export default {
               this.$router.push('/auth');
             }
           },
-          error => {
+          (error) => {
             const notification = { title: '', level: 3, message: 'Something went wrong.' }; // notification object
             this.$store.commit('setNotification', notification);
             this.$store.commit('setNotificationStatus', true);
-          }
+          },
         );
       }
     },
@@ -159,8 +164,7 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
     },
 
     last_view() {

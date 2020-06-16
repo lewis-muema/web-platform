@@ -204,6 +204,24 @@ const requestRiderLastPosition = function requestRiderLastPosition({ dispatch },
     );
   });
 };
+const requestCancellationReasons = function requestCancellationReasons({ dispatch }) {
+  const payload = {
+    app: 'ADONIS_PRIVATE_API',
+    endpoint: 'cancel-reasons?platform=customer',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
 export default {
   getTrackingData,
@@ -213,4 +231,5 @@ export default {
   saveOrderDetails,
   requestETASms,
   requestRiderLastPosition,
+  requestCancellationReasons,
 };

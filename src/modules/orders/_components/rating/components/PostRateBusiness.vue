@@ -30,9 +30,11 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 export default {
   name: 'PostRateBusiness',
+  mixins: [NotificationMxn],
   computed: {
     ...mapGetters({
       getStep: '$_rating/getStep',
@@ -68,8 +70,7 @@ export default {
         level: 1,
         message: 'Thank You for using Sendy.You will be redirected to the home page.',
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
       setTimeout(() => {
         this.updateScore(0);
         this.updateStep(1);

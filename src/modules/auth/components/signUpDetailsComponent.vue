@@ -227,13 +227,14 @@
 import { mapActions } from 'vuex';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import SessionMxn from '../../../mixins/session_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 const currencyConversion = require('country-tz-currency');
 
 export default {
   name: 'BizDetailsComponent',
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
   data() {
     return {
       account: 'biz',
@@ -316,6 +317,7 @@ export default {
 
         if (phoneValid && emailValid && this.pass_validation) {
           if (this.u_terms) {
+            localStorage.removeItem('request_id');
             this.next_step = false;
             this.sign_up_text = 'SIGNING UP ...';
             const phone = this.phone.replace(/[()\-\s]+/g, '');
@@ -377,7 +379,7 @@ export default {
       this.requestSignUpPhoneVerification(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.request_id = response.request_id;
+            localStorage.setItem('request_id', response.request_id);
             this.doNotification(1, 'Phone Verification', 'Phone verification code has been sent');
             this.trackMixpanelEvent('Verification Code Received', {
               'Client Email ': this.email,
@@ -415,32 +417,43 @@ export default {
     },
     verify_code() {
       if (this.code !== '') {
-        const values = {};
-        values.code = this.code;
-        values.request_id = this.request_id;
-        const fullPayload = {
-          values,
-          vm: this,
-          app: 'NODE_PRIVATE_API',
-          endpoint: 'check_verification',
-        };
-        this.requestSignUpVerificationVerify(fullPayload).then(
-          (response) => {
-            if (response.status) {
-              this.doNotification(1, 'Phone Verification', 'Phone verification successful! Your Account will be created shortly ...');
-              this.create_account();
-            } else {
-              this.doNotification(2, 'Phone Verification', response.message);
-            }
-          },
-          (error) => {
-            this.doNotification(
-              2,
-              'Phone Verification Error ',
-              error.response.data.message,
-            );
-          },
-        );
+        const requestId = localStorage.getItem('request_id');
+        if (requestId === '') {
+          this.doNotification(2, 'Phone Verification Error', 'Internal system error .Kindly try after 15 minutes');
+          setTimeout(() => {
+            this.setUpState = 1;
+            this.next_step = true;
+            this.sign_up_text = 'SIGN UP';
+            localStorage.removeItem('request_id');
+          }, 2000);
+        } else {
+          const values = {};
+          values.code = this.code;
+          values.request_id = requestId;
+          const fullPayload = {
+            values,
+            vm: this,
+            app: 'NODE_PRIVATE_API',
+            endpoint: 'check_verification',
+          };
+          this.requestSignUpVerificationVerify(fullPayload).then(
+            (response) => {
+              if (response.status) {
+                this.doNotification(1, 'Phone Verification', 'Phone verification successful! Your Account will be created shortly ...');
+                this.create_account();
+              } else {
+                this.doNotification(2, 'Phone Verification', response.message);
+              }
+            },
+            (error) => {
+              this.doNotification(
+                2,
+                'Phone Verification Error ',
+                error.response.data.message,
+              );
+            },
+          );
+        }
       } else {
         this.doNotification(
           2,
@@ -531,7 +544,7 @@ export default {
     go_back_state(code) {
       this.setUpState = code;
       this.code = '';
-      this.request_id = '';
+      localStorage.removeItem('request_id');
     },
     validate_pass() {
       const patt = new RegExp('^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9@#$%^&+=]*$');
@@ -549,11 +562,11 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
     },
     directSignInViaAuth() {
       this.deleteSession();
+      localStorage.removeItem('request_id');
       const params = {
         email: this.email,
         password: this.password,

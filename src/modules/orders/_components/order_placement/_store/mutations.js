@@ -8,6 +8,7 @@ const getDefaultState = () => ({
   location_names: [],
   saved_cards: [],
   schedule_time: '',
+  schedule_end_time: '',
   order_notes: '',
   extra_destinations: 0,
   pickup_filled: false,
@@ -58,6 +59,10 @@ export default {
 
   setScheduleTime(state, val) {
     state.schedule_time = val;
+  },
+
+  setScheduleEndTime(state, val) {
+    state.schedule_end_time = val;
   },
 
   setOrderNotes(state, val) {
@@ -167,6 +172,9 @@ export default {
   setPairSerialNumber(state, val) {
     state.pair_serial_number = val;
   },
+  setPairWithRiderState(state, val) {
+    state.pair_rider_state = val;
+  },
   setPairRiderPhone(state, val) {
     state.pair_rider_phone = val;
   },
@@ -199,5 +207,8 @@ export default {
   },
   setVehicleDetails(state, val) {
     state.vehicle_plate = val;
+  },
+  setPairErrorMessage(state, val) {
+    state.pair_error_msg = val;
   },
 };

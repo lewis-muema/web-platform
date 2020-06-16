@@ -72,10 +72,11 @@
 <script>
 import { mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
   name: 'SignIn',
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
 
   data() {
     return {
@@ -226,8 +227,7 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
     },
   },
 };

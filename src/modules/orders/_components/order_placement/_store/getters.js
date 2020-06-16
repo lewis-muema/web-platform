@@ -5,6 +5,7 @@ export default {
   getActiveVendorDetails: state => state.active_vendor_details,
   getActiveOrderOption: state => state.active_order_option,
   getScheduleTime: state => state.schedule_time,
+  getScheduleEndTime: state => state.schedule_end_time,
   getOrderNotes: state => state.order_notes,
   getOrderPath: state => state.order_path,
   getLocationNames: state => state.location_names,
@@ -37,4 +38,6 @@ export default {
   getProductPhase: state => state.product_phase,
   getProductId: state => state.product_id,
   getVehicleDetails: state => state.vehicle_plate,
+  getPairWithRiderState: state => state.pair_rider_state,
+  getPairErrorMessage: state => state.pair_error_msg,
 };

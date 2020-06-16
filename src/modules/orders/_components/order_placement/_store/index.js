@@ -9,6 +9,7 @@ export default {
       active_package_class: '',
       active_vendor_name: '',
       active_vendor_details: {},
+      schedule_end_time: '',
       active_order_option: '',
       price_request_object: {},
       max_destinations: 24,
@@ -44,6 +45,8 @@ export default {
       product_phase: 1,
       product_id: 1,
       vehicle_plate: '',
+      pair_rider_state: false,
+      pair_error_msg: '',
     };
   },
   actions,

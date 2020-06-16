@@ -1,5 +1,19 @@
 <template lang="html">
   <div class="homeview--outer">
+    <div class="homeview--outer-selection-panel">
+      <div
+        class="homeview--outer-selections homeview--outer-selections__active"
+        @click="switchMode('/orders')"
+      >
+        On Demand
+      </div>
+      <div
+        class="homeview--outer-selections"
+        @click="switchMode('/orders/dedicated/no-destination')"
+      >
+        Dedicated Vehicles
+      </div>
+    </div>
     <order-placement />
   </div>
 </template>
@@ -11,6 +25,51 @@ import OrderPlacement from './OrderPlacement.vue';
 export default {
   name: 'Home',
   components: { OrderPlacement },
+  data() {
+    return {
+      mode: 1,
+    };
+  },
+  methods: {
+    switchMode(route) {
+      if (route === '/orders/dedicated/no-destination') {
+        this.selectDedicatedVehicles();
+      }
+      this.$router.push(route);
+    },
+    selectDedicatedVehicles() {
+      const acc = this.$store.getters.getSession;
+      const accDefault = acc[acc.default];
+      this.trackMixpanelEvent('Select dedicated vehicles', {
+        'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Account': accDefault.user_email,
+        'Client name': accDefault.user_name,
+      });
+      this.trackMixpanelEvent('Select no-destination orders', {
+        'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Account': accDefault.user_email,
+        'Client name': accDefault.user_name,
+      });
+    },
+    trackMixpanelEvent(name, event) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name, event);
+        }
+      } catch (er) {
+        // ...
+      }
+    },
+  },
 };
 </script>
 
