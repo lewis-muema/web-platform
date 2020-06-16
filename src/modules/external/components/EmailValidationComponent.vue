@@ -59,6 +59,7 @@ export default {
     return {
       peerEmail: '',
       message: '',
+      emailValid: true,
     };
   },
   computed: {
@@ -66,7 +67,11 @@ export default {
       getBizEmail: '$_external/getBizEmail',
     }),
     is_valid() {
-      return this.peerEmail !== '';
+      let valid = false;
+      if (this.peerEmail === '') {
+        valid = true;
+      }
+      return valid;
     },
   },
   methods: {
@@ -76,15 +81,17 @@ export default {
       updatePerEmail: '$_external/updatePerEmail',
     }),
     next_view() {
-      let emailValid = true;
-      for (let i = 0; i < this.errors.items.length; i++) {
-        if (this.errors.items[i].field === 'email') {
-          emailValid = false;
-          break;
+      this.emailValid = true;
+      if (this.peerEmail !== '') {
+        for (let i = 0; i < this.errors.items.length; i++) {
+          if (this.errors.items[i].field === 'email') {
+            this.emailValid = false;
+            break;
+          }
         }
       }
 
-      if (emailValid) {
+      if (this.emailValid) {
         if (this.getBizEmail !== this.peerEmail) {
           this.updatePerEmail(this.peerEmail);
           this.updateViewStep(0);
