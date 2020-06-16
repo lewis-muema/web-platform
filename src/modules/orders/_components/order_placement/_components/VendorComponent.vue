@@ -966,7 +966,6 @@ export default {
       this.setOrderState(2);
       this.setExtendOptions(true);
       this.handleScheduledTime();
-      this.carrier_type = this.activeVendorPriceData.vendor_id === 2 ? '0' : '1';
     },
     triggerGAEvent(field, value) {
       let analyticsEnv = '';
@@ -1003,7 +1002,7 @@ export default {
         if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
           this.carrier_type = '1';
         } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
-          this.carrier_type = '2';
+          this.carrier_type = '0';
         } else if (copStatus) {
           this.carrier_type = session[session.default].default_carrier_type.toString(10);
         } else {
