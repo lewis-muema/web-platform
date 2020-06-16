@@ -487,4 +487,7 @@
   margin-bottom: 3%;
   text-transform: capitalize;
 }
+.vendorExtraInfo{
+  background-color: #1782c5 !important;
+}
 /* end transitions */
