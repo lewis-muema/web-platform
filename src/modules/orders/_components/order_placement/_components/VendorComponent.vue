@@ -103,6 +103,7 @@
                     placement="right"
                     width="350"
                     trigger="hover"
+                    popper-class="vendorExtraInfo"
                   >
                     <div
                       class="reset-font"
@@ -1455,5 +1456,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=2';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=3';
 </style>
