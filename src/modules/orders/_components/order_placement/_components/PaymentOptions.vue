@@ -983,15 +983,17 @@ export default {
                 });
               }
               if (this.$route.path === '/orders/dedicated/multi-destination') {
-                this.trackMixpanelEvent('Multi destination order vendor type selected', {
+                this.trackGAEvent('Multi destination vendor type selected');
+                this.trackMixpanelEvent('Multi destination vendor type selected', {
                   'Vendor ID': data.vendor_type,
-                  'Carrier type': this.carrierTypeName(data.carrier_type),
+                  'Carrier type': this.carrierTypeName(data.carrier_type, data.vendor_type),
                   'Client name': accData.user_name,
                   'Client email': data.user_email,
                   'Account type': acc === 'peer' ? 'Personal' : 'Business',
                   'Client type': 'Web Platform',
                 });
-                this.trackMixpanelEvent('Multi destination order payment option', {
+                this.trackGAEvent('Multi destination payment option');
+                this.trackMixpanelEvent('Multi destination payment option', {
                   'Payment option': this.payMethodName(data.payment_method),
                   'Client name': accData.user_name,
                   'Client email': data.user_email,
@@ -1000,6 +1002,7 @@ export default {
                   'Client type': 'Web Platform',
                 });
               }
+              this.trackGAEvent(this.$route.path === '/orders/dedicated/multi-destination' ? 'Multi destination order completion log' : 'Order Completion Log');
               this.trackMixpanelEvent(this.$route.path === '/orders/dedicated/multi-destination' ? 'Multi destination order completion log' : 'Order Completion Log', {
                 'Account ': data.type,
                 'Account Type': acc === 'peer' ? 'Personal' : 'Business',
@@ -1190,7 +1193,16 @@ export default {
       return 'Unknown payment method';
     },
 
-    carrierTypeName(id) {
+    carrierTypeName(id, vendor) {
+      if (vendor === 1) {
+        if (id === '0') {
+          return 'Bike without box';
+        }
+        if (id === '1') {
+          return 'Bike with box';
+        }
+        return 'Any';
+      }
       if (id === '0') {
         return 'Open';
       }
@@ -1298,6 +1310,14 @@ export default {
       } catch (er) {
         // ...
       }
+    },
+    trackGAEvent(eventLabel) {
+      const eventPayload = {
+        eventCategory: 'Sendy Dedicated',
+        eventAction: 'Click',
+        eventLabel,
+      };
+      this.fireGAEvent(eventPayload);
     },
 
     /* start mpesa */

@@ -449,11 +449,11 @@ export default {
           eventAction: 'Click',
           eventLabel: 'Pickup Location - Order Placement - Web App',
         };
-        this.fireGAEvent(eventPayload);
         if (this.$route.path === '/orders/dedicated/multi-destination') {
           this.trackLocationSelect(place.name, index);
         } else {
           this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
+          this.fireGAEvent(eventPayload);
         }
       } else {
         const eventPayload = {
@@ -461,11 +461,11 @@ export default {
           eventAction: 'Click',
           eventLabel: 'Destination Location - Order Placement - Web App',
         };
-        this.fireGAEvent(eventPayload);
         if (this.$route.path === '/orders/dedicated/multi-destination') {
           this.trackLocationSelect(place.name, index);
         } else {
           this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
+          this.fireGAEvent(eventPayload);
         }
       }
       this.attemptPriceRequest();
@@ -482,12 +482,18 @@ export default {
         'Client name': accDefault.user_name,
       };
       if (type === 0) {
-        eventName = 'Enter pick-up location for multi-destination order';
+        eventName = 'Enter pick-up location for multi-destination';
         eventData['Pick up location'] = location;
       } else if (type > 0) {
-        eventName = 'Enter delivery location for multi-destination order';
+        eventName = 'Enter delivery location for multi-destination';
         eventData['Delivery location'] = location;
       }
+      const eventPayload = {
+        eventCategory: 'Sendy Dedicated',
+        eventAction: 'Click',
+        eventLabel: eventName,
+      };
+      this.fireGAEvent(eventPayload);
       let analyticsEnv = '';
       try {
         analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
