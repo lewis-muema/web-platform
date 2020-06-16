@@ -11,7 +11,7 @@
         class="homeview--outer-selections"
         @click="switchMode('/orders/dedicated/no-destination')"
       >
-        Dedicated Vehicles
+        Dedicated
       </div>
     </div>
     <order-placement />
@@ -19,12 +19,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import OrderPlacement from './OrderPlacement.vue';
+import EventsMixin from '../../../../mixins/events_mixin';
+
 
 export default {
   name: 'Home',
   components: { OrderPlacement },
+  mixins: [EventsMixin],
   data() {
     return {
       mode: 1,
@@ -46,12 +48,22 @@ export default {
         'Client Account': accDefault.user_email,
         'Client name': accDefault.user_name,
       });
+      this.trackGAEvent('Select dedicated vehicles');
       this.trackMixpanelEvent('Select no-destination orders', {
         'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
         'Client Type': 'Web Platform',
         'Client Account': accDefault.user_email,
         'Client name': accDefault.user_name,
       });
+      this.trackGAEvent('Select no-destination orders');
+    },
+    trackGAEvent(eventLabel) {
+      const eventPayload = {
+        eventCategory: 'Sendy Dedicated',
+        eventAction: 'Click',
+        eventLabel,
+      };
+      this.fireGAEvent(eventPayload);
     },
     trackMixpanelEvent(name, event) {
       let analyticsEnv = '';
