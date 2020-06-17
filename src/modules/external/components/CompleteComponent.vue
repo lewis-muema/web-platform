@@ -6,18 +6,35 @@
     <div class="complete-contents">
       <div class="complete-pair">
         <p>You can now enjoy Sendy services at work and at home!</p>
-        <p>Woah - that’s double the convenience!</p>
+        <p v-if="getPerEmail !== ''">
+          Woah - that’s double the convenience!
+        </p>
       </div>
-      <div class="complete-pair">
+      <div
+        v-if="getPerEmail !== ''"
+        class="complete-pair"
+      >
         <p>
           Your two accounts have now been connected and you can access either account with your one
           selected password.
         </p>
         <p>Login at any time to your two account profiles using the emails below.</p>
       </div>
+      <div
+        v-else
+        class="complete-pair"
+      >
+        <p>
+          Your account has now been created and you can access the account with your
+          selected password.
+        </p>
+        <p>Login at any time to your account profile using the email below.</p>
+      </div>
       <div class="complete-pair">
         <p>{{ getBizName }}: {{ getBizEmail }}</p>
-        <p>Personal: {{ getPerEmail }}</p>
+        <p v-if="getPerEmail !== ''">
+          Personal: {{ getPerEmail }}
+        </p>
       </div>
     </div>
     <div class="complete-continue">
@@ -81,5 +98,6 @@ export default {
 {
   text-align: center;
   height: 40px;
+  padding-top: 1%;
 }
 </style>
