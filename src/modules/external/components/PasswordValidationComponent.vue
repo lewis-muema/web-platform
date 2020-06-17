@@ -145,6 +145,14 @@ export default {
             if (response.status) {
               this.setViewState(4);
               this.updateViewStep(0);
+              this.trackMixpanelEvent('Account SetUp - Cop Invitation ', {
+                'User Name': this.getName,
+                'Cop User Email ': this.getBizEmail,
+                'Personal Email ': this.getPerEmail,
+                Platform: 'Web',
+                'Cop Account': `SENDY ${this.getCopId}`,
+                'Department Id': this.getDeptId,
+              });
             } else {
               this.$router.push('/auth');
             }
@@ -155,6 +163,22 @@ export default {
             this.$store.commit('setNotificationStatus', true);
           },
         );
+      }
+    },
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+        }
+      } catch (er) {
+        // ...
       }
     },
 
