@@ -7,6 +7,7 @@ const state = {
   order_history_orders: [],
   payments: [],
   statement: [],
+  user_currencies: [],
 };
 
 export default {
