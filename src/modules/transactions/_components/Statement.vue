@@ -36,6 +36,17 @@
         </button>
       </div>
     </div>
+    <div class="currencies-section">
+      <div
+        v-for="(currency, index) in currencies"
+        :key="index"
+        class="currency-selectors"
+        :class="activeCurrency === currency ? 'active-currency' : ''"
+        @click="activeCurrency = currency"
+      >
+        {{ currency }}
+      </div>
+    </div>
     <div class="bg-grey">
       <div class="download_history">
         <el-dropdown
@@ -162,12 +173,15 @@ export default {
         to_date: '',
       },
       filteredStatementData: [],
+      currencies: [],
+      activeCurrency: '',
     };
   },
   computed: {
     ...mapGetters({
       getSess: 'getSession',
-      statementData: '$_transactions/getStatement',
+      unfilteredStatementData: '$_transactions/getStatement',
+      getUserCurrencies: '$_transactions/getUserCurrencies',
     }),
     valid_filter() {
       return this.filterData.from_date !== '' && this.filterData.to_date !== '';
@@ -184,6 +198,15 @@ export default {
       }
       return 0;
     },
+    statementData() {
+      const orderHistory = [];
+      this.unfilteredStatementData.forEach((row) => {
+        if (row.currency === this.activeCurrency) {
+          orderHistory.push(row);
+        }
+      });
+      return orderHistory;
+    },
   },
   watch: {
     getSess: {
@@ -192,9 +215,15 @@ export default {
       },
       deep: true,
     },
+    statementData() {
+      this.currencies = this.getUserCurrencies;
+    },
   },
   mounted() {
     this.populateStatement();
+    this.currencies = this.getUserCurrencies;
+    const sessionData = this.$store.getters.getSession;
+    this.activeCurrency = sessionData[sessionData.default].default_currency;
   },
   methods: {
     populateStatement() {
