@@ -54,3 +54,22 @@
 .order_cost_amount{
   text-align: right;
 }
+.currency-selectors{
+    width: 100px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    border: 1px solid #BFD1E3;
+    font-size: 12px;
+    cursor: pointer;
+}
+.currencies-section {
+    display: inline-flex;
+}
+.active-currency {
+    color: white;
+    background: #1B7FC3;
+    border: 1px solid #1B7FC3 !important;
+}
