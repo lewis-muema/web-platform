@@ -246,10 +246,7 @@
               v-if="isTestAccount()"
               class="home-view-truck-options-inner-wrapper"
             >
-              <div
-                class="home-view-truck-options-label"
-                @click="initiateaccountSwitch"
-              >
+              <div class="home-view-truck-options-label">
                 Test Specifications
               </div>
               <div>
@@ -932,9 +929,6 @@ export default {
     dispatchOrderNotes() {
       this.trackMixpanelEvent('Set Order Notes', { 'Order Notes': this.order_notes });
       this.setOrderNotes(this.order_notes);
-    },
-    initiateaccountSwitch() {
-      this.$root.$emit('Account status', true);
     },
     dispatchPairStatus() {
       const status = this.pair_rider;
