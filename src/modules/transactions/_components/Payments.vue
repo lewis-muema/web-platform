@@ -44,7 +44,17 @@
         </button>
       </div>
     </div>
-
+    <div class="currencies-section">
+      <div
+        v-for="(currency, index) in currencies"
+        :key="index"
+        class="currency-selectors"
+        :class="activeCurrency === currency ? 'active-currency' : ''"
+        @click="activeCurrency = currency"
+      >
+        {{ currency }}
+      </div>
+    </div>
     <el-table
       :data="payment_data"
       style="width: 100%"
@@ -120,12 +130,15 @@ export default {
         to_date: '',
       },
       filteredPaymentData: [],
+      currencies: [],
+      activeCurrency: '',
     };
   },
   computed: {
     ...mapGetters({
       getSess: 'getSession',
-      paymentData: '$_transactions/getPayments',
+      unfilteredPaymentData: '$_transactions/getPayments',
+      getUserCurrencies: '$_transactions/getUserCurrencies',
     }),
     payment_data() {
       const from = (this.pagination_page - 1) * this.pagination_limit;
@@ -143,6 +156,15 @@ export default {
     payment_total() {
       return this.paymentData.length;
     },
+    paymentData() {
+      const orderHistory = [];
+      this.unfilteredPaymentData.forEach((row) => {
+        if (row.currency === this.activeCurrency) {
+          orderHistory.push(row);
+        }
+      });
+      return orderHistory;
+    },
   },
   watch: {
     getSess: {
@@ -151,9 +173,15 @@ export default {
       },
       deep: true,
     },
+    paymentData() {
+      this.currencies = this.getUserCurrencies;
+    },
   },
   mounted() {
     this.loadPayments();
+    this.currencies = this.getUserCurrencies;
+    const sessionData = this.$store.getters.getSession;
+    this.activeCurrency = sessionData[sessionData.default].default_currency;
   },
   methods: {
     ...mapActions(['$_transactions/requestPayments']),

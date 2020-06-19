@@ -80,7 +80,27 @@
             data-vv-validate-on="blur"
             v-bind="phoneInputProps"
             @onBlur="validate_phone"
+            @country-changed="checkCountryCode"
           />
+        </div>
+        <div class=" ">
+          <p class="input--label">
+            Order type
+          </p>
+          <div class="sign-up-order-type">
+            <label class="input--label radio--label"><input
+              v-model="selectedCountry"
+              type="radio"
+              class="radio--label"
+              :value="localCountry"
+            >{{ localCountry }}</label>
+            <label class="input--label radio--label"><input
+              v-model="selectedCountry"
+              type="radio"
+              class="radio--label"
+              value="USD"
+            >USD</label>
+          </div>
         </div>
         <div class=" ">
           <p class="input--label">
@@ -228,6 +248,9 @@ export default {
       countryCode: 'KE',
       currency: 'KES',
       code: '',
+      localCountry: '',
+      localCountryCode: '',
+      selectedCountry: '',
       phoneInputProps: {
         mode: 'international',
         defaultCountry: 'ke',
@@ -253,6 +276,21 @@ export default {
       sign_up_text: 'SIGN UP',
     };
   },
+  watch: {
+    selectedCountry(val) {
+      if (val === 'USD') {
+        this.countryCode = 'US';
+      } else {
+        this.countryCode = this.localCountryCode;
+      }
+      this.currency = val;
+    },
+    localCountry(val) {
+      if (this.selectedCountry !== 'USD') {
+        this.selectedCountry = val;
+      }
+    },
+  },
   methods: {
     ...mapActions({
       requestSignUpPhoneVerification: '$_auth/requestSignUpPhoneVerification',
@@ -263,6 +301,10 @@ export default {
     }),
     validate_phone() {
       this.$validator.validate();
+    },
+    checkCountryCode(country) {
+      this.localCountryCode = country.iso2;
+      this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
     },
     validateDetails() {
       let valid = false;
@@ -279,11 +321,6 @@ export default {
     next() {
       if (this.validateDetails()) {
         const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
-        const phoneNumber = parsePhoneNumberFromString(this.phone);
-        this.countryCode = phoneNumber.country;
-
-        const countryCodeData = currencyConversion.getCountryByCode(phoneNumber.country);
-        this.currency = countryCodeData.currencyCode;
 
         let emailValid = true;
         for (let i = 0; i < this.errors.items.length; i++) {

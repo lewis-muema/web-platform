@@ -3,6 +3,9 @@ export default {
   setOrderHistoryOrders(state, orders) {
     state.order_history_orders = orders;
   },
+  setUserCurrencies(state, currencies) {
+    state.user_currencies = currencies;
+  },
   setCopUsers(state, users) {
     state.cop_users = users;
   },
