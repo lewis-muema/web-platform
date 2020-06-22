@@ -134,11 +134,13 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'OnboardingInfoComponent',
+  mixins: [NotificationMxn],
   data() {
     return {
       name: '',
@@ -295,8 +297,7 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
     },
   },
 };

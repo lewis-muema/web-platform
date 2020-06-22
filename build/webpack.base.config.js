@@ -13,7 +13,9 @@ const env = process.env.DOCKER_ENV === 'testing'
   ? require('../configs/test.env')
   : process.env.DOCKER_ENV === 'production'
     ? require('../configs/prod.env')
-    : require('../configs/dev.env');
+    :  process.env.DOCKER_ENV === 'staging'
+       ? require('../configs/staging.env')
+       : require('../configs/dev.env');
 
 module.exports = {
   devtool: isProd ? false : '#cheap-module-source-map',

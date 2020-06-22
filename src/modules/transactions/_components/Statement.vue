@@ -36,6 +36,17 @@
         </button>
       </div>
     </div>
+    <div class="currencies-section">
+      <div
+        v-for="(currency, index) in currencies"
+        :key="index"
+        class="currency-selectors"
+        :class="activeCurrency === currency ? 'active-currency' : ''"
+        @click="activeCurrency = currency"
+      >
+        {{ currency }}
+      </div>
+    </div>
     <div class="bg-grey">
       <div class="download_history">
         <el-dropdown
@@ -162,12 +173,15 @@ export default {
         to_date: '',
       },
       filteredStatementData: [],
+      currencies: [],
+      activeCurrency: '',
     };
   },
   computed: {
     ...mapGetters({
       getSess: 'getSession',
-      statementData: '$_transactions/getStatement',
+      unfilteredStatementData: '$_transactions/getStatement',
+      getUserCurrencies: '$_transactions/getUserCurrencies',
     }),
     valid_filter() {
       return this.filterData.from_date !== '' && this.filterData.to_date !== '';
@@ -184,6 +198,15 @@ export default {
       }
       return 0;
     },
+    statementData() {
+      const orderHistory = [];
+      this.unfilteredStatementData.forEach((row) => {
+        if (row.currency === this.activeCurrency) {
+          orderHistory.push(row);
+        }
+      });
+      return orderHistory;
+    },
   },
   watch: {
     getSess: {
@@ -192,9 +215,15 @@ export default {
       },
       deep: true,
     },
+    statementData() {
+      this.currencies = this.getUserCurrencies;
+    },
   },
   mounted() {
     this.populateStatement();
+    this.currencies = this.getUserCurrencies;
+    const sessionData = this.$store.getters.getSession;
+    this.activeCurrency = sessionData[sessionData.default].default_currency;
   },
   methods: {
     populateStatement() {
@@ -336,20 +365,22 @@ export default {
 
         for (let i = 0; i < this.statementData.length; i++) {
           const arr = {};
-          arr.Amount = this.statementData[i].amount;
           arr.Date = this.statementData[i].date_time;
           arr.Description = this.statementData[i].description;
           arr.PaymentMethod = this.statementData[i].pay_method_name;
-          arr.RunningBalance = this.statementData[i].running_balance;
+          arr.Debit = this.formatDebitAmount(this.statementData[i]);
+          arr.Credit = this.formatCreditAmount(this.statementData[i]);
+          arr.RunningBalance = this.formatRunningBalance(this.statementData[i]);
           arr.Transaction = this.statementData[i].txn;
           data2.push(arr);
         }
         data = _.map(data2, row => _.pick(
           row,
-          'Amount',
           'Date',
           'Description',
           'PaymentMethod',
+          'Debit',
+          'Credit',
           'RunningBalance',
           'Transaction',
         ));
@@ -359,16 +390,17 @@ export default {
         exportFromJSON({ data, fileName, exportType });
       } else {
         const pdfBody = [
-          ['Amount', 'Date', 'Description', 'Payment Method', 'Running Balance', 'Transaction'],
+          ['Date', 'Description', 'Payment Method', 'Debit', 'Credit', 'Running Balance', 'Transaction'],
         ];
 
         this.statementData.forEach((item) => {
           pdfBody.push([
-            item.amount,
             item.date_time,
             item.description,
             item.pay_method_name,
-            item.running_balance,
+            this.formatDebitAmount(item),
+            this.formatCreditAmount(item),
+            this.formatRunningBalance(item),
             item.txn,
           ]);
         });

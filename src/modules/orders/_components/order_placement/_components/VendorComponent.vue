@@ -2,6 +2,7 @@
   <div
     v-if="getOrderState === 1"
     class="home-view-vendor-and-optins-wrappper"
+    :class="$route.path === '/orders/dedicated/multi-destination' ? 'dedicated-vendors-wrapper' : ''"
   >
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
@@ -103,6 +104,7 @@
                     placement="right"
                     width="350"
                     trigger="hover"
+                    popper-class="vendorExtraInfo"
                   >
                     <div
                       class="reset-font"
@@ -200,6 +202,35 @@
           <!-- start large /medium vendors -->
           <div class="home-view-truck-options-wrapper">
             <div class="home-view-truck-options-divider" />
+            <div
+              v-if="$route.path === '/orders/dedicated/multi-destination'"
+              class="home-view-truck-options-inner-wrapper"
+            >
+              <div class="home-view-truck-options-dedicated-notes">
+                <p>Add notes for each destination (optional)</p>
+                <div
+                  v-for="(path, index) in getStoreOrderPath"
+                  :key="index"
+                >
+                  <div
+                    v-if="index > 0"
+                    class="home-view-truck-options-dedicated-notes-label"
+                  >
+                    <div class="home-view-truck-options-dedicated-notes-icon" />
+                    <p class="no-margin">
+                      {{ path.name }}
+                    </p>
+                  </div>
+                  <el-input
+                    v-if="index > 0"
+                    class=""
+                    autocomplete="true"
+                    placeholder="Notes"
+                    @input="addDestinationNotes($event, path, index)"
+                  />
+                </div>
+              </div>
+            </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
                 What do you want delivered?
@@ -353,7 +384,10 @@
                 class="el-input__inner"
               >
             </div>
-            <div class="home-view-truck-options-inner-wrapper">
+            <div
+              v-if="$route.path !== '/orders/dedicated/multi-destination'"
+              class="home-view-truck-options-inner-wrapper"
+            >
               <div class="home-view-truck-options-label">
                 Additional Instructions
               </div>
@@ -516,10 +550,29 @@
                     </el-input>
                     <div class="pair_info_text_content">
                       <div v-if="pair_status === '1'">
-                        <p class="upper_scope_pair_text">
-                          {{ riderNameDisplay }} not found
-                        </p>
-                        <p>{{ failure_text }}</p>
+                        <el-row :gutter="20">
+                          <el-col
+                            :span="1"
+                            class="pairing-alert"
+                          >
+                            <div>
+                              <i class="el-icon-warning pairing-alert-icon" />
+                            </div>
+                          </el-col>
+                          <el-col
+                            :span="8"
+                            class="pairing-error-display"
+                          >
+                            <div class="share-option">
+                              <div class="pairing-error-header">
+                                {{ riderNameDisplay }} not found
+                              </div>
+                              <div class="pair-model-info">
+                                {{ failure_text }}
+                              </div>
+                            </div>
+                          </el-col>
+                        </el-row>
                       </div>
                       <div v-if="pair_status === '2'">
                         <el-row :gutter="20">
@@ -586,12 +639,13 @@ import _ from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PaymentOptions from './PaymentOptions.vue';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 export default {
   components: {
     PaymentOptions,
   },
-  mixins: [TimezoneMxn],
+  mixins: [TimezoneMxn, NotificationMxn],
   data() {
     return {
       first_time: false,
@@ -713,7 +767,7 @@ export default {
       getPairWithRiderStatus: '$_orders/$_home/getPairWithRiderStatus',
       getVehicleDetails: '$_orders/$_home/getVehicleDetails',
       getCarrierType: '$_orders/$_home/getCarrierType',
-
+      getStoreOrderPath: '$_orders/getStorePath',
     }),
 
     vehicleDetailsPlaceholder() {
@@ -827,6 +881,7 @@ export default {
       setScheduleTime: '$_orders/$_home/setScheduleTime',
       setOrderNotes: '$_orders/$_home/setOrderNotes',
       setPairWithRiderStatus: '$_orders/$_home/setPairWithRiderStatus',
+      setPairWithRiderState: '$_orders/$_home/setPairWithRiderState',
       setPairSerialNumber: '$_orders/$_home/setPairSerialNumber',
       setPairRiderPhone: '$_orders/$_home/setPairRiderPhone',
       setOuterActiveVendorDetails: '$_orders/setOuterActiveVendorDetails',
@@ -837,6 +892,11 @@ export default {
       setLoadWeightValue: '$_orders/$_home/setLoadWeightValue',
       setVendorPrice: '$_orders/$_home/setVendorPrice',
       setVehicleDetails: '$_orders/$_home/setVehicleDetails',
+      setStorePath: '$_orders/setStorePath',
+      clearStorePath: '$_orders/clearStorePath',
+      unsetStorePath: '$_orders/unsetStorePath',
+      setWaypointNotes: '$_orders/setWaypointNotes',
+      setPairErrorMessage: '$_orders/$_home/setPairErrorMessage',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -854,23 +914,34 @@ export default {
     },
     dispatchScheduleTime() {
       const dateTime = new Date();
+      this.trackMixpanelEvent('Set Order Schedule Time', { 'Scheduled Time': this.schedule_time });
       if (this.schedule_time && dateTime > this.schedule_time) {
         this.schedule_time = new Date();
       }
       this.setScheduleTime(this.schedule_time);
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
     },
+    addDestinationNotes(note, pathObj, i) {
+      this.setWaypointNotes({
+        index: i,
+        notes: note,
+      });
+    },
     dispatchOrderNotes() {
+      this.trackMixpanelEvent('Set Order Notes', { 'Order Notes': this.order_notes });
       this.setOrderNotes(this.order_notes);
     },
     dispatchPairStatus() {
       const status = this.pair_rider;
-      if (status === 1) {
+      if (status === '1') {
         // pair with rider
         this.setPairWithRiderStatus(true);
+        this.setPairWithRiderState(true);
       } else {
         // do not pair
         this.setPairWithRiderStatus(false);
+        this.setPairWithRiderState(false);
+        this.setPairErrorMessage('');
       }
     },
     goToNextStep() {
@@ -930,7 +1001,9 @@ export default {
       if (this.vendor_id !== this.activeVendorPriceData.vendor_id) {
         if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
           this.carrier_type = '1';
-        } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+        } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id) && this.activeVendorPriceData.vendor_id === 2) {
+          this.carrier_type = '0';
+        } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id) && this.activeVendorPriceData.vendor_id === 3) {
           this.carrier_type = '2';
         } else if (copStatus) {
           this.carrier_type = session[session.default].default_carrier_type.toString(10);
@@ -987,6 +1060,8 @@ export default {
     },
 
     dispatchAdditionalLoaderStatus(val) {
+      const track = this.additional_loader === 1
+        ? this.trackMixpanelEvent('Selected Loader For Order', { 'Number of Loaders': val }) : '';
       this.setAdditionalLoaderStatus(val);
     },
 
@@ -1004,6 +1079,7 @@ export default {
 
     setActivePackageClassWrapper(name) {
       this.setActivePackageClass(name);
+      this.activeClass = name;
       this.setOuterActivePackageClass(name);
       this.reCheckCarrierType();
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
@@ -1020,6 +1096,8 @@ export default {
     },
     checkVehicleDetails() {
       const vehicleDetails = this.vehicle_plate;
+      this.setPairRiderPhone('');
+      this.setPairErrorMessage('');
       if (vehicleDetails === '') {
         this.doNotification(
           '2',
@@ -1075,15 +1153,24 @@ export default {
       this.requestPairRider(fullPayload).then(
         (response) => {
           if (response.status) {
+            this.trackMixpanelEvent('Paired Order With Rider', { 'Paired Rider': plate });
             this.updateData(response.data);
           } else {
             this.pair_status = '1';
             this.failure_text = response.message;
+            this.setPairErrorMessage(response.message);
             this.visible2 = true;
             this.setPairWithRiderStatus(false);
           }
         },
-        error => false,
+        (error) => {
+          const msg = error.response.data.message;
+          this.pair_status = '1';
+          this.failure_text = msg;
+          this.setPairErrorMessage(msg);
+          this.visible2 = true;
+          this.setPairWithRiderStatus(false);
+        },
       );
       this.searchOption = false;
     },
@@ -1295,13 +1382,12 @@ export default {
     },
 
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = {
         title,
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
 
     getVendorDescription(vendorObject) {
@@ -1416,5 +1502,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=3';
 </style>

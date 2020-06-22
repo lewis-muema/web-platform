@@ -93,11 +93,12 @@ import payment_loading from './LoadingComponent.vue';
 import payment_success from './SuccessComponent.vue';
 import payment_fail from './FailComponent.vue';
 import Mcrypt from '../../../mixins/mcrypt_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
   name: 'AddCard',
   components: { payment_loading, payment_success, payment_fail },
-  mixins: [Mcrypt],
+  mixins: [Mcrypt, NotificationMxn],
   data() {
     return {
       add_card_payment_data: {
@@ -250,18 +251,14 @@ export default {
               'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
               'Client Type': 'Web Platform',
             });
-            that.$store.dispatch('show_notification', notification, {
-              root: true,
-            });
+            this.displayNotification(notification);
           } else {
             const notification = {
               title: 'Add Card Failed',
               level: 2,
               message: response.data.message,
             };
-            that.$store.dispatch('show_notification', notification, {
-              root: true,
-            });
+            this.displayNotification(notification);
           }
         },
         (error) => {
@@ -270,9 +267,7 @@ export default {
             level: 2,
             message: 'something went wrong while adding new card',
           };
-          this.$store.dispatch('show_notification', notification, {
-            root: true,
-          });
+          this.displayNotification(notification);
         },
       );
     },

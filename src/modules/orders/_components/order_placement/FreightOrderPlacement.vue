@@ -8,7 +8,9 @@
         v-if="phase === 1"
         class="homeview--input-products block"
       >
-        <div class="homeview--input-categories">Goods Type</div>
+        <div class="homeview--input-categories">
+          Goods Type
+        </div>
         <select
           v-model="productCategoryId"
           class="homeview--input-categories"
@@ -18,7 +20,9 @@
             v-for="category in categories"
             :key="category.id"
             :value="category.id"
-          >{{ category.name }}</option>
+          >
+            {{ category.name }}
+          </option>
         </select>
       </div>
       <fbu-containers
@@ -43,6 +47,7 @@ import { mapGetters, mapMutations, mapActions } from 'vuex';
 import orderPlacementStore from './_store';
 import SessionMxn from '../../../../mixins/session_mixin';
 import FbuContainersFlow from './_components/FbuContainersFlow.vue';
+import NotificationMxn from '../../../../mixins/notification_mixin';
 
 export default {
   name: 'OrderPlacement',
@@ -50,7 +55,7 @@ export default {
   components: {
     'fbu-containers': FbuContainersFlow,
   },
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
   data() {
     return {
       productCategoryId: 1,
@@ -101,7 +106,7 @@ export default {
       };
       clearInterval(this.countdown);
       this.requestFreightProductCategories(payload).then(
-        (response) => {          
+        (response) => {
           this.loadingStatus = false;
           response.products.forEach((row, i) => {
             this.categories.push(row);
@@ -133,9 +138,8 @@ export default {
       );
     },
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
 
     selectCategory() {
@@ -175,8 +179,7 @@ export default {
     registerOrderPlacementModule() {
       let moduleIsRegistered = false;
       try {
-        moduleIsRegistered =
-          this.$store._modules.root._children.$_orders._children.$_home !== undefined;
+        moduleIsRegistered = this.$store._modules.root._children.$_orders._children.$_home !== undefined;
       } catch (er) {
         //
       }

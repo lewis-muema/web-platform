@@ -174,6 +174,14 @@ export default {
           scaledSize: new google.maps.Size(23, 40),
         };
       }
+      if (icon === 'region') {
+        return {
+          url: 'https://images.sendyit.com/web_platform/orders/region_placeholder2.png',
+          scaledSize: new google.maps.Size(150, 150),
+          origin: new google.maps.Point(0, 0),
+          anchor: new google.maps.Point(75, 75),
+        };
+      }
       return {
         url: 'https://images.sendyit.com/web_platform/orders/destination_placeholder.png',
         scaledSize: new google.maps.Size(23, 40),
@@ -532,6 +540,7 @@ export default {
 
           markedCoords = `${lat},${long}`;
           // markedCoords = '0.3130284,32.4590386'; (Uganda coordinates for test)
+
           this.getCode(markedCoords);
         });
       }

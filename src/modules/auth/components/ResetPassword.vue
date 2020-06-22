@@ -68,17 +68,25 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import {
+  mapActions,
+} from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
   data() {
     return {
       message: '',
       new_password: '',
       confirm_password: '',
     };
+  },
+  computed: {
+    is_valid() {
+      return this.confirm_password !== '' && this.new_password !== '';
+    },
   },
   mounted() {
     this.check_content();
@@ -165,7 +173,11 @@ export default {
             const e = {
               ...err,
             };
-            this.doNotification(2, 'Password Reset Failed', e.response.data.message);
+            this.doNotification(
+              2,
+              'Password Reset Failed',
+              e.response.data.reason,
+            );
           });
       }
     },
@@ -201,7 +213,9 @@ export default {
                 const partsOfToken = accessToken.split('.');
                 const middleString = partsOfToken[1];
                 const data = atob(middleString);
-                const { payload } = JSON.parse(data);
+                const {
+                  payload,
+                } = JSON.parse(data);
 
                 // set session
                 // commit everything to the store
@@ -263,13 +277,7 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
-    },
-  },
-  computed: {
-    is_valid() {
-      return this.confirm_password !== '' && this.new_password !== '';
+      this.displayNotification(notification);
     },
   },
 };

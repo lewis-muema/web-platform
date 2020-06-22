@@ -10,6 +10,7 @@ export default {
           }
           if (workingResponse.data.status) {
             commit('setOrderHistoryOrders', workingResponse.data.data);
+            commit('setUserCurrencies', workingResponse.data.currencies);
             resolve(workingResponse.data);
           } else {
             reject(workingResponse.data);
@@ -49,6 +50,7 @@ export default {
         (response) => {
           if (response.data.status) {
             commit('setPayments', response.data.data);
+            commit('setUserCurrencies', response.data.currencies);
             resolve(response.data);
           } else {
             reject(response.data);
@@ -66,6 +68,7 @@ export default {
         (response) => {
           if (response.data.status) {
             commit('setStatement', response.data.data);
+            commit('setUserCurrencies', response.data.currencies);
             resolve(response.data);
           } else {
             reject(response.data);

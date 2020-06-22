@@ -160,6 +160,7 @@ import payment_fail from './FailComponent.vue';
 import addCard from './AddCard.vue';
 import Mcrypt from '../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../mixins/payment_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
   name: 'CardComponent',
@@ -169,7 +170,7 @@ export default {
     payment_fail,
     addCard,
   },
-  mixins: [Mcrypt, PaymentMxn],
+  mixins: [Mcrypt, PaymentMxn, NotificationMxn],
   data() {
     return {
       card_payment_data: {
@@ -185,9 +186,6 @@ export default {
       payment_state: 'Attempting Payment',
       show_cvv: false,
     };
-  },
-  mounted() {
-    this.getUserCards();
   },
   computed: {
     ...mapGetters({
@@ -252,6 +250,16 @@ export default {
       }
     },
   },
+  mounted() {
+    this.getUserCards();
+  },
+  created() {
+    if (this.get_saved_cards.length === 0) {
+      this.isHidden = false;
+    } else {
+      this.isHidden = true;
+    }
+  },
   methods: {
     showCvv() {
       if (this.show_cvv) {
@@ -271,13 +279,14 @@ export default {
     getPaymentCard() {
       const session = this.$store.getters.getSession;
       const setCurrency = session[session.default].default_currency;
+      const vendorId = 1;
       if (this.payment_card.startsWith('2_')) {
         const card = this.get_saved_cards.find(
           card_details => card_details.last4 === this.payment_card.slice(2),
         );
-        this.handleSavedCard(setCurrency, card);
+        this.handleSavedCard(vendorId, setCurrency, card);
       } else {
-        this.handleNewCardPayment(setCurrency);
+        this.handleNewCardPayment(vendorId, setCurrency);
       }
     },
 
@@ -367,9 +376,7 @@ export default {
               level: 1,
               message: 'card deleted successfully.',
             };
-            this.$store.dispatch('show_notification', notification, {
-              root: true,
-            });
+            this.displayNotification(notification);
             this.getUserCards();
           } else {
             const notification = {
@@ -377,9 +384,7 @@ export default {
               level: 2,
               message: 'delete card failed, please try again.',
             };
-            this.$store.dispatch('show_notification', notification, {
-              root: true,
-            });
+            this.displayNotification(notification);
           }
         },
         (error) => {
@@ -388,9 +393,7 @@ export default {
             level: 2,
             message: 'delete card did not go through',
           };
-          this.$store.dispatch('show_notification', notification, {
-            root: true,
-          });
+          this.displayNotification(notification);
         },
       );
     },
@@ -400,13 +403,6 @@ export default {
       this.card_payment_data.cvv = '';
       this.card_payment_data.amount = '';
     },
-  },
-  created() {
-    if (this.get_saved_cards.length === 0) {
-      this.isHidden = false;
-    } else {
-      this.isHidden = true;
-    }
   },
 };
 </script>
@@ -441,5 +437,8 @@ export default {
 .paymentbody--input-wrap-saved-cards{
   min-height: 4rem;
   margin: .5em;
+}
+.el-radio.is-bordered{
+  width:100%;
 }
 </style>
