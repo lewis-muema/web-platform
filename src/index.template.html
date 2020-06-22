@@ -85,6 +85,9 @@
         a.src = g;
         m.parentNode.insertBefore(a, m);
       })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+      let b = window;
+      let _sessionSnack = b.localStorage.getItem('_sessionSnack');
+      
       ga('create', 'UA-50235468-1', 'auto', { allowLinker: true });
       ga('require', 'GTM-56KF6PL');
       ga('require', 'linker');
@@ -97,6 +100,15 @@
       ga('send', 'pageview');
       let PageLoadTime = Math.round(performance.now());
       ga('send', 'timing', 'JS Dependencies', 'Website Load', PageLoadTime);
+
+      if(_sessionSnack !== null) {
+        _sessionSnack = JSON.parse(_sessionSnack);
+        ga("set", "userType", _sessionSnack.default)
+        ga("set", "userId", _sessionSnack[`${_sessionSnack.default}`].user_id)
+        ga("set", "copId", _sessionSnack[`${_sessionSnack.default}`].cop_id)
+      }
+
+
     </script>
 
 </head>
