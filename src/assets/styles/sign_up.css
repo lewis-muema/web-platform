@@ -338,3 +338,24 @@
 .el-radio__label {
   font-size: 13px !important;
 }
+
+@media (max-width: 500px) {
+  .el-radio.is-bordered {
+    width: 45.5%;
+    display: inline-block;
+  }
+  .sign-up-details-section {
+    margin:20px auto;
+    padding: 15px;
+  }
+  .sign-up--extra {
+    text-align: center !important;
+  }
+  .sign-up-main {
+    width: 80% !important;
+    margin: 5% auto;
+  }
+  .sign-up-help-card {
+    display: none;
+  }
+}
