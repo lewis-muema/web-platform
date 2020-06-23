@@ -812,7 +812,7 @@
                 <input
                   class="button-primary add-instructions-submit"
                   type="submit"
-                  value="Submit"
+                  value="Done"
                   @click="saveAdditionaNotes(route_point)"
                 >
               </div>
@@ -1769,6 +1769,7 @@ export default {
         } else {
           data = {
             coordinates: pathObj.coordinates,
+            name: pathObj.name,
             notes: this.notes[i] === undefined ? '' : this.notes[i],
             recipient_phone: this.contact[i] === undefined ? '' : this.contact[i],
             notify: this.contact[i] === undefined || this.contact[i] === '' ? false : this.send_sms[i],
@@ -1784,6 +1785,7 @@ export default {
       } else {
         data = {
           coordinates: pathObj.coordinates,
+          name: pathObj.name,
           notes: this.notes[i],
           recipient_phone: this.contact[i] === undefined ? '' : this.contact[i],
           notify: this.send_sms[i] === undefined ? false : this.send_sms[i],
@@ -1803,6 +1805,7 @@ export default {
         } else {
           data = {
             coordinates: pathObj.coordinates,
+            name: pathObj.name,
             notes: this.notes[i],
             recipient_phone: '',
             notify: this.send_sms[i],
@@ -1817,6 +1820,7 @@ export default {
         this.validPhone = true;
         data = {
           coordinates: pathObj.coordinates,
+          name: pathObj.name,
           notes: this.notes[i] === undefined ? '' : this.notes[i],
           notify: this.send_sms[i] === undefined ? false : this.send_sms[i],
           recipient_phone: this.contact[i],

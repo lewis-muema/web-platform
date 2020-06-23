@@ -521,9 +521,7 @@ cursor: pointer;
   width: 100% !important;
 }
 .add-instructions-setup{
-  margin-top: 0;
-  /* font-size: 19px; */
-  /* color: #000000; */
+  margin-top: 3%;
   font-weight: 400;
   font-size: 18px;
   line-height: 21px;
