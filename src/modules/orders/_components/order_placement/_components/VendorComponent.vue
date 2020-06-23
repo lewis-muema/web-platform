@@ -658,7 +658,7 @@ export default {
       load_units: '',
       discount_timed_out: false,
       customer_min_amount: '',
-      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
+      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van', '3T Truck', '5T Truck', '7T Truck', '10T Truck', '14T Truck', '20T Truck', '24T Truck'],
       vendors_without_return: ['Standard', 'Runner'],
       baseTruckOptions: [
         {

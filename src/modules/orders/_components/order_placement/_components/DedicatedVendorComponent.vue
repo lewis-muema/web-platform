@@ -260,7 +260,7 @@
                   >
                   <el-select
                     v-model="expandedActiveVendorTally[index].carrier_type"
-                    :disabled="[3].includes(activeVendor.vendor_id)"
+                    :disabled="vendors_with_fixed_carrier_type.includes(activeVendor.vendor_name)"
                     class="dedicated-vendor-select"
                     popper-class="dedicated-vendor-popper-class"
                     @change="changeCarrierType($event, index)"
@@ -464,7 +464,7 @@ export default {
       number_of_loaders: 1,
       delivery_item: '',
       discount_timed_out: false,
-      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
+      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van', '3T Truck', '5T Truck', '7T Truck', '10T Truck', '14T Truck', '20T Truck', '24T Truck'],
       vendors_without_return: ['Standard', 'Runner'],
       schedule_time: '',
       time_range_from: '',
@@ -487,7 +487,7 @@ export default {
           label: 'Any',
         }
       ],
-      smallVendorOptions: [        
+      smallVendorOptions: [
         {
           value: '0',
           label: 'Bike without box',
@@ -707,6 +707,8 @@ export default {
             for (let i = 0; i < row1.tally; i++) {
               if (row1.vendor_id === 3) {
                 row1.carrier_type = '0';
+              } else if (this.vendors_with_fixed_carrier_type.includes(row1.vendor_name)) {
+                row1.carrier_type = '1';
               } else {
                 row1.carrier_type = '';
               }
