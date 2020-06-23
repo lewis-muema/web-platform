@@ -183,7 +183,7 @@
         <el-dialog
           :visible.sync="confirmFinal"
           width="30%"
-          class=""
+          class="summary-dialog"
           :before-close="handleClose"
           :modal-append-to-body="false"
         >
@@ -206,6 +206,7 @@
                   <li
                     v-for="(val, index) in getHomeLocations"
                     v-if="index > 0"
+                    :key="index"
                   >
                     <p
                       v-if="index > 1"
@@ -259,6 +260,75 @@
                   <div class="order_summary-wrapper__vendor">
                     <div class="order_summary--vendor-formal-name">
                       {{ scheduleTimeSummary() }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-if="pickUpInstructions()"
+                class="order_summary--outline"
+              >
+                <label class="delivery_label">
+                  Pickup instructions at {{ getInstructionNotes[0].name }}
+                </label>
+                <div
+                  v-if="getInstructionNotes[0].notes !== ''"
+                  class="order_summary-wrapper__vendor instructions-notes"
+                >
+                  <div class="order_summary--vendor-formal-name">
+                    {{ getInstructionNotes[0].notes }}
+                  </div>
+                </div>
+                <div
+                  v-if="getInstructionNotes[0].recipient_phone !== ''"
+                  class="order_summary-types-item order_summary--vendor-wrapper"
+                >
+                  <div class="order_summary__img">
+                    <i
+                      class="el-icon-phone-outline order_summary-item__image calender--icon"
+                    />
+                  </div>
+                  <div class="order_summary-wrapper__vendor">
+                    <div class="order_summary--vendor-formal-name">
+                      {{ getInstructionNotes[0].recipient_phone }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div
+                v-if="dropOffInstructions()"
+                class="order_summary--outline"
+              >
+                <div
+                  v-for="(data, index) in deliveryNotesData()"
+                  :key="index"
+                >
+                  <label class="delivery_label">
+                    Drop off instructions at {{ data.name }}
+                  </label>
+                  <div
+                    v-if="data.notes !== ''"
+                    class="order_summary-wrapper__vendor instructions-notes"
+                  >
+                    <div class="order_summary--vendor-formal-name">
+                      {{ data.notes }}
+                    </div>
+                  </div>
+                  <div
+                    v-if="data.recipient_phone !== ''"
+                    class="order_summary-types-item order_summary--vendor-wrapper"
+                  >
+                    <div class="order_summary__img">
+                      <i
+                        class="el-icon-phone-outline order_summary-item__image calender--icon"
+                      />
+                    </div>
+                    <div class="order_summary-wrapper__vendor">
+                      <div class="order_summary--vendor-formal-name">
+                        {{ data.recipient_phone }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -405,6 +475,8 @@ export default {
       getStoreOrderPath: '$_orders/getStorePath',
       getPairWithRiderState: '$_orders/$_home/getPairWithRiderState',
       getPairErrorMessage: '$_orders/$_home/getPairErrorMessage',
+      getInstructionNotes: '$_orders/$_home/getInstructionNotes',
+
     }),
 
     active_price_tier_data() {
@@ -607,6 +679,7 @@ export default {
       setOrderState: '$_orders/$_home/setOrderState',
       setExtendOptions: '$_orders/$_home/setExtendOptions',
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
+      clearInstructionNotes: '$_orders/$_home/clearInstructionNotes',
 
     }),
 
@@ -1021,6 +1094,7 @@ export default {
                 'Carrier Type ID': data.carrier_type,
                 'Vendor Type ID': data.vendor_type,
               });
+              this.clearInstructionNotes();
               if (!Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
                 this.$router.push({
                   name: 'tracking',
@@ -1146,6 +1220,7 @@ export default {
         }
         payload.waypoint_notes = notesArray;
       }
+      payload.waypoint_instructions = this.getInstructionNotes.filter(value => Object.keys(value).length !== 0);
       payload = {
         values: payload,
       };
@@ -1747,6 +1822,24 @@ export default {
       }
       return resp;
     },
+    pickUpInstructions() {
+      let value = true;
+      if (this.getInstructionNotes[0] === '' || this.getInstructionNotes[0] === undefined) {
+        value = false;
+      }
+      return value;
+    },
+    dropOffInstructions() {
+      const data = this.getInstructionNotes.slice(1);
+      let value = true;
+      if (data.length === 0) {
+        value = false;
+      }
+      return value;
+    },
+    deliveryNotesData() {
+      return this.getInstructionNotes.slice(1);
+    },
     carrierTypeSummary() {
       const carrierType = this.final_carrier_type;
       let resp = 'Any';
@@ -1791,5 +1884,5 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../../../assets/styles/orders_order_placement_options.css';
+@import '../../../../../assets/styles/orders_order_placement_options.css?v=1';
 </style>

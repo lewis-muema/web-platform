@@ -367,6 +367,62 @@
                 Delivery is in 2 to 4 hours from the scheduled time
               </span>
             </div>
+            <div
+              v-if="displayNotesAddition()"
+            >
+              <div
+                class="home-view-truck-options-inner-wrapper"
+              >
+                <div class="home-view-truck-options-label">
+                  Pickup instructions at {{ orderPath[0].name }}
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    class="button-additional-notes"
+                    name="button"
+                    @click="openNotesDialog(1)"
+                  >
+                    <a class="instructions-holder">
+                      Add pickup instructions
+                    </a>
+                    <i class="el-icon-circle-plus-outline align-instructions-icon" />
+                  </button>
+                </div>
+              </div>
+              <div
+                v-if="isPickUpSet()"
+                class="instructions-set"
+              >
+                <i class="el-icon-success" /> Pickup instructions added
+              </div>
+              <div
+                class="home-view-truck-options-inner-wrapper"
+              >
+                <div class="home-view-truck-options-label">
+                  {{ destinationNotesLabel() }}
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    class="button-additional-notes "
+                    name="button"
+                    @click="openNotesDialog(2)"
+                  >
+                    <a class="instructions-holder">
+                      Add drop off instructions
+                    </a>
+                    <i class="el-icon-circle-plus-outline align-instructions-icon" />
+                  </button>
+                </div>
+              </div>
+              <div
+                v-if="isDropOffSet()"
+                class="instructions-set"
+              >
+                <i class="el-icon-success" /> Drop off instructions added
+              </div>
+            </div>
             <div class="home-view-truck-options-inner-wrapper recipient-section">
               <p class="home-view-truck-options-label no-margin">
                 Recipient Details
@@ -383,27 +439,6 @@
                 placeholder="Phone number"
                 class="el-input__inner"
               >
-            </div>
-            <div
-              v-if="$route.path !== '/orders/dedicated/multi-destination'"
-              class="home-view-truck-options-inner-wrapper"
-            >
-              <div class="home-view-truck-options-label">
-                Additional Instructions
-              </div>
-              <div class="" />
-              <div
-                class=""
-                @change="dispatchOrderNotes"
-              >
-                <textarea
-                  v-model="order_notes"
-                  name="name"
-                  rows="5"
-                  class="textarea-control"
-                  placeholder=" Instructions.."
-                />
-              </div>
             </div>
 
             <!-- show large and medium extended options -->
@@ -630,6 +665,162 @@
       <!-- end carrier type section -->
     </transition>
     <!-- end carrier type transition -->
+    <transition
+      name="fade"
+      mode="out-in"
+    >
+      <div class="add-instructions-pop-up">
+        <el-dialog
+          :visible.sync="addDeliveryInfo"
+          width="30%"
+          class="updateNotificationsDialog"
+          :modal-append-to-body="false"
+        >
+          <div class="add-instructions-outer">
+            <p class="add-instructions-setup">
+              {{ instructionsOuterLabel() }}
+            </p>
+            <div
+              class=""
+            >
+              <div
+                v-if="route_point === 1"
+                class="instructions--inner-section"
+              >
+                <div
+                  class=""
+                >
+                  <div class="add-instructions-setup-label">
+                    {{ instructionsInnerLabel() }} {{ get_order_path[0].name }}
+                  </div>
+                  <div class="" />
+                  <div
+                    class=""
+                  >
+                    <textarea
+                      v-model="notes[0]"
+                      name="name"
+                      rows="5"
+                      class="textarea-control add-notes"
+                      placeholder="E.g. Pick package at the reception.."
+                      @input="addInstructionNotes(get_order_path[0], 0)"
+                    />
+                  </div>
+                </div>
+                <div class="">
+                  <div class="add-instructions-setup-contact">
+                    Contact person
+                  </div>
+                  <div class="" />
+                  <div
+                    class=""
+                    @change="addInstructionContact(get_order_path[0], 0)"
+                  >
+                    <vue-tel-input
+                      v-model.trim="contact[0]"
+                      v-validate="'required|check_phone'"
+                      class="input-control sign-up-form"
+                      type="number"
+                      name="phone"
+                      value=""
+                      data-vv-validate-on="blur"
+                      v-bind="phoneInputProps"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="notify_recipient"
+                >
+                  <input
+                    v-model="send_sms[0]"
+                    type="checkbox"
+                    name="u_terms"
+                    class="send_sms-checkbox"
+                    :onclick="setSendSms(get_order_path[0], 0)"
+                  >
+                  <span>
+                    Notify them of the pickup via SMS
+                  </span>
+                </div>
+              </div>
+              <div
+                v-for="(data, index) in getInstructionsPath()"
+                v-else
+                :key="index"
+                class="instructions--inner-section"
+              >
+                <div
+                  class=""
+                >
+                  <div class="add-instructions-setup-label">
+                    {{ instructionsInnerLabel() }} {{ data.name }}
+                  </div>
+                  <div class="" />
+                  <div
+                    class=""
+                  >
+                    <textarea
+                      v-model="notes[index+1]"
+                      name="name"
+                      rows="5"
+                      class="textarea-control add-notes"
+                      placeholder="E.g. Pick package at the reception.."
+                      @input="addInstructionNotes(data, index+1)"
+                    />
+                  </div>
+                </div>
+                <div class="">
+                  <div class="add-instructions-setup-contact">
+                    Contact person
+                  </div>
+                  <div class="" />
+                  <div
+                    class=""
+                    @change="addInstructionContact(data, index+1)"
+                  >
+                    <vue-tel-input
+                      v-model.trim="contact[index+1]"
+                      v-validate="'required|check_phone'"
+                      class="input-control sign-up-form"
+                      type="number"
+                      name="phone"
+                      value=""
+                      data-vv-validate-on="blur"
+                      v-bind="phoneInputProps"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="notify_recipient"
+                >
+                  <input
+                    v-model="send_sms[index+1]"
+                    type="checkbox"
+                    name="u_terms"
+                    class="send_sms-checkbox"
+                    :onclick="setSendSms(data, index+1)"
+                  >
+                  <span>
+                    Notify them of the pickup via SMS
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="">
+              <div class="">
+                <input
+                  class="button-primary add-instructions-submit"
+                  type="submit"
+                  value="Submit"
+                  @click="saveAdditionaNotes(route_point)"
+                >
+              </div>
+            </div>
+          </div>
+        </el-dialog>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -640,6 +831,8 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PaymentOptions from './PaymentOptions.vue';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
+
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   components: {
@@ -742,6 +935,36 @@ export default {
       recipientName: '',
       recipientPhone: '',
       vendor_id: 0,
+      orderPath: [],
+      addDeliveryInfo: false,
+      locations_data: [],
+      route_point: 0,
+      instructions_data: [],
+      notes: [],
+      contact: [],
+      phoneInputProps: {
+        mode: 'international',
+        defaultCountry: 'ke',
+        disabledFetchingCountry: false,
+        disabled: false,
+        disabledFormatting: false,
+        placeholder: 'Enter a phone number',
+        required: false,
+        enabledCountryCode: false,
+        enabledFlags: true,
+        preferredCountries: ['ke', 'ug', 'tz'],
+        autocomplete: 'off',
+        name: 'telephone',
+        maxLen: 25,
+        dropdownOptions: {
+          disabledDialCode: false,
+        },
+        inputOptions: {
+          showDialCode: false,
+        },
+      },
+      validPhone: true,
+      send_sms: [],
     };
   },
   computed: {
@@ -768,6 +991,8 @@ export default {
       getVehicleDetails: '$_orders/$_home/getVehicleDetails',
       getCarrierType: '$_orders/$_home/getCarrierType',
       getStoreOrderPath: '$_orders/getStorePath',
+      get_order_path: '$_orders/$_home/getOrderPath',
+      getInstructionNotes: '$_orders/$_home/getInstructionNotes',
     }),
 
     vehicleDetailsPlaceholder() {
@@ -897,6 +1122,8 @@ export default {
       unsetStorePath: '$_orders/unsetStorePath',
       setWaypointNotes: '$_orders/setWaypointNotes',
       setPairErrorMessage: '$_orders/$_home/setPairErrorMessage',
+      saveInstructionNotes: '$_orders/$_home/setInstructionNotes',
+      clearInstructionNotes: '$_orders/$_home/clearInstructionNotes',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -1023,6 +1250,7 @@ export default {
       this.pair_rider = '';
       this.vehicle_plate = '';
       this.clearOuterActiveVendorDetails();
+      this.clearInstructionNotes();
     },
     dispatchDeliveryItem() {
       this.setDeliveryItem(this.delivery_item);
@@ -1367,6 +1595,8 @@ export default {
       this.order_notes = this.getOrderNotes;
       this.pair_rider = this.getPairWithRiderStatus ? '1' : '';
       this.vehicle_plate = this.getVehicleDetails;
+      this.orderPath = this.get_order_path;
+      this.instructions_data = this.getInstructionNotes;
     },
     initiateStoreData() {
       const activeVendorName = this.getOuterActiveVendorDetails;
@@ -1497,10 +1727,159 @@ export default {
         .then(response => response)
         .catch(err => err);
     },
+    destinationNotesLabel() {
+      let name = 'Drop off instructions';
+
+      if (this.get_order_path.length <= 2) {
+        name = `Drop off instructions at ${this.get_order_path[1].name}`;
+      }
+      return name;
+    },
+    instructionsInnerLabel() {
+      let name = 'Drop off instructions at ';
+
+      if (this.route_point === 1) {
+        name = 'Pickup Instructions at';
+      }
+
+      return name;
+    },
+    openNotesDialog(value) {
+      this.route_point = value;
+      this.locations_data = this.get_order_path;
+      this.addDeliveryInfo = true;
+    },
+    instructionsOuterLabel() {
+      let name = 'Add drop off instructions';
+
+      if (this.route_point === 1) {
+        name = 'Add pickup instructions';
+      }
+
+      return name;
+    },
+    getInstructionsPath() {
+      return this.locations_data.slice(1);
+    },
+    setSendSms(pathObj, i) {
+      if (typeof this.send_sms[i] === 'boolean') {
+        let data = {};
+        if (this.send_sms[i] && (this.contact[i] === undefined || this.contact[i] === '') && (this.notes[i] === undefined || this.notes[i] === '')) {
+          data = {};
+        } else {
+          data = {
+            coordinates: pathObj.coordinates,
+            notes: this.notes[i] === undefined ? '' : this.notes[i],
+            recipient_phone: this.contact[i] === undefined ? '' : this.contact[i],
+            notify: this.contact[i] === undefined || this.contact[i] === '' ? false : this.send_sms[i],
+          };
+        }
+        this.instructions_data[i] = data;
+      }
+    },
+    addInstructionNotes(pathObj, i) {
+      let data = {};
+      if ((this.contact[i] === undefined || this.contact[i] === '') && (this.notes[i] === undefined || this.notes[i] === '')) {
+        data = {};
+      } else {
+        data = {
+          coordinates: pathObj.coordinates,
+          notes: this.notes[i],
+          recipient_phone: this.contact[i] === undefined ? '' : this.contact[i],
+          notify: this.send_sms[i] === undefined ? false : this.send_sms[i],
+        };
+      }
+
+      this.instructions_data[i] = data;
+    },
+    addInstructionContact(pathObj, i) {
+      let data = {};
+      let phoneValid = false;
+      if (this.contact[i] === '') {
+        this.validPhone = true;
+        this.contact[i] = '';
+        if ((this.notes[i] === undefined || this.notes[i] === '') && (this.send_sms[i] === undefined || this.send_sms[i] === '')) {
+          data = {};
+        } else {
+          data = {
+            coordinates: pathObj.coordinates,
+            notes: this.notes[i],
+            recipient_phone: '',
+            notify: this.send_sms[i],
+          };
+        }
+      } else {
+        this.validPhone = false;
+        phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.contact[i]));
+      }
+
+      if (phoneValid) {
+        this.validPhone = true;
+        data = {
+          coordinates: pathObj.coordinates,
+          notes: this.notes[i] === undefined ? '' : this.notes[i],
+          notify: this.send_sms[i] === undefined ? false : this.send_sms[i],
+          recipient_phone: this.contact[i],
+        };
+      }
+      this.instructions_data[i] = data;
+    },
+    saveAdditionaNotes() {
+      setTimeout(() => {
+        if (this.instructions_data.length === 0) {
+          this.doNotification(
+            2,
+            'Add Instructions Error!!',
+            'Kindly provide instructions to submit data.',
+          );
+        } else if (this.validPhone) {
+          this.doNotification(
+            1,
+            'Additional Instructions saved successfully!!',
+          );
+          this.saveInstructionNotes(this.instructions_data);
+          this.addDeliveryInfo = false;
+        } else {
+          this.doNotification(
+            2,
+            'Phone verifications Error!!',
+            'Kindly provide a valid phone number.',
+          );
+        }
+      }, 2000);
+    },
+    displayNotesAddition() {
+      let state = false;
+      if (this.$route.path !== '/orders/dedicated/multi-destination' && this.orderPath.length > 0) {
+        state = true;
+      }
+      return state;
+    },
+    validate_phone() {
+      this.$validator.validate();
+    },
+    isDropOffSet() {
+      const data = this.instructions_data.slice(1);
+      let value = true;
+      if (data.filter(val => Object.keys(val).length !== 0).length === 0) {
+        value = false;
+      }
+      return value;
+    },
+    isPickUpSet() {
+      let value = true;
+      if (this.instructions_data[0] === '' || this.instructions_data[0] === undefined || Object.keys(this.instructions_data[0]).length === 0) {
+        value = false;
+      }
+      return value;
+    },
+    handleClose() {
+      // Do nothing ...
+    },
   },
 };
 </script>
 
 <style lang="css" scoped>
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=3';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=4';
 </style>
