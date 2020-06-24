@@ -112,7 +112,7 @@ export default {
           const pass = this.cpassword;
           const name = this.getName;
           const biz_email = this.getBizEmail;
-          const personal_email = this.getPerEmail;
+          const personal_email = this.getPerEmail === '' ? null : this.getPerEmail;
           const phone = this.getPhone;
           const type = this.getType;
           const department_id = this.getDeptId;
