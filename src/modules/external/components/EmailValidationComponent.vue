@@ -41,10 +41,9 @@
         class="btn-submit"
         style="width:30% !important;"
         name="next"
-        :disabled="!is_valid"
         @click="next_view"
       >
-        Next
+        {{ btn_txt }}
       </button>
     </div>
   </div>
@@ -60,18 +59,21 @@ export default {
       peerEmail: '',
       message: '',
       emailValid: true,
+      btn_txt: 'Skip',
     };
   },
   computed: {
     ...mapGetters({
       getBizEmail: '$_external/getBizEmail',
     }),
-    is_valid() {
-      let valid = false;
-      if (this.peerEmail === '') {
-        valid = true;
+  },
+  watch: {
+    peerEmail(val) {
+      if (val === '') {
+        this.btn_txt = 'Skip';
+      } else {
+        this.btn_txt = 'Next';
       }
-      return valid;
     },
   },
   methods: {
