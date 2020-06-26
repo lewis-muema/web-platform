@@ -158,7 +158,8 @@ export default {
             }
           },
           (error) => {
-            const notification = { title: '', level: 3, message: 'Something went wrong.' }; // notification object
+            const resp = error.response.data;
+            const notification = { level: 2, title: 'Onboarding Error !', message: resp.message }; // notification object
             this.$store.commit('setNotification', notification);
             this.$store.commit('setNotificationStatus', true);
           },
