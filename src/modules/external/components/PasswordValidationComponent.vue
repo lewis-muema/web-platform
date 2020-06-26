@@ -90,7 +90,7 @@ export default {
           const pass = this.cpassword;
           const name = this.getName;
           const biz_email = this.getBizEmail;
-          const personal_email = this.getPerEmail;
+          const personal_email = this.getPerEmail === '' ? null : this.getPerEmail;
           const phone = this.getPhone;
           const type = this.getType;
           const department_id = this.getDeptId;
@@ -112,7 +112,7 @@ export default {
           const pass = this.cpassword;
           const name = this.getName;
           const biz_email = this.getBizEmail;
-          const personal_email = this.getPerEmail;
+          const personal_email = this.getPerEmail === '' ? null : this.getPerEmail;
           const phone = this.getPhone;
           const type = this.getType;
           const department_id = this.getDeptId;
@@ -145,16 +145,41 @@ export default {
             if (response.status) {
               this.setViewState(4);
               this.updateViewStep(0);
+              this.trackMixpanelEvent('Account SetUp - Cop Invitation ', {
+                'User Name': this.getName,
+                'Cop User Email ': this.getBizEmail,
+                'Personal Email ': this.getPerEmail,
+                Platform: 'Web',
+                'Cop Account': `SENDY ${this.getCopId}`,
+                'Department Id': this.getDeptId,
+              });
             } else {
               this.$router.push('/auth');
             }
           },
           (error) => {
-            const notification = { title: '', level: 3, message: 'Something went wrong.' }; // notification object
+            const resp = error.response.data;
+            const notification = { level: 2, title: 'Onboarding Error !', message: resp.message }; // notification object
             this.$store.commit('setNotification', notification);
             this.$store.commit('setNotificationStatus', true);
           },
         );
+      }
+    },
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+        }
+      } catch (er) {
+        // ...
       }
     },
 
