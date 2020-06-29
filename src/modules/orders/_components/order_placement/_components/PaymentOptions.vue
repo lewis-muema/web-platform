@@ -1647,6 +1647,7 @@ export default {
           if (payOption === 1) {
             const accountType = 'Individual';
             const payload = {
+              currency: this.getPriceRequestObject.currency,
               country_code: this.getCountryCode,
               account_type: accountType,
               entry_point: 'Customer App Price Request',
