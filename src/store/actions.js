@@ -126,7 +126,7 @@ export default {
                 window.location.href = loginUrl;
               }
             })
-              .catch((err) => {
+              .catch(() => {
                 localStorage.removeItem('_sessionSnack');
                 localStorage.removeItem('jwtToken');
                 window.location.href = loginUrl;
@@ -219,7 +219,7 @@ export default {
                 window.location.href = loginUrl;
               }
             })
-              .catch((err) => {
+              .catch(() => {
                 localStorage.removeItem('_sessionSnack');
                 localStorage.removeItem('jwtToken');
                 window.location.href = loginUrl;
