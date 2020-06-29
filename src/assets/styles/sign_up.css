@@ -262,6 +262,9 @@
 .account-details--wrapper{
   width: 100% !important;
 }
+.account-type--selector {
+  display: flex;
+}
 .verify-code-btn{
   width: 100%;
 }
