@@ -6,7 +6,7 @@
       <p class="sign-up--extra">
         Sign up for Sendy
       </p>
-      <div>
+      <div class="account-type--selector">
         <el-radio
           v-model="account"
           label="biz"
@@ -278,17 +278,11 @@ export default {
   },
   watch: {
     selectedCountry(val) {
-      if (val === 'USD') {
-        this.countryCode = 'US';
-      } else {
-        this.countryCode = this.localCountryCode;
-      }
+      this.countryCode = this.localCountryCode;
       this.currency = val;
     },
     localCountry(val) {
-      if (this.selectedCountry !== 'USD') {
-        this.selectedCountry = val;
-      }
+      this.selectedCountry = val;
     },
   },
   methods: {

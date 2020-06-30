@@ -50,7 +50,7 @@
                           Minimum Cost :
                         </span>
                         <span>
-                          {{ tracking_data.price_tier.currency }}
+                          {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }}
                           {{ tracking_data.package_details.customer_min_amount }}
                         </span>
                       </span>
@@ -59,7 +59,7 @@
                           Cost :
                         </span>
                         <span>
-                          {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                          {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}
                         </span>
                       </span>
                     </span>
@@ -68,7 +68,7 @@
                         Cost :
                       </span>
                       <span>
-                        {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                        {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}
                       </span>
                     </span>
                   </div>
@@ -372,21 +372,21 @@
                               <div v-if="accType === 1" class="">
                                 <p>
                                   Price has been confirmed to be
-                                  {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                                  {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}
                                 </p>
                               </div>
                               <div v-else class="">
                                 <div v-if="myRb <= 0">
                                   <p>
                                     Price has been confirmed to be
-                                    {{ tracking_data.price_tier.currency }}
+                                    {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }}
                                     {{ tracking_data.amount }}
                                   </p>
                                 </div>
                                 <div v-else>
                                   <p>
                                     Price has been confirmed to be
-                                    {{ tracking_data.price_tier.currency }}
+                                    {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }}
                                     {{ tracking_data.amount }}.Choose payment option below
                                   </p>
                                   <div class="">
@@ -634,14 +634,14 @@
                         !tracking_data.fixed_cost
                     "
                   >
-                    Minimum Amount : {{ tracking_data.price_tier.currency }}
+                    Minimum Amount : {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }}
                     {{ tracking_data.package_details.customer_min_amount }}
                   </div>
                   <div v-else>
-                    {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                    {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}
                   </div>
                 </div>
-                <div v-else>{{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}</div>
+                <div v-else>{{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}</div>
                 <div class="">
                   <div class="">
                     {{ tracking_data.order_no }}
