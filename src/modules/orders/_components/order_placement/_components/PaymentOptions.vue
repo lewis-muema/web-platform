@@ -25,7 +25,6 @@
         </div>
       </div>
     </div>
-
     <div
       v-if="get_active_order_option === 'payment'"
       class="home-view-actions--note"
@@ -1138,12 +1137,15 @@ export default {
     refreshRunningBalance() {
       return new Promise((resolve, reject) => {
         const session = this.$store.getters.getSession;
-
+        const profile_id = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
+        const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
+        const secondaryProfile = session.default === 'biz' ? this.getPriceRequestObject.client_id - profile_id === 100000000 : this.getPriceRequestObject.user_id - profile_id === 100000000;
         const runningBalancePayload = {
-          cop_id: 'cop_id' in session[session.default] ? session[session.default].cop_id : 0,
+          [profile_name]: profile_id,
           phone: session[session.default].user_phone,
           default_currency: this.default_currency,
           rb_currency: this.activeVendorPriceData.currency,
+          secondary_profile: secondaryProfile,
         };
 
         const payload = {
