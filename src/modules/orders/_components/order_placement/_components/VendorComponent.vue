@@ -702,7 +702,7 @@
                       name="name"
                       rows="5"
                       class="textarea-control add-notes"
-                      placeholder="E.g. Pick package at the reception.."
+                      :placeholder="additionalInstructionsPlaceholder"
                       @input="addInstructionNotes(get_order_path[0], 0)"
                     />
                   </div>
@@ -764,7 +764,7 @@
                       name="name"
                       rows="5"
                       class="textarea-control add-notes"
-                      placeholder="E.g. Pick package at the reception.."
+                      :placeholder="additionalInstructionsPlaceholder"
                       @input="addInstructionNotes(data, index+1)"
                     />
                   </div>
@@ -1071,6 +1071,15 @@ export default {
         displayPairName = 'driver';
       }
       return displayPairName.toLowerCase();
+    },
+    additionalInstructionsPlaceholder() {
+      let display = 'E.g Pick package at the reception ...';
+      if (this.small_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+        display = 'E.g Pick package at the reception ...';
+      } else {
+        display = 'E.g Pick load at the reception ...';
+      }
+      return display;
     },
   },
   watch: {
