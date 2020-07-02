@@ -11,6 +11,7 @@ const state = {
   card_success_status: false,
   saved_cards: [],
   stripe_user_id: '',
+  active_currency: '',
 };
 
 export default {

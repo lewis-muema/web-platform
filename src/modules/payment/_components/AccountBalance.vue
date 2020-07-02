@@ -1,5 +1,16 @@
 <template lang="html">
   <div class="">
+    <div class="payinfo-currencies">
+      <div
+        v-for="(currency, index) in currencies"
+        :key="index"
+        class="currency-tabs"
+        :class="activeCurrency === currency ? 'active-currency' : ''"
+        @click="activeCurrency = currency"
+      >
+        {{ currency }}
+      </div>
+    </div>
     <div class="paytitle">
       Top up your Sendy account
     </div>
@@ -7,14 +18,14 @@
       <div class="payinfo--icon" />
       <div class="payinfo--balance">
         Balance <span class="payinfo--balance-el">{{ running_balance }}</span>
-        {{ default_currency }}
+        {{ getActiveCurrency }}
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 const currencyConversion = require('country-tz-currency');
 
@@ -23,11 +34,25 @@ export default {
   data() {
     return {
       default_currency: 'KES',
+      activeCurrency: '',
+      secondaryRB: '',
+      currencies: [],
     };
+  },
+  watch: {
+    activeCurrency(val) {
+      this.setActiveCurrency(val);
+      if (this.running_balance && this.activeCurrency !== this.default_currency) {
+        this.requestSecondaryRunningBalance();
+      } else if (this.running_balance && this.activeCurrency === this.default_currency) {
+        this.requestRB();
+      }
+    },
   },
   computed: {
     ...mapGetters({
       getDefaultCurrency: 'getDefaultCurrency',
+      getActiveCurrency: '$_payment/getActiveCurrency',
     }),
     // this just gets what is on the store
     running_balance() {
@@ -44,12 +69,42 @@ export default {
   mounted() {
     this.requestRB();
     this.checkUserLocation();
+    this.requestCurrencies();
+    this.currencies.push(this.default_currency);
+    this.activeCurrency = this.default_currency;
   },
   methods: {
     ...mapActions({
       _requestRunningBalance: '$_payment/requestRunningBalance',
       requestCountryCode: '$_payment/requestCountryCode',
     }),
+    ...mapMutations({
+      setActiveCurrency: '$_payment/setActiveCurrency',
+    }),
+    requestCurrencies() {
+      const session = this.$store.getters.getSession;
+      const profile_id = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
+      const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
+      const currencyPayload = {
+        [profile_name]: profile_id,
+      };
+      const payload = {
+        values: currencyPayload,
+        vm: this,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'get_currencies',
+      };
+      this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
+        (response) => {
+          if (response.status) {
+            this.currencies = response.data.currencies;
+          }          
+        },
+        (error) => {
+          // ...
+        },
+      );
+    },
     requestRB() {
       this.checkDefaultCurrency();
       // this will request from the api and update the store
@@ -76,6 +131,34 @@ export default {
           const resp = response.data;
           const balance = resp.data.running_balance;
           this.$store.commit('setRunningBalance', balance);
+        },
+        (error) => {
+          // ...
+        },
+      );
+    },
+    requestSecondaryRunningBalance() {
+      const session = this.$store.getters.getSession;
+      const profile_id = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
+      const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
+      const runningBalancePayload = {
+        [profile_name]: profile_id,
+        phone: session[session.default].user_phone,
+        default_currency: session[session.default].default_currency,
+        rb_currency: session[session.default].default_currency,
+        secondary_profile: true,
+      };
+      const payload = {
+        values: runningBalancePayload,
+        vm: this,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'running_balance',
+      };
+
+      this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
+        (response) => {
+          this.secondaryRB = response.data.data.running_balance;
+          this.$store.commit('setRunningBalance', this.secondaryRB);
         },
         (error) => {
           // ...
@@ -163,5 +246,27 @@ export default {
 }
 .payinfo--balance-el {
   padding: 0px 5px;
+}
+.payinfo-currencies {
+  position: absolute;
+  bottom: 33px;
+  display: flex;
+  width: 100%;
+  border-bottom: 2px solid #ebeef5;
+}
+.currency-tabs {
+  width: 60px;
+  text-align: center;
+  border: 1px solid #ebeef5;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: -1px;
+  cursor: pointer;
+}
+.active-currency {
+  color: white;
+  background: #1B7FC3;
+  border: 1px solid #1B7FC3 !important;
 }
 </style>
