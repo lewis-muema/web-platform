@@ -309,7 +309,7 @@ export default {
       const fullPayload = {
         values,
         vm: this,
-        app: 'PRIVATE_API',
+        app: 'NODE_PRIVATE_API',
         endpoint: 'check_verification',
       };
       this.requestByPassVerificationVerify(fullPayload).then(
