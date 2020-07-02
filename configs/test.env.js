@@ -3,7 +3,7 @@ module.exports = {
   DEBUG_MODE: true,
   AUTH: '"https://authtest.sendyit.com/"',
   NODE_PRIVATE_API: '"https://authtest.sendyit.com/v1/"',
-  PRIVATE_API: '"https://apitest.sendyit.com/parcel/index.php/api/v11/"',
+  PRIVATE_API: '"https://authtest.sendyit.com/parcel/"',
   BACKEND_CUSTOMERS_APP: '"https://customerstest.sendyit.com/customers/"',
   PAYMENT_SERVICE: '"https://authtest.sendyit.com/localisation/"',
   BACKEND_API_KEY: '"4RNNeyATKN6B6S6XiOyJdPMEJ3oLRKBT"',
