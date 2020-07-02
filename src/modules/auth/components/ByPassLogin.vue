@@ -263,12 +263,12 @@ export default {
         }
 
         const values = {};
-        values.phone_no = phone.replace(/[()\-\s]+/g, '');
+        values.number = phone.replace(/[()\-\s]+/g, '');
         const fullPayload = {
           values,
           vm: this,
-          app: 'PRIVATE_API',
-          endpoint: 'verify_phone',
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'request_verification',
         };
         this.requestByPassPhoneVerification(fullPayload).then(
           (response) => {
