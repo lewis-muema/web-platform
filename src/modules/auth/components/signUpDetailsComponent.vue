@@ -427,7 +427,7 @@ export default {
     verify_code() {
       if (this.code !== '') {
         const requestId = localStorage.getItem('request_id');
-        if (requestId === '') {
+        if (requestId === '' || requestId === null) {
           this.doNotification(2, 'Phone Verification Error', 'Internal system error .Kindly try after 15 minutes');
           setTimeout(() => {
             this.setUpState = 1;
