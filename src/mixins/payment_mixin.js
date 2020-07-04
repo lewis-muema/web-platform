@@ -1,7 +1,12 @@
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import Mcrypt from './mcrypt_mixin';
 
 const PaymentMxn = {
+  computed: {
+    ...mapGetters({
+      getSecondaryProfile: 'getSecondaryProfile',
+    }),
+  },
   methods: {
     ...mapActions({
       requestRunningBalanceFromAPI: '$_payment/requestRunningBalance',
@@ -84,6 +89,10 @@ const PaymentMxn = {
                 user_phone: userPhone,
               },
             };
+
+            if (this.getSecondaryProfile !== '') {
+              runningBalancePayload.values.secondary_profile = this.getSecondaryProfile;
+            }
 
             const payload = {
               values: runningBalancePayload,
@@ -200,6 +209,10 @@ const PaymentMxn = {
                 user_phone: userPhone,
               },
             };
+
+            if (this.getSecondaryProfile !== '') {
+              runningBalancePayload.values.secondary_profile = this.getSecondaryProfile;
+            }
 
             const payload = {
               values: runningBalancePayload,
