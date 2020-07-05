@@ -25,7 +25,6 @@
         </div>
       </div>
     </div>
-
     <div
       v-if="get_active_order_option === 'payment'"
       class="home-view-actions--note"
@@ -405,6 +404,7 @@ export default {
       getStoreOrderPath: '$_orders/getStorePath',
       getPairWithRiderState: '$_orders/$_home/getPairWithRiderState',
       getPairErrorMessage: '$_orders/$_home/getPairErrorMessage',
+      getSecondaryProfile: 'getSecondaryProfile',
     }),
 
     active_price_tier_data() {
@@ -607,7 +607,7 @@ export default {
       setOrderState: '$_orders/$_home/setOrderState',
       setExtendOptions: '$_orders/$_home/setExtendOptions',
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
-
+      setSecondaryProfile: 'setSecondaryProfile',
     }),
 
     ...mapActions({
@@ -829,6 +829,11 @@ export default {
         );
         return false;
       }
+      const session = this.$store.getters.getSession;
+      const profile_id = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
+      const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
+      const secondaryProfile = session.default === 'biz' ? this.getPriceRequestObject.client_id - profile_id === 100000000 : this.getPriceRequestObject.user_id - profile_id === 100000000;
+      this.setSecondaryProfile(secondaryProfile);
 
       if (this.payment_method === '') {
         if (this.checkAccountPaymentOption()) {
@@ -1216,12 +1221,15 @@ export default {
     refreshRunningBalance() {
       return new Promise((resolve, reject) => {
         const session = this.$store.getters.getSession;
-
+        const profile_id = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
+        const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
+        const secondaryProfile = session.default === 'biz' ? this.getPriceRequestObject.client_id - profile_id === 100000000 : this.getPriceRequestObject.user_id - profile_id === 100000000;
         const runningBalancePayload = {
-          cop_id: 'cop_id' in session[session.default] ? session[session.default].cop_id : 0,
+          [profile_name]: profile_id,
           phone: session[session.default].user_phone,
           default_currency: this.default_currency,
           rb_currency: this.activeVendorPriceData.currency,
+          secondary_profile: secondaryProfile,
         };
 
         const payload = {
@@ -1412,13 +1420,16 @@ export default {
       if (session.default === 'biz') {
         copId = session.biz.cop_id;
       }
-
+      const profile_id = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
+      const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
+      const secondaryProfile = session.default === 'biz' ? this.getPriceRequestObject.client_id - profile_id === 100000000 : this.getPriceRequestObject.user_id - profile_id === 100000000;
       const oldRb = this.$store.getters.getRunningBalance;
       const runningBalancePayload = {
-        cop_id: copId,
+        [profile_name]: profile_id,
         phone: session[session.default].user_phone,
         default_currency: session[session.default].default_currency,
         rb_currency: session[session.default].default_currency,
+        secondary_profile: secondaryProfile,
       };
 
       const payload = {
@@ -1571,6 +1582,7 @@ export default {
           if (payOption === 1) {
             const accountType = 'Individual';
             const payload = {
+              currency: this.getPriceRequestObject.currency,
               country_code: this.getCountryCode,
               account_type: accountType,
               entry_point: 'Customer App Price Request',
