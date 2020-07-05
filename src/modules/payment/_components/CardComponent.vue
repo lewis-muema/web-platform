@@ -279,13 +279,14 @@ export default {
     getPaymentCard() {
       const session = this.$store.getters.getSession;
       const setCurrency = session[session.default].default_currency;
+      const vendorId = 1;
       if (this.payment_card.startsWith('2_')) {
         const card = this.get_saved_cards.find(
           card_details => card_details.last4 === this.payment_card.slice(2),
         );
-        this.handleSavedCard(setCurrency, card);
+        this.handleSavedCard(vendorId, setCurrency, card);
       } else {
-        this.handleNewCardPayment(setCurrency);
+        this.handleNewCardPayment(vendorId, setCurrency);
       }
     },
 

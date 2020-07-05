@@ -6,43 +6,171 @@
     <div class="complete-contents">
       <div class="complete-pair">
         <p>You can now enjoy Sendy services at work and at home!</p>
-        <p>Woah - that’s double the convenience!</p>
+        <p v-if="getPerEmail !== ''">
+          Woah - that’s double the convenience!
+        </p>
       </div>
-      <div class="complete-pair">
+      <div
+        v-if="getPerEmail !== ''"
+        class="complete-pair"
+      >
         <p>
           Your two accounts have now been connected and you can access either account with your one
           selected password.
         </p>
         <p>Login at any time to your two account profiles using the emails below.</p>
       </div>
+      <div
+        v-else
+        class="complete-pair"
+      >
+        <p>
+          Your account has now been created and you can access the account with your
+          selected password.
+        </p>
+        <p>Login at any time to your account profile using the email below.</p>
+      </div>
       <div class="complete-pair">
         <p>{{ getBizName }}: {{ getBizEmail }}</p>
-        <p>Personal: {{ getPerEmail }}</p>
+        <p v-if="getPerEmail !== ''">
+          Personal: {{ getPerEmail }}
+        </p>
       </div>
     </div>
     <div class="complete-continue">
       <a
         class="btn-submit mid"
-        :href="getBaseUrl"
+        @click="directSignInViaAuth"
       >
-        Continue to App
+        {{ login_text }}
       </a>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import NotificationMxn from '../../../mixins/notification_mixin';
+import SessionMxn from '../../../mixins/session_mixin';
 
 export default {
   name: 'CompleteComponent',
+  mixins: [NotificationMxn, SessionMxn],
+  data() {
+    return {
+      login_text: 'Continue to App',
+    };
+  },
   computed: {
     ...mapGetters({
       getBizName: '$_external/getBizName',
       getBizEmail: '$_external/getBizEmail',
       getBaseUrl: '$_external/getBaseUrl',
       getPerEmail: '$_external/getPerEmail',
+      getPass: '$_external/getPass',
     }),
+  },
+  methods: {
+    ...mapActions({
+      requestSignUpSegmentation: '$_auth/requestSignUpSegmentation',
+      authSignIn: '$_external/requestSignIn',
+    }),
+    directSignInViaAuth() {
+      this.deleteSession();
+      this.login_text = 'Logging in ...';
+      const params = {
+        email: this.getBizEmail,
+        password: this.getPass,
+      };
+      const fullPayload = {
+        values: params,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'sign_in',
+      };
+      this.authSignIn(fullPayload).then(
+        (response) => {
+          if (Object.prototype.hasOwnProperty.call(response, 'status')) {
+            const errorResponse = response.data;
+            if (errorResponse.code === 1) {
+              this.login_text = 'Continue to App';
+              this.doNotification(2, 'Login failed', 'Wrong password or email.');
+            } else {
+              this.login_text = 'Continue to App';
+              this.doNotification(2, 'Login failed', 'Account deactivated');
+            }
+          } else {
+            try {
+              if (response) {
+                const refreshToken = response.refresh_token;
+                const accessToken = response.access_token;
+                // eslint-disable-next-line max-len
+                // TODO change from using local storage as session trust store. malicious js will read the data
+                localStorage.setItem('jwtToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
+                const partsOfToken = accessToken.split('.');
+                const middleString = partsOfToken[1];
+                const data = atob(middleString);
+                const { payload } = JSON.parse(data);
+
+                // set session
+                // commit everything to the store
+                // redirect to orders
+                const sessionData = payload;
+                const jsonSession = JSON.stringify(sessionData);
+                this.setSession(jsonSession);
+                this.$store.commit('setSession', sessionData);
+                let analyticsEnv = '';
+                try {
+                  analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+                } catch (er) {
+                  // ...
+                }
+
+                /* global mixpanel */
+
+                if ('default' in sessionData && analyticsEnv === 'production') {
+                  const acc = sessionData[sessionData.default];
+
+                  mixpanel.people.set_once({
+                    $email: acc.user_email,
+                    $phone: acc.user_phone,
+                    'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                    $name: acc.user_name,
+                    'Client Type': 'Web Platform - Cop Invitation',
+                  });
+
+                  // login identify
+                  mixpanel.identify(acc.user_email);
+
+                  // track login
+                  mixpanel.track('User Login', {
+                    'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                    'Last Login': new Date(),
+                    'Client Type': 'Web Platform - Cop Invitation',
+                  });
+                }
+                this.$router.push('/orders');
+              }
+            } catch (error) {
+              // @todo Log the error (central logging)
+            }
+          }
+        },
+        (error) => {
+          this.login_text = 'Continue to App';
+          this.doNotification(2, 'Login failed', 'Login failed. Please try again');
+          this.$router.push('/auth/sign_in');
+        },
+      );
+    },
+    doNotification(level, title, message) {
+      const notification = {
+        title,
+        level,
+        message,
+      };
+      this.displayNotification(notification);
+    },
   },
 };
 </script>
@@ -81,5 +209,6 @@ export default {
 {
   text-align: center;
   height: 40px;
+  padding-top: 1%;
 }
 </style>

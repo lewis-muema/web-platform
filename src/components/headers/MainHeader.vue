@@ -104,6 +104,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import axios from 'axios';
 import SessionMxn from '../../mixins/session_mixin';
 import EventsMixin from '../../mixins/events_mixin';
 
@@ -183,6 +184,7 @@ export default {
     },
     logOut() {
       try {
+        this.clearAuthToken();
         localStorage.removeItem('_sessionSnack');
         localStorage.removeItem('jwtToken');
         localStorage.removeItem('refreshToken');
@@ -198,6 +200,11 @@ export default {
           this.$router.replace({ name: 'sign_in' });
         }
       }
+    },
+    clearAuthToken() {
+      const auth = process.env.CONFIGS_ENV.AUTH;
+      const payload = { refresh_token: localStorage.getItem('refreshToken') };
+      axios.post(`${auth}logout`, payload);
     },
     switchOption() {
       const session = this.$store.getters.getSession;

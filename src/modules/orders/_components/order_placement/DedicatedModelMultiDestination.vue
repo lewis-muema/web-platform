@@ -11,7 +11,7 @@
         class="homeview--outer-selections homeview--outer-selections__active"
         @click="switchMode('/orders/dedicated/no-destination')"
       >
-        Dedicated Vehicles
+        Dedicated
       </div>
     </div>
     <div>
@@ -26,7 +26,7 @@
             type="radio"
             value="/orders/dedicated/no-destination"
           ><br>
-          <label for="no-destination">No destination</label>
+          <label for="no-destination">Open destination</label>
         </div>
         <div class="homeview--outer-mode-options">
           <input
@@ -47,10 +47,12 @@
 import { mapGetters } from 'vuex';
 import orderPlacementStore from './_store';
 import OrderPlacement from './OrderPlacement.vue';
+import EventsMixin from '../../../../mixins/events_mixin';
 
 export default {
   name: 'DedicatedMultiDestinationModel',
   components: { OrderPlacement },
+  mixins: [EventsMixin],
   data() {
     return {
       mode: '/orders/dedicated/multi-destination',
@@ -85,6 +87,15 @@ export default {
         'Client Account': accDefault.user_email,
         'Client name': accDefault.user_name,
       });
+      this.trackGAEvent(name);
+    },
+    trackGAEvent(eventLabel) {
+      const eventPayload = {
+        eventCategory: 'Sendy Dedicated',
+        eventAction: 'Click',
+        eventLabel,
+      };
+      this.fireGAEvent(eventPayload);
     },
     trackMixpanelEvent(name, event) {
       let analyticsEnv = '';

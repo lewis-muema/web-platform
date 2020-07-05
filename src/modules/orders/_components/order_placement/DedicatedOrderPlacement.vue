@@ -337,6 +337,16 @@ export default {
         eventName = 'Enter return location for no-destination';
       }
       this.trackMixpanelEvent(eventName, eventData);
+      this.trackGAEvent(eventName);
+    },
+
+    trackGAEvent(eventLabel) {
+      const eventPayload = {
+        eventCategory: 'Sendy Dedicated',
+        eventAction: 'Click',
+        eventLabel,
+      };
+      this.fireGAEvent(eventPayload);
     },
 
     trackMixpanelEvent(name, event) {
@@ -417,19 +427,6 @@ export default {
       this.set_location_name(locationNamePayload);
       if (index === 0) {
         this.setPickupFilled(true);
-        const eventPayload = {
-          eventCategory: 'Order Placement',
-          eventAction: 'Click',
-          eventLabel: 'Pickup Location (No destination) - Order Placement - Web App',
-        };
-        this.fireGAEvent(eventPayload);
-      } else {
-        const eventPayload = {
-          eventCategory: 'Order Placement',
-          eventAction: 'Click',
-          eventLabel: 'Return Location (No destination) - Order Placement - Web App',
-        };
-        this.fireGAEvent(eventPayload);
       }
       this.attemptPriceRequest();
     },

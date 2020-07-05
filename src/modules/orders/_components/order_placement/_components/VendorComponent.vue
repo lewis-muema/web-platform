@@ -104,6 +104,7 @@
                     placement="right"
                     width="350"
                     trigger="hover"
+                    popper-class="vendorExtraInfo"
                   >
                     <div
                       class="reset-font"
@@ -657,7 +658,7 @@ export default {
       load_units: '',
       discount_timed_out: false,
       customer_min_amount: '',
-      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
+      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van', '3T Truck', '5T Truck', '7T Truck', '10T Truck', '14T Truck', '20T Truck', '24T Truck'],
       vendors_without_return: ['Standard', 'Runner'],
       baseTruckOptions: [
         {
@@ -1000,7 +1001,9 @@ export default {
       if (this.vendor_id !== this.activeVendorPriceData.vendor_id) {
         if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
           this.carrier_type = '1';
-        } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+        } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id) && this.activeVendorPriceData.vendor_id === 2) {
+          this.carrier_type = '0';
+        } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id) && this.activeVendorPriceData.vendor_id === 3) {
           this.carrier_type = '2';
         } else if (copStatus) {
           this.carrier_type = session[session.default].default_carrier_type.toString(10);
@@ -1498,5 +1501,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=2';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=3';
 </style>
