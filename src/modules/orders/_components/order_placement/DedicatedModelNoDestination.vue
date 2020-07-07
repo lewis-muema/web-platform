@@ -25,7 +25,9 @@
             v-model="mode"
             type="radio"
             value="/orders/dedicated/no-destination"
-          ><br>
+          >
+          <span class="tour-pointer-2" />
+          <br>
           <label for="no-destination">Open destination</label>
         </div>
         <div class="homeview--outer-mode-options">
@@ -131,4 +133,9 @@ export default {
 
 <style lang="css">
 @import "../../../../assets/styles/orders_order_placement.css?v=2";
+.tour-pointer-2 {
+  position: relative;
+  left: 25px;
+  top: 5px;
+}
 </style>

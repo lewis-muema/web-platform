@@ -7,6 +7,29 @@
       class="box"
     >
       <div
+        v-if="activeClass > -1 && tourViewStatus"
+        class="pointer-container"
+        :style="{top: offsettop() + 'px', left: offsetleft() + 'px'}"
+      >
+        <div class="tour-pointer" />
+        <div
+          class="tour-actions"
+        >
+          <p class="tour-title">
+            {{ dedicatedTourPoints[activeClass].title }}
+          </p>
+          <p class="tour-description">
+            {{ dedicatedTourPoints[activeClass].description }}
+          </p>
+          <p
+            class="tour-end"
+            @click="skipTour()"
+          >
+            End tour
+          </p>
+        </div>
+      </div>
+      <div
         v-if="blinder_status"
         class="blinder"
         :class="countdown_status ? 'blinder-override' : ''"
@@ -104,6 +127,26 @@
               </span>
             </div>
           </div>
+        </div>
+        <div
+          v-if="tour_status"
+          class="tour-popup"
+        >
+          <p class="tour-popup-description">
+            Hello! We’ve added a new feature, the open destination orders. We’d like to give you a quick tour of this new feature.
+          </p>
+          <p
+            class="tour-popup-get-started"
+            @click="startTour()"
+          >
+            Let’s get started!
+          </p>
+          <p
+            class="tour-popup-skip"
+            @click="skipTour()"
+          >
+            Skip tour
+          </p>
         </div>
       </div>
       <map-component />
@@ -257,6 +300,7 @@ import NpsMixin from '../../mixins/nps_mixin';
 import SessionMxn from '../../mixins/session_mixin';
 import NotificationMxn from '../../mixins/notification_mixin';
 
+let interval = '';
 
 export default {
   name: 'Orders',
@@ -273,6 +317,7 @@ export default {
       countdown_status: false,
       discount_status: false,
       upload_status: false,
+      tour_status: false,
       uploadButton: '',
       success_status: false,
       countdown: '',
@@ -293,6 +338,39 @@ export default {
         {
           value: false,
           label: 'No',
+        },
+      ],
+      activeClass: -1,
+      dedicatedTourPoints: [
+        {
+          title: 'Order Type: Dedicated vehicles',
+          description: 'Get a truck for a whole day to do all your deliveries. We handle your logistics while you focus on your core business',
+          class: '.tour-pointer-1',
+        },
+        {
+          title: 'Order Type: No Destination',
+          description: 'With no destination vehicles you can skip adding a destination or add a general region to deliver in and the driver will check off each delivery stop',
+          class: '.tour-pointer-2',
+        },
+        {
+          title: 'Vehicle Type',
+          description: 'Select multiple vehicle types and multiple vehicles of the same vehicle type',
+          class: '.tour-pointer-3',
+        },
+        {
+          title: 'Select Vehicle type',
+          description: 'Select open or closed vehicles for pick ups and bikes',
+          class: '.tour-pointer-4',
+        },
+        {
+          title: 'Schedule',
+          description: 'Select the date for your deliveries',
+          class: '.tour-pointer-5',
+        },
+        {
+          title: 'Schedule: Time',
+          description: 'Select the time-frame you’d like your deliveries done',
+          class: '.tour-pointer-6',
         },
       ],
     };
@@ -322,6 +400,27 @@ export default {
       this.$store.commit('$_orders/removeMarkers', []);
       this.$store.commit('$_orders/$_tracking/setTrackedOrder', '');
       this.clearVendorMarkers();
+      this.checkTourStatus();
+      if (to.path === '/orders/dedicated/no-destination' && this.tourViewStatus) {
+        this.activeClass = -1;
+        setTimeout(() => {
+          this.activeClass = 1;
+        }, 1000);
+      }
+      if (to.path === '/orders' && this.tourViewStatus) {
+        this.activeClass = -1;
+        setTimeout(() => {
+          this.activeClass = 0;
+        }, 1000);
+      }
+    },
+    activeClass() {
+      clearInterval(interval);
+      if (this.activeClass > 2 && this.tourViewStatus) {
+        interval = setInterval(() => {
+          this.offset();
+        }, 10);
+      }
     },
   },
 
@@ -329,6 +428,16 @@ export default {
     this.registerOrdersStore();
     // const STORE_KEY = '$_orders';
     // this.register_store_module(STORE_KEY, orderStore);
+    this.checkTourStatus();
+    if (this.$route.path === '/orders' && this.tourViewStatus) {
+      this.blinder_status = true;
+      this.tour_status = true;
+    }
+    if (this.$route.path === '/orders/dedicated/no-destination' && this.tourViewStatus) {
+      setTimeout(() => {
+        this.activeClass = 1;
+      }, 1000);
+    }
   },
   mounted() {
     this.checkSession();
@@ -364,6 +473,49 @@ export default {
       }
       this.updateCrmData = isSet;
     },
+    checkTourStatus() {
+      if (process.browser && Object.prototype.hasOwnProperty.call(localStorage, 'tourViewStatus') && JSON.parse(localStorage.tourViewStatus)) {
+        this.tourViewStatus = false;
+      } else {
+        this.tourViewStatus = true;
+      }
+    },
+    startTour() {
+      localStorage.tourViewStatus = false;
+      this.activeClass = 0;
+      this.blinder_status = false;
+      this.tour_status = false;
+      this.checkTourStatus();
+    },
+    skipTour() {
+      localStorage.tourViewStatus = true;
+      this.blinder_status = false;
+      this.tour_status = false;
+      this.checkTourStatus();
+      this.activeClass = -1;
+    },
+    offset() {
+      const tourClass = this.activeClass > -1 ? document.querySelector(this.dedicatedTourPoints[this.activeClass].class) : null;
+      if (tourClass === null) {
+        this.activeClass = -1;
+      }
+      document.querySelector('.pointer-container').style.top = `${tourClass === null ? 0 : tourClass.getBoundingClientRect().top - document.querySelector('#orders_container').getBoundingClientRect().top}px`;
+      document.querySelector('.pointer-container').style.left = `${tourClass === null ? 0 : tourClass.getBoundingClientRect().left - document.querySelector('#orders_container').getBoundingClientRect().left}px`;
+    },
+    offsettop() {
+      const tourClass = this.activeClass > -1 ? document.querySelector(this.dedicatedTourPoints[this.activeClass].class) : null;
+      if (tourClass === null) {
+        this.activeClass = -1;
+      }
+      return tourClass === null ? 0 : tourClass.getBoundingClientRect().top - document.querySelector('#orders_container').getBoundingClientRect().top;
+    },
+    offsetleft() {
+      const tourClass = this.activeClass > -1 ? document.querySelector(this.dedicatedTourPoints[this.activeClass].class) : null;
+      if (tourClass === null) {
+        this.activeClass = -1;
+      }
+      return tourClass === null ? 0 : tourClass.getBoundingClientRect().left - document.querySelector('#orders_container').getBoundingClientRect().left;
+    },
     sessionFrefill() {
       const session = this.$store.getters.getSession;
       if (Object.keys(session).length > 0) {
@@ -387,6 +539,27 @@ export default {
         this.blinder_status = arg1;
         this.upload_status = arg1;
         this.success_status = false;
+      });
+      this.$root.$on('tour class', (arg1, arg2) => {
+        if (this.tourViewStatus) {
+          if (this.activeClass === 5) {
+            clearInterval(interval);
+          }
+          if (this.activeClass === 0) {
+            this.activeClass = -1;
+          }
+          setTimeout(() => {
+            this.activeClass = arg1;
+          }, arg2);
+        }
+      });
+      this.$root.$on('tour class hidden', () => {
+        if (this.tourViewStatus) {
+          if (this.activeClass === 5) {
+            this.skipTour();
+          }
+          this.activeClass = -1;
+        }
       });
       this.$root.$on('Countdown status', (arg1, arg2) => {
         this.blinder_status = arg1;
@@ -731,5 +904,63 @@ cancel-pop-up > div > div > div.el-dialog__header{
 .finish-setup-outer{
   margin-left: 6%;
   margin-right: 6%;
+}
+.tour-pointer {
+  width: 20px;
+    height: 20px;
+    background: #F44B54;
+    border-radius: 20px;
+    z-index: 2000;
+    position: relative;
+    box-shadow: 0px 0px 12px 2px rgba(253, 1, 1, 0.77);
+}
+.pointer-container {
+  position: relative;
+  display: flex;
+  width: max-content;
+  margin-top: -10px;
+  margin-left: -10px;
+}
+.tour-actions {
+  z-index: 2000;
+  height: max-content;
+  background: white;
+  margin-left: 10px;
+  box-shadow: 0px 0px 12px 2px rgba(142, 140, 140, 0.55);
+  border-radius: 5px;
+  padding: 10px 15px 10px 20px;
+  font-size: 12px;
+  width: max-content;
+}
+.tour-description {
+  width: 200px;
+  font-size: 13px;
+}
+.tour-title {
+  color: #F28226;
+  font-size: 14px;
+}
+.tour-popup-description {
+  font-size: 15px;
+  font-weight: 400;
+  padding: 10px 30px 10px 30px;
+}
+.tour-popup-get-started {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1782c5;
+  cursor: pointer;
+  margin: 20px 0px 10px 0px;
+}
+.tour-popup-skip {
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 10px 0px 20px 0px;
+}
+.tour-end {
+  font-weight: 500;
+  color: #1782c5;
+  cursor: pointer;
 }
 </style>

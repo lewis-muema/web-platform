@@ -9,9 +9,10 @@
       </div>
       <div
         class="homeview--outer-selections"
-        @click="switchMode('/orders/dedicated/no-destination')"
+        @click="switchMode('/orders/dedicated/no-destination');"
       >
         Dedicated
+        <span class="tour-pointer-1" />
       </div>
     </div>
     <order-placement />
@@ -58,6 +59,7 @@ export default {
     switchMode(route) {
       if (route === '/orders/dedicated/no-destination') {
         this.selectDedicatedVehicles();
+        this.$root.$emit('tour class', 1, 2000);
       }
       this.$router.push(route);
     },
@@ -109,4 +111,8 @@ export default {
 
 <style lang="css">
 @import "../../../../assets/styles/orders_order_placement.css?v=2";
+.tour-pointer-1 {
+  position: relative;
+  left: 20px;
+}
 </style>
