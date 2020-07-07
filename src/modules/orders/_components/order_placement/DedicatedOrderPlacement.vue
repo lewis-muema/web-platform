@@ -1,5 +1,7 @@
 <template lang="html">
-  <div class="homeview--inner">
+  <div
+    class="homeview--inner"
+  >
     <!-- <div class="homeview--form__header">
          New Delivery
      </div> -->
@@ -7,6 +9,7 @@
       <div
         ref="scrollable_locations"
         class="homeview--form homeview--row homeview--form__scrollable"
+        @click="$root.$emit('tour class hidden', 1)"
       >
         <div class="homeview--input-bundler">
           <no-ssr placeholder="">
