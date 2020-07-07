@@ -40,6 +40,7 @@
           v-if="activePackageClassPriceData !== ''"
           class="home-view-vendor-types"
         >
+          <span class="tour-pointer-3" />
           <!-- start vendor types loop -->
           <div
             v-for="(j, i) in activePackageClassPriceData.price_tiers"
@@ -222,6 +223,7 @@
           <!-- start large /medium vendors -->
           <div class="home-view-truck-options-wrapper">
             <div class="home-view-truck-options-divider" />
+            <span class="tour-pointer-4" />
             <div
               v-if="!vehicleDetailsStatus"
               class="home-view-truck-options-inner-wrapper"
@@ -229,7 +231,7 @@
               <div class="home-view-truck-options-label home-view-truck-options-vehicle-type">
                 <div
                   class="home-view-truck-options-vehicle-type-title"
-                  @click="vehicleDetailsStatus = !vehicleDetailsStatus"
+                  @click="vehicleDetailsStatus = !vehicleDetailsStatus; $root.$emit('tour class hidden', 1);"
                 >
                   Vehicle type
                   <i class="el-icon-arrow-down home-view-truck-options-vehicle-arrow" />
@@ -320,6 +322,7 @@
                   :picker-options="dueDatePickerOptions"
                   @change="dispatchScheduleTime"
                 />
+                <span class="tour-pointer-5" />
               </div>
               <div
                 v-if="StartTime && EndTime && schedule_time"
@@ -349,6 +352,7 @@
                   :picker-options="{selectableRange: `${toStartTime} - ${EndTime}`}"
                   @change="setEndHours"
                 />
+                <span class="tour-pointer-6" />
               </div>
             </div>
             <div class="home-view-truck-options-inner-wrapper recipient-section">
@@ -599,6 +603,13 @@ export default {
     recipientPhone(data) {
       this.debounceRecipientPhone(data);
     },
+    schedule_time(val) {
+      if (val) {
+        this.$root.$emit('tour class', 5, 0);
+      } else {
+        this.$root.$emit('tour class', 4, 0);
+      }
+    },
   },
   created() {
     this.setFirstTimeUser();
@@ -687,6 +698,7 @@ export default {
       this.expandedActiveVendorTally[index].carrier_type = option;
       this.selectStatus = false;
       this.selectStatus = true;
+      this.$root.$emit('tour class', 4, 0);
     },
     setStartHours() {
       this.setScheduleTime(this.time_range_from);
@@ -717,6 +729,7 @@ export default {
           }
         });
       });
+      this.$root.$emit('tour class', 3, 0);
       const tallyObject = [];
       this.expandedActiveVendorTally.forEach((row, x) => {
         const vendorObject = {};
@@ -790,6 +803,7 @@ export default {
       this.setOrderState(1);
       this.setExtendOptions(false);
       this.clearOuterActiveVendorDetails();
+      this.$root.$emit('tour class', 2, 500);
     },
     dispatchDeliveryItem() {
       this.setDeliveryItem(this.delivery_item);
@@ -1011,6 +1025,7 @@ export default {
       this.priceRequestData = this.getPriceRequestObject.economy_price_tiers;
       const activeVendorName = this.getOuterActiveVendorDetails;
       const activeVendorClass = this.getOuterActivePackageClass;
+      this.$root.$emit('tour class', 2, 0);
       if ('vendor_name' in activeVendorName && activeVendorClass !== '') {
         this.setActiveVendorName(activeVendorName.vendor_name);
         this.setActivePackageClass(activeVendorClass);
@@ -1100,4 +1115,15 @@ export default {
 
 <style lang="css" scoped>
 @import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
+.tour-pointer-3 {
+  float: right;
+  position: relative;
+  left: 10px;
+}
+.tour-pointer-4 {
+  float: right;
+  position: relative;
+  right: 5px;
+  top: 5px;
+}
 </style>
