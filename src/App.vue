@@ -274,5 +274,5 @@ export default {
 <style lang="css">
 @import url('https://fonts.googleapis.com/css?family=Rubik:300,400,500,700');
 @import './assets/styles/app.css';
-@import './assets/styles/overide.css?v=1';
+@import './assets/styles/overide.css?v=2';
 </style>

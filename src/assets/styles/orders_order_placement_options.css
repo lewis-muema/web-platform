@@ -235,3 +235,6 @@ ul.summary_timeline > li:before {
   background: #000 !important;
   z-index: 2000 !important;
 }
+.instructions-notes{
+  margin-top: 2%;
+}

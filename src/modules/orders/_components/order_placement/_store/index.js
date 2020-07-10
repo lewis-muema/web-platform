@@ -46,6 +46,7 @@ export default {
       vehicle_plate: '',
       pair_rider_state: false,
       pair_error_msg: '',
+      instruction_notes: [],
     };
   },
   actions,
