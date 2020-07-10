@@ -183,7 +183,7 @@
         <el-dialog
           :visible.sync="confirmFinal"
           width="30%"
-          class=""
+          class="summary-dialog"
           :before-close="handleClose"
           :modal-append-to-body="false"
         >
@@ -206,6 +206,7 @@
                   <li
                     v-for="(val, index) in getHomeLocations"
                     v-if="index > 0"
+                    :key="index"
                   >
                     <p
                       v-if="index > 1"
@@ -252,13 +253,73 @@
                 <label class="delivery_label">The pickup time of your order</label>
                 <div class="order_summary-types-item order_summary--vendor-wrapper">
                   <div class="order_summary__img">
-                    <i
-                      class="el-icon-date order_summary-item__image calender--icon"
-                    />
+                    <i class="el-icon-date order_summary-item__image calender--icon" />
                   </div>
                   <div class="order_summary-wrapper__vendor">
                     <div class="order_summary--vendor-formal-name">
                       {{ scheduleTimeSummary() }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-if="pickUpInstructions()"
+                class="order_summary--outline"
+              >
+                <label class="delivery_label">
+                  Pickup instructions at {{ getInstructionNotes[0].name }}
+                </label>
+                <div
+                  v-if="getInstructionNotes[0].notes !== ''"
+                  class="order_summary-wrapper__vendor instructions-notes"
+                >
+                  <div class="order_summary--vendor-formal-name">
+                    {{ getInstructionNotes[0].notes }}
+                  </div>
+                </div>
+                <div
+                  v-if="getInstructionNotes[0].recipient_phone !== ''"
+                  class="order_summary-types-item order_summary--vendor-wrapper"
+                >
+                  <div class="order_summary__img">
+                    <i class="el-icon-phone-outline order_summary-item__image calender--icon" />
+                  </div>
+                  <div class="order_summary-wrapper__vendor">
+                    <div class="order_summary--vendor-formal-name">
+                      {{ getInstructionNotes[0].recipient_phone }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                v-if="dropOffInstructions()"
+                class="order_summary--outline"
+              >
+                <div
+                  v-for="(data, index) in deliveryNotesData()"
+                  :key="index"
+                >
+                  <label class="delivery_label"> Drop off instructions at {{ data.name }} </label>
+                  <div
+                    v-if="data.notes !== ''"
+                    class="order_summary-wrapper__vendor instructions-notes"
+                  >
+                    <div class="order_summary--vendor-formal-name">
+                      {{ data.notes }}
+                    </div>
+                  </div>
+                  <div
+                    v-if="data.recipient_phone !== ''"
+                    class="order_summary-types-item order_summary--vendor-wrapper"
+                  >
+                    <div class="order_summary__img">
+                      <i class="el-icon-phone-outline order_summary-item__image calender--icon" />
+                    </div>
+                    <div class="order_summary-wrapper__vendor">
+                      <div class="order_summary--vendor-formal-name">
+                        {{ data.recipient_phone }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -281,9 +342,7 @@
                 </p>
               </div>
 
-              <div
-                class="summary-button-outer"
-              >
+              <div class="summary-button-outer">
                 <input
                   class="button-primary btn-edit-order"
                   type="submit"
@@ -366,7 +425,6 @@ export default {
       time: 15,
       isRunning: false,
       interval: null,
-
     };
   },
 
@@ -405,6 +463,7 @@ export default {
       getStoreOrderPath: '$_orders/getStorePath',
       getPairWithRiderState: '$_orders/$_home/getPairWithRiderState',
       getPairErrorMessage: '$_orders/$_home/getPairErrorMessage',
+      getInstructionNotes: '$_orders/$_home/getInstructionNotes',
     }),
 
     active_price_tier_data() {
@@ -607,7 +666,7 @@ export default {
       setOrderState: '$_orders/$_home/setOrderState',
       setExtendOptions: '$_orders/$_home/setExtendOptions',
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
-
+      clearInstructionNotes: '$_orders/$_home/clearInstructionNotes',
     }),
 
     ...mapActions({
@@ -638,7 +697,7 @@ export default {
           && this.getRunningBalance - this.order_cost >= 0)
         || this.getPriceRequestObject.payment_option === 2
         || (this.getPriceRequestObject.payment_option === 0
-            && this.getRunningBalance - this.order_cost >= 0)
+          && this.getRunningBalance - this.order_cost >= 0)
       );
     },
 
@@ -680,11 +739,7 @@ export default {
       if (this.getPairWithRiderState && this.getPairRiderPhone === '') {
         this.initiatePairingFailureNotification();
       } else if (this.getPairWithRiderState && !this.getPairWithRiderStatus) {
-        this.doNotification(
-          2,
-          'Pairing Failure',
-          this.getPairErrorMessage,
-        );
+        this.doNotification(2, 'Pairing Failure', this.getPairErrorMessage);
       } else if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
         this.preCheckPaymentDetails();
       } else {
@@ -712,11 +767,7 @@ export default {
         msg = 'Kindly provide partner details while initiating pairing requests';
       }
 
-      this.doNotification(
-        2,
-        'Pairing Failure',
-        msg,
-      );
+      this.doNotification(2, 'Pairing Failure', msg);
     },
     editOrder() {
       this.confirmFinal = false;
@@ -783,7 +834,6 @@ export default {
         });
       }
     },
-
 
     preCheckPaymentDetails() {
       const eventPayload = {
@@ -1004,22 +1054,32 @@ export default {
                   'Client type': 'Web Platform',
                 });
               }
-              this.trackGAEvent(this.$route.path === '/orders/dedicated/multi-destination' ? 'Multi destination order completion log' : 'Order Completion Log');
-              this.trackMixpanelEvent(this.$route.path === '/orders/dedicated/multi-destination' ? 'Multi destination order completion log' : 'Order Completion Log', {
-                'Account ': data.type,
-                'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-                'Client Type': 'Web Platform',
-                'Payment Mode': this.payment_method,
-                'Cash Status': data.cash_status,
-                'User Email': data.user_email,
-                'User Phone': data.user_phone,
-                'Order Number': order_no,
-                'Order Amount': data.amount,
-                'Schedule Time': data.schedule_time,
-                'Schedule Status': data.schedule_status,
-                'Carrier Type ID': data.carrier_type,
-                'Vendor Type ID': data.vendor_type,
-              });
+              this.trackGAEvent(
+                this.$route.path === '/orders/dedicated/multi-destination'
+                  ? 'Multi destination order completion log'
+                  : 'Order Completion Log',
+              );
+              this.trackMixpanelEvent(
+                this.$route.path === '/orders/dedicated/multi-destination'
+                  ? 'Multi destination order completion log'
+                  : 'Order Completion Log',
+                {
+                  'Account ': data.type,
+                  'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+                  'Client Type': 'Web Platform',
+                  'Payment Mode': this.payment_method,
+                  'Cash Status': data.cash_status,
+                  'User Email': data.user_email,
+                  'User Phone': data.user_phone,
+                  'Order Number': order_no,
+                  'Order Amount': data.amount,
+                  'Schedule Time': data.schedule_time,
+                  'Schedule Status': data.schedule_status,
+                  'Carrier Type ID': data.carrier_type,
+                  'Vendor Type ID': data.vendor_type,
+                },
+              );
+              this.clearInstructionNotes();
               if (!Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
                 this.$router.push({
                   name: 'tracking',
@@ -1038,11 +1098,7 @@ export default {
           },
           (error) => {
             if (Object.prototype.hasOwnProperty.call(error, 'reason')) {
-              this.doNotification(
-                2,
-                'Order completion failed',
-                error.reason,
-              );
+              this.doNotification(2, 'Order completion failed', error.reason);
             } else {
               this.doNotification(
                 2,
@@ -1145,6 +1201,9 @@ export default {
         }
         payload.waypoint_notes = notesArray;
       }
+      payload.waypoint_instructions = this.getInstructionNotes.filter(
+        value => Object.keys(value).length !== 0,
+      );
       payload = {
         values: payload,
       };
@@ -1611,7 +1670,11 @@ export default {
 
       const exist = data.payment_methods.find(available => available.payment_method_id === 5);
 
-      if (exist && (this.$route.path === '/orders/dedicated/multi-destination' || this.$route.path === '/orders/dedicated/no-destination')) {
+      if (
+        exist
+        && (this.$route.path === '/orders/dedicated/multi-destination'
+          || this.$route.path === '/orders/dedicated/no-destination')
+      ) {
         data.payment_methods.splice(data.payment_methods.indexOf(exist), 1);
       }
 
@@ -1746,6 +1809,24 @@ export default {
       }
       return resp;
     },
+    pickUpInstructions() {
+      let value = true;
+      if (this.getInstructionNotes[0] === '' || this.getInstructionNotes[0] === undefined) {
+        value = false;
+      }
+      return value;
+    },
+    dropOffInstructions() {
+      const data = this.getInstructionNotes.slice(1);
+      let value = true;
+      if (data.length === 0) {
+        value = false;
+      }
+      return value;
+    },
+    deliveryNotesData() {
+      return this.getInstructionNotes.slice(1);
+    },
     carrierTypeSummary() {
       const carrierType = this.final_carrier_type;
       let resp = 'Any';
@@ -1784,11 +1865,10 @@ export default {
       }
       return resp;
     },
-
   },
 };
 </script>
 
 <style lang="css">
-@import '../../../../../assets/styles/orders_order_placement_options.css';
+@import '../../../../../assets/styles/orders_order_placement_options.css?v=1';
 </style>
