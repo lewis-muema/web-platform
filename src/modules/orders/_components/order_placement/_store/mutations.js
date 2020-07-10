@@ -206,4 +206,10 @@ export default {
   setPairErrorMessage(state, val) {
     state.pair_error_msg = val;
   },
+  setInstructionNotes(state, val) {
+    state.instruction_notes = val;
+  },
+  clearInstructionNotes(state) {
+    state.instruction_notes = [];
+  },
 };
