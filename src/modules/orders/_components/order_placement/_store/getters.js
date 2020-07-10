@@ -40,4 +40,5 @@ export default {
   getVehicleDetails: state => state.vehicle_plate,
   getPairWithRiderState: state => state.pair_rider_state,
   getPairErrorMessage: state => state.pair_error_msg,
+  getInstructionNotes: state => state.instruction_notes,
 };

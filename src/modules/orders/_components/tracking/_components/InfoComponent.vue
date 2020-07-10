@@ -243,30 +243,82 @@
                   <!-- End for truck orders  -->
                 </div>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="6" class="notes-scrollable">
                 <div class="tracking-notes">
                   <div class="info-text-transform infor-top-bar-text">
-                    <img
-                      src="https://images.sendyit.com/web_platform/tracking/edit.svg"
-                      alt=""
-                      class="infobar-truck-img"
-                    />
-                    Notes
+                    PICKUP INSTRUCTIONS AT {{tracking_data.path[0].name}}
                   </div>
-                  <div v-if="tracking_data.order_notes.length > 0" class="tracking-notes-inner">
-                    <div v-for="(val, index) in tracking_data.order_notes" v-if="index >= 0">
-                      <div v-if="val.msg === ''">
-                        No notes provided.
+                    <div class="tracking-notes-inner" v-if="checkPickUpNotes(tracking_data.path[0])">
+                      <div
+                        v-if="displayNotes(tracking_data.path[0])"
+                        class="additional-instructions-content additional-instructions-wrapper"
+                      >
+                        <div class="additional-notes-outer">
+                          <div class="additional-notes-recipient">
+                            {{tracking_data.path[0].notes}}
+                          </div>
+                        </div>
                       </div>
-                      <div v-else>
-                        {{ val.msg }}
+
+                      <div
+                        v-if="tracking_data.path[0].recipient_phone !== null "
+                        class="additional-instructions-content additional-instructions-wrapper"
+                      >
+                        <div class="additional-instructions__flex">
+                          <i
+                            class="el-icon-phone-outline additional-instructions__imagerecipient_contact-icon"
+                          />
+                        </div>
+                        <div class="additional-notes-outer">
+                          <div class="additional-notes-recipient">
+                            {{tracking_data.path[0].recipient_phone}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="" v-else>
+                      No notes provided.
+                    </div>
+                </div>
+
+                <div v-for="(val, index) in tracking_data.path" v-if="index > 0" class="tracking-notes">
+                  <div class="info-text-transform infor-top-bar-text">
+                    DROP OFF INSTRUCTIONS AT {{val.name}}
+                  </div>
+                  <div class="tracking-notes-inner" v-if="checkPickUpNotes(val)">
+                    <div
+                      v-if="displayNotes(val)"
+                      class="additional-instructions-content additional-instructions-wrapper"
+                    >
+                      <div class="additional-notes-outer">
+                        <div class="additional-notes-recipient">
+                          {{val.notes}}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      v-if="val.recipient_phone !== null "
+                      class="additional-instructions-content additional-instructions-wrapper"
+                    >
+                      <div class="additional-instructions__flex">
+                        <i
+                          class="el-icon-phone-outline additional-instructions__imagerecipient_contact-icon"
+                        />
+                      </div>
+                      <div class="additional-notes-outer">
+                        <div class="additional-notes-recipient">
+                          {{val.recipient_phone}}
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div v-else class="tracking-notes-inner">
+                  <div class="" v-else>
                     No notes provided.
                   </div>
+
                 </div>
+
               </el-col>
               <el-col :span="6" class="">
                 <div class="">
@@ -1639,7 +1691,21 @@ export default {
       else {
         return true ;
       }
-    }
+    },
+    checkPickUpNotes(val){
+      let resp = true ;
+      if (val.recipient_phone === null && (val.hasOwnProperty("notes") === false || val.notes === null)) {
+        resp = false ;
+      }
+      return resp ;
+    },
+    displayNotes(val){
+      let resp = true ;
+      if (val.notes === null || val.hasOwnProperty("notes") === false ) {
+        return false
+      }
+      return resp ;
+    },
   },
 };
 </script>
