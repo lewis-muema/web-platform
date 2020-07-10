@@ -464,6 +464,7 @@ export default {
       getPairWithRiderState: '$_orders/$_home/getPairWithRiderState',
       getPairErrorMessage: '$_orders/$_home/getPairErrorMessage',
       getInstructionNotes: '$_orders/$_home/getInstructionNotes',
+      getSecondaryProfile: 'getSecondaryProfile',
     }),
 
     active_price_tier_data() {
@@ -667,6 +668,7 @@ export default {
       setExtendOptions: '$_orders/$_home/setExtendOptions',
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
       clearInstructionNotes: '$_orders/$_home/clearInstructionNotes',
+      setSecondaryProfile: 'setSecondaryProfile',
     }),
 
     ...mapActions({
