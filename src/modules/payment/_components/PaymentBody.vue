@@ -1,5 +1,6 @@
 <template lang="html">
   <div class="paymentbody">
+    <div class="payment-overlay" v-if="getDefaultCurrency !== getActiveCurrency" />
     <pay-method />
     <div class="">
       <router-view />
@@ -8,17 +9,25 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import PayMethod from './PayMethod.vue';
 
 export default {
   name: 'PaymentBody',
   components: { PayMethod },
+  computed: {
+    ...mapGetters({
+      getDefaultCurrency: 'getDefaultCurrency',
+      getActiveCurrency: '$_payment/getActiveCurrency',
+    }),
+  },
 };
 </script>
 
 <style lang="css">
 .paymentbody {
   margin-top: 50px;
+  position: relative;
 }
 .paymentbody--input-wrap
 {
@@ -41,5 +50,12 @@ export default {
   letter-spacing: 1.1px;
   width: 100%;
   height: 45px;
+}
+.payment-overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: #ffffffb5;
+  z-index: 200;
 }
 </style>

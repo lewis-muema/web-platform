@@ -57,6 +57,17 @@
         </button>
       </div>
     </div>
+    <div class="currencies-section">
+      <div
+        v-for="(currency, index) in currencies"
+        :key="index"
+        class="currency-selectors"
+        :class="activeCurrency === currency ? 'active-currency' : ''"
+        @click="activeCurrency = currency"
+      >
+        {{ currency }}
+      </div>
+    </div>
     <div class="bg-grey">
       <div class="download_history">
         <el-dropdown
@@ -279,13 +290,16 @@ export default {
       savepdf: 'save-pdf',
       sessionData: {},
       default_currency: '',
+      currencies: [],
+      activeCurrency: '',
     };
   },
   computed: {
     ...mapGetters({
       getSess: 'getSession',
-      orderHistoryData: '$_transactions/getOrderHistoryOrders',
+      unfilteredOrderHistoryData: '$_transactions/getOrderHistoryOrders',
       copUsers: '$_transactions/getCopUsers',
+      getUserCurrencies: '$_transactions/getUserCurrencies',
     }),
     inactive_filter() {
       return (
@@ -301,6 +315,15 @@ export default {
     order_history_total() {
       return this.orderHistoryData.length;
     },
+    orderHistoryData() {
+      const orderHistory = [];
+      this.unfilteredOrderHistoryData.forEach((row) => {
+        if (row.order_currency === this.activeCurrency) {
+          orderHistory.push(row);
+        }
+      });
+      return orderHistory;
+    },
   },
   watch: {
     getSess: {
@@ -309,10 +332,14 @@ export default {
       },
       deep: true,
     },
+    orderHistoryData() {
+      this.currencies = this.getUserCurrencies;
+    },
   },
   mounted() {
     this.populateOrders();
     this.setUserDefaultCurrency();
+    this.currencies = this.getUserCurrencies;
   },
   methods: {
     ...mapMutations({
@@ -357,6 +384,7 @@ export default {
     setUserDefaultCurrency() {
       const sessionData = this.$store.getters.getSession;
       this.default_currency = sessionData[sessionData.default].default_currency;
+      this.activeCurrency = this.default_currency;
     },
     filterTableData() {
       this.loading = true;
@@ -384,6 +412,7 @@ export default {
 
         payload = {
           cop_id: copId,
+          user_id: '-1',
           user_type: userType,
           from: fromDate,
           to: toDate,
