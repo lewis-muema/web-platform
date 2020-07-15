@@ -428,16 +428,18 @@ export default {
     this.registerOrdersStore();
     // const STORE_KEY = '$_orders';
     // this.register_store_module(STORE_KEY, orderStore);
-    this.checkTourStatus();
-    if (this.$route.path === '/orders' && this.tourViewStatus) {
-      this.blinder_status = true;
-      this.tour_status = true;
-    }
-    if (this.$route.path === '/orders/dedicated/no-destination' && this.tourViewStatus) {
-      setTimeout(() => {
-        this.activeClass = 1;
-      }, 1000);
-    }
+    this.$nextTick(() => {
+      this.checkTourStatus();
+      if (this.$route.path === '/orders' && this.tourViewStatus) {
+        this.blinder_status = true;
+        this.tour_status = true;
+      }
+      if (this.$route.path === '/orders/dedicated/no-destination' && this.tourViewStatus) {
+        setTimeout(() => {
+          this.activeClass = 1;
+        }, 1000);
+      }
+    });
   },
   mounted() {
     this.checkSession();
