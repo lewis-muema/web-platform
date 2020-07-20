@@ -21,6 +21,9 @@ export default {
   setCountryCode(state, code) {
     state.country_code = code;
   },
+  setDedicatedAccessStatus(state, data) {
+    state.dedicated_access_status = data;
+  },
   setDefaultCurrency(state, defaultCurrency) {
     state.default_currency = defaultCurrency;
   },
