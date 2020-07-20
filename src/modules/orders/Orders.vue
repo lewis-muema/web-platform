@@ -7,7 +7,7 @@
       class="box"
     >
       <div
-        v-if="activeClass > -1 && tourViewStatus"
+        v-if="activeClass > -1 && tourViewStatus && getDedicatedAccessStatus"
         class="pointer-container"
         :style="{top: offsettop() + 'px', left: offsetleft() + 'px'}"
       >
@@ -378,6 +378,8 @@ export default {
   computed: {
     ...mapGetters({
       getNPSStatus: 'getNPSStatus',
+      getDedicatedAccessStatus: 'getDedicatedAccessStatus',
+      get_session: 'getSession',
     }),
     uploadBtn() {
       if (this.uploadButton) {
@@ -401,13 +403,13 @@ export default {
       this.$store.commit('$_orders/$_tracking/setTrackedOrder', '');
       this.clearVendorMarkers();
       this.checkTourStatus();
-      if (to.path === '/orders/dedicated/no-destination' && this.tourViewStatus) {
+      if (to.path === '/orders/dedicated/no-destination' && this.tourViewStatus && this.getDedicatedAccessStatus) {
         this.activeClass = -1;
         setTimeout(() => {
           this.activeClass = 1;
         }, 1000);
       }
-      if (to.path === '/orders' && this.tourViewStatus) {
+      if (to.path === '/orders' && this.tourViewStatus && this.getDedicatedAccessStatus) {
         this.activeClass = -1;
         setTimeout(() => {
           this.activeClass = 0;
@@ -416,11 +418,22 @@ export default {
     },
     activeClass() {
       clearInterval(interval);
-      if (this.activeClass > 2 && this.tourViewStatus) {
+      if (this.activeClass > 2 && this.tourViewStatus && this.getDedicatedAccessStatus) {
         interval = setInterval(() => {
           this.offset();
         }, 10);
       }
+    },
+    get_session: {
+      handler(val) {
+        if (val.default === 'biz') {
+          this.setDedicatedAccessStatus(true);
+        } else {
+          this.setDedicatedAccessStatus(false);
+          this.redirectToOrders();
+        }
+      },
+      deep: true,
     },
   },
 
@@ -430,11 +443,11 @@ export default {
     // this.register_store_module(STORE_KEY, orderStore);
     this.$nextTick(() => {
       this.checkTourStatus();
-      if (this.$route.path === '/orders' && this.tourViewStatus) {
+      if (this.$route.path === '/orders' && this.tourViewStatus && this.getDedicatedAccessStatus) {
         this.blinder_status = true;
         this.tour_status = true;
       }
-      if (this.$route.path === '/orders/dedicated/no-destination' && this.tourViewStatus) {
+      if (this.$route.path === '/orders/dedicated/no-destination' && this.tourViewStatus && this.getDedicatedAccessStatus) {
         setTimeout(() => {
           this.activeClass = 1;
         }, 1000);
@@ -446,6 +459,11 @@ export default {
     this.rootListener();
     this.isNewCopAcc();
     this.sessionFrefill();
+    const session = this.$store.getters.getSession;
+    if (session.default === 'biz') {
+      this.setDedicatedAccessStatus(true);
+    }
+    this.redirectToOrders();
   },
   destroyed() {
     clearInterval(this.countdown);
@@ -457,6 +475,7 @@ export default {
   methods: {
     ...mapMutations({
       clearVendorMarkers: '$_orders/clearVendorMarkers',
+      setDedicatedAccessStatus: 'setDedicatedAccessStatus',
     }),
     isNewCopAcc() {
       let isSet = false;
@@ -480,6 +499,11 @@ export default {
         this.tourViewStatus = false;
       } else {
         this.tourViewStatus = true;
+      }
+    },
+    redirectToOrders() {
+      if ((this.$route.path === '/orders/dedicated/no-destination' || this.$route.path === '/orders/dedicated/multi-destination') && !this.getDedicatedAccessStatus) {
+        this.$router.push('/orders');
       }
     },
     startTour() {
@@ -543,7 +567,7 @@ export default {
         this.success_status = false;
       });
       this.$root.$on('tour class', (arg1, arg2) => {
-        if (this.tourViewStatus) {
+        if (this.tourViewStatus && this.getDedicatedAccessStatus) {
           if (this.activeClass === 5) {
             clearInterval(interval);
           }
@@ -556,7 +580,7 @@ export default {
         }
       });
       this.$root.$on('tour class hidden', () => {
-        if (this.tourViewStatus) {
+        if (this.tourViewStatus && this.getDedicatedAccessStatus) {
           if (this.activeClass === 5) {
             this.skipTour();
           }

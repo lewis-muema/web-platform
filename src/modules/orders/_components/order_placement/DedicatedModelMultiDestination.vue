@@ -1,5 +1,8 @@
 <template lang="html">
-  <div class="homeview--outer">
+  <div
+    v-if="getDedicatedAccessStatus"
+    class="homeview--outer"
+  >
     <div class="homeview--outer-selection-panel">
       <div
         class="homeview--outer-selections"
@@ -61,6 +64,7 @@ export default {
   computed: {
     ...mapGetters({
       get_extended_options: '$_orders/$_home/getExtendedOptions',
+      getDedicatedAccessStatus: 'getDedicatedAccessStatus',
     }),
   },
   watch: {

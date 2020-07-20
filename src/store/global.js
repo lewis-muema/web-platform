@@ -22,6 +22,7 @@ const state = {
   redirect_order: ' ',
   nps_status: false,
   secondary_profile: '',
+  dedicated_access_status: false,
 };
 
 export default {
