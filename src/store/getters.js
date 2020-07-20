@@ -30,6 +30,9 @@ export default {
   getCountryCode(state) {
     return state.country_code;
   },
+  getDedicatedAccessStatus(state) {
+    return state.dedicated_access_status;
+  },
   getDefaultCurrency(state) {
     return state.default_currency;
   },

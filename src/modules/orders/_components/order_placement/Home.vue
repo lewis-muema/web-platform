@@ -1,6 +1,9 @@
 <template lang="html">
   <div class="homeview--outer">
-    <div class="homeview--outer-selection-panel">
+    <div
+      v-if="getDedicatedAccessStatus"
+      class="homeview--outer-selection-panel"
+    >
       <div
         class="homeview--outer-selections homeview--outer-selections__active"
         @click="switchMode('/orders')"
@@ -20,6 +23,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import orderPlacementStore from './_store';
 import OrderPlacement from './OrderPlacement.vue';
 import EventsMixin from '../../../../mixins/events_mixin';
 
@@ -32,6 +37,14 @@ export default {
     return {
       mode: 1,
     };
+  },
+  computed: {
+    ...mapGetters({
+      getDedicatedAccessStatus: 'getDedicatedAccessStatus',
+    }),
+  },
+  created() {
+    this.registerOrderPlacementModule();
   },
   methods: {
     switchMode(route) {
@@ -81,6 +94,18 @@ export default {
         }
       } catch (er) {
         // ...
+      }
+    },
+    registerOrderPlacementModule() {
+      let moduleIsRegistered = false;
+      try {
+        moduleIsRegistered = this.$store._modules.root._children.$_orders._children.$_home !== undefined;
+      } catch (er) {
+        //
+      }
+
+      if (!moduleIsRegistered) {
+        this.$store.registerModule(['$_orders', '$_home'], orderPlacementStore);
       }
     },
   },
