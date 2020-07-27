@@ -89,7 +89,16 @@
                     </span>
                     <span v-else> {{ getVendorCurrency(j) }} {{ getVendorPrice(j) }} </span>
                   </div>
-                  <div class="home-view-vendor-types-item--cost-wrapper_time">
+                  <div
+                    v-if="$route.path === '/orders/dedicated/multi-destination'"
+                    class="home-view-vendor-types-item--cost-wrapper_time"
+                  >
+                    Type: {{ formatPriceType(j.price_type) }}
+                  </div>
+                  <div
+                    v-else
+                    class="home-view-vendor-types-item--cost-wrapper_time"
+                  >
                     <span v-if="isStandardUnavailable(j)">
                       {{ scheduleTimeFrame(j) }}
                     </span>
@@ -924,6 +933,10 @@ export default {
         index: i,
         notes: note,
       });
+    },
+    formatPriceType(type) {
+      const name = type.replace(/_/g, ' ');
+      return name.charAt(0).toUpperCase() + name.slice(1);
     },
     dispatchOrderNotes() {
       this.trackMixpanelEvent('Set Order Notes', { 'Order Notes': this.order_notes });
