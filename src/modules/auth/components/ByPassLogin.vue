@@ -133,6 +133,7 @@ import { mapActions } from 'vuex';
 import LoadingComponent from './LoadingComponent.vue';
 import SuccessComponent from './SuccessComponent.vue';
 import SessionMxn from '../../../mixins/session_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
   name: 'ByPassLogin',
@@ -140,7 +141,7 @@ export default {
     LoadingComponent,
     SuccessComponent,
   },
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
 
   data() {
     return {
@@ -262,12 +263,12 @@ export default {
         }
 
         const values = {};
-        values.phone_no = phone.replace(/[()\-\s]+/g, '');
+        values.number = phone.replace(/[()\-\s]+/g, '');
         const fullPayload = {
           values,
           vm: this,
-          app: 'PRIVATE_API',
-          endpoint: 'verify_phone',
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'request_verification',
         };
         this.requestByPassPhoneVerification(fullPayload).then(
           (response) => {
@@ -308,7 +309,7 @@ export default {
       const fullPayload = {
         values,
         vm: this,
-        app: 'PRIVATE_API',
+        app: 'NODE_PRIVATE_API',
         endpoint: 'check_verification',
       };
       this.requestByPassVerificationVerify(fullPayload).then(
@@ -387,8 +388,7 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
     },
   },
 };

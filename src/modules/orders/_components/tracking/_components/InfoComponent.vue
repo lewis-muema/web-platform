@@ -50,7 +50,7 @@
                           Minimum Cost :
                         </span>
                         <span>
-                          {{ tracking_data.price_tier.currency }}
+                          {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }}
                           {{ tracking_data.package_details.customer_min_amount }}
                         </span>
                       </span>
@@ -59,7 +59,7 @@
                           Cost :
                         </span>
                         <span>
-                          {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                          {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}
                         </span>
                       </span>
                     </span>
@@ -68,7 +68,7 @@
                         Cost :
                       </span>
                       <span>
-                        {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                        {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}
                       </span>
                     </span>
                   </div>
@@ -243,30 +243,82 @@
                   <!-- End for truck orders  -->
                 </div>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="6" class="notes-scrollable">
                 <div class="tracking-notes">
                   <div class="info-text-transform infor-top-bar-text">
-                    <img
-                      src="https://images.sendyit.com/web_platform/tracking/edit.svg"
-                      alt=""
-                      class="infobar-truck-img"
-                    />
-                    Notes
+                    PICKUP INSTRUCTIONS AT {{tracking_data.path[0].name}}
                   </div>
-                  <div v-if="tracking_data.order_notes.length > 0" class="tracking-notes-inner">
-                    <div v-for="(val, index) in tracking_data.order_notes" v-if="index >= 0">
-                      <div v-if="val.msg === ''">
-                        No notes provided.
+                    <div class="tracking-notes-inner" v-if="checkPickUpNotes(tracking_data.path[0])">
+                      <div
+                        v-if="displayNotes(tracking_data.path[0])"
+                        class="additional-instructions-content additional-instructions-wrapper"
+                      >
+                        <div class="additional-notes-outer">
+                          <div class="additional-notes-recipient">
+                            {{tracking_data.path[0].notes}}
+                          </div>
+                        </div>
                       </div>
-                      <div v-else>
-                        {{ val.msg }}
+
+                      <div
+                        v-if="tracking_data.path[0].recipient_phone !== null "
+                        class="additional-instructions-content additional-instructions-wrapper"
+                      >
+                        <div class="additional-instructions__flex">
+                          <i
+                            class="el-icon-phone-outline additional-instructions__imagerecipient_contact-icon"
+                          />
+                        </div>
+                        <div class="additional-notes-outer">
+                          <div class="additional-notes-recipient">
+                            {{tracking_data.path[0].recipient_phone}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="" v-else>
+                      No notes provided.
+                    </div>
+                </div>
+
+                <div v-for="(val, index) in tracking_data.path" v-if="index > 0" class="tracking-notes">
+                  <div class="info-text-transform infor-top-bar-text">
+                    DROP OFF INSTRUCTIONS AT {{val.name}}
+                  </div>
+                  <div class="tracking-notes-inner" v-if="checkPickUpNotes(val)">
+                    <div
+                      v-if="displayNotes(val)"
+                      class="additional-instructions-content additional-instructions-wrapper"
+                    >
+                      <div class="additional-notes-outer">
+                        <div class="additional-notes-recipient">
+                          {{val.notes}}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      v-if="val.recipient_phone !== null "
+                      class="additional-instructions-content additional-instructions-wrapper"
+                    >
+                      <div class="additional-instructions__flex">
+                        <i
+                          class="el-icon-phone-outline additional-instructions__imagerecipient_contact-icon"
+                        />
+                      </div>
+                      <div class="additional-notes-outer">
+                        <div class="additional-notes-recipient">
+                          {{val.recipient_phone}}
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div v-else class="tracking-notes-inner">
+                  <div class="" v-else>
                     No notes provided.
                   </div>
+
                 </div>
+
               </el-col>
               <el-col :span="6" class="">
                 <div class="">
@@ -320,21 +372,21 @@
                               <div v-if="accType === 1" class="">
                                 <p>
                                   Price has been confirmed to be
-                                  {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                                  {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}
                                 </p>
                               </div>
                               <div v-else class="">
                                 <div v-if="myRb <= 0">
                                   <p>
                                     Price has been confirmed to be
-                                    {{ tracking_data.price_tier.currency }}
+                                    {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }}
                                     {{ tracking_data.amount }}
                                   </p>
                                 </div>
                                 <div v-else>
                                   <p>
                                     Price has been confirmed to be
-                                    {{ tracking_data.price_tier.currency }}
+                                    {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }}
                                     {{ tracking_data.amount }}.Choose payment option below
                                   </p>
                                   <div class="">
@@ -582,14 +634,14 @@
                         !tracking_data.fixed_cost
                     "
                   >
-                    Minimum Amount : {{ tracking_data.price_tier.currency }}
+                    Minimum Amount : {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }}
                     {{ tracking_data.package_details.customer_min_amount }}
                   </div>
                   <div v-else>
-                    {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                    {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}
                   </div>
                 </div>
-                <div v-else>{{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}</div>
+                <div v-else>{{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}</div>
                 <div class="">
                   <div class="">
                     {{ tracking_data.order_no }}
@@ -799,13 +851,14 @@ import _ from 'lodash';
 import { mapGetters } from 'vuex';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 
 const moment = require('moment');
 
 export default {
   name: 'InfoWindow',
-  mixins: [TimezoneMxn, EventsMixin],
+  mixins: [TimezoneMxn, EventsMixin,NotificationMxn],
   filters: {
     moment(date) {
       return moment(date).format('MMM Do YYYY, h:mm a');
@@ -1284,9 +1337,8 @@ export default {
       }
     },
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
     cancelOrder() {
       if (this.cancel_reason !== '' && Object.keys(this.$store.getters.getSession).length > 0) {
@@ -1639,7 +1691,21 @@ export default {
       else {
         return true ;
       }
-    }
+    },
+    checkPickUpNotes(val){
+      let resp = true ;
+      if (val.recipient_phone === null && (val.hasOwnProperty("notes") === false || val.notes === null)) {
+        resp = false ;
+      }
+      return resp ;
+    },
+    displayNotes(val){
+      let resp = true ;
+      if (val.notes === null || val.hasOwnProperty("notes") === false ) {
+        return false
+      }
+      return resp ;
+    },
   },
 };
 </script>

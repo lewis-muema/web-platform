@@ -134,11 +134,13 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'OnboardingInfoComponent',
+  mixins: [NotificationMxn],
   data() {
     return {
       name: '',
@@ -240,12 +242,12 @@ export default {
     sendVerificationCode() {
       const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
       const values = {};
-      values.phone_no = phone;
+      values.number = phone;
       const fullPayload = {
         values,
         vm: this,
-        app: 'PRIVATE_API',
-        endpoint: 'verify_phone',
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'request_verification',
       };
       this.requestOnboardingPhoneVerification(fullPayload).then(
         (response) => {
@@ -266,7 +268,7 @@ export default {
       const fullPayload = {
         values,
         vm: this,
-        app: 'PRIVATE_API',
+        app: 'NODE_PRIVATE_API',
         endpoint: 'check_verification',
       };
       this.requestOnboardingVerificationVerify(fullPayload).then(
@@ -295,8 +297,7 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
     },
   },
 };

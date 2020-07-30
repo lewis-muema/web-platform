@@ -27,16 +27,19 @@
   -webkit-box-direction: normal;
   border-right: 1px solid #d8dfe6;
 }
+.sign-up-logo {
+  width: 83%;
+  display: block;
+  margin: auto;
+}
 .sign-up-help-card{
   -webkit-box-flex: 1;
-  flex: 1;
+  flex: 2;
   -webkit-box-orient: vertical;
   flex-direction: column;
   display: flex;
   -webkit-box-direction: normal;
   padding-right: 9%;
-  padding-top: 10%;
-
 }
 .sign-up-main{
   /* border: 1px solid #d8dfe6; */
@@ -44,7 +47,7 @@
   margin: 1rem auto;
   padding: 2rem;
   font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
-  width: 67% !important;
+  width: 90% !important;
   padding-bottom: 0;
   margin-top: 0;
   padding-top: 1%;
@@ -227,8 +230,9 @@
   margin-top: 2%;
 }
 .extra-text{
-  font-weight: 400;
-  font-size: 18px !important;
+  font-weight: 600;
+  font-size: 17px !important;
+  text-align: center;
 }
 .benefits-text{
   padding-left: 5%;
@@ -239,6 +243,10 @@
 .sign-up-btn-outer{
   margin-top: 9%;
   margin-left: 0;
+}
+.sign-up-order-type {
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 .unit-submit{
   width: 112% !important;
@@ -254,6 +262,9 @@
 .account-details--wrapper{
   width: 100% !important;
 }
+.account-type--selector {
+  display: flex;
+}
 .verify-code-btn{
   width: 100%;
 }
@@ -265,6 +276,9 @@
   font-size: 12px;
   font-weight: 200;
   color: #000;
+}
+.radio--label {
+  margin-right: 10px;
 }
 .verification-code-info{
   margin-bottom: 2%;
@@ -294,7 +308,7 @@
   text-align:center;
 }
 .sign-up-container {
- width: 90%;
+ width: 96%;
  margin: 0px auto;
  flex-direction: column;
  display: flex;
@@ -317,13 +331,11 @@
  color: #1782C5;
 }
 .logo-display{
-  height: 80px;
-  min-width: 67px;
-  margin-right: 1%;
+  height: 75px;
+  margin: 0px 2.5% 0px 2.5%;
 }
 .logo-outer{
-  width: 87%;
-  margin-left: 9%;
+  width: 100%;
 }
 .verify-code-header{
  color: #000000;
@@ -337,4 +349,25 @@
 .el-checkbox__label,
 .el-radio__label {
   font-size: 13px !important;
+}
+
+@media (max-width: 500px) {
+  .el-radio.is-bordered {
+    width: 45.5%;
+    display: inline-block;
+  }
+  .sign-up-details-section {
+    margin:20px auto;
+    padding: 15px;
+  }
+  .sign-up--extra {
+    text-align: center !important;
+  }
+  .sign-up-main {
+    width: 80% !important;
+    margin: 5% auto;
+  }
+  .sign-up-help-card {
+    display: none;
+  }
 }

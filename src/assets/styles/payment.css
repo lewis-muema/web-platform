@@ -5,6 +5,7 @@
 .payment--header {
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 
 .paymethod {

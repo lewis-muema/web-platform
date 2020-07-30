@@ -484,7 +484,6 @@ ul.timeline > li#timeline_right.payedReached:before {
   padding-top: 12px;
 }
 .tracking-notes-inner {
-  padding-left: 19px;
   padding-top: 5px;
   max-width: 80% !important;
 }
@@ -796,4 +795,38 @@ button.default.action--slide-button {
   background: #FFFFFF !important;
   color: #1B7FC3 !important;
   border: 1px solid #1B7FC3 !important;
+}
+.additional-notes-recipient{
+  padding: 3px;
+}
+.additional-notes-outer {
+  flex-direction: column;
+  flex: 1;
+}
+.recipient_contact-icon{
+  font-size: 23px;
+}
+.additional-instructions__image{
+  height: 30px;
+  min-width: 30px;
+}
+.additional-instructions__flex{
+  flex-basis: 11%;
+}
+.additional-instructions-wrapper{
+ flex-direction: row;
+ justify-content: flex-start;
+ align-items: center;
+ flex-basis: 43%;
+}
+.additional-instructions-content {
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  margin-top: 2%;
+}
+.notes-scrollable{
+  overflow-y: scroll;
+  height: 190px;
+  font-size: 12px;
 }

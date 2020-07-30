@@ -45,4 +45,7 @@ export default {
   setNPSStatus(state, status) {
     state.nps_status = status;
   },
+  setSecondaryProfile(state, status) {
+    state.secondary_profile = status;
+  },
 };

@@ -51,6 +51,9 @@ export default {
   getNPSStatus(state) {
     return state.nps_status;
   },
+  getSecondaryProfile(state) {
+    return state.secondary_profile;
+  },
 };
 
 function isEmpty(obj) {
