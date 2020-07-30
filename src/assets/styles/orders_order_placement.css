@@ -539,7 +539,7 @@
   width: 300px;
   height: max-content;
 }
-.discounts_popup, .upload-popup {
+.discounts_popup, .upload-popup, .tour-popup {
   padding: 20px;
   border-radius: 20px;
   text-align: center;
@@ -555,6 +555,11 @@
   width: 30%;
   height: max-content;
   border-radius: 0px;
+}
+.tour-popup {
+  width: 30%;
+  height: max-content;
+  border-radius: 10px;
 }
 .upload-photo {
   width: 140px;

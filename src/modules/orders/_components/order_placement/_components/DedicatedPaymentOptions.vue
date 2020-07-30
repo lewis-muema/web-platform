@@ -528,6 +528,7 @@ export default {
         eventAction: 'Click',
         eventLabel: 'Order Confirmation Button - Order Placement Page - Web App',
       };
+      this.$root.$emit('tour class hidden', 1);
       this.fireGAEvent(eventPayload);
       const unsetCarriers = this.getExpandedActiveVendorTally.filter(
         data => data.carrier_type === '',

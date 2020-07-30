@@ -1,6 +1,9 @@
 <template lang="html">
   <div class="homeview--outer">
-    <div class="homeview--outer-selection-panel">
+    <div
+      v-if="getDedicatedAccessStatus"
+      class="homeview--outer-selection-panel"
+    >
       <div
         class="homeview--outer-selections homeview--outer-selections__active"
         @click="switchMode('/orders')"
@@ -9,9 +12,10 @@
       </div>
       <div
         class="homeview--outer-selections"
-        @click="switchMode('/orders/dedicated/no-destination')"
+        @click="switchMode('/orders/dedicated/no-destination');"
       >
         Dedicated
+        <span class="tour-pointer-1" />
       </div>
     </div>
     <order-placement />
@@ -21,6 +25,8 @@
 <script>
 import Vue from 'vue';
 import VeeValidate, { Validator } from 'vee-validate';
+import { mapGetters } from 'vuex';
+import orderPlacementStore from './_store';
 import OrderPlacement from './OrderPlacement.vue';
 import EventsMixin from '../../../../mixins/events_mixin';
 
@@ -53,10 +59,19 @@ export default {
       mode: 1,
     };
   },
+  computed: {
+    ...mapGetters({
+      getDedicatedAccessStatus: 'getDedicatedAccessStatus',
+    }),
+  },
+  created() {
+    this.registerOrderPlacementModule();
+  },
   methods: {
     switchMode(route) {
       if (route === '/orders/dedicated/no-destination') {
         this.selectDedicatedVehicles();
+        this.$root.$emit('tour class', 1, 2000);
       }
       this.$router.push(route);
     },
@@ -102,10 +117,26 @@ export default {
         // ...
       }
     },
+    registerOrderPlacementModule() {
+      let moduleIsRegistered = false;
+      try {
+        moduleIsRegistered = this.$store._modules.root._children.$_orders._children.$_home !== undefined;
+      } catch (er) {
+        //
+      }
+
+      if (!moduleIsRegistered) {
+        this.$store.registerModule(['$_orders', '$_home'], orderPlacementStore);
+      }
+    },
   },
 };
 </script>
 
 <style lang="css">
 @import "../../../../assets/styles/orders_order_placement.css?v=2";
+.tour-pointer-1 {
+  position: relative;
+  left: 20px;
+}
 </style>

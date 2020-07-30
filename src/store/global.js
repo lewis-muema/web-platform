@@ -21,6 +21,7 @@ const state = {
   redirect_status: false,
   redirect_order: ' ',
   nps_status: false,
+  dedicated_access_status: false,
   secondary_profile: '',
 };
 
