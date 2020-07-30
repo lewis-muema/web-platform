@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import VeeValidate, { Validator } from 'vee-validate';
 import { mapGetters } from 'vuex';
 import orderPlacementStore from './_store';
 import OrderPlacement from './OrderPlacement.vue';
