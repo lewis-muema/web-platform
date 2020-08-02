@@ -2,6 +2,9 @@
   <div
     v-if="getOrderState === 1"
     class="home-view-vendor-and-optins-wrappper"
+    :class="
+      $route.path === '/orders/dedicated/multi-destination' ? 'dedicated-vendors-wrapper' : ''
+    "
   >
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
@@ -88,7 +91,16 @@
                     </span>
                     <span v-else> {{ getVendorCurrency(j) }} {{ getVendorPrice(j) }} </span>
                   </div>
-                  <div class="home-view-vendor-types-item--cost-wrapper_time">
+                  <div
+                    v-if="$route.path === '/orders/dedicated/multi-destination'"
+                    class="home-view-vendor-types-item--cost-wrapper_time"
+                  >
+                    Type: {{ formatPriceType(j.price_type) }}
+                  </div>
+                  <div
+                    v-else
+                    class="home-view-vendor-types-item--cost-wrapper_time"
+                  >
                     <span v-if="isStandardUnavailable(j)">
                       {{ scheduleTimeFrame(j) }}
                     </span>
@@ -103,6 +115,7 @@
                     placement="right"
                     width="350"
                     trigger="hover"
+                    popper-class="vendorExtraInfo"
                   >
                     <div
                       class="reset-font"
@@ -200,6 +213,35 @@
           <!-- start large /medium vendors -->
           <div class="home-view-truck-options-wrapper">
             <div class="home-view-truck-options-divider" />
+            <div
+              v-if="$route.path === '/orders/dedicated/multi-destination'"
+              class="home-view-truck-options-inner-wrapper"
+            >
+              <div class="home-view-truck-options-dedicated-notes">
+                <p>Add notes for each destination (optional)</p>
+                <div
+                  v-for="(path, index) in getStoreOrderPath"
+                  :key="index"
+                >
+                  <div
+                    v-if="index > 0"
+                    class="home-view-truck-options-dedicated-notes-label"
+                  >
+                    <div class="home-view-truck-options-dedicated-notes-icon" />
+                    <p class="no-margin">
+                      {{ path.name }}
+                    </p>
+                  </div>
+                  <el-input
+                    v-if="index > 0"
+                    class=""
+                    autocomplete="true"
+                    placeholder="Notes"
+                    @input="addDestinationNotes($event, path, index)"
+                  />
+                </div>
+              </div>
+            </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
                 What do you want delivered?
@@ -800,7 +842,18 @@ export default {
       load_units: '',
       discount_timed_out: false,
       customer_min_amount: '',
-      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
+      vendors_with_fixed_carrier_type: [
+        'Standard',
+        'Runner',
+        'Van',
+        '3T Truck',
+        '5T Truck',
+        '7T Truck',
+        '10T Truck',
+        '14T Truck',
+        '20T Truck',
+        '24T Truck',
+      ],
       vendors_without_return: ['Standard', 'Runner'],
       baseTruckOptions: [
         {
@@ -1109,6 +1162,16 @@ export default {
       this.setScheduleTime(this.schedule_time);
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
     },
+    addDestinationNotes(note, pathObj, i) {
+      this.setWaypointNotes({
+        index: i,
+        notes: note,
+      });
+    },
+    formatPriceType(type) {
+      const name = type.replace(/_/g, ' ');
+      return name.charAt(0).toUpperCase() + name.slice(1);
+    },
     dispatchOrderNotes() {
       this.trackMixpanelEvent('Set Order Notes', { 'Order Notes': this.order_notes });
       this.setOrderNotes(this.order_notes);
@@ -1183,7 +1246,15 @@ export default {
       if (this.vendor_id !== this.activeVendorPriceData.vendor_id) {
         if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
           this.carrier_type = '1';
-        } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+        } else if (
+          this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)
+          && this.activeVendorPriceData.vendor_id === 2
+        ) {
+          this.carrier_type = '0';
+        } else if (
+          this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)
+          && this.activeVendorPriceData.vendor_id === 3
+        ) {
           this.carrier_type = '2';
         } else if (copStatus) {
           this.carrier_type = session[session.default].default_carrier_type.toString(10);

@@ -1,97 +1,99 @@
 <template lang="html">
-  <div class="homeview--outer">
-    <div
-      v-if="getDedicatedAccessStatus"
-      class="homeview--outer-selection-panel"
-    >
+  <div
+    v-if="getDedicatedAccessStatus"
+    class="homeview--outer"
+  >
+    <div class="homeview--outer-selection-panel">
       <div
-        class="homeview--outer-selections homeview--outer-selections__active"
+        class="homeview--outer-selections"
         @click="switchMode('/orders')"
       >
         On Demand
       </div>
       <div
-        class="homeview--outer-selections"
-        @click="switchMode('/orders/dedicated/no-destination');"
+        class="homeview--outer-selections homeview--outer-selections__active"
+        @click="switchMode('/orders/dedicated/no-destination')"
       >
         Dedicated
-        <span class="tour-pointer-1" />
       </div>
     </div>
-    <order-placement />
+    <div>
+      <div 
+        v-if="!get_extended_options"
+        class="homeview--outer-modes"
+      >
+        <div class="homeview--outer-mode-options">
+          <input
+            id="no-destination"
+            v-model="mode"
+            type="radio"
+            value="/orders/dedicated/no-destination"
+          >
+          <span class="tour-pointer-2" />
+          <br>
+          <label for="no-destination">Open destination</label>
+        </div>
+        <div class="homeview--outer-mode-options">
+          <input
+            id="multi-destination"
+            v-model="mode"
+            type="radio"
+            value="/orders/dedicated/multi-destination"
+          ><br>
+          <label for="multi-destination">Multi destination</label>
+        </div>
+      </div>
+      <DedicatedOrderPlacement />
+    </div>
   </div>
 </template>
 
 <script>
-import Vue from 'vue';
-import VeeValidate, { Validator } from 'vee-validate';
 import { mapGetters } from 'vuex';
 import orderPlacementStore from './_store';
-import OrderPlacement from './OrderPlacement.vue';
+import DedicatedOrderPlacement from './DedicatedOrderPlacement.vue';
 import EventsMixin from '../../../../mixins/events_mixin';
 
-const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-
-Vue.use(VeeValidate);
-
-Validator.extend('check_phone', {
-  getMessage: field => 'The phone number not valid',
-  validate: (value) => {
-    let validity = false;
-    try {
-      const rawNumber = phoneUtil.parseAndKeepRawInput(value);
-      const numberCode = phoneUtil.getRegionCodeForNumber(rawNumber);
-      const number = phoneUtil.parse(value, numberCode);
-      validity = phoneUtil.isValidNumber(number);
-    } catch (e) {
-      validity = false;
-    }
-    return validity;
-  },
-});
-
 export default {
-  name: 'Home',
-  components: { OrderPlacement },
+  name: 'DedicatedNoDestinationModel',
+  components: { DedicatedOrderPlacement },
   mixins: [EventsMixin],
   data() {
     return {
-      mode: 1,
+      mode: '/orders/dedicated/no-destination',
     };
   },
   computed: {
     ...mapGetters({
+      get_extended_options: '$_orders/$_home/getExtendedOptions',
       getDedicatedAccessStatus: 'getDedicatedAccessStatus',
     }),
+  },
+  watch: {
+    mode(val) {
+      this.switchMode(val);
+    },
   },
   created() {
     this.registerOrderPlacementModule();
   },
   methods: {
     switchMode(route) {
-      if (route === '/orders/dedicated/no-destination') {
-        this.selectDedicatedVehicles();
-        this.$root.$emit('tour class', 1, 2000);
+      if (route === '/orders/dedicated/multi-destination') {
+        this.selectMultiDestnationOrder('Select multi-destination orders');
       }
       this.$router.push(route);
     },
-    selectDedicatedVehicles() {
+    selectMultiDestnationOrder(name) {
       const acc = this.$store.getters.getSession;
       const accDefault = acc[acc.default];
-      this.trackMixpanelEvent('Select dedicated vehicles', {
+      this.trackGAEvent(name);
+      this.trackMixpanelEvent(name, {
         'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
         'Client Type': 'Web Platform',
         'Client Account': accDefault.user_email,
         'Client name': accDefault.user_name,
       });
-      this.trackGAEvent('Select dedicated vehicles');
-      this.trackMixpanelEvent('Select no-destination orders', {
-        'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-        'Client Type': 'Web Platform',
-        'Client Account': accDefault.user_email,
-        'Client name': accDefault.user_name,
-      });
-      this.trackGAEvent('Select no-destination orders');
     },
     trackGAEvent(eventLabel) {
       const eventPayload = {
@@ -135,8 +137,9 @@ export default {
 
 <style lang="css">
 @import "../../../../assets/styles/orders_order_placement.css?v=2";
-.tour-pointer-1 {
+.tour-pointer-2 {
   position: relative;
-  left: 20px;
+  left: 25px;
+  top: 5px;
 }
 </style>

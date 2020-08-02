@@ -56,10 +56,7 @@
               </div>
             </div>
           </div>
-          <span v-if="checkIfTruckOrder()">
-            <!-- Nothing displayed -->
-          </span>
-          <span v-else-if="getPriceRequestObject.payment_option === 1">
+          <span v-if="getPriceRequestObject.payment_option === 1">
             <div
               v-for="method in payment_methods"
               :key="method.payment_method_id"
@@ -72,7 +69,7 @@
                     type="radio"
                     :value="method.payment_method_id"
                     name="paymentOptions"
-                    class="payment__radio-button"
+                    class="payment__radio-button-dedicated"
                   >
                   <span>
                     <p class="no-margin">{{ method.name }}</p>
@@ -155,7 +152,7 @@
           type="button"
           class="button-primary home-view--place-order"
           name="button"
-          @click="displayOrderHistory()"
+          @click="preCheckPaymentDetails()"
         >
           {{ place_order_text }}
         </button>
@@ -174,193 +171,6 @@
         </button>
       </div>
     </div>
-    <transition
-      name="fade"
-      mode="out-in"
-    >
-      <div class="summary-pop-up">
-        <el-dialog
-          :visible.sync="confirmFinal"
-          width="30%"
-          class="summary-dialog"
-          :before-close="handleClose"
-          :modal-append-to-body="false"
-        >
-          <div class="order_final_summary">
-            <p class="confirm-label">
-              Confirm your order details
-            </p>
-            <div class="">
-              <div class="">
-                <ul class="summary_timeline order_summary_timeline">
-                  <li>
-                    <p class="delivery_label">
-                      Pickup Location
-                    </p>
-                    <p class="delivery_points">
-                      {{ getHomeLocations[0] }}
-                    </p>
-                  </li>
-
-                  <li
-                    v-for="(val, index) in getHomeLocations"
-                    v-if="index > 0"
-                    :key="index"
-                  >
-                    <p
-                      v-if="index > 1"
-                      class="delivery_label"
-                    >
-                      {{ `Destination ${index}` }}
-                    </p>
-                    <p
-                      v-else
-                      class="delivery_label"
-                    >
-                      Destination
-                    </p>
-                    <p class="delivery_points">
-                      {{ val }}
-                    </p>
-                  </li>
-                </ul>
-              </div>
-              <label class="delivery_label">Type of order</label>
-              <div class="order_summary-types-item order_summary--vendor-wrapper">
-                <div class="order_summary__img">
-                  <img
-                    class="order_summary-item__image"
-                    :src="getVendorIcon(activeVendorPriceData.vendor_id)"
-                    alt=""
-                  >
-                </div>
-                <div class="order_summary-wrapper__vendor">
-                  <div class="order_summary--vendor-formal-name">
-                    {{ activeVendorPriceData.vendor_name }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="order_summary--outline">
-                <label class="delivery_label">
-                  Type of {{ activeVendorPriceData.vendor_name.toLowerCase() }}
-                </label>
-                <p>{{ carrierTypeSummary() }}</p>
-              </div>
-
-              <div class="order_summary--outline">
-                <label class="delivery_label">The pickup time of your order</label>
-                <div class="order_summary-types-item order_summary--vendor-wrapper">
-                  <div class="order_summary__img">
-                    <i class="el-icon-date order_summary-item__image calender--icon" />
-                  </div>
-                  <div class="order_summary-wrapper__vendor">
-                    <div class="order_summary--vendor-formal-name">
-                      {{ scheduleTimeSummary() }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                v-if="pickUpInstructions()"
-                class="order_summary--outline"
-              >
-                <label class="delivery_label">
-                  Pickup instructions at {{ getInstructionNotes[0].name }}
-                </label>
-                <div
-                  v-if="getInstructionNotes[0].notes !== ''"
-                  class="order_summary-wrapper__vendor instructions-notes"
-                >
-                  <div class="order_summary--vendor-formal-name">
-                    {{ getInstructionNotes[0].notes }}
-                  </div>
-                </div>
-                <div
-                  v-if="getInstructionNotes[0].recipient_phone !== ''"
-                  class="order_summary-types-item order_summary--vendor-wrapper"
-                >
-                  <div class="order_summary__img">
-                    <i class="el-icon-phone-outline order_summary-item__image calender--icon" />
-                  </div>
-                  <div class="order_summary-wrapper__vendor">
-                    <div class="order_summary--vendor-formal-name">
-                      {{ getInstructionNotes[0].recipient_phone }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                v-if="dropOffInstructions()"
-                class="order_summary--outline"
-              >
-                <div
-                  v-for="(data, index) in deliveryNotesData()"
-                  :key="index"
-                >
-                  <label class="delivery_label"> Drop off instructions at {{ data.name }} </label>
-                  <div
-                    v-if="data.notes !== ''"
-                    class="order_summary-wrapper__vendor instructions-notes"
-                  >
-                    <div class="order_summary--vendor-formal-name">
-                      {{ data.notes }}
-                    </div>
-                  </div>
-                  <div
-                    v-if="data.recipient_phone !== ''"
-                    class="order_summary-types-item order_summary--vendor-wrapper"
-                  >
-                    <div class="order_summary__img">
-                      <i class="el-icon-phone-outline order_summary-item__image calender--icon" />
-                    </div>
-                    <div class="order_summary-wrapper__vendor">
-                      <div class="order_summary--vendor-formal-name">
-                        {{ data.recipient_phone }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                v-if="get_order_notes.length > 0"
-                class="order_summary--outline"
-              >
-                <label class="delivery_label">Notes</label>
-                <p>{{ get_order_notes }}</p>
-              </div>
-
-              <div class="countdown_divider" />
-
-              <div class="count_down_section">
-                <p class="timeout_text">
-                  Order will be placed in
-                  <a class="timeout_count">{{ time }} seconds</a>
-                </p>
-              </div>
-
-              <div class="summary-button-outer">
-                <input
-                  class="button-primary btn-edit-order"
-                  type="submit"
-                  value="EDIT ORDER"
-                  @click="editOrder"
-                >
-
-                <!-- <input
-                  class="button-primary btn-submit-order "
-                  type="submit"
-                  value="CONFIRM ORDER"
-                  @click="confirmOrder"
-                > -->
-              </div>
-            </div>
-          </div>
-        </el-dialog>
-      </div>
-    </transition>
   </div>
 </template>
 
@@ -373,7 +183,6 @@ import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
-import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 library.add(faChevronDown);
 
@@ -383,7 +192,7 @@ const TRUCK_VENDORS = [20, 25];
 export default {
   name: 'OrderOptions',
   components: {},
-  mixins: [Mcrypt, PaymentMxn, TimezoneMxn, EventsMixin, NotificationMxn],
+  mixins: [Mcrypt, PaymentMxn, TimezoneMxn, EventsMixin],
   data() {
     return {
       schedule_time: this.moment(),
@@ -424,6 +233,7 @@ export default {
       time: 15,
       isRunning: false,
       interval: null,
+      squashedVendorData: {},
     };
   },
 
@@ -432,6 +242,9 @@ export default {
       get_active_order_option: '$_orders/$_home/getActiveOrderOption',
       getRunningBalance: 'getRunningBalance',
       getPriceRequestObject: '$_orders/$_home/getPriceRequestObject',
+      getOuterPriceRequestData: '$_orders/getOuterPriceRequestData',
+      getActiveVendorTally: '$_orders/getActiveVendorTally',
+      getExpandedActiveVendorTally: '$_orders/getExpandedActiveVendorTally',
       get_active_package_class: '$_orders/$_home/getActivePackageClass',
       get_active_vendor_name: '$_orders/$_home/getActiveVendorName',
       activeVendorPriceData: '$_orders/$_home/getActiveVendorDetails',
@@ -440,6 +253,7 @@ export default {
       get_payment_method: '$_orders/$_home/getPaymentMethod',
       get_order_notes: '$_orders/$_home/getOrderNotes',
       get_schedule_time: '$_orders/$_home/getScheduleTime',
+      get_schedule_end_time: '$_orders/$_home/getScheduleEndTime',
       get_saved_cards: '$_orders/$_home/getSavedCards',
       get_stripe_user_id: '$_orders/$_home/getStripeUserId',
       get_carrier_type: '$_orders/$_home/getCarrierType',
@@ -459,10 +273,6 @@ export default {
       getLoadWeightStatus: '$_orders/$_home/getLoadWeightStatus',
       getLoadWeightValue: '$_orders/$_home/getLoadWeightValue',
       getHomeLocations: '$_orders/getHomeLocations',
-      getStoreOrderPath: '$_orders/getStorePath',
-      getPairWithRiderState: '$_orders/$_home/getPairWithRiderState',
-      getPairErrorMessage: '$_orders/$_home/getPairErrorMessage',
-      getInstructionNotes: '$_orders/$_home/getInstructionNotes',
       getSecondaryProfile: 'getSecondaryProfile',
     }),
 
@@ -485,31 +295,25 @@ export default {
     // cost that the client pays. Is less the discount
     order_cost() {
       let cost = 0;
-      if (typeof this.activeVendorPriceData !== 'undefined') {
-        if (
-          'cost' in this.activeVendorPriceData
-          && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')
-        ) {
-          if (
-            !this.getIsReturn
-            || this.vendors_without_return.includes(this.get_active_vendor_name)
-          ) {
-            cost = this.activeVendorPriceData.cost - this.activeVendorPriceData.discountAmount;
-          }
-          cost = this.activeVendorPriceData.return_cost - this.activeVendorPriceData.discountAmount;
-        }
-        cost = this.activeVendorPriceData.cost - this.activeVendorPriceData.discountAmount;
-      }
-
+      let totalCost = 0;
+      let totalReturnCost = 0;
+      let totalDiscountAMount = 0;
+      this.getExpandedActiveVendorTally.forEach((row) => {
+        totalCost = row.cost + totalCost;
+        totalReturnCost = row.return_cost + totalReturnCost;
+        totalDiscountAMount = row.discountAmount + totalDiscountAMount;
+      });
+      cost = totalCost - totalDiscountAMount;
       return cost;
     },
 
     // order cost including discounts
     full_order_cost() {
-      if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
-        return this.order_cost + this.activeVendorPriceData.discountAmount;
-      }
-      return this.order_cost + this.activeVendorPriceData.discountAmount;
+      let totalDiscountAMount = 0;
+      this.getExpandedActiveVendorTally.forEach((row) => {
+        totalDiscountAMount = row.discountAmount + totalDiscountAMount;
+      });
+      return this.order_cost + totalDiscountAMount;
     },
 
     display_cards() {
@@ -536,7 +340,7 @@ export default {
       if (this.order_is_scheduled) {
         text = 'Schedule ';
       }
-      return `${text}${this.get_active_vendor_name} Order`;
+      return `${text} Order`;
     },
     pay_order_text() {
       let text = 'Payment Options';
@@ -554,8 +358,14 @@ export default {
     },
 
     eta_time() {
+      let ETA = 0;
+      this.getExpandedActiveVendorTally.forEach((row) => {
+        if (row.eta > ETA) {
+          ETA = row.eta;
+        }
+      });
       return this.moment()
-        .add(this.activeVendorPriceData.eta, 'second')
+        .add(ETA, 'second')
         .format('YYYY-MM-DD HH:mm:ss');
     },
     current_time() {
@@ -666,7 +476,6 @@ export default {
       setOrderState: '$_orders/$_home/setOrderState',
       setExtendOptions: '$_orders/$_home/setExtendOptions',
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
-      clearInstructionNotes: '$_orders/$_home/clearInstructionNotes',
       setSecondaryProfile: 'setSecondaryProfile',
     }),
 
@@ -674,10 +483,21 @@ export default {
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
       completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
       terminateMpesaPaymentRequest: '$_payment/terminateMpesaPaymentRequest',
-      requestOrderCompletion: '$_orders/$_home/requestOrderCompletion',
+      requestDedicatedOrderCompletion: '$_orders/$_home/requestDedicatedOrderCompletion',
       requestSavedCards: '$_orders/$_home/requestSavedCards',
       requestPaymentOptionsAction: '$_payment/requestPaymentOptions',
     }),
+
+    individual_order_cost(row) {
+      let cost = 0;
+      cost = row.cost - row.discountAmount;
+      return cost;
+    },
+
+    // order cost including discounts
+    individual_full_order_cost(row) {
+      return this.individual_order_cost(row) + row.discountAmount;
+    },
 
     do_set_active_order_option(name) {
       // eslint-disable-next-line no-unused-expressions
@@ -698,142 +518,8 @@ export default {
           && this.getRunningBalance - this.order_cost >= 0)
         || this.getPriceRequestObject.payment_option === 2
         || (this.getPriceRequestObject.payment_option === 0
-          && this.getRunningBalance - this.order_cost >= 0)
+            && this.getRunningBalance - this.order_cost >= 0)
       );
-    },
-
-    checkIfTruckOrder() {
-      let isTruck = false;
-      if (
-        TRUCK_VENDORS.includes(this.activeVendorPriceData.vendor_id)
-        && !this.getPriceRequestObject.fixed_cost
-      ) {
-        isTruck = true;
-      }
-
-      return isTruck;
-    },
-
-    isValidateCustomerMinAmount() {
-      let minAmount = 0;
-      try {
-        minAmount = Number(this.getCustomerMinAmount);
-      } catch (er) {
-        //
-      }
-      if (
-        minAmount <= 0
-        && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')
-      ) {
-        this.doNotification(
-          '2',
-          'Missing Minimum Order Amount',
-          'The minimum order amount is missing, please fill it to enable the drivers bid effectively.',
-        );
-        return false;
-      }
-
-      return true;
-    },
-
-    displayOrderHistory() {
-      if (this.getPairWithRiderState && this.getPairRiderPhone === '') {
-        this.initiatePairingFailureNotification();
-      } else if (this.getPairWithRiderState && !this.getPairWithRiderStatus) {
-        this.doNotification(2, 'Pairing Failure', this.getPairErrorMessage);
-      } else if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
-        this.preCheckPaymentDetails();
-      } else {
-        this.confirmFinal = true;
-        this.isRunning = false;
-        this.toggleTimer();
-        let accData = {};
-        const session = this.$store.getters.getSession;
-        const acc = session.default;
-        accData = session[session.default];
-        this.trackMixpanelEvent('Order Summary View', {
-          'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-          'Client Type': 'Web Platform',
-          'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
-          'User Email': accData.user_email,
-          'User Phone': accData.user_phone,
-        });
-      }
-    },
-    initiatePairingFailureNotification() {
-      let msg = '';
-      if (this.getPairErrorMessage !== '') {
-        msg = this.getPairErrorMessage;
-      } else {
-        msg = 'Kindly provide partner details while initiating pairing requests';
-      }
-
-      this.doNotification(2, 'Pairing Failure', msg);
-    },
-    editOrder() {
-      this.confirmFinal = false;
-      this.isRunning = true;
-      this.time = 15;
-      clearInterval(this.interval);
-      this.setOrderState(1);
-      this.setExtendOptions(false);
-      this.clearOuterActiveVendorDetails();
-      let accData = {};
-      const session = this.$store.getters.getSession;
-      const acc = session.default;
-      accData = session[session.default];
-      this.trackMixpanelEvent('Order Summary Edit Button - Clicked', {
-        'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-        'Client Type': 'Web Platform',
-        'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
-        'User Email': accData.user_email,
-        'User Phone': accData.user_phone,
-      });
-    },
-    confirmOrder() {
-      this.confirmFinal = false;
-      this.preCheckPaymentDetails();
-      clearInterval(this.interval);
-      let accData = {};
-      const session = this.$store.getters.getSession;
-      const acc = session.default;
-      accData = session[session.default];
-      this.trackMixpanelEvent('Order Summary Confirm Button - Clicked', {
-        'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-        'Client Type': 'Web Platform',
-        'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
-        'User Email': accData.user_email,
-        'User Phone': accData.user_phone,
-      });
-    },
-    toggleTimer() {
-      if (this.isRunning) {
-        clearInterval(this.interval);
-      } else {
-        this.interval = setInterval(this.incrementTime, 1000);
-      }
-      this.isRunning = !this.isRunning;
-    },
-    incrementTime() {
-      this.time = parseInt(this.time, 10) - 1;
-      if (this.time <= 1) {
-        this.preCheckPaymentDetails();
-        this.confirmFinal = false;
-        this.isRunning = true;
-        clearInterval(this.interval);
-        this.time = 15;
-        let accData = {};
-        const session = this.$store.getters.getSession;
-        const acc = session.default;
-        accData = session[session.default];
-        this.trackMixpanelEvent('Order Summary View Timeout', {
-          'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-          'Client Type': 'Web Platform',
-          'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
-          'User Email': accData.user_email,
-          'User Phone': accData.user_phone,
-        });
-      }
     },
 
     preCheckPaymentDetails() {
@@ -842,20 +528,24 @@ export default {
         eventAction: 'Click',
         eventLabel: 'Order Confirmation Button - Order Placement Page - Web App',
       };
+      this.$root.$emit('tour class hidden', 1);
       this.fireGAEvent(eventPayload);
-
-      if (this.isValidateLoadWeightStatus() && this.isValidateScheduleTime()) {
+      const unsetCarriers = this.getExpandedActiveVendorTally.filter(
+        data => data.carrier_type === '',
+      );
+      if (unsetCarriers.length > 0) {
+        this.doNotification(
+          2,
+          'Vehicle type not set',
+          'Please set the vehicle type for all of the vehicles selected',
+        );
+        return false;
+      }
+      if (this.isValidateScheduleTime() === 1) {
         this.loading = true;
         this.refreshRunningBalance().then(
           () => {
             this.loading = false;
-            if (this.checkIfTruckOrder()) {
-              if (this.isValidateCustomerMinAmount()) {
-                this.handlePostPaidPayments();
-                return true;
-              }
-              return false;
-            }
             this.checkPaymentDetails();
             return true;
           },
@@ -868,11 +558,29 @@ export default {
             this.loading = false;
           },
         );
+      } else if (this.isValidateScheduleTime() === 2) {
+        this.doNotification(
+          2,
+          'Schedule time not set',
+          'Please enter starting time.',
+        );
+      } else if (this.isValidateScheduleTime() === 3) {
+        this.doNotification(
+          2,
+          'Schedule time not set',
+          'Please enter ending time.',
+        );
+      } else if (this.isValidateScheduleTime() === 4) {
+        this.doNotification(
+          2,
+          'Schedule time not set',
+          'Please enter starting time and ending time.',
+        );
       }
     },
 
     checkPaymentDetails() {
-      if (this.get_active_vendor_name === '') {
+      if (this.getExpandedActiveVendorTally.length === 0) {
         this.doNotification(
           '2',
           'Select a vehicle type',
@@ -912,9 +620,8 @@ export default {
             // eslint-disable-next-line camelcase
             card_details => card_details.last4 === this.payment_account.slice(2),
           );
-          const setCurrency = this.activeVendorPriceData.currency;
-          const vendorId = this.activeVendorPriceData.vendor_id;
-          this.handleSavedCard(vendorId, setCurrency, card, true);
+          const setCurrency = this.getPriceRequestObject.currency;
+          this.handleSavedCard(setCurrency, card, true);
         } else {
           // console.log('not handled payment method', this.payment_method);
         }
@@ -963,86 +670,46 @@ export default {
 
     doCompleteOrder() {
       const orderData = this.getCompleteOrderObject();
-      if (orderData.values.payment_method === 12 && orderData.values.cop_id === 0) {
+      if (orderData.values[0].payment_method === 12 && orderData.values[0].cop_id === 0) {
         this.handleOrderPlacementError(orderData.values);
       } else {
         const payload = {
           values: this.getCompleteOrderObject(),
           app: 'PRIVATE_API',
-          endpoint: 'pay',
+          endpoint: 'pay/no_destination',
         };
         this.loading = true;
-        this.requestOrderCompletion(payload).then(
+        this.requestDedicatedOrderCompletion(payload).then(
           (response) => {
             this.loading = false;
-            if (response.length > 0) {
-              // eslint-disable-next-line no-param-reassign,prefer-destructuring
-              response = response[0];
+            this.shouldDestroy = true;
+            this.should_destroy = true;
+            if (Object.keys(this.$store.getters.getSession).length > 0) {
+              this.$store.dispatch('$_orders/fetchOngoingOrders');
             }
-            /* eslint camelcase: ["error", {ignoreDestructuring: true}] */
-            if (response.status) {
-              const eventPayload = {
-                eventCategory: 'Order Placement',
-                eventAction: 'Order Confirmation',
-                eventLabel: 'Order Confirmed - Order Placement - Web App',
-              };
-              this.fireGAEvent(eventPayload);
-
-              let order_no;
-              this.setPickupFilled(false);
-              // eslint-disable-next-line camelcase
-              if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'order_no')) {
-                ({ order_no } = this.activeVendorPriceData);
-              } else {
-                ({ order_no } = response.respond);
-                try {
-                  this.mixpanelTrackPricingServiceCompletion(order_no);
-                } catch (er) {
-                  // catch er
-                }
-              }
-              if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
-                this.doNotification(1, 'Successfully placed freight order', '');
-              }
-              this.shouldDestroy = true;
-              this.should_destroy = true;
-              if (Object.keys(this.$store.getters.getSession).length > 0) {
-                this.$store.dispatch('$_orders/fetchOngoingOrders');
-              }
-
-              this.$root.$emit('Order Placement Force Update');
-              let accData = {};
-              const data = JSON.parse(payload.values).values;
-              const session = this.$store.getters.getSession;
-              const acc = session.default;
-              accData = session[session.default];
-              if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
-                this.trackMixpanelEvent('Place Order', {
-                  'Account ': data.type,
-                  'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-                  'Client Type': 'Web Platform',
-                  'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
-                  'Order Number': order_no,
-                  'Payment Mode': this.payment_method,
-                  'User Email': data.user_email,
-                  'User Phone': data.user_phone,
-                  'Super User Id': session.admin_details.admin_id,
-                });
-              } else {
-                this.trackMixpanelEvent('Place Order', {
-                  'Account ': data.type,
-                  'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-                  'Client Type': 'Web Platform',
-                  'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
-                  'Order Number': order_no,
-                  'Payment Mode': this.payment_method,
-                  'User Email': data.user_email,
-                  'User Phone': data.user_phone,
-                });
-              }
-              if (this.$route.path === '/orders/dedicated/multi-destination') {
-                this.trackGAEvent('Multi destination vendor type selected');
-                this.trackMixpanelEvent('Multi destination vendor type selected', {
+            const eventPayload = {
+              eventCategory: 'Order Placement',
+              eventAction: 'Order Confirmation',
+              eventLabel: 'Order Confirmed - Order Placement - Web App',
+            };
+            this.fireGAEvent(eventPayload);
+            this.setPickupFilled(false);
+            this.$root.$emit('Order Placement Force Update');
+            let order = '';
+            response.forEach((row) => {
+              /* eslint camelcase: ["error", {ignoreDestructuring: true}] */
+              if (row.status) {
+                if (!order) {
+                  order = row.respond.order_no;
+                };
+                this.mixpanelTrackPricingServiceCompletion(row.respond.order_no);
+                let accData = {};
+                const data = row.original_data;
+                const session = this.$store.getters.getSession;
+                const acc = session.default;
+                accData = session[session.default];
+                this.trackGAEvent('No destination vendor type selected');
+                this.trackMixpanelEvent('No destination vendor type selected', {
                   'Vendor ID': data.vendor_type,
                   'Carrier type': this.carrierTypeName(data.carrier_type, data.vendor_type),
                   'Client name': accData.user_name,
@@ -1050,68 +717,50 @@ export default {
                   'Account type': acc === 'peer' ? 'Personal' : 'Business',
                   'Client type': 'Web Platform',
                 });
-                this.trackGAEvent('Multi destination payment option');
-                this.trackMixpanelEvent('Multi destination payment option', {
+                this.trackGAEvent('No destination payment option');
+                this.trackMixpanelEvent('No destination payment option', {
                   'Payment option': this.payMethodName(data.payment_method),
                   'Client name': accData.user_name,
                   'Client email': data.user_email,
                   'Account type': acc === 'peer' ? 'Personal' : 'Business',
-                  'Order no': order_no,
+                  'Order no': row.respond.order_no,
                   'Client type': 'Web Platform',
                 });
-              }
-              this.trackGAEvent(
-                this.$route.path === '/orders/dedicated/multi-destination'
-                  ? 'Multi destination order completion log'
-                  : 'Order Completion Log',
-              );
-              this.trackMixpanelEvent(
-                this.$route.path === '/orders/dedicated/multi-destination'
-                  ? 'Multi destination order completion log'
-                  : 'Order Completion Log',
-                {
+                this.trackGAEvent('No destination order completion log');
+                this.trackMixpanelEvent('No destination order completion log', {
                   'Account ': data.type,
                   'Account Type': acc === 'peer' ? 'Personal' : 'Business',
                   'Client Type': 'Web Platform',
                   'Payment Mode': this.payment_method,
                   'Cash Status': data.cash_status,
-                  'User Email': data.user_email,
-                  'User Phone': data.user_phone,
-                  'Order Number': order_no,
+                  'Client Email': data.user_email,
+                  'Client Phone': data.user_phone,
+                  'Client name': accData.user_name,
+                  'Order Number': row.respond.order_no,
                   'Order Amount': data.amount,
                   'Schedule Time': data.schedule_time,
                   'Schedule Status': data.schedule_status,
                   'Carrier Type ID': data.carrier_type,
                   'Vendor Type ID': data.vendor_type,
-                },
-              );
-              this.clearInstructionNotes();
-              if (!Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
-                this.$router.push({
-                  name: 'tracking',
-                  params: {
-                    order_no,
-                  },
                 });
+              } else {
+                this.doNotification(
+                  2,
+                  'Order completion failed',
+                  'Price request failed. Please try again',
+                );
               }
-            } else {
-              this.doNotification(
-                2,
-                'Order completion failed',
-                'Price request failed. Please try again',
-              );
+            });
+            if (order) {
+              this.$router.push(`/orders/tracking/${order}`);
             }
           },
-          (error) => {
-            if (Object.prototype.hasOwnProperty.call(error, 'reason')) {
-              this.doNotification(2, 'Order completion failed', error.reason);
-            } else {
-              this.doNotification(
-                2,
-                'Order completion failed',
-                'Order completion failed. Please check your internet connection and try again.',
-              );
-            }
+          () => {
+            this.doNotification(
+              3,
+              'Order completion failed',
+              'Order completion failed. Please check your internet connection and try again.',
+            );
             this.loading = false;
           },
         );
@@ -1132,109 +781,79 @@ export default {
       } else if (this.getPriceRequestObject.payment_option === 2) {
         this.payment_method = 12;
       }
-      let payload = {
-        note: this.get_order_notes,
-        trans_no: this.order_no,
-        user_email: acc.user_email,
-        user_phone: acc.user_phone,
-        no_charge_status: false,
-        insurance_amount: 10,
-        note_status:
+
+      const fullPayload = [];
+      this.getExpandedActiveVendorTally.forEach((row) => {
+        const payload = {
+          note: this.get_order_notes,
+          trans_no: 'order_no' in row ? row.order_no : row.id,
+          user_email: acc.user_email,
+          user_phone: acc.user_phone,
+          no_charge_status: false,
+          insurance_amount: 10,
+          note_status:
           typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
-        last_digit: 'none',
-        insurance_id: 1,
-        platform: 'corporate',
-        card_token: this.card_token,
-        customer_token: this.customer_token,
-        insurance_status: true,
-        close_rider_id: 0,
-        amount: this.full_order_cost,
-        schedule_status: this.order_is_scheduled,
-        destination_paid_status: false,
-        delivery_points: this.get_order_path.length - 1,
-        sendy_coupon: '0',
-        payment_method: Number(this.payment_method),
-        schedule_time: this.order_is_scheduled
-          ? this.convertToUTC(this.scheduled_time)
-          : this.convertToUTC(this.current_time),
-        tier_tag: this.activeVendorPriceData.tier_tag,
-        tier_name: this.activeVendorPriceData.tier_name,
-        cop_id: 'cop_id' in acc ? acc.cop_id : 0,
-        carrier_type: this.final_carrier_type,
-        isreturn:
-          this.getIsReturn && !this.vendors_without_return.includes(this.get_active_vendor_name),
-        vendor_type: this.activeVendorPriceData.vendor_id,
-        rider_phone: this.order_no,
-        type: this.payment_type,
-        package_details: {
-          max_temperature: Number(this.getMaxTemperature),
-          delivery_item: this.getDeliveryItem,
-          load_weight: this.getLoadWeightStatus ? this.getLoadWeightValue : 0,
-          load_units: this.getLoadUnits,
-          additional_loader: Boolean(this.getAdditionalLoaderStatus),
-          no_of_loaders: Number(this.getNOOfLoaders),
-          customer_min_amount: Number(this.getCustomerMinAmount),
-        },
-        test_specs: this.getTestSpecs,
-      };
-      if (this.getPairWithRiderStatus) {
-        payload.rider_details = {
-          sim_card_sn: this.getPairSerialNumber,
-          rider_phone: this.getPairRiderPhone,
-          order_no: this.order_no,
+          last_digit: 'none',
+          insurance_id: 1,
+          platform: 'corporate',
+          card_token: this.card_token,
+          customer_token: this.customer_token,
+          insurance_status: true,
+          close_rider_id: 0,
+          amount: this.individual_full_order_cost(row),
+          schedule_status: this.order_is_scheduled,
+          destination_paid_status: true,
+          delivery_points: this.get_order_path.length - 1,
+          sendy_coupon: '0',
+          payment_method: Number(this.payment_method),
+          schedule_start_time: this.convertToUTC(this.get_schedule_time),
+          schedule_end_time: this.convertToUTC(this.get_schedule_end_time),
+          tier_tag: row.tier_tag,
+          tier_name: row.tier_name,
+          cop_id: 'cop_id' in acc ? acc.cop_id : 0,
+          carrier_type: row.carrier_type,
+          isreturn: false,
+          vendor_type: row.vendor_id,
+          rider_phone: 'order_no' in row ? row.order_no : row.id,
+          type: this.payment_type,
+          package_details: {
+            max_temperature: Number(this.getMaxTemperature),
+            delivery_item: this.getDeliveryItem,
+            load_weight: this.getLoadWeightStatus ? this.getLoadWeightValue : 0,
+            load_units: this.getLoadUnits,
+            additional_loader: Boolean(this.getAdditionalLoaderStatus),
+            no_of_loaders: Number(this.getNOOfLoaders),
+            customer_min_amount: Number(this.getCustomerMinAmount),
+          },
+          test_specs: this.getTestSpecs,
         };
-      }
-      // support new pricing
-      if (this.activeVendorPriceData.order_no === undefined) {
-        payload.pricing_uuid = this.activeVendorPriceData.id;
-      }
-      if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
-        payload.freight = true;
-      }
-      if (this.$route.path === '/orders/dedicated/multi-destination') {
-        let notesArray = [];
-        const notesIndex = [];
-        this.getStoreOrderPath.forEach((row) => {
-          if (row.notes) {
-            notesArray.push(row.notes);
-            notesIndex.push(row.notes);
-          } else {
-            notesArray.push('');
-          }
-        });
-        if (notesIndex.length === 0) {
-          notesArray = [];
+        // support new pricing
+        if (row.order_no === undefined) {
+          payload.pricing_uuid = row.id;
         }
-        payload.waypoint_notes = notesArray;
-      }
-      payload.waypoint_instructions = this.getInstructionNotes.filter(
-        value => Object.keys(value).length !== 0,
-      );
-      payload = {
-        values: payload,
+        fullPayload.push(payload);
+      });
+      const data = {
+        values: fullPayload,
       };
       this.identifyMixpanelUser(acc.user_email);
-      return payload;
+      return data;
     },
 
     doNotification(level, title, message) {
+      this.$store.commit('setNotificationStatus', true);
       const notification = {
         title,
         level,
         message,
       };
-      this.displayNotification(notification);
+      this.$store.commit('setNotification', notification);
     },
 
     saveInfoToStore() {
       // save locations, notes & payment option
 
       this.setPaymentMethod(this.payment_method);
-    },
-
-    retrieveFromStore() {
-      this.schedule_time = this.get_schedule_time;
-      this.payment_method = this.get_payment_method;
     },
 
     payMethodName(id) {
@@ -1278,6 +897,11 @@ export default {
       return 'Any';
     },
 
+    retrieveFromStore() {
+      this.schedule_time = this.get_schedule_time;
+      this.payment_method = this.get_payment_method;
+    },
+
     refreshRunningBalance() {
       return new Promise((resolve, reject) => {
         const session = this.$store.getters.getSession;
@@ -1288,7 +912,7 @@ export default {
           [profile_name]: profile_id,
           phone: session[session.default].user_phone,
           default_currency: this.default_currency,
-          rb_currency: this.activeVendorPriceData.currency,
+          rb_currency: this.getPriceRequestObject.currency,
           secondary_profile: secondaryProfile,
         };
 
@@ -1380,6 +1004,7 @@ export default {
         // ...
       }
     },
+
     trackGAEvent(eventLabel) {
       const eventPayload = {
         eventCategory: 'Sendy Dedicated',
@@ -1419,8 +1044,8 @@ export default {
         cop_id: copId,
         phone: userPhone,
         email: userEmail,
-        currency: this.activeVendorPriceData.currency,
-        vendorType: this.activeVendorPriceData.vendor_id,
+        currency: this.getPriceRequestObject.currency,
+        vendorType: this.getExpandedActiveVendorTally[0].vendor_id,
       };
       const fullPayload = {
         values: mpesaPayload,
@@ -1483,6 +1108,7 @@ export default {
       const profile_id = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
       const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
       const secondaryProfile = session.default === 'biz' ? this.getPriceRequestObject.client_id - profile_id === 100000000 : this.getPriceRequestObject.user_id - profile_id === 100000000;
+
       const oldRb = this.$store.getters.getRunningBalance;
       const runningBalancePayload = {
         [profile_name]: profile_id,
@@ -1683,11 +1309,7 @@ export default {
 
       const exist = data.payment_methods.find(available => available.payment_method_id === 5);
 
-      if (
-        exist
-        && (this.$route.path === '/orders/dedicated/multi-destination'
-          || this.$route.path === '/orders/dedicated/no-destination')
-      ) {
+      if (exist && (this.$route.path === '/orders/dedicated/multi-destination' || this.$route.path === '/orders/dedicated/no-destination')) {
         data.payment_methods.splice(data.payment_methods.indexOf(exist), 1);
       }
 
@@ -1711,7 +1333,7 @@ export default {
     checkCountryCode() {
       this.getUserDefaultCurrency();
       this.country_code = this.getCountryCode;
-      this.rb_currency = this.activeVendorPriceData.currency;
+      this.rb_currency = this.getPriceRequestObject.currency;
     },
     getUserDefaultCurrency() {
       const session = this.$store.getters.getSession;
@@ -1724,64 +1346,17 @@ export default {
       const intValue = phone.substring(0, 4);
       this.mpesa_valid = intValue !== '+256';
     },
-    isValidateLoadWeightStatus() {
-      if (
-        this.activeVendorPriceData.vendor_id === 25
-        && !this.getLoadWeightStatus
-        && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')
-      ) {
-        this.doNotification('2', 'Invalid Load Weight', 'Kindly provide a valid load weight');
-        return false;
-      }
-      return true;
-    },
     isValidateScheduleTime() {
-      let dateTime = '';
-      if (this.get_schedule_time === '' || this.get_schedule_time === null) {
-        dateTime = this.moment();
-      } else {
-        dateTime = this.scheduled_time;
+      if (this.get_schedule_time && this.get_schedule_end_time) {
+        return 1;
       }
-      const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
-      const timeHrs = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
-
-      const standardOptions = [21, 22, 24];
-      if (standardOptions.includes(this.activeVendorPriceData.vendor_id)) {
-        if (day === 'Sunday' && timeHrs >= '17') {
-          this.doNotification(
-            2,
-            'Standard option is unavailable right now',
-            'Kindly schedule for tommorow 8AM',
-          );
-          return false;
-        }
-        if (day === 'Saturday' && timeHrs >= '17') {
-          this.doNotification(
-            2,
-            'Standard option is unavailable right now',
-            'Kindly schedule for Monday 8AM',
-          );
-          return false;
-        }
-        if (timeHrs < '07') {
-          this.doNotification(
-            2,
-            'Standard option is unavailable right now',
-            'Kindly schedule for 8AM',
-          );
-          return false;
-        }
-        if (timeHrs >= '17') {
-          this.doNotification(
-            2,
-            'Standard option is unavailable right now',
-            'Kindly schedule for tommorow 8AM',
-          );
-          return false;
-        }
-        return true;
+      if (!this.get_schedule_time && this.get_schedule_end_time) {
+        return 2;
       }
-      return true;
+      if (this.get_schedule_time && !this.get_schedule_end_time) {
+        return 3;
+      }
+      return 4;
     },
 
     handleOrderPlacementError(data) {
@@ -1809,79 +1384,10 @@ export default {
         location.reload();
       }, 4000);
     },
-    handleClose() {
-      // Do nothing ...
-    },
-    getVendorIcon(id) {
-      return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
-    },
-    scheduleTimeSummary() {
-      let resp = 'As soon as possible';
-      if (this.order_is_scheduled) {
-        resp = this.scheduled_time;
-      }
-      return resp;
-    },
-    pickUpInstructions() {
-      let value = true;
-      if (this.getInstructionNotes[0] === '' || this.getInstructionNotes[0] === undefined) {
-        value = false;
-      }
-      return value;
-    },
-    dropOffInstructions() {
-      const data = this.getInstructionNotes.slice(1);
-      let value = true;
-      if (data.length === 0) {
-        value = false;
-      }
-      return value;
-    },
-    deliveryNotesData() {
-      return this.getInstructionNotes.slice(1);
-    },
-    carrierTypeSummary() {
-      const carrierType = this.final_carrier_type;
-      let resp = 'Any';
-      if (this.largeVendors.includes(this.activeVendorPriceData.vendor_id)) {
-        if (carrierType === 3) {
-          resp = 'Refrigerated';
-        } else if (carrierType === 4) {
-          resp = 'Flatbed/Skeleton';
-        } else if (carrierType === 5) {
-          resp = 'Tipper';
-        } else if (carrierType === 6) {
-          resp = 'Refeer';
-        } else if (carrierType === 7) {
-          resp = 'Highside';
-        } else {
-          resp = 'Closed/Boxed body';
-        }
-      } else if (this.mediumVendors.includes(this.activeVendorPriceData.vendor_id)) {
-        if (carrierType === 0) {
-          resp = 'Open';
-        } else if (carrierType === 1) {
-          resp = 'Closed';
-        } else {
-          resp = 'Any';
-        }
-      } else if (carrierType === 0) {
-        resp = 'Bike without box';
-      } else if (carrierType === 1) {
-        resp = 'Bike with box';
-      } else if (carrierType === 3) {
-        resp = 'Refrigerated';
-      } else if (carrierType === 4) {
-        resp = 'Flatbed';
-      } else {
-        resp = 'Any';
-      }
-      return resp;
-    },
   },
 };
 </script>
 
 <style lang="css">
-@import '../../../../../assets/styles/orders_order_placement_options.css?v=1';
+@import '../../../../../assets/styles/orders_order_placement_options.css';
 </style>

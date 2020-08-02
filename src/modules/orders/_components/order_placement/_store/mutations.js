@@ -8,6 +8,7 @@ const getDefaultState = () => ({
   location_names: [],
   saved_cards: [],
   schedule_time: '',
+  schedule_end_time: '',
   order_notes: '',
   extra_destinations: 0,
   pickup_filled: false,
@@ -58,6 +59,10 @@ export default {
 
   setScheduleTime(state, val) {
     state.schedule_time = val;
+  },
+
+  setScheduleEndTime(state, val) {
+    state.schedule_end_time = val;
   },
 
   setOrderNotes(state, val) {

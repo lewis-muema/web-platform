@@ -236,7 +236,7 @@ export default {
       const fullPayload = {
         values,
         vm: this,
-        app: 'PRIVATE_API',
+        app: 'NODE_PRIVATE_API',
         endpoint: 'check_verification',
       };
       this.requestPhoneVerificationVerify(fullPayload).then(
@@ -261,12 +261,12 @@ export default {
     },
     sendVerificationCode(phone) {
       const values = {};
-      values.phone_no = phone;
+      values.number = phone;
       const fullPayload = {
         values,
         vm: this,
-        app: 'PRIVATE_API',
-        endpoint: 'verify_phone',
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'request_verification',
       };
       this.requestPhoneVerification(fullPayload).then(
         (response) => {
