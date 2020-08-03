@@ -3,7 +3,7 @@
     v-if="getOrderState === 1"
     class="home-view-vendor-and-optins-wrappper"
     :class="
-      $route.path === '/orders/dedicated/multi-destination' ? 'dedicated-vendors-wrapper' : ''
+      $route.path === '/orders/dedicated/multi-destination' ? 'dedicated-vendors-wrapper' : dedicatedClass
     "
   >
     <div class="home-view--seperator" />
@@ -995,6 +995,7 @@ export default {
       getStoreOrderPath: '$_orders/getStorePath',
       get_order_path: '$_orders/$_home/getOrderPath',
       getInstructionNotes: '$_orders/$_home/getInstructionNotes',
+      getDedicatedAccessStatus: 'getDedicatedAccessStatus',
     }),
 
     vehicleDetailsPlaceholder() {
@@ -1008,6 +1009,10 @@ export default {
         );
       }
       return '';
+    },
+
+    dedicatedClass() {
+      return this.getDedicatedAccessStatus ? 'dedicated-wrapper-override' : '';
     },
 
     truckOptions() {
