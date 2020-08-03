@@ -469,6 +469,9 @@
 .dedicated-vendor-items-select {
   padding-right: 3px !important;
 }
+.dedicated-wrapper-override {
+  max-height: 37vh !important;
+}
 .pairing-alert{
   width: 20% !important;
   margin-top: 12%;
