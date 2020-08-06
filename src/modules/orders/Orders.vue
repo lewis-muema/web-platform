@@ -22,10 +22,18 @@
             {{ dedicatedTourPoints[activeClass].description }}
           </p>
           <p
+            v-if="activeClass === 0 || activeClass === dedicatedTourPoints.length - 1"
             class="tour-end"
             @click="skipTour()"
           >
             End tour
+          </p>
+          <p
+            v-if="activeClass === 1"
+            class="tour-end"
+            @click="selectPickup()"
+          >
+            NEXT
           </p>
         </div>
       </div>
@@ -349,7 +357,7 @@ export default {
         },
         {
           title: 'Order Type: No Destination',
-          description: 'With no destination vehicles you can skip adding a destination or add a general region to deliver in and the driver will check off each delivery stop',
+          description: 'With no destination vehicles you can skip adding a destination or add a general region to deliver in and the driver will check off each delivery stop. Enter the pick up location input to continue',
           class: '.tour-pointer-2',
         },
         {
@@ -541,6 +549,25 @@ export default {
         this.activeClass = -1;
       }
       return tourClass === null ? 0 : tourClass.getBoundingClientRect().left - document.querySelector('#orders_container').getBoundingClientRect().left;
+    },
+    triggerFocus(element) {
+      const eventType = 'onfocusin' in element ? 'focusin' : 'focus';
+      const bubbles = 'onfocusin' in element;
+      let event;
+
+      if ('createEvent' in document) {
+        event = document.createEvent('Event');
+        event.initEvent(eventType, bubbles, true);
+      } else if ('Event' in window) {
+        event = new Event(eventType, { bubbles, cancelable: true });
+      }
+
+      element.focus();
+      element.dispatchEvent(event);
+    },
+    selectPickup() {
+      document.querySelector('#homeview--pick-up-location-input').click();
+      this.triggerFocus(document.querySelector('#homeview--pick-up-location-input'));
     },
     sessionFrefill() {
       const session = this.$store.getters.getSession;
