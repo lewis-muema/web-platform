@@ -591,8 +591,8 @@ export default {
       this.setOuterPriceRequestObject('');
       const payload = {
         values: this.createPriceRequestObject(),
-        app: 'PRIVATE_API',
-        endpoint: 'pricing_multiple',
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'orders/price_request',
       };
       this.loading = true;
       const previousActiveVendor = this.get_active_vendor_name;
