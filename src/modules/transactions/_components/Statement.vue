@@ -292,6 +292,9 @@ export default {
         value = value.split('.');
         return value[0];
       }
+      if (Math.sign(row.amount) === 0 && row.description === 'Delivery') {
+        return Math.sign(row.amount);
+      }
       return '';
     },
     formatCreditAmount(row) {
