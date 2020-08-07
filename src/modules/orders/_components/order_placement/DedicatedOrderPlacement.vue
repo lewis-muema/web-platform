@@ -20,6 +20,7 @@
               width="10px"
             />
             <gmap-autocomplete
+              id="homeview--pick-up-location-input"
               v-model="locations[0]"
               :options="map_options"
               placeholder="Enter a pickup location"
@@ -515,8 +516,8 @@ export default {
       this.setOuterPriceRequestObject('');
       const payload = {
         values: this.createPriceRequestObject(),
-        app: 'PRIVATE_API',
-        endpoint: 'pricing_multiple',
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'orders/price_request',
       };
       this.loading = true;
       const definedLocations = this.locations;

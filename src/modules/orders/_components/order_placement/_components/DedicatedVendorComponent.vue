@@ -1,7 +1,7 @@
 <template lang="html">
   <div
     v-if="getOrderState === 1"
-    class="home-view-vendor-and-optins-wrappper"
+    class="home-view-vendor-and-optins-wrappper dedicated-vendors-wrapper"
   >
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
@@ -136,6 +136,30 @@
                       {{ number.label }}
                     </el-option>
                   </el-select>
+                </div>
+                <div
+                  class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right info-icon-spacer"
+                >
+                  <el-popover
+                    placement="right"
+                    width="350"
+                    trigger="hover"
+                    popper-class="vendorExtraInfo"
+                  >
+                    <div
+                      class="reset-font"
+                      v-html="j.tier_description"
+                    />
+                    <span
+                      slot="reference"
+                      class="extra_info_background"
+                    >
+                      <i
+                        class="el-icon-info"
+                        :class="getScheduledVendorTypeClass(j, 2)"
+                      />
+                    </span>
+                  </el-popover>
                 </div>
               </div>
               <!-- end cost wrapper -->
@@ -1125,5 +1149,8 @@ export default {
   position: relative;
   right: 5px;
   top: 5px;
+}
+.info-icon-spacer {
+  padding: 0px 0px 0px 5px;
 }
 </style>
