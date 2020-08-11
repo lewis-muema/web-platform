@@ -1411,6 +1411,7 @@ export default {
         (response) => {
           if (response.status) {
             this.trackMixpanelEvent('Paired Order With Rider', { 'Paired Rider': plate });
+            this.triggerGAEvent('Paired Order With Rider', { 'Paired Rider': plate });
             this.updateData(response.data);
           } else {
             this.pair_status = '1';
