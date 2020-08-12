@@ -161,7 +161,7 @@
         v-if="country === 'UG'"
         class="card-payment-disabled-notification"
       >
-        Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using cash. Contact Support on +256393239706 for any queries.
+        Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. Contact Support on +256393239706 for any queries.
       </p>
     </div>
   </div>
