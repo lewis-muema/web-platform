@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'PayMethod',
@@ -21,6 +21,7 @@ export default {
   },
   methods: {
     ...mapActions({ requestPaymentOptionsAction: '$_payment/requestPaymentOptions' }),
+    ...mapMutations({ setCardPaymentStatus: '$_payment/setCardPaymentStatus'}),
 
     getPaymentOptions() {
       const session = this.$store.getters.getSession;
@@ -48,12 +49,18 @@ export default {
         endpoint: 'accounts/pay_methods',
       };
       this.requestPaymentOptionsAction(fullPayload).then(
-        response => {
+        (response) => {
           if (response.status) {
             this.payment_methods = response.payment_methods;
+            this.payment_methods.forEach((row) => {
+              if (row.payment_method_id === 2) {
+                this.setCardPaymentStatus(true);
+              }
+            });
+            this.$router.push({path: `/payment/${this.payment_methods[0].name.replace(/-/g, '').toLowerCase()}`});
           }
         },
-        error => {
+        (error) => {
           console.log('error', error);
         }
       );

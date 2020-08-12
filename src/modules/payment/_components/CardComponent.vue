@@ -8,146 +8,161 @@
     v-else
     class="paymentbody--form"
   >
-    <div
-      v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0"
-      class=""
-    >
-      <div class="paymentbody--input-wrap-saved-cards">
-        <div
-          v-for="card in get_saved_cards"
-          class="card--saved-card-width"
-        >
+    <div v-if="getCardPaymentStatus">
+      <div
+        v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0"
+        class=""
+      >
+        <div class="paymentbody--input-wrap-saved-cards">
+          <div
+            v-for="card in get_saved_cards"
+            class="card--saved-card-width"
+          >
+            <el-radio
+              v-model="payment_card"
+              class="card--saved-card"
+              :label="getCardValue(card.last4)"
+              border
+              @change="isHidden = true"
+            >
+              <font-awesome-icon
+                :icon="getCardIcon(card)"
+                class="payments-orange"
+              />
+              **** **** **** {{ card.last4 }}
+              <div
+                class="card--delete"
+                @click="deleteSavedCard(card)"
+              >
+                <font-awesome-icon icon="trash" /> Remove
+              </div>
+            </el-radio>
+          </div>
+        </div>
+        <div class="paymentbody--input-wrap">
           <el-radio
             v-model="payment_card"
-            class="card--saved-card"
-            :label="getCardValue(card.last4)"
+            class="card--new-card"
+            label="1"
             border
-            @change="isHidden = true"
+            @change="isHidden = false"
           >
-            <font-awesome-icon
-              :icon="getCardIcon(card)"
-              class="payments-orange"
-            />
-            **** **** **** {{ card.last4 }}
-            <div
-              class="card--delete"
-              @click="deleteSavedCard(card)"
-            >
-              <font-awesome-icon icon="trash" /> Remove
-            </div>
+            New Card
           </el-radio>
         </div>
       </div>
-      <div class="paymentbody--input-wrap">
-        <el-radio
-          v-model="payment_card"
-          class="card--new-card"
-          label="1"
-          border
-          @change="isHidden = false"
-        >
-          New Card
-        </el-radio>
-      </div>
-    </div>
-    <div v-show="!isHidden">
-      <div class="paymentbody--input-wrap">
-        <input
-          v-model="card_payment_data.card_no"
-          type="text"
-          name="card_payment_card_no"
-          placeholder="Card Number"
-          class="input-control paymentbody--input"
-          @change="creditCardMask()"
-          @keyup="creditCardMask()"
-        >
-      </div>
-
-      <div class="paymentbody--input-wrap paymentbody--input-spaced">
-        <div class="input-control-big">
+      <div v-show="!isHidden">
+        <div class="paymentbody--input-wrap">
           <input
-            v-model="card_payment_data.card_expiry"
+            v-model="card_payment_data.card_no"
             type="text"
-            name="card_payment_month"
-            value=""
-            placeholder="MM/YY"
+            name="card_payment_card_no"
+            placeholder="Card Number"
             class="input-control paymentbody--input"
-            @change="creditCExpiryMask"
-            @keyup="creditCExpiryMask"
+            @change="creditCardMask()"
+            @keyup="creditCardMask()"
           >
         </div>
-        <div class="input-control-small">
-          <el-input
-            v-model="card_payment_data.cvv"
-            placeholder="CVV"
-            type="number"
-            name="card_payment_cvv"
-            class="paymentbody--input"
-          >
-            <el-button
-              slot="append"
-              icon="el-icon-info"
-              class="input--append-button"
-              @click="showCvv"
-              @mouseover.native="showCvv"
-              @mouseleave.native="showCvv"
-            />
-          </el-input>
-          <div
-            v-show="cvv_state"
-            class="payment--cvv-info-wrap"
-          >
-            <div class="sendy_payments_form_cvv_title">
-              CVV
-            </div>
-            <div class="sendy_payments_form_cvv_description">
-              A three or four digit code on your credit or debit card. You can find this at the back
-              of your card.
-            </div>
-            <div class="sendy_payments_form_cvv_body">
-              <img
-                src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/cvv.png"
-                alt="CVV"
-              >
+
+        <div class="paymentbody--input-wrap paymentbody--input-spaced">
+          <div class="input-control-big">
+            <input
+              v-model="card_payment_data.card_expiry"
+              type="text"
+              name="card_payment_month"
+              value=""
+              placeholder="MM/YY"
+              class="input-control paymentbody--input"
+              @change="creditCExpiryMask"
+              @keyup="creditCExpiryMask"
+            >
+          </div>
+          <div class="input-control-small">
+            <el-input
+              v-model="card_payment_data.cvv"
+              placeholder="CVV"
+              type="number"
+              name="card_payment_cvv"
+              class="paymentbody--input"
+            >
+              <el-button
+                slot="append"
+                icon="el-icon-info"
+                class="input--append-button"
+                @click="showCvv"
+                @mouseover.native="showCvv"
+                @mouseleave.native="showCvv"
+              />
+            </el-input>
+            <div
+              v-show="cvv_state"
+              class="payment--cvv-info-wrap"
+            >
+              <div class="sendy_payments_form_cvv_title">
+                CVV
+              </div>
+              <div class="sendy_payments_form_cvv_description">
+                A three or four digit code on your credit or debit card. You can find this at the back
+                of your card.
+              </div>
+              <div class="sendy_payments_form_cvv_body">
+                <img
+                  src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/cvv.png"
+                  alt="CVV"
+                >
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="paymentbody--input-wrap savecard--desc-wrap">
-        <input
-          v-model="card_payment_data.is_save"
-          type="checkbox"
-          name="card_payment_save"
-          class="input-checkbox paymentbody--input-checkbox"
-        >
-        <div class="savecard--desc-title">
-          Save your card details for easier payment in future
+        <div class="paymentbody--input-wrap savecard--desc-wrap">
+          <input
+            v-model="card_payment_data.is_save"
+            type="checkbox"
+            name="card_payment_save"
+            class="input-checkbox paymentbody--input-checkbox"
+          >
+          <div class="savecard--desc-title">
+            Save your card details for easier payment in future
+          </div>
         </div>
       </div>
+      <div class="paymentbody--input-wrap">
+        <input
+          v-model="card_payment_data.amount"
+          type="number"
+          name="card_payment_amount"
+          placeholder="Amount"
+          class="card--input input-control paymentbody--input"
+        >
+      </div>
+      <div class="paymentbody--input-wrap">
+        <button
+          type="button"
+          name="button"
+          :class="
+            valid_payment
+              ? 'button-primary paymentbody--input-button'
+              : 'paymentbody--input-button card--input button--primary-inactive'
+          "
+          @click="getPaymentCard"
+        >
+          Pay
+        </button>
+      </div>
     </div>
-    <div class="paymentbody--input-wrap">
-      <input
-        v-model="card_payment_data.amount"
-        type="number"
-        name="card_payment_amount"
-        placeholder="Amount"
-        class="card--input input-control paymentbody--input"
+    <div v-else>
+      <p
+        v-if="country === 'KE'"
+        class="card-payment-disabled-notification"
       >
-    </div>
-    <div class="paymentbody--input-wrap">
-      <button
-        type="button"
-        name="button"
-        :class="
-          valid_payment
-            ? 'button-primary paymentbody--input-button'
-            : 'paymentbody--input-button card--input button--primary-inactive'
-        "
-        @click="getPaymentCard"
+        Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using M-Pesa, or pay cash upon delivery. Contact Support on +254709779779 for any queries.
+      </p>
+      <p
+        v-if="country === 'UG'"
+        class="card-payment-disabled-notification"
       >
-        Pay
-      </button>
+        Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using cash. Contact Support on +256393239706 for any queries.
+      </p>
     </div>
   </div>
 </template>
@@ -185,6 +200,7 @@ export default {
       isHidden: false,
       payment_state: 'Attempting Payment',
       show_cvv: false,
+      country: '',
     };
   },
   computed: {
@@ -194,6 +210,7 @@ export default {
       card_success_status: '$_payment/getCardSuccessStatus',
       get_saved_cards: '$_payment/getSavedCards',
       get_stripe_user_id: '$_payment/getStripeUserId',
+      getCardPaymentStatus: '$_payment/getCardPaymentStatus',
     }),
     valid_payment() {
       if (this.payment_card.startsWith('2_')) {
@@ -240,6 +257,10 @@ export default {
         return false;
       }
     },
+    user_name() {
+      const session = this.$store.getters.getSession;
+      return session[session.default].user_name.split(' ')[0];
+    },
   },
   watch: {
     get_saved_cards() {
@@ -252,6 +273,8 @@ export default {
   },
   mounted() {
     this.getUserCards();
+    const session = this.$store.getters.getSession;
+    this.country = session[session.default].country_code;
   },
   created() {
     if (this.get_saved_cards.length === 0) {
@@ -437,5 +460,12 @@ export default {
 .paymentbody--input-wrap-saved-cards{
   min-height: 4rem;
   margin: .5em;
+}
+.card-payment-disabled-notification {
+  padding: 35px;
+  border-radius: 5px;
+  background-color: #E8F3FC;
+  color: #0F4176;
+  font-size: 14px;
 }
 </style>
