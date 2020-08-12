@@ -19,6 +19,19 @@
   cursor: pointer;
 }
 
+.card-option-disabled-notification {
+  padding: 19px;
+  border-radius: 5px;
+  background-color: #E8F3FC;
+  color: #0F4176;
+  font-size: 12px;
+}
+
+.payment-options-alignment {
+  display: flex;
+  align-items: flex-end;
+}
+
 .home-view-notes-wrapper--item__row {
   align-items: center;
   justify-content: space-between;

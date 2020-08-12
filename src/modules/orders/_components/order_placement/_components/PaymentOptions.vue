@@ -74,7 +74,7 @@
                     name="paymentOptions"
                     class="payment__radio-button"
                   >
-                  <span>
+                  <span class="payment-options-alignment">
                     <p class="no-margin">{{ method.name }}</p>
                   </span>
                 </div>
@@ -124,6 +124,20 @@
                 </div>
                 <div class="home-view-notes-wrapper--item__value" />
               </div>
+            </div>
+            <div v-if="!getCardPaymentStatus">
+              <p
+                v-if="getCountryCode === 'KE'"
+                class="card-option-disabled-notification"
+              >
+                Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using M-Pesa, or pay cash upon delivery. Contact Support on +254709779779 for any queries.
+              </p>
+              <p
+                v-if="getCountryCode === 'UG'"
+                class="card-option-disabled-notification"
+              >
+                Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using cash. Contact Support on +256393239706 for any queries.
+              </p>
             </div>
           </span>
         </div>
@@ -464,6 +478,7 @@ export default {
       getPairErrorMessage: '$_orders/$_home/getPairErrorMessage',
       getInstructionNotes: '$_orders/$_home/getInstructionNotes',
       getSecondaryProfile: 'getSecondaryProfile',
+      getCardPaymentStatus: '$_payment/getCardPaymentStatus',
     }),
 
     active_price_tier_data() {
@@ -622,6 +637,10 @@ export default {
         return 'loading-override';
       }
       return '';
+    },
+    user_name() {
+      const session = this.$store.getters.getSession;
+      return session[session.default].user_name.split(' ')[0];
     },
   },
 
