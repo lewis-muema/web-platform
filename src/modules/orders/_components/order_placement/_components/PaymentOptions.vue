@@ -127,16 +127,16 @@
             </div>
             <div v-if="!getCardPaymentStatus">
               <p
-                v-if="getCountryCode === 'KE'"
+                v-if="country === 'KE'"
                 class="card-option-disabled-notification"
               >
                 Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using M-Pesa, or pay cash upon delivery. Contact Support on +254709779779 for any queries.
               </p>
               <p
-                v-if="getCountryCode === 'UG'"
+                v-if="country === 'UG'"
                 class="card-option-disabled-notification"
               >
-                Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using cash. Contact Support on +256393239706 for any queries.
+                Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. Contact Support on +256393239706 for any queries.
               </p>
             </div>
           </span>
@@ -438,6 +438,7 @@ export default {
       time: 15,
       isRunning: false,
       interval: null,
+      country: '',
     };
   },
 
@@ -654,6 +655,8 @@ export default {
   mounted() {
     this.checkCountryCode();
     this.checkUserPhone();
+    const session = this.$store.getters.getSession;
+    this.country = session[session.default].country_code;
     // this.setDefaultPaymentOptions();
   },
 
