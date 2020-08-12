@@ -8,4 +8,5 @@ export default {
   getSavedCards: state => state.saved_cards,
   getStripeUserId: state => state.stripe_user_id,
   getActiveCurrency: state => state.active_currency,
+  getCardPaymentStatus: state => state.card_payment_status,
 };
