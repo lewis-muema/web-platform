@@ -27,4 +27,7 @@ export default {
   setActiveCurrency(state, status) {
     state.active_currency = status;
   },
+  setCardPaymentStatus(state, status) {
+    state.card_payment_status = status;
+  },
 };
