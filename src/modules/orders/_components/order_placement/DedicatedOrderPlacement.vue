@@ -20,6 +20,7 @@
               width="10px"
             />
             <gmap-autocomplete
+              id="homeview--pick-up-location-input"
               v-model="locations[0]"
               :options="map_options"
               placeholder="Enter a pickup location"
@@ -551,8 +552,8 @@ export default {
           }
         },
         (error) => {
-          if (Object.prototype.hasOwnProperty.call(error, 'crisis_notification')) {
-            this.doNotification(3, error.reason, error.crisis_notification.msg);
+          if (Object.prototype.hasOwnProperty.call(error.response.data, 'crisis_notification')) {
+            this.doNotification(3, error.response.data.reason, error.response.data.crisis_notification.msg);
           } else {
             this.doNotification(
               3,
