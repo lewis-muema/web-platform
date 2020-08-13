@@ -164,6 +164,46 @@
         Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using cash. Contact Support on +256393239706 for any queries.
       </p>
     </div>
+    <form @submit.prevent="onSubmit">
+      <div
+        id="cc-name"
+        class="form-group"
+      >
+        <div class="form-control-static">
+          <span class="fake-input" />
+        </div>
+      </div>
+      <div
+        id="cc-number"
+        class="form-group"
+      >
+        <div class="form-control-static">
+          <span class="fake-input" />
+        </div>
+      </div>
+      <div
+        id="cc-cvc"
+        class="form-group"
+      >
+        <div class="form-control-static">
+          <span class="fake-input" />
+        </div>
+      </div>
+      <div
+        id="cc-expiration-date"
+        class="form-group"
+      >
+        <div class="form-control-static">
+          <span class="fake-input" />
+        </div>
+      </div>
+      <button
+        type="submit"
+        class="btn btn-sm btn-primary"
+      >
+        Submit
+      </button>
+    </form>
   </div>
 </template>
 
@@ -201,6 +241,7 @@ export default {
       payment_state: 'Attempting Payment',
       show_cvv: false,
       country: '',
+      form: {},
     };
   },
   computed: {
@@ -275,6 +316,7 @@ export default {
     this.getUserCards();
     const session = this.$store.getters.getSession;
     this.country = session[session.default].country_code;
+    this.loadVeryGoodSecurityScript();
   },
   created() {
     if (this.get_saved_cards.length === 0) {
@@ -312,6 +354,56 @@ export default {
         this.handleNewCardPayment(vendorId, setCurrency);
       }
     },
+
+    loadVeryGoodSecurityScript() {
+      const script = document.createElement('script');
+      script.onload = () => {
+        // this.libraryActive = true;
+        // eslint-disable-next-line no-undef
+        this.form = VGSCollect.create('tnts91uunnd', 'sandbox', (state) => {
+          // console.log(state);
+        });
+        this.form.field('#cc-name .fake-input', {
+          type: 'text',
+          name: 'card_name',
+          placeholder: 'Joe Business',
+          validations: ['required'],
+        });
+
+        this.form.field('#cc-number .fake-input', {
+          type: 'card-number',
+          name: 'card_number',
+          successColor: '#4F8A10',
+          errorColor: '#D8000C',
+          placeholder: '4111 1111 1111 1111',
+          validations: ['required', 'validCardNumber'],
+        });
+
+        this.form.field('#cc-cvc .fake-input', {
+          type: 'card-security-code',
+          name: 'card_cvc',
+          placeholder: '344',
+          validations: ['required', 'validCardSecurityCode'],
+        });
+
+        this.form.field('#cc-expiration-date .fake-input', {
+          type: 'card-expiration-date',
+          name: 'card_exp',
+          placeholder: '01 / 2016',
+          validations: ['required', 'validCardExpirationDate'],
+        });
+      };
+      script.async = true;
+      script.src = 'https://js.verygoodvault.com/vgs-collect/2.0/vgs-collect.js';
+      document.head.appendChild(script);
+    },
+
+    onSubmit() {
+      this.form.submit('/customers/collect_card_details', {}, (status, response) => {
+        console.log(response, status);
+      });
+    },
+
 
     creditCardMask() {
       const currentVal = this.card_payment_data.card_no;
