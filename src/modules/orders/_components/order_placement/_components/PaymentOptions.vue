@@ -1009,7 +1009,6 @@ export default {
                 eventLabel: 'Order Confirmed - Order Placement - Web App',
               };
               this.fireGAEvent(eventPayload);
-
               let order_no;
               this.setPickupFilled(false);
               // eslint-disable-next-line camelcase
@@ -1023,6 +1022,16 @@ export default {
                   // catch er
                 }
               }
+              // ecommerce data tracking
+              const ecommercePayload = {
+                // eslint-disable-next-line camelcase
+                orderNo: order_no,
+                amount: orderData.values.amount,
+                vendorType: orderData.values.vendor_type,
+              };
+              this.trackEcommerceData(ecommercePayload);
+
+
               if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
                 this.doNotification(1, 'Successfully placed freight order', '');
               }
