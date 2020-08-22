@@ -75,7 +75,7 @@ export default {
           }
         },
         (error) => {
-          reject(error);
+          resolve(error.response.data);
         },
       );
     });
