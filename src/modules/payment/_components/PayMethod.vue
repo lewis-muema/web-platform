@@ -14,10 +14,12 @@ export default {
   data() {
     return {
       payment_methods: [],
+      cardActiveStatus: false,
     };
   },
   mounted() {
     this.getPaymentOptions();
+    this.setCardPaymentStatus(true);
   },
   methods: {
     ...mapActions({ requestPaymentOptionsAction: '$_payment/requestPaymentOptions' }),
@@ -54,10 +56,10 @@ export default {
             this.payment_methods = response.payment_methods;
             this.payment_methods.forEach((row) => {
               if (row.payment_method_id === 2) {
-                this.setCardPaymentStatus(true);
+                this.cardActiveStatus = true;
               }
             });
-            this.$router.push({path: `/payment/${this.payment_methods[0].name.replace(/-/g, '').toLowerCase()}`});
+            this.setCardPaymentStatus(this.cardActiveStatus);
           }
         },
         (error) => {
