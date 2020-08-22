@@ -11,14 +11,25 @@
         {{ currency }}
       </div>
     </div>
-    <div class="paytitle">
-      Top up your Sendy account
-    </div>
-    <div class="payinfo">
-      <div class="payinfo--icon" />
-      <div class="payinfo--balance">
-        Balance <span class="payinfo--balance-el">{{ running_balance }}</span>
-        {{ getActiveCurrency }}
+    <div class="payinfo-container">
+      <div class="paytitle">
+        Top up your Sendy account
+      </div>
+      <div class="payinfo">
+        <div class="payinfo-icon-container">
+          <font-awesome-icon
+            icon="wallet"
+            width="15px"
+          />
+        </div>
+        <div class="payinfo--balance">
+          <p class="account-balance-info-title">
+            Account Balance
+          </p>
+          <p class="account-balance-info-body">
+            {{ getActiveCurrency }}<span class="payinfo--balance-el">{{ running_balance }}</span>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -26,6 +37,10 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faWallet } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faWallet);
 
 const currencyConversion = require('country-tz-currency');
 
@@ -213,21 +228,27 @@ export default {
 </script>
 
 <style lang="css">
-.payinfo {
-  display: flex;
-}
 .paytitle {
   display: flex;
   flex: 2;
   align-items: center;
   font-size: 16px;
+  height: 40px;
+  font-weight: 500;
+  font-size: 24px;
 }
 .payinfo {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex: 1;
   color: rgb(85, 85, 85);
   font-size: 14px;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  width: 80%;
+  margin: auto;
+  height: 70px;
+  margin-top: 10px;
 }
 .payinfo--icon {
   display: flex;
@@ -239,20 +260,21 @@ export default {
   width: 25px;
 }
 .payinfo--balance {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex: 2;
+  display: block;
 }
 .payinfo--balance-el {
   padding: 0px 5px;
 }
 .payinfo-currencies {
   position: absolute;
-  bottom: 33px;
+  bottom: 90px;
   display: flex;
   width: 100%;
   border-bottom: 2px solid #ebeef5;
+}
+.payinfo-container {
+  height: 80px;
+  width: 100%;
 }
 .currency-tabs {
   width: 60px;
@@ -268,5 +290,31 @@ export default {
   color: white;
   background: #1B7FC3;
   border: 1px solid #1B7FC3 !important;
+}
+.payinfo-icon-container {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px;
+  background: #E8F3FC;
+  margin: 10px 20px 10px 20px;
+  color: #527CBD;
+  font-size: 20px;
+}
+.account-balance-info-title {
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #909399;
+  font-size: 10px;
+  margin: 15px 0px 0px 0px;
+}
+.account-balance-info-body {
+  letter-spacing: 0.02em;
+  color: #527CBD;
+  font-weight: 500;
+  font-size: 16px;
+  margin: 7px 0px 0px 0px;
 }
 </style>

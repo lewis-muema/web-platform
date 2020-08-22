@@ -85,44 +85,91 @@
               v-if="display_cards"
               class="card-accounts-list"
             >
-              <div
-                v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0"
-                class=""
-              >
-                <div
-                  v-for="card in get_saved_cards"
-                  :key="card.last4"
-                  class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
-                >
-                  <div class="home-view-notes-wrapper--item__option">
-                    <div class="home-view-notes-wrapper--item__option-div">
-                      <el-radio
-                        v-model="payment_account"
-                        :label="getCardValue(card.last4)"
-                      >
-                        **** **** **** {{ card.last4 }}
-                        <font-awesome-icon
-                          :icon="getCardIcon(card)"
-                          class="payments-orange"
-                        />
-                      </el-radio>
-                    </div>
-                  </div>
-                  <div class="home-view-notes-wrapper--item__value" />
-                </div>
-              </div>
-              <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
-                <div class="home-view-notes-wrapper--item__option">
-                  <div class="home-view-notes-wrapper--item__option-div">
-                    <div
-                      class="home-view-notes-wrapper--item__link"
-                      @click="takeMeToAddNewCard()"
+              <div class="payment-options-cards-container">
+                <div v-if="!addCardStatus && get_saved_cards.length > 0">
+                  <p class="payment-options-cards-title">Saved Cards</p>
+                  <div
+                    v-for="(cards, index) in get_saved_cards"
+                    :key="index"
+                    class="payment-options-saved-cards-row"
+                  >
+                    {{ formatCardNumber(cards.card) }}
+                    <input
+                      v-model="activeSavedCard"
+                      :value="index"
+                      type="radio"
+                      class="payment-options-saved-card-radio"
                     >
-                      + &nbsp;&nbsp; Visa/Mastercard
-                    </div>
+                  </div>
+                  <div
+                    class="payment-options-add-card-holder"
+                    @click="addCardStatus = !addCardStatus"
+                  >
+                    <span>
+                      <font-awesome-icon
+                        icon="plus-circle"
+                        class="payment-options-add-card-icon"
+                      />
+                    </span>
+                    <span class="payment-options-add-card">Add a new Card</span>
                   </div>
                 </div>
-                <div class="home-view-notes-wrapper--item__value" />
+                <form
+                  v-else
+                  class="VGS-form"
+                  @submit.prevent="onSubmit"
+                >
+                  <span
+                    v-if="get_saved_cards.length > 0"
+                    class="payment-options-cards-title back-option"
+                    @click="addCardStatus = !addCardStatus"
+                  >
+                    <font-awesome-icon
+                      icon="arrow-left"
+                      class="payment-options-add-card-icon"
+                    />
+                    Back
+                  </span>
+                  <p class="payment-options-cards-title">Add a new card</p>
+                  <div
+                    id="cc-number"
+                    class="form-group"
+                  >
+                    <div class="form-control-static">
+                      <span class="fake-input-1" />
+                    </div>
+                  </div>
+                  <div class="cvv-expire-fields">
+                    <div
+                      id="cc-expiration-date"
+                      class="form-group"
+                    >
+                      <div class="form-control-static">
+                        <span class="fake-input-1" />
+                      </div>
+                    </div>
+                    <div
+                      id="cc-cvc"
+                      class="form-group"
+                    >
+                      <div class="form-control-static">
+                        <span class="fake-input-1" />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    id="cc-save-card-1"
+                    class="form-group"
+                  >
+                    <div class="form-control-static">
+                      <input
+                        v-model="saveCardState"
+                        type="checkbox"
+                      >
+                      <span class="fake-checkbox-label-1">I want to save my card for future orders</span>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
             <div v-if="!getCardPaymentStatus">
@@ -382,14 +429,14 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import numeral from 'numeral';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faPlusCircle, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
 
-library.add(faChevronDown);
+library.add(faChevronDown, faPlusCircle, faArrowLeft);
 
 // const TRUCK_VENDORS = [6,10,13,14,17,18,19,20];
 const TRUCK_VENDORS = [20, 25];
@@ -439,6 +486,11 @@ export default {
       isRunning: false,
       interval: null,
       country: '',
+      form: {},
+      vgs_valid_payment: false,
+      addCardStatus: false,
+      activeSavedCard: '',
+      saveCardState: false,
     };
   },
 
@@ -480,6 +532,7 @@ export default {
       getInstructionNotes: '$_orders/$_home/getInstructionNotes',
       getSecondaryProfile: 'getSecondaryProfile',
       getCardPaymentStatus: '$_payment/getCardPaymentStatus',
+      getActiveCurrency: '$_payment/getActiveCurrency',
     }),
 
     active_price_tier_data() {
@@ -643,6 +696,42 @@ export default {
       const session = this.$store.getters.getSession;
       return session[session.default].user_name.split(' ')[0];
     },
+    valid_vgs_saved_card() {
+      if (!this.addCardStatus && this.activeSavedCard !== '') {
+        return true;
+      }
+      return false;
+    },
+  },
+
+  watch: {
+    addCardStatus(val) {
+      if (val && !Object.prototype.hasOwnProperty.call(val, 'state')) {
+        setTimeout(() => {
+          this.setForm();
+        }, 800);
+      } else {
+        this.getUserCards();
+      }
+    },
+    payment_method(val) {
+      if (val === 2 && this.get_saved_cards.length === 0) {
+        setTimeout(() => {
+          this.setForm();
+          this.addCardStatus = true;
+        }, 800);
+      }
+    },
+    form: {
+      handler(val) {
+        if (Object.prototype.hasOwnProperty.call(val.state, 'cardno') && val.state.cardno.isValid && val.state.cvv.isValid && val.state.expiry_date.isValid && this.addCardStatus) {
+          this.vgs_valid_payment = true;
+        } else {
+          this.vgs_valid_payment = false;
+        }
+      },
+      deep: true,
+    },
   },
 
   created() {
@@ -657,6 +746,7 @@ export default {
     this.checkUserPhone();
     const session = this.$store.getters.getSession;
     this.country = session[session.default].country_code;
+    this.loadVeryGoodSecurityScript();
     // this.setDefaultPaymentOptions();
   },
 
@@ -690,6 +780,7 @@ export default {
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
       clearInstructionNotes: '$_orders/$_home/clearInstructionNotes',
       setSecondaryProfile: 'setSecondaryProfile',
+      setCardPaymentStatus: '$_payment/setCardPaymentStatus',
     }),
 
     ...mapActions({
@@ -700,6 +791,168 @@ export default {
       requestSavedCards: '$_orders/$_home/requestSavedCards',
       requestPaymentOptionsAction: '$_payment/requestPaymentOptions',
     }),
+
+    loadVeryGoodSecurityScript() {
+      const script = document.createElement('script');
+      script.onload = () => {
+        setTimeout(() => {
+          // this.setForm();
+        }, 500);
+      };
+      script.async = true;
+      script.src = 'https://js.verygoodvault.com/vgs-collect/2.0/vgs-collect.js';
+      document.head.appendChild(script);
+    },
+
+    setForm() {
+      // eslint-disable-next-line no-undef
+      this.form = VGSCollect.create('tnts91uunnd', 'sandbox', () => {});
+
+      this.form.field('#cc-number .fake-input-1', {
+        type: 'card-number',
+        name: 'cardno',
+        successColor: '#4F8A10',
+        errorColor: '#D8000C',
+        fontSize: '11px',
+        css: {
+          'letter-spacing': '0.03em',
+        },
+        placeholder: 'Card Number',
+        validations: ['required', 'validCardNumber'],
+      });
+
+
+      this.form.field('#cc-cvc .fake-input-1', {
+        type: 'card-security-code',
+        name: 'cvv',
+        fontSize: '11px',
+        css: {
+          'letter-spacing': '0.03em',
+        },
+        placeholder: 'CVV',
+        validations: ['required', 'validCardSecurityCode'],
+      });
+
+      this.form.field('#cc-expiration-date .fake-input-1', {
+        type: 'card-expiration-date',
+        name: 'expiry_date',
+        fontSize: '11px',
+        css: {
+          'letter-spacing': '0.03em',
+        },
+        serializers: [{ name: 'replace', options: { old: ' ', new: '' } }],
+        placeholder: 'Card Expiry (MM/YYYY)',
+        validations: ['required', 'validCardExpirationDate'],
+      });
+    },
+
+    onSubmit() {
+      if (this.vgs_valid_payment) {
+        const session = this.$store.getters.getSession;
+        const accData = session[session.default];
+        const firstName = accData.user_name.split(' ')[0];
+        const lastName = accData.user_name.split(' ').length > 1 ? accData.user_name.split(' ')[1] : '';
+        const newCardPayload = {
+          currency: this.activeVendorPriceData.currency,
+          country: this.getCountryCode,
+          amount: this.pending_amount.replace(',', ''),
+          email: accData.user_email,
+          phonenumber: accData.user_phone,
+          firstname: firstName,
+          lastname: lastName,
+          txRef: `${this.order_no}/${accData.user_phone}`,
+          user_id: accData.user_id,
+          cop_id: session.default === 'biz' ? accData.cop_id : 0,
+          save: this.saveCardState,
+        };
+        this.loading = true;
+        this.form.submit('/customers/collect_card_details/', {
+          data: newCardPayload,
+        }, (status, response) => {
+          if (response.status) {
+            if (response.running_balance * -1 >= parseInt(this.pending_amount.replace(',', ''), 10)) {
+              this.doCompleteOrder();
+            } else {
+              this.loading = false;
+              this.doNotification(
+                2,
+                'Insufficient balance',
+                'The amount charge is not sufficient to place the order, please try again',
+              );
+            }
+          } else {
+            this.loading = false;
+            this.doNotification(
+              2,
+              'Failed to charge card',
+              'We could not charge your card, Please try again later',
+            );
+          }
+        });
+      } else {
+        this.doNotification(
+          2,
+          'Failed to charge card',
+          'Please enter all the card details and try again',
+        );
+      }
+    },
+
+    chargeSavedCard() {
+      if (this.valid_vgs_saved_card) {
+        const session = this.$store.getters.getSession;
+        const accData = session[session.default];
+        const firstName = accData.user_name.split(' ')[0];
+        const payload = {
+          txRef: `${this.order_no}/${accData.user_phone}`,
+          card: this.activeSavedCard !== '' && this.get_saved_cards.length > 0 ? this.get_saved_cards[this.activeSavedCard].card : '',
+          currency: this.activeVendorPriceData.currency,
+          amount: this.pending_amount.replace(',', ''),
+          country: this.getCountryCode,
+          email: accData.user_email,
+          phonenumber: accData.user_phone,
+          firstname: firstName,
+          user_id: accData.user_id,
+          cop_id: session.default === 'biz' ? accData.cop_id : 0,
+        };
+        const savedCardPayload = {
+          values: payload,
+          app: 'AUTH',
+          endpoint: 'customers/charge_saved_card',
+        };
+        this.loading = true;
+        this.requestSavedCards(savedCardPayload).then(
+          (response) => {
+            if (response.status) {
+              if (response.running_balance * -1 >= parseInt(this.pending_amount.replace(',', ''), 10)) {
+                this.doCompleteOrder();
+              } else {
+                this.loading = false;
+                this.doNotification(
+                  2,
+                  'Insufficient balance',
+                  'The amount charge is not sufficient to place the order please try again',
+                );
+              }
+            } else {
+              this.loading = false;
+              this.doNotification(
+                2,
+                'Failed to charge card',
+                'We could not charge your card, Please try again later',
+              );
+            }
+          },
+          error => false,
+        );
+      } else {
+        this.doNotification(
+          2,
+          'Failed to charge card',
+          'Please select one of your saved cards',
+        );
+      }
+    },
 
     do_set_active_order_option(name) {
       // eslint-disable-next-line no-unused-expressions
@@ -930,13 +1183,11 @@ export default {
         } else if (Number(this.payment_method) === 11) {
           this.handleRunningBalancePayments();
         } else if (Number(this.payment_method) === 2) {
-          const card = this.get_saved_cards.find(
-            // eslint-disable-next-line camelcase
-            card_details => card_details.last4 === this.payment_account.slice(2),
-          );
-          const setCurrency = this.activeVendorPriceData.currency;
-          const vendorId = this.activeVendorPriceData.vendor_id;
-          this.handleSavedCard(vendorId, setCurrency, card, true);
+          if (this.addCardStatus) {
+            this.onSubmit();
+          } else {
+            this.chargeSavedCard();
+          }
         } else {
           // console.log('not handled payment method', this.payment_method);
         }
@@ -1353,6 +1604,11 @@ export default {
       return `2_${last4digits}`;
     },
 
+    formatCardNumber(cardno) {
+      const last4 = cardno.substring(cardno.length - 4, cardno.length);
+      return `**** **** **** ${last4}`;
+    },
+
     setDefaultOptions() {
       if (this.get_active_order_option === '') {
         if (this.show_payment) {
@@ -1631,23 +1887,16 @@ export default {
         cop_id: copId,
       };
 
-      // encrypt card payload here
-      cardPayload = Mcrypt.encrypt(cardPayload);
-
       const fullPayload = {
         values: cardPayload,
-        app: 'PRIVATE_API',
-        endpoint: 'get_card',
+        app: 'AUTH',
+        endpoint: 'customers/get_saved_cards',
       };
 
       this.requestSavedCards(fullPayload).then(
         (response) => {
-          // decrypt response here
-          // eslint-disable-next-line no-param-reassign
-          response = JSON.parse(Mcrypt.decrypt(response));
           if (response.status) {
             this.setSavedCards(response.cards);
-            this.setStripeUserId(response.stripe_user_id);
           } else {
             // console.log('failed to get saved cards');
           }
@@ -1726,6 +1975,11 @@ export default {
       }
 
       this.payment_methods = data.payment_methods;
+      this.payment_methods.forEach((row) => {
+        if (row.payment_method_id === 2) {
+          this.setCardPaymentStatus(true);
+        }
+      });
     },
 
     /* end card */
