@@ -733,7 +733,6 @@ export default {
 
   watch: {
     addCardStatus(val) {
-      console.log(val);
       if (val) {
         setTimeout(() => {
           this.setForm();
