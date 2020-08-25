@@ -87,31 +87,54 @@
             >
               <div class="payment-options-cards-container">
                 <div v-if="!addCardStatus && get_saved_cards.length > 0">
-                  <p class="payment-options-cards-title">Saved Cards</p>
-                  <div
-                    v-for="(cards, index) in get_saved_cards"
-                    :key="index"
-                    class="payment-options-saved-cards-row"
-                  >
-                    {{ formatCardNumber(cards.card) }}
-                    <input
-                      v-model="activeSavedCard"
-                      :value="index"
-                      type="radio"
-                      class="payment-options-saved-card-radio"
+                  <div v-if="deletedCardIndex === ''">
+                    <p class="payment-options-cards-title">Saved Cards</p>
+                    <div
+                      v-for="(cards, index) in get_saved_cards"
+                      :key="index"
+                      class="payment-options-saved-cards-row"
                     >
+                      <input
+                        v-model="activeSavedCard"
+                        :value="index"
+                        type="radio"
+                        class="payment-options-saved-card-radio"
+                      >
+                      {{ formatCardNumber(cards.card) }}
+                      <font-awesome-icon
+                        icon="trash-alt"
+                        class="payment-options-delete-card-icon"
+                        @click="deletedCardIndex = index"
+                      />
+                    </div>
+                    <div
+                      class="payment-options-add-card-holder"
+                      @click="addCardStatus = !addCardStatus"
+                    >
+                      <span>
+                        <font-awesome-icon
+                          icon="plus-circle"
+                          class="payment-options-add-card-icon"
+                        />
+                      </span>
+                      <span class="payment-options-add-card">Add a new Card</span>
+                    </div>
                   </div>
                   <div
-                    class="payment-options-add-card-holder"
-                    @click="addCardStatus = !addCardStatus"
+                    v-else
+                    class="delete-saved-card-dialogue"
                   >
-                    <span>
-                      <font-awesome-icon
-                        icon="plus-circle"
-                        class="payment-options-add-card-icon"
-                      />
-                    </span>
-                    <span class="payment-options-add-card">Add a new Card</span>
+                    <p class="delete-saved-card-dialogue-label">Are you sure you want to delete this card <strong>{{ get_saved_cards[deletedCardIndex].card }}</strong>?</p>
+                    <p class="delete-saved-card-dialogue-label">
+                      <span
+                        class="delete-saved-card-dialogue-buttons"
+                        @click="deleteSavedCard(deletedCardIndex)"
+                      >Yes</span>
+                      <span
+                        class="delete-saved-card-dialogue-buttons"
+                        @click="deletedCardIndex = ''"
+                      >No</span>
+                    </p>
                   </div>
                 </div>
                 <form
@@ -440,14 +463,14 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import numeral from 'numeral';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChevronDown, faPlusCircle, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faPlusCircle, faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
 
-library.add(faChevronDown, faPlusCircle, faArrowLeft);
+library.add(faChevronDown, faPlusCircle, faArrowLeft, faTrashAlt);
 
 // const TRUCK_VENDORS = [6,10,13,14,17,18,19,20];
 const TRUCK_VENDORS = [20, 25];
@@ -502,6 +525,7 @@ export default {
       addCardStatus: false,
       activeSavedCard: '',
       saveCardState: false,
+      deletedCardIndex: '',
     };
   },
 
@@ -713,11 +737,14 @@ export default {
       }
       return false;
     },
+    savedCardsTally() {
+      return this.get_saved_cards.length;
+    },
   },
 
   watch: {
     addCardStatus(val) {
-      if (val && !Object.prototype.hasOwnProperty.call(val, 'state')) {
+      if (val) {
         setTimeout(() => {
           this.setForm();
         }, 800);
@@ -728,9 +755,18 @@ export default {
     payment_method(val) {
       if (val === 2 && this.get_saved_cards.length === 0) {
         setTimeout(() => {
-          this.setForm();
           this.addCardStatus = true;
-        }, 800);
+        }, 500);
+      }
+      if (val !== 2) {
+        this.addCardStatus = false;
+      }
+    },
+    savedCardsTally(val) {
+      if (val === 0) {
+        setTimeout(() => {
+          this.addCardStatus = true;
+        }, 500);
       }
     },
     form: {
@@ -805,11 +841,6 @@ export default {
 
     loadVeryGoodSecurityScript() {
       const script = document.createElement('script');
-      script.onload = () => {
-        setTimeout(() => {
-          // this.setForm();
-        }, 500);
-      };
       script.async = true;
       script.src = 'https://js.verygoodvault.com/vgs-collect/2.0/vgs-collect.js';
       document.head.appendChild(script);
@@ -963,6 +994,33 @@ export default {
           'Please select one of your saved cards',
         );
       }
+    },
+
+    deleteSavedCard(index) {
+      const payload = {
+        card: this.get_saved_cards[index].card,
+      };
+      const deleteCardPayload = {
+        values: payload,
+        app: 'AUTH',
+        endpoint: 'customers/delete_saved_card',
+      };
+      this.deletedCardIndex = '';
+      this.loading = true;
+      this.requestSavedCards(deleteCardPayload).then(
+        (response) => {
+          this.loading = false;
+          if (response.status) {
+            this.getUserCards();
+          } else {
+            this.doNotification(
+              2,
+              'Failed to delete saved card',
+              'Failed to delete saved card. Please try again later',
+            );
+          }
+        },
+      );
     },
 
     do_set_active_order_option(name) {
@@ -1912,7 +1970,7 @@ export default {
           if (response.status) {
             this.setSavedCards(response.cards);
           } else {
-            // console.log('failed to get saved cards');
+            this.setSavedCards([]);
           }
         },
         // eslint-disable-next-line no-unused-vars
