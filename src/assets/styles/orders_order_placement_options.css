@@ -68,7 +68,29 @@
 }
 
 .payment-options-saved-card-radio {
+  margin-right: 10px;
+}
+
+.payment-options-delete-card-icon {
   margin-left: auto;
+  color: red;
+  cursor: pointer;
+}
+
+.delete-saved-card-dialogue {
+  height: 100px;
+  padding: 10px;
+}
+
+.delete-saved-card-dialogue-label {
+  text-align: center;
+}
+.delete-saved-card-dialogue-buttons {
+  padding: 5px 10px 5px 10px;
+  margin: 5px;
+  border: 1px solid;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .payment-options-saved-cards-row {

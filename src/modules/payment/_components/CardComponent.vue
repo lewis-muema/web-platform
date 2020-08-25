@@ -3,6 +3,28 @@
     class="paymentbody--form"
   >
     <div
+      v-if="deleteCardIndex !== ''"
+      class="saved-cards-delete-dialogue"
+    >
+      <div class="saved-cards-delete-dialogue-container">
+        <p>Are you sure you would like to delete this card <strong>{{ get_saved_cards[deleteCardIndex].card }}</strong>?</p>
+        <p>
+          <span
+            class="delete-saved-card-dialogue-buttons"
+            @click="deleteSavedCard(deleteCardIndex)"
+          >
+            Yes
+          </span>
+          <span
+            class="delete-saved-card-dialogue-buttons"
+            @click="deleteCardIndex = ''"
+          >
+            No
+          </span>
+        </p>
+      </div>
+    </div>
+    <div
       v-if="!addCardStatus"
       class="saved-cards-container"
     >
@@ -22,13 +44,21 @@
             icon="credit-card"
           />
         </span>
-        {{ formatCardNumber(cards.card) }}
         <input
           v-model="selectedSavedCard"
           type="radio"
           class="card-payment-saved-card-radio"
           :value="index"
         >
+        {{ formatCardNumber(cards.card) }}
+        <span
+          class="card-payment-remove-cards-icon"
+          @click="deleteCardIndex = index"
+        >
+          <font-awesome-icon
+            icon="trash-alt"
+          />
+        </span>
       </div>
       <div
         class="card-payment-add-card-holder"
@@ -171,7 +201,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChevronDown, faPlusCircle, faArrowLeft, faCreditCard } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faPlusCircle, faArrowLeft, faCreditCard, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import payment_loading from './LoadingComponent.vue';
 import payment_success from './SuccessComponent.vue';
 import payment_fail from './FailComponent.vue';
@@ -180,7 +210,7 @@ import Mcrypt from '../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../mixins/payment_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
 
-library.add(faChevronDown, faPlusCircle, faArrowLeft, faCreditCard);
+library.add(faChevronDown, faPlusCircle, faArrowLeft, faCreditCard, faTrashAlt);
 
 export default {
   name: 'CardComponent',
@@ -213,6 +243,7 @@ export default {
       addCardStatus: false,
       saveCardState: false,
       loadingStatus: false,
+      deleteCardIndex: '',
     };
   },
   computed: {
@@ -428,6 +459,34 @@ export default {
       );
     },
 
+    deleteSavedCard(index) {
+      const payload = {
+        card: this.get_saved_cards[index].card,
+      };
+      const deleteCardPayload = {
+        values: payload,
+        app: 'AUTH',
+        endpoint: 'customers/delete_saved_card',
+      };
+      this.deleteCardIndex = '';
+      this.loading = true;
+      this.requestSavedCards(deleteCardPayload).then(
+        (response) => {
+          this.loading = false;
+          if (response.status) {
+            this.getUserCards();
+          } else {
+            const notification = {
+              title: 'Failed to delete saved card',
+              level: 2,
+              message: 'Please try again later.',
+            };
+            this.displayNotification(notification);
+          }
+        },
+      );
+    },
+
     getUserCards() {
       const session = this.$store.getters.getSession;
       let cop_id = 0;
@@ -459,51 +518,10 @@ export default {
           if (response.status) {
             this.setSavedCards(response.cards);
           } else {
+            this.setSavedCards([]);
           }
         },
         error => false,
-      );
-    },
-    deleteSavedCard(card) {
-      let cardPayload = {
-        card_id: card.card_id,
-        stripe_user_id: this.get_stripe_user_id,
-      };
-      cardPayload = Mcrypt.encrypt(cardPayload);
-
-      const fullPayload = {
-        values: cardPayload,
-        app: 'PRIVATE_API',
-        endpoint: 'remove_card',
-      };
-      this.removeSavedCard(fullPayload).then(
-        (response) => {
-          if (response.length > 0) {
-            this.isHidden = false;
-            const notification = {
-              title: 'Remove Card success',
-              level: 1,
-              message: 'card deleted successfully.',
-            };
-            this.displayNotification(notification);
-            this.getUserCards();
-          } else {
-            const notification = {
-              title: 'Remove Card Failed',
-              level: 2,
-              message: 'delete card failed, please try again.',
-            };
-            this.displayNotification(notification);
-          }
-        },
-        (error) => {
-          const notification = {
-            title: 'delete card failed',
-            level: 2,
-            message: 'delete card did not go through',
-          };
-          this.displayNotification(notification);
-        },
       );
     },
     clearCardData() {
@@ -638,7 +656,12 @@ export default {
   margin-right: 20px;
 }
 .card-payment-saved-card-radio {
+  margin: 0px 10px 0px 10px;
+}
+.card-payment-remove-cards-icon {
   margin-left: auto;
+  color: red;
+  margin-right: 10px;
 }
 .card-payment-saved-cards-row {
   height: 35px;
@@ -710,5 +733,31 @@ export default {
 }
 .loader-height-override {
   height: 50px;
+}
+.saved-cards-delete-dialogue {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #ffffffa8;
+  display: flex;
+  justify-content: center;
+}
+.saved-cards-delete-dialogue-container {
+  width: 75%;
+  background: #e8f3fc;
+  height: 100px;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 10%;
+  color: #527CBD;
+  text-align: center;
+  font-size: 14px;
+}
+.delete-saved-card-dialogue-buttons {
+  padding: 5px 10px 5px 10px;
+  margin: 5px;
+  border: 1px solid;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>
