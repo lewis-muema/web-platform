@@ -23,6 +23,7 @@ const state = {
   nps_status: false,
   secondary_profile: '',
   dedicated_access_status: false,
+  pick_up_filled_status: false,
 };
 
 export default {

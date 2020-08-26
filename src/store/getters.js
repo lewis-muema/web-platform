@@ -54,6 +54,9 @@ export default {
   getSecondaryProfile(state) {
     return state.secondary_profile;
   },
+  getPickUpFilledStatus(state) {
+    return state.pick_up_filled_status;
+  },
 };
 
 function isEmpty(obj) {
