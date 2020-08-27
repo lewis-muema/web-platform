@@ -390,15 +390,32 @@ export default {
       this.form.submit('/customers/collect_card_details/', {
         data: newCardPayload,
       }, (status, response) => {
-        this.loadingStatus = false;
         if (response.status) {
-          const notification = {
-            title: 'Top up',
-            level: 1,
-            message: 'Your account has been topped up successfully.',
+          const newSavedCardPayload = {
+            values: response.data,
+            app: 'AUTH',
+            endpoint: 'customers/charge_new_card',
           };
-          this.displayNotification(notification);
-          this.$store.commit('setRunningBalance', response.running_balance * -1);
+          this.requestSavedCards(newSavedCardPayload).then(
+            (res) => {
+              this.loadingStatus = false;
+              if (res.status) {
+                const notification = {
+                  title: 'Top up',
+                  level: 1,
+                  message: 'Your account has been topped up successfully.',
+                };
+                this.displayNotification(notification);
+                this.$store.commit('setRunningBalance', res.running_balance);
+              } else {
+                this.doNotification(
+                  2,
+                  'Failed to charge card',
+                  'We could not capture your card details, Please try again later',
+                );
+              }
+            },
+          );
         } else {
           const notification = {
             title: 'Top up',
@@ -437,7 +454,7 @@ export default {
           this.loadingStatus = false;
           // decrypt response here
           if (response.status) {
-            this.$store.commit('setRunningBalance', response.running_balance * -1);
+            this.$store.commit('setRunningBalance', response.running_balance);
             this.savedCardAmount = '';
             this.selectedSavedCard = '';
             const notification = {
@@ -460,8 +477,12 @@ export default {
     },
 
     deleteSavedCard(index) {
+      const session = this.$store.getters.getSession;
+      const accData = session[session.default];
       const payload = {
         card: this.get_saved_cards[index].card,
+        user_id: accData.user_id,
+        cop_id: session.default === 'biz' ? accData.cop_id : 0,
       };
       const deleteCardPayload = {
         values: payload,
@@ -523,12 +544,6 @@ export default {
         },
         error => false,
       );
-    },
-    clearCardData() {
-      this.card_payment_data.card_no = '';
-      this.card_payment_data.card_expiry = '';
-      this.card_payment_data.cvv = '';
-      this.card_payment_data.amount = '';
     },
   },
 };

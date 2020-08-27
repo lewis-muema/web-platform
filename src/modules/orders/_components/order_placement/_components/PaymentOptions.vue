@@ -894,6 +894,7 @@ export default {
           txRef: `${this.order_no}/${accData.user_phone}`,
           user_id: accData.user_id,
           cop_id: session.default === 'biz' ? accData.cop_id : 0,
+          vendor_type: this.activeVendorPriceData.vendor_id,
           save: this.saveCardState,
         };
         this.loading = true;
@@ -901,16 +902,34 @@ export default {
           data: newCardPayload,
         }, (status, response) => {
           if (response.status) {
-            if (response.running_balance * -1 >= parseInt(this.pending_amount.replace(',', ''), 10)) {
-              this.doCompleteOrder();
-            } else {
-              this.loading = false;
-              this.doNotification(
-                2,
-                'Insufficient balance',
-                'The amount charge is not sufficient to place the order, please try again',
-              );
-            }
+            const newSavedCardPayload = {
+              values: response.data,
+              app: 'AUTH',
+              endpoint: 'customers/charge_new_card',
+            };
+            this.requestSavedCards(newSavedCardPayload).then(
+              (res) => {
+                if (res.status) {
+                  if (res.running_balance >= parseInt(this.pending_amount.replace(',', ''), 10)) {
+                    this.doCompleteOrder();
+                  } else {
+                    this.loading = false;
+                    this.doNotification(
+                      2,
+                      'Insufficient balance',
+                      'The amount charge is not sufficient to place the order, please try again',
+                    );
+                  }
+                } else {
+                  this.loading = false;
+                  this.doNotification(
+                    2,
+                    'Failed to charge card',
+                    'We could not capture your card details, Please try again later',
+                  );
+                }
+              },
+            );
           } else {
             this.loading = false;
             this.doNotification(
@@ -945,6 +964,7 @@ export default {
           firstname: firstName,
           user_id: accData.user_id,
           cop_id: session.default === 'biz' ? accData.cop_id : 0,
+          vendor_type: this.activeVendorPriceData.vendor_id,
         };
         const savedCardPayload = {
           values: payload,
@@ -955,7 +975,7 @@ export default {
         this.requestSavedCards(savedCardPayload).then(
           (response) => {
             if (response.status) {
-              if (response.running_balance * -1 >= parseInt(this.pending_amount.replace(',', ''), 10)) {
+              if (response.running_balance >= parseInt(this.pending_amount.replace(',', ''), 10)) {
                 this.doCompleteOrder();
               } else {
                 this.loading = false;
@@ -986,8 +1006,12 @@ export default {
     },
 
     deleteSavedCard(index) {
+      const session = this.$store.getters.getSession;
+      const accData = session[session.default];
       const payload = {
         card: this.get_saved_cards[index].card,
+        user_id: accData.user_id,
+        cop_id: session.default === 'biz' ? accData.cop_id : 0,
       };
       const deleteCardPayload = {
         values: payload,
