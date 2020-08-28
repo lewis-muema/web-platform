@@ -310,7 +310,7 @@ export default {
         this.$store.commit('setNotificationStatus', true);
         this.trackMixpanelEvent('Redirect to the android app/store from mobile web');
         setTimeout(() => {
-          window.location = 'https://images.sendyit.com/android_customer_app/';
+          window.location = 'https://play.google.com/store/apps/details?id=com.sendy.co.ke.sendyy';
         }, 10000);
       }
     },
