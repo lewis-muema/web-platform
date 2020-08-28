@@ -278,7 +278,6 @@ export default {
     },
 
     detectAndroid() {
-      const session = this.getSession;
       if (navigator.userAgent.match(/Android/i)) {
         const notification = {
           title: 'Mobile redirect',
@@ -287,18 +286,13 @@ export default {
         };
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
-        this.trackMixpanelEvent('Redirect to the android app/store from mobile web', {
-          'user name': session[session.default].user_name,
-          'user email': session[session.default].user_email,
-          'user phone': session[session.default].user_phone,
-        });
+        this.trackMixpanelEvent('Redirect to the android app/store from mobile web');
         setTimeout(() => {
-          window.location = 'https://www.sendyit.com/android_customer_app/';
+          window.location = 'https://images.sendyit.com/android_customer_app/';
         }, 10000);
       }
     },
     detectIOS() {
-      const session = this.getSession;
       if (navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i)) {
         const notification = {
           title: 'Mobile redirect',
@@ -307,32 +301,23 @@ export default {
         };
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
-        this.trackMixpanelEvent('Redirect to the IOS app/store from mobile web', {
-          'user name': session[session.default].user_name,
-          'user email': session[session.default].user_email,
-          'user phone': session[session.default].user_phone,
-        });
+        this.trackMixpanelEvent('Redirect to the IOS app/store from mobile web');
         setTimeout(() => {
           window.location = 'itms://itunes.apple.com/us/app/sendy-delivery-app/id1088688361?mt=8';
         }, 10000);
       }
     },
     autoPopBeacon() {
-      const session = this.getSession;
       setTimeout(() => {
         if (this.$route.path === '/auth' || this.$route.path === '/auth/sign_in') {
           window.Beacon('open');
           window.Beacon('navigate', '/answers/');
           setTimeout(() => {
             window.Beacon('suggest', ['59d5bc412c7d3a40f0ed346c']);
-            this.trackMixpanelEvent('Auto pop up helpscout beacon for account creation', {
-              'user name': session[session.default].user_name,
-              'user email': session[session.default].user_email,
-              'user phone': session[session.default].user_phone,
-            });
           }, 1500);
         }
         if (this.$route.path === '/orders' && !this.getPickUpFilledStatus) {
+          const session = this.$store.getters.getSession;
           window.Beacon('open');
           window.Beacon('navigate', '/answers/');
           setTimeout(() => {
