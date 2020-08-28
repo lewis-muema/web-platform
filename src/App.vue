@@ -278,6 +278,7 @@ export default {
     },
 
     detectAndroid() {
+      const session = this.getSession;
       if (navigator.userAgent.match(/Android/i)) {
         const notification = {
           title: 'Mobile redirect',
@@ -286,12 +287,18 @@ export default {
         };
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
+        this.trackMixpanelEvent('Redirect to the android app/store from mobile web', {
+          'user name': session[session.default].user_name,
+          'user email': session[session.default].user_email,
+          'user phone': session[session.default].user_phone,
+        });
         setTimeout(() => {
-          window.location = ' https://www.sendyit.com/android_customer_app/';
+          window.location = 'https://www.sendyit.com/android_customer_app/';
         }, 10000);
       }
     },
     detectIOS() {
+      const session = this.getSession;
       if (navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i)) {
         const notification = {
           title: 'Mobile redirect',
@@ -300,28 +307,44 @@ export default {
         };
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
+        this.trackMixpanelEvent('Redirect to the IOS app/store from mobile web', {
+          'user name': session[session.default].user_name,
+          'user email': session[session.default].user_email,
+          'user phone': session[session.default].user_phone,
+        });
         setTimeout(() => {
           window.location = 'itms://itunes.apple.com/us/app/sendy-delivery-app/id1088688361?mt=8';
         }, 10000);
       }
     },
     autoPopBeacon() {
+      const session = this.getSession;
       setTimeout(() => {
         if (this.$route.path === '/auth' || this.$route.path === '/auth/sign_in') {
           window.Beacon('open');
           window.Beacon('navigate', '/answers/');
           setTimeout(() => {
             window.Beacon('suggest', ['59d5bc412c7d3a40f0ed346c']);
-          }, 3000);
+            this.trackMixpanelEvent('Auto pop up helpscout beacon for account creation', {
+              'user name': session[session.default].user_name,
+              'user email': session[session.default].user_email,
+              'user phone': session[session.default].user_phone,
+            });
+          }, 1500);
         }
         if (this.$route.path === '/orders' && !this.getPickUpFilledStatus) {
           window.Beacon('open');
           window.Beacon('navigate', '/answers/');
           setTimeout(() => {
-            window.Beacon('suggest', ['59d6021a042863379ddc6c61']);
-          }, 3000);
+            window.Beacon('suggest', ['59d5e11f2c7d3a40f0ed34fe']);
+            this.trackMixpanelEvent('Auto pop up helpscout beacon for order placement', {
+              'user name': session[session.default].user_name,
+              'user email': session[session.default].user_email,
+              'user phone': session[session.default].user_phone,
+            });
+          }, 1500);
         }
-      }, 300000);
+      }, 30000);
     },
   },
 };
