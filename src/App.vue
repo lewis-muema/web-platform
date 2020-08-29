@@ -304,13 +304,13 @@ export default {
         const notification = {
           title: 'Mobile redirect',
           level: 2,
-          message: 'We have detected you are using an android device. We will redirect you to the android app in the next few seconds for the best experience',
+          message: 'We have detected you are using an android device. We will redirect you to the play store to download the app in the next few seconds for the best experience',
         };
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
         this.trackMixpanelEvent('Redirect to the android app/store from mobile web');
         setTimeout(() => {
-          window.location = 'https://play.google.com/store/apps/details?id=com.sendy.co.ke.sendyy';
+          window.location = 'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.sendy.co.ke.sendyy&ddl=1&pcampaignid=web_ddl_1';
         }, 10000);
       }
     },
@@ -319,7 +319,7 @@ export default {
         const notification = {
           title: 'Mobile redirect',
           level: 2,
-          message: 'We have detected you are using an IOS device. We will redirect you to the IOS app in the next few seconds for the best experience',
+          message: 'We have detected you are using an IOS device. We will redirect you to the app store to download the app in the next few seconds for the best experience',
         };
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
