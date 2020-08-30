@@ -313,6 +313,7 @@ export default {
       set_location_name: '$_orders/$_home/setLocationName',
       unset_location_name: '$_orders/$_home/unsetLocationName',
       setPickupFilled: '$_orders/$_home/setPickUpFilled',
+      setPickUpFilledStatus: 'setPickUpFilledStatus',
       addExtraDestination: '$_orders/$_home/addExtraDestination',
       removeExtraDestination: '$_orders/$_home/removeExtraDestination',
       set_active_package_class: '$_orders/$_home/setActivePackageClass',
@@ -396,6 +397,7 @@ export default {
     resetLocation(index) {
       if (index === 0) {
         this.setPickupFilled(false);
+        this.setPickUpFilledStatus(false);
       }
 
       this.unset_location_marker(index);
@@ -445,6 +447,7 @@ export default {
       this.set_location_name(locationNamePayload);
       if (index === 0) {
         this.setPickupFilled(true);
+        this.setPickUpFilledStatus(true);
         const eventPayload = {
           eventCategory: 'Order Placement',
           eventAction: 'Click',
@@ -807,6 +810,7 @@ export default {
     resetPathLocation(index) {
       if (index === 0) {
         this.setPickupFilled(false);
+        this.setPickUpFilledStatus(false);
         this.unset_order_path(index);
         this.unsetStorePath(index);
       }
