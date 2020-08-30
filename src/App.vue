@@ -28,6 +28,7 @@ export default {
   computed: {
     ...mapGetters({
       getSession: 'getSession',
+      getPickUpFilledStatus: 'getPickUpFilledStatus',
     }),
     notification_status() {
       return this.$store.getters.getNotificationStatus;
@@ -50,6 +51,33 @@ export default {
         this.updateFirebaseToken();
       }
     },
+    $route(to, from) {
+      if (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders') {
+        this.autoPopBeacon();
+      }
+    },
+  },
+  mounted() {
+    // beacon click listener
+    window.Beacon('on', 'open', () => {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          window.ga('send', 'event', {
+            eventCategory: 'Beacon Chat',
+            eventAction: 'Click',
+            eventLabel: 'Chat Icon - Beacon',
+          });
+        }
+      } catch (er) {
+        // ...
+      }
+    });
   },
   mounted() {
     // beacon click listener
@@ -91,6 +119,9 @@ export default {
       // initilize firebase on load
       this.initializeFirebase();
       this.loadFCMListeners();
+      this.detectAndroid();
+      this.detectIOS();
+      this.autoPopBeacon();
     }
   },
   methods: {
@@ -288,6 +319,61 @@ export default {
       }
       // reset notification status
       this.$store.commit('setNotificationStatus', false);
+    },
+
+    detectAndroid() {
+      if (navigator.userAgent.match(/Android/i)) {
+        const notification = {
+          title: 'Mobile redirect',
+          level: 2,
+          message: 'We have detected you are using an android device. We will redirect you to the play store to download the app in the next few seconds for the best experience',
+        };
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
+        this.trackMixpanelEvent('Redirect to the android app/store from mobile web');
+        setTimeout(() => {
+          window.location = 'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.sendy.co.ke.sendyy&ddl=1&pcampaignid=web_ddl_1';
+        }, 10000);
+      }
+    },
+    detectIOS() {
+      if (navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i)) {
+        const notification = {
+          title: 'Mobile redirect',
+          level: 2,
+          message: 'We have detected you are using an IOS device. We will redirect you to the app store to download the app in the next few seconds for the best experience',
+        };
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
+        this.trackMixpanelEvent('Redirect to the IOS app/store from mobile web');
+        setTimeout(() => {
+          window.location = 'itms://itunes.apple.com/us/app/sendy-delivery-app/id1088688361?mt=8';
+        }, 10000);
+      }
+    },
+    autoPopBeacon() {
+      setTimeout(() => {
+        if (this.$route.path === '/auth' || this.$route.path === '/auth/sign_in') {
+          window.Beacon('open');
+          window.Beacon('navigate', '/answers/');
+          setTimeout(() => {
+            window.Beacon('suggest', ['59d5bc412c7d3a40f0ed346c']);
+          }, 1500);
+        }
+        if (this.$route.path === '/orders' && !this.getPickUpFilledStatus) {
+          const session = this.$store.getters.getSession;
+          window.Beacon('open');
+          window.Beacon('navigate', '/answers/');
+          setTimeout(() => {
+            window.Beacon('suggest', ['59d5e11f2c7d3a40f0ed34fe']);
+            this.trackMixpanelEvent('Auto pop up helpscout beacon for order placement', {
+              'user name': session[session.default].user_name,
+              'user email': session[session.default].user_email,
+              'user phone': session[session.default].user_phone,
+            });
+          }, 1500);
+        }
+      }, 30000);
     },
   },
 };

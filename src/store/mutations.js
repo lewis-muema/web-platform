@@ -48,4 +48,7 @@ export default {
   setSecondaryProfile(state, status) {
     state.secondary_profile = status;
   },
+  setPickUpFilledStatus(state, status) {
+    state.pick_up_filled_status = status;
+  },
 };
