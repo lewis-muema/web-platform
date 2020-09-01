@@ -3,7 +3,6 @@
     class=""
     style="width:150% "
   >
-    {{ activeVendorPriceData.vendor_id }}
     <div class="">
       <div class="home-view-vendor-classes--label">
         <div
