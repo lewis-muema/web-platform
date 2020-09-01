@@ -3,6 +3,7 @@
     class=""
     style="width:150% "
   >
+    {{ activeVendorPriceData.vendor_id }}
     <div class="">
       <div class="home-view-vendor-classes--label">
         <div
@@ -891,7 +892,7 @@ export default {
           phonenumber: accData.user_phone,
           firstname: firstName,
           lastname: lastName,
-          txRef: `${this.order_no}/${accData.user_phone}`,
+          txRef: `${Date.now()}`,
           user_id: accData.user_id,
           cop_id: session.default === 'biz' ? accData.cop_id : 0,
           vendor_type: this.activeVendorPriceData.vendor_id,
@@ -954,7 +955,7 @@ export default {
         const accData = session[session.default];
         const firstName = accData.user_name.split(' ')[0];
         const payload = {
-          txRef: `${this.order_no}/${accData.user_phone}`,
+          txRef: `${Date.now()}`,
           card: this.activeSavedCard !== '' && this.get_saved_cards.length > 0 ? this.get_saved_cards[this.activeSavedCard].card : '',
           currency: this.activeVendorPriceData.currency,
           amount: this.pending_amount.replace(',', ''),

@@ -697,17 +697,17 @@ export default {
         const lastName = accData.user_name.split(' ').length > 1 ? accData.user_name.split(' ')[1] : '';
         const order_no = Object.prototype.hasOwnProperty.call(this.getExpandedActiveVendorTally[0], 'order_no') ? this.getExpandedActiveVendorTally[0].order_no : this.getExpandedActiveVendorTally[0].id;
         const newCardPayload = {
-          currency: this.getPriceRequestObject.currency,
+          currency: this.getExpandedActiveVendorTally[0].currency,
           country: this.getCountryCode,
           amount: this.pending_amount.replace(',', ''),
           email: accData.user_email,
           phonenumber: accData.user_phone,
           firstname: firstName,
           lastname: lastName,
-          txRef: `${order_no}/${accData.user_phone}`,
+          txRef: `${Date.now()}`,
           user_id: accData.user_id,
           cop_id: session.default === 'biz' ? accData.cop_id : 0,
-          vendor_type: this.getPriceRequestObject.vendor_type,
+          vendor_type: this.getExpandedActiveVendorTally[0].vendor_id,
           save: this.saveCardState,
         };
         this.loading = true;
@@ -768,9 +768,9 @@ export default {
         const firstName = accData.user_name.split(' ')[0];
         const order_no = Object.prototype.hasOwnProperty.call(this.getExpandedActiveVendorTally[0], 'order_no') ? this.getExpandedActiveVendorTally[0].order_no : this.getExpandedActiveVendorTally[0].id;
         const payload = {
-          txRef: `${order_no}/${accData.user_phone}`,
+          txRef: `${Date.now()}`,
           card: this.activeSavedCard !== '' && this.get_saved_cards.length > 0 ? this.get_saved_cards[this.activeSavedCard].card : '',
-          currency: this.getPriceRequestObject.currency,
+          currency: this.getExpandedActiveVendorTally[0].currency,
           amount: this.pending_amount.replace(',', ''),
           country: this.getCountryCode,
           email: accData.user_email,
@@ -778,7 +778,7 @@ export default {
           firstname: firstName,
           user_id: accData.user_id,
           cop_id: session.default === 'biz' ? accData.cop_id : 0,
-          vendor_type: this.getPriceRequestObject.vendor_type,
+          vendor_type: this.getExpandedActiveVendorTally[0].vendor_id,
         };
         const savedCardPayload = {
           values: payload,
