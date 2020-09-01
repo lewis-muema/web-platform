@@ -381,10 +381,11 @@ export default {
         phonenumber: accData.user_phone,
         firstname: firstName,
         lastname: lastName,
-        txRef: `${accData.user_phone}-${moment(Date.now()).format('DD/MM/YYYY_HH:mm:ss')}`,
+        txRef: `${Date.now()}`,
         user_id: accData.user_id,
         cop_id: session.default === 'biz' ? accData.cop_id : 0,
         save: this.saveCardState,
+        vendor_type: 1,
       };
       this.loadingStatus = true;
       this.form.submit('/customers/collect_card_details/', {
@@ -432,7 +433,7 @@ export default {
       const accData = session[session.default];
       const firstName = accData.user_name.split(' ')[0];
       const payload = {
-        txRef: `${accData.user_phone}-${moment(Date.now()).format('DD/MM/YYYY_HH:mm:ss')}`,
+        txRef: `${Date.now()}`,
         card: this.get_saved_cards.length > 0 && this.selectedSavedCard !== '' ? this.get_saved_cards[this.selectedSavedCard].card : '',
         currency: this.getActiveCurrency,
         amount: this.savedCardAmount,
@@ -442,6 +443,7 @@ export default {
         firstname: firstName,
         user_id: accData.user_id,
         cop_id: session.default === 'biz' ? accData.cop_id : 0,
+        vendor_type: 1,
       };
       const savedCardPayload = {
         values: payload,
@@ -747,7 +749,7 @@ export default {
   pointer-events: none;
 }
 .loader-height-override {
-  height: 50px;
+  height: 50px !important;
 }
 .saved-cards-delete-dialogue {
   position: absolute;
