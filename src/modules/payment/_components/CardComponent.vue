@@ -152,7 +152,9 @@
             v-model="saveCardState"
             type="checkbox"
           >
-          <span class="fake-checkbox-label">Save your card details for easier payment in future</span>
+          <span
+            class="fake-checkbox-label"
+          >Save your card details for easier payment in future</span>
         </div>
       </div>
       <div
@@ -406,6 +408,7 @@ export default {
                   level: 1,
                   message: 'Your account has been topped up successfully.',
                 };
+                this.clearInputs();
                 this.displayNotification(notification);
                 this.$store.commit('setRunningBalance', res.running_balance);
               } else {
@@ -459,6 +462,7 @@ export default {
             this.$store.commit('setRunningBalance', response.running_balance);
             this.savedCardAmount = '';
             this.selectedSavedCard = '';
+            this.clearInputs();
             const notification = {
               title: 'Top up',
               level: 1,
@@ -476,6 +480,14 @@ export default {
         },
         error => false,
       );
+    },
+
+    clearInputs() {
+      this.addCardStatus = false;
+      this.saveCardState = false;
+      setTimeout(() => {
+        this.addCardStatus = true;
+      }, 100);
     },
 
     deleteSavedCard(index) {
