@@ -911,6 +911,9 @@ export default {
         this.loading = true;
         this.form.submit('/customers/collect_card_details/', {
           data: newCardPayload,
+          headers: {
+            Authorization: localStorage.jwtToken,
+          },
         }, (status, response) => {
           if (response.status) {
             const newSavedCardPayload = {
