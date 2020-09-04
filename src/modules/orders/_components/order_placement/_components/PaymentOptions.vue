@@ -939,7 +939,7 @@ export default {
                   this.doNotification(
                     2,
                     'Failed to charge card',
-                    'We could not capture your card details, Please try again later',
+                    res.message,
                   );
                 }
               },
@@ -949,7 +949,7 @@ export default {
             this.doNotification(
               2,
               'Failed to charge card',
-              'We could not charge your card, Please try again later',
+              response.message,
             );
           }
         });
@@ -1004,7 +1004,7 @@ export default {
               this.doNotification(
                 2,
                 'Failed to charge card',
-                'We could not charge your card, Please try again later',
+                response.message,
               );
             }
           },
