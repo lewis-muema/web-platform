@@ -415,19 +415,20 @@ export default {
                 this.displayNotification(notification);
                 this.$store.commit('setRunningBalance', res.running_balance);
               } else {
-                this.doNotification(
-                  2,
-                  'Failed to charge card',
-                  'We could not capture your card details, Please try again later',
-                );
+                const notification = {
+                  title: 'Failed to charge card',
+                  level: 2,
+                  message: res.message,
+                };
+                this.displayNotification(notification);
               }
             },
           );
         } else {
           const notification = {
-            title: 'Top up',
+            title: 'Failed to charge card',
             level: 2,
-            message: 'Failed to top up account',
+            message: response.message,
           };
           this.displayNotification(notification);
         }
@@ -476,7 +477,7 @@ export default {
             const notification = {
               title: 'Top up',
               level: 2,
-              message: 'Failed to top up account',
+              message: response.message,
             };
             this.displayNotification(notification);
           }
