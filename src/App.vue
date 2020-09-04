@@ -53,7 +53,7 @@ export default {
     },
     $route(to, from) {
       if (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders') {
-        this.autoPopBeacon();
+        // this.autoPopBeacon();
       }
     },
   },
@@ -121,7 +121,7 @@ export default {
       this.loadFCMListeners();
       this.detectAndroid();
       this.detectIOS();
-      this.autoPopBeacon();
+      // this.autoPopBeacon();
     }
   },
   methods: {
