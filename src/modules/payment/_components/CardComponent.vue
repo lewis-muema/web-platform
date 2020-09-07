@@ -1,5 +1,6 @@
 <template lang="html">
   <div
+    v-if="getCardPaymentStatus"
     class="paymentbody--form"
   >
     <div
