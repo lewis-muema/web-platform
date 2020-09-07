@@ -334,7 +334,7 @@ export default {
 
     setForm() {
       // eslint-disable-next-line no-undef
-      this.form = VGSCollect.create('tnts91uunnd', 'sandbox', () => {});
+      this.form = VGSCollect.create(process.env.CONFIGS_ENV.VGS_VAULT_ID, process.env.CONFIGS_ENV.VGS_ENVIRONMENT, () => {});
 
       this.form.field('#cc-number .fake-input', {
         type: 'card-number',
@@ -425,6 +425,7 @@ export default {
             },
           );
         } else {
+          this.loadingStatus = false;
           const notification = {
             title: 'Failed to charge card',
             level: 2,

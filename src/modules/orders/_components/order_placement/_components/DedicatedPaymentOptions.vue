@@ -646,7 +646,7 @@ export default {
 
     setForm() {
       // eslint-disable-next-line no-undef
-      this.form = VGSCollect.create('tnts91uunnd', 'sandbox', () => {});
+      this.form = VGSCollect.create(process.env.CONFIGS_ENV.VGS_VAULT_ID, process.env.CONFIGS_ENV.VGS_ENVIRONMENT, () => {});
 
       this.form.field('#cc-number .fake-input-1', {
         type: 'card-number',
@@ -756,6 +756,7 @@ export default {
           }
         });
       } else {
+        this.loading = false;
         this.doNotification(
           2,
           'Failed to charge card',
@@ -814,6 +815,7 @@ export default {
           error => false,
         );
       } else {
+        this.loading = false;
         this.doNotification(
           2,
           'Failed to charge card',
