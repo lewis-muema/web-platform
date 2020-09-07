@@ -59,6 +59,9 @@ export default {
                 this.cardActiveStatus = true;
               }
             });
+            if (!this.cardActiveStatus) {
+              this.$router.push('/payment/promocode');
+            }
             this.setCardPaymentStatus(this.cardActiveStatus);
           }
         },
