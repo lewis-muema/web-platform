@@ -28,7 +28,7 @@
       *.www.googletagmanager.com wss://*.hotjar.com 'unsafe-inline' 'unsafe-eval';
       child-src 'none';
       font-src 'self' *.googleapis.com *.gstatic.com data:;
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com *.verygoodproxy.com *.verygoodvault.com
       *.gstatic.com *.google-analytics.com https://optimize.google.com
       *.stats.g.doubleclick.net *.amazonaws.com/ *.mixpanel.com/
       *.helpscout.net cdn4.mxpnl.com *.hotjar.com *.www.google-analytics.com *.www.googletagmanager.com
@@ -39,10 +39,10 @@
       *.googleusercontent.com *.hotjar.io *.hotjar.com *.google-analytics.com www.google-analytics.com
       *.stats.g.doubleclick.net data:;
       connect-src 'self' localhost:8200 *.hsforms.com *.google-analytics.com *.hotjar.io *.mixpanel.com *.amazonaws.com/
-      *.sendyit.com d3hb14vkzrxvla.cloudfront.net sentry.io
+      *.sendyit.com d3hb14vkzrxvla.cloudfront.net sentry.io https://*.sandbox.verygoodproxy.com https://*.verygoodvault.com
       https://ip2c.org/s
       *.googleapis.com api.mixpanel.com *.helpscout.net *.pusher.com *.hotjar.com wss://chat.sendyit.com;
-      frame-src 'self' *.sendyit.com *.hotjar.com *.youtube.com https://optimize.google.com
+      frame-src 'self' *.sendyit.com *.hotjar.com *.youtube.com https://optimize.google.com *.verygoodproxy.com *.verygoodvault.com
       *.google-analytics.com www.google-analytics.com
       *.stats.g.doubleclick.net;"
       />

@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="paymentbody">
-    <div class="payment-overlay" v-if="getDefaultCurrency !== getActiveCurrency" />
+    <div class="payment-overlay" v-if="defaultCurrency !== getActiveCurrency" />
     <pay-method />
     <div class="">
       <router-view />
@@ -20,6 +20,13 @@ export default {
       getDefaultCurrency: 'getDefaultCurrency',
       getActiveCurrency: '$_payment/getActiveCurrency',
     }),
+    defaultCurrency() {
+      const session = this.$store.getters.getSession;
+      if (session[session.default]) {
+        return session[session.default].default_currency;
+      }
+      return this.getDefaultCurrency;
+    },
   },
 };
 </script>
