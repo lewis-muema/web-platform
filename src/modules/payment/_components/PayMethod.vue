@@ -60,7 +60,7 @@ export default {
               }
             });
             if (!this.cardActiveStatus) {
-              this.$router.push('/payment/mpesa');
+              this.$router.push('/payment/promocode');
             }
             this.setCardPaymentStatus(this.cardActiveStatus);
           }
