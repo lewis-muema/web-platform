@@ -297,6 +297,13 @@ export default {
           user_phone: phone,
         };
 
+        this.trackMixpanelEvent('Edit Profile', {
+          'Account Type': 'Business',
+          'Client Type': 'Web Platform',
+          'User Email': values.user_email,
+          'User Phone': values.user_phone,
+        });
+
         const fullPayload = {
           values,
           app: 'NODE_PRIVATE_API',
@@ -350,6 +357,13 @@ export default {
           user_email: this.user_email,
           user_phone: phone,
         };
+
+        this.trackMixpanelEvent('Edit Profile', {
+          'Account Type': 'Peer',
+          'Client Type': 'Web Platform',
+          'User Email': values.user_email,
+          'User Phone': values.user_phone,
+        });
 
         const fullPayload = {
           values,
@@ -410,6 +424,29 @@ export default {
         message,
       };
       this.displayNotification(notification);
+    },
+
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+          // this.$ga.event({
+          //   eventCategory: 'Orders',
+          //   eventAction: 'Price Request',
+          //   eventLabel: name,
+          //   eventValue: 14,
+          // });
+        }
+      } catch (er) {
+        // ...
+      }
     },
   },
 };
