@@ -456,7 +456,7 @@ export default {
         if (this.$route.path === '/orders/dedicated/multi-destination') {
           this.trackLocationSelect(place.name, index);
         } else {
-          this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
+          this.trackMixpanelEvent(`Add Pickup Location ${eventPayload.eventLabel}`);
           this.fireGAEvent(eventPayload);
         }
       } else {
@@ -468,7 +468,7 @@ export default {
         if (this.$route.path === '/orders/dedicated/multi-destination') {
           this.trackLocationSelect(place.name, index);
         } else {
-          this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
+          this.trackMixpanelEvent(`Add Destination ${eventPayload.eventLabel}`);
           this.fireGAEvent(eventPayload);
         }
       }
