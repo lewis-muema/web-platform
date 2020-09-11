@@ -170,6 +170,7 @@ export default {
   mounted() {
     this.loading = false;
     this.clearSession();
+    this.trackMixpanelEvent('By Pass Login Page');
   },
   methods: {
     ...mapActions({
@@ -389,6 +390,22 @@ export default {
         message,
       };
       this.displayNotification(notification);
+    },
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+        }
+      } catch (er) {
+        // ...
+      }
     },
   },
 };
