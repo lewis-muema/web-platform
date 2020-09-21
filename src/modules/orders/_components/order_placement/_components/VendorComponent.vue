@@ -862,7 +862,18 @@ export default {
       load_units: '',
       discount_timed_out: false,
       customer_min_amount: '',
-      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van', '3T Truck', '5T Truck', '7T Truck', '10T Truck', '14T Truck', '20T Truck', '24T Truck'],
+      vendors_with_fixed_carrier_type: [
+        'Standard',
+        'Runner',
+        'Van',
+        '3T Truck',
+        '5T Truck',
+        '7T Truck',
+        '10T Truck',
+        '14T Truck',
+        '20T Truck',
+        '24T Truck',
+      ],
       vendors_without_return: ['Standard', 'Runner'],
       baseTruckOptions: [
         {
@@ -1159,7 +1170,10 @@ export default {
     }, 500),
     // eslint-disable-next-line func-names
     debounceRecipientPhone: _.debounce(function (data) {
-      this.triggerGAEvent('Client recipient phone number input - Order Placement Page - WebApp', data);
+      this.triggerGAEvent(
+        'Client recipient phone number input - Order Placement Page - WebApp',
+        data,
+      );
     }, 500),
     dispatchCarrierType() {
       this.setCarrierType(this.carrier_type);
@@ -1258,9 +1272,15 @@ export default {
       if (this.vendor_id !== this.activeVendorPriceData.vendor_id) {
         if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
           this.carrier_type = '1';
-        } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id) && this.activeVendorPriceData.vendor_id === 2) {
+        } else if (
+          this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)
+          && this.activeVendorPriceData.vendor_id === 2
+        ) {
           this.carrier_type = '0';
-        } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id) && this.activeVendorPriceData.vendor_id === 3) {
+        } else if (
+          this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)
+          && this.activeVendorPriceData.vendor_id === 3
+        ) {
           this.carrier_type = '2';
         } else if (copStatus) {
           this.carrier_type = session[session.default].default_carrier_type.toString(10);
@@ -1319,7 +1339,8 @@ export default {
 
     dispatchAdditionalLoaderStatus(val) {
       const track = this.additional_loader === 1
-        ? this.trackMixpanelEvent('Selected Loader For Order', { 'Number of Loaders': val }) : '';
+        ? this.trackMixpanelEvent('Selected Loader For Order', { 'Number of Loaders': val })
+        : '';
       this.setAdditionalLoaderStatus(val);
     },
 
@@ -1412,6 +1433,7 @@ export default {
         (response) => {
           if (response.status) {
             this.trackMixpanelEvent('Paired Order With Rider', { 'Paired Rider': plate });
+            this.triggerGAEvent('Paired Order With Rider', { 'Paired Rider': plate });
             this.updateData(response.data);
           } else {
             this.pair_status = '1';
@@ -1548,7 +1570,10 @@ export default {
     destroyVendorComponent() {
       if (this.recipientPhone && this.recipientName) {
         this.submitMail();
-        this.triggerGAEvent('Order Placement with Recipient Inputs - Order Placement Page - WebApp', '');
+        this.triggerGAEvent(
+          'Order Placement with Recipient Inputs - Order Placement Page - WebApp',
+          '',
+        );
       }
       this.setActiveVendorName('');
       this.setActiveVendorDetails({});
@@ -1794,7 +1819,11 @@ export default {
     setSendSms(pathObj, i) {
       if (typeof this.send_sms[i] === 'boolean') {
         let data = {};
-        if (this.send_sms[i] && (this.contact[i] === undefined || this.contact[i] === '') && (this.notes[i] === undefined || this.notes[i] === '')) {
+        if (
+          this.send_sms[i]
+          && (this.contact[i] === undefined || this.contact[i] === '')
+          && (this.notes[i] === undefined || this.notes[i] === '')
+        ) {
           data = {};
         } else {
           data = {
@@ -1802,7 +1831,8 @@ export default {
             name: pathObj.name,
             notes: this.notes[i] === undefined ? '' : this.notes[i],
             recipient_phone: this.contact[i] === undefined ? '' : this.contact[i],
-            notify: this.contact[i] === undefined || this.contact[i] === '' ? false : this.send_sms[i],
+            notify:
+              this.contact[i] === undefined || this.contact[i] === '' ? false : this.send_sms[i],
           };
         }
         this.instructions_data[i] = data;
@@ -1810,7 +1840,10 @@ export default {
     },
     addInstructionNotes(pathObj, i) {
       let data = {};
-      if ((this.contact[i] === undefined || this.contact[i] === '') && (this.notes[i] === undefined || this.notes[i] === '')) {
+      if (
+        (this.contact[i] === undefined || this.contact[i] === '')
+        && (this.notes[i] === undefined || this.notes[i] === '')
+      ) {
         data = {};
       } else {
         data = {
@@ -1830,7 +1863,10 @@ export default {
       if (this.contact[i] === '') {
         this.validPhone = true;
         this.contact[i] = '';
-        if ((this.notes[i] === undefined || this.notes[i] === '') && (this.send_sms[i] === undefined || this.send_sms[i] === '')) {
+        if (
+          (this.notes[i] === undefined || this.notes[i] === '')
+          && (this.send_sms[i] === undefined || this.send_sms[i] === '')
+        ) {
           data = {};
         } else {
           data = {
@@ -1902,7 +1938,11 @@ export default {
     },
     isPickUpSet() {
       let value = true;
-      if (this.instructions_data[0] === '' || this.instructions_data[0] === undefined || Object.keys(this.instructions_data[0]).length === 0) {
+      if (
+        this.instructions_data[0] === ''
+        || this.instructions_data[0] === undefined
+        || Object.keys(this.instructions_data[0]).length === 0
+      ) {
         value = false;
       }
       return value;

@@ -84,10 +84,7 @@
             >
             <span>{{ order_details.path[index].name }}</span>
             <div
-              v-if="
-                order_details.rider_deliver_img !== null &&
-                  index <= order_details.rider_deliver_img.length
-              "
+              v-if="order_details.rider_deliver_img !== null && index <= order_details.rider_deliver_img.length"
               class="recepient-padded"
             >
               Recieved by {{ order_details.rider_deliver_img[index - 1].name }}

@@ -336,9 +336,7 @@
                 <label class="delivery_label">The pickup time of your order</label>
                 <div class="order_summary-types-item order_summary--vendor-wrapper">
                   <div class="order_summary__img">
-                    <i
-                      class="el-icon-date order_summary-item__image calender--icon"
-                    />
+                    <i class="el-icon-date order_summary-item__image calender--icon" />
                   </div>
                   <div class="order_summary-wrapper__vendor">
                     <div class="order_summary--vendor-formal-name">
@@ -434,9 +432,7 @@
                 </p>
               </div>
 
-              <div
-                class="summary-button-outer"
-              >
+              <div class="summary-button-outer">
                 <input
                   class="button-primary btn-edit-order"
                   type="submit"
@@ -1071,7 +1067,7 @@ export default {
           && this.getRunningBalance - this.order_cost >= 0)
         || this.getPriceRequestObject.payment_option === 2
         || (this.getPriceRequestObject.payment_option === 0
-            && this.getRunningBalance - this.order_cost >= 0)
+          && this.getRunningBalance - this.order_cost >= 0)
       );
     },
 
@@ -1113,11 +1109,7 @@ export default {
       if (this.getPairWithRiderState && this.getPairRiderPhone === '') {
         this.initiatePairingFailureNotification();
       } else if (this.getPairWithRiderState && !this.getPairWithRiderStatus) {
-        this.doNotification(
-          2,
-          'Pairing Failure',
-          this.getPairErrorMessage,
-        );
+        this.doNotification(2, 'Pairing Failure', this.getPairErrorMessage);
       } else if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
         this.preCheckPaymentDetails();
       } else {
@@ -1145,11 +1137,7 @@ export default {
         msg = 'Kindly provide partner details while initiating pairing requests';
       }
 
-      this.doNotification(
-        2,
-        'Pairing Failure',
-        msg,
-      );
+      this.doNotification(2, 'Pairing Failure', msg);
     },
     editOrder() {
       this.confirmFinal = false;
@@ -1216,7 +1204,6 @@ export default {
         });
       }
     },
-
 
     preCheckPaymentDetails() {
       const eventPayload = {
@@ -1368,7 +1355,6 @@ export default {
                 eventLabel: 'Order Confirmed - Order Placement - Web App',
               };
               this.fireGAEvent(eventPayload);
-
               let order_no;
               this.setPickupFilled(false);
               // eslint-disable-next-line camelcase
@@ -1382,6 +1368,16 @@ export default {
                   // catch er
                 }
               }
+              // ecommerce data tracking
+              const ecommercePayload = {
+                // eslint-disable-next-line camelcase
+                orderNo: order_no,
+                amount: orderData.values.amount,
+                vendorType: orderData.values.vendor_type,
+              };
+              this.trackEcommerceData(ecommercePayload);
+
+
               if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
                 this.doNotification(1, 'Successfully placed freight order', '');
               }
@@ -1476,11 +1472,7 @@ export default {
           },
           (error) => {
             if (Object.prototype.hasOwnProperty.call(error, 'reason')) {
-              this.doNotification(
-                2,
-                'Order completion failed',
-                error.reason,
-              );
+              this.doNotification(2, 'Order completion failed', error.reason);
             } else {
               this.doNotification(
                 2,
@@ -2055,7 +2047,11 @@ export default {
 
       const exist = data.payment_methods.find(available => available.payment_method_id === 5);
 
-      if (exist && (this.$route.path === '/orders/dedicated/multi-destination' || this.$route.path === '/orders/dedicated/no-destination')) {
+      if (
+        exist
+        && (this.$route.path === '/orders/dedicated/multi-destination'
+          || this.$route.path === '/orders/dedicated/no-destination')
+      ) {
         data.payment_methods.splice(data.payment_methods.indexOf(exist), 1);
       }
 
@@ -2251,7 +2247,6 @@ export default {
       }
       return resp;
     },
-
   },
 };
 </script>
