@@ -30,6 +30,9 @@ export default {
   getCountryCode(state) {
     return state.country_code;
   },
+  getDedicatedAccessStatus(state) {
+    return state.dedicated_access_status;
+  },
   getDefaultCurrency(state) {
     return state.default_currency;
   },
@@ -44,6 +47,15 @@ export default {
   },
   getRedirectOrder(state) {
     return state.redirect_order;
+  },
+  getNPSStatus(state) {
+    return state.nps_status;
+  },
+  getSecondaryProfile(state) {
+    return state.secondary_profile;
+  },
+  getPickUpFilledStatus(state) {
+    return state.pick_up_filled_status;
   },
 };
 

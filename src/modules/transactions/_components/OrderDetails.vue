@@ -9,10 +9,16 @@
         <Img :src="createStaticMapUrl(order_details.path)" />
       </div>
       <div class="order_details_desc">
-        <div v-if="order_details.fixed_cost" class="order_details_price">
+        <div
+          v-if="order_details.fixed_cost"
+          class="order_details_price"
+        >
           {{ order_details.order_currency }} {{ formatCurrency(order_details.order_cost) }}
         </div>
-        <div v-else class="order_details_price">
+        <div
+          v-else
+          class="order_details_price"
+        >
           <div
             v-if="
               order_details.order_details.delivery_status === 0 && order_details.customer_min_amount
@@ -35,7 +41,7 @@
               </div>-->
         <div class="order_details_desc_item--wrapper">
           <div class="order_details_desc_item">
-            Date : {{ order_details.order_date | moment }}
+            Date : {{ convertToUTCToLocal(order_details.order_date) | moment }}
           </div>
           <span v-for="j in order_details.logs">
             <div
@@ -57,7 +63,6 @@
           <img
             src="../../../assets/img/maroon_button.png"
             class="order_details_desc_image"
-            alt=""
           >
           {{ getOrderFromName(order_details.path) }}
         </div>
@@ -67,12 +72,24 @@
         >
           <div class="order_details_desc_item order_details_desc_item--no-space">
             <img
+              v-if="order_details.path[index].waypoint_type === 'PICKUP'"
+              src="../../../assets/img/maroon_button.png"
+              class="order_details_desc_image"
+            >
+
+            <img
+              v-else
               src="../../../assets/img/blue_button.png"
               class="order_details_desc_image"
-              alt=""
             >
             <span>{{ order_details.path[index].name }}</span>
-            <div v-if="order_details.rider_deliver_img !== null" class="recepient-padded">
+            <div
+              v-if="
+                order_details.rider_deliver_img !== null &&
+                  index <= order_details.rider_deliver_img.length
+              "
+              class="recepient-padded"
+            >
               Recieved by {{ order_details.rider_deliver_img[index - 1].name }}
             </div>
           </div>
@@ -95,10 +112,7 @@
     </div>
     <div class="rider_details_wrap">
       <div class="rider_details_image">
-        <img
-          :src="order_details.rider.rider_photo"
-          alt=""
-        >
+        <img :src="order_details.rider.rider_photo">
       </div>
       <div class="rider_details_items">
         <div class="rider_details_item">
@@ -107,7 +121,10 @@
         <div class="rider_details_item">
           {{ order_details.rider.number_plate }}
         </div>
-        <div v-if="order_details.order_details.delivery_status === 3" class="rider_details_item">
+        <div
+          v-if="order_details.order_details.delivery_status === 3"
+          class="rider_details_item"
+        >
           <div v-if="order_details.rider.rider_rating !== null">
             <el-rate
               v-model="order_details.rider.rider_rating"
@@ -149,12 +166,11 @@
               </button>
             </div>
             <el-dialog
+              v-if="order_details.rider_deliver_img !== null"
               class="delivery_image_dialog"
               :visible.sync="dialogVisible"
             >
-              <span slot="title">
-                Delivery Documents for {{ order_details.order_no }}
-              </span><br>
+              <span slot="title"> Delivery Documents for {{ order_details.order_no }} </span><br>
               <template
                 v-for="(locations, index) in order_details.path"
                 v-if="index >= 1"
@@ -168,10 +184,19 @@
                     v-for="(val, index) in order_details.rider_deliver_img"
                     v-if="index >= 0"
                   >
-                    <div v-if="val.delivery_image.length > 0" class="delivery_documents_img">
+                    <div
+                      v-if="val.delivery_image.length > 0"
+                      class="delivery_documents_img"
+                    >
                       <div style="width: 166%">
-                        <div v-for="(val, index) in val.delivery_image[0].images" v-if="index >= 0">
-                          <img class="delivery-image-content" :src="deliveryImagePath(val)" />
+                        <div
+                          v-for="(val, index) in val.delivery_image[0].images"
+                          v-if="index >= 0"
+                        >
+                          <img
+                            class="delivery-image-content"
+                            :src="deliveryImagePath(val)"
+                          >
                         </div>
                       </div>
                     </div>
@@ -179,13 +204,16 @@
 
                   <div class="delivery_documents_sign">
                     <img
+                      v-if="index <= order_details.rider_deliver_img.length"
                       class="delivery-image-content"
                       :src="deliverySignaturePath(order_details.rider_deliver_img[index - 1].img)"
-                      alt=""
                     >
                   </div>
                   <div
-                    v-if="order_details.rider_deliver_img !== null"
+                    v-if="
+                      order_details.rider_deliver_img !== null &&
+                        index <= order_details.rider_deliver_img.length
+                    "
                     class="delivery_image_details"
                   >
                     Delivery signature by : {{ order_details.rider_deliver_img[index - 1].name }}
@@ -208,8 +236,7 @@
               @close="closeDialog()"
             >
               <span slot="title">
-                Dispute Delivery Documents - Order {{ order_details.order_no }}
-              </span><br>
+                Dispute Delivery Documents - Order {{ order_details.order_no }} </span><br>
               <div class="dispute_documents_body">
                 <div>
                   <select
@@ -288,6 +315,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import numeral from 'numeral';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 const moment = require('moment');
 
@@ -298,6 +327,7 @@ export default {
       return moment(date).format('MMM Do YYYY, h:mm a');
     },
   },
+  mixins: [TimezoneMxn, NotificationMxn],
   data() {
     return {
       order_id: '',
@@ -320,7 +350,7 @@ export default {
     }),
     createStaticMapUrl(path) {
       // TODO:get google_key from configs
-      const googleKey = 'AIzaSyDJ_S9JgQJSaHa88SXcPbh9JijQOl8RXpc';
+      const googleKey = process.env.CONFIGS_ENV.GOOGLE_API_KEY;
       const fromCordinates = path[0].coordinates;
       const toCordinates = path[path.length - 1].coordinates;
       return `https://maps.googleapis.com/maps/api/staticmap?path=color:0x2c82c5|weight:5|${fromCordinates}|${toCordinates}&size=257x257&markers=color:0xF17F3A%7Clabel:P%7C
@@ -386,7 +416,7 @@ export default {
         };
 
         this.requestDisputeStatus(fullPayload).then(
-          response => {
+          (response) => {
             if (!response.status) {
               this.dialogFormVisible = true;
             } else {
@@ -397,9 +427,9 @@ export default {
               );
             }
           },
-          error => {
+          (error) => {
             this.doNotification(2, 'Delivery dispute', 'Something went wrong, please retry .');
-          }
+          },
         );
       } else {
         this.doNotification(
@@ -427,7 +457,7 @@ export default {
           endpoint: 'dispute_order',
         };
         this.requestDisputeDeliveryDocs(fullPayload).then(
-          response => {
+          (response) => {
             if (response.status) {
               this.doNotification(2, 'Delivery dispute', 'Delivery dispute successful !');
               this.closeDialog();
@@ -435,9 +465,9 @@ export default {
               this.doNotification(2, 'Delivery dispute', response.message);
             }
           },
-          error => {
+          (error) => {
             this.doNotification(2, 'Delivery dispute', 'Something went wrong, please retry .');
-          }
+          },
         );
       } else {
         this.message = 'Please provide all details';
@@ -450,8 +480,7 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
     },
     setUserDefaultCurrency() {
       const sessionData = this.$store.getters.getSession;
@@ -466,7 +495,9 @@ export default {
       getOrderDetails: '$_transactions/getOrderHistoryOrders',
     }),
     order_details() {
-      return this.getOrderDetails.find(order => order.order_id === this.$route.params.id);
+      return this.getOrderDetails.find(
+        order => order.order_id === parseInt(this.$route.params.id, 10),
+      );
     },
   },
   mounted() {

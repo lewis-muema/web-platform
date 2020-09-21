@@ -20,6 +20,10 @@ const state = {
   fcm_data: {},
   redirect_status: false,
   redirect_order: ' ',
+  nps_status: false,
+  secondary_profile: '',
+  dedicated_access_status: false,
+  pick_up_filled_status: false,
 };
 
 export default {

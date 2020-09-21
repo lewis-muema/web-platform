@@ -7,8 +7,10 @@ const state = {
   phone: '',
   email: '',
   name: '',
-  country_code: '',
+  country_code: 'KE',
   request_id: '',
+  view_state: 1,
+  activeTab: 'Biz',
 };
 
 export default {

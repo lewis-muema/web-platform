@@ -57,7 +57,7 @@
             name="phone"
             value=""
             data-vv-validate-on="blur"
-            :preferred-countries="['ke', 'ug', 'tz']"
+            v-bind="phoneInputProps"
             @onBlur="validate_phone"
             @focus="setCurrentStep(3)"
           />
@@ -134,11 +134,13 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'OnboardingInfoComponent',
+  mixins: [NotificationMxn],
   data() {
     return {
       name: '',
@@ -148,6 +150,27 @@ export default {
       phoneVerification: false,
       code: '',
       requestId: '',
+      phoneInputProps: {
+        mode: 'international',
+        defaultCountry: 'ke',
+        disabledFetchingCountry: false,
+        disabled: false,
+        disabledFormatting: false,
+        placeholder: 'Enter a phone number',
+        required: false,
+        enabledCountryCode: false,
+        enabledFlags: true,
+        preferredCountries: ['ke', 'ug', 'tz'],
+        autocomplete: 'off',
+        name: 'telephone',
+        maxLen: 25,
+        dropdownOptions: {
+          disabledDialCode: false,
+        },
+        inputOptions: {
+          showDialCode: false,
+        },
+      },
     };
   },
   computed: {
@@ -219,12 +242,12 @@ export default {
     sendVerificationCode() {
       const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
       const values = {};
-      values.phone_no = phone;
+      values.number = phone;
       const fullPayload = {
         values,
         vm: this,
-        app: 'PRIVATE_API',
-        endpoint: 'verify_phone',
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'request_verification',
       };
       this.requestOnboardingPhoneVerification(fullPayload).then(
         (response) => {
@@ -245,7 +268,7 @@ export default {
       const fullPayload = {
         values,
         vm: this,
-        app: 'PRIVATE_API',
+        app: 'NODE_PRIVATE_API',
         endpoint: 'check_verification',
       };
       this.requestOnboardingVerificationVerify(fullPayload).then(
@@ -274,8 +297,7 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
     },
   },
 };
@@ -283,7 +305,6 @@ export default {
 
 <style lang="css">
 
-@import '../../../../node_modules/vue-tel-input/dist/vue-tel-input.css';
 
 .form-inputs > div:nth-child(3) > div > div > div > ul {
     z-index: 9;

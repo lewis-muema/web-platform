@@ -1,7 +1,12 @@
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import Mcrypt from './mcrypt_mixin';
 
 const PaymentMxn = {
+  computed: {
+    ...mapGetters({
+      getSecondaryProfile: 'getSecondaryProfile',
+    }),
+  },
   methods: {
     ...mapActions({
       requestRunningBalanceFromAPI: '$_payment/requestRunningBalance',
@@ -28,7 +33,7 @@ const PaymentMxn = {
       return repsonseData;
     },
     // this function will complete transactions for card payments already in the system
-    handleSavedCard(setCurrency, card, orderOptions = false) {
+    handleSavedCard(vendorId, setCurrency, card, orderOptions = false) {
       const session = this.$store.getters.getSession;
       let userId = 0;
       let copId = 0;
@@ -54,6 +59,7 @@ const PaymentMxn = {
         cop_id: copId,
         user_phone: userPhone,
         currency: setCurrency,
+        vendorType: vendorId,
       };
       // encrypt the card payload
       cardPayload = Mcrypt.encrypt(cardPayload);
@@ -84,6 +90,10 @@ const PaymentMxn = {
                 user_phone: userPhone,
               },
             };
+
+            if (this.getSecondaryProfile !== '') {
+              runningBalancePayload.values.secondary_profile = this.getSecondaryProfile;
+            }
 
             const payload = {
               values: runningBalancePayload,
@@ -129,7 +139,7 @@ const PaymentMxn = {
       );
       return true;
     },
-    handleNewCardPayment(setCurrency) {
+    handleNewCardPayment(vendorId, setCurrency) {
       // sort encryption
       const session = this.$store.getters.getSession;
 
@@ -167,6 +177,7 @@ const PaymentMxn = {
         user_name: userName,
         complete_payment: true,
         currency: setCurrency,
+        vendorType: vendorId,
       };
 
       cardPayload = Mcrypt.encrypt(cardPayload);
@@ -200,6 +211,10 @@ const PaymentMxn = {
                 user_phone: userPhone,
               },
             };
+
+            if (this.getSecondaryProfile !== '') {
+              runningBalancePayload.values.secondary_profile = this.getSecondaryProfile;
+            }
 
             const payload = {
               values: runningBalancePayload,

@@ -3,7 +3,10 @@
     <!-- <div class="homeview--form__header">
          New Delivery
      </div> -->
-    <div v-if="phase === 1" class="homeview--inputs-override">
+    <div
+      v-if="phase === 1"
+      class="homeview--inputs-override"
+    >
       <div
         ref="scrollable_locations"
         class="homeview--form homeview--row homeview--form__scrollable homeview--input-freight-locations"
@@ -71,6 +74,8 @@
             <input
               v-model.number="noOfContainers"
               type="number"
+              min="5"
+              max="50"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input input-spacer"
               placeholder="No of containers"
             >
@@ -93,7 +98,11 @@
               </div>
             </div>
             <div class="homeview--return-input">
-              <input type="checkbox" v-model="returnStatus" @change="resetDestination()"> Return empty containers to pick up location
+              <input
+                v-model="returnStatus"
+                type="checkbox"
+                @change="resetDestination()"
+              > Return empty containers to the same location
             </div>
             <gmap-autocomplete
               v-if="returnStatus"
@@ -111,13 +120,20 @@
       </div>
       <div>
         <div class="homeview--proceed">
-          <p class="home-view--upload-par">OR</p>
-          <p class="home-view--upload-button" @click="initiateUpload()">Upload file</p>
+          <p class="home-view--upload-par">
+            OR
+          </p>
+          <p
+            class="home-view--upload-button"
+            @click="initiateUpload()"
+          >
+            Upload file
+          </p>
           <button
             type="button"
             class="home-view--place-order"
             :class="nextStatus"
-            :disabled="nextStatus === 'button--primary-inactive'"
+            :disabled="nextStatus === 'button--primary-inactive inactive-1'"
             @click="productPhase(2)"
           >
             Continue
@@ -139,7 +155,7 @@
             Order details
           </td>
           <td class="homeview---top-details-right col-right">
-            Total containers : {{ noOfContainers }}
+            Total containers  {{ noOfContainers }}
           </td>
         </tr>
         <tr class="homeview--bottom-details">
@@ -150,7 +166,7 @@
               class="homeview--row__font-awesome homeview--input-bundler__img .homeview--input-bundler__destination-input sendy-orange"
               width="10px"
             /> Pick-Up <br>
-            {{ locations[0] }}
+            <span class="homeview--top-locations">{{ locations[0] }}</span>
           </td>
           <td class="homeview--bottom-details-right col-right">
             <font-awesome-icon
@@ -159,7 +175,7 @@
               class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue"
               width="10px"
             /> Destination <br>
-            {{ locations[1] }}
+            <span class="homeview--top-locations">{{ locations[1] }}</span>
           </td>
         </tr>
       </table>
@@ -168,6 +184,9 @@
           ref="scrollable_locations"
           class="homeview--form homeview--row homeview--form__scrollable homeview--input-freight-containers"
         >
+          <p class="homeview--input-header">
+            Container details
+          </p>
           <input
             v-model="cont_no"
             type="text"
@@ -177,6 +196,8 @@
           <input
             v-model.number="cont_weight"
             type="number"
+            min="5"
+            max="50"
             class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
             placeholder="Container Weight in Tonnes"
           >
@@ -185,14 +206,13 @@
             :options="map_options"
             placeholder="Empty Container Destination"
             :select-first-on-enter="true"
-            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
+            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details homeview--return-destination-input"
             @place_changed="setReturnDestination($event, 2)"
-            @keyup="checkChangeEvents($event, 2)"
-            @change="checkChangeEvents($event, 2)"
+            @keydown.native.capture="checkReturnDestination()"
           />
           <select
             v-model.number="size"
-            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
+            class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details input-container--size"
           >
             <option
               class=""
@@ -223,7 +243,7 @@
             v-if="selectedContainer === null"
             class="homeview--button-add-container"
             :class="buttonStatus"
-            :disabled="buttonStatus === 'button--primary-inactive'"
+            :disabled="buttonStatus === 'button--primary-inactive inactive-1'"
             @click="addContainer()"
           >
             Add Container Details
@@ -231,14 +251,17 @@
           <button
             v-else
             class="button-primary homeview--button-add-container bg-button-orange"
+            :class="editStatus"
+            :disabled="editStatus === 'button--primary-inactive inactive-1'"
             @click="applyContainerChanges()"
           >
             Edit container details
           </button>
           <button
+            v-if="selectedContainer === null"
             class="homeview--button-add-container"
             :class="placeOrderStatus"
-            :disabled="placeOrderStatus === 'button--primary-inactive'"
+            :disabled="placeOrderStatus === 'button--primary-inactive inactive-2'"
             @click="getQuote()"
           >
             Place Order
@@ -250,7 +273,8 @@
         >
           <div
             v-for="(container, index) in containers"
-            :key="container.length" class="homeview--section__container"
+            :key="container.length"
+            class="homeview--section__container"
             :class="`container${index}`"
           >
             <div class="homeview--heading">
@@ -327,38 +351,65 @@
         </div>
       </div>
     </div>
-    <div v-if="phase === 3 && getOuterPriceRequestData" class="">
+    <div
+      v-if="phase === 3 && getOuterPriceRequestData"
+      class=""
+    >
       <div
         ref="scrollable_locations"
         class="homeview--form homeview--row homeview--form__scrollable homeview--input-freight-complete"
       >
         <table class="homeview--order-confirm">
           <tr>
-            <td class="homeview--order-confirm-row__top color-blue">Order Status: Pending</td>
-            <td class="homeview--order-confirm-row__top color-orange">Cost: {{ getEconomicPriceTiers.currency }} {{ getEconomicPriceTiers.cost }}</td>
-          </tr>
-          <tr>
-            <td class="homeview--order-confirm-row__middle">Order Details</td>
-            <td class="homeview--order-confirm-row__middle">Truck Size</td>
+            <td class="homeview--order-confirm-row__top color-blue">
+              Order Status: Pending
+            </td>
+            <td class="homeview--order-confirm-row__top color-orange">
+              Cost: {{ getEconomicPriceTiers.currency }} {{ getEconomicPriceTiers.cost }}
+            </td>
           </tr>
           <tr>
             <td class="homeview--order-confirm-row__middle">
-              <p class="homeview--order-confirm-header">Pick Up</p>
-              <p class="homeview--order-confirm-body">{{ getOuterPriceRequestData.from_name }}</p>
+              Order Details
             </td>
             <td class="homeview--order-confirm-row__middle">
-              <p class="homeview--order-confirm-header">20 Feet</p>
-              <p class="homeview--order-confirm-body">{{ twentyfoot }} Flatbed trucks</p>
+              Truck Size
+            </td>
+          </tr>
+          <tr>
+            <td class="homeview--order-confirm-row__middle">
+              <p class="homeview--order-confirm-header">
+                Pick Up
+              </p>
+              <p class="homeview--order-confirm-body">
+                {{ getOuterPriceRequestData.from_name }}
+              </p>
+            </td>
+            <td class="homeview--order-confirm-row__middle">
+              <p class="homeview--order-confirm-header">
+                20 Feet
+              </p>
+              <p class="homeview--order-confirm-body">
+                {{ twentyfoot }} Flatbed trucks
+              </p>
             </td>
           </tr>
           <tr>
             <td class="homeview--order-confirm-row__bottom">
-              <p class="homeview--order-confirm-header">Drop Off</p>
-              <p class="homeview--order-confirm-body">{{ getOuterPriceRequestData.to_name }}</p>
+              <p class="homeview--order-confirm-header">
+                Drop Off
+              </p>
+              <p class="homeview--order-confirm-body">
+                {{ getOuterPriceRequestData.to_name }}
+              </p>
             </td>
             <td class="homeview--order-confirm-row__bottom">
-              <p class="homeview--order-confirm-header">40 Feet</p>
-              <p class="homeview--order-confirm-body">{{ fourtyfoot }} Flatbed trucks</p>
+              <p class="homeview--order-confirm-header">
+                40 Feet
+              </p>
+              <p class="homeview--order-confirm-body">
+                {{ fourtyfoot }} Flatbed trucks
+              </p>
             </td>
           </tr>
         </table>
@@ -392,6 +443,7 @@ import orderPlacementStore from '../_store';
 import paymentsModuleStore from '../../../../payment/_store';
 import SessionMxn from '../../../../../mixins/session_mixin';
 import PaymentOptions from './PaymentOptions.vue';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 library.add(
   faPlus,
@@ -414,7 +466,7 @@ export default {
     'no-ssr': NoSSR,
     PaymentOptions,
   },
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
   data() {
     return {
       dueDatePickerOptions: {
@@ -490,38 +542,44 @@ export default {
 
     allow_add_destination() {
       return (
-        !this.loading &&
-        Array.isArray(this.get_order_path) &&
-        this.get_order_path.length - 1 <= this.get_max_destinations &&
-        this.get_order_path.length > 1 &&
-        this.get_extra_destinations <= this.get_order_path.length - 2
+        !this.loading
+        && Array.isArray(this.get_order_path)
+        && this.get_order_path.length - 1 <= this.get_max_destinations
+        && this.get_order_path.length > 1
+        && this.get_extra_destinations <= this.get_order_path.length - 2
       );
     },
 
     show_vendor_view() {
       return (
-        Array.isArray(this.getStoreOrderPath) &&
-        this.getStoreOrderPath.length > 1 &&
-        Object.prototype.hasOwnProperty.call(this.getOuterPriceRequestData, 'economy_price_tiers')
+        Array.isArray(this.getStoreOrderPath)
+        && this.getStoreOrderPath.length > 1
+        && Object.prototype.hasOwnProperty.call(this.getOuterPriceRequestData, 'economy_price_tiers')
       );
     },
     buttonStatus() {
-      if (this.destination !== 'none' && this.size !== 'none' && this.cont_weight && this.containers.length < this.noOfContainers && this.consignee) {
+      if (this.cont_no && this.destination.name && this.size !== 'none' && this.cont_weight && this.containers.length < this.noOfContainers && this.consignee) {
         return 'button-primary bg-button-orange';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive inactive-1';
+    },
+    editStatus() {
+      if (this.cont_no && this.destination.name && this.size !== 'none' && this.cont_weight && this.consignee) {
+        return 'button-primary bg-button-orange';
+      }
+      return 'button--primary-inactive inactive-1';
     },
     nextStatus() {
       if (this.locations.length >= 2 && this.noOfContainers > 0) {
         return 'button-primary';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive inactive-1';
     },
     placeOrderStatus() {
       if (this.containers.length === this.noOfContainers) {
         return 'button-primary';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive inactive-2';
     },
     scheduleStatus() {
       if (this.schedule_time) {
@@ -571,6 +629,7 @@ export default {
       resetState: '$_orders/$_home/resetState',
       setCountryCode: '$_orders/$_home/setCountryCode',
       setDefaultCurrency: '$_orders/$_home/setDefaultCurrency',
+      setScheduleTime: '$_orders/$_home/setScheduleTime',
       setHomeLocations: '$_orders/setHomeLocations',
       setStorePath: '$_orders/setStorePath',
       clearStorePath: '$_orders/clearStorePath',
@@ -589,6 +648,28 @@ export default {
       // console.log('index', index);
       // console.log('evt', evt);
       // TO DO research implementation of native input events
+    },
+    checkReturnDestination(evt, index) {
+      if (document.querySelector('.homeview--return-destination-input').value === '') {
+        this.destination = {
+          name: '',
+          coordinates: '',
+          waypoint_details_status: true,
+          type: 'coordinates',
+          country_code: '',
+          more: {
+            Estate: '',
+            FlatName: '',
+            place_idcustom: '',
+            Label: '',
+            HouseDoor: '',
+            Otherdescription: '',
+            Typed: '',
+            Vicinity: 'Not Indicated',
+            Address: 'Not Indicated',
+          },
+        };
+      }
     },
     trackMixpanelEvent(name) {
       let analyticsEnv = '';
@@ -707,9 +788,9 @@ export default {
     },
     attemptPriceRequest() {
       if (
-        Array.isArray(this.locations) &&
-        this.locations.length > 1 &&
-        this.get_pickup_filled === true
+        Array.isArray(this.locations)
+        && this.locations.length > 1
+        && this.get_pickup_filled === true
       ) {
         this.clearOuterPriceRequestObject();
         this.clearOuterActiveVendorDetails();
@@ -794,12 +875,14 @@ export default {
       if (this.schedule_time && dateTime > this.schedule_time) {
         this.schedule_time = new Date();
       }
+      this.setScheduleTime(this.schedule_time);
     },
     initiateUpload() {
       this.$root.$emit('Upload status', true);
     },
     addContainer() {
       this.containers.push({
+        id: this.containers.length,
         container_number: this.cont_no,
         container_destination: this.destination,
         container_size_feet: this.size,
@@ -872,23 +955,33 @@ export default {
       this.setOuterPriceRequestObject('');
       const payload = {
         values: this.createPriceRequestObject(),
-        app: 'PRIVATE_API',
-        endpoint: 'pricing_multiple',
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'orders/price_request',
       };
       this.loading = true;
       const definedLocations = this.locations;
       this.requestPriceQuote(payload).then(
         (response) => {
-          this.setOrderState(1);
-          this.setHomeLocations(definedLocations);
-          this.loading = false;
-          this.productPhase(3);
-          this.set_active_vendor_name(response.values.economy_price_tiers[0].price_tiers[0].vendor_name);
-          const previousActiveVendor = this.get_active_vendor_name;
-          response.values.freight = true;
-          this.setOuterPriceRequestObject(response.values);
-          this.setDefaultPackageClass();
-          this.setDefaultVendorType(previousActiveVendor);
+          if (response.status) {
+            this.setOrderState(1);
+            this.setHomeLocations(definedLocations);
+            this.loading = false;
+            this.productPhase(3);
+            this.set_active_vendor_name(response.values.economy_price_tiers[0].price_tiers[0].vendor_name);
+            const previousActiveVendor = this.get_active_vendor_name;
+            response.values.freight = true;
+            this.setOuterPriceRequestObject(response.values);
+            this.setDefaultPackageClass();
+            this.setDefaultVendorType(previousActiveVendor);
+          } else {
+            this.productPhase(2);
+            if (Object.prototype.hasOwnProperty.call(response, 'crisis_notification') && response.crisis_notification.msg) {
+              this.doNotification(3, `${response.reason}`, response.crisis_notification.msg);
+            } else {
+              this.doNotification(3, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
+            }
+            this.loading = false;
+          }
           // const acc = this.$store.getters.getSession;
           // const accDefault = acc[acc.default];
 
@@ -909,9 +1002,9 @@ export default {
         (error) => {
           this.productPhase(2);
           if (Object.prototype.hasOwnProperty.call(error, 'crisis_notification') && error.crisis_notification.msg) {
-            this.doNotification(3, error.reason, error.crisis_notification.msg);
+            this.doNotification(2, `${error.reason}`, error.crisis_notification.msg);
           } else {
-            this.doNotification(3, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
+            this.doNotification(2, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
           }
 
           this.loading = false;
@@ -920,9 +1013,8 @@ export default {
     },
 
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
 
     doSetDefaultPackageClass() {
@@ -948,9 +1040,7 @@ export default {
       if (this.get_active_vendor_name === '') {
         this.doSetDefaultVendorType();
       } else {
-        const result = this.get_price_request_object.economy_price_tiers.filter(pack =>
-          pack.price_tiers.some(vendor => vendor.vendor_name === previous),
-        );
+        const result = this.get_price_request_object.economy_price_tiers.filter(pack => pack.price_tiers.some(vendor => vendor.vendor_name === previous));
 
         if (result.length === 0) {
           this.doSetDefaultVendorType();
@@ -1022,8 +1112,7 @@ export default {
     registerOrderPlacementModule() {
       let moduleIsRegistered = false;
       try {
-        moduleIsRegistered =
-          this.$store._modules.root._children.$_orders._children.$_home !== undefined;
+        moduleIsRegistered = this.$store._modules.root._children.$_orders._children.$_home !== undefined;
       } catch (er) {
         //
       }
@@ -1066,8 +1155,8 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../../../assets/styles/orders_order_placement.css?v=1';
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
+@import '../../../../../assets/styles/orders_order_placement.css?v=2';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=2';
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */
@@ -1088,5 +1177,13 @@ export default {
 }
 ::-webkit-scrollbar-thumb:window-inactive {
   background-color: rgba(0, 0, 0, 0.2);
+}
+.homeview--return-destination-input, .homeview--input-bundler__destination-input {
+  color: black;
+  font-weight: 600;
+}
+.homeview--return-destination-input::-webkit-input-placeholder,
+.homeview--input-bundler__destination-input::-webkit-input-placeholder {
+  font-weight: 400;
 }
 </style>

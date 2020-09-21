@@ -30,7 +30,7 @@
             </a>
             <ul class="nav--menu-dropdown-list">
               <div v-if="!admin_details">
-                <li v-if="switchValid">
+                <li v-show="switchValid">
                   <a @click="switchAccount()">
                     Switch to
                     <span v-if="this.$store.getters.getSession.default === 'peer'"> Business </span>
@@ -38,6 +38,11 @@
                       Personal
                     </span>
                     account
+                  </a>
+                </li>
+                <li v-show="isUpgradeValid">
+                  <a @click="linkRoute('/user/upgrade_acc')">
+                    Create Business Account
                   </a>
                 </li>
                 <li>
@@ -76,6 +81,11 @@
                   </a>
                 </li>
               </div>
+              <li v-if="admin_details">
+                <a @click="linkRoute('/orders/freight')">
+                  Freight
+                </a>
+              </li>
               <li class="menu--last-child">
                 <a
                   class="menu--last-child-link"
@@ -94,11 +104,14 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import axios from 'axios';
 import SessionMxn from '../../mixins/session_mixin';
+import EventsMixin from '../../mixins/events_mixin';
+
 
 export default {
   name: 'MainHeader',
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, EventsMixin],
   data() {
     return {
       switchValid: false,
@@ -114,6 +127,15 @@ export default {
       getSess: 'getSession',
       getCountryCode: 'getCountryCode',
     }),
+    isUpgradeValid() {
+      const session = this.$store.getters.getSession;
+      let isValid = false;
+
+      if (!this.switchValid && session.default === 'peer') {
+        isValid = true;
+      }
+      return isValid;
+    },
   },
   watch: {
     getSess: {
@@ -124,27 +146,32 @@ export default {
     },
   },
   mounted() {
-    this.switchOption();
-    this.loggedUser();
-    this.superUserCheck();
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0) {
+      this.switchOption();
+      this.loggedUser();
+      this.superUserCheck();
+    }
   },
   methods: {
     loggedUser() {
       const session = this.$store.getters.getSession;
-      const fullName = session[session.default].user_name.split(' ');
-      const firstName = fullName[0];
-      this.helpline_contact = session.customer_care_number;
-      if (session.default === 'biz') {
-        // Admin
-        if (session[session.default].user_type === 2) {
-          this.admin_user = true;
-          this.logged_user = `${firstName} (Business Acc)`;
-        } else if (session[session.default].user_type === 1) {
-          this.logged_user = `${firstName} (Business Acc)`;
+      if (Object.keys(session).length > 0) {
+        const fullName = session[session.default].user_name.split(' ');
+        const firstName = fullName[0];
+        this.helpline_contact = session.customer_care_number;
+        if (session.default === 'biz') {
+          // Admin
+          if (session[session.default].user_type === 2) {
+            this.admin_user = true;
+            this.logged_user = `${firstName} (Business Acc)`;
+          } else if (session[session.default].user_type === 1) {
+            this.logged_user = `${firstName} (Business Acc)`;
+          }
+        } else {
+          this.admin_user = false;
+          this.logged_user = `${firstName} (Personal Acc)`;
         }
-      } else {
-        this.admin_user = false;
-        this.logged_user = `${firstName} (Personal Acc)`;
       }
     },
     superUserCheck() {
@@ -157,6 +184,7 @@ export default {
     },
     logOut() {
       try {
+        this.clearAuthToken();
         localStorage.removeItem('_sessionSnack');
         localStorage.removeItem('jwtToken');
         localStorage.removeItem('refreshToken');
@@ -172,6 +200,11 @@ export default {
           this.$router.replace({ name: 'sign_in' });
         }
       }
+    },
+    clearAuthToken() {
+      const auth = process.env.CONFIGS_ENV.AUTH;
+      const payload = { refresh_token: localStorage.getItem('refreshToken') };
+      axios.post(`${auth}logout`, payload);
     },
     switchOption() {
       const session = this.$store.getters.getSession;
@@ -197,9 +230,66 @@ export default {
     },
     linkRoute(route) {
       this.$router.push(route);
+      if (route === '/user/upgrade_acc') {
+        const session = this.$store.getters.getSession;
+        this.trackMixpanelEvent('Create Business Account Clicked', {
+          'Account Type': session.default === 'peer' ? 'Personal' : 'Business',
+          'Client Type': 'Web Platform',
+          'User Email': session[session.default].user_email,
+          'User Phone': session[session.default].user_phone,
+        });
+      }
+      let eventLabel;
+      switch (route) {
+        case '/user/upgrade_acc':
+          eventLabel = 'Create Business Account';
+          break;
+        case '/orders':
+          eventLabel = 'New Delivery';
+          break;
+        case '/transactions/order_history':
+          eventLabel = 'Orders';
+          break;
+        case '/orders/freight':
+          eventLabel = 'Freight';
+          break;
+        case '/admin/users':
+          eventLabel = 'Settings';
+          break;
+        case '/analytics/report':
+          eventLabel = 'Analytics';
+          break;
+        case '/user/profile/personal_information':
+          eventLabel = 'Profile';
+          break;
+        default:
+          eventLabel = route;
+      }
+      const eventPayload = {
+        eventCategory: 'Menu Navigation',
+        eventAction: 'Click',
+        eventLabel,
+      };
+      this.fireGAEvent(eventPayload);
     },
     linkPayments() {
       this.$router.push('/payment/card');
+    },
+    /* global mixpanel */
+    trackMixpanelEvent(name, event) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name, event);
+        }
+      } catch (er) {
+        // ...
+      }
     },
   },
 };

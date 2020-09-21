@@ -109,7 +109,12 @@ const trackMQTT = function trackMQTT({ commit, state }) {
     client.on('message', (topic, message) => {
       const vendor = JSON.parse(message.toString());
       vendor.overide_visible = true;
-      commit('$_orders/setVendorMarkers', vendor, { root: true });
+      if (Object.prototype.hasOwnProperty.call(state.tracking_data, 'confirm_status')) {
+        commit('$_orders/setVendorMarkers', vendor, { root: true });
+      }
+      if (Object.prototype.hasOwnProperty.call(state.tracking_data, 'freight_order_details')) {
+        commit('$_orders/$_tracking/setDateTime', new Date().toISOString(), { root: true });
+      }
     });
 
     client.on('close', () => {
@@ -199,6 +204,24 @@ const requestRiderLastPosition = function requestRiderLastPosition({ dispatch },
     );
   });
 };
+const requestCancellationReasons = function requestCancellationReasons({ dispatch }) {
+  const payload = {
+    app: 'ADONIS_PRIVATE_API',
+    endpoint: 'cancel-reasons?platform=customer',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
 export default {
   getTrackingData,
@@ -208,4 +231,5 @@ export default {
   saveOrderDetails,
   requestETASms,
   requestRiderLastPosition,
+  requestCancellationReasons,
 };

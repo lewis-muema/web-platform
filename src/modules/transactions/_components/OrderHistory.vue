@@ -10,6 +10,7 @@
           v-model="filterData.user"
           class="section--filter-input"
           placeholder="Users"
+          filterable
         >
           <el-option
             label="All Users"
@@ -54,6 +55,17 @@
         >
           {{ order_history_text }}
         </button>
+      </div>
+    </div>
+    <div class="currencies-section">
+      <div
+        v-for="(currency, index) in currencies"
+        :key="index"
+        class="currency-selectors"
+        :class="activeCurrency === currency ? 'active-currency' : ''"
+        @click="activeCurrency = currency"
+      >
+        {{ currency }}
       </div>
     </div>
     <div class="bg-grey">
@@ -114,7 +126,7 @@
         prop="order_date"
       >
         <template slot-scope="props">
-          {{ order_history_data[props.$index]['order_date'] | moment }}
+          {{ convertToUTCToLocal(order_history_data[props.$index]['order_date']) | moment }}
         </template>
       </el-table-column>
 
@@ -207,14 +219,15 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { Printd } from 'printd';
 import * as _ from 'lodash';
 import exportFromJSON from 'export-from-json';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-
 import numeral from 'numeral';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
+
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -257,6 +270,7 @@ export default {
       return moment(date).format('MMM Do YYYY, h:mm a');
     },
   },
+  mixins: [TimezoneMxn],
   data() {
     return {
       empty_orders_state: 'Fetching Order History',
@@ -276,13 +290,16 @@ export default {
       savepdf: 'save-pdf',
       sessionData: {},
       default_currency: '',
+      currencies: [],
+      activeCurrency: '',
     };
   },
   computed: {
     ...mapGetters({
       getSess: 'getSession',
-      orderHistoryData: '$_transactions/getOrderHistoryOrders',
+      unfilteredOrderHistoryData: '$_transactions/getOrderHistoryOrders',
       copUsers: '$_transactions/getCopUsers',
+      getUserCurrencies: '$_transactions/getUserCurrencies',
     }),
     inactive_filter() {
       return (
@@ -298,6 +315,15 @@ export default {
     order_history_total() {
       return this.orderHistoryData.length;
     },
+    orderHistoryData() {
+      const orderHistory = [];
+      this.unfilteredOrderHistoryData.forEach((row) => {
+        if (row.order_currency === this.activeCurrency) {
+          orderHistory.push(row);
+        }
+      });
+      return orderHistory;
+    },
   },
   watch: {
     getSess: {
@@ -306,40 +332,59 @@ export default {
       },
       deep: true,
     },
+    orderHistoryData() {
+      this.currencies = this.getUserCurrencies;
+    },
   },
   mounted() {
     this.populateOrders();
     this.setUserDefaultCurrency();
+    this.currencies = this.getUserCurrencies;
   },
   methods: {
+    ...mapMutations({
+      setOrderHistoryOrders: '$_transactions/setOrderHistoryOrders',
+    }),
+
     populateOrders() {
       const sessionData = this.$store.getters.getSession;
 
-      this.sessionData = sessionData;
+      if (Object.keys(sessionData).length > 0) {
+        this.sessionData = sessionData;
 
-      let ordersPayload = {};
+        let ordersPayload = {};
 
-      if (sessionData.default === 'biz') {
-        ordersPayload = {
-          cop_id: sessionData.biz.cop_id,
-          user_type: sessionData.biz.user_type,
-          user_id: sessionData.biz.user_id,
-        };
-      } else {
-        // create peer payload
-        ordersPayload = {
-          user_id: sessionData[sessionData.default].user_id,
-        };
-      }
+        if (sessionData.default === 'biz' && sessionData.biz.user_type === 2) {
+          // create cop admin payload
 
-      this.requestOrderHistory(ordersPayload);
-      if (sessionData.default === 'biz') {
-        this.requestCopUsers();
+          ordersPayload = {
+            cop_id: sessionData.biz.cop_id,
+            user_type: sessionData.biz.user_type,
+            user_id: '-1',
+          };
+        } else if (sessionData.default === 'biz') {
+          ordersPayload = {
+            cop_id: sessionData.biz.cop_id,
+            user_type: sessionData.biz.user_type,
+            user_id: sessionData.biz.user_id,
+          };
+        } else {
+          // create peer payload
+          ordersPayload = {
+            user_id: sessionData[sessionData.default].user_id,
+          };
+        }
+
+        this.requestOrderHistory(ordersPayload);
+        if (sessionData.default === 'biz') {
+          this.requestCopUsers();
+        }
       }
     },
     setUserDefaultCurrency() {
       const sessionData = this.$store.getters.getSession;
       this.default_currency = sessionData[sessionData.default].default_currency;
+      this.activeCurrency = this.default_currency;
     },
     filterTableData() {
       this.loading = true;
@@ -367,6 +412,7 @@ export default {
 
         payload = {
           cop_id: copId,
+          user_id: '-1',
           user_type: userType,
           from: fromDate,
           to: toDate,
@@ -467,9 +513,15 @@ export default {
           this.order_history_text = 'Search';
           this.empty_orders_state = 'Order History Not Found';
         },
-        () => {
+        (error) => {
+          this.setOrderHistoryOrders([]);
           this.order_history_text = 'Search';
-          this.empty_orders_state = 'Order History Failed to Fetch';
+
+          if (Object.prototype.hasOwnProperty.call(error.response.data, 'data')) {
+            this.empty_orders_state = 'No Order History for user';
+          } else {
+            this.empty_orders_state = 'Order History Failed to Fetch';
+          }
         },
       );
     },

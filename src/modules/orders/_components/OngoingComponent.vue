@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    v-if="!loading && get_orders.length > 0"
+    v-if="!loading && ongoing_data > 0"
     class="ongoing--outer"
   >
     <div
@@ -53,11 +53,13 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
 
 library.add(faChevronUp);
 
 export default {
   name: 'OngoingComponent',
+  mixins: [TimezoneMxn],
   data() {
     return {
       loading: true,
@@ -75,12 +77,36 @@ export default {
     },
     filter_orders() {
       const orders = [];
+      const childOrders = [];
+      const parentOrders = [];
       this.get_orders.forEach((row) => {
+        if (Object.prototype.hasOwnProperty.call(row, 'child_orders')) {
+          row.child_orders.forEach((child) => {
+            if (!childOrders.includes(child.order_no)) {
+              childOrders.push(child.order_no);
+            }
+          });
+        }
         if (!Object.prototype.hasOwnProperty.call(row, 'freight_order')) {
+          parentOrders.push(row);
+        }
+      });
+      if (childOrders.length === 0) {
+        return parentOrders;
+      }
+      parentOrders.forEach((row) => {
+        if (!childOrders.includes(row.order_no)) {
           orders.push(row);
         }
       });
       return orders;
+    },
+    ongoing_data() {
+      let length = 0;
+      if (this.get_orders !== undefined) {
+        length = this.get_orders.length;
+      }
+      return length;
     },
     classObject() {
       return {
@@ -93,15 +119,20 @@ export default {
   watch: {
     getSession: {
       handler() {
-        this.$store.dispatch('$_orders/fetchOngoingOrders');
+        if (Object.keys(this.$store.getters.getSession).length > 0) {
+          this.$store.dispatch('$_orders/fetchOngoingOrders');
+        }
       },
       deep: true,
     },
   },
   mounted() {
-    this.$store.dispatch('$_orders/fetchOngoingOrders');
-    this.loading = true;
-    this.poll();
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0 && this.get_orders !== undefined) {
+      this.poll();
+      this.$store.dispatch('$_orders/fetchOngoingOrders');
+      this.loading = true;
+    }
   },
   methods: {
     ...mapMutations({
@@ -132,7 +163,8 @@ export default {
       return false;
     },
     date_format(date) {
-      return this.moment(date).calendar(null, {
+      const localTime = this.convertToUTCToLocal(date);
+      return this.moment(localTime).calendar(null, {
         lastWeek: 'MMM-D hh:mm a',
         sameDay: '[Today] hh:mm a',
         nextDay: '[Tomorrow] hh:mm a',
@@ -154,7 +186,8 @@ export default {
           that.loading = false;
         });
       } catch (e) {
-        Sentry.captureException(e);
+        this.$store.commit('setOngoingOrders', []);
+        this.loading = false;
       }
     },
     getStatus(order) {
@@ -195,9 +228,10 @@ export default {
   position: absolute;
   margin-top: 10px;
   right: 10px;
-  min-width: 345px;
+  min-width: 25%;
   max-height: 55%;
   overflow-x: hidden;
+  margin-right : 19px;
 }
 .ongoing--count
 {
@@ -211,7 +245,6 @@ export default {
   border: 0px solid #1782c5;
   border-radius: 2px;
   box-shadow: 0 3px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
-  max-width: 72%;
 }
 .ongoing--card
 {
@@ -222,7 +255,7 @@ export default {
     transition: all .5s ease-in-out;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
     border-radius: 2px !important;
-    max-width: 90%;
+    max-width: 100%;
 }
 .ongoing--card:hover,.ongoing--card.active
 {
@@ -261,5 +294,8 @@ border-radius: 0px 0px 3px 3px;
 .rotate
 {
   transform: rotate(180deg);
+}
+.ongoing--column{
+  width: 105%;
 }
 </style>

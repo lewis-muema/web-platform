@@ -7,4 +7,6 @@ export default {
   getCardSuccessStatus: state => state.card_success_status,
   getSavedCards: state => state.saved_cards,
   getStripeUserId: state => state.stripe_user_id,
+  getActiveCurrency: state => state.active_currency,
+  getCardPaymentStatus: state => state.card_payment_status,
 };

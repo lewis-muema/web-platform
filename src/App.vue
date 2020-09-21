@@ -1,6 +1,8 @@
 <template>
-  <div id="app"
-class="box app app-overflow">
+  <div
+    id="app"
+    class="box app app-overflow"
+  >
     <!-- Global component responsible for flashing notifications -->
     <sendy-flash details />
 
@@ -26,31 +28,46 @@ export default {
   computed: {
     ...mapGetters({
       getSession: 'getSession',
-      getNotificationStatus: 'getNotificationStatus',
+      getPickUpFilledStatus: 'getPickUpFilledStatus',
     }),
+    notification_status() {
+      return this.$store.getters.getNotificationStatus;
+    },
   },
   watch: {
-    getNotificationStatus(val) {
+    notification_status(val) {
+      this.trackMixpanelEvent('Notification state', {
+        'Notification Status': val,
+      });
+
       if (val) {
         this.showNotification();
+        this.trackMixpanelEvent('Notification initiated');
       }
     },
     // watch session so as to only update token on session
     getSession(val) {
       if (val) {
-        this.updateFirebaseToken();
+        this.initializeFirebase();
+      }
+    },
+    $route(to, from) {
+      if (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders') {
+        // this.autoPopBeacon();
       }
     },
   },
   beforeMount() {
-    Sentry.init({
-      dsn: ENV.SENTRY_DSN,
-      integrations: [
-        new Sentry.Integrations.Vue({
-          Vue,
-        }),
-      ],
-    });
+    if (ENV.DOMAIN !== 'localhost') {
+      Sentry.init({
+        dsn: ENV.SENTRY_DSN,
+        integrations: [
+          new Sentry.Integrations.Vue({
+            Vue,
+          }),
+        ],
+      });
+    }
   },
   created() {
     this.$store.commit('setENV', ENV);
@@ -58,6 +75,9 @@ export default {
       // initilize firebase on load
       this.initializeFirebase();
       this.loadFCMListeners();
+      this.detectAndroid();
+      this.detectIOS();
+      // this.autoPopBeacon();
     }
   },
   methods: {
@@ -66,12 +86,7 @@ export default {
       channel.addEventListener('message', (event) => {
         const orderNo = event.data.focusOrder;
         if (orderNo !== undefined) {
-          this.$router.push({
-            name: 'tracking',
-            params: {
-              order_no: orderNo,
-            },
-          });
+          this.$router.push(event.data.url);
         }
       });
 
@@ -83,7 +98,7 @@ export default {
         if ({}.hasOwnProperty.call(session, 'default')) {
           if (logAction === 'notification') {
             // add log for notification recieved
-            this.trackMixpanelEvent('FCM Notification Recieved - Web', {
+            this.trackMixpanelEvent('FCM Notification Received - Web', {
               'Order No': logData.order_no,
               'Cop Id': session[session.default].cop_id,
               'User Id': session[session.default].user_id,
@@ -102,7 +117,7 @@ export default {
           // no session
           if (logAction === 'notification') {
             // add log for notification recieved
-            this.trackMixpanelEvent('FCM Notification Recieved - Web', {
+            this.trackMixpanelEvent('FCM Notification Received - Web', {
               'Order No': logData.order_no,
             });
           }
@@ -138,71 +153,74 @@ export default {
     },
     updateFirebaseToken() {
       const session = this.getSession;
-      const fcmPayload = {
-        client_type: 'corporate',
-      };
-      if (session.default === 'biz') {
-        fcmPayload.cop_user_id = session[session.default].user_id;
-      } else {
-        fcmPayload.user_id = session[session.default].user_id;
+      if (Object.keys(session).length > 0) {
+        const fcmPayload = {
+          client_type: 'corporate',
+        };
+        if (session.default === 'biz') {
+          fcmPayload.cop_user_id = session[session.default].user_id;
+        } else {
+          fcmPayload.user_id = session[session.default].user_id;
+        }
+
+        fcmPayload.token = this.$store.getters.getFCMToken;
+
+        const payload = {
+          values: fcmPayload,
+          app: 'NODE_PRIVATE_API',
+          vm: this,
+          endpoint: 'firebase_token',
+        };
+
+        this.$store
+          .dispatch('requestAxiosPost', payload)
+          .then(response => response)
+          .catch(err => err);
       }
-
-      fcmPayload.token = this.$store.getters.getFCMToken;
-
-      const payload = {
-        values: fcmPayload,
-        app: 'NODE_PRIVATE_API',
-        vm: this,
-        endpoint: 'firebase_token',
-      };
-
-      this.$store
-        .dispatch('requestAxiosPost', payload)
-        .then(response => response)
-        .catch(err => err);
     },
     initializeFirebase() {
-      this.$messaging
-        .requestPermission()
-        .then(() => firebase.messaging().getToken())
-        .then((token) => {
-          this.fcmToken = token;
-          this.$store.commit('setFCMToken', token);
+      if (firebase.messaging.isSupported()) {
+        this.$messaging
+          .requestPermission()
+          .then(() => firebase.messaging().getToken())
+          .then((token) => {
+            this.fcmToken = token;
+            if (token !== null) {
+              this.$store.commit('setFCMToken', token);
+              // check if session exists and if so update
+              const session = this.getSession;
+              // eslint-disable-next-line no-prototype-builtins
+              if ({}.hasOwnProperty.call(session, 'default')) {
+                this.updateFirebaseToken();
+              }
+            }
+          })
+          .catch((err) => {
+            console.log('Unable to get permission to notify.', err);
+            // TOOD: we could update this to force the user to give us notification permissions
+          });
 
-          // check if session exists and if so update
-          const session = this.getSession;
-          // eslint-disable-next-line no-prototype-builtins
-          if ({}.hasOwnProperty.call(session, 'default')) {
-            this.updateFirebaseToken();
-          }
-        })
-        .catch((err) => {
-          console.log('Unable to get permission to notify.', err);
-          // TOOD: we could update this to force the user to give us notification permissions
+        this.$messaging.onMessage((payload) => {
+          const notificationData = payload.data;
+
+          this.$store.commit('setFCMData', notificationData);
+          // fire internal notification
+          const level = 1;
+          const notification = {
+            title: payload.notification.title,
+            level,
+            message: payload.notification.body,
+          };
+          this.$store.commit('setNotification', notification);
+          this.$store.commit('setNotificationStatus', true);
+
+          // redirect to tracking page when order no has been provided
+          // TODO : create new logic for internal redirects
+
+          // TODO: fire different events to act on message recieved
+          // proposed central notifications actor class to process different types of notifiacations
         });
-
-      this.$messaging.onMessage((payload) => {
-        const notificationData = payload.data;
-        const orderNo = notificationData.order_no;
-
-        this.$store.commit('setFCMData', notificationData);
-
-        // fire internal notification
-        const level = 1;
-        const notification = {
-          title: payload.notification.title,
-          level,
-          message: payload.notification.body,
-        };
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true);
-
-        // redirect to tracking page when order no has been provided
-        // TODO : create new logic for internal redirects
-
-        // TODO: fire different events to act on message recieved
-        // proposed central notifications actor class to process different types of notifiacations
-      });
+      }
     },
     showNotification() {
       const notification = this.$store.getters.getNotification;
@@ -258,12 +276,67 @@ export default {
       // reset notification status
       this.$store.commit('setNotificationStatus', false);
     },
+
+    detectAndroid() {
+      if (navigator.userAgent.match(/Android/i)) {
+        const notification = {
+          title: 'Mobile redirect',
+          level: 2,
+          message: 'We have detected you are using an android device. We will redirect you to the play store to download the app in the next few seconds for the best experience',
+        };
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
+        this.trackMixpanelEvent('Redirect to the android app/store from mobile web');
+        setTimeout(() => {
+          window.location = 'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.sendy.co.ke.sendyy&ddl=1&pcampaignid=web_ddl_1';
+        }, 10000);
+      }
+    },
+    detectIOS() {
+      if (navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i)) {
+        const notification = {
+          title: 'Mobile redirect',
+          level: 2,
+          message: 'We have detected you are using an IOS device. We will redirect you to the app store to download the app in the next few seconds for the best experience',
+        };
+        this.$store.commit('setNotification', notification);
+        this.$store.commit('setNotificationStatus', true);
+        this.trackMixpanelEvent('Redirect to the IOS app/store from mobile web');
+        setTimeout(() => {
+          window.location = 'itms://itunes.apple.com/us/app/sendy-delivery-app/id1088688361?mt=8';
+        }, 10000);
+      }
+    },
+    autoPopBeacon() {
+      setTimeout(() => {
+        if (this.$route.path === '/auth' || this.$route.path === '/auth/sign_in') {
+          window.Beacon('open');
+          window.Beacon('navigate', '/answers/');
+          setTimeout(() => {
+            window.Beacon('suggest', ['59d5bc412c7d3a40f0ed346c']);
+          }, 1500);
+        }
+        if (this.$route.path === '/orders' && !this.getPickUpFilledStatus) {
+          const session = this.$store.getters.getSession;
+          window.Beacon('open');
+          window.Beacon('navigate', '/answers/');
+          setTimeout(() => {
+            window.Beacon('suggest', ['59d5e11f2c7d3a40f0ed34fe']);
+            this.trackMixpanelEvent('Auto pop up helpscout beacon for order placement', {
+              'user name': session[session.default].user_name,
+              'user email': session[session.default].user_email,
+              'user phone': session[session.default].user_phone,
+            });
+          }, 1500);
+        }
+      }, 30000);
+    },
   },
 };
 </script>
 
 <style lang="css">
-@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,500,700');
+@import 'https://fonts.googleapis.com/css?family=Rubik:300,400,500,700';
 @import './assets/styles/app.css';
-@import './assets/styles/overide.css';
+@import './assets/styles/overide.css?v=2';
 </style>

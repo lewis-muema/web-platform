@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <div v-if="truckMoreInfo" class="truck-info-component">
+    <div v-if="truckMoreInfo && tracking_data !== undefined" class="truck-info-component">
       <transition name="fade" mode="out-in">
         <div v-if="!loading" class="infobar--outer">
           <div key="prime" class="infobar-content infobar--content-padded">
@@ -50,7 +50,7 @@
                           Minimum Cost :
                         </span>
                         <span>
-                          {{ tracking_data.price_tier.currency }}
+                          {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }}
                           {{ tracking_data.package_details.customer_min_amount }}
                         </span>
                       </span>
@@ -59,7 +59,7 @@
                           Cost :
                         </span>
                         <span>
-                          {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                          {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}
                         </span>
                       </span>
                     </span>
@@ -68,7 +68,7 @@
                         Cost :
                       </span>
                       <span>
-                        {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                        {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}
                       </span>
                     </span>
                   </div>
@@ -110,12 +110,15 @@
                       <p>{{ tracking_data.path[0].name }}</p>
                     </li>
 
-                    <li v-for="(val, index) in tracking_data.path" v-if="index > 0">
+                    <li v-for="(val, index) in tracking_data.path" v-if="index > 0" :class="Object.prototype.hasOwnProperty.call(val, 'notes') && val.notes ? 'infor-top-bar-notes-section' : ''">
                       <p class="info-text-transform infor-top-bar-text">
-                        Destination
+                         {{tracking_data.path[index].waypoint_type ? tracking_data.path[index].waypoint_type :  `Destination`}}
                       </p>
                       <p>
                         {{ val.name }}
+                      </p>
+                      <p class="infor-top-bar-text-notes" v-if="Object.prototype.hasOwnProperty.call(val, 'notes') && val.notes">
+                        Notes: {{ val.notes }}
                       </p>
                     </li>
                   </ul>
@@ -158,7 +161,7 @@
                     </div>
                     <div class="tracking-loader-inner">
                       <span class="info-text-transform">
-                        {{ tracking_data.date_time | moment }}
+                        {{ convertToUTCToLocal(tracking_data.date_time) | moment }}
                       </span>
                     </div>
                   </div>
@@ -240,30 +243,82 @@
                   <!-- End for truck orders  -->
                 </div>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="6" class="notes-scrollable">
                 <div class="tracking-notes">
                   <div class="info-text-transform infor-top-bar-text">
-                    <img
-                      src="https://images.sendyit.com/web_platform/tracking/edit.svg"
-                      alt=""
-                      class="infobar-truck-img"
-                    />
-                    Notes
+                    PICKUP INSTRUCTIONS AT {{tracking_data.path[0].name}}
                   </div>
-                  <div v-if="tracking_data.order_notes.length > 0" class="tracking-notes-inner">
-                    <div v-for="(val, index) in tracking_data.order_notes" v-if="index >= 0">
-                      <div v-if="val.msg === ''">
-                        No notes provided.
+                    <div class="tracking-notes-inner" v-if="checkPickUpNotes(tracking_data.path[0])">
+                      <div
+                        v-if="displayNotes(tracking_data.path[0])"
+                        class="additional-instructions-content additional-instructions-wrapper"
+                      >
+                        <div class="additional-notes-outer">
+                          <div class="additional-notes-recipient">
+                            {{tracking_data.path[0].notes}}
+                          </div>
+                        </div>
                       </div>
-                      <div v-else>
-                        {{ val.msg }}
+
+                      <div
+                        v-if="tracking_data.path[0].recipient_phone !== null "
+                        class="additional-instructions-content additional-instructions-wrapper"
+                      >
+                        <div class="additional-instructions__flex">
+                          <i
+                            class="el-icon-phone-outline additional-instructions__imagerecipient_contact-icon"
+                          />
+                        </div>
+                        <div class="additional-notes-outer">
+                          <div class="additional-notes-recipient">
+                            {{tracking_data.path[0].recipient_phone}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="" v-else>
+                      No notes provided.
+                    </div>
+                </div>
+
+                <div v-for="(val, index) in tracking_data.path" v-if="index > 0" class="tracking-notes">
+                  <div class="info-text-transform infor-top-bar-text">
+                    DROP OFF INSTRUCTIONS AT {{val.name}}
+                  </div>
+                  <div class="tracking-notes-inner" v-if="checkPickUpNotes(val)">
+                    <div
+                      v-if="displayNotes(val)"
+                      class="additional-instructions-content additional-instructions-wrapper"
+                    >
+                      <div class="additional-notes-outer">
+                        <div class="additional-notes-recipient">
+                          {{val.notes}}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      v-if="val.recipient_phone !== null "
+                      class="additional-instructions-content additional-instructions-wrapper"
+                    >
+                      <div class="additional-instructions__flex">
+                        <i
+                          class="el-icon-phone-outline additional-instructions__imagerecipient_contact-icon"
+                        />
+                      </div>
+                      <div class="additional-notes-outer">
+                        <div class="additional-notes-recipient">
+                          {{val.recipient_phone}}
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div v-else class="tracking-notes-inner">
+                  <div class="" v-else>
                     No notes provided.
                   </div>
+
                 </div>
+
               </el-col>
               <el-col :span="6" class="">
                 <div class="">
@@ -276,7 +331,9 @@
                           <p class="infor-top-bar-text stagePassed">
                             {{ orderPlaced }}
                           </p>
-                          <p class="eta_data">{{ tracking_data.eta_data.placed | moment }}</p>
+                          <p class="eta_data">
+                            {{ convertToLocalTime(tracking_data.eta_data.placed) | moment }}
+                          </p>
                         </div>
                       </li>
 
@@ -293,7 +350,9 @@
                           <p class="infor-top-bar-text stagePassed">
                             Your Order has been scheduled
                           </p>
-                          <p class="eta_data">{{ tracking_data.date_time | moment }}</p>
+                          <p class="eta_data">
+                            {{ convertToUTCToLocal(tracking_data.date_time) | moment }}
+                          </p>
                         </div>
                       </li>
 
@@ -313,21 +372,21 @@
                               <div v-if="accType === 1" class="">
                                 <p>
                                   Price has been confirmed to be
-                                  {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                                  {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}
                                 </p>
                               </div>
                               <div v-else class="">
                                 <div v-if="myRb <= 0">
                                   <p>
                                     Price has been confirmed to be
-                                    {{ tracking_data.price_tier.currency }}
+                                    {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }}
                                     {{ tracking_data.amount }}
                                   </p>
                                 </div>
                                 <div v-else>
                                   <p>
                                     Price has been confirmed to be
-                                    {{ tracking_data.price_tier.currency }}
+                                    {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }}
                                     {{ tracking_data.amount }}.Choose payment option below
                                   </p>
                                   <div class="">
@@ -422,6 +481,19 @@
                           class="infor-top-bar-text"
                           v-bind:class="{ deliveredActive: setDelivered }"
                         >
+                         <span v-if="'waypoint_type'in val && val.waypoint_type !== null && val.waypoint_type.toLowerCase() === 'pickup'">
+                          <span v-if="tracking_data.delivery_status < 3 && !val.visited">
+                            <p class="stagePending">
+                              Your {{ partnerName }} is on the way to  pick your {{ packageName }} at {{ val.name }}
+                            </p>
+                          </span>
+                          <span v-else>
+                            <p class="stagePassed">
+                              Your {{ packageName }} at {{ val.name }} has been picked.
+                            </p>
+                          </span>
+                        </span>
+                        <span v-else>
                           <span v-if="tracking_data.delivery_status < 3 && !val.visited">
                             <p class="stagePending">
                               Your {{ packageName }} is on the way to {{ val.name }}
@@ -432,6 +504,11 @@
                               Your {{ packageName }} has been delivered to {{ val.name }}
                             </p>
                           </span>
+                        </span>
+
+
+
+
                         </div>
                       </li>
 
@@ -458,7 +535,7 @@
                 </div>
               </el-col>
             </el-row>
-            <div v-if="getStatus === 'Pending'" class="save-option">
+            <div v-if="cancellationState()" class="save-option">
               <el-row
                 :gutter="20"
                 class="infobar-content infobar--truck-item  infobar--item-truck-bordered-top infobar--item-truck-cancel"
@@ -471,7 +548,7 @@
               </el-col> -->
                 <el-col :span="6" class="cancel-text-option">
                   <div
-                    v-if="tracking_data.delivery_status < 2 && user_state"
+                    v-if="cancelBtnState()"
                     class="info-text-transform info-text-cursor "
                     @click="canceldialog()"
                   >
@@ -521,7 +598,7 @@
 
     <div>
       <transition name="fade" mode="out-in">
-        <div v-if="!truckMoreInfo">
+        <div v-if="!truckMoreInfo && tracking_data !== undefined">
           <div v-if="!loading" class="infobar--outer">
             <div class="infobar--content infobar--content-padded">
               <div class="infobar--photo infobar--content infobar--item infobar--item-bordered">
@@ -557,14 +634,14 @@
                         !tracking_data.fixed_cost
                     "
                   >
-                    Minimum Amount : {{ tracking_data.price_tier.currency }}
+                    Minimum Amount : {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }}
                     {{ tracking_data.package_details.customer_min_amount }}
                   </div>
                   <div v-else>
-                    {{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}
+                    {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}
                   </div>
                 </div>
-                <div v-else>{{ tracking_data.price_tier.currency }} {{ tracking_data.amount }}</div>
+                <div v-else>{{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}</div>
                 <div class="">
                   <div class="">
                     {{ tracking_data.order_no }}
@@ -601,7 +678,7 @@
                   </div>
                 </div>
                 <div
-                  v-if="tracking_data.delivery_status < 2 && user_state"
+                  v-if="cancelBtnState()"
                   class="infobar--actions-hover"
                   @click="canceldialog()"
                 >
@@ -622,53 +699,113 @@
       <transition name="fade" mode="out-in">
         <div class="">
           <el-dialog :visible.sync="cancelOption" class="cancelOptions">
-            <div class="">
-              <div class="cancel-reason-option">
-                Cancel this order?
+            <div class="cancelOptions--content-wrap" v-if="extendedDialog()">
+              <div class="">
+                <div class="cancel-reason-title" id="cancel-reason-title">
+                  Are you sure you want to cancel?
+                </div>
+                <div class="cancel-reason-subtitle" id="cancel-reason-subtitle">
+                  You may incur cost on cancellation. Please confirm order details in future before placing an order
+                </div>
               </div>
-              <div class="cancel-reason-option">
-                You can place another one at any time.
+              <div v-for="reasons in cancellation_reasons">
+                <div class="cancel-reason-text" id="cancel-reason-text">
+                  <div class="">
+                    <el-radio v-model="cancel_reason" :label="reasons.cancel_reason_id">
+                      {{reasons.cancel_reason}}
+                    </el-radio>
+                  </div>
+                </div>
+              </div>
+              <div class="cancel-reason-input" v-if="cancel_reason === 0">
+                <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                  placeholder="Tell us why you want to cancel"
+                  v-model="cancel_desc">
+                </el-input>
+              </div>
+              <div class="cancel-reason-input">
+                <input type="text" v-model="inputCancelReason" class="cancel-reason-text-input" name="" placeholder="Enter cancel reason" />
+              </div>
+              <div class="action--slide-desc">
+                <button
+                  type="button"
+                  name="button"
+                  class="action--slide-button cancellation-submit accept-cancell-btn"
+                  @click="cancelOrder()"
+                >
+                  YES , CANCEL
+                </button>
+                <button
+                  type="button"
+                  name="button"
+                  class="action--slide-button cancellation-submit"
+                  @click="cancelToggle(true)"
+                >
+                  NO , DON'T CANCEL
+                </button>
               </div>
             </div>
-            <div class="cancel-reason-text">
-              <div class="">
-                <el-radio v-model="cancel_reason" label="4">
-                  I placed the wrong locations
-                </el-radio>
+            <div class="cancelOptions--content-wrap" v-if="cancel_reason === 4">
+              <div class="cancelOptions--content-message">
+                Did you know after your order is confirmed you can call your rider and give him the
+                right destination? We will recalculate the cost and deliver your item.
               </div>
-              <div class="">
-                <el-radio v-model="cancel_reason" label="5">
-                  My order is not ready
-                </el-radio>
-              </div>
-              <div class="">
-                <el-radio v-model="cancel_reason" label="7">
-                  No driver has been allocated
-                </el-radio>
-              </div>
-              <div class="">
-                <el-radio v-model="cancel_reason" label="8">
-                  I placed this order twice
-                </el-radio>
+              <div class="cancelOptions--content-buttons">
+                <button
+                  type="button"
+                  name="button"
+                  class="action--slide-button"
+                  @click="cancelToggle(cancel_reason)"
+                >
+                  Okay, I'll call the rider
+                </button>
+                <button
+                  type="button"
+                  name="button"
+                  class="default action--slide-button"
+                  @click="cancelOrder()"
+                >
+                  Cancel Order
+                </button>
               </div>
             </div>
-            <div class="action--slide-desc">
-              <button
-                type="button"
-                name="button"
-                class="action--slide-button"
-                @click="cancelOrder()"
-              >
-                Yes
-              </button>
-              <button
-                type="button"
-                name="button"
-                class="action--slide-button"
-                @click="cancelToggle()"
-              >
-                No
-              </button>
+            <div class="cancelOptions--content-wrap" v-if="pop_state === 5">
+              <div class="warning-icon-pstn">
+                <i class="el-icon-warning warning-icon"></i>
+              </div>
+              <div class="cancelOptions--content-message pop-message">
+                  In the future, ensure your order is ready
+              </div>
+              <div class="cancelOptions--content-buttons">
+                <button
+                  type="button"
+                  name="button"
+                  class="action--slide-button pop_btn"
+                  @click="disablePop()"
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+            <div class="cancelOptions--content-wrap" v-if="pop_state === 13">
+              <div class="warning-icon-pstn">
+                <i class="el-icon-warning warning-icon"></i>
+              </div>
+              <div class="cancelOptions--content-message pop-message">
+                  Your preferred rider is either offline or already busy
+              </div>
+              <div class="cancelOptions--content-buttons">
+                <button
+                  type="button"
+                  name="button"
+                  class="action--slide-button pop_btn"
+                  @click="disablePop()"
+                >
+                  OK
+                </button>
+              </div>
             </div>
           </el-dialog>
 
@@ -710,12 +847,18 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import { mapGetters } from 'vuex';
+import TimezoneMxn from '../../../../../mixins/timezone_mixin';
+import EventsMixin from '../../../../../mixins/events_mixin';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
+
 
 const moment = require('moment');
 
 export default {
   name: 'InfoWindow',
+  mixins: [TimezoneMxn, EventsMixin,NotificationMxn],
   filters: {
     moment(date) {
       return moment(date).format('MMM Do YYYY, h:mm a');
@@ -733,6 +876,7 @@ export default {
       cancel_desc: '',
       maximiseInfo: 0,
       cancelOption: false,
+      inputCancelReason: '',
       paymentOption: '',
       truckMoreInfo: true,
       myRb: '',
@@ -760,6 +904,12 @@ export default {
       setScheduled: false,
       partnerName: '',
       packageName: '',
+      hubspotStatus: true,
+      cancellation_reasons : [],
+      cancellation_state : false,
+      more_info : false ,
+      other_notes : '',
+      pop_state : -1 ,
     };
   },
   computed: {
@@ -833,13 +983,17 @@ export default {
       return text;
     },
     delayState() {
-      if (
-        Object.prototype.hasOwnProperty.call(this.tracking_data.eta_data, 'cancelled') &&
-        this.tracking_data.eta_data.cancelled
-      ) {
-        return this.tracking_data.eta_data.cancelled_message;
-      } else if (this.tracking_data.eta_data.delayed) {
-        return this.tracking_data.eta_data.delayed_message;
+      if (this.tracking_data !== undefined) {
+        if (
+          Object.prototype.hasOwnProperty.call(this.tracking_data.eta_data, 'cancelled') &&
+          this.tracking_data.eta_data.cancelled
+        ) {
+          return this.tracking_data.eta_data.cancelled_message;
+        } else if (this.tracking_data.eta_data.delayed) {
+          return this.tracking_data.eta_data.delayed_message;
+        } else {
+          return this.confirmEta;
+        }
       } else {
         return this.confirmEta;
       }
@@ -853,14 +1007,41 @@ export default {
       this.poll(from);
       this.initiateOrderData();
     },
-
+    cancelOption: function cancelOption() {
+      if (this.cancelOption === false) {
+        let eventPayload = {
+          eventCategory: 'Order Cancellation',
+          eventAction: 'Click',
+          eventLabel: 'No Button - Order Cancellation Page - WebApp',
+        };
+        this.fireGAEvent(eventPayload);
+      }
+    },
     tracking_data(data) {
-      if (Object.prototype.hasOwnProperty.call(data, 'confirm_status')) {
-        if (data.confirm_status === 1) {
-          this.reCheckMQTTConnection();
+      if (data !== undefined) {
+        if (Object.prototype.hasOwnProperty.call(data, 'confirm_status')) {
+          if (data.confirm_status === 1) {
+            this.reCheckMQTTConnection();
+          }
         }
       }
       this.initiateOrderData();
+    },
+    inputCancelReason(data) {
+      if (data) {
+        this.cancel_reason = 11;
+        this.cancel_desc = data;
+        this.debounceCancelReason(data);
+      } else {
+        this.cancel_reason = -1;
+        this.cancel_desc = '';
+      }
+    },
+    cancel_reason(value){
+      if (value !== '') {
+        this.cancelChange(value);
+      }
+
     },
   },
   mounted() {
@@ -878,34 +1059,36 @@ export default {
     moment() {
       return moment();
     },
+    // eslint-disable-next-line func-names
+    debounceCancelReason: _.debounce(function (data) {
+      this.fireGAEvent({
+        eventCategory: 'Order Cancellation',
+        eventAction: 'Click',
+        eventLabel: 'Enter cancel reason input - Order Cancellation Page - WebApp',
+      });
+    }, 500),
     cancelChange(reason) {
-      switch (reason) {
-        case 4: {
-          this.cancel_desc = 'I placed the wrong locations';
-          break;
-        }
-        case 5: {
-          this.cancel_desc = 'My order is not ready';
-          break;
-        }
-        case 7: {
-          this.cancel_desc = 'No driver has been allocated';
-          break;
-        }
-        case 8: {
-          this.cancel_desc = 'I placed this order twice';
-          break;
-        }
-        default:
+      this.more_info = false ;
+      this.cancel_desc = '';
+      const data = this.cancellation_reasons.find(position => position.cancel_reason_id === reason);
+      if (reason === 0) {
+        this.more_info = true ;
+      }
+      else {
+        this.cancel_desc = data.cancel_reason;
       }
     },
     initiateOrderData() {
-      this.setRiderLocationToStore();
-      this.checkVendorName();
-      this.checkScheduler();
-      this.setTimeLineIconState();
-      this.confirmUser();
-      this.orderETA();
+      if (this.tracking_data !== undefined) {
+        if (Object.keys(this.tracking_data).length > 0) {
+          this.setTimeLineIconState();
+          this.setRiderLocationToStore();
+          this.checkVendorName();
+          this.checkScheduler();
+          this.orderETA();
+          this.confirmUser();
+        }
+      }
     },
     checkPreviousRoute() {
       if (this.$route.path === `/external/tracking/${this.$route.params.order_no}`) {
@@ -914,39 +1097,76 @@ export default {
       }
     },
     poll(from) {
-      const that = this;
-      this.$store
-        .dispatch('$_orders/$_tracking/getTrackingData', { order_no: from })
-        .then(response => {
-          if (response) {
-            if (this.tracking_data.delivery_status === 3) {
-              that.doNotification('1', 'Order delivered', 'Your order has been delivered.');
-              if (that.$route.name !== 'tracking_external') {
-                that.$router.push(`/orders/rating/${from}`);
-              } else {
-                that.$router.push(`/external/rating/${from}`);
+      if (this.tracking_data !== undefined) {
+        const that = this;
+        this.$store
+          .dispatch('$_orders/$_tracking/getTrackingData', { order_no: from })
+          .then((response) => {
+            if (response) {
+              if (this.tracking_data.delivery_status === 3) {
+                that.doNotification('1', 'Order delivered', 'Your order has been delivered.');
+                if (that.$route.name !== 'tracking_external') {
+                  that.$router.push(`/orders/rating/${from}`);
+                } else {
+                  that.$router.push(`/external/rating/${from}`);
+                }
+              } else if (this.tracking_data.main_status === 2) {
+                that.doNotification('2', 'Order cancelled', 'Your order has been cancelled.');
+                that.place();
+              } else if (this.tracked_order === from) {
+                setTimeout(() => {
+                  that.poll(from);
+                }, 30000);
               }
-            } else if (this.tracking_data.main_status === 2) {
-              that.doNotification('2', 'Order cancelled', 'Your order has been cancelled.');
+            } else {
               that.place();
-            } else if (this.tracked_order === from) {
-              setTimeout(() => {
-                that.poll(from);
-              }, 30000);
             }
-          } else {
-            that.place();
-          }
-          that.loading = false;
-        });
+            that.loading = false;
+          });
+      }
     },
-    cancelToggle() {
+    cancelToggle(cancelReason = 0) {
+      if (cancelReason === true) {
+        let eventPayload = {
+             eventCategory: 'Order Cancellation',
+              eventAction: 'Click',
+              eventLabel: 'No Button - Order Cancellation Page - WebApp',
+          }
+          this.fireGAEvent(eventPayload);
+
+      }
+      if(cancelReason === '4') {
+          this.trackMixpanelEvent('Dissuaded Cancellation ', {
+              'Order No': this.tracking_data.order_no,
+          });
+      }
       if (this.cancel_popup === 1) {
         this.cancel_popup = 0;
       } else {
         this.cancel_popup = 1;
       }
       this.cancelOption = false;
+      this.cancel_reason = '';
+      if (cancelReason === true) {
+        let eventPayload = {
+          eventCategory: 'Order Cancellation',
+          eventAction: 'Click',
+          eventLabel: 'No Button - Order Cancellation Page - WebApp',
+        };
+        this.fireGAEvent(eventPayload);
+      }
+      if (cancelReason === '4') {
+        this.trackMixpanelEvent('Dissuaded Cancellation ', {
+          'Order No': this.tracking_data.order_no,
+        });
+      }
+      if (this.cancel_popup === 1) {
+        this.cancel_popup = 0;
+      } else {
+        this.cancel_popup = 1;
+      }
+      this.cancelOption = false;
+      this.cancel_reason = '';
     },
     maximiseInfoDetails() {
       this.truckMoreInfo = true;
@@ -955,22 +1175,27 @@ export default {
       return `https://images.sendyit.com/web_platform/vendor_type/side/${id}.svg`;
     },
     checkVendorName() {
-      if (this.tracking_data.rider.vendor_name === 'Bike') {
-        this.partnerName = 'rider';
-        this.packageName = 'package';
-        if (this.tracking_data.price_type === 3) {
+      if (
+        Object.keys(this.tracking_data).length > 0 &&
+        Object.prototype.hasOwnProperty.call(this.tracking_data.rider, 'vendor_name')
+      ) {
+        if (this.tracking_data.rider.vendor_name === 'Bike') {
+          this.partnerName = 'rider';
+          this.packageName = 'package';
+          if (this.tracking_data.price_type === 3) {
+            this.vendorName = 'Standard';
+          } else {
+            this.vendorName = 'Express';
+          }
+        } else if (this.tracking_data.rider.vendor_name === 'Economy Bike') {
           this.vendorName = 'Standard';
+          this.partnerName = 'rider';
+          this.packageName = 'package';
         } else {
-          this.vendorName = 'Express';
+          this.vendorName = this.tracking_data.rider.vendor_name;
+          this.partnerName = 'driver';
+          this.packageName = 'load';
         }
-      } else if (this.tracking_data.rider.vendor_name === 'Economy Bike') {
-        this.vendorName = 'Standard';
-        this.partnerName = 'rider';
-        this.packageName = 'package';
-      } else {
-        this.vendorName = this.tracking_data.rider.vendor_name;
-        this.partnerName = 'driver';
-        this.packageName = 'load';
       }
     },
     checkScheduler() {
@@ -1054,13 +1279,19 @@ export default {
     },
     confirmUser() {
       const session = this.$store.getters.getSession;
-      let sessionUserEmail = session[session.default].user_email;
-      let orderUserEmail = this.tracking_data.user.email;
+      if (
+        Object.keys(session).length > 0 &&
+        Object.prototype.hasOwnProperty.call(session, 'default')
+      ) {
+        let sessionUserEmail = session[session.default].user_email;
+        let orderUserEmail = this.tracking_data.user.email;
 
-      if (sessionUserEmail === orderUserEmail) {
-        this.user_state = true;
-      } else {
-        this.user_state = false;
+        if (sessionUserEmail === orderUserEmail) {
+          this.user_state = true;
+          this.retrieveCancellationReasons();
+        } else {
+          this.user_state = false;
+        }
       }
     },
     minimiseInfoDetails() {
@@ -1068,16 +1299,21 @@ export default {
     },
     checkRunningBalance() {
       const session = this.$store.getters.getSession;
-      const payload = {
-        cop_id: session[session.default].cop_id,
-        user_phone: session[session.default].user_phone,
-      };
-      this.$store.dispatch('$_orders/$_tracking/runningBalance', payload).then(response => {
-        if (response.status) {
-          this.myRb = response.running_balance;
-          this.accType = response.payment_plan;
-        }
-      });
+      if (
+        Object.keys(session).length > 0 &&
+        Object.prototype.hasOwnProperty.call(session, 'default')
+      ) {
+        const payload = {
+          cop_id: session[session.default].cop_id,
+          user_phone: session[session.default].user_phone,
+        };
+        this.$store.dispatch('$_orders/$_tracking/runningBalance', payload).then((response) => {
+          if (response.status) {
+            this.myRb = response.running_balance;
+            this.accType = response.payment_plan;
+          }
+        });
+      }
     },
     takeMeToPayment() {
       if (this.paymentOption === 1) {
@@ -1090,8 +1326,10 @@ export default {
     },
     canceldialog() {
       this.cancelOption = true;
+      this.cancel_reason = '';
     },
     place() {
+      this.pop_state = false ;
       if (this.$route.name !== 'tracking_external') {
         this.$router.push('/orders');
       } else {
@@ -1099,50 +1337,95 @@ export default {
       }
     },
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
     cancelOrder() {
-      if (this.cancel_reason !== '') {
-        const payload = {
-          order_no: this.tracking_data.order_no,
-          cancel_reason_id: this.cancel_reason,
-          reason_description: this.cancel_desc,
-          client_type: this.$store.getters.getSession.default,
-        };
-        const that = this;
-        this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then(response => {
-          if (response.status) {
-            that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
-            that.cancelToggle();
-            this.$store.dispatch('$_orders/fetchOngoingOrders');
-            that.place();
-          } else {
-            const payload2 = {
-              order_no: that.$route.params.order_no,
-              cancel_reason_id: 4,
-              reason_description: 'I placed the wrong locations',
-              client_type: that.$store.getters.getSession.default,
-            };
-            this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then(response2 => {
-              if (response2.status) {
-                that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
-                that.cancelToggle();
-                this.$store.dispatch('$_orders/fetchOngoingOrders');
-                that.place();
-              } else {
-                that.doNotification(
-                  2,
-                  'Order cancellation failed',
-                  'Could not cancel the order. Please contact Customer Care at 0709779779.'
-                );
-              }
+      if (this.cancel_reason !== '' && Object.keys(this.$store.getters.getSession).length > 0) {
+        if (this.cancel_reason === 0 && this.cancel_desc === '') {
+          this.doNotification(3, 'Order cancellation failed', 'Please provide reason for cancellation');
+        }
+        else {
+          this.pop_state = this.cancel_reason;
+          setTimeout(() => {
+           this.pop_state = false ;
+          }, 3000);
+          const payload = {
+            order_no: this.tracking_data.order_no,
+            cancel_reason_id: this.cancel_reason,
+            reason_description: this.cancel_desc,
+            client_type: this.$store.getters.getSession.default,
+          };
+          const that = this;
+          if (this.inputCancelReason && this.hubspotStatus) {
+            this.submitHubspotCancelReason();
+            this.fireGAEvent({
+              eventCategory: 'Order Cancellation',
+              eventAction: 'Click',
+              eventLabel: 'Submit cancel reason input - Order Cancellation Page - WebApp',
             });
           }
-        });
+          let eventPayload = {
+            eventCategory: 'Order Cancellation',
+            eventAction: 'Click',
+            eventLabel: 'Yes Button - Order Cancellation Page - WebApp',
+          };
+          this.fireGAEvent(eventPayload);
+
+          this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then((response) => {
+            if (response.status) {
+              that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+              that.cancelToggle();
+              this.$store.dispatch('$_orders/fetchOngoingOrders');
+              that.place();
+            } else {
+              const payload2 = {
+                order_no: that.$route.params.order_no,
+                cancel_reason_id: 4,
+                reason_description: 'I placed the wrong locations',
+                client_type: that.$store.getters.getSession.default,
+              };
+              this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then((response2) => {
+                if (response2.status) {
+                  that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+                  that.cancelToggle();
+                  this.$store.dispatch('$_orders/fetchOngoingOrders');
+                  that.place();
+                } else {
+                  that.doNotification(
+                    2,
+                    'Order cancellation failed',
+                    'Could not cancel the order. Please contact Customer Care at 0709779779.'
+                  );
+                }
+              });
+            }
+          });
+        }
       } else {
         this.doNotification(3, 'Order cancellation failed', 'Please select cancellation reason.');
+      }
+    },
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+          // this.$ga.event({
+          //   eventCategory: 'Orders',
+          //   eventAction: 'Price Request',
+          //   eventLabel: name,
+          //   eventValue: 14,
+          // });
+        }
+      } catch (er) {
+        // ...
       }
     },
     saveDetails() {
@@ -1166,7 +1449,7 @@ export default {
       }
 
       this.$store.dispatch('$_orders/$_tracking/saveOrderDetails', params).then(
-        response => {
+        (response) => {
           if (response.status) {
             this.doNotification(1, 'Save Details', 'Order Details saved successfully.');
             this.isSaved = true;
@@ -1174,7 +1457,7 @@ export default {
             this.doNotification(3, 'Save Details failed', 'Could not save details. Kindly retry.');
           }
         },
-        error => {
+        (error) => {
           this.doNotification(2, 'Save Details Error ', 'Check Internet connection and retry');
         }
       );
@@ -1209,7 +1492,7 @@ export default {
         payload.message = `Hi! ${userName} wants you to track their Sendy order here: ${track}`;
 
         this.$store.dispatch('$_orders/$_tracking/requestETASms', payload).then(
-          response => {
+          (response) => {
             if (response.status === 200) {
               this.doNotification(1, 'Share ETA', 'SMS sent successfully.');
               this.shareOption = false;
@@ -1217,7 +1500,7 @@ export default {
               this.doNotification(2, 'Share ETA failed', 'Could not send ETA sms. Kindly retry.');
             }
           },
-          error => {
+          (error) => {
             this.doNotification(2, 'Share ETA Error ', 'Check Internet connection and retry');
           }
         );
@@ -1226,81 +1509,86 @@ export default {
       }
     },
     setRiderLocationToStore() {
-      const payload = {};
-      payload.rider_id = [this.tracking_data.rider.rider_id];
-      this.$store.dispatch('$_orders/$_tracking/requestRiderLastPosition', payload).then(
-        response => {
-          if (response.status === 'true') {
-            let riderOnlineData = response.partnerArray[0];
-            const size = Object.keys(this.vendors).length;
-            if (size > 0) {
-              this.$store.dispatch('$_orders/$_tracking/trackMQTT');
+      if (Object.prototype.hasOwnProperty.call(this.tracking_data, 'rider')) {
+        const payload = {};
+
+        payload.rider_id = [this.tracking_data.rider.rider_id];
+        this.$store.dispatch('$_orders/$_tracking/requestRiderLastPosition', payload).then(
+          (response) => {
+            if (response.status === 'true') {
+              let riderOnlineData = response.partnerArray[0];
+              const size = Object.keys(this.vendors).length;
+              if (size > 0) {
+                this.$store.dispatch('$_orders/$_tracking/trackMQTT');
+              } else {
+                riderOnlineData.overide_visible = true;
+                this.$store.commit('$_orders/setVendorMarkers', riderOnlineData);
+              }
             } else {
-              riderOnlineData.overide_visible = true;
-              this.$store.commit('$_orders/setVendorMarkers', riderOnlineData);
+              this.$store.dispatch('$_orders/$_tracking/trackMQTT');
             }
-          } else {
-            this.$store.dispatch('$_orders/$_tracking/trackMQTT');
+          },
+          (error) => {
+            // ...
           }
-        },
-        error => {
-          // ...
-        }
-      );
+        );
+      }
     },
     orderETA() {
-      if (this.tracking_data.confirm_status === 0) {
-        const confirmEta = this.tracking_data.eta_data.etc;
-        const etaSplit = confirmEta.split('to');
-        const start = etaSplit[0].replace(/\s+/g, '');
-        const end = etaSplit[1].replace(/\s+/g, '');
+      if (Object.keys(this.tracking_data).length > 0) {
+        if (this.tracking_data.confirm_status === 0) {
+          const confirmEta = this.tracking_data.eta_data.etc;
+          const etaSplit = confirmEta.split('to');
+          const start = etaSplit[0].replace(/\s+/g, '');
+          const end = etaSplit[1].replace(/\s+/g, '');
 
-        const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-        const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+          const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+          const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-        this.confirmEta = `${startEta} - ${endEta}`;
+          this.confirmEta = `${startEta} - ${endEta}`;
 
-        this.pickUpEta = '';
-        this.deliveryEta = '';
-      } else if (
-        this.tracking_data.confirm_status === 1 &&
-        this.tracking_data.delivery_status === 0
-      ) {
-        const pickUpEta = this.tracking_data.eta_data.etp;
-        const confirmedEta = this.tracking_data.eta_data.confirmed;
-        const etaSplit = pickUpEta.split('to');
-        const start = etaSplit[0].replace(/\s+/g, '');
-        const end = etaSplit[1].replace(/\s+/g, '');
+          this.pickUpEta = '';
+          this.deliveryEta = '';
+        } else if (
+          this.tracking_data.confirm_status === 1 &&
+          this.tracking_data.delivery_status === 0
+        ) {
+          const pickUpEta = this.tracking_data.eta_data.etp;
+          const confirmedEta = this.tracking_data.eta_data.confirmed;
+          const etaSplit = pickUpEta.split('to');
+          const start = etaSplit[0].replace(/\s+/g, '');
+          const end = etaSplit[1].replace(/\s+/g, '');
 
-        const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-        const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+          const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+          const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-        this.pickUpEta = `${startEta}-${endEta}`;
-        this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
-      } else if (this.tracking_data.delivery_status === 2) {
-        const deliveryEta = this.tracking_data.eta_data.etd;
-        const confirmedEta = this.tracking_data.eta_data.confirmed;
-        const pickedEta = this.tracking_data.eta_data.picked;
-        const etaSplit = deliveryEta.split('to');
-        const start = etaSplit[0].replace(/\s+/g, '');
-        const end = etaSplit[1].replace(/\s+/g, '');
+          this.pickUpEta = `${startEta}-${endEta}`;
+          this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
+        } else if (this.tracking_data.delivery_status === 2) {
+          const deliveryEta = this.tracking_data.eta_data.etd;
+          const confirmedEta = this.tracking_data.eta_data.confirmed;
+          const pickedEta = this.tracking_data.eta_data.picked;
+          const etaSplit = deliveryEta.split('to');
+          const start = etaSplit[0].replace(/\s+/g, '');
+          const end = etaSplit[1].replace(/\s+/g, '');
 
-        const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-        const endEta = moment(end, moment.ISO_8601).format('h:mm a');
+          const startEta = moment(start, moment.ISO_8601).format('h:mm a');
+          const endEta = moment(end, moment.ISO_8601).format('h:mm a');
 
-        this.deliveryEta = `${startEta}-${endEta}`;
-        this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
-        this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
-      } else if (this.tracking_data.delivery_status === 3) {
-        const deliveryEta = this.tracking_data.eta_data.delivered;
-        const confirmedEta = this.tracking_data.eta_data.confirmed;
-        const pickedEta = this.tracking_data.eta_data.picked;
+          this.deliveryEta = `${startEta}-${endEta}`;
+          this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
+          this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
+        } else if (this.tracking_data.delivery_status === 3) {
+          const deliveryEta = this.tracking_data.eta_data.delivered;
+          const confirmedEta = this.tracking_data.eta_data.confirmed;
+          const pickedEta = this.tracking_data.eta_data.picked;
 
-        this.deliveryEta = moment(deliveryEta, moment.ISO_8601).format('h:mm a');
-        this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
-        this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
-      } else {
-        // ...
+          this.deliveryEta = moment(deliveryEta, moment.ISO_8601).format('h:mm a');
+          this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
+          this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
+        } else {
+          // ...
+        }
       }
     },
     toDeliveryTypeClass(val, index) {
@@ -1321,6 +1609,102 @@ export default {
         return ['confirmationDelayActive'];
       }
       return '';
+    },
+    submitHubspotCancelReason() {
+      this.hubspotStatus = false;
+      const session = this.$store.getters.getSession;
+      // eslint-disable-next-line global-require
+      const portalId = '4951975';
+      const formId = '396e6fb7-2bb9-4bae-a5e7-623983ecd97e';
+      const fields = {
+        fields: [
+          {
+            name: 'firstname',
+            value: session[session.default].user_name,
+          },
+          {
+            name: 'email',
+            value: session[session.default].user_email,
+          },
+          {
+            name: 'phone',
+            value: session[session.default].user_phone,
+          },
+          {
+            name: 'cancel_reason',
+            value: this.inputCancelReason,
+          },
+        ],
+      };
+      const payload = {
+        values: fields,
+        app: 'HUBSPOT_URL',
+        vm: this,
+        endpoint: `${portalId}/${formId}`,
+      };
+
+      this.$store
+        .dispatch('requestAxiosPost', payload)
+        .then(response => response)
+        .catch(err => err);
+    },
+    retrieveCancellationReasons(){
+      this.$store.dispatch('$_orders/$_tracking/requestCancellationReasons').then(
+        (response) => {
+         if (response.status) {
+           this.cancellation_reasons  = response.data ;
+           this.cancellation_state = true ;
+         }
+         else {
+            this.cancellation_state = false ;
+         }
+        },
+        (error) => {
+          this.cancellation_state = false ;
+        }
+      );
+    },
+    cancelBtnState(){
+      if (this.tracking_data.delivery_status < 2 && this.user_state &&  this.cancellation_state) {
+        return true ;
+      }
+      else {
+        return false ;
+      }
+    },
+    disablePop(){
+      this.cancelToggle();
+      this.pop_state = false ;
+    },
+    extendedDialog(){
+      if (this.cancel_reason === 4 || this.pop_state === 5 ||this.pop_state === 13) {
+        return false ;
+      }
+      else {
+        return true ;
+      }
+    },
+    cancellationState(){
+      if(this.getStatus === 'Delivered' || this.getStatus === 'In Transit' ){
+        return false ;
+      }
+      else {
+        return true ;
+      }
+    },
+    checkPickUpNotes(val){
+      let resp = true ;
+      if (val.recipient_phone === null && (val.hasOwnProperty("notes") === false || val.notes === null)) {
+        resp = false ;
+      }
+      return resp ;
+    },
+    displayNotes(val){
+      let resp = true ;
+      if (val.notes === null || val.hasOwnProperty("notes") === false ) {
+        return false
+      }
+      return resp ;
     },
   },
 };

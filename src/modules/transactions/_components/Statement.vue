@@ -36,6 +36,17 @@
         </button>
       </div>
     </div>
+    <div class="currencies-section">
+      <div
+        v-for="(currency, index) in currencies"
+        :key="index"
+        class="currency-selectors"
+        :class="activeCurrency === currency ? 'active-currency' : ''"
+        @click="activeCurrency = currency"
+      >
+        {{ currency }}
+      </div>
+    </div>
     <div class="bg-grey">
       <div class="download_history">
         <el-dropdown
@@ -141,6 +152,7 @@ import * as _ from 'lodash';
 import exportFromJSON from 'export-from-json';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -148,6 +160,7 @@ const moment = require('moment');
 
 export default {
   name: 'Statement',
+  mixins: [TimezoneMxn],
   data() {
     return {
       empty_statement_state: 'Fetching Statement',
@@ -160,12 +173,15 @@ export default {
         to_date: '',
       },
       filteredStatementData: [],
+      currencies: [],
+      activeCurrency: '',
     };
   },
   computed: {
     ...mapGetters({
       getSess: 'getSession',
-      statementData: '$_transactions/getStatement',
+      unfilteredStatementData: '$_transactions/getStatement',
+      getUserCurrencies: '$_transactions/getUserCurrencies',
     }),
     valid_filter() {
       return this.filterData.from_date !== '' && this.filterData.to_date !== '';
@@ -182,6 +198,15 @@ export default {
       }
       return 0;
     },
+    statementData() {
+      const orderHistory = [];
+      this.unfilteredStatementData.forEach((row) => {
+        if (row.currency === this.activeCurrency) {
+          orderHistory.push(row);
+        }
+      });
+      return orderHistory;
+    },
   },
   watch: {
     getSess: {
@@ -190,44 +215,53 @@ export default {
       },
       deep: true,
     },
+    statementData() {
+      this.currencies = this.getUserCurrencies;
+    },
   },
   mounted() {
     this.populateStatement();
+    this.currencies = this.getUserCurrencies;
+    const sessionData = this.$store.getters.getSession;
+    this.activeCurrency = sessionData[sessionData.default].default_currency;
   },
   methods: {
     populateStatement() {
       const sessionData = this.$store.getters.getSession;
 
-      let statementPayload = {};
+      if (Object.keys(sessionData).length > 0) {
+        let statementPayload = {};
 
-      if (sessionData.default === 'biz') {
-        statementPayload = {
-          cop_id: sessionData.biz.cop_id,
-          user_type: sessionData.biz.user_type,
-          user_id: sessionData.biz.user_id,
+
+        if (sessionData.default === 'biz') {
+          statementPayload = {
+            cop_id: sessionData.biz.cop_id,
+            user_type: sessionData.biz.user_type,
+            user_id: sessionData.biz.user_id,
+          };
+        } else {
+          // create peer payload
+          statementPayload = {
+            user_id: sessionData[sessionData.default].user_id,
+          };
+        }
+
+        const fullPayload = {
+          values: statementPayload,
+          vm: this,
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'statement',
         };
-      } else {
-        // create peer payload
-        statementPayload = {
-          user_id: sessionData[sessionData.default].user_id,
-        };
+
+        this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(
+          () => {
+            this.empty_statement_state = 'Statement Not Found';
+          },
+          () => {
+            this.empty_statement_state = 'Statement Failed to Fetch';
+          },
+        );
       }
-
-      const fullPayload = {
-        values: statementPayload,
-        vm: this,
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'statement',
-      };
-
-      this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(
-        () => {
-          this.empty_statement_state = 'Statement Not Found';
-        },
-        () => {
-          this.empty_statement_state = 'Statement Failed to Fetch';
-        },
-      );
     },
     ...mapActions(['$_transactions/requestStatement']),
     changeSize(val) {
@@ -240,7 +274,8 @@ export default {
       this.statementData.slice(from, to);
     },
     formatDate(row) {
-      return moment(row.date_time).format('MMM Do YYYY, h:mm a');
+      const localTime = this.convertToUTCToLocal(row.date_time);
+      return moment(localTime).format('MMM Do YYYY, h:mm a');
     },
     formatRunningBalance(row) {
       let value = row.running_balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
@@ -256,6 +291,9 @@ export default {
         let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         value = value.split('.');
         return value[0];
+      }
+      if (Math.sign(row.amount) === 0 && row.description === 'Delivery') {
+        return Math.sign(row.amount);
       }
       return '';
     },
@@ -330,20 +368,22 @@ export default {
 
         for (let i = 0; i < this.statementData.length; i++) {
           const arr = {};
-          arr.Amount = this.statementData[i].amount;
           arr.Date = this.statementData[i].date_time;
           arr.Description = this.statementData[i].description;
           arr.PaymentMethod = this.statementData[i].pay_method_name;
-          arr.RunningBalance = this.statementData[i].running_balance;
+          arr.Debit = this.formatDebitAmount(this.statementData[i]);
+          arr.Credit = this.formatCreditAmount(this.statementData[i]);
+          arr.RunningBalance = this.formatRunningBalance(this.statementData[i]);
           arr.Transaction = this.statementData[i].txn;
           data2.push(arr);
         }
         data = _.map(data2, row => _.pick(
           row,
-          'Amount',
           'Date',
           'Description',
           'PaymentMethod',
+          'Debit',
+          'Credit',
           'RunningBalance',
           'Transaction',
         ));
@@ -353,16 +393,17 @@ export default {
         exportFromJSON({ data, fileName, exportType });
       } else {
         const pdfBody = [
-          ['Amount', 'Date', 'Description', 'Payment Method', 'Running Balance', 'Transaction'],
+          ['Date', 'Description', 'Payment Method', 'Debit', 'Credit', 'Running Balance', 'Transaction'],
         ];
 
         this.statementData.forEach((item) => {
           pdfBody.push([
-            item.amount,
             item.date_time,
             item.description,
             item.pay_method_name,
-            item.running_balance,
+            this.formatDebitAmount(item),
+            this.formatCreditAmount(item),
+            this.formatRunningBalance(item),
             item.txn,
           ]);
         });

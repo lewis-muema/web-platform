@@ -25,8 +25,12 @@ function guard(to, from, next) {
       if (process.browser) {
         // read ls here
         const _sessionSnack = localStorage.getItem('_sessionSnack');
+        let userState = true;
+        if (typeof _sessionSnack === 'string') {
+          userState = _sessionSnack.includes('peer');
+        }
 
-        if (isEmpty(_sessionSnack)) {
+        if (isEmpty(_sessionSnack) || _sessionSnack === null || !userState) {
           resolve(next('/auth/sign_in'));
         } else {
           session = JSON.parse(_sessionSnack);
@@ -79,8 +83,11 @@ function loginGuard(to, from, next) {
       if (process.browser) {
         // read ls here
         const _sessionSnack = localStorage.getItem('_sessionSnack');
-
-        if (isEmpty(_sessionSnack)) {
+        let userState = true;
+        if (typeof _sessionSnack === 'string') {
+          userState = _sessionSnack.includes('peer');
+        }
+        if (isEmpty(_sessionSnack) || _sessionSnack === null || !userState) {
           resolve(next());
           if ('login' in to.meta) {
             const details = to.meta.login;
@@ -309,6 +316,18 @@ export function createRouter() {
             meta: { innerTrack: 'Order Placement Page' },
           },
           {
+            path: '/orders/dedicated/no-destination',
+            component: () => import('../modules/orders/_components/order_placement/DedicatedModelNoDestination.vue'),
+            name: 'dedicated_no_destination_order_placement',
+            meta: { innerTrack: 'Dedicated No Destination Order Placement Page' },
+          },
+          {
+            path: '/orders/dedicated/multi-destination',
+            component: () => import('../modules/orders/_components/order_placement/DedicatedModelMultiDestination.vue'),
+            name: 'dedicated_multi_destination_order_placement',
+            meta: { innerTrack: 'Dedicated Multi Destination Order Placement Page' },
+          },
+          {
             path: '/orders/freight',
             component: () => import(
               '../modules/orders/_components/order_placement/Freight.vue',
@@ -317,11 +336,12 @@ export function createRouter() {
             meta: { innerTrack: 'Freight Order Placement Page' },
           },
           {
-            path: '/orders/freight/tracking/:order',
+            path: '/orders/freight/tracking/:order_no',
             component: () => import(
-              '../modules/orders/_components/tracking/_components/FbuTrackBar.vue',
+              '../modules/orders/_components/tracking/FBUTracking.vue',
             ),
             name: 'freight_order_tracking',
+            beforeEnter: guard,
             meta: { innerTrack: 'Freight Order Tracking Page' },
           },
           {
@@ -371,6 +391,10 @@ export function createRouter() {
           {
             path: '/user/free_deliveries',
             component: () => import('../modules/user/_components/FreeDeliveries.vue'),
+          },
+          {
+            path: '/user/upgrade_acc',
+            component: () => import('../modules/user/_components/UpgradeAccount.vue'),
           },
         ],
       },

@@ -2,6 +2,9 @@ export default {
   getOrderHistoryOrders(state) {
     return state.order_history_orders;
   },
+  getUserCurrencies(state) {
+    return state.user_currencies;
+  },
   getPayments(state) {
     return state.payments;
   },

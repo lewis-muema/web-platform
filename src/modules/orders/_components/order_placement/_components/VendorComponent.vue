@@ -2,6 +2,9 @@
   <div
     v-if="getOrderState === 1"
     class="home-view-vendor-and-optins-wrappper"
+    :class="
+      $route.path === '/orders/dedicated/multi-destination' ? 'dedicated-vendors-wrapper' : dedicatedClass
+    "
   >
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
@@ -88,7 +91,16 @@
                     </span>
                     <span v-else> {{ getVendorCurrency(j) }} {{ getVendorPrice(j) }} </span>
                   </div>
-                  <div class="home-view-vendor-types-item--cost-wrapper_time">
+                  <div
+                    v-if="$route.path === '/orders/dedicated/multi-destination'"
+                    class="home-view-vendor-types-item--cost-wrapper_time"
+                  >
+                    Type: {{ formatPriceType(j.price_type) }}
+                  </div>
+                  <div
+                    v-else
+                    class="home-view-vendor-types-item--cost-wrapper_time"
+                  >
                     <span v-if="isStandardUnavailable(j)">
                       {{ scheduleTimeFrame(j) }}
                     </span>
@@ -103,6 +115,7 @@
                     placement="right"
                     width="350"
                     trigger="hover"
+                    popper-class="vendorExtraInfo"
                   >
                     <div
                       class="reset-font"
@@ -200,6 +213,35 @@
           <!-- start large /medium vendors -->
           <div class="home-view-truck-options-wrapper">
             <div class="home-view-truck-options-divider" />
+            <div
+              v-if="$route.path === '/orders/dedicated/multi-destination'"
+              class="home-view-truck-options-inner-wrapper"
+            >
+              <div class="home-view-truck-options-dedicated-notes">
+                <p>Add notes for each destination (optional)</p>
+                <div
+                  v-for="(path, index) in getStoreOrderPath"
+                  :key="index"
+                >
+                  <div
+                    v-if="index > 0"
+                    class="home-view-truck-options-dedicated-notes-label"
+                  >
+                    <div class="home-view-truck-options-dedicated-notes-icon" />
+                    <p class="no-margin">
+                      {{ path.name }}
+                    </p>
+                  </div>
+                  <el-input
+                    v-if="index > 0"
+                    class=""
+                    autocomplete="true"
+                    placeholder="Notes"
+                    @input="addDestinationNotes($event, path, index)"
+                  />
+                </div>
+              </div>
+            </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
                 What do you want delivered?
@@ -320,44 +362,14 @@
                 <el-date-picker
                   v-model="schedule_time"
                   class="vendor_component-actions__element-date"
-                  :class="discountInputWidth"
                   type="datetime"
                   format="dd-MM-yyyy h:mm a"
                   placeholder="As soon as possible"
                   prefix-icon="el-icon-date"
-                  :default-time="moment().format('HH:mm:ss')"
+                  :default-time="default_value"
                   :picker-options="dueDatePickerOptions"
                   @change="dispatchScheduleTime"
                 />
-                <span
-                  v-if="showDiscountsInfoPopup()"
-                  class=""
-                >
-                  <i
-                    slot="suffix"
-                    class="el-icon-info el-input__icon"
-                    @mouseover="toggleDiscountsPopover(true)"
-                    @mouseout="toggleDiscountsPopover(false)"
-                  />
-                  <el-popover
-                    v-model="showScheduledDiscountsMessage"
-                    placement="right"
-                    width="200"
-                    trigger="manual"
-                    popper-class="pop-over-layout home-view-truck-options-discounts-popup"
-                  >
-                    <p class="home-view-truck-options-schedule-discounts">
-                      We now offer discounts for scheduled orders! This applies to all 5T, 10T and
-                      14T truck orders whose pick up time is 24hours to 31days into the future.
-                    </p>
-                  </el-popover>
-                </span>
-                <p
-                  v-if="orderDiscountStatus"
-                  class="discount-applied-text"
-                >
-                  (We have applied a {{ discountPercentage }}% discount for your order!)
-                </p>
               </div>
               <span
                 v-if="isStandardUnavailable(activeVendorPriceData)"
@@ -366,23 +378,78 @@
                 Delivery is in 2 to 4 hours from the scheduled time
               </span>
             </div>
-            <div class="home-view-truck-options-inner-wrapper">
-              <div class="home-view-truck-options-label">
-                Additional Instructions
-              </div>
-              <div class="" />
+            <div
+              v-if="displayNotesAddition()"
+            >
               <div
-                class=""
-                @change="dispatchOrderNotes"
+                class="home-view-truck-options-inner-wrapper"
               >
-                <textarea
-                  v-model="order_notes"
-                  name="name"
-                  rows="5"
-                  class="textarea-control"
-                  placeholder=" Instructions.."
-                />
+                <div class="home-view-truck-options-label">
+                  Pickup instructions at {{ orderPath[0].name }}
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    class="button-additional-notes"
+                    name="button"
+                    @click="openNotesDialog(1)"
+                  >
+                    <a class="instructions-holder">
+                      Add pickup instructions
+                    </a>
+                    <i class="el-icon-circle-plus-outline align-instructions-icon" />
+                  </button>
+                </div>
               </div>
+              <div
+                v-if="isPickUpSet()"
+                class="instructions-set"
+              >
+                <i class="el-icon-success" /> Pickup instructions added
+              </div>
+              <div
+                class="home-view-truck-options-inner-wrapper"
+              >
+                <div class="home-view-truck-options-label">
+                  {{ destinationNotesLabel() }}
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    class="button-additional-notes "
+                    name="button"
+                    @click="openNotesDialog(2)"
+                  >
+                    <a class="instructions-holder">
+                      Add drop off instructions
+                    </a>
+                    <i class="el-icon-circle-plus-outline align-instructions-icon" />
+                  </button>
+                </div>
+              </div>
+              <div
+                v-if="isDropOffSet()"
+                class="instructions-set"
+              >
+                <i class="el-icon-success" /> Drop off instructions added
+              </div>
+            </div>
+            <div class="home-view-truck-options-inner-wrapper recipient-section">
+              <p class="home-view-truck-options-label no-margin">
+                Recipient Details
+              </p>
+              <input
+                v-model="recipientName"
+                type="text"
+                placeholder="Name"
+                class="el-input__inner bottom-spacer"
+              >
+              <input
+                v-model="recipientPhone"
+                type="number"
+                placeholder="Phone number"
+                class="el-input__inner"
+              >
             </div>
 
             <!-- show large and medium extended options -->
@@ -529,10 +596,29 @@
                     </el-input>
                     <div class="pair_info_text_content">
                       <div v-if="pair_status === '1'">
-                        <p class="upper_scope_pair_text">
-                          {{ riderNameDisplay }} not found
-                        </p>
-                        <p>{{ failure_text }}</p>
+                        <el-row :gutter="20">
+                          <el-col
+                            :span="1"
+                            class="pairing-alert"
+                          >
+                            <div>
+                              <i class="el-icon-warning pairing-alert-icon" />
+                            </div>
+                          </el-col>
+                          <el-col
+                            :span="8"
+                            class="pairing-error-display"
+                          >
+                            <div class="share-option">
+                              <div class="pairing-error-header">
+                                {{ riderNameDisplay }} not found
+                              </div>
+                              <div class="pair-model-info">
+                                {{ failure_text }}
+                              </div>
+                            </div>
+                          </el-col>
+                        </el-row>
                       </div>
                       <div v-if="pair_status === '2'">
                         <el-row :gutter="20">
@@ -590,18 +676,180 @@
       <!-- end carrier type section -->
     </transition>
     <!-- end carrier type transition -->
+    <transition
+      name="fade"
+      mode="out-in"
+    >
+      <div class="add-instructions-pop-up">
+        <el-dialog
+          :visible.sync="addDeliveryInfo"
+          width="30%"
+          class="updateNotificationsDialog"
+          :modal-append-to-body="false"
+        >
+          <div class="add-instructions-outer">
+            <p class="add-instructions-setup">
+              {{ instructionsOuterLabel() }}
+            </p>
+            <div
+              class=""
+            >
+              <div
+                v-if="route_point === 1"
+                class="instructions--inner-section"
+              >
+                <div
+                  class=""
+                >
+                  <div class="add-instructions-setup-label">
+                    {{ instructionsInnerLabel() }} {{ get_order_path[0].name }}
+                  </div>
+                  <div class="" />
+                  <div
+                    class=""
+                  >
+                    <textarea
+                      v-model="notes[0]"
+                      name="name"
+                      rows="5"
+                      class="textarea-control add-notes"
+                      :placeholder="additionalInstructionsPlaceholder"
+                      @input="addInstructionNotes(get_order_path[0], 0)"
+                    />
+                  </div>
+                </div>
+                <div class="">
+                  <div class="add-instructions-setup-contact">
+                    Contact person
+                  </div>
+                  <div class="" />
+                  <div
+                    class=""
+                    @change="addInstructionContact(get_order_path[0], 0)"
+                  >
+                    <vue-tel-input
+                      v-model.trim="contact[0]"
+                      v-validate="'required|check_phone'"
+                      class="input-control sign-up-form"
+                      type="number"
+                      name="phone"
+                      value=""
+                      data-vv-validate-on="blur"
+                      v-bind="phoneInputProps"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="notify_recipient"
+                >
+                  <input
+                    v-model="send_sms[0]"
+                    type="checkbox"
+                    name="u_terms"
+                    class="send_sms-checkbox"
+                    :onclick="setSendSms(get_order_path[0], 0)"
+                  >
+                  <span>
+                    Notify them of the pickup via SMS
+                  </span>
+                </div>
+              </div>
+              <div
+                v-for="(data, index) in getInstructionsPath()"
+                v-else
+                :key="index"
+                class="instructions--inner-section"
+              >
+                <div
+                  class=""
+                >
+                  <div class="add-instructions-setup-label">
+                    {{ instructionsInnerLabel() }} {{ data.name }}
+                  </div>
+                  <div class="" />
+                  <div
+                    class=""
+                  >
+                    <textarea
+                      v-model="notes[index+1]"
+                      name="name"
+                      rows="5"
+                      class="textarea-control add-notes"
+                      :placeholder="additionalInstructionsPlaceholder"
+                      @input="addInstructionNotes(data, index+1)"
+                    />
+                  </div>
+                </div>
+                <div class="">
+                  <div class="add-instructions-setup-contact">
+                    Contact person
+                  </div>
+                  <div class="" />
+                  <div
+                    class=""
+                    @change="addInstructionContact(data, index+1)"
+                  >
+                    <vue-tel-input
+                      v-model.trim="contact[index+1]"
+                      v-validate="'required|check_phone'"
+                      class="input-control sign-up-form"
+                      type="number"
+                      name="phone"
+                      value=""
+                      data-vv-validate-on="blur"
+                      v-bind="phoneInputProps"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="notify_recipient"
+                >
+                  <input
+                    v-model="send_sms[index+1]"
+                    type="checkbox"
+                    name="u_terms"
+                    class="send_sms-checkbox"
+                    :onclick="setSendSms(data, index+1)"
+                  >
+                  <span>
+                    Notify them of the pickup via SMS
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="">
+              <div class="">
+                <input
+                  class="button-primary add-instructions-submit"
+                  type="submit"
+                  value="Done"
+                  @click="saveAdditionaNotes(route_point)"
+                >
+              </div>
+            </div>
+          </div>
+        </el-dialog>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
 import numeral from 'numeral';
+import _ from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PaymentOptions from './PaymentOptions.vue';
+import TimezoneMxn from '../../../../../mixins/timezone_mixin';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
+
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   components: {
     PaymentOptions,
   },
+  mixins: [TimezoneMxn, NotificationMxn],
   data() {
     return {
       first_time: false,
@@ -614,7 +862,7 @@ export default {
       load_units: '',
       discount_timed_out: false,
       customer_min_amount: '',
-      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
+      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van', '3T Truck', '5T Truck', '7T Truck', '10T Truck', '14T Truck', '20T Truck', '24T Truck'],
       vendors_without_return: ['Standard', 'Runner'],
       baseTruckOptions: [
         {
@@ -663,6 +911,7 @@ export default {
         },
       ],
       schedule_time: '',
+      default_value: this.moment().format('HH:mm:ss'),
       order_notes: '',
       small_vendors: [1, 22, 21, 23],
       medium_vendors: [2, 3],
@@ -690,10 +939,43 @@ export default {
         disabledDate: this.disabledDueDate,
       },
       standardOptions: [21, 22, 24],
-      discountInputWidth: '',
       orderDiscountStatus: false,
       discountPercentage: 0,
       fullPayload: {},
+      activeClass: 'small',
+      recipientName: '',
+      recipientPhone: '',
+      vendor_id: 0,
+      orderPath: [],
+      addDeliveryInfo: false,
+      locations_data: [],
+      route_point: 0,
+      instructions_data: [],
+      notes: [],
+      contact: [],
+      phoneInputProps: {
+        mode: 'international',
+        defaultCountry: 'ke',
+        disabledFetchingCountry: false,
+        disabled: false,
+        disabledFormatting: false,
+        placeholder: 'Enter a phone number',
+        required: false,
+        enabledCountryCode: false,
+        enabledFlags: true,
+        preferredCountries: ['ke', 'ug', 'tz'],
+        autocomplete: 'off',
+        name: 'telephone',
+        maxLen: 25,
+        dropdownOptions: {
+          disabledDialCode: false,
+        },
+        inputOptions: {
+          showDialCode: false,
+        },
+      },
+      validPhone: true,
+      send_sms: [],
     };
   },
   computed: {
@@ -715,6 +997,14 @@ export default {
       getPairRiderNextStep: '$_orders/$_home/getPairRiderNextStep',
       getOuterActiveVendorDetails: '$_orders/getOuterActiveVendorDetails',
       getOuterActivePackageClass: '$_orders/getOuterActivePackageClass',
+      getOrderNotes: '$_orders/$_home/getOrderNotes',
+      getPairWithRiderStatus: '$_orders/$_home/getPairWithRiderStatus',
+      getVehicleDetails: '$_orders/$_home/getVehicleDetails',
+      getCarrierType: '$_orders/$_home/getCarrierType',
+      getStoreOrderPath: '$_orders/getStorePath',
+      get_order_path: '$_orders/$_home/getOrderPath',
+      getInstructionNotes: '$_orders/$_home/getInstructionNotes',
+      getDedicatedAccessStatus: 'getDedicatedAccessStatus',
     }),
 
     vehicleDetailsPlaceholder() {
@@ -728,6 +1018,10 @@ export default {
         );
       }
       return '';
+    },
+
+    dedicatedClass() {
+      return this.getDedicatedAccessStatus ? 'dedicated-wrapper-override' : '';
     },
 
     truckOptions() {
@@ -794,8 +1088,24 @@ export default {
       }
       return displayPairName.toLowerCase();
     },
+    additionalInstructionsPlaceholder() {
+      let display = 'E.g Pick package at the reception ...';
+      if (this.small_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+        display = 'E.g Pick package at the reception ...';
+      } else {
+        display = 'E.g Pick load at the reception ...';
+      }
+      return display;
+    },
   },
-
+  watch: {
+    recipientName(data) {
+      this.debounceRecipientName(data);
+    },
+    recipientPhone(data) {
+      this.debounceRecipientPhone(data);
+    },
+  },
   created() {
     this.setFirstTimeUser();
     this.initializeVendorComponent();
@@ -821,6 +1131,7 @@ export default {
       setScheduleTime: '$_orders/$_home/setScheduleTime',
       setOrderNotes: '$_orders/$_home/setOrderNotes',
       setPairWithRiderStatus: '$_orders/$_home/setPairWithRiderStatus',
+      setPairWithRiderState: '$_orders/$_home/setPairWithRiderState',
       setPairSerialNumber: '$_orders/$_home/setPairSerialNumber',
       setPairRiderPhone: '$_orders/$_home/setPairRiderPhone',
       setOuterActiveVendorDetails: '$_orders/setOuterActiveVendorDetails',
@@ -830,63 +1141,145 @@ export default {
       setLoadWeightStatus: '$_orders/$_home/setLoadWeightStatus',
       setLoadWeightValue: '$_orders/$_home/setLoadWeightValue',
       setVendorPrice: '$_orders/$_home/setVendorPrice',
+      setVehicleDetails: '$_orders/$_home/setVehicleDetails',
+      setStorePath: '$_orders/setStorePath',
+      clearStorePath: '$_orders/clearStorePath',
+      unsetStorePath: '$_orders/unsetStorePath',
+      setWaypointNotes: '$_orders/setWaypointNotes',
+      setPairErrorMessage: '$_orders/$_home/setPairErrorMessage',
+      saveInstructionNotes: '$_orders/$_home/setInstructionNotes',
+      clearInstructionNotes: '$_orders/$_home/clearInstructionNotes',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
-      requestDiscount: '$_orders/$_home/requestDiscount',
     }),
-
+    // eslint-disable-next-line func-names
+    debounceRecipientName: _.debounce(function (data) {
+      this.triggerGAEvent('Client recipient name input - Order Placement Page - WebApp', data);
+    }, 500),
+    // eslint-disable-next-line func-names
+    debounceRecipientPhone: _.debounce(function (data) {
+      this.triggerGAEvent('Client recipient phone number input - Order Placement Page - WebApp', data);
+    }, 500),
     dispatchCarrierType() {
       this.setCarrierType(this.carrier_type);
     },
     dispatchScheduleTime() {
       const dateTime = new Date();
+      this.trackMixpanelEvent('Set Order Schedule Time', { 'Scheduled Time': this.schedule_time });
       if (this.schedule_time && dateTime > this.schedule_time) {
         this.schedule_time = new Date();
       }
       this.setScheduleTime(this.schedule_time);
-      if ([10, 14, 17].includes(this.activeVendorPriceData.vendor_id)) {
-        this.getDiscounts();
-      } else {
-        this.trackScheduleEvent('Schedule Order', {});
-      }
+      this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
+    },
+    addDestinationNotes(note, pathObj, i) {
+      this.setWaypointNotes({
+        index: i,
+        notes: note,
+      });
+    },
+    formatPriceType(type) {
+      const name = type.replace(/_/g, ' ');
+      return name.charAt(0).toUpperCase() + name.slice(1);
     },
     dispatchOrderNotes() {
+      this.trackMixpanelEvent('Set Order Notes', { 'Order Notes': this.order_notes });
       this.setOrderNotes(this.order_notes);
     },
     dispatchPairStatus() {
       const status = this.pair_rider;
-      if (status === 1) {
+      if (status === '1') {
         // pair with rider
         this.setPairWithRiderStatus(true);
+        this.setPairWithRiderState(true);
       } else {
         // do not pair
         this.setPairWithRiderStatus(false);
+        this.setPairWithRiderState(false);
+        this.setPairErrorMessage('');
       }
     },
     goToNextStep() {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          window.ga('send', 'event', {
+            eventCategory: 'Order Placement',
+            eventAction: 'Click',
+            eventLabel: 'Continue Button - Order Placement Page - WebApp',
+          });
+        }
+      } catch (er) {
+        // ...
+      }
       this.setDefaultCarrierType();
       this.setOrderState(2);
       this.setExtendOptions(true);
       this.handleScheduledTime();
     },
-    setDefaultCarrierType() {
-      if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
-        this.carrier_type = '1';
-      } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)) {
-        this.carrier_type = '2';
-      } else {
-        this.carrier_type = '2';
+    triggerGAEvent(field, value) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
       }
+      try {
+        if (analyticsEnv === 'production') {
+          window.ga('send', 'event', {
+            eventCategory: 'Order Placement',
+            eventAction: 'Click',
+            eventLabel: field,
+            eventValue: value,
+          });
+        }
+      } catch (er) {
+        // ...
+      }
+    },
+    setDefaultCarrierType() {
+      const session = this.$store.getters.getSession;
+      let copStatus = false;
+      if (session.default === 'biz') {
+        const bizData = session[session.default];
+        const data = Object.prototype.hasOwnProperty.call(bizData, 'default_carrier_type');
+        if (data) {
+          copStatus = true;
+        }
+      }
+
+      if (this.vendor_id !== this.activeVendorPriceData.vendor_id) {
+        if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+          this.carrier_type = '1';
+        } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id) && this.activeVendorPriceData.vendor_id === 2) {
+          this.carrier_type = '0';
+        } else if (this.medium_vendors.includes(this.activeVendorPriceData.vendor_id) && this.activeVendorPriceData.vendor_id === 3) {
+          this.carrier_type = '2';
+        } else if (copStatus) {
+          this.carrier_type = session[session.default].default_carrier_type.toString(10);
+        } else {
+          this.carrier_type = '2';
+        }
+      } else {
+        this.carrier_type = this.getCarrierType;
+      }
+
+      this.vendor_id = this.activeVendorPriceData.vendor_id;
     },
     goBackToHome() {
       this.schedule_time = '';
-      this.revertDiscount();
       this.setOrderState(1);
       this.setExtendOptions(false);
       this.pair_rider = '';
       this.vehicle_plate = '';
       this.clearOuterActiveVendorDetails();
+      this.clearInstructionNotes();
     },
     dispatchDeliveryItem() {
       this.setDeliveryItem(this.delivery_item);
@@ -924,6 +1317,8 @@ export default {
     },
 
     dispatchAdditionalLoaderStatus(val) {
+      const track = this.additional_loader === 1
+        ? this.trackMixpanelEvent('Selected Loader For Order', { 'Number of Loaders': val }) : '';
       this.setAdditionalLoaderStatus(val);
     },
 
@@ -941,133 +1336,14 @@ export default {
 
     setActivePackageClassWrapper(name) {
       this.setActivePackageClass(name);
+      this.activeClass = name;
       this.setOuterActivePackageClass(name);
       this.reCheckCarrierType();
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
-    },
-    toggleDiscountsPopover(state) {
-      this.showScheduledDiscountsMessage = state;
-      const rect = document.querySelector('.el-icon-info').getBoundingClientRect();
-      document
-        .querySelector('.home-view-truck-options-discounts-popup')
-        .style.setProperty('top', `${rect.top - 80}px`, 'important');
-    },
-    defineDiscountsPayload() {
-      const time = this.moment(this.schedule_time).format('YYYY-MM-DD HH:mm:ss');
-      const payload = JSON.stringify({
-        date_time: time,
-        order_no: this.activeVendorPriceData.order_no,
-      });
-      this.fullPayload = {
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'discount',
-        values: payload,
-      };
-    },
-    getDiscounts() {
-      this.discount_timed_out = false;
-      this.defineDiscountsPayload();
-      const dateTime = new Date();
-      dateTime.setHours(dateTime.getHours() + 24);
-      if (this.schedule_time) {
-        this.$root.$emit(
-          'Discount loading status',
-          'el-icon-loading',
-          'Please wait, we are applying a discount to your order',
-          true,
-          true,
-        );
-        const timeout = setTimeout(() => {
-          this.discount_timed_out = true;
-          this.$root.$emit(
-            'Discount loading status',
-            'el-icon-close',
-            'We are unable to process your discount at this moment',
-            false,
-            true,
-          );
-        }, 10000);
-        this.requestDiscount(this.fullPayload)
-          .then((response) => {
-            if (!this.discount_timed_out) {
-              clearTimeout(timeout);
-              if (
-                response.percentage_discount > 0
-                || response.discounted_amount !== response.original_amount
-              ) {
-                this.setVendorPrice(response.discounted_amount);
-                this.discountPercentage = response.percentage_discount;
-                this.orderDiscountStatus = true;
-                this.$root.$emit(
-                  'Discount loading status',
-                  'el-icon-circle-check-outline',
-                  `A discount of ${response.percentage_discount}% has been applied to your order`,
-                  false,
-                  true,
-                );
-                this.trackScheduleEvent('Schedule Order', {
-                  'Order Number': this.activeVendorPriceData.order_no,
-                  'Order time': this.moment().format('YYYY-MM-DD hh:mm:ss a'),
-                  'Scheduled time': this.moment(response.date_time).format('YYYY-MM-DD hh:mm:ss a'),
-                  'Original price': `${this.activeVendorPriceData.currency} ${
-                    response.original_amount
-                  }`,
-                  'Discounted price': `${this.activeVendorPriceData.currency} ${
-                    response.discounted_amount
-                  }`,
-                  'Percentage discount': `${response.percentage_discount} %`,
-                });
-              } else {
-                this.setVendorPrice(response.discounted_amount);
-                this.orderDiscountStatus = false;
-                this.$root.$emit(
-                  'Discount loading status',
-                  'el-icon-close',
-                  'We are unable to process your discount at this moment',
-                  false,
-                  true,
-                );
-                this.trackScheduleEvent('Schedule Order', {});
-              }
-            }
-          })
-          .catch(() => {
-            this.orderDiscountStatus = false;
-            this.$root.$emit(
-              'Discount loading status',
-              'el-icon-close',
-              'We are unable to process your discount at this moment',
-              false,
-              true,
-            );
-            this.trackScheduleEvent('Schedule Order', {});
-          });
-      } else if (this.orderDiscountStatus) {
-        this.$root.$emit(
-          'Discount loading status',
-          'el-icon-loading',
-          'Please wait while we adjust the pricing',
-          true,
-          true,
-        );
-        this.revertDiscount();
-      }
-    },
-    revertDiscount() {
-      this.defineDiscountsPayload();
-      this.requestDiscount(this.fullPayload).then((response) => {
-        this.setVendorPrice(response.discounted_amount);
-        this.orderDiscountStatus = false;
-        this.$root.$emit('Discount loading status', '', '', true, false);
-      });
-    },
-    showDiscountsInfoPopup() {
-      if ([10, 14, 17].includes(this.activeVendorPriceData.vendor_id)) {
-        this.discountInputWidth = 'discount-input-width--discounted';
-        return true;
-      }
-      this.discountInputWidth = 'discount-input-width--nondiscounted';
-      return false;
+      const activeData = this.activePackageClassPriceData.price_tiers[0];
+      this.setVendorDetails(activeData);
+      this.delivery_item = '';
+      this.order_notes = '';
     },
     clearVehicleDetails() {
       this.vehicle_plate = '';
@@ -1077,6 +1353,8 @@ export default {
     },
     checkVehicleDetails() {
       const vehicleDetails = this.vehicle_plate;
+      this.setPairRiderPhone('');
+      this.setPairErrorMessage('');
       if (vehicleDetails === '') {
         this.doNotification(
           '2',
@@ -1109,6 +1387,7 @@ export default {
       this.setPairWithRiderStatus(true);
       this.setPairSerialNumber(val.sim_card_sn);
       this.setPairRiderPhone(val.rider_phone);
+      this.setVehicleDetails(this.vehicle_plate);
     },
     handlePairRequest(plate) {
       this.visible2 = false;
@@ -1131,15 +1410,24 @@ export default {
       this.requestPairRider(fullPayload).then(
         (response) => {
           if (response.status) {
+            this.trackMixpanelEvent('Paired Order With Rider', { 'Paired Rider': plate });
             this.updateData(response.data);
           } else {
             this.pair_status = '1';
             this.failure_text = response.message;
+            this.setPairErrorMessage(response.message);
             this.visible2 = true;
             this.setPairWithRiderStatus(false);
           }
         },
-        error => false,
+        (error) => {
+          const msg = error.response.data.message;
+          this.pair_status = '1';
+          this.failure_text = msg;
+          this.setPairErrorMessage(msg);
+          this.visible2 = true;
+          this.setPairWithRiderStatus(false);
+        },
       );
       this.searchOption = false;
     },
@@ -1178,7 +1466,8 @@ export default {
     },
     transformDate(vendorDetails) {
       if (Object.prototype.hasOwnProperty.call(vendorDetails, 'customer_eta')) {
-        return this.moment(vendorDetails.customer_eta, 'YYYY-MM-DD HH:mm:ss').format('hh.mm a');
+        const localTime = this.convertToUTCToLocal(vendorDetails.customer_eta);
+        return this.moment(localTime, 'YYYY-MM-DD HH:mm:ss').format('hh.mm a');
       }
       return this.moment()
         .add(vendorDetails.eta, 'seconds')
@@ -1226,8 +1515,9 @@ export default {
     },
     scheduleTimeFrame(vendorObject) {
       const dateTime = vendorObject.current_time;
-      const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
-      const timeHrs = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
+      const localTime = this.convertToUTCToLocal(dateTime);
+      const day = this.moment(localTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
+      const timeHrs = this.moment(localTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
 
       if (day === 'Sunday' && timeHrs >= '17') {
         return 'Schedule for tommorow';
@@ -1255,6 +1545,10 @@ export default {
     },
 
     destroyVendorComponent() {
+      if (this.recipientPhone && this.recipientName) {
+        this.submitMail();
+        this.triggerGAEvent('Order Placement with Recipient Inputs - Order Placement Page - WebApp', '');
+      }
       this.setActiveVendorName('');
       this.setActiveVendorDetails({});
       this.setCarrierType(this.carrier_type);
@@ -1318,21 +1612,6 @@ export default {
         // ...
       }
     },
-    trackScheduleEvent(name, event) {
-      let analyticsEnv = '';
-      try {
-        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {
-        // ...
-      }
-      try {
-        if (analyticsEnv === 'production') {
-          mixpanel.track(name, event);
-        }
-      } catch (er) {
-        // ...
-      }
-    },
     initializeVendorComponent() {
       this.carrier_type = this.get_vendor_carrier_type;
       this.number_of_loaders = this.getNOOfLoaders;
@@ -1342,6 +1621,11 @@ export default {
       this.load_units = this.getLoadUnits;
       this.additional_loader = this.getAdditionalLoaderStatus;
       this.customer_min_amount = this.getCustomerMinAmount;
+      this.order_notes = this.getOrderNotes;
+      this.pair_rider = this.getPairWithRiderStatus ? '1' : '';
+      this.vehicle_plate = this.getVehicleDetails;
+      this.orderPath = this.get_order_path;
+      this.instructions_data = this.getInstructionNotes;
     },
     initiateStoreData() {
       const activeVendorName = this.getOuterActiveVendorDetails;
@@ -1357,13 +1641,12 @@ export default {
     },
 
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = {
         title,
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
 
     getVendorDescription(vendorObject) {
@@ -1400,7 +1683,6 @@ export default {
       return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
     },
     handleScheduledTime() {
-      this.schedule_time = '';
       if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'current_time')) {
         const dateTime = this.activeVendorPriceData.current_time;
         const day = this.moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('dddd');
@@ -1433,17 +1715,204 @@ export default {
             this.schedule_time = this.moment(newDate, 'YYYY-DD-MM HH:mm').format(
               'YYYY-MM-DD HH:mm:ss Z',
             );
-          } else {
-            this.schedule_time = '';
           }
           this.dispatchScheduleTime();
         }
       }
+    },
+    submitMail() {
+      // eslint-disable-next-line global-require
+      const portalId = '4951975';
+      const formId = 'c2ffd971-6f9b-43e0-a8b2-30fd94f29d4b';
+      const fields = {
+        fields: [
+          {
+            name: 'recipient_name',
+            value: this.recipientName,
+          },
+          {
+            name: 'firstname',
+            value: this.recipientName,
+          },
+          {
+            name: 'recipient_phone',
+            value: this.recipientPhone,
+          },
+          {
+            name: 'phone',
+            value: this.recipientPhone,
+          },
+        ],
+      };
+      const payload = {
+        values: fields,
+        app: 'HUBSPOT_URL',
+        vm: this,
+        endpoint: `${portalId}/${formId}`,
+      };
+
+      this.$store
+        .dispatch('requestAxiosPost', payload)
+        .then(response => response)
+        .catch(err => err);
+    },
+    destinationNotesLabel() {
+      let name = 'Drop off instructions';
+
+      if (this.get_order_path.length <= 2) {
+        name = `Drop off instructions at ${this.get_order_path[1].name}`;
+      }
+      return name;
+    },
+    instructionsInnerLabel() {
+      let name = 'Drop off instructions at ';
+
+      if (this.route_point === 1) {
+        name = 'Pickup Instructions at';
+      }
+
+      return name;
+    },
+    openNotesDialog(value) {
+      this.route_point = value;
+      this.locations_data = this.get_order_path;
+      this.addDeliveryInfo = true;
+    },
+    instructionsOuterLabel() {
+      let name = 'Add drop off instructions';
+
+      if (this.route_point === 1) {
+        name = 'Add pickup instructions';
+      }
+
+      return name;
+    },
+    getInstructionsPath() {
+      return this.locations_data.slice(1);
+    },
+    setSendSms(pathObj, i) {
+      if (typeof this.send_sms[i] === 'boolean') {
+        let data = {};
+        if (this.send_sms[i] && (this.contact[i] === undefined || this.contact[i] === '') && (this.notes[i] === undefined || this.notes[i] === '')) {
+          data = {};
+        } else {
+          data = {
+            coordinates: pathObj.coordinates,
+            name: pathObj.name,
+            notes: this.notes[i] === undefined ? '' : this.notes[i],
+            recipient_phone: this.contact[i] === undefined ? '' : this.contact[i],
+            notify: this.contact[i] === undefined || this.contact[i] === '' ? false : this.send_sms[i],
+          };
+        }
+        this.instructions_data[i] = data;
+      }
+    },
+    addInstructionNotes(pathObj, i) {
+      let data = {};
+      if ((this.contact[i] === undefined || this.contact[i] === '') && (this.notes[i] === undefined || this.notes[i] === '')) {
+        data = {};
+      } else {
+        data = {
+          coordinates: pathObj.coordinates,
+          name: pathObj.name,
+          notes: this.notes[i],
+          recipient_phone: this.contact[i] === undefined ? '' : this.contact[i],
+          notify: this.send_sms[i] === undefined ? false : this.send_sms[i],
+        };
+      }
+
+      this.instructions_data[i] = data;
+    },
+    addInstructionContact(pathObj, i) {
+      let data = {};
+      let phoneValid = false;
+      if (this.contact[i] === '') {
+        this.validPhone = true;
+        this.contact[i] = '';
+        if ((this.notes[i] === undefined || this.notes[i] === '') && (this.send_sms[i] === undefined || this.send_sms[i] === '')) {
+          data = {};
+        } else {
+          data = {
+            coordinates: pathObj.coordinates,
+            name: pathObj.name,
+            notes: this.notes[i],
+            recipient_phone: '',
+            notify: this.send_sms[i],
+          };
+        }
+      } else {
+        this.validPhone = false;
+        phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.contact[i]));
+      }
+
+      if (phoneValid) {
+        this.validPhone = true;
+        data = {
+          coordinates: pathObj.coordinates,
+          name: pathObj.name,
+          notes: this.notes[i] === undefined ? '' : this.notes[i],
+          notify: this.send_sms[i] === undefined ? false : this.send_sms[i],
+          recipient_phone: this.contact[i],
+        };
+      }
+      this.instructions_data[i] = data;
+    },
+    saveAdditionaNotes() {
+      setTimeout(() => {
+        if (this.instructions_data.length === 0) {
+          this.doNotification(
+            2,
+            'Add Instructions Error!!',
+            'Kindly provide instructions to submit data.',
+          );
+        } else if (this.validPhone) {
+          this.doNotification(
+            1,
+            'Additional Instructions saved successfully!!',
+          );
+          this.saveInstructionNotes(this.instructions_data);
+          this.addDeliveryInfo = false;
+        } else {
+          this.doNotification(
+            2,
+            'Phone verifications Error!!',
+            'Kindly provide a valid phone number.',
+          );
+        }
+      }, 2000);
+    },
+    displayNotesAddition() {
+      let state = false;
+      if (this.$route.path !== '/orders/dedicated/multi-destination' && this.orderPath.length > 0) {
+        state = true;
+      }
+      return state;
+    },
+    validate_phone() {
+      this.$validator.validate();
+    },
+    isDropOffSet() {
+      const data = this.instructions_data.slice(1);
+      let value = true;
+      if (data.filter(val => Object.keys(val).length !== 0).length === 0) {
+        value = false;
+      }
+      return value;
+    },
+    isPickUpSet() {
+      let value = true;
+      if (this.instructions_data[0] === '' || this.instructions_data[0] === undefined || Object.keys(this.instructions_data[0]).length === 0) {
+        value = false;
+      }
+      return value;
+    },
+    handleClose() {
+      // Do nothing ...
     },
   },
 };
 </script>
 
 <style lang="css" scoped>
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=4';
 </style>

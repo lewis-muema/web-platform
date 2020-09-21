@@ -25,7 +25,6 @@
         </div>
       </div>
     </div>
-
     <div
       v-if="get_active_order_option === 'payment'"
       class="home-view-actions--note"
@@ -75,7 +74,7 @@
                     name="paymentOptions"
                     class="payment__radio-button"
                   >
-                  <span>
+                  <span class="payment-options-alignment">
                     <p class="no-margin">{{ method.name }}</p>
                   </span>
                 </div>
@@ -86,45 +85,129 @@
               v-if="display_cards"
               class="card-accounts-list"
             >
-              <div
-                v-if="Array.isArray(get_saved_cards) && get_saved_cards.length > 0"
-                class=""
-              >
-                <div
-                  v-for="card in get_saved_cards"
-                  :key="card.last4"
-                  class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
-                >
-                  <div class="home-view-notes-wrapper--item__option">
-                    <div class="home-view-notes-wrapper--item__option-div">
-                      <el-radio
-                        v-model="payment_account"
-                        :label="getCardValue(card.last4)"
-                      >
-                        **** **** **** {{ card.last4 }}
-                        <font-awesome-icon
-                          :icon="getCardIcon(card)"
-                          class="payments-orange"
-                        />
-                      </el-radio>
-                    </div>
-                  </div>
-                  <div class="home-view-notes-wrapper--item__value" />
-                </div>
-              </div>
-              <div class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row">
-                <div class="home-view-notes-wrapper--item__option">
-                  <div class="home-view-notes-wrapper--item__option-div">
+              <div class="payment-options-cards-container">
+                <div v-if="!addCardStatus && get_saved_cards.length > 0">
+                  <div v-if="deletedCardIndex === ''">
+                    <p class="payment-options-cards-title">Saved Cards</p>
                     <div
-                      class="home-view-notes-wrapper--item__link"
-                      @click="takeMeToAddNewCard()"
+                      v-for="(cards, index) in get_saved_cards"
+                      :key="index"
+                      class="payment-options-saved-cards-row"
                     >
-                      + &nbsp;&nbsp; Visa/Mastercard
+                      <input
+                        v-model="activeSavedCard"
+                        :value="index"
+                        type="radio"
+                        class="payment-options-saved-card-radio"
+                      >
+                      {{ formatCardNumber(cards.card) }}
+                      <font-awesome-icon
+                        icon="trash-alt"
+                        class="payment-options-delete-card-icon"
+                        @click="deletedCardIndex = index"
+                      />
+                    </div>
+                    <div
+                      class="payment-options-add-card-holder"
+                      @click="addCardStatus = !addCardStatus"
+                    >
+                      <span>
+                        <font-awesome-icon
+                          icon="plus-circle"
+                          class="payment-options-add-card-icon"
+                        />
+                      </span>
+                      <span class="payment-options-add-card">Add a new Card</span>
                     </div>
                   </div>
+                  <div
+                    v-else
+                    class="delete-saved-card-dialogue"
+                  >
+                    <p class="delete-saved-card-dialogue-label">Are you sure you want to delete this card <strong>{{ get_saved_cards[deletedCardIndex].card }}</strong>?</p>
+                    <p class="delete-saved-card-dialogue-label">
+                      <span
+                        class="delete-saved-card-dialogue-buttons"
+                        @click="deleteSavedCard(deletedCardIndex)"
+                      >Yes</span>
+                      <span
+                        class="delete-saved-card-dialogue-buttons"
+                        @click="deletedCardIndex = ''"
+                      >No</span>
+                    </p>
+                  </div>
                 </div>
-                <div class="home-view-notes-wrapper--item__value" />
+                <form
+                  v-else
+                  class="VGS-form"
+                  @submit.prevent="onSubmit"
+                >
+                  <span
+                    v-if="get_saved_cards.length > 0"
+                    class="payment-options-cards-title back-option"
+                    @click="addCardStatus = !addCardStatus"
+                  >
+                    <font-awesome-icon
+                      icon="arrow-left"
+                      class="payment-options-add-card-icon"
+                    />
+                    Back
+                  </span>
+                  <p class="payment-options-cards-title">Add a new card</p>
+                  <div
+                    id="cc-number"
+                    class="form-group"
+                  >
+                    <div class="form-control-static">
+                      <span class="fake-input-1" />
+                    </div>
+                  </div>
+                  <div class="cvv-expire-fields">
+                    <div
+                      id="cc-expiration-date"
+                      class="form-group"
+                    >
+                      <div class="form-control-static">
+                        <span class="fake-input-1" />
+                      </div>
+                    </div>
+                    <div
+                      id="cc-cvc"
+                      class="form-group"
+                    >
+                      <div class="form-control-static">
+                        <span class="fake-input-1" />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    id="cc-save-card-1"
+                    class="form-group"
+                  >
+                    <div class="form-control-static">
+                      <input
+                        v-model="saveCardState"
+                        type="checkbox"
+                      >
+                      <span class="fake-checkbox-label-1">I want to save my card for future orders</span>
+                    </div>
+                  </div>
+                </form>
               </div>
+            </div>
+            <div v-if="!getCardPaymentStatus">
+              <p
+                v-if="getCountryCode === 'KE'"
+                class="card-option-disabled-notification"
+              >
+                Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using M-Pesa, or pay cash upon delivery. Contact Support on +254709779779 for any queries.
+              </p>
+              <p
+                v-if="getCountryCode === 'UG'"
+                class="card-option-disabled-notification"
+              >
+                Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using cash. Contact Support on +256393239706 for any queries.
+              </p>
             </div>
           </span>
         </div>
@@ -142,7 +225,10 @@
       </div>
     </div>
 
-    <div class="home-view-place-order" :class="loader_class">
+    <div
+      class="home-view-place-order"
+      :class="loader_class"
+    >
       <div
         v-if="loading"
         v-loading="loading"
@@ -153,7 +239,7 @@
           type="button"
           class="button-primary home-view--place-order"
           name="button"
-          @click="preCheckPaymentDetails()"
+          @click="displayOrderHistory()"
         >
           {{ place_order_text }}
         </button>
@@ -172,26 +258,219 @@
         </button>
       </div>
     </div>
+    <transition
+      name="fade"
+      mode="out-in"
+    >
+      <div class="summary-pop-up">
+        <el-dialog
+          :visible.sync="confirmFinal"
+          width="30%"
+          class="summary-dialog"
+          :before-close="handleClose"
+          :modal-append-to-body="false"
+        >
+          <div class="order_final_summary">
+            <p class="confirm-label">
+              Confirm your order details
+            </p>
+            <div class="">
+              <div class="">
+                <ul class="summary_timeline order_summary_timeline">
+                  <li>
+                    <p class="delivery_label">
+                      Pickup Location
+                    </p>
+                    <p class="delivery_points">
+                      {{ getHomeLocations[0] }}
+                    </p>
+                  </li>
+
+                  <li
+                    v-for="(val, index) in getHomeLocations"
+                    v-if="index > 0"
+                    :key="index"
+                  >
+                    <p
+                      v-if="index > 1"
+                      class="delivery_label"
+                    >
+                      {{ `Destination ${index}` }}
+                    </p>
+                    <p
+                      v-else
+                      class="delivery_label"
+                    >
+                      Destination
+                    </p>
+                    <p class="delivery_points">
+                      {{ val }}
+                    </p>
+                  </li>
+                </ul>
+              </div>
+              <label class="delivery_label">Type of order</label>
+              <div class="order_summary-types-item order_summary--vendor-wrapper">
+                <div class="order_summary__img">
+                  <img
+                    class="order_summary-item__image"
+                    :src="getVendorIcon(activeVendorPriceData.vendor_id)"
+                    alt=""
+                  >
+                </div>
+                <div class="order_summary-wrapper__vendor">
+                  <div class="order_summary--vendor-formal-name">
+                    {{ activeVendorPriceData.vendor_name }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="order_summary--outline">
+                <label class="delivery_label">
+                  Type of {{ activeVendorPriceData.vendor_name.toLowerCase() }}
+                </label>
+                <p>{{ carrierTypeSummary() }}</p>
+              </div>
+
+              <div class="order_summary--outline">
+                <label class="delivery_label">The pickup time of your order</label>
+                <div class="order_summary-types-item order_summary--vendor-wrapper">
+                  <div class="order_summary__img">
+                    <i
+                      class="el-icon-date order_summary-item__image calender--icon"
+                    />
+                  </div>
+                  <div class="order_summary-wrapper__vendor">
+                    <div class="order_summary--vendor-formal-name">
+                      {{ scheduleTimeSummary() }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-if="pickUpInstructions()"
+                class="order_summary--outline"
+              >
+                <label class="delivery_label">
+                  Pickup instructions at {{ getInstructionNotes[0].name }}
+                </label>
+                <div
+                  v-if="getInstructionNotes[0].notes !== ''"
+                  class="order_summary-wrapper__vendor instructions-notes"
+                >
+                  <div class="order_summary--vendor-formal-name">
+                    {{ getInstructionNotes[0].notes }}
+                  </div>
+                </div>
+                <div
+                  v-if="getInstructionNotes[0].recipient_phone !== ''"
+                  class="order_summary-types-item order_summary--vendor-wrapper"
+                >
+                  <div class="order_summary__img">
+                    <i
+                      class="el-icon-phone-outline order_summary-item__image calender--icon"
+                    />
+                  </div>
+                  <div class="order_summary-wrapper__vendor">
+                    <div class="order_summary--vendor-formal-name">
+                      {{ getInstructionNotes[0].recipient_phone }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div
+                v-if="dropOffInstructions()"
+                class="order_summary--outline"
+              >
+                <div
+                  v-for="(data, index) in deliveryNotesData()"
+                  :key="index"
+                >
+                  <label class="delivery_label">
+                    Drop off instructions at {{ data.name }}
+                  </label>
+                  <div
+                    v-if="data.notes !== ''"
+                    class="order_summary-wrapper__vendor instructions-notes"
+                  >
+                    <div class="order_summary--vendor-formal-name">
+                      {{ data.notes }}
+                    </div>
+                  </div>
+                  <div
+                    v-if="data.recipient_phone !== ''"
+                    class="order_summary-types-item order_summary--vendor-wrapper"
+                  >
+                    <div class="order_summary__img">
+                      <i
+                        class="el-icon-phone-outline order_summary-item__image calender--icon"
+                      />
+                    </div>
+                    <div class="order_summary-wrapper__vendor">
+                      <div class="order_summary--vendor-formal-name">
+                        {{ data.recipient_phone }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                v-if="get_order_notes.length > 0"
+                class="order_summary--outline"
+              >
+                <label class="delivery_label">Notes</label>
+                <p>{{ get_order_notes }}</p>
+              </div>
+
+              <div class="countdown_divider" />
+
+              <div class="count_down_section">
+                <p class="timeout_text">
+                  Order will be placed in
+                  <a class="timeout_count">{{ time }} seconds</a>
+                </p>
+              </div>
+
+              <div
+                class="summary-button-outer"
+              >
+                <input
+                  class="button-primary btn-edit-order"
+                  type="submit"
+                  value="EDIT ORDER"
+                  @click="editOrder"
+                >
+
+                <!-- <input
+                  class="button-primary btn-submit-order "
+                  type="submit"
+                  value="CONFIRM ORDER"
+                  @click="confirmOrder"
+                > -->
+              </div>
+            </div>
+          </div>
+        </el-dialog>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
-import {
-  mapActions,
-  mapGetters,
-  mapMutations,
-} from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import numeral from 'numeral';
-import {
-  library,
-} from '@fortawesome/fontawesome-svg-core';
-import {
-  faChevronDown,
-} from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faChevronDown, faPlusCircle, faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
+import TimezoneMxn from '../../../../../mixins/timezone_mixin';
+import EventsMixin from '../../../../../mixins/events_mixin';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
-library.add(faChevronDown);
+library.add(faChevronDown, faPlusCircle, faArrowLeft, faTrashAlt);
 
 // const TRUCK_VENDORS = [6,10,13,14,17,18,19,20];
 const TRUCK_VENDORS = [20, 25];
@@ -199,7 +478,7 @@ const TRUCK_VENDORS = [20, 25];
 export default {
   name: 'OrderOptions',
   components: {},
-  mixins: [Mcrypt, PaymentMxn],
+  mixins: [Mcrypt, PaymentMxn, TimezoneMxn, EventsMixin, NotificationMxn],
   data() {
     return {
       schedule_time: this.moment(),
@@ -233,6 +512,20 @@ export default {
       mpesa_valid: false,
       mpesa_payment: false,
       mpesa_payment_state: false,
+      confirmFinal: false,
+      smallVendors: [1, 22, 21, 23],
+      mediumVendors: [2, 3],
+      largeVendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
+      time: 15,
+      isRunning: false,
+      interval: null,
+      country: '',
+      form: {},
+      vgs_valid_payment: false,
+      addCardStatus: false,
+      activeSavedCard: '',
+      saveCardState: false,
+      deletedCardIndex: '',
     };
   },
 
@@ -267,6 +560,14 @@ export default {
       getTestSpecs: '$_orders/$_home/getTestSpecs',
       getLoadWeightStatus: '$_orders/$_home/getLoadWeightStatus',
       getLoadWeightValue: '$_orders/$_home/getLoadWeightValue',
+      getHomeLocations: '$_orders/getHomeLocations',
+      getStoreOrderPath: '$_orders/getStorePath',
+      getPairWithRiderState: '$_orders/$_home/getPairWithRiderState',
+      getPairErrorMessage: '$_orders/$_home/getPairErrorMessage',
+      getInstructionNotes: '$_orders/$_home/getInstructionNotes',
+      getSecondaryProfile: 'getSecondaryProfile',
+      getCardPaymentStatus: '$_payment/getCardPaymentStatus',
+      getActiveCurrency: '$_payment/getActiveCurrency',
     }),
 
     active_price_tier_data() {
@@ -289,19 +590,19 @@ export default {
     order_cost() {
       let cost = 0;
       if (typeof this.activeVendorPriceData !== 'undefined') {
-        if ('cost' in this.activeVendorPriceData && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+        if (
+          'cost' in this.activeVendorPriceData
+          && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')
+        ) {
           if (
             !this.getIsReturn
             || this.vendors_without_return.includes(this.get_active_vendor_name)
           ) {
             cost = this.activeVendorPriceData.cost - this.activeVendorPriceData.discountAmount;
-            return cost;
           }
           cost = this.activeVendorPriceData.return_cost - this.activeVendorPriceData.discountAmount;
-          return cost;
         }
-        cost = this.activeVendorPriceData.cost - this.activeVendorPriceData.discount_amount;
-        return cost;
+        cost = this.activeVendorPriceData.cost - this.activeVendorPriceData.discountAmount;
       }
 
       return cost;
@@ -310,7 +611,7 @@ export default {
     // order cost including discounts
     full_order_cost() {
       if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
-        return this.order_cost + this.activeVendorPriceData.discount_amount;
+        return this.order_cost + this.activeVendorPriceData.discountAmount;
       }
       return this.order_cost + this.activeVendorPriceData.discountAmount;
     },
@@ -401,13 +702,13 @@ export default {
     },
 
     balance_quote_label() {
+      let text = '';
       if (this.getRunningBalance < 0) {
-        return 'You Owe';
+        text = 'You Owe';
+      } else {
+        text = 'Your Balance';
       }
-      if (this.getRunningBalance - this.order_cost < 0) {
-        return 'Your Balance';
-      }
-      return false;
+      return text;
     },
 
     // Disabled return orders - users to place the last pickup as the last destination
@@ -426,6 +727,58 @@ export default {
       }
       return '';
     },
+    user_name() {
+      const session = this.$store.getters.getSession;
+      return session[session.default].user_name.split(' ')[0];
+    },
+    valid_vgs_saved_card() {
+      if (!this.addCardStatus && this.activeSavedCard !== '') {
+        return true;
+      }
+      return false;
+    },
+    savedCardsTally() {
+      return this.get_saved_cards.length;
+    },
+  },
+
+  watch: {
+    addCardStatus(val) {
+      if (val) {
+        setTimeout(() => {
+          this.setForm();
+        }, 800);
+      } else {
+        this.getUserCards();
+      }
+    },
+    payment_method(val) {
+      if (val === 2 && this.get_saved_cards.length === 0) {
+        setTimeout(() => {
+          this.addCardStatus = true;
+        }, 500);
+      }
+      if (val !== 2) {
+        this.addCardStatus = false;
+      }
+    },
+    savedCardsTally(val) {
+      if (val === 0) {
+        setTimeout(() => {
+          this.addCardStatus = true;
+        }, 500);
+      }
+    },
+    form: {
+      handler(val) {
+        if (Object.prototype.hasOwnProperty.call(val.state, 'cardno') && val.state.cardno.isValid && val.state.cvv.isValid && val.state.expiry_date.isValid && this.addCardStatus) {
+          this.vgs_valid_payment = true;
+        } else {
+          this.vgs_valid_payment = false;
+        }
+      },
+      deep: true,
+    },
   },
 
   created() {
@@ -438,6 +791,9 @@ export default {
   mounted() {
     this.checkCountryCode();
     this.checkUserPhone();
+    const session = this.$store.getters.getSession;
+    this.country = session[session.default].country_code;
+    this.loadVeryGoodSecurityScript();
     // this.setDefaultPaymentOptions();
   },
 
@@ -466,6 +822,12 @@ export default {
       setSavedCards: '$_orders/$_home/setSavedCards',
       setStripeUserId: '$_orders/$_home/setStripeUserId',
       setReturnStatus: '$_orders/$_home/setReturnStatus',
+      setOrderState: '$_orders/$_home/setOrderState',
+      setExtendOptions: '$_orders/$_home/setExtendOptions',
+      clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
+      clearInstructionNotes: '$_orders/$_home/clearInstructionNotes',
+      setSecondaryProfile: 'setSecondaryProfile',
+      setCardPaymentStatus: '$_payment/setCardPaymentStatus',
     }),
 
     ...mapActions({
@@ -476,6 +838,219 @@ export default {
       requestSavedCards: '$_orders/$_home/requestSavedCards',
       requestPaymentOptionsAction: '$_payment/requestPaymentOptions',
     }),
+
+    loadVeryGoodSecurityScript() {
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://js.verygoodvault.com/vgs-collect/2.0/vgs-collect.js';
+      document.head.appendChild(script);
+    },
+
+    setForm() {
+      // eslint-disable-next-line no-undef
+      this.form = VGSCollect.create(process.env.CONFIGS_ENV.VGS_VAULT_ID, process.env.CONFIGS_ENV.VGS_ENVIRONMENT, () => {});
+
+      this.form.field('#cc-number .fake-input-1', {
+        type: 'card-number',
+        name: 'cardno',
+        successColor: '#4F8A10',
+        errorColor: '#D8000C',
+        fontSize: '11px',
+        css: {
+          'letter-spacing': '0.03em',
+        },
+        placeholder: 'Card Number',
+        validations: ['required', 'validCardNumber'],
+      });
+
+
+      this.form.field('#cc-cvc .fake-input-1', {
+        type: 'card-security-code',
+        name: 'cvv',
+        fontSize: '11px',
+        css: {
+          'letter-spacing': '0.03em',
+        },
+        placeholder: 'CVV',
+        validations: ['required', 'validCardSecurityCode'],
+      });
+
+      this.form.field('#cc-expiration-date .fake-input-1', {
+        type: 'card-expiration-date',
+        name: 'expiry_date',
+        fontSize: '11px',
+        css: {
+          'letter-spacing': '0.03em',
+        },
+        serializers: [{ name: 'replace', options: { old: ' ', new: '' } }],
+        placeholder: 'Card Expiry (MM/YYYY)',
+        validations: ['required', 'validCardExpirationDate'],
+      });
+    },
+
+    onSubmit() {
+      if (this.vgs_valid_payment) {
+        const session = this.$store.getters.getSession;
+        const accData = session[session.default];
+        const firstName = accData.user_name.split(' ')[0];
+        const lastName = accData.user_name.split(' ').length > 1 ? accData.user_name.split(' ')[1] : '';
+        const newCardPayload = {
+          currency: this.activeVendorPriceData.currency,
+          country: this.getCountryCode,
+          amount: this.pending_amount.replace(',', ''),
+          email: accData.user_email,
+          phonenumber: accData.user_phone,
+          firstname: firstName,
+          lastname: lastName,
+          txRef: `${Date.now()}`,
+          user_id: accData.user_id,
+          cop_id: session.default === 'biz' ? accData.cop_id : 0,
+          vendor_type: this.activeVendorPriceData.vendor_id,
+          save: this.saveCardState,
+        };
+        this.loading = true;
+        this.form.submit('/customers/collect_card_details/', {
+          data: newCardPayload,
+          headers: {
+            Authorization: localStorage.jwtToken,
+          },
+        }, (status, response) => {
+          if (response.status) {
+            const newSavedCardPayload = {
+              values: response.data,
+              app: 'AUTH',
+              endpoint: 'customers/charge_new_card',
+            };
+            this.requestSavedCards(newSavedCardPayload).then(
+              (res) => {
+                if (res.status) {
+                  if (res.running_balance >= parseInt(this.pending_amount.replace(',', ''), 10)) {
+                    this.doCompleteOrder();
+                  } else {
+                    this.loading = false;
+                    this.doNotification(
+                      2,
+                      'Insufficient balance',
+                      'The amount charge is not sufficient to place the order, please try again',
+                    );
+                  }
+                } else {
+                  this.loading = false;
+                  this.doNotification(
+                    2,
+                    'Failed to charge card',
+                    res.message,
+                  );
+                }
+              },
+            );
+          } else {
+            this.loading = false;
+            this.doNotification(
+              2,
+              'Failed to charge card',
+              response.message,
+            );
+          }
+        });
+      } else {
+        this.loading = false;
+        this.doNotification(
+          2,
+          'Failed to charge card',
+          'Please enter all the card details and try again',
+        );
+      }
+    },
+
+    chargeSavedCard() {
+      if (this.valid_vgs_saved_card) {
+        const session = this.$store.getters.getSession;
+        const accData = session[session.default];
+        const firstName = accData.user_name.split(' ')[0];
+        const payload = {
+          txRef: `${Date.now()}`,
+          card: this.activeSavedCard !== '' && this.get_saved_cards.length > 0 ? this.get_saved_cards[this.activeSavedCard].card : '',
+          currency: this.activeVendorPriceData.currency,
+          amount: this.pending_amount.replace(',', ''),
+          country: this.getCountryCode,
+          email: accData.user_email,
+          phonenumber: accData.user_phone,
+          firstname: firstName,
+          user_id: accData.user_id,
+          cop_id: session.default === 'biz' ? accData.cop_id : 0,
+          vendor_type: this.activeVendorPriceData.vendor_id,
+        };
+        const savedCardPayload = {
+          values: payload,
+          app: 'AUTH',
+          endpoint: 'customers/charge_saved_card',
+        };
+        this.loading = true;
+        this.requestSavedCards(savedCardPayload).then(
+          (response) => {
+            if (response.status) {
+              if (response.running_balance >= parseInt(this.pending_amount.replace(',', ''), 10)) {
+                this.doCompleteOrder();
+              } else {
+                this.loading = false;
+                this.doNotification(
+                  2,
+                  'Insufficient balance',
+                  'The amount charge is not sufficient to place the order please try again',
+                );
+              }
+            } else {
+              this.loading = false;
+              this.doNotification(
+                2,
+                'Failed to charge card',
+                response.message,
+              );
+            }
+          },
+          error => false,
+        );
+      } else {
+        this.loading = false;
+        this.doNotification(
+          2,
+          'Failed to charge card',
+          'Please select one of your saved cards',
+        );
+      }
+    },
+
+    deleteSavedCard(index) {
+      const session = this.$store.getters.getSession;
+      const accData = session[session.default];
+      const payload = {
+        card: this.get_saved_cards[index].card,
+        user_id: accData.user_id,
+        cop_id: session.default === 'biz' ? accData.cop_id : 0,
+      };
+      const deleteCardPayload = {
+        values: payload,
+        app: 'AUTH',
+        endpoint: 'customers/delete_saved_card',
+      };
+      this.deletedCardIndex = '';
+      this.loading = true;
+      this.requestSavedCards(deleteCardPayload).then(
+        (response) => {
+          this.loading = false;
+          if (response.status) {
+            this.getUserCards();
+          } else {
+            this.doNotification(
+              2,
+              'Failed to delete saved card',
+              'Failed to delete saved card. Please try again later',
+            );
+          }
+        },
+      );
+    },
 
     do_set_active_order_option(name) {
       // eslint-disable-next-line no-unused-expressions
@@ -495,6 +1070,8 @@ export default {
         (this.getPriceRequestObject.payment_option === 1
           && this.getRunningBalance - this.order_cost >= 0)
         || this.getPriceRequestObject.payment_option === 2
+        || (this.getPriceRequestObject.payment_option === 0
+            && this.getRunningBalance - this.order_cost >= 0)
       );
     },
 
@@ -517,7 +1094,10 @@ export default {
       } catch (er) {
         //
       }
-      if (minAmount <= 0 && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+      if (
+        minAmount <= 0
+        && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')
+      ) {
         this.doNotification(
           '2',
           'Missing Minimum Order Amount',
@@ -529,7 +1109,124 @@ export default {
       return true;
     },
 
+    displayOrderHistory() {
+      if (this.getPairWithRiderState && this.getPairRiderPhone === '') {
+        this.initiatePairingFailureNotification();
+      } else if (this.getPairWithRiderState && !this.getPairWithRiderStatus) {
+        this.doNotification(
+          2,
+          'Pairing Failure',
+          this.getPairErrorMessage,
+        );
+      } else if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+        this.preCheckPaymentDetails();
+      } else {
+        this.confirmFinal = true;
+        this.isRunning = false;
+        this.toggleTimer();
+        let accData = {};
+        const session = this.$store.getters.getSession;
+        const acc = session.default;
+        accData = session[session.default];
+        this.trackMixpanelEvent('Order Summary View', {
+          'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+          'Client Type': 'Web Platform',
+          'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+          'User Email': accData.user_email,
+          'User Phone': accData.user_phone,
+        });
+      }
+    },
+    initiatePairingFailureNotification() {
+      let msg = '';
+      if (this.getPairErrorMessage !== '') {
+        msg = this.getPairErrorMessage;
+      } else {
+        msg = 'Kindly provide partner details while initiating pairing requests';
+      }
+
+      this.doNotification(
+        2,
+        'Pairing Failure',
+        msg,
+      );
+    },
+    editOrder() {
+      this.confirmFinal = false;
+      this.isRunning = true;
+      this.time = 15;
+      clearInterval(this.interval);
+      this.setOrderState(1);
+      this.setExtendOptions(false);
+      this.clearOuterActiveVendorDetails();
+      let accData = {};
+      const session = this.$store.getters.getSession;
+      const acc = session.default;
+      accData = session[session.default];
+      this.trackMixpanelEvent('Order Summary Edit Button - Clicked', {
+        'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+        'User Email': accData.user_email,
+        'User Phone': accData.user_phone,
+      });
+    },
+    confirmOrder() {
+      this.confirmFinal = false;
+      this.preCheckPaymentDetails();
+      clearInterval(this.interval);
+      let accData = {};
+      const session = this.$store.getters.getSession;
+      const acc = session.default;
+      accData = session[session.default];
+      this.trackMixpanelEvent('Order Summary Confirm Button - Clicked', {
+        'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+        'User Email': accData.user_email,
+        'User Phone': accData.user_phone,
+      });
+    },
+    toggleTimer() {
+      if (this.isRunning) {
+        clearInterval(this.interval);
+      } else {
+        this.interval = setInterval(this.incrementTime, 1000);
+      }
+      this.isRunning = !this.isRunning;
+    },
+    incrementTime() {
+      this.time = parseInt(this.time, 10) - 1;
+      if (this.time <= 1) {
+        this.preCheckPaymentDetails();
+        this.confirmFinal = false;
+        this.isRunning = true;
+        clearInterval(this.interval);
+        this.time = 15;
+        let accData = {};
+        const session = this.$store.getters.getSession;
+        const acc = session.default;
+        accData = session[session.default];
+        this.trackMixpanelEvent('Order Summary View Timeout', {
+          'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+          'Client Type': 'Web Platform',
+          'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+          'User Email': accData.user_email,
+          'User Phone': accData.user_phone,
+        });
+      }
+    },
+
+
     preCheckPaymentDetails() {
+      const eventPayload = {
+        eventCategory: 'Order Placement',
+        eventAction: 'Click',
+        eventLabel: 'Order Confirmation Button - Order Placement Page - Web App',
+      };
+      this.fireGAEvent(eventPayload);
+      clearInterval(this.interval);
+
       if (this.isValidateLoadWeightStatus() && this.isValidateScheduleTime()) {
         this.loading = true;
         this.refreshRunningBalance().then(
@@ -566,6 +1263,11 @@ export default {
         );
         return false;
       }
+      const session = this.$store.getters.getSession;
+      const profile_id = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
+      const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
+      const secondaryProfile = session.default === 'biz' ? this.getPriceRequestObject.client_id - profile_id === 100000000 : this.getPriceRequestObject.user_id - profile_id === 100000000;
+      this.setSecondaryProfile(secondaryProfile);
 
       if (this.payment_method === '') {
         if (this.checkAccountPaymentOption()) {
@@ -589,12 +1291,11 @@ export default {
         } else if (Number(this.payment_method) === 11) {
           this.handleRunningBalancePayments();
         } else if (Number(this.payment_method) === 2) {
-          const card = this.get_saved_cards.find(
-            // eslint-disable-next-line camelcase
-            card_details => card_details.last4 === this.payment_account.slice(2),
-          );
-          const setCurrency = this.activeVendorPriceData.currency;
-          this.handleSavedCard(setCurrency, card, true);
+          if (this.addCardStatus) {
+            this.onSubmit();
+          } else {
+            this.chargeSavedCard();
+          }
         } else {
           // console.log('not handled payment method', this.payment_method);
         }
@@ -642,111 +1343,155 @@ export default {
     },
 
     doCompleteOrder() {
-      const payload = {
-        values: this.getCompleteOrderObject(),
-        app: 'PRIVATE_API',
-        endpoint: 'pay',
-      };
-      this.loading = true;
-      this.requestOrderCompletion(payload).then(
-        (response) => {
-          this.loading = false;
-          if (response.length > 0) {
-            // eslint-disable-next-line no-param-reassign,prefer-destructuring
-            response = response[0];
-          }
-          /* eslint camelcase: ["error", {ignoreDestructuring: true}] */
-          if (response.status) {
-            let order_no;
-            this.setPickupFilled(false);
-            // eslint-disable-next-line camelcase
-            if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'order_no')) {
-              ({
-                order_no,
-              } = this.activeVendorPriceData);
-            } else {
-              ({
-                order_no,
-              } = response.respond);
-              try {
-                this.mixpanelTrackPricingServiceCompletion(order_no);
-              } catch (er) {
-                // catch er
-              }
+      const orderData = this.getCompleteOrderObject();
+      if (orderData.values.payment_method === 12 && orderData.values.cop_id === 0) {
+        this.handleOrderPlacementError(orderData.values);
+      } else {
+        const payload = {
+          values: this.getCompleteOrderObject(),
+          app: 'ADONIS_PRIVATE_API',
+          endpoint: 'orders/confirm_order',
+        };
+        this.loading = true;
+        this.requestOrderCompletion(payload).then(
+          (response) => {
+            this.loading = false;
+            if (response.length > 0) {
+              // eslint-disable-next-line no-param-reassign,prefer-destructuring
+              response = response[0];
             }
-            if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
-              this.doNotification(1, 'Successfully placed freight order', '');
-            }
-            this.shouldDestroy = true;
-            this.should_destroy = true;
-            this.$store.dispatch('$_orders/fetchOngoingOrders');
-            this.$root.$emit('Order Placement Force Update');
-            const data = JSON.parse(payload.values).values;
-            const session = this.$store.getters.getSession;
-            const acc = session.default;
-            if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
-              this.trackMixpanelEvent('Place Order', {
-                'Account ': data.type,
-                'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-                'Client Type': 'Web Platform',
-                'Order Number': order_no,
-                'Payment Mode': this.payment_method,
-                'User Email': data.user_email,
-                'User Phone': data.user_phone,
-                'Super User Id': session.admin_details.admin_id,
-              });
-            } else {
-              this.trackMixpanelEvent('Place Order', {
-                'Account ': data.type,
-                'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-                'Client Type': 'Web Platform',
-                'Order Number': order_no,
-                'Payment Mode': this.payment_method,
-                'User Email': data.user_email,
-                'User Phone': data.user_phone,
-              });
-            }
+            /* eslint camelcase: ["error", {ignoreDestructuring: true}] */
+            if (response.status) {
+              const eventPayload = {
+                eventCategory: 'Order Placement',
+                eventAction: 'Order Confirmation',
+                eventLabel: 'Order Confirmed - Order Placement - Web App',
+              };
+              this.fireGAEvent(eventPayload);
 
-            this.trackMixpanelEvent('Order Completion Log', {
-              'Account ': data.type,
-              'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-              'Client Type': 'Web Platform',
-              'Payment Mode': this.payment_method,
-              'Cash Status': data.cash_status,
-              'User Email': data.user_email,
-              'User Phone': data.user_phone,
-              'Order Number': order_no,
-              'Order Amount': data.amount,
-              'Schedule Time': data.schedule_time,
-              'Schedule Status': data.schedule_status,
-              'Carrier Type ID': data.carrier_type,
-              'Vendor Type ID': data.vendor_type,
-            });
-            if (!Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
-              this.$router.push({
-                name: 'tracking',
-                params: {
-                  order_no,
-                },
+              let order_no;
+              this.setPickupFilled(false);
+              // eslint-disable-next-line camelcase
+              if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'order_no')) {
+                ({ order_no } = this.activeVendorPriceData);
+              } else {
+                ({ order_no } = response.respond);
+                try {
+                  this.mixpanelTrackPricingServiceCompletion(order_no);
+                } catch (er) {
+                  // catch er
+                }
+              }
+              if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+                this.doNotification(1, 'Successfully placed freight order', '');
+              }
+              this.shouldDestroy = true;
+              this.should_destroy = true;
+              if (Object.keys(this.$store.getters.getSession).length > 0) {
+                this.$store.dispatch('$_orders/fetchOngoingOrders');
+              }
+
+              this.$root.$emit('Order Placement Force Update');
+              let accData = {};
+              const data = JSON.parse(payload.values).values;
+              const session = this.$store.getters.getSession;
+              const acc = session.default;
+              accData = session[session.default];
+              if (Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
+                this.trackMixpanelEvent('Place Order', {
+                  'Account ': data.type,
+                  'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+                  'Client Type': 'Web Platform',
+                  'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+                  'Order Number': order_no,
+                  'Payment Mode': this.payment_method,
+                  'User Email': data.user_email,
+                  'User Phone': data.user_phone,
+                  'Super User Id': session.admin_details.admin_id,
+                });
+              } else {
+                this.trackMixpanelEvent('Place Order', {
+                  'Account ': data.type,
+                  'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+                  'Client Type': 'Web Platform',
+                  'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+                  'Order Number': order_no,
+                  'Payment Mode': this.payment_method,
+                  'User Email': data.user_email,
+                  'User Phone': data.user_phone,
+                });
+              }
+              if (this.$route.path === '/orders/dedicated/multi-destination') {
+                this.trackGAEvent('Multi destination vendor type selected');
+                this.trackMixpanelEvent('Multi destination vendor type selected', {
+                  'Vendor ID': data.vendor_type,
+                  'Carrier type': this.carrierTypeName(data.carrier_type, data.vendor_type),
+                  'Client name': accData.user_name,
+                  'Client email': data.user_email,
+                  'Account type': acc === 'peer' ? 'Personal' : 'Business',
+                  'Client type': 'Web Platform',
+                });
+                this.trackGAEvent('Multi destination payment option');
+                this.trackMixpanelEvent('Multi destination payment option', {
+                  'Payment option': this.payMethodName(data.payment_method),
+                  'Client name': accData.user_name,
+                  'Client email': data.user_email,
+                  'Account type': acc === 'peer' ? 'Personal' : 'Business',
+                  'Order no': order_no,
+                  'Client type': 'Web Platform',
+                });
+              }
+              this.trackGAEvent(this.$route.path === '/orders/dedicated/multi-destination' ? 'Multi destination order completion log' : 'Order Completion Log');
+              this.trackMixpanelEvent(this.$route.path === '/orders/dedicated/multi-destination' ? 'Multi destination order completion log' : 'Order Completion Log', {
+                'Account ': data.type,
+                'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+                'Client Type': 'Web Platform',
+                'Payment Mode': this.payment_method,
+                'Cash Status': data.cash_status,
+                'User Email': data.user_email,
+                'User Phone': data.user_phone,
+                'Order Number': order_no,
+                'Order Amount': data.amount,
+                'Schedule Time': data.schedule_time,
+                'Schedule Status': data.schedule_status,
+                'Carrier Type ID': data.carrier_type,
+                'Vendor Type ID': data.vendor_type,
               });
+              this.clearInstructionNotes();
+              if (!Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+                this.$router.push({
+                  name: 'tracking',
+                  params: {
+                    order_no,
+                  },
+                });
+              }
+            } else {
+              this.doNotification(
+                2,
+                'Order completion failed',
+                'Price request failed. Please try again',
+              );
             }
-          } else {
-            this.doNotification(
-              2,
-              'Order completion failed',
-              'Price request failed. Please try again',
-            );
-          }
-        },
-        () => {
-          this.doNotification(
-            3,
-            'Order completion failed',
-            'Order completion failed. Please check your internet connection and try again.',
-          );
-          this.loading = false;
-        },
-      );
+          },
+          (error) => {
+            if (Object.prototype.hasOwnProperty.call(error, 'reason')) {
+              this.doNotification(
+                2,
+                'Order completion failed',
+                error.reason,
+              );
+            } else {
+              this.doNotification(
+                2,
+                'Order completion failed',
+                'Order completion failed. Please check your internet connection and try again.',
+              );
+            }
+            this.loading = false;
+          },
+        );
+      }
     },
 
     getCompleteOrderObject() {
@@ -770,7 +1515,8 @@ export default {
         user_phone: acc.user_phone,
         no_charge_status: false,
         insurance_amount: 10,
-        note_status: typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
+        note_status:
+          typeof this.get_order_notes === 'undefined' ? false : this.get_order_notes.length > 0,
         last_digit: 'none',
         insurance_id: 1,
         platform: 'corporate',
@@ -784,12 +1530,15 @@ export default {
         delivery_points: this.get_order_path.length - 1,
         sendy_coupon: '0',
         payment_method: Number(this.payment_method),
-        schedule_time: this.order_is_scheduled ? this.scheduled_time : this.current_time,
+        schedule_time: this.order_is_scheduled
+          ? this.convertToUTC(this.scheduled_time)
+          : this.convertToUTC(this.current_time),
         tier_tag: this.activeVendorPriceData.tier_tag,
         tier_name: this.activeVendorPriceData.tier_name,
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
         carrier_type: this.final_carrier_type,
-        isreturn: this.getIsReturn && !this.vendors_without_return.includes(this.get_active_vendor_name),
+        isreturn:
+          this.getIsReturn && !this.vendors_without_return.includes(this.get_active_vendor_name),
         vendor_type: this.activeVendorPriceData.vendor_id,
         rider_phone: this.order_no,
         type: this.payment_type,
@@ -815,7 +1564,26 @@ export default {
       if (this.activeVendorPriceData.order_no === undefined) {
         payload.pricing_uuid = this.activeVendorPriceData.id;
       }
-
+      if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+        payload.freight = true;
+      }
+      if (this.$route.path === '/orders/dedicated/multi-destination') {
+        let notesArray = [];
+        const notesIndex = [];
+        this.getStoreOrderPath.forEach((row) => {
+          if (row.notes) {
+            notesArray.push(row.notes);
+            notesIndex.push(row.notes);
+          } else {
+            notesArray.push('');
+          }
+        });
+        if (notesIndex.length === 0) {
+          notesArray = [];
+        }
+        payload.waypoint_notes = notesArray;
+      }
+      payload.waypoint_instructions = this.getInstructionNotes.filter(value => Object.keys(value).length !== 0);
       payload = {
         values: payload,
       };
@@ -824,13 +1592,12 @@ export default {
     },
 
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = {
         title,
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
 
     saveInfoToStore() {
@@ -844,15 +1611,59 @@ export default {
       this.payment_method = this.get_payment_method;
     },
 
+    payMethodName(id) {
+      if (id === 1) {
+        return 'Mpesa';
+      }
+      if (id === 2) {
+        return 'Card';
+      }
+      if (id === 3) {
+        return 'Promo code';
+      }
+      if (id === 5) {
+        return 'Cash';
+      }
+      if (id === 11) {
+        return 'Running balance';
+      }
+      if (id === 12) {
+        return 'Post pay';
+      }
+      return 'Unknown payment method';
+    },
+
+    carrierTypeName(id, vendor) {
+      if (vendor === 1) {
+        if (id === '0') {
+          return 'Bike without box';
+        }
+        if (id === '1') {
+          return 'Bike with box';
+        }
+        return 'Any';
+      }
+      if (id === '0') {
+        return 'Open';
+      }
+      if (id === '1') {
+        return 'Closed';
+      }
+      return 'Any';
+    },
+
     refreshRunningBalance() {
       return new Promise((resolve, reject) => {
         const session = this.$store.getters.getSession;
-
+        const profile_id = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
+        const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
+        const secondaryProfile = session.default === 'biz' ? this.getPriceRequestObject.client_id - profile_id === 100000000 : this.getPriceRequestObject.user_id - profile_id === 100000000;
         const runningBalancePayload = {
-          cop_id: 'cop_id' in session[session.default] ? session[session.default].cop_id : 0,
+          [profile_name]: profile_id,
           phone: session[session.default].user_phone,
           default_currency: this.default_currency,
           rb_currency: this.activeVendorPriceData.currency,
+          secondary_profile: secondaryProfile,
         };
 
         const payload = {
@@ -892,6 +1703,11 @@ export default {
 
     getCardValue(last4digits) {
       return `2_${last4digits}`;
+    },
+
+    formatCardNumber(cardno) {
+      const last4 = cardno.substring(cardno.length - 4, cardno.length);
+      return `**** **** **** ${last4}`;
     },
 
     setDefaultOptions() {
@@ -943,6 +1759,14 @@ export default {
         // ...
       }
     },
+    trackGAEvent(eventLabel) {
+      const eventPayload = {
+        eventCategory: 'Sendy Dedicated',
+        eventAction: 'Click',
+        eventLabel,
+      };
+      this.fireGAEvent(eventPayload);
+    },
 
     /* start mpesa */
 
@@ -975,6 +1799,7 @@ export default {
         phone: userPhone,
         email: userEmail,
         currency: this.activeVendorPriceData.currency,
+        vendorType: this.activeVendorPriceData.vendor_id,
       };
       const fullPayload = {
         values: mpesaPayload,
@@ -1034,13 +1859,16 @@ export default {
       if (session.default === 'biz') {
         copId = session.biz.cop_id;
       }
-
+      const profile_id = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
+      const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
+      const secondaryProfile = session.default === 'biz' ? this.getPriceRequestObject.client_id - profile_id === 100000000 : this.getPriceRequestObject.user_id - profile_id === 100000000;
       const oldRb = this.$store.getters.getRunningBalance;
       const runningBalancePayload = {
-        copId,
+        [profile_name]: profile_id,
         phone: session[session.default].user_phone,
         default_currency: session[session.default].default_currency,
         rb_currency: session[session.default].default_currency,
+        secondary_profile: secondaryProfile,
       };
 
       const payload = {
@@ -1058,19 +1886,23 @@ export default {
         (function (pollCount) {
           // eslint-disable-next-line consistent-return
           that.mpesa_poll_timer_id = window.setTimeout(() => {
-            const res = that.checkRunningBalance(oldRb, payload);
-            if (res) {
+            if (!that.mpesa_payment_state) {
+              that.checkRunningBalance(oldRb, payload);
+            }
+            if (that.mpesa_payment) {
               // eslint-disable-next-line no-param-reassign
               pollCount = pollLimit;
               that.payment_state = 0;
               that.loading = false;
               that.doNotification('1', 'Payment successful', 'Completing your order...');
               that.doCompleteOrder();
+              that.mpesa_payment = false;
+              that.mpesa_payment_state = true;
               return true;
             }
 
             if (pollLimitValue === 6) {
-              if (pollCount === 5) {
+              if (pollCount === 5 && !that.mpesa_payment_state) {
                 that.doNotification(
                   '0',
                   'Payment not received',
@@ -1080,6 +1912,7 @@ export default {
                 that.loading = false;
                 that.requestMpesaPaymentPoll(60);
                 that.mpesa_payment_state = false;
+                that.mpesa_payment = false;
               }
             }
           }, 10000 * pollCount);
@@ -1094,16 +1927,20 @@ export default {
             // eslint-disable-next-line no-param-reassign,prefer-destructuring
             response = response[0];
           }
-          if (response.status === 200) {
-            const newRb = response.data.data.running_balance;
-            if (newRb > oldRb) {
-              this.completeMpesaPaymentRequest({});
-              this.mpesa_payment = true;
+          if (!this.mpesa_payment_state) {
+            if (response.status === 200) {
+              const newRb = response.data.data.running_balance;
+              if (newRb > oldRb) {
+                this.completeMpesaPaymentRequest({});
+                this.mpesa_payment = true;
+              } else {
+                this.mpesa_payment = false;
+              }
             } else {
               this.mpesa_payment = false;
             }
           } else {
-            this.mpesa_payment = false;
+            this.requestMpesaPaymentPoll(60);
           }
         },
         // eslint-disable-next-line no-unused-vars
@@ -1151,25 +1988,18 @@ export default {
         cop_id: copId,
       };
 
-      // encrypt card payload here
-      cardPayload = Mcrypt.encrypt(cardPayload);
-
       const fullPayload = {
         values: cardPayload,
-        app: 'PRIVATE_API',
-        endpoint: 'get_card',
+        app: 'AUTH',
+        endpoint: 'customers/get_saved_cards',
       };
 
       this.requestSavedCards(fullPayload).then(
         (response) => {
-          // decrypt response here
-          // eslint-disable-next-line no-param-reassign
-          response = JSON.parse(Mcrypt.decrypt(response));
           if (response.status) {
             this.setSavedCards(response.cards);
-            this.setStripeUserId(response.stripe_user_id);
           } else {
-            // console.log('failed to get saved cards');
+            this.setSavedCards([]);
           }
         },
         // eslint-disable-next-line no-unused-vars
@@ -1184,6 +2014,7 @@ export default {
           if (payOption === 1) {
             const accountType = 'Individual';
             const payload = {
+              currency: this.getPriceRequestObject.currency,
               country_code: this.getCountryCode,
               account_type: accountType,
               entry_point: 'Customer App Price Request',
@@ -1222,21 +2053,30 @@ export default {
       let payment = [];
       payment = data.payment_methods;
 
-      const exist = data.payment_methods.find(available => available.name === 'Cash');
+      const exist = data.payment_methods.find(available => available.payment_method_id === 5);
+
+      if (exist && (this.$route.path === '/orders/dedicated/multi-destination' || this.$route.path === '/orders/dedicated/no-destination')) {
+        data.payment_methods.splice(data.payment_methods.indexOf(exist), 1);
+      }
 
       if (exist === undefined || exist === null) {
         payment = data.payment_methods;
       } else {
         const runningBalance = this.getRunningBalance;
-        if ((runningBalance >= 0) && (runningBalance - this.order_cost < 0)) {
+        if (runningBalance >= 0 && runningBalance - this.order_cost < 0) {
           payment = data.payment_methods;
         } else {
-          const cashIndex = data.payment_methods.findIndex(index => index.name === 'Cash');
+          const cashIndex = data.payment_methods.findIndex(index => index.payment_method_id === 5);
           payment = data.payment_methods.splice(cashIndex, 1);
         }
       }
 
       this.payment_methods = data.payment_methods;
+      this.payment_methods.forEach((row) => {
+        if (row.payment_method_id === 2) {
+          this.setCardPaymentStatus(true);
+        }
+      });
     },
 
     /* end card */
@@ -1258,7 +2098,11 @@ export default {
       this.mpesa_valid = intValue !== '+256';
     },
     isValidateLoadWeightStatus() {
-      if (this.activeVendorPriceData.vendor_id === 25 && !this.getLoadWeightStatus && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+      if (
+        this.activeVendorPriceData.vendor_id === 25
+        && !this.getLoadWeightStatus
+        && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')
+      ) {
         this.doNotification('2', 'Invalid Load Weight', 'Kindly provide a valid load weight');
         return false;
       }
@@ -1312,10 +2156,106 @@ export default {
       }
       return true;
     },
+
+    handleOrderPlacementError(data) {
+      this.doNotification(
+        2,
+        'Order Completion Failed',
+        'Kindly ensure you are using your Business account and retry .',
+      );
+      this.trackMixpanelEvent('Business Order Fail Alert', {
+        'Account ': data.type,
+        'Client Type': 'Web Platform',
+        'Payment Mode': data.payment_method,
+        'Client Mode': data.cop_id,
+        'User Email': data.user_email,
+        'User Phone': data.user_phone,
+        'Order Number': data.trans_no,
+        'Order Amount': data.amount,
+        'Schedule Time': data.schedule_time,
+        'Schedule Status': data.schedule_status,
+        'Carrier Type ID': data.carrier_type,
+        'Vendor Type ID': data.vendor_type,
+      });
+
+      setTimeout(() => {
+        location.reload();
+      }, 4000);
+    },
+    handleClose() {
+      // Do nothing ...
+    },
+    getVendorIcon(id) {
+      return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
+    },
+    scheduleTimeSummary() {
+      let resp = 'As soon as possible';
+      if (this.order_is_scheduled) {
+        resp = this.scheduled_time;
+      }
+      return resp;
+    },
+    pickUpInstructions() {
+      let value = true;
+      if (this.getInstructionNotes[0] === '' || this.getInstructionNotes[0] === undefined) {
+        value = false;
+      }
+      return value;
+    },
+    dropOffInstructions() {
+      const data = this.getInstructionNotes.slice(1);
+      let value = true;
+      if (data.length === 0) {
+        value = false;
+      }
+      return value;
+    },
+    deliveryNotesData() {
+      return this.getInstructionNotes.slice(1);
+    },
+    carrierTypeSummary() {
+      const carrierType = this.final_carrier_type;
+      let resp = 'Any';
+      if (this.largeVendors.includes(this.activeVendorPriceData.vendor_id)) {
+        if (carrierType === 3) {
+          resp = 'Refrigerated';
+        } else if (carrierType === 4) {
+          resp = 'Flatbed/Skeleton';
+        } else if (carrierType === 5) {
+          resp = 'Tipper';
+        } else if (carrierType === 6) {
+          resp = 'Refeer';
+        } else if (carrierType === 7) {
+          resp = 'Highside';
+        } else {
+          resp = 'Closed/Boxed body';
+        }
+      } else if (this.mediumVendors.includes(this.activeVendorPriceData.vendor_id)) {
+        if (carrierType === 0) {
+          resp = 'Open';
+        } else if (carrierType === 1) {
+          resp = 'Closed';
+        } else {
+          resp = 'Any';
+        }
+      } else if (carrierType === 0) {
+        resp = 'Bike without box';
+      } else if (carrierType === 1) {
+        resp = 'Bike with box';
+      } else if (carrierType === 3) {
+        resp = 'Refrigerated';
+      } else if (carrierType === 4) {
+        resp = 'Flatbed';
+      } else {
+        resp = 'Any';
+      }
+      return resp;
+    },
+
   },
 };
 </script>
 
 <style lang="css">
-@import '../../../../../assets/styles/orders_order_placement_options.css';
+@import '../../../../../assets/styles/orders_order_placement_options.css?v=1';
 </style>

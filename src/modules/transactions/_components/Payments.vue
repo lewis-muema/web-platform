@@ -44,7 +44,17 @@
         </button>
       </div>
     </div>
-
+    <div class="currencies-section">
+      <div
+        v-for="(currency, index) in currencies"
+        :key="index"
+        class="currency-selectors"
+        :class="activeCurrency === currency ? 'active-currency' : ''"
+        @click="activeCurrency = currency"
+      >
+        {{ currency }}
+      </div>
+    </div>
     <el-table
       :data="payment_data"
       style="width: 100%"
@@ -101,11 +111,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
 
 const moment = require('moment');
 
 export default {
   name: 'Payments',
+  mixins: [TimezoneMxn],
   data() {
     return {
       empty_payments_state: 'Fetching Payments',
@@ -118,12 +130,15 @@ export default {
         to_date: '',
       },
       filteredPaymentData: [],
+      currencies: [],
+      activeCurrency: '',
     };
   },
   computed: {
     ...mapGetters({
       getSess: 'getSession',
-      paymentData: '$_transactions/getPayments',
+      unfilteredPaymentData: '$_transactions/getPayments',
+      getUserCurrencies: '$_transactions/getUserCurrencies',
     }),
     payment_data() {
       const from = (this.pagination_page - 1) * this.pagination_limit;
@@ -141,6 +156,15 @@ export default {
     payment_total() {
       return this.paymentData.length;
     },
+    paymentData() {
+      const orderHistory = [];
+      this.unfilteredPaymentData.forEach((row) => {
+        if (row.currency === this.activeCurrency) {
+          orderHistory.push(row);
+        }
+      });
+      return orderHistory;
+    },
   },
   watch: {
     getSess: {
@@ -149,43 +173,51 @@ export default {
       },
       deep: true,
     },
+    paymentData() {
+      this.currencies = this.getUserCurrencies;
+    },
   },
   mounted() {
     this.loadPayments();
+    this.currencies = this.getUserCurrencies;
+    const sessionData = this.$store.getters.getSession;
+    this.activeCurrency = sessionData[sessionData.default].default_currency;
   },
   methods: {
     ...mapActions(['$_transactions/requestPayments']),
     loadPayments() {
       const sessionData = this.$store.getters.getSession;
-      let paymentPayload = {};
+      if (Object.keys(sessionData).length > 0) {
+        let paymentPayload = {};
 
-      if (sessionData.default === 'biz') {
-        paymentPayload = {
-          cop_id: sessionData.biz.cop_id,
-          user_type: sessionData.biz.user_type,
-          user_id: sessionData.biz.user_id,
+        if (sessionData.default === 'biz') {
+          paymentPayload = {
+            cop_id: sessionData.biz.cop_id,
+            user_type: sessionData.biz.user_type,
+            user_id: sessionData.biz.user_id,
+          };
+        } else {
+          // create peer payload
+          paymentPayload = {
+            user_id: sessionData[sessionData.default].user_id,
+          };
+        }
+
+        const fullPayload = {
+          values: paymentPayload,
+          vm: this,
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'payments',
         };
-      } else {
-        // create peer payload
-        paymentPayload = {
-          user_id: sessionData[sessionData.default].user_id,
-        };
+        this.$store.dispatch('$_transactions/requestPayments', fullPayload).then(
+          () => {
+            this.empty_payments_state = 'Payments Not Found';
+          },
+          () => {
+            this.empty_payments_state = 'Payments Failed to Fetch';
+          },
+        );
       }
-
-      const fullPayload = {
-        values: paymentPayload,
-        vm: this,
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'payments',
-      };
-      this.$store.dispatch('$_transactions/requestPayments', fullPayload).then(
-        () => {
-          this.empty_payments_state = 'Payments Not Found';
-        },
-        () => {
-          this.empty_payments_state = 'Payments Failed to Fetch';
-        },
-      );
     },
     take_to_payment() {
       this.$router.push('/payment/mpesa');
@@ -254,7 +286,8 @@ export default {
     },
 
     formatDate(row) {
-      return moment(row.date_time).format('MMM Do YYYY, h:mm a');
+      const localTime = this.convertToUTCToLocal(row.date_time);
+      return moment(localTime).format('MMM Do YYYY, h:mm a');
     },
     formatAmount(row) {
       let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');

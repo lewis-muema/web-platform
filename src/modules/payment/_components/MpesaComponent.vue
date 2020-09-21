@@ -159,7 +159,7 @@ export default {
       if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
       }
-      const oldRb = this.$store.getters.getRunningBalance;
+      const oldRb = Math.abs(this.$store.getters.getRunningBalance);
 
       const runningBalancePayload = {
         values: {
@@ -222,9 +222,9 @@ export default {
           }
           if (response.status === 200) {
             // check if rb has changed
-            const newRb = response.data.running_balance;
+            const newRb = Math.abs(response.data.running_balance);
 
-            if (newRb < oldRb) {
+            if (newRb > oldRb) {
               that._completeMpesaPaymentRequest({});
               return true;
             }
@@ -263,6 +263,7 @@ export default {
         phone: this.mpesa_payment_data.phone_number, // confirm about this later
         email: user_email,
         currency: session[session.default].default_currency,
+        vendorType: 1,
       };
 
       // TODO: implement the discount bundles if needed

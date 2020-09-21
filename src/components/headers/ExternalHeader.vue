@@ -26,4 +26,17 @@ export default {
     width: 60%;
     padding-left: 40%;
 }
+@media (max-width: 500px) {
+  .external-header__img {
+    width: 100%;
+    padding-left: 30%;
+   }
+  .header--item__left {
+    text-align: center;
+  }
+  .logo {
+    margin: auto;
+    padding: 0px;
+  }
+}
 </style>

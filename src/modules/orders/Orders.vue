@@ -7,79 +7,295 @@
       class="box"
     >
       <div
+        v-if="activeClass > -1 && tourViewStatus && getDedicatedAccessStatus"
+        class="pointer-container"
+        :style="{top: offsettop() + 'px', left: offsetleft() + 'px'}"
+      >
+        <div class="tour-pointer" />
+        <div
+          class="tour-actions"
+        >
+          <p class="tour-title">
+            {{ dedicatedTourPoints[activeClass].title }}
+          </p>
+          <p class="tour-description">
+            {{ dedicatedTourPoints[activeClass].description }}
+          </p>
+          <p
+            v-if="activeClass === 0 || activeClass === dedicatedTourPoints.length - 1"
+            class="tour-end"
+            @click="skipTour()"
+          >
+            End tour
+          </p>
+          <p
+            v-if="activeClass === 1"
+            class="tour-end"
+            @click="selectPickup()"
+          >
+            NEXT
+          </p>
+        </div>
+      </div>
+      <div
         v-if="blinder_status"
         class="blinder"
+        :class="countdown_status ? 'blinder-override' : ''"
       >
-        <div class="discounts_popup" v-if="discount_status">
-          <div class="discount-status">
-            <i
-              v-if="!loading_status"
-              slot="suffix"
-              class="close el-input__icon el-icon-error"
-              @click="closeDiscountPopup()"
-            />
-            <img
-              v-if="icon_class === 'el-icon-close'"
-              src="https://images.sendyit.com/web_platform/orders/Frown.svg"
-              class="frown-icon-class"
-            >
-            <i
-              v-else
-              id="icon_override"
-              slot="suffix"
-              class="el-input__icon"
-              :class="icon_class"
-            />
-            <p class="discounts-description">
-              {{ message }}
+        <div
+          v-if="upload_status"
+          class="upload-popup"
+        >
+          <i
+            slot="suffix"
+            class="close el-input__icon el-icon-error"
+            @click="closePopup()"
+          />
+          <img
+            src="https://images.sendyit.com/web_platform/orders/upload.png"
+            class="upload-photo"
+          >
+          <p class="no-margin upload-par">
+            <span
+              class="upload-link"
+              @click="simulateClick()"
+            >Click here</span> to upload
+          </p>
+          <p class="no-margin upload-text">
+            (We support .csv .xlsx and .xml)
+          </p>
+          <input
+            id="upload-input"
+            ref="uploadbttn"
+            type="file"
+            accept=".xls,.xlsx,.csv,.xml"
+            @change="attachUpload"
+          >
+          <button
+            id="upload-button"
+            class="upload-csv-button"
+            :class="uploadBtn"
+            :disabled="uploadBtn === 'button--primary-inactive inactive-1'"
+            @click="upload()"
+          >
+            Upload CSV
+          </button>
+        </div>
+        <div
+          v-if="success_status"
+          class="upload-popup"
+        >
+          <i
+            slot="suffix"
+            class="close el-input__icon el-icon-error"
+            @click="closePopup()"
+          />
+          <img
+            src="https://images.sendyit.com/web_platform/orders/OrderConfirmation.svg"
+            class="upload-photo"
+          >
+          <p class="no-margin upload-par">
+            Your file has been uploaded! An order will be generated shortly.
+          </p>
+        </div>
+        <div
+          v-if="countdown_status"
+          class="countdown-popup"
+        >
+          <img
+            class="countdown-img"
+            src="https://images.sendyit.com/web_platform/orders/countdown.png"
+          >
+          <div class="countdown-container">
+            <p class="countdown-heading">
+              SENDY FREIGHT
             </p>
-            <button
-              v-if="!loading_status"
-              class="discount-popup-dismiss"
-              @click="closeDiscountPopup()"
-            >
-              OK
-            </button>
+            <p class="countdown-par">
+              LAUNCHING SOON
+            </p>
+            <div class="timer">
+              <span class="countdown-time">
+                <p class="timer-digits">{{ days }}</p>
+                <p class="timer-description">DAYS</p>
+              </span>
+              <span class="countdown-divider">:</span>
+              <span class="countdown-time">
+                <p class="timer-digits">{{ hours }}</p>
+                <p class="timer-description">HOURS</p>
+              </span>
+              <span class="countdown-divider">:</span>
+              <span class="countdown-time">
+                <p class="timer-digits">{{ minutes }}</p>
+                <p class="timer-description">MINUTES</p>
+              </span>
+              <span class="countdown-divider">:</span>
+              <span class="countdown-time">
+                <p class="timer-digits">{{ seconds }}</p>
+                <p class="timer-description">SECONDS</p>
+              </span>
+            </div>
           </div>
         </div>
-        <div class="upload-popup" v-if="upload_status">
-          <i
-            slot="suffix"
-            class="close el-input__icon el-icon-error"
-            @click="closeDiscountPopup()"
-          />
-          <img src="https://images.sendyit.com/web_platform/orders/upload.png" class="upload-photo" />
-          <p class="no-margin upload-par">Drag and drop your file or <span class="upload-link" @click="simulateClick()">click here</span> to upload</p>
-          <p class="no-margin upload-text">(We support .csv .xlsx .xml and .ods)</p>
-          <input type="file" id="upload-input" accept=".xls,.xlsx,.csv,.xml" @change="attachUpload" ref="uploadbttn">
-          <button @click="upload()" class="upload-csv-button" :class="uploadBtn" :disabled="uploadBtn === 'button--primary-inactive'" id="upload-button">Upload CSV</button>
+        <div
+          v-if="tour_status"
+          class="tour-popup"
+        >
+          <p class="tour-popup-description">
+            Hello! We’ve added a new feature, the open destination orders. We’d like to give you a quick tour of this new feature.
+          </p>
+          <p
+            class="tour-popup-get-started"
+            @click="startTour()"
+          >
+            Let’s get started!
+          </p>
+          <p
+            class="tour-popup-skip"
+            @click="skipTour()"
+          >
+            Skip tour
+          </p>
         </div>
-        <div class="upload-popup" v-if="success_status">
-          <i
-            slot="suffix"
-            class="close el-input__icon el-icon-error"
-            @click="closeDiscountPopup()"
-          />
-          <img src="https://images.sendyit.com/web_platform/orders/OrderConfirmation.svg" class="upload-photo" />
-          <p class="no-margin upload-par">Your file has been uploaded, and an order as been generated!</p>
-        </div>        
       </div>
       <map-component />
-      <FbuChildOrders v-if="this.$route.path === '/orders/freight'" />
-      <FbuChildOrderTracking v-else-if="this.$route.name === 'freight_order_tracking'" />
-      <ongoing-component v-else />
+      <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
+      <ongoing-component v-if="this.$route.name !== 'freight_order_tracking' && this.$route.name !== 'freight_order_placement'" />
+      <NPSFooter v-if="!nps_status" />
       <transition
         name="fade"
         mode="out-in"
       >
         <router-view />
       </transition>
+      <transition
+        name="fade"
+        mode="out-in"
+      >
+        <div class="cancel-pop-up">
+          <el-dialog
+            :visible.sync="updateCrmData"
+            width="30%"
+            class="updateCrmDialog"
+            :before-close="handleClose"
+            :modal-append-to-body="false"
+          >
+            <div class="finish-setup-outer">
+              <p class="crm-setup">
+                Finish account set up
+              </p>
+              <div class="">
+                <div class="">
+                  <label class="final-label">Does your business file VAT returns? (optional)</label>
+                  <div
+                    class="final-upper-padding"
+                  >
+                    <el-select
+                      v-model="tax_compliance"
+                      placeholder="Select"
+                      class="compliance-select-final"
+                    >
+                      <el-option
+                        v-for="item in taxOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                </div>
+
+                <div
+                  v-if="tax_compliance"
+                  class="final-upper-padding"
+                >
+                  <label class="final-label">Enter your business KRA pin</label>
+                  <div
+                    class="final-upper-padding"
+                  >
+                    <input
+                      v-model="kra_pin"
+                      class="input-control upgrade-final"
+                      type="text"
+                      name="kra_pin"
+                      placeholder="KRA PIN"
+                      autocomplete="on"
+                    >
+                    <span
+                      v-show="!valid_kra_pin"
+                      class="invalid-kra"
+                    >
+                      Please enter a valid KRA PIN
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class="final-upper-padding"
+                >
+                  <label class="final-label">
+                    Select the primary vehicle you will be using for your business.
+                  </label>
+                  <p class="final-inner">
+                    (This will not restrict you from using other vehicles)
+                  </p>
+                  <div
+                    class="final-upper-padding"
+                  >
+                    <div class="vendors-final-outerline">
+                      <div
+                        class="vendor-final-cards"
+                        :class="{ vendor_active_final: activeTab === 'mbu' }"
+                        @click="selectCard('mbu',1)"
+                      >
+                        <img
+                          class="vendor-types-final"
+                          :src="getVendorIcon(1)"
+                          alt=""
+                        >
+                      </div>
+                      <div
+                        class="vendor-final-cards"
+                        :class="{ vendor_active_final: activeTab === 'ebu' }"
+                        @click="selectCard('ebu',2)"
+                      >
+                        <img
+                          class="vendor-types-final"
+                          :src="getVendorIcon(6)"
+                          alt=""
+                        >
+                      </div>
+                      <div
+                        class="vendor-final-cards"
+                        :class="{ vendor_active_final: activeTab === 'fbu' }"
+                        @click="selectCard('fbu',3)"
+                      >
+                        <img
+                          class="vendor-types-final"
+                          :src="getVendorIcon(25)"
+                          alt=""
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="">
+                  <input
+                    class="button-primary final-step-submit"
+                    type="submit"
+                    value="Submit"
+                    @click="submit"
+                  >
+                </div>
+              </div>
+            </div>
+          </el-dialog>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 import S3 from 'aws-s3';
 import orderStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
@@ -87,30 +303,105 @@ import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
 import OngoingComponent from './_components/OngoingComponent.vue';
 import FbuChildOrders from './_components/FbuChildOrders.vue';
-import FbuChildOrderTracking from './_components/tracking/_components/FbuChildOrderTracking.vue';
+import NPSFooter from '../../components/footers/NPSFooter.vue';
+import NpsMixin from '../../mixins/nps_mixin';
+import SessionMxn from '../../mixins/session_mixin';
+import NotificationMxn from '../../mixins/notification_mixin';
+
+let interval = '';
 
 export default {
   name: 'Orders',
-  components: { MainHeader, MapComponent, OngoingComponent, FbuChildOrders, FbuChildOrderTracking },
-  mixins: [RegisterStoreModule],
+  components: {
+    MainHeader, MapComponent, OngoingComponent, FbuChildOrders, NPSFooter,
+  },
+  mixins: [RegisterStoreModule, NpsMixin, SessionMxn, NotificationMxn],
   data() {
     return {
       icon_class: '',
       message: '',
       loading_status: false,
       blinder_status: false,
+      countdown_status: false,
       discount_status: false,
       upload_status: false,
+      tour_status: false,
       uploadButton: '',
       success_status: false,
+      countdown: '',
+      days: '00',
+      hours: '00',
+      minutes: '00',
+      seconds: '00',
+      updateCrmData: false,
+      tax_compliance: '',
+      kra_pin: '',
+      activeTab: '',
+      primary_business_unit: '',
+      taxOptions: [
+        {
+          value: true,
+          label: 'Yes',
+        },
+        {
+          value: false,
+          label: 'No',
+        },
+      ],
+      activeClass: -1,
+      dedicatedTourPoints: [
+        {
+          title: 'Order Type: Dedicated vehicles',
+          description: 'Get a truck for a whole day to do all your deliveries. We handle your logistics while you focus on your core business',
+          class: '.tour-pointer-1',
+        },
+        {
+          title: 'Order Type: No Destination',
+          description: 'With no destination vehicles you can skip adding a destination or add a general region to deliver in and the driver will check off each delivery stop. Enter the pick up location input to continue',
+          class: '.tour-pointer-2',
+        },
+        {
+          title: 'Vehicle Type',
+          description: 'Select multiple vehicle types and multiple vehicles of the same vehicle type',
+          class: '.tour-pointer-3',
+        },
+        {
+          title: 'Select Vehicle type',
+          description: 'Select open or closed vehicles for pick ups and bikes',
+          class: '.tour-pointer-4',
+        },
+        {
+          title: 'Schedule',
+          description: 'Select the date for your deliveries',
+          class: '.tour-pointer-5',
+        },
+        {
+          title: 'Schedule: Time',
+          description: 'Select the time-frame you’d like your deliveries done',
+          class: '.tour-pointer-6',
+        },
+      ],
     };
   },
   computed: {
+    ...mapGetters({
+      getNPSStatus: 'getNPSStatus',
+      getDedicatedAccessStatus: 'getDedicatedAccessStatus',
+      get_session: 'getSession',
+    }),
     uploadBtn() {
       if (this.uploadButton) {
         return 'button-primary';
       }
-      return 'button--primary-inactive';
+      return 'button--primary-inactive inactive-1';
+    },
+    valid_kra_pin() {
+      const pin = this.kra_pin;
+
+      if (pin !== '') {
+        return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+      }
+      return true;
     },
   },
   watch: {
@@ -119,6 +410,38 @@ export default {
       this.$store.commit('$_orders/removeMarkers', []);
       this.$store.commit('$_orders/$_tracking/setTrackedOrder', '');
       this.clearVendorMarkers();
+      this.checkTourStatus();
+      if (to.path === '/orders/dedicated/no-destination' && this.tourViewStatus && this.getDedicatedAccessStatus) {
+        this.activeClass = -1;
+        setTimeout(() => {
+          this.activeClass = 1;
+        }, 1000);
+      }
+      if (to.path === '/orders' && this.tourViewStatus && this.getDedicatedAccessStatus) {
+        this.activeClass = -1;
+        setTimeout(() => {
+          this.activeClass = 0;
+        }, 1000);
+      }
+    },
+    activeClass() {
+      clearInterval(interval);
+      if (this.activeClass > 2 && this.tourViewStatus && this.getDedicatedAccessStatus) {
+        interval = setInterval(() => {
+          this.offset();
+        }, 10);
+      }
+    },
+    get_session: {
+      handler(val) {
+        if (val.default === 'biz') {
+          this.setDedicatedAccessStatus(true);
+        } else {
+          this.setDedicatedAccessStatus(false);
+          this.redirectToOrders();
+        }
+      },
+      deep: true,
     },
   },
 
@@ -126,37 +449,194 @@ export default {
     this.registerOrdersStore();
     // const STORE_KEY = '$_orders';
     // this.register_store_module(STORE_KEY, orderStore);
+    this.$nextTick(() => {
+      this.checkTourStatus();
+      if (this.$route.path === '/orders' && this.tourViewStatus && this.getDedicatedAccessStatus) {
+        this.blinder_status = true;
+        this.tour_status = true;
+      }
+      if (this.$route.path === '/orders/dedicated/no-destination' && this.tourViewStatus && this.getDedicatedAccessStatus) {
+        setTimeout(() => {
+          this.activeClass = 1;
+        }, 1000);
+      }
+    });
   },
   mounted() {
     this.checkSession();
     this.rootListener();
+    this.isNewCopAcc();
+    this.sessionFrefill();
+    const session = this.$store.getters.getSession;
+    if (session.default === 'biz') {
+      this.setDedicatedAccessStatus(true);
+    }
+    this.redirectToOrders();
   },
   destroyed() {
+    clearInterval(this.countdown);
     const session = this.$store.getters.getSession;
     if (localStorage.jwtToken && !['order_placement', 'by_pass', 'rating', 'tracking'].includes(this.$route.name) && Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
       this.$router.push('/orders');
     }
   },
   methods: {
-    ...mapGetters({
-      getDiscountLoadingStatus: '$_orders/$_components/$_home/getDiscountLoadingStatus',
-    }),
     ...mapMutations({
       clearVendorMarkers: '$_orders/clearVendorMarkers',
+      setDedicatedAccessStatus: 'setDedicatedAccessStatus',
     }),
+    isNewCopAcc() {
+      let isSet = false;
+      const session = this.$store.getters.getSession;
+      if (Object.keys(session).length > 0) {
+        if (session.default === 'biz') {
+          // Admin
+
+          if (session[session.default].user_type === 2) {
+            if (session[session.default].primary_business_unit === 0
+              || session[session.default].primary_business_unit === null) {
+              isSet = true;
+            }
+          }
+        }
+      }
+      this.updateCrmData = isSet;
+    },
+    checkTourStatus() {
+      if (process.browser && Object.prototype.hasOwnProperty.call(localStorage, 'tourViewStatus') && JSON.parse(localStorage.tourViewStatus)) {
+        this.tourViewStatus = false;
+      } else {
+        this.tourViewStatus = true;
+      }
+    },
+    redirectToOrders() {
+      if ((this.$route.path === '/orders/dedicated/no-destination' || this.$route.path === '/orders/dedicated/multi-destination') && !this.getDedicatedAccessStatus) {
+        this.$router.push('/orders');
+      }
+    },
+    startTour() {
+      localStorage.tourViewStatus = false;
+      this.activeClass = 0;
+      this.blinder_status = false;
+      this.tour_status = false;
+      this.checkTourStatus();
+    },
+    skipTour() {
+      localStorage.tourViewStatus = true;
+      this.blinder_status = false;
+      this.tour_status = false;
+      this.checkTourStatus();
+      this.activeClass = -1;
+    },
+    offset() {
+      const tourClass = this.activeClass > -1 ? document.querySelector(this.dedicatedTourPoints[this.activeClass].class) : null;
+      if (tourClass === null) {
+        this.activeClass = -1;
+      }
+      document.querySelector('.pointer-container').style.top = `${tourClass === null ? 0 : tourClass.getBoundingClientRect().top - document.querySelector('#orders_container').getBoundingClientRect().top}px`;
+      document.querySelector('.pointer-container').style.left = `${tourClass === null ? 0 : tourClass.getBoundingClientRect().left - document.querySelector('#orders_container').getBoundingClientRect().left}px`;
+    },
+    offsettop() {
+      const tourClass = this.activeClass > -1 ? document.querySelector(this.dedicatedTourPoints[this.activeClass].class) : null;
+      if (tourClass === null) {
+        this.activeClass = -1;
+      }
+      return tourClass === null ? 0 : tourClass.getBoundingClientRect().top - document.querySelector('#orders_container').getBoundingClientRect().top;
+    },
+    offsetleft() {
+      const tourClass = this.activeClass > -1 ? document.querySelector(this.dedicatedTourPoints[this.activeClass].class) : null;
+      if (tourClass === null) {
+        this.activeClass = -1;
+      }
+      return tourClass === null ? 0 : tourClass.getBoundingClientRect().left - document.querySelector('#orders_container').getBoundingClientRect().left;
+    },
+    triggerFocus(element) {
+      const eventType = 'onfocusin' in element ? 'focusin' : 'focus';
+      const bubbles = 'onfocusin' in element;
+      let event;
+
+      if ('createEvent' in document) {
+        event = document.createEvent('Event');
+        event.initEvent(eventType, bubbles, true);
+      } else if ('Event' in window) {
+        event = new Event(eventType, { bubbles, cancelable: true });
+      }
+
+      element.focus();
+      element.dispatchEvent(event);
+    },
+    selectPickup() {
+      document.querySelector('#homeview--pick-up-location-input').click();
+      this.triggerFocus(document.querySelector('#homeview--pick-up-location-input'));
+    },
+    sessionFrefill() {
+      const session = this.$store.getters.getSession;
+      if (Object.keys(session).length > 0) {
+        if (session.default === 'biz'
+        && Object.prototype.hasOwnProperty.call(session[session.default], 'tax_authority_pin')) {
+          if (session[session.default].tax_authority_pin === null) {
+            this.tax_compliance = '';
+            this.kra_pin = '';
+          } else if (session[session.default].tax_authority_pin !== '') {
+            this.tax_compliance = true;
+            this.kra_pin = session[session.default].tax_authority_pin;
+          } else {
+            this.tax_compliance = false;
+            this.kra_pin = '';
+          }
+        }
+      }
+    },
     rootListener() {
-      this.$root.$on('Discount loading status', (arg1, arg2, arg3, arg4) => {
-        this.icon_class = arg1;
-        this.message = arg2;
-        this.loading_status = arg3;
-        this.blinder_status = arg4;
-        this.discount_status = arg4;
-      });
       this.$root.$on('Upload status', (arg1) => {
         this.blinder_status = arg1;
         this.upload_status = arg1;
         this.success_status = false;
       });
+      this.$root.$on('tour class', (arg1, arg2) => {
+        if (this.tourViewStatus && this.getDedicatedAccessStatus) {
+          if (this.activeClass === 5) {
+            clearInterval(interval);
+          }
+          if (this.activeClass === 0) {
+            this.activeClass = -1;
+          }
+          setTimeout(() => {
+            this.activeClass = arg1;
+          }, arg2);
+        }
+      });
+      this.$root.$on('tour class hidden', () => {
+        if (this.tourViewStatus && this.getDedicatedAccessStatus) {
+          if (this.activeClass === 5) {
+            this.skipTour();
+          }
+          this.activeClass = -1;
+        }
+      });
+      this.$root.$on('Countdown status', (arg1, arg2) => {
+        this.blinder_status = arg1;
+        this.countdown_status = arg1;
+        clearInterval(this.countdown);
+        if (arg1) {
+          this.start_countdown(arg2);
+        }
+      });
+    },
+    start_countdown(time) {
+      let secs = time.seconds;
+      this.countdown = setInterval(() => {
+        this.days = this.moment.duration(secs, 'seconds').get('days');
+        this.hours = this.moment.duration(secs, 'seconds').get('hours');
+        this.minutes = this.moment.duration(secs, 'seconds').get('minutes');
+        this.seconds = this.moment.duration(secs, 'seconds').get('seconds');
+        if (secs === 0) {
+          this.blinder_status = false;
+          this.countdown_status = false;
+        } else {
+          secs -= 1;
+        }
+      }, 1000);
     },
     registerOrdersStore() {
       const moduleIsRegistered = this.$store._modules.root._children.$_orders !== undefined;
@@ -188,9 +668,12 @@ export default {
       S3Client
         .uploadFile(this.uploadButton, fileName)
         .then((data) => {
+          this.uploadButton = '';
           this.succesfullUpload(data);
         })
-        .catch(err => console.error(err));
+        .catch((err) => {
+          this.doNotification(2, 'Failed to upload file', 'Please check your connection and try again');
+        });
     },
     checkSession() {
       const session = this.$store.getters.getSession;
@@ -210,8 +693,82 @@ export default {
         }, 5000);
       }
     },
-    closeDiscountPopup() {
+    doNotification(level, title, message) {
+      const notification = { title, level, message };
+      this.displayNotification(notification);
+    },
+    closePopup() {
       this.blinder_status = false;
+    },
+    handleClose() {
+      // Do nothing ...
+    },
+    selectCard(tab, code) {
+      this.activeTab = tab;
+      this.primary_business_unit = code;
+    },
+    getVendorIcon(id) {
+      return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
+    },
+    submit() {
+      if (this.primary_business_unit === '') {
+        this.doNotification(2, 'Final set up error !', 'Please select primary type vehicle');
+      } else if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
+        this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
+      } else {
+        const session = this.$store.getters.getSession;
+        const values = {
+          cop_id: session[session.default].cop_id,
+          cop_name: session[session.default].cop_name,
+          cop_contact_person: session[session.default].cop_contact_person,
+          cop_email: session[session.default].cop_biz_email,
+          cop_phone: session[session.default].cop_biz_phone,
+          tax_authority_pin: this.kra_pin,
+          primary_business_unit: this.primary_business_unit,
+        };
+
+        this.$store
+          .dispatch('$_orders/requestCopInfo', values)
+          .then((response) => {
+            if (response.status) {
+              const updatedSession = session;
+              updatedSession[session.default].primary_business_unit = this.primary_business_unit;
+              updatedSession[session.default].tax_authority_pin = this.kra_pin;
+
+
+              const newSession = JSON.stringify(updatedSession);
+              this.setSession(newSession);
+
+              const level = 1; // success
+              const notification = {
+                title: 'Final set up complete!',
+                level,
+                message: 'Details saved successfully',
+              };
+              this.isNewCopAcc();
+
+              this.$store.commit('setNotification', notification);
+              this.$store.commit('setNotificationStatus', true);
+            } else {
+              const level = 3;
+              this.message = 'Something went wrong.';
+              const notification = {
+                title: '',
+                level,
+                message: this.message,
+              };
+
+              this.$store.commit('setNotification', notification);
+              this.$store.commit('setNotificationStatus', true);
+            }
+          },
+          (error) => {
+            const level = 3;
+            const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+            this.$store.commit('setNotification', notification);
+            this.$store.commit('setNotificationStatus', true);
+          });
+      }
     },
   },
 };
@@ -247,5 +804,216 @@ export default {
 .fade-enter,
 .fade-leave-active {
   opacity: 0;
+}
+.blinder-override {
+  background: white !important;
+}
+.countdown-popup {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  height: inherit;
+}
+.countdown-img {
+  width: 80vw;
+  display: block;
+  position: absolute;
+  margin: auto;
+  bottom: -100%;
+  left: -100%;
+  top: -100%;
+  right: -100%;
+}
+.countdown-container {
+  background: white;
+  width: 30%;
+  z-index: 80;
+  padding: 40px;
+  border-radius: 25px;
+  text-align: center;
+  margin-top: -50px;
+}
+.countdown-heading {
+  font-weight: 500;
+  font-size: 25px;
+}
+.countdown-par {
+  font-size: 15px;
+}
+.countdown-par, .countdown-heading {
+  text-align: center;
+  color: #1B7FC3;
+  margin: 10px;
+}
+.timer {
+  display: flex;
+  color: #1a7fc3;
+}
+.countdown-time {
+  width: 25%;
+}
+.timer-digits {
+  font-size: 50px;
+  margin: 0;
+  font-weight: 500;
+  text-shadow: 0px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.timer-description {
+  margin: 0px;
+  font-size: 10px;
+  text-shadow: 0px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.countdown-divider {
+  margin-top: 10px;
+  font-size: 25px;
+  font-weight: 500;
+  text-shadow: 0px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.cancel-pop-up > div > div > div.el-dialog__header > button{
+  display: none ;
+}
+.updateCrmDialog{
+
+}
+.cancel-pop-up > div > div > div.el-dialog__body{
+  padding-top: 0 !important;
+}
+.crm-setup{
+  font-size: 19px;
+  color: #000000;
+  font-weight: 400;
+}
+cancel-pop-up > div > div > div.el-dialog__header{
+  padding-top: 0 !important;
+}
+.compliance-select-final{
+  width: 100% !important;
+}
+.upgrade-final{
+  width: 100% !important;
+  margin-bottom: 2%;
+}
+.vendors-final-outerline{
+  display: flex;
+  justify-content: space-between;
+  width: 89% ;
+  margin-left: 2%;
+  margin-top: 2%;
+}
+.vendor-final-cards{
+  border: 1.0945px solid #D8D8D8;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+  width: 31% ;
+  margin-right: 7%;
+}
+.vendor-types-final {
+  height: 43px;
+  min-width: 63px;
+  padding: 20%;
+  cursor: pointer;
+}
+.vendor_active_final{
+  background: #EDF8FF;
+  border: 2px solid #1B7FC3;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
+  animation: flip-scale-down-diag-2 0.5s linear ;
+}
+@keyframes flip-scale-down-diag-2 {
+  0% {
+    transform: scale(1) rotate3d(-1, 1, 0, 0deg);
+  }
+  50% {
+    transform: scale(0.4) rotate3d(-1, 1, 0, -90deg);
+  }
+  100% {
+    transform: scale(1) rotate3d(-1, 1, 0, -180deg);
+  }
+}
+.final-step-submit{
+  margin-top: 6% !important;
+  width: 100% !important;
+}
+.final-label{
+ margin-bottom: 2%;
+ font-size: 14px;
+ font-weight: 200;
+ color: #000;
+}
+.final-inner{
+ font-size: 12px;
+ color: #8F8F8F;
+ margin-bottom: 0;
+}
+.invalid-kra {
+  display: block;
+  color: #f57f20;
+  font-size: 14px;
+}
+.final-upper-padding{
+  padding-top: 2%;
+}
+.finish-setup-outer{
+  margin-left: 6%;
+  margin-right: 6%;
+}
+.tour-pointer {
+  width: 20px;
+    height: 20px;
+    background: #F44B54;
+    border-radius: 20px;
+    z-index: 2000;
+    position: relative;
+    box-shadow: 0px 0px 12px 2px rgba(253, 1, 1, 0.77);
+}
+.pointer-container {
+  position: relative;
+  display: flex;
+  width: max-content;
+  margin-top: -10px;
+  margin-left: -10px;
+}
+.tour-actions {
+  z-index: 2000;
+  height: max-content;
+  background: white;
+  margin-left: 10px;
+  box-shadow: 0px 0px 12px 2px rgba(142, 140, 140, 0.55);
+  border-radius: 5px;
+  padding: 10px 15px 10px 20px;
+  font-size: 12px;
+  width: max-content;
+}
+.tour-description {
+  width: 200px;
+  font-size: 13px;
+}
+.tour-title {
+  color: #F28226;
+  font-size: 14px;
+}
+.tour-popup-description {
+  font-size: 15px;
+  font-weight: 400;
+  padding: 10px 30px 10px 30px;
+}
+.tour-popup-get-started {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1782c5;
+  cursor: pointer;
+  margin: 20px 0px 10px 0px;
+}
+.tour-popup-skip {
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 10px 0px 20px 0px;
+}
+.tour-end {
+  font-weight: 500;
+  color: #1782c5;
+  cursor: pointer;
 }
 </style>

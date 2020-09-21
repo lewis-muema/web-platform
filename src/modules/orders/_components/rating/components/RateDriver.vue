@@ -17,10 +17,14 @@
 
       <div class="rate-rider-star">
         <div class="submit-stars">
-          <el-rate
-            v-model="rated_score"
-            :colors="['#99A9BF', '#F57f20', '#1782C5']"
-          />
+          <span class="submit-stars-container">
+            <p class="rate-text rate-text-right">Very Bad</p>
+            <el-rate
+              v-model="rated_score"
+              :colors="['#99A9BF', '#F57f20', '#1782C5']"
+            />
+            <p class="rate-text rate-text-left">Very Good</p>
+          </span>
           <textarea
             v-model="rating_comment"
             placeholder="Share your experience with us."
@@ -44,9 +48,11 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 export default {
   name: 'RateDriverComponent',
+  mixins: [NotificationMxn],
   data() {
     return {
       rated_score: 1,
@@ -93,14 +99,15 @@ export default {
     };
     this.$store.dispatch('$_rating/requestOrder', usersFullPayload).then(
       (response) => {
-        this.driver_name = response.rider.rider_name;
-        this.driver_photo = response.rider.rider_photo;
-        this.user_email = response.user.email;
+        if (response.status) {
+          this.driver_name = response.rider.rider_name;
+          this.driver_photo = response.rider.rider_photo;
+          this.user_email = response.user.email;
+        }
       },
       (error) => {
         const notification = { title: '', level: 2, message: 'Something went wrong.' }; // notification object
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true);
+        this.displayNotification(notification);
       },
     );
   },
@@ -131,8 +138,7 @@ export default {
         },
         (error) => {
           const notification = { title: '', level: 2, message: 'Something went wrong.' }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true);
+          this.displayNotification(notification);
         },
       );
     },
@@ -212,5 +218,19 @@ export default {
     -webkit-box-shadow: none !important;
     outline:none;
     box-shadow: none !important;
+}
+.submit-stars-container {
+    display: flex;
+    justify-content: center;
+}
+.rate-text {
+    font-size: 9px;
+    margin-top: 20px;
+}
+.rate-text-right {
+    margin-right: -22px;
+}
+.rate-text-left {
+    margin-left: -28px;
 }
 </style>

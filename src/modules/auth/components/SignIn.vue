@@ -9,9 +9,9 @@
           Log in to Sendy
         </div>
 
-      <p class="sign-in-error">
-        {{ message }}
-      </p>
+        <p class="sign-in-error">
+          {{ message }}
+        </p>
 
         <div @keyup.enter="sign_in">
           <div class="sign-holder dimen">
@@ -25,9 +25,7 @@
               v-model="email"
               class="input-control sign-form"
               type="text"
-              name="email"
               placeholder="Enter Email"
-              autocomplete="on"
             >
           </div>
 
@@ -76,10 +74,11 @@
 <script>
 import { mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
   name: 'SignIn',
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
 
   data() {
     return {
@@ -125,7 +124,7 @@ export default {
           endpoint: 'sign_in',
         };
         this.authSignIn(fullPayload).then(
-          response => {
+          (response) => {
             if (Object.prototype.hasOwnProperty.call(response, 'status')) {
               const errorResponse = response.data;
               if (errorResponse.code === 1) {
@@ -170,32 +169,38 @@ export default {
                   } catch (er) {
                     // ...
                   }
-                  if ('default' in sessionData && analyticsEnv === 'production') {
+                  if ('default' in sessionData) {
                     const acc = sessionData[sessionData.default];
-
-                    mixpanel.people.set_once({
-                      $email: acc.user_email,
-                      $phone: acc.user_phone,
-                      'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-                      $name: acc.user_name,
-                      'Client Type': 'Web Platform',
+                    this.$apm.setUserContext({
+                      id: acc.user_id,
+                      username: acc.user_name,
+                      email: acc.user_email,
                     });
+                    if (analyticsEnv === 'production') {
+                      mixpanel.people.set_once({
+                        $email: acc.user_email,
+                        $phone: acc.user_phone,
+                        'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                        $name: acc.user_name,
+                        'Client Type': 'Web Platform',
+                      });
 
-                    // login identify
-                    mixpanel.identify(acc.user_email);
+                      // login identify
+                      mixpanel.identify(acc.user_email);
 
-                    // track login
-                    mixpanel.track('User Login', {
-                      'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
-                      'Last Login': new Date(),
-                      'Client Type': 'Web Platform',
-                    });
+                      // track login
+                      mixpanel.track('User Login', {
+                        'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+                        'Last Login': new Date(),
+                        'Client Type': 'Web Platform',
+                      });
+                    }
                   }
-                  //check for redirect status before push
-                  let redirectStatus = this.$store.getters.getRedirectStatus;
-                  let redirectOrder = this.$store.getters.getRedirectOrder;
+                  // check for redirect status before push
+                  const redirectStatus = this.$store.getters.getRedirectStatus;
+                  const redirectOrder = this.$store.getters.getRedirectOrder;
                   if (redirectStatus) {
-                    //reset redirect status
+                    // reset redirect status
                     this.$store.commit('setRedirectStatus', false);
                     this.$store.commit('setRedirectOrder', '');
                     this.$router.push(`/orders/tracking/${redirectOrder}`);
@@ -209,10 +214,10 @@ export default {
               }
             }
           },
-          error => {
+          (error) => {
             this.login_text = 'Login';
             this.doNotification(2, 'Login failed', 'Login failed. Please try again');
-          }
+          },
         );
       } else {
         this.message = 'Provide all values';
@@ -224,14 +229,13 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
     },
   },
 };
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 .log-item {
   text-align: center;
   border: 0px solid #ccc;

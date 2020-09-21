@@ -454,9 +454,23 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 export default {
   name: 'Comments',
+  mixins: [NotificationMxn],
+  data() {
+    return {
+      timeliness: false,
+      payment: false,
+      directions: false,
+      cleanliness: false,
+      politeness: false,
+      pricing: false,
+      app: false,
+      comment: '',
+    };
+  },
   computed: {
     ...mapGetters({
       getStep: '$_rating/getStep',
@@ -474,18 +488,6 @@ export default {
     class_full_comments() {
       return { full_comments: this.getScore === 5 };
     },
-  },
-  data() {
-    return {
-      timeliness: false,
-      payment: false,
-      directions: false,
-      cleanliness: false,
-      politeness: false,
-      pricing: false,
-      app: false,
-      comment: '',
-    };
   },
   methods: {
     ...mapMutations({
@@ -525,8 +527,7 @@ export default {
         (response) => {},
         (error) => {
           const notification = { title: '', level: 2, message: 'Something went wrong.' }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true);
+          this.displayNotification(notification);
         },
       );
     },

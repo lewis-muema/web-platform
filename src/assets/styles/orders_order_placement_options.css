@@ -19,6 +19,158 @@
   cursor: pointer;
 }
 
+.card-option-disabled-notification {
+  padding: 19px;
+  border-radius: 5px;
+  background-color: #E8F3FC;
+  color: #0F4176;
+  font-size: 12px;
+}
+
+.payment-options-alignment {
+  display: flex;
+  align-items: flex-end;
+}
+
+.payment-options-cards-title {
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 10px;
+  margin: 0px 0px 10px 0px;
+  color: #527CBD;
+}
+.back-option {
+  cursor: pointer;
+}
+
+.no-saved-cards-label {
+  margin: 30px 0px 30px 0px;
+  font-size: 12px;
+  color: #144577;
+}
+
+.payment-options-cards-container {
+  padding: 10px 25px 10px 25px;
+}
+
+.payment-options-add-card {
+  align-items: flex-end;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  font-size: 12px;
+  color: #527CBD;
+  margin-left: 8px;
+}
+
+.payment-options-add-card-icon {
+  color: #527CBD;
+}
+
+.payment-options-saved-card-radio {
+  margin-right: 10px;
+}
+
+.payment-options-delete-card-icon {
+  margin-left: auto;
+  color: red;
+  cursor: pointer;
+}
+
+.delete-saved-card-dialogue {
+  height: 100px;
+  padding: 10px;
+}
+
+.delete-saved-card-dialogue-label {
+  text-align: center;
+}
+.delete-saved-card-dialogue-buttons {
+  padding: 5px 10px 5px 10px;
+  margin: 5px;
+  border: 1px solid;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.payment-options-saved-cards-row {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  color: #606266;
+  letter-spacing: 0.03em;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.fake-input-1 iframe {
+  height: 35px;
+  width: -webkit-fill-available;
+  border-radius: 4px;
+  padding-left: 10px;
+  color: #C0C4CC;
+  margin-top: 5px;
+  border: 1px solid #909399;
+  background: white;
+}
+#cc-save-card-1 {
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+#cc-amount-1 {
+  display: none;
+}
+.fake-checkbox-1 iframe {
+  height: 14px;
+  width: 14px;
+  margin-right: 2px;
+  margin-bottom: -3px;
+}
+.fake-checkbox-label-1 {
+  font-size: 12px;
+  color: #303133;
+}
+.paymentbody--form form {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.cvv-expire-fields {
+  display: flex;
+}
+#cc-expiration-date {
+  width: 67%;
+}
+#cc-cvc {
+  width: 30%;
+  padding-left: 3%;
+}
+.amount-input {
+  display: flex;
+  align-items: center;
+}
+.amount-input .fake-input-1 {
+  width: 90%;
+}
+.amount-input .fake-input-1 iframe {
+  border-radius: 0px 5px 5px 0px !important;
+}
+#react {
+  color: #C0C4CC;
+  letter-spacing: 0.03em;
+}
+
+.VGS-form {
+  width: 240px;
+}
+
+.payment-options-add-card-holder {
+  margin: 10px 0px 5px 0px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
 .home-view-notes-wrapper--item__row {
   align-items: center;
   justify-content: space-between;
@@ -82,9 +234,162 @@
   margin-top: 7% !important;
   margin-right: 7% !important;
 }
+.payment__radio-button-dedicated {
+  margin-right: 7% !important;
+}
 .payment__radio-button-label {
   width: 100% !important;
 }
 .card-accounts-list {
   background: aliceblue !important;
+}
+.order_final_summary{
+  margin-left: 6%;
+  margin-right: 6%;
+}
+.confirm-label{
+  font-size: 19px;
+  font-weight: 400;
+  color: #1B7FC3;
+  letter-spacing: 0.02em;
+}
+ul.summary_timeline {
+  list-style-type: none;
+  position: relative;
+  margin-left: -7%;
+}
+ul.summary_timeline:before {
+  content: ' ';
+  background: #d4d9df;
+  display: inline-block;
+  position: absolute;
+  left: 29px;
+  width: 2px;
+  height: 82%;
+  z-index: 400;
+}
+ul.summary_timeline > li {
+  margin: 20px 0;
+  padding-left: 20px;
+  height: 35px;
+  margin-bottom: 30px !important;
+}
+ul.summary_timeline > li:before {
+  /* content: ' '; */
+  background: #1B7FC3;
+  display: inline-block;
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid #1B7FC3;
+  left: 20px;
+  width: 14px;
+  height: 14px;
+  z-index: 400;
+  content: '';
+  font-size: 16px;
+  color: white;
+}
+.order_summary_timeline li:first-child:before {
+    background: #f57f20;
+    border: 4px solid #f57f20;
+    content: '';
+}
+.delivery_label{
+  color: #3D5266;
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 2% !important;
+}
+.delivery_points{
+  margin-top: 0 !important;
+}
+.order_summary__img{
+  flex-basis: 11%;
+}
+.order_summary--vendor-wrapper{
+ flex-direction: row;
+ justify-content: flex-start;
+ align-items: center;
+ flex-basis: 43%;
+}
+.order_summary-types-item {
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  margin-top: 2%;
+}
+.order_summary-item__image {
+  height: 30px;
+  min-width: 30px;
+}
+.order_summary-wrapper__vendor {
+  flex-direction: column;
+  flex: 1;
+}
+.order_summary--vendor-formal-name{
+  padding: 3px;
+}
+.order_summary--outline{
+  margin-top: 3%;
+}
+.btn-edit-order{
+  color: #FF7900 !important;
+  background: #F5F7FA !important;
+  border-color: #FF7900 !important;
+  width: 45% !important;
+
+}
+.btn-submit-order{
+  color: #FFFFFF !important;
+  background: #F57F20 !important;
+  border-color: #FF7900 !important;
+  width: 45% !important;
+}
+.confirm_button_outer{
+  display:flex;
+  justify-content: space-between;
+  margin-top: 10%;
+}
+.calender--icon{
+  font-size: 30px;
+}
+.summary-button-outer{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10%;
+  margin: 1em;
+  margin-right: 0% !important;
+  margin-left: 0% !important;
+}
+.count_down_section{
+  font-size: 15px;
+  margin-top: 7%;
+  margin-bottom: 6%;
+}
+.timeout_text{
+  color: #000000;
+}
+.timeout_count{
+  color: #1B7FC3;
+}
+.summary-pop-up > div.el-dialog__wrapper > div > div.el-dialog__header{
+  padding-top: 0% !important;
+}
+.countdown_divider{
+  border-bottom: 1px solid #74696942;
+  margin-top: 6%;
+}
+.summary-pop-up > div.el-dialog__wrapper > div > div.el-dialog__body{
+  padding-top: 2% !important;
+}
+.summary-pop-up > div.el-dialog__wrapper > div > div.el-dialog__header > button > i{
+  display: none;
+}
+.summary-pop-up > div.v-modal{
+  opacity: .5 !important;
+  background: #000 !important;
+  z-index: 2000 !important;
+}
+.instructions-notes{
+  margin-top: 2%;
 }

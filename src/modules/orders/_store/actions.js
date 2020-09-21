@@ -15,7 +15,11 @@ const fetchOngoingOrders = function fetchOngoingOrders({ commit, dispatch, rootS
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosPost', payload, { root: true }).then(
       (response) => {
-        commit('setOngoingOrders', response.data);
+        if (response.status) {
+          commit('setOngoingOrders', response.data);
+        } else {
+          commit('setOngoingOrders', []);
+        }
         resolve(response.data);
       },
       (error) => {
@@ -34,6 +38,27 @@ const connectMqtt = function connectMqtt({ commit }) {
 
 const intializeMqtt = function intializeMqtt() {
   return false;
+};
+
+const riderDetails = function riderDetails({ dispatch }, data) {
+  const payload = {
+    app: 'NODE_PRIVATE_API',
+    endpoint: 'last_partner_position',
+    values: data,
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+        // handle failure to dispatch to global store
+      },
+    );
+  });
 };
 
 const getOrderData = function getOrderData({ dispatch }, data) {
@@ -58,9 +83,55 @@ const getOrderData = function getOrderData({ dispatch }, data) {
   });
 };
 
+const requestCountryCode = function requestCountryCode({ dispatch }, data) {
+  const payload = {
+    app: 'PRIVATE_API',
+    endpoint: 'geocountry',
+    values: data,
+  };
+
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+        // handle failure to dispatch to global store
+      },
+    );
+  });
+};
+const requestCopInfo = function requestCopInfo({ dispatch }, values) {
+  const payload = {
+    app: 'NODE_PRIVATE_API',
+    endpoint: 'update_cop',
+    values,
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+        // handle failure to dispatch to global store
+      },
+    );
+  });
+};
+
+
 export default {
   fetchOngoingOrders,
   connectMqtt,
   intializeMqtt,
   getOrderData,
+  riderDetails,
+  requestCountryCode,
+  requestCopInfo,
 };

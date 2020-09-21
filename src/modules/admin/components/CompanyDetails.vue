@@ -1,5 +1,8 @@
 <template lang="html">
-  <div id="cop_info_container" class="cop_info_container">
+  <div
+    id="cop_info_container"
+    class="cop_info_container"
+  >
     <div class="cop-edit-inner">
       <div class="company-edit2-details">
         Edit Company Details.
@@ -14,21 +17,29 @@
             class="input-control cop-edit-form"
             type="text"
             autocomplete="off"
-          />
+          >
         </div>
 
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
             <span>Name of contact person</span>
           </label>
-          <input v-model="contact_name" class="input-control cop-edit-form" type="text" />
+          <input
+            v-model="contact_name"
+            class="input-control cop-edit-form"
+            type="text"
+          >
         </div>
 
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
             <span>Email of Contact person</span>
           </label>
-          <input v-model="contact_email" class="input-control cop-edit-form" type="text" />
+          <input
+            v-model="contact_email"
+            class="input-control cop-edit-form"
+            type="text"
+          >
         </div>
 
         <div class="cop-edit-holder">
@@ -42,13 +53,17 @@
             name="phone"
             value=""
             data-vv-validate-on="blur"
-            :preferred-countries="['ke', 'ug', 'tz']"
+            v-bind="phoneInputProps"
             @onBlur="validate_phone"
           />
         </div>
 
         <div class="sign-holder">
-          <button class="button-primary btn-edit-cop-info" type="submit" @click="save_cop">
+          <button
+            class="button-primary btn-edit-cop-info"
+            type="submit"
+            @click="save_cop"
+          >
             Save
           </button>
         </div>
@@ -60,12 +75,13 @@
 <script>
 import { mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'CompanyDetails',
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
   data() {
     return {
       cop_name: '',
@@ -73,6 +89,27 @@ export default {
       contact_email: '',
       contact_name: '',
       message: '',
+      phoneInputProps: {
+        mode: 'international',
+        defaultCountry: 'ke',
+        disabledFetchingCountry: false,
+        disabled: false,
+        disabledFormatting: false,
+        placeholder: 'Enter a phone number',
+        required: false,
+        enabledCountryCode: false,
+        enabledFlags: true,
+        preferredCountries: ['ke', 'ug', 'tz'],
+        autocomplete: 'off',
+        name: 'telephone',
+        maxLen: 25,
+        dropdownOptions: {
+          disabledDialCode: false,
+        },
+        inputOptions: {
+          showDialCode: false,
+        },
+      },
     };
   },
   mounted() {
@@ -95,10 +132,10 @@ export default {
 
     save_cop() {
       if (
-        this.cop_name !== '' &&
-        this.phone !== '' &&
-        this.contact_email !== '' &&
-        this.contact_name !== ''
+        this.cop_name !== ''
+        && this.phone !== ''
+        && this.contact_email !== ''
+        && this.contact_name !== ''
       ) {
         const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
 
@@ -122,7 +159,7 @@ export default {
           };
 
           this.requestCopInfo(fullPayload).then(
-            response => {
+            (response) => {
               if (response.status) {
                 const updatedSession = session;
                 updatedSession[session.default].cop_name = this.cop_name;
@@ -141,8 +178,7 @@ export default {
                   message: this.message,
                 };
 
-                this.$store.commit('setNotification', notification);
-                this.$store.commit('setNotificationStatus', true);
+                this.displayNotification(notification);
               } else {
                 const level = 3;
                 this.message = 'Something went wrong.';
@@ -152,16 +188,14 @@ export default {
                   message: this.message,
                 };
 
-                this.$store.commit('setNotification', notification);
-                this.$store.commit('setNotificationStatus', true);
+                this.displayNotification(notification);
               }
             },
-            error => {
+            (error) => {
               const level = 3;
               const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true);
-            }
+              this.displayNotification(notification);
+            },
           );
         } else {
           const level = 3;
@@ -171,9 +205,7 @@ export default {
             level,
             message: this.message,
           };
-
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true);
+          this.displayNotification(notification);
         }
       } else {
         const level = 3;
@@ -183,9 +215,7 @@ export default {
           level,
           message: this.message,
         };
-
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true);
+        this.displayNotification(notification);
       }
     },
   },
@@ -194,7 +224,6 @@ export default {
 
 <style lang="css">
  @import "../../../assets/styles/datatable.css";
- @import "../../../../node_modules/vue-tel-input/dist/vue-tel-input.css";
 
  .company-edit2-details {
   font-size: 1.3rem;

@@ -8,9 +8,14 @@ const setTrackedOrder = (state, payload) => {
 const setIsMQTTConnected = (state, payload) => {
   state.isMQTTConnected = payload;
 };
+const setDateTime = (state, payload) => {
+  state.date_time = payload;
+};
+
 
 export default {
   setTrackingData,
   setTrackedOrder,
   setIsMQTTConnected,
+  setDateTime,
 };

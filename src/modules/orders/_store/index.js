@@ -7,7 +7,7 @@ export default {
   state() {
     return {
       page: 0, // 0 - Order Placement, 1 - Tracking, 2 - Rating
-      ongoing_orders: {},
+      ongoing_orders: [],
       map: {
         markers: [],
         polyline: {
@@ -25,10 +25,11 @@ export default {
       order_path: [],
       location_path: [],
       outer_price_request: {},
+      active_vendor_tally: [],
+      expanded_active_vendor_tally: [],
       outer_active_vendor_data: {},
       outer_active_package_data: 'small',
-      child_orders: [],
-      selected_child: '',
+      parent_order: '',
     };
   },
   actions,

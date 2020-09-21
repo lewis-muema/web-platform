@@ -78,10 +78,12 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 export default {
   name: 'InviteComponent',
   components: {},
+  mixins: [NotificationMxn],
   data() {
     return {
       value: '',
@@ -104,6 +106,7 @@ export default {
         },
       ],
       invitees: [],
+      invitation: false,
     };
   },
   computed: {
@@ -161,7 +164,8 @@ export default {
             cop_id = session[session.default].cop_id;
           }
 
-          if (this.elements[i].email !== '') {
+
+          if (this.elements[i].email !== '' && this.elements[i].department !== '') {
             const { email } = this.elements[i];
             const { name } = this.elements[i];
             const { department } = this.elements[i];
@@ -172,46 +176,54 @@ export default {
               name,
               department_id: department,
             });
+            this.invitation = true;
+            const payload = this.invitees;
+            const fullPayload = {
+              values: payload,
+              vm: this,
+              app: 'NODE_PRIVATE_API',
+              endpoint: 'invite_user',
+            };
+            this.$store.dispatch('$_admin/inviteNewUsers', fullPayload).then(
+              (response) => {
+                this.button = 'Send Invites';
+                if (response.status) {
+                  const level = 1;
+                  const notification = {
+                    title: 'Add Users',
+                    level,
+                    message: 'Invitations sent successfully',
+                  };
+                  this.inviteLog(payload);
+                  this.displayNotification(notification);
+                  this.updateViewState(4);
+                }
+              },
+              (error) => {
+                // ...
+              },
+            );
+          } else if (!this.invitation) {
+            this.button = 'Send Invites';
+            const level = 2;
+            const notification = {
+              title: 'Send Invites',
+              level,
+              message: 'Please select a department',
+            };
+            this.displayNotification(notification);
           }
         } else {
           this.button = 'Send Invites';
           const level = 2;
           const notification = {
-            title: '',
+            title: 'Send Invites',
             level,
             message: 'Please enter at least one valid email address.',
           }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
         }
       }
-      const payload = this.invitees;
-      const fullPayload = {
-        values: payload,
-        vm: this,
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'invite_user',
-      };
-      this.$store.dispatch('$_admin/inviteNewUsers', fullPayload).then(
-        (response) => {
-          this.button = 'Send Invites';
-          if (response.status) {
-            const level = 1;
-            const notification = {
-              title: 'Add Users',
-              level,
-              message: 'Invitations sent successfully',
-            };
-            this.inviteLog(payload);
-            this.$store.commit('setNotification', notification);
-            this.$store.commit('setNotificationStatus', true);
-            this.updateViewState(4);
-          }
-        },
-        (error) => {
-          // ...
-        },
-      );
     },
     inviteLog(invitees) {
       let analyticsEnv = '';
@@ -261,8 +273,7 @@ export default {
             level,
             message: 'Link created!',
           }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
         },
         (error) => {
           const level = 2;
@@ -271,8 +282,7 @@ export default {
             level,
             message: 'An error occurred.',
           }; // notification object
-          this.$store.commit('setNotification', notification);
-          this.$store.commit('setNotificationStatus', true); // activate notification
+          this.displayNotification(notification);
         },
       );
     },

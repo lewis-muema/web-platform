@@ -101,7 +101,7 @@
       </div>
 
       <div
-        v-if="allow_add_destination"
+        v-if="allow_add_destination && $route.path === '/orders'"
         class="homeview--row homeview--row__more-destinations homeview-locations-options"
       >
         <div class="homeview-locations-options--add-destination">
@@ -116,6 +116,37 @@
             @click="addExtraDestinationWrapper()"
           >Add Destination</a>
         </div>
+      </div>
+      <div
+        v-if="$route.path === '/orders/dedicated/multi-destination'"
+        class="homeview--row homeview--row__more-destinations homeview-locations-options"
+        :class="allow_add_destination ? 'homeview-locations-options-multi-destination-active' : 'homeview-locations-options-multi-destination-inactive'"
+      >
+        <div class="homeview-locations-options--add-destination">
+          <font-awesome-icon
+            icon="plus"
+            size="xs"
+            class="sendy-blue homeview--row__font-awesome"
+            :class="allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'"
+            width="10px"
+          />
+          <a
+            class="homeview--add"
+            :class="allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'"
+            @click="addExtraDestinationWrapper()"
+          >Add Destination</a>
+        </div>
+      </div>
+      <div v-if="$route.path === '/orders/dedicated/multi-destination' && fileUploadStatus">
+        <p class="home-view--upload-par">
+          OR
+        </p>
+        <p
+          class="home-view--upload-button"
+          @click="initiateUpload()"
+        >
+          Upload file
+        </p>
       </div>
       <div
         v-if="loading"
@@ -162,6 +193,8 @@ import orderPlacementStore from './_store';
 import paymentsModuleStore from '../../../payment/_store';
 import VendorComponent from './_components/VendorComponent.vue';
 import SessionMxn from '../../../../mixins/session_mixin';
+import EventsMixin from '../../../../mixins/events_mixin';
+import NotificationMxn from '../../../../mixins/notification_mixin';
 
 library.add(
   faPlus,
@@ -179,18 +212,23 @@ library.add(
 
 export default {
   name: 'OrderPlacement',
-
   components: {
     'no-ssr': NoSSR,
     'vendor-view': VendorComponent,
   },
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, EventsMixin, NotificationMxn],
   data() {
     return {
       show_destinations: false,
       loading: false,
       locations: [],
+      fileUploadStatus: false,
       map_options: {
+        componentRestrictions: {
+          country: [
+            'ke', 'ug', 'tz',
+          ],
+        },
         bounds: {
           north: 35.6,
           east: 59.4,
@@ -200,16 +238,6 @@ export default {
         strictBounds: true,
       },
     };
-  },
-  watch: {
-    get_session: {
-      handler(val, oldVal) {
-        if (this.show_vendor_view || this.loading) {
-          this.doPriceRequest();
-        }
-      },
-      deep: true,
-    },
   },
   computed: {
     ...mapGetters({
@@ -250,12 +278,25 @@ export default {
       );
     },
   },
+  watch: {
+    get_session: {
+      handler(val, oldVal) {
+        if (this.show_vendor_view || this.loading) {
+          this.handleStoredData();
+        }
+      },
+      deep: true,
+    },
+  },
   created() {
     this.instantiateHomeComponent();
     this.initializeOrderFlow();
   },
   mounted() {
-    this.checkSessionData();
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0) {
+      this.checkSessionData();
+    }
   },
   destroyed() {
     this.destroyOrderPlacement();
@@ -272,6 +313,7 @@ export default {
       set_location_name: '$_orders/$_home/setLocationName',
       unset_location_name: '$_orders/$_home/unsetLocationName',
       setPickupFilled: '$_orders/$_home/setPickUpFilled',
+      setPickUpFilledStatus: 'setPickUpFilledStatus',
       addExtraDestination: '$_orders/$_home/addExtraDestination',
       removeExtraDestination: '$_orders/$_home/removeExtraDestination',
       set_active_package_class: '$_orders/$_home/setActivePackageClass',
@@ -293,11 +335,18 @@ export default {
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
       setOuterPriceRequestObject: '$_orders/setOuterPriceRequestObject',
       setOrderState: '$_orders/$_home/setOrderState',
+      setExtendOptions: '$_orders/$_home/setExtendOptions',
+      set_tracking_data: '$_orders/$_tracking/setTrackingData',
+      clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
 
     ...mapActions({
       requestPriceQuote: '$_orders/$_home/requestPriceQuote',
     }),
+
+    initiateUpload() {
+      this.$root.$emit('Upload status', true);
+    },
 
     removeExtraDestinationWrapper(index) {
       this.removeExtraDestination();
@@ -348,6 +397,7 @@ export default {
     resetLocation(index) {
       if (index === 0) {
         this.setPickupFilled(false);
+        this.setPickUpFilledStatus(false);
       }
 
       this.unset_location_marker(index);
@@ -389,7 +439,7 @@ export default {
         index,
         name: place.name,
       };
-      this.resetLocation(index);
+      this.resetPathLocation(index);
       this.setMarker(place.geometry.location.lat(), place.geometry.location.lng(), index);
       this.set_order_path(pathPayload);
       this.setStorePath(pathPayload);
@@ -397,9 +447,72 @@ export default {
       this.set_location_name(locationNamePayload);
       if (index === 0) {
         this.setPickupFilled(true);
+        this.setPickUpFilledStatus(true);
+        const eventPayload = {
+          eventCategory: 'Order Placement',
+          eventAction: 'Click',
+          eventLabel: 'Pickup Location - Order Placement - Web App',
+        };
+        if (this.$route.path === '/orders/dedicated/multi-destination') {
+          this.trackLocationSelect(place.name, index);
+        } else {
+          this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
+          this.fireGAEvent(eventPayload);
+        }
+      } else {
+        const eventPayload = {
+          eventCategory: 'Order Placement',
+          eventAction: 'Click',
+          eventLabel: 'Destination Location - Order Placement - Web App',
+        };
+        if (this.$route.path === '/orders/dedicated/multi-destination') {
+          this.trackLocationSelect(place.name, index);
+        } else {
+          this.trackMixpanelEvent(`Successfully set Order ${eventPayload.eventLabel}`);
+          this.fireGAEvent(eventPayload);
+        }
       }
       this.attemptPriceRequest();
     },
+
+    trackLocationSelect(location, type) {
+      const acc = this.$store.getters.getSession;
+      const accDefault = acc[acc.default];
+      let eventName = '';
+      const eventData = {
+        'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Account': accDefault.user_email,
+        'Client name': accDefault.user_name,
+      };
+      if (type === 0) {
+        eventName = 'Enter pick-up location for multi-destination';
+        eventData['Pick up location'] = location;
+      } else if (type > 0) {
+        eventName = 'Enter delivery location for multi-destination';
+        eventData['Delivery location'] = location;
+      }
+      const eventPayload = {
+        eventCategory: 'Sendy Dedicated',
+        eventAction: 'Click',
+        eventLabel: eventName,
+      };
+      this.fireGAEvent(eventPayload);
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(eventName, eventData);
+        }
+      } catch (er) {
+        // ...
+      }
+    },
+
     attemptPriceRequest() {
       if (
         Array.isArray(this.locations)
@@ -407,7 +520,6 @@ export default {
         && this.get_pickup_filled === true
       ) {
         this.clearOuterPriceRequestObject();
-        this.clearOuterActiveVendorDetails();
         this.doPriceRequest();
       }
     },
@@ -451,9 +563,9 @@ export default {
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
         name: acc.user_name,
         phone: acc.user_phone,
-        date_time: this.moment().format('YYYY-MM-DD HH:mm:ss'),
+        date_time: this.moment.utc(),
         schedule_status: false,
-        schedule_time: this.moment().format('YYYY-MM-DD HH:mm:ss'),
+        schedule_time: this.moment.utc(),
         vendor_type: 1,
         group_id: 1,
         client_type: 'corporate',
@@ -466,10 +578,13 @@ export default {
         promotion_status: false,
         destination_paid_status: false,
         is_edit: false,
-        country_code: this.getCountryCode,
-        default_currency: this.getDefaultCurrency,
-        preffered_currency: this.getDefaultCurrency,
+        country_code: this.getSessionItem('country_code'),
+        default_currency: this.getSessionItem('default_currency'),
+        preffered_currency: this.getSessionItem('default_currency'),
       };
+      if (this.$route.path === '/orders/dedicated/multi-destination') {
+        infor.order_type_tag = 'dedicated_order';
+      }
       const jsonDecodedPath = JSON.stringify(obj);
       infor.path = jsonDecodedPath;
       const finalObj = { values: infor };
@@ -479,8 +594,8 @@ export default {
       this.setOuterPriceRequestObject('');
       const payload = {
         values: this.createPriceRequestObject(),
-        app: 'PRIVATE_API',
-        endpoint: 'pricing_multiple',
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'orders/price_request',
       };
       this.loading = true;
       const previousActiveVendor = this.get_active_vendor_name;
@@ -511,8 +626,8 @@ export default {
           }
         },
         (error) => {
-          if (Object.prototype.hasOwnProperty.call(error, 'crisis_notification')) {
-            this.doNotification(3, error.reason, error.crisis_notification.msg);
+          if (Object.prototype.hasOwnProperty.call(error.response.data, 'crisis_notification')) {
+            this.doNotification(3, error.response.data.reason, error.response.data.crisis_notification.msg);
           } else {
             this.doNotification(
               3,
@@ -525,19 +640,30 @@ export default {
         },
       );
     },
+    handleStoredData() {
+      this.clearOuterPriceRequestObject();
+      this.clearOuterActiveVendorDetails();
+      this.setExtendOptions(false);
+      this.doPriceRequest();
+    },
 
     doNotification(level, title, message) {
-      this.$store.commit('setNotificationStatus', true);
       const notification = { title, level, message };
-      this.$store.commit('setNotification', notification);
+      this.displayNotification(notification);
     },
 
     doSetDefaultPackageClass() {
-      try {
-        const defaultPackageClass = this.get_price_request_object.economy_price_tiers[0].tier_group;
-        this.set_active_package_class(defaultPackageClass);
-      } catch (er) {
-        // console.log(er);
+      if (
+        this.get_price_request_object !== undefined
+        && this.get_price_request_object.economy_price_tiers !== undefined
+      ) {
+        try {
+          const defaultPackageClass = this.get_price_request_object.economy_price_tiers[0]
+            .tier_group;
+          this.set_active_package_class(defaultPackageClass);
+        } catch (er) {
+          // console.log(er);
+        }
       }
     },
 
@@ -554,7 +680,10 @@ export default {
     setDefaultVendorType(previous) {
       if (this.get_active_vendor_name === '') {
         this.doSetDefaultVendorType();
-      } else {
+      } else if (
+        this.get_price_request_object !== undefined
+        && this.get_price_request_object.economy_price_tiers !== undefined
+      ) {
         const result = this.get_price_request_object.economy_price_tiers.filter(pack => pack.price_tiers.some(vendor => vendor.vendor_name === previous));
 
         if (result.length === 0) {
@@ -571,7 +700,7 @@ export default {
     setDefaultPackageClass() {
       if (this.get_active_package_class === '') {
         this.doSetDefaultPackageClass();
-      } else {
+      } else if (this.get_price_request_object !== undefined && this.get_price_request_object.economy_price_tiers !== undefined) {
         const self = this;
         const _package = this.get_price_request_object.economy_price_tiers.filter(
           pack => pack.tier_group === self.get_active_package_class,
@@ -649,11 +778,18 @@ export default {
       if (!acc.hasOwnProperty('country_code')) {
         this.deleteSession();
         this.$router.push({ path: '/auth/sign_in' });
+      } else {
+        this.$apm.setUserContext({
+          id: acc.user_id,
+          username: acc.user_name,
+          email: acc.user_email,
+        });
       }
     },
     initializeOrderFlow() {
       if (this.$route.path === '/orders/') {
         const storedLocation = this.getHomeLocations;
+        this.set_order_path(this.getStoreOrderPath);
         if (storedLocation.length > 1) {
           this.locations = storedLocation;
           this.setPickupFilled(true);
@@ -667,12 +803,27 @@ export default {
         this.clearOuterActiveVendorDetails();
       }
     },
+    getSessionItem(itemName) {
+      const session = this.$store.getters.getSession;
+      return session[session.default][itemName];
+    },
+    resetPathLocation(index) {
+      if (index === 0) {
+        this.setPickupFilled(false);
+        this.setPickUpFilledStatus(false);
+        this.unset_order_path(index);
+        this.unsetStorePath(index);
+      }
+      this.unset_location_marker(index);
+      this.deleteLocationInModel(index);
+      this.unset_location_name(index);
+    },
   },
 };
 </script>
 
 <style lang="css">
-@import "../../../../assets/styles/orders_order_placement.css?v=1";
+@import "../../../../assets/styles/orders_order_placement.css?v=3";
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */

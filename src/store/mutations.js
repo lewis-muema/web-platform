@@ -21,6 +21,9 @@ export default {
   setCountryCode(state, code) {
     state.country_code = code;
   },
+  setDedicatedAccessStatus(state, data) {
+    state.dedicated_access_status = data;
+  },
   setDefaultCurrency(state, defaultCurrency) {
     state.default_currency = defaultCurrency;
   },
@@ -38,5 +41,14 @@ export default {
   },
   setRedirectOrder(state, order) {
     state.redirect_order = order;
+  },
+  setNPSStatus(state, status) {
+    state.nps_status = status;
+  },
+  setSecondaryProfile(state, status) {
+    state.secondary_profile = status;
+  },
+  setPickUpFilledStatus(state, status) {
+    state.pick_up_filled_status = status;
   },
 };

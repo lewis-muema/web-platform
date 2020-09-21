@@ -3,11 +3,12 @@ const getDefaultState = () => ({
   active_vendor_name: '',
   active_order_option: '',
   price_request_object: {},
-  max_destinations: 9,
+  max_destinations: 24,
   order_path: [],
   location_names: [],
   saved_cards: [],
   schedule_time: '',
+  schedule_end_time: '',
   order_notes: '',
   extra_destinations: 0,
   pickup_filled: false,
@@ -58,6 +59,10 @@ export default {
 
   setScheduleTime(state, val) {
     state.schedule_time = val;
+  },
+
+  setScheduleEndTime(state, val) {
+    state.schedule_end_time = val;
   },
 
   setOrderNotes(state, val) {
@@ -167,6 +172,9 @@ export default {
   setPairSerialNumber(state, val) {
     state.pair_serial_number = val;
   },
+  setPairWithRiderState(state, val) {
+    state.pair_rider_state = val;
+  },
   setPairRiderPhone(state, val) {
     state.pair_rider_phone = val;
   },
@@ -196,5 +204,17 @@ export default {
   },
   setProductPhase(state, val) {
     state.product_phase = val;
+  },
+  setVehicleDetails(state, val) {
+    state.vehicle_plate = val;
+  },
+  setPairErrorMessage(state, val) {
+    state.pair_error_msg = val;
+  },
+  setInstructionNotes(state, val) {
+    state.instruction_notes = val;
+  },
+  clearInstructionNotes(state) {
+    state.instruction_notes = [];
   },
 };

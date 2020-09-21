@@ -20,7 +20,7 @@ const setOngoingOrders = (state, payload) => {
 
 const setMarkers = (state, payload) => {
   payload.forEach((value, i) => {
-    let icon = 'destination';
+    let icon = value.waypoint_type ? value.waypoint_type.toLowerCase() : 'destination';
     if (i === 0) {
       icon = 'pickup';
     }
@@ -119,8 +119,17 @@ const clearStorePath = (state) => {
 const unsetStorePath = (state, index) => {
   state.location_path.splice(index, 1);
 };
+const setWaypointNotes = (state, val) => {
+  state.location_path[val.index].notes = val.notes;
+};
 const setOuterPriceRequestObject = (state, payload) => {
   state.outer_price_request = payload;
+};
+const setActiveVendorTally = (state, payload) => {
+  state.active_vendor_tally = payload;
+};
+const setExpandedActiveVendorTally = (state, payload) => {
+  state.expanded_active_vendor_tally = payload;
 };
 const clearOuterPriceRequestObject = (state) => {
   state.outer_price_request = {};
@@ -137,20 +146,8 @@ const setOuterActivePackageClass = (state, payload) => {
 const clearVendorMarkers = (state) => {
   state.map.vendors = {};
 };
-const setChildOrders = (state, val) => {
-  state.child_orders.splice(val.index, val.index === 0 ? 0 : 1, val.vals);
-};
-const clearChildOrders = (state) => {
-  state.child_orders = [];
-};
-const selectChildOrders = (state, val) => {
-  state.selected_child = '';
-  setTimeout(() => {
-    state.selected_child = val;
-  }, 100);
-};
-const clearSelectedChild = (state) => {
-  state.selected_child = '';
+const setParentOrder = (state, payload) => {
+  state.parent_order = payload;
 };
 export default {
   setPage,
@@ -167,6 +164,8 @@ export default {
   setHomeLocations,
   setStorePath,
   setOuterPriceRequestObject,
+  setActiveVendorTally,
+  setExpandedActiveVendorTally,
   setOuterActiveVendorDetails,
   setOuterActivePackageClass,
   clearHomeLocation,
@@ -174,9 +173,7 @@ export default {
   clearOuterPriceRequestObject,
   clearOuterActiveVendorDetails,
   unsetStorePath,
+  setWaypointNotes,
   clearVendorMarkers,
-  setChildOrders,
-  clearChildOrders,
-  selectChildOrders,
-  clearSelectedChild,
+  setParentOrder,
 };

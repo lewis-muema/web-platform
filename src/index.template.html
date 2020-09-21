@@ -11,25 +11,42 @@
       name="description"
       content="Whether you run an online shop or a manufacturing business, Sendy
       is the preferred logistics platform for helping you grow your business."
-      />
+    />
     <link rel="apple-touch-icon" sizes="120x120" href="/public/logo_120.png" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1,
       minimal-ui"
-      />
+    />
     <link rel="shortcut icon" sizes="48x48" href="/public/logo_120.png" />
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Rubik:400,500,400,700' type='text/css'>
     <meta name="theme-color" content="#f60" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self' *.sendyit.com *.google-analytics.com *.www.googletagmanager.com 'unsafe-inline' 'unsafe-eval';
-        child-src 'none'; font-src 'self' *.googleapis.com *.gstatic.com data:;
-        script-src 'self' 'unsafe-inline' 'unsafe-eval' *.stats.g.doubleclick.net *.amazonaws.com/ *.mixpanel.com/  *.googleapis.com *.helpscout.net cdn4.mxpnl.com  *.hotjar.com *.google-analytics.com data:;
-        style-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com;
-        img-src 'self' *.google-analytics.com *.sendyit.com s3-eu-west-1.amazonaws.com  images.mxpnl.com cdn.mxpnl.com *.gstatic.com *.googleapis.com *.cloudfront.net *.googleusercontent.com *.google-analytics.com www.google-analytics.com *.stats.g.doubleclick.net data:;
-        connect-src 'self' *.google-analytics.com *.hotjar.io *.mixpanel.com *.amazonaws.com/ *.sendyit.com d3hb14vkzrxvla.cloudfront.net sentry.io api.mixpanel.com *.helpscout.net *.pusher.com *.hotjar.com wss://chat.sendyit.com;
-        frame-src 'self' *.sendyit.com *.hotjar.com *.youtube.com *.google-analytics.com www.google-analytics.com *.stats.g.doubleclick.net;"
-    />
+      content="worker-src 'self' *.sendyit.com;
+      default-src 'self' *.sendyit.com *.google-analytics.com *.gstatic.com
+      *.www.googletagmanager.com wss://*.hotjar.com 'unsafe-inline' 'unsafe-eval';
+      child-src 'none';
+      font-src 'self' *.googleapis.com *.gstatic.com data:;
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com *.verygoodproxy.com *.verygoodvault.com
+      *.gstatic.com *.google-analytics.com https://optimize.google.com
+      *.stats.g.doubleclick.net *.amazonaws.com/ *.mixpanel.com/
+      *.helpscout.net cdn4.mxpnl.com *.hotjar.com *.www.google-analytics.com *.www.googletagmanager.com
+      *.google-analytics.com data:;
+      style-src 'self' 'unsafe-eval' *.googleapis.com https://optimize.google.com 'unsafe-inline';
+      img-src 'self' *.sendyit.com s3-eu-west-1.amazonaws.com images.mxpnl.com
+      cdn.mxpnl.com *.gstatic.com *.googleapis.com *.cloudfront.net https://optimize.google.com
+      *.googleusercontent.com *.hotjar.io *.hotjar.com *.google-analytics.com www.google-analytics.com
+      *.stats.g.doubleclick.net data:;
+      connect-src 'self' localhost:8200 *.hsforms.com *.google-analytics.com *.hotjar.io *.mixpanel.com *.amazonaws.com/
+      *.sendyit.com d3hb14vkzrxvla.cloudfront.net sentry.io https://*.sandbox.verygoodproxy.com https://*.verygoodvault.com
+      https://ip2c.org/s
+      *.googleapis.com api.mixpanel.com *.helpscout.net *.pusher.com *.hotjar.com wss://chat.sendyit.com;
+      frame-src 'self' *.sendyit.com *.hotjar.com *.youtube.com https://optimize.google.com *.verygoodproxy.com *.verygoodvault.com
+      *.google-analytics.com www.google-analytics.com
+      *.stats.g.doubleclick.net;"
+      />
+
     <link rel="manifest" href="/manifest.json" />
 
     <!-- Page hiding snippet (recommended)  -->
@@ -69,7 +86,11 @@
         a.src = g;
         m.parentNode.insertBefore(a, m);
       })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+      let b = window;
+      let _sessionSnack = b.localStorage.getItem('_sessionSnack');
+
       ga('create', 'UA-50235468-1', 'auto', { allowLinker: true });
+      ga('require', 'GTM-56KF6PL');
       ga('require', 'linker');
       ga('linker:autoLink', [
         'sendyit.com',
@@ -77,13 +98,21 @@
         'growth.sendyit.com',
         'app.sendyit.com',
       ]);
-      ga('require', 'GTM-56KF6PL');
       ga('send', 'pageview');
       let PageLoadTime = Math.round(performance.now());
       ga('send', 'timing', 'JS Dependencies', 'Website Load', PageLoadTime);
+
+      if(_sessionSnack !== null) {
+        _sessionSnack = JSON.parse(_sessionSnack);
+        ga("set", "userType", _sessionSnack.default)
+        ga("set", "userId", _sessionSnack[`${_sessionSnack.default}`].user_id)
+        ga("set", "copId", _sessionSnack[`${_sessionSnack.default}`].cop_id)
+      }
+
+
     </script>
-  </head>
-  <main>
+
+</head>
   <body class="body">
     <noscript>
       Please enable Javascript to enjoy using this site
@@ -202,8 +231,8 @@
           d.parentNode.insertBefore(b, d);
         }
       })(document, window.mixpanel || []);
-      mixpanel.init('44f45c8f1e756ba049e6284def96ac7f');
-      </script>
+      mixpanel.init('44f45c8f1e756ba049e6284def96ac7f', { api_host: 'https://api.mixpanel.com' });
+    </script>
     <!-- end Mixpanel -->
     <!-- Hotjar Tracking Code for app.sendyit.com -->
     <script>

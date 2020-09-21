@@ -37,7 +37,7 @@
           name="phone"
           value=""
           data-vv-validate-on="blur"
-          :preferred-countries="['ke', 'ug', 'tz']"
+          v-bind="phoneInputProps"
           @onBlur="validate_phone"
         />
       </p>
@@ -99,14 +99,18 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import {
+  mapGetters,
+  mapActions,
+} from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'PersonalInfo',
-  mixins: [SessionMxn],
+  mixins: [SessionMxn, NotificationMxn],
   data() {
     return {
       user_name: '',
@@ -116,6 +120,27 @@ export default {
       code: '',
       proceed_update: true,
       request_id: '',
+      phoneInputProps: {
+        mode: 'international',
+        defaultCountry: 'ke',
+        disabledFetchingCountry: false,
+        disabled: false,
+        disabledFormatting: false,
+        placeholder: 'Enter a phone number',
+        required: false,
+        enabledCountryCode: false,
+        enabledFlags: true,
+        preferredCountries: ['ke', 'ug', 'tz'],
+        autocomplete: 'off',
+        name: 'telephone',
+        maxLen: 25,
+        dropdownOptions: {
+          disabledDialCode: false,
+        },
+        inputOptions: {
+          showDialCode: false,
+        },
+      },
     };
   },
   computed: {
@@ -138,9 +163,11 @@ export default {
   methods: {
     set_data() {
       const session = this.$store.getters.getSession;
-      this.user_name = session[session.default].user_name;
-      this.user_email = session[session.default].user_email;
-      this.phone = session[session.default].user_phone;
+      if (Object.keys(session).length > 0) {
+        this.user_name = session[session.default].user_name;
+        this.user_email = session[session.default].user_email;
+        this.phone = session[session.default].user_phone;
+      }
     },
     validate_phone() {
       this.$validator.validate();
@@ -209,7 +236,7 @@ export default {
       const fullPayload = {
         values,
         vm: this,
-        app: 'PRIVATE_API',
+        app: 'NODE_PRIVATE_API',
         endpoint: 'check_verification',
       };
       this.requestPhoneVerificationVerify(fullPayload).then(
@@ -234,12 +261,12 @@ export default {
     },
     sendVerificationCode(phone) {
       const values = {};
-      values.phone_no = phone;
+      values.number = phone;
       const fullPayload = {
         values,
         vm: this,
-        app: 'PRIVATE_API',
-        endpoint: 'verify_phone',
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'request_verification',
       };
       this.requestPhoneVerification(fullPayload).then(
         (response) => {
@@ -293,8 +320,7 @@ export default {
                 level,
                 message: this.message,
               }; // notification object
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true); // activate notification
+              this.displayNotification(notification);
             } else {
               const level = 3;
               this.message = 'Something went wrong.';
@@ -303,8 +329,7 @@ export default {
                 level,
                 message: this.message,
               }; // notification object
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true); // activate notification
+              this.displayNotification(notification);
             }
           },
           (error) => {
@@ -315,8 +340,7 @@ export default {
               level,
               message: this.message,
             }; // notification object
-            this.$store.commit('setNotification', notification);
-            this.$store.commit('setNotificationStatus', true);
+            this.displayNotification(notification);
           },
         );
       } else if (session.default === 'peer') {
@@ -352,8 +376,7 @@ export default {
                 level,
                 message: this.message,
               };
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true);
+              this.displayNotification(notification);
             } else {
               const level = 3;
               this.message = 'Something went wrong.';
@@ -362,8 +385,7 @@ export default {
                 level,
                 message: this.message,
               };
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true);
+              this.displayNotification(notification);
             }
           },
           (error) => {
@@ -374,8 +396,7 @@ export default {
               level,
               message: this.message,
             };
-            this.$store.commit('setNotification', notification);
-            this.$store.commit('setNotificationStatus', true);
+            this.displayNotification(notification);
           },
         );
       } else {
@@ -388,15 +409,13 @@ export default {
         level,
         message,
       };
-      this.$store.commit('setNotification', notification);
-      this.$store.commit('setNotificationStatus', true);
+      this.displayNotification(notification);
     },
   },
 };
 </script>
 
 <style lang="css">
-@import "../../../../node_modules/vue-tel-input/dist/vue-tel-input.css";
 
 #auth_container > div > div:nth-child(2) > div > div > p:nth-child(3) > div > div > ul{
       z-index: 9;
