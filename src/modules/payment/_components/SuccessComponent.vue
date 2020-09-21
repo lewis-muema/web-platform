@@ -4,7 +4,7 @@
       {{ payment_loading_title }}
     </div>
     <div class="payment--mpesa-image">
-      <img src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/success.png" />
+      <img src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/success.png">
     </div>
     <div class="paymemt--mpesa-loader-actions">
       <button
@@ -20,8 +20,9 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+
 export default {
-  name: 'payment_success',
+  name: 'PaymentSuccess',
   data() {
     return {
       loading: true,
@@ -33,26 +34,26 @@ export default {
   methods: {
     ...mapActions(['$_payment/resetMpesaPaymentRequest']),
     backToPaymentRequest() {
-      let payload = {};
+      const payload = {};
       this.$store
         .dispatch('$_payment/resetMpesaPaymentRequest', payload)
-        .then(response => {}, error => {});
+        .then((response) => {}, (error) => {});
     },
     requestRB() {
-      //this will request from the api and update the store
-      let session = this.$store.getters.getSession;
+      // this will request from the api and update the store
+      const session = this.$store.getters.getSession;
       let cop_id = 0;
       if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
       }
-      let running_balance_payload = {
+      const running_balance_payload = {
         values: {
-          cop_id: cop_id,
-          user_phone: session[session.default]['user_phone'],
+          cop_id,
+          user_phone: session[session.default].user_phone,
         },
       };
 
-      let payload = {
+      const payload = {
         values: running_balance_payload,
         vm: this,
         app: 'PRIVATE_API',
@@ -61,7 +62,7 @@ export default {
 
       this.$store
         .dispatch('requestRunningBalance', payload, { root: true })
-        .then(response => {}, error => {});
+        .then((response) => {}, (error) => {});
     },
   },
   computed: {

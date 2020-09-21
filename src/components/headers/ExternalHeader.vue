@@ -7,7 +7,7 @@
           alt="logo"
           class="logo"
           onclick="location.href='https://sendyit.com/';"
-        />
+        >
       </div>
     </div>
   </div>
