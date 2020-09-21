@@ -1,4 +1,5 @@
 FROM node:carbon
+RUN useradd -u 3000 sendy
 
 # Create app directory
 #WORKDIR /usr/src/app
@@ -6,12 +7,21 @@ FROM node:carbon
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
-RUN mkdir /opt/sendy/
+
+RUN mkdir /opt/sendy/ && \
+    mkdir /home/sendy
 COPY . /opt/sendy/
 WORKDIR /opt/sendy/
 
+RUN chown -R sendy:sendy /opt/sendy/ 
+RUN chown -R sendy:sendy /home/sendy/
+
+
 ARG DOCKER_ENV
 ENV DOCKER_ENV=$DOCKER_ENV
+
+USER sendy:sendy
+
 
 RUN npm install && npm run build
 

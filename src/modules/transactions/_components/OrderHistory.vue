@@ -340,11 +340,29 @@ export default {
     this.populateOrders();
     this.setUserDefaultCurrency();
     this.currencies = this.getUserCurrencies;
+    this.trackMixpanelEvent('Opened Order History Page');
   },
   methods: {
     ...mapMutations({
       setOrderHistoryOrders: '$_transactions/setOrderHistoryOrders',
     }),
+
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+        }
+      } catch (er) {
+        // ...
+      }
+    },
 
     populateOrders() {
       const sessionData = this.$store.getters.getSession;

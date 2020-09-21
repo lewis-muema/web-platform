@@ -87,9 +87,29 @@ export default {
   created() {
     const STORE_KEY = '$_admin';
     this.$store.registerModule(STORE_KEY, adminStore);
+    this.trackMixpanelEvent('Select Admin Settings Menu');
   },
   destroyed() {
     // TO DO:  destroy store?
+  },
+
+  methods: {
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+        }
+      } catch (er) {
+        // ...
+      }
+    },
   },
 };
 </script>

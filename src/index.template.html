@@ -88,7 +88,7 @@
       })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
       let b = window;
       let _sessionSnack = b.localStorage.getItem('_sessionSnack');
-      
+
       ga('create', 'UA-50235468-1', 'auto', { allowLinker: true });
       ga('require', 'GTM-56KF6PL');
       ga('require', 'linker');
@@ -98,6 +98,7 @@
         'growth.sendyit.com',
         'app.sendyit.com',
       ]);
+      ga('require', 'ecommerce', 'ecommerce.js');
       ga('send', 'pageview');
       let PageLoadTime = Math.round(performance.now());
       ga('send', 'timing', 'JS Dependencies', 'Website Load', PageLoadTime);
@@ -137,7 +138,8 @@
         )
           return a();
         e.attachEvent ? e.attachEvent('onload', a) : e.addEventListener('load', a, !1);
-      })(window, document, window.Beacon || function() {});
+      })(window, document, window.Beacon || function() {
+      });
     </script>
     <script type="text/javascript">
       window.Beacon('init', 'bfdc6b7d-be53-41ea-9f6a-ac15569db113');
@@ -251,4 +253,5 @@
       })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
     </script>
   </body>
+</main>
 </html>
