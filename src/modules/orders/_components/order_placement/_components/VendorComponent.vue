@@ -1166,7 +1166,7 @@ export default {
     },
     dispatchScheduleTime() {
       const dateTime = new Date();
-      this.trackMixpanelEvent('Set Order Schedule Time', { 'Scheduled Time': this.schedule_time });
+      this.trackMixpanelEvent('Schedule Order', { 'Scheduled Time': this.schedule_time });
       if (this.schedule_time && dateTime > this.schedule_time) {
         this.schedule_time = new Date();
       }
@@ -1174,6 +1174,7 @@ export default {
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
     },
     addDestinationNotes(note, pathObj, i) {
+      this.trackMixpanelEvent('Add A Note', { 'Destination Note': note });
       this.setWaypointNotes({
         index: i,
         notes: note,
