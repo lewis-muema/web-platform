@@ -1041,8 +1041,8 @@ export default {
       } else {
         const payload = {
           values: this.getCompleteOrderObject(),
-          app: 'PRIVATE_API',
-          endpoint: 'pay/no_destination',
+          app: 'ADONIS_PRIVATE_API',
+          endpoint: 'orders/confirm_order/no_destination',
         };
         this.loading = true;
         this.requestDedicatedOrderCompletion(payload).then(
