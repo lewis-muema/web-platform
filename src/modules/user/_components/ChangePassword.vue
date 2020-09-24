@@ -70,6 +70,29 @@ export default {
     ...mapActions({
       requestChangePassword: '$_user/requestChangePassword',
     }),
+
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+          // this.$ga.event({
+          //   eventCategory: 'Orders',
+          //   eventAction: 'Price Request',
+          //   eventLabel: name,
+          //   eventValue: 14,
+          // });
+        }
+      } catch (er) {
+        // ...
+      }
+    },
     update_password() {
       if (this.old_password !== '' && this.new_password !== '' && this.confirm_password !== '') {
         if (this.new_password !== this.confirm_password) {
@@ -98,6 +121,8 @@ export default {
             this.requestChangePassword(fullPayload).then(
               (response) => {
                 if (response.status) {
+                  this.trackMixpanelEvent('Change Password');
+                  
                   const level = 1; // success
                   this.message = 'Password Changed. You will be redirected to the login page within 5 seconds';
                   const notification = { title: 'Password Change', level, message: this.message }; // notification object

@@ -56,6 +56,33 @@ export default {
         this.autoPopBeacon();
       }
     },
+    $route(to, from) {
+      if (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders') {
+        // this.autoPopBeacon();
+      }
+    },
+  },
+  mounted() {
+    // beacon click listener
+    window.Beacon('on', 'open', () => {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          window.ga('send', 'event', {
+            eventCategory: 'Beacon Chat',
+            eventAction: 'Click',
+            eventLabel: 'Chat Icon - Beacon',
+          });
+        }
+      } catch (er) {
+        // ...
+      }
+    });
   },
   beforeMount() {
     if (ENV.DOMAIN !== 'localhost') {
