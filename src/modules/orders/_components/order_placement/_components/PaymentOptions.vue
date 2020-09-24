@@ -1328,8 +1328,8 @@ export default {
       } else {
         const payload = {
           values: this.getCompleteOrderObject(),
-          app: 'PRIVATE_API',
-          endpoint: 'pay',
+          app: 'ADONIS_PRIVATE_API',
+          endpoint: 'orders/confirm_order',
         };
         this.loading = true;
         this.requestOrderCompletion(payload).then(
