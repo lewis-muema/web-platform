@@ -1146,7 +1146,7 @@ export default {
           showDialCode: false,
         },
       },
-      validPhone: true,
+      validPhone: false,
       send_sms: [],
       intercounty_load: '',
       parcel_size: '',
@@ -2374,7 +2374,7 @@ export default {
     isDropOffSet() {
       const data = this.instructions_data.slice(1);
       let value = true;
-      if (data.filter(val => Object.keys(val).length !== 0).length === 0) {
+      if (data.filter(val => Object.keys(val).length !== 0).length === 0 || !this.validPhone) {
         value = false;
       }
       return value;
@@ -2385,6 +2385,7 @@ export default {
         this.instructions_data[0] === ''
         || this.instructions_data[0] === undefined
         || Object.keys(this.instructions_data[0]).length === 0
+        || !this.validPhone
       ) {
         value = false;
       }

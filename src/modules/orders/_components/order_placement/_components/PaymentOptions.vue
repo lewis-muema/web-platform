@@ -339,11 +339,36 @@
                 </div>
               </div>
 
-              <div class="order_summary--outline">
+              <div
+                v-if="activeVendorPriceData.vendor_id === 26"
+                class="order_summary--outline"
+              >
+                <label class="delivery_label">
+                  Type of package to be delivered
+                </label>
+                <p>{{ getInterCountyPayload.package_type }}</p>
+              </div>
+
+              <div
+                v-else
+                class="order_summary--outline"
+              >
                 <label class="delivery_label">
                   Type of {{ activeVendorPriceData.vendor_name.toLowerCase() }}
                 </label>
                 <p>{{ carrierTypeSummary() }}</p>
+              </div>
+
+              <div v-if="activeVendorPriceData.vendor_id === 26">
+                <div
+                  v-if="getInterCountyPayload.package_type === 'PARCEL'"
+                  class="order_summary--outline"
+                >
+                  <label class="delivery_label">
+                    Approximate weight of Parcel (Highest in the limit)
+                  </label>
+                  <p>{{ getInterCountyPayload.approximate_weight }}kg</p>
+                </div>
               </div>
 
               <div class="order_summary--outline">
