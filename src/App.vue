@@ -52,8 +52,8 @@ export default {
       }
     },
     $route(to, from) {
-      if (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders') {
-        // this.autoPopBeacon();
+      if (document.querySelector('.body').id.includes('beacon-active') && (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders')) {
+        this.autoPopBeacon();
       }
     },
     $route(to, from) {
@@ -104,7 +104,9 @@ export default {
       this.loadFCMListeners();
       this.detectAndroid();
       this.detectIOS();
-      // this.autoPopBeacon();
+      if (document.querySelector('.body').id.includes('beacon-active')) {
+        this.autoPopBeacon();
+      }
     }
   },
   methods: {
@@ -356,7 +358,7 @@ export default {
             });
           }, 1500);
         }
-      }, 30000);
+      }, 1000);
     },
   },
 };
