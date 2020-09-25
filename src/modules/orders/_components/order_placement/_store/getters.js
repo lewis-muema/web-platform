@@ -41,4 +41,5 @@ export default {
   getPairWithRiderState: state => state.pair_rider_state,
   getPairErrorMessage: state => state.pair_error_msg,
   getInstructionNotes: state => state.instruction_notes,
+  getInterCountyPayload: state => state.inter_county_order_details,
 };
