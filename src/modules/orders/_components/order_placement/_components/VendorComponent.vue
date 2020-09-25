@@ -260,7 +260,7 @@
                 </div>
               </div>
 
-              <div class="">
+              <div class="" v-if="hubCoordinator">
                 <div class="home-view-truck-options-inner-wrapper">
                   <div class="home-view-truck-options-label">
                     Who is sending the package?
@@ -1184,6 +1184,7 @@ export default {
       sender_name : '',
       sender_phone : '' ,
       pickupInstructions : false,
+      hubCoordinator : false,
     };
   },
   computed: {
@@ -1524,6 +1525,7 @@ export default {
       this.setOrderState(2);
       this.setExtendOptions(true);
       this.handleScheduledTime();
+      this.checkHubCoordinator();
     },
     triggerGAEvent(field, value) {
       let analyticsEnv = '';
@@ -2412,7 +2414,23 @@ export default {
 
       }
       return resp;
-    }
+    },
+    checkHubCoordinator() {
+      const session = this.$store.getters.getSession;
+      if (Object.keys(session).length > 0) {
+
+        if (session.default === 'biz') {
+
+          if (session[session.default].cop_user_type === 2) {
+            this.hubCoordinator = true ;
+          } else{
+            this.hubCoordinator = false ;
+          }
+        } else {
+          this.hubCoordinator = false ;
+        }
+      }
+    },
   },
 };
 </script>
