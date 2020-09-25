@@ -1196,6 +1196,10 @@ export default {
         && this.getInterCountyPayload.approximate_weight === ''
       ) {
         msg = 'Kindly provide weight of package you want delivered';
+        this.doNotification(2, 'Order Completion Failure', msg);
+      } else if (Object.keys(this.getInterCountyPayload.recipient_info).length === 0) {
+        msg = 'Kindly provide recipient information';
+        this.doNotification(2, 'Order Completion Failure', msg);
       } else {
         this.initiateOrderSummaryDialog();
       }
@@ -1298,6 +1302,11 @@ export default {
               return false;
             }
             if (this.activeVendorPriceData.vendor_id === 26) {
+              if (this.getPriceRequestObject.payment_option === 2) {
+                this.payment_type = 'postpay';
+              } else {
+                this.payment_type = 'prepay';
+              }
               this.doCompleteOrder();
             } else {
               this.checkPaymentDetails();
@@ -1636,7 +1645,27 @@ export default {
       // intercounty payload
 
       if (this.activeVendorPriceData.vendor_id === 26) {
-        payload.inter_county_order_details = this.getInterCountyPayload;
+        const intercountyPayload = {
+          recipient_info: this.getInterCountyPayload.recipient_info,
+          pickup_waypoint_instructions: this.getInterCountyPayload.pickup_waypoint_instructions,
+          package_type: this.getInterCountyPayload.package_type,
+          approximate_weight: this.getInterCountyPayload.approximate_weight,
+          destination_delivery_status: this.getInterCountyPayload.destination_delivery_status,
+          pickup_delivery_status: this.getInterCountyPayload.pickup_delivery_status,
+          destination_delivery_status: this.getInterCountyPayload.destination_delivery_status,
+        };
+
+        if (this.getInterCountyPayload.destination_delivery_status) {
+          intercountyPayload.destination_delivery_mode = this.getInterCountyPayload.destination_delivery_mode;
+        }
+        if (this.getInterCountyPayload.pickup_delivery_status) {
+          intercountyPayload.pickup_pricing_uuid = this.getInterCountyPayload.pickup_pricing_uuid;
+        }
+        if (this.getInterCountyPayload.destination_delivery_status) {
+          intercountyPayload.destination_delivery_mode = this.getInterCountyPayload.destination_delivery_mode;
+          intercountyPayload.destination_pricing_uuid = this.getInterCountyPayload.destination_pricing_uuid;
+        }
+        payload.inter_county_order_details = intercountyPayload;
       }
       // support new pricing
       if (this.activeVendorPriceData.order_no === undefined) {
