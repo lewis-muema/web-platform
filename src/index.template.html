@@ -98,6 +98,7 @@
         'growth.sendyit.com',
         'app.sendyit.com',
       ]);
+      ga('require', 'ecommerce', 'ecommerce.js');
       ga('send', 'pageview');
       let PageLoadTime = Math.round(performance.now());
       ga('send', 'timing', 'JS Dependencies', 'Website Load', PageLoadTime);
@@ -113,7 +114,7 @@
     </script>
 
 </head>
-  <body class="body">
+  <body class="body" id="beacon-inactive">
     <noscript>
       Please enable Javascript to enjoy using this site
     </noscript>
@@ -137,7 +138,8 @@
         )
           return a();
         e.attachEvent ? e.attachEvent('onload', a) : e.addEventListener('load', a, !1);
-      })(window, document, window.Beacon || function() {});
+      })(window, document, window.Beacon || function() {
+      });
     </script>
     <script type="text/javascript">
       window.Beacon('init', 'bfdc6b7d-be53-41ea-9f6a-ac15569db113');
