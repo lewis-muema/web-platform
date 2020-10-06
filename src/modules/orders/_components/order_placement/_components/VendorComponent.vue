@@ -305,6 +305,19 @@
                 </div>
               </div>
 
+              <div class="home-view-truck-options-inner-wrapper">
+                <div class="home-view-truck-options-label">
+                  Nearest collection centre from  pickup location
+                </div>
+                <div>
+                  <textarea
+                    v-model.trim="pickUpCollectionCentreInfo"
+                    class="textarea-control collection_centre"
+                    type="text"
+                  />
+                </div>
+              </div>
+
               <div v-if="pickupInstructions">
                 <div class="home-view-truck-options-inner-wrapper">
                   <div class="home-view-truck-options-label">
@@ -1269,7 +1282,7 @@ export default {
 
             options.push({
               value: -1,
-              label: `Have the package delivered to ${this.get_order_path[1].name}`,
+              label: `Doorstep delivery to ${this.get_order_path[1].name}`,
             })
 
       }
@@ -1282,7 +1295,7 @@ export default {
             options.push({
               amount : intercountyDeliveries[i].cost,
               value: intercountyDeliveries[i].id,
-              label : `I’d like a ${this.riderNameDisplay} to pick it at ${this.get_order_path[1].name} (Delivery fee will be charged)`,
+              label: `Doorstep delivery to ${this.get_order_path[1].name} by Sendy ${this.riderNameDisplay} (Delivery fee will be charged)`,
               vendor_name : intercountyDeliveries[i].vendor_name,
             })
             }
@@ -1297,6 +1310,14 @@ export default {
       let resp = '' ;
 
       resp = this.activeVendorPriceData.inter_county_info.destination_collection_center.address ;
+
+      return resp ;
+
+    },
+    pickUpCollectionCentreInfo (){
+      let resp = '' ;
+
+      resp = this.activeVendorPriceData.inter_county_info.pickup_collection_center.address ;
 
       return resp ;
 
