@@ -53,7 +53,7 @@ export default {
     },
     $route(to, from) {
       if (document.querySelector('.body').id.includes('beacon-active') && (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders')) {
-        this.autoPopBeacon();
+        this.autoPopBeacon(2);
       }
     },
   },
@@ -100,7 +100,7 @@ export default {
       this.detectAndroid();
       this.detectIOS();
       if (document.querySelector('.body').id.includes('beacon-active')) {
-        this.autoPopBeacon();
+        this.autoPopBeacon(1);
       }
     }
   },
@@ -331,29 +331,39 @@ export default {
         }, 10000);
       }
     },
-    autoPopBeacon() {
-      setTimeout(() => {
-        if (this.$route.path === '/auth' || this.$route.path === '/auth/sign_in') {
-          window.Beacon('open');
-          window.Beacon('navigate', '/answers/');
-          setTimeout(() => {
-            window.Beacon('suggest', ['59d5bc412c7d3a40f0ed346c']);
-          }, 1500);
-        }
-        if (this.$route.path === '/orders' && !this.getPickUpFilledStatus) {
-          const session = this.$store.getters.getSession;
-          window.Beacon('open');
-          window.Beacon('navigate', '/answers/');
-          setTimeout(() => {
-            window.Beacon('suggest', ['59d5e11f2c7d3a40f0ed34fe']);
-            this.trackMixpanelEvent('Auto pop up helpscout beacon for order placement', {
-              'user name': session[session.default].user_name,
-              'user email': session[session.default].user_email,
-              'user phone': session[session.default].user_phone,
-            });
-          }, 1500);
-        }
-      }, 1000);
+    autoPopBeacon(id) {
+      if (id === 1) {
+        window.Beacon('on', 'ready', () => {
+          this.beaconActions();
+        });
+      }
+      if (id === 2) {
+        this.beaconActions();
+      }
+    },
+    beaconActions() {
+      if (this.$route.path === '/auth' || this.$route.path === '/auth/sign_in') {
+        window.Beacon('close');
+        window.Beacon('open');
+        window.Beacon('navigate', '/answers/');
+        setTimeout(() => {
+          window.Beacon('suggest', ['59d5bc412c7d3a40f0ed346c']);
+        }, 2000);
+      }
+      if (this.$route.path === '/orders' && !this.getPickUpFilledStatus) {
+        const session = this.$store.getters.getSession;
+        window.Beacon('close');
+        window.Beacon('open');
+        window.Beacon('navigate', '/answers/');
+        setTimeout(() => {
+          window.Beacon('suggest', ['59d5e11f2c7d3a40f0ed34fe']);
+          this.trackMixpanelEvent('Auto pop up helpscout beacon for order placement', {
+            'user name': session[session.default].user_name,
+            'user email': session[session.default].user_email,
+            'user phone': session[session.default].user_phone,
+          });
+        }, 2000);
+      }
     },
   },
 };
