@@ -369,6 +369,41 @@
                   </label>
                   <p>{{ getInterCountyPayload.approximate_weight }}kg</p>
                 </div>
+
+                <div class="order_summary--outline">
+                  <label class="delivery_label">
+                    How do you want your package picked?
+                  </label>
+                  <p>{{ interCountyPickUpOption() }}</p>
+                </div>
+
+                <div class="order_summary--outline">
+                  <label class="delivery_label">
+                    The nearest collection centre to you is
+                  </label>
+                  <p>
+                    {{ activeVendorPriceData.inter_county_info.pickup_collection_center.address }}
+                  </p>
+                </div>
+
+                <div class="order_summary--outline">
+                  <label class="delivery_label">
+                    Recipient contact information
+                  </label>
+                  <p>{{ getInterCountyPayload.recipient_info.name }}</p>
+                  <p>{{ getInterCountyPayload.recipient_info.phone_number }}</p>
+                </div>
+
+                <div class="order_summary--outline">
+                  <label class="delivery_label">
+                    The package will be delivered to the collection centre at
+                  </label>
+                  <p>
+                    {{
+                      activeVendorPriceData.inter_county_info.destination_collection_center.address
+                    }}
+                  </p>
+                </div>
               </div>
 
               <div class="order_summary--outline">
@@ -2329,7 +2364,11 @@ export default {
     },
     pickUpInstructions() {
       let value = true;
-      if (this.getInstructionNotes[0] === '' || this.getInstructionNotes[0] === undefined) {
+      if (
+        this.getInstructionNotes[0] === ''
+        || this.getInstructionNotes[0] === undefined
+        || this.activeVendorPriceData.vendor_id === 26
+      ) {
         value = false;
       }
       return value;
@@ -2337,7 +2376,7 @@ export default {
     dropOffInstructions() {
       const data = this.getInstructionNotes.slice(1);
       let value = true;
-      if (data.length === 0) {
+      if (data.length === 0 || this.activeVendorPriceData.vendor_id === 26) {
         value = false;
       }
       return value;
@@ -2380,6 +2419,13 @@ export default {
         resp = 'Flatbed';
       } else {
         resp = 'Any';
+      }
+      return resp;
+    },
+    interCountyPickUpOption() {
+      let resp = 'A sendy rider will pick the package and deliver to the nearest collection centre ';
+      if (this.getInterCountyPayload.pickup_pricing_uuid === '') {
+        resp = " I'll take it to the nearest collection centre";
       }
       return resp;
     },
