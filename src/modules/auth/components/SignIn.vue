@@ -181,6 +181,7 @@ export default {
                         'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
                         $name: acc.user_name,
                         'Client Type': 'Web Platform',
+                        $distinctID: acc.default === 'peer' ? `${acc.user_id}_0` : `0_${acc.user_id}`,
                       });
 
                       // login identify
