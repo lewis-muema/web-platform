@@ -242,9 +242,9 @@ export default {
     state.inter_county_order_details.destination_delivery_status = val;
   },
   setInterCountyDeliveryId(state, val) {
-    state.inter_county_order_details.destination_delivery_mode = val;
+    state.inter_county_order_details.destination_pricing_uuid = val;
   },
   setInterCountyDeliveryMode(state, val) {
-    state.inter_county_order_details.destination_pricing_uuid = val;
+    state.inter_county_order_details.destination_delivery_mode = val;
   },
 };
