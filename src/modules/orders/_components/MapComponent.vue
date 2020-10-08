@@ -353,7 +353,7 @@ export default {
         || val.inter_county_order_details.status === 'arrived'
         || val.inter_county_order_details.status === 'completed'
       ) {
-        this.iconLabel = 'destination';
+        this.iconLabel = 'delivery';
       } else {
         this.iconLabel = 'pickup';
       }
