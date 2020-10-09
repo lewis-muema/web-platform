@@ -84,7 +84,10 @@
             >
             <span>{{ order_details.path[index].name }}</span>
             <div
-              v-if="order_details.rider_deliver_img !== null && index <= order_details.rider_deliver_img.length"
+              v-if="
+                order_details.rider_deliver_img !== null &&
+                  index <= order_details.rider_deliver_img.length
+              "
               class="recepient-padded"
             >
               Recieved by {{ order_details.rider_deliver_img[index - 1].name }}
@@ -367,8 +370,8 @@ export default {
     rateOrder() {
       this.show_rating = false;
     },
-    trackOrder(orderNo) {
-      this.$router.push({ name: 'tracking', params: { orderNo } });
+    trackOrder(order_no) {
+      this.$router.push({ name: 'tracking', params: { order_no } });
     },
     getDeliveryDocsSrc(order) {
       let env = '';
