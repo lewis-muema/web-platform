@@ -84,7 +84,10 @@
             >
             <span>{{ order_details.path[index].name }}</span>
             <div
-              v-if="order_details.rider_deliver_img !== null && index <= order_details.rider_deliver_img.length"
+              v-if="
+                order_details.rider_deliver_img !== null &&
+                  index <= order_details.rider_deliver_img.length
+              "
               class="recepient-padded"
             >
               Recieved by {{ order_details.rider_deliver_img[index - 1].name }}
@@ -207,7 +210,10 @@
                     >
                   </div>
                   <div
-                    v-if="order_details.rider_deliver_img !== null && index <= order_details.rider_deliver_img.length"
+                    v-if="
+                      order_details.rider_deliver_img !== null &&
+                        index <= order_details.rider_deliver_img.length
+                    "
                     class="delivery_image_details"
                   >
                     Delivery signature by : {{ order_details.rider_deliver_img[index - 1].name }}
@@ -364,8 +370,8 @@ export default {
     rateOrder() {
       this.show_rating = false;
     },
-    trackOrder(orderNo) {
-      this.$router.push({ name: 'tracking', params: { orderNo } });
+    trackOrder(order_no) {
+      this.$router.push({ name: 'tracking', params: { order_no } });
     },
     getDeliveryDocsSrc(order) {
       let env = '';
@@ -489,7 +495,9 @@ export default {
       getOrderDetails: '$_transactions/getOrderHistoryOrders',
     }),
     order_details() {
-      return this.getOrderDetails.find(order => order.order_id === parseInt(this.$route.params.id, 10));
+      return this.getOrderDetails.find(
+        order => order.order_id === parseInt(this.$route.params.id, 10),
+      );
     },
   },
   mounted() {
