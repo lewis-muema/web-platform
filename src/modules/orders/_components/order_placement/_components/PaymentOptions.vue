@@ -298,6 +298,9 @@
                     <p class="delivery_points">
                       {{ getHomeLocations[0] }}
                     </p>
+                    <p class="visinity_point">
+                      ({{ getVicinityLocations[0] }})
+                    </p>
                   </li>
 
                   <li
@@ -319,6 +322,9 @@
                     </p>
                     <p class="delivery_points">
                       {{ val }}
+                    </p>
+                    <p class="visinity_point">
+                      ({{ getVicinityLocations[index] }})
                     </p>
                   </li>
                 </ul>
@@ -629,6 +635,7 @@ export default {
       getLoadWeightStatus: '$_orders/$_home/getLoadWeightStatus',
       getLoadWeightValue: '$_orders/$_home/getLoadWeightValue',
       getHomeLocations: '$_orders/getHomeLocations',
+      getVicinityLocations: '$_orders/getVicinityLocations',
       getStoreOrderPath: '$_orders/getStorePath',
       getPairWithRiderState: '$_orders/$_home/getPairWithRiderState',
       getPairErrorMessage: '$_orders/$_home/getPairErrorMessage',

@@ -5,6 +5,7 @@ const getMarkers = state => state.map.markers;
 const getPolyline = state => state.map.polyline;
 const getVendors = state => state.map.vendors;
 const getHomeLocations = state => state.home_locations;
+const getVicinityLocations = state => state.vicinity_locations;
 const getStorePath = state => state.location_path;
 const getOuterPriceRequestData = state => state.outer_price_request;
 const getActiveVendorTally = state => state.active_vendor_tally;
@@ -12,7 +13,6 @@ const getExpandedActiveVendorTally = state => state.expanded_active_vendor_tally
 const getOuterActiveVendorDetails = state => state.outer_active_vendor_data;
 const getOuterActivePackageClass = state => state.outer_active_package_data;
 const getParentOrder = state => state.parent_order;
-
 
 export default {
   getPage,
@@ -29,4 +29,5 @@ export default {
   getOuterActiveVendorDetails,
   getOuterActivePackageClass,
   getParentOrder,
+  getVicinityLocations,
 };
