@@ -120,19 +120,27 @@
       <div
         v-if="$route.path === '/orders/dedicated/multi-destination'"
         class="homeview--row homeview--row__more-destinations homeview-locations-options"
-        :class="allow_add_destination ? 'homeview-locations-options-multi-destination-active' : 'homeview-locations-options-multi-destination-inactive'"
+        :class="
+          allow_add_destination
+            ? 'homeview-locations-options-multi-destination-active'
+            : 'homeview-locations-options-multi-destination-inactive'
+        "
       >
         <div class="homeview-locations-options--add-destination">
           <font-awesome-icon
             icon="plus"
             size="xs"
             class="sendy-blue homeview--row__font-awesome"
-            :class="allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'"
+            :class="
+              allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'
+            "
             width="10px"
           />
           <a
             class="homeview--add"
-            :class="allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'"
+            :class="
+              allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'
+            "
             @click="addExtraDestinationWrapper()"
           >Add Destination</a>
         </div>
@@ -222,12 +230,11 @@ export default {
       show_destinations: false,
       loading: false,
       locations: [],
+      vicinity_location: [],
       fileUploadStatus: false,
       map_options: {
         componentRestrictions: {
-          country: [
-            'ke', 'ug', 'tz',
-          ],
+          country: ['ke', 'ug', 'tz'],
         },
         bounds: {
           north: 35.6,
@@ -329,6 +336,7 @@ export default {
       setCountryCode: '$_orders/$_home/setCountryCode',
       setDefaultCurrency: '$_orders/$_home/setDefaultCurrency',
       setHomeLocations: '$_orders/setHomeLocations',
+      setVicinityLocation: '$_orders/setVicinityLocation',
       setStorePath: '$_orders/setStorePath',
       clearStorePath: '$_orders/clearStorePath',
       clearOuterPriceRequestObject: '$_orders/clearOuterPriceRequestObject',
@@ -404,6 +412,7 @@ export default {
       this.unset_order_path(index);
       this.unsetStorePath(index);
       this.deleteLocationInModel(index);
+      this.deleteVicinityInModel(index);
       this.unset_location_name(index);
     },
 
@@ -444,6 +453,7 @@ export default {
       this.set_order_path(pathPayload);
       this.setStorePath(pathPayload);
       this.setLocationInModel(index, place.name);
+      this.setVicinityInModel(index, place.vicinity);
       this.set_location_name(locationNamePayload);
       if (index === 0) {
         this.setPickupFilled(true);
@@ -527,13 +537,23 @@ export default {
     setLocationInModel(index, name) {
       this.locations.splice(index, 0, name);
     },
+    setVicinityInModel(index, name) {
+      this.vicinity_location.splice(index, 0, name);
+    },
 
     deleteLocationInModel(index) {
       this.locations.splice(index, 1);
     },
+    deleteVicinityInModel(index) {
+      this.vicinity_location.splice(index, 1);
+    },
 
     clearLocationNamesModel() {
       this.locations = [];
+    },
+
+    clearVicinityNamesModel() {
+      this.vicinity_location = [];
     },
 
     setMarker(lat, lng, index) {
@@ -604,6 +624,7 @@ export default {
         (response) => {
           this.setOrderState(1);
           this.setHomeLocations(definedLocations);
+          this.setVicinityLocation(this.vicinity_location);
           this.setOuterPriceRequestObject(response.values);
           this.loading = false;
           this.setDefaultPackageClass();
@@ -627,7 +648,11 @@ export default {
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'crisis_notification')) {
-            this.doNotification(3, error.response.data.reason, error.response.data.crisis_notification.msg);
+            this.doNotification(
+              3,
+              error.response.data.reason,
+              error.response.data.crisis_notification.msg,
+            );
           } else {
             this.doNotification(
               3,
@@ -700,7 +725,10 @@ export default {
     setDefaultPackageClass() {
       if (this.get_active_package_class === '') {
         this.doSetDefaultPackageClass();
-      } else if (this.get_price_request_object !== undefined && this.get_price_request_object.economy_price_tiers !== undefined) {
+      } else if (
+        this.get_price_request_object !== undefined
+        && this.get_price_request_object.economy_price_tiers !== undefined
+      ) {
         const self = this;
         const _package = this.get_price_request_object.economy_price_tiers.filter(
           pack => pack.tier_group === self.get_active_package_class,
@@ -728,6 +756,7 @@ export default {
 
     destroyOrderPlacement() {
       this.clearLocationNamesModel();
+      this.clearVicinityNamesModel();
       this.setPickupFilled(false);
       try {
         this.$store.unregisterModule(['$_orders', '$_home']);
@@ -816,6 +845,7 @@ export default {
       }
       this.unset_location_marker(index);
       this.deleteLocationInModel(index);
+      this.deleteVicinityInModel(index);
       this.unset_location_name(index);
     },
   },

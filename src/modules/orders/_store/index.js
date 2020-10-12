@@ -30,6 +30,7 @@ export default {
       outer_active_vendor_data: {},
       outer_active_package_data: 'small',
       parent_order: '',
+      vicinity_locations: [],
     };
   },
   actions,
