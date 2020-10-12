@@ -1699,7 +1699,7 @@ export default {
           .then((response) => {
             if (response) {
               if (!that.mpesa_payment_state) {
-                if (that.tracking_data.main_status === 'approved') {
+                if (that.tracking_data.inter_county_order_details.status === 'approved') {
                   that.completeMpesaPaymentRequest({});
                   that.mpesa_payment = true;
                 } else {
