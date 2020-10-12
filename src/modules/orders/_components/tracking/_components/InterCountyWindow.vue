@@ -888,6 +888,7 @@ export default {
   methods: {
     ...mapActions({
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
+      completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
     }),
     ...mapMutations({
       hide_vendors: '$_orders/hideVendors',
