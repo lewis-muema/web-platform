@@ -452,7 +452,7 @@ export default {
       this.setMarker(place.geometry.location.lat(), place.geometry.location.lng(), index);
       this.set_order_path(pathPayload);
       this.setStorePath(pathPayload);
-      this.setLocationInModel(index, place.name);
+      this.setLocationInModel(index, `${place.name} (${place.formatted_address})`);
       this.setVicinityInModel(index, place.vicinity);
       this.set_location_name(locationNamePayload);
       if (index === 0) {

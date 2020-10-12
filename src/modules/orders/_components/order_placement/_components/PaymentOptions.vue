@@ -298,9 +298,6 @@
                     <p class="delivery_points">
                       {{ getHomeLocations[0] }}
                     </p>
-                    <p class="visinity_point">
-                      ({{ getVicinityLocations[0] }})
-                    </p>
                   </li>
 
                   <li
@@ -322,9 +319,6 @@
                     </p>
                     <p class="delivery_points">
                       {{ val }}
-                    </p>
-                    <p class="visinity_point">
-                      ({{ getVicinityLocations[index] }})
                     </p>
                   </li>
                 </ul>
