@@ -109,9 +109,12 @@ export default {
       app: 'NODE_PRIVATE_API',
       endpoint: 'cop_departments',
     };
-    this.$store
-      .dispatch('$_admin/requestDepartmentsList', usersFullPayload)
-      .then((response) => {}, (error) => {});
+    this.$store.dispatch('$_admin/requestDepartmentsList', usersFullPayload).then(
+      (response) => {},
+      (error) => {
+        this.empty_departments_state = 'No Departments For Account';
+      },
+    );
     this.filteredUserData = this.deptData;
   },
   computed: {
