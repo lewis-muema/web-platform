@@ -217,4 +217,34 @@ export default {
   clearInstructionNotes(state) {
     state.instruction_notes = [];
   },
+  setInterCountySenderInfo(state, val) {
+    state.inter_county_order_details.sender_info = val;
+  },
+  setIntercountyLoadType(state, val) {
+    state.inter_county_order_details.package_type = val;
+  },
+  setIntercountyParcelSize(state, val) {
+    state.inter_county_order_details.approximate_weight = val;
+  },
+  setInterCountyRecipientInfo(state, val) {
+    state.inter_county_order_details.recipient_info = val;
+  },
+  setInterCountyWaypointInfo(state, val) {
+    state.inter_county_order_details.pickup_waypoint_instructions = val;
+  },
+  setInterCountyPickUpStatus(state, val) {
+    state.inter_county_order_details.pickup_delivery_status = val;
+  },
+  setInterCountyPickUpId(state, val) {
+    state.inter_county_order_details.pickup_pricing_uuid = val;
+  },
+  setInterCountyDeliveryStatus(state, val) {
+    state.inter_county_order_details.destination_delivery_status = val;
+  },
+  setInterCountyDeliveryId(state, val) {
+    state.inter_county_order_details.destination_pricing_uuid = val;
+  },
+  setInterCountyDeliveryMode(state, val) {
+    state.inter_county_order_details.destination_delivery_mode = val;
+  },
 };

@@ -26,7 +26,8 @@
   display: inline-block;
   float: left;
   padding-left: 10px;
-  padding-top: 10px;
+  padding-top: 5%;
+  padding-bottom: 5px;
 }
 .info_window_descript{
   width: 100%;

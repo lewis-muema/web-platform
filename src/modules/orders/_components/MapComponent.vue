@@ -283,6 +283,8 @@ export default {
           // return 'Delivered';
           this.infoHeader = '';
           this.infoDescription = '';
+        } else if (data.rider.vendor_id === 26) {
+          this.handleInterCountyToolTip(data);
         } else if (
           data.delivery_status === 2
           && waiting !== undefined
@@ -343,6 +345,24 @@ export default {
         this.orderETA(data);
       } else {
         this.infoWinOpen = false;
+      }
+    },
+    handleInterCountyToolTip(val) {
+      if (
+        val.inter_county_order_details.status === 'enroute'
+        || val.inter_county_order_details.status === 'arrived'
+        || val.inter_county_order_details.status === 'completed'
+      ) {
+        this.iconLabel = 'delivery';
+      } else {
+        this.iconLabel = 'pickup';
+      }
+      const data = val.order_timeline;
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].status === 'ongoing') {
+          this.infoHeader = data[i].message;
+          this.infoDescription = '';
+        }
       }
     },
     orderETA(data) {
@@ -473,21 +493,27 @@ export default {
 
         if (riderOnlineTimeRange <= 30) {
           this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
-          this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed.toFixed(2)}kmph`;
+          this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed.toFixed(
+            2,
+          )}kmph`;
           this.riderLastSeen = '';
           this.extraNotificationInfo = '';
           this.activeStateIcon = this.vendor_icon_id;
           this.vendorStatus = 'active';
         } else if (riderOnlineTimeRange > 30 && riderOnlineTimeRange <= 60) {
           this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
-          this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed.toFixed(2)}kmph`;
+          this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed.toFixed(
+            2,
+          )}kmph`;
           this.riderLastSeen = `Tracker \u00A0\u00A0:\u00A0\u00A0 Last signal sent ${riderOnlineTimeRange} minutes ago`;
           this.extraNotificationInfo = '';
           this.activeStateIcon = this.vendor_icon_id;
           this.vendorStatus = 'active';
         } else {
           this.vehicleRegistration = `Vehicle \u00A0\u00A0:\u00A0\u00A0 ${data.rider.number_plate}`;
-          this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed.toFixed(2)}kmph`;
+          this.speedData = `Speed \u00A0\u00A0:\u00A0\u00A0 ${riderLocationDetails.speed.toFixed(
+            2,
+          )}kmph`;
           this.riderLastSeen = 'Tracker \u00A0\u00A0:\u00A0\u00A0 No Signal';
           this.extraNotificationInfo = '(This could be due to network issues)';
           this.activeStateIcon = `${this.vendor_icon_id}_offline`;

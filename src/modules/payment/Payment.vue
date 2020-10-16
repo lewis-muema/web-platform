@@ -61,6 +61,7 @@ export default {
   },
   mounted() {
     this.checkUserLocation();
+    this.trackMixpanelEvent('Opened Paymnents Page');
   },
   methods: {
     ...mapActions({
@@ -109,6 +110,23 @@ export default {
           // ...
         }
       );
+    },
+
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+        }
+      } catch (er) {
+        // ...
+      }
     },
   },
 };

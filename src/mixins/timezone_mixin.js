@@ -17,10 +17,7 @@ const timezone = {
     },
     convertToUTC(date) {
       const userTZ = moment.tz.guess();
-      const gmtDate = moment
-        .tz(date, userTZ)
-        .tz('GMT')
-        .format('YYYY-MM-DD HH:mm ZZ');
+      const gmtDate = moment.tz(date, 'YYYY-MM-DD HH:mm ZZ', userTZ);
       const UTCDate = moment.utc(gmtDate);
       return UTCDate;
     },
