@@ -1256,15 +1256,19 @@ export default {
 
       let intercountyPickUp = this.activeVendorPriceData.inter_county_info.pickup_deliveries ;
 
-      if (Object.keys(intercountyPickUp).length > 0) {
-        for (let i = 0; i < intercountyPickUp.length; i++) {
-          options.push({
-            amount : intercountyPickUp[i].cost,
-            value: intercountyPickUp[i].id,
-            label : `I’d like a ${this.riderNameDisplay} to pick it at ${this.get_order_path[0].name} (Pick up fee will be charged)`,
-            vendor_name : intercountyPickUp[i].vendor_name,
-          })
-          }
+      if (intercountyPickUp !== null) {
+
+        if (Object.keys(intercountyPickUp).length > 0) {
+          for (let i = 0; i < intercountyPickUp.length; i++) {
+            options.push({
+              amount : intercountyPickUp[i].cost,
+              value: intercountyPickUp[i].id,
+              label : `I’d like a ${this.riderNameDisplay} to pick it at ${this.get_order_path[0].name} (Pick up fee will be charged)`,
+              vendor_name : intercountyPickUp[i].vendor_name,
+            })
+            }
+        }
+
       }
 
       return options ;
@@ -1309,7 +1313,11 @@ export default {
     collectionCentreInfo (){
       let resp = '' ;
 
-      resp = this.activeVendorPriceData.inter_county_info.destination_collection_center.address ;
+      if (this.activeVendorPriceData.inter_county_info.destination_collection_center !== null) {
+
+        resp = this.activeVendorPriceData.inter_county_info.destination_collection_center.address ;
+
+      }
 
       return resp ;
 
@@ -1317,7 +1325,11 @@ export default {
     pickUpCollectionCentreInfo (){
       let resp = '' ;
 
-      resp = this.activeVendorPriceData.inter_county_info.pickup_collection_center.address ;
+      if (this.activeVendorPriceData.inter_county_info.pickup_collection_center !== null) {
+
+        resp = this.activeVendorPriceData.inter_county_info.pickup_collection_center.address ;
+
+      }
 
       return resp ;
 
