@@ -377,7 +377,10 @@
                   <p>{{ interCountyPickUpOption() }}</p>
                 </div>
 
-                <div class="order_summary--outline">
+                <div
+                  v-if="activeVendorPriceData.inter_county_info.pickup_collection_center !== null"
+                  class="order_summary--outline"
+                >
                   <label class="delivery_label">
                     The nearest collection centre to you is
                   </label>
@@ -394,7 +397,12 @@
                   <p>{{ getInterCountyPayload.recipient_info.phone_number }}</p>
                 </div>
 
-                <div class="order_summary--outline">
+                <div
+                  v-if="
+                    activeVendorPriceData.inter_county_info.destination_collection_center !== null
+                  "
+                  class="order_summary--outline"
+                >
                   <label class="delivery_label">
                     The package will be delivered to the collection centre at
                   </label>
