@@ -339,18 +339,18 @@
                     Expand Info
                   </div>
                 </div>
-                <!-- <div
-                    v-if="cancelBtnState()"
-                    class="infobar--actions-hover"
-                    @click="canceldialog()"
-                  >
-                    <div class="infobar--actions-icon">
-                      <i class="el-icon-circle-close-outline" />
-                    </div>
-                    <div class="infobar--actions-text">
-                      Cancel Order
-                    </div>
-                  </div> -->
+                <div
+                  v-if="cancelBtnState()"
+                  class="infobar--actions-hover"
+                  @click="canceldialog()"
+                >
+                  <div class="infobar--actions-icon">
+                    <i class="el-icon-circle-close-outline" />
+                  </div>
+                  <div class="infobar--actions-text">
+                    Cancel Order
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1487,8 +1487,13 @@ export default {
       );
     },
     cancelBtnState() {
-      if (this.tracking_data.delivery_status < 2 && this.user_state && this.cancellation_state) {
-        return true;
+      if (
+        Object.prototype.hasOwnProperty.call(
+          this.tracking_data.inter_county_order_details,
+          'cancellable',
+        )
+      ) {
+        return this.tracking_data.inter_county_order_details.cancellable;
       }
       return false;
     },
