@@ -368,7 +368,7 @@
 
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  How do you want your package to be picked?
+                  How do you want your package delivered from the collection centre?
                 </div>
                 <div class="home-view-truck-options-inner--full-select">
                   <el-select
@@ -1263,7 +1263,7 @@ export default {
             options.push({
               amount : intercountyPickUp[i].cost,
               value: intercountyPickUp[i].id,
-              label : `I’d like a ${this.riderNameDisplay} to pick it at ${this.get_order_path[0].name} (Pick up fee will be charged)`,
+              label : `I’d like a ${intercountyPickUp[i].vendor_name} to pick it at ${this.get_order_path[0].name} (Pick up fee will be charged)`,
               vendor_name : intercountyPickUp[i].vendor_name,
             })
             }
@@ -1278,7 +1278,7 @@ export default {
       let options = [
         {
           value: '',
-          label: 'From a collection centre near them',
+          label: 'Pick it from a collection centre near them',
         }
       ] ;
 
@@ -1299,7 +1299,7 @@ export default {
             options.push({
               amount : intercountyDeliveries[i].cost,
               value: intercountyDeliveries[i].id,
-              label: `Doorstep delivery to ${this.get_order_path[1].name} by Sendy ${this.riderNameDisplay} (Delivery fee will be charged)`,
+              label: `Doorstep delivery to ${this.get_order_path[1].name} by a Sendy ${intercountyDeliveries[i].vendor_name} (Delivery fee will be charged)`,
               vendor_name : intercountyDeliveries[i].vendor_name,
             })
             }
