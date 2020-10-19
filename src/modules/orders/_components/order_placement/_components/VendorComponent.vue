@@ -368,7 +368,7 @@
 
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  How do you want your package to be picked?
+                  How do you want your package delivered from the collection centre?
                 </div>
                 <div class="home-view-truck-options-inner--full-select">
                   <el-select
@@ -1278,7 +1278,7 @@ export default {
       let options = [
         {
           value: '',
-          label: 'From a collection centre near them',
+          label: 'Pick it from a collection centre near them',
         }
       ] ;
 
