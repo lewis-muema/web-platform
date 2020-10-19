@@ -67,7 +67,7 @@
                             ? tracking_data.price_tier.currency
                             : tracking_data.currency
                         }}
-                        {{ tracking_data.inter_county_order_details.final_price.sendy_price }}
+                        {{ tracking_data.inter_county_order_details.total_cost }}
                       </span>
                     </span>
                   </div>
@@ -315,7 +315,7 @@
                       ? tracking_data.price_tier.currency
                       : tracking_data.currency
                   }}
-                  {{ tracking_data.inter_county_order_details.final_price.sendy_price }}
+                  {{ tracking_data.inter_county_order_details.total_cost }}
                 </div>
                 <div class="">
                   <div class="">
@@ -339,18 +339,18 @@
                     Expand Info
                   </div>
                 </div>
-                <!-- <div
-                    v-if="cancelBtnState()"
-                    class="infobar--actions-hover"
-                    @click="canceldialog()"
-                  >
-                    <div class="infobar--actions-icon">
-                      <i class="el-icon-circle-close-outline" />
-                    </div>
-                    <div class="infobar--actions-text">
-                      Cancel Order
-                    </div>
-                  </div> -->
+                <div
+                  v-if="cancelBtnState()"
+                  class="infobar--actions-hover"
+                  @click="canceldialog()"
+                >
+                  <div class="infobar--actions-icon">
+                    <i class="el-icon-circle-close-outline" />
+                  </div>
+                  <div class="infobar--actions-text">
+                    Cancel Order
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -523,7 +523,7 @@
               <div class="cancelOptions--content-message">
                 The cost of your cross county order to Nyeri is
                 <span class="payments-headline">{{
-                  tracking_data.inter_county_order_details.final_price.sendy_price
+                  tracking_data.inter_county_order_details.total_cost
                 }}</span>
               </div>
               <div class="cancelOptions--content-message">
@@ -922,9 +922,7 @@ export default {
     cancelChange(reason) {
       this.more_info = false;
       this.cancel_desc = '';
-      const data = this.cancellation_reasons.find(
-        position => position.cancel_reason_id === reason,
-      );
+      const data = this.cancellation_reasons.find(position => position.cancel_reason_id === reason);
       if (reason === 0) {
         this.more_info = true;
       } else {
@@ -1231,22 +1229,20 @@ export default {
                 reason_description: 'I placed the wrong locations',
                 client_type: that.$store.getters.getSession.default,
               };
-              this.$store
-                .dispatch('$_orders/$_tracking/cancelOrder', payload2)
-                .then((response2) => {
-                  if (response2.status) {
-                    that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
-                    that.cancelToggle();
-                    this.$store.dispatch('$_orders/fetchOngoingOrders');
-                    that.place();
-                  } else {
-                    that.doNotification(
-                      2,
-                      'Order cancellation failed',
-                      'Could not cancel the order. Please contact Customer Care at 0709779779.',
-                    );
-                  }
-                });
+              this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then((response2) => {
+                if (response2.status) {
+                  that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+                  that.cancelToggle();
+                  this.$store.dispatch('$_orders/fetchOngoingOrders');
+                  that.place();
+                } else {
+                  that.doNotification(
+                    2,
+                    'Order cancellation failed',
+                    'Could not cancel the order. Please contact Customer Care at 0709779779.',
+                  );
+                }
+              });
             }
           });
         }
@@ -1491,8 +1487,13 @@ export default {
       );
     },
     cancelBtnState() {
-      if (this.tracking_data.delivery_status < 2 && this.user_state && this.cancellation_state) {
-        return true;
+      if (
+        Object.prototype.hasOwnProperty.call(
+          this.tracking_data.inter_county_order_details,
+          'cancellable',
+        )
+      ) {
+        return this.tracking_data.inter_county_order_details.cancellable;
       }
       return false;
     },
@@ -1578,7 +1579,7 @@ export default {
       }
 
       const mpesaPayload = {
-        amount: this.tracking_data.inter_county_order_details.final_price.sendy_price,
+        amount: this.tracking_data.inter_county_order_details.total_cost,
         sourceMobile: userPhone,
         referenceNumber,
         user_id: userId,
