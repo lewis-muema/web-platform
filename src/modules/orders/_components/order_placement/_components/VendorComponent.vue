@@ -886,7 +886,7 @@
                     />
                   </div>
                 </div>
-                <div class="notify_recipient">
+                <div class="notify_recipient" v-if="activeVendorPriceData.vendor_id !== 26">
                   <input
                     v-model="send_sms[0]"
                     type="checkbox"
@@ -977,7 +977,7 @@
                     />
                   </div>
                 </div>
-                <div class="notify_recipient">
+                <div class="notify_recipient" v-if="activeVendorPriceData.vendor_id !== 26">
                   <input
                     v-model="send_sms[index + 1]"
                     type="checkbox"
