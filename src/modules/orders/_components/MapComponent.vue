@@ -566,7 +566,6 @@ export default {
 
           markedCoords = `${lat},${long}`;
           // markedCoords = '0.3130284,32.4590386'; (Uganda coordinates for test)
-
           this.getCode(markedCoords);
         });
       }

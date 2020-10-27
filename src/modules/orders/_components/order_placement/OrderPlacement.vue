@@ -230,7 +230,6 @@ export default {
       show_destinations: false,
       loading: false,
       locations: [],
-      vicinity_location: [],
       fileUploadStatus: false,
       map_options: {
         componentRestrictions: {
@@ -336,7 +335,6 @@ export default {
       setCountryCode: '$_orders/$_home/setCountryCode',
       setDefaultCurrency: '$_orders/$_home/setDefaultCurrency',
       setHomeLocations: '$_orders/setHomeLocations',
-      setVicinityLocation: '$_orders/setVicinityLocation',
       setStorePath: '$_orders/setStorePath',
       clearStorePath: '$_orders/clearStorePath',
       clearOuterPriceRequestObject: '$_orders/clearOuterPriceRequestObject',
@@ -412,7 +410,6 @@ export default {
       this.unset_order_path(index);
       this.unsetStorePath(index);
       this.deleteLocationInModel(index);
-      this.deleteVicinityInModel(index);
       this.unset_location_name(index);
     },
 
@@ -453,7 +450,6 @@ export default {
       this.set_order_path(pathPayload);
       this.setStorePath(pathPayload);
       this.setLocationInModel(index, `${place.name} (${place.formatted_address})`);
-      this.setVicinityInModel(index, place.vicinity);
       this.set_location_name(locationNamePayload);
       if (index === 0) {
         this.setPickupFilled(true);
@@ -530,6 +526,7 @@ export default {
         && this.get_pickup_filled === true
       ) {
         this.clearOuterPriceRequestObject();
+        this.clearOuterActiveVendorDetails();
         this.doPriceRequest();
       }
     },
@@ -537,23 +534,13 @@ export default {
     setLocationInModel(index, name) {
       this.locations.splice(index, 0, name);
     },
-    setVicinityInModel(index, name) {
-      this.vicinity_location.splice(index, 0, name);
-    },
 
     deleteLocationInModel(index) {
       this.locations.splice(index, 1);
     },
-    deleteVicinityInModel(index) {
-      this.vicinity_location.splice(index, 1);
-    },
 
     clearLocationNamesModel() {
       this.locations = [];
-    },
-
-    clearVicinityNamesModel() {
-      this.vicinity_location = [];
     },
 
     setMarker(lat, lng, index) {
@@ -624,7 +611,6 @@ export default {
         (response) => {
           this.setOrderState(1);
           this.setHomeLocations(definedLocations);
-          this.setVicinityLocation(this.vicinity_location);
           this.setOuterPriceRequestObject(response.values);
           this.loading = false;
           this.setDefaultPackageClass();
@@ -725,10 +711,7 @@ export default {
     setDefaultPackageClass() {
       if (this.get_active_package_class === '') {
         this.doSetDefaultPackageClass();
-      } else if (
-        this.get_price_request_object !== undefined
-        && this.get_price_request_object.economy_price_tiers !== undefined
-      ) {
+      } else {
         const self = this;
         const _package = this.get_price_request_object.economy_price_tiers.filter(
           pack => pack.tier_group === self.get_active_package_class,
@@ -756,7 +739,6 @@ export default {
 
     destroyOrderPlacement() {
       this.clearLocationNamesModel();
-      this.clearVicinityNamesModel();
       this.setPickupFilled(false);
       try {
         this.$store.unregisterModule(['$_orders', '$_home']);
@@ -818,7 +800,6 @@ export default {
     initializeOrderFlow() {
       if (this.$route.path === '/orders/') {
         const storedLocation = this.getHomeLocations;
-        this.set_order_path(this.getStoreOrderPath);
         if (storedLocation.length > 1) {
           this.locations = storedLocation;
           this.setPickupFilled(true);
@@ -845,7 +826,6 @@ export default {
       }
       this.unset_location_marker(index);
       this.deleteLocationInModel(index);
-      this.deleteVicinityInModel(index);
       this.unset_location_name(index);
     },
   },
