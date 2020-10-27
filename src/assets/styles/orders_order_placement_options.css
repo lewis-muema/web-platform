@@ -302,6 +302,7 @@ ul.summary_timeline > li:before {
 }
 .delivery_points{
   margin-top: 0 !important;
+  margin-bottom: 1% !important;
 }
 .order_summary__img{
   flex-basis: 11%;
@@ -392,4 +393,9 @@ ul.summary_timeline > li:before {
 }
 .instructions-notes{
   margin-top: 2%;
+}
+.visinity_point{
+  font-size: 10px;
+  color: #959090;
+  margin-bottom: 5%;
 }

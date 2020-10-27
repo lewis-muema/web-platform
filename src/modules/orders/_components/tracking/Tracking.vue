@@ -7,7 +7,7 @@
     >
       <i class="el-icon-back" />
     </a>
-    <info-window />
+    <info-window :key="componentKey" />
   </div>
 </template>
 
@@ -26,10 +26,17 @@ export default {
   name: 'Tracking',
   components: { InfoWindow },
   mixins: [RegisterStoreModule],
+  data() {
+    return {
+      componentKey: 0,
+    };
+  },
   watch: {
     $route() {
       this.$store.commit('$_orders/removePolyline', []);
       this.$store.commit('$_orders/removeMarkers', []);
+      this.hide_vendors();
+      this.componentKey += 1;
     },
   },
   created() {
@@ -42,6 +49,7 @@ export default {
   mounted() {
     this.change_page(1);
     this.hide_vendors();
+    this.componentKey += 1;
   },
   methods: {
     ...mapMutations({

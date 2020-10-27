@@ -3,7 +3,10 @@
     class=""
     style="width:150% "
   >
-    <div class="">
+    <div
+      v-if="activeVendorPriceData.vendor_id !== 26"
+      class=""
+    >
       <div class="home-view-vendor-classes--label">
         <div
           class="home-view-vendor-classes-label-item"
@@ -26,7 +29,7 @@
       </div>
     </div>
     <div
-      v-if="get_active_order_option === 'payment'"
+      v-if="paymentStatusOption"
       class="home-view-actions--note"
     >
       <div class="" />
@@ -325,11 +328,79 @@
                 </div>
               </div>
 
-              <div class="order_summary--outline">
+              <div
+                v-if="activeVendorPriceData.vendor_id === 26"
+                class="order_summary--outline"
+              >
+                <label class="delivery_label">
+                  Type of package to be delivered
+                </label>
+                <p>{{ getInterCountyPayload.package_type }}</p>
+              </div>
+
+              <div
+                v-else
+                class="order_summary--outline"
+              >
                 <label class="delivery_label">
                   Type of {{ activeVendorPriceData.vendor_name.toLowerCase() }}
                 </label>
                 <p>{{ carrierTypeSummary() }}</p>
+              </div>
+
+              <div v-if="activeVendorPriceData.vendor_id === 26">
+                <div
+                  v-if="getInterCountyPayload.package_type === 'PARCEL'"
+                  class="order_summary--outline"
+                >
+                  <label class="delivery_label">
+                    Approximate weight of Parcel (Highest in the limit)
+                  </label>
+                  <p>{{ getInterCountyPayload.approximate_weight }}kg</p>
+                </div>
+
+                <div class="order_summary--outline">
+                  <label class="delivery_label">
+                    How do you want your package picked?
+                  </label>
+                  <p>{{ interCountyPickUpOption() }}</p>
+                </div>
+
+                <div
+                  v-if="activeVendorPriceData.inter_county_info.pickup_collection_center !== null"
+                  class="order_summary--outline"
+                >
+                  <label class="delivery_label">
+                    The nearest collection centre to you is
+                  </label>
+                  <p>
+                    {{ activeVendorPriceData.inter_county_info.pickup_collection_center.address }}
+                  </p>
+                </div>
+
+                <div class="order_summary--outline">
+                  <label class="delivery_label">
+                    Recipient contact information
+                  </label>
+                  <p>{{ getInterCountyPayload.recipient_info.name }}</p>
+                  <p>{{ getInterCountyPayload.recipient_info.phone_number }}</p>
+                </div>
+
+                <div
+                  v-if="
+                    activeVendorPriceData.inter_county_info.destination_collection_center !== null
+                  "
+                  class="order_summary--outline"
+                >
+                  <label class="delivery_label">
+                    The package will be delivered to the collection centre at
+                  </label>
+                  <p>
+                    {{
+                      activeVendorPriceData.inter_county_info.destination_collection_center.address
+                    }}
+                  </p>
+                </div>
               </div>
 
               <div class="order_summary--outline">
@@ -452,7 +523,12 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import numeral from 'numeral';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChevronDown, faPlusCircle, faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronDown,
+  faPlusCircle,
+  faArrowLeft,
+  faTrashAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
@@ -557,6 +633,7 @@ export default {
       getSecondaryProfile: 'getSecondaryProfile',
       getCardPaymentStatus: '$_payment/getCardPaymentStatus',
       getActiveCurrency: '$_payment/getActiveCurrency',
+      getInterCountyPayload: '$_orders/$_home/getInterCountyPayload',
     }),
 
     active_price_tier_data() {
@@ -622,6 +699,18 @@ export default {
 
     show_payment_label() {
       return !this.hide_payment && this.getRunningBalance !== 0;
+    },
+    paymentStatusOption() {
+      let resp = false;
+
+      if (this.get_active_order_option === 'payment') {
+        resp = true;
+      }
+
+      if (this.activeVendorPriceData.vendor_id === 26) {
+        resp = false;
+      }
+      return resp;
     },
 
     place_order_text() {
@@ -851,7 +940,6 @@ export default {
         placeholder: 'Card Number',
         validations: ['required', 'validCardNumber'],
       });
-
 
       this.form.field('#cc-cvc .fake-input-1', {
         type: 'card-security-code',
@@ -1103,23 +1191,52 @@ export default {
         this.initiatePairingFailureNotification();
       } else if (this.getPairWithRiderState && !this.getPairWithRiderStatus) {
         this.doNotification(2, 'Pairing Failure', this.getPairErrorMessage);
+      } else if (this.activeVendorPriceData.vendor_id === 26) {
+        this.initiateInterCountyCheck();
       } else if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
         this.preCheckPaymentDetails();
       } else {
-        this.confirmFinal = true;
-        this.isRunning = false;
-        this.toggleTimer();
-        let accData = {};
-        const session = this.$store.getters.getSession;
-        const acc = session.default;
-        accData = session[session.default];
-        this.trackMixpanelEvent('Order Summary View', {
-          'Account Type': acc === 'peer' ? 'Personal' : 'Business',
-          'Client Type': 'Web Platform',
-          'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
-          'User Email': accData.user_email,
-          'User Phone': accData.user_phone,
-        });
+        this.initiateOrderSummaryDialog();
+      }
+    },
+    initiateOrderSummaryDialog() {
+      this.confirmFinal = true;
+      this.isRunning = false;
+      this.toggleTimer();
+      let accData = {};
+      const session = this.$store.getters.getSession;
+      const acc = session.default;
+      accData = session[session.default];
+      this.trackMixpanelEvent('Order Summary View', {
+        'Account Type': acc === 'peer' ? 'Personal' : 'Business',
+        'Client Type': 'Web Platform',
+        'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
+        'User Email': accData.user_email,
+        'User Phone': accData.user_phone,
+      });
+    },
+    initiateInterCountyCheck() {
+      let msg = '';
+      if (this.getInterCountyPayload.package_type === '') {
+        msg = 'Kindly provide type of package you want delivered';
+        this.doNotification(2, 'Order Completion Failure', msg);
+      } else if (
+        this.getInterCountyPayload.package_type === 'PARCEL'
+        && this.getInterCountyPayload.approximate_weight === ''
+      ) {
+        msg = 'Kindly provide weight of package you want delivered';
+        this.doNotification(2, 'Order Completion Failure', msg);
+      } else if (
+        this.getInterCountyPayload.package_type === 'PARCEL'
+        && this.getInterCountyPayload.approximate_weight === ''
+      ) {
+        msg = 'Kindly provide weight of package you want delivered';
+        this.doNotification(2, 'Order Completion Failure', msg);
+      } else if (Object.keys(this.getInterCountyPayload.recipient_info).length === 0) {
+        msg = 'Kindly provide recipient information';
+        this.doNotification(2, 'Order Completion Failure', msg);
+      } else {
+        this.initiateOrderSummaryDialog();
       }
     },
     initiatePairingFailureNotification() {
@@ -1218,7 +1335,17 @@ export default {
               }
               return false;
             }
-            this.checkPaymentDetails();
+            if (this.activeVendorPriceData.vendor_id === 26) {
+              if (this.getPriceRequestObject.payment_option === 2) {
+                this.payment_type = 'postpay';
+              } else {
+                this.payment_type = 'prepay';
+              }
+              this.doCompleteOrder();
+            } else {
+              this.checkPaymentDetails();
+            }
+
             return true;
           },
           () => {
@@ -1552,6 +1679,32 @@ export default {
           rider_phone: this.getPairRiderPhone,
           order_no: this.order_no,
         };
+      }
+
+      // intercounty payload
+
+      if (this.activeVendorPriceData.vendor_id === 26) {
+        const intercountyPayload = {
+          recipient_info: this.getInterCountyPayload.recipient_info,
+          pickup_waypoint_instructions: this.getInterCountyPayload.pickup_waypoint_instructions,
+          package_type: this.getInterCountyPayload.package_type,
+          approximate_weight: this.getInterCountyPayload.approximate_weight,
+          destination_delivery_status: this.getInterCountyPayload.destination_delivery_status,
+          pickup_delivery_status: this.getInterCountyPayload.pickup_delivery_status,
+          destination_delivery_status: this.getInterCountyPayload.destination_delivery_status,
+        };
+
+        if (this.getInterCountyPayload.destination_delivery_status) {
+          intercountyPayload.destination_delivery_mode = this.getInterCountyPayload.destination_delivery_mode;
+        }
+        if (this.getInterCountyPayload.pickup_delivery_status) {
+          intercountyPayload.pickup_pricing_uuid = this.getInterCountyPayload.pickup_pricing_uuid;
+        }
+        if (this.getInterCountyPayload.destination_delivery_status) {
+          intercountyPayload.destination_delivery_mode = this.getInterCountyPayload.destination_delivery_mode;
+          intercountyPayload.destination_pricing_uuid = this.getInterCountyPayload.destination_pricing_uuid;
+        }
+        payload.inter_county_order_details = intercountyPayload;
       }
       // support new pricing
       if (this.activeVendorPriceData.order_no === undefined) {
@@ -2196,7 +2349,11 @@ export default {
     },
     pickUpInstructions() {
       let value = true;
-      if (this.getInstructionNotes[0] === '' || this.getInstructionNotes[0] === undefined) {
+      if (
+        this.getInstructionNotes[0] === ''
+        || this.getInstructionNotes[0] === undefined
+        || this.activeVendorPriceData.vendor_id === 26
+      ) {
         value = false;
       }
       return value;
@@ -2204,7 +2361,7 @@ export default {
     dropOffInstructions() {
       const data = this.getInstructionNotes.slice(1);
       let value = true;
-      if (data.length === 0) {
+      if (data.length === 0 || this.activeVendorPriceData.vendor_id === 26) {
         value = false;
       }
       return value;
@@ -2247,6 +2404,13 @@ export default {
         resp = 'Flatbed';
       } else {
         resp = 'Any';
+      }
+      return resp;
+    },
+    interCountyPickUpOption() {
+      let resp = 'A sendy rider will pick the package and deliver to the nearest collection centre ';
+      if (this.getInterCountyPayload.pickup_pricing_uuid === '') {
+        resp = " I'll take it to the nearest collection centre";
       }
       return resp;
     },

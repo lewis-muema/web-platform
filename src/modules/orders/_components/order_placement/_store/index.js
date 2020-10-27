@@ -48,6 +48,16 @@ export default {
       pair_rider_state: false,
       pair_error_msg: '',
       instruction_notes: [],
+      inter_county_order_details: {
+        pickup_delivery_status: false,
+        pickup_pricing_uuid: '',
+        destination_delivery_status: false,
+        destination_delivery_mode: '',
+        package_type: '',
+        approximate_weight: '',
+        recipient_info: {},
+        pickup_waypoint_instructions: [],
+      },
     };
   },
   actions,
