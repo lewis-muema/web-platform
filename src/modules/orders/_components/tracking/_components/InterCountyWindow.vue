@@ -922,7 +922,9 @@ export default {
     cancelChange(reason) {
       this.more_info = false;
       this.cancel_desc = '';
-      const data = this.cancellation_reasons.find(position => position.cancel_reason_id === reason);
+      const data = this.cancellation_reasons.find(
+        position => position.cancel_reason_id === reason,
+      );
       if (reason === 0) {
         this.more_info = true;
       } else {
@@ -1543,7 +1545,8 @@ export default {
     },
     showPaymentBtn(timeline) {
       const resp = timeline.action === 'payment'
-        && this.tracking_data.inter_county_order_details.status === 'pending_payment';
+        && this.tracking_data.inter_county_order_details.status === 'pending_payment'
+        && timeline.status === 'ongoing';
 
       return resp;
     },
