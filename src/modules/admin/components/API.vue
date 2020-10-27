@@ -11,7 +11,7 @@
           name="update_api_text"
           @click="updateApiKey"
         >
-          {{ this.update_api_text }}
+          {{ update_api_text }}
         </button>
         <button
           v-if="!registered"
@@ -21,7 +21,7 @@
           name="generate_api_text"
           @click="generateAPIKey"
         >
-          {{ this.generate_api_text }}
+          {{ generate_api_text }}
         </button>
       </div>
     </div>
@@ -273,6 +273,7 @@ export default {
             this.registered = false;
           }
         }
+        this.empty_payments_state = 'No API Credentials For Account';
       } else if (this.fetchedData.live.length > 0) {
         resp = this.fetchedData.live[index].api_status;
         if (resp === 1) {
@@ -283,6 +284,7 @@ export default {
           this.registered = false;
         }
       }
+      this.empty_payments_state = 'No API Credentials For Account';
       return resp;
     },
   },

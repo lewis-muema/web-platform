@@ -371,7 +371,12 @@ export default {
       this.show_rating = false;
     },
     trackOrder(order_no) {
-      this.$router.push({ name: 'tracking', params: { order_no } });
+      this.$router.push({
+        name: 'tracking',
+        params: {
+          order_no,
+        },
+      });
     },
     getDeliveryDocsSrc(order) {
       let env = '';

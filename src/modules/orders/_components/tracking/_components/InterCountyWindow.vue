@@ -555,14 +555,6 @@
                         M-Pesa
                       </el-radio>
                     </div>
-                    <!-- <div class="options-section">
-                      <el-radio
-                        v-model="paymentOption"
-                        label="2"
-                      >
-                        Card
-                      </el-radio>
-                    </div> -->
                   </div>
                 </div>
               </div>
@@ -922,7 +914,9 @@ export default {
     cancelChange(reason) {
       this.more_info = false;
       this.cancel_desc = '';
-      const data = this.cancellation_reasons.find(position => position.cancel_reason_id === reason);
+      const data = this.cancellation_reasons.find(
+        position => position.cancel_reason_id === reason,
+      );
       if (reason === 0) {
         this.more_info = true;
       } else {
@@ -935,7 +929,6 @@ export default {
           this.setTimeLineIconState();
           this.checkVendorName();
           this.checkScheduler();
-          this.orderETA();
           this.confirmUser();
         }
       }
@@ -1229,20 +1222,22 @@ export default {
                 reason_description: 'I placed the wrong locations',
                 client_type: that.$store.getters.getSession.default,
               };
-              this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then((response2) => {
-                if (response2.status) {
-                  that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
-                  that.cancelToggle();
-                  this.$store.dispatch('$_orders/fetchOngoingOrders');
-                  that.place();
-                } else {
-                  that.doNotification(
-                    2,
-                    'Order cancellation failed',
-                    'Could not cancel the order. Please contact Customer Care at 0709779779.',
-                  );
-                }
-              });
+              this.$store
+                .dispatch('$_orders/$_tracking/cancelOrder', payload2)
+                .then((response2) => {
+                  if (response2.status) {
+                    that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+                    that.cancelToggle();
+                    this.$store.dispatch('$_orders/fetchOngoingOrders');
+                    that.place();
+                  } else {
+                    that.doNotification(
+                      2,
+                      'Order cancellation failed',
+                      'Could not cancel the order. Please contact Customer Care at 0709779779.',
+                    );
+                  }
+                });
             }
           });
         }
@@ -1339,63 +1334,6 @@ export default {
       } else {
         this.doNotification(2, 'Share ETA failed !', 'Please enter a valid phone number');
       }
-    },
-    orderETA() {
-      // if (Object.keys(this.tracking_data).length > 0) {
-      //   if (this.tracking_data.confirm_status === 0) {
-      //     const confirmEta = this.tracking_data.eta_data.etc;
-      //     const etaSplit = confirmEta.split('to');
-      //     const start = etaSplit[0].replace(/\s+/g, '');
-      //     const end = etaSplit[1].replace(/\s+/g, '');
-      //
-      //     const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-      //     const endEta = moment(end, moment.ISO_8601).format('h:mm a');
-      //
-      //     this.confirmEta = `${startEta} - ${endEta}`;
-      //
-      //     this.pickUpEta = '';
-      //     this.deliveryEta = '';
-      //   } else if (
-      //     this.tracking_data.confirm_status === 1 &&
-      //     this.tracking_data.delivery_status === 0
-      //   ) {
-      //     const pickUpEta = this.tracking_data.eta_data.etp;
-      //     const confirmedEta = this.tracking_data.eta_data.confirmed;
-      //     const etaSplit = pickUpEta.split('to');
-      //     const start = etaSplit[0].replace(/\s+/g, '');
-      //     const end = etaSplit[1].replace(/\s+/g, '');
-      //
-      //     const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-      //     const endEta = moment(end, moment.ISO_8601).format('h:mm a');
-      //
-      //     this.pickUpEta = `${startEta}-${endEta}`;
-      //     this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
-      //   } else if (this.tracking_data.delivery_status === 2) {
-      //     const deliveryEta = this.tracking_data.eta_data.etd;
-      //     const confirmedEta = this.tracking_data.eta_data.confirmed;
-      //     const pickedEta = this.tracking_data.eta_data.picked;
-      //     const etaSplit = deliveryEta.split('to');
-      //     const start = etaSplit[0].replace(/\s+/g, '');
-      //     const end = etaSplit[1].replace(/\s+/g, '');
-      //
-      //     const startEta = moment(start, moment.ISO_8601).format('h:mm a');
-      //     const endEta = moment(end, moment.ISO_8601).format('h:mm a');
-      //
-      //     this.deliveryEta = `${startEta}-${endEta}`;
-      //     this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
-      //     this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
-      //   } else if (this.tracking_data.delivery_status === 3) {
-      //     const deliveryEta = this.tracking_data.eta_data.delivered;
-      //     const confirmedEta = this.tracking_data.eta_data.confirmed;
-      //     const pickedEta = this.tracking_data.eta_data.picked;
-      //
-      //     this.deliveryEta = moment(deliveryEta, moment.ISO_8601).format('h:mm a');
-      //     this.confirmEta = moment(confirmedEta, moment.ISO_8601).format('h:mm a');
-      //     this.pickUpEta = moment(pickedEta, moment.ISO_8601).format('h:mm a');
-      //   } else {
-      //     // ...
-      //   }
-      // }
     },
     toDeliveryTypeClass(val, index) {
       const nextPoint = this.tracking_data.path[index - 1].visited;
