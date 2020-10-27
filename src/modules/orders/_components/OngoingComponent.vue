@@ -119,8 +119,7 @@ export default {
   watch: {
     getSession: {
       handler() {
-        const session = this.$store.getters.getSession;
-        if (Object.keys(session).length > 0) {
+        if (Object.keys(this.$store.getters.getSession).length > 0) {
           this.$store.dispatch('$_orders/fetchOngoingOrders');
         }
       },
@@ -295,5 +294,8 @@ border-radius: 0px 0px 3px 3px;
 .rotate
 {
   transform: rotate(180deg);
+}
+.ongoing--column{
+  width: 105%;
 }
 </style>

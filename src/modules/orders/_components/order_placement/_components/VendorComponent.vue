@@ -242,420 +242,605 @@
                 </div>
               </div>
             </div>
-            <div class="home-view-truck-options-inner-wrapper">
-              <div class="home-view-truck-options-label">
-                What do you want delivered?
-              </div>
-              <div>
-                <el-input
-                  v-model.trim="delivery_item"
-                  autocomplete="true"
-                  @change="dispatchDeliveryItem"
-                />
-              </div>
-            </div>
-            <div
-              v-if="isTestAccount()"
-              class="home-view-truck-options-inner-wrapper"
-            >
-              <div class="home-view-truck-options-label">
-                Test Specifications
-              </div>
-              <div>
-                <el-input
-                  v-model.trim="test_specifications"
-                  autocomplete="true"
-                  placeholder="Specifications ..."
-                  @change="dispatchTestSpecs"
-                />
-              </div>
-            </div>
-            <div v-if="small_vendors.includes(activeVendorPriceData.vendor_id)">
-              <div
-                v-if="!vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)"
-                class="home-view-truck-options-inner-wrapper"
-              >
-                <div class="home-view-truck-options-label">
-                  What type of bike do you want?
-                </div>
-                <div class="home-view-truck-options-inner--full-select">
-                  <el-select
-                    v-model="carrier_type"
-                    placeholder=""
-                    filterable
-                    @change="dispatchCarrierType"
-                  >
-                    <el-option
-                      v-for="item in smallVendorOptions"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
-                </div>
-              </div>
-            </div>
-            <div v-else>
-              <div
-                v-if="!vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)"
-                class="home-view-truck-options-inner-wrapper"
-              >
-                <div
-                  v-if="large_vendors.includes(activeVendorPriceData.vendor_id)"
-                  class="home-view-truck-options-label"
-                >
-                  What type of truck do you want?
-                </div>
-                <div
-                  v-else
-                  class="home-view-truck-options-label"
-                >
-                  What type of {{ getVendorNameOnCarrierType }} do you want?
-                </div>
-                <div class="home-view-truck-options-inner--full-select">
-                  <el-select
-                    v-model="carrier_type"
-                    placeholder=""
-                    filterable
-                    @change="dispatchCarrierType"
-                  >
-                    <el-option
-                      v-for="item in truckOptions"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
-                </div>
-              </div>
-            </div>
-            <div
-              v-if="activeVendorPriceData.vendor_id === 25"
-              class="home-view-truck-options-inner-wrapper load-weight-outer"
-            >
-              <div class="home-view-truck-options-label">
-                What is the weight of your load?
-              </div>
-              <div>
-                <input
-                  v-model.trim="load_weight"
-                  v-mask="loadWeightMask"
-                  class="input-control load-weight"
-                  type="text"
-                  placeholder="From 18.00 to 33.00"
-                  autocomplete="on"
-                  min="18"
-                  max="33"
-                  @keyup="dispatchLoadWeight"
-                >
-                <span class="tonage-value-text">Tonnes</span>
-              </div>
-              <p class="tonnage-validate-error">
-                {{ pass_msg }}
-              </p>
-            </div>
-            <div class="home-view-truck-options-inner-wrapper">
-              <div class="home-view-truck-options-label">
-                {{ getPickUpDescriptText(activeVendorPriceData) }}
-              </div>
-              <div class="block">
-                <el-date-picker
-                  v-model="schedule_time"
-                  class="vendor_component-actions__element-date"
-                  type="datetime"
-                  format="dd-MM-yyyy h:mm a"
-                  placeholder="As soon as possible"
-                  prefix-icon="el-icon-date"
-                  :default-time="default_value"
-                  :picker-options="dueDatePickerOptions"
-                  @change="dispatchScheduleTime"
-                />
-              </div>
-              <span
-                v-if="isStandardUnavailable(activeVendorPriceData)"
-                class="vendor_component-schedule"
-              >
-                Delivery is in 2 to 4 hours from the scheduled time
-              </span>
-            </div>
-            <div v-if="displayNotesAddition()">
-              <div class="home-view-truck-options-inner-wrapper">
-                <div class="home-view-truck-options-label">
-                  Pickup instructions at {{ orderPath[0].name }}
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    class="button-additional-notes"
-                    name="button"
-                    @click="openNotesDialog(1)"
-                  >
-                    <a class="instructions-holder">
-                      Add pickup instructions
-                    </a>
-                    <i class="el-icon-circle-plus-outline align-instructions-icon" />
-                  </button>
-                </div>
-              </div>
-              <div
-                v-if="isPickUpSet()"
-                class="instructions-set"
-              >
-                <i class="el-icon-success" /> Pickup instructions added
-              </div>
-              <div class="home-view-truck-options-inner-wrapper">
-                <div class="home-view-truck-options-label">
-                  {{ destinationNotesLabel() }}
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    class="button-additional-notes "
-                    name="button"
-                    @click="openNotesDialog(2)"
-                  >
-                    <a class="instructions-holder">
-                      Add drop off instructions
-                    </a>
-                    <i class="el-icon-circle-plus-outline align-instructions-icon" />
-                  </button>
-                </div>
-              </div>
-              <div
-                v-if="isDropOffSet()"
-                class="instructions-set"
-              >
-                <i class="el-icon-success" /> Drop off instructions added
-              </div>
-            </div>
-            <div class="home-view-truck-options-inner-wrapper recipient-section">
-              <p class="home-view-truck-options-label no-margin">
-                Recipient Details
-              </p>
-              <input
-                v-model="recipientName"
-                type="text"
-                placeholder="Name"
-                class="el-input__inner bottom-spacer"
-              >
-              <input
-                v-model="recipientPhone"
-                type="number"
-                placeholder="Phone number"
-                class="el-input__inner"
-              >
-            </div>
 
-            <!-- show large and medium extended options -->
-            <div v-if="large_vendors.includes(activeVendorPriceData.vendor_id)">
-              <div
-                v-if="Number(carrier_type) === 3"
-                class="home-view-truck-options-inner-wrapper"
-              >
+            <!-- Intercounty Flow  -->
+
+            <div v-if="activeVendorPriceData.vendor_id === 26">
+              <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  Temperature shouldn't exceed? (°C)
+                  What do you want delivered?
                 </div>
-                <div class="home-view-truck-options-inner--number-of-loaders">
-                  <el-input-number
-                    v-model.trim="max_temperature"
-                    :min="1"
-                    :max="10"
-                    @change="handleChangeInMaxTemperature"
+                <div class="home-view-truck-options-inner--full-select">
+                  <el-select
+                    v-model="intercounty_load"
+                    placeholder=""
+                    filterable
+                    @change="dispatchInterCountyLoad"
+                  >
+                    <el-option
+                      v-for="item in interCountyOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
+              </div>
+
+              <div class="home-view-truck-options-inner-wrapper" v-if="intercounty_load === 'PARCEL'">
+                <div class="home-view-truck-options-label">
+                  What is the approximate weight of the package?
+                </div>
+                <div class="home-view-truck-options-inner--full-select">
+                  <el-select
+                    v-model="parcel_size"
+                    placeholder=""
+                    filterable
+                    @change="dispatchInterCountyParcelSize"
+                  >
+                    <el-option
+                      v-for="item in parcelOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
+              </div>
+
+              <div class="" v-if="hubCoordinator">
+                <div class="home-view-truck-options-inner-wrapper">
+                  <div class="home-view-truck-options-label">
+                    Who is sending the package?
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      class="button-additional-notes"
+                      name="button"
+                      @click="openNotesDialog(0)"
+                    >
+                      <a class="instructions-holder">
+                        Add sender’s information
+                      </a>
+                      <i class="el-icon-circle-plus-outline align-instructions-icon" />
+                    </button>
+                  </div>
+                </div>
+                <div v-if="isSenderDataSet()" class="instructions-set">
+                  <i class="el-icon-success" /> Sender's information added
+                </div>
+              </div>
+
+              <div class="home-view-truck-options-inner-wrapper">
+                <div class="home-view-truck-options-label">
+                  How do you want your package to be picked?
+                </div>
+                <div class="home-view-truck-options-inner--full-select">
+                  <el-select
+                    v-model="package_pickup"
+                    placeholder=""
+                    filterable
+                    @change="dispatchInterCountyPackagePickup"
+                  >
+                    <el-option
+                      v-for="item in pickupOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
+              </div>
+
+              <div class="home-view-truck-options-inner-wrapper">
+                <div class="home-view-truck-options-label">
+                  Nearest collection centre from  pickup location
+                </div>
+                <div>
+                  <textarea
+                    v-model.trim="pickUpCollectionCentreInfo"
+                    class="textarea-control collection_centre"
+                    type="text"
                   />
                 </div>
               </div>
 
-              <div
-                v-if="!isFixedCost(activeVendorPriceData)"
-                class="home-view-truck-options-inner-wrapper"
-              >
+              <div v-if="pickupInstructions">
+                <div class="home-view-truck-options-inner-wrapper">
+                  <div class="home-view-truck-options-label">
+                    Pickup instructions at {{ orderPath[0].name }}
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      class="button-additional-notes"
+                      name="button"
+                      @click="openNotesDialog(1)"
+                    >
+                      <a class="instructions-holder">
+                        Add pickup instructions
+                      </a>
+                      <i class="el-icon-circle-plus-outline align-instructions-icon" />
+                    </button>
+                  </div>
+                </div>
+                <div v-if="isPickUpSet()" class="instructions-set">
+                  <i class="el-icon-success" /> Pickup instructions added
+                </div>
+              </div>
+
+              <div class="">
+                <div class="home-view-truck-options-inner-wrapper">
+                  <div class="home-view-truck-options-label">
+                    Who are you sending the package to?
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      class="button-additional-notes "
+                      name="button"
+                      @click="openNotesDialog(2)"
+                    >
+                      <a class="instructions-holder">
+                        Add recipient’s information
+                      </a>
+                      <i class="el-icon-circle-plus-outline align-instructions-icon" />
+                    </button>
+                  </div>
+                </div>
+                <div v-if="isDropOffSet()" class="instructions-set">
+                  <i class="el-icon-success" /> Drop off instructions added
+                </div>
+              </div>
+
+              <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  How much are you offering to pay for this order?
+                  How do you want your package delivered from the collection centre?
+                </div>
+                <div class="home-view-truck-options-inner--full-select">
+                  <el-select
+                    v-model="package_delivery"
+                    placeholder=""
+                    filterable
+                    @change="dispatchInterCountyPackageDelivery"
+                  >
+                    <el-option
+                      v-for="item in deliveryOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
+              </div>
+
+              <div class="home-view-truck-options-inner-wrapper">
+                <div class="home-view-truck-options-label">
+                  The package will be delivered to the collection centre at
+                </div>
+                <div>
+                  <textarea
+                    v-model.trim="collectionCentreInfo"
+                    class="textarea-control collection_centre"
+                    type="text"
+                  />
+                </div>
+              </div>
+
+              <div class="home-view-truck-options-inner-wrapper price-estimate-container">
+                <div class="delivery-estimate-info">
+                  <div class="estimate-icon-container">
+                    Delivery Estimate
+                  </div>
+                  <div class="estimate-value">
+                    <p class="estimate-info-body">
+                      {{getVendorCurrency(activeVendorPriceData)}}<span class="estimate-currency-highlight">{{dispatchInterCountyPrice()}}</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="extra-intercounty-info">
+                  (You will be notified of the actual order cost
+                  once the package is weighed at our collection center)
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Other Vendor Options Flow -->
+
+            <div v-else>
+              <div class="home-view-truck-options-inner-wrapper">
+                <div class="home-view-truck-options-label">
+                  What do you want delivered?
                 </div>
                 <div>
                   <el-input
-                    v-model.trim="customer_min_amount"
-                    :min="0"
-                    type="number"
-                    placeholder="Kes"
-                    @change="handleChangeInMinAmount"
+                    v-model.trim="delivery_item"
+                    autocomplete="true"
+                    @change="dispatchDeliveryItem"
                   />
                 </div>
               </div>
 
-              <div class="home-view-truck-options-inner-wrapper">
+              <div v-if="isTestAccount()" class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  Do you want us to provide you with Loader/s?
+                  Test Specifications
                 </div>
-                <div class="">
-                  <el-radio
-                    v-model="additional_loader"
-                    label="1"
-                    @change="dispatchAdditionalLoaderStatus"
-                  >
-                    Yes
-                  </el-radio>
-                  <el-radio
-                    v-model="additional_loader"
-                    label="0"
-                    @change="dispatchAdditionalLoaderStatus"
-                  >
-                    No
-                  </el-radio>
-                </div>
-              </div>
-
-              <div
-                v-if="Number(additional_loader) === 1"
-                class="home-view-truck-options-inner-wrapper"
-              >
-                <div class="home-view-truck-options-label">
-                  How many Loaders do you require?
-                </div>
-                <div class="home-view-truck-options-inner--number-of-loaders">
-                  <el-input-number
-                    v-model="number_of_loaders"
-                    :min="0"
-                    :max="10"
-                    @change="handleChangeInNumberOfLoaders"
+                <div>
+                  <el-input
+                    v-model.trim="test_specifications"
+                    autocomplete="true"
+                    placeholder="Specifications ..."
+                    @change="dispatchTestSpecs"
                   />
                 </div>
               </div>
-            </div>
 
-            <!-- Pair with rider  -->
-            <div v-if="![22, 24].includes(activeVendorPriceData.vendor_id)">
-              <div class="home-view-truck-options-inner-wrapper">
-                <div class="home-view-truck-options-label">
-                  Do you have a preferred {{ riderNameDisplay }} at your pick up location ?
-                </div>
-                <div class="">
-                  <el-select
-                    v-model="pair_rider"
-                    class="pair_rider_section"
-                    placeholder="Select"
-                    filterable
-                    @change="dispatchPairStatus"
-                  >
-                    <el-option
-                      label="Yes"
-                      value="1"
-                    />
-                    <el-option
-                      label="No"
-                      value="2"
-                    />
-                  </el-select>
-                </div>
-              </div>
-              <div
-                v-if="pair_rider === '1'"
-                class="home-view-truck-options-inner-wrapper"
-              >
-                <div class="home-view-truck-options-label">
-                  <div v-if="[21].includes(activeVendorPriceData.vendor_id)">
-                    Enter their phone number to pair
+              <div v-if="small_vendors.includes(activeVendorPriceData.vendor_id)">
+                <div
+                  v-if="
+                    !vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)
+                  "
+                  class="home-view-truck-options-inner-wrapper"
+                >
+                  <div class="home-view-truck-options-label">
+                    What type of bike do you want?
                   </div>
-                  <div v-else>
-                    Enter their phone number or the {{ getVendorNameOnCarrierType }}'s number plate
-                    to pair
-                  </div>
-                </div>
-                <div class="">
-                  <el-popover
-                    v-model="visible2"
-                    placement="right"
-                    width="200"
-                    trigger="manual"
-                    popper-class="pop-over-layout"
-                  >
-                    <el-input
-                      slot="reference"
-                      v-model.trim="vehicle_plate"
-                      :placeholder="vehicleDetailsPlaceholder"
-                      autocomplete="true"
-                      @input="checkVehicleDetails"
+                  <div class="home-view-truck-options-inner--full-select">
+                    <el-select
+                      v-model="carrier_type"
+                      placeholder=""
+                      filterable
+                      @change="dispatchCarrierType"
                     >
-                      <i
-                        v-if="searchOption"
-                        slot="suffix"
-                        class="el-icon-loading el-input__icon"
+                      <el-option
+                        v-for="item in smallVendorOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
                       />
-                      <i
-                        v-if="pair_status !== ''"
-                        slot="suffix"
-                        class="el-icon-close el-input__icon"
-                        @click="clearVehicleDetails"
+                    </el-select>
+                  </div>
+                </div>
+              </div>
+
+              <div v-else>
+                <div
+                  v-if="
+                    !vendors_with_fixed_carrier_type.includes(activeVendorPriceData.vendor_name)
+                  "
+                  class="home-view-truck-options-inner-wrapper"
+                >
+                  <div
+                    v-if="large_vendors.includes(activeVendorPriceData.vendor_id)"
+                    class="home-view-truck-options-label"
+                  >
+                    What type of truck do you want?
+                  </div>
+                  <div v-else class="home-view-truck-options-label">
+                    What type of {{ getVendorNameOnCarrierType }} do you want?
+                  </div>
+                  <div class="home-view-truck-options-inner--full-select">
+                    <el-select
+                      v-model="carrier_type"
+                      placeholder=""
+                      filterable
+                      @change="dispatchCarrierType"
+                    >
+                      <el-option
+                        v-for="item in truckOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
                       />
-                    </el-input>
-                    <div class="pair_info_text_content">
-                      <div v-if="pair_status === '1'">
-                        <el-row :gutter="20">
-                          <el-col
-                            :span="1"
-                            class="pairing-alert"
-                          >
-                            <div>
-                              <i class="el-icon-warning pairing-alert-icon" />
-                            </div>
-                          </el-col>
-                          <el-col
-                            :span="8"
-                            class="pairing-error-display"
-                          >
-                            <div class="share-option">
-                              <div class="pairing-error-header">
-                                {{ riderNameDisplay }} not found
-                              </div>
-                              <div class="pair-model-info">
-                                {{ failure_text }}
-                              </div>
-                            </div>
-                          </el-col>
-                        </el-row>
-                      </div>
-                      <div v-if="pair_status === '2'">
-                        <el-row :gutter="20">
-                          <el-col
-                            :span="8"
-                            class="display_rider_inline"
-                          >
-                            <div class="">
-                              <img
-                                align="middle"
-                                class="display_paired_rider_img"
-                                :src="pair_rider_image"
-                              >
-                              <div class="pair-rider-name">
-                                {{ pair_rider_name }}
-                              </div>
-                              <div>
-                                <el-rate
-                                  v-model="pair_rider_rating"
-                                  disabled
-                                  disabled-void-color="#C0C4CC"
-                                  :colors="['#1782C5', '#1782C5', '#1782C5']"
-                                />
-                              </div>
-                            </div>
-                          </el-col>
-                          <el-col
-                            :span="6"
-                            class="pair_right_more_info"
-                          >
-                            <div class="share-option">
-                              <div class="pair-model-info">
-                                {{ pair_rider_make }} {{ pair_rider_model }}
-                              </div>
-                              <div>
-                                {{ pair_rider_plate }}
-                              </div>
-                            </div>
-                          </el-col>
-                        </el-row>
-                      </div>
+                    </el-select>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                v-if="activeVendorPriceData.vendor_id === 25"
+                class="home-view-truck-options-inner-wrapper load-weight-outer"
+              >
+                <div class="home-view-truck-options-label">
+                  What is the weight of your load?
+                </div>
+                <div>
+                  <input
+                    v-model.trim="load_weight"
+                    v-mask="loadWeightMask"
+                    class="input-control load-weight"
+                    type="text"
+                    placeholder="From 18.00 to 33.00"
+                    autocomplete="on"
+                    min="18"
+                    max="33"
+                    @keyup="dispatchLoadWeight"
+                  />
+                  <span class="tonage-value-text">Tonnes</span>
+                </div>
+                <p class="tonnage-validate-error">
+                  {{ pass_msg }}
+                </p>
+              </div>
+              <div class="home-view-truck-options-inner-wrapper">
+                <div class="home-view-truck-options-label">
+                  {{ getPickUpDescriptText(activeVendorPriceData) }}
+                </div>
+                <div class="block">
+                  <el-date-picker
+                    v-model="schedule_time"
+                    class="vendor_component-actions__element-date"
+                    type="datetime"
+                    format="dd-MM-yyyy h:mm a"
+                    placeholder="As soon as possible"
+                    prefix-icon="el-icon-date"
+                    :default-time="default_value"
+                    :picker-options="dueDatePickerOptions"
+                    @change="dispatchScheduleTime"
+                  />
+                </div>
+                <span
+                  v-if="isStandardUnavailable(activeVendorPriceData)"
+                  class="vendor_component-schedule"
+                >
+                  Delivery is in 2 to 4 hours from the scheduled time
+                </span>
+              </div>
+              <div v-if="displayNotesAddition()">
+                <div class="home-view-truck-options-inner-wrapper">
+                  <div class="home-view-truck-options-label">
+                    Pickup instructions at {{ orderPath[0].name }}
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      class="button-additional-notes"
+                      name="button"
+                      @click="openNotesDialog(1)"
+                    >
+                      <a class="instructions-holder">
+                        Add pickup instructions
+                      </a>
+                      <i class="el-icon-circle-plus-outline align-instructions-icon" />
+                    </button>
+                  </div>
+                </div>
+                <div v-if="isPickUpSet()" class="instructions-set">
+                  <i class="el-icon-success" /> Pickup instructions added
+                </div>
+                <div class="home-view-truck-options-inner-wrapper">
+                  <div class="home-view-truck-options-label">
+                    {{ destinationNotesLabel() }}
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      class="button-additional-notes "
+                      name="button"
+                      @click="openNotesDialog(2)"
+                    >
+                      <a class="instructions-holder">
+                        Add drop off instructions
+                      </a>
+                      <i class="el-icon-circle-plus-outline align-instructions-icon" />
+                    </button>
+                  </div>
+                </div>
+                <div v-if="isDropOffSet()" class="instructions-set">
+                  <i class="el-icon-success" /> Drop off instructions added
+                </div>
+              </div>
+              <div class="home-view-truck-options-inner-wrapper recipient-section">
+                <p class="home-view-truck-options-label no-margin">
+                  Recipient Details
+                </p>
+                <input
+                  v-model="recipientName"
+                  type="text"
+                  placeholder="Name"
+                  class="el-input__inner bottom-spacer"
+                />
+                <input
+                  v-model="recipientPhone"
+                  type="number"
+                  placeholder="Phone number"
+                  class="el-input__inner"
+                />
+              </div>
+
+              <!-- show large and medium extended options -->
+              <div v-if="large_vendors.includes(activeVendorPriceData.vendor_id)">
+                <div
+                  v-if="Number(carrier_type) === 3"
+                  class="home-view-truck-options-inner-wrapper"
+                >
+                  <div class="home-view-truck-options-label">
+                    Temperature shouldn't exceed? (°C)
+                  </div>
+                  <div class="home-view-truck-options-inner--number-of-loaders">
+                    <el-input-number
+                      v-model.trim="max_temperature"
+                      :min="1"
+                      :max="10"
+                      @change="handleChangeInMaxTemperature"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  v-if="!isFixedCost(activeVendorPriceData)"
+                  class="home-view-truck-options-inner-wrapper"
+                >
+                  <div class="home-view-truck-options-label">
+                    How much are you offering to pay for this order?
+                  </div>
+                  <div>
+                    <el-input
+                      v-model.trim="customer_min_amount"
+                      :min="0"
+                      type="number"
+                      placeholder="Kes"
+                      @change="handleChangeInMinAmount"
+                    />
+                  </div>
+                </div>
+
+                <div class="home-view-truck-options-inner-wrapper">
+                  <div class="home-view-truck-options-label">
+                    Do you want us to provide you with Loader/s?
+                  </div>
+                  <div class="">
+                    <el-radio
+                      v-model="additional_loader"
+                      label="1"
+                      @change="dispatchAdditionalLoaderStatus"
+                    >
+                      Yes
+                    </el-radio>
+                    <el-radio
+                      v-model="additional_loader"
+                      label="0"
+                      @change="dispatchAdditionalLoaderStatus"
+                    >
+                      No
+                    </el-radio>
+                  </div>
+                </div>
+
+                <div
+                  v-if="Number(additional_loader) === 1"
+                  class="home-view-truck-options-inner-wrapper"
+                >
+                  <div class="home-view-truck-options-label">
+                    How many Loaders do you require?
+                  </div>
+                  <div class="home-view-truck-options-inner--number-of-loaders">
+                    <el-input-number
+                      v-model="number_of_loaders"
+                      :min="0"
+                      :max="10"
+                      @change="handleChangeInNumberOfLoaders"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pair with rider  -->
+              <div v-if="![22, 24].includes(activeVendorPriceData.vendor_id)">
+                <div class="home-view-truck-options-inner-wrapper">
+                  <div class="home-view-truck-options-label">
+                    Do you have a preferred {{ riderNameDisplay }} at your pick up location ?
+                  </div>
+                  <div class="">
+                    <el-select
+                      v-model="pair_rider"
+                      class="pair_rider_section"
+                      placeholder="Select"
+                      filterable
+                      @change="dispatchPairStatus"
+                    >
+                      <el-option label="Yes" value="1" />
+                      <el-option label="No" value="2" />
+                    </el-select>
+                  </div>
+                </div>
+                <div v-if="pair_rider === '1'" class="home-view-truck-options-inner-wrapper">
+                  <div class="home-view-truck-options-label">
+                    <div v-if="[21].includes(activeVendorPriceData.vendor_id)">
+                      Enter their phone number to pair
                     </div>
-                  </el-popover>
+                    <div v-else>
+                      Enter their phone number or the {{ getVendorNameOnCarrierType }}'s number
+                      plate to pair
+                    </div>
+                  </div>
+                  <div class="">
+                    <el-popover
+                      v-model="visible2"
+                      placement="right"
+                      width="200"
+                      trigger="manual"
+                      popper-class="pop-over-layout"
+                    >
+                      <el-input
+                        slot="reference"
+                        v-model.trim="vehicle_plate"
+                        :placeholder="vehicleDetailsPlaceholder"
+                        autocomplete="true"
+                        @input="checkVehicleDetails"
+                      >
+                        <i
+                          v-if="searchOption"
+                          slot="suffix"
+                          class="el-icon-loading el-input__icon"
+                        />
+                        <i
+                          v-if="pair_status !== ''"
+                          slot="suffix"
+                          class="el-icon-close el-input__icon"
+                          @click="clearVehicleDetails"
+                        />
+                      </el-input>
+                      <div class="pair_info_text_content">
+                        <div v-if="pair_status === '1'">
+                          <el-row :gutter="20">
+                            <el-col :span="1" class="pairing-alert">
+                              <div>
+                                <i class="el-icon-warning pairing-alert-icon" />
+                              </div>
+                            </el-col>
+                            <el-col :span="8" class="pairing-error-display">
+                              <div class="share-option">
+                                <div class="pairing-error-header">
+                                  {{ riderNameDisplay }} not found
+                                </div>
+                                <div class="pair-model-info">
+                                  {{ failure_text }}
+                                </div>
+                              </div>
+                            </el-col>
+                          </el-row>
+                        </div>
+                        <div v-if="pair_status === '2'">
+                          <el-row :gutter="20">
+                            <el-col :span="8" class="display_rider_inline">
+                              <div class="">
+                                <img
+                                  align="middle"
+                                  class="display_paired_rider_img"
+                                  :src="pair_rider_image"
+                                />
+                                <div class="pair-rider-name">
+                                  {{ pair_rider_name }}
+                                </div>
+                                <div>
+                                  <el-rate
+                                    v-model="pair_rider_rating"
+                                    disabled
+                                    disabled-void-color="#C0C4CC"
+                                    :colors="['#1782C5', '#1782C5', '#1782C5']"
+                                  />
+                                </div>
+                              </div>
+                            </el-col>
+                            <el-col :span="6" class="pair_right_more_info">
+                              <div class="share-option">
+                                <div class="pair-model-info">
+                                  {{ pair_rider_make }} {{ pair_rider_model }}
+                                </div>
+                                <div>
+                                  {{ pair_rider_plate }}
+                                </div>
+                              </div>
+                            </el-col>
+                          </el-row>
+                        </div>
+                      </div>
+                    </el-popover>
+                  </div>
                 </div>
               </div>
             </div>
@@ -682,16 +867,24 @@
           :modal-append-to-body="false"
         >
           <div class="add-instructions-outer">
-            <p class="add-instructions-setup">
+            <p class="add-instructions-setup" v-if="activeVendorPriceData.vendor_id === 26">
+
+              <span v-if="route_point === 1">
+                Add inter-county pickup instructions
+              </span>
+
+              <span v-else>
+                Add inter-county recepient instruction
+              </span>
+
+            </p>
+            <p class="add-instructions-setup" v-else>
               {{ instructionsOuterLabel() }}
             </p>
             <div class="">
-              <div
-                v-if="route_point === 1"
-                class="instructions--inner-section"
-              >
+              <div v-if="route_point === 1"  class="instructions--inner-section">
                 <div class="">
-                  <div class="add-instructions-setup-label">
+                  <div class="add-instructions-setup-label" v-if="activeVendorPriceData.vendor_id === 26">
                     {{ instructionsInnerLabel() }} {{ get_order_path[0].name }}
                   </div>
                   <div class="" />
@@ -727,17 +920,52 @@
                     />
                   </div>
                 </div>
-                <div class="notify_recipient">
+                <div class="notify_recipient" v-if="activeVendorPriceData.vendor_id !== 26">
                   <input
                     v-model="send_sms[0]"
                     type="checkbox"
                     name="u_terms"
                     class="send_sms-checkbox"
                     :onclick="setSendSms(get_order_path[0], 0)"
-                  >
+                  />
                   <span>
                     Notify them of the pickup via SMS
                   </span>
+                </div>
+              </div>
+              <div v-else-if="route_point === 0" class="instructions--inner-section">
+                <div class="">
+                  <div class="add-instructions-setup-label" v-if="activeVendorPriceData.vendor_id === 26">
+                    Name of the sender
+                  </div>
+                  <div class="" />
+                  <div class="">
+                    <textarea
+                      v-model="sender_name"
+                      name="name"
+                      rows="3"
+                      class="textarea-control add-notes"
+                      placeholder=""
+                    />
+                  </div>
+                </div>
+                <div class="">
+                  <div class="add-instructions-setup-contact">
+                    Contact person
+                  </div>
+                  <div class="" />
+                  <div class="" @change="addRecipientContact()">
+                    <vue-tel-input
+                      v-model.trim="sender_phone"
+                      v-validate="'required|check_phone'"
+                      class="input-control sign-up-form"
+                      type="number"
+                      name="phone"
+                      value=""
+                      data-vv-validate-on="blur"
+                      v-bind="phoneInputProps"
+                    />
+                  </div>
                 </div>
               </div>
               <div
@@ -747,7 +975,10 @@
                 class="instructions--inner-section"
               >
                 <div class="">
-                  <div class="add-instructions-setup-label">
+                  <div class="add-instructions-setup-label" v-if="activeVendorPriceData.vendor_id === 26">
+                    Recipient information
+                  </div>
+                  <div class="add-instructions-setup-label" v-else>
                     {{ instructionsInnerLabel() }} {{ data.name }}
                   </div>
                   <div class="" />
@@ -783,14 +1014,14 @@
                     />
                   </div>
                 </div>
-                <div class="notify_recipient">
+                <div class="notify_recipient" v-if="activeVendorPriceData.vendor_id !== 26">
                   <input
                     v-model="send_sms[index + 1]"
                     type="checkbox"
                     name="u_terms"
                     class="send_sms-checkbox"
                     :onclick="setSendSms(data, index + 1)"
-                  >
+                  />
                   <span>
                     Notify them of the pickup via SMS
                   </span>
@@ -805,7 +1036,7 @@
                   type="submit"
                   value="Done"
                   @click="saveAdditionaNotes(route_point)"
-                >
+                />
               </div>
             </div>
           </div>
@@ -965,8 +1196,45 @@ export default {
           showDialCode: false,
         },
       },
-      validPhone: true,
+      validPhone: false,
       send_sms: [],
+      intercounty_load: '',
+      parcel_size: '',
+      package_pickup : '',
+      package_delivery : '',
+      parcelOptions: [
+        {
+          value: 5,
+          label: '0 - 5kgs',
+        },
+        {
+          value: 10,
+          label: '6 - 10kgs',
+        },
+        {
+          value: 15,
+          label: '11 - 15kgs',
+        },
+        {
+          value: 16,
+          label: '16kgs plus',
+        },
+      ],
+      interCountyOptions: [
+        {
+          value: 'PARCEL',
+          label: 'Parcel',
+        },
+        {
+          value: 'DOCUMENT',
+          label: 'Documents',
+        },
+      ],
+      estimate_amount : 0 ,
+      sender_name : '',
+      sender_phone : '' ,
+      pickupInstructions : false,
+      hubCoordinator : false,
     };
   },
   computed: {
@@ -1014,7 +1282,95 @@ export default {
     dedicatedClass() {
       return this.getDedicatedAccessStatus ? 'dedicated-wrapper-override' : '';
     },
+    pickupOptions(){
 
+      let options = [
+        {
+          value: '',
+          label: 'I’ll take it to the nearest collection centre',
+        }
+      ] ;
+
+      let intercountyPickUp = this.activeVendorPriceData.inter_county_info.pickup_deliveries ;
+
+      if (intercountyPickUp !== null) {
+
+        if (Object.keys(intercountyPickUp).length > 0) {
+          for (let i = 0; i < intercountyPickUp.length; i++) {
+            options.push({
+              amount : intercountyPickUp[i].cost,
+              value: intercountyPickUp[i].id,
+              label : `I’d like a ${intercountyPickUp[i].vendor_name} to pick it at ${this.get_order_path[0].name} (Pick up fee will be charged)`,
+              vendor_name : intercountyPickUp[i].vendor_name,
+            })
+            }
+        }
+
+      }
+
+      return options ;
+
+    },
+    deliveryOptions(){
+      let options = [
+        {
+          value: '',
+          label: 'Pick it from a collection centre near them',
+        }
+      ] ;
+
+      if (this.activeVendorPriceData.inter_county_info.partner_delivery_available) {
+
+            options.push({
+              value: -1,
+              label: `Doorstep delivery to ${this.get_order_path[1].name}`,
+            })
+
+      }
+      else {
+
+        let intercountyDeliveries = this.activeVendorPriceData.inter_county_info.destination_deliveries ;
+
+        if (Object.keys(intercountyDeliveries).length > 0) {
+          for (let i = 0; i < intercountyDeliveries.length; i++) {
+            options.push({
+              amount : intercountyDeliveries[i].cost,
+              value: intercountyDeliveries[i].id,
+              label: `Doorstep delivery to ${this.get_order_path[1].name} by a Sendy ${intercountyDeliveries[i].vendor_name} (Delivery fee will be charged)`,
+              vendor_name : intercountyDeliveries[i].vendor_name,
+            })
+            }
+        }
+
+      }
+
+      return options ;
+
+    },
+    collectionCentreInfo (){
+      let resp = '' ;
+
+      if (this.activeVendorPriceData.inter_county_info.destination_collection_center !== null) {
+
+        resp = this.activeVendorPriceData.inter_county_info.destination_collection_center.address ;
+
+      }
+
+      return resp ;
+
+    },
+    pickUpCollectionCentreInfo (){
+      let resp = '' ;
+
+      if (this.activeVendorPriceData.inter_county_info.pickup_collection_center !== null) {
+
+        resp = this.activeVendorPriceData.inter_county_info.pickup_collection_center.address ;
+
+      }
+
+      return resp ;
+
+    },
     truckOptions() {
       if (this.get_active_package_class === 'medium') {
         return this.mediumOptions;
@@ -1083,7 +1439,11 @@ export default {
       let display = 'E.g Pick package at the reception ...';
       if (this.small_vendors.includes(this.activeVendorPriceData.vendor_id)) {
         display = 'E.g Pick package at the reception ...';
-      } else {
+      }
+      else if (this.activeVendorPriceData.vendor_id === 26 ) {
+        display = '';
+      }
+      else {
         display = 'E.g Pick load at the reception ...';
       }
       return display;
@@ -1096,6 +1456,14 @@ export default {
     recipientPhone(data) {
       this.debounceRecipientPhone(data);
     },
+    package_pickup(data){
+      if (data === '') {
+        this.pickupInstructions = false ;
+      }
+      else {
+        this.pickupInstructions = true ;
+      }
+    }
   },
   created() {
     this.setFirstTimeUser();
@@ -1140,6 +1508,16 @@ export default {
       setPairErrorMessage: '$_orders/$_home/setPairErrorMessage',
       saveInstructionNotes: '$_orders/$_home/setInstructionNotes',
       clearInstructionNotes: '$_orders/$_home/clearInstructionNotes',
+      saveInterCountySenderInfo: '$_orders/$_home/setInterCountySenderInfo',
+      setIntercountyLoadType: '$_orders/$_home/setIntercountyLoadType',
+      setIntercountyParcelSize: '$_orders/$_home/setIntercountyParcelSize',
+      setInterCountyRecipientInfo: '$_orders/$_home/setInterCountyRecipientInfo',
+      setInterCountyWaypointInfo: '$_orders/$_home/setInterCountyWaypointInfo',
+      setInterCountyPickUpStatus: '$_orders/$_home/setInterCountyPickUpStatus',
+      setInterCountyPickUpId: '$_orders/$_home/setInterCountyPickUpId',
+      setInterCountyDeliveryStatus: '$_orders/$_home/setInterCountyDeliveryStatus',
+      setInterCountyDeliveryId: '$_orders/$_home/setInterCountyDeliveryId',
+      setInterCountyDeliveryMode: '$_orders/$_home/setInterCountyDeliveryMode',
     }),
     ...mapActions({
       requestPairRider: '$_orders/$_home/requestPairRider',
@@ -1217,6 +1595,7 @@ export default {
       this.setOrderState(2);
       this.setExtendOptions(true);
       this.handleScheduledTime();
+      this.checkHubCoordinator();
     },
     triggerGAEvent(field, value) {
       let analyticsEnv = '';
@@ -1284,6 +1663,93 @@ export default {
     },
     dispatchDeliveryItem() {
       this.setDeliveryItem(this.delivery_item);
+    },
+    dispatchInterCountyLoad() {
+      this.setIntercountyLoadType(this.intercounty_load);
+      if (this.intercounty_load === 'DOCUMENT') {
+        this.setIntercountyParcelSize(this.activeVendorPriceData.inter_county_info.max_weight);
+      }
+    },
+    dispatchInterCountyParcelSize() {
+      this.dispatchInterCountyPrice();
+      this.setIntercountyParcelSize(this.parcel_size);
+    },
+    dispatchInterCountyPackagePickup() {
+      this.dispatchInterCountyPrice();
+      if (this.package_pickup === '') {
+        this.setInterCountyPickUpStatus(false);
+        this.setInterCountyPickUpId('');
+      }
+      else {
+        this.setInterCountyPickUpStatus(true);
+        this.setInterCountyPickUpId(this.package_pickup);
+      }
+    },
+    dispatchInterCountyPackageDelivery() {
+      this.dispatchInterCountyPrice();
+      if (this.package_delivery === '') {
+        this.setInterCountyDeliveryStatus(false);
+        this.setInterCountyDeliveryId('');
+        this.setInterCountyDeliveryMode('');
+
+      }
+      else if (this.package_delivery === -1) {
+        this.setInterCountyDeliveryStatus(true);
+        this.setInterCountyDeliveryId('');
+        this.setInterCountyDeliveryMode('PARTNER');
+      }
+      else {
+        this.setInterCountyDeliveryStatus(true);
+        this.setInterCountyDeliveryId(this.package_delivery);
+        this.setInterCountyDeliveryMode('SENDY');
+      }
+    },
+    dispatchInterCountyPrice(){
+      let baseAmount = 0 ;
+      let packageWeightExtraFee = 0 ;
+      let deliveryPickUpCharge = 0 ;
+      let deliveryDeliveryCharge = 0 ;
+      let cost = this.activeVendorPriceData.cost;
+      let weightLimit = this.activeVendorPriceData.inter_county_info.max_weight ;
+      let limitChargePerKg = this.activeVendorPriceData.inter_county_info.cost_per_kg.value ;
+
+      baseAmount = cost ;
+
+
+      if (this.parcel_size > weightLimit) {
+
+        packageWeightExtraFee = (this.parcel_size - weightLimit) * limitChargePerKg;
+
+      }
+
+      if (this.package_pickup !== '') {
+
+        let pickupOptions = this.activeVendorPriceData.inter_county_info.pickup_deliveries;
+
+        let val = pickupOptions.find(position => position.id === this.package_pickup );
+
+        deliveryPickUpCharge = val.cost;
+
+      }
+
+      if (this.package_delivery !== '') {
+
+        let deliveryOptions = this.activeVendorPriceData.inter_county_info.destination_deliveries;
+
+        if (this.package_delivery !== -1) {
+
+          let val = deliveryOptions.find(position => position.id === this.package_delivery );
+
+          deliveryDeliveryCharge = val.cost;
+        }
+
+      }
+
+      let totalDeliveryAmount = (baseAmount + packageWeightExtraFee + deliveryPickUpCharge + deliveryDeliveryCharge) ;
+
+
+      return totalDeliveryAmount ;
+
     },
     dispatchTestSpecs() {
       this.setTestSpecs(this.test_specifications);
@@ -1500,7 +1966,7 @@ export default {
     },
 
     isFixedCost(vendorObject) {
-      const bidVendors = [20, 25];
+      const bidVendors = [20, 25, 26];
       if (bidVendors.includes(vendorObject.vendor_id)) {
         if (!vendorObject.fixed_cost) {
           return false;
@@ -1665,6 +2131,10 @@ export default {
       if (vendorObject.vendor_id === 25) {
         return 'From 18 Tonnes';
       }
+      if (vendorObject.vendor_id === 26) {
+        return 'Send packages upcountry';
+      }
+
       return vendorObject.vendor_description;
     },
     getPickUpDescriptText(vendorObject) {
@@ -1873,26 +2343,98 @@ export default {
       }
       this.instructions_data[i] = data;
     },
-    saveAdditionaNotes() {
-      setTimeout(() => {
-        if (this.instructions_data.length === 0) {
-          this.doNotification(
-            2,
-            'Add Instructions Error!!',
-            'Kindly provide instructions to submit data.',
-          );
-        } else if (this.validPhone) {
-          this.doNotification(1, 'Additional Instructions saved successfully!!');
-          this.saveInstructionNotes(this.instructions_data);
-          this.addDeliveryInfo = false;
+    addRecipientContact() {
+      let data = {};
+      let phoneValid = false;
+      if (this.sender_phone === '') {
+        this.validPhone = true;
+        this.sender_phone = '';
+        if (
+          (this.sender_name === undefined || this.sender_name === '')
+        ) {
+          data = {};
         } else {
+          data = {
+            name: this.sender_name,
+            phone_number: '',
+          };
+        }
+      } else {
+        this.validPhone = false;
+        phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.sender_phone));
+      }
+
+      if (phoneValid) {
+        this.validPhone = true;
+        data = {
+          name: this.sender_name === undefined ? '' : this.sender_name,
+          phone_number: this.sender_phone,
+        };
+      }
+    },
+    saveAdditionaNotes(val) {
+      if (val === 0) {
+        if (this.sender_name === '' || this.sender_phone === '' || !this.validPhone) {
           this.doNotification(
             2,
-            'Phone verifications Error!!',
-            'Kindly provide a valid phone number.',
+            'Sendor Information Error!!',
+            'Kindly provide valid details to submit data.',
           );
         }
-      }, 2000);
+        else {
+
+          let payload ={
+            "name": this.sender_name,
+            "phone_number": this.sender_phone
+          }
+
+          this.saveInterCountySenderInfo(payload);
+
+          this.addDeliveryInfo = false;
+        }
+      }
+      else {
+        setTimeout(() => {
+          if (this.instructions_data.length === 0) {
+            this.doNotification(
+              2,
+              'Add Instructions Error!!',
+              'Kindly provide instructions to submit data.',
+            );
+          } else if (this.validPhone) {
+            this.doNotification(1, 'Additional Instructions saved successfully!!');
+
+            if (this.activeVendorPriceData.vendor_id === 26) {
+              this.handleIntercountyAdditionalDetails(val , this.instructions_data);
+            }
+            else {
+              this.saveInstructionNotes(this.instructions_data);
+            }
+
+            this.addDeliveryInfo = false;
+          } else {
+            this.doNotification(
+              2,
+              'Phone verifications Error!!',
+              'Kindly provide a valid phone number.',
+            );
+          }
+        }, 2000);
+      }
+
+    },
+    handleIntercountyAdditionalDetails(index , val){
+
+      if (index === 2) {
+        let payload = {
+          name: val[1].notes,
+          phone_number: val[1].recipient_phone
+        }
+        this.setInterCountyRecipientInfo(payload);
+      }
+      else {
+        this.setInterCountyWaypointInfo(val);
+      }
     },
     displayNotesAddition() {
       let state = false;
@@ -1907,7 +2449,7 @@ export default {
     isDropOffSet() {
       const data = this.instructions_data.slice(1);
       let value = true;
-      if (data.filter(val => Object.keys(val).length !== 0).length === 0) {
+      if (data.filter(val => Object.keys(val).length !== 0).length === 0 || !this.validPhone) {
         value = false;
       }
       return value;
@@ -1918,6 +2460,17 @@ export default {
         this.instructions_data[0] === ''
         || this.instructions_data[0] === undefined
         || Object.keys(this.instructions_data[0]).length === 0
+        || !this.validPhone
+      ) {
+        value = false;
+      }
+      return value;
+    },
+    isSenderDataSet() {
+      let value = true;
+      if (
+        this.sender_phone === ''
+        || this.sender_name === '' || !this.validPhone
       ) {
         value = false;
       }
@@ -1926,10 +2479,95 @@ export default {
     handleClose() {
       // Do nothing ...
     },
+    interCountyExtraInfo(val){
+      let resp = false ;
+      if (this.route_point === 2 && val === 26) {
+
+        resp = true
+
+      }
+      return resp;
+    },
+    checkHubCoordinator() {
+      const session = this.$store.getters.getSession;
+      if (Object.keys(session).length > 0) {
+
+        if (session.default === 'biz') {
+
+          if (session[session.default].cop_user_type === 2) {
+            this.hubCoordinator = true ;
+          } else{
+            this.hubCoordinator = false ;
+          }
+        } else {
+          this.hubCoordinator = false ;
+        }
+      }
+    },
   },
 };
 </script>
 
 <style lang="css" scoped>
 @import '../../../../../assets/styles/orders_order_placement_vendors.css?v=4';
+.collection_centre{
+min-height: 45px;
+ background: rgba(231, 231, 231, 0.42);
+ font-size: 11px;
+ display: block;
+ word-break: break-all;
+ pointer-events: none;
+}
+.estimatetitle{
+ display: flex;
+ flex: 2;
+ align-items: center;
+ height: 37px;
+ font-weight: 400;
+ font-size: 13px;
+ color: #1782c5;
+}
+.delivery-estimate-info{
+ display: flex;
+ justify-content: flex-start;
+ flex: 1;
+ color: rgb(85, 85, 85);
+ font-size: 14px;
+ box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+ border-radius: 6px;
+ width: 100%;
+ height: 64px;
+}
+.estimate-icon-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px;
+  margin: 10px 7% 10px 20px;
+  color: #527CBD;
+  font-size: 14px;
+}
+.estimate-value {
+ display: block;
+ margin: 10px 0% 10px 11px;
+ width: 43%;
+ text-align: center;
+}
+.estimate-currency-highlight{
+  padding: 0px 5px;
+}
+.estimate-info-body{
+  color: #000000;
+  font-weight: 500;
+}
+.price-estimate-container{
+  margin-top: 5%;
+}
+.extra-intercounty-info{
+  margin-top: 3%;
+  color: #3D3C3C;
+  font-weight: 300;
+  font-size: 12px;
+}
+
 </style>
