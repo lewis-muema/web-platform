@@ -8,7 +8,10 @@
       class="saved-cards-delete-dialogue"
     >
       <div class="saved-cards-delete-dialogue-container">
-        <p>Are you sure you would like to delete this card <strong>{{ get_saved_cards[deleteCardIndex].card }}</strong>?</p>
+        <p>
+          Are you sure you would like to delete this card
+          <strong>{{ get_saved_cards[deleteCardIndex].card }}</strong>?
+        </p>
         <p>
           <span
             class="delete-saved-card-dialogue-buttons"
@@ -41,9 +44,7 @@
         class="card-payment-saved-cards-row"
       >
         <span class="card-payment-saved-cards-icon">
-          <font-awesome-icon
-            icon="credit-card"
-          />
+          <font-awesome-icon icon="credit-card" />
         </span>
         <input
           v-model="selectedSavedCard"
@@ -56,14 +57,10 @@
           class="card-payment-remove-cards-icon"
           @click="deleteCardIndex = index"
         >
-          <font-awesome-icon
-            icon="trash-alt"
-          />
+          <font-awesome-icon icon="trash-alt" />
         </span>
       </div>
-      <div
-        class="card-payment-add-card-holder"
-      >
+      <div class="card-payment-add-card-holder">
         <span>
           <font-awesome-icon
             icon="plus-circle"
@@ -188,13 +185,18 @@
         v-if="country === 'KE'"
         class="card-payment-disabled-notification"
       >
-        Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using M-Pesa, or pay cash upon delivery. Contact Support on +254709779779 for any queries.
+        Dear {{ user_name }}, <br>
+        Card payments will be momentarily unavailable as we undergo technical maintenance. You can
+        still pay for your Sendy deliveries using M-Pesa, or pay cash upon delivery. Contact Support
+        on +254709779779 for any queries.
       </p>
       <p
         v-if="country === 'UG'"
         class="card-payment-disabled-notification"
       >
-        Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. Contact Support on +256393239706 for any queries.
+        Dear {{ user_name }}, <br>
+        Card payments will be momentarily unavailable as we undergo technical maintenance. Contact
+        Support on +256393239706 for any queries.
       </p>
     </div>
   </div>
@@ -204,7 +206,13 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChevronDown, faPlusCircle, faArrowLeft, faCreditCard, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronDown,
+  faPlusCircle,
+  faArrowLeft,
+  faCreditCard,
+  faTrashAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import payment_loading from './LoadingComponent.vue';
 import payment_success from './SuccessComponent.vue';
 import payment_fail from './FailComponent.vue';
@@ -287,7 +295,14 @@ export default {
     },
     form: {
       handler(val) {
-        if (Object.prototype.hasOwnProperty.call(val.state, 'cardno') && val.state.cardno.isValid && val.state.cvv.isValid && val.state.expiry_date.isValid && val.state.amount.isValid && this.addCardStatus) {
+        if (
+          Object.prototype.hasOwnProperty.call(val.state, 'cardno')
+          && val.state.cardno.isValid
+          && val.state.cvv.isValid
+          && val.state.expiry_date.isValid
+          && val.state.amount.isValid
+          && this.addCardStatus
+        ) {
           this.vgs_valid_payment = true;
         } else {
           this.vgs_valid_payment = false;
@@ -335,7 +350,11 @@ export default {
 
     setForm() {
       // eslint-disable-next-line no-undef
-      this.form = VGSCollect.create(process.env.CONFIGS_ENV.VGS_VAULT_ID, process.env.CONFIGS_ENV.VGS_ENVIRONMENT, () => {});
+      this.form = VGSCollect.create(
+        process.env.CONFIGS_ENV.VGS_VAULT_ID,
+        process.env.CONFIGS_ENV.VGS_ENVIRONMENT,
+        () => {},
+      );
 
       this.form.field('#cc-number .fake-input', {
         type: 'card-number',
@@ -391,20 +410,22 @@ export default {
         vendor_type: 1,
       };
       this.loadingStatus = true;
-      this.form.submit('/customers/collect_card_details/', {
-        data: newCardPayload,
-        headers: {
-          Authorization: localStorage.jwtToken,
+      this.form.submit(
+        '/customers/collect_card_details/',
+        {
+          data: newCardPayload,
+          headers: {
+            Authorization: localStorage.jwtToken,
+          },
         },
-      }, (status, response) => {
-        if (response.status) {
-          const newSavedCardPayload = {
-            values: response.data,
-            app: 'AUTH',
-            endpoint: 'customers/charge_new_card',
-          };
-          this.requestSavedCards(newSavedCardPayload).then(
-            (res) => {
+        (status, response) => {
+          if (response.status) {
+            const newSavedCardPayload = {
+              values: response.data,
+              app: 'AUTH',
+              endpoint: 'customers/charge_new_card',
+            };
+            this.requestSavedCards(newSavedCardPayload).then((res) => {
               this.loadingStatus = false;
               if (res.status) {
                 const notification = {
@@ -423,18 +444,18 @@ export default {
                 };
                 this.displayNotification(notification);
               }
-            },
-          );
-        } else {
-          this.loadingStatus = false;
-          const notification = {
-            title: 'Failed to charge card',
-            level: 2,
-            message: response.message,
-          };
-          this.displayNotification(notification);
-        }
-      });
+            });
+          } else {
+            this.loadingStatus = false;
+            const notification = {
+              title: 'Failed to charge card',
+              level: 2,
+              message: response.message,
+            };
+            this.displayNotification(notification);
+          }
+        },
+      );
     },
 
     chargeSavedCard() {
@@ -443,7 +464,10 @@ export default {
       const firstName = accData.user_name.split(' ')[0];
       const payload = {
         txRef: `${Date.now()}`,
-        card: this.get_saved_cards.length > 0 && this.selectedSavedCard !== '' ? this.get_saved_cards[this.selectedSavedCard].card : '',
+        card:
+          this.get_saved_cards.length > 0 && this.selectedSavedCard !== ''
+            ? this.get_saved_cards[this.selectedSavedCard].card
+            : '',
         currency: this.getActiveCurrency,
         amount: this.savedCardAmount,
         country: accData.country_code,
@@ -511,21 +535,19 @@ export default {
       };
       this.deleteCardIndex = '';
       this.loading = true;
-      this.requestSavedCards(deleteCardPayload).then(
-        (response) => {
-          this.loading = false;
-          if (response.status) {
-            this.getUserCards();
-          } else {
-            const notification = {
-              title: 'Failed to delete saved card',
-              level: 2,
-              message: 'Please try again later.',
-            };
-            this.displayNotification(notification);
-          }
-        },
-      );
+      this.requestSavedCards(deleteCardPayload).then((response) => {
+        this.loading = false;
+        if (response.status) {
+          this.getUserCards();
+        } else {
+          const notification = {
+            title: 'Failed to delete saved card',
+            level: 2,
+            message: 'Please try again later.',
+          };
+          this.displayNotification(notification);
+        }
+      });
     },
 
     getUserCards() {
@@ -540,7 +562,7 @@ export default {
         user_id = session.peer.user_id;
       }
 
-      let cardPayload = {
+      const cardPayload = {
         user_id,
         cop_id,
       };

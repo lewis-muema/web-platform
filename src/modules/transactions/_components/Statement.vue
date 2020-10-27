@@ -232,7 +232,6 @@ export default {
       if (Object.keys(sessionData).length > 0) {
         let statementPayload = {};
 
-
         if (sessionData.default === 'biz') {
           statementPayload = {
             cop_id: sessionData.biz.cop_id,
@@ -390,7 +389,15 @@ export default {
         exportFromJSON({ data, fileName, exportType });
       } else {
         const pdfBody = [
-          ['Date', 'Description', 'Payment Method', 'Debit', 'Credit', 'Running Balance', 'Transaction'],
+          [
+            'Date',
+            'Description',
+            'Payment Method',
+            'Debit',
+            'Credit',
+            'Running Balance',
+            'Transaction',
+          ],
         ];
 
         this.statementData.forEach((item) => {

@@ -1,5 +1,8 @@
 <template>
-  <div id="auth_container" class="">
+  <div
+    id="auth_container"
+    class=""
+  >
     <!-- <main-header></main-header> -->
     <div class="profile-container">
       <div
@@ -7,12 +10,18 @@
         style="margin-top:5%;margin-left:20%;border-right:5px solid #1782C5;height:400px;"
       >
         <a class="my-profile__adj">
-          <router-link class="profile--link" to="/user/profile/personal_information">
+          <router-link
+            class="profile--link"
+            to="/user/profile/personal_information"
+          >
             Personal Information
           </router-link>
         </a>
         <div class="my-profile__adj">
-          <router-link class="profile--link" to="/user/profile/change_password">
+          <router-link
+            class="profile--link"
+            to="/user/profile/change_password"
+          >
             Change Password
           </router-link>
         </div>

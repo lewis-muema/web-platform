@@ -216,7 +216,7 @@ export default {
 };
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 .log-item{
 text-align: center;
 border: 0px solid #ccc;

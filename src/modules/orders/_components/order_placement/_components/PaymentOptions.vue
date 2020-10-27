@@ -127,7 +127,10 @@
                     v-else
                     class="delete-saved-card-dialogue"
                   >
-                    <p class="delete-saved-card-dialogue-label">Are you sure you want to delete this card <strong>{{ get_saved_cards[deletedCardIndex].card }}</strong>?</p>
+                    <p class="delete-saved-card-dialogue-label">
+                      Are you sure you want to delete this card
+                      <strong>{{ get_saved_cards[deletedCardIndex].card }}</strong>?
+                    </p>
                     <p class="delete-saved-card-dialogue-label">
                       <span
                         class="delete-saved-card-dialogue-buttons"
@@ -192,7 +195,9 @@
                         v-model="saveCardState"
                         type="checkbox"
                       >
-                      <span class="fake-checkbox-label-1">I want to save my card for future orders</span>
+                      <span
+                        class="fake-checkbox-label-1"
+                      >I want to save my card for future orders</span>
                     </div>
                   </div>
                 </form>
@@ -203,13 +208,18 @@
                 v-if="country === 'KE'"
                 class="card-option-disabled-notification"
               >
-                Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using M-Pesa, or pay cash upon delivery. Contact Support on +254709779779 for any queries.
+                Dear {{ user_name }}, <br>
+                Card payments will be momentarily unavailable as we undergo technical maintenance.
+                You can still pay for your Sendy deliveries using M-Pesa, or pay cash upon delivery.
+                Contact Support on +254709779779 for any queries.
               </p>
               <p
                 v-if="country === 'UG'"
                 class="card-option-disabled-notification"
               >
-                Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance. Contact Support on +256393239706 for any queries.
+                Dear {{ user_name }}, <br>
+                Card payments will be momentarily unavailable as we undergo technical maintenance.
+                Contact Support on +256393239706 for any queries.
               </p>
             </div>
           </span>
@@ -849,7 +859,13 @@ export default {
     },
     form: {
       handler(val) {
-        if (Object.prototype.hasOwnProperty.call(val.state, 'cardno') && val.state.cardno.isValid && val.state.cvv.isValid && val.state.expiry_date.isValid && this.addCardStatus) {
+        if (
+          Object.prototype.hasOwnProperty.call(val.state, 'cardno')
+          && val.state.cardno.isValid
+          && val.state.cvv.isValid
+          && val.state.expiry_date.isValid
+          && this.addCardStatus
+        ) {
           this.vgs_valid_payment = true;
         } else {
           this.vgs_valid_payment = false;
@@ -926,7 +942,11 @@ export default {
 
     setForm() {
       // eslint-disable-next-line no-undef
-      this.form = VGSCollect.create(process.env.CONFIGS_ENV.VGS_VAULT_ID, process.env.CONFIGS_ENV.VGS_ENVIRONMENT, () => {});
+      this.form = VGSCollect.create(
+        process.env.CONFIGS_ENV.VGS_VAULT_ID,
+        process.env.CONFIGS_ENV.VGS_ENVIRONMENT,
+        () => {},
+      );
 
       this.form.field('#cc-number .fake-input-1', {
         type: 'card-number',
@@ -986,20 +1006,22 @@ export default {
           save: this.saveCardState,
         };
         this.loading = true;
-        this.form.submit('/customers/collect_card_details/', {
-          data: newCardPayload,
-          headers: {
-            Authorization: localStorage.jwtToken,
+        this.form.submit(
+          '/customers/collect_card_details/',
+          {
+            data: newCardPayload,
+            headers: {
+              Authorization: localStorage.jwtToken,
+            },
           },
-        }, (status, response) => {
-          if (response.status) {
-            const newSavedCardPayload = {
-              values: response.data,
-              app: 'AUTH',
-              endpoint: 'customers/charge_new_card',
-            };
-            this.requestSavedCards(newSavedCardPayload).then(
-              (res) => {
+          (status, response) => {
+            if (response.status) {
+              const newSavedCardPayload = {
+                values: response.data,
+                app: 'AUTH',
+                endpoint: 'customers/charge_new_card',
+              };
+              this.requestSavedCards(newSavedCardPayload).then((res) => {
                 if (res.status) {
                   if (res.running_balance >= parseInt(this.pending_amount.replace(',', ''), 10)) {
                     this.doCompleteOrder();
@@ -1013,23 +1035,15 @@ export default {
                   }
                 } else {
                   this.loading = false;
-                  this.doNotification(
-                    2,
-                    'Failed to charge card',
-                    res.message,
-                  );
+                  this.doNotification(2, 'Failed to charge card', res.message);
                 }
-              },
-            );
-          } else {
-            this.loading = false;
-            this.doNotification(
-              2,
-              'Failed to charge card',
-              response.message,
-            );
-          }
-        });
+              });
+            } else {
+              this.loading = false;
+              this.doNotification(2, 'Failed to charge card', response.message);
+            }
+          },
+        );
       } else {
         this.loading = false;
         this.doNotification(
@@ -1047,7 +1061,10 @@ export default {
         const firstName = accData.user_name.split(' ')[0];
         const payload = {
           txRef: `${Date.now()}`,
-          card: this.activeSavedCard !== '' && this.get_saved_cards.length > 0 ? this.get_saved_cards[this.activeSavedCard].card : '',
+          card:
+            this.activeSavedCard !== '' && this.get_saved_cards.length > 0
+              ? this.get_saved_cards[this.activeSavedCard].card
+              : '',
           currency: this.activeVendorPriceData.currency,
           amount: this.pending_amount.replace(',', ''),
           country: this.getCountryCode,
@@ -1079,22 +1096,14 @@ export default {
               }
             } else {
               this.loading = false;
-              this.doNotification(
-                2,
-                'Failed to charge card',
-                response.message,
-              );
+              this.doNotification(2, 'Failed to charge card', response.message);
             }
           },
           error => false,
         );
       } else {
         this.loading = false;
-        this.doNotification(
-          2,
-          'Failed to charge card',
-          'Please select one of your saved cards',
-        );
+        this.doNotification(2, 'Failed to charge card', 'Please select one of your saved cards');
       }
     },
 
@@ -1113,20 +1122,18 @@ export default {
       };
       this.deletedCardIndex = '';
       this.loading = true;
-      this.requestSavedCards(deleteCardPayload).then(
-        (response) => {
-          this.loading = false;
-          if (response.status) {
-            this.getUserCards();
-          } else {
-            this.doNotification(
-              2,
-              'Failed to delete saved card',
-              'Failed to delete saved card. Please try again later',
-            );
-          }
-        },
-      );
+      this.requestSavedCards(deleteCardPayload).then((response) => {
+        this.loading = false;
+        if (response.status) {
+          this.getUserCards();
+        } else {
+          this.doNotification(
+            2,
+            'Failed to delete saved card',
+            'Failed to delete saved card. Please try again later',
+          );
+        }
+      });
     },
 
     do_set_active_order_option(name) {
@@ -1370,9 +1377,13 @@ export default {
         return false;
       }
       const session = this.$store.getters.getSession;
-      const profile_id = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
+      const profile_id = session.default === 'biz'
+        ? session[session.default].cop_id
+        : session[session.default].user_id;
       const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
-      const secondaryProfile = session.default === 'biz' ? this.getPriceRequestObject.client_id - profile_id === 100000000 : this.getPriceRequestObject.user_id - profile_id === 100000000;
+      const secondaryProfile = session.default === 'biz'
+        ? this.getPriceRequestObject.client_id - profile_id === 100000000
+        : this.getPriceRequestObject.user_id - profile_id === 100000000;
       this.setSecondaryProfile(secondaryProfile);
 
       if (this.payment_method === '') {
@@ -1495,7 +1506,6 @@ export default {
                 vendorType: orderData.values.vendor_type,
               };
               this.trackEcommerceData(ecommercePayload);
-
 
               if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
                 this.doNotification(1, 'Successfully placed freight order', '');
@@ -1803,9 +1813,13 @@ export default {
     refreshRunningBalance() {
       return new Promise((resolve, reject) => {
         const session = this.$store.getters.getSession;
-        const profile_id = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
+        const profile_id = session.default === 'biz'
+          ? session[session.default].cop_id
+          : session[session.default].user_id;
         const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
-        const secondaryProfile = session.default === 'biz' ? this.getPriceRequestObject.client_id - profile_id === 100000000 : this.getPriceRequestObject.user_id - profile_id === 100000000;
+        const secondaryProfile = session.default === 'biz'
+          ? this.getPriceRequestObject.client_id - profile_id === 100000000
+          : this.getPriceRequestObject.user_id - profile_id === 100000000;
         const runningBalancePayload = {
           [profile_name]: profile_id,
           phone: session[session.default].user_phone,
@@ -2007,9 +2021,13 @@ export default {
       if (session.default === 'biz') {
         copId = session.biz.cop_id;
       }
-      const profile_id = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
+      const profile_id = session.default === 'biz'
+        ? session[session.default].cop_id
+        : session[session.default].user_id;
       const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
-      const secondaryProfile = session.default === 'biz' ? this.getPriceRequestObject.client_id - profile_id === 100000000 : this.getPriceRequestObject.user_id - profile_id === 100000000;
+      const secondaryProfile = session.default === 'biz'
+        ? this.getPriceRequestObject.client_id - profile_id === 100000000
+        : this.getPriceRequestObject.user_id - profile_id === 100000000;
       const oldRb = this.$store.getters.getRunningBalance;
       const runningBalancePayload = {
         [profile_name]: profile_id,
@@ -2131,7 +2149,7 @@ export default {
         userId = session.peer.user_id;
       }
 
-      let cardPayload = {
+      const cardPayload = {
         user_id: userId,
         cop_id: copId,
       };
@@ -2218,7 +2236,9 @@ export default {
         if (runningBalance >= 0 && runningBalance - this.order_cost < 0) {
           payment = data.payment_methods;
         } else {
-          const cashIndex = data.payment_methods.findIndex(index => index.payment_method_id === 5);
+          const cashIndex = data.payment_methods.findIndex(
+            index => index.payment_method_id === 5,
+          );
           payment = data.payment_methods.splice(cashIndex, 1);
         }
       }

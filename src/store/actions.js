@@ -112,15 +112,17 @@ export default {
               access_token: localStorage.getItem('jwtToken'),
               refresh_token: localStorage.getItem('refreshToken'),
             };
-            axios.post(`${state.ENV.AUTH}token`, data).then((response) => {
-              if (response.status === 200) {
-                localStorage.setItem('jwtToken', response.data);
-              } else {
-                localStorage.removeItem('_sessionSnack');
-                localStorage.removeItem('jwtToken');
-                window.location.href = loginUrl;
-              }
-            })
+            axios
+              .post(`${state.ENV.AUTH}token`, data)
+              .then((response) => {
+                if (response.status === 200) {
+                  localStorage.setItem('jwtToken', response.data);
+                } else {
+                  localStorage.removeItem('_sessionSnack');
+                  localStorage.removeItem('jwtToken');
+                  window.location.href = loginUrl;
+                }
+              })
               .catch(() => {
                 localStorage.removeItem('_sessionSnack');
                 localStorage.removeItem('jwtToken');
@@ -204,15 +206,17 @@ export default {
               access_token: localStorage.getItem('jwtToken'),
               refresh_token: localStorage.getItem('refreshToken'),
             };
-            axios.post(`${state.ENV.AUTH}token`, data).then((response) => {
-              if (response.status === 200) {
-                localStorage.setItem('jwtToken', response.data);
-              } else {
-                localStorage.removeItem('_sessionSnack');
-                localStorage.removeItem('jwtToken');
-                window.location.href = loginUrl;
-              }
-            })
+            axios
+              .post(`${state.ENV.AUTH}token`, data)
+              .then((response) => {
+                if (response.status === 200) {
+                  localStorage.setItem('jwtToken', response.data);
+                } else {
+                  localStorage.removeItem('_sessionSnack');
+                  localStorage.removeItem('jwtToken');
+                  window.location.href = loginUrl;
+                }
+              })
               .catch(() => {
                 localStorage.removeItem('_sessionSnack');
                 localStorage.removeItem('jwtToken');

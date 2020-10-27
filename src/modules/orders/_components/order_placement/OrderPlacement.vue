@@ -120,19 +120,27 @@
       <div
         v-if="$route.path === '/orders/dedicated/multi-destination'"
         class="homeview--row homeview--row__more-destinations homeview-locations-options"
-        :class="allow_add_destination ? 'homeview-locations-options-multi-destination-active' : 'homeview-locations-options-multi-destination-inactive'"
+        :class="
+          allow_add_destination
+            ? 'homeview-locations-options-multi-destination-active'
+            : 'homeview-locations-options-multi-destination-inactive'
+        "
       >
         <div class="homeview-locations-options--add-destination">
           <font-awesome-icon
             icon="plus"
             size="xs"
             class="sendy-blue homeview--row__font-awesome"
-            :class="allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'"
+            :class="
+              allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'
+            "
             width="10px"
           />
           <a
             class="homeview--add"
-            :class="allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'"
+            :class="
+              allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'
+            "
             @click="addExtraDestinationWrapper()"
           >Add Destination</a>
         </div>
@@ -225,9 +233,7 @@ export default {
       fileUploadStatus: false,
       map_options: {
         componentRestrictions: {
-          country: [
-            'ke', 'ug', 'tz',
-          ],
+          country: ['ke', 'ug', 'tz'],
         },
         bounds: {
           north: 35.6,
@@ -628,7 +634,11 @@ export default {
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'crisis_notification')) {
-            this.doNotification(3, error.response.data.reason, error.response.data.crisis_notification.msg);
+            this.doNotification(
+              3,
+              error.response.data.reason,
+              error.response.data.crisis_notification.msg,
+            );
           } else {
             this.doNotification(
               3,
