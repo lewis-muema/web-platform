@@ -48,11 +48,14 @@ export default {
     // watch session so as to only update token on session
     getSession(val) {
       if (val) {
-        this.initializeFirebase();
+        this.updateFirebaseToken();
       }
     },
     $route(to, from) {
-      if (document.querySelector('.body').id.includes('beacon-active') && (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders')) {
+      if (
+        document.querySelector('.body').id.includes('beacon-active')
+        && (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders')
+      ) {
         this.autoPopBeacon(2);
       }
     },
@@ -144,7 +147,7 @@ export default {
         if ({}.hasOwnProperty.call(session, 'default')) {
           if (logAction === 'notification') {
             // add log for notification recieved
-            this.trackMixpanelEvent('FCM Notification Received - Web', {
+            this.trackMixpanelEvent('FCM Notification Recieved - Web', {
               'Order No': logData.order_no,
               'Cop Id': session[session.default].cop_id,
               'User Id': session[session.default].user_id,
@@ -163,7 +166,7 @@ export default {
           // no session
           if (logAction === 'notification') {
             // add log for notification recieved
-            this.trackMixpanelEvent('FCM Notification Received - Web', {
+            this.trackMixpanelEvent('FCM Notification Recieved - Web', {
               'Order No': logData.order_no,
             });
           }
@@ -328,7 +331,8 @@ export default {
         const notification = {
           title: 'Mobile redirect',
           level: 2,
-          message: 'We have detected you are using an android device. We will redirect you to the play store to download the app in the next few seconds for the best experience',
+          message:
+            'We have detected you are using an android device. We will redirect you to the play store to download the app in the next few seconds for the best experience',
         };
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
@@ -339,11 +343,17 @@ export default {
       }
     },
     detectIOS() {
-      if (navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i)) {
+      if (
+        navigator.userAgent.match(/webOS/i)
+        || navigator.userAgent.match(/iPhone/i)
+        || navigator.userAgent.match(/iPad/i)
+        || navigator.userAgent.match(/iPod/i)
+      ) {
         const notification = {
           title: 'Mobile redirect',
           level: 2,
-          message: 'We have detected you are using an IOS device. We will redirect you to the app store to download the app in the next few seconds for the best experience',
+          message:
+            'We have detected you are using an IOS device. We will redirect you to the app store to download the app in the next few seconds for the best experience',
         };
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
