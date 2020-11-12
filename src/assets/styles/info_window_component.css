@@ -256,13 +256,11 @@ ul.timeline:before {
   position: absolute;
   left: 29px;
   width: 2px;
-  height: 90%;
   z-index: 400;
 }
 ul.timeline > li {
   margin: 20px 0;
   padding-left: 20px;
-  height: 35px;
   margin-bottom: 30px !important;
 }
 ul.timeline > li:before {
@@ -463,6 +461,7 @@ ul.timeline > li#timeline_right.payedReached:before {
 .info-payment-button {
   padding-left: 5px;
   padding-top: 10px;
+  margin-bottom: 4%;
 }
 .button-tracking-payment {
   width: 200px;
@@ -605,11 +604,13 @@ ul.timeline > li#timeline_right.payedReached:before {
 }
 ul.inforbar_route_timeline:before {
   background: #1b7fc3 !important;
+  height: 82% !important;
 }
 ul.inforbar_order_timeline:before {
   width: 2px;
   background: #8a8a8a !important;
   margin-left: 2px;
+  height: 100%;
 }
 .inforbar_left_scrollable {
   padding-left: 0px !important;
@@ -829,4 +830,30 @@ button.default.action--slide-button {
   overflow-y: scroll;
   height: 190px;
   font-size: 12px;
+}
+.inter-county-infobar--photo{
+  width: 46px;
+  max-height: 56px;
+  min-height: 53px;
+}
+.inter-county-img{
+  height: 73%;
+}
+.payments-headline{
+  color: #000;
+}
+.payments-cursor{
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 200;
+}
+.show-options{
+  margin-left: 5%;
+  margin-top: 6%;
+}
+.options-section{
+  margin-bottom: 5%;
+}
+.payments-wrap{
+  margin: 4%;
 }

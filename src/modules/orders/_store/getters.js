@@ -13,7 +13,6 @@ const getOuterActiveVendorDetails = state => state.outer_active_vendor_data;
 const getOuterActivePackageClass = state => state.outer_active_package_data;
 const getParentOrder = state => state.parent_order;
 
-
 export default {
   getPage,
   showOngoing,

@@ -684,8 +684,7 @@ export default {
           level: 2,
           message: 'You will be redirected to the login page within 5 seconds.',
         };
-        this.$store.commit('setNotification', notification);
-        this.$store.commit('setNotificationStatus', true);
+        this.displayNotification(notification);
         setTimeout(() => {
           localStorage.removeItem('_sessionSnack');
           localStorage.removeItem('jwtToken');
@@ -746,9 +745,7 @@ export default {
                 message: 'Details saved successfully',
               };
               this.isNewCopAcc();
-
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true);
+              this.displayNotification(notification);
             } else {
               const level = 3;
               this.message = 'Something went wrong.';
@@ -757,17 +754,15 @@ export default {
                 level,
                 message: this.message,
               };
-
-              this.$store.commit('setNotification', notification);
-              this.$store.commit('setNotificationStatus', true);
+              this.displayNotification(notification);
             }
           },
           (error) => {
             const level = 3;
             const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
-            this.$store.commit('setNotification', notification);
-            this.$store.commit('setNotificationStatus', true);
-          });
+            this.displayNotification(notification);
+          },
+        );
       }
     },
   },

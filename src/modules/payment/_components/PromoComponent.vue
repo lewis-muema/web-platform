@@ -74,10 +74,8 @@ export default {
           if (response.length > 0) {
             response = response[0];
           }
-
-          this.$store.commit('setNotificationStatus', true);
           let level = 0;
-          const message = response.data.msg;
+          let message = response.data.msg;
           if (response.data.status === true) {
             // update running balance with new value
             const running_balance = parseFloat(response.data.running_balance);
@@ -86,10 +84,11 @@ export default {
             level = 1;
           } else {
             this.payment_state = 'Promocode Redeem Failed';
+            message = 'Unable to redeem promocode';
             level = 2;
           }
           const notification = {
-            title: 'redeem promocode',
+            title: 'Redeem promocode',
             level,
             message: `${message}`,
           };

@@ -50,6 +50,7 @@ Validator.extend('check_phone', {
   },
 });
 
+
 export default {
   name: 'Home',
   components: { OrderPlacement },
