@@ -223,6 +223,26 @@ const requestCancellationReasons = function requestCancellationReasons({ dispatc
   });
 };
 
+const computeCancellationFee = function computeCancellationFee({ dispatch }, data) {
+  const payload = {
+    values: data,
+    app: 'ORDERS_APP',
+    endpoint: 'compute_cancellation_fee',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   getTrackingData,
   cancelOrder,
@@ -232,4 +252,5 @@ export default {
   requestETASms,
   requestRiderLastPosition,
   requestCancellationReasons,
+  computeCancellationFee,
 };
