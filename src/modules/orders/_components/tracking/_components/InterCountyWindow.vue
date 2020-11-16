@@ -959,7 +959,7 @@ export default {
               } else if (this.tracked_order === from) {
                 setTimeout(() => {
                   that.poll(from);
-                }, 30000);
+                }, 20000);
               }
             } else {
               that.place();
@@ -1481,8 +1481,7 @@ export default {
     },
     showPaymentBtn(timeline) {
       const resp = timeline.action === 'payment'
-        && this.tracking_data.inter_county_order_details.status === 'pending_payment'
-        && timeline.status === 'ongoing';
+        && this.tracking_data.inter_county_order_details.status === 'pending_payment';
 
       return resp;
     },
@@ -1607,7 +1606,7 @@ export default {
               pollCount = pollLimit;
               that.payment_state = 0;
               that.loading_payment = false;
-              this.showPaymentTab = false;
+              that.showPaymentTab = false;
               that.doNotification('1', 'Order Payment', 'Payment was successful');
               that.payment_check = '';
               that.mpesa_payment = false;
