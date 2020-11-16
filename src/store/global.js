@@ -21,8 +21,8 @@ const state = {
   redirect_status: false,
   redirect_order: ' ',
   nps_status: false,
-  secondary_profile: '',
   dedicated_access_status: false,
+  secondary_profile: '',
   pick_up_filled_status: false,
 };
 

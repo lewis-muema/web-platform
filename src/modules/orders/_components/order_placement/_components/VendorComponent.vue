@@ -3,9 +3,7 @@
     v-if="getOrderState === 1"
     class="home-view-vendor-and-optins-wrappper"
     :class="
-      $route.path === '/orders/dedicated/multi-destination'
-        ? 'dedicated-vendors-wrapper'
-        : dedicatedClass
+      $route.path === '/orders/dedicated/multi-destination' ? 'dedicated-vendors-wrapper' : dedicatedClass
     "
   >
     <div class="home-view--seperator" />
@@ -31,7 +29,7 @@
                   :src="getPackageIcon(vendor_class.tier_group)"
                   class="home-view-vendor-classes-menu--img"
                   alt="vendor_class.tier_group"
-                />
+                >
                 <span class="home-view-vendor-classes-menu--span">
                   {{ vendor_class.tier_group }}
                 </span>
@@ -41,7 +39,10 @@
         </div>
 
         <!-- start vendor types wrapper -->
-        <div v-if="activePackageClassPriceData !== ''" class="home-view-vendor-types">
+        <div
+          v-if="activePackageClassPriceData !== ''"
+          class="home-view-vendor-types"
+        >
           <!-- start vendor types loop -->
           <div
             v-for="j in activePackageClassPriceData.price_tiers"
@@ -63,7 +64,7 @@
                     :src="getVendorIcon(j.vendor_id)"
                     :class="getScheduledVendorTypeClass(j, 2)"
                     alt=""
-                  />
+                  >
                 </div>
                 <div class="home-view-vendor-types-item--vendor-wrapper__vendor">
                   <div class="home-view-vendor-types-item-vendor--vendor-formal-name">
@@ -96,7 +97,10 @@
                   >
                     Type: {{ formatPriceType(j.price_type) }}
                   </div>
-                  <div v-else class="home-view-vendor-types-item--cost-wrapper_time">
+                  <div
+                    v-else
+                    class="home-view-vendor-types-item--cost-wrapper_time"
+                  >
                     <span v-if="isStandardUnavailable(j)">
                       {{ scheduleTimeFrame(j) }}
                     </span>
@@ -113,9 +117,18 @@
                     trigger="hover"
                     popper-class="vendorExtraInfo"
                   >
-                    <div class="reset-font" v-html="j.tier_description" />
-                    <span slot="reference" class="extra_info_background">
-                      <i class="el-icon-info" :class="getScheduledVendorTypeClass(j, 2)" />
+                    <div
+                      class="reset-font"
+                      v-html="j.tier_description"
+                    />
+                    <span
+                      slot="reference"
+                      class="extra_info_background"
+                    >
+                      <i
+                        class="el-icon-info"
+                        :class="getScheduledVendorTypeClass(j, 2)"
+                      />
                     </span>
                   </el-popover>
                 </div>
@@ -128,7 +141,10 @@
         <!-- end vendor types wrapper -->
       </div>
     </div>
-    <div v-if="get_active_package_class !== ''" class="">
+    <div
+      v-if="get_active_package_class !== ''"
+      class=""
+    >
       <button
         type="button"
         class="button-primary home-view--place-order"
@@ -140,7 +156,10 @@
     </div>
   </div>
 
-  <div v-else-if="getOrderState === 2" class="extended-options-wrappper">
+  <div
+    v-else-if="getOrderState === 2"
+    class="extended-options-wrappper"
+  >
     <!-- start carrier type transition -->
     <transition name="home-carrier-type-fade">
       <div class="home-view-vendor-types-item-wrap home-next-step">
@@ -148,7 +167,10 @@
           class="home-view-vendor-types-item home-view-vendor-types-item--vendor-wrapper"
           :class="getScheduledVendorTypeClass(activeVendorPriceData, 2)"
         >
-          <div class="" @click="goBackToHome">
+          <div
+            class=""
+            @click="goBackToHome"
+          >
             <i class="el-icon-back back-to-home-btn" />
           </div>
           <div class="home-view-vendor-types-item--vendor-wrapper__img vendor__img_pstn">
@@ -156,7 +178,7 @@
               class="home-view-vendor-types-item__image"
               :src="getVendorIcon(activeVendorPriceData.vendor_id)"
               alt=""
-            />
+            >
           </div>
           <div class="home-view-vendor-types-item--vendor-wrapper__vendor">
             <div class="home-view-vendor-types-item-vendor--vendor-formal-name">
@@ -197,8 +219,14 @@
             >
               <div class="home-view-truck-options-dedicated-notes">
                 <p>Add notes for each destination (optional)</p>
-                <div v-for="(path, index) in getStoreOrderPath" :key="index">
-                  <div v-if="index > 0" class="home-view-truck-options-dedicated-notes-label">
+                <div
+                  v-for="(path, index) in getStoreOrderPath"
+                  :key="index"
+                >
+                  <div
+                    v-if="index > 0"
+                    class="home-view-truck-options-dedicated-notes-label"
+                  >
                     <div class="home-view-truck-options-dedicated-notes-icon" />
                     <p class="no-margin">
                       {{ path.name }}
@@ -827,7 +855,10 @@
       <!-- end carrier type section -->
     </transition>
     <!-- end carrier type transition -->
-    <transition name="fade" mode="out-in">
+    <transition
+      name="fade"
+      mode="out-in"
+    >
       <div class="add-instructions-pop-up">
         <el-dialog
           :visible.sync="addDeliveryInfo"
@@ -873,7 +904,10 @@
                     Contact person
                   </div>
                   <div class="" />
-                  <div class="" @change="addInstructionContact(get_order_path[0], 0)">
+                  <div
+                    class=""
+                    @change="addInstructionContact(get_order_path[0], 0)"
+                  >
                     <vue-tel-input
                       v-model.trim="contact[0]"
                       v-validate="'required|check_phone'"
@@ -964,7 +998,10 @@
                     Contact person
                   </div>
                   <div class="" />
-                  <div class="" @change="addInstructionContact(data, index + 1)">
+                  <div
+                    class=""
+                    @change="addInstructionContact(data, index + 1)"
+                  >
                     <vue-tel-input
                       v-model.trim="contact[index + 1]"
                       v-validate="'required|check_phone'"
@@ -1767,7 +1804,6 @@ export default {
 
     setActivePackageClassWrapper(name) {
       this.setActivePackageClass(name);
-      this.activeClass = name;
       this.setOuterActivePackageClass(name);
       this.reCheckCarrierType();
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
@@ -1842,6 +1878,7 @@ export default {
         (response) => {
           if (response.status) {
             this.trackMixpanelEvent('Paired Order With Rider', { 'Paired Rider': plate });
+            this.triggerGAEvent('Paired Order With Rider', { 'Paired Rider': plate });
             this.updateData(response.data);
           } else {
             this.pair_status = '1';

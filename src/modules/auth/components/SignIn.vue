@@ -4,69 +4,67 @@
     class="log-item"
   >
     <div class="sign-inner">
-      <label>
-        <div class="sign-top">
-          Log in to Sendy
+      <div class="sign-top">
+        Log in to Sendy
+      </div>
+
+      <p class="sign-in-error">
+        {{ message }}
+      </p>
+
+      <div @keyup.enter="sign_in">
+        <div class="sign-holder dimen">
+          <span
+            id="log_in_warn"
+            class="sign-holder__error"
+          />
+        </div>
+        <div class="sign-holder dimen">
+          <input
+            v-model="email"
+            class="input-control sign-form"
+            type="text"
+            placeholder="Enter Email"
+          >
         </div>
 
-        <p class="sign-in-error">
-          {{ message }}
-        </p>
-
-        <div @keyup.enter="sign_in">
-          <div class="sign-holder dimen">
-            <span
-              id="log_in_warn"
-              class="sign-holder__error"
-            />
-          </div>
-          <div class="sign-holder dimen">
-            <input
-              v-model="email"
-              class="input-control sign-form"
-              type="text"
-              placeholder="Enter Email"
-            >
-          </div>
-
-          <div class="sign-holder dimen">
-            <input
-              v-model="password"
-              class="input-control sign-form"
-              type="password"
-              name="password"
-              placeholder="Password"
-            >
-          </div>
-
-          <div class="sign-holder">
-            <input
-              v-model="login_text"
-              class="button-primary sign-btn-color"
-              type="submit"
-              name="login_text"
-              @click="sign_in"
-            >
-          </div>
-          <div class=" sign-holder sign-forgot-pass sign-smaller">
-            <router-link
-              class="sign-holder__link"
-              to="/auth/forgot_password"
-            >
-              Forgot password?
-            </router-link>
-          </div>
-          <div class="sign-holder sign-sign-up sign-smaller">
-            Don't have an Account?
-            <router-link
-              class="sign-holder__link"
-              to="/auth/sign_up"
-            >
-              Sign Up
-            </router-link>
-          </div>
+        <div class="sign-holder dimen">
+          <input
+            v-model="password"
+            class="input-control sign-form"
+            type="password"
+            name="password"
+            placeholder="Password"
+          >
         </div>
-      </label>
+
+        <div class="sign-holder">
+          <input
+            v-model="login_text"
+            class="button-primary sign-btn-color"
+            type="submit"
+            name="login_text"
+            @click="sign_in"
+          >
+        </div>
+        <div class=" sign-holder sign-forgot-pass sign-smaller">
+          <router-link
+            class="sign-holder__link"
+            to="/auth/forgot_password"
+          >
+            Forgot password?
+          </router-link>
+        </div>
+        <div class="sign-holder sign-sign-up sign-smaller">
+          Don't have an Account?
+          <router-link
+            class="sign-holder__link"
+            to="/auth/sign_up"
+          >
+            Sign Up
+          </router-link>
+        </div>
+      </div>
     </div>
   </div>
 </template>

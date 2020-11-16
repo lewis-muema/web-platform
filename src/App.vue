@@ -48,14 +48,39 @@ export default {
     // watch session so as to only update token on session
     getSession(val) {
       if (val) {
-        this.initializeFirebase();
+        this.updateFirebaseToken();
       }
     },
     $route(to, from) {
-      if (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders') {
-        // this.autoPopBeacon();
+      if (
+        document.querySelector('.body').id.includes('beacon-active')
+        && (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders')
+      ) {
+        this.autoPopBeacon(2);
       }
     },
+  },
+  mounted() {
+    // beacon click listener
+    window.Beacon('on', 'open', () => {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          window.ga('send', 'event', {
+            eventCategory: 'Beacon Chat',
+            eventAction: 'Click',
+            eventLabel: 'Chat Icon - Beacon',
+          });
+        }
+      } catch (er) {
+        // ...
+      }
+    });
   },
   beforeMount() {
     if (ENV.DOMAIN !== 'localhost') {
@@ -77,7 +102,9 @@ export default {
       this.loadFCMListeners();
       this.detectAndroid();
       this.detectIOS();
-      // this.autoPopBeacon();
+      if (document.querySelector('.body').id.includes('beacon-active')) {
+        this.autoPopBeacon(1);
+      }
     }
   },
   methods: {
@@ -98,7 +125,7 @@ export default {
         if ({}.hasOwnProperty.call(session, 'default')) {
           if (logAction === 'notification') {
             // add log for notification recieved
-            this.trackMixpanelEvent('FCM Notification Received - Web', {
+            this.trackMixpanelEvent('FCM Notification Recieved - Web', {
               'Order No': logData.order_no,
               'Cop Id': session[session.default].cop_id,
               'User Id': session[session.default].user_id,
@@ -117,7 +144,7 @@ export default {
           // no session
           if (logAction === 'notification') {
             // add log for notification recieved
-            this.trackMixpanelEvent('FCM Notification Received - Web', {
+            this.trackMixpanelEvent('FCM Notification Recieved - Web', {
               'Order No': logData.order_no,
             });
           }
@@ -282,7 +309,8 @@ export default {
         const notification = {
           title: 'Mobile redirect',
           level: 2,
-          message: 'We have detected you are using an android device. We will redirect you to the play store to download the app in the next few seconds for the best experience',
+          message:
+            'We have detected you are using an android device. We will redirect you to the play store to download the app in the next few seconds for the best experience',
         };
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
@@ -293,11 +321,17 @@ export default {
       }
     },
     detectIOS() {
-      if (navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i)) {
+      if (
+        navigator.userAgent.match(/webOS/i)
+        || navigator.userAgent.match(/iPhone/i)
+        || navigator.userAgent.match(/iPad/i)
+        || navigator.userAgent.match(/iPod/i)
+      ) {
         const notification = {
           title: 'Mobile redirect',
           level: 2,
-          message: 'We have detected you are using an IOS device. We will redirect you to the app store to download the app in the next few seconds for the best experience',
+          message:
+            'We have detected you are using an IOS device. We will redirect you to the app store to download the app in the next few seconds for the best experience',
         };
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
@@ -307,29 +341,39 @@ export default {
         }, 10000);
       }
     },
-    autoPopBeacon() {
-      setTimeout(() => {
-        if (this.$route.path === '/auth' || this.$route.path === '/auth/sign_in') {
-          window.Beacon('open');
-          window.Beacon('navigate', '/answers/');
-          setTimeout(() => {
-            window.Beacon('suggest', ['59d5bc412c7d3a40f0ed346c']);
-          }, 1500);
-        }
-        if (this.$route.path === '/orders' && !this.getPickUpFilledStatus) {
-          const session = this.$store.getters.getSession;
-          window.Beacon('open');
-          window.Beacon('navigate', '/answers/');
-          setTimeout(() => {
-            window.Beacon('suggest', ['59d5e11f2c7d3a40f0ed34fe']);
-            this.trackMixpanelEvent('Auto pop up helpscout beacon for order placement', {
-              'user name': session[session.default].user_name,
-              'user email': session[session.default].user_email,
-              'user phone': session[session.default].user_phone,
-            });
-          }, 1500);
-        }
-      }, 30000);
+    autoPopBeacon(id) {
+      if (id === 1) {
+        window.Beacon('on', 'ready', () => {
+          this.beaconActions();
+        });
+      }
+      if (id === 2) {
+        this.beaconActions();
+      }
+    },
+    beaconActions() {
+      if (this.$route.path === '/auth' || this.$route.path === '/auth/sign_in') {
+        window.Beacon('close');
+        window.Beacon('open');
+        window.Beacon('navigate', '/answers/');
+        setTimeout(() => {
+          window.Beacon('suggest', ['59d5bc412c7d3a40f0ed346c']);
+        }, 2000);
+      }
+      if (this.$route.path === '/orders' && !this.getPickUpFilledStatus) {
+        const session = this.$store.getters.getSession;
+        window.Beacon('close');
+        window.Beacon('open');
+        window.Beacon('navigate', '/answers/');
+        setTimeout(() => {
+          window.Beacon('suggest', ['59d5e11f2c7d3a40f0ed34fe']);
+          this.trackMixpanelEvent('Auto pop up helpscout beacon for order placement', {
+            'user name': session[session.default].user_name,
+            'user email': session[session.default].user_email,
+            'user phone': session[session.default].user_phone,
+          });
+        }, 2000);
+      }
     },
   },
 };

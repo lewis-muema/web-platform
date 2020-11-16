@@ -107,12 +107,6 @@ const unsetLocationMarker = (state, index) => {
 const setHomeLocations = (state, payload) => {
   state.home_locations = payload;
 };
-const setVicinityLocation = (state, payload) => {
-  state.vicinity_locations = payload;
-};
-const clearVicinityLocation = (state) => {
-  state.vicinity_locations = [];
-};
 const clearHomeLocation = (state) => {
   state.home_locations = [];
 };
@@ -182,6 +176,4 @@ export default {
   setWaypointNotes,
   clearVendorMarkers,
   setParentOrder,
-  setVicinityLocation,
-  clearVicinityLocation,
 };

@@ -232,7 +232,6 @@ export default {
       if (Object.keys(sessionData).length > 0) {
         let statementPayload = {};
 
-
         if (sessionData.default === 'biz') {
           statementPayload = {
             cop_id: sessionData.biz.cop_id,
@@ -291,9 +290,6 @@ export default {
         let value = row.amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         value = value.split('.');
         return value[0];
-      }
-      if (Math.sign(row.amount) === 0 && row.description === 'Delivery') {
-        return Math.sign(row.amount);
       }
       return '';
     },
@@ -393,7 +389,15 @@ export default {
         exportFromJSON({ data, fileName, exportType });
       } else {
         const pdfBody = [
-          ['Date', 'Description', 'Payment Method', 'Debit', 'Credit', 'Running Balance', 'Transaction'],
+          [
+            'Date',
+            'Description',
+            'Payment Method',
+            'Debit',
+            'Credit',
+            'Running Balance',
+            'Transaction',
+          ],
         ];
 
         this.statementData.forEach((item) => {

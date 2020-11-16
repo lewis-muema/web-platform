@@ -205,7 +205,7 @@
             </div>
             <div v-if="!getCardPaymentStatus">
               <p
-                v-if="getCountryCode === 'KE'"
+                v-if="country === 'KE'"
                 class="card-option-disabled-notification"
               >
                 Dear {{ user_name }}, <br>
@@ -214,13 +214,12 @@
                 Contact Support on +254709779779 for any queries.
               </p>
               <p
-                v-if="getCountryCode === 'UG'"
+                v-if="country === 'UG'"
                 class="card-option-disabled-notification"
               >
                 Dear {{ user_name }}, <br>
                 Card payments will be momentarily unavailable as we undergo technical maintenance.
-                You can still pay for your Sendy deliveries using cash. Contact Support on
-                +256393239706 for any queries.
+                Contact Support on +256393239706 for any queries.
               </p>
             </div>
           </span>
@@ -637,7 +636,6 @@ export default {
       getLoadWeightStatus: '$_orders/$_home/getLoadWeightStatus',
       getLoadWeightValue: '$_orders/$_home/getLoadWeightValue',
       getHomeLocations: '$_orders/getHomeLocations',
-      getVicinityLocations: '$_orders/getVicinityLocations',
       getStoreOrderPath: '$_orders/getStorePath',
       getPairWithRiderState: '$_orders/$_home/getPairWithRiderState',
       getPairErrorMessage: '$_orders/$_home/getPairErrorMessage',
@@ -1331,7 +1329,6 @@ export default {
         eventLabel: 'Order Confirmation Button - Order Placement Page - Web App',
       };
       this.fireGAEvent(eventPayload);
-      clearInterval(this.interval);
 
       if (this.isValidateLoadWeightStatus() && this.isValidateScheduleTime()) {
         this.loading = true;
@@ -1488,7 +1485,6 @@ export default {
                 eventLabel: 'Order Confirmed - Order Placement - Web App',
               };
               this.fireGAEvent(eventPayload);
-
               let order_no;
               this.setPickupFilled(false);
               // eslint-disable-next-line camelcase
@@ -1502,6 +1498,15 @@ export default {
                   // catch er
                 }
               }
+              // ecommerce data tracking
+              const ecommercePayload = {
+                // eslint-disable-next-line camelcase
+                orderNo: order_no,
+                amount: orderData.values.amount,
+                vendorType: orderData.values.vendor_type,
+              };
+              this.trackEcommerceData(ecommercePayload);
+
               if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
                 this.doNotification(1, 'Successfully placed freight order', '');
               }
