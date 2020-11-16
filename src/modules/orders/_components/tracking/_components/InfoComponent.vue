@@ -709,15 +709,28 @@
                     <div class="cancel-reason-title" id="cancel-reason-title">
                       Are you sure you want to cancel?
                     </div>
-                    <div class="cancel-reason-subtitle" id="cancel-reason-subtitle">
-                      You may incur cost on cancellation. Please confirm order details in future before placing an order
+                    <div class="cancellation-info--outer">
+                      <div class="cancellation-info--inner">
+                        <div
+                          v-if="!cancellation_fee"
+                          class="cancel-reason-subtitle"
+                          id="cancel-reason-subtitle"
+                        >
+                          You may incur cost on cancellation. Please confirm order details in future
+                          before placing an order
+                        </div>
+                        <div v-else class="cancel-reason-subtitle" id="cancel-reason-subtitle">
+                          <i class="el-icon-warning warning-cancellation-icon"></i>
+                          {{ getCancellationInfo() }}
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div v-for="reasons in cancellation_reasons">
                     <div class="cancel-reason-text" id="cancel-reason-text">
                       <div class="">
                         <el-radio v-model="cancel_reason" :label="reasons.cancel_reason_id">
-                          {{reasons.cancel_reason}}
+                          {{ reasons.cancel_reason }}
                         </el-radio>
                       </div>
                     </div>
@@ -754,8 +767,8 @@
                 </div>
                 <div class="cancelOptions--content-wrap" v-if="cancel_reason === 4">
                   <div class="cancelOptions--content-message">
-                    Did you know after your order is confirmed you can call your rider and give him the
-                    right destination? We will recalculate the cost and deliver your item.
+                    Did you know after your order is confirmed you can call your rider and give him
+                    the right destination? We will recalculate the cost and deliver your item.
                   </div>
                   <div class="cancelOptions--content-buttons">
                     <button
@@ -919,6 +932,9 @@ export default {
       more_info : false ,
       other_notes : '',
       pop_state : -1 ,
+      cancellation_fee : false,
+      cancellation_amount : 0 ,
+      cancellation_message : '',
     };
   },
   computed: {
@@ -1340,8 +1356,41 @@ export default {
       }
     },
     canceldialog() {
-      this.cancelOption = true;
-      this.cancel_reason = '';
+
+      const payload = {
+        "order_no" : this.tracking_data.order_no
+      };
+      this.$store.dispatch('$_orders/$_tracking/computeCancellationFee', payload).then(
+        (response) => {
+          if (response.data.cancellation_fee === 0) {
+            this.cancellation_fee = false ;
+            this.cancellation_amount = 0 ;
+            this.cancellation_message = '';
+          }
+          else {
+            this.cancellation_fee = true ;
+            this.cancellation_amount = response.data.cancellation_fee ;
+            this.cancellation_message = response.data.description ;
+          }
+          this.cancelOption = true;
+          this.cancel_reason = '';
+        },
+        () => {
+          this.cancellation_fee = false ;
+          this.cancelOption = false;
+          this.cancel_reason = '';
+        }
+      );
+    },
+    getCancellationInfo(){
+
+      let text = `You will incur a cancellation fee of ${this.tracking_data.currency} ${this.cancellation_amount} , please ensure you check order details and your order is ready before placing an order`;
+
+      if (this.getStatus === 'Confirmed') {
+        text = `Please note you will be charged ${this.tracking_data.currency} ${this.cancellation_amount} for cancelling this order`;
+      }
+
+      return text ;
     },
     place() {
       this.pop_state = false ;

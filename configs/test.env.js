@@ -20,6 +20,7 @@ module.exports = {
   ELASTIC_APM_DISTRIBUTED_TRACING_ORIGINS: '"https://authtest.sendyit.com"',
   HUBSPOT_URL: '"https://api.hsforms.com/submissions/v3/integration/submit/"',
   ADONIS_PRIVATE_API: '"https://authtest.sendyit.com/adonis/"',
+  ORDERS_APP: '"https://authtest.sendyit.com/orders/"',
   VGS_VAULT_ID: '"tnts91uunnd"',
   VGS_ENVIRONMENT: '"sandbox"',
 };
