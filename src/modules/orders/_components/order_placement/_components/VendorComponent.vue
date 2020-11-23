@@ -1650,6 +1650,7 @@ export default {
         this.carrier_type = this.getCarrierType;
       }
 
+      this.setCarrierType(this.carrier_type);
       this.vendor_id = this.activeVendorPriceData.vendor_id;
     },
     goBackToHome() {
