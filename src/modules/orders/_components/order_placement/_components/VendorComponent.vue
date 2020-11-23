@@ -1196,7 +1196,7 @@ export default {
           showDialCode: false,
         },
       },
-      validPhone: false,
+      validPhone: true,
       send_sms: [],
       intercounty_load: '',
       parcel_size: '',
@@ -2394,32 +2394,47 @@ export default {
         }
       }
       else {
-        setTimeout(() => {
-          if (this.instructions_data.length === 0) {
+        if (this.activeVendorPriceData.vendor_id === 26) {
+          setTimeout(() => {
+            if (this.instructions_data.length === 0) {
+              this.doNotification(
+                2,
+                'Add Instructions Error!!',
+                'Kindly provide instructions to submit data.',
+              );
+            } else if (this.validPhone) {
+              this.doNotification(1, 'Additional Instructions saved successfully!!');
+
+              if (this.activeVendorPriceData.vendor_id === 26) {
+                this.handleIntercountyAdditionalDetails(val , this.instructions_data);
+              }
+              else {
+                this.saveInstructionNotes(this.instructions_data);
+              }
+
+              this.addDeliveryInfo = false;
+            } else {
+              this.doNotification(
+                2,
+                'Phone verifications Error!!',
+                'Kindly provide a valid phone number.',
+              );
+            }
+          }, 2000);
+        }
+        else {
+          if (this.instructions_data.length === 0 || !this.validPhone) {
             this.doNotification(
               2,
-              'Add Instructions Error!!',
+              'Add Instructions Error!',
               'Kindly provide instructions to submit data.',
             );
-          } else if (this.validPhone) {
-            this.doNotification(1, 'Additional Instructions saved successfully!!');
-
-            if (this.activeVendorPriceData.vendor_id === 26) {
-              this.handleIntercountyAdditionalDetails(val , this.instructions_data);
-            }
-            else {
-              this.saveInstructionNotes(this.instructions_data);
-            }
-
-            this.addDeliveryInfo = false;
-          } else {
-            this.doNotification(
-              2,
-              'Phone verifications Error!!',
-              'Kindly provide a valid phone number.',
-            );
           }
-        }, 2000);
+          else {
+            this.saveInstructionNotes(this.instructions_data);
+            this.addDeliveryInfo = false;
+          }
+        }
       }
 
     },
