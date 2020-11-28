@@ -181,6 +181,13 @@
         >
           No notes provided.
         </div>
+        <p
+          class="infor-top-change-details edit-instructions-align"
+          @click="showEditInstructionsDialog()"
+        >
+          <i class="el-icon-edit-outline" />
+          Edit Instructions
+        </p>
       </div>
 
       <div
@@ -229,6 +236,13 @@
         >
           No notes provided.
         </div>
+        <p
+          class="infor-top-change-details edit-instructions-align"
+          @click="showEditInstructionsDialog()"
+        >
+          <i class="el-icon-edit-outline" />
+          Edit Instructions
+        </p>
       </div>
     </el-col>
   </div>
@@ -304,6 +318,9 @@ export default {
         return false;
       }
       return resp;
+    },
+    showEditInstructionsDialog() {
+      console.log('am here');
     },
   },
 };

@@ -11,6 +11,13 @@
               Pickup Location
             </p>
             <p>{{ trackingData.path[0].name }}</p>
+            <p
+              class="infor-top-change-details"
+              @click="showEditLocationsDialog()"
+            >
+              <i class="el-icon-edit-outline" />
+              Add or change locations
+            </p>
           </li>
 
           <li
@@ -46,6 +53,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import NotificationMxn from '../../../../../../mixins/notification_mixin';
 
 export default {
@@ -61,7 +69,14 @@ export default {
     return {};
   },
   computed: {},
-  methods: {},
+  methods: {
+    ...mapMutations({
+      setEditLocationDialog: '$_orders/$_tracking/setEditLocationDialog',
+    }),
+    showEditLocationsDialog() {
+      this.setEditLocationDialog(true);
+    },
+  },
 };
 </script>
 

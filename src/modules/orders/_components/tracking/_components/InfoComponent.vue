@@ -6,7 +6,6 @@
       </div>
       <div v-else>
         <div>
-
           <transition name="fade" mode="out-in">
             <div v-if="!getTrackMoreInfo && tracking_data !== undefined">
               <div v-if="!loading" class="infobar--outer">
@@ -14,13 +13,16 @@
                   <div class="infobar--photo infobar--content infobar--item infobar--item-bordered">
                     <img class="rimg" :src="tracking_data.rider.rider_photo" />
                   </div>
-                  <div class="infobar--content infobar--item infobar--driver infobar--item-bordered">
+                  <div
+                    class="infobar--content infobar--item infobar--driver infobar--item-bordered"
+                  >
                     <div v-if="tracking_data.confirm_status > 0" class="infobar--driver-details">
                       <div class="">
                         {{ tracking_data.rider.rider_name }} - {{ tracking_data.rider.rider_phone }}
                       </div>
                       <div class="">
-                        {{ tracking_data.rider.vehicle_name }} {{ tracking_data.rider.number_plate }}
+                        {{ tracking_data.rider.vehicle_name }}
+                        {{ tracking_data.rider.number_plate }}
                       </div>
                     </div>
                     <div v-else class="infobar--driver-details">
@@ -44,14 +46,31 @@
                             !tracking_data.fixed_cost
                         "
                       >
-                        Minimum Amount : {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }}
+                        Minimum Amount :
+                        {{
+                          tracking_data.price_tier.currency
+                            ? tracking_data.price_tier.currency
+                            : tracking_data.currency
+                        }}
                         {{ tracking_data.package_details.customer_min_amount }}
                       </div>
                       <div v-else>
-                        {{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}
+                        {{
+                          tracking_data.price_tier.currency
+                            ? tracking_data.price_tier.currency
+                            : tracking_data.currency
+                        }}
+                        {{ tracking_data.amount }}
                       </div>
                     </div>
-                    <div v-else>{{ tracking_data.price_tier.currency ? tracking_data.price_tier.currency : tracking_data.currency }} {{ tracking_data.amount }}</div>
+                    <div v-else>
+                      {{
+                        tracking_data.price_tier.currency
+                          ? tracking_data.price_tier.currency
+                          : tracking_data.currency
+                      }}
+                      {{ tracking_data.amount }}
+                    </div>
                     <div class="">
                       <div class="">
                         {{ tracking_data.order_no }}
@@ -110,11 +129,9 @@
           <transition name="fade" mode="out-in">
             <div v-if="!loading" class="infobar--outer">
               <div key="prime" class="infobar-content infobar--content-padded">
-
                 <!-- Tracking more Info top bar -->
 
                 <HeaderSection :trackingData="tracking_data" />
-
 
                 <el-row
                   :gutter="20"
@@ -123,7 +140,6 @@
                   <LocationsSection :trackingData="tracking_data" />
                   <InstructionsSection :trackingData="tracking_data" />
                   <OrderTimelineSection :trackingData="tracking_data" />
-
                 </el-row>
 
                 <FooterSection v-if="getStatus !== 'Pending'" :trackingData="tracking_data" />
@@ -135,7 +151,6 @@
         <div>
           <transition name="fade" mode="out-in">
             <div class="">
-
               <!-- Order Cancellation Dialog -->
 
               <el-dialog :visible.sync="cancelOption" class="cancelOptions">
@@ -173,13 +188,20 @@
                   <div class="cancel-reason-input" v-if="cancel_reason === 0">
                     <el-input
                       type="textarea"
-                      :autosize="{ minRows: 2, maxRows: 4}"
+                      :autosize="{ minRows: 2, maxRows: 4 }"
                       placeholder="Tell us why you want to cancel"
-                      v-model="cancel_desc">
+                      v-model="cancel_desc"
+                    >
                     </el-input>
                   </div>
                   <div class="cancel-reason-input">
-                    <input type="text" v-model="inputCancelReason" class="cancel-reason-text-input" name="" placeholder="Enter cancel reason" />
+                    <input
+                      type="text"
+                      v-model="inputCancelReason"
+                      class="cancel-reason-text-input"
+                      name=""
+                      placeholder="Enter cancel reason"
+                    />
                   </div>
                   <div class="action--slide-desc">
                     <button
@@ -229,7 +251,7 @@
                     <i class="el-icon-warning warning-icon"></i>
                   </div>
                   <div class="cancelOptions--content-message pop-message">
-                      In the future, ensure your order is ready
+                    In the future, ensure your order is ready
                   </div>
                   <div class="cancelOptions--content-buttons">
                     <button
@@ -247,7 +269,7 @@
                     <i class="el-icon-warning warning-icon"></i>
                   </div>
                   <div class="cancelOptions--content-message pop-message">
-                      Your preferred rider is either offline or already busy
+                    Your preferred rider is either offline or already busy
                   </div>
                   <div class="cancelOptions--content-buttons">
                     <button
@@ -296,6 +318,197 @@
                 </div>
               </el-dialog>
 
+              <!-- Edit Order Dialog -->
+
+              <el-dialog :visible.sync="editLocationOption" class="cancelOptions">
+                <div class="cancel-reason-title" id="cancel-reason-title">
+                  Add or change locations
+                </div>
+                <div class="cancel-reason-description">
+                  You may incur cost on updating locations
+                </div>
+                <div
+                  ref="scrollable_locations"
+                  class="homeview--form homeview--row homeview--form__scrollable edit-location-inner"
+                >
+                  <div class="homeview--input-bundler">
+                    <no-ssr placeholder="">
+                      <font-awesome-icon
+                        icon="circle"
+                        size="xs"
+                        class="homeview--row__font-awesome-edit homeview--input-bundler__img .homeview--input-bundler__destination-input sendy-orange"
+                        width="10px"
+                      />
+                      <gmap-autocomplete
+                        v-model="locations[0]"
+                        :options="map_options"
+                        placeholder="Enter a pickup location"
+                        :select-first-on-enter="true"
+                        class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
+                        @place_changed="setLocation($event, 0)"
+                        @keyup="checkChangeEvents($event, 0)"
+                        @change="checkChangeEvents($event, 0)"
+                      />
+                      <font-awesome-icon
+                        icon="times"
+                        size="xs"
+                        class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup     "
+                        width="10px"
+                        @click="clearLocation(0)"
+                      />
+                    </no-ssr>
+                  </div>
+
+                  <div class="homeview--destinations">
+                    <div class="homeview--input-bundler">
+                      <no-ssr placeholder="">
+                        <font-awesome-icon
+                          icon="circle"
+                          size="xs"
+                          class="homeview--row__font-awesome-edit homeview--input-bundler__img sendy-blue"
+                          width="10px"
+                        />
+                        <gmap-autocomplete
+                          v-model="locations[1]"
+                          :options="map_options"
+                          placeholder="Enter a destination location"
+                          :select-first-on-enter="true"
+                          class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
+                          @place_changed="setLocation($event, 1)"
+                          @keyup="checkChangeEvents($event, 1)"
+                          @change="checkChangeEvents($event, 1)"
+                        />
+                        <font-awesome-icon
+                          icon="times"
+                          size="xs"
+                          class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup "
+                          width="10px"
+                          @click="clearLocation(1)"
+                        />
+                      </no-ssr>
+                    </div>
+                  </div>
+
+                  <div
+                    v-for="n in get_extra_destinations"
+                    :key="n + 1"
+                    class="homeview--destinations"
+                    :data-index="n + 1"
+                  >
+                    <div class="homeview--input-bundler">
+                      <no-ssr placeholder="">
+                        <font-awesome-icon
+                          icon="circle"
+                          size="xs"
+                          class="homeview--row__font-awesome-edit homeview--input-bundler__img sendy-blue"
+                          width="10px"
+                        />
+                        <gmap-autocomplete
+                          v-model="locations[n + 1]"
+                          :options="map_options"
+                          placeholder="Enter a destination location"
+                          :select-first-on-enter="true"
+                          class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
+                          @place_changed="setLocation($event, n + 1)"
+                          @keyup="checkChangeEvents($event, (n = 1))"
+                          @change="checkChangeEvents($event, n + 1)"
+                        />
+                        <font-awesome-icon
+                          icon="times"
+                          size="xs"
+                          class="homeview--row__font-awesome homeview--input-bundler__img-right "
+                          width="10px"
+                          @click="removeExtraDestinationWrapper(n + 1)"
+                        />
+                      </no-ssr>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  v-if="allow_add_destination"
+                  class="homeview--row homeview--row__more-destinations homeview-locations-options edit-location-inner"
+                >
+                  <div class="homeview-locations-options--add-destination">
+                    <font-awesome-icon
+                      icon="plus"
+                      size="xs"
+                      class="sendy-blue homeview--row__font-awesome"
+                      width="10px"
+                    />
+                    <a class="homeview--add" @click="addExtraDestinationWrapper()"
+                      >Add Destination</a
+                    >
+                  </div>
+                </div>
+                <div
+                  class="homeview--row homeview--row__more-destinations
+                 homeview-locations-options location-notify"
+                  v-if="!price_request_validity"
+                >
+                  <div class="cancellation-info--outer">
+                    <div class="cancellation-info--inner">
+                      <div class="cancel-reason-subtitle" id="cancel-reason-subtitle">
+                        Sorry, we could not update the order because the location entered cannot be
+                        serviced by a
+                        {{ tracking_data.rider.vendor_name }} . Please try again with other
+                        locations
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="show_price_split && price_request_validity">
+                  <div class="price-split-separator">
+                    <div class="price-estimate-header">
+                      <i class="el-icon-circle-check price-summary-icon"></i>Price update
+                    </div>
+                  </div>
+
+                  <div
+                    class="homeview--row homeview--row__more-destinations homeview-locations-options location-notify"
+                  >
+                    <div class="price-split-container">
+                      <div class="price-split-info">
+                        <div class="price-split-icon-container">
+                          Total order cost
+                        </div>
+                        <div class="price-split-estimate-value">
+                          <p class="">
+                            {{ order_currency
+                            }}<span class="price-split-currency-highlight">{{ new_cost }}</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="price-split-info">
+                        <div class="price-split-icon-container">
+                          Amount paid
+                        </div>
+                        <div class="price-split-estimate-value">
+                          <p class="">
+                            {{ order_currency
+                            }}<span class="price-split-currency-highlight">{{
+                              tracking_data.amount
+                            }}</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="price-split-info">
+                        <div class="price-split-icon-container price-split-info-cost">
+                          Amount due
+                        </div>
+                        <div class="price-split-estimate-value">
+                          <p class="price-split-info-cost">
+                            {{ order_currency
+                            }}<span class="price-split-currency-highlight">{{
+                              getAmountDue(tracking_data.amount, new_cost)
+                            }}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </el-dialog>
             </div>
           </transition>
         </div>
@@ -306,7 +519,8 @@
 
 <script>
 import _ from 'lodash';
-import { mapGetters ,mapMutations} from 'vuex';
+import NoSSR from 'vue-no-ssr';
+import { mapGetters, mapMutations ,mapActions} from 'vuex';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
@@ -316,14 +530,47 @@ import HeaderSection from './InfoBarSegments/InfoBarHeaderComponent.vue';
 import LocationsSection from './InfoBarSegments/InfoBarLocationsComponent.vue';
 import InstructionsSection from './InfoBarSegments/InfoBarInstructionsComponent.vue';
 import OrderTimelineSection from './InfoBarSegments/InfoBarOrderTimelineComponent.vue';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCcVisa, faCcMastercard } from '@fortawesome/free-brands-svg-icons';
+import {
+  faPlus,
+  faMapMarkerAlt,
+  faCircle,
+  faClock,
+  faPen,
+  faDollarSign,
+  faTimes,
+  faMobileAlt,
+  faStar,
+} from '@fortawesome/free-solid-svg-icons';
 
+library.add(
+  faPlus,
+  faMapMarkerAlt,
+  faCircle,
+  faClock,
+  faPen,
+  faDollarSign,
+  faTimes,
+  faMobileAlt,
+  faStar,
+  faCcVisa,
+  faCcMastercard,
+);
 
 const moment = require('moment');
 
 export default {
   name: 'InfoWindow',
-  components: { InterCountyWindow , FooterSection ,HeaderSection ,LocationsSection ,InstructionsSection,OrderTimelineSection},
-  mixins: [TimezoneMxn, EventsMixin,NotificationMxn],
+  components: {
+   'no-ssr': NoSSR,
+    InterCountyWindow,
+    FooterSection,
+    HeaderSection,
+    LocationsSection,
+    InstructionsSection,
+    OrderTimelineSection,
+  },
   filters: {
     moment(date) {
       return moment(date).format('MMM Do YYYY, h:mm a');
@@ -332,6 +579,7 @@ export default {
       return moment(date).format('hA');
     },
   },
+  mixins: [TimezoneMxn, EventsMixin, NotificationMxn],
   data() {
     return {
       loading: true,
@@ -349,17 +597,42 @@ export default {
       shareOption: false,
       recipientPhone: '',
       externalTracking: false,
-      small_vendors: [1],
       setScheduled: false,
       hubspotStatus: true,
-      cancellation_reasons : [],
-      cancellation_state : false,
-      more_info : false ,
-      other_notes : '',
-      pop_state : -1 ,
-      cancellation_fee : false,
-      cancellation_amount : 0 ,
-      cancellation_message : '',
+      cancellation_reasons: [],
+      cancellation_state: false,
+      more_info: false,
+      other_notes: '',
+      pop_state: -1,
+      cancellation_fee: false,
+      cancellation_amount: 0,
+      cancellation_message: '',
+      editLocationOption : false,
+      show_destinations: false,
+      location_loading: false,
+      locations: [],
+      fileUploadStatus: false,
+      map_options: {
+        componentRestrictions: {
+          country: ['ke', 'ug', 'tz'],
+        },
+        bounds: {
+          north: 35.6,
+          east: 59.4,
+          south: -28.3,
+          west: -19.1,
+        },
+        strictBounds: true,
+      },
+      small_vendors: [1, 22, 21, 23],
+      medium_vendors: [2, 3],
+      large_vendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
+      tier_group : '',
+      price_request_validity : true ,
+      order_currency : '',
+      new_cost : '',
+      new_pricing_uuid : '',
+      show_price_split : false ,
     };
   },
   computed: {
@@ -374,7 +647,21 @@ export default {
       getConfirmEta: '$_orders/$_tracking/getConfirmEta',
       getPickUpEta: '$_orders/$_tracking/getPickUpEta',
       getDeliveryEta: '$_orders/$_tracking/getDeliveryEta',
+      getEditLocationDialog: '$_orders/$_tracking/getEditLocationDialog',
+      getStoreOrderPath: '$_orders/$_tracking/getStorePath',
+      get_pickup_filled: '$_orders/$_tracking/getPickUpFilled',
+      get_extra_destinations: '$_orders/$_tracking/getExtraDestinations',
+      get_max_destinations: '$_orders/$_tracking/getMaxDestinations',
     }),
+    allow_add_destination() {
+      return (
+        !this.location_loading
+        && Array.isArray(this.getStoreOrderPath)
+        && this.getStoreOrderPath.length - 1 <= this.get_max_destinations
+        && this.getStoreOrderPath.length > 1
+        && this.get_extra_destinations <= this.getStoreOrderPath.length - 2
+      );
+    },
     getStatus() {
       if (!this.loading) {
         switch (this.tracking_data.delivery_status) {
@@ -424,7 +711,7 @@ export default {
       }
     },
     deliveryStatus(name) {
-      let status = this.tracking_data.delivery_status;
+      const status = this.tracking_data.delivery_status;
       let text = '';
       if (status < 3) {
         text = `Your package is on the way to ${name}`;
@@ -444,7 +731,7 @@ export default {
     },
     cancelOption: function cancelOption() {
       if (this.cancelOption === false) {
-        let eventPayload = {
+        const eventPayload = {
           eventCategory: 'Order Cancellation',
           eventAction: 'Click',
           eventLabel: 'No Button - Order Cancellation Page - WebApp',
@@ -452,9 +739,15 @@ export default {
         this.fireGAEvent(eventPayload);
       }
     },
-    shareOption(val){
+    shareOption(val) {
       if (!val) {
         this.setShareOption(false);
+      }
+    },
+    editLocationOption(val) {
+      if (!val) {
+        this.setEditLocationDialog(false);
+        //should also clear stored locations
       }
     },
     tracking_data(data) {
@@ -477,18 +770,22 @@ export default {
         this.cancel_desc = '';
       }
     },
-    cancel_reason(value){
+    cancel_reason(value) {
       if (value !== '') {
         this.cancelChange(value);
       }
-
     },
-    getShareOption(value){
-      this.shareOption = value
+    getShareOption(value) {
+      this.shareOption = value;
+    },
+    getEditLocationDialog(value) {
+      this.editLocationOption = value;
     },
   },
   mounted() {
+    this.show_price_split = false ;
     this.loading = true;
+    this.location_loading = true;
     this.$store.commit('$_orders/$_tracking/setTrackedOrder', this.$route.params.order_no);
     this.poll(this.$route.params.order_no);
     this.initiateOrderData();
@@ -509,6 +806,19 @@ export default {
       setConfirmEta: '$_orders/$_tracking/setConfirmEta',
       setPickUpEta: '$_orders/$_tracking/setPickUpEta',
       setDeliveryEta: '$_orders/$_tracking/setDeliveryEta',
+      setEditLocationDialog: '$_orders/$_tracking/setEditLocationDialog',
+      setPickupFilled: '$_orders/$_tracking/setPickUpFilled',
+      setPickUpFilledStatus: '$_orders/$_tracking/setPickUpFilledStatus',
+      unsetOrderPath: '$_orders/$_tracking/unsetOrderPath',
+      setOrderPath: '$_orders/$_tracking/setOrderPath',
+      clearStorePath: '$_orders/$_tracking/clearStorePath',
+      unsetLocationName: '$_orders/$_tracking/unsetLocationName',
+      set_location_name: '$_orders/$_tracking/setLocationName',
+      addExtraDestination: '$_orders/$_tracking/addExtraDestination',
+      removeExtraDestination: '$_orders/$_tracking/removeExtraDestination',
+    }),
+    ...mapActions({
+      requestPriceQuote: '$_orders/$_home/requestPriceQuote',
     }),
     moment() {
       return moment();
@@ -522,13 +832,14 @@ export default {
       });
     }, 500),
     cancelChange(reason) {
-      this.more_info = false ;
+      this.more_info = false;
       this.cancel_desc = '';
-      const data = this.cancellation_reasons.find(position => position.cancel_reason_id === reason);
+      const data = this.cancellation_reasons.find(
+        position => position.cancel_reason_id === reason,
+      );
       if (reason === 0) {
-        this.more_info = true ;
-      }
-      else {
+        this.more_info = true;
+      } else {
         this.cancel_desc = data.cancel_reason;
       }
     },
@@ -581,18 +892,17 @@ export default {
     },
     cancelToggle(cancelReason = 0) {
       if (cancelReason === true) {
-        let eventPayload = {
-             eventCategory: 'Order Cancellation',
-              eventAction: 'Click',
-              eventLabel: 'No Button - Order Cancellation Page - WebApp',
-          }
-          this.fireGAEvent(eventPayload);
-
+        const eventPayload = {
+          eventCategory: 'Order Cancellation',
+          eventAction: 'Click',
+          eventLabel: 'No Button - Order Cancellation Page - WebApp',
+        };
+        this.fireGAEvent(eventPayload);
       }
-      if(cancelReason === '4') {
-          this.trackMixpanelEvent('Dissuaded Cancellation ', {
-              'Order No': this.tracking_data.order_no,
-          });
+      if (cancelReason === '4') {
+        this.trackMixpanelEvent('Dissuaded Cancellation ', {
+          'Order No': this.tracking_data.order_no,
+        });
       }
       if (this.cancel_popup === 1) {
         this.cancel_popup = 0;
@@ -602,7 +912,7 @@ export default {
       this.cancelOption = false;
       this.cancel_reason = '';
       if (cancelReason === true) {
-        let eventPayload = {
+        const eventPayload = {
           eventCategory: 'Order Cancellation',
           eventAction: 'Click',
           eventLabel: 'No Button - Order Cancellation Page - WebApp',
@@ -627,8 +937,8 @@ export default {
     },
     checkVendorName() {
       if (
-        Object.keys(this.tracking_data).length > 0 &&
-        Object.prototype.hasOwnProperty.call(this.tracking_data.rider, 'vendor_name')
+        Object.keys(this.tracking_data).length > 0
+        && Object.prototype.hasOwnProperty.call(this.tracking_data.rider, 'vendor_name')
       ) {
         if (this.tracking_data.rider.vendor_name === 'Bike') {
           this.setTrackPartnerName('rider');
@@ -652,11 +962,11 @@ export default {
     confirmUser() {
       const session = this.$store.getters.getSession;
       if (
-        Object.keys(session).length > 0 &&
-        Object.prototype.hasOwnProperty.call(session, 'default')
+        Object.keys(session).length > 0
+        && Object.prototype.hasOwnProperty.call(session, 'default')
       ) {
-        let sessionUserEmail = session[session.default].user_email;
-        let orderUserEmail = this.tracking_data.user.email;
+        const sessionUserEmail = session[session.default].user_email;
+        const orderUserEmail = this.tracking_data.user.email;
 
         if (sessionUserEmail === orderUserEmail) {
           this.user_state = true;
@@ -667,44 +977,45 @@ export default {
       }
     },
     canceldialog() {
-
       const payload = {
-        "order_no" : this.tracking_data.order_no
+        order_no: this.tracking_data.order_no,
       };
       this.$store.dispatch('$_orders/$_tracking/computeCancellationFee', payload).then(
         (response) => {
           if (response.data.cancellation_fee === 0) {
-            this.cancellation_fee = false ;
-            this.cancellation_amount = 0 ;
+            this.cancellation_fee = false;
+            this.cancellation_amount = 0;
             this.cancellation_message = '';
-          }
-          else {
-            this.cancellation_fee = true ;
-            this.cancellation_amount = response.data.cancellation_fee ;
-            this.cancellation_message = response.data.description ;
+          } else {
+            this.cancellation_fee = true;
+            this.cancellation_amount = response.data.cancellation_fee;
+            this.cancellation_message = response.data.description;
           }
           this.cancelOption = true;
           this.cancel_reason = '';
         },
         () => {
-          this.cancellation_fee = false ;
+          this.cancellation_fee = false;
           this.cancelOption = false;
           this.cancel_reason = '';
-        }
+        },
       );
     },
-    getCancellationInfo(){
-
-      let text = `You will incur a cancellation fee of ${this.tracking_data.currency} ${this.cancellation_amount} , please ensure you check order details and your order is ready before placing an order`;
+    getCancellationInfo() {
+      let text = `You will incur a cancellation fee of ${this.tracking_data.currency} ${
+        this.cancellation_amount
+      } , please ensure you check order details and your order is ready before placing an order`;
 
       if (this.getStatus === 'Confirmed') {
-        text = `Please note you will be charged ${this.tracking_data.currency} ${this.cancellation_amount} for cancelling this order`;
+        text = `Please note you will be charged ${this.tracking_data.currency} ${
+          this.cancellation_amount
+        } for cancelling this order`;
       }
 
-      return text ;
+      return text;
     },
     place() {
-      this.pop_state = false ;
+      this.pop_state = false;
       if (this.$route.name !== 'tracking_external') {
         this.$router.push('/orders');
       } else {
@@ -718,12 +1029,15 @@ export default {
     cancelOrder() {
       if (this.cancel_reason !== '' && Object.keys(this.$store.getters.getSession).length > 0) {
         if (this.cancel_reason === 0 && this.cancel_desc === '') {
-          this.doNotification(3, 'Order cancellation failed', 'Please provide reason for cancellation');
-        }
-        else {
+          this.doNotification(
+            3,
+            'Order cancellation failed',
+            'Please provide reason for cancellation',
+          );
+        } else {
           this.pop_state = this.cancel_reason;
           setTimeout(() => {
-           this.pop_state = false ;
+            this.pop_state = false;
           }, 3000);
           const payload = {
             order_no: this.tracking_data.order_no,
@@ -740,7 +1054,7 @@ export default {
               eventLabel: 'Submit cancel reason input - Order Cancellation Page - WebApp',
             });
           }
-          let eventPayload = {
+          const eventPayload = {
             eventCategory: 'Order Cancellation',
             eventAction: 'Click',
             eventLabel: 'Yes Button - Order Cancellation Page - WebApp',
@@ -760,20 +1074,22 @@ export default {
                 reason_description: 'I placed the wrong locations',
                 client_type: that.$store.getters.getSession.default,
               };
-              this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then((response2) => {
-                if (response2.status) {
-                  that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
-                  that.cancelToggle();
-                  this.$store.dispatch('$_orders/fetchOngoingOrders');
-                  that.place();
-                } else {
-                  that.doNotification(
-                    2,
-                    'Order cancellation failed',
-                    'Could not cancel the order. Please contact Customer Care at 0709779779.'
-                  );
-                }
-              });
+              this.$store
+                .dispatch('$_orders/$_tracking/cancelOrder', payload2)
+                .then((response2) => {
+                  if (response2.status) {
+                    that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+                    that.cancelToggle();
+                    this.$store.dispatch('$_orders/fetchOngoingOrders');
+                    that.place();
+                  } else {
+                    that.doNotification(
+                      2,
+                      'Order cancellation failed',
+                      'Could not cancel the order. Please contact Customer Care at 0709779779.',
+                    );
+                  }
+                });
             }
           });
         }
@@ -804,7 +1120,7 @@ export default {
       }
     },
     saveDetails() {
-      let sessionData = this.$store.getters.getSession;
+      const sessionData = this.$store.getters.getSession;
       let params = {};
 
       if (sessionData.default === 'biz') {
@@ -834,7 +1150,7 @@ export default {
         },
         (error) => {
           this.doNotification(2, 'Save Details Error ', 'Check Internet connection and retry');
-        }
+        },
       );
     },
     dateFormat(date) {
@@ -854,22 +1170,20 @@ export default {
         this.initiateMQTT();
       }
     },
-    initiateMQTT(){
+    initiateMQTT() {
       if (this.tracking_data.rider.vendor_id !== 26) {
         this.$store.dispatch('$_orders/$_tracking/trackMQTT');
-      }
-      else {
+      } else {
         this.hide_vendors();
         this.clearVendorMarkers();
       }
-
     },
     shareETASms() {
       if (this.recipientPhone !== '' && this.recipientPhone.length > 9) {
         const payload = {};
         const track = `${window.location.origin}/external/tracking/${this.$route.params.order_no}`;
         const session = this.$store.getters.getSession;
-        let userName = session[session.default].user_name;
+        const userName = session[session.default].user_name;
         payload.phone = this.recipientPhone;
         payload.message = `Hi! ${userName} wants you to track their Sendy order here: ${track}`;
 
@@ -884,7 +1198,7 @@ export default {
           },
           (error) => {
             this.doNotification(2, 'Share ETA Error ', 'Check Internet connection and retry');
-          }
+          },
         );
       } else {
         this.doNotification(2, 'Share ETA failed !', 'Please enter a valid phone number');
@@ -898,7 +1212,7 @@ export default {
         this.$store.dispatch('$_orders/$_tracking/requestRiderLastPosition', payload).then(
           (response) => {
             if (response.status === 'true') {
-              let riderOnlineData = response.partnerArray[0];
+              const riderOnlineData = response.partnerArray[0];
               const size = Object.keys(this.vendors).length;
               if (size > 0) {
                 this.initiateMQTT();
@@ -912,7 +1226,7 @@ export default {
           },
           (error) => {
             // ...
-          }
+          },
         );
       }
     },
@@ -932,8 +1246,8 @@ export default {
             this.setPickUpEta('');
             this.setDeliveryEta('');
           } else if (
-            this.tracking_data.confirm_status === 1 &&
-            this.tracking_data.delivery_status === 0
+            this.tracking_data.confirm_status === 1
+            && this.tracking_data.delivery_status === 0
           ) {
             const pickUpEta = this.tracking_data.eta_data.etp;
             const confirmedEta = this.tracking_data.eta_data.confirmed;
@@ -964,7 +1278,6 @@ export default {
             const deliveryEta = this.tracking_data.eta_data.delivered;
             const confirmedEta = this.tracking_data.eta_data.confirmed;
             const pickedEta = this.tracking_data.eta_data.picked;
-
 
             this.setConfirmEta(moment(confirmedEta, moment.ISO_8601).format('h:mm a'));
             this.setPickUpEta(moment(pickedEta, moment.ISO_8601).format('h:mm a'));
@@ -1013,56 +1326,320 @@ export default {
         .then(response => response)
         .catch(err => err);
     },
-    retrieveCancellationReasons(){
+    retrieveCancellationReasons() {
       this.$store.dispatch('$_orders/$_tracking/requestCancellationReasons').then(
         (response) => {
-         if (response.status) {
-           this.cancellation_reasons  = response.data ;
-           this.cancellation_state = true ;
-         }
-         else {
-            this.cancellation_state = false ;
-         }
+          if (response.status) {
+            this.cancellation_reasons = response.data;
+            this.cancellation_state = true;
+          } else {
+            this.cancellation_state = false;
+          }
         },
         (error) => {
-          this.cancellation_state = false ;
-        }
+          this.cancellation_state = false;
+        },
       );
     },
-    cancelBtnState(){
-      if (this.tracking_data.delivery_status < 2 && this.user_state &&  this.cancellation_state) {
-        return true ;
+    cancelBtnState() {
+      if (this.tracking_data.delivery_status < 2 && this.user_state && this.cancellation_state) {
+        return true;
       }
-      else {
-        return false ;
-      }
+      return false;
     },
-    disablePop(){
+    disablePop() {
       this.cancelToggle();
-      this.pop_state = false ;
+      this.pop_state = false;
     },
-    extendedDialog(){
-      if (this.cancel_reason === 4 || this.pop_state === 5 ||this.pop_state === 13) {
-        return false ;
+    extendedDialog() {
+      if (this.cancel_reason === 4 || this.pop_state === 5 || this.pop_state === 13) {
+        return false;
       }
-      else {
-        return true ;
-      }
+      return true;
     },
-    interCountyInforBar(){
-      let resp = false ;
+    interCountyInforBar() {
+      let resp = false;
       if (this.tracking_data !== undefined && Object.keys(this.tracking_data).length > 0) {
         if (this.tracking_data.rider.vendor_id === 26) {
-          resp = true ;
+          resp = true;
         }
-
       }
-      return resp ;
-    }
+      return resp;
+    },
+    removeExtraDestinationWrapper(index) {
+      this.removeExtraDestination();
+      this.clearLocation(index);
+    },
+    addExtraDestinationWrapper() {
+      this.addExtraDestination();
+      this.scrollToBottom();
+    },
+    scrollToBottom() {
+      const container = this.$refs.scrollable_locations;
+      container.scrollTop = container.scrollHeight;
+    },
+    checkChangeEvents(evt, index) {
+      // console.log('index', index);
+      // console.log('evt', evt);
+      // TO DO research implementation of native input events
+    },
+    attemptPriceRequest() {
+      if (
+        Array.isArray(this.locations)
+        && this.locations.length > 1
+        && this.get_pickup_filled === true
+      ) {
+        this.doPriceRequest();
+      }
+    },
+    getSessionItem(itemName) {
+      const session = this.$store.getters.getSession;
+      return session[session.default][itemName];
+    },
+    createPriceRequestObject() {
+      const obj = { path: this.getStoreOrderPath };
+      let acc = {};
+      const session = this.$store.getters.getSession;
+      if ('default' in session) {
+        acc = session[session.default];
+      }
+      const infor = {
+        email: acc.user_email,
+        client_mode: 'cop_id' in acc ? acc.cop_id : 0,
+        cop_id: 'cop_id' in acc ? acc.cop_id : 0,
+        name: acc.user_name,
+        phone: acc.user_phone,
+        date_time: moment.utc(),
+        schedule_status: false,
+        schedule_time: moment.utc(),
+        vendor_type: 1,
+        group_id: 1,
+        client_type: 'corporate',
+        rider_dist: 0,
+        no_charge_status: false,
+        is_re_request: false,
+        rider_phone: '0709779779',
+        insurance: '0',
+        type: 'coordinates',
+        promotion_status: false,
+        destination_paid_status: false,
+        is_edit: false,
+        country_code: this.getSessionItem('country_code'),
+        default_currency: this.getSessionItem('default_currency'),
+        preffered_currency: this.getSessionItem('default_currency'),
+      };
+      if (this.$route.path === '/orders/dedicated/multi-destination') {
+        infor.order_type_tag = 'dedicated_order';
+      }
+      const jsonDecodedPath = JSON.stringify(obj);
+      infor.path = jsonDecodedPath;
+      const finalObj = { values: infor };
+      return finalObj;
+    },
+    doPriceRequest() {
+      const payload = {
+        values: this.createPriceRequestObject(),
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'orders/price_request',
+      };
+      this.location_loading = true;
+      // const previousActiveVendor = this.get_active_vendor_name;
+      // const definedLocations = this.locations;
+      this.$store.dispatch('$_orders/$_tracking/requestPriceQuote', payload).then(
+        (response) => {
+          this.location_loading = false;
+          this.show_price_split = false ;
+          if (this.large_vendors.includes(this.tracking_data.rider.vendor_id)) {
+            this.tier_group = 'large';
+          }
+          else if (this.medium_vendors.includes(this.tracking_data.rider.vendor_id)) {
+            this.tier_group = 'medium';
+          }else {
+            this.tier_group = 'small';
+          }
+          let priceRequestObject = response.values.economy_price_tiers ;
+          let checker = priceRequestObject.find(position => position.tier_group === 'small');
+
+          if (checker === 'undefined' || checker === undefined) {
+             this.price_request_validity = false ;
+             this.location_loading = true;
+             this.show_price_split = false ;
+          }
+          else {
+            let checkTrackingVendorId = checker.price_tiers.find(position => position.vendor_id === this.tracking_data.rider.vendor_id);
+            if (checkTrackingVendorId === 'undefined' || checkTrackingVendorId === undefined) {
+              this.price_request_validity = false ;
+              this.location_loading = true;
+              this.show_price_split = false ;
+            }
+            else {
+              this.price_request_validity = true ;
+              this.show_price_split = true ;
+              this.order_currency = checkTrackingVendorId.currency;
+              this.new_cost = checkTrackingVendorId.cost;
+              this.new_pricing_uuid = checkTrackingVendorId.id;
+            }
+          }
+          const acc = this.$store.getters.getSession;
+          const accDefault = acc[acc.default];
+          this.mixpanelTrackPricingServiceRequest(response);
+          if (Object.prototype.hasOwnProperty.call(acc, 'admin_details')) {
+            this.trackMixpanelEvent('Make Price Request - Edit locations', {
+              'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+              'Client Type': 'Web Platform',
+              'Super User Id': acc.admin_details.admin_id,
+              'Client Account': accDefault.user_email,
+            });
+          } else {
+            this.trackMixpanelEvent('Make Price Request - Edit locations', {
+              'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
+              'Client Type': 'Web Platform',
+            });
+          }
+        },
+        (error) => {
+          if (Object.prototype.hasOwnProperty.call(error.response.data, 'crisis_notification')) {
+            this.doNotification(
+              3,
+              error.response.data.reason,
+              error.response.data.crisis_notification.msg,
+            );
+          } else {
+            this.doNotification(
+              3,
+              'Price request failed',
+              'Price request failed. Please try again after a few minutes.',
+            );
+          }
+
+          this.location_loading = false;
+        },
+      );
+    },
+    clearLocation(index) {
+      this.resetLocation(index);
+      this.attemptPriceRequest();
+    },
+    resetLocation(index) {
+      if (index === 0) {
+        this.setPickupFilled(false);
+        this.setPickUpFilledStatus(false);
+      }
+
+      this.unsetOrderPath(index);
+      this.deleteLocationInModel(index);
+      this.unsetLocationName(index);
+    },
+    deleteLocationInModel(index) {
+      this.locations.splice(index, 1);
+    },
+    resetPathLocation(index) {
+      if (index === 0) {
+        this.setPickupFilled(false);
+        this.setPickUpFilledStatus(false);
+        this.unsetOrderPath(index);
+      }
+      this.deleteLocationInModel(index);
+      this.unsetLocationName(index);
+    },
+    setLocationInModel(index, name) {
+      this.locations.splice(index, 0, name);
+    },
+    getAmountDue(oldVal , newVal){
+
+      return (newVal - oldVal) ;
+
+    },
+    setLocation(place, index) {
+      if (!place) {
+        return;
+      }
+      const countryIndex = place.address_components.findIndex(country_code => country_code.types.includes('country'));
+      const pathObj = {
+        name: place.name,
+        coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
+        waypoint_details_status: true,
+        type: 'coordinates',
+        country_code: place.address_components[countryIndex].short_name,
+        more: {
+          Estate: '',
+          FlatName: '',
+          place_idcustom: place.place_id,
+          Label: '',
+          HouseDoor: '',
+          Otherdescription: '',
+          Typed: '',
+          Vicinity: 'Not Indicated',
+          Address: 'Not Indicated',
+        },
+      };
+      const pathPayload = {
+        index,
+        path: pathObj,
+      };
+      const locationNamePayload = {
+        index,
+        name: place.name,
+      };
+      this.resetPathLocation(index);
+      this.setOrderPath(pathPayload);
+      this.setLocationInModel(index, `${place.name} (${place.formatted_address})`);
+      this.set_location_name(locationNamePayload);
+      if (index === 0) {
+        this.setPickupFilled(true);
+        this.setPickUpFilledStatus(true);
+        const eventPayload = {
+          eventCategory: 'Order Placement',
+          eventAction: 'Click',
+          eventLabel: 'Pickup Location - Order Placement - Web App',
+        };
+        if (this.$route.path === '/orders/dedicated/multi-destination') {
+          this.trackLocationSelect(place.name, index);
+        } else {
+          this.trackMixpanelEvent(`Add Pickup Location ${eventPayload.eventLabel}`);
+          this.fireGAEvent(eventPayload);
+        }
+      } else {
+        const eventPayload = {
+          eventCategory: 'Order Placement',
+          eventAction: 'Click',
+          eventLabel: 'Destination Location - Order Placement - Web App',
+        };
+        if (this.$route.path === '/orders/dedicated/multi-destination') {
+          this.trackLocationSelect(place.name, index);
+        } else {
+          this.trackMixpanelEvent(`Add Destination ${eventPayload.eventLabel}`);
+          this.fireGAEvent(eventPayload);
+        }
+      }
+      this.attemptPriceRequest();
+    },
   },
 };
 </script>
 
 <style lang="css" scoped>
 @import "../../../../../assets/styles/info_window_component.css";
+@import "../../../../../assets/styles/orders_order_placement.css?v=3";
+</style>
+<style scoped>
+/* unfortunately browser vendors dont care about BEM */
+::-webkit-scrollbar {
+  width: 12px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  background: #1782c5;
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background-color: rgba(0, 0, 0, 0.2);
+}
 </style>
