@@ -1,4 +1,4 @@
-FROM node:carbon
+FROM sendy-docker-local.jfrog.io/node:carbon
 RUN useradd -u 3000 sendy
 
 # Create app directory
