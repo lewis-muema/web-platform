@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 // import axios from 'axios';
 // import mqtt from 'mqtt';
 
@@ -124,6 +125,76 @@ const requestCopInfo = function requestCopInfo({ dispatch }, values) {
     );
   });
 };
+const saveSuggestions = function saveSuggestions({ dispatch }, values) {
+  const payload = {
+    app: 'AUTH',
+    endpoint: 'customers/user_location',
+    values,
+  };
+  return new Promise((resolve) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        resolve(error.response.data);
+      },
+    );
+  });
+};
+const removeSuggestions = function removeSuggestions({ dispatch }, values) {
+  const payload = {
+    app: 'AUTH',
+    endpoint: 'customers/remove_location',
+    values,
+  };
+  return new Promise((resolve) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        resolve(error.response.data);
+      },
+    );
+  });
+};
+const fetchSuggestions = function fetchSuggestions({ dispatch, commit }, values) {
+  const payload = {
+    app: 'AUTH',
+    endpoint: 'customers/locations',
+    values,
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        const concatenated = [];
+        response.data.saved_locations.reverse().forEach((row) => {
+          row.location_type = 'saved';
+          row.address = row.more.Address === 'Not Indicated' ? row.name : row.more.Address.replace(`${row.name}, `, '');
+          concatenated.push(row);
+        });
+        response.data.frequent_locations.reverse().forEach((row) => {
+          row.location_type = 'frequent';
+          row.address = row.more.Address === 'Not Indicated' ? row.name : row.more.Address.replace(`${row.name}, `, '');
+          concatenated.push(row);
+        });
+        commit('setSuggestions', concatenated);
+      },
+      (error) => {
+        reject(error);
+        commit('setSuggestions', []);
+        // handle failure to dispatch to global store
+      },
+    );
+  });
+};
 
 
 export default {
@@ -134,4 +205,7 @@ export default {
   riderDetails,
   requestCountryCode,
   requestCopInfo,
+  fetchSuggestions,
+  saveSuggestions,
+  removeSuggestions,
 };
