@@ -744,10 +744,11 @@ button.default.action--slide-button {
 }
 .cancel-reason-subtitle{
   color: #000000;
-  margin-left: 9%;
-  font-size: 14px;
+  margin-left: 1%;
+  font-size: 13px;
   line-height: 25px;
   font-weight: 300;
+  display: flex;
 }
 #cancel-reason-text > div > label > span.el-radio__label{
   line-height: 23px;
@@ -856,4 +857,19 @@ button.default.action--slide-button {
 }
 .payments-wrap{
   margin: 4%;
+}
+.warning-cancellation-icon{
+  font-size: 14px !important;
+  color: #F57F20 !important;
+  margin-top: 4%;
+  margin-right: 2%;
+}
+.cancellation-info--outer{
+  background: #FEF7D6;
+  border-radius: 4px;
+  margin-right: 3%;
+  margin-left: 8%;
+}
+.cancellation-info--inner{
+  padding: 1%;
 }
