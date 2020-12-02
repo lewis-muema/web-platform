@@ -31,12 +31,13 @@
       <button
         type="button"
         name="button"
+        :disabled="isClicked"
         :class="
           valid_payment
             ? 'button-primary paymentbody--input-button'
             : 'button--primary-inactive paymentbody--input-button'
         "
-        @click="requestMpesaPayment"
+        @click.once="requestMpesaPayment"
       >
         Pay
       </button>
@@ -63,6 +64,7 @@ export default {
       },
       payment_state: 'Mpesa Payment Not Initiated',
       mpesa_number_invalid: false,
+      isClicked: false,
     };
   },
   computed: {
