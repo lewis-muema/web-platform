@@ -388,7 +388,7 @@ export default {
     pickUpSuggestions() {
       const data = [];
       this.getSuggestions.forEach((row) => {
-        if (row.type !== 'DROPOFF') {
+        if (row.type === 'PICKUP' || row.waypoint_type === 'PICKUP') {
           data.push(row);
         }
       });
@@ -397,7 +397,7 @@ export default {
     destinationSuggestions() {
       const data = [];
       this.getSuggestions.forEach((row) => {
-        if (row.type !== 'PICKUP') {
+        if (row.type === 'DROPOFF' || row.waypoint_type === 'DROPOFF') {
           data.push(row);
         }
       });
