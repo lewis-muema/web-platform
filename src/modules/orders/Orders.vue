@@ -9,12 +9,10 @@
       <div
         v-if="activeClass > -1 && tourViewStatus && getDedicatedAccessStatus"
         class="pointer-container"
-        :style="{top: offsettop() + 'px', left: offsetleft() + 'px'}"
+        :style="{ top: offsettop() + 'px', left: offsetleft() + 'px' }"
       >
         <div class="tour-pointer" />
-        <div
-          class="tour-actions"
-        >
+        <div class="tour-actions">
           <p class="tour-title">
             {{ dedicatedTourPoints[activeClass].title }}
           </p>
@@ -141,7 +139,8 @@
           class="tour-popup"
         >
           <p class="tour-popup-description">
-            Hello! We’ve added a new feature, the open destination orders. We’d like to give you a quick tour of this new feature.
+            Hello! We’ve added a new feature, the open destination orders. We’d like to give you a
+            quick tour of this new feature.
           </p>
           <p
             class="tour-popup-get-started"
@@ -234,7 +233,12 @@
       </div>
       <map-component />
       <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
-      <ongoing-component v-if="this.$route.name !== 'freight_order_tracking' && this.$route.name !== 'freight_order_placement'" />
+      <ongoing-component
+        v-if="
+          this.$route.name !== 'freight_order_tracking' &&
+            this.$route.name !== 'freight_order_placement'
+        "
+      />
       <NPSFooter v-if="!nps_status" />
       <transition
         name="fade"
@@ -259,99 +263,171 @@
                 Finish account set up
               </p>
               <div class="">
-                <div class="">
-                  <label class="final-label">Does your business file VAT returns? (optional)</label>
-                  <div
-                    class="final-upper-padding"
-                  >
-                    <el-select
-                      v-model="tax_compliance"
-                      placeholder="Select"
-                      class="compliance-select-final"
-                    >
-                      <el-option
-                        v-for="item in taxOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      />
-                    </el-select>
+                <div v-if="updateKraSection">
+                  <div class="">
+                    <label
+                      class="final-label"
+                    >Does your business file VAT returns? (optional)</label>
+                    <div class="final-upper-padding">
+                      <el-select
+                        v-model="tax_compliance"
+                        placeholder="Select"
+                        class="compliance-select-final"
+                      >
+                        <el-option
+                          v-for="item in selectOptions"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </div>
                   </div>
-                </div>
 
-                <div
-                  v-if="tax_compliance"
-                  class="final-upper-padding"
-                >
-                  <label class="final-label">Enter your business KRA pin</label>
                   <div
+                    v-if="tax_compliance"
                     class="final-upper-padding"
                   >
-                    <input
-                      v-model="kra_pin"
-                      class="input-control upgrade-final"
-                      type="text"
-                      name="kra_pin"
-                      placeholder="KRA PIN"
-                      autocomplete="on"
-                    >
-                    <span
-                      v-show="!valid_kra_pin"
-                      class="invalid-kra"
-                    >
-                      Please enter a valid KRA PIN
-                    </span>
+                    <label class="final-label">Enter your business KRA pin</label>
+                    <div class="final-upper-padding">
+                      <input
+                        v-model="kra_pin"
+                        class="input-control upgrade-final"
+                        type="text"
+                        name="kra_pin"
+                        placeholder="KRA PIN"
+                        autocomplete="on"
+                      >
+                      <span
+                        v-show="!valid_kra_pin"
+                        class="invalid-kra"
+                      >
+                        Please enter a valid KRA PIN
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div
-                  class="final-upper-padding"
-                >
-                  <label class="final-label">
-                    Select the primary vehicle you will be using for your business.
-                  </label>
-                  <p class="final-inner">
-                    (This will not restrict you from using other vehicles)
-                  </p>
-                  <div
-                    class="final-upper-padding"
-                  >
-                    <div class="vendors-final-outerline">
-                      <div
-                        class="vendor-final-cards"
-                        :class="{ vendor_active_final: activeTab === 'mbu' }"
-                        @click="selectCard('mbu',1)"
-                      >
-                        <img
-                          class="vendor-types-final"
-                          :src="getVendorIcon(1)"
-                          alt=""
+
+                  <div class="final-upper-padding">
+                    <label class="final-label">
+                      Select the primary vehicle you will be using for your business.
+                    </label>
+                    <p class="final-inner">
+                      (This will not restrict you from using other vehicles)
+                    </p>
+                    <div class="final-upper-padding">
+                      <div class="vendors-final-outerline">
+                        <div
+                          class="vendor-final-cards"
+                          :class="{ vendor_active_final: activeTab === 'mbu' }"
+                          @click="selectCard('mbu', 1)"
                         >
-                      </div>
-                      <div
-                        class="vendor-final-cards"
-                        :class="{ vendor_active_final: activeTab === 'ebu' }"
-                        @click="selectCard('ebu',2)"
-                      >
-                        <img
-                          class="vendor-types-final"
-                          :src="getVendorIcon(6)"
-                          alt=""
+                          <img
+                            class="vendor-types-final"
+                            :src="getVendorIcon(1)"
+                            alt=""
+                          >
+                        </div>
+                        <div
+                          class="vendor-final-cards"
+                          :class="{ vendor_active_final: activeTab === 'ebu' }"
+                          @click="selectCard('ebu', 2)"
                         >
-                      </div>
-                      <div
-                        class="vendor-final-cards"
-                        :class="{ vendor_active_final: activeTab === 'fbu' }"
-                        @click="selectCard('fbu',3)"
-                      >
-                        <img
-                          class="vendor-types-final"
-                          :src="getVendorIcon(25)"
-                          alt=""
+                          <img
+                            class="vendor-types-final"
+                            :src="getVendorIcon(6)"
+                            alt=""
+                          >
+                        </div>
+                        <div
+                          class="vendor-final-cards"
+                          :class="{ vendor_active_final: activeTab === 'fbu' }"
+                          @click="selectCard('fbu', 3)"
                         >
+                          <img
+                            class="vendor-types-final"
+                            :src="getVendorIcon(25)"
+                            alt=""
+                          >
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                <div
+                  v-if="updateSetIndustry"
+                  class="final-upper-padding"
+                >
+                  <div class="final-upper-padding">
+                    <label class="final-label">What industry is your business in?</label>
+                    <div class="final-upper-padding">
+                      <el-select
+                        v-model="industry_type"
+                        placeholder="Select"
+                        class="compliance-select-final"
+                      >
+                        <el-option
+                          v-for="item in industriesOptions"
+                          :key="item.industry_id"
+                          :label="item.name"
+                          :value="item.industry_id"
+                        />
+                      </el-select>
+                    </div>
+                  </div>
+
+                  <div class="final-upper-padding">
+                    <label class="final-label">Is social media your main source of clients?</label>
+                    <div class="final-upper-padding">
+                      <el-select
+                        v-model="social_media_option"
+                        placeholder="Select"
+                        class="compliance-select-final"
+                      >
+                        <el-option
+                          v-for="item in selectOptions"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </div>
+                  </div>
+
+                  <div
+                    v-if="social_media_option"
+                    class="final-upper-padding"
+                  >
+                    <label class="final-label">What is your business instragram handle?</label>
+                    <div class="final-upper-padding">
+                      <input
+                        v-model="ig_media_handle"
+                        class="input-control upgrade-final"
+                        type="text"
+                        placeholder="@mystore"
+                        autocomplete="on"
+                      >
+                    </div>
+                  </div>
+
+                  <div
+                    v-if="social_media_option"
+                    class="final-upper-padding"
+                  >
+                    <label
+                      class="final-label"
+                    >What is the link to your business facebook page?</label>
+                    <div class="final-upper-padding">
+                      <input
+                        v-model="facebook_media_handle"
+                        class="input-control upgrade-final"
+                        type="text"
+                        placeholder="www.facebook.com/pages/mystore"
+                        autocomplete="on"
+                      >
+                    </div>
+                  </div>
+                </div>
+
                 <div class="">
                   <input
                     class="button-primary final-step-submit"
@@ -388,7 +464,11 @@ let interval = '';
 export default {
   name: 'Orders',
   components: {
-    MainHeader, MapComponent, OngoingComponent, FbuChildOrders, NPSFooter,
+    MainHeader,
+    MapComponent,
+    OngoingComponent,
+    FbuChildOrders,
+    NPSFooter,
   },
   mixins: [RegisterStoreModule, NpsMixin, SessionMxn, NotificationMxn],
   data() {
@@ -411,7 +491,13 @@ export default {
       minutes: '00',
       seconds: '00',
       updateCrmData: false,
+      updateKraSection: false,
+      updateSetIndustry: false,
       tax_compliance: '',
+      social_media_option: '',
+      ig_media_handle: '',
+      facebook_media_handle: '',
+      industry_type: '',
       kra_pin: '',
       activeTab: '',
       primary_business_unit: '',
@@ -428,7 +514,8 @@ export default {
         },
         strictBounds: true,
       },
-      taxOptions: [
+      industriesOptions: [],
+      selectOptions: [
         {
           value: true,
           label: 'Yes',
@@ -443,17 +530,20 @@ export default {
       dedicatedTourPoints: [
         {
           title: 'Order Type: Dedicated vehicles',
-          description: 'Get a truck for a whole day to do all your deliveries. We handle your logistics while you focus on your core business',
+          description:
+            'Get a truck for a whole day to do all your deliveries. We handle your logistics while you focus on your core business',
           class: '.tour-pointer-1',
         },
         {
           title: 'Order Type: No Destination',
-          description: 'With no destination vehicles you can skip adding a destination or add a general region to deliver in and the driver will check off each delivery stop. Enter the pick up location input to continue',
+          description:
+            'With no destination vehicles you can skip adding a destination or add a general region to deliver in and the driver will check off each delivery stop. Enter the pick up location input to continue',
           class: '.tour-pointer-2',
         },
         {
           title: 'Vehicle Type',
-          description: 'Select multiple vehicle types and multiple vehicles of the same vehicle type',
+          description:
+            'Select multiple vehicle types and multiple vehicles of the same vehicle type',
           class: '.tour-pointer-3',
         },
         {
@@ -512,7 +602,11 @@ export default {
       this.$store.commit('$_orders/$_tracking/setTrackedOrder', '');
       this.clearVendorMarkers();
       this.checkTourStatus();
-      if (to.path === '/orders/dedicated/no-destination' && this.tourViewStatus && this.getDedicatedAccessStatus) {
+      if (
+        to.path === '/orders/dedicated/no-destination'
+        && this.tourViewStatus
+        && this.getDedicatedAccessStatus
+      ) {
         this.activeClass = -1;
         setTimeout(() => {
           this.activeClass = 1;
@@ -556,7 +650,11 @@ export default {
         this.blinder_status = true;
         this.tour_status = true;
       }
-      if (this.$route.path === '/orders/dedicated/no-destination' && this.tourViewStatus && this.getDedicatedAccessStatus) {
+      if (
+        this.$route.path === '/orders/dedicated/no-destination'
+        && this.tourViewStatus
+        && this.getDedicatedAccessStatus
+      ) {
         setTimeout(() => {
           this.activeClass = 1;
         }, 1000);
@@ -578,11 +676,18 @@ export default {
   destroyed() {
     clearInterval(this.countdown);
     const session = this.$store.getters.getSession;
-    if (localStorage.jwtToken && !['order_placement', 'by_pass', 'rating', 'tracking'].includes(this.$route.name) && Object.prototype.hasOwnProperty.call(session, 'admin_details')) {
+    if (
+      localStorage.jwtToken
+      && !['order_placement', 'by_pass', 'rating', 'tracking'].includes(this.$route.name)
+      && Object.prototype.hasOwnProperty.call(session, 'admin_details')
+    ) {
       this.$router.push('/orders');
     }
   },
   methods: {
+    ...mapActions({
+      requestIndustries: '$_orders/requestIndustries',
+    }),
     ...mapMutations({
       clearVendorMarkers: '$_orders/clearVendorMarkers',
       setDedicatedAccessStatus: 'setDedicatedAccessStatus',
@@ -594,30 +699,66 @@ export default {
     }),
     isNewCopAcc() {
       let isSet = false;
+      let kraSection = false;
+      let setIndustry = false;
       const session = this.$store.getters.getSession;
       if (Object.keys(session).length > 0) {
         if (session.default === 'biz') {
           // Admin
 
           if (session[session.default].user_type === 2) {
-            if (session[session.default].primary_business_unit === 0
-              || session[session.default].primary_business_unit === null) {
+            if (
+              session[session.default].primary_business_unit === 0
+              || session[session.default].primary_business_unit === null
+            ) {
               isSet = true;
+              kraSection = true;
+            }
+            if (session[session.default].industry_id === null) {
+              isSet = true;
+              setIndustry = true;
+              this.fetchIndustries();
             }
           }
         }
       }
+
       this.updateCrmData = isSet;
+      this.updateKraSection = kraSection;
+      this.updateSetIndustry = setIndustry;
+    },
+    fetchIndustries() {
+      const payload = {
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'industries?isActive=1',
+      };
+      this.requestIndustries(payload).then(
+        (response) => {
+          this.industriesOptions = response;
+        },
+        // eslint-disable-next-line no-unused-vars
+        (error) => {
+          this.industriesOptions = [];
+        },
+      );
     },
     checkTourStatus() {
-      if (process.browser && Object.prototype.hasOwnProperty.call(localStorage, 'tourViewStatus') && JSON.parse(localStorage.tourViewStatus)) {
+      if (
+        process.browser
+        && Object.prototype.hasOwnProperty.call(localStorage, 'tourViewStatus')
+        && JSON.parse(localStorage.tourViewStatus)
+      ) {
         this.tourViewStatus = false;
       } else {
         this.tourViewStatus = true;
       }
     },
     redirectToOrders() {
-      if ((this.$route.path === '/orders/dedicated/no-destination' || this.$route.path === '/orders/dedicated/multi-destination') && !this.getDedicatedAccessStatus) {
+      if (
+        (this.$route.path === '/orders/dedicated/no-destination'
+          || this.$route.path === '/orders/dedicated/multi-destination')
+        && !this.getDedicatedAccessStatus
+      ) {
         this.$router.push('/orders');
       }
     },
@@ -636,26 +777,48 @@ export default {
       this.activeClass = -1;
     },
     offset() {
-      const tourClass = this.activeClass > -1 ? document.querySelector(this.dedicatedTourPoints[this.activeClass].class) : null;
+      const tourClass = this.activeClass > -1
+        ? document.querySelector(this.dedicatedTourPoints[this.activeClass].class)
+        : null;
       if (tourClass === null) {
         this.activeClass = -1;
       }
-      document.querySelector('.pointer-container').style.top = `${tourClass === null ? 0 : tourClass.getBoundingClientRect().top - document.querySelector('#orders_container').getBoundingClientRect().top}px`;
-      document.querySelector('.pointer-container').style.left = `${tourClass === null ? 0 : tourClass.getBoundingClientRect().left - document.querySelector('#orders_container').getBoundingClientRect().left}px`;
+      document.querySelector('.pointer-container').style.top = `${
+        tourClass === null
+          ? 0
+          : tourClass.getBoundingClientRect().top
+            - document.querySelector('#orders_container').getBoundingClientRect().top
+      }px`;
+      document.querySelector('.pointer-container').style.left = `${
+        tourClass === null
+          ? 0
+          : tourClass.getBoundingClientRect().left
+            - document.querySelector('#orders_container').getBoundingClientRect().left
+      }px`;
     },
     offsettop() {
-      const tourClass = this.activeClass > -1 ? document.querySelector(this.dedicatedTourPoints[this.activeClass].class) : null;
+      const tourClass = this.activeClass > -1
+        ? document.querySelector(this.dedicatedTourPoints[this.activeClass].class)
+        : null;
       if (tourClass === null) {
         this.activeClass = -1;
       }
-      return tourClass === null ? 0 : tourClass.getBoundingClientRect().top - document.querySelector('#orders_container').getBoundingClientRect().top;
+      return tourClass === null
+        ? 0
+        : tourClass.getBoundingClientRect().top
+            - document.querySelector('#orders_container').getBoundingClientRect().top;
     },
     offsetleft() {
-      const tourClass = this.activeClass > -1 ? document.querySelector(this.dedicatedTourPoints[this.activeClass].class) : null;
+      const tourClass = this.activeClass > -1
+        ? document.querySelector(this.dedicatedTourPoints[this.activeClass].class)
+        : null;
       if (tourClass === null) {
         this.activeClass = -1;
       }
-      return tourClass === null ? 0 : tourClass.getBoundingClientRect().left - document.querySelector('#orders_container').getBoundingClientRect().left;
+      return tourClass === null
+        ? 0
+        : tourClass.getBoundingClientRect().left
+            - document.querySelector('#orders_container').getBoundingClientRect().left;
     },
     triggerFocus(element) {
       const eventType = 'onfocusin' in element ? 'focusin' : 'focus';
@@ -679,8 +842,10 @@ export default {
     sessionFrefill() {
       const session = this.$store.getters.getSession;
       if (Object.keys(session).length > 0) {
-        if (session.default === 'biz'
-        && Object.prototype.hasOwnProperty.call(session[session.default], 'tax_authority_pin')) {
+        if (
+          session.default === 'biz'
+          && Object.prototype.hasOwnProperty.call(session[session.default], 'tax_authority_pin')
+        ) {
           if (session[session.default].tax_authority_pin === null) {
             this.tax_compliance = '';
             this.kra_pin = '';
@@ -881,22 +1046,28 @@ export default {
     upload() {
       const config = {
         bucketName: 'sendy-freight',
-        dirName: 'CSV', /* optional */
+        dirName: 'CSV' /* optional */,
         region: 'eu-west-1',
         accessKeyId: 'AKIAWZQTKIQ27IYWPMFE',
         secretAccessKey: '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',
-        s3Url: '', /* optional */
+        s3Url: '' /* optional */,
       };
       const S3Client = new S3(config);
-      const fileName = `${new Date().getTime()}_${this.uploadButton.name.split('.')[0].toLowerCase().replace(/\s/g, '')}`;
-      S3Client
-        .uploadFile(this.uploadButton, fileName)
+      const fileName = `${new Date().getTime()}_${this.uploadButton.name
+        .split('.')[0]
+        .toLowerCase()
+        .replace(/\s/g, '')}`;
+      S3Client.uploadFile(this.uploadButton, fileName)
         .then((data) => {
           this.uploadButton = '';
           this.succesfullUpload(data);
         })
         .catch((err) => {
-          this.doNotification(2, 'Failed to upload file', 'Please check your connection and try again');
+          this.doNotification(
+            2,
+            'Failed to upload file',
+            'Please check your connection and try again',
+          );
         });
     },
     checkSession() {
@@ -933,14 +1104,48 @@ export default {
     getVendorIcon(id) {
       return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
     },
-    submit() {
+    handleKraAndIndustry() {
+      if (this.primary_business_unit === '') {
+        this.doNotification(2, 'Final set up error !', 'Please select primary type vehicle');
+      } else if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
+        this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
+      } else if (this.industry_type === '' || this.social_media_option === '') {
+        this.doNotification(2, 'Final set up error !', 'Please select industry preference');
+      } else if (
+        this.social_media_option
+        && (this.ig_media_handle === '' && this.facebook_media_handle === '')
+      ) {
+        this.doNotification(2, 'Final set up error !', 'Please provide social media handle');
+      } else {
+        const session = this.$store.getters.getSession;
+        const payload = {
+          cop_id: session[session.default].cop_id,
+          cop_name: session[session.default].cop_name,
+          cop_contact_person: session[session.default].cop_contact_person,
+          cop_email: session[session.default].cop_biz_email,
+          cop_phone: session[session.default].cop_biz_phone,
+          tax_authority_pin: this.kra_pin,
+          primary_business_unit: this.primary_business_unit,
+          social_media_business: this.social_media_option,
+          industry_id: this.industry_type,
+        };
+        if (this.ig_media_handle !== '') {
+          payload.instagram_handle = this.ig_media_handle;
+        }
+        if (this.facebook_media_handle !== '') {
+          payload.facebook_link = this.facebook_link;
+        }
+        this.finalSetUp(payload);
+      }
+    },
+    handleKraSetUp() {
       if (this.primary_business_unit === '') {
         this.doNotification(2, 'Final set up error !', 'Please select primary type vehicle');
       } else if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
         this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
       } else {
         const session = this.$store.getters.getSession;
-        const values = {
+        const payload = {
           cop_id: session[session.default].cop_id,
           cop_name: session[session.default].cop_name,
           cop_contact_person: session[session.default].cop_contact_person,
@@ -949,44 +1154,91 @@ export default {
           tax_authority_pin: this.kra_pin,
           primary_business_unit: this.primary_business_unit,
         };
+        this.finalSetUp(payload);
+      }
+    },
+    handleIndustrySetUp() {
+      if (this.industry_type === '' || this.social_media_option === '') {
+        this.doNotification(2, 'Final set up error !', 'Please select industry preference');
+      } else if (
+        this.social_media_option
+        && (this.ig_media_handle === '' && this.facebook_media_handle === '')
+      ) {
+        this.doNotification(2, 'Final set up error !', 'Please provide social media handle');
+      } else {
+        const session = this.$store.getters.getSession;
+        const payload = {
+          cop_id: session[session.default].cop_id,
+          cop_name: session[session.default].cop_name,
+          cop_contact_person: session[session.default].cop_contact_person,
+          cop_email: session[session.default].cop_biz_email,
+          cop_phone: session[session.default].cop_biz_phone,
+          social_media_business: this.social_media_option,
+          industry_id: this.industry_type,
+        };
+        if (this.ig_media_handle !== '') {
+          payload.instagram_handle = this.ig_media_handle;
+        }
+        if (this.facebook_media_handle !== '') {
+          payload.facebook_link = this.facebook_link;
+        }
+        this.finalSetUp(payload);
+      }
+    },
+    finalSetUp(payload) {
+      const session = this.$store.getters.getSession;
 
-        this.$store
-          .dispatch('$_orders/requestCopInfo', values)
-          .then((response) => {
-            if (response.status) {
-              const updatedSession = session;
+      this.$store.dispatch('$_orders/requestCopInfo', payload).then(
+        (response) => {
+          if (response.status) {
+            const updatedSession = session;
+            if (this.updateKraSection && this.updateSetIndustry) {
               updatedSession[session.default].primary_business_unit = this.primary_business_unit;
               updatedSession[session.default].tax_authority_pin = this.kra_pin;
-
-
-              const newSession = JSON.stringify(updatedSession);
-              this.setSession(newSession);
-
-              const level = 1; // success
-              const notification = {
-                title: 'Final set up complete!',
-                level,
-                message: 'Details saved successfully',
-              };
-              this.isNewCopAcc();
-              this.displayNotification(notification);
-            } else {
-              const level = 3;
-              this.message = 'Something went wrong.';
-              const notification = {
-                title: '',
-                level,
-                message: this.message,
-              };
-              this.displayNotification(notification);
+              updatedSession[session.default].industry_id = this.industry_type;
+            } else if (this.updateKraSection) {
+              updatedSession[session.default].primary_business_unit = this.primary_business_unit;
+              updatedSession[session.default].tax_authority_pin = this.kra_pin;
+            } else if (this.updateSetIndustry) {
+              updatedSession[session.default].industry_id = this.industry_type;
             }
-          },
-          (error) => {
-            const level = 3;
-            const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+
+            const newSession = JSON.stringify(updatedSession);
+            this.setSession(newSession);
+
+            const level = 1; // success
+            const notification = {
+              title: 'Final set up complete!',
+              level,
+              message: 'Details saved successfully',
+            };
+            this.isNewCopAcc();
             this.displayNotification(notification);
-          },
-          );
+          } else {
+            const level = 3;
+            this.message = 'Something went wrong.';
+            const notification = {
+              title: '',
+              level,
+              message: this.message,
+            };
+            this.displayNotification(notification);
+          }
+        },
+        (error) => {
+          const level = 3;
+          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+          this.displayNotification(notification);
+        },
+      );
+    },
+    submit() {
+      if (this.updateKraSection && this.updateSetIndustry) {
+        this.handleKraAndIndustry();
+      } else if (this.updateKraSection) {
+        this.handleKraSetUp();
+      } else if (this.updateSetIndustry) {
+        this.handleIndustrySetUp();
       }
     },
     setLocation(place) {
