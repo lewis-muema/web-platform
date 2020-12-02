@@ -86,10 +86,10 @@ export default {
       // validate amount
       // validate mpesa number
       return (
-        this.mpesa_payment_data.amount !== ''
-        && this.mpesa_payment_data.amount !== 0
-        && this.mpesa_payment_data.phone_number !== ''
-        && this.valid_phone
+        this.mpesa_payment_data.amount !== '' &&
+        this.mpesa_payment_data.amount !== 0 &&
+        this.mpesa_payment_data.phone_number !== '' &&
+        this.valid_phone
       );
     },
     valid_phone() {
@@ -161,7 +161,7 @@ export default {
       if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
       }
-      const oldRb = Math.abs(this.$store.getters.getRunningBalance);
+      const oldRb = this.$store.getters.getRunningBalance;
 
       const runningBalancePayload = {
         values: {
@@ -211,7 +211,7 @@ export default {
               that._terminateMpesaPaymentRequest({});
             }
           }, 10000 * poll_count);
-        }(poll_count));
+        })(poll_count);
       }
     },
 
@@ -224,7 +224,7 @@ export default {
           }
           if (response.status === 200) {
             // check if rb has changed
-            const newRb = Math.abs(response.data.running_balance);
+            const newRb = response.data.running_balance;
 
             if (newRb > oldRb) {
               that._completeMpesaPaymentRequest({});
@@ -234,7 +234,7 @@ export default {
           // commit  to the global store here
           return false;
         },
-        error => false,
+        (error) => false
       );
     },
 
@@ -295,7 +295,7 @@ export default {
         },
         (error) => {
           this.payment_state = 'Mpesa Payment Failed';
-        },
+        }
       );
     },
   },
