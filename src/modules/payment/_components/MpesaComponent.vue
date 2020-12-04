@@ -224,7 +224,7 @@ export default {
           }
           if (response.status === 200) {
             // check if rb has changed
-            const newRb = response.data.running_balance;
+            const newRb = response.data.running_balance * -1;
 
             if (newRb > oldRb) {
               that._completeMpesaPaymentRequest({});
