@@ -956,3 +956,24 @@ button.default.action--slide-button {
   margin-top: 4%;
   margin-right: 2%;
 }
+.payment-methods-section{
+  margin: 9%;
+}
+.edit-locations-payments--postpay {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  padding: 20px;
+  color: #1782c5;
+  margin-bottom: -15px;
+}
+.edit-locations--place-order {
+  margin-top: 8%;
+  width: 100%;
+  text-transform: uppercase;
+}
+.edit-payment-loading-container {
+  margin-top: 12% !important;
+  height: 1rem;
+  margin-bottom: 10px;
+}

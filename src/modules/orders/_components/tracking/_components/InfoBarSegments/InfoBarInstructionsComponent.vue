@@ -182,6 +182,7 @@
           No notes provided.
         </div>
         <p
+          v-if="checkEditOption()"
           class="infor-top-change-details edit-instructions-align"
           @click="showEditInstructionsDialog()"
         >
@@ -237,6 +238,7 @@
           No notes provided.
         </div>
         <p
+          v-if="checkEditOption()"
           class="infor-top-change-details edit-instructions-align"
           @click="showEditInstructionsDialog()"
         >
@@ -321,6 +323,13 @@ export default {
     },
     showEditInstructionsDialog() {
       console.log('am here');
+    },
+    checkEditOption() {
+      let show = false;
+      if (Object.prototype.hasOwnProperty.call(this.trackingData, 'edit_config')) {
+        show = this.trackingData.edit_config.change_notes;
+      }
+      return show;
     },
   },
 };

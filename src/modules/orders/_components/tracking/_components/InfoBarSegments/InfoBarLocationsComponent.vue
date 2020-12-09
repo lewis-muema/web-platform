@@ -12,6 +12,7 @@
             </p>
             <p>{{ trackingData.path[0].name }}</p>
             <p
+              v-if="checkEditOption()"
               class="infor-top-change-details"
               @click="showEditLocationsDialog()"
             >
@@ -75,6 +76,13 @@ export default {
     }),
     showEditLocationsDialog() {
       this.setEditLocationDialog(true);
+    },
+    checkEditOption() {
+      let show = false;
+      if (Object.prototype.hasOwnProperty.call(this.trackingData, 'edit_config')) {
+        show = this.trackingData.edit_config.add_drop_off;
+      }
+      return show;
     },
   },
 };

@@ -257,6 +257,42 @@ const requestPriceQuote = function requestPriceQuote({ dispatch }, data) {
     });
   });
 };
+const requestEditOrder = function requestEditOrder({ dispatch }, data) {
+  const payload = data;
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        if (response.data.status) {
+          resolve(response.data);
+        } else {
+          resolve(response.data);
+        }
+      },
+      (error) => {
+        reject(error);
+        // handle failure to dispatch to global store
+      },
+    );
+  });
+};
+
+const requestPaymentOptions = function requestPaymentOptions({ dispatch }, data) {
+  const payload = data;
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
 export default {
   getTrackingData,
@@ -269,4 +305,6 @@ export default {
   requestCancellationReasons,
   computeCancellationFee,
   requestPriceQuote,
+  requestEditOrder,
+  requestPaymentOptions,
 };

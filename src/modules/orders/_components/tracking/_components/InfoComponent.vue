@@ -441,23 +441,26 @@
                   </div>
                 </div>
                 <div
+                  v-if="location_loading"
+                  v-loading="location_loading"
+                  class="orders-loading-container"
+                />
+
+                <div
                   class="homeview--row homeview--row__more-destinations
                  homeview-locations-options location-notify"
-                  v-if="!price_request_validity"
+                  v-if="!price_request_validity && !location_loading"
                 >
                   <div class="cancellation-info--outer">
                     <div class="cancellation-info--inner">
                       <div class="cancel-reason-subtitle" id="cancel-reason-subtitle">
-                        Sorry, we could not update the order because the location entered cannot be
-                        serviced by a
-                        {{ tracking_data.rider.vendor_name }} . Please try again with other
-                        locations
+                          {{message}}
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div v-if="show_price_split && price_request_validity">
+                <div v-if="show_price_split && price_request_validity && !location_loading">
                   <div class="price-split-separator">
                     <div class="price-estimate-header">
                       <i class="el-icon-circle-check price-summary-icon"></i>Price update
@@ -500,10 +503,226 @@
                           <p class="price-split-info-cost">
                             {{ order_currency
                             }}<span class="price-split-currency-highlight">{{
-                              getAmountDue(tracking_data.amount, new_cost)
+                              getAmountDue
                             }}</span>
                           </p>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="payment-methods-section">
+                    <div class="">
+                      <div class="payments-cursor" @click="do_set_payment_option()">
+                        <a>
+                          <span class="">
+                            Payment options
+                          </span>
+                          <font-awesome-icon icon="chevron-down" :class="revertIcon" width="15px" />
+                        </a>
+                      </div>
+                      <div v-if="paymentStatusOption" class="home-view-actions--note">
+                        <div class="" />
+                        <div class="home-view-notes-wrapper">
+                          <div v-if="show_payment" class="">
+                            <span v-if="getOrderPaymentMethod === 1">
+                              <div
+                                v-for="method in payment_methods"
+                                :key="method.payment_method_id"
+                                class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
+                              >
+                                <div class="home-view-notes-wrapper--item__option">
+                                  <div
+                                    class="home-view-notes-wrapper--item__option-div payment__radio-button-label"
+                                  >
+                                    <input
+                                      v-model="payment_method"
+                                      type="radio"
+                                      :value="method.payment_method_id"
+                                      name="paymentOptions"
+                                      class="payment__radio-button"
+                                    />
+                                    <span class="payment-options-alignment">
+                                      <p class="no-margin">{{ method.name }}</p>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div class="home-view-notes-wrapper--item__value" />
+                              </div>
+
+
+                              <div v-if="display_cards" class="card-accounts-list">
+                                <div class="payment-options-cards-container">
+                                  <div v-if="!addCardStatus && get_saved_cards.length > 0">
+                                    <div v-if="deletedCardIndex === ''">
+                                      <p class="payment-options-cards-title">Saved Cards</p>
+                                      <div
+                                        v-for="(cards, index) in get_saved_cards"
+                                        :key="index"
+                                        class="payment-options-saved-cards-row"
+                                      >
+                                        <input
+                                          v-model="activeSavedCard"
+                                          :value="index"
+                                          type="radio"
+                                          class="payment-options-saved-card-radio"
+                                        />
+                                        {{ formatCardNumber(cards.card) }}
+                                        <font-awesome-icon
+                                          icon="trash-alt"
+                                          class="payment-options-delete-card-icon"
+                                          @click="deletedCardIndex = index"
+                                        />
+                                      </div>
+                                      <div
+                                        class="payment-options-add-card-holder"
+                                        @click="addCardStatus = !addCardStatus"
+                                      >
+                                        <span>
+                                          <font-awesome-icon
+                                            icon="plus-circle"
+                                            class="payment-options-add-card-icon"
+                                          />
+                                        </span>
+                                        <span class="payment-options-add-card">Add a new Card</span>
+                                      </div>
+                                    </div>
+                                    <div v-else class="delete-saved-card-dialogue">
+                                      <p class="delete-saved-card-dialogue-label">
+                                        Are you sure you want to delete this card
+                                        <strong>{{ get_saved_cards[deletedCardIndex].card }}</strong
+                                        >?
+                                      </p>
+                                      <p class="delete-saved-card-dialogue-label">
+                                        <span
+                                          class="delete-saved-card-dialogue-buttons"
+                                          @click="deleteSavedCard(deletedCardIndex)"
+                                          >Yes</span
+                                        >
+                                        <span
+                                          class="delete-saved-card-dialogue-buttons"
+                                          @click="deletedCardIndex = ''"
+                                          >No</span
+                                        >
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <form
+                                    v-else
+                                    class="VGS-form"
+                                    @submit.prevent="onSubmit"
+                                  >
+                                    <span
+                                      v-if="get_saved_cards.length > 0"
+                                      class="payment-options-cards-title back-option"
+                                      @click="addCardStatus = !addCardStatus"
+                                    >
+                                      <font-awesome-icon
+                                        icon="arrow-left"
+                                        class="payment-options-add-card-icon"
+                                      />
+                                      Back
+                                    </span>
+                                    <p class="payment-options-cards-title">Add a new card</p>
+                                    <div
+                                      id="cc-number"
+                                      class="form-group"
+                                    >
+                                      <div class="form-control-static">
+                                        <span class="fake-input-1" />
+                                      </div>
+                                    </div>
+                                    <div class="cvv-expire-fields">
+                                      <div
+                                        id="cc-expiration-date"
+                                        class="form-group"
+                                      >
+                                        <div class="form-control-static">
+                                          <span class="fake-input-1" />
+                                        </div>
+                                      </div>
+                                      <div
+                                        id="cc-cvc"
+                                        class="form-group"
+                                      >
+                                        <div class="form-control-static">
+                                          <span class="fake-input-1" />
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      id="cc-save-card-1"
+                                      class="form-group"
+                                    >
+                                      <div class="form-control-static">
+                                        <input
+                                          v-model="saveCardState"
+                                          type="checkbox"
+                                        >
+                                        <span
+                                          class="fake-checkbox-label-1"
+                                        >I want to save my card for future orders</span>
+                                      </div>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+
+
+                              <div v-if="!getCardPaymentStatus">
+                                <p
+                                  v-if="country === 'KE'"
+                                  class="card-option-disabled-notification"
+                                >
+                                  Dear {{ user_name }}, <br />
+                                  Card payments will be momentarily unavailable as we undergo
+                                  technical maintenance. You can still pay for your Sendy deliveries
+                                  using M-Pesa, or pay cash upon delivery. Contact Support on
+                                  +254709779779 for any queries.
+                                </p>
+                                <p
+                                  v-if="country === 'UG'"
+                                  class="card-option-disabled-notification"
+                                >
+                                  Dear {{ user_name }}, <br />
+                                  Card payments will be momentarily unavailable as we undergo
+                                  technical maintenance. Contact Support on +256393239706 for any
+                                  queries.
+                                </p>
+                              </div>
+
+
+                            </span>
+                          </div>
+                          <span v-else-if="getOrderPaymentMethod === 2">
+                            <div class="edit-locations-payments--postpay">
+                              <p>This is a postpay account</p>
+                              <p>The delivery costs will be added to your balance.</p>
+                            </div>
+                          </span>
+                          <span v-else>
+                            <div class="edit-locations-payments--postpay">
+                              <p>The delivery costs will be charged from your balance.</p>
+                            </div>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div
+                        v-if="loading_payment"
+                        v-loading="loading_payment"
+                        class="edit-payment-loading-container"
+                      />
+
+                      <div v-if="show_price_split && price_request_validity
+                        && !location_loading && !loading_payment">
+                        <button
+                          type="button"
+                          class="button-primary edit-locations--place-order"
+                          name="button"
+                          @click="updateLocations()"
+                        >
+                          Update Locations
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -525,6 +744,8 @@ import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
 import InterCountyWindow from './InterCountyWindow.vue';
+import Mcrypt from '../../../../../mixins/mcrypt_mixin';
+import PaymentMxn from '../../../../../mixins/payment_mixin';
 import FooterSection from './InfoBarSegments/InfoBarFooterComponent.vue';
 import HeaderSection from './InfoBarSegments/InfoBarHeaderComponent.vue';
 import LocationsSection from './InfoBarSegments/InfoBarLocationsComponent.vue';
@@ -579,7 +800,7 @@ export default {
       return moment(date).format('hA');
     },
   },
-  mixins: [TimezoneMxn, EventsMixin, NotificationMxn],
+  mixins: [TimezoneMxn, EventsMixin, NotificationMxn, Mcrypt, PaymentMxn],
   data() {
     return {
       loading: true,
@@ -633,6 +854,24 @@ export default {
       new_cost : '',
       new_pricing_uuid : '',
       show_price_split : false ,
+      payment_check : '',
+      payment_methods: [],
+      payment_method : '',
+      addCardStatus: false,
+      deletedCardIndex: '',
+      activeSavedCard: '',
+      vgs_valid_payment: false,
+      saveCardState: false,
+      country : '',
+      form: {},
+      message : '',
+      loading_payment : false,
+      payment_type : '',
+      mpesa_poll_timer_id: null,
+      payment_state: 0,
+      mpesa_valid: false,
+      mpesa_payment: false,
+      mpesa_payment_state: false,
     };
   },
   computed: {
@@ -652,6 +891,10 @@ export default {
       get_pickup_filled: '$_orders/$_tracking/getPickUpFilled',
       get_extra_destinations: '$_orders/$_tracking/getExtraDestinations',
       get_max_destinations: '$_orders/$_tracking/getMaxDestinations',
+      getCountryCode: 'getCountryCode',
+      getRunningBalance: 'getRunningBalance',
+      get_saved_cards: '$_orders/$_home/getSavedCards',
+      getCardPaymentStatus: '$_payment/getCardPaymentStatus',
     }),
     allow_add_destination() {
       return (
@@ -661,6 +904,55 @@ export default {
         && this.getStoreOrderPath.length > 1
         && this.get_extra_destinations <= this.getStoreOrderPath.length - 2
       );
+    },
+    hide_payment() {
+      return (
+        this.tracking_data.payment_method === 12
+        || this.getRunningBalance - this.getAmountDue >= 0
+      );
+    },
+    getAmountDue(){
+
+      return (this.tracking_data.amount - this.new_cost) ;
+
+    },
+
+    show_payment() {
+      return !this.hide_payment;
+    },
+    checkAccountPaymentOption() {
+      return (
+        (this.tracking_data.payment_option === 1
+          && this.getRunningBalance - this.getAmountDue >= 0)
+        || this.tracking_data.payment_option === 2
+        || (this.tracking_data.payment_option === 0
+          && this.getRunningBalance - this.getAmountDue >= 0)
+      );
+    },
+    revertIcon() {
+      return {
+        'sendy-blue': true,
+        'rotate-transform': true,
+        rotate: this.payment_check === 'payment',
+      };
+    },
+    paymentStatusOption() {
+      let resp = false;
+
+      if (this.payment_check === 'payment') {
+        resp = true;
+      }
+      return resp;
+    },
+    getOrderPaymentMethod(){
+      return this.tracking_data.payment_option ;
+    },
+    display_cards() {
+      return this.payment_method === 2;
+    },
+    user_name() {
+      const session = this.$store.getters.getSession;
+      return session[session.default].user_name.split(' ')[0];
     },
     getStatus() {
       if (!this.loading) {
@@ -720,6 +1012,9 @@ export default {
       }
       return text;
     },
+    savedCardsTally() {
+      return this.get_saved_cards.length;
+    },
   },
   watch: {
     '$route.params.order_no': function trackedOrder(from) {
@@ -748,6 +1043,10 @@ export default {
       if (!val) {
         this.setEditLocationDialog(false);
         //should also clear stored locations
+      }
+      else {
+          // this.attemptPriceRequest();
+          this.handleLocationPath();
       }
     },
     tracking_data(data) {
@@ -781,14 +1080,56 @@ export default {
     getEditLocationDialog(value) {
       this.editLocationOption = value;
     },
+    addCardStatus(val) {
+      if (val) {
+        setTimeout(() => {
+          this.setForm();
+        }, 800);
+      } else {
+        this.getUserCards();
+      }
+    },
+    payment_method(val) {
+      if (val === 2 && this.get_saved_cards.length === 0) {
+        setTimeout(() => {
+          this.addCardStatus = true;
+        }, 500);
+      }
+      if (val !== 2) {
+        this.addCardStatus = false;
+      }
+    },
+    savedCardsTally(val) {
+      if (val === 0) {
+        setTimeout(() => {
+          this.addCardStatus = true;
+        }, 500);
+      }
+    },
+    form: {
+      handler(val) {
+        if (
+          Object.prototype.hasOwnProperty.call(val.state, 'cardno')
+          && val.state.cardno.isValid
+          && val.state.cvv.isValid
+          && val.state.expiry_date.isValid
+          && this.addCardStatus
+        ) {
+          this.vgs_valid_payment = true;
+        } else {
+          this.vgs_valid_payment = false;
+        }
+      },
+      deep: true,
+    },
   },
   mounted() {
     this.show_price_split = false ;
     this.loading = true;
-    this.location_loading = true;
     this.$store.commit('$_orders/$_tracking/setTrackedOrder', this.$route.params.order_no);
     this.poll(this.$route.params.order_no);
     this.initiateOrderData();
+    this.loadVeryGoodSecurityScript();
   },
   created() {
     this.order_number = this.$route.params.order_no;
@@ -816,12 +1157,71 @@ export default {
       set_location_name: '$_orders/$_tracking/setLocationName',
       addExtraDestination: '$_orders/$_tracking/addExtraDestination',
       removeExtraDestination: '$_orders/$_tracking/removeExtraDestination',
+      setSavedCards: '$_orders/$_home/setSavedCards',
+      setCardPaymentStatus: '$_payment/setCardPaymentStatus',
+      setSecondaryProfile: 'setSecondaryProfile',
     }),
     ...mapActions({
       requestPriceQuote: '$_orders/$_home/requestPriceQuote',
+      requestPaymentOptions: '$_orders/$_home/requestPaymentOptions',
+      requestSavedCards: '$_orders/$_home/requestSavedCards',
+      requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
+
     }),
     moment() {
       return moment();
+    },
+    loadVeryGoodSecurityScript() {
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://js.verygoodvault.com/vgs-collect/2.0/vgs-collect.js';
+      document.head.appendChild(script);
+    },
+
+    setForm() {
+      console.log('am here');
+      // eslint-disable-next-line no-undef
+      this.form = VGSCollect.create(
+        process.env.CONFIGS_ENV.VGS_VAULT_ID,
+        process.env.CONFIGS_ENV.VGS_ENVIRONMENT,
+        () => {},
+      );
+
+      this.form.field('#cc-number .fake-input-1', {
+        type: 'card-number',
+        name: 'cardno',
+        successColor: '#4F8A10',
+        errorColor: '#D8000C',
+        fontSize: '11px',
+        css: {
+          'letter-spacing': '0.03em',
+        },
+        placeholder: 'Card Number',
+        validations: ['required', 'validCardNumber'],
+      });
+
+      this.form.field('#cc-cvc .fake-input-1', {
+        type: 'card-security-code',
+        name: 'cvv',
+        fontSize: '11px',
+        css: {
+          'letter-spacing': '0.03em',
+        },
+        placeholder: 'CVV',
+        validations: ['required', 'validCardSecurityCode'],
+      });
+
+      this.form.field('#cc-expiration-date .fake-input-1', {
+        type: 'card-expiration-date',
+        name: 'expiry_date',
+        fontSize: '11px',
+        css: {
+          'letter-spacing': '0.03em',
+        },
+        serializers: [{ name: 'replace', options: { old: ' ', new: '' } }],
+        placeholder: 'Card Expiry (MM/YYYY)',
+        validations: ['required', 'validCardExpirationDate'],
+      });
     },
     // eslint-disable-next-line func-names
     debounceCancelReason: _.debounce(function (data) {
@@ -852,7 +1252,55 @@ export default {
           this.checkVendorName();
           this.orderETA();
           this.confirmUser();
+          const session = this.$store.getters.getSession;
+          this.country = session[session.default].country_code;
         }
+      }
+    },
+    handleLocationPath(){
+      if (this.tracking_data !== undefined) {
+        if (Object.keys(this.tracking_data).length > 0) {
+          for (let i = 0; i < this.tracking_data.path.length; i++) {
+            this.locations[i] = this.tracking_data.path[i].name ;
+            const pathObj = {
+              name: this.tracking_data.path[i].name,
+              coordinates: this.tracking_data.path[i].coordinates,
+              waypoint_details_status: true,
+              type: 'coordinates',
+              country_code: this.tracking_data.path[i].country_code,
+              more: {
+                Estate: '',
+                FlatName: '',
+                place_idcustom: this.tracking_data.path[i].more.place_idcustom,
+                Label: '',
+                HouseDoor: '',
+                Otherdescription: '',
+                Typed: '',
+                Vicinity: 'Not Indicated',
+                Address: 'Not Indicated',
+              },
+            };
+            let index = i ;
+            const pathPayload = {
+              index,
+              path: pathObj,
+            };
+            const locationNamePayload = {
+              index,
+              name: this.tracking_data.path[i].name,
+            };
+            this.resetPathLocation(index);
+            this.setOrderPath(pathPayload);
+            this.setLocationInModel(index, this.tracking_data.path[i].name);
+            this.set_location_name(locationNamePayload);
+            if (i === 0) {
+              this.setPickupFilled(true);
+              this.setPickUpFilledStatus(true);
+            }
+            this.attemptPriceRequest();
+         }
+        }
+
       }
     },
     checkPreviousRoute() {
@@ -1178,6 +1626,148 @@ export default {
         this.clearVendorMarkers();
       }
     },
+
+    /* start card */
+
+    getUserCards() {
+      const session = this.$store.getters.getSession;
+      let copId = 0;
+      let userId = 0;
+      if (session.default === 'biz') {
+        copId = session.biz.cop_id;
+        userId = session.biz.user_id;
+      } else {
+        copId = 0;
+        userId = session.peer.user_id;
+      }
+
+      const cardPayload = {
+        user_id: userId,
+        cop_id: copId,
+      };
+
+      const fullPayload = {
+        values: cardPayload,
+        app: 'AUTH',
+        endpoint: 'customers/get_saved_cards',
+      };
+
+      this.requestSavedCards(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.setSavedCards(response.cards);
+          } else {
+            this.setSavedCards([]);
+          }
+        },
+        // eslint-disable-next-line no-unused-vars
+        error => false,
+      );
+    },
+
+    getCardValue(last4digits) {
+      return `2_${last4digits}`;
+    },
+
+    formatCardNumber(cardno) {
+      const last4 = cardno.substring(cardno.length - 4, cardno.length);
+      return `**** **** **** ${last4}`;
+    },
+
+    deleteSavedCard(index) {
+      const session = this.$store.getters.getSession;
+      const accData = session[session.default];
+      const payload = {
+        card: this.get_saved_cards[index].card,
+        user_id: accData.user_id,
+        cop_id: session.default === 'biz' ? accData.cop_id : 0,
+      };
+      const deleteCardPayload = {
+        values: payload,
+        app: 'AUTH',
+        endpoint: 'customers/delete_saved_card',
+      };
+      this.deletedCardIndex = '';
+      this.loading = true;
+      this.requestSavedCards(deleteCardPayload).then((response) => {
+        this.loading = true;
+        if (response.status) {
+          this.getUserCards();
+        } else {
+          this.doNotification(
+            2,
+            'Failed to delete saved card',
+            'Failed to delete saved card. Please try again later',
+          );
+        }
+      });
+    },
+
+    onSubmit() {
+      if (this.vgs_valid_payment) {
+        const session = this.$store.getters.getSession;
+        const accData = session[session.default];
+        const firstName = accData.user_name.split(' ')[0];
+        const lastName = accData.user_name.split(' ').length > 1 ? accData.user_name.split(' ')[1] : '';
+        const newCardPayload = {
+          currency: this.order_currency,
+          country: this.getCountryCode,
+          amount: this.getAmountDue,
+          email: accData.user_email,
+          phonenumber: accData.user_phone,
+          firstname: firstName,
+          lastname: lastName,
+          txRef: `${Date.now()}`,
+          user_id: accData.user_id,
+          cop_id: session.default === 'biz' ? accData.cop_id : 0,
+          vendor_type: this.tracking_data.rider.vendor_id,
+          save: this.saveCardState,
+        };
+        this.form.submit(
+          '/customers/collect_card_details/',
+          {
+            data: newCardPayload,
+            headers: {
+              Authorization: localStorage.jwtToken,
+            },
+          },
+          (status, response) => {
+            if (response.status) {
+              const newSavedCardPayload = {
+                values: response.data,
+                app: 'AUTH',
+                endpoint: 'customers/charge_new_card',
+              };
+              this.requestSavedCards(newSavedCardPayload).then((res) => {
+                if (res.status) {
+                  if (res.running_balance >= parseInt(this.getAmountDue, 10)) {
+                    this.doCompleteOrder();
+                  } else {
+                    this.doNotification(
+                      2,
+                      'Insufficient balance',
+                      'The amount charge is not sufficient to place the order, please try again',
+                    );
+                  }
+                } else {
+                  this.doNotification(2, 'Failed to charge card', res.message);
+                }
+              });
+            } else {
+              this.doNotification(2, 'Failed to charge card', response.message);
+            }
+          },
+        );
+      } else {
+        this.loading = false;
+        this.doNotification(
+          2,
+          'Failed to charge card',
+          'Please enter all the card details and try again',
+        );
+      }
+    },
+
     shareETASms() {
       if (this.recipientPhone !== '' && this.recipientPhone.length > 9) {
         const payload = {};
@@ -1457,27 +2047,30 @@ export default {
           }else {
             this.tier_group = 'small';
           }
+          console.log('tier group', this.tier_group);
           let priceRequestObject = response.values.economy_price_tiers ;
-          let checker = priceRequestObject.find(position => position.tier_group === 'small');
+          let checker = priceRequestObject.find(position => position.tier_group === this.tier_group);
 
           if (checker === 'undefined' || checker === undefined) {
              this.price_request_validity = false ;
-             this.location_loading = true;
+             this.location_loading = false;
              this.show_price_split = false ;
+             this.message = `Sorry, we could not update the order because the location entered cannot be
+                              serviced by a ${ this.tracking_data.rider.vendor_name } . Please try again with other
+                              locations` ;
           }
           else {
             let checkTrackingVendorId = checker.price_tiers.find(position => position.vendor_id === this.tracking_data.rider.vendor_id);
             if (checkTrackingVendorId === 'undefined' || checkTrackingVendorId === undefined) {
               this.price_request_validity = false ;
-              this.location_loading = true;
+              this.location_loading = false;
               this.show_price_split = false ;
+              this.message = `Sorry, we could not update the order because the location entered cannot be
+                               serviced by a ${ this.tracking_data.rider.vendor_name } . Please try again with other
+                               locations` ;
             }
             else {
-              this.price_request_validity = true ;
-              this.show_price_split = true ;
-              this.order_currency = checkTrackingVendorId.currency;
-              this.new_cost = checkTrackingVendorId.cost;
-              this.new_pricing_uuid = checkTrackingVendorId.id;
+              this.checkOrderValidityState(checkTrackingVendorId);
             }
           }
           const acc = this.$store.getters.getSession;
@@ -1516,6 +2109,102 @@ export default {
         },
       );
     },
+    mixpanelTrackPricingServiceRequest(data) {
+      if (!Object.prototype.hasOwnProperty.call(data, 'order_no')) {
+        this.trackMixpanelEvent('Make Price Request - Pricing Service', {
+          'Cop ID': data.client_id,
+        });
+      }
+    },
+    checkOrderValidityState(trackingVendorId){
+
+      let value = {
+        order_no: this.$route.params.order_no,
+        pricing_uuid: trackingVendorId.id,
+        client_type: 'corporate',
+      };
+
+      const payload = {
+        values: value,
+        app: 'ORDERS_APP',
+        endpoint: 'edit_order',
+      };
+
+      this.$store.dispatch('$_orders/$_tracking/requestEditOrder', payload).then(
+        (response) => {
+          if (response.status) {
+            this.price_request_validity = true ;
+            this.show_price_split = true ;
+            this.order_currency = trackingVendorId.currency;
+            this.new_cost = trackingVendorId.cost;
+            this.new_pricing_uuid = trackingVendorId.id;
+            this.setDefaultPaymentOptions(trackingVendorId);
+          }
+          else {
+            this.price_request_validity = false ;
+            this.location_loading = false;
+            this.show_price_split = false ;
+            this.message = `Edit location failure : ${response.reason}` ;
+          }
+        },
+        (error) => {
+          this.price_request_validity = false ;
+          this.location_loading = false;
+          this.show_price_split = false ;
+          this.message = `Edit location failure : ${error.response.data.reason}` ;
+        },
+      );
+
+    },
+    setDefaultPaymentOptions(val){
+      const accountType = 'Individual';
+      const payload = {
+        currency: val.currency,
+        country_code: this.getCountryCode,
+        account_type: accountType,
+        entry_point: 'Customer App Price Request',
+      };
+      const fullPayload = {
+        values: payload,
+        vm: this,
+        app: 'PAYMENT_SERVICE',
+        endpoint: 'accounts/pay_methods',
+      };
+
+      this.$store.dispatch('$_orders/$_tracking/requestPaymentOptions', fullPayload).then(
+        (response) => {
+             this.determinePaymentOptions(response);
+        },
+        (error) => {
+          console.log('error', error);
+        },
+      );
+    },
+    determinePaymentOptions(data) {
+
+      const exist = data.payment_methods.find(available => available.payment_method_id === this.tracking_data.payment_method);
+
+      if (exist === undefined || exist === null) {
+        this.payment_methods = data.payment_methods;
+      } else {
+         this.payment_methods.push(exist);
+      }
+      this.payment_method = this.tracking_data.payment_method;
+
+      this.payment_methods.forEach((row) => {
+        if (row.payment_method_id === 2) {
+          this.setCardPaymentStatus(true);
+        }
+      });
+    },
+
+    do_set_payment_option() {
+      let status = '';
+      if (this.payment_check === '') {
+        status = 'payment';
+      }
+      this.payment_check = status;
+    },
     clearLocation(index) {
       this.resetLocation(index);
       this.attemptPriceRequest();
@@ -1544,11 +2233,6 @@ export default {
     },
     setLocationInModel(index, name) {
       this.locations.splice(index, 0, name);
-    },
-    getAmountDue(oldVal , newVal){
-
-      return (newVal - oldVal) ;
-
     },
     setLocation(place, index) {
       if (!place) {
@@ -1614,6 +2298,315 @@ export default {
       }
       this.attemptPriceRequest();
     },
+    updateLocations(){
+      this.loading_payment = true;
+      if (this.tracking_data.payment_option === 2) {
+        this.payment_type = 'postpay';
+        this.payment_method = '';
+      } else {
+        this.payment_type = 'prepay';
+      }
+      this.checkPaymentDetails();
+    },
+    handlePostPaidPayments() {
+      this.payment_type = 'postpay';
+      this.doCompleteOrder();
+    },
+    doCompleteOrder(){
+
+      let value = {
+        order_no: this.$route.params.order_no,
+        pricing_uuid: this.new_pricing_uuid,
+        client_type: 'corporate',
+        update : true
+      };
+
+      const payload = {
+        values: value,
+        app: 'ORDERS_APP',
+        endpoint: 'edit_order',
+      };
+
+      this.$store.dispatch('$_orders/$_tracking/requestEditOrder', payload).then(
+        (response) => {
+          this.loading_payment = false;
+          if (response.status) {
+            this.editLocationOption = false ;
+            this.show_price_split = false ;
+            this.poll(this.$route.params.order_no);
+            this.doNotification(
+              1,
+              'Locations updated successfully',
+              '',
+            );
+          }
+          else {
+            this.doNotification(
+              2,
+              'Locations update failed',
+              'Please try again',
+            );
+          }
+        },
+        (error) => {
+          this.doNotification(
+            2,
+            'Locations update failed',
+            'Locations update failed. Please check your internet connection and try again.',
+          );
+          this.loading_payment = false;
+        },
+      );
+
+    },
+    checkPaymentDetails() {
+
+      if (this.payment_method === '') {
+        if (this.checkAccountPaymentOption()) {
+          this.handlePostPaidPayments();
+        } else {
+          this.doNotification(
+            '2',
+            'Choose a payment method',
+            'Please select a payment method and try again.',
+          );
+          this.loading_payment = false;
+          return false;
+        }
+      } else {
+        console.log('payment_method', this.payment_method);
+        if (Number(this.payment_method) === 1) {
+          this.handleMpesaPayments();
+        } else if (Number(this.payment_method) === 5) {
+          this.handleCashPayments();
+        } else if (Number(this.payment_method) === 3) {
+          this.handlePromoCodePayments();
+        } else if (Number(this.payment_method) === 11) {
+          this.handleRunningBalancePayments();
+        }
+        else if (Number(this.payment_method) === 12) {
+         this.handlePostPaidPayments();
+       }
+        else if (Number(this.payment_method) === 2) {
+          if (this.addCardStatus) {
+            this.onSubmit();
+          } else {
+            this.chargeSavedCard();
+          }
+        } else {
+          // console.log('not handled payment method', this.payment_method);
+        }
+      }
+
+      return true;
+    },
+    payment_is_to_be_requested() {
+      return this.getRunningBalance - this.getAmountDue < 0;
+    },
+    handleMpesaPayments() {
+      if (this.payment_is_to_be_requested) {
+        this.requestMpesaPayment();
+        return false;
+      }
+
+      this.doCompleteOrder();
+      return true;
+    },
+
+    /* start mpesa */
+
+    requestMpesaPayment() {
+      const session = this.$store.getters.getSession;
+      let referenceNumber = 'SENDY';
+      let copId = 0;
+      let userId = 0;
+      let userEmail = '';
+      let userPhone = '';
+      if (session.default === 'biz') {
+        referenceNumber += session.biz.cop_id;
+        copId = session.biz.cop_id;
+        userId = session.biz.user_id;
+        userEmail = session.biz.user_email;
+        userPhone = session.biz.user_phone;
+      } else {
+        referenceNumber = session.peer.user_phone;
+        userId = session.peer.user_id;
+        userPhone = session.peer.user_phone;
+        userEmail = session.peer.user_email;
+      }
+
+      const mpesaPayload = {
+        amount: this.getAmountDue,
+        sourceMobile: userPhone,
+        referenceNumber,
+        user_id: userId,
+        cop_id: copId,
+        phone: userPhone,
+        email: userEmail,
+        currency: this.order_currency,
+        vendorType: this.tracking_data.rider.vendor_id,
+      };
+      const fullPayload = {
+        values: mpesaPayload,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'initiate_mpesa',
+      };
+      this.payment_state = 1;
+      this.loading_payment = true;
+
+      this.requestMpesaPaymentAction(fullPayload).then(
+        (response) => {
+          if (response.length > 0) {
+            // eslint-disable-next-line no-param-reassign
+            response = response[0];
+          }
+
+          if (response.status === 200) {
+            this.doNotification('0', 'M-Pesa Payment', `Request for payment sent to ${userPhone}.`);
+            this.requestMpesaPaymentPoll();
+          } else {
+            this.refreshRunningBalance();
+            this.doNotification(
+              '0',
+              'M-Pesa Payment',
+              `M-Pesa request to ${userPhone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
+                this.pending_amount
+              }.`,
+            );
+            this.payment_state = 0;
+            this.loading_payment = false;
+          }
+        },
+        () => {
+          this.refreshRunningBalance();
+          this.doNotification(
+            '0',
+            'M-Pesa Payment',
+            `M-Pesa request to ${userPhone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
+               this.getAmountDue
+            }.`,
+          );
+          this.payment_state = 0;
+          this.loading_payment = false;
+        },
+      );
+    },
+
+    clearMpesaPollCounter() {
+      // fails silently if the id is not found
+      window.clearTimeout(this.mpesa_poll_timer_id);
+    },
+
+    requestMpesaPaymentPoll(pollLimitValue = 6) {
+      this.clearMpesaPollCounter();
+      const session = this.$store.getters.getSession;
+      let copId = 0;
+      if (session.default === 'biz') {
+        copId = session.biz.cop_id;
+      }
+      const profile_id = session.default === 'biz'
+        ? session[session.default].cop_id
+        : session[session.default].user_id;
+      const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
+      const secondaryProfile = session.default === 'biz'
+        ? this.getPriceRequestObject.client_id - profile_id === 100000000
+        : this.getPriceRequestObject.user_id - profile_id === 100000000;
+      const oldRb = this.$store.getters.getRunningBalance;
+      const runningBalancePayload = {
+        [profile_name]: profile_id,
+        phone: session[session.default].user_phone,
+        default_currency: session[session.default].default_currency,
+        rb_currency: session[session.default].default_currency,
+        secondary_profile: secondaryProfile,
+      };
+
+      const payload = {
+        params: runningBalancePayload,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'running_balance',
+      };
+
+      const pollLimit = pollLimitValue; // 10secs * 6  = 60sec = 1min
+      // poll the dispatch
+      for (let pollCount = 0; pollCount < pollLimit; pollCount++) {
+        // wait 10 seconds
+        const that = this;
+        // eslint-disable-next-line func-names,no-shadow
+        (function (pollCount) {
+          // eslint-disable-next-line consistent-return
+          that.mpesa_poll_timer_id = window.setTimeout(() => {
+            if (!that.mpesa_payment_state) {
+              that.checkRunningBalance(oldRb, payload);
+            }
+            if (that.mpesa_payment) {
+              // eslint-disable-next-line no-param-reassign
+              pollCount = pollLimit;
+              that.payment_state = 0;
+              that.loading_payment = false;
+              that.doNotification('1', 'Payment successful', 'Completing your order...');
+              that.doCompleteOrder();
+              that.mpesa_payment = false;
+              that.mpesa_payment_state = true;
+              return true;
+            }
+
+            if (pollLimitValue === 6) {
+              if (pollCount === 5 && !that.mpesa_payment_state) {
+                that.doNotification(
+                  '0',
+                  'Payment not received',
+                  "We'll keep retrying to check your payment status and complete your order once the payment is received.",
+                );
+                that.payment_state = 0;
+                that.loading_payment = false;
+                that.requestMpesaPaymentPoll(60);
+                that.mpesa_payment_state = false;
+                that.mpesa_payment = false;
+              }
+            }
+          }, 10000 * pollCount);
+        }(pollCount));
+      }
+    },
+
+    checkRunningBalance(oldRb, payload) {
+      this.requestRunningBalanceFromAPI(payload).then(
+        (response) => {
+          if (response.length > 0) {
+            // eslint-disable-next-line no-param-reassign,prefer-destructuring
+            response = response[0];
+          }
+          if (!this.mpesa_payment_state) {
+            if (response.status === 200) {
+              const newRb = response.data.data.running_balance;
+              if (newRb > oldRb) {
+                this.completeMpesaPaymentRequest({});
+                this.mpesa_payment = true;
+              } else {
+                this.mpesa_payment = false;
+              }
+            } else {
+              this.mpesa_payment = false;
+            }
+          } else {
+            this.requestMpesaPaymentPoll(60);
+          }
+        },
+        // eslint-disable-next-line no-unused-vars
+        error => false,
+      );
+    },
+
+    cancelMpesaPaymentRequest() {
+      this.payment_state = 0;
+      this.loading_payment = false;
+      this.doNotification(
+        '2',
+        'M-Pesa Payment cancelled',
+        'M-Pesa payment has been cancelled, please try again.',
+      );
+      this.requestMpesaPaymentPoll(60);
+    },
   },
 };
 </script>
@@ -1621,6 +2614,7 @@ export default {
 <style lang="css" scoped>
 @import "../../../../../assets/styles/info_window_component.css";
 @import "../../../../../assets/styles/orders_order_placement.css?v=3";
+@import '../../../../../assets/styles/orders_order_placement_options.css?v=1';
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */
