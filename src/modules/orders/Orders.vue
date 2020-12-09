@@ -909,7 +909,7 @@ export default {
           payload.instagram_handle = this.ig_media_handle;
         }
         if (this.facebook_media_handle !== '') {
-          payload.facebook_link = this.facebook_link;
+          payload.facebook_link = this.facebook_media_handle;
         }
         this.finalSetUp(payload);
       }
@@ -956,7 +956,7 @@ export default {
           payload.instagram_handle = this.ig_media_handle;
         }
         if (this.facebook_media_handle !== '') {
-          payload.facebook_link = this.facebook_link;
+          payload.facebook_link = this.facebook_media_handle;
         }
         this.finalSetUp(payload);
       }
