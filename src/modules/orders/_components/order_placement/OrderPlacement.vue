@@ -418,7 +418,6 @@ export default {
         // console.log('not a place', index);
         return;
       }
-      console.log('places', place);
       const countryIndex = place.address_components.findIndex(country_code => country_code.types.includes('country'));
       const pathObj = {
         name: place.name,
