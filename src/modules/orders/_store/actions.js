@@ -125,6 +125,22 @@ const requestCopInfo = function requestCopInfo({ dispatch }, values) {
   });
 };
 
+const requestIndustries = function requestIndustries({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, { root: true }).then(
+      (response) => {
+        if (response.status === 200) {
+          resolve(response.data);
+        } else {
+          reject(response.data);
+        }
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
 export default {
   fetchOngoingOrders,
@@ -134,4 +150,5 @@ export default {
   riderDetails,
   requestCountryCode,
   requestCopInfo,
+  requestIndustries,
 };

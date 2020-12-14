@@ -43,6 +43,7 @@ import {
   RadioGroup,
   RadioButton,
   Autocomplete,
+  Upload,
 } from 'element-ui';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -85,6 +86,7 @@ Vue.use(Autocomplete);
 Vue.use(Loading.directive);
 Vue.use(VueGeolocation);
 Vue.use(VueMask);
+Vue.use(Upload);
 Vue.use(vueCountryRegionSelect);
 // Vue.use(exportFromJSON);
 
