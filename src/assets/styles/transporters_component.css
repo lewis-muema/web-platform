@@ -1,0 +1,187 @@
+.transporters-main{
+  border-radius: 4px;
+  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  width: 97% !important;
+  padding-bottom: 0;
+  margin-top: 0;
+  padding-top: 3%;
+}
+.transporters-container {
+ width: 96%;
+ margin: 0px auto;
+ flex-direction: column;
+ display: flex;
+}
+.transporters-main--inner{
+  padding-top: 0%;
+}
+.transporters-content
+{
+  display: flex;
+  flex-direction: row !important;
+}
+.transporters-find-section{
+  -webkit-box-flex: 1;
+  flex: 1;
+  -webkit-box-orient: vertical;
+  flex-direction: column;
+  display: flex;
+  -webkit-box-direction: normal;
+  margin-right: 2%;
+  border: 1px solid #d8dfe6;
+  padding: 2rem;
+}
+.transporters-results-section{
+  -webkit-box-flex: 2;
+  flex: 1;
+  padding-right: 11%;
+  -webkit-box-orient: vertical;
+  flex-direction: column;
+  display: flex;
+  -webkit-box-direction: normal;
+}
+.transporters-details-section{
+  -webkit-box-flex: 2;
+  flex: 2;
+  -webkit-box-orient: vertical;
+  flex-direction: column;
+  display: flex;
+  -webkit-box-direction: normal;
+  border-radius: 4px;
+  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  padding-left: 2rem;
+  padding-right: 0rem;
+}
+.freight-input--label{
+  margin-bottom: 2%;
+  font-size: 12px;
+  font-weight: 200;
+  color: #000;
+}
+.next-terms-holder {
+  margin-top: 6%;
+}
+.terms-btn-color {
+ border-width: 0px !important;
+}
+.next-freight-btn {
+  width: 100%;
+}
+.transporters-pickup-time {
+  background-color: white !important;
+  width: 100% !important;
+}
+.transporters-select .el-select{
+  width: 100%;
+}
+.transporters-select .el-input__inner{
+  color: #1782c5;
+}
+.freight-load-weight{
+
+}
+.tonage-value-text{
+  color: #555 !important;
+  padding-left: 10px;
+  width: 20% !important;
+  font-size: 12px;
+  font-style: italic;
+}
+.freight-load-weight{
+  width: 75% !important;
+  font-style: italic;
+}
+.transporters-filters {
+  display: flex;
+}
+.quote-flex{
+  flex: 1;
+}
+.search-flex{
+  flex: 1;
+}
+.request-quote-btn{
+  width: 53%;
+}
+.request-quote-btn-color {
+  color: #1B7FC3;
+  border-width: 1px !important;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+  display: block;
+  border-radius: 4px;
+  height: 40px;
+  transition: background-color 0.3s;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 13px;
+  border-color: #1B7FC3;
+}
+.freight-terms{
+  margin-top: 6%;
+  font-size: 14px;
+  font-weight: 200;
+  color: #000;
+}
+.transporter-listing{
+  margin-top: 3%;
+}
+.transporter-detail{
+  border: 1px solid #d8dfe6;
+  padding: 1rem;
+  border-radius: 4px;
+}
+.transporter-name{
+  color: #1B7FC3;
+  margin-left: 5%;
+}
+.verification-success{
+  color: #EA7125;
+  margin-left: 1%;
+}
+.select-transporter{
+  margin-right: 1.5%;
+}
+.transporters-highlight{
+  margin-top: 2%;
+  font-size: 12px;
+  font-weight: 200;
+  color: #000;
+}
+.highlight-icon{
+  color: #000000;
+  margin-right: 3%;
+}
+.truck-add-info{
+  margin-top: 0.5%;
+}
+.truck-add-info-align{
+  width: 24%;
+}
+.trans-completed_orders{
+  width: 61%;
+}
+.view-transporter-info{
+  color: #1B7FC3;
+  font-weight: bold;
+}
+.truck-add-rating-align{
+  margin-left: 4.3%;
+  width: 30%;
+}
+.transporters-img {
+  height: 45%;
+  vertical-align: middle;
+  margin-bottom: 7px;
+}
+.transporters-quotes-input--label{
+  margin-bottom: 3%;
+  font-size: 14px;
+  font-weight: 400;
+  color: #000;
+  width: 66%;
+}
+.logistics-tab{
+  margin-right: 35%;
+}

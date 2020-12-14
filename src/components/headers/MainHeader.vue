@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="header">
-    <div class="header--item">
+    <div class="header--icon">
       <div class="header--item__left">
         <a
           class="header--item__left"
@@ -12,6 +12,34 @@
             class="logo"
           >
         </a>
+      </div>
+    </div>
+    <div class="header--item segmentation-align">
+      <div class="header--item__left segmentation-header">
+        <div class="logistics-tab">
+          <a @click="linkRoute('/orders')">Logistics</a>
+          <div
+            :class="
+              route_path === 'order_placement'
+                ? 'active_segmentation_menu'
+                : 'disable_segmentation_menu'
+            "
+          />
+        </div>
+
+        <div
+          v-if="checkFreightUser()"
+          class=""
+        >
+          <a @click="linkRoute('/freight')">Freight</a>
+          <div
+            :class="
+              freightPages.includes(route_path)
+                ? 'active_segmentation_menu'
+                : 'disable_segmentation_menu'
+            "
+          />
+        </div>
       </div>
     </div>
     <div class="header--item__right">
@@ -108,7 +136,6 @@ import axios from 'axios';
 import SessionMxn from '../../mixins/session_mixin';
 import EventsMixin from '../../mixins/events_mixin';
 
-
 export default {
   name: 'MainHeader',
   mixins: [SessionMxn, EventsMixin],
@@ -120,6 +147,16 @@ export default {
       mpesa_valid: false,
       helpline_contact: '',
       admin_details: false,
+      freightPages: [
+        'freight_page',
+        'freight_verify',
+        'freight_dashboard',
+        'freight_transporters',
+        'freight_orders',
+        'freight_orders_info',
+        'freight_transporters_details',
+        'freight_create_orders',
+      ],
     };
   },
   computed: {
@@ -127,6 +164,9 @@ export default {
       getSess: 'getSession',
       getCountryCode: 'getCountryCode',
     }),
+    route_path() {
+      return this.$route.name;
+    },
     isUpgradeValid() {
       const session = this.$store.getters.getSession;
       let isValid = false;
@@ -181,6 +221,15 @@ export default {
       } else {
         this.admin_details = false;
       }
+    },
+    checkFreightUser() {
+      const session = this.$store.getters.getSession;
+      let resp = false;
+
+      if (session[session.default].user_type === 2 || session.default === 'peer') {
+        resp = true;
+      }
+      return resp;
     },
     logOut() {
       try {
@@ -296,5 +345,5 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../assets/styles/internal_header.css?v=1';
+@import '../../assets/styles/internal_header.css?v=2';
 </style>
