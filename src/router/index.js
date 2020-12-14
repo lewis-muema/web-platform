@@ -64,9 +64,7 @@ function guard(to, from, next) {
           if (details !== 'undefined') {
             mixpanel.track(details, {
               'Client Type': 'Web Platform',
-              'Account Type': session.default === 'peer'
-                ? 'Personal'
-                : 'Business',
+              'Account Type': session.default === 'peer' ? 'Personal' : 'Business',
             });
           }
         }
@@ -191,9 +189,7 @@ export function createRouter() {
               {
                 path: 'details/:id',
                 name: 'order-details',
-                component: () => import(
-                  '../modules/transactions/_components/OrderDetails.vue',
-                ),
+                component: () => import('../modules/transactions/_components/OrderDetails.vue'),
               },
             ],
           },
@@ -329,17 +325,13 @@ export function createRouter() {
           },
           {
             path: '/orders/freight',
-            component: () => import(
-              '../modules/orders/_components/order_placement/Freight.vue',
-            ),
+            component: () => import('../modules/orders/_components/order_placement/Freight.vue'),
             name: 'freight_order_placement',
             meta: { innerTrack: 'Freight Order Placement Page' },
           },
           {
             path: '/orders/freight/tracking/:order_no',
-            component: () => import(
-              '../modules/orders/_components/tracking/FBUTracking.vue',
-            ),
+            component: () => import('../modules/orders/_components/tracking/FBUTracking.vue'),
             name: 'freight_order_tracking',
             beforeEnter: guard,
             meta: { innerTrack: 'Freight Order Tracking Page' },
@@ -359,6 +351,61 @@ export function createRouter() {
           },
         ],
       },
+      {
+        path: '/freight',
+        component: () => import('../modules/freight/Home.vue'),
+        beforeEnter: guard,
+        meta: { innerTrack: 'Freight Home Page' },
+        children: [
+          {
+            path: '/',
+            component: () => import('../modules/freight/Freight.vue'),
+            name: 'freight_page',
+          },
+          {
+            path: '/freight/verify',
+            component: () => import('../modules/freight/VerifyComponent.vue'),
+            name: 'freight_verify',
+          },
+          {
+            path: '/freight/dashboard',
+            component: () => import('../modules/freight/_components/MainComponent.vue'),
+            children: [
+              {
+                path: '/',
+                component: () => import('../modules/freight/_components/DashboardComponent.vue'),
+                name: 'freight_dashboard',
+              },
+              {
+                path: '/freight/transporters',
+                component: () => import('../modules/freight/_components/TransportersComponent.vue'),
+                name: 'freight_transporters',
+              },
+              {
+                path: '/freight/transporters/info/:id',
+                component: () => import('../modules/freight/_components/TransportersDetailsComponent.vue'),
+                name: 'freight_transporters_details',
+              },
+              {
+                path: '/freight/orders',
+                component: () => import('../modules/freight/_components/OrdersComponent.vue'),
+                name: 'freight_orders',
+              },
+              {
+                path: '/freight/orders/create',
+                component: () => import('../modules/freight/_components/CreateFreightOrder.vue'),
+                name: 'freight_create_orders',
+              },
+              {
+                path: '/freight/orders/info/:id',
+                component: () => import('../modules/freight/_components/OrdersDetailsComponent.vue'),
+                name: 'freight_orders_info',
+              },
+            ],
+          },
+        ],
+      },
+
       {
         path: '/user',
         component: () => import('../modules/user/User.vue'),

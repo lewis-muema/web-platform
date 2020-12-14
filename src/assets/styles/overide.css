@@ -676,3 +676,17 @@ span.el-pagination__jump {
   background-color: #1782C5;
   border: 1px solid #000;
 }
+.el-upload--picture-card {
+  width: 96% !important;
+  height: 227px !important;
+}
+.el-upload-dragger {
+  height: 200px !important;
+}
+.el-upload-list__item-name {
+  display: none;
+}
+.el-upload-list__item{
+  margin-top: 0;
+  margin-bottom: -2%;
+}

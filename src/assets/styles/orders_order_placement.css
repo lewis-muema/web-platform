@@ -23,6 +23,58 @@
   padding-bottom: 15px;
   display: flex;
 }
+.homeview--input-suggestions {
+  position: absolute;
+  margin-top: -15px;
+  background: white;
+  z-index: 10;
+  border-radius: 2px;
+  border-top: 1px solid #d9d9d9;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+.homeview--input-suggestion-rows {
+  height: 33px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-left: 12px;
+  cursor: pointer;
+}
+.homeview--input-suggetions-title {
+  padding: 15px 15px 10px 15px;
+  color: #4D4D4D;
+}
+.homeview--input-suggetions-link {
+  color: #1B7FC3;
+  text-align: center;
+  padding: 15px 0px 15px 0px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+}
+.homeview--input-suggestion-rows-active {
+  background: #80808014;
+}
+.homeview--input-suggestion-icon-holder {
+  margin-right: 12px;
+}
+.homeview--input-suggestion-icon {
+  font-size: 14px;
+  color: #575454;
+}
+.homeview--input-suggestion-place-name {
+  font-size: 13px;
+  font-family: sans-serif;
+  color: black;
+}
+.homeview--input-suggestion-address-name {
+  font-size: 12px;
+  font-family: sans-serif;
+  color: rgba(0, 0, 0, 0.34);
+  margin: 5px;
+}
 .homeview--input-spacer {
   width: 20px;
   margin-left: -20px;
@@ -539,7 +591,7 @@
   width: 300px;
   height: max-content;
 }
-.discounts_popup, .upload-popup, .tour-popup {
+.discounts_popup, .upload-popup, .tour-popup, .locations-popup {
   padding: 20px;
   border-radius: 20px;
   text-align: center;
@@ -556,10 +608,80 @@
   height: max-content;
   border-radius: 0px;
 }
+.close-variant {
+  margin-left: auto;
+  cursor: pointer;
+}
 .tour-popup {
   width: 30%;
   height: max-content;
   border-radius: 10px;
+}
+.locations-popup {
+  width: 350px;
+  height: max-content;
+  border-radius: 0px;
+}
+.locations-popup-title {
+  display: flex;
+  align-items: center;
+  padding-right: 5px;
+}
+.locations-popup-button-inactive {
+  margin: 15px 10px 10px 20px;
+  width: -webkit-fill-available;
+  height: 40px;
+  background: #7F7F7F;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  pointer-events: none;
+}
+.locations-popup-button-active {
+  margin: 15px 10px 10px 20px;
+  width: -webkit-fill-available;
+  height: 40px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  background: #007ECB;
+}
+.locations-popup-title-text {
+  margin-left: 20px;
+  font-weight: 500;
+  font-size: 17px;
+}
+.locations-popup-saved-title {
+  border-top: 1px solid rgba(0, 0, 0, 0.28);
+  padding: 15px 0px 0px 15px;
+  display: flex;
+  font-weight: 500;
+  font-size: 15px;
+}
+.locations-popup-saved-list {
+  max-height: 160px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+.locations-popup-saved-remove {
+  margin-left: auto;
+  font-size: 12px;
+  color: #F57F20;
+  margin-right: 15px;
+}
+.locations-popup-saved-name {
+  text-overflow: ellipsis;
+  width: 240px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: left;
+}
+.fa-icon-position-override {
+  left: -5px !important;
+}
+.locations-popup-input {
+  display: flex;
+  padding-right: 10px;
 }
 .upload-photo {
   width: 140px;
