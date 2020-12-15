@@ -248,7 +248,6 @@ export default {
 
       this.getFreightOrderDetail(fullPayload).then(
         (response) => {
-          console.log('response', response);
           if (response.status) {
             this.freightOrderDetail = response.order;
             this.loading = false;
