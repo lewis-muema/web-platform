@@ -4,154 +4,161 @@
       class="transporters-container transporters-main--inner"
       style="display : flex"
     >
-      <div
-        class="back-freight-btn back-freight-orders"
-        @click="backToOrders()"
-      >
-        <i class="el-icon-arrow-left view-transporter-info" /> Back
+      <div v-if="loading">
+        <loading-component />
       </div>
-      <div class="freight-orders-main-summary">
-        <div class="freight-order-details-wrapper">
-          <div class="order_details_map">
-            <Img
-              :src="createStaticMapUrl(freightOrderDetail.destination, freightOrderDetail.pick_up)"
-            />
-          </div>
-          <div class="order_details_desc">
-            <div class="order_details_price">
-              Order amount: {{ freightOrderDetail.currency }}
-              {{ formatCurrency(freightOrderDetail.amount) }}
-            </div>
-
-            <div class="order_details_desc_item">
-              <img
-                src="../../../assets/img/maroon_button.png"
-                class="order_details_desc_image"
-              >
-              <span class="order-info-header">Pick up location</span>
-              <div class="freight-order-info-extra">
-                {{ freightOrderDetail.pick_up_name }}
-              </div>
-            </div>
-            <div class="order_details_desc_item order_details_desc_item--no-space">
-              <img
-                src="../../../assets/img/blue_button.png"
-                class="order_details_desc_image"
-              >
-              <span class="order-info-header">Destination</span>
-              <div class="freight-order-info-extra">
-                {{ freightOrderDetail.destination_name }}
-              </div>
-            </div>
-            <div class="order_details_desc_item order-details-schedule-time">
-              <img
-                src="../../../assets/img/blue_button.png"
-                class="order_details_desc_image"
-              >
-              <span class="order-info-header">Pick up time</span>
-              <div class="freight-order-info-extra">
-                {{ convertToUTCToLocal(freightOrderDetail.pick_up_time) }}
-              </div>
-            </div>
-          </div>
+      <div v-else>
+        <div
+          class="back-freight-btn back-freight-orders"
+          @click="backToOrders()"
+        >
+          <i class="el-icon-arrow-left view-transporter-info" /> Back
         </div>
-
-        <div class="rider_details_wrap">
-          <div class="">
-            <div class="transporter-infor--header">
-              Transporter
-            </div>
-            <div class="transporter-info-extra">
-              {{ freightOrderDetail.transporter_name }}
-            </div>
-            <div
-              class="transporter-info-extra view-transporter-mark"
-              @click="goToTransporter(freightOrderDetail.owner_id)"
-            >
-              View
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="freight-border-line" />
-      <div class="">
-        <div class="transporter-doucuments-title align-documents-data">
-          Documents
-        </div>
-        <div class="transporter-listing order-order-documents">
-          <div
-            v-for="(val, index) in freightOrderDetail.documents"
-            v-if="index >= 0"
-            class="doc-detail"
-          >
-            <div class="transporters-filters documents-highlight orders-freight-documents">
-              <div class=" freight-documents-title">
-                {{ freightOrderDetail.documents[index].document_name }}
-              </div>
-              <div class=" freight-documents-date">
-                {{ freightOrderDetail.documents[index].date_created }}
-              </div>
-              <div
-                class="freight-documents-name view-freight-document"
-                @click="
-                  viewDocument(
-                    freightOrderDetail.documents[index].url,
-                    freightOrderDetail.documents[index].document_name
-                  )
+        <div class="freight-orders-main-summary">
+          <div class="freight-order-details-wrapper">
+            <div class="order_details_map">
+              <Img
+                :src="
+                  createStaticMapUrl(freightOrderDetail.destination, freightOrderDetail.pick_up)
                 "
-              >
-                View Document <i class="el-icon-arrow-right view-transporter-info" />
+              />
+            </div>
+            <div class="order_details_desc">
+              <div class="order_details_price">
+                Order amount: {{ freightOrderDetail.currency }}
+                {{ formatCurrency(freightOrderDetail.amount) }}
+              </div>
+
+              <div class="order_details_desc_item">
+                <img
+                  src="../../../assets/img/maroon_button.png"
+                  class="order_details_desc_image"
+                >
+                <span class="order-info-header">Pick up location</span>
+                <div class="freight-order-info-extra">
+                  {{ freightOrderDetail.pick_up_name }}
+                </div>
+              </div>
+              <div class="order_details_desc_item order_details_desc_item--no-space">
+                <img
+                  src="../../../assets/img/blue_button.png"
+                  class="order_details_desc_image"
+                >
+                <span class="order-info-header">Destination</span>
+                <div class="freight-order-info-extra">
+                  {{ freightOrderDetail.destination_name }}
+                </div>
+              </div>
+              <div class="order_details_desc_item order-details-schedule-time">
+                <img
+                  src="../../../assets/img/blue_button.png"
+                  class="order_details_desc_image"
+                >
+                <span class="order-info-header">Pick up time</span>
+                <div class="freight-order-info-extra">
+                  {{ convertToUTCToLocal(freightOrderDetail.pick_up_time) }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rider_details_wrap">
+            <div class="">
+              <div class="transporter-infor--header">
+                Transporter
+              </div>
+              <div class="transporter-info-extra">
+                {{ freightOrderDetail.transporter_name }}
               </div>
               <div
-                v-if="freightOrderDetail.documents[index].status === 'PENDING'"
-                class="freight-documents-approve"
-                style="display : flex"
+                class="transporter-info-extra view-transporter-mark"
+                @click="goToTransporter(freightOrderDetail.owner_id)"
               >
-                <button
-                  type="button"
-                  class="button-primary section--filter-action freight-approve-doc"
-                  name="create_order_text"
-                >
-                  {{ approve_doc_text }}
-                </button>
-                <button
-                  type="button"
-                  class="section--filter-action freight-decline-doc"
-                  name="create_order_text"
-                >
-                  {{ decline_doc_text }}
-                </button>
+                View
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <transition
-        name="fade"
-        mode="out-in"
-      >
+        <div class="freight-border-line" />
         <div class="">
-          <el-dialog
-            :visible.sync="viewDocumentOption"
-            class="documentOptions"
-          >
-            <div class="">
-              <div class="document-text-option ">
-                {{ src_name }} document
-              </div>
-              <div class="document-divider" />
-              <div class="document-view-inner">
-                <iframe
-                  :src="src_link"
-                  frameBorder="0"
-                  width="100%"
-                  height="100%"
-                />
+          <div class="transporter-doucuments-title align-documents-data">
+            Documents
+          </div>
+          <div class="transporter-listing order-order-documents">
+            <div
+              v-for="(val, index) in freightOrderDetail.documents"
+              v-if="index >= 0"
+              class="doc-detail"
+            >
+              <div class="transporters-filters documents-highlight orders-freight-documents">
+                <div class=" freight-documents-title">
+                  {{ freightOrderDetail.documents[index].document_name }}
+                </div>
+                <div class=" freight-documents-date">
+                  {{ freightOrderDetail.documents[index].date_created }}
+                </div>
+                <div
+                  class="freight-documents-name view-freight-document"
+                  @click="
+                    viewDocument(
+                      freightOrderDetail.documents[index].url,
+                      freightOrderDetail.documents[index].document_name
+                    )
+                  "
+                >
+                  View Document <i class="el-icon-arrow-right view-transporter-info" />
+                </div>
+                <div
+                  v-if="freightOrderDetail.documents[index].status === 'PENDING'"
+                  class="freight-documents-approve"
+                  style="display : flex"
+                >
+                  <button
+                    type="button"
+                    class="button-primary section--filter-action freight-approve-doc"
+                    name="create_order_text"
+                  >
+                    {{ approve_doc_text }}
+                  </button>
+                  <button
+                    type="button"
+                    class="section--filter-action freight-decline-doc"
+                    name="create_order_text"
+                  >
+                    {{ decline_doc_text }}
+                  </button>
+                </div>
               </div>
             </div>
-          </el-dialog>
+          </div>
         </div>
-      </transition>
+        <transition
+          name="fade"
+          mode="out-in"
+        >
+          <div class="">
+            <el-dialog
+              :visible.sync="viewDocumentOption"
+              class="documentOptions"
+            >
+              <div class="">
+                <div class="document-text-option ">
+                  {{ src_name }} document
+                </div>
+                <div class="document-divider" />
+                <div class="document-view-inner">
+                  <iframe
+                    :src="src_link"
+                    frameBorder="0"
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
+              </div>
+            </el-dialog>
+          </div>
+        </transition>
+      </div>
     </div>
   </div>
 </template>
@@ -160,15 +167,18 @@
 import { mapGetters, mapActions } from 'vuex';
 import numeral from 'numeral';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
+import LoadingComponent from './LoadingComponent.vue';
 
 export default {
   name: 'Transporters',
+  components: { LoadingComponent },
   mixins: [TimezoneMxn],
   data() {
     return {
       quote_text: 'Request for quote',
       financing_text: 'Create order',
       rating: 5.0,
+      loading: true,
       approve_doc_text: 'Approve',
       decline_doc_text: 'Decline',
       viewDocumentOption: false,
@@ -212,6 +222,7 @@ export default {
     },
   },
   mounted() {
+    this.loading = true;
     const sessionData = this.$store.getters.getSession;
     if (Object.keys(sessionData).length > 0) {
       this.fetchOrderDetail(this.$route.params.id);
@@ -238,6 +249,7 @@ export default {
         (response) => {
           if (response.status) {
             this.freightOrderDetail = response.order;
+            this.loading = false;
           } else {
             this.doNotification(2, 'Failed to retrieve order details', response.message);
             this.$router.push('/freight/orders');
