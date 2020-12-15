@@ -17,7 +17,10 @@
     <div class="header--item segmentation-align">
       <div class="header--item__left segmentation-header">
         <div class="logistics-tab">
-          <a @click="linkRoute('/orders')">Logistics</a>
+          <a
+            class="segmentation-tab"
+            @click="linkRoute('/orders')"
+          >Logistics</a>
           <div
             :class="
               route_path === 'order_placement'
@@ -31,7 +34,10 @@
           v-if="checkFreightUser()"
           class=""
         >
-          <a @click="linkRoute('/freight')">Freight</a>
+          <a
+            class="segmentation-tab"
+            @click="linkRoute('/freight')"
+          >Freight</a>
           <div
             :class="
               freightPages.includes(route_path)
