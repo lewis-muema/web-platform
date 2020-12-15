@@ -177,12 +177,16 @@ const fetchSuggestions = function fetchSuggestions({ dispatch, commit }, values)
         const concatenated = [];
         response.data.saved_locations.reverse().forEach((row) => {
           row.location_type = 'saved';
-          row.address = row.more.Address === 'Not Indicated' ? row.name : row.more.Address.replace(`${row.name}, `, '');
+          row.address = row.more.Address === 'Not Indicated'
+            ? row.name
+            : row.more.Address.replace(`${row.name}, `, '');
           concatenated.push(row);
         });
         response.data.frequent_locations.reverse().forEach((row) => {
           row.location_type = 'frequent';
-          row.address = row.more.Address === 'Not Indicated' ? row.name : row.more.Address.replace(`${row.name}, `, '');
+          row.address = row.more.Address === 'Not Indicated'
+            ? row.name
+            : row.more.Address.replace(`${row.name}, `, '');
           concatenated.push(row);
         });
         commit('setSuggestions', concatenated);
@@ -211,24 +215,6 @@ const requestIndustries = function requestIndustries({ dispatch }, payload) {
     );
   });
 };
-
-const requestIndustries = function requestIndustries({ dispatch }, payload) {
-  return new Promise((resolve, reject) => {
-    dispatch('requestAxiosGet', payload, { root: true }).then(
-      (response) => {
-        if (response.status === 200) {
-          resolve(response.data);
-        } else {
-          reject(response.data);
-        }
-      },
-      (error) => {
-        reject(error);
-      },
-    );
-  });
-};
-
 export default {
   fetchOngoingOrders,
   connectMqtt,
