@@ -7,43 +7,28 @@
             <p class="freight-input--label">
               Pick up location
             </p>
-            <input
-              v-model="pick_up"
+            <gmap-autocomplete
+              v-model="locations[0]"
+              :options="map_options"
+              placeholder="Enter a pickup location"
+              :select-first-on-enter="true"
               class="input-control"
-              type="text"
-              name="name"
-              value=""
-            >
+              @place_changed="setLocation($event, 0)"
+            />
           </div>
 
           <div class="">
             <p class="freight-input--label">
               Destination
             </p>
-            <input
-              v-model="destination"
+            <gmap-autocomplete
+              v-model="locations[1]"
+              :options="map_options"
+              placeholder="Enter a destination location"
+              :select-first-on-enter="true"
               class="input-control"
-              type="text"
-              name="name"
-              value=""
-            >
-          </div>
-
-          <div class="">
-            <p class="freight-input--label">
-              Pick up time
-            </p>
-            <div class="block">
-              <el-date-picker
-                v-model="pick_up_time"
-                class="transporters-pickup-time"
-                type="datetime"
-                format="dd-MM-yyyy h:mm a"
-                placeholder="As soon as possible"
-                prefix-icon="el-icon-date"
-                :default-time="default_value"
-              />
-            </div>
+              @place_changed="setLocation($event, 1)"
+            />
           </div>
 
           <div class="">
@@ -58,9 +43,9 @@
               >
                 <el-option
                   v-for="item in truckTypes"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.id"
+                  :label="item.carrier_type"
+                  :value="item.id"
                 />
               </el-select>
             </div>
@@ -94,9 +79,9 @@
               >
                 <el-option
                   v-for="item in goodsType"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.id"
+                  :label="item.cargo_type"
+                  :value="item.id"
                 />
               </el-select>
             </div>
@@ -107,6 +92,7 @@
               v-model="submit_text"
               class="button-primary terms-btn-color search-transporter"
               type="submit"
+              @click="filterTransporters"
             >
           </div>
         </div>
@@ -260,19 +246,32 @@ import Vue from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import VueTypeahead from 'vue-typeahead';
 import Axios from 'axios';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 Vue.prototype.$http = Axios;
 
 export default {
   name: 'Transporters',
   extends: VueTypeahead,
+  mixins: [NotificationMxn],
   data() {
     return {
       submit_text: 'Find Transporters',
       quote_text: 'Request for quote',
-      pick_up: '',
-      destination: '',
-      pick_up_time: '',
+      locations: [],
+      order_path: [],
+      map_options: {
+        componentRestrictions: {
+          country: ['ke', 'ug', 'tz'],
+        },
+        bounds: {
+          north: 35.6,
+          east: 59.4,
+          south: -28.3,
+          west: -19.1,
+        },
+        strictBounds: true,
+      },
       default_value: this.moment().format('HH:mm:ss'),
       truck_type: '',
       goods: '',
@@ -287,38 +286,8 @@ export default {
       selectFirst: false,
       minChars: 2,
       ownersListing: [],
-      truckTypes: [
-        {
-          value: '1',
-          label: 'Closed/Boxed body',
-        },
-        {
-          value: '4',
-          label: 'Flatbed/Skeleton',
-        },
-        {
-          value: '5',
-          label: 'Tipper',
-        },
-        {
-          value: '6',
-          label: 'Refeer',
-        },
-        {
-          value: '7',
-          label: 'Highside',
-        },
-      ],
-      goodsType: [
-        {
-          value: '1',
-          label: 'Sugar',
-        },
-        {
-          value: '4',
-          label: 'Sand',
-        },
-      ],
+      truckTypes: [],
+      goodsType: [],
     };
   },
   computed: {
@@ -337,10 +306,15 @@ export default {
   watch: {},
   mounted() {
     this.fetchOwnersListing();
+    this.fetchGoodsTypes();
+    this.fetchCarrierTypes();
   },
   methods: {
     ...mapActions({
       getOwnersListing: '$_freight/getOwnersListing',
+      getCargoTypes: '$_freight/getCargoTypes',
+      getCarrierTypes: '$_freight/getCarrierTypes',
+      getFilteredOwnersListing: '$_freight/getFilteredOwnersListing',
     }),
     fetchOwnersListing() {
       const payload = {};
@@ -364,6 +338,50 @@ export default {
         },
       );
     },
+    fetchGoodsTypes() {
+      const payload = {};
+
+      const fullPayload = {
+        values: payload,
+        app: 'ORDERS_APP',
+        endpoint: 'v2/freight/cargo_types',
+      };
+
+      this.getCargoTypes(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.goodsType = response.cargo_types;
+          } else {
+            this.goodsType = [];
+          }
+        },
+        (error) => {
+          this.goodsType = [];
+        },
+      );
+    },
+    fetchCarrierTypes() {
+      const payload = {};
+
+      const fullPayload = {
+        values: payload,
+        app: 'ORDERS_APP',
+        endpoint: 'v2/freight/carrier_types',
+      };
+
+      this.getCarrierTypes(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.truckTypes = response.carrier_types;
+          } else {
+            this.truckTypes = [];
+          }
+        },
+        (error) => {
+          this.truckTypes = [];
+        },
+      );
+    },
     viewTransporterInfo() {
       const transporterId = 2;
       this.$router.push(`/freight/transporters/info/${transporterId}`);
@@ -376,6 +394,80 @@ export default {
         this.hasItems = false;
       }
       return data.response.docs;
+    },
+    setLocation(place, index) {
+      if (!place) {
+        // console.log('not a place', index);
+        return;
+      }
+      const pathObj = {
+        address_components: place.address_components,
+      };
+      const pathPayload = {
+        index,
+        path: pathObj,
+      };
+      this.resetPathLocation(index);
+      this.order_path.splice(pathPayload.index, pathPayload.index === 0 ? 0 : 1, pathPayload.path);
+      this.setLocationInModel(index, `${place.name}`);
+    },
+    setLocationInModel(index, name) {
+      this.locations.splice(index, 0, name);
+    },
+    resetPathLocation(index) {
+      if (index === 0) {
+        this.order_path.splice(index, 1);
+      }
+      this.deleteLocationInModel(index);
+    },
+    deleteLocationInModel(index) {
+      this.locations.splice(index, 1);
+    },
+    filterTransporters() {
+      if (
+        Array.isArray(this.locations)
+        && this.locations.length > 1
+        && this.truck_type !== ''
+        && this.load_weight !== ''
+        && this.goods !== ''
+      ) {
+        this.doFilterOwners();
+      } else {
+        this.doNotification(2, 'Find transporters error !', 'Kindly provide all values');
+      }
+    },
+    doFilterOwners() {
+      const payload = {
+        cargo_type: parseInt(this.goods, 10),
+        load_weight: parseInt(this.load_weight, 10),
+        carrier_type: parseInt(this.truck_type, 10),
+        pick_up: this.order_path[0].address_components,
+        destination: this.order_path[1].address_components,
+      };
+
+      const fullPayload = {
+        values: payload,
+        app: 'ORDERS_APP',
+        endpoint: 'v2/freight/owners',
+      };
+
+      this.getFilteredOwnersListing(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.ownersListing = response.owners_listing;
+          } else {
+            this.doNotification(2, 'Unable to filter transporters!', response.message);
+            this.fetchOwnersListing();
+          }
+        },
+        (error) => {
+          this.fetchOwnersListing();
+        },
+      );
+    },
+    doNotification(level, title, message) {
+      const notification = { title, level, message };
+      this.displayNotification(notification);
     },
   },
 };
