@@ -69,7 +69,13 @@ const getFreightOrderDetail = function getFreightOrderDetail({ dispatch }, paylo
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosPost', payload, { root: true }).then(
       (response) => {
-        resolve(response.data);
+        let workingResponse = response;
+        /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+        if (response.length > 1) {
+          workingResponse = response[0];
+        }
+
+        resolve(workingResponse.data);
       },
       (error) => {
         reject(error);

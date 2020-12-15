@@ -168,11 +168,12 @@ import { mapGetters, mapActions } from 'vuex';
 import numeral from 'numeral';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
 import LoadingComponent from './LoadingComponent.vue';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
   name: 'Transporters',
   components: { LoadingComponent },
-  mixins: [TimezoneMxn],
+  mixins: [TimezoneMxn, NotificationMxn],
   data() {
     return {
       quote_text: 'Request for quote',
@@ -298,6 +299,10 @@ export default {
       this.src_link = url;
       this.src_name = name;
       this.viewDocumentOption = true;
+    },
+    doNotification(level, title, message) {
+      const notification = { title, level, message };
+      this.displayNotification(notification);
     },
   },
 };
