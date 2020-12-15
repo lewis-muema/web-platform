@@ -690,3 +690,8 @@ span.el-pagination__jump {
   margin-top: 0;
   margin-bottom: -2%;
 }
+.documentOptions > div {
+  margin-top: 8% !important;
+  width: 80% !important;
+  height: 900px;
+}
