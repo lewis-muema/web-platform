@@ -90,10 +90,26 @@ const getFreightOrderDetail = function getFreightOrderDetail({ dispatch }, paylo
   });
 };
 
+const getOwnersListing = function getOwnersListing({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   updateFreightStatus,
   requestFreightStatus,
   createFreightOrder,
   requestFreightOrders,
   getFreightOrderDetail,
+  getOwnersListing,
 };
