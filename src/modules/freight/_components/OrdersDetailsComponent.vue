@@ -13,11 +13,14 @@
       <div class="freight-orders-main-summary">
         <div class="order-details-wrapper">
           <div class="order_details_map">
-            <Img :src="createStaticMapUrl(path)" />
+            <Img
+              :src="createStaticMapUrl(freightOrderDetail.destination, freightOrderDetail.pick_up)"
+            />
           </div>
           <div class="order_details_desc">
             <div class="order_details_price">
-              Order amount: KES 75,000
+              Order amount: {{ freightOrderDetail.currency }}
+              {{ formatCurrency(freightOrderDetail.amount) }}
             </div>
 
             <div class="order_details_desc_item">
@@ -27,7 +30,7 @@
               >
               <span class="order-info-header">Pick up location</span>
               <div class="order-info-extra">
-                {{ path[0].name }}
+                {{ freightOrderDetail.pick_up_name }}
               </div>
             </div>
             <div class="order_details_desc_item order_details_desc_item--no-space">
@@ -37,7 +40,7 @@
               >
               <span class="order-info-header">Destination</span>
               <div class="order-info-extra">
-                {{ path[1].name }}
+                {{ freightOrderDetail.destination_name }}
               </div>
             </div>
             <div class="order_details_desc_item order-details-schedule-time">
@@ -47,7 +50,7 @@
               >
               <span class="order-info-header">Pick up time</span>
               <div class="order-info-extra">
-                11/12/2020
+                {{ convertToUTCToLocal(freightOrderDetail.pick_up_time) }}
               </div>
             </div>
           </div>
@@ -59,11 +62,11 @@
               Transporter
             </div>
             <div class="transporter-info-extra">
-              Umoja Transporters
+              {{ freightOrderDetail.transporter_name }}
             </div>
             <div
               class="transporter-info-extra view-transporter-mark"
-              @click="goToTransporter(2)"
+              @click="goToTransporter(freightOrderDetail.owner_id)"
             >
               View
             </div>
@@ -76,18 +79,31 @@
           Documents
         </div>
         <div class="transporter-listing order-order-documents">
-          <div class="doc-detail">
+          <div
+            v-for="(val, index) in freightOrderDetail.documents"
+            v-if="index >= 0"
+            class="doc-detail"
+          >
             <div class="transporters-filters documents-highlight orders-freight-documents">
               <div class=" freight-documents-title">
-                Invoice
+                {{ freightOrderDetail.documents[index].document_name }}
               </div>
               <div class=" freight-documents-date">
-                2/2/2012
+                {{ freightOrderDetail.documents[index].date_created }}
               </div>
-              <div class="freight-documents-name view-freight-document">
+              <div
+                class="freight-documents-name view-freight-document"
+                @click="
+                  viewDocument(
+                    freightOrderDetail.documents[index].url,
+                    freightOrderDetail.documents[index].document_name
+                  )
+                "
+              >
                 View Document <i class="el-icon-arrow-right view-transporter-info" />
               </div>
               <div
+                v-if="freightOrderDetail.documents[index].status === 'PENDING'"
                 class="freight-documents-approve"
                 style="display : flex"
               >
@@ -110,15 +126,44 @@
           </div>
         </div>
       </div>
+      <transition
+        name="fade"
+        mode="out-in"
+      >
+        <div class="">
+          <el-dialog
+            :visible.sync="viewDocumentOption"
+            class="documentOptions"
+          >
+            <div class="">
+              <div class="document-text-option ">
+                {{ src_name }} document
+              </div>
+              <div class="document-divider" />
+              <div class="document-view-inner">
+                <iframe
+                  :src="src_link"
+                  frameBorder="0"
+                  width="100%"
+                  height="100%"
+                />
+              </div>
+            </div>
+          </el-dialog>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import numeral from 'numeral';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
 
 export default {
   name: 'Transporters',
+  mixins: [TimezoneMxn],
   data() {
     return {
       quote_text: 'Request for quote',
@@ -126,6 +171,9 @@ export default {
       rating: 5.0,
       approve_doc_text: 'Approve',
       decline_doc_text: 'Decline',
+      viewDocumentOption: false,
+      src_link: '',
+      src_name: '',
       path: [
         {
           coordinates: '-1.3001097,36.772822099999985',
@@ -149,12 +197,62 @@ export default {
         },
       ],
       documents_data: [],
+      freightOrderDetail: [],
     };
   },
   computed: {
     ...mapGetters({}),
   },
+  watch: {
+    viewDocumentOption(val) {
+      if (!val) {
+        this.src_link = '';
+        this.src_name = '';
+      }
+    },
+  },
+  mounted() {
+    const sessionData = this.$store.getters.getSession;
+    if (Object.keys(sessionData).length > 0) {
+      this.fetchOrderDetail(this.$route.params.id);
+    }
+  },
   methods: {
+    ...mapActions({
+      getFreightOrderDetail: '$_freight/getFreightOrderDetail',
+    }),
+    fetchOrderDetail(orderId) {
+      const sessionData = this.$store.getters.getSession;
+      const values = {
+        order_id: orderId,
+        user_type: sessionData.default === 'biz' ? 1 : 3,
+      };
+
+      const fullPayload = {
+        values,
+        app: 'ORDERS_APP',
+        endpoint: 'v2/freight/order/details',
+      };
+
+      this.getFreightOrderDetail(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.freightOrderDetail = response.order;
+          } else {
+            this.doNotification(2, 'Failed to retrieve order details', response.message);
+            this.$router.push('/freight/orders');
+          }
+        },
+        (error) => {
+          this.doNotification(
+            2,
+            'Order details retrival failure !',
+            'Failed to fetch order , Kindly retry again or contact customer support ',
+          );
+          this.$router.push('/freight/orders');
+        },
+      );
+    },
     backToTransporters() {
       this.$router.push('/freight/transporters');
     },
@@ -164,11 +262,10 @@ export default {
     backToOrders() {
       this.$router.push('/freight/orders');
     },
-    createStaticMapUrl(path) {
-      // TODO:get google_key from configs
+    createStaticMapUrl(destination, pickup) {
       const googleKey = process.env.CONFIGS_ENV.GOOGLE_API_KEY;
-      const fromCordinates = path[0].coordinates;
-      const toCordinates = path[path.length - 1].coordinates;
+      const fromCordinates = pickup.coordinates;
+      const toCordinates = destination.coordinates;
       return `https://maps.googleapis.com/maps/api/staticmap?path=color:0x2c82c5|weight:5|${fromCordinates}|${toCordinates}&size=257x257&markers=color:0xF17F3A%7Clabel:P%7C
         ${fromCordinates}&markers=color:0x2c82c5%7Clabel:D%7C${toCordinates}&key=${googleKey}`;
     },
@@ -181,6 +278,14 @@ export default {
     },
     goToTransporter(val) {
       this.$router.push(`/freight/transporters/info/${val}`);
+    },
+    formatCurrency(currency) {
+      return numeral(currency).format('0,0');
+    },
+    viewDocument(url, name) {
+      this.src_link = url;
+      this.src_name = name;
+      this.viewDocumentOption = true;
     },
   },
 };
@@ -296,8 +401,8 @@ export default {
   margin-top: 10%;
 }
 .order-info-extra{
-  margin-left: 6%;
-  margin-top: 2%;
+  margin-left: 14%;
+  margin-top: 5%;
   margin-bottom: 2%;
 }
 .order-info-header{
@@ -398,6 +503,14 @@ export default {
 }
 .doc-detail{
   border: 1px solid #d8dfe6;
-  border-radius: 4px;
+  border-radius: 1px;
+}
+.document-text-option {
+  text-align: left;
+  margin: 0px 10px 10px 10px;
+  line-height: 20px;
+}
+.document-view-inner{
+  height: 500px !important;
 }
 </style>

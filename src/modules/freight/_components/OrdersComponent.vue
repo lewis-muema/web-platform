@@ -87,7 +87,7 @@
         header-align="center"
         align="center"
       >
-        <template slot-scope="scope">
+        <template slot-scope="props">
           <div
             class="view-orders-transporter-info"
             @click="viewOrdersInfo(order_history_data[props.$index]['order_id'])"
@@ -95,23 +95,6 @@
             View <i class="el-icon-arrow-right view-transporter-info" />
           </div>
         </template>
-        <!-- <template slot-scope="scope">
-          <div class="freight-orders-status">
-            <el-button
-              type="primary"
-              round
-              class="freight-status"
-            >
-              Pending
-            </el-button>
-            <div
-              class="view-orders-transporter-info"
-              @click="viewOrdersInfo(3)"
-            >
-              View <i class="el-icon-arrow-right view-transporter-info" />
-            </div>
-          </div>
-        </template> -->
       </el-table-column>
     </el-table>
 
@@ -206,29 +189,6 @@ export default {
       if (Object.keys(sessionData).length > 0) {
         this.sessionData = sessionData;
 
-        // let ordersPayload = {};
-        //
-        // if (sessionData.default === 'biz' && sessionData.biz.user_type === 2) {
-        //   // create cop admin payload
-        //
-        //   ordersPayload = {
-        //     cop_id: sessionData.biz.cop_id,
-        //     user_type: sessionData.biz.user_type,
-        //     user_id: '-1',
-        //   };
-        // } else if (sessionData.default === 'biz') {
-        //   ordersPayload = {
-        //     cop_id: sessionData.biz.cop_id,
-        //     user_type: sessionData.biz.user_type,
-        //     user_id: sessionData.biz.user_id,
-        //   };
-        // } else {
-        //   // create peer payload
-        //   ordersPayload = {
-        //     user_id: sessionData[sessionData.default].user_id,
-        //   };
-        // }
-
         const ordersPayload = {
           user_id:
             sessionData.default === 'biz'
@@ -322,7 +282,6 @@ div > button > span{
   cursor: default;
 }
 .view-orders-transporter-info{
-  margin-left: 30%;
   cursor: pointer;
 }
 .freight-orders-status{

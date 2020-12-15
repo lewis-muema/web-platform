@@ -160,24 +160,6 @@
             </ul>
           </div>
 
-          <!-- <div
-            v-if="transporter_name !== ''"
-            class=""
-          >
-            <p class="freight-input--label">
-              Transporter name
-            </p>
-            <div>
-              <input
-                v-model="transporter_name"
-                class="input-control transporter-input-name"
-                type="text"
-                placeholder=""
-                autocomplete="on"
-              >
-            </div>
-          </div> -->
-
           <div class="">
             <p class="freight-input--label">
               Will the container be returned?
