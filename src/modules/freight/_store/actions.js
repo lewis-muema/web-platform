@@ -105,6 +105,51 @@ const getOwnersListing = function getOwnersListing({ dispatch }, payload) {
   });
 };
 
+const getCargoTypes = function getCargoTypes({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
+const getCarrierTypes = function getCarrierTypes({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
+const getFilteredOwnersListing = function getFilteredOwnersListing({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   updateFreightStatus,
   requestFreightStatus,
@@ -112,4 +157,7 @@ export default {
   requestFreightOrders,
   getFreightOrderDetail,
   getOwnersListing,
+  getCargoTypes,
+  getCarrierTypes,
+  getFilteredOwnersListing,
 };
