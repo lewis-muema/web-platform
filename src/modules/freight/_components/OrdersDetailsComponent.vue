@@ -11,7 +11,7 @@
         <i class="el-icon-arrow-left view-transporter-info" /> Back
       </div>
       <div class="freight-orders-main-summary">
-        <div class="order-details-wrapper">
+        <div class="freight-order-details-wrapper">
           <div class="order_details_map">
             <Img
               :src="createStaticMapUrl(freightOrderDetail.destination, freightOrderDetail.pick_up)"
@@ -29,7 +29,7 @@
                 class="order_details_desc_image"
               >
               <span class="order-info-header">Pick up location</span>
-              <div class="order-info-extra">
+              <div class="freight-order-info-extra">
                 {{ freightOrderDetail.pick_up_name }}
               </div>
             </div>
@@ -39,7 +39,7 @@
                 class="order_details_desc_image"
               >
               <span class="order-info-header">Destination</span>
-              <div class="order-info-extra">
+              <div class="freight-order-info-extra">
                 {{ freightOrderDetail.destination_name }}
               </div>
             </div>
@@ -49,7 +49,7 @@
                 class="order_details_desc_image"
               >
               <span class="order-info-header">Pick up time</span>
-              <div class="order-info-extra">
+              <div class="freight-order-info-extra">
                 {{ convertToUTCToLocal(freightOrderDetail.pick_up_time) }}
               </div>
             </div>
@@ -362,7 +362,7 @@ export default {
 .reviews-outer{
   width: 85%;
 }
-.order-details-wrapper {
+.freight-order-details-wrapper {
   width: 64%;
   display: inline-block;
 }
@@ -400,8 +400,8 @@ export default {
 .order-details-schedule-time{
   margin-top: 10%;
 }
-.order-info-extra{
-  margin-left: 14%;
+.freight-order-info-extra{
+  margin-left: 6%;
   margin-top: 5%;
   margin-bottom: 2%;
 }
