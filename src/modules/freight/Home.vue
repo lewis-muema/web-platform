@@ -85,16 +85,16 @@ export default {
     },
     checkFreightStatus() {
       const session = this.$store.getters.getSession;
-      let values = '';
+      let val = '';
       if (session.default === 'biz') {
-        values = `copId=${session[session.default].cop_id}`;
+        val = `copId=${session[session.default].cop_id}`;
       } else {
-        values = `userId=${session[session.default].user_id}`;
+        val = `userId=${session[session.default].user_id}`;
       }
       const fullPayload = {
-        values,
+        values: val,
         app: 'ADONIS_PRIVATE_API',
-        endpoint: `freight-status?${values}`,
+        endpoint: `freight-status?${val}`,
       };
       const status = session[session.default].freight_status;
       this.handleFreightRoute(status);
