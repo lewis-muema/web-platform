@@ -353,7 +353,7 @@ export default {
       }
     },
     submitBizData() {
-      if (this.kra_pin === '' && !this.valid_kra_pin) {
+      if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
         this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
       } else if (this.industry_type === '') {
         this.doNotification(2, 'Final set up error !', 'Please select industry preference');
@@ -380,7 +380,7 @@ export default {
       }
     },
     submitPeerData() {
-      if (this.kra_pin === '' && !this.valid_kra_pin) {
+      if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
         this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
       } else if (this.id_number === '') {
         this.doNotification(2, 'Final set up error !', 'Please enter your ID number');
