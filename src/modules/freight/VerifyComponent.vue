@@ -105,7 +105,7 @@ export default {
         const session = this.$store.getters.getSession;
         let fullPayload = {};
         if (session.default === 'biz') {
-          const values = {
+          const bizPayload = {
             cop_id: session[session.default].cop_id,
             cop_name: session[session.default].cop_name,
             cop_contact_person: session[session.default].cop_contact_person,
@@ -114,17 +114,17 @@ export default {
             freight_status: 1,
           };
           fullPayload = {
-            values,
+            values: bizPayload,
             app: 'NODE_PRIVATE_API',
             endpoint: 'update_cop',
           };
         } else {
-          const values = {
+          const peerPayload = {
             user_id: session[session.default].user_id,
             freight_status: 1,
           };
           fullPayload = {
-            values,
+            values: peerPayload,
             app: 'NODE_PRIVATE_API',
             endpoint: 'update_user',
           };

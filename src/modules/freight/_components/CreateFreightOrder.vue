@@ -610,7 +610,7 @@ export default {
         acc = session[session.default];
       }
 
-      const values = {
+      const payload = {
         cop_id: 'cop_id' in acc ? acc.cop_id : 0,
         cop_user_id: 'cop_id' in acc ? acc.user_id : 0,
         peer_id: 'cop_id' in acc ? null : acc.user_id,
@@ -639,7 +639,7 @@ export default {
         ],
       };
       const fullPayload = {
-        values,
+        values: payload,
         app: 'ORDERS_APP',
         endpoint: 'v2/freight/order',
       };
