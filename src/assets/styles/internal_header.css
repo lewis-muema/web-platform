@@ -192,8 +192,6 @@ a.menu--last-child-link {
 }
 .segmentation-header{
   cursor: pointer;
-  margin-left: 3%;
-  margin-top: 7%;
 }
 .active_segmentation_menu{
   background: #FFFFFF;
@@ -208,6 +206,8 @@ a.menu--last-child-link {
 }
 .segmentation-align{
   margin-left: 3%;
+  margin-left: 3%;
+  padding: 1.5em 40px;
 }
 .disable_segmentation_menu{
   background: none;
