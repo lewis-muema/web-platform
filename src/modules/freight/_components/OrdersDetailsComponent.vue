@@ -235,13 +235,13 @@ export default {
     }),
     fetchOrderDetail(orderId) {
       const sessionData = this.$store.getters.getSession;
-      const values = {
+      const payload = {
         order_id: orderId,
         user_type: sessionData.default === 'biz' ? 1 : 3,
       };
 
       const fullPayload = {
-        values,
+        values: payload,
         app: 'ORDERS_APP',
         endpoint: 'v2/freight/order/details',
       };

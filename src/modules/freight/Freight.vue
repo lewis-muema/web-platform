@@ -361,7 +361,7 @@ export default {
         this.doNotification(2, 'Final set up error !', 'Please enter business registration');
       } else {
         const session = this.$store.getters.getSession;
-        const values = {
+        const payload = {
           cop_id: session[session.default].cop_id,
           cop_name: session[session.default].cop_name,
           cop_contact_person: session[session.default].cop_contact_person,
@@ -372,7 +372,7 @@ export default {
           company_reg_no: this.biz_registration,
         };
         const fullPayload = {
-          values,
+          values: payload,
           app: 'NODE_PRIVATE_API',
           endpoint: 'update_cop',
         };
@@ -386,13 +386,13 @@ export default {
         this.doNotification(2, 'Final set up error !', 'Please enter your ID number');
       } else {
         const session = this.$store.getters.getSession;
-        const values = {
+        const payload = {
           user_id: session[session.default].user_id,
           tax_authority_pin: this.kra_pin,
           id_no: this.id_number,
         };
         const fullPayload = {
-          values,
+          values: payload,
           app: 'NODE_PRIVATE_API',
           endpoint: 'update_user',
         };
