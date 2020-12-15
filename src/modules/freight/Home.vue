@@ -1,7 +1,6 @@
 <template lang="html">
   <div
     v-if="sessionData"
-    id="user_container"
     class=""
   >
     <main-header />
@@ -42,17 +41,18 @@ Validator.extend('check_phone', {
 
 export default {
   name: 'FreightHome',
-  components: { MainHeader, SessionMxn },
-  mixins: [RegisterStoreModule],
+  components: {
+    MainHeader,
+  },
+  mixins: [RegisterStoreModule, SessionMxn],
   data() {
     return {
       sessionData: false,
+      status: '',
     };
   },
   computed: {
-    ...mapGetters({
-      getSession: 'getSession',
-    }),
+    ...mapGetters({}),
   },
   watch: {},
   mounted() {
@@ -96,21 +96,19 @@ export default {
         app: 'ADONIS_PRIVATE_API',
         endpoint: `freight-status?${values}`,
       };
+      let status = session[session.default].freight_status;
+      this.handleFreightRoute(status);
+
       this.requestFreightStatus(fullPayload).then(
         (response) => {
-          let status = 0;
-
           if (response.length === undefined || response.length === 'undefined') {
             status = response.freight_status;
           } else {
             const arrLength = response.length;
             status = response[arrLength - 1].freight_status;
           }
-          if (status === 0) {
-            this.$router.push('/freight');
-          } else if (status === 1) {
-            this.$router.push('/freight/verify');
-          }
+          this.handleFreightRoute(status);
+
           const updatedSession = session;
           updatedSession[session.default].freight_status = status;
           const newSession = JSON.stringify(updatedSession);
@@ -120,6 +118,17 @@ export default {
           // error
         },
       );
+    },
+    handleFreightRoute(val) {
+      if (val === 0) {
+        this.$router.push('/freight/set-up');
+      } else if (val === 1) {
+        this.$router.push('/freight/verify');
+      } else if (val === 2) {
+        this.$router.push('/freight/dashboard');
+      } else {
+        this.$router.push('/orders');
+      }
     },
   },
 };

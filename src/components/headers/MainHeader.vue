@@ -154,7 +154,8 @@ export default {
       helpline_contact: '',
       admin_details: false,
       freightPages: [
-        'freight_page',
+        'freight_home',
+        'freight_set_up',
         'freight_verify',
         'freight_dashboard',
         'freight_transporters',
@@ -232,7 +233,11 @@ export default {
       const session = this.$store.getters.getSession;
       let resp = false;
 
-      if (session[session.default].user_type === 2 || session.default === 'peer') {
+      if (session.default === 'biz') {
+        if (session[session.default].user_type === 2) {
+          resp = true;
+        }
+      } else {
         resp = true;
       }
       return resp;

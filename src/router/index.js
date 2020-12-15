@@ -359,8 +359,13 @@ export function createRouter() {
         children: [
           {
             path: '/',
+            component: () => import('../modules/freight/Home.vue'),
+            name: 'freight_home',
+          },
+          {
+            path: '/freight/set-up',
             component: () => import('../modules/freight/Freight.vue'),
-            name: 'freight_page',
+            name: 'freight_set_up',
           },
           {
             path: '/freight/verify',
