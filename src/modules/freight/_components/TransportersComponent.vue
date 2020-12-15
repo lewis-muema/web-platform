@@ -177,7 +177,7 @@
               </ul>
             </div>
           </div>
-          <div class="freight-terms">
+          <div class="freight-terms freight-select">
             <input
               v-model="freight_selector"
               type="checkbox"
@@ -188,56 +188,63 @@
               Select all
             </span>
           </div>
-          <div class="transporter-listing">
-            <div class="transporter-detail">
-              <div class="transporter-name">
-                Umoja Transporters
-                <img
-                  src="https://images.sendyit.com/web_platform/freight/verified.svg"
-                  alt=""
-                  class="transporters-img highlight-icon"
-                >
-              </div>
-              <div class="transporters-filters transporters-highlight">
-                <div class="select-transporter">
-                  <input
-                    v-model="select_transporter"
-                    type="checkbox"
-                    name="u_terms"
-                    class="hiddeny"
-                  >
-                </div>
-                <div class="truck-add-info truck-add-info-align">
+          <div class="transporter-outer">
+            <div class="transporter-listing">
+              <div
+                v-for="(val, index) in ownersListing"
+                v-if="index >= 0"
+                class="transporter-detail"
+              >
+                <div class="transporter-name">
+                  {{ ownersListing[index].name }}
                   <img
-                    src="https://images.sendyit.com/web_platform/freight/vehicle.svg"
+                    src="https://images.sendyit.com/web_platform/freight/verified.svg"
                     alt=""
                     class="transporters-img highlight-icon"
                   >
-                  28 Truck
                 </div>
-                <div class="truck-add-info trans-completed_orders">
-                  <img
-                    src="https://images.sendyit.com/web_platform/freight/highlight.svg"
-                    alt=""
-                    class="transporters-img highlight-icon"
+                <div class="transporters-filters transporters-highlight">
+                  <div class="select-transporter">
+                    <input
+                      v-model="select_transporter"
+                      type="checkbox"
+                      name="u_terms"
+                      class="hiddeny"
+                    >
+                  </div>
+                  <div class="truck-add-info truck-add-info-align">
+                    <img
+                      src="https://images.sendyit.com/web_platform/freight/vehicle.svg"
+                      alt=""
+                      class="transporters-img highlight-icon"
+                    >
+                    28 Truck
+                  </div>
+                  <div class="truck-add-info trans-completed_orders">
+                    <img
+                      src="https://images.sendyit.com/web_platform/freight/highlight.svg"
+                      alt=""
+                      class="transporters-img highlight-icon"
+                    >
+                    {{ ownersListing[index].complete_orders }} completed orders
+                  </div>
+                  <div
+                    class="truck-add-info view-transporter-info"
+                    @click="viewTransporterInfo(ownersListing[index].id)"
                   >
-                  20 completed orders
+                    View <i class="el-icon-arrow-right view-transporter-info" />
+                  </div>
                 </div>
-                <div
-                  class="truck-add-info view-transporter-info"
-                  @click="viewTransporterInfo()"
-                >
-                  View <i class="el-icon-arrow-right view-transporter-info" />
-                </div>
-              </div>
-              <div class="transporters-filters transporters-highlight">
-                <div class="truck-add-info truck-add-rating-align">
-                  <img
-                    src="https://images.sendyit.com/web_platform/freight/rating.svg"
-                    alt=""
-                    class="transporters-img highlight-icon"
-                  >
-                  5 (13 Reviews)
+                <div class="transporters-filters transporters-highlight">
+                  <div class="truck-add-info truck-add-rating-align">
+                    <img
+                      src="https://images.sendyit.com/web_platform/freight/rating.svg"
+                      alt=""
+                      class="transporters-img highlight-icon"
+                    >
+                    {{ ownersListing[index].avg_rating }} (
+                    {{ ownersListing[index].avg_rating }} Reviews)
+                  </div>
                 </div>
               </div>
             </div>
@@ -250,7 +257,7 @@
 
 <script>
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import VueTypeahead from 'vue-typeahead';
 import Axios from 'axios';
 
@@ -279,6 +286,7 @@ export default {
       data: {},
       selectFirst: false,
       minChars: 2,
+      ownersListing: [],
       truckTypes: [
         {
           value: '1',
@@ -327,7 +335,35 @@ export default {
     },
   },
   watch: {},
+  mounted() {
+    this.fetchOwnersListing();
+  },
   methods: {
+    ...mapActions({
+      getOwnersListing: '$_freight/getOwnersListing',
+    }),
+    fetchOwnersListing() {
+      const payload = {};
+
+      const fullPayload = {
+        values: payload,
+        app: 'ORDERS_APP',
+        endpoint: 'v2/freight/owners',
+      };
+
+      this.getOwnersListing(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.ownersListing = response.owners_listing;
+          } else {
+            this.ownersListing = [];
+          }
+        },
+        (error) => {
+          this.ownersListing = [];
+        },
+      );
+    },
     viewTransporterInfo() {
       const transporterId = 2;
       this.$router.push(`/freight/transporters/info/${transporterId}`);
@@ -354,5 +390,13 @@ export default {
 .search-transporter{
   width: 100%;
   margin-top: 4%;
+}
+.transporter-outer{
+  height: 500px;
+  margin: 0em;
+  overflow-y: auto;
+}
+.freight-select{
+  margin-bottom: 3%;
 }
 </style>

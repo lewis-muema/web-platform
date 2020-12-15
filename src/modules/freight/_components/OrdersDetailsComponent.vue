@@ -51,7 +51,7 @@
               </div>
               <div class="order_details_desc_item order-details-schedule-time">
                 <img
-                  src="../../../assets/img/blue_button.png"
+                  src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/freight/time.svg"
                   class="order_details_desc_image"
                 >
                 <span class="order-info-header">Pick up time</span>
