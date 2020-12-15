@@ -317,10 +317,7 @@ export default {
       getFilteredOwnersListing: '$_freight/getFilteredOwnersListing',
     }),
     fetchOwnersListing() {
-      const payload = {};
-
       const fullPayload = {
-        values: payload,
         app: 'ORDERS_APP',
         endpoint: 'v2/freight/owners',
       };
@@ -339,10 +336,7 @@ export default {
       );
     },
     fetchGoodsTypes() {
-      const payload = {};
-
       const fullPayload = {
-        values: payload,
         app: 'ORDERS_APP',
         endpoint: 'v2/freight/cargo_types',
       };
@@ -361,10 +355,7 @@ export default {
       );
     },
     fetchCarrierTypes() {
-      const payload = {};
-
       const fullPayload = {
-        values: payload,
         app: 'ORDERS_APP',
         endpoint: 'v2/freight/carrier_types',
       };
