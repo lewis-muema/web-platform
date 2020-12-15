@@ -215,7 +215,6 @@ const requestIndustries = function requestIndustries({ dispatch }, payload) {
     );
   });
 };
-
 export default {
   fetchOngoingOrders,
   connectMqtt,
