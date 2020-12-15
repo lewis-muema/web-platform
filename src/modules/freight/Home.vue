@@ -96,23 +96,26 @@ export default {
         app: 'ADONIS_PRIVATE_API',
         endpoint: `freight-status?${values}`,
       };
-      let status = session[session.default].freight_status;
+      const status = session[session.default].freight_status;
       this.handleFreightRoute(status);
 
       this.requestFreightStatus(fullPayload).then(
         (response) => {
+          let newStatus = '';
           if (response.length === undefined || response.length === 'undefined') {
-            status = response.freight_status;
+            newStatus = response.freight_status;
           } else {
             const arrLength = response.length;
-            status = response[arrLength - 1].freight_status;
+            newStatus = response[arrLength - 1].freight_status;
           }
-          this.handleFreightRoute(status);
 
-          const updatedSession = session;
-          updatedSession[session.default].freight_status = status;
-          const newSession = JSON.stringify(updatedSession);
-          this.setSession(newSession);
+          if (newStatus !== status) {
+            this.handleFreightRoute(newStatus);
+            const updatedSession = session;
+            updatedSession[session.default].freight_status = newStatus;
+            const newSession = JSON.stringify(updatedSession);
+            this.setSession(newSession);
+          }
         },
         () => {
           // error
