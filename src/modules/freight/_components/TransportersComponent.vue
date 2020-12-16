@@ -32,7 +32,7 @@
           </div>
           <div class="">
             <p class="freight-input--label">
-              By when should bids be submitted?
+              Pick up time
             </p>
             <div class="transporters-select">
               <el-date-picker
@@ -483,12 +483,11 @@ export default {
         },
       );
     },
-    viewTransporterInfo() {
-      const transporterId = 2;
-      this.$router.push(`/freight/transporters/info/${transporterId}`);
+    viewTransporterInfo(val) {
+      this.$router.push(`/freight/transporters/info/${val}`);
     },
     onHit(item) {
-      console.log('item', item);
+      this.$router.push(`/freight/transporters/info/${item.id}`);
     },
     prepareResponseData(data) {
       if (data.response.docs.length === 0) {

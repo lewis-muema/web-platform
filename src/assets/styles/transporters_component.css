@@ -497,3 +497,7 @@
   padding: 1rem;
   border-radius: 4px;
 }
+.sendQuoteOption > div {
+    margin-top: 30vh !important;
+    width: 33% !important;
+}

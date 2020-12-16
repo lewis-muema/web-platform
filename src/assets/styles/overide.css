@@ -695,3 +695,9 @@ span.el-pagination__jump {
   width: 80% !important;
   height: 900px;
 }
+div.pac-container {
+  z-index: 99999999999 !important;
+}
+.freight-rating > .el-rate__item > .el-rate__icon{
+  font-size: 45px;
+}
