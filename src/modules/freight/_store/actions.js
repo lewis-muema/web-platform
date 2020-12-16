@@ -165,6 +165,19 @@ const approveDocument = function approveDocument({ dispatch }, payload) {
   });
 };
 
+const sendCustomerQuote = function sendCustomerQuote({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, { root: true }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   updateFreightStatus,
   requestFreightStatus,
@@ -176,4 +189,5 @@ export default {
   getCarrierTypes,
   getFilteredOwnersListing,
   approveDocument,
+  sendCustomerQuote,
 };
