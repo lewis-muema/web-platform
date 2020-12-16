@@ -44,6 +44,7 @@ import {
   RadioButton,
   Autocomplete,
   Upload,
+  CheckboxGroup,
 } from 'element-ui';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -88,7 +89,7 @@ Vue.use(VueGeolocation);
 Vue.use(VueMask);
 Vue.use(Upload);
 Vue.use(vueCountryRegionSelect);
-// Vue.use(exportFromJSON);
+Vue.use(CheckboxGroup);
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$msgbox = MessageBox;

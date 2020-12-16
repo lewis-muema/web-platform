@@ -30,6 +30,22 @@
               @place_changed="setLocation($event, 1)"
             />
           </div>
+          <div class="">
+            <p class="freight-input--label">
+              By when should bids be submitted?
+            </p>
+            <div class="transporters-select">
+              <el-date-picker
+                v-model="pick_up_time"
+                class="bids-time"
+                type="datetime"
+                format="dd-MM-yyyy h:mm a"
+                placeholder="Select time"
+                prefix-icon="el-icon-date"
+                :default-time="default_value"
+              />
+            </div>
+          </div>
 
           <div class="">
             <p class="freight-input--label">
@@ -102,11 +118,14 @@
         >
           <div class="transporters-filters">
             <div class="quote-flex">
-              <input
-                v-model="quote_text"
-                class="request-quote-btn-color request-quote-btn"
-                type="submit"
-              >
+              <div v-if="show_quote">
+                <input
+                  v-model="quote_text"
+                  class="request-quote-btn-color request-quote-btn"
+                  type="submit"
+                  @click="showQuoteDialog"
+                >
+              </div>
             </div>
             <div class="search-flex">
               <el-input
@@ -164,79 +183,126 @@
             </div>
           </div>
           <div class="freight-terms freight-select">
-            <input
-              v-model="freight_selector"
-              type="checkbox"
-              name="u_terms"
-              class="hiddeny"
+            <el-checkbox
+              v-model="checkAll"
+              :indeterminate="isIndeterminate"
+              @change="handleCheckAllChange"
             >
-            <span class="">
               Select all
-            </span>
+            </el-checkbox>
           </div>
           <div class="transporter-outer">
             <div class="transporter-listing">
-              <div
-                v-for="(val, index) in ownersListing"
-                v-if="index >= 0"
-                class="transporter-detail"
+              <el-checkbox-group
+                v-model="checkedOwners"
+                class="minnne"
+                @change="handleCheckedCitiesChange"
               >
-                <div class="transporter-name">
-                  {{ ownersListing[index].name }}
-                  <img
-                    src="https://images.sendyit.com/web_platform/freight/verified.svg"
-                    alt=""
-                    class="transporters-img highlight-icon"
-                  >
-                </div>
-                <div class="transporters-filters transporters-highlight">
-                  <div class="select-transporter">
-                    <input
-                      v-model="select_transporter"
-                      type="checkbox"
-                      name="u_terms"
-                      class="hiddeny"
-                    >
-                  </div>
-                  <div class="truck-add-info truck-add-info-align">
+                <el-checkbox
+                  v-for="(val, index) in ownersListing"
+                  :key="index"
+                  :label="val"
+                  class="transporter-detail transporters-segment"
+                >
+                  <div class="transporter-name">
+                    {{ ownersListing[index].name }}
                     <img
-                      src="https://images.sendyit.com/web_platform/freight/vehicle.svg"
+                      src="https://images.sendyit.com/web_platform/freight/verified.svg"
                       alt=""
                       class="transporters-img highlight-icon"
                     >
-                    28 Truck
                   </div>
-                  <div class="truck-add-info trans-completed_orders">
-                    <img
-                      src="https://images.sendyit.com/web_platform/freight/highlight.svg"
-                      alt=""
-                      class="transporters-img highlight-icon"
+                  <div class="transporters-filters transporters-highlight">
+                    <div class="truck-add-info truck-add-info-align">
+                      <img
+                        src="https://images.sendyit.com/web_platform/freight/vehicle.svg"
+                        alt=""
+                        class="transporters-img highlight-icon"
+                      >
+                      28 Truck
+                    </div>
+                    <div class="truck-add-info trans-completed_orders">
+                      <img
+                        src="https://images.sendyit.com/web_platform/freight/highlight.svg"
+                        alt=""
+                        class="transporters-img highlight-icon"
+                      >
+                      {{ ownersListing[index].complete_orders }} completed orders
+                    </div>
+                    <div
+                      class="truck-add-info view-transporter-info"
+                      @click="viewTransporterInfo(ownersListing[index].id)"
                     >
-                    {{ ownersListing[index].complete_orders }} completed orders
+                      View <i class="el-icon-arrow-right view-transporter-info" />
+                    </div>
                   </div>
-                  <div
-                    class="truck-add-info view-transporter-info"
-                    @click="viewTransporterInfo(ownersListing[index].id)"
-                  >
-                    View <i class="el-icon-arrow-right view-transporter-info" />
+                  <div class="transporters-filters transporters-highlight">
+                    <div class="truck-add-info truck-add-rating-align">
+                      <img
+                        src="https://images.sendyit.com/web_platform/freight/rating.svg"
+                        alt=""
+                        class="transporters-img highlight-icon"
+                      >
+                      {{ ownersListing[index].avg_rating }} (
+                      {{ ownersListing[index].avg_rating }} Reviews)
+                    </div>
                   </div>
-                </div>
-                <div class="transporters-filters transporters-highlight">
-                  <div class="truck-add-info truck-add-rating-align">
-                    <img
-                      src="https://images.sendyit.com/web_platform/freight/rating.svg"
-                      alt=""
-                      class="transporters-img highlight-icon"
-                    >
-                    {{ ownersListing[index].avg_rating }} (
-                    {{ ownersListing[index].avg_rating }} Reviews)
-                  </div>
-                </div>
-              </div>
+                </el-checkbox>
+              </el-checkbox-group>
             </div>
           </div>
         </div>
       </div>
+      <transition
+        name="fade"
+        mode="out-in"
+      >
+        <div class="">
+          <el-dialog
+            :visible.sync="quoteDialogVisible"
+            class="declineDocumentOptions"
+          >
+            <div class="">
+              <div class="decline-text-option decline-documemt-extend request-quote-header">
+                Request for quote
+              </div>
+            </div>
+            <div class="">
+              <div class="decline-text-option decline-documemt-extend">
+                <span class="transporters-no-highlight">{{ filteredCheckedOwners.length }}</span>
+                Selected Transporters
+              </div>
+            </div>
+            <div class="decline-documemt-extend decline-documemt-input">
+              <p class="freight-input--label">
+                By when should bids be submitted?
+              </p>
+              <div class="block">
+                <el-date-picker
+                  v-model="quotation_time"
+                  class="transporters-pickup-time"
+                  type="datetime"
+                  format="dd-MM-yyyy h:mm a"
+                  placeholder="Select time"
+                  prefix-icon="el-icon-date"
+                  :default-time="default_value"
+                />
+              </div>
+            </div>
+
+            <div class="decline-documemt-extend decline-button-align">
+              <button
+                type="button"
+                name="button"
+                class="quote-action--slide-button"
+                @click="sendFinalQuote()"
+              >
+                Submit
+              </button>
+            </div>
+          </el-dialog>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -260,6 +326,7 @@ export default {
       quote_text: 'Request for quote',
       locations: [],
       order_path: [],
+      main_order_path: [],
       map_options: {
         componentRestrictions: {
           country: ['ke', 'ug', 'tz'],
@@ -288,6 +355,13 @@ export default {
       truckTypes: [],
       goodsType: [],
       owners_list: [],
+      checkAll: false,
+      isIndeterminate: true,
+      checkedOwners: [],
+      filteredCheckedOwners: [],
+      quoteDialogVisible: false,
+      pick_up_time: '',
+      quotation_time: '',
     };
   },
   computed: {
@@ -305,6 +379,16 @@ export default {
     ownersListing() {
       return this.owners_list;
     },
+    show_quote() {
+      return (
+        Array.isArray(this.locations)
+        && this.locations.length > 1
+        && this.truck_type !== ''
+        && this.load_weight !== ''
+        && this.goods !== ''
+        && this.pick_up_time !== ''
+      );
+    },
   },
   watch: {},
   mounted() {
@@ -318,7 +402,17 @@ export default {
       getCargoTypes: '$_freight/getCargoTypes',
       getCarrierTypes: '$_freight/getCarrierTypes',
       getFilteredOwnersListing: '$_freight/getFilteredOwnersListing',
+      sendCustomerQuote: '$_freight/sendCustomerQuote',
     }),
+    handleCheckAllChange(val) {
+      this.checkedOwners = val ? this.owners_list : [];
+      this.isIndeterminate = false;
+    },
+    handleCheckedCitiesChange(value) {
+      const checkedCount = value.length;
+      this.checkAll = checkedCount === this.owners_list.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.owners_list.length;
+    },
     fetchOwnersListing() {
       this.$store.dispatch('$_freight/getOwnersListing').then(
         (response) => {
@@ -407,6 +501,38 @@ export default {
         // console.log('not a place', index);
         return;
       }
+      const countryIndex = place.address_components.findIndex(country_code => country_code.types.includes('country'));
+      const mainPathObj = {
+        name: place.name,
+        coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
+        waypoint_details_status: true,
+        type: 'coordinates',
+        country_code: place.address_components[countryIndex].short_name,
+        more: {
+          Address: place.formatted_address,
+          Estate: '',
+          FlatName: '',
+          HouseDoor: '',
+          Label: '',
+          Otherdescription: '',
+          Road: '',
+          Typed: '',
+          Vicinity: 'Not Indicated',
+          landmark: '',
+          place_idcustom: place.place_id,
+          viewport: {
+            northeast: {
+              lat: 0,
+              lng: 0,
+            },
+            southwest: {
+              lat: 0,
+              lng: 0,
+            },
+          },
+        },
+      };
+
       const pathObj = {
         address_components: place.address_components,
       };
@@ -414,8 +540,17 @@ export default {
         index,
         path: pathObj,
       };
+      const mainPathPayload = {
+        index,
+        path: mainPathObj,
+      };
       this.resetPathLocation(index);
       this.order_path.splice(pathPayload.index, pathPayload.index === 0 ? 0 : 1, pathPayload.path);
+      this.main_order_path.splice(
+        mainPathPayload.index,
+        mainPathPayload.index === 0 ? 0 : 1,
+        mainPathPayload.path,
+      );
       this.setLocationInModel(index, `${place.name}`);
     },
     setLocationInModel(index, name) {
@@ -424,6 +559,7 @@ export default {
     resetPathLocation(index) {
       if (index === 0) {
         this.order_path.splice(index, 1);
+        this.main_order_path.splice(index, 1);
       }
       this.deleteLocationInModel(index);
     },
@@ -437,6 +573,7 @@ export default {
         && this.truck_type !== ''
         && this.load_weight !== ''
         && this.goods !== ''
+        && this.pick_up_time !== ''
       ) {
         this.doFilterOwners();
       } else {
@@ -482,6 +619,84 @@ export default {
         },
       );
     },
+    showQuoteDialog() {
+      if (this.checkedOwners.length > 0) {
+        this.filteredCheckedOwners = [];
+        for (let i = 0; i < this.checkedOwners.length; i++) {
+          this.filteredCheckedOwners.push(this.checkedOwners[i].id);
+        }
+        setTimeout(() => {
+          this.quoteDialogVisible = true;
+        }, 800);
+      } else {
+        this.doNotification(
+          2,
+          'Unable to request for quotation!',
+          'Kindly select a transporter to request quotation',
+        );
+      }
+    },
+    sendFinalQuote() {
+      if (this.filteredCheckedOwners.length === 0 || this.quotation_time === '') {
+        this.doNotification(
+          2,
+          'Unable to request for quotation!',
+          'Kindly provide time for quotation to to submitted',
+        );
+      } else {
+        let acc = {};
+        const session = this.$store.getters.getSession;
+        if ('default' in session) {
+          acc = session[session.default];
+        }
+        const payload = {
+          cop_id: 'cop_id' in acc ? acc.cop_id : 0,
+          cop_user_id: 'cop_id' in acc ? acc.user_id : 0,
+          peer_id: 'cop_id' in acc ? null : acc.user_id,
+          owners: this.filteredCheckedOwners,
+          cargo_type: parseInt(this.goods, 10),
+          load_weight: parseInt(this.load_weight, 10),
+          carrier_type: parseInt(this.truck_type, 10),
+          pick_up: this.main_order_path[0],
+          destination: this.main_order_path[1],
+          pick_up_time: this.moment(this.pick_up_time).format('YYYY-MM-DD HH:mm:ss'),
+          quotation_deadline: this.moment(this.quotation_time).format('YYYY-MM-DD HH:mm:ss'),
+        };
+
+        const fullPayload = {
+          values: payload,
+          app: 'ORDERS_APP',
+          endpoint: 'v2/freight/quotations',
+        };
+        this.sendCustomerQuote(fullPayload).then(
+          (response) => {
+            if (response.status) {
+              this.doNotification(1, 'Quotations sent successfully!', '');
+              this.fetchOwnersListing();
+            } else {
+              this.doNotification(2, 'Unable to request for quotation!', response.message);
+            }
+            this.resetQuatationDialog();
+          },
+          (error) => {
+            if (Object.prototype.hasOwnProperty.call(error, 'message')) {
+              this.doNotification(2, 'Quote request failed', error.message);
+            } else {
+              this.doNotification(
+                2,
+                'Quote request failed',
+                'Quote request failed. Please check your internet connection and try again.',
+              );
+              this.resetQuatationDialog();
+            }
+          },
+        );
+      }
+    },
+    resetQuatationDialog() {
+      this.quoteDialogVisible = false;
+      this.quotation_time = '';
+    },
     doNotification(level, title, message) {
       const notification = { title, level, message };
       this.displayNotification(notification);
@@ -507,5 +722,8 @@ export default {
 }
 .freight-select{
   margin-bottom: 3%;
+}
+.bids-time{
+  width: 100%;
 }
 </style>
