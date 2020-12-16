@@ -117,6 +117,7 @@
                     type="button"
                     class="button-primary section--filter-action freight-approve-doc"
                     name="create_order_text"
+                    @click="approveDoc(freightOrderDetail.documents[index])"
                   >
                     {{ approve_doc_text }}
                   </button>
@@ -124,9 +125,25 @@
                     type="button"
                     class="section--filter-action freight-decline-doc"
                     name="create_order_text"
+                    @click="declineDialog(freightOrderDetail.documents[index])"
                   >
                     {{ decline_doc_text }}
                   </button>
+                </div>
+                <div
+                  v-else
+                  class="freight-documents-approve"
+                  style="display : flex"
+                >
+                  <div class="freight-approval-reason">
+                    {{ freightOrderDetail.documents[index].message }}
+                    <div
+                      v-if="freightOrderDetail.documents[index].status === 'DECLINED'"
+                      class="freight-decline-reason"
+                    >
+                      Reason : {{ freightOrderDetail.documents[index].reason }}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -154,6 +171,35 @@
                     height="100%"
                   />
                 </div>
+              </div>
+            </el-dialog>
+            <el-dialog
+              :visible.sync="showDeclineDialog"
+              class="declineDocumentOptions"
+            >
+              <div class="">
+                <div class="decline-text-option decline-documemt-extend">
+                  Decline Document
+                </div>
+              </div>
+              <div class="decline-documemt-extend decline-documemt-input">
+                <el-input
+                  v-model.trim="reason"
+                  :min="0"
+                  type="textarea"
+                  autocomplete="true"
+                />
+              </div>
+
+              <div class="decline-documemt-extend decline-button-align">
+                <button
+                  type="button"
+                  name="button"
+                  class="decline-action--slide-button"
+                  @click="declineDocument()"
+                >
+                  Decline
+                </button>
               </div>
             </el-dialog>
           </div>
@@ -185,30 +231,11 @@ export default {
       viewDocumentOption: false,
       src_link: '',
       src_name: '',
-      path: [
-        {
-          coordinates: '-1.3001097,36.772822099999985',
-          country_code: 'KE',
-          locality: {
-            coordinates: '-1.300190,36.772672',
-            name: 'Nairobi',
-          },
-          name: 'Ngong Rd, Nairobi, Kenya',
-          waypoint_type: 'PICKUP',
-        },
-        {
-          coordinates: '-1.2987826,36.76318070000002',
-          country_code: 'KE',
-          locality: {
-            coordinates: '-1.298783,36.763181',
-            name: 'Maziwa',
-          },
-          name: 'Junction Mall Parking Hall, Ngong Rd, Nairobi, Kenya',
-          waypoint_type: 'DELIVERY',
-        },
-      ],
       documents_data: [],
       freightOrderDetail: [],
+      decline_doc: {},
+      showDeclineDialog: false,
+      reason: '',
     };
   },
   computed: {
@@ -219,6 +246,11 @@ export default {
       if (!val) {
         this.src_link = '';
         this.src_name = '';
+      }
+    },
+    showDeclineDialog(val) {
+      if (!val) {
+        this.closeDeclineDialog();
       }
     },
   },
@@ -232,6 +264,7 @@ export default {
   methods: {
     ...mapActions({
       getFreightOrderDetail: '$_freight/getFreightOrderDetail',
+      approveDocument: '$_freight/approveDocument',
     }),
     fetchOrderDetail(orderId) {
       const sessionData = this.$store.getters.getSession;
@@ -248,11 +281,18 @@ export default {
 
       this.getFreightOrderDetail(fullPayload).then(
         (response) => {
-          if (response.status) {
-            this.freightOrderDetail = response.order;
+          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+
+          let workingResponse = response;
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
+            this.freightOrderDetail = workingResponse.order;
             this.loading = false;
           } else {
-            this.doNotification(2, 'Failed to retrieve order details', response.message);
+            this.doNotification(2, 'Failed to retrieve order details', workingResponse.message);
             this.$router.push('/freight/orders');
           }
         },
@@ -299,6 +339,93 @@ export default {
       this.src_link = url;
       this.src_name = name;
       this.viewDocumentOption = true;
+    },
+    approveDoc(val) {
+      const payload = {
+        order_id: this.freightOrderDetail.order_id,
+        document_id: val.document_id,
+        cop_id: this.freightOrderDetail.cop_id === null ? 0 : this.freightOrderDetail.cop_id,
+        cop_user_id:
+          this.freightOrderDetail.cop_id === null ? 0 : this.freightOrderDetail.cop_user_id,
+        peer_id: this.freightOrderDetail.peer_id === null ? 0 : this.freightOrderDetail.peer_id,
+        owner_id: this.freightOrderDetail.owner_id,
+        created_by: this.freightOrderDetail.created_by,
+        status: 2,
+      };
+
+      const fullPayload = {
+        values: payload,
+        app: 'ORDERS_APP',
+        endpoint: 'v2/freight/order/documents',
+      };
+
+      this.approveDocument(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.doNotification(1, 'Document approval!', 'Document approved successfully');
+            this.fetchOrderDetail(this.$route.params.id);
+          } else {
+            this.doNotification(2, 'Failed to approve document!', response.message);
+          }
+        },
+        (error) => {
+          this.doNotification(
+            2,
+            'Failed to approve document!',
+            'Failed to approve document, Kindly retry again or contact customer support ',
+          );
+        },
+      );
+    },
+    declineDialog(val) {
+      this.decline_doc = val;
+      this.showDeclineDialog = true;
+    },
+    declineDocument() {
+      const payload = {
+        order_id: this.freightOrderDetail.order_id,
+        document_id: this.decline_doc.document_id,
+        cop_id: this.freightOrderDetail.cop_id === null ? 0 : this.freightOrderDetail.cop_id,
+        cop_user_id:
+          this.freightOrderDetail.cop_id === null ? 0 : this.freightOrderDetail.cop_user_id,
+        peer_id: this.freightOrderDetail.peer_id === null ? 0 : this.freightOrderDetail.peer_id,
+        owner_id: this.freightOrderDetail.owner_id,
+        created_by: this.freightOrderDetail.created_by,
+        status: 3,
+        reason: this.reason,
+      };
+
+      const fullPayload = {
+        values: payload,
+        app: 'ORDERS_APP',
+        endpoint: 'v2/freight/order/documents',
+      };
+
+      this.approveDocument(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.doNotification(1, 'Document declined!', 'Document declined successfully');
+            this.closeDeclineDialog();
+            this.fetchOrderDetail(this.$route.params.id);
+          } else {
+            this.doNotification(2, 'Failed to decline document!', response.message);
+            this.closeDeclineDialog();
+          }
+        },
+        (error) => {
+          this.doNotification(
+            2,
+            'Failed to decline document!',
+            'Failed to decline document, Kindly retry again or contact customer support ',
+          );
+          this.closeDeclineDialog();
+        },
+      );
+    },
+    closeDeclineDialog() {
+      this.decline_doc = {};
+      this.showDeclineDialog = false;
+      this.reason = '';
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };
@@ -529,5 +656,16 @@ export default {
 }
 .document-view-inner{
   height: 500px !important;
+}
+.freight-approval-reason{
+  margin-top: 2%;
+  margin-left: 6%;
+}
+.freight-decline-reason{
+  margin-top: 7%;
+  color: #F44B54;
+  font-style: italic;
+  font-weight: normal;
+  font-size: 16px;
 }
 </style>
