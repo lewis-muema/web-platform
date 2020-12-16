@@ -146,7 +146,7 @@ export default {
   text-align: center;
 }
 .freight-dashboard-outer{
-  width: 54%;
+  width: 64%;
   margin-top: 3%;
   height: 587px;
   margin: 0em;
