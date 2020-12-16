@@ -1,5 +1,3 @@
-// import axios from 'axios';
-// import mqtt from 'mqtt';
 /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
 
 const updateFreightStatus = function updateFreightStatus({ dispatch }, payload) {

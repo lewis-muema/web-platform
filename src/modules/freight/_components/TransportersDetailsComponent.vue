@@ -13,7 +13,7 @@
             <i class="el-icon-arrow-left view-transporter-info" /> Back
           </div>
           <div class="transporter-listing transporter-summary-data">
-            <div class="transporter-detail">
+            <div class="transporter-detail--info">
               <div class="transporter-name">
                 Umoja Transporters
                 <img
