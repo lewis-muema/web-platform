@@ -147,6 +147,24 @@ const getFilteredOwnersListing = function getFilteredOwnersListing({ dispatch },
   });
 };
 
+const approveDocument = function approveDocument({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPatch', payload, { root: true }).then(
+      (response) => {
+        let workingResponse = response;
+        if (response.length > 1) {
+          workingResponse = response[0];
+        }
+
+        resolve(workingResponse.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   updateFreightStatus,
   requestFreightStatus,
@@ -157,4 +175,5 @@ export default {
   getCargoTypes,
   getCarrierTypes,
   getFilteredOwnersListing,
+  approveDocument,
 };
