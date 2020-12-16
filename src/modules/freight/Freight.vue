@@ -403,7 +403,13 @@ export default {
       const session = this.$store.getters.getSession;
       this.updateFreightInformation(fullPayload).then(
         (response) => {
-          if (response.status) {
+          let workingResponse = response;
+          if (response.length > 1) {
+            /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
             const updatedSession = session;
             if (session.default === 'biz') {
               updatedSession[session.default].tax_authority_pin = this.kra_pin;
