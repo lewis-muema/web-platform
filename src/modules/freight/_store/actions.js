@@ -189,6 +189,21 @@ const requestActivity = function requestActivity({ dispatch }, payload) {
   });
 };
 
+const getOwnersDetail = function getOwnersDetail({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   updateFreightStatus,
   requestFreightStatus,
@@ -202,4 +217,5 @@ export default {
   approveDocument,
   sendCustomerQuote,
   requestActivity,
+  getOwnersDetail,
 };

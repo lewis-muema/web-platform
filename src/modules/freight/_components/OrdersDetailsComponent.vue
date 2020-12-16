@@ -76,6 +76,21 @@
               >
                 View
               </div>
+              <div class="rating-section">
+                <div class="rating-title">
+                  How was your experience with Umoja Transporters?
+                </div>
+                <div class="decline-documemt-extend">
+                  <button
+                    type="button"
+                    name="button"
+                    class="decline-action--slide-button rate-freight-order"
+                    @click="openRatingDialog"
+                  >
+                    Rate order
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -202,6 +217,42 @@
                 </button>
               </div>
             </el-dialog>
+            <el-dialog
+              :visible.sync="showRatingDialog"
+              class="declineDocumentOptions"
+            >
+              <div class="">
+                <div class="decline-text-option rating-header">
+                  How was your experience with Umoja Transporters?
+                </div>
+              </div>
+              <span class="freight-stars-container">
+                <el-rate
+                  v-model="rated_score"
+                  class="freight-rating"
+                  :colors="['#99A9BF', '#F57f20', '#1782C5']"
+                />
+              </span>
+              <div class="decline-documemt-input">
+                <el-input
+                  v-model.trim="reason"
+                  :min="0"
+                  placeholder="Tell us more (Optional)"
+                  type="textarea"
+                  autocomplete="true"
+                />
+              </div>
+
+              <div class="decline-documemt-extend decline-button-align">
+                <button
+                  type="button"
+                  name="button"
+                  class="decline-action--slide-button"
+                >
+                  Submit
+                </button>
+              </div>
+            </el-dialog>
           </div>
         </transition>
       </div>
@@ -236,6 +287,8 @@ export default {
       decline_doc: {},
       showDeclineDialog: false,
       reason: '',
+      showRatingDialog: false,
+      rated_score: 1,
     };
   },
   computed: {
@@ -427,6 +480,9 @@ export default {
       this.showDeclineDialog = false;
       this.reason = '';
     },
+    openRatingDialog() {
+      this.showRatingDialog = true;
+    },
     doNotification(level, title, message) {
       const notification = { title, level, message };
       this.displayNotification(notification);
@@ -437,4 +493,35 @@ export default {
 
 <style lang="css" scoped>
 @import '../../../assets/styles/transporters_component.css?v=1';
+.rating-section{
+  background: #FBFBFB;
+  border: 1px solid #d8dfe6;
+  padding: 1rem;
+  box-sizing: border-box;
+  border-radius: 4px;
+  width: 66%;
+  margin-top: 7%;
+  min-height: 138px;
+}
+.rating-title{
+  font-size: 13px;
+  margin-top: 1%;
+}
+.rate-freight-order{
+  margin-left: 0 !important;
+  height: 40px !important;
+  margin-top: 9% !important;
+  width: 61% !important;
+}
+.rating-header{
+  font-size: 18px;
+  line-height: 27px;
+  text-align: center;
+  color: #000000;
+}
+.freight-stars-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 17%;
+}
 </style>
