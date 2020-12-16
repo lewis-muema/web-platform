@@ -716,7 +716,7 @@ export default {
   margin-top: 4%;
 }
 .transporter-outer{
-  height: 500px;
+  height: 455px;
   margin: 0em;
   overflow-y: auto;
 }
