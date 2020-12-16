@@ -701,3 +701,6 @@ div.pac-container {
 .freight-rating > .el-rate__item > .el-rate__icon{
   font-size: 45px;
 }
+.el-upload-list__item-name{
+  display: none ;
+}
