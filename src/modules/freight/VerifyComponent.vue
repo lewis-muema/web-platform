@@ -23,10 +23,10 @@
           I acknowledge that i have read and understood the terms of service
         </span>
       </div>
-      <div class="next-terms-holder">
+      <div class="next-terms-holder-btn">
         <input
           placeholder="Submit"
-          class="button-primary terms-btn-color next-freight-btn"
+          class="button-primary terms-btn-color next-freight-submit"
           type="submit"
           name="login_text"
           @click="submit"
@@ -131,7 +131,12 @@ export default {
         }
         this.updateFreightStatus(fullPayload).then(
           (response) => {
-            if (response.status) {
+            let workingResponse = response;
+            if (response.length > 1) {
+              workingResponse = response[0];
+            }
+
+            if (workingResponse.status) {
               const updatedSession = session;
               updatedSession[session.default].freight_status = 1;
 
@@ -216,13 +221,14 @@ export default {
   line-height: 5px;
   color: #000000;
 }
-.next-terms-holder {
+.next-terms-holder-btn {
   margin-top: 2%;
+  padding-bottom: 4% !important;
 }
 .terms-btn-color {
  border-width: 0px !important;
 }
-.next-freight-btn {
+.next-freight-submit {
   width: 15%;
 }
 .approval-card{
