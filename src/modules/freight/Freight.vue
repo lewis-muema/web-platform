@@ -51,7 +51,7 @@
                     <input
                       v-model="id_number"
                       class="input-control upgrade-final"
-                      type="number"
+                      type="text"
                       name="id_number"
                       placeholder=""
                       autocomplete="on"
