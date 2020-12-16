@@ -75,13 +75,7 @@ const getFreightOrderDetail = function getFreightOrderDetail({ dispatch }, paylo
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosPost', payload, { root: true }).then(
       (response) => {
-        let workingResponse = response;
-        /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-        if (response.length > 1) {
-          workingResponse = response[0];
-        }
-
-        resolve(workingResponse.data);
+        resolve(response.data);
       },
       (error) => {
         reject(error);
@@ -89,8 +83,11 @@ const getFreightOrderDetail = function getFreightOrderDetail({ dispatch }, paylo
     );
   });
 };
-
-const getOwnersListing = function getOwnersListing({ dispatch }, payload) {
+const getOwnersListing = function getOwnersListing({ dispatch }) {
+  const payload = {
+    app: 'ORDERS_APP',
+    endpoint: 'v2/freight/owners',
+  };
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosGet', payload, {
       root: true,

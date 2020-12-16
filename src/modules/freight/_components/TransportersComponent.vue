@@ -285,9 +285,9 @@ export default {
       data: {},
       selectFirst: false,
       minChars: 2,
-      ownersListing: [],
       truckTypes: [],
       goodsType: [],
+      owners_list: [],
     };
   },
   computed: {
@@ -301,6 +301,9 @@ export default {
       }*+OR+id_no:*${this.query_string}*+OR+phone:*${
         this.query_string
       }*) AND freight_status:*2* &wt=json&indent=true&row=10&sort=id%20desc&jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJyV01HZVR2WWZMVnlBSWwxOHFPVGFWMnRxMnFDVmpJZiIsIm5hbWUiOiJzb2xyIn0.p7uW30OQBaSEduNerbIaSbaQTdUAa-VkVMQUF4LAPFQ`;
+    },
+    ownersListing() {
+      return this.owners_list;
     },
   },
   watch: {},
@@ -317,21 +320,22 @@ export default {
       getFilteredOwnersListing: '$_freight/getFilteredOwnersListing',
     }),
     fetchOwnersListing() {
-      const fullPayload = {
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/owners',
-      };
-
-      this.getOwnersListing(fullPayload).then(
+      this.$store.dispatch('$_freight/getOwnersListing').then(
         (response) => {
-          if (response.status) {
-            this.ownersListing = response.owners_listing;
+          let workingResponse = response;
+          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
+            this.owners_list = workingResponse.owners_listing;
           } else {
-            this.ownersListing = [];
+            this.owners_list = [];
           }
         },
         (error) => {
-          this.ownersListing = [];
+          this.owners_list = [];
         },
       );
     },
@@ -343,8 +347,14 @@ export default {
 
       this.getCargoTypes(fullPayload).then(
         (response) => {
-          if (response.status) {
-            this.goodsType = response.cargo_types;
+          let workingResponse = response;
+          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
+            this.goodsType = workingResponse.cargo_types;
           } else {
             this.goodsType = [];
           }
@@ -362,8 +372,14 @@ export default {
 
       this.getCarrierTypes(fullPayload).then(
         (response) => {
-          if (response.status) {
-            this.truckTypes = response.carrier_types;
+          let workingResponse = response;
+          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
+            this.truckTypes = workingResponse.carrier_types;
           } else {
             this.truckTypes = [];
           }
@@ -444,10 +460,20 @@ export default {
 
       this.getFilteredOwnersListing(fullPayload).then(
         (response) => {
-          if (response.status) {
-            this.ownersListing = response.owners_listing;
+          let workingResponse = response;
+          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
+            if (workingResponse.owners_listing.length === 0) {
+              this.doNotification(2, workingResponse.message, '');
+              this.fetchOwnersListing();
+            }
+            this.owners_list = workingResponse.owners_listing;
           } else {
-            this.doNotification(2, 'Unable to filter transporters!', response.message);
+            this.doNotification(2, 'Unable to filter transporters!', workingResponse.message);
             this.fetchOwnersListing();
           }
         },
