@@ -37,7 +37,10 @@
             v-if="val.actionable"
             class="transporters-filters transporters-highlight"
           >
-            <div class="truck-add-info dashboard-align-inner view-document">
+            <div
+              class="truck-add-info dashboard-align-inner view-document"
+              @click="viewDocument(val.data.url, val.data.document_name)"
+            >
               View document >
             </div>
           </div>
@@ -53,6 +56,7 @@
                 type="button"
                 class="section--filter-action dashboard-approve-doc"
                 name="create_order_text"
+                @click="approveThisDocument()"
               >
                 Approve
               </button>
@@ -60,6 +64,7 @@
                 type="button"
                 class="section--filter-action dashboard-decline-doc"
                 name="create_order_text"
+                @click="declineDialog(val)"
               >
                 Decline
               </button>
@@ -73,6 +78,61 @@
         </div>
       </div>
     </div>
+    <transition
+      name="fade"
+      mode="out-in"
+    >
+      <div class="">
+        <el-dialog
+          :visible.sync="viewDocumentOption"
+          class="documentOptions"
+        >
+          <div class="">
+            <div class="document-text-option ">
+              {{ src_name }} document
+            </div>
+            <div class="document-divider" />
+            <div class="document-view-inner">
+              <iframe
+                :src="src_link"
+                frameBorder="0"
+                width="100%"
+                height="100%"
+              />
+            </div>
+          </div>
+        </el-dialog>
+        <el-dialog
+          :visible.sync="showDeclineDialog"
+          class="declineDocumentOptions"
+        >
+          <div class="">
+            <div class="decline-text-option decline-documemt-extend">
+              Decline Document
+            </div>
+          </div>
+          <div class="decline-documemt-extend decline-documemt-input">
+            <el-input
+              v-model.trim="reason"
+              :min="0"
+              type="textarea"
+              autocomplete="true"
+            />
+          </div>
+
+          <div class="decline-documemt-extend decline-button-align">
+            <button
+              type="button"
+              name="button"
+              class="decline-action--slide-button"
+              @click="declineDocument()"
+            >
+              Decline
+            </button>
+          </div>
+        </el-dialog>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -90,7 +150,26 @@ export default {
     return {
       logs: [],
       loading: false,
+      src_link: '',
+      src_name: '',
+      viewDocumentOption: false,
+      showDeclineDialog: false,
+      decline_doc: {},
+      reason: '',
     };
+  },
+  watch: {
+    viewDocumentOption(val) {
+      if (!val) {
+        this.src_link = '';
+        this.src_name = '';
+      }
+    },
+    showDeclineDialog(val) {
+      if (!val) {
+        this.closeDeclineDialog();
+      }
+    },
   },
   mounted() {
     this.loading = true;
@@ -99,6 +178,7 @@ export default {
   methods: {
     ...mapActions({
       requestActivity: '$_freight/requestActivity',
+      approveDocument: '$_freight/approveDocument',
     }),
     fetchDashboardData() {
       let acc = {};
@@ -117,8 +197,13 @@ export default {
       };
       this.requestActivity(fullPayload).then(
         (response) => {
-          if (response.status) {
-            this.logs = response.log;
+          let workingResponse = response;
+          if (response.length > 1) {
+            /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+            workingResponse = response[0];
+          }
+          if (workingResponse.status) {
+            this.logs = workingResponse.log;
           } else {
             this.logs = [];
           }
@@ -129,6 +214,128 @@ export default {
           this.loading = false;
         },
       );
+    },
+    viewDocument(url, name) {
+      this.src_link = url;
+      this.src_name = name;
+      this.viewDocumentOption = true;
+    },
+    closeDeclineDialog() {
+      this.decline_doc = {};
+      this.showDeclineDialog = false;
+      this.reason = '';
+    },
+    declineDialog(val) {
+      this.decline_doc = val;
+      this.showDeclineDialog = true;
+    },
+    declineDocument() {
+      if (this.reason !== '') {
+        let acc = {};
+        const session = this.$store.getters.getSession;
+        if ('default' in session) {
+          acc = session[session.default];
+        }
+
+        const payload = {
+          order_id: this.decline_doc.data.order_id,
+          document_id: this.decline_doc.data.document_id,
+          status: 3,
+          reason: this.reason,
+        };
+
+        if (session.default === 'biz') {
+          payload.cop_id = acc.cop_id;
+          payload.cop_user_id = acc.user_id;
+          payload.created_by = 1;
+        } else {
+          payload.peer_id = acc.user_id;
+          payload.created_by = 3;
+        }
+
+        const fullPayload = {
+          values: payload,
+          app: 'ORDERS_APP',
+          endpoint: 'v2/freight/order/documents',
+        };
+
+        this.approveDocument(fullPayload).then(
+          (response) => {
+            if (response.status) {
+              this.doNotification(1, 'Document declined!', 'Document declined successfully');
+              this.closeDeclineDialog();
+              this.fetchDashboardData();
+            } else {
+              this.doNotification(2, 'Failed to decline document!', response.message);
+              this.closeDeclineDialog();
+            }
+          },
+          (error) => {
+            this.doNotification(
+              2,
+              'Failed to decline document!',
+              'Failed to decline document, Kindly retry again or contact customer support ',
+            );
+            this.closeDeclineDialog();
+          },
+        );
+      } else {
+        this.doNotification(
+          2,
+          'Failed to declined document',
+          'Kinly provide the reason to decline',
+        );
+      }
+    },
+    approveThisDocument() {
+      let acc = {};
+      const session = this.$store.getters.getSession;
+      if ('default' in session) {
+        acc = session[session.default];
+      }
+
+      const payload = {
+        order_id: this.decline_doc.data.order_id,
+        document_id: this.decline_doc.data.document_id,
+        status: 2,
+      };
+
+      if (session.default === 'biz') {
+        payload.cop_id = acc.cop_id;
+        payload.cop_user_id = acc.user_id;
+        payload.created_by = 1;
+      } else {
+        payload.peer_id = acc.user_id;
+        payload.created_by = 3;
+      }
+
+      const fullPayload = {
+        values: payload,
+        app: 'ORDERS_APP',
+        endpoint: 'v2/freight/order/documents',
+      };
+
+      this.approveDocument(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.doNotification(1, 'Document approval!', 'Document approved successfully');
+            this.fetchOrderDetail(this.$route.params.id);
+          } else {
+            this.doNotification(2, 'Failed to approve document!', response.message);
+          }
+        },
+        (error) => {
+          this.doNotification(
+            2,
+            'Failed to approve document!',
+            'Failed to approve document, Kindly retry again or contact customer support ',
+          );
+        },
+      );
+    },
+    doNotification(level, title, message) {
+      const notification = { title, level, message };
+      this.displayNotification(notification);
     },
   },
 };
@@ -159,6 +366,7 @@ export default {
 .view-document{
   color: #1B7FC3;
   font-weight: 400;
+  cursor: pointer;
 }
 .dashboard-name{
   color: #000000;

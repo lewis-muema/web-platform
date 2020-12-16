@@ -645,11 +645,16 @@ export default {
       };
       this.createFreightOrder(fullPayload).then(
         (response) => {
-          if (response.status) {
+          let workingResponse = response;
+          if (response.length > 1) {
+            /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+            workingResponse = response[0];
+          }
+          if (workingResponse.status) {
             this.doNotification(1, 'Successfully placed freight order', '');
             this.backToOrders();
           } else {
-            this.doNotification(2, 'Order Completion Failure', response.message);
+            this.doNotification(2, 'Order Completion Failure', workingResponse.message);
           }
         },
         (error) => {
