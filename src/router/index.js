@@ -406,6 +406,11 @@ export function createRouter() {
                 component: () => import('../modules/freight/_components/OrdersDetailsComponent.vue'),
                 name: 'freight_orders_info',
               },
+              {
+                path: '/freight/settings',
+                component: () => import('../modules/freight/_components/SettingsComponent.vue'),
+                name: 'freight_settings',
+              },
             ],
           },
         ],

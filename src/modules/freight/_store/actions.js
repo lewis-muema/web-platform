@@ -222,6 +222,35 @@ const getOwnersDetail = function getOwnersDetail({ dispatch }, payload) {
   });
 };
 
+const requestUsersList = function requestUsersList({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+const requestApproveApprover = function requestApproveApprover({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPatch', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   updateFreightStatus,
   requestFreightStatus,
@@ -237,4 +266,6 @@ export default {
   requestActivity,
   getOwnersDetail,
   rateFreightOrder,
+  requestUsersList,
+  requestApproveApprover,
 };
