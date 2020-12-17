@@ -255,6 +255,50 @@
             </div>
           </div>
 
+          <div
+            v-for="(val, index) in stored_documents"
+            v-if="index >= 0"
+          >
+            <div class="">
+              <p class="freight-input--label upload-landing">
+                {{ val.document_name }} document
+              </p>
+              <div class="documents--flex">
+                <div class="document-image-extra">
+                  <div class="download-uploaded-img-extra">
+                    <div
+                      class="upload-demo"
+                      drag
+                    >
+                      <img
+                        class="upload_image-extra"
+                        src="https://images.sendyit.com/web_platform/freight/complete.svg"
+                      >
+                    </div>
+                    <div class="success-extra">
+                      <span class="document-upload-label">
+                        {{ val.document_name }} document uploaded successfully .
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="delete-upload"
+                  @click="removeRecord(index)"
+                >
+                  X
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="document-upload-extra"
+            @click="showExtraDocModal"
+          >
+            <i class="el-icon-circle-plus" /> Add document
+          </div>
+
           <div class="next-terms-holder">
             <input
               v-model="submit_text"
@@ -266,6 +310,105 @@
         </div>
       </div>
     </div>
+    <transition
+      name="fade"
+      mode="out-in"
+    >
+      <div class="">
+        <el-dialog
+          :visible.sync="displayExtraDocument"
+          class="uploadDocumentOptions"
+        >
+          <div class="">
+            <div class="decline-text-option  upload-document-header">
+              Add new document
+            </div>
+          </div>
+          <div class="">
+            <div class="documents-highlight-label">
+              Select additional type of document required
+            </div>
+            <el-select
+              v-model="doc_name"
+              placeholder=""
+              class="select-documents"
+              filterable
+            >
+              <el-option
+                v-for="item in documents"
+                :key="item.document_type"
+                :label="item.document_name"
+                :value="item.document_type"
+              />
+            </el-select>
+          </div>
+
+          <div
+            v-if="doc_name === 1"
+            class=""
+          >
+            <div class="documents-highlight-label">
+              Additional document name
+            </div>
+            <el-input
+              v-model="new_doc_name"
+              placeholder=""
+              class="select-documents"
+              filterable
+            />
+          </div>
+
+          <div class="upload-new-doc--outer">
+            <div class="">
+              <p class="documents-highlight-label">
+                Upload document
+              </p>
+              <div class="add-document-image">
+                <div class="download-uploaded-img">
+                  <el-upload
+                    class="add-upload-demo"
+                    drag
+                    action="handleLandingCardPreview"
+                    :before-upload="beforeAddUpload"
+                    :http-request="handleAddCardPreview"
+                    :on-remove="handleRemoveAdd"
+                  >
+                    <img
+                      id="addImagePreview"
+                      class="add-upload-image"
+                      src="https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg"
+                    >
+                    <i class="el-icon-upload" />
+                    <div v-if="addNewName !== ''">
+                      {{ add_text }}
+                    </div>
+                    <div v-else>
+                      Drop file here or <em>click to upload</em>
+                    </div>
+                  </el-upload>
+                  <div v-if="addNewName !== '' && add_text === 'Change'">
+                    <span class="document-upload-label align-new-doc">
+                      Document added successfully .
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="decline-documemt-extend decline-button-align">
+            <button
+              type="button"
+              name="button"
+              class="decline-action--slide-button"
+              @click="submitNewData"
+            >
+              Done
+            </button>
+          </div>
+        </el-dialog>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -321,6 +464,9 @@ export default {
       termsData: {},
       terms_text: 'Change',
       termsName: '',
+      add_text: 'Change',
+      addNewDocData: {},
+      addNewName: '',
       ownerDisplay: '',
       hide: '',
       hideInput: 'hide',
@@ -343,7 +489,19 @@ export default {
       selectFirst: false,
       minChars: 2,
       owner_id: '',
+      displayExtraDocument: true,
+      documents: [],
+      doc_name: '',
+      new_doc_name: '',
+      stored_documents: [],
     };
+  },
+  watch: {
+    displayExtraDocument(val) {
+      if (!val) {
+        this.closeExtraDocumentDialog();
+      }
+    },
   },
   computed: {
     ...mapGetters({}),
@@ -360,15 +518,95 @@ export default {
   },
   created() {
     this.initiateS3();
+    this.fetchDocumentTypes();
   },
   methods: {
     ...mapActions({
       createFreightOrder: '$_freight/createFreightOrder',
+      getDocumentTypes: '$_freight/getDocumentTypes',
     }),
     trigger() {
       this.transporter_name = '';
       this.hideInput = 'hide';
       this.hide = '';
+    },
+    closeExtraDocumentDialog() {
+      this.add_text = 'Change';
+      this.addNewDocData = {};
+      this.addNewName = '';
+      this.displayExtraDocument = false;
+      const imageId = 'addImagePreview';
+      const src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
+      $(`#${imageId}`).attr('src', src);
+      this.doc_name = '';
+      this.new_doc_name = '';
+    },
+    submitNewData() {
+      if (this.doc_name === 1 && this.new_doc_name === '') {
+        this.doNotification(
+          2,
+          'Upload document error!',
+          'Kindly provide additional document name ',
+        );
+      } else if (this.doc_name === '' || this.addNewName === '') {
+        this.doNotification(2, 'Upload document error!', 'Kindly provide missing data ');
+      } else {
+        this.setToStore();
+      }
+    },
+    setToStore() {
+      const data = {
+        document_type: this.doc_name,
+        url: `https://sendy-partner-docs.s3-eu-west-1.amazonaws.com/${this.addNewName}`,
+      };
+
+      const val = this.documents.find(position => position.document_type === this.doc_name);
+
+      if (this.doc_name === 1) {
+        data.document_name = this.new_doc_name;
+      } else {
+        data.document_name = val.document_name;
+      }
+
+      this.stored_documents.push(data);
+      this.closeExtraDocumentDialog();
+    },
+    removeRecord(val) {
+      this.stored_documents.splice(val, 1);
+      this.doNotification(1, 'Document removed successfully', '');
+    },
+    fetchDocumentTypes() {
+      const fullPayload = {
+        app: 'ORDERS_APP',
+        endpoint: 'v2/freight/documents',
+      };
+
+      this.getDocumentTypes(fullPayload).then(
+        (response) => {
+          let workingResponse = response;
+          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
+            this.documents = workingResponse.documents;
+          } else {
+            this.doNotification(
+              2,
+              'Unable to fetch document types !',
+              'No available document types',
+            );
+            this.documents = [];
+            this.displayExtraDocument = false;
+          }
+        },
+        (error) => {
+          this.doNotification(2, 'Unable to fetch document types!', 'No available document types');
+          this.documents = [];
+          this.displayExtraDocument = false;
+        },
+      );
     },
     initiateS3() {
       const script = document.createElement('script');
@@ -429,6 +667,14 @@ export default {
       }
       return isPdf;
     },
+    beforeAddUpload(file) {
+      const isPdf = file.type === 'application/pdf';
+
+      if (!isPdf) {
+        this.doNotification(2, 'Document upload error !', 'Document must be in PDF format');
+      }
+      return isPdf;
+    },
     handleLandingCardPreview(file) {
       this.billOfLandingData = file;
       this.uploadBillOfLanding();
@@ -437,10 +683,19 @@ export default {
       this.termsData = file;
       this.uploadTermsAndCondition();
     },
+    handleAddCardPreview(file) {
+      this.addNewDocData = file;
+      this.uploadAddNewDocument();
+    },
     handleRemoveLanding() {
       this.billOfLandingName = '';
       this.billOfLandingData = {};
       this.landing_text = 'Change';
+    },
+    handleRemoveAdd() {
+      this.addNewName = '';
+      this.addNewDocData = {};
+      this.add_text = 'Change';
     },
     handleRemoveTerms() {
       this.termsName = '';
@@ -451,6 +706,10 @@ export default {
       if (Object.keys(this.billOfLandingData).length === 0) {
         this.doNotification(2, 'Kindly upload bill of landing document', '');
       } else {
+        const imageId = 'ladingImagePreview';
+        let src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
+        $(`#${imageId}`).attr('src', src);
+
         this.landing_text = 'Uploading ...';
         const { file } = this.billOfLandingData;
         const fileType = file.type;
@@ -471,8 +730,7 @@ export default {
               this.landing_text = 'Change';
               console.log('There was an error uploading your document: ', err.message);
             } else {
-              const imageId = 'ladingImagePreview';
-              const src = 'https://images.sendyit.com/web_platform/freight/complete.svg';
+              src = 'https://images.sendyit.com/web_platform/freight/complete.svg';
               $(`#${imageId}`).attr('src', src);
               this.landing_text = 'Change';
             }
@@ -485,6 +743,10 @@ export default {
       if (Object.keys(this.termsData).length === 0) {
         this.doNotification(2, 'Kindly upload terms and condition document', '');
       } else {
+        const imageId = 'imagePreview';
+        let src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
+        $(`#${imageId}`).attr('src', src);
+
         this.terms_text = 'Uploading ...';
         const { file } = this.termsData;
         const fileType = file.type;
@@ -505,10 +767,46 @@ export default {
               this.terms_text = 'Change';
               console.log('There was an error uploading your document: ', err.message);
             } else {
-              const imageId = 'imagePreview';
-              const src = 'https://images.sendyit.com/web_platform/freight/complete.svg';
+              src = 'https://images.sendyit.com/web_platform/freight/complete.svg';
               $(`#${imageId}`).attr('src', src);
               this.terms_text = 'Change';
+            }
+            // eslint-disable-next-line comma-dangle
+          }
+        );
+      }
+    },
+    uploadAddNewDocument() {
+      if (Object.keys(this.addNewDocData).length === 0) {
+        this.doNotification(2, 'Kindly upload new document', '');
+      } else {
+        const imageId = 'addImagePreview';
+        let src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
+        $(`#${imageId}`).attr('src', src);
+
+        this.add_text = 'Uploading ...';
+        const { file } = this.addNewDocData;
+        const fileType = file.type;
+        const fileName = this.sanitizeFilename(file.name, 'other');
+        this.addNewName = fileName;
+        const albumPhotosKey = `${encodeURIComponent('freight_docs')}/`;
+        const photoKey = albumPhotosKey + fileName;
+        this.addNewName = photoKey;
+        s3.upload(
+          {
+            Key: photoKey,
+            Body: file,
+            ACL: 'public-read',
+            ContentType: fileType,
+          },
+          (err) => {
+            if (err) {
+              this.add_text = 'Change';
+              console.log('There was an error uploading your document: ', err.message);
+            } else {
+              src = 'https://images.sendyit.com/web_platform/freight/complete.svg';
+              $(`#${imageId}`).attr('src', src);
+              this.add_text = 'Change';
             }
             // eslint-disable-next-line comma-dangle
           }
@@ -526,8 +824,11 @@ export default {
       }
       if (type === 'bill') {
         tempName = `bill_of_landing_${values}_${new Date().getTime()}.${name.split('.').pop()}`;
+      } else if (type === 'other') {
+        tempName = `add_new_document_${values}_${new Date().getTime()}.${name.split('.').pop()}`;
       }
       tempName = `terms_of_delivery_${values}_${new Date().getTime()}.${name.split('.').pop()}`;
+
       return tempName;
     },
     setLocation(place, index) {
@@ -611,8 +912,8 @@ export default {
       }
 
       const payload = {
-        cop_id: 'cop_id' in acc ? acc.cop_id : 0,
-        cop_user_id: 'cop_id' in acc ? acc.user_id : 0,
+        cop_id: 'cop_id' in acc ? acc.cop_id : null,
+        cop_user_id: 'cop_id' in acc ? acc.user_id : null,
         peer_id: 'cop_id' in acc ? null : acc.user_id,
         owner_id: this.owner_id,
         created_by: 'cop_id' in acc ? 1 : 3,
@@ -638,6 +939,12 @@ export default {
           },
         ],
       };
+      if (this.stored_documents.length > 0) {
+        for (let i = 0; i < this.stored_documents.length; i++) {
+          payload.documents.push(this.stored_documents[i]);
+        }
+      }
+
       const fullPayload = {
         values: payload,
         app: 'ORDERS_APP',
@@ -669,6 +976,9 @@ export default {
           }
         },
       );
+    },
+    showExtraDocModal() {
+      this.displayExtraDocument = true;
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };
@@ -760,7 +1070,13 @@ export default {
 .document-image> div > div:nth-child(1) > div > input {
   display: none;
 }
+.add-document-image> div > div:nth-child(1) > div > input {
+  display: none;
+}
 .download-uploaded-img {
+  height: 200px;
+}
+.add-download-uploaded-img{
   height: 200px;
 }
 .el-icon-upload {
@@ -774,6 +1090,12 @@ export default {
   margin-top: 2%;
   margin-bottom: 2%;
 }
+.add-upload-image{
+  width: 100%;
+  height: 132px;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
 .document-upload-label {
   font-style: italic;
   font-size: 14px;
@@ -782,6 +1104,9 @@ export default {
   cursor: pointer;
 }
 .upload-demo{
+  font-size: 13px !important;
+}
+.add-upload-demo{
   font-size: 13px !important;
 }
 .upload-landing{
@@ -807,5 +1132,63 @@ li.suggestions_solr:last-child {
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   border-bottom: 0;
+}
+.document-upload-extra{
+  font-size: 14px;
+  color: #1B7FC3;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 11%;
+}
+.upload-document-header{
+  font-weight: 100;
+  font-size: 20px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+}
+.documents-highlight-label{
+  margin-left: 2%;
+  margin-bottom: 2%;
+  color: #000000;
+  font-weight : 200;
+}
+.select-documents{
+  width: 95%;
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-bottom: 8%;
+}
+.align-new-doc{
+  margin-left: 4%;
+  margin-top: 5%;
+}
+.download-uploaded-img-extra{
+  border: 1px solid #d8dfe6;
+  height: 200px;
+  margin-bottom: 9%;
+  margin-right: 5%;
+}
+.upload_image-extra{
+  width: 100%;
+  height: 132px;
+  margin-top: 6%;
+  margin-bottom: 2%;
+}
+.success-extra{
+  margin-top: 13%;
+}
+.documents--flex{
+  display: flex;
+  width: 82%;
+}
+.document-image-extra{
+  flex: 1;
+}
+.delete-upload{
+  margin-top: 22%;
+  cursor: pointer;
+  color :#ff0000;
 }
 </style>
