@@ -105,7 +105,10 @@
               v-if="index >= 0"
               class="doc-detail"
             >
-              <div class="transporters-filters documents-highlight orders-freight-documents">
+              <div
+                v-if="freightOrderDetail.documents[index].created_by === 'OWNER'"
+                class="transporters-filters documents-highlight orders-freight-documents "
+              >
                 <div class=" freight-documents-title">
                   {{ freightOrderDetail.documents[index].document_name }}
                 </div>
