@@ -629,10 +629,17 @@ export default {
       };
       this.sendCustomerQuote(fullPayload).then(
         (response) => {
-          if (response.status) {
+          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+
+          let workingResponse = response;
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
             this.doNotification(1, 'Quotations sent successfully!', '');
           } else {
-            this.doNotification(2, 'Unable to request for quotation!', response.message);
+            this.doNotification(2, 'Unable to request for quotation!', workingResponse.message);
           }
           this.backToTransporters();
         },

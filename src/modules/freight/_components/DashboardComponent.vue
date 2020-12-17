@@ -56,7 +56,7 @@
                 type="button"
                 class="section--filter-action dashboard-approve-doc"
                 name="create_order_text"
-                @click="approveThisDocument()"
+                @click="approveThisDocument(val)"
               >
                 Approve
               </button>
@@ -261,12 +261,18 @@ export default {
 
         this.approveDocument(fullPayload).then(
           (response) => {
-            if (response.status) {
+            /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+
+            let workingResponse = response;
+            if (response.length > 1) {
+              workingResponse = response[0];
+            }
+            if (workingResponse.status) {
               this.doNotification(1, 'Document declined!', 'Document declined successfully');
               this.closeDeclineDialog();
               this.fetchDashboardData();
             } else {
-              this.doNotification(2, 'Failed to decline document!', response.message);
+              this.doNotification(2, 'Failed to decline document!', workingResponse.message);
               this.closeDeclineDialog();
             }
           },
@@ -287,7 +293,7 @@ export default {
         );
       }
     },
-    approveThisDocument() {
+    approveThisDocument(val) {
       let acc = {};
       const session = this.$store.getters.getSession;
       if ('default' in session) {
@@ -295,8 +301,8 @@ export default {
       }
 
       const payload = {
-        order_id: this.decline_doc.data.order_id,
-        document_id: this.decline_doc.data.document_id,
+        order_id: val.data.order_id,
+        document_id: val.data.document_id,
         status: 2,
       };
 
@@ -317,11 +323,18 @@ export default {
 
       this.approveDocument(fullPayload).then(
         (response) => {
-          if (response.status) {
+          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+
+          let workingResponse = response;
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
             this.doNotification(1, 'Document approval!', 'Document approved successfully');
             this.fetchOrderDetail(this.$route.params.id);
           } else {
-            this.doNotification(2, 'Failed to approve document!', response.message);
+            this.doNotification(2, 'Failed to approve document!', workingResponse.message);
           }
         },
         (error) => {
