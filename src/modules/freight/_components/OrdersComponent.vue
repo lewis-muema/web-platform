@@ -63,8 +63,6 @@
         label="Amount"
         prop="path"
         width="150"
-        header-align="center"
-        align="center"
       >
         <template slot-scope="scope">
           {{ order_history_data[scope.$index]['currency'] }}
@@ -207,7 +205,7 @@ export default {
     changePage() {
       const from = (this.pagination_page - 1) * this.pagination_limit;
       const to = this.pagination_page * this.pagination_limit;
-      this.orderHistoryData.slice(from, to);
+      this.freightOrdersData.slice(from, to);
     },
     ...mapActions(['$_freight/requestFreightOrders']),
     moment() {
