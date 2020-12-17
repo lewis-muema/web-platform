@@ -219,7 +219,7 @@
                         alt=""
                         class="transporters-img highlight-icon"
                       >
-                      28 Truck
+                      {{ returnCount(ownersListing[index].vehicle_count) }}
                     </div>
                     <div class="truck-add-info trans-completed_orders">
                       <img
@@ -702,6 +702,14 @@ export default {
     resetQuatationDialog() {
       this.quoteDialogVisible = false;
       this.quotation_time = '';
+    },
+    returnCount(val) {
+      let resp = `${val} Trucks`;
+
+      if (val === 1) {
+        resp = `${val} Truck`;
+      }
+      return resp;
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };
