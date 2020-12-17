@@ -23,9 +23,9 @@
           >Logistics</a>
           <div
             :class="
-              route_path === 'order_placement'
-                ? 'active_segmentation_menu'
-                : 'disable_segmentation_menu'
+              freightPages.includes(route_path)
+                ? 'disable_segmentation_menu'
+                : 'active_segmentation_menu'
             "
           />
         </div>
@@ -163,6 +163,7 @@ export default {
         'freight_orders_info',
         'freight_transporters_details',
         'freight_create_orders',
+        'freight_settings',
       ],
     };
   },
