@@ -163,6 +163,24 @@ const approveDocument = function approveDocument({ dispatch }, payload) {
   });
 };
 
+const rateFreightOrder = function rateFreightOrder({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, { root: true }).then(
+      (response) => {
+        let workingResponse = response;
+        if (response.length > 1) {
+          workingResponse = response[0];
+        }
+
+        resolve(workingResponse.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 const sendCustomerQuote = function sendCustomerQuote({ dispatch }, payload) {
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosPost', payload, { root: true }).then(
@@ -218,4 +236,5 @@ export default {
   sendCustomerQuote,
   requestActivity,
   getOwnersDetail,
+  rateFreightOrder,
 };
