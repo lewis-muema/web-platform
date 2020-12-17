@@ -78,7 +78,7 @@
               </div>
               <div class="rating-section">
                 <div class="rating-title">
-                  How was your experience with Umoja Transporters?
+                  How was your experience with {{ freightOrderDetail.transporter_name }} ?
                 </div>
                 <div class="decline-documemt-extend">
                   <button
@@ -223,7 +223,7 @@
             >
               <div class="">
                 <div class="decline-text-option rating-header">
-                  How was your experience with Umoja Transporters?
+                  How was your experience with {{ freightOrderDetail.transporter_name }} ?
                 </div>
               </div>
               <span class="freight-stars-container">
@@ -235,7 +235,7 @@
               </span>
               <div class="decline-documemt-input">
                 <el-input
-                  v-model.trim="reason"
+                  v-model.trim="comment"
                   :min="0"
                   placeholder="Tell us more (Optional)"
                   type="textarea"
@@ -248,6 +248,7 @@
                   type="button"
                   name="button"
                   class="decline-action--slide-button"
+                  @click="submitRating(freightOrderDetail)"
                 >
                   Submit
                 </button>
@@ -287,6 +288,7 @@ export default {
       decline_doc: {},
       showDeclineDialog: false,
       reason: '',
+      comment: '',
       showRatingDialog: false,
       rated_score: 1,
     };
@@ -318,6 +320,7 @@ export default {
     ...mapActions({
       getFreightOrderDetail: '$_freight/getFreightOrderDetail',
       approveDocument: '$_freight/approveDocument',
+      rateFreightOrder: '$_freight/rateFreightOrder',
     }),
     fetchOrderDetail(orderId) {
       const sessionData = this.$store.getters.getSession;
@@ -394,17 +397,27 @@ export default {
       this.viewDocumentOption = true;
     },
     approveDoc(val) {
+      let acc = {};
+      const session = this.$store.getters.getSession;
+      if ('default' in session) {
+        acc = session[session.default];
+      }
+
       const payload = {
         order_id: this.freightOrderDetail.order_id,
         document_id: val.document_id,
-        cop_id: this.freightOrderDetail.cop_id === null ? 0 : this.freightOrderDetail.cop_id,
-        cop_user_id:
-          this.freightOrderDetail.cop_id === null ? 0 : this.freightOrderDetail.cop_user_id,
-        peer_id: this.freightOrderDetail.peer_id === null ? 0 : this.freightOrderDetail.peer_id,
         owner_id: this.freightOrderDetail.owner_id,
-        created_by: this.freightOrderDetail.created_by,
         status: 2,
       };
+
+      if (session.default === 'biz') {
+        payload.cop_id = acc.cop_id;
+        payload.cop_user_id = acc.user_id;
+        payload.created_by = 1;
+      } else {
+        payload.peer_id = acc.user_id;
+        payload.created_by = 3;
+      }
 
       const fullPayload = {
         values: payload,
@@ -414,11 +427,16 @@ export default {
 
       this.approveDocument(fullPayload).then(
         (response) => {
-          if (response.status) {
+          let workingResponse = response;
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
             this.doNotification(1, 'Document approval!', 'Document approved successfully');
             this.fetchOrderDetail(this.$route.params.id);
           } else {
-            this.doNotification(2, 'Failed to approve document!', response.message);
+            this.doNotification(2, 'Failed to approve document!', workingResponse.message);
           }
         },
         (error) => {
@@ -435,18 +453,28 @@ export default {
       this.showDeclineDialog = true;
     },
     declineDocument() {
+      let acc = {};
+      const session = this.$store.getters.getSession;
+      if ('default' in session) {
+        acc = session[session.default];
+      }
+
       const payload = {
         order_id: this.freightOrderDetail.order_id,
         document_id: this.decline_doc.document_id,
-        cop_id: this.freightOrderDetail.cop_id === null ? 0 : this.freightOrderDetail.cop_id,
-        cop_user_id:
-          this.freightOrderDetail.cop_id === null ? 0 : this.freightOrderDetail.cop_user_id,
-        peer_id: this.freightOrderDetail.peer_id === null ? 0 : this.freightOrderDetail.peer_id,
         owner_id: this.freightOrderDetail.owner_id,
-        created_by: this.freightOrderDetail.created_by,
         status: 3,
         reason: this.reason,
       };
+
+      if (session.default === 'biz') {
+        payload.cop_id = acc.cop_id;
+        payload.cop_user_id = acc.user_id;
+        payload.created_by = 1;
+      } else {
+        payload.peer_id = acc.user_id;
+        payload.created_by = 3;
+      }
 
       const fullPayload = {
         values: payload,
@@ -456,12 +484,17 @@ export default {
 
       this.approveDocument(fullPayload).then(
         (response) => {
-          if (response.status) {
+          let workingResponse = response;
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
             this.doNotification(1, 'Document declined!', 'Document declined successfully');
             this.closeDeclineDialog();
             this.fetchOrderDetail(this.$route.params.id);
           } else {
-            this.doNotification(2, 'Failed to decline document!', response.message);
+            this.doNotification(2, 'Failed to decline document!', workingResponse.message);
             this.closeDeclineDialog();
           }
         },
@@ -482,6 +515,49 @@ export default {
     },
     openRatingDialog() {
       this.showRatingDialog = true;
+    },
+    submitRating(val) {
+      const payload = {
+        order_id: val.order_id,
+        rating: parseInt(this.rated_score, 10),
+        comment: this.comment,
+      };
+      const fullPayload = {
+        values: payload,
+        app: 'ORDERS_APP',
+        endpoint: 'v2/freight/rate_owner',
+      };
+
+      this.rateFreightOrder(fullPayload).then(
+        (response) => {
+          let workingResponse = response;
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
+            this.doNotification(1, 'Order rated successfully!', '');
+            this.closeRatingDialog();
+            this.backToOrders();
+          } else {
+            this.doNotification(2, 'Failed to rate order!', workingResponse.message);
+            this.closeRatingDialog();
+          }
+        },
+        (error) => {
+          this.doNotification(
+            2,
+            'Failed to rate order!',
+            'Failed to rate order, Kindly retry again or contact customer support ',
+          );
+          this.closeRatingDialog();
+        },
+      );
+    },
+    closeRatingDialog() {
+      this.decline_doc = {};
+      this.rating = 1;
+      this.comment = '';
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };
