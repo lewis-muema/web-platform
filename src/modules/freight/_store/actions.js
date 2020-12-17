@@ -146,7 +146,7 @@ const getFilteredOwnersListing = function getFilteredOwnersListing({ dispatch },
 };
 
 const approveDocument = function approveDocument({ dispatch }, payload) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     dispatch('requestAxiosPatch', payload, { root: true }).then(
       (response) => {
         let workingResponse = response;
@@ -157,7 +157,7 @@ const approveDocument = function approveDocument({ dispatch }, payload) {
         resolve(workingResponse.data);
       },
       (error) => {
-        reject(error);
+        resolve(error);
       },
     );
   });
@@ -265,6 +265,21 @@ const requestApproversList = function requestApproversList({ dispatch }, payload
   });
 };
 
+const getDocumentTypes = function getDocumentTypes({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   updateFreightStatus,
   requestFreightStatus,
@@ -283,4 +298,5 @@ export default {
   requestUsersList,
   requestApproveApprover,
   requestApproversList,
+  getDocumentTypes,
 };
