@@ -79,7 +79,7 @@
             </p>
             <div class="freight-input">
               <div class="freight-input-icon">
-                <span>KES</span>
+                <span>{{ getCurrency }}</span>
               </div>
               <div class="freight-input-area">
                 <input
@@ -496,13 +496,6 @@ export default {
       stored_documents: [],
     };
   },
-  watch: {
-    displayExtraDocument(val) {
-      if (!val) {
-        this.closeExtraDocumentDialog();
-      }
-    },
-  },
   computed: {
     ...mapGetters({}),
     query_string() {
@@ -514,6 +507,18 @@ export default {
       }*+OR+id_no:*${this.query_string}*+OR+phone:*${
         this.query_string
       }*) AND freight_status:*2* &wt=json&indent=true&row=10&sort=id%20desc&jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJyV01HZVR2WWZMVnlBSWwxOHFPVGFWMnRxMnFDVmpJZiIsIm5hbWUiOiJzb2xyIn0.p7uW30OQBaSEduNerbIaSbaQTdUAa-VkVMQUF4LAPFQ`;
+    },
+    getCurrency() {
+      const session = this.$store.getters.getSession;
+
+      return session[session.default].default_currency;
+    },
+  },
+  watch: {
+    displayExtraDocument(val) {
+      if (!val) {
+        this.closeExtraDocumentDialog();
+      }
     },
   },
   created() {
