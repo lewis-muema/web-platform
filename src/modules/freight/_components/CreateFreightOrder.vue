@@ -489,7 +489,7 @@ export default {
       selectFirst: false,
       minChars: 2,
       owner_id: '',
-      displayExtraDocument: true,
+      displayExtraDocument: false,
       documents: [],
       doc_name: '',
       new_doc_name: '',
