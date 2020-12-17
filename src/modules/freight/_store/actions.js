@@ -250,6 +250,20 @@ const requestApproveApprover = function requestApproveApprover({ dispatch }, pay
     );
   });
 };
+const requestApproversList = function requestApproversList({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
 export default {
   updateFreightStatus,
@@ -268,4 +282,5 @@ export default {
   rateFreightOrder,
   requestUsersList,
   requestApproveApprover,
+  requestApproversList,
 };
