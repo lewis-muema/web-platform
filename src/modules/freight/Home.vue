@@ -13,8 +13,6 @@ import Vue from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import VeeValidate, { Validator } from 'vee-validate';
 import freightStore from './_store';
-import ordersModuleStore from '../orders/_store';
-import transactionsModuleStore from '../transactions/_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import SessionMxn from '../../mixins/session_mixin';
 import MainHeader from '../../components/headers/MainHeader.vue';
@@ -59,10 +57,10 @@ export default {
     this.checkSessionData();
   },
   created() {
-    const STORE_KEY = '$_freight';
-    this.$store.registerModule(STORE_KEY, freightStore);
-    this.registerOrderModule();
-    this.registerTransactionsModule();
+    const moduleIsRegistered = this.$store._modules.root._children.$_freight !== undefined;
+    if (!moduleIsRegistered) {
+      this.$store.registerModule('$_freight', freightStore);
+    }
   },
   methods: {
     ...mapActions({
