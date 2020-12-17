@@ -23,6 +23,12 @@
         >
           Orders
         </router-link>
+        <router-link
+          class="section__link"
+          to="/freight/settings"
+        >
+          Settings
+        </router-link>
       </div>
       <div class="">
         <router-view />
