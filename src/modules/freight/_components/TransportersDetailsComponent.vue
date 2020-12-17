@@ -136,7 +136,7 @@
                   <div class="transporters-filters transporters-highlight">
                     <div class="truck-add-info">
                       <el-rate
-                        :v-model="val.rating"
+                        :value="val.rating"
                         disabled
                         show-score
                         disabled-void-color="#C0C4CC"

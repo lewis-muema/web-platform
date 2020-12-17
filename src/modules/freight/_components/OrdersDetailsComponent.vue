@@ -76,7 +76,10 @@
               >
                 View
               </div>
-              <div class="rating-section">
+              <div
+                v-if="!freightOrderDetail.rated"
+                class="rating-section"
+              >
                 <div class="rating-title">
                   How was your experience with {{ freightOrderDetail.transporter_name }} ?
                 </div>
@@ -89,6 +92,21 @@
                   >
                     Rate order
                   </button>
+                </div>
+              </div>
+              <div v-else>
+                <div class="transporters-filters transporters-highlight">
+                  <div class="truck-add-info">
+                    <div class="transporter-infor--header freight-ratings-section">
+                      Order Ratings
+                    </div>
+                    <el-rate
+                      :value="freightOrderDetail.rating.rating"
+                      disabled
+                      disabled-void-color="#C0C4CC"
+                      :colors="['#99A9BF', '#F57f20', '#1782C5']"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -105,10 +123,7 @@
               v-if="index >= 0"
               class="doc-detail"
             >
-              <div
-                v-if="freightOrderDetail.documents[index].created_by === 'OWNER'"
-                class="transporters-filters documents-highlight orders-freight-documents "
-              >
+              <div class="transporters-filters documents-highlight orders-freight-documents ">
                 <div class=" freight-documents-title">
                   {{ freightOrderDetail.documents[index].document_name }}
                 </div>
@@ -127,7 +142,10 @@
                   View Document <i class="el-icon-arrow-right view-transporter-info" />
                 </div>
                 <div
-                  v-if="freightOrderDetail.documents[index].status === 'PENDING'"
+                  v-if="
+                    freightOrderDetail.documents[index].status === 'PENDING' &&
+                      freightOrderDetail.documents[index].created_by === 'OWNER'
+                  "
                   class="freight-documents-approve"
                   style="display : flex"
                 >
@@ -610,5 +628,10 @@ export default {
   display: flex;
   justify-content: center;
   margin-bottom: 17%;
+}
+.freight-ratings-section{
+  margin-top: 14%;
+  margin-bottom: 10%;
+  font-weight: 500;
 }
 </style>
