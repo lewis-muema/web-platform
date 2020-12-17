@@ -603,11 +603,20 @@ export default {
           }
 
           if (workingResponse.status) {
-            if (workingResponse.owners_listing.length === 0) {
-              this.doNotification(2, workingResponse.message, '');
-              this.fetchOwnersListing();
+            if (workingResponse.owners_listing > 0) {
+              this.doNotification(1, workingResponse.message, '');
+              this.owners_list = workingResponse.owners_listing;
+            } else {
+              this.owners_list = workingResponse.owners_listing;
+              this.doNotification(
+                2,
+                'No available Transporters ',
+                'No available transporters based on the filters',
+              );
+              setTimeout(() => {
+                this.fetchOwnersListing();
+              }, 800);
             }
-            this.owners_list = workingResponse.owners_listing;
           } else {
             this.doNotification(2, 'Unable to filter transporters!', workingResponse.message);
             this.fetchOwnersListing();
