@@ -502,3 +502,21 @@
     margin-top: 30vh !important;
     width: 33% !important;
 }
+.declineDocumentOptions >.el-dialog >.el-dialog__body {
+  margin: 4% !important;
+}
+.uploadDocumentOptions >.el-dialog >.el-dialog__body {
+    margin: 4% !important;
+    margin-top: 0% !important;
+}
+.uploadDocumentOptions > div {
+  margin-top: 10vh !important;
+  width: 28% !important;
+}
+.add-upload-demo > .el-upload > .el-upload-dragger{
+  width: 303px !important;
+  margin-left: 3%;
+}
+.upload-new-doc--outer{
+  margin-bottom: 9%;
+}

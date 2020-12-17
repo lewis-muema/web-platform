@@ -242,6 +242,7 @@ export default {
           document_id: this.decline_doc.data.document_id,
           status: 3,
           reason: this.reason,
+          owner_id: this.decline_doc.data.owner_id,
         };
 
         if (session.default === 'biz') {
@@ -277,11 +278,15 @@ export default {
             }
           },
           (error) => {
-            this.doNotification(
-              2,
-              'Failed to decline document!',
-              'Failed to decline document, Kindly retry again or contact customer support ',
-            );
+            if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
+              this.doNotification(2, 'Failed to decline document!', error.response.data.reason);
+            } else {
+              this.doNotification(
+                2,
+                'Failed to decline document!',
+                'Failed to decline document, Kindly retry again or contact customer support ',
+              );
+            }
             this.closeDeclineDialog();
           },
         );
@@ -303,6 +308,7 @@ export default {
       const payload = {
         order_id: val.data.order_id,
         document_id: val.data.document_id,
+        owner_id: val.data.owner_id,
         status: 2,
       };
 
@@ -338,11 +344,15 @@ export default {
           }
         },
         (error) => {
-          this.doNotification(
-            2,
-            'Failed to approve document!',
-            'Failed to approve document, Kindly retry again or contact customer support ',
-          );
+          if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
+            this.doNotification(2, 'Failed to approve document!', error.response.data.reason);
+          } else {
+            this.doNotification(
+              2,
+              'Failed to approve document!',
+              'Failed to approve document, Kindly retry again or contact customer support ',
+            );
+          }
         },
       );
     },

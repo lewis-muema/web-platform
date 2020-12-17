@@ -443,11 +443,15 @@ export default {
           }
         },
         (error) => {
-          this.doNotification(
-            2,
-            'Failed to approve document!',
-            'Failed to approve document, Kindly retry again or contact customer support ',
-          );
+          if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
+            this.doNotification(2, 'Failed to approve document!', error.response.data.reason);
+          } else {
+            this.doNotification(
+              2,
+              'Failed to approve document!',
+              'Failed to approve document, Kindly retry again or contact customer support ',
+            );
+          }
         },
       );
     },
@@ -502,11 +506,15 @@ export default {
           }
         },
         (error) => {
-          this.doNotification(
-            2,
-            'Failed to decline document!',
-            'Failed to decline document, Kindly retry again or contact customer support ',
-          );
+          if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
+            this.doNotification(2, 'Failed to decline document!', error.response.data.reason);
+          } else {
+            this.doNotification(
+              2,
+              'Failed to decline document!',
+              'Failed to decline document, Kindly retry again or contact customer support ',
+            );
+          }
           this.closeDeclineDialog();
         },
       );
