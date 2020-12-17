@@ -55,7 +55,7 @@
       <el-table-column
         key="1"
         label="Transporter"
-        prop="client_name"
+        prop="transporter_name"
         width="200"
       />
 
