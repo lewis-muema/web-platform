@@ -338,7 +338,7 @@ export default {
 
           if (workingResponse.status) {
             this.doNotification(1, 'Document approval!', 'Document approved successfully');
-            this.fetchOrderDetail(this.$route.params.id);
+            this.fetchDashboardData();
           } else {
             this.doNotification(2, 'Failed to approve document!', workingResponse.message);
           }
