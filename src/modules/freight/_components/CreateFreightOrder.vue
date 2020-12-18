@@ -53,6 +53,7 @@
                 placeholder="As soon as possible"
                 prefix-icon="el-icon-date"
                 :default-time="default_value"
+                :picker-options="dueDatePickerOptions"
               />
             </div>
           </div>
@@ -468,6 +469,9 @@ export default {
       addNewDocData: {},
       addNewName: '',
       ownerDisplay: '',
+      dueDatePickerOptions: {
+        disabledDate: this.disabledDueDate,
+      },
       hide: '',
       hideInput: 'hide',
       goodsOptions: [
@@ -652,6 +656,9 @@ export default {
     viewTransporterInfo() {
       const transporterId = 2;
       this.$router.push(`/freight/transporters/info/${transporterId}`);
+    },
+    disabledDueDate(date) {
+      return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
     },
     backToOrders() {
       this.$router.push('/freight/orders');

@@ -43,6 +43,7 @@
                 placeholder="Select time"
                 prefix-icon="el-icon-date"
                 :default-time="default_value"
+                :picker-options="dueDatePickerOptions"
               />
             </div>
           </div>
@@ -286,6 +287,7 @@
                   placeholder="Select time"
                   prefix-icon="el-icon-date"
                   :default-time="default_value"
+                  :picker-options="dueDatePickerOptions"
                 />
               </div>
             </div>
@@ -355,6 +357,9 @@ export default {
       truckTypes: [],
       goodsType: [],
       owners_list: [],
+      dueDatePickerOptions: {
+        disabledDate: this.disabledDueDate,
+      },
       checkAll: false,
       isIndeterminate: true,
       checkedOwners: [],
@@ -407,6 +412,9 @@ export default {
     handleCheckAllChange(val) {
       this.checkedOwners = val ? this.owners_list : [];
       this.isIndeterminate = false;
+    },
+    disabledDueDate(date) {
+      return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
     },
     handleCheckedCitiesChange(value) {
       const checkedCount = value.length;
