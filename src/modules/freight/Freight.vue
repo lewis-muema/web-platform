@@ -77,7 +77,7 @@
                       v-show="!valid_kra_pin"
                       class="invalid-kra"
                     >
-                      Please enter a valid KRA PIN
+                      {{ kraFailResponse }}
                     </span>
                   </div>
                 </div>
@@ -148,22 +148,30 @@ export default {
       const session = this.$store.getters.getSession;
 
       if (pin !== '') {
-        if (session[session.default].default_currency === 'UGX') {
-          return /^\d{10}$/.test(pin);
+        if (session[session.default].default_currency === 'KES') {
+          return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
         }
-        return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+        return /^\d{10}$/.test(pin);
       }
       return true;
     },
     fetchKraHeader() {
-      let kraName = 'KRA';
+      let kraName = 'TIN number';
       const session = this.$store.getters.getSession;
-      if (session[session.default].default_currency === 'UGX') {
-        kraName = 'TIN';
+      if (session[session.default].default_currency === 'KES') {
+        kraName = 'KRA PIN';
       }
-      let resp = `Enter your business ${kraName} pin`;
+      let resp = `Enter your business ${kraName}`;
       if (session.default === 'peer') {
-        resp = `Enter your ${kraName}  pin`;
+        resp = `Enter your ${kraName}`;
+      }
+      return resp;
+    },
+    kraFailResponse() {
+      let resp = 'Please enter a valid TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].default_currency === 'KES') {
+        resp = 'Please enter a valid KRA PIN';
       }
       return resp;
     },
