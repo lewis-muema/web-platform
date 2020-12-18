@@ -8,7 +8,7 @@
         name="fade"
         mode="out-in"
       >
-        <div class="cancel-pop-up">
+        <div class="final-set-up-pop">
           <el-dialog
             :visible.sync="updateCrmData"
             width="30%"
@@ -273,7 +273,11 @@ export default {
       }
     },
     handleClose() {
-      // Do nothing ...
+      this.$router.push('/orders');
+      this.id_number = '';
+      this.kra_pin = '';
+      this.biz_registration = '';
+      this.industry_type = '';
     },
     isNewCopAcc() {
       let isSet = false;
@@ -477,13 +481,10 @@ export default {
   padding-top: 15px;
   margin-bottom: 30px;
 }
-.cancel-pop-up > div > div > div.el-dialog__header > button{
-  display: none ;
-}
 .updateCrmDialog{
 
 }
-.cancel-pop-up > div > div > div.el-dialog__body{
+.final-set-up-pop > div > div > div.el-dialog__body{
   padding-top: 0 !important;
 }
 .crm-setup{
@@ -491,7 +492,7 @@ export default {
   color: #000000;
   font-weight: 400;
 }
-cancel-pop-up > div > div > div.el-dialog__header{
+final-set-up-pop > div > div > div.el-dialog__header{
   padding-top: 0 !important;
 }
 .compliance-select-final{

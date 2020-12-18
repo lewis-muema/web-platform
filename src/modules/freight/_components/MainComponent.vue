@@ -24,6 +24,7 @@
           Orders
         </router-link>
         <router-link
+          v-if="copAcc"
           class="section__link"
           to="/freight/settings"
         >
@@ -51,6 +52,11 @@ export default {
     ...mapGetters({
       getSession: 'getSession',
     }),
+    copAcc() {
+      const session = this.$store.getters.getSession;
+      const resp = session.default === 'biz';
+      return resp;
+    },
   },
   watch: {
     getSession: {
