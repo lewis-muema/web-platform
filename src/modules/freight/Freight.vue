@@ -145,17 +145,25 @@ export default {
     }),
     valid_kra_pin() {
       const pin = this.kra_pin;
+      const session = this.$store.getters.getSession;
 
       if (pin !== '') {
+        if (session[session.default].default_currency === 'UGX') {
+          return /^\d{10}$/.test(pin);
+        }
         return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
       }
       return true;
     },
     fetchKraHeader() {
-      let resp = 'Enter your business KRA pin';
+      let kraName = 'KRA';
       const session = this.$store.getters.getSession;
+      if (session[session.default].default_currency === 'UGX') {
+        kraName = 'TIN';
+      }
+      let resp = `Enter your business ${kraName} pin`;
       if (session.default === 'peer') {
-        resp = 'Enter your KRA pin';
+        resp = `Enter your ${kraName}  pin`;
       }
       return resp;
     },
