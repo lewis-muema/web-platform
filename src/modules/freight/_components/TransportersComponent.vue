@@ -611,7 +611,7 @@ export default {
           }
 
           if (workingResponse.status) {
-            if (workingResponse.owners_listing > 0) {
+            if (workingResponse.owners_listing.length > 0) {
               this.doNotification(1, workingResponse.message, '');
               this.owners_list = workingResponse.owners_listing;
             } else {
