@@ -20,7 +20,7 @@
           <a
             class="segmentation-tab"
             @click="linkRoute('/orders')"
-          >Logistics</a>
+          >Transportation</a>
           <div
             :class="
               freightPages.includes(route_path)

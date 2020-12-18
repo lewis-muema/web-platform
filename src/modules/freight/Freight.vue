@@ -301,12 +301,18 @@ export default {
             isSet = true;
             kraSection = true;
           }
-          if (session[session.default].industry_id === null) {
+          if (
+            session[session.default].industry_id === null
+            || session[session.default].industry_id === ''
+          ) {
             isSet = true;
             setIndustry = true;
             this.fetchIndustries();
           }
-          if (session[session.default].tax_authority_pin === null) {
+          if (
+            session[session.default].tax_authority_pin === null
+            || session[session.default].tax_authority_pin === ''
+          ) {
             isSet = true;
             kraSection = true;
           }
