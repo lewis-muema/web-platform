@@ -155,81 +155,6 @@
             Skip tour
           </p>
         </div>
-        <div
-          v-if="locations_status"
-          class="locations-popup"
-        >
-          <div class="locations-popup-title">
-            <p class="locations-popup-title-text">
-              Manage Saved pick up locations
-            </p>
-            <i
-              slot="suffix"
-              class="close-variant el-input__icon el-icon-close"
-              @click="hideLocationsManagement()"
-            />
-          </div>
-          <div class="locations-popup-input">
-            <font-awesome-icon
-              icon="circle"
-              size="xs"
-              class="homeview--row__font-awesome homeview--input-bundler__img fa-icon-position-override sendy-orange"
-              width="10px"
-            />
-            <gmap-autocomplete
-              v-model="location"
-              :options="map_options"
-              placeholder="Enter a pickup location"
-              :select-first-on-enter="true"
-              class="input-control homeview--input-bundler__input input-control"
-              @place_changed="setLocation($event)"
-            />
-          </div>
-          <button
-            :class="location ? 'locations-popup-button-active' : 'locations-popup-button-inactive'"
-            @click="saveLocation()"
-          >
-            Save Location
-          </button>
-          <div>
-            <p class="locations-popup-saved-title">
-              Saved locations
-            </p>
-            <div class="locations-popup-saved-list">
-              <div
-                v-for="(suggestion, index) in suggestions"
-                :key="index"
-                class="homeview--input-suggestion-rows"
-                :class="activeRow === index ? 'homeview--input-suggestion-rows-active' : ''"
-                @mouseover="activeRow = index"
-                @mouseout="activeRow = ''"
-              >
-                <span class="homeview--input-suggestion-icon-holder">
-                  <font-awesome-icon
-                    icon="star"
-                    size="xs"
-                    class="homeview--input-suggestion-icon"
-                    width="10px"
-                  />
-                </span>
-                <span class="locations-popup-saved-name">
-                  <span class="homeview--input-suggestion-place-name">
-                    {{ suggestion.name }},
-                  </span>
-                  <span class="homeview--input-suggestion-address-name">
-                    {{ suggestion.address }}
-                  </span>
-                </span>
-                <span
-                  class="locations-popup-saved-remove"
-                  @click="removeLocation(suggestion)"
-                >
-                  Remove
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
       <map-component />
       <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
@@ -481,8 +406,6 @@ export default {
       discount_status: false,
       upload_status: false,
       tour_status: false,
-      locations_status: false,
-      location: '',
       uploadButton: '',
       success_status: false,
       countdown: '',
@@ -501,19 +424,6 @@ export default {
       kra_pin: '',
       activeTab: '',
       primary_business_unit: '',
-      activeRow: 0,
-      map_options: {
-        componentRestrictions: {
-          country: ['ke', 'ug', 'tz'],
-        },
-        bounds: {
-          north: 35.6,
-          east: 59.4,
-          south: -28.3,
-          west: -19.1,
-        },
-        strictBounds: true,
-      },
       industriesOptions: [],
       selectOptions: [
         {
@@ -526,7 +436,6 @@ export default {
         },
       ],
       activeClass: -1,
-      waypoint_type: '',
       dedicatedTourPoints: [
         {
           title: 'Order Type: Dedicated vehicles',
@@ -569,7 +478,6 @@ export default {
       getNPSStatus: 'getNPSStatus',
       getDedicatedAccessStatus: 'getDedicatedAccessStatus',
       get_session: 'getSession',
-      getSuggestions: '$_orders/getSuggestions',
     }),
     uploadBtn() {
       if (this.uploadButton) {
@@ -584,15 +492,6 @@ export default {
         return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
       }
       return true;
-    },
-    suggestions() {
-      const rows = [];
-      this.getSuggestions.forEach((row) => {
-        if (row.location_type === 'saved') {
-          rows.push(row);
-        }
-      });
-      return rows;
     },
   },
   watch: {
@@ -666,7 +565,6 @@ export default {
     this.rootListener();
     this.isNewCopAcc();
     this.sessionFrefill();
-    this.triggerFetchsuggestions();
     const session = this.$store.getters.getSession;
     if (session.default === 'biz') {
       this.setDedicatedAccessStatus(true);
@@ -691,11 +589,6 @@ export default {
     ...mapMutations({
       clearVendorMarkers: '$_orders/clearVendorMarkers',
       setDedicatedAccessStatus: 'setDedicatedAccessStatus',
-    }),
-    ...mapActions({
-      fetchSuggestions: '$_orders/fetchSuggestions',
-      saveSuggestions: '$_orders/saveSuggestions',
-      removeSuggestions: '$_orders/removeSuggestions',
     }),
     isNewCopAcc() {
       let isSet = false;
@@ -894,123 +787,6 @@ export default {
           this.start_countdown(arg2);
         }
       });
-      this.$root.$on('Locations status', (arg1, arg2) => {
-        this.blinder_status = arg1;
-        this.locations_status = arg1;
-        this.waypoint_type = arg2;
-      });
-    },
-    hideLocationsManagement() {
-      this.blinder_status = false;
-      this.locations_status = false;
-      this.waypoint_type = '';
-    },
-    saveLocation() {
-      const session = this.$store.getters.getSession;
-      const userId = session[session.default].user_id;
-      const copId = session.default === 'biz' ? session[session.default].cop_id : 0;
-      const countryIndex = this.suggestion.address_components.findIndex(countryCode => countryCode.types.includes('country'));
-      const cityIndex = this.suggestion.address_components.findIndex(city => city.types.includes('administrative_area_level_1'));
-      const data = {
-        user_id: userId,
-        cop_id: copId,
-        location: {
-          name: this.suggestion.name,
-          waypoint_type: this.waypoint_type,
-          coordinates: `${this.suggestion.geometry.location.lat()},${this.suggestion.geometry.location.lng()}`,
-          waypoint_details_status: true,
-          type: 'coordinates',
-          country_code: this.suggestion.address_components[countryIndex].short_name,
-          city_name: this.suggestion.address_components[cityIndex].short_name,
-          locality: {
-            name: this.suggestion.vicinity,
-            coordinates: `${this.suggestion.geometry.location.lat()},${this.suggestion.geometry.location.lng()}`,
-          },
-          more: {
-            Address: this.suggestion.formatted_address,
-            Estate: '',
-            FlatName: '',
-            HouseDoor: '',
-            Label: '',
-            Otherdescription: '',
-            Road: '',
-            Typed: '',
-            Vicinity: '',
-            landmark: '',
-            place_idcustom: this.suggestion.place_id,
-            viewport: {
-              northeast: {
-                lat: 0,
-                lng: 0,
-              },
-              southwest: {
-                lat: 0,
-                lng: 0,
-              },
-            },
-          },
-        },
-      };
-      this.saveSuggestions(data).then((response) => {
-        if (response.status) {
-          const notification = {
-            title: '',
-            level: 1,
-            message: response.message,
-          };
-          this.displayNotification(notification);
-          this.location = '';
-          this.suggestion = '';
-          this.triggerFetchsuggestions();
-        } else {
-          const notification = {
-            title: '',
-            level: 3,
-            message: response.message,
-          };
-          this.displayNotification(notification);
-        }
-      });
-    },
-    removeLocation(suggestion) {
-      const session = this.$store.getters.getSession;
-      const userId = session[session.default].user_id;
-      const copId = session.default === 'biz' ? session[session.default].cop_id : 0;
-      const data = {
-        user_id: userId,
-        cop_id: copId,
-        location_id: suggestion.location_id,
-      };
-      this.removeSuggestions(data).then((response) => {
-        if (response.status) {
-          const notification = {
-            title: '',
-            level: 1,
-            message: response.message,
-          };
-          this.displayNotification(notification);
-          this.location = '';
-          this.suggestion = '';
-          this.triggerFetchsuggestions();
-        } else {
-          const notification = {
-            title: '',
-            level: 3,
-            message: response.message,
-          };
-          this.displayNotification(notification);
-        }
-      });
-    },
-    triggerFetchsuggestions() {
-      const session = this.$store.getters.getSession;
-      const userId = session[session.default].user_id;
-      const copId = session.default === 'biz' ? session[session.default].cop_id : 0;
-      this.fetchSuggestions({
-        user_id: userId,
-        cop_id: copId,
-        type: 1,
-      });
     },
     start_countdown(time) {
       let secs = time.seconds;
@@ -1133,7 +909,7 @@ export default {
           payload.instagram_handle = this.ig_media_handle;
         }
         if (this.facebook_media_handle !== '') {
-          payload.facebook_link = this.facebook_link;
+          payload.facebook_link = this.facebook_media_handle;
         }
         this.finalSetUp(payload);
       }
@@ -1180,7 +956,7 @@ export default {
           payload.instagram_handle = this.ig_media_handle;
         }
         if (this.facebook_media_handle !== '') {
-          payload.facebook_link = this.facebook_link;
+          payload.facebook_link = this.facebook_media_handle;
         }
         this.finalSetUp(payload);
       }
@@ -1240,10 +1016,6 @@ export default {
       } else if (this.updateSetIndustry) {
         this.handleIndustrySetUp();
       }
-    },
-    setLocation(place) {
-      this.location = place.formatted_address;
-      this.suggestion = place;
     },
   },
 };
