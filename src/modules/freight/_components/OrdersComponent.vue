@@ -233,7 +233,7 @@ export default {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'data')) {
             this.empty_orders_state = 'No available freight orders';
           } else {
-            this.empty_orders_state = 'Orders failed to fetch';
+            this.empty_orders_state = 'No available freight orders';
           }
         },
       );

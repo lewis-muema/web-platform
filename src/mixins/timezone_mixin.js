@@ -21,6 +21,17 @@ const timezone = {
       const UTCDate = moment.utc(gmtDate);
       return UTCDate;
     },
+    dashboardTimer(orderTime) {
+      const localTime = this.convertToLocalTime(orderTime);
+      const timer = moment(localTime).toDate();
+      const now = moment(new Date());
+      if (moment.duration(now.diff(timer)).asHours() <= 24) {
+        const timer1 = moment(timer, 'YYYYMMDD, h:mm:ss a').fromNow();
+        return timer1;
+      }
+      const timer1 = moment(timer).format('ddd, Do MMM YYYY, hh:mm A');
+      return timer1;
+    },
   },
 };
 export default timezone;

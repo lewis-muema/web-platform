@@ -143,7 +143,7 @@ export default {
       approver: '',
       users: [],
       approvers_list: [],
-      empty_orders_state: 'Fetching freight Orders',
+      empty_orders_state: 'Fetching approvers list',
       pagination_limit: 10,
       pagination_page: 1,
       loading: false,
@@ -204,9 +204,11 @@ export default {
           } else {
             this.users = [];
           }
+          this.empty_orders_state = 'No approvers available';
         },
         (error) => {
           this.users = [];
+          this.empty_orders_state = 'No approvers available';
         },
       );
     },

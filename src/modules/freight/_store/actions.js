@@ -157,7 +157,7 @@ const approveDocument = function approveDocument({ dispatch }, payload) {
         resolve(workingResponse.data);
       },
       (error) => {
-        resolve(error);
+        resolve(error.response.data);
       },
     );
   });
