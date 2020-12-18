@@ -72,7 +72,7 @@
           </div>
           <div class="transporters-filters transporters-highlight">
             <div class="truck-add-info dashboard-align-inner">
-              {{ moment(val.date_time).fromNow() }}
+              {{ formatTime(val.date_time) }}
             </div>
           </div>
         </div>
@@ -140,12 +140,13 @@
 import { mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import TimeZoneMxn from '../../../mixins/timezone_mixin';
 import LoadingComponent from './LoadingComponent.vue';
 
 export default {
   name: 'Dashboard',
   components: { LoadingComponent },
-  mixins: [SessionMxn, NotificationMxn],
+  mixins: [SessionMxn, NotificationMxn, TimeZoneMxn],
   data() {
     return {
       logs: [],
@@ -270,12 +271,13 @@ export default {
             }
             if (workingResponse.status) {
               this.doNotification(1, 'Document declined!', 'Document declined successfully');
-              this.closeDeclineDialog();
               this.fetchDashboardData();
-            } else {
+            } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
               this.doNotification(2, 'Failed to decline document!', workingResponse.message);
-              this.closeDeclineDialog();
+            } else {
+              this.doNotification(2, 'Failed to decline document!', workingResponse.reason);
             }
+            this.closeDeclineDialog();
           },
           (error) => {
             if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
@@ -297,6 +299,9 @@ export default {
           'Kinly provide the reason to decline',
         );
       }
+    },
+    formatTime(time) {
+      return this.dashboardTimer(time);
     },
     approveThisDocument(val) {
       let acc = {};
@@ -339,8 +344,10 @@ export default {
           if (workingResponse.status) {
             this.doNotification(1, 'Document approval!', 'Document approved successfully');
             this.fetchDashboardData();
-          } else {
+          } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
             this.doNotification(2, 'Failed to approve document!', workingResponse.message);
+          } else {
+            this.doNotification(2, 'Failed to approve document!', workingResponse.reason);
           }
         },
         (error) => {
