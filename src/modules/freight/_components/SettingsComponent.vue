@@ -200,7 +200,7 @@ export default {
             workingResponse = response[0];
           }
           if (workingResponse.status) {
-            this.users = workingResponse.data;
+            this.users = workingResponse.data.filter(c => c.type === 2);
           } else {
             this.users = [];
           }

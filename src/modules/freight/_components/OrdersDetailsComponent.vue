@@ -144,7 +144,8 @@
                 <div
                   v-if="
                     freightOrderDetail.documents[index].status === 'PENDING' &&
-                      freightOrderDetail.documents[index].created_by === 'OWNER'
+                      freightOrderDetail.documents[index].created_by === 'OWNER' &&
+                      checkActionableBtnState
                   "
                   class="freight-documents-approve"
                   style="display : flex"
@@ -587,6 +588,16 @@ export default {
       this.decline_doc = {};
       this.rating = 1;
       this.comment = '';
+    },
+    checkActionableBtnState() {
+      const session = this.$store.getters.getSession;
+      if (session.default === 'biz') {
+        if (session[session.default].freight_approver === 1) {
+          return true;
+        }
+        return false;
+      }
+      return true;
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };
