@@ -190,3 +190,36 @@ a.menu--last-child-link {
 .nav--menu-dropdown-link {
     padding: 1.5em 31px;
 }
+.segmentation-header{
+  cursor: pointer;
+}
+.active_segmentation_menu{
+  background: #FFFFFF;
+  border-radius: 6px;
+  margin-top: 15%;
+  width: 105%;
+  margin-left: -1%;
+  height: 8% !important;
+}
+.header--icon{
+  display: flex;
+}
+.segmentation-align{
+  margin-left: 3%;
+  margin-left: 3%;
+  padding: 1.5em 40px;
+}
+.disable_segmentation_menu{
+  background: none;
+  border-radius: 6px;
+  margin-top: 15%;
+  width: 105%;
+  margin-left: -1%;
+  height: 8% !important;
+}
+.logistics-tab{
+  margin-right: 20%;
+}
+.segmentation-tab{
+  color: #fff !important;
+}

@@ -676,3 +676,31 @@ span.el-pagination__jump {
   background-color: #1782C5;
   border: 1px solid #000;
 }
+.el-upload--picture-card {
+  width: 96% !important;
+  height: 227px !important;
+}
+.el-upload-dragger {
+  height: 200px !important;
+}
+.el-upload-list__item-name {
+  display: none;
+}
+.el-upload-list__item{
+  margin-top: 0;
+  margin-bottom: -2%;
+}
+.documentOptions > div {
+  margin-top: 8% !important;
+  width: 80% !important;
+  height: 900px;
+}
+div.pac-container {
+  z-index: 99999999999 !important;
+}
+.freight-rating > .el-rate__item > .el-rate__icon{
+  font-size: 45px !important;
+}
+.el-upload-list__item-name{
+  display: none !important;
+}
