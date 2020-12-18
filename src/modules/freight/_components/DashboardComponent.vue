@@ -45,7 +45,7 @@
             </div>
           </div>
           <div
-            v-if="val.actionable"
+            v-if="checkActionableBtnState(val.actionable)"
             class="transporters-filters transporters-highlight dashboard-approvals"
           >
             <div
@@ -362,6 +362,16 @@ export default {
           }
         },
       );
+    },
+    checkActionableBtnState(val) {
+      const session = this.$store.getters.getSession;
+      if (session.default === 'biz') {
+        if (session[session.default].freight_approver === 1 && val) {
+          return true;
+        }
+        return false;
+      }
+      return val;
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };
