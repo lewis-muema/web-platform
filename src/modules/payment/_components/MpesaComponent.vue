@@ -178,54 +178,24 @@ export default {
         endpoint: 'running_balance',
       };
 
+      //timeout the check after a minute
+      this.running_balance_timeout = setTimeout(()=>{
+        clearInterval(this.running_balance_interval);
+        this._terminateMpesaPaymentRequest({});
+        return 0;
+      }, 1000 * 60);
 
-      // Running balance poll runs every 10s
+
+      // Running balance check, runs every 10s
       this.running_balance_interval = setInterval(()=>{
         this.checkRunningBalance(oldRb, payload).then(response => {
           if(response === true){
             clearInterval(this.running_balance_interval);
+            clearTimeout(this.running_balance_timeout);
           }
         })
       }, 1000 * 10);
 
-      // const poll_limit = 6; // 10secs * 6  = 60sec = 1min
-      // // poll the dispatch
-      // for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
-      //   // wait 10 seconds
-      //   const that = this;
-      //   (function (poll_count) {
-      //     setTimeout(() => {
-      //       const res = that.checkRunningBalance(oldRb, payload);
-      //       res.then(response => console.log(response))
-      //       if (res) {
-      //         console.log("res",res);
-      //         poll_count = poll_limit;
-      //         // let notification = {
-      //         //   level: 1,
-      //         //   title: "Payment successful",
-      //         //   message: "M-Pesa payment was successful."
-      //         // };
-      //         // that.$store.dispatch("show_notification", notification, {
-      //         //   root: true
-      //         // });
-      //         that._completeMpesaPaymentRequest({});
-      //         return true;
-      //       }
-      //       if (poll_count === 5) {
-      //         // let notification = {
-      //         //   level: 2,
-      //         //   title: "Payment failed",
-      //         //   message:
-      //         //     "Please select your preferred payment method and try again."
-      //         // };
-      //         // that.$store.dispatch("show_notification", notification, {
-      //         //   root: true
-      //         // });
-      //         that._terminateMpesaPaymentRequest({});
-      //       }
-      //     }, 10000 * poll_count);
-      //   })(poll_count);
-      // }
     },
 
     checkRunningBalance(oldRb, payload) {
