@@ -65,6 +65,8 @@ export default {
       payment_state: 'Mpesa Payment Not Initiated',
       mpesa_number_invalid: false,
       isClicked: false,
+      running_balance_interval: null,
+      running_balance_timeout:null,
     };
   },
   computed: {
@@ -184,8 +186,9 @@ export default {
         (function (poll_count) {
           setTimeout(() => {
             const res = that.checkRunningBalance(oldRb, payload);
-
+            res.then(response => console.log(response))
             if (res) {
+              console.log("res",res);
               poll_count = poll_limit;
               // let notification = {
               //   level: 1,
@@ -217,7 +220,8 @@ export default {
 
     checkRunningBalance(oldRb, payload) {
       const that = this;
-      this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
+      return new Promise((resolve)=>{
+        this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
         (response) => {
           if (response.length > 0) {
             response = response[0];
@@ -228,14 +232,15 @@ export default {
 
             if (newRb > oldRb) {
               that._completeMpesaPaymentRequest({});
-              return true;
+              resolve(true);
             }
           }
           // commit  to the global store here
-          return false;
+          resolve(false);
         },
-        (error) => false
+        (error) => resolve(false)
       );
+      });
     },
 
     requestMpesaPayment() {
