@@ -55,7 +55,7 @@
       <el-table-column
         key="1"
         label="Transporter"
-        prop="client_name"
+        prop="transporter_name"
         width="200"
       />
 
@@ -63,8 +63,6 @@
         label="Amount"
         prop="path"
         width="150"
-        header-align="center"
-        align="center"
       >
         <template slot-scope="scope">
           {{ order_history_data[scope.$index]['currency'] }}
@@ -87,7 +85,7 @@
         header-align="center"
         align="center"
       >
-        <template slot-scope="scope">
+        <template slot-scope="props">
           <div
             class="view-orders-transporter-info"
             @click="viewOrdersInfo(order_history_data[props.$index]['order_id'])"
@@ -95,23 +93,6 @@
             View <i class="el-icon-arrow-right view-transporter-info" />
           </div>
         </template>
-        <!-- <template slot-scope="scope">
-          <div class="freight-orders-status">
-            <el-button
-              type="primary"
-              round
-              class="freight-status"
-            >
-              Pending
-            </el-button>
-            <div
-              class="view-orders-transporter-info"
-              @click="viewOrdersInfo(3)"
-            >
-              View <i class="el-icon-arrow-right view-transporter-info" />
-            </div>
-          </div>
-        </template> -->
       </el-table-column>
     </el-table>
 
@@ -206,29 +187,6 @@ export default {
       if (Object.keys(sessionData).length > 0) {
         this.sessionData = sessionData;
 
-        // let ordersPayload = {};
-        //
-        // if (sessionData.default === 'biz' && sessionData.biz.user_type === 2) {
-        //   // create cop admin payload
-        //
-        //   ordersPayload = {
-        //     cop_id: sessionData.biz.cop_id,
-        //     user_type: sessionData.biz.user_type,
-        //     user_id: '-1',
-        //   };
-        // } else if (sessionData.default === 'biz') {
-        //   ordersPayload = {
-        //     cop_id: sessionData.biz.cop_id,
-        //     user_type: sessionData.biz.user_type,
-        //     user_id: sessionData.biz.user_id,
-        //   };
-        // } else {
-        //   // create peer payload
-        //   ordersPayload = {
-        //     user_id: sessionData[sessionData.default].user_id,
-        //   };
-        // }
-
         const ordersPayload = {
           user_id:
             sessionData.default === 'biz'
@@ -247,7 +205,7 @@ export default {
     changePage() {
       const from = (this.pagination_page - 1) * this.pagination_limit;
       const to = this.pagination_page * this.pagination_limit;
-      this.orderHistoryData.slice(from, to);
+      this.freightOrdersData.slice(from, to);
     },
     ...mapActions(['$_freight/requestFreightOrders']),
     moment() {
@@ -275,7 +233,7 @@ export default {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'data')) {
             this.empty_orders_state = 'No available freight orders';
           } else {
-            this.empty_orders_state = 'Orders failed to fetch';
+            this.empty_orders_state = 'No available freight orders';
           }
         },
       );
@@ -322,7 +280,6 @@ div > button > span{
   cursor: default;
 }
 .view-orders-transporter-info{
-  margin-left: 30%;
   cursor: pointer;
 }
 .freight-orders-status{

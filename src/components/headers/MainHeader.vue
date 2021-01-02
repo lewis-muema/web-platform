@@ -20,12 +20,12 @@
           <a
             class="segmentation-tab"
             @click="linkRoute('/orders')"
-          >Logistics</a>
+          >Transportation</a>
           <div
             :class="
-              route_path === 'order_placement'
-                ? 'active_segmentation_menu'
-                : 'disable_segmentation_menu'
+              freightPages.includes(route_path)
+                ? 'disable_segmentation_menu'
+                : 'active_segmentation_menu'
             "
           />
         </div>
@@ -154,7 +154,8 @@ export default {
       helpline_contact: '',
       admin_details: false,
       freightPages: [
-        'freight_page',
+        'freight_home',
+        'freight_set_up',
         'freight_verify',
         'freight_dashboard',
         'freight_transporters',
@@ -162,6 +163,7 @@ export default {
         'freight_orders_info',
         'freight_transporters_details',
         'freight_create_orders',
+        'freight_settings',
       ],
     };
   },
@@ -232,7 +234,11 @@ export default {
       const session = this.$store.getters.getSession;
       let resp = false;
 
-      if (session[session.default].user_type === 2 || session.default === 'peer') {
+      if (session.default === 'biz') {
+        if (session[session.default].user_type === 2) {
+          resp = true;
+        }
+      } else {
         resp = true;
       }
       return resp;

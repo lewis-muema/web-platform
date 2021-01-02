@@ -1,7 +1,6 @@
 <template lang="html">
   <div
     v-if="sessionData"
-    id="user_container"
     class=""
   >
     <main-header />
@@ -14,8 +13,6 @@ import Vue from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import VeeValidate, { Validator } from 'vee-validate';
 import freightStore from './_store';
-import ordersModuleStore from '../orders/_store';
-import transactionsModuleStore from '../transactions/_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import SessionMxn from '../../mixins/session_mixin';
 import MainHeader from '../../components/headers/MainHeader.vue';
@@ -42,27 +39,28 @@ Validator.extend('check_phone', {
 
 export default {
   name: 'FreightHome',
-  components: { MainHeader, SessionMxn },
-  mixins: [RegisterStoreModule],
+  components: {
+    MainHeader,
+  },
+  mixins: [RegisterStoreModule, SessionMxn],
   data() {
     return {
       sessionData: false,
+      status: '',
     };
   },
   computed: {
-    ...mapGetters({
-      getSession: 'getSession',
-    }),
+    ...mapGetters({}),
   },
   watch: {},
   mounted() {
     this.checkSessionData();
   },
   created() {
-    const STORE_KEY = '$_freight';
-    this.$store.registerModule(STORE_KEY, freightStore);
-    this.registerOrderModule();
-    this.registerTransactionsModule();
+    const moduleIsRegistered = this.$store._modules.root._children.$_freight !== undefined;
+    if (!moduleIsRegistered) {
+      this.$store.registerModule('$_freight', freightStore);
+    }
   },
   methods: {
     ...mapActions({
@@ -85,41 +83,53 @@ export default {
     },
     checkFreightStatus() {
       const session = this.$store.getters.getSession;
-      let values = '';
+      let val = '';
       if (session.default === 'biz') {
-        values = `copId=${session[session.default].cop_id}`;
+        val = `copId=${session[session.default].cop_id}`;
       } else {
-        values = `userId=${session[session.default].user_id}`;
+        val = `userId=${session[session.default].user_id}`;
       }
       const fullPayload = {
-        values,
+        values: val,
         app: 'ADONIS_PRIVATE_API',
-        endpoint: `freight-status?${values}`,
+        endpoint: `freight-status?${val}`,
       };
+      const status = session[session.default].freight_status;
+      this.handleFreightRoute(status);
+
       this.requestFreightStatus(fullPayload).then(
         (response) => {
-          let status = 0;
-
+          let newStatus = '';
           if (response.length === undefined || response.length === 'undefined') {
-            status = response.freight_status;
+            newStatus = response.freight_status;
           } else {
             const arrLength = response.length;
-            status = response[arrLength - 1].freight_status;
+            newStatus = response[arrLength - 1].freight_status;
           }
-          if (status === 0) {
-            this.$router.push('/freight');
-          } else if (status === 1) {
-            this.$router.push('/freight/verify');
+
+          if (newStatus !== status) {
+            this.handleFreightRoute(newStatus);
+            const updatedSession = session;
+            updatedSession[session.default].freight_status = newStatus;
+            const newSession = JSON.stringify(updatedSession);
+            this.setSession(newSession);
           }
-          const updatedSession = session;
-          updatedSession[session.default].freight_status = status;
-          const newSession = JSON.stringify(updatedSession);
-          this.setSession(newSession);
         },
         () => {
           // error
         },
       );
+    },
+    handleFreightRoute(val) {
+      if (val === 0) {
+        this.$router.push('/freight/set-up');
+      } else if (val === 1) {
+        this.$router.push('/freight/verify');
+      } else if (val === 2) {
+        this.$router.push('/freight/dashboard');
+      } else {
+        this.$router.push('/orders');
+      }
     },
   },
 };

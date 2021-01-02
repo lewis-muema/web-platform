@@ -690,3 +690,17 @@ span.el-pagination__jump {
   margin-top: 0;
   margin-bottom: -2%;
 }
+.documentOptions > div {
+  margin-top: 8% !important;
+  width: 80% !important;
+  height: 900px;
+}
+div.pac-container {
+  z-index: 99999999999 !important;
+}
+.freight-rating > .el-rate__item > .el-rate__icon{
+  font-size: 45px !important;
+}
+.el-upload-list__item-name{
+  display: none !important;
+}

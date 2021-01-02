@@ -359,8 +359,13 @@ export function createRouter() {
         children: [
           {
             path: '/',
+            component: () => import('../modules/freight/Home.vue'),
+            name: 'freight_home',
+          },
+          {
+            path: '/freight/set-up',
             component: () => import('../modules/freight/Freight.vue'),
-            name: 'freight_page',
+            name: 'freight_set_up',
           },
           {
             path: '/freight/verify',
@@ -400,6 +405,11 @@ export function createRouter() {
                 path: '/freight/orders/info/:id',
                 component: () => import('../modules/freight/_components/OrdersDetailsComponent.vue'),
                 name: 'freight_orders_info',
+              },
+              {
+                path: '/freight/settings',
+                component: () => import('../modules/freight/_components/SettingsComponent.vue'),
+                name: 'freight_settings',
               },
             ],
           },

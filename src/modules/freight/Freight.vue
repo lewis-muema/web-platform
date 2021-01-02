@@ -8,7 +8,7 @@
         name="fade"
         mode="out-in"
       >
-        <div class="cancel-pop-up">
+        <div class="final-set-up-pop">
           <el-dialog
             :visible.sync="updateCrmData"
             width="30%"
@@ -51,7 +51,7 @@
                     <input
                       v-model="id_number"
                       class="input-control upgrade-final"
-                      type="number"
+                      type="text"
                       name="id_number"
                       placeholder=""
                       autocomplete="on"
@@ -77,7 +77,7 @@
                       v-show="!valid_kra_pin"
                       class="invalid-kra"
                     >
-                      Please enter a valid KRA PIN
+                      {{ kraFailResponse }}
                     </span>
                   </div>
                 </div>
@@ -145,17 +145,33 @@ export default {
     }),
     valid_kra_pin() {
       const pin = this.kra_pin;
+      const session = this.$store.getters.getSession;
 
       if (pin !== '') {
-        return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+        if (session[session.default].default_currency === 'KES') {
+          return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+        }
+        return /^\d{10}$/.test(pin);
       }
       return true;
     },
     fetchKraHeader() {
-      let resp = 'Enter your business KRA pin';
+      let kraName = 'TIN number';
       const session = this.$store.getters.getSession;
+      if (session[session.default].default_currency === 'KES') {
+        kraName = 'KRA PIN';
+      }
+      let resp = `Enter your business ${kraName}`;
       if (session.default === 'peer') {
-        resp = 'Enter your KRA pin';
+        resp = `Enter your ${kraName}`;
+      }
+      return resp;
+    },
+    kraFailResponse() {
+      let resp = 'Please enter a valid TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].default_currency === 'KES') {
+        resp = 'Please enter a valid KRA PIN';
       }
       return resp;
     },
@@ -273,7 +289,11 @@ export default {
       }
     },
     handleClose() {
-      // Do nothing ...
+      this.$router.push('/orders');
+      this.id_number = '';
+      this.kra_pin = '';
+      this.biz_registration = '';
+      this.industry_type = '';
     },
     isNewCopAcc() {
       let isSet = false;
@@ -297,12 +317,18 @@ export default {
             isSet = true;
             kraSection = true;
           }
-          if (session[session.default].industry_id === null) {
+          if (
+            session[session.default].industry_id === null
+            || session[session.default].industry_id === ''
+          ) {
             isSet = true;
             setIndustry = true;
             this.fetchIndustries();
           }
-          if (session[session.default].tax_authority_pin === null) {
+          if (
+            session[session.default].tax_authority_pin === null
+            || session[session.default].tax_authority_pin === ''
+          ) {
             isSet = true;
             kraSection = true;
           }
@@ -353,7 +379,7 @@ export default {
       }
     },
     submitBizData() {
-      if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
+      if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
         this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
       } else if (this.industry_type === '') {
         this.doNotification(2, 'Final set up error !', 'Please select industry preference');
@@ -361,7 +387,7 @@ export default {
         this.doNotification(2, 'Final set up error !', 'Please enter business registration');
       } else {
         const session = this.$store.getters.getSession;
-        const values = {
+        const payload = {
           cop_id: session[session.default].cop_id,
           cop_name: session[session.default].cop_name,
           cop_contact_person: session[session.default].cop_contact_person,
@@ -372,7 +398,7 @@ export default {
           company_reg_no: this.biz_registration,
         };
         const fullPayload = {
-          values,
+          values: payload,
           app: 'NODE_PRIVATE_API',
           endpoint: 'update_cop',
         };
@@ -380,19 +406,19 @@ export default {
       }
     },
     submitPeerData() {
-      if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
+      if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
         this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
       } else if (this.id_number === '') {
         this.doNotification(2, 'Final set up error !', 'Please enter your ID number');
       } else {
         const session = this.$store.getters.getSession;
-        const values = {
+        const payload = {
           user_id: session[session.default].user_id,
           tax_authority_pin: this.kra_pin,
           id_no: this.id_number,
         };
         const fullPayload = {
-          values,
+          values: payload,
           app: 'NODE_PRIVATE_API',
           endpoint: 'update_user',
         };
@@ -403,7 +429,13 @@ export default {
       const session = this.$store.getters.getSession;
       this.updateFreightInformation(fullPayload).then(
         (response) => {
-          if (response.status) {
+          let workingResponse = response;
+          if (response.length > 1) {
+            /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
             const updatedSession = session;
             if (session.default === 'biz') {
               updatedSession[session.default].tax_authority_pin = this.kra_pin;
@@ -471,13 +503,10 @@ export default {
   padding-top: 15px;
   margin-bottom: 30px;
 }
-.cancel-pop-up > div > div > div.el-dialog__header > button{
-  display: none ;
-}
 .updateCrmDialog{
 
 }
-.cancel-pop-up > div > div > div.el-dialog__body{
+.final-set-up-pop > div > div > div.el-dialog__body{
   padding-top: 0 !important;
 }
 .crm-setup{
@@ -485,7 +514,7 @@ export default {
   color: #000000;
   font-weight: 400;
 }
-cancel-pop-up > div > div > div.el-dialog__header{
+final-set-up-pop > div > div > div.el-dialog__header{
   padding-top: 0 !important;
 }
 .compliance-select-final{

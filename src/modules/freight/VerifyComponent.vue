@@ -23,10 +23,10 @@
           I acknowledge that i have read and understood the terms of service
         </span>
       </div>
-      <div class="next-terms-holder">
+      <div class="next-terms-holder-btn">
         <input
           placeholder="Submit"
-          class="button-primary terms-btn-color next-freight-btn"
+          class="button-primary terms-btn-color next-freight-submit"
           type="submit"
           name="login_text"
           @click="submit"
@@ -105,7 +105,7 @@ export default {
         const session = this.$store.getters.getSession;
         let fullPayload = {};
         if (session.default === 'biz') {
-          const values = {
+          const bizPayload = {
             cop_id: session[session.default].cop_id,
             cop_name: session[session.default].cop_name,
             cop_contact_person: session[session.default].cop_contact_person,
@@ -114,24 +114,29 @@ export default {
             freight_status: 1,
           };
           fullPayload = {
-            values,
+            values: bizPayload,
             app: 'NODE_PRIVATE_API',
             endpoint: 'update_cop',
           };
         } else {
-          const values = {
+          const peerPayload = {
             user_id: session[session.default].user_id,
             freight_status: 1,
           };
           fullPayload = {
-            values,
+            values: peerPayload,
             app: 'NODE_PRIVATE_API',
             endpoint: 'update_user',
           };
         }
         this.updateFreightStatus(fullPayload).then(
           (response) => {
-            if (response.status) {
+            let workingResponse = response;
+            if (response.length > 1) {
+              workingResponse = response[0];
+            }
+
+            if (workingResponse.status) {
               const updatedSession = session;
               updatedSession[session.default].freight_status = 1;
 
@@ -216,13 +221,14 @@ export default {
   line-height: 5px;
   color: #000000;
 }
-.next-terms-holder {
+.next-terms-holder-btn {
   margin-top: 2%;
+  padding-bottom: 4% !important;
 }
 .terms-btn-color {
  border-width: 0px !important;
 }
-.next-freight-btn {
+.next-freight-submit {
   width: 15%;
 }
 .approval-card{

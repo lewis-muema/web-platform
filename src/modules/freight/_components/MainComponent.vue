@@ -23,6 +23,13 @@
         >
           Orders
         </router-link>
+        <router-link
+          v-if="copAcc"
+          class="section__link"
+          to="/freight/settings"
+        >
+          Settings
+        </router-link>
       </div>
       <div class="">
         <router-view />
@@ -45,6 +52,11 @@ export default {
     ...mapGetters({
       getSession: 'getSession',
     }),
+    copAcc() {
+      const session = this.$store.getters.getSession;
+      const resp = session.default === 'biz';
+      return resp;
+    },
   },
   watch: {
     getSession: {
