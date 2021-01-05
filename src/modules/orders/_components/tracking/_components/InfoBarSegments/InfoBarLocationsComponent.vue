@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 import NotificationMxn from '../../../../../../mixins/notification_mixin';
 
 export default {
@@ -67,19 +67,57 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      user_state: false,
+    };
   },
-  computed: {},
+  computed: {
+    ...mapGetters({
+      getSession: 'getSession',
+    }),
+  },
+  watch: {
+    getSession: {
+      handler() {
+        if (Object.keys(this.$store.getters.getSession).length > 0) {
+          this.confirmUser();
+        }
+      },
+      deep: true,
+    },
+  },
+  mounted() {
+    this.confirmUser();
+  },
   methods: {
     ...mapMutations({
       setEditLocationDialog: '$_orders/$_tracking/setEditLocationDialog',
     }),
+    confirmUser() {
+      const session = this.$store.getters.getSession;
+      if (
+        Object.keys(session).length > 0
+        && Object.prototype.hasOwnProperty.call(session, 'default')
+      ) {
+        const sessionUserEmail = session[session.default].user_email;
+        const orderUserEmail = this.trackingData.user.email;
+
+        if (sessionUserEmail === orderUserEmail) {
+          this.user_state = true;
+        } else {
+          this.user_state = false;
+        }
+      }
+    },
     showEditLocationsDialog() {
       this.setEditLocationDialog(true);
     },
     checkEditOption() {
       let show = false;
-      if (Object.prototype.hasOwnProperty.call(this.trackingData, 'edit_config')) {
+      if (
+        Object.prototype.hasOwnProperty.call(this.trackingData, 'edit_config')
+        && this.user_state
+      ) {
         show = this.trackingData.edit_config.add_drop_off;
       }
       return show;

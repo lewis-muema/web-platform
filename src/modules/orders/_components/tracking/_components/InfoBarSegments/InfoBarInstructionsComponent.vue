@@ -278,17 +278,45 @@ export default {
   data() {
     return {
       scheduled_time: false,
+      user_state: false,
     };
   },
   computed: {
     ...mapGetters({
       getTrackVendorName: '$_orders/$_tracking/getTrackVendorName',
+      getSession: 'getSession',
     }),
+  },
+  watch: {
+    getSession: {
+      handler() {
+        if (Object.keys(this.$store.getters.getSession).length > 0) {
+          this.confirmUser();
+        }
+      },
+      deep: true,
+    },
   },
   mounted() {
     this.checkScheduler();
   },
   methods: {
+    confirmUser() {
+      const session = this.$store.getters.getSession;
+      if (
+        Object.keys(session).length > 0
+        && Object.prototype.hasOwnProperty.call(session, 'default')
+      ) {
+        const sessionUserEmail = session[session.default].user_email;
+        const orderUserEmail = this.trackingData.user.email;
+
+        if (sessionUserEmail === orderUserEmail) {
+          this.user_state = true;
+        } else {
+          this.user_state = false;
+        }
+      }
+    },
     getVendorIcon(id) {
       return `https://images.sendyit.com/web_platform/vendor_type/side/${id}.svg`;
     },
@@ -326,7 +354,10 @@ export default {
     },
     checkEditOption() {
       let show = false;
-      if (Object.prototype.hasOwnProperty.call(this.trackingData, 'edit_config')) {
+      if (
+        Object.prototype.hasOwnProperty.call(this.trackingData, 'edit_config')
+        && this.user_state
+      ) {
         show = this.trackingData.edit_config.change_notes;
       }
       return show;

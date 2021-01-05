@@ -913,21 +913,12 @@ export default {
     },
     getAmountDue(){
 
-      return (this.tracking_data.amount - this.new_cost) ;
+      return (this.new_cost - this.tracking_data.amount) ;
 
     },
 
     show_payment() {
       return !this.hide_payment;
-    },
-    checkAccountPaymentOption() {
-      return (
-        (this.tracking_data.payment_option === 1
-          && this.getRunningBalance - this.getAmountDue >= 0)
-        || this.tracking_data.payment_option === 2
-        || (this.tracking_data.payment_option === 0
-          && this.getRunningBalance - this.getAmountDue >= 0)
-      );
     },
     revertIcon() {
       return {
@@ -1014,6 +1005,12 @@ export default {
     },
     savedCardsTally() {
       return this.get_saved_cards.length;
+    },
+    valid_vgs_saved_card() {
+      if (!this.addCardStatus && this.activeSavedCard !== '') {
+        return true;
+      }
+      return false;
     },
   },
   watch: {
@@ -1179,7 +1176,6 @@ export default {
     },
 
     setForm() {
-      console.log('am here');
       // eslint-disable-next-line no-undef
       this.form = VGSCollect.create(
         process.env.CONFIGS_ENV.VGS_VAULT_ID,
@@ -1256,6 +1252,15 @@ export default {
           this.country = session[session.default].country_code;
         }
       }
+    },
+    checkAccountPaymentOption() {
+      return (
+        (this.tracking_data.payment_option === 1
+          && this.getRunningBalance - this.getAmountDue >= 0)
+        || this.tracking_data.payment_option === 2
+        || (this.tracking_data.payment_option === 0
+          && this.getRunningBalance - this.getAmountDue >= 0)
+      );
     },
     handleLocationPath(){
       if (this.tracking_data !== undefined) {
@@ -1768,6 +1773,59 @@ export default {
       }
     },
 
+    chargeSavedCard() {
+      if (this.valid_vgs_saved_card) {
+        const session = this.$store.getters.getSession;
+        const accData = session[session.default];
+        const firstName = accData.user_name.split(' ')[0];
+        const payload = {
+          txRef: `${Date.now()}`,
+          card:
+            this.activeSavedCard !== '' && this.get_saved_cards.length > 0
+              ? this.get_saved_cards[this.activeSavedCard].card
+              : '',
+          currency: this.order_currency,
+          country: this.getCountryCode,
+          amount: this.getAmountDue,
+          email: accData.user_email,
+          phonenumber: accData.user_phone,
+          firstname: firstName,
+          user_id: accData.user_id,
+          cop_id: session.default === 'biz' ? accData.cop_id : 0,
+          vendor_type: this.tracking_data.rider.vendor_id,
+        };
+        const savedCardPayload = {
+          values: payload,
+          app: 'AUTH',
+          endpoint: 'customers/charge_saved_card',
+        };
+        this.loading_payment = true;
+        this.requestSavedCards(savedCardPayload).then(
+          (response) => {
+            if (response.status) {
+              if (response.running_balance >= parseInt(this.getAmountDue.replace(',', ''), 10)) {
+                this.doCompleteOrder();
+              } else {
+                this.loading_payment = false;
+                this.doNotification(
+                  2,
+                  'Insufficient balance',
+                  'The amount charge is not sufficient to place the order please try again',
+                );
+              }
+            } else {
+              this.loading_payment = false;
+              this.doNotification(2, 'Failed to charge card', response.message);
+            }
+          },
+          error => false,
+        );
+      } else {
+        this.loading = false;
+        this.doNotification(2, 'Failed to charge card', 'Please select one of your saved cards');
+      }
+    },
+
     shareETASms() {
       if (this.recipientPhone !== '' && this.recipientPhone.length > 9) {
         const payload = {};
@@ -2047,7 +2105,6 @@ export default {
           }else {
             this.tier_group = 'small';
           }
-          console.log('tier group', this.tier_group);
           let priceRequestObject = response.values.economy_price_tiers ;
           let checker = priceRequestObject.find(position => position.tier_group === this.tier_group);
 
@@ -2374,7 +2431,6 @@ export default {
           return false;
         }
       } else {
-        console.log('payment_method', this.payment_method);
         if (Number(this.payment_method) === 1) {
           this.handleMpesaPayments();
         } else if (Number(this.payment_method) === 5) {
@@ -2399,6 +2455,17 @@ export default {
       }
 
       return true;
+    },
+    handleCashPayments() {
+      this.doCompleteOrder();
+    },
+    handlePromoCodePayments() {
+      this.$router.push({
+        name: 'promo_payment',
+      });
+    },
+    handleRunningBalancePayments() {
+      this.doCompleteOrder();
     },
     payment_is_to_be_requested() {
       return this.getRunningBalance - this.getAmountDue < 0;
@@ -2436,7 +2503,7 @@ export default {
       }
 
       const mpesaPayload = {
-        amount: this.getAmountDue,
+        amount: this.getAmountDue.replace(',', ''),
         sourceMobile: userPhone,
         referenceNumber,
         user_id: userId,
