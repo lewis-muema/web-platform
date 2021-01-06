@@ -10,6 +10,12 @@ const getTrackPackageName = state => state.track_package_name;
 const getConfirmEta = state => state.confirm_eta;
 const getPickUpEta = state => state.pickup_eta;
 const getDeliveryEta = state => state.delivery_eta;
+const getEditLocationDialog = state => state.edit_location;
+const getPickUpFilled = state => state.pickup_filled;
+const getPickUpFilledStatus = state => state.pick_up_filled_status;
+const getStorePath = state => state.order_path;
+const getExtraDestinations = state => state.extra_destinations;
+const getMaxDestinations = state => state.max_destinations;
 
 export default {
   getTrackingData,
@@ -24,4 +30,10 @@ export default {
   getConfirmEta,
   getPickUpEta,
   getDeliveryEta,
+  getEditLocationDialog,
+  getPickUpFilled,
+  getPickUpFilledStatus,
+  getStorePath,
+  getExtraDestinations,
+  getMaxDestinations,
 };

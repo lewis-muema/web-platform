@@ -18,6 +18,8 @@ import { faArrowLeft, faWallet } from '@fortawesome/free-solid-svg-icons';
 import TrackingStore from './_store';
 import InfoWindow from './_components/InfoComponent.vue';
 import RegisterStoreModule from '../../../../mixins/register_store_module';
+import paymentsModuleStore from '../../../payment/_store';
+import orderPlacementStore from '../order_placement/_store';
 
 library.add(faArrowLeft);
 library.add(faWallet);
@@ -45,6 +47,7 @@ export default {
     if (!this.$store.state[STORE_PARENT][STORE_KEY]) {
       this.$store.registerModule([STORE_PARENT, STORE_KEY], TrackingStore);
     }
+    this.instantiateHomeComponent();
   },
   mounted() {
     this.change_page(1);
@@ -56,6 +59,29 @@ export default {
       hide_vendors: '$_orders/hideVendors',
       change_page: '$_orders/setPage',
     }),
+    instantiateHomeComponent() {
+      this.registerPaymentModule();
+      this.registerOrderPlacementModule();
+    },
+    registerPaymentModule() {
+      const moduleIsRegistered = this.$store._modules.root._children.$_payment !== undefined;
+
+      if (!moduleIsRegistered) {
+        this.$store.registerModule('$_payment', paymentsModuleStore);
+      }
+    },
+    registerOrderPlacementModule() {
+      let moduleIsRegistered = false;
+      try {
+        moduleIsRegistered = this.$store._modules.root._children.$_orders._children.$_home !== undefined;
+      } catch (er) {
+        //
+      }
+
+      if (!moduleIsRegistered) {
+        this.$store.registerModule(['$_orders', '$_home'], orderPlacementStore);
+      }
+    },
   },
 };
 </script>
