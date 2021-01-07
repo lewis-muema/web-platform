@@ -237,7 +237,7 @@
         </span>
       </div>
     </div>
-
+    <PromoCodesComponent :hide-payment="hide_payment" @promoCodeDetails="setPromoCodeDetails" />
     <div
       class="home-view-place-order"
       :class="loader_class"
@@ -544,6 +544,7 @@ import PaymentMxn from '../../../../../mixins/payment_mixin';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
+import PromoCodesComponent from './PromoCodesComponent.vue';
 
 library.add(faChevronDown, faPlusCircle, faArrowLeft, faTrashAlt);
 
@@ -552,7 +553,7 @@ const TRUCK_VENDORS = [20, 25];
 
 export default {
   name: 'OrderOptions',
-  components: {},
+  components: { PromoCodesComponent },
   mixins: [Mcrypt, PaymentMxn, TimezoneMxn, EventsMixin, NotificationMxn],
   data() {
     return {
@@ -601,6 +602,7 @@ export default {
       activeSavedCard: '',
       saveCardState: false,
       deletedCardIndex: '',
+      couponDetails: null,
     };
   },
 
@@ -1690,6 +1692,9 @@ export default {
           order_no: this.order_no,
         };
       }
+       if (this.couponDetails !== null) {
+        payload.promo_code_details = this.couponDetails;
+      }
 
       // intercounty payload
 
@@ -2433,6 +2438,9 @@ export default {
         resp = " I'll take it to the nearest collection centre";
       }
       return resp;
+    },
+    setPromoCodeDetails(promoCodeDetails) {
+      this.couponDetails = promoCodeDetails;
     },
   },
 };

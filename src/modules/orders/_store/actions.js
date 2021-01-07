@@ -215,6 +215,21 @@ const requestIndustries = function requestIndustries({ dispatch }, payload) {
     );
   });
 };
+const requestPromoCodePayment = function requestPromoCodePayment({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   fetchOngoingOrders,
   connectMqtt,
@@ -227,4 +242,5 @@ export default {
   saveSuggestions,
   removeSuggestions,
   requestIndustries,
+  requestPromoCodePayment,
 };
