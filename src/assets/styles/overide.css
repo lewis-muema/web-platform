@@ -743,9 +743,10 @@ div.pac-container {
   display: block;
   padding: 0;
 }
-.el-button--primary.is-disabled:hover {
-  color: #fff;
-  background-color:  rgba(0,0,0,0.50);
-  border-color: rgba(0,0,0,0.50);
-}
+.el-button--primary.is-disabled:hover, .button--primary-inactive:hover, .button--primary-inactive:focus {
+  color: #fff !important;
+  background-color:  rgba(0,0,0,0.50) !important;
+  border-color: rgba(0,0,0,0.50) !important;
+  cursor: not-allowed;
 
+}

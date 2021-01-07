@@ -21,7 +21,7 @@
                             <div v-else class="promocode-value">50% OFF (Max. KES 300)</div>
                             <div class="promocode-date" :class="{ 'to-expire' : formatExpiryDate(promocode.couponEndDate).status === 'red' } ">Expiry: {{ formatExpiryDate(promocode.couponEndDate).expiryDate }}</div>
                         </el-col>
-                        <el-col :span="4">
+                        <el-col :span="8">
                             <div class="radio-holder">
                                 <input
                                     type="radio"
@@ -147,11 +147,10 @@ export default {
 }
 .promocodestitle{
     font-weight: 400;
-    font-size: 14px;
+    font-size: small;
     line-height: 24px;
     letter-spacing: 0.03em;
     color: #909399;
-    margin-bottom: 24px;
 }
 .promocodeinfo {
   padding: 8px 0;
@@ -181,7 +180,7 @@ export default {
     padding-top: .5em
 }
 .promocodes__radio-button {
-    width: 30px;
+    width: 22px;
     height: 30px;
     cursor: pointer;
 }
@@ -256,4 +255,10 @@ export default {
     border: none;
     width: 90px;
 }
+.radio-holder {
+    padding-left: 10px;
+    padding-right: 0px;
+    text-align: right;
+}
+
 </style>
