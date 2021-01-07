@@ -4,7 +4,7 @@
       <div class="promocodestitle main-header">
         Valid Promo Codes
       </div>
-      <div class="promocodeinfo" v-for="(promocode, index) in promoCodes" :key="index">
+      <div class="promocodeinfo" v-for="(promocode, index) in promoCodes" :key="index" :class="{ 'last-item': index === Object.keys(promoCodes).length - 1 }">
         <div class="promocodestitle promocode-sub-header">{{ promocode.couponName }}</div>
         <div v-if="promocode.couponCodeType === 1" class="promocode-value">{{promocode.currency }} {{ promocode.couponBalance }}</div>
         <div v-else class="promocode-value">50% OFF (Max. KES 300)</div>
@@ -32,7 +32,7 @@
         Redeem
          <i
           v-if="processing"
-          class="el-icon-loading tracking-loading-spinner"
+          class="el-icon-loading tracking-loading-spinner promocode-spinner"
         />
       </button>
     </div>
@@ -120,7 +120,12 @@ export default {
 .paymentbody--list {
   margin: .5em;
 }
-.tracking-loading-spinner {
-  font-size: 20px;
+.promocode-spinner {
+  font-size: 15px !important;
+  font-weight: 700;
+  color: #fff !important;
+}
+.last-item {
+    border-bottom: none;
 }
 </style>
