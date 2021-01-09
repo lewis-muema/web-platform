@@ -260,13 +260,7 @@ export default {
       };
       this.$store.dispatch('$_freight/requestApproversList', fullPayload).then(
         (response) => {
-          let workingResponse = response;
-          if (response.length > 1) {
-            /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-            workingResponse = response[0];
-          }
-
-          this.approvers_list = workingResponse;
+          this.approvers_list = response;
         },
         (error) => {
           this.approvers_list = [];
