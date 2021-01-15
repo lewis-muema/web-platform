@@ -38,6 +38,12 @@ const setDeliveryEta = (state, data) => {
 const setEditLocationDialog = (state, data) => {
   state.edit_location = data;
 };
+const showNotesDialog = (state, data) => {
+  state.edit_notes = data;
+};
+const updateNotesInStore = (state, data) => {
+  state.stored_notes = data;
+};
 const setPickUpFilled = (state, data) => {
   state.pickup_filled = data;
 };
@@ -83,6 +89,8 @@ export default {
   setPickUpEta,
   setDeliveryEta,
   setEditLocationDialog,
+  showNotesDialog,
+  updateNotesInStore,
   setPickUpFilled,
   setPickUpFilledStatus,
   unsetOrderPath,
