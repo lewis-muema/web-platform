@@ -23,6 +23,8 @@ const state = {
   location_path: [],
   extra_destinations: 0,
   max_destinations: 24,
+  edit_notes: false,
+  stored_notes: {},
 };
 
 export default {
