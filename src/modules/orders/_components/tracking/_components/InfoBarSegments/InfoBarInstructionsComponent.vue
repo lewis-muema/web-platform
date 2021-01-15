@@ -184,7 +184,7 @@
         <p
           v-if="checkEditOption()"
           class="infor-top-change-details edit-instructions-align"
-          @click="showEditInstructionsDialog()"
+          @click="showEditInstructionsDialog(trackingData.path[0])"
         >
           <i class="el-icon-edit-outline" />
           Edit Instructions
@@ -240,7 +240,7 @@
         <p
           v-if="checkEditOption()"
           class="infor-top-change-details edit-instructions-align"
-          @click="showEditInstructionsDialog()"
+          @click="showEditInstructionsDialog(val)"
         >
           <i class="el-icon-edit-outline" />
           Edit Instructions
@@ -251,7 +251,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import NotificationMxn from '../../../../../../mixins/notification_mixin';
 import EventsMixin from '../../../../../../mixins/events_mixin';
 import TimezoneMxn from '../../../../../../mixins/timezone_mixin';
@@ -299,8 +299,13 @@ export default {
   },
   mounted() {
     this.checkScheduler();
+    this.confirmUser();
   },
   methods: {
+    ...mapMutations({
+      showNotesDialog: '$_orders/$_tracking/showNotesDialog',
+      updateNotesInStore: '$_orders/$_tracking/updateNotesInStore',
+    }),
     confirmUser() {
       const session = this.$store.getters.getSession;
       if (
@@ -349,8 +354,9 @@ export default {
       }
       return resp;
     },
-    showEditInstructionsDialog() {
-      console.log('am here');
+    showEditInstructionsDialog(val) {
+      this.showNotesDialog(true);
+      this.updateNotesInStore(val);
     },
     checkEditOption() {
       let show = false;
