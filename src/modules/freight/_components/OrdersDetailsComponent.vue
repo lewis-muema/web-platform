@@ -297,7 +297,7 @@ export default {
   data() {
     return {
       quote_text: 'Request for quote',
-      financing_text: 'Create order',
+      financing_text: 'Place Order',
       rating: 5.0,
       loading: true,
       approve_doc_text: 'Approve',
