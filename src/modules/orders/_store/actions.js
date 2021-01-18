@@ -230,6 +230,21 @@ const requestPromoCodePayment = function requestPromoCodePayment({ dispatch }, p
   });
 };
 
+const updateSocialApprovalStatus = function updateSocialApprovalStatus({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPatch', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   fetchOngoingOrders,
   connectMqtt,
@@ -243,4 +258,5 @@ export default {
   removeSuggestions,
   requestIndustries,
   requestPromoCodePayment,
+  updateSocialApprovalStatus,
 };

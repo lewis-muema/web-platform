@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable camelcase */
 <template lang="html">
   <div class="">
     <main-header />
@@ -247,6 +249,16 @@
         <router-view />
       </transition>
       <transition
+        v-if="showSocialMediaApprovalDialog"
+        name="fade"
+        mode="out-in"
+      >
+        <approval-dialog
+          :approval-status="socialMediaApprovalStatus"
+          :cop-id="copId"
+        />
+      </transition>
+      <transition
         name="fade"
         mode="out-in"
       >
@@ -453,6 +465,7 @@ import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
 import OngoingComponent from './_components/OngoingComponent.vue';
+import ApprovalDialog from './_components/social_media_business/ApprovalDialog.vue';
 import FbuChildOrders from './_components/FbuChildOrders.vue';
 import NPSFooter from '../../components/footers/NPSFooter.vue';
 import NpsMixin from '../../mixins/nps_mixin';
@@ -468,11 +481,15 @@ export default {
     MapComponent,
     OngoingComponent,
     FbuChildOrders,
+    ApprovalDialog,
     NPSFooter,
   },
   mixins: [RegisterStoreModule, NpsMixin, SessionMxn, NotificationMxn],
   data() {
     return {
+      showSocialMediaApprovalDialog: false,
+      socialMediaApprovalStatus: 0,
+      copId: 0,
       icon_class: '',
       message: '',
       loading_status: false,
@@ -670,6 +687,7 @@ export default {
     const session = this.$store.getters.getSession;
     if (session.default === 'biz') {
       this.setDedicatedAccessStatus(true);
+      this.checkSocialMediaApproval();
     }
     this.redirectToOrders();
   },
@@ -697,6 +715,21 @@ export default {
       saveSuggestions: '$_orders/saveSuggestions',
       removeSuggestions: '$_orders/removeSuggestions',
     }),
+    checkSocialMediaApproval() {
+      const session = this.$store.getters.getSession;
+      if (Object.keys(session).length > 0) {
+        if (session.default === 'biz') {
+          const bizSession = session[session.default];
+          this.copId = bizSession.cop_id;
+          const { verified_social_media_business, social_media_business_approval_status } = bizSession;
+          console.log(' verified_social_media_business, social_media_business_approval_status ', verified_social_media_business, social_media_business_approval_status);
+          if (social_media_business_approval_status === 0) {
+            this.showSocialMediaApprovalDialog = true;
+            this.socialMediaApprovalStatus = verified_social_media_business;
+          }
+        }
+      }
+    },
     isNewCopAcc() {
       let isSet = false;
       let kraSection = false;
@@ -1201,6 +1234,10 @@ export default {
               updatedSession[session.default].tax_authority_pin = this.kra_pin;
             } else if (this.updateSetIndustry) {
               updatedSession[session.default].industry_id = this.industry_type;
+            }
+
+            if (this.social_media_option) {
+              this.showSocialMediaApprovalDialog = true;
             }
 
             const newSession = JSON.stringify(updatedSession);
