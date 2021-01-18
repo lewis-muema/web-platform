@@ -9,7 +9,7 @@
           class="section__link"
           to="/freight/dashboard"
         >
-          Dashboard
+          Activity Log
         </router-link>
         <router-link
           class="section__link"
@@ -21,7 +21,7 @@
           class="section__link"
           to="/freight/orders"
         >
-          Orders
+          Shipments
         </router-link>
         <router-link
           v-if="copAcc"

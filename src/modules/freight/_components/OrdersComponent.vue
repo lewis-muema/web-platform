@@ -127,11 +127,11 @@ export default {
   mixins: [TimezoneMxn],
   data() {
     return {
-      empty_orders_state: 'Fetching freight Orders',
+      empty_orders_state: 'Fetching freight shipments',
       search: '',
       pagination_limit: 10,
       pagination_page: 1,
-      create_order_text: 'Create an order',
+      create_order_text: 'Place an order',
       loading: false,
       sessionData: {},
     };
@@ -225,15 +225,15 @@ export default {
       };
       this.$store.dispatch('$_freight/requestFreightOrders', fullPayload).then(
         () => {
-          this.empty_orders_state = 'No available freight orders';
+          this.empty_orders_state = 'No available freight shipments';
         },
         (error) => {
           this.setFreightOrders([]);
 
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'data')) {
-            this.empty_orders_state = 'No available freight orders';
+            this.empty_orders_state = 'No available freight shipments';
           } else {
-            this.empty_orders_state = 'No available freight orders';
+            this.empty_orders_state = 'No available freight shipments';
           }
         },
       );
