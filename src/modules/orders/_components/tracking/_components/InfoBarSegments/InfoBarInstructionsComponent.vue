@@ -405,7 +405,8 @@ export default {
     },
     showEditPickUpTime() {
       this.showScheduleTimeDialog(true);
-      this.updatePickUpTimeInStore(this.trackingData.date_time);
+      const time = this.convertToUTCToLocal(this.trackingData.date_time);
+      this.updatePickUpTimeInStore(time);
     },
   },
 };

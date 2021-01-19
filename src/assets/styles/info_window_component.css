@@ -743,7 +743,7 @@ button.default.action--slide-button {
 .cancel-reason-title{
   color: #000000;
   margin-left: 9%;
-  font-size: 18px;
+  font-size: 17px;
   line-height: 3;
 }
 .cancel-reason-subtitle{
@@ -873,6 +873,7 @@ button.default.action--slide-button {
   border-radius: 4px;
   margin-right: 3%;
   margin-left: 8%;
+  margin-top: 5%;
 }
 .cancellation-info--inner{
   padding: 1%;
