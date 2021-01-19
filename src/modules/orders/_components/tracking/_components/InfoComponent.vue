@@ -803,6 +803,52 @@
                 </div>
               </el-dialog>
 
+              <el-dialog
+               :visible.sync="editScheduledTimeOption"
+                width="30%"
+                class="updateNotificationsDialog scheduleDialog"
+                :modal-append-to-body="false"
+              >
+                <div class="add-instructions-outer">
+                  <p class="add-instructions-setup schedule_time_outer">
+                    Schedule pick up time of the order
+                  </p>
+                  <div class="">
+                    <div
+                      class="instructions--inner-section"
+                    >
+                      <div class="">
+                        <div
+                          class=""
+                        >
+                          <el-date-picker
+                            v-model="schedule_time"
+                            class="vendor_component-actions__element-date"
+                            type="datetime"
+                            format="dd-MM-yyyy h:mm a"
+                            placeholder="As soon as possible"
+                            prefix-icon="el-icon-date"
+                            :default-time="default_value"
+                            :picker-options="dueDatePickerOptions"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="">
+                    <div class="">
+                      <input
+                        class="button-primary add-instructions-submit"
+                        type="submit"
+                        value="Schedule order"
+                        @click="updateScheduledTime()"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </el-dialog>
+
             </div>
           </transition>
         </div>
@@ -888,7 +934,7 @@ export default {
       cancelOption: false,
       inputCancelReason: '',
       paymentOption: '',
-      scheduled_time: false,
+      scheduled_time: '',
       user_state: false,
       isSaved: false,
       shareOption: false,
@@ -906,6 +952,7 @@ export default {
       cancellation_message: '',
       editLocationOption : false,
       editInstructionsOption : false,
+      editScheduledTimeOption : false,
       storedNotes : {},
       show_destinations: false,
       location_loading: false,
@@ -974,6 +1021,11 @@ export default {
       editedNotes : '' ,
       editedContact : '',
       send_sms : false,
+      schedule_time: '',
+      default_value: this.moment().format('HH:mm:ss'),
+      dueDatePickerOptions: {
+        disabledDate: this.disabledDueDate,
+      },
     };
   },
   computed: {
@@ -991,6 +1043,8 @@ export default {
       getEditLocationDialog: '$_orders/$_tracking/getEditLocationDialog',
       getNotesInStore: '$_orders/$_tracking/getNotesInStore',
       getNotesDialog: '$_orders/$_tracking/getNotesDialog',
+      getScheduleTimeDialog: '$_orders/$_tracking/getScheduleTimeDialog',
+      getPickUpTime: '$_orders/$_tracking/getPickUpTime',
       getStoreOrderPath: '$_orders/$_tracking/getStorePath',
       get_pickup_filled: '$_orders/$_tracking/getPickUpFilled',
       get_extra_destinations: '$_orders/$_tracking/getExtraDestinations',
@@ -1188,6 +1242,10 @@ export default {
       this.editedNotes = this.getNotesInStore.notes === null ? '' : this.getNotesInStore.notes ;
       this.editedContact = this.getNotesInStore.recipient_phone === null ? '' : this.getNotesInStore.recipient_phone ;
     },
+    getScheduleTimeDialog(value) {
+      this.editScheduledTimeOption = value;
+      this.schedule_time = this.convertToUTC(this.getPickUpTime);
+    },
     editInstructionsOption(val) {
       if (!val) {
         this.showNotesDialog(false);
@@ -1196,6 +1254,12 @@ export default {
         this.send_sms = false ;
         this.editedNotes = '';
         this.editedContact = '';
+      }
+    },
+    editScheduledTimeOption(val) {
+      if (!val) {
+        this.showScheduleTimeDialog(false);
+        this.updatePickUpTimeInStore('');
       }
     },
     addCardStatus(val) {
@@ -1280,6 +1344,8 @@ export default {
       setSecondaryProfile: 'setSecondaryProfile',
       showNotesDialog: '$_orders/$_tracking/showNotesDialog',
       updateNotesInStore: '$_orders/$_tracking/updateNotesInStore',
+      showScheduleTimeDialog: '$_orders/$_tracking/showScheduleTimeDialog',
+      updatePickUpTimeInStore: '$_orders/$_tracking/updatePickUpTimeInStore',
     }),
     ...mapActions({
       requestPriceQuote: '$_orders/$_home/requestPriceQuote',
@@ -2902,7 +2968,68 @@ export default {
           );
         },
       );
+    },
+    disabledDueDate(date) {
+      return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
+    },
+    updateScheduledTime(){
+      if (this.schedule_time !== '') {
 
+        let value = {
+          order_no: this.$route.params.order_no,
+          client_type: 'corporate',
+          date_time : this.convertToUTCToLocal(this.schedule_time),
+        };
+
+        const payload = {
+          values: value,
+          app: 'ORDERS_APP',
+          endpoint: 'schedule_order',
+        };
+
+        this.$store.dispatch('$_orders/$_tracking/requestEditOrder', payload).then(
+          (response) => {
+            if (response.status) {
+              this.poll(this.$route.params.order_no);
+              this.showScheduleTimeDialog(false);
+              this.updatePickUpTimeInStore('');
+              this.scheduled_time = '';
+
+              this.doNotification(
+                1,
+                'Pick up time updated successfully',
+                '',
+              );
+            }
+            else {
+              this.doNotification(
+                2,
+                'Pick up time update failed',
+                'Please try again',
+              );
+            }
+          },
+          (error) => {
+            if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
+              this.doNotification(2, 'Pick up time update failed', error.response.data.reason);
+            }
+            else {
+              this.doNotification(
+                2,
+                'Pick up time update failed',
+                'Pick up time update failed. Please check your internet connection and try again.',
+              );
+            }
+          },
+        );
+      }
+      else {
+        this.doNotification(
+           2,
+          'Edit pick up time error',
+          'Kindly provide order pick up time',
+        );
+      }
     },
   },
 };
@@ -2933,5 +3060,8 @@ export default {
 }
 ::-webkit-scrollbar-thumb:window-inactive {
   background-color: rgba(0, 0, 0, 0.2);
+}
+.schedule_time_outer{
+  margin-top: 11% !important;
 }
 </style>

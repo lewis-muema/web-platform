@@ -16,6 +16,8 @@ const state = {
   pickup_eta: '',
   delivery_eta: '',
   edit_location: false,
+  edit_scheduled_time: false,
+  pick_up_time: '',
   pick_up_filled_status: false,
   pickup_filled: false,
   order_path: [],
