@@ -156,9 +156,6 @@
               <el-dialog :visible.sync="cancelOption" class="cancelOptions">
                 <div class="cancelOptions--content-wrap" v-if="extendedDialog()">
                   <div class="">
-                    <div class="cancel-reason-title" id="cancel-reason-title">
-                      Are you sure you want to cancel?
-                    </div>
                     <div class="cancellation-info--outer">
                       <div class="cancellation-info--inner">
                         <div
@@ -176,51 +173,103 @@
                       </div>
                     </div>
                   </div>
-                  <div v-for="reasons in cancellation_reasons">
-                    <div class="cancel-reason-text" id="cancel-reason-text">
-                      <div class="">
-                        <el-radio v-model="cancel_reason" :label="reasons.cancel_reason_id">
-                          {{ reasons.cancel_reason }}
-                        </el-radio>
+                  <div  v-if="!cancellation_step">
+                    <div class="edit-information-outer">
+                      <p class="cancellation-edit-options align-inner-bar" v-if="checkEditOption()">
+                        <i class="el-icon-location edit-location-icon" />
+                        Wrong delivery locations?
+                        <div class="cancellation-edit-inner" @click="showEditLocationsDialog()">
+                          Edit locations
+                        </div>
+                      </p>
+
+                      <p class="cancellation-edit-options align-inner-bar" v-if="checkScheduleOption()">
+                      <img src="https://images.sendyit.com/web_platform/tracking/calendar.svg" alt="" class="infobar-truck-img">
+                         Schedule order for later?
+                        <div class="cancellation-edit-inner" @click="showEditPickUpTime()">
+                         Schedule order
+                        </div>
+                      </p>
+
+                    </div>
+                    <div class="">
+                      <div class="cancel-reason-title">
+                        Do you still want to cancel the order?
+                      </div>
+                      <div class="action--slide-desc">
+                        <button
+                          type="button"
+                          name="button"
+                          class="action--slide-button cancellation-submit accept-cancell-btn"
+                          @click="cancelStep(true)"
+                        >
+                          CONTINUE TO CANCEL
+                        </button>
+                        <button
+                          type="button"
+                          name="button"
+                          class="action--slide-button cancellation-submit"
+                          @click="cancelStep(false)"
+                        >
+                          NO , DON'T CANCEL
+                        </button>
                       </div>
                     </div>
+
                   </div>
-                  <div class="cancel-reason-input" v-if="cancel_reason === 0">
-                    <el-input
-                      type="textarea"
-                      :autosize="{ minRows: 2, maxRows: 4 }"
-                      placeholder="Tell us why you want to cancel"
-                      v-model="cancel_desc"
-                    >
-                    </el-input>
+                  <div v-if="cancellation_step">
+
+                    <div v-for="reasons in cancellation_reasons">
+                      <div class="cancel-reason-text" id="cancel-reason-text">
+                        <div class="">
+                          <el-radio v-model="cancel_reason" :label="reasons.cancel_reason_id">
+                            {{ reasons.cancel_reason }}
+                          </el-radio>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="cancel-reason-input" v-if="cancel_reason === 0">
+                      <el-input
+                        type="textarea"
+                        :autosize="{ minRows: 2, maxRows: 4 }"
+                        placeholder="Tell us why you want to cancel"
+                        v-model="cancel_desc"
+                      >
+                      </el-input>
+                    </div>
+
+                    <div class="cancel-reason-input">
+                      <input
+                        type="text"
+                        v-model="inputCancelReason"
+                        class="cancel-reason-text-input"
+                        name=""
+                        placeholder="Enter cancel reason"
+                      />
+                    </div>
+
+                    <div class="action--slide-desc">
+                      <button
+                        type="button"
+                        name="button"
+                        class="action--slide-button cancellation-submit accept-cancell-btn"
+                        @click="cancelOrder()"
+                      >
+                        YES , CANCEL
+                      </button>
+                      <button
+                        type="button"
+                        name="button"
+                        class="action--slide-button cancellation-submit"
+                        @click="cancelToggle(true)"
+                      >
+                        NO , DON'T CANCEL
+                      </button>
+                    </div>
+
                   </div>
-                  <div class="cancel-reason-input">
-                    <input
-                      type="text"
-                      v-model="inputCancelReason"
-                      class="cancel-reason-text-input"
-                      name=""
-                      placeholder="Enter cancel reason"
-                    />
-                  </div>
-                  <div class="action--slide-desc">
-                    <button
-                      type="button"
-                      name="button"
-                      class="action--slide-button cancellation-submit accept-cancell-btn"
-                      @click="cancelOrder()"
-                    >
-                      YES , CANCEL
-                    </button>
-                    <button
-                      type="button"
-                      name="button"
-                      class="action--slide-button cancellation-submit"
-                      @click="cancelToggle(true)"
-                    >
-                      NO , DON'T CANCEL
-                    </button>
-                  </div>
+
                 </div>
                 <div class="cancelOptions--content-wrap" v-if="cancel_reason === 4">
                   <div class="cancelOptions--content-message">
@@ -1026,6 +1075,7 @@ export default {
       dueDatePickerOptions: {
         disabledDate: this.disabledDueDate,
       },
+      cancellation_step : false,
     };
   },
   computed: {
@@ -1053,6 +1103,7 @@ export default {
       getRunningBalance: 'getRunningBalance',
       get_saved_cards: '$_orders/$_home/getSavedCards',
       getCardPaymentStatus: '$_payment/getCardPaymentStatus',
+      getSession: 'getSession',
     }),
     allow_add_destination() {
       return (
@@ -1187,6 +1238,7 @@ export default {
           eventLabel: 'No Button - Order Cancellation Page - WebApp',
         };
         this.fireGAEvent(eventPayload);
+        this.cancellation_step = false;
       }
     },
     shareOption(val) {
@@ -1245,6 +1297,7 @@ export default {
     getScheduleTimeDialog(value) {
       this.editScheduledTimeOption = value;
       this.schedule_time = this.convertToUTC(this.getPickUpTime);
+      this.default_value = this.moment(this.getPickUpTime).format('HH:mm:ss');
     },
     editInstructionsOption(val) {
       if (!val) {
@@ -1261,6 +1314,14 @@ export default {
         this.showScheduleTimeDialog(false);
         this.updatePickUpTimeInStore('');
       }
+    },
+    getSession: {
+      handler() {
+        if (Object.keys(this.$store.getters.getSession).length > 0) {
+          this.confirmUser();
+        }
+      },
+      deep: true,
     },
     addCardStatus(val) {
       if (val) {
@@ -3031,6 +3092,40 @@ export default {
         );
       }
     },
+    cancelStep(val){
+      this.cancellation_step = val ;
+      if (!val) {
+        this.cancelOption = val;
+      }
+    },
+    showEditPickUpTime() {
+      this.cancelOption = false;
+      this.setTrackMoreInfo(true);
+      this.showScheduleTimeDialog(true);
+      this.updatePickUpTimeInStore(this.tracking_data.date_time);
+    },
+    showEditLocationsDialog() {
+      this.cancelOption = false;
+      this.setTrackMoreInfo(true);
+      this.setEditLocationDialog(true);
+    },
+    checkScheduleOption() {
+      let show = false;
+      if (this.tracking_data.delivery_status < 2 && this.user_state) {
+        show = true;
+      }
+      return show;
+    },
+    checkEditOption() {
+      let show = false;
+      if (
+        Object.prototype.hasOwnProperty.call(this.tracking_data, 'edit_config')
+        && this.user_state
+      ) {
+        show = this.tracking_data.edit_config.add_drop_off;
+      }
+      return show;
+    },
   },
 };
 </script>
@@ -3063,5 +3158,27 @@ export default {
 }
 .schedule_time_outer{
   margin-top: 11% !important;
+}
+.edit-information-outer{
+  margin-right: 3%;
+  margin-left: 9%;
+  border-bottom: 1px solid #74696942;
+}
+.cancellation-edit-options{
+  color: #2C2A2A;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 2%;
+}
+.edit-location-icon{
+  color: #1B7FC3 !important;
+}
+.cancellation-edit-inner{
+  margin: 3% 0px 5% 0px;
+  font-style: italic;
+  color: #1B7FC3;
+  cursor: pointer;
+  font-size: 12px;
+  padding-left: 19px;
 }
 </style>
