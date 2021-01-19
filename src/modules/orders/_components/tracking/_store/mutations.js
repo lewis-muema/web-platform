@@ -41,6 +41,12 @@ const setEditLocationDialog = (state, data) => {
 const showNotesDialog = (state, data) => {
   state.edit_notes = data;
 };
+const showScheduleTimeDialog = (state, data) => {
+  state.edit_scheduled_time = data;
+};
+const updatePickUpTimeInStore = (state, data) => {
+  state.pick_up_time = data;
+};
 const updateNotesInStore = (state, data) => {
   state.stored_notes = data;
 };
@@ -90,6 +96,8 @@ export default {
   setDeliveryEta,
   setEditLocationDialog,
   showNotesDialog,
+  showScheduleTimeDialog,
+  updatePickUpTimeInStore,
   updateNotesInStore,
   setPickUpFilled,
   setPickUpFilledStatus,

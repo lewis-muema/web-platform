@@ -473,7 +473,7 @@ ul.timeline > li#timeline_right.payedReached:before {
   padding-left: 30px;
 }
 .tracking-loader {
-  padding-bottom: 10px;
+  padding-bottom: 11%;
   width: 120%;
 }
 .tracking-loader-inner {
@@ -481,7 +481,7 @@ ul.timeline > li#timeline_right.payedReached:before {
 }
 .tracking-loader-outer {
   padding-left: 58px;
-  padding-top: 12px;
+  padding-top: 3%;
 }
 .tracking-notes-inner {
   padding-top: 5px;
@@ -704,6 +704,9 @@ ul.inforbar_order_timeline:before {
 }
 .inforbar_order_content {
   padding-left: 5% !important;
+  overflow-y: scroll;
+  height: 190px;
+  font-size: 12px;
 }
 .stagePending {
   margin-bottom: 7px !important;
