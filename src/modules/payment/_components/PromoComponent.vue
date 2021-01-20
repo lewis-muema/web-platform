@@ -7,7 +7,7 @@
       <div class="promocodeinfo" v-for="(promocode, index) in promoCodes" :key="index" :class="{ 'last-item': index === Object.keys(promoCodes).length - 1 }">
         <div class="promocodestitle promocode-sub-header">{{ promocode.couponName }}</div>
         <div v-if="promocode.couponCodeType === 1" class="promocode-value">{{promocode.currency }} {{ promocode.couponBalance }}</div>
-        <div v-else class="promocode-value">50% OFF (Max. KES 300)</div>
+        <div v-else class="promocode-value">{{ promocode.couponBalance * 100 }}% OFF (Max. {{ promocode.currency }} {{ formatNumber(promocode.maxDiscountAmount) }})</div>
         <div class="promocode-date" :class="{ 'to-expire' : formatExpiryDate(promocode.couponEndDate).status === 'red' } ">Expiry: {{ formatExpiryDate(promocode.couponEndDate).expiryDate }}</div>
       </div>
     </div>
