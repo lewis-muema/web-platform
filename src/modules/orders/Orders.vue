@@ -161,7 +161,7 @@
         >
           <div class="locations-popup-title">
             <p class="locations-popup-title-text">
-              Manage Saved pick up locations
+              Manage saved {{ waypointType }} locations
             </p>
             <i
               slot="suffix"
@@ -179,17 +179,17 @@
             <gmap-autocomplete
               v-model="location"
               :options="map_options"
-              placeholder="Enter a pickup location"
+              :placeholder="`Enter a ${waypointType} location`"
               :select-first-on-enter="true"
-              class="input-control homeview--input-bundler__input input-control"
+              class="input-control homeview--input-bundler__input input-control manage-locations-input"
               @place_changed="setLocation($event)"
             />
           </div>
           <button
-            :class="location ? 'locations-popup-button-active' : 'locations-popup-button-inactive'"
+            :class="location && !locationSavingStatus ? 'locations-popup-button-active' : 'locations-popup-button-inactive'"
             @click="saveLocation()"
           >
-            Save Location
+            {{ locationSavingStatus ? 'Saving' : 'Save' }} Location
           </button>
           <div>
             <p class="locations-popup-saved-title">
@@ -226,6 +226,12 @@
                 >
                   Remove
                 </span>
+              </div>
+              <div
+                v-if="suggestions.length === 0"
+                class="saved-locations-message"
+              >
+                No saved {{ waypointType }} locations
               </div>
             </div>
           </div>
@@ -527,6 +533,7 @@ export default {
       ],
       activeClass: -1,
       waypoint_type: '',
+      locationSavingStatus: false,
       dedicatedTourPoints: [
         {
           title: 'Order Type: Dedicated vehicles',
@@ -588,11 +595,14 @@ export default {
     suggestions() {
       const rows = [];
       this.getSuggestions.forEach((row) => {
-        if (row.location_type === 'saved') {
+        if (row.location_type === 'saved' && row.waypoint_type === this.waypoint_type) {
           rows.push(row);
         }
       });
       return rows;
+    },
+    waypointType() {
+      return this.waypoint_type === 'PICKUP' ? 'pick up' : 'drop off';
     },
   },
   watch: {
@@ -951,6 +961,7 @@ export default {
           },
         },
       };
+      this.locationSavingStatus = true;
       this.saveSuggestions(data).then((response) => {
         if (response.status) {
           const notification = {
@@ -966,10 +977,11 @@ export default {
           const notification = {
             title: '',
             level: 3,
-            message: response.message,
+            message: response.message === 'Location limit exceeded' ? `Limit allowed for saved ${this.waypointType} locations has been reached` : response.message,
           };
           this.displayNotification(notification);
         }
+        this.locationSavingStatus = false;
       });
     },
     removeLocation(suggestion) {
@@ -1242,7 +1254,7 @@ export default {
       }
     },
     setLocation(place) {
-      this.location = place.formatted_address;
+      this.location = document.querySelector('.manage-locations-input').value;
       this.suggestion = place;
     },
   },
@@ -1490,5 +1502,9 @@ cancel-pop-up > div > div > div.el-dialog__header{
   font-weight: 500;
   color: #1782c5;
   cursor: pointer;
+}
+.saved-locations-message {
+  font-size: 14px;
+  margin: 10px;
 }
 </style>
