@@ -687,7 +687,6 @@ export default {
     const session = this.$store.getters.getSession;
     if (session.default === 'biz') {
       this.setDedicatedAccessStatus(true);
-      console.log('checkSocialMediaApproval');
       this.checkSocialMediaApproval();
     }
     this.redirectToOrders();
