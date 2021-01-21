@@ -687,6 +687,7 @@ export default {
     const session = this.$store.getters.getSession;
     if (session.default === 'biz') {
       this.setDedicatedAccessStatus(true);
+      console.log('checkSocialMediaApproval');
       this.checkSocialMediaApproval();
     }
     this.redirectToOrders();
@@ -722,8 +723,7 @@ export default {
           const bizSession = session[session.default];
           this.copId = bizSession.cop_id;
           const { verified_social_media_business, social_media_business_approval_status } = bizSession;
-          console.log(' verified_social_media_business, social_media_business_approval_status ', verified_social_media_business, social_media_business_approval_status);
-          if (social_media_business_approval_status === 0) {
+          if (social_media_business_approval_status === 1) {
             this.showSocialMediaApprovalDialog = true;
             this.socialMediaApprovalStatus = verified_social_media_business;
           }
@@ -1236,7 +1236,7 @@ export default {
               updatedSession[session.default].industry_id = this.industry_type;
             }
 
-            if (this.social_media_option !== '') {
+            if (this.social_media_option) {
               this.showSocialMediaApprovalDialog = true;
             }
 
