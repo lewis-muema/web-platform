@@ -11,6 +11,10 @@ const getConfirmEta = state => state.confirm_eta;
 const getPickUpEta = state => state.pickup_eta;
 const getDeliveryEta = state => state.delivery_eta;
 const getEditLocationDialog = state => state.edit_location;
+const getScheduleTimeDialog = state => state.edit_scheduled_time;
+const getPickUpTime = state => state.pick_up_time;
+const getNotesDialog = state => state.edit_notes;
+const getNotesInStore = state => state.stored_notes;
 const getPickUpFilled = state => state.pickup_filled;
 const getPickUpFilledStatus = state => state.pick_up_filled_status;
 const getStorePath = state => state.order_path;
@@ -36,4 +40,8 @@ export default {
   getStorePath,
   getExtraDestinations,
   getMaxDestinations,
+  getNotesDialog,
+  getNotesInStore,
+  getScheduleTimeDialog,
+  getPickUpTime,
 };

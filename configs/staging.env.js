@@ -24,4 +24,5 @@ module.exports = {
   OWNER_SEARCH: '"https://gate.sendyit.com/solr/owner/"',
   VGS_VAULT_ID: '"tntr6hr8zz0"',
   VGS_ENVIRONMENT: '"live"',
+  CUSTOMERS_APP_AUTH:'"https://authtest.sendyit.com/customers/"',
 };

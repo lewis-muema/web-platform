@@ -38,6 +38,18 @@ const setDeliveryEta = (state, data) => {
 const setEditLocationDialog = (state, data) => {
   state.edit_location = data;
 };
+const showNotesDialog = (state, data) => {
+  state.edit_notes = data;
+};
+const showScheduleTimeDialog = (state, data) => {
+  state.edit_scheduled_time = data;
+};
+const updatePickUpTimeInStore = (state, data) => {
+  state.pick_up_time = data;
+};
+const updateNotesInStore = (state, data) => {
+  state.stored_notes = data;
+};
 const setPickUpFilled = (state, data) => {
   state.pickup_filled = data;
 };
@@ -83,6 +95,10 @@ export default {
   setPickUpEta,
   setDeliveryEta,
   setEditLocationDialog,
+  showNotesDialog,
+  showScheduleTimeDialog,
+  updatePickUpTimeInStore,
+  updateNotesInStore,
   setPickUpFilled,
   setPickUpFilledStatus,
   unsetOrderPath,

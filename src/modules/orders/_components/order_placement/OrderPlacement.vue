@@ -603,11 +603,15 @@ export default {
       const session = this.$store.getters.getSession;
       const userId = session[session.default].user_id;
       const copId = session.default === 'biz' ? session[session.default].cop_id : 0;
-      this.fetchSuggestions({
+      const suggestionsObject = {
         user_id: userId,
         cop_id: copId,
         type: 1,
-      });
+      };
+      const payload = {
+        values: suggestionsObject,
+      };
+      this.fetchSuggestions(payload);
     },
     addExtraDestinationWrapper() {
       this.addExtraDestination();

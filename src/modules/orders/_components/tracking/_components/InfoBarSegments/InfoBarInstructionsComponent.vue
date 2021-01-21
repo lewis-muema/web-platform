@@ -12,11 +12,11 @@
               alt=""
               class="infobar-truck-img"
             >
-            <span class="info-text-transform infor-top-bar-text">
+            <span class="info-text-transform infor-top-bar-text align-top-bar">
               Type of order
             </span>
           </div>
-          <div class="tracking-loader-inner">
+          <div class="tracking-loader-inner align-inner-bar">
             <img
               :src="getVendorIcon(trackingData.rider.vendor_id)"
               alt=""
@@ -27,25 +27,51 @@
             </span>
           </div>
         </div>
-        <div
-          v-if="scheduled_time"
-          class="tracking-loader"
-        >
-          <div class="">
-            <img
-              src="https://images.sendyit.com/web_platform/tracking/calendar.svg"
-              alt=""
-              class="infobar-truck-img"
-            >
-            <span class="info-text-transform infor-top-bar-text">
-              Scheduled pick up time
-            </span>
+        <div class="tracking-loader">
+          <div v-if="scheduled_time">
+            <div class="">
+              <img
+                src="https://images.sendyit.com/web_platform/tracking/calendar.svg"
+                alt=""
+                class="infobar-truck-img"
+              >
+              <span class="info-text-transform infor-top-bar-text align-top-bar">
+                Scheduled pick up time
+              </span>
+            </div>
+            <div class="tracking-loader-inner align-inner-bar">
+              <span class="info-text-transform">
+                {{ convertToUTCToLocal(trackingData.date_time) | moment }}
+              </span>
+            </div>
           </div>
-          <div class="tracking-loader-inner">
-            <span class="info-text-transform">
-              {{ convertToUTCToLocal(trackingData.date_time) | moment }}
-            </span>
+
+          <div v-if="!scheduled_time">
+            <div class="">
+              <img
+                src="https://images.sendyit.com/web_platform/tracking/calendar.svg"
+                alt=""
+                class="infobar-truck-img"
+              >
+              <span class="info-text-transform infor-top-bar-text align-top-bar">
+                Pick up time
+              </span>
+            </div>
+            <div class="tracking-loader-inner align-inner-bar">
+              <span class="info-text-transform">
+                {{ convertToUTCToLocal(trackingData.date_time) | moment }}
+              </span>
+            </div>
           </div>
+
+          <p
+            v-if="checkScheduleOption()"
+            class="info-scheduled-time align-inner-bar"
+            @click="showEditPickUpTime()"
+          >
+            <i class="el-icon-edit-outline" />
+            Reschedule pick up time
+          </p>
         </div>
 
         <!-- Show for truck orders  -->
@@ -60,13 +86,13 @@
                 alt=""
                 class="infobar-truck-img"
               >
-              <span class="info-text-transform infor-top-bar-text">
+              <span class="info-text-transform infor-top-bar-text align-top-bar">
                 Goods to be delivered
               </span>
             </div>
             <div
               v-if="'delivery_item' in trackingData.package_details"
-              class="tracking-loader-inner"
+              class="tracking-loader-inner align-inner-bar"
             >
               <div v-if="trackingData.package_details.delivery_item === ''">
                 Not Indicated
@@ -77,7 +103,7 @@
             </div>
             <div
               v-else
-              class="tracking-loader-inner"
+              class="tracking-loader-inner align-inner-bar"
             >
               Not Indicated
             </div>
@@ -89,20 +115,20 @@
                 alt=""
                 class="infobar-truck-img"
               >
-              <span class="info-text-transform">
+              <span class="info-text-transform align-top-bar">
                 Weight of Load
               </span>
             </div>
             <div
               v-if="'load_weight' in trackingData.package_details"
-              class="tracking-loader-inner"
+              class="tracking-loader-inner align-inner-bar"
             >
               {{ trackingData.package_details.load_weight }}
               {{ trackingData.package_details.load_units }}
             </div>
             <div
               v-else
-              class="tracking-loader-inner"
+              class="tracking-loader-inner align-inner-bar"
             >
               Not Indicated
             </div>
@@ -115,19 +141,19 @@
                 alt=""
                 class="infobar-truck-img"
               >
-              <span class="info-text-transform infor-top-bar-text">
+              <span class="info-text-transform infor-top-bar-text align-top-bar">
                 Do you need a loader?
               </span>
             </div>
             <div
               v-if="trackingData.package_details.additional_loader"
-              class="tracking-loader-inner"
+              class="tracking-loader-inner align-inner-bar"
             >
               Yes, {{ trackingData.package_details.no_of_loaders }}
             </div>
             <div
               v-else
-              class="tracking-loader-inner"
+              class="tracking-loader-inner align-inner-bar"
             >
               No
             </div>
@@ -184,7 +210,7 @@
         <p
           v-if="checkEditOption()"
           class="infor-top-change-details edit-instructions-align"
-          @click="showEditInstructionsDialog()"
+          @click="showEditInstructionsDialog(trackingData.path[0])"
         >
           <i class="el-icon-edit-outline" />
           Edit Instructions
@@ -240,7 +266,7 @@
         <p
           v-if="checkEditOption()"
           class="infor-top-change-details edit-instructions-align"
-          @click="showEditInstructionsDialog()"
+          @click="showEditInstructionsDialog(val)"
         >
           <i class="el-icon-edit-outline" />
           Edit Instructions
@@ -251,7 +277,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import NotificationMxn from '../../../../../../mixins/notification_mixin';
 import EventsMixin from '../../../../../../mixins/events_mixin';
 import TimezoneMxn from '../../../../../../mixins/timezone_mixin';
@@ -299,8 +325,15 @@ export default {
   },
   mounted() {
     this.checkScheduler();
+    this.confirmUser();
   },
   methods: {
+    ...mapMutations({
+      showNotesDialog: '$_orders/$_tracking/showNotesDialog',
+      updateNotesInStore: '$_orders/$_tracking/updateNotesInStore',
+      showScheduleTimeDialog: '$_orders/$_tracking/showScheduleTimeDialog',
+      updatePickUpTimeInStore: '$_orders/$_tracking/updatePickUpTimeInStore',
+    }),
     confirmUser() {
       const session = this.$store.getters.getSession;
       if (
@@ -349,8 +382,9 @@ export default {
       }
       return resp;
     },
-    showEditInstructionsDialog() {
-      console.log('am here');
+    showEditInstructionsDialog(val) {
+      this.showNotesDialog(true);
+      this.updateNotesInStore(val);
     },
     checkEditOption() {
       let show = false;
@@ -362,10 +396,37 @@ export default {
       }
       return show;
     },
+    checkScheduleOption() {
+      let show = false;
+      if (this.trackingData.delivery_status < 2 && this.user_state) {
+        show = true;
+      }
+      return show;
+    },
+    showEditPickUpTime() {
+      this.showScheduleTimeDialog(true);
+      const time = this.convertToUTCToLocal(this.trackingData.date_time);
+      this.updatePickUpTimeInStore(time);
+    },
   },
 };
 </script>
 
 <style lang="css" scoped>
 @import "../../../../../../assets/styles/info_window_component.css";
+.info-scheduled-time{
+  margin: 3% 0px -2% 0px;
+  font-style: italic;
+  color: #1B7FC3;
+  cursor: pointer;
+  font-size: 12px;
+  padding-left: 19px;
+}
+.align-top-bar{
+  margin-left: 1%;
+  margin-top: 2%;
+}
+.align-inner-bar{
+  margin-left: 1%;
+}
 </style>

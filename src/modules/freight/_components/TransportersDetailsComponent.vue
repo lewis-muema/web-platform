@@ -378,7 +378,7 @@ export default {
   data() {
     return {
       quote_text: 'Request for quote',
-      financing_text: 'Create order',
+      financing_text: 'Place Order',
       submit_text: 'Request',
       rating: 5.0,
       quoteDialog: false,
