@@ -1236,7 +1236,7 @@ export default {
               updatedSession[session.default].industry_id = this.industry_type;
             }
 
-            if (this.social_media_option) {
+            if (this.social_media_option !== '') {
               this.showSocialMediaApprovalDialog = true;
             }
 
