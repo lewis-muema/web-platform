@@ -222,4 +222,5 @@ a.menu--last-child-link {
 }
 .segmentation-tab{
   color: #fff !important;
+  text-transform: uppercase;
 }

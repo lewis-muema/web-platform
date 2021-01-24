@@ -7,7 +7,7 @@
       <i class="el-icon-arrow-left view-transporter-info" /> Back
     </div>
     <div class="create-order-upper">
-      Create order
+      Place Order
     </div>
     <div class="transporters-container transporters-main--inner">
       <div class="transporters-content">
@@ -432,7 +432,7 @@ export default {
   mixins: [NotificationMxn],
   data() {
     return {
-      submit_text: 'Create Order',
+      submit_text: 'Place Order',
       quote_text: 'Request for quote',
       locations: [],
       map_options: {
@@ -913,7 +913,7 @@ export default {
       ) {
         this.doCompleteOrder();
       } else {
-        this.doNotification(2, 'Create order error !', 'Kindly provide all values');
+        this.doNotification(2, 'Place Order error !', 'Kindly provide all values');
       }
     },
     doCompleteOrder() {
