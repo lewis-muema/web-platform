@@ -126,7 +126,7 @@ export default {
       } else if (val === 1) {
         this.$router.push('/freight/verify');
       } else if (val === 2) {
-        this.$router.push('/freight/orders');
+        this.$router.push('/freight/transporters');
       } else {
         this.$router.push('/orders');
       }
