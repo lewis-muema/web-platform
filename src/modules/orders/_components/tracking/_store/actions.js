@@ -293,6 +293,25 @@ const requestPaymentOptions = function requestPaymentOptions({ dispatch }, data)
     );
   });
 };
+const cancelCoupon = function cancelCoupon({ dispatch }, data) {
+  const payload = {
+    values: data,
+    app: 'CUSTOMERS_APP',
+    endpoint: 'use_coupon',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
 export default {
   getTrackingData,
@@ -307,4 +326,5 @@ export default {
   requestPriceQuote,
   requestEditOrder,
   requestPaymentOptions,
+  cancelCoupon,
 };
