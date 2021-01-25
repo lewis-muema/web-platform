@@ -91,7 +91,7 @@ export default {
       let resp = 0;
       if (Object.prototype.hasOwnProperty.call(session[session.default], 'freight_status')) {
         if (session[session.default].freight_status === 2) {
-          this.$router.push('/freight/dashboard');
+          this.$router.push('/freight/transporters');
         } else {
           resp = session[session.default].freight_status;
         }
