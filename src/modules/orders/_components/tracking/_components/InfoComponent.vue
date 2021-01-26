@@ -879,6 +879,7 @@
                             prefix-icon="el-icon-date"
                             :default-time="default_value"
                             :picker-options="dueDatePickerOptions"
+                            @change="dispatchScheduleTime"
                           />
                         </div>
                       </div>
@@ -963,14 +964,6 @@ export default {
     InstructionsSection,
     OrderTimelineSection,
   },
-  filters: {
-    moment(date) {
-      return moment(date).format('MMM Do YYYY, h:mm a');
-    },
-    eta_moment(date) {
-      return moment(date).format('hA');
-    },
-  },
   mixins: [TimezoneMxn, EventsMixin, NotificationMxn, Mcrypt, PaymentMxn],
   data() {
     return {
@@ -983,7 +976,6 @@ export default {
       cancelOption: false,
       inputCancelReason: '',
       paymentOption: '',
-      scheduled_time: '',
       user_state: false,
       isSaved: false,
       shareOption: false,
@@ -1105,6 +1097,17 @@ export default {
       getCardPaymentStatus: '$_payment/getCardPaymentStatus',
       getSession: 'getSession',
     }),
+    order_is_scheduled() {
+      return this.moment(this.current_time).isBefore(this.schedule_time);
+    },
+    current_time() {
+      return this.moment().format('YYYY-MM-DD HH:mm:ss');
+    },
+    scheduled_time() {
+      return this.moment(this.schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
+    },
     allow_add_destination() {
       return (
         !this.location_loading
@@ -1415,8 +1418,8 @@ export default {
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
 
     }),
-    moment() {
-      return moment();
+    dispatchScheduleTime(){
+      this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
     },
     loadVeryGoodSecurityScript() {
       const script = document.createElement('script');
@@ -3062,10 +3065,16 @@ export default {
     updateScheduledTime(){
       if (this.schedule_time !== '') {
 
+        let time = this.order_is_scheduled
+          ? this.convertToUTC(this.scheduled_time)
+          : this.convertToUTC(this.current_time);
+
+        let scheduleTime = this.moment(time).utc().format('YYYY-MM-DD HH:mm:ss') ;
+
         let value = {
           order_no: this.$route.params.order_no,
           client_type: 'corporate',
-          date_time : this.convertToUTCToLocal(this.schedule_time),
+          date_time : scheduleTime,
         };
 
         const payload = {
@@ -3080,7 +3089,7 @@ export default {
               this.poll(this.$route.params.order_no);
               this.showScheduleTimeDialog(false);
               this.updatePickUpTimeInStore('');
-              this.scheduled_time = '';
+              this.schedule_time = '';
 
               this.doNotification(
                 1,
