@@ -237,7 +237,10 @@
         </span>
       </div>
     </div>
-
+    <PromoCodesComponent
+      :hide-payment="hide_payment"
+      @promoCodeDetails="setPromoCodeDetails"
+    />
     <div
       class="home-view-place-order"
       :class="loader_class"
@@ -530,6 +533,9 @@
 </template>
 
 <script>
+/* eslint-disable camelcase */
+/* eslint-disable max-len */
+
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import numeral from 'numeral';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -544,6 +550,8 @@ import PaymentMxn from '../../../../../mixins/payment_mixin';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
+import PromoCodesComponent from './PromoCodesComponent.vue';
+import PromocodesMixin from '../../../../../mixins/promocodes_mixin';
 
 library.add(faChevronDown, faPlusCircle, faArrowLeft, faTrashAlt);
 
@@ -552,8 +560,8 @@ const TRUCK_VENDORS = [20, 25];
 
 export default {
   name: 'OrderOptions',
-  components: {},
-  mixins: [Mcrypt, PaymentMxn, TimezoneMxn, EventsMixin, NotificationMxn],
+  components: { PromoCodesComponent },
+  mixins: [Mcrypt, PaymentMxn, TimezoneMxn, EventsMixin, NotificationMxn, PromocodesMixin],
   data() {
     return {
       schedule_time: this.moment(),
@@ -601,6 +609,7 @@ export default {
       activeSavedCard: '',
       saveCardState: false,
       deletedCardIndex: '',
+      couponDetails: null,
     };
   },
 
@@ -831,6 +840,9 @@ export default {
   },
 
   watch: {
+    notification(obj) {
+      this.displayNotification(obj);
+    },
     addCardStatus(val) {
       if (val) {
         setTimeout(() => {
@@ -1600,6 +1612,15 @@ export default {
                   },
                 });
               }
+              const discountedAmount = this.calculateCouponAmount(this.full_order_cost, this.couponDetails);
+
+              const couponData = {
+                coupon_code: this.couponDetails.couponName,
+                coupon_amount: this.full_order_cost < discountedAmount ? this.full_order_cost : discountedAmount,
+                is_cancelled: false,
+                coupon_type: this.couponDetails.couponCodeType,
+              };
+              this.useCoupon(couponData);
             } else {
               this.doNotification(
                 2,
@@ -1688,6 +1709,14 @@ export default {
           sim_card_sn: this.getPairSerialNumber,
           rider_phone: this.getPairRiderPhone,
           order_no: this.order_no,
+        };
+      }
+
+      if (this.couponDetails !== null) {
+        const discountedAmount = this.calculateCouponAmount(this.full_order_cost, this.couponDetails);
+        payload.promo_code_details = {
+          discount_amount: this.full_order_cost < discountedAmount ? this.full_order_cost : discountedAmount,
+          promo_code: this.couponDetails.couponName,
         };
       }
 
@@ -2434,6 +2463,22 @@ export default {
       }
       return resp;
     },
+    setPromoCodeDetails(promoCodeDetails) {
+      this.couponDetails = promoCodeDetails;
+    },
+    calculateCouponAmount(orderAmount, couponDetails) {
+      // eslint-disable-next-line no-unused-vars
+      let amount = orderAmount;
+      if (couponDetails.couponCodeType === 1) {
+        amount = couponDetails.couponBalance;
+      } else {
+        const calculatedAmount = couponDetails.couponBalance * orderAmount;
+        // eslint-disable-next-line max-len
+        amount = calculatedAmount > couponDetails.maxDiscountAmount ? couponDetails.maxDiscountAmount : calculatedAmount;
+      }
+      return amount;
+    },
+
   },
 };
 </script>

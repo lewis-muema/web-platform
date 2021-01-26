@@ -1,5 +1,42 @@
-<template lang="html">
+<template>
   <div class="paymentbody--form">
+    <div
+      v-if="promoCodes !== null && promoCodes.length !== 0"
+      class="paymentbody--list"
+    >
+      <div class="promocodestitle main-header">
+        Valid Promo Codes
+      </div>
+      <div
+        v-for="(promocode, index) in promoCodes"
+        :key="index"
+        class="promocodeinfo"
+        :class="{ 'last-item': index === Object.keys(promoCodes).length - 1 }"
+      >
+        <div class="promocodestitle promocode-sub-header">
+          {{ promocode.couponName }}
+        </div>
+        <div
+          v-if="promocode.couponCodeType === 1"
+          class="promocode-value"
+        >
+          {{ promocode.currency }} {{ promocode.couponBalance }}
+        </div>
+        <div
+          v-else
+          class="promocode-value"
+        >
+          {{ promocode.couponBalance * 100 }}% OFF (Max. {{ promocode.currency }}
+          {{ formatNumber(promocode.maxDiscountAmount) }})
+        </div>
+        <div
+          class="promocode-date"
+          :class="{ 'to-expire' : formatExpiryDate(promocode.couponEndDate).status === 'red' } "
+        >
+          Expiry: {{ formatExpiryDate(promocode.couponEndDate).expiryDate }}
+        </div>
+      </div>
+    </div>
     <div class="paymentbody--input-wrap">
       <input
         v-model="promocode_payment_data.sendy_coupon"
@@ -13,25 +50,32 @@
       <button
         type="button"
         name="button"
-        :class="
-          valid_payment
-            ? 'button-primary paymentbody--input-button'
-            : 'paymentbody--input-button button--primary-inactive'
-        "
-        @click="requestPromoPayment"
+        :disabled="processing || !valid_payment"
+        class="button-primary paymentbody--input-button"
+        :class="{ 'paymentbody--input-button button--primary-inactive' : !valid_payment || processing }"
+        @click="redeem_coupon"
       >
         Redeem
+        <i
+          v-if="processing"
+          class="el-icon-loading tracking-loading-spinner promocode-spinner"
+        />
       </button>
     </div>
   </div>
 </template>
 
 <script>
+/* eslint-disable max-len */
+
 import { mapActions } from 'vuex';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import TimezoneMxn from '../../../mixins/timezone_mixin';
+import promocodesMxn from '../../../mixins/promocodes_mixin';
+
 
 export default {
-  mixins: [NotificationMxn],
+  mixins: [NotificationMxn, TimezoneMxn, promocodesMxn],
   data() {
     return {
       promocode_payment_data: {
@@ -44,63 +88,72 @@ export default {
       return this.promocode_payment_data.sendy_coupon !== '';
     },
   },
+  watch: {
+    promoCodes(data) {
+      this.promoCodes = data;
+    },
+    notification(obj) {
+      this.displayNotification(obj);
+    },
+  },
+  mounted() {
+    this.requestPromoCodes();
+  },
   methods: {
     ...mapActions(['$_payment/requestPromoCodePayment']),
-    requestPromoPayment() {
-      const session = this.$store.getters.getSession;
-      let cop_id = 0;
-      if (session.default === 'biz') {
-        cop_id = session[session.default].cop_id;
-      }
-      const promo_payload = {
-        values: {
-          user_email: session[session.default].user_email,
-          user_phone: session[session.default].user_phone,
-          sendy_coupon: this.promocode_payment_data.sendy_coupon,
-          cop_id,
-          client_type: session.default,
-        },
-      };
 
-      const full_payload = {
-        values: promo_payload,
-        vm: this,
-        app: 'PRIVATE_API',
-        endpoint: 'redeem_promocode',
-      };
-
-      this.$store.dispatch('$_payment/requestPromoCodePayment', full_payload).then(
-        (response) => {
-          if (response.length > 0) {
-            response = response[0];
-          }
-          let level = 0;
-          let message = response.data.msg;
-          if (response.data.status === true) {
-            // update running balance with new value
-            const running_balance = parseFloat(response.data.running_balance);
-            this.$store.commit('setRunningBalance', running_balance);
-            this.payment_state = 'Promocode Redeem Success';
-            level = 1;
-          } else {
-            this.payment_state = 'Promocode Redeem Failed';
-            message = 'Unable to redeem promocode';
-            level = 2;
-          }
-          const notification = {
-            title: 'Redeem promocode',
-            level,
-            message: `${message}`,
-          };
-          this.displayNotification(notification);
-        },
-        (error) => {
-          this.payment_state = 'Promocode Redeeem Failed';
-        },
-      );
+    redeem_coupon() {
+      this.requestPromoPayment(this.promocode_payment_data.sendy_coupon);
     },
   },
 };
 </script>
 
-<style lang="css"></style>
+<style lang="css">
+.promocodestitle{
+    font-size: 16px;
+    line-height: 28px;
+    letter-spacing: 0.02em;
+    color: #000000;
+}
+.promocodeinfo {
+  padding: 8px 0;
+    border-bottom: 0.4px solid #DCDFE6;
+}
+.main-header {
+  font-weight: 500;
+}
+.promocode-sub-header {
+    color: #303133;
+}
+.promocode-value {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  color: #909399;
+}
+.promocode-date {
+  font-size: 11px;
+  line-height: 18px;
+  color: #6EC763;
+}
+.to-expire {
+  color: #F7797F;
+}
+.paymentbody--form {
+  margin-left: 2em;
+}
+.paymentbody--list {
+  margin: .5em;
+}
+.promocode-spinner {
+  font-size: 15px !important;
+  font-weight: 700;
+  color: #fff !important;
+}
+.last-item {
+    border-bottom: none;
+}
+
+</style>
