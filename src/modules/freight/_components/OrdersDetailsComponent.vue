@@ -12,7 +12,7 @@
           class="back-freight-btn back-freight-orders"
           @click="backToOrders()"
         >
-          <i class="el-icon-arrow-left view-transporter-info" /> Back
+          <i class="el-icon-arrow-left view-transporter-info" /> {{$t('general.back')}}
         </div>
         <div class="freight-orders-main-summary">
           <div class="freight-order-details-wrapper">
@@ -25,7 +25,8 @@
             </div>
             <div class="order_details_desc">
               <div class="order_details_price">
-                Order amount: {{ freightOrderDetail.currency }}
+                {{$t('orderDetail.order_amount')}}
+                <!-- Order amount: {{ freightOrderDetail.currency }} -->
                 {{ formatCurrency(freightOrderDetail.amount) }}
               </div>
 
@@ -34,7 +35,7 @@
                   src="../../../assets/img/maroon_button.png"
                   class="order_details_desc_image"
                 >
-                <span class="order-info-header">Pick up location</span>
+                <span class="order-info-header">{{$t('orderDetail.pickup_location')}}</span>
                 <div class="freight-order-info-extra">
                   {{ freightOrderDetail.pick_up_name }}
                 </div>
@@ -44,7 +45,7 @@
                   src="../../../assets/img/blue_button.png"
                   class="order_details_desc_image"
                 >
-                <span class="order-info-header">Destination</span>
+                <span class="order-info-header">{{$t('orderDetail.destination')}}</span>
                 <div class="freight-order-info-extra">
                   {{ freightOrderDetail.destination_name }}
                 </div>
@@ -54,7 +55,7 @@
                   src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/freight/time.svg"
                   class="order_details_desc_image"
                 >
-                <span class="order-info-header">Pick up time</span>
+                <span class="order-info-header">{{$t('orderDetail.pickup_time')}}</span>
                 <div class="freight-order-info-extra">
                   {{ convertToUTCToLocal(freightOrderDetail.pick_up_time) }}
                 </div>
@@ -65,7 +66,7 @@
           <div class="rider_details_wrap">
             <div class="">
               <div class="transporter-infor--header">
-                Transporter
+                {{$t('orderDetail.transporter')}}
               </div>
               <div class="transporter-info-extra">
                 {{ freightOrderDetail.transporter_name }}
@@ -74,14 +75,15 @@
                 class="transporter-info-extra view-transporter-mark"
                 @click="goToTransporter(freightOrderDetail.owner_id)"
               >
-                View
+                {{$t('orderDetail.view')}}
               </div>
               <div
                 v-if="!freightOrderDetail.rated"
                 class="rating-section"
               >
                 <div class="rating-title">
-                  How was your experience with {{ freightOrderDetail.transporter_name }} ?
+                  <!-- How was your experience with {{ freightOrderDetail.transporter_name }} ? -->
+                  {{$t('orderDetail.experience_with')}}
                 </div>
                 <div class="decline-documemt-extend">
                   <button
@@ -90,7 +92,7 @@
                     class="decline-action--slide-button rate-freight-order"
                     @click="openRatingDialog"
                   >
-                    Rate order
+                    {{$t('orderDetail.rate_order')}}
                   </button>
                 </div>
               </div>
@@ -98,7 +100,7 @@
                 <div class="transporters-filters transporters-highlight">
                   <div class="truck-add-info">
                     <div class="transporter-infor--header freight-ratings-section">
-                      Order Ratings
+                      {{$t('orderDetail.order_ratings')}}
                     </div>
                     <el-rate
                       :value="freightOrderDetail.rating.rating"
@@ -115,7 +117,7 @@
         <div class="freight-border-line" />
         <div class="">
           <div class="transporter-doucuments-title align-documents-data">
-            Documents
+            {{$t('orderDetail.doc')}}
           </div>
           <div class="transporter-listing order-order-documents">
             <div
@@ -139,7 +141,7 @@
                     )
                   "
                 >
-                  View Document <i class="el-icon-arrow-right view-transporter-info" />
+                  {{$t('orderDetail.view_doc')}} <i class="el-icon-arrow-right view-transporter-info" />
                 </div>
                 <div
                   v-if="
@@ -178,7 +180,7 @@
                       v-if="freightOrderDetail.documents[index].status === 'DECLINED'"
                       class="freight-decline-reason"
                     >
-                      Reason : {{ freightOrderDetail.documents[index].reason }}
+                      {{$t('orderDetail.reason')}} : {{ freightOrderDetail.documents[index].reason }}
                     </div>
                   </div>
                 </div>
@@ -197,7 +199,8 @@
             >
               <div class="">
                 <div class="document-text-option ">
-                  {{ src_name }} document
+                  <!-- {{ src_name }} document -->
+                  {{$t('orderDetail.name_document')}}
                 </div>
                 <div class="document-divider" />
                 <div class="document-view-inner">
@@ -216,7 +219,7 @@
             >
               <div class="">
                 <div class="decline-text-option decline-documemt-extend">
-                  Decline Document
+                  {{$t('orderDetail.decline_doc')}}
                 </div>
               </div>
               <div class="decline-documemt-extend decline-documemt-input">
@@ -235,7 +238,7 @@
                   class="decline-action--slide-button"
                   @click="declineDocument()"
                 >
-                  Decline
+                  {{$t('orderDetail.decline')}}
                 </button>
               </div>
             </el-dialog>
@@ -245,7 +248,8 @@
             >
               <div class="">
                 <div class="decline-text-option rating-header">
-                  How was your experience with {{ freightOrderDetail.transporter_name }} ?
+                  <!-- How was your experience with {{ freightOrderDetail.transporter_name }} ? -->
+                  {{$t('orderDetail.experience_with')}}
                 </div>
               </div>
               <span class="freight-stars-container">
@@ -259,7 +263,7 @@
                 <el-input
                   v-model.trim="comment"
                   :min="0"
-                  placeholder="Tell us more (Optional)"
+                  :placeholder="$t('orderDetail.tell_us_more')"
                   type="textarea"
                   autocomplete="true"
                 />
@@ -272,7 +276,7 @@
                   class="decline-action--slide-button"
                   @click="submitRating(freightOrderDetail)"
                 >
-                  Submit
+                  {{$t('orderDetail.submit')}}
                 </button>
               </div>
             </el-dialog>
@@ -296,12 +300,12 @@ export default {
   mixins: [TimezoneMxn, NotificationMxn],
   data() {
     return {
-      quote_text: 'Request for quote',
-      financing_text: 'Place Order',
+      quote_text: this.$t('orderDetail.request_quote'),
+      financing_text: this.$t('orderDetail.create_order'),
       rating: 5.0,
       loading: true,
-      approve_doc_text: 'Approve',
-      decline_doc_text: 'Decline',
+      approve_doc_text: this.$t('orderDetail.approve'),
+      decline_doc_text: this.$t('orderDetail.decline'),
       viewDocumentOption: false,
       src_link: '',
       src_name: '',
@@ -370,15 +374,15 @@ export default {
             this.freightOrderDetail = workingResponse.order;
             this.loading = false;
           } else {
-            this.doNotification(2, 'Failed to retrieve order details', workingResponse.message);
+            this.doNotification(2, this.$t('orderDetail.failed_retrieve_order'), workingResponse.message);
             this.$router.push('/freight/orders');
           }
         },
         (error) => {
           this.doNotification(
             2,
-            'Order details retrival failure !',
-            'Failed to fetch order , Kindly retry again or contact customer support ',
+            this.$t('orderDetail.order_retrival_failure'),
+            this.$t('orderDetail.failed_to_fetch'),
           );
           this.$router.push('/freight/orders');
         },
@@ -455,22 +459,22 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, 'Document approval!', 'Document approved successfully');
+            this.doNotification(1, this.$t('orderDetail.document_approval'), this.$t('orderDetail.doc_approved_succesful'));
             this.fetchOrderDetail(this.$route.params.id);
           } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
-            this.doNotification(2, 'Failed to approve document!', workingResponse.message);
+            this.doNotification(2, this.$t('orderDetail.failed_to_approve'), workingResponse.message);
           } else {
-            this.doNotification(2, 'Failed to approve document!', workingResponse.reason);
+            this.doNotification(2, this.$t('orderDetail.failed_to_approve'), workingResponse.reason);
           }
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
-            this.doNotification(2, 'Failed to approve document!', error.response.data.reason);
+            this.doNotification(2, this.$t('orderDetail.failed_to_approve'), error.response.data.reason);
           } else {
             this.doNotification(
               2,
-              'Failed to approve document!',
-              'Failed to approve document, Kindly retry again or contact customer support ',
+              this.$t('orderDetail.failed_to_approve'),
+              this.$t('orderDetail.failed_to_approve_text'),
             );
           }
         },
@@ -518,23 +522,23 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, 'Document declined!', 'Document declined successfully');
+            this.doNotification(1, this.$t('orderDetail.document_declined'), this.$t('orderDetail.doc_declined_successful'));
             this.fetchOrderDetail(this.$route.params.id);
           } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
-            this.doNotification(2, 'Failed to decline document!', workingResponse.message);
+            this.doNotification(2, this.$t('orderDetail.doc_declined_failed'), workingResponse.message);
           } else {
-            this.doNotification(2, 'Failed to decline document!', workingResponse.reason);
+            this.doNotification(2, this.$t('orderDetail.doc_declined_failed'), workingResponse.reason);
           }
           this.closeDeclineDialog();
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
-            this.doNotification(2, 'Failed to decline document!', error.response.data.reason);
+            this.doNotification(2, this.$t('orderDetail.doc_declined_failed'), error.response.data.reason);
           } else {
             this.doNotification(
               2,
-              'Failed to decline document!',
-              'Failed to decline document, Kindly retry again or contact customer support ',
+              this.$t('orderDetail.doc_declined_failed'),
+              this.$t('orderDetail.doc_declined_failed_text'),
             );
           }
           this.closeDeclineDialog();
@@ -569,19 +573,19 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, 'Order rated successfully!', '');
+            this.doNotification(1, this.$t('orderDetail.order_rated'), '');
             this.closeRatingDialog();
             this.backToOrders();
           } else {
-            this.doNotification(2, 'Failed to rate order!', workingResponse.message);
+            this.doNotification(2, this.$t('orderDetail.failed_rate_order'), workingResponse.message);
             this.closeRatingDialog();
           }
         },
         (error) => {
           this.doNotification(
             2,
-            'Failed to rate order!',
-            'Failed to rate order, Kindly retry again or contact customer support ',
+            this.$t('orderDetail.failed_rate_order'),
+            this.$t('orderDetail.failed_rate_order_text'),
           );
           this.closeRatingDialog();
         },

@@ -2,7 +2,7 @@
   <div>
     <div class="loading-title">
       <h1 class="loader--title">
-        Loading Data
+        {{$t('FreightLoadingComponent.loading_Data')}}
       </h1>
     </div>
     <div class="data-loader" />
