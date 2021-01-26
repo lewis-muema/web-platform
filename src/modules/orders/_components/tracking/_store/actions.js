@@ -242,6 +242,25 @@ const computeCancellationFee = function computeCancellationFee({ dispatch }, dat
     );
   });
 };
+const cancelCoupon = function cancelCoupon({ dispatch }, data) {
+  const payload = {
+    values: data,
+    app: 'CUSTOMERS_APP',
+    endpoint: 'use_coupon',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
 export default {
   getTrackingData,
@@ -253,4 +272,5 @@ export default {
   requestRiderLastPosition,
   requestCancellationReasons,
   computeCancellationFee,
+  cancelCoupon,
 };
