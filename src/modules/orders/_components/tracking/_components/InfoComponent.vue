@@ -294,6 +294,538 @@
                 </div>
               </el-dialog>
 
+              <!-- Edit Order Dialog -->
+
+              <el-dialog :visible.sync="editLocationOption" class="cancelOptions">
+                <div class="cancel-reason-title" id="cancel-reason-title">
+                  Add or change locations
+                </div>
+                <div class="cancel-reason-description">
+                  You may incur cost on updating locations
+                </div>
+                <div
+                  ref="scrollable_locations"
+                  class="homeview--form homeview--row homeview--form__scrollable edit-location-inner"
+                >
+                  <div class="homeview--input-bundler">
+                    <no-ssr placeholder="">
+                      <font-awesome-icon
+                        icon="circle"
+                        size="xs"
+                        class="homeview--row__font-awesome-edit homeview--input-bundler__img .homeview--input-bundler__destination-input sendy-orange"
+                        width="10px"
+                      />
+                      <gmap-autocomplete
+                        v-model="locations[0]"
+                        :options="map_options"
+                        placeholder="Enter a pickup location"
+                        :select-first-on-enter="true"
+                        class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
+                        @place_changed="setLocation($event, 0)"
+                        @keyup="checkChangeEvents($event, 0)"
+                        @change="checkChangeEvents($event, 0)"
+                      />
+                      <font-awesome-icon
+                        icon="times"
+                        size="xs"
+                        class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup     "
+                        width="10px"
+                        @click="clearLocation(0)"
+                      />
+                    </no-ssr>
+                  </div>
+
+                  <div class="homeview--destinations">
+                    <div class="homeview--input-bundler">
+                      <no-ssr placeholder="">
+                        <font-awesome-icon
+                          icon="circle"
+                          size="xs"
+                          class="homeview--row__font-awesome-edit homeview--input-bundler__img sendy-blue"
+                          width="10px"
+                        />
+                        <gmap-autocomplete
+                          v-model="locations[1]"
+                          :options="map_options"
+                          placeholder="Enter a destination location"
+                          :select-first-on-enter="true"
+                          class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
+                          @place_changed="setLocation($event, 1)"
+                          @keyup="checkChangeEvents($event, 1)"
+                          @change="checkChangeEvents($event, 1)"
+                        />
+                        <font-awesome-icon
+                          icon="times"
+                          size="xs"
+                          class="homeview--row__font-awesome homeview--input-bundler__img-right-pickup "
+                          width="10px"
+                          @click="clearLocation(1)"
+                        />
+                      </no-ssr>
+                    </div>
+                  </div>
+
+                  <div
+                    v-for="n in get_extra_destinations"
+                    :key="n + 1"
+                    class="homeview--destinations"
+                    :data-index="n + 1"
+                  >
+                    <div class="homeview--input-bundler">
+                      <no-ssr placeholder="">
+                        <font-awesome-icon
+                          icon="circle"
+                          size="xs"
+                          class="homeview--row__font-awesome-edit homeview--input-bundler__img sendy-blue"
+                          width="10px"
+                        />
+                        <gmap-autocomplete
+                          v-model="locations[n + 1]"
+                          :options="map_options"
+                          placeholder="Enter a destination location"
+                          :select-first-on-enter="true"
+                          class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
+                          @place_changed="setLocation($event, n + 1)"
+                          @keyup="checkChangeEvents($event, (n = 1))"
+                          @change="checkChangeEvents($event, n + 1)"
+                        />
+                        <font-awesome-icon
+                          icon="times"
+                          size="xs"
+                          class="homeview--row__font-awesome homeview--input-bundler__img-right "
+                          width="10px"
+                          @click="removeExtraDestinationWrapper(n + 1)"
+                        />
+                      </no-ssr>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  v-if="allow_add_destination"
+                  class="homeview--row homeview--row__more-destinations homeview-locations-options edit-location-inner"
+                >
+                  <div class="homeview-locations-options--add-destination">
+                    <font-awesome-icon
+                      icon="plus"
+                      size="xs"
+                      class="sendy-blue homeview--row__font-awesome"
+                      width="10px"
+                    />
+                    <a class="homeview--add" @click="addExtraDestinationWrapper()"
+                      >Add Destination</a
+                    >
+                  </div>
+                </div>
+                <div
+                  v-if="location_loading"
+                  v-loading="location_loading"
+                  class="orders-loading-container"
+                />
+
+                <div
+                  class="homeview--row homeview--row__more-destinations
+                 homeview-locations-options location-notify"
+                  v-if="!price_request_validity && !location_loading"
+                >
+                  <div class="cancellation-info--outer">
+                    <div class="cancellation-info--inner">
+                      <div class="cancel-reason-subtitle" id="cancel-reason-subtitle">
+                          {{message}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="show_price_split && price_request_validity && !location_loading">
+                  <div class="price-split-separator">
+                    <div class="price-estimate-header">
+                      <i class="el-icon-circle-check price-summary-icon"></i>Price update
+                    </div>
+                  </div>
+
+                  <div
+                    class="homeview--row homeview--row__more-destinations homeview-locations-options location-notify"
+                  >
+                    <div class="price-split-container">
+                      <div class="price-split-info">
+                        <div class="price-split-icon-container">
+                          Total order cost
+                        </div>
+                        <div class="price-split-estimate-value">
+                          <p class="">
+                            {{ order_currency
+                            }}<span class="price-split-currency-highlight">{{ new_cost }}</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="price-split-info">
+                        <div class="price-split-icon-container">
+                          Amount paid
+                        </div>
+                        <div class="price-split-estimate-value">
+                          <p class="">
+                            {{ order_currency
+                            }}<span class="price-split-currency-highlight">{{
+                              tracking_data.amount
+                            }}</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="price-split-info">
+                        <div class="price-split-icon-container price-split-info-cost">
+                          Amount due
+                        </div>
+                        <div class="price-split-estimate-value">
+                          <p class="price-split-info-cost">
+                            {{ order_currency
+                            }}<span class="price-split-currency-highlight">{{
+                              getAmountDue
+                            }}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="payment-methods-section">
+                    <div class="">
+                      <div class="payments-cursor" @click="do_set_payment_option()">
+                        <a>
+                          <span class="">
+                            Payment options
+                          </span>
+                          <font-awesome-icon icon="chevron-down" :class="revertIcon" width="15px" />
+                        </a>
+                      </div>
+                      <div v-if="paymentStatusOption" class="home-view-actions--note">
+                        <div class="" />
+                        <div class="home-view-notes-wrapper">
+                          <div v-if="show_payment" class="">
+                            <span v-if="getOrderPaymentMethod === 1">
+                              <div
+                                v-for="method in payment_methods"
+                                :key="method.payment_method_id"
+                                class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
+                              >
+                                <div class="home-view-notes-wrapper--item__option">
+                                  <div
+                                    class="home-view-notes-wrapper--item__option-div payment__radio-button-label"
+                                  >
+                                    <input
+                                      v-model="payment_method"
+                                      type="radio"
+                                      :value="method.payment_method_id"
+                                      name="paymentOptions"
+                                      class="payment__radio-button"
+                                    />
+                                    <span class="payment-options-alignment">
+                                      <p class="no-margin">{{ method.name }}</p>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div class="home-view-notes-wrapper--item__value" />
+                              </div>
+
+
+                              <div v-if="display_cards" class="card-accounts-list">
+                                <div class="payment-options-cards-container">
+                                  <div v-if="!addCardStatus && get_saved_cards.length > 0">
+                                    <div v-if="deletedCardIndex === ''">
+                                      <p class="payment-options-cards-title">Saved Cards</p>
+                                      <div
+                                        v-for="(cards, index) in get_saved_cards"
+                                        :key="index"
+                                        class="payment-options-saved-cards-row"
+                                      >
+                                        <input
+                                          v-model="activeSavedCard"
+                                          :value="index"
+                                          type="radio"
+                                          class="payment-options-saved-card-radio"
+                                        />
+                                        {{ formatCardNumber(cards.card) }}
+                                        <font-awesome-icon
+                                          icon="trash-alt"
+                                          class="payment-options-delete-card-icon"
+                                          @click="deletedCardIndex = index"
+                                        />
+                                      </div>
+                                      <div
+                                        class="payment-options-add-card-holder"
+                                        @click="addCardStatus = !addCardStatus"
+                                      >
+                                        <span>
+                                          <font-awesome-icon
+                                            icon="plus-circle"
+                                            class="payment-options-add-card-icon"
+                                          />
+                                        </span>
+                                        <span class="payment-options-add-card">Add a new Card</span>
+                                      </div>
+                                    </div>
+                                    <div v-else class="delete-saved-card-dialogue">
+                                      <p class="delete-saved-card-dialogue-label">
+                                        Are you sure you want to delete this card
+                                        <strong>{{ get_saved_cards[deletedCardIndex].card }}</strong
+                                        >?
+                                      </p>
+                                      <p class="delete-saved-card-dialogue-label">
+                                        <span
+                                          class="delete-saved-card-dialogue-buttons"
+                                          @click="deleteSavedCard(deletedCardIndex)"
+                                          >Yes</span
+                                        >
+                                        <span
+                                          class="delete-saved-card-dialogue-buttons"
+                                          @click="deletedCardIndex = ''"
+                                          >No</span
+                                        >
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <form
+                                    v-else
+                                    class="VGS-form"
+                                    @submit.prevent="onSubmit"
+                                  >
+                                    <span
+                                      v-if="get_saved_cards.length > 0"
+                                      class="payment-options-cards-title back-option"
+                                      @click="addCardStatus = !addCardStatus"
+                                    >
+                                      <font-awesome-icon
+                                        icon="arrow-left"
+                                        class="payment-options-add-card-icon"
+                                      />
+                                      Back
+                                    </span>
+                                    <p class="payment-options-cards-title">Add a new card</p>
+                                    <div
+                                      id="cc-number"
+                                      class="form-group"
+                                    >
+                                      <div class="form-control-static">
+                                        <span class="fake-input-1" />
+                                      </div>
+                                    </div>
+                                    <div class="cvv-expire-fields">
+                                      <div
+                                        id="cc-expiration-date"
+                                        class="form-group"
+                                      >
+                                        <div class="form-control-static">
+                                          <span class="fake-input-1" />
+                                        </div>
+                                      </div>
+                                      <div
+                                        id="cc-cvc"
+                                        class="form-group"
+                                      >
+                                        <div class="form-control-static">
+                                          <span class="fake-input-1" />
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      id="cc-save-card-1"
+                                      class="form-group"
+                                    >
+                                      <div class="form-control-static">
+                                        <input
+                                          v-model="saveCardState"
+                                          type="checkbox"
+                                        >
+                                        <span
+                                          class="fake-checkbox-label-1"
+                                        >I want to save my card for future orders</span>
+                                      </div>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+
+
+                              <div v-if="!getCardPaymentStatus">
+                                <p
+                                  v-if="country === 'KE'"
+                                  class="card-option-disabled-notification"
+                                >
+                                  Dear {{ user_name }}, <br />
+                                  Card payments will be momentarily unavailable as we undergo
+                                  technical maintenance. You can still pay for your Sendy deliveries
+                                  using M-Pesa, or pay cash upon delivery. Contact Support on
+                                  +254709779779 for any queries.
+                                </p>
+                                <p
+                                  v-if="country === 'UG'"
+                                  class="card-option-disabled-notification"
+                                >
+                                  Dear {{ user_name }}, <br />
+                                  Card payments will be momentarily unavailable as we undergo
+                                  technical maintenance. Contact Support on +256393239706 for any
+                                  queries.
+                                </p>
+                              </div>
+
+
+                            </span>
+                          </div>
+                          <span v-else-if="getOrderPaymentMethod === 2">
+                            <div class="edit-locations-payments--postpay">
+                              <p>This is a postpay account</p>
+                              <p>The delivery costs will be added to your balance.</p>
+                            </div>
+                          </span>
+                          <span v-else>
+                            <div class="edit-locations-payments--postpay">
+                              <p>The delivery costs will be charged from your balance.</p>
+                            </div>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div
+                        v-if="loading_payment"
+                        v-loading="loading_payment"
+                        class="edit-payment-loading-container"
+                      />
+
+                      <div v-if="show_price_split && price_request_validity
+                        && !location_loading && !loading_payment">
+                        <button
+                          type="button"
+                          class="button-primary edit-locations--place-order"
+                          name="button"
+                          @click="updateLocations()"
+                        >
+                          Update Locations
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </el-dialog>
+
+              <el-dialog
+               :visible.sync="editInstructionsOption"
+                width="30%"
+                class="updateNotificationsDialog"
+                :modal-append-to-body="false"
+              >
+                <div class="add-instructions-outer">
+                  <p class="add-instructions-setup">
+                    {{ editInstructionsOuterLabel() }}
+                  </p>
+                  <div class="">
+                    <div
+                      class="instructions--inner-section"
+                    >
+                      <div class="">
+                        <div class="" />
+                        <div class="">
+                          <textarea
+                            v-model="editedNotes"
+                            name="name"
+                            rows="5"
+                            class="textarea-control add-notes"
+                            placeholder="Instructions"
+                          />
+                        </div>
+                      </div>
+                      <div class="">
+                        <div class="add-instructions-setup-contact">
+                          Contact person
+                        </div>
+                        <div class="" />
+                        <div
+                          class=""
+                        >
+                          <vue-tel-input
+                            v-model.trim="editedContact"
+                            v-validate="'required|check_phone'"
+                            class="input-control sign-up-form"
+                            type="number"
+                            name="phone"
+                            value=""
+                            data-vv-validate-on="blur"
+                            v-bind="phoneInputProps"
+                            @onBlur="validate_phone"
+                          />
+                        </div>
+                      </div>
+                      <div class="notify_recipient">
+                        <input
+                          type="checkbox"
+                          name="u_terms"
+                          class="send_sms-checkbox"
+                          v-model="send_sms"
+                        />
+                        <span>
+                          Notify them of the pickup via SMS
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="">
+                    <div class="">
+                      <input
+                        class="button-primary add-instructions-submit"
+                        type="submit"
+                        value="Update Instructions"
+                        @click="saveUpdatedInstructions()"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </el-dialog>
+
+              <el-dialog
+               :visible.sync="editScheduledTimeOption"
+                width="30%"
+                class="updateNotificationsDialog scheduleDialog"
+                :modal-append-to-body="false"
+              >
+                <div class="add-instructions-outer">
+                  <p class="add-instructions-setup schedule_time_outer">
+                    Schedule pick up time of the order
+                  </p>
+                  <div class="">
+                    <div
+                      class="instructions--inner-section"
+                    >
+                      <div class="">
+                        <div
+                          class=""
+                        >
+                          <el-date-picker
+                            v-model="schedule_time"
+                            class="vendor_component-actions__element-date"
+                            type="datetime"
+                            format="dd-MM-yyyy h:mm a"
+                            placeholder="As soon as possible"
+                            prefix-icon="el-icon-date"
+                            :default-time="default_value"
+                            :picker-options="dueDatePickerOptions"
+                            @change="dispatchScheduleTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="">
+                    <div class="">
+                      <input
+                        class="button-primary add-instructions-submit"
+                        type="submit"
+                        value="Schedule order"
+                        @click="updateScheduledTime()"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </el-dialog>
+
             </div>
           </transition>
         </div>
@@ -320,16 +852,16 @@ const moment = require('moment');
 
 export default {
   name: 'InfoWindow',
-  components: { InterCountyWindow , FooterSection ,HeaderSection ,LocationsSection ,InstructionsSection,OrderTimelineSection},
-  mixins: [TimezoneMxn, EventsMixin,NotificationMxn],
-  filters: {
-    moment(date) {
-      return moment(date).format('MMM Do YYYY, h:mm a');
-    },
-    eta_moment(date) {
-      return moment(date).format('hA');
-    },
+  components: {
+   'no-ssr': NoSSR,
+    InterCountyWindow,
+    FooterSection,
+    HeaderSection,
+    LocationsSection,
+    InstructionsSection,
+    OrderTimelineSection,
   },
+  mixins: [TimezoneMxn, EventsMixin, NotificationMxn, Mcrypt, PaymentMxn],
   data() {
     return {
       loading: true,
@@ -341,7 +873,6 @@ export default {
       cancelOption: false,
       inputCancelReason: '',
       paymentOption: '',
-      scheduled_time: false,
       user_state: false,
       isSaved: false,
       shareOption: false,
@@ -373,6 +904,66 @@ export default {
       getPickUpEta: '$_orders/$_tracking/getPickUpEta',
       getDeliveryEta: '$_orders/$_tracking/getDeliveryEta',
     }),
+    order_is_scheduled() {
+      return this.moment(this.current_time).isBefore(this.schedule_time);
+    },
+    current_time() {
+      return this.moment().format('YYYY-MM-DD HH:mm:ss');
+    },
+    scheduled_time() {
+      return this.moment(this.schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
+    },
+    allow_add_destination() {
+      return (
+        !this.location_loading
+        && Array.isArray(this.getStoreOrderPath)
+        && this.getStoreOrderPath.length - 1 <= this.get_max_destinations
+        && this.getStoreOrderPath.length > 1
+        && this.get_extra_destinations <= this.getStoreOrderPath.length - 2
+      );
+    },
+    hide_payment() {
+      return (
+        this.tracking_data.payment_method === 12
+        || this.getRunningBalance - this.getAmountDue >= 0
+      );
+    },
+    getAmountDue(){
+
+      return (this.new_cost - this.tracking_data.amount) ;
+
+    },
+
+    show_payment() {
+      return !this.hide_payment;
+    },
+    revertIcon() {
+      return {
+        'sendy-blue': true,
+        'rotate-transform': true,
+        rotate: this.payment_check === 'payment',
+      };
+    },
+    paymentStatusOption() {
+      let resp = false;
+
+      if (this.payment_check === 'payment') {
+        resp = true;
+      }
+      return resp;
+    },
+    getOrderPaymentMethod(){
+      return this.tracking_data.payment_option ;
+    },
+    display_cards() {
+      return this.payment_method === 2;
+    },
+    user_name() {
+      const session = this.$store.getters.getSession;
+      return session[session.default].user_name.split(' ')[0];
+    },
     getStatus() {
       if (!this.loading) {
         switch (this.tracking_data.delivery_status) {
@@ -508,8 +1099,8 @@ export default {
       setPickUpEta: '$_orders/$_tracking/setPickUpEta',
       setDeliveryEta: '$_orders/$_tracking/setDeliveryEta',
     }),
-    moment() {
-      return moment();
+    dispatchScheduleTime(){
+      this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
     },
     // eslint-disable-next-line func-names
     debounceCancelReason: _.debounce(function (data) {
@@ -1053,6 +1644,85 @@ export default {
         if (this.tracking_data.rider.vendor_id === 26) {
           resp = true ;
         }
+      }
+
+      let value = {
+        order_no: this.$route.params.order_no,
+        client_type: 'corporate',
+        waypoint_instructions : newData
+      };
+
+      const payload = {
+        values: value,
+        app: 'ORDERS_APP',
+        endpoint: 'change_notes',
+      };
+
+      this.$store.dispatch('$_orders/$_tracking/requestEditOrder', payload).then(
+        (response) => {
+          if (response.status) {
+            this.poll(this.$route.params.order_no);
+            this.showNotesDialog(false);
+            this.updateNotesInStore({});
+            this.storedNotes = {};
+            this.send_sms = false ;
+            this.editedNotes = '';
+            this.editedContact = '';
+
+            this.doNotification(
+              1,
+              'Additional instructions updated successfully',
+              '',
+            );
+          }
+          else {
+            this.doNotification(
+              2,
+              'Additional instructions update failed',
+              'Please try again',
+            );
+          }
+        },
+        (error) => {
+          this.doNotification(
+            2,
+            'Additional instructions update failed',
+            'Additional instructions update failed. Please check your internet connection and try again.',
+          );
+        },
+      );
+    },
+    disabledDueDate(date) {
+      return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
+    },
+    updateScheduledTime(){
+      if (this.schedule_time !== '') {
+
+        let time = this.order_is_scheduled
+          ? this.convertToUTC(this.scheduled_time)
+          : this.convertToUTC(this.current_time);
+
+        let scheduleTime = this.moment(time).utc().format('YYYY-MM-DD HH:mm:ss') ;
+
+        let value = {
+          order_no: this.$route.params.order_no,
+          client_type: 'corporate',
+          date_time : scheduleTime,
+        };
+
+        const payload = {
+          values: value,
+          app: 'ORDERS_APP',
+          endpoint: 'schedule_order',
+        };
+
+        this.$store.dispatch('$_orders/$_tracking/requestEditOrder', payload).then(
+          (response) => {
+            if (response.status) {
+              this.poll(this.$route.params.order_no);
+              this.showScheduleTimeDialog(false);
+              this.updatePickUpTimeInStore('');
+              this.schedule_time = '';
 
       }
       return resp ;
