@@ -5,12 +5,12 @@
   >
     <div class="cop-edit-inner">
       <div class="company-edit2-details">
-        Edit Company Details.
+        {{ $t('companyDetails.edit')}}
       </div>
       <div class="edit-cop-info-position">
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
-            <span>Company Name</span>
+            <span>{{ $t('companyDetails.company_name')}}</span>
           </label>
           <input
             v-model="cop_name"
@@ -22,7 +22,7 @@
 
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
-            <span>Name of contact person</span>
+            <span>{{ $t('companyDetails.contact_person')}}</span>
           </label>
           <input
             v-model="contact_name"
@@ -33,7 +33,7 @@
 
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
-            <span>Email of Contact person</span>
+            <span>{{ $t('companyDetails.email_contact_person')}}</span>
           </label>
           <input
             v-model="contact_email"
@@ -44,7 +44,7 @@
 
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
-            <span>Phone number of Contact person</span>
+            <span>{{ $t('companyDetails.phone_contact_person')}}</span>
           </label>
           <vue-tel-input
             v-model.trim="phone"
@@ -64,7 +64,7 @@
             type="submit"
             @click="save_cop"
           >
-            Save
+            {{ $t('companyDetails.save')}}
           </button>
         </div>
       </div>
@@ -95,7 +95,7 @@ export default {
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
-        placeholder: 'Enter a phone number',
+        placeholder: this.$t('companyDetails.phone_number'),
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
