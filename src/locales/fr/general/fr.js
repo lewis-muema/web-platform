@@ -771,6 +771,12 @@ const translations = {
   place_another_one_any_time: 'FR_You can place another one at any time.',
   deliveries: 'Deliveries',
 
+  //aprovalDialogue
+  application_approved: 'FR_Your application has been approved',
+  congrats_application_approved: 'FR_Congrats! your application to join the Sendy Social Club has been approved. You will now enjoy discounted prices on your orders among other benefits.',
+  application_declined: 'FR_Your application has been declined',
+  sorry_application_declined: 'FR_Sorry, your application to join the Sendy social club has been declined. Your business doesn’t qualify as a social commerce business, however, you can still place Sendy orders',
+  okay: 'FR_Okay',
 
 };
 

@@ -41,11 +41,13 @@
             >
           </div>
           <div class="dialog--title-text">
-            Your application has been approved
+            {{$t('general.application_approved')}}
+            <!-- Your application has been approved -->
           </div>
           <div class="dialog--content-text">
             <p>
-              Congrats! your application to join the Sendy Social Club has been approved. You will now enjoy discounted prices on your orders among other benefits.
+               {{$t('general.congrats_application_approved')}}
+              <!-- Congrats! your application to join the Sendy Social Club has been approved. You will now enjoy discounted prices on your orders among other benefits. -->
             </p>
           </div>
         </div>
@@ -60,11 +62,13 @@
             >
           </div>
           <div class="dialog--title-text">
-            Your application has been declined
+             {{$t('general.application_declined')}}
+            <!-- Your application has been declined -->
           </div>
           <div class="dialog--content-text">
             <p>
-              Sorry, your application to join the Sendy social club has been declined. Your business doesn’t qualify as a social commerce business, however, you can still place Sendy orders
+              {{$t('general.sorry_application_declined')}}
+              <!-- Sorry, your application to join the Sendy social club has been declined. Your business doesn’t qualify as a social commerce business, however, you can still place Sendy orders -->
             </p>
           </div>
         </div>
@@ -73,7 +77,7 @@
           <input
             class="button-primary final-step-submit"
             type="submit"
-            value="Okay"
+            :value="$t('general.okay')"
             @click="updateApprovalView"
           >
         </div>
