@@ -103,7 +103,7 @@
                   <input
                     class="button-primary final-step-submit"
                     type="submit"
-                    value="Submit"
+                    :value="$t('general.submit')"
                     @click="submit"
                   >
                 </div>
