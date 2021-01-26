@@ -17,13 +17,12 @@
               width="10px"
             />
             <gmap-autocomplete
-              id="pickup"
               v-model="locations[0]"
               :options="map_options"
-              placeholder="Enter a pickup location"
+              :placeholder="$t('general.enter_pickup_location')"
               :select-first-on-enter="true"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
-              @place_changed="setLocation($event, 0, 1)"
+              @place_changed="setLocation($event, 0)"
               @keyup="checkChangeEvents($event, 0)"
               @change="checkChangeEvents($event, 0)"
             />
@@ -36,57 +35,6 @@
             />
           </no-ssr>
         </div>
-        <div
-          v-if="activeEl === 'pickup' && hiddenSuggestionsStatus"
-          class="homeview--input-suggestions"
-          :style="{ marginTop: `${(scrollFromTop - 15)}px`, width: `${suggestionsWidth}px`, left: `${leftDisplacement}px` }"
-          @mouseover="activeSuggestionList = true"
-          @mouseout="activeSuggestionList = false"
-        >
-          <div class="homeview--input-suggetions-title">
-            Saved and Frequently used
-          </div>
-          <div
-            v-for="(suggestion, index) in pickUpSuggestions"
-            :key="index"
-            class="homeview--input-suggestion-rows"
-            :class="activeRow === index ? 'homeview--input-suggestion-rows-active' : ''"
-            @mouseover="activeRow = index"
-            @mouseout="activeRow = ''"
-            @click="setLocation(suggestion, 0, 2)"
-          >
-            <span class="homeview--input-suggestion-icon-holder">
-              <font-awesome-icon
-                v-if="suggestion.location_type === 'frequent'"
-                icon="history"
-                size="xs"
-                class="homeview--input-suggestion-icon"
-                width="10px"
-              />
-              <font-awesome-icon
-                v-if="suggestion.location_type === 'saved'"
-                icon="star"
-                size="xs"
-                class="homeview--input-suggestion-icon"
-                width="10px"
-              />
-            </span>
-            <span class="locations-popup-saved-name">
-              <span class="homeview--input-suggestion-place-name">
-                {{ suggestion.name }},
-              </span>
-              <span class="homeview--input-suggestion-address-name">
-                {{ suggestion.address }}
-              </span>
-            </span>
-          </div>
-          <div
-            class="homeview--input-suggetions-link"
-            @click="triggerLocationsManagementPopUp(true, 'PICKUP')"
-          >
-            Add or remove saved locations >
-          </div>
-        </div>
         <div class="homeview--destinations">
           <div class="homeview--input-bundler">
             <no-ssr placeholder="">
@@ -97,13 +45,12 @@
                 width="10px"
               />
               <gmap-autocomplete
-                id="destination"
                 v-model="locations[1]"
                 :options="map_options"
-                placeholder="Enter a destination location"
+                :placeholder="$t('general.enter_destination_location')"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
-                @place_changed="setLocation($event, 1, 1)"
+                @place_changed="setLocation($event, 1)"
                 @keyup="checkChangeEvents($event, 1)"
                 @change="checkChangeEvents($event, 1)"
               />
@@ -115,57 +62,6 @@
                 @click="clearLocation(1)"
               />
             </no-ssr>
-          </div>
-          <div
-            v-if="activeEl === 'destination' && hiddenSuggestionsStatus"
-            class="homeview--input-suggestions"
-            :style="{ marginTop: `${(scrollFromTop - 15)}px`, width: `${suggestionsWidth}px`, left: `${leftDisplacement}px` }"
-            @mouseover="activeSuggestionList = true"
-            @mouseout="activeSuggestionList = false"
-          >
-            <div class="homeview--input-suggetions-title">
-              Saved and Frequently used
-            </div>
-            <div
-              v-for="(suggestion, index) in destinationSuggestions"
-              :key="index"
-              class="homeview--input-suggestion-rows"
-              :class="activeRow === index ? 'homeview--input-suggestion-rows-active' : ''"
-              @mouseover="activeRow = index"
-              @mouseout="activeRow = ''"
-              @click="setLocation(suggestion, 1, 2)"
-            >
-              <span class="homeview--input-suggestion-icon-holder">
-                <font-awesome-icon
-                  v-if="suggestion.location_type === 'frequent'"
-                  icon="history"
-                  size="xs"
-                  class="homeview--input-suggestion-icon"
-                  width="10px"
-                />
-                <font-awesome-icon
-                  v-if="suggestion.location_type === 'saved'"
-                  icon="star"
-                  size="xs"
-                  class="homeview--input-suggestion-icon"
-                  width="10px"
-                />
-              </span>
-              <span class="locations-popup-saved-name">
-                <span class="homeview--input-suggestion-place-name">
-                  {{ suggestion.name }},
-                </span>
-                <span class="homeview--input-suggestion-address-name">
-                  {{ suggestion.address }}
-                </span>
-              </span>
-            </div>
-            <div
-              class="homeview--input-suggetions-link"
-              @click="triggerLocationsManagementPopUp(true, 'DROPOFF')"
-            >
-              Add or remove saved locations >
-            </div>
           </div>
         </div>
         <div
@@ -183,13 +79,12 @@
                 width="10px"
               />
               <gmap-autocomplete
-                :id="`destination${n}`"
                 v-model="locations[n + 1]"
                 :options="map_options"
-                placeholder="Enter a destination location"
+                :placeholder="$t('general.enter_destination_location')"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
-                @place_changed="setLocation($event, n + 1, 1)"
+                @place_changed="setLocation($event, n + 1)"
                 @keyup="checkChangeEvents($event, (n = 1))"
                 @change="checkChangeEvents($event, n + 1)"
               />
@@ -201,57 +96,6 @@
                 @click="removeExtraDestinationWrapper(n + 1)"
               />
             </no-ssr>
-          </div>
-          <div
-            v-if="activeEl === `destination${n}` && hiddenSuggestionsStatus"
-            class="homeview--input-suggestions"
-            :style="{ marginTop: `${(scrollFromTop - 15)}px`, width: `${suggestionsWidth}px`, left: `${leftDisplacement}px` }"
-            @mouseover="activeSuggestionList = true"
-            @mouseout="activeSuggestionList = false"
-          >
-            <div class="homeview--input-suggetions-title">
-              Saved and Frequently used
-            </div>
-            <div
-              v-for="(suggestion, index) in destinationSuggestions"
-              :key="index"
-              class="homeview--input-suggestion-rows"
-              :class="activeRow === index ? 'homeview--input-suggestion-rows-active' : ''"
-              @mouseover="activeRow = index"
-              @mouseout="activeRow = ''"
-              @click="setLocation(suggestion, n + 1, 2)"
-            >
-              <span class="homeview--input-suggestion-icon-holder">
-                <font-awesome-icon
-                  v-if="suggestion.location_type === 'frequent'"
-                  icon="history"
-                  size="xs"
-                  class="homeview--input-suggestion-icon"
-                  width="10px"
-                />
-                <font-awesome-icon
-                  v-if="suggestion.location_type === 'saved'"
-                  icon="star"
-                  size="xs"
-                  class="homeview--input-suggestion-icon"
-                  width="10px"
-                />
-              </span>
-              <span class="locations-popup-saved-name">
-                <span class="homeview--input-suggestion-place-name">
-                  {{ suggestion.name }},
-                </span>
-                <span class="homeview--input-suggestion-address-name">
-                  {{ suggestion.address }}
-                </span>
-              </span>
-            </div>
-            <div
-              class="homeview--input-suggetions-link"
-              @click="triggerLocationsManagementPopUp(true, 'DROPOFF')"
-            >
-              Add or remove saved locations >
-            </div>
           </div>
         </div>
       </div>
@@ -270,7 +114,7 @@
           <a
             class="homeview--add"
             @click="addExtraDestinationWrapper()"
-          >Add Destination</a>
+          >{{$t('general.add_destination')}}</a>
         </div>
       </div>
       <div
@@ -298,18 +142,18 @@
               allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'
             "
             @click="addExtraDestinationWrapper()"
-          >Add Destination</a>
+          >{{$t('general.add_destination')}}</a>
         </div>
       </div>
       <div v-if="$route.path === '/orders/dedicated/multi-destination' && fileUploadStatus">
         <p class="home-view--upload-par">
-          OR
+          {{$t('general.or')}}
         </p>
         <p
           class="home-view--upload-button"
           @click="initiateUpload()"
         >
-          Upload file
+          {{$t('general.upload_file')}}
         </p>
       </div>
       <div
@@ -330,7 +174,7 @@
           type="button"
           class="button--primary-inactive home-view--place-order"
         >
-          Confirm Order
+          {{$t('general.confirm_order')}}
         </button>
       </div>
     </div>
@@ -352,7 +196,6 @@ import {
   faTimes,
   faMobileAlt,
   faStar,
-  faHistory,
 } from '@fortawesome/free-solid-svg-icons';
 import orderPlacementStore from './_store';
 import paymentsModuleStore from '../../../payment/_store';
@@ -373,7 +216,6 @@ library.add(
   faStar,
   faCcVisa,
   faCcMastercard,
-  faHistory,
 );
 
 export default {
@@ -389,14 +231,6 @@ export default {
       loading: false,
       locations: [],
       fileUploadStatus: false,
-      activeRow: '',
-      activeEl: '',
-      DOM: '',
-      scrollFromTop: 0,
-      suggestionsWidth: 0,
-      leftDisplacement: 0,
-      hiddenSuggestionsStatus: true,
-      activeSuggestionList: false,
       map_options: {
         componentRestrictions: {
           country: ['ke', 'ug', 'tz'],
@@ -430,7 +264,6 @@ export default {
       getHomeLocations: '$_orders/getHomeLocations',
       getStoreOrderPath: '$_orders/getStorePath',
       getOuterPriceRequestData: '$_orders/getOuterPriceRequestData',
-      getSuggestions: '$_orders/getSuggestions',
     }),
 
     allow_add_destination() {
@@ -450,24 +283,6 @@ export default {
         && Object.prototype.hasOwnProperty.call(this.getOuterPriceRequestData, 'economy_price_tiers')
       );
     },
-    pickUpSuggestions() {
-      const data = [];
-      this.getSuggestions.forEach((row) => {
-        if (row.type === 'PICKUP' || row.waypoint_type === 'PICKUP') {
-          data.push(row);
-        }
-      });
-      return data;
-    },
-    destinationSuggestions() {
-      const data = [];
-      this.getSuggestions.forEach((row) => {
-        if (row.type === 'DROPOFF' || row.waypoint_type === 'DROPOFF') {
-          data.push(row);
-        }
-      });
-      return data;
-    },
   },
   watch: {
     get_session: {
@@ -478,29 +293,10 @@ export default {
       },
       deep: true,
     },
-    DOM: {
-      handler(val, oldVal) {
-        this.addFocusListener();
-        this.triggerFetchsuggestions();
-      },
-      deep: true,
-    },
-    activeEl: {
-      handler(val, oldVal) {
-        if (val) {
-          this.hiddenStatus();
-          document.getElementById(val).onkeydown = this.hiddenStatus;
-        } else {
-          document.getElementById(oldVal).onkeydown = '';
-        }
-      },
-      deep: true,
-    },
   },
   created() {
     this.instantiateHomeComponent();
     this.initializeOrderFlow();
-    this.DOM = process;
   },
   mounted() {
     const session = this.$store.getters.getSession;
@@ -510,9 +306,6 @@ export default {
   },
   destroyed() {
     this.destroyOrderPlacement();
-  },
-  beforeDestroy() {
-    this.removeFocusListener();
   },
   methods: {
     ...mapMutations({
@@ -555,34 +348,10 @@ export default {
 
     ...mapActions({
       requestPriceQuote: '$_orders/$_home/requestPriceQuote',
-      fetchSuggestions: '$_orders/fetchSuggestions',
     }),
 
     initiateUpload() {
       this.$root.$emit('Upload status', true);
-    },
-
-    addFocusListener() {
-      document.addEventListener('focus', this.focusedInput, true);
-      document.addEventListener('blur', this.blurredInput, true);
-      document.querySelector('.homeview--form__scrollable').addEventListener('scroll', this.scrollingDiv, true);
-    },
-
-    focusedInput() {
-      this.activeEl = document.activeElement.id;
-      this.suggestionsWidth = document.activeElement.offsetWidth;
-      this.leftDisplacement = document.activeElement.offsetLeft;
-    },
-    blurredInput() {
-      this.activeEl = this.activeSuggestionList ? this.activeEl : '';
-    },
-    scrollingDiv(evt) {
-      this.scrollFromTop = (evt.target.scrollTop * -1);
-    },
-    removeFocusListener() {
-      document.removeEventListener('focus', this.focusedInput, true);
-      document.removeEventListener('blur', this.blurredInput, true);
-      document.querySelector('.homeview--form__scrollable').removeEventListener('scroll', this.scrollingDiv, true);
     },
 
     removeExtraDestinationWrapper(index) {
@@ -590,29 +359,6 @@ export default {
       this.clearLocation(index);
     },
 
-    hiddenStatus() {
-      setTimeout(() => {
-        if (document.getElementById(this.activeEl).value) {
-          this.hiddenSuggestionsStatus = false;
-        } else {
-          this.hiddenSuggestionsStatus = true;
-        }
-      }, 100);
-    },
-    triggerFetchsuggestions() {
-      const session = this.$store.getters.getSession;
-      const userId = session[session.default].user_id;
-      const copId = session.default === 'biz' ? session[session.default].cop_id : 0;
-      const suggestionsObject = {
-        user_id: userId,
-        cop_id: copId,
-        type: 1,
-      };
-      const payload = {
-        values: suggestionsObject,
-      };
-      this.fetchSuggestions(payload);
-    },
     addExtraDestinationWrapper() {
       this.addExtraDestination();
       this.scrollToBottom();
@@ -667,28 +413,28 @@ export default {
       this.unset_location_name(index);
     },
 
-    setLocation(place, index, type) {
+    setLocation(place, index) {
       if (!place) {
         // console.log('not a place', index);
         return;
       }
-      const countryIndex = type === 1 ? place.address_components.findIndex(country_code => country_code.types.includes('country')) : '';
+      const countryIndex = place.address_components.findIndex(country_code => country_code.types.includes('country'));
       const pathObj = {
         name: place.name,
-        coordinates: type === 1 ? `${place.geometry.location.lat()},${place.geometry.location.lng()}` : place.coordinates,
+        coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
         waypoint_details_status: true,
-        type: type === 1 ? 'coordinates' : place.type,
-        country_code: type === 1 ? place.address_components[countryIndex].short_name : place.country_code,
+        type: 'coordinates',
+        country_code: place.address_components[countryIndex].short_name,
         more: {
           Estate: '',
           FlatName: '',
-          place_idcustom: type === 1 ? place.place_id : place.more.place_idcustom,
+          place_idcustom: place.place_id,
           Label: '',
           HouseDoor: '',
           Otherdescription: '',
           Typed: '',
           Vicinity: 'Not Indicated',
-          Address: type === 1 ? place.formatted_address : place.more.Address,
+          Address: 'Not Indicated',
         },
       };
       const pathPayload = {
@@ -697,16 +443,14 @@ export default {
       };
       const locationNamePayload = {
         index,
-        name: pathObj.name,
+        name: place.name,
       };
-      this.hiddenSuggestionsStatus = true;
       this.resetPathLocation(index);
-      this.setMarker(parseFloat(pathObj.coordinates.split(',')[0]), parseFloat(pathObj.coordinates.split(',')[1]), index);
+      this.setMarker(place.geometry.location.lat(), place.geometry.location.lng(), index);
       this.set_order_path(pathPayload);
       this.setStorePath(pathPayload);
-      this.setLocationInModel(index, `${pathObj.name} (${pathObj.more.Address})`);
+      this.setLocationInModel(index, `${place.name} (${place.formatted_address})`);
       this.set_location_name(locationNamePayload);
-      this.activeEl = '';
       if (index === 0) {
         this.setPickupFilled(true);
         this.setPickUpFilledStatus(true);
@@ -716,7 +460,7 @@ export default {
           eventLabel: 'Pickup Location - Order Placement - Web App',
         };
         if (this.$route.path === '/orders/dedicated/multi-destination') {
-          this.trackLocationSelect(pathObj.name, index);
+          this.trackLocationSelect(place.name, index);
         } else {
           this.trackMixpanelEvent(`Add Pickup Location ${eventPayload.eventLabel}`);
           this.fireGAEvent(eventPayload);
@@ -728,7 +472,7 @@ export default {
           eventLabel: 'Destination Location - Order Placement - Web App',
         };
         if (this.$route.path === '/orders/dedicated/multi-destination') {
-          this.trackLocationSelect(pathObj.name, index);
+          this.trackLocationSelect(place.name, index);
         } else {
           this.trackMixpanelEvent(`Add Destination ${eventPayload.eventLabel}`);
           this.fireGAEvent(eventPayload);
@@ -788,13 +532,7 @@ export default {
     },
 
     setLocationInModel(index, name) {
-      this.locations[index] = name;
-      const activeElement = this.activeEl;
-      setTimeout(() => {
-        if (!document.getElementById(activeElement).value) {
-          document.getElementById(activeElement).value = name;
-        }
-      }, 100);
+      this.locations.splice(index, 0, name);
     },
 
     deleteLocationInModel(index) {
@@ -904,8 +642,8 @@ export default {
           } else {
             this.doNotification(
               3,
-              'Price request failed',
-              'Price request failed. Please try again after a few minutes.',
+              this.$t('general.price_request_failed'),
+              this.$t('general.price_request_failed'),
             );
           }
 
@@ -1089,10 +827,6 @@ export default {
       this.unset_location_marker(index);
       this.deleteLocationInModel(index);
       this.unset_location_name(index);
-    },
-    triggerLocationsManagementPopUp(status, type) {
-      this.activeEl = '';
-      this.$root.$emit('Locations status', status, type);
     },
   },
 };
