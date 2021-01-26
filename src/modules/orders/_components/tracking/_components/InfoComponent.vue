@@ -983,7 +983,6 @@ export default {
       cancelOption: false,
       inputCancelReason: '',
       paymentOption: '',
-      scheduled_time: '',
       user_state: false,
       isSaved: false,
       shareOption: false,
@@ -3039,7 +3038,7 @@ export default {
         let value = {
           order_no: this.$route.params.order_no,
           client_type: 'corporate',
-          date_time : this.convertToUTCToLocal(this.schedule_time),
+          date_time : this.convertToUTC(this.schedule_time),
         };
 
         const payload = {
@@ -3054,7 +3053,7 @@ export default {
               this.poll(this.$route.params.order_no);
               this.showScheduleTimeDialog(false);
               this.updatePickUpTimeInStore('');
-              this.scheduled_time = '';
+              this.schedule_time = '';
 
               this.doNotification(
                 1,
