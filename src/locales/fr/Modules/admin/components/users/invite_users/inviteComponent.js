@@ -1,4 +1,3 @@
-import { fromPairs } from "lodash";
 
 const fr = {
   email: 'FR_name@example.com',
@@ -17,6 +16,5 @@ const fr = {
   invite_link: 'FR_Invite Link',
   error_occured: 'FR_An error occurred',
 };
-  
-  export default fr;
-  
+
+export default fr;

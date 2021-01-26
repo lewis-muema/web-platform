@@ -18,4 +18,4 @@ const en = {
 };
 
 
-export default translations;
+export default en;
