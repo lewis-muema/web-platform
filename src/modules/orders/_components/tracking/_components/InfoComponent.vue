@@ -715,6 +715,31 @@ export default {
       const notification = { title, level, message };
       this.displayNotification(notification);
     },
+    cancelPromocode () {
+      const session = this.$store.getters.getSession;
+
+      const copID = session.default === 'biz' ? session[session.default].cop_id : 0;
+      const individualID = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
+
+      const payload = {
+          cop_id : copID,
+          individual_id : individualID,
+          coupon_code :"",
+          coupon_amount :0,
+          is_cancelled :true,
+          coupon_type :0
+      };
+
+      this.$store.dispatch('$_orders/$_tracking/cancelCoupon', payload).then(
+        (response) => {
+          return response.status;
+        },
+        (error) => {
+          return error;
+        },
+      );
+    },
+
     cancelOrder() {
       if (this.cancel_reason !== '' && Object.keys(this.$store.getters.getSession).length > 0) {
         if (this.cancel_reason === 0 && this.cancel_desc === '') {
@@ -746,6 +771,8 @@ export default {
             eventLabel: 'Yes Button - Order Cancellation Page - WebApp',
           };
           this.fireGAEvent(eventPayload);
+
+          this.cancelPromocode();
 
           this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then((response) => {
             if (response.status) {
