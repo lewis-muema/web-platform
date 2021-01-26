@@ -8,17 +8,9 @@
         <ul class="timeline inforbar_route_timeline">
           <li>
             <p class="info-text-transform infor-top-bar-text">
-              Pickup Location
+              {{$t('general.pickup_location')}}
             </p>
             <p>{{ trackingData.path[0].name }}</p>
-            <p
-              v-if="checkEditOption()"
-              class="infor-top-change-details"
-              @click="showEditLocationsDialog()"
-            >
-              <i class="el-icon-edit-outline" />
-              Add or change locations
-            </p>
           </li>
 
           <li
@@ -44,7 +36,7 @@
               v-if="Object.prototype.hasOwnProperty.call(val, 'notes') && val.notes"
               class="infor-top-bar-text-notes"
             >
-              Notes: {{ val.notes }}
+              {{$t('general.notes')}}: {{ val.notes }}
             </p>
           </li>
         </ul>
@@ -54,7 +46,6 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from 'vuex';
 import NotificationMxn from '../../../../../../mixins/notification_mixin';
 
 export default {
@@ -67,62 +58,10 @@ export default {
     },
   },
   data() {
-    return {
-      user_state: false,
-    };
+    return {};
   },
-  computed: {
-    ...mapGetters({
-      getSession: 'getSession',
-    }),
-  },
-  watch: {
-    getSession: {
-      handler() {
-        if (Object.keys(this.$store.getters.getSession).length > 0) {
-          this.confirmUser();
-        }
-      },
-      deep: true,
-    },
-  },
-  mounted() {
-    this.confirmUser();
-  },
-  methods: {
-    ...mapMutations({
-      setEditLocationDialog: '$_orders/$_tracking/setEditLocationDialog',
-    }),
-    confirmUser() {
-      const session = this.$store.getters.getSession;
-      if (
-        Object.keys(session).length > 0
-        && Object.prototype.hasOwnProperty.call(session, 'default')
-      ) {
-        const sessionUserEmail = session[session.default].user_email;
-        const orderUserEmail = this.trackingData.user.email;
-
-        if (sessionUserEmail === orderUserEmail) {
-          this.user_state = true;
-        } else {
-          this.user_state = false;
-        }
-      }
-    },
-    showEditLocationsDialog() {
-      this.setEditLocationDialog(true);
-    },
-    checkEditOption() {
-      let show = false;
-      if (
-        Object.prototype.hasOwnProperty.call(this.trackingData, 'edit_config')
-        && this.user_state
-      ) {
-        show = this.trackingData.edit_config.add_drop_off;
-      }
-      return show;
-    },
-  },
+  computed: {},
+  methods: {},
 };
 </script>
 

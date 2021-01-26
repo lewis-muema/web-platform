@@ -12,11 +12,11 @@
               alt=""
               class="infobar-truck-img"
             >
-            <span class="info-text-transform infor-top-bar-text align-top-bar">
-              Type of order
+            <span class="info-text-transform infor-top-bar-text">
+             {{$t('general.type_of_order')}} 
             </span>
           </div>
-          <div class="tracking-loader-inner align-inner-bar">
+          <div class="tracking-loader-inner">
             <img
               :src="getVendorIcon(trackingData.rider.vendor_id)"
               alt=""
@@ -27,51 +27,25 @@
             </span>
           </div>
         </div>
-        <div class="tracking-loader">
-          <div v-if="scheduled_time">
-            <div class="">
-              <img
-                src="https://images.sendyit.com/web_platform/tracking/calendar.svg"
-                alt=""
-                class="infobar-truck-img"
-              >
-              <span class="info-text-transform infor-top-bar-text align-top-bar">
-                Scheduled pick up time
-              </span>
-            </div>
-            <div class="tracking-loader-inner align-inner-bar">
-              <span class="info-text-transform">
-                {{ convertToUTCToLocal(trackingData.date_time) | moment }}
-              </span>
-            </div>
+        <div
+          v-if="scheduled_time"
+          class="tracking-loader"
+        >
+          <div class="">
+            <img
+              src="https://images.sendyit.com/web_platform/tracking/calendar.svg"
+              alt=""
+              class="infobar-truck-img"
+            >
+            <span class="info-text-transform infor-top-bar-text">
+              {{$t('general.scheduled_pick_up_time')}}
+            </span>
           </div>
-
-          <div v-if="!scheduled_time">
-            <div class="">
-              <img
-                src="https://images.sendyit.com/web_platform/tracking/calendar.svg"
-                alt=""
-                class="infobar-truck-img"
-              >
-              <span class="info-text-transform infor-top-bar-text align-top-bar">
-                Pick up time
-              </span>
-            </div>
-            <div class="tracking-loader-inner align-inner-bar">
-              <span class="info-text-transform">
-                {{ convertToUTCToLocal(trackingData.date_time) | moment }}
-              </span>
-            </div>
+          <div class="tracking-loader-inner">
+            <span class="info-text-transform">
+              {{ convertToUTCToLocal(trackingData.date_time) | moment }}
+            </span>
           </div>
-
-          <p
-            v-if="checkScheduleOption()"
-            class="info-scheduled-time align-inner-bar"
-            @click="showEditPickUpTime()"
-          >
-            <i class="el-icon-edit-outline" />
-            Reschedule pick up time
-          </p>
         </div>
 
         <!-- Show for truck orders  -->
@@ -86,16 +60,16 @@
                 alt=""
                 class="infobar-truck-img"
               >
-              <span class="info-text-transform infor-top-bar-text align-top-bar">
-                Goods to be delivered
+              <span class="info-text-transform infor-top-bar-text">
+                {{$t('general.goods_to_be_delivered')}}
               </span>
             </div>
             <div
               v-if="'delivery_item' in trackingData.package_details"
-              class="tracking-loader-inner align-inner-bar"
+              class="tracking-loader-inner"
             >
               <div v-if="trackingData.package_details.delivery_item === ''">
-                Not Indicated
+                {{$t('general.not_indicated')}}
               </div>
               <div v-else>
                 {{ trackingData.package_details.delivery_item }}
@@ -103,9 +77,9 @@
             </div>
             <div
               v-else
-              class="tracking-loader-inner align-inner-bar"
+              class="tracking-loader-inner"
             >
-              Not Indicated
+              {{$t('general.not_indicated')}}
             </div>
           </div>
           <div class="tracking-loader">
@@ -115,22 +89,22 @@
                 alt=""
                 class="infobar-truck-img"
               >
-              <span class="info-text-transform align-top-bar">
-                Weight of Load
+              <span class="info-text-transform">
+                {{$t('general.weight_of_load')}}
               </span>
             </div>
             <div
               v-if="'load_weight' in trackingData.package_details"
-              class="tracking-loader-inner align-inner-bar"
+              class="tracking-loader-inner"
             >
               {{ trackingData.package_details.load_weight }}
               {{ trackingData.package_details.load_units }}
             </div>
             <div
               v-else
-              class="tracking-loader-inner align-inner-bar"
+              class="tracking-loader-inner"
             >
-              Not Indicated
+             {{$t('general.not_indicated')}}
             </div>
           </div>
 
@@ -141,21 +115,21 @@
                 alt=""
                 class="infobar-truck-img"
               >
-              <span class="info-text-transform infor-top-bar-text align-top-bar">
-                Do you need a loader?
+              <span class="info-text-transform infor-top-bar-text">
+               {{$t('general.need_loader')}}
               </span>
             </div>
             <div
               v-if="trackingData.package_details.additional_loader"
-              class="tracking-loader-inner align-inner-bar"
+              class="tracking-loader-inner"
             >
-              Yes, {{ trackingData.package_details.no_of_loaders }}
+              {{$t('general.yes')}}, {{ trackingData.package_details.no_of_loaders }}
             </div>
             <div
               v-else
-              class="tracking-loader-inner align-inner-bar"
+              class="tracking-loader-inner"
             >
-              No
+              {{$t('general.no')}}
             </div>
           </div>
         </div>
@@ -168,7 +142,7 @@
     >
       <div class="tracking-notes">
         <div class="info-text-transform infor-top-bar-text">
-          PICKUP INSTRUCTIONS AT {{ trackingData.path[0].name }}
+          {{$t('general.pickup_instructions_at_capital')}} {{ trackingData.path[0].name }}
         </div>
         <div
           v-if="checkPickUpNotes(trackingData.path[0])"
@@ -205,16 +179,8 @@
           v-else
           class=""
         >
-          No notes provided.
+          {{$t('general.no_notes_provided')}}
         </div>
-        <p
-          v-if="checkEditOption()"
-          class="infor-top-change-details edit-instructions-align"
-          @click="showEditInstructionsDialog(trackingData.path[0])"
-        >
-          <i class="el-icon-edit-outline" />
-          Edit Instructions
-        </p>
       </div>
 
       <div
@@ -224,7 +190,7 @@
         class="tracking-notes"
       >
         <div class="info-text-transform infor-top-bar-text">
-          DROP OFF INSTRUCTIONS AT {{ val.name }}
+          {{$t('general.drop_off_instructions_capital')}} {{ val.name }}
         </div>
         <div
           v-if="checkPickUpNotes(val)"
@@ -261,23 +227,15 @@
           v-else
           class=""
         >
-          No notes provided.
+         {{$t('general.no_notes_provided')}}
         </div>
-        <p
-          v-if="checkEditOption()"
-          class="infor-top-change-details edit-instructions-align"
-          @click="showEditInstructionsDialog(val)"
-        >
-          <i class="el-icon-edit-outline" />
-          Edit Instructions
-        </p>
       </div>
     </el-col>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters } from 'vuex';
 import NotificationMxn from '../../../../../../mixins/notification_mixin';
 import EventsMixin from '../../../../../../mixins/events_mixin';
 import TimezoneMxn from '../../../../../../mixins/timezone_mixin';
@@ -304,52 +262,17 @@ export default {
   data() {
     return {
       scheduled_time: false,
-      user_state: false,
     };
   },
   computed: {
     ...mapGetters({
       getTrackVendorName: '$_orders/$_tracking/getTrackVendorName',
-      getSession: 'getSession',
     }),
-  },
-  watch: {
-    getSession: {
-      handler() {
-        if (Object.keys(this.$store.getters.getSession).length > 0) {
-          this.confirmUser();
-        }
-      },
-      deep: true,
-    },
   },
   mounted() {
     this.checkScheduler();
-    this.confirmUser();
   },
   methods: {
-    ...mapMutations({
-      showNotesDialog: '$_orders/$_tracking/showNotesDialog',
-      updateNotesInStore: '$_orders/$_tracking/updateNotesInStore',
-      showScheduleTimeDialog: '$_orders/$_tracking/showScheduleTimeDialog',
-      updatePickUpTimeInStore: '$_orders/$_tracking/updatePickUpTimeInStore',
-    }),
-    confirmUser() {
-      const session = this.$store.getters.getSession;
-      if (
-        Object.keys(session).length > 0
-        && Object.prototype.hasOwnProperty.call(session, 'default')
-      ) {
-        const sessionUserEmail = session[session.default].user_email;
-        const orderUserEmail = this.trackingData.user.email;
-
-        if (sessionUserEmail === orderUserEmail) {
-          this.user_state = true;
-        } else {
-          this.user_state = false;
-        }
-      }
-    },
     getVendorIcon(id) {
       return `https://images.sendyit.com/web_platform/vendor_type/side/${id}.svg`;
     },
@@ -382,51 +305,10 @@ export default {
       }
       return resp;
     },
-    showEditInstructionsDialog(val) {
-      this.showNotesDialog(true);
-      this.updateNotesInStore(val);
-    },
-    checkEditOption() {
-      let show = false;
-      if (
-        Object.prototype.hasOwnProperty.call(this.trackingData, 'edit_config')
-        && this.user_state
-      ) {
-        show = this.trackingData.edit_config.change_notes;
-      }
-      return show;
-    },
-    checkScheduleOption() {
-      let show = false;
-      if (this.trackingData.delivery_status < 2 && this.user_state) {
-        show = true;
-      }
-      return show;
-    },
-    showEditPickUpTime() {
-      this.showScheduleTimeDialog(true);
-      const time = this.convertToUTCToLocal(this.trackingData.date_time);
-      this.updatePickUpTimeInStore(time);
-    },
   },
 };
 </script>
 
 <style lang="css" scoped>
 @import "../../../../../../assets/styles/info_window_component.css";
-.info-scheduled-time{
-  margin: 3% 0px -2% 0px;
-  font-style: italic;
-  color: #1B7FC3;
-  cursor: pointer;
-  font-size: 12px;
-  padding-left: 19px;
-}
-.align-top-bar{
-  margin-left: 1%;
-  margin-top: 2%;
-}
-.align-inner-bar{
-  margin-left: 1%;
-}
 </style>
