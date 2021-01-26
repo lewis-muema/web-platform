@@ -7,7 +7,7 @@
       class="ongoing--count"
       @click="toggle_ongoing()"
     >
-      <span>{{ num_ongoing }} ongoing orders</span>
+      <span>{{ num_ongoing }} {{$t('general.num_ongoing_orders')}}</span>
       <font-awesome-icon
         icon="chevron-up"
         :class="classObject"
@@ -194,21 +194,21 @@ export default {
       if (!this.loading) {
         switch (order.delivery_status) {
           case 3: {
-            return 'Delivered';
+            return this.$t('general.delivered');
             break;
           }
           case 2: {
-            return 'In Transit';
+            return this.$t('general.intransit');
             break;
           }
           default: {
             switch (order.confirm_status) {
               case 1: {
-                return 'Confirmed';
+                return this.$t('general.confirmed');
                 break;
               }
               default: {
-                return 'Pending';
+                return this.$t('general.pending');
                 break;
               }
             }
@@ -299,6 +299,6 @@ border-radius: 0px 0px 3px 3px;
   width: 105%;
 }
 .ongoing-card-text{
-  color: #555 !important;
+  color: #555;
 }
 </style>
