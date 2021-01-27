@@ -793,7 +793,7 @@ const translations = {
   enter_verification_code: 'Enter Verification Code',
   please_provide_all_values: 'Please provide all values.',
   deliveries: 'Deliveries',
-  //aprovalDialogue
+  // aprovalDialogue
   application_approved: 'Your application has been approved',
   congrats_application_approved: 'Congrats! your application to join the Sendy Social Club has been approved. You will now enjoy discounted prices on your orders among other benefits.',
   application_declined: 'Your application has been declined',
@@ -801,7 +801,9 @@ const translations = {
   okay: 'Okay',
 
   use_promocodes: 'Use promocode',
-  valid_promo_codes:' Valid Promo Codes',
+  valid_promo_codes: ' Valid Promo Codes',
+  off: 'OFF',
+  max: 'Max.',
 };
 
 export default translations;
