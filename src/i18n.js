@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import axios from 'axios';
-
+import { createStore } from './store'
 Vue.use(VueI18n);
 
+const store = createStore();
 
 function loadLocaleMessages() {
   const locales = require.context('./locales/locales', true, /[A-Za-z0-9-_,\s]+\.js$/i);
@@ -30,6 +31,8 @@ function fetchCountry() {
   axios('https://extreme-ip-lookup.com/json')
     .then((response) => {
       i18n.locale = response.data.countryCode === 'CIV' ? 'en' : 'fr';
+      var lang= response.data.countryCode === 'CIV' ? 'en-US' : 'fr';
+      store.commit('setLanguage', lang);
     })
     .catch(error => error);
 }
