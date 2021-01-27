@@ -12,7 +12,7 @@
             class="infobar-truck-img"
           >
           <span class="infor-top-bar-text">
-            Order Number :
+          {{$t('general.order_number')}}:
           </span>
           <span>
             {{ trackingData.order_no }}
@@ -29,7 +29,7 @@
             alt=""
             class="top-bar-img infobar-truck-img"
           >
-          <span class="infor-top-bar-text"> Status :</span>
+          <span class="infor-top-bar-text"> {{$t('general.status')}} :</span>
           <span> {{ getStatus }} </span>
         </div>
       </el-col>
@@ -47,7 +47,7 @@
                 "
               >
                 <span class="infor-top-bar-text">
-                  Minimum Cost :
+                  {{$t('general.minimum_cost')}} :
                 </span>
                 <span>
                   {{
@@ -91,7 +91,7 @@
       <el-col :span="5">
         <div class="info-text-transform">
           <div class="topbar-text infor-top-bar-text">
-            Order Timeline
+            {{$t('general.order_timeline')}}
           </div>
         </div>
       </el-col>
@@ -136,18 +136,18 @@ export default {
     getStatus() {
       switch (this.trackingData.delivery_status) {
         case 3: {
-          return 'Delivered';
+          return this.$t('general.delivered');
         }
         case 2: {
-          return 'In Transit';
+          return this.$t('general.in_transit');
         }
         default: {
           switch (this.trackingData.confirm_status) {
             case 1: {
-              return 'Confirmed';
+              return this.$t('general.confirmed');
             }
             default: {
-              return 'Pending';
+              return this.$t('general.pending');
             }
           }
         }

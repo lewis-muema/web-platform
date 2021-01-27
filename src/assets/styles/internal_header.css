@@ -196,26 +196,25 @@ a.menu--last-child-link {
 .active_segmentation_menu{
   background: #FFFFFF;
   border-radius: 6px;
-  margin-top: 15%;
+  margin-top: 8%;
   width: 105%;
   margin-left: -1%;
-  height: 8% !important;
+  height: 21% !important;
 }
 .header--icon{
   display: flex;
 }
 .segmentation-align{
-  margin-left: 3%;
-  margin-left: 3%;
-  padding: 1.5em 40px;
+  margin-left: 1%;
+  padding: 1.7em 39px;
 }
 .disable_segmentation_menu{
   background: none;
   border-radius: 6px;
-  margin-top: 15%;
+  margin-top: 8%;
   width: 105%;
   margin-left: -1%;
-  height: 8% !important;
+  height: 21% !important;
 }
 .logistics-tab{
   margin-right: 20%;

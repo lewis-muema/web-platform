@@ -21,7 +21,7 @@
               id="homeview--pick-up-location-input"
               v-model="locations[0]"
               :options="map_options"
-              placeholder="Enter a pickup location"
+              :placeholder="$t('general.enter_pickup_location')"
               :select-first-on-enter="true"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
               @place_changed="setLocation($event, 0)"
@@ -49,7 +49,7 @@
               <gmap-autocomplete
                 v-model="dropOffRegion"
                 :options="map_options"
-                placeholder="Enter region"
+                :placeholder="$t('general.enter_region')"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
                 @place_changed="addRegion($event)"
@@ -72,7 +72,7 @@
               <gmap-autocomplete
                 v-model="locations[1]"
                 :options="map_options"
-                placeholder="Return location (Optional)"
+                :placeholder="$t('general.return_location')"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-return-location"
                 @place_changed="setLocation($event, 1)"
@@ -91,13 +91,13 @@
         </div>
         <div v-if="fileUploadStatus">
           <p class="home-view--upload-par">
-            OR
+            {{$t('general.or')}}
           </p>
           <p
             class="home-view--upload-button"
             @click="initiateUpload()"
           >
-            Upload file
+           {{$t('general.upload_file')}}
           </p>
         </div>
       </div>
@@ -120,7 +120,7 @@
           type="button"
           class="button--primary-inactive home-view--place-order"
         >
-          Continue
+          {{$t('general.continue')}}
         </button>
       </div>
     </div>
@@ -559,8 +559,8 @@ export default {
           } else {
             this.doNotification(
               3,
-              'Price request failed',
-              'Price request failed. Please try again after a few minutes.',
+              this.$t('general.price_request_failed'),
+              this.$t('general.price_request_failed_text'),
             );
           }
 

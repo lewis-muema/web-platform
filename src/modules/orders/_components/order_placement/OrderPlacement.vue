@@ -19,7 +19,7 @@
             <gmap-autocomplete
               v-model="locations[0]"
               :options="map_options"
-              placeholder="Enter a pickup location"
+              :placeholder="$t('general.enter_pickup_location')"
               :select-first-on-enter="true"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
               @place_changed="setLocation($event, 0)"
@@ -47,7 +47,7 @@
               <gmap-autocomplete
                 v-model="locations[1]"
                 :options="map_options"
-                placeholder="Enter a destination location"
+                :placeholder="$t('general.enter_destination_location')"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
                 @place_changed="setLocation($event, 1)"
@@ -81,7 +81,7 @@
               <gmap-autocomplete
                 v-model="locations[n + 1]"
                 :options="map_options"
-                placeholder="Enter a destination location"
+                :placeholder="$t('general.enter_destination_location')"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
                 @place_changed="setLocation($event, n + 1)"
@@ -114,7 +114,7 @@
           <a
             class="homeview--add"
             @click="addExtraDestinationWrapper()"
-          >Add Destination</a>
+          >{{$t('general.add_destination')}}</a>
         </div>
       </div>
       <div
@@ -142,18 +142,18 @@
               allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'
             "
             @click="addExtraDestinationWrapper()"
-          >Add Destination</a>
+          >{{$t('general.add_destination')}}</a>
         </div>
       </div>
       <div v-if="$route.path === '/orders/dedicated/multi-destination' && fileUploadStatus">
         <p class="home-view--upload-par">
-          OR
+          {{$t('general.or')}}
         </p>
         <p
           class="home-view--upload-button"
           @click="initiateUpload()"
         >
-          Upload file
+          {{$t('general.upload_file')}}
         </p>
       </div>
       <div
@@ -174,7 +174,7 @@
           type="button"
           class="button--primary-inactive home-view--place-order"
         >
-          Confirm Order
+          {{$t('general.confirm_order')}}
         </button>
       </div>
     </div>
@@ -642,8 +642,8 @@ export default {
           } else {
             this.doNotification(
               3,
-              'Price request failed',
-              'Price request failed. Please try again after a few minutes.',
+              this.$t('general.price_request_failed'),
+              this.$t('general.price_request_failed'),
             );
           }
 

@@ -7,8 +7,11 @@
       class="ongoing--count"
       @click="toggle_ongoing()"
     >
-      <span v-if="!parent_order">{{ num_ongoing }} ongoing FBU orders</span>
-      <span v-else>{{ child_orders.length }} containers</span>
+      <span v-if="!parent_order">
+        {{ num_ongoing }} {{$t('general.ongoing_fbu_orders')}}
+        
+        </span>
+      <span v-else>{{ child_orders.length }} {{$t('general.containers')}}</span>
       <font-awesome-icon
         icon="chevron-up"
         :class="classObject"
@@ -28,17 +31,17 @@
             @click="toggle_parent(order.child_orders, order)"
           >
             <div class="ongoing--order-count">
-              Goods Quantity: <b>{{ order.count }} container{{ pluralize(order.count) }}</b>
+              {{$t('general.goods_quantity')}}: <b>{{ order.count }} {{$t('general.container')}} {{ pluralize(order.count) }}</b>
             </div>
             <div class="ongoing--card-location card-location-override">
-              <span class="homeview--childinfo-order-details">Order Details</span><br>
+              <span class="homeview--childinfo-order-details">{{$t('general.order_details')}}</span><br>
               <div class="ongoing--card-parent-order-details">
                 <div class="ongoing--parent-locations">
-                  <span class="ongoing--parent-locations-header">Pick-Up</span><br>
+                  <span class="ongoing--parent-locations-header">{{$t('general.pick_up_')}}</span><br>
                   <span class="ongoing--parent-locations-body">{{ order.path[0].name }}</span>
                 </div>
                 <div class="ongoing--parent-locations">
-                  <span class="ongoing--parent-locations-header">Destination</span><br>
+                  <span class="ongoing--parent-locations-header">{{$t('general.destination')}}</span><br>
                   <span class="ongoing--parent-locations-body">{{ order.path[1].name }}</span>
                 </div>
               </div>
@@ -48,7 +51,7 @@
               :class="getStatus(order)"
             >
               <div class="">
-                Order Status: <b>{{ getStatus(order) }}
+                {{$t('general.order_status')}}: <b>{{ getStatus(order) }}
                 </b>
               </div>
               <div class="">
@@ -304,12 +307,12 @@ export default {
         }
       });
       if (pending) {
-        return 'Pending';
+        return this.$t('general.pending');
       }
       if (delivered) {
-        return 'Delivered';
+        return this.$t('general.delivered');
       }
-      return 'Ongoing';
+      return this.$t('general.ongoing');
     },
     validateChildOrders(children) {
       const childrenObject = [];

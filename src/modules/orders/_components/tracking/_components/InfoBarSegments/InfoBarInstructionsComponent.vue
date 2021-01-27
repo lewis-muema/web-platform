@@ -13,7 +13,7 @@
               class="infobar-truck-img"
             >
             <span class="info-text-transform infor-top-bar-text">
-              Type of order
+             {{$t('general.type_of_order')}} 
             </span>
           </div>
           <div class="tracking-loader-inner">
@@ -38,7 +38,7 @@
               class="infobar-truck-img"
             >
             <span class="info-text-transform infor-top-bar-text">
-              Scheduled pick up time
+              {{$t('general.scheduled_pick_up_time')}}
             </span>
           </div>
           <div class="tracking-loader-inner">
@@ -61,7 +61,7 @@
                 class="infobar-truck-img"
               >
               <span class="info-text-transform infor-top-bar-text">
-                Goods to be delivered
+                {{$t('general.goods_to_be_delivered')}}
               </span>
             </div>
             <div
@@ -69,7 +69,7 @@
               class="tracking-loader-inner"
             >
               <div v-if="trackingData.package_details.delivery_item === ''">
-                Not Indicated
+                {{$t('general.not_indicated')}}
               </div>
               <div v-else>
                 {{ trackingData.package_details.delivery_item }}
@@ -79,7 +79,7 @@
               v-else
               class="tracking-loader-inner"
             >
-              Not Indicated
+              {{$t('general.not_indicated')}}
             </div>
           </div>
           <div class="tracking-loader">
@@ -90,7 +90,7 @@
                 class="infobar-truck-img"
               >
               <span class="info-text-transform">
-                Weight of Load
+                {{$t('general.weight_of_load')}}
               </span>
             </div>
             <div
@@ -104,7 +104,7 @@
               v-else
               class="tracking-loader-inner"
             >
-              Not Indicated
+             {{$t('general.not_indicated')}}
             </div>
           </div>
 
@@ -116,20 +116,20 @@
                 class="infobar-truck-img"
               >
               <span class="info-text-transform infor-top-bar-text">
-                Do you need a loader?
+               {{$t('general.need_loader')}}
               </span>
             </div>
             <div
               v-if="trackingData.package_details.additional_loader"
               class="tracking-loader-inner"
             >
-              Yes, {{ trackingData.package_details.no_of_loaders }}
+              {{$t('general.yes')}}, {{ trackingData.package_details.no_of_loaders }}
             </div>
             <div
               v-else
               class="tracking-loader-inner"
             >
-              No
+              {{$t('general.no')}}
             </div>
           </div>
         </div>
@@ -142,7 +142,7 @@
     >
       <div class="tracking-notes">
         <div class="info-text-transform infor-top-bar-text">
-          PICKUP INSTRUCTIONS AT {{ trackingData.path[0].name }}
+          {{$t('general.pickup_instructions_at_capital')}} {{ trackingData.path[0].name }}
         </div>
         <div
           v-if="checkPickUpNotes(trackingData.path[0])"
@@ -179,7 +179,7 @@
           v-else
           class=""
         >
-          No notes provided.
+          {{$t('general.no_notes_provided')}}
         </div>
       </div>
 
@@ -190,7 +190,7 @@
         class="tracking-notes"
       >
         <div class="info-text-transform infor-top-bar-text">
-          DROP OFF INSTRUCTIONS AT {{ val.name }}
+          {{$t('general.drop_off_instructions_capital')}} {{ val.name }}
         </div>
         <div
           v-if="checkPickUpNotes(val)"
@@ -227,7 +227,7 @@
           v-else
           class=""
         >
-          No notes provided.
+         {{$t('general.no_notes_provided')}}
         </div>
       </div>
     </el-col>

@@ -5,12 +5,12 @@
         <div class="transporters-find-section">
           <div class="">
             <p class="freight-input--label">
-              Pick up location
+              {{ $t('transporterComponent.pickup_location') }}
             </p>
             <gmap-autocomplete
               v-model="locations[0]"
               :options="map_options"
-              placeholder="Enter a pickup location"
+              :placeholder="$t('transporterComponent.enter_pickup_location')"
               :select-first-on-enter="true"
               class="input-control"
               @place_changed="setLocation($event, 0)"
@@ -19,12 +19,12 @@
 
           <div class="">
             <p class="freight-input--label">
-              Destination
+              {{$t('transporterComponent.destination')}}
             </p>
             <gmap-autocomplete
               v-model="locations[1]"
               :options="map_options"
-              placeholder="Enter a destination location"
+              :placeholder="$t('transporterComponent.enter_destination')"
               :select-first-on-enter="true"
               class="input-control"
               @place_changed="setLocation($event, 1)"
@@ -32,7 +32,7 @@
           </div>
           <div class="">
             <p class="freight-input--label">
-              Pick up time
+              {{$t('transporterComponent.pickup_time')}}
             </p>
             <div class="transporters-select">
               <el-date-picker
@@ -40,7 +40,7 @@
                 class="bids-time"
                 type="datetime"
                 format="dd-MM-yyyy h:mm a"
-                placeholder="Select time"
+                :placeholder="$t('transporterComponent.select_time')"
                 prefix-icon="el-icon-date"
                 :default-time="default_value"
                 :picker-options="dueDatePickerOptions"
@@ -50,7 +50,7 @@
 
           <div class="">
             <p class="freight-input--label">
-              Type of truck
+              {{$t('transporterComponent.truck_type')}}
             </p>
             <div class="transporters-select">
               <el-select
@@ -70,7 +70,7 @@
 
           <div class="">
             <p class="freight-input--label">
-              What is the weight of the load?
+             {{$t('transporterComponent.weight')}}
             </p>
             <div>
               <input
@@ -80,13 +80,13 @@
                 placeholder=""
                 autocomplete="on"
               >
-              <span class="tonage-value-text">Tonnes</span>
+              <span class="tonage-value-text">{{$t('transporterComponent.tonnes')}}</span>
             </div>
           </div>
 
           <div class="">
             <p class="freight-input--label">
-              What is being transported?
+              {{$t('transporterComponent.item_transported')}}
             </p>
             <div class="transporters-select">
               <el-select
@@ -131,7 +131,7 @@
             <div class="search-flex">
               <el-input
                 v-model="query"
-                placeholder="Search by name"
+                :placeholder="$t('transporterComponent.search_by_name')"
                 autocomplete="off"
                 :prepare-response-data="prepareResponseData"
                 @keydown.down="down"
@@ -178,7 +178,7 @@
                 class="search-results-ul"
               >
                 <span class="screen-no-details-found">
-                  No Details Found
+                  {{$t('transporterComponent.no_details')}}
                 </span>
               </ul>
             </div>
@@ -189,7 +189,7 @@
               :indeterminate="isIndeterminate"
               @change="handleCheckAllChange"
             >
-              Select all
+              {{$t('transporterComponent.select_all')}}
             </el-checkbox>
           </div>
           <div class="transporter-outer">
@@ -228,13 +228,13 @@
                         alt=""
                         class="transporters-img highlight-icon"
                       >
-                      {{ ownersListing[index].complete_orders }} completed orders
+                      {{ ownersListing[index].complete_orders }} {{$t('transporterComponent.completed_orders')}}
                     </div>
                     <div
                       class="truck-add-info view-transporter-info"
                       @click="viewTransporterInfo(ownersListing[index].id)"
                     >
-                      View <i class="el-icon-arrow-right view-transporter-info" />
+                      {{$t('transporterComponent.view')}} <i class="el-icon-arrow-right view-transporter-info" />
                     </div>
                   </div>
                   <div class="transporters-filters transporters-highlight">
@@ -245,7 +245,7 @@
                         class="transporters-img highlight-icon"
                       >
                       {{ ownersListing[index].avg_rating }} (
-                      {{ ownersListing[index].avg_rating }} Reviews)
+                      {{ ownersListing[index].avg_rating }} {{$t('transporterComponent.reviews')}})
                     </div>
                   </div>
                 </el-checkbox>
@@ -265,18 +265,18 @@
           >
             <div class="">
               <div class="decline-text-option decline-documemt-extend request-quote-header">
-                Request for quote
+                {{$t('transporterComponent.request_for_quote')}}
               </div>
             </div>
             <div class="">
               <div class="decline-text-option decline-documemt-extend">
                 <span class="transporters-no-highlight">{{ filteredCheckedOwners.length }}</span>
-                Selected Transporters
+                {{$t('transporterComponent.select_transporter')}}
               </div>
             </div>
             <div class="decline-documemt-extend decline-documemt-input">
               <p class="freight-input--label">
-                By when should bids be submitted?
+                {{$t('transporterComponent.when_bids_submitted')}}
               </p>
               <div class="block">
                 <el-date-picker
@@ -284,7 +284,7 @@
                   class="transporters-pickup-time"
                   type="datetime"
                   format="dd-MM-yyyy h:mm a"
-                  placeholder="Select time"
+                  :placeholder="$t('transporterComponent.select_time')"
                   prefix-icon="el-icon-date"
                   :default-time="default_value"
                   :picker-options="dueDatePickerOptions"
@@ -299,7 +299,7 @@
                 class="quote-action--slide-button"
                 @click="sendFinalQuote()"
               >
-                Submit
+                {{$t('transporterComponent.submit')}}
               </button>
             </div>
           </el-dialog>
@@ -324,8 +324,8 @@ export default {
   mixins: [NotificationMxn],
   data() {
     return {
-      submit_text: 'Find Transporters',
-      quote_text: 'Request for quote',
+      submit_text: this.$t('transporterComponent.find_transporter'),
+      quote_text: this.$t('transporterComponent.request_for_quote'),
       locations: [],
       order_path: [],
       main_order_path: [],
@@ -524,7 +524,7 @@ export default {
           Otherdescription: '',
           Road: '',
           Typed: '',
-          Vicinity: 'Not Indicated',
+          Vicinity: this.$t('transporterComponent.not_indicated'),
           landmark: '',
           place_idcustom: place.place_id,
           viewport: {
@@ -584,7 +584,7 @@ export default {
       ) {
         this.doFilterOwners();
       } else {
-        this.doNotification(2, 'Find transporters error !', 'Kindly provide all values');
+        this.doNotification(2, this.$t('transporterComponent.find_tranporter_error'), this.$t('transporterComponent.provide_all'));
       }
     },
     doFilterOwners() {
@@ -618,15 +618,15 @@ export default {
               this.owners_list = workingResponse.owners_listing;
               this.doNotification(
                 2,
-                'No available Transporters ',
-                'No available transporters based on the filters',
+                this.$t('transporterComponent.no_available'),
+                this.$t('transporterComponent.no_available_text'),
               );
               setTimeout(() => {
                 this.fetchOwnersListing();
               }, 800);
             }
           } else {
-            this.doNotification(2, 'Unable to filter transporters!', workingResponse.message);
+            this.doNotification(2, this.$t('transporterComponent.unable_filter'), workingResponse.message);
             this.fetchOwnersListing();
           }
         },
@@ -647,8 +647,8 @@ export default {
       } else {
         this.doNotification(
           2,
-          'Unable to request for quotation!',
-          'Kindly select a transporter to request quotation',
+          this.$t('transporterComponent.unable_request'),
+          this.$t('transporterComponent.select_transporter'),
         );
       }
     },
@@ -656,8 +656,8 @@ export default {
       if (this.filteredCheckedOwners.length === 0 || this.quotation_time === '') {
         this.doNotification(
           2,
-          'Unable to request for quotation!',
-          'Kindly provide time for quotation to to submitted',
+          this.$t('transporterComponent.unable_request'),
+          this.$t('transporterComponent.provide_time'),
         );
       } else {
         let acc = {};
@@ -694,21 +694,21 @@ export default {
             }
 
             if (workingResponse.status) {
-              this.doNotification(1, 'Quotations sent successfully!', '');
+              this.doNotification(1, this.$t('transporterComponent.quotations_sent'), '');
               this.fetchOwnersListing();
             } else {
-              this.doNotification(2, 'Unable to request for quotation!', workingResponse.message);
+              this.doNotification(2, this.$t('transporterComponent.unable_request'), workingResponse.message);
             }
             this.resetQuatationDialog();
           },
           (error) => {
             if (Object.prototype.hasOwnProperty.call(error, 'message')) {
-              this.doNotification(2, 'Quote request failed', error.message);
+              this.doNotification(2, this.$t('transporterComponent.quote_request_failed'), error.message);
             } else {
               this.doNotification(
                 2,
-                'Quote request failed',
-                'Quote request failed. Please check your internet connection and try again.',
+                this.$t('transporterComponent.quote_request_failed'),
+                this.$t('transporterComponent.quote_request_failed_text'),
               );
               this.resetQuatationDialog();
             }
