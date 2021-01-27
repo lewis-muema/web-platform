@@ -17,7 +17,7 @@
             :class="get_current_active_order_option_class('payment')"
           >
             <span class="home-view-actions--items__span">
-              {{ pay_order_text }}
+              {{ pay_order_text }}   
             </span>
             <font-awesome-icon
               icon="chevron-down"

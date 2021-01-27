@@ -800,6 +800,8 @@ const translations = {
   sorry_application_declined: 'Sorry, your application to join the Sendy social club has been declined. Your business doesn’t qualify as a social commerce business, however, you can still place Sendy orders',
   okay: 'Okay',
 
+  use_promocodes: 'Use promocode',
+  valid_promo_codes:' Valid Promo Codes',
 };
 
 export default translations;

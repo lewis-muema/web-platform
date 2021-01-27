@@ -2,7 +2,7 @@
   <div class="paymentbody--form">
     <div class="paymentbody--list" v-if="promoCodes !== null && promoCodes.length !== 0">
       <div class="promocodestitle main-header">
-        Valid Promo Codes
+        {{$t('general.valid_promo_codes')}}
       </div>
       <div class="promocodeinfo" v-for="(promocode, index) in promoCodes" :key="index" :class="{ 'last-item': index === Object.keys(promoCodes).length - 1 }">
         <div class="promocodestitle promocode-sub-header">{{ promocode.couponName }}</div>
@@ -16,7 +16,7 @@
         v-model="promocode_payment_data.sendy_coupon"
         type="text"
         name="sendy_coupon"
-        placeholder="Promo Code"
+        :placeholder="$t('general.promo_code')"
         class="input-control paymentbody--input"
       >
     </div>
@@ -29,7 +29,7 @@
         :class="{ 'paymentbody--input-button button--primary-inactive' : !valid_payment || processing }"
         @click="redeem_coupon"
       >
-        Redeem
+        {{$t('general.redeem')}}
          <i
           v-if="processing"
           class="el-icon-loading tracking-loading-spinner promocode-spinner"
