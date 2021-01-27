@@ -1148,7 +1148,7 @@ export default {
                 this.doNotification(
                   3,
                   this.$t('general.order_completion_failed'),
-                  this.$t('general.order_completion_failed_text'),
+                  `${row.reason}`,
                 );
               }, 10);
             });
@@ -1221,6 +1221,13 @@ export default {
         // support new pricing
         if (row.order_no === undefined) {
           payload.pricing_uuid = row.id;
+        }
+        if (row.pair_status === '2' && row.vehicle_plate) {
+          payload.rider_details = {
+            sim_card_sn: row.pair_rider_sim_card_sn,
+            rider_phone: row.pair_rider_phone,
+            order_no: 'order_no' in row ? row.order_no : row.id,
+          };
         }
         fullPayload.push(payload);
       });

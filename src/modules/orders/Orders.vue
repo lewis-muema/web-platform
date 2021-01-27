@@ -792,6 +792,9 @@ export default {
     vehicleDetailsPlaceholder() {
       return  this.$t('general.enter_no_plate');
     },
+    vehicleDetailsPlaceholder() {
+      return 'Enter Full Number plate / Phone Number';
+    },
   },
   watch: {
     $route(to, from) {
