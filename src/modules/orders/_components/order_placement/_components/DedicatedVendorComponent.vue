@@ -456,7 +456,22 @@
                 </div>
               </div>
             </div>
-
+            <div v-if="![22, 24].includes(activeVendorPriceData.vendor_id)">
+              <div class="home-view-truck-options-inner-wrapper">
+                <div class="home-view-truck-options-label">
+                  Do you have a preferred driver/s at your pick up location ?
+                </div>
+                <div class="">
+                  <div
+                    class="pair_rider_section-variant"
+                    @click="pairWithDrivers()"
+                  >
+                    Pair with driver/s
+                    <i class="el-icon-circle-plus-outline pair-plus-icon" />
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-vendor-classes--label">
                 <payment-options @destroyOrderOptions="destroyVendorComponent()" />
@@ -513,7 +528,7 @@ export default {
         {
           value: '2',
           label: 'Any',
-        }
+        },
       ],
       smallVendorOptions: [
         {
@@ -710,6 +725,10 @@ export default {
     formatPriceType(type) {
       const name = type.replace(/_/g, ' ');
       return name.charAt(0).toUpperCase() + name.slice(1);
+    },
+
+    pairWithDrivers() {
+      this.$root.$emit('Pairing status', true);
     },
 
     vendorOptions(id) {
