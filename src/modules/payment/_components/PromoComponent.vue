@@ -40,6 +40,8 @@
 </template>
 
 <script>
+/* eslint-disable max-len */
+
 import { mapActions } from 'vuex';
 import NotificationMxn from '../../../mixins/notification_mixin';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
@@ -64,20 +66,19 @@ export default {
     promoCodes(data) {
       this.promoCodes = data;
     },
-    notification (obj) {
-          this.displayNotification(obj);
-      },
+    notification(obj) {
+      this.displayNotification(obj);
+    },
   },
-   mounted() {
-     this.requestPromoCodes();
-
+  mounted() {
+    this.requestPromoCodes();
   },
   methods: {
     ...mapActions(['$_payment/requestPromoCodePayment']),
-  
-      redeem_coupon() {
-            this.requestPromoPayment(this.promocode_payment_data.sendy_coupon);
-        },
+
+    redeem_coupon() {
+      this.requestPromoPayment(this.promocode_payment_data.sendy_coupon);
+    },
   },
 };
 </script>
