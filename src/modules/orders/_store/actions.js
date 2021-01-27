@@ -104,26 +104,7 @@ const requestCountryCode = function requestCountryCode({ dispatch }, data) {
     );
   });
 };
-const requestCopInfo = function requestCopInfo({ dispatch }, values) {
-  const payload = {
-    app: 'NODE_PRIVATE_API',
-    endpoint: 'update_cop',
-    values,
-  };
-  return new Promise((resolve, reject) => {
-    dispatch('requestAxiosPost', payload, {
-      root: true,
-    }).then(
-      (response) => {
-        resolve(response.data);
-      },
-      (error) => {
-        reject(error);
-        // handle failure to dispatch to global store
-      },
-    );
-  });
-};
+
 const requestIndustries = function requestIndustries({ dispatch }, payload) {
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosGet', payload, { root: true }).then(
