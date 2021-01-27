@@ -655,6 +655,9 @@ span.el-pagination__jump {
 .updateNotificationsDialog > div > div.el-dialog__header{
   padding: 0px 20px 10px !important;
 }
+.scheduleDialog > div{
+  width: 23% !important;
+}
 .el-dialog{
   max-height: 75%;
   overflow-y: auto;
@@ -748,6 +751,5 @@ div.pac-container {
   background-color:  rgba(0,0,0,0.50) !important;
   border-color: rgba(0,0,0,0.50) !important;
   cursor: not-allowed;
+
 }
-
-

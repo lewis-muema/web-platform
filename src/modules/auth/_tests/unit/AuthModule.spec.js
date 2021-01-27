@@ -12,6 +12,7 @@ import Vuex from 'vuex';
 // import SignUp from '../../components/SignUp.vue';
 // import SignUpVerification from '../../components/SignUpVerification.vue';
 
+
 Vue.use(Vuex);
 
 describe('Auth.vue', () => {

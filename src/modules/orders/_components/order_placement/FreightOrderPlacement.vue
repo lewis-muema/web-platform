@@ -9,7 +9,7 @@
         class="homeview--input-products block"
       >
         <div class="homeview--input-categories">
-          Goods Type
+          {{$t('general.goods_type')}}
         </div>
         <select
           v-model="productCategoryId"
@@ -132,7 +132,7 @@ export default {
             }, 1000);
             this.$root.$emit('Countdown status', true, error.count_down);
           } else {
-            this.doNotification(2, 'Could not fetch freight categories', 'Please try again');
+            this.doNotification(2, this.$t('general.could_not_fetch_freight_categories'), this.$t('general.please_try_again'));
           }
         },
       );

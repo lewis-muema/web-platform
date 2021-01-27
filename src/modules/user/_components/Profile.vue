@@ -14,7 +14,7 @@
             class="profile--link"
             to="/user/profile/personal_information"
           >
-            Personal Information
+            {{$t('general.personal_info')}}
           </router-link>
         </a>
         <div class="my-profile__adj">
@@ -22,7 +22,7 @@
             class="profile--link"
             to="/user/profile/change_password"
           >
-            Change Password
+            {{$t('general.change_password')}}
           </router-link>
         </div>
       </div>

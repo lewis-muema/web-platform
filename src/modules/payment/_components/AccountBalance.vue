@@ -13,7 +13,7 @@
     </div>
     <div class="payinfo-container">
       <div class="paytitle">
-        Top up your Sendy account
+       {{$t('general.top_up_your_sendy_account')}}
       </div>
       <div class="payinfo">
         <div class="payinfo-icon-container">
@@ -24,7 +24,7 @@
         </div>
         <div class="payinfo--balance">
           <p class="account-balance-info-title">
-            Account Balance
+            {{$t('general.account_balance')}}
           </p>
           <p class="account-balance-info-body">
             {{ getActiveCurrency }}<span class="payinfo--balance-el">{{ running_balance }}</span>

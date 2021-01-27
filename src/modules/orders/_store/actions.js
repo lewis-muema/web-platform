@@ -104,6 +104,7 @@ const requestCountryCode = function requestCountryCode({ dispatch }, data) {
     );
   });
 };
+
 const requestCopInfo = function requestCopInfo({ dispatch }, values) {
   const payload = {
     app: 'NODE_PRIVATE_API',
@@ -140,6 +141,7 @@ const requestIndustries = function requestIndustries({ dispatch }, payload) {
     );
   });
 };
+
 const requestPromoCodePayment = function requestPromoCodePayment({ dispatch }, payload) {
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosPost', payload, {
@@ -155,6 +157,20 @@ const requestPromoCodePayment = function requestPromoCodePayment({ dispatch }, p
   });
 };
 
+const updateSocialApprovalStatus = function updateSocialApprovalStatus({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPatch', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
 export default {
   fetchOngoingOrders,
@@ -166,4 +182,5 @@ export default {
   requestCopInfo,
   requestIndustries,
   requestPromoCodePayment,
+  updateSocialApprovalStatus,
 };
