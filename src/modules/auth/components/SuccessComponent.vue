@@ -19,8 +19,8 @@ export default {
   },
   computed: {
     payment_loading_title() {
-      return this.$t('successComponent.verify_success');
-      }
+      return 'Verifying Super User Successfull . You will be redirected to the Home Page within 5 seconds';
+    },
   },
   mounted() {
   },

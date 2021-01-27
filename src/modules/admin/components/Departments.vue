@@ -8,7 +8,7 @@
         <el-input
           v-model="filterData.department"
           class="section--filter-input"
-          :placeholder="$t('departments.search_department')"
+          placeholder="Search Department"
         />
 
         <button
@@ -21,7 +21,7 @@
           :disabled="active_filter == true ? false : true"
           @click="filterUserTableData"
         >
-          {{this.$t('departments.search')}}
+          Search
         </button>
       </div>
       <div class="section--filter-action-wrap">
@@ -29,7 +29,7 @@
           class="button-primary section--filter-action btn-dprts"
           @click="addDepartment"
         >
-          {{this.$t('departments.add_department')}}
+          Add Department
         </button>
       </div>
     </div>
@@ -43,11 +43,11 @@
         {{ empty_departments_state }}
       </template>
       <el-table-column
-        :label="$t('departments.name')"
+        label="Name"
         prop="department_name"
       />
       <el-table-column
-        :label="$t('departments.admin')"
+        label="Admin"
         prop="department_admin"
       />
       <el-table-column label="Action">
@@ -55,7 +55,7 @@
           <a
             class="btn-dpt-edit"
             @click="edit_department(departments_data[scope.$index]['department_id'])"
-          >{{$t('departments.edit')}}</a>
+          >Edit</a>
         </template>
       </el-table-column>
     </el-table>
@@ -82,7 +82,7 @@ export default {
   name: 'Departments',
   data() {
     return {
-      empty_departments_state: this.$t('departments.fetch_department'),
+      empty_departments_state: 'Fetching Departments',
       pagination_limit: 10,
       pagination_page: 1,
       filterState: false,
@@ -112,7 +112,7 @@ export default {
     this.$store.dispatch('$_admin/requestDepartmentsList', usersFullPayload).then(
       (response) => {},
       (error) => {
-        this.empty_departments_state = this.$t('departments.no_department');
+        this.empty_departments_state = 'No Departments For Account';
       },
     );
     this.filteredUserData = this.deptData;

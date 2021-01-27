@@ -1,8 +1,7 @@
 <template lang="html">
   <div class="screen-one">
     <div class="onboarding-user-header">
-      {{$t('onboardingComponent.join')}}
-      <!-- Join the {{ getBizName }} business account on Sendy -->
+      Join the {{ getBizName }} business account on Sendy
     </div>
 
     <p class="onboard-error">
@@ -13,7 +12,7 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>{{$t('onboardingComponent.name')}}</span>
+            <span>Name</span>
           </label>
           <input
             v-model="name"
@@ -28,7 +27,7 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>{{ $t('onboardingComponent.email_address') }}</span>
+            <span>Email Address</span>
           </label>
           <input
             v-model="email"
@@ -49,7 +48,7 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>{{$t('onboardingComponent.phone_no')}}</span>
+            <span>Phone Number</span>
           </label>
           <vue-tel-input
             v-model="phone"
@@ -74,7 +73,7 @@
     <div class="divide" />
     <div class="form-submits">
       <a class="waves-effect">
-        {{$t('onboardingComponent.back')}}
+        Back
       </a>
       <button
         id="nextBtn"
@@ -84,7 +83,7 @@
         :disabled="!is_valid"
         @click="next_view"
       >
-        {{$t('onboardingComponent.next')}}
+        Next
       </button>
     </div>
 
@@ -100,7 +99,8 @@
       </span>
       <div>
         <div class="onboarding-validation-description">
-          {{$t('onboardingComponent.verification_sms')}}
+          For your security, Sendy wants to make sure it's really you. We will send a message with
+          your verification code.
         </div>
 
         <div class="onboarding-verification-input">
@@ -108,7 +108,7 @@
             id="onboarding-verif_input"
             v-model="code"
             type="text"
-            :placeholder="$t('onboardingComponent.enter_verification_code')"
+            placeholder="Enter Verification Code"
           >
         </div>
       </div>
@@ -118,14 +118,14 @@
           class="onboarding-cancel "
           @click="onboardingVerificationCancel"
         >
-          {{$t('onboardingComponent.cancel')}}
+          Cancel
         </button>
         <button
           type="button"
           class="onboarding-verify"
           @click="onboardingVerificationVerify"
         >
-          {{$t('onboardingComponent.verify')}}
+          Verify
         </button>
       </div>
     </el-dialog>
@@ -156,7 +156,7 @@ export default {
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
-        placeholder: this.$t('onboardingComponent.enter_phone'),
+        placeholder: 'Enter a phone number',
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
@@ -224,7 +224,7 @@ export default {
         this.phoneVerification = true;
         this.sendVerificationCode();
       } else {
-        this.message = $t('onboardingComponent.prov_email');
+        this.message = 'Provide valid Email ';
       }
     },
     setCurrentStep(step) {
@@ -234,8 +234,8 @@ export default {
       this.phoneVerification = false;
       this.doNotification(
         2,
-        this.$t('onboardingComponent.phone_verification'),
-        this.$t('onboardingComponent.phone_verification_failed'),
+        'Phone Verification',
+        'Phone Verification Failed . Retry to complete Onboarding process',
       );
     },
 
@@ -254,7 +254,7 @@ export default {
           if (response.status) {
             this.requestId = response.request_id;
           } else {
-            this.doNotification(2, this.$t('onboardingComponent.phone_verification'), response.message);
+            this.doNotification(2, 'Phone Verification', response.message);
           }
         },
         (error) => {},
@@ -274,7 +274,7 @@ export default {
       this.requestOnboardingVerificationVerify(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.doNotification(2, this.$t('onboardingComponent.phone_verification'), this.$t('onboardingComponent.phone_verification_successful'));
+            this.doNotification(2, 'Phone Verification', 'Phone verification successful !');
 
             const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
 
@@ -284,7 +284,7 @@ export default {
             this.updateBizEmail(this.email);
             this.updateViewStep(0);
           } else {
-            this.doNotification(2, this.$t('onboardingComponent.phone_verification'), response.message);
+            this.doNotification(2, 'Phone Verification', response.message);
           }
         },
         (error) => {},

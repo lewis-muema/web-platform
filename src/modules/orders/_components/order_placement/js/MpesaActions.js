@@ -48,7 +48,7 @@ export default {
       endpoint: 'initiate_mpesa',
     };
 
-    this.payment_state = this.$t('general.requesting_mpesa_payment');
+    this.payment_state = 'requesting Mpesa Payment';
 
     this.requestMpesaPaymentAction(fullPayload).then(
       (response) => {
@@ -56,10 +56,10 @@ export default {
           // request poll here
           this.requestMpesaPaymentPoll();
         }
-        this.payment_state = this.$t('general.mpesa_payment_sucess');
+        this.payment_state = 'Mpesa Payment Success';
       },
       () => {
-        this.payment_state = this.$t('general.mpesa_payment_failed');
+        this.payment_state = 'Mpesa Payment Failed';
       },
     );
   },

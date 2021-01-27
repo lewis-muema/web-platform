@@ -22,7 +22,7 @@ const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
-  getMessage: field => this.$t('general.phone_number_not_valid'),
+  getMessage: field => 'The phone number not valid',
   validate: (value) => {
     let validity = false;
     try {

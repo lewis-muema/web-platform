@@ -2,7 +2,7 @@
   <div class="inv-container">
     <div class="show-out">
       <div class="show-txt">
-        <label class="inviteUser--text">{{ $t('linkComponent.invite_link') }}</label>
+        <label class="inviteUser--text">Invite link for {{ bizName }}</label>
         <input
           id="in_link"
           readonly
@@ -23,11 +23,11 @@
         <a
           class="show-link-justify"
           @click="back"
-        >{{ $t('linkComponent.back') }}</a>
+        >BACK</a>
       </div>
     </div>
     <div class="show-in">
-      {{ $t('linkComponent.use_link_to_join') }}
+      Anyone can use this link to join {{ getBizName }} on Sendy
     </div>
   </div>
 </template>
@@ -39,7 +39,7 @@ export default {
   name: 'LinkShowComponent',
   data() {
     return {
-      button: this.$t('linkComponent.copy_to_clipboard'),
+      button: 'Copy to clipboard',
       bizName: '',
     };
   },
@@ -65,7 +65,7 @@ export default {
       const copyText = document.getElementById('in_link');
       copyText.select();
       document.execCommand('Copy');
-      this.button = this.$t('linkComponent.copied');
+      this.button = 'Copied';
     },
     back() {
       this.updateViewState(1);

@@ -24,14 +24,14 @@
             class="tour-end"
             @click="skipTour()"
           >
-            {{$t('general.end_tour')}}
+            End tour
           </p>
           <p
             v-if="activeClass === 1"
             class="tour-end"
             @click="selectPickup()"
           >
-             {{$t('general.next')}}
+            NEXT
           </p>
         </div>
       </div>
@@ -57,10 +57,10 @@
             <span
               class="upload-link"
               @click="simulateClick()"
-            >{{$t('general.click_here')}}</span> {{$t('general.to_upload')}}
+            >Click here</span> to upload
           </p>
           <p class="no-margin upload-text">
-            ({{$t('general.we_support_file_formats')}})
+            (We support .csv .xlsx and .xml)
           </p>
           <input
             id="upload-input"
@@ -76,7 +76,7 @@
             :disabled="uploadBtn === 'button--primary-inactive inactive-1'"
             @click="upload()"
           >
-            {{$t('general.upload_csv')}}
+            Upload CSV
           </button>
         </div>
         <div
@@ -93,7 +93,7 @@
             class="upload-photo"
           >
           <p class="no-margin upload-par">
-            {{$t('general.files_uploaded')}}
+            Your file has been uploaded! An order will be generated shortly.
           </p>
         </div>
         <div
@@ -106,30 +106,30 @@
           >
           <div class="countdown-container">
             <p class="countdown-heading">
-              {{$t('general.sendy_freight')}}
+              SENDY FREIGHT
             </p>
             <p class="countdown-par">
-              {{$t('general.launching_soon')}}
+              LAUNCHING SOON
             </p>
             <div class="timer">
               <span class="countdown-time">
                 <p class="timer-digits">{{ days }}</p>
-                <p class="timer-description">{{$t('general.days')}}</p>
+                <p class="timer-description">DAYS</p>
               </span>
               <span class="countdown-divider">:</span>
               <span class="countdown-time">
                 <p class="timer-digits">{{ hours }}</p>
-                <p class="timer-description">{{$t('general.hours')}}</p>
+                <p class="timer-description">HOURS</p>
               </span>
               <span class="countdown-divider">:</span>
               <span class="countdown-time">
                 <p class="timer-digits">{{ minutes }}</p>
-                <p class="timer-description">{{$t('general.minutes')}}</p>
+                <p class="timer-description">MINUTES</p>
               </span>
               <span class="countdown-divider">:</span>
               <span class="countdown-time">
                 <p class="timer-digits">{{ seconds }}</p>
-                <p class="timer-description">{{$t('general.seconds')}}</p>
+                <p class="timer-description">SECONDS</p>
               </span>
             </div>
           </div>
@@ -139,19 +139,20 @@
           class="tour-popup"
         >
           <p class="tour-popup-description">
-            {{$t('general.new_featuer_added')}}
+            Hello! We’ve added a new feature, the open destination orders. We’d like to give you a
+            quick tour of this new feature.
           </p>
           <p
             class="tour-popup-get-started"
             @click="startTour()"
           >
-           {{$t('general.get_started')}}
+            Let’s get started!
           </p>
           <p
             class="tour-popup-skip"
             @click="skipTour()"
           >
-            {{$t('general.skip_tour')}}
+            Skip tour
           </p>
         </div>
       </div>
@@ -184,18 +185,18 @@
           >
             <div class="finish-setup-outer">
               <p class="crm-setup">
-                {{$t('general.finish_account_setup')}}
+                Finish account set up
               </p>
               <div class="">
                 <div v-if="updateKraSection">
                   <div class="">
                     <label
                       class="final-label"
-                    >{{$t('general.does_biz_file_vat_optional')}}</label>
+                    >Does your business file VAT returns? (optional)</label>
                     <div class="final-upper-padding">
                       <el-select
                         v-model="tax_compliance"
-                        :placeholder="$t('general.select')"
+                        placeholder="Select"
                         class="compliance-select-final"
                       >
                         <el-option
@@ -212,31 +213,31 @@
                     v-if="tax_compliance"
                     class="final-upper-padding"
                   >
-                    <label class="final-label"></label>
+                    <label class="final-label">Enter your business KRA pin</label>
                     <div class="final-upper-padding">
                       <input
                         v-model="kra_pin"
                         class="input-control upgrade-final"
                         type="text"
                         name="kra_pin"
-                        :placeholder="$t('general.kra_pin')"
+                        placeholder="KRA PIN"
                         autocomplete="on"
                       >
                       <span
                         v-show="!valid_kra_pin"
                         class="invalid-kra"
                       >
-                        {{$t('general.valid_kra_pin')}}
+                        Please enter a valid KRA PIN
                       </span>
                     </div>
                   </div>
 
                   <div class="final-upper-padding">
                     <label class="final-label">
-                     {{ $t('general.select_primary_vehicle')}}
+                      Select the primary vehicle you will be using for your business.
                     </label>
                     <p class="final-inner">
-                      {{ $t('general.not_restrict_you')}}
+                      (This will not restrict you from using other vehicles)
                     </p>
                     <div class="final-upper-padding">
                       <div class="vendors-final-outerline">
@@ -282,7 +283,7 @@
                   class="final-upper-padding"
                 >
                   <div class="final-upper-padding">
-                    <label class="final-label">{{ $t('general.industry')}}</label>
+                    <label class="final-label">What industry is your business in?</label>
                     <div class="final-upper-padding">
                       <el-select
                         v-model="industry_type"
@@ -300,11 +301,11 @@
                   </div>
 
                   <div class="final-upper-padding">
-                    <label class="final-label">{{ $t('general.social_media')}}</label>
+                    <label class="final-label">Is social media your main source of clients?</label>
                     <div class="final-upper-padding">
                       <el-select
                         v-model="social_media_option"
-                        :placeholder="$t('general.select')"
+                        placeholder="Select"
                         class="compliance-select-final"
                       >
                         <el-option
@@ -321,7 +322,7 @@
                     v-if="social_media_option"
                     class="final-upper-padding"
                   >
-                    <label class="final-label">{{ $t('general.biz_insta_handle')}}</label>
+                    <label class="final-label">What is your business instragram handle?</label>
                     <div class="final-upper-padding">
                       <input
                         v-model="ig_media_handle"
@@ -339,7 +340,7 @@
                   >
                     <label
                       class="final-label"
-                    >{{ $t('general.link_business_face_book_page')}}</label>
+                    >What is the link to your business facebook page?</label>
                     <div class="final-upper-padding">
                       <input
                         v-model="facebook_media_handle"
@@ -356,7 +357,7 @@
                   <input
                     class="button-primary final-step-submit"
                     type="submit"
-                    :value="$t('general.submit')"
+                    value="Submit"
                     @click="submit"
                   >
                 </div>
@@ -437,33 +438,36 @@ export default {
       activeClass: -1,
       dedicatedTourPoints: [
         {
-          title: this.$t('general.order_type_dedicated_vehicles'),
-          description:this.$t('general.get_truck_whole_day'),
+          title: 'Order Type: Dedicated vehicles',
+          description:
+            'Get a truck for a whole day to do all your deliveries. We handle your logistics while you focus on your core business',
           class: '.tour-pointer-1',
         },
         {
-          title: this.$t('general.order_type_no_destination'),
-          description: this.$t('general.skip_adding_destination'),
+          title: 'Order Type: No Destination',
+          description:
+            'With no destination vehicles you can skip adding a destination or add a general region to deliver in and the driver will check off each delivery stop. Enter the pick up location input to continue',
           class: '.tour-pointer-2',
         },
         {
-          title: this.$t('general.vehicle_type'),
-          description:this.$t('general.select_multiple_vehicle'),
+          title: 'Vehicle Type',
+          description:
+            'Select multiple vehicle types and multiple vehicles of the same vehicle type',
           class: '.tour-pointer-3',
         },
         {
-          title: this.$t('general.select_vehicle_type'),
-          description: this.$t('general.select_open_or_closed_vehicles'),
+          title: 'Select Vehicle type',
+          description: 'Select open or closed vehicles for pick ups and bikes',
           class: '.tour-pointer-4',
         },
         {
-          title: this.$t('general.schedule'),
-          description: this.$t('general.select_date_for_delivery'),
+          title: 'Schedule',
+          description: 'Select the date for your deliveries',
           class: '.tour-pointer-5',
         },
         {
-          title: this.$t('general.schedule_time_capital'),
-          description: this.$t('general.select_time_frame'),
+          title: 'Schedule: Time',
+          description: 'Select the time-frame you’d like your deliveries done',
           class: '.tour-pointer-6',
         },
       ],
@@ -837,8 +841,8 @@ export default {
         .catch((err) => {
           this.doNotification(
             2,
-            this.$t('general.failed_upload_file'),
-            this.$t('general.check_connection_try_again'),
+            'Failed to upload file',
+            'Please check your connection and try again',
           );
         });
     },
@@ -847,9 +851,9 @@ export default {
       const sessionData = Object.keys(session).length;
       if (sessionData === 0) {
         const notification = {
-          title: this.$t('general.session_has_expired'),
+          title: 'Your session has expired!',
           level: 2,
-          message: this.$t('general.redirected_to_login'),
+          message: 'You will be redirected to the login page within 5 seconds.',
         };
         this.displayNotification(notification);
         setTimeout(() => {
@@ -878,16 +882,16 @@ export default {
     },
     handleKraAndIndustry() {
       if (this.primary_business_unit === '') {
-        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.select_primary_type_vehicle'));
+        this.doNotification(2, 'Final set up error !', 'Please select primary type vehicle');
       } else if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
-        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.enter_valid_kra'));
+        this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
       } else if (this.industry_type === '' || this.social_media_option === '') {
-        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.select_industry_preference'),);
+        this.doNotification(2, 'Final set up error !', 'Please select industry preference');
       } else if (
         this.social_media_option
         && (this.ig_media_handle === '' && this.facebook_media_handle === '')
       ) {
-        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.social_media_handle'));
+        this.doNotification(2, 'Final set up error !', 'Please provide social media handle');
       } else {
         const session = this.$store.getters.getSession;
         const payload = {
@@ -912,9 +916,9 @@ export default {
     },
     handleKraSetUp() {
       if (this.primary_business_unit === '') {
-        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.select_primary_type_vehicle'));
+        this.doNotification(2, 'Final set up error !', 'Please select primary type vehicle');
       } else if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
-        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.enter_valid_kra'));
+        this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
       } else {
         const session = this.$store.getters.getSession;
         const payload = {
@@ -931,12 +935,12 @@ export default {
     },
     handleIndustrySetUp() {
       if (this.industry_type === '' || this.social_media_option === '') {
-        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.select_industry_preference'));
+        this.doNotification(2, 'Final set up error !', 'Please select industry preference');
       } else if (
         this.social_media_option
         && (this.ig_media_handle === '' && this.facebook_media_handle === '')
       ) {
-        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.social_media_handle'));
+        this.doNotification(2, 'Final set up error !', 'Please provide social media handle');
       } else {
         const session = this.$store.getters.getSession;
         const payload = {
@@ -988,7 +992,7 @@ export default {
             this.displayNotification(notification);
           } else {
             const level = 3;
-            this.message = this.$t('general.something_went_wrong');
+            this.message = 'Something went wrong.';
             const notification = {
               title: '',
               level,
@@ -999,7 +1003,7 @@ export default {
         },
         (error) => {
           const level = 3;
-          const notification = { title: '', level, message:this.$t('general.something_went_wrong') }; // notification object
+          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
           this.displayNotification(notification);
         },
       );

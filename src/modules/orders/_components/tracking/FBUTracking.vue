@@ -22,10 +22,10 @@
           >
             <div class="">
               <div class="cancel-reason-option">
-                {{$t('general.cancel_this_order')}}
+                Cancel this order?
               </div>
               <div class="cancel-reason-option">
-                {{$t('general.place_another_one_any_time')}}
+                You can place another one at any time.
               </div>
             </div>
             <div class="cancel-reason-text">
@@ -34,7 +34,7 @@
                   v-model="cancel_reason"
                   label="4"
                 >
-                  {{$t('general.placed_wrong_location')}}
+                  I placed the wrong locations
                 </el-radio>
               </div>
               <div class="">
@@ -42,7 +42,7 @@
                   v-model="cancel_reason"
                   label="5"
                 >
-                  {{$t('general.order_not_ready')}}
+                  My order is not ready
                 </el-radio>
               </div>
               <div class="">
@@ -50,7 +50,7 @@
                   v-model="cancel_reason"
                   label="7"
                 >
-                  {{$t('general.no_driver_allocated')}}
+                  No driver has been allocated
                 </el-radio>
               </div>
               <div class="">
@@ -58,7 +58,7 @@
                   v-model="cancel_reason"
                   label="8"
                 >
-                  {{$t('general.place_order_twice')}}
+                  I placed this order twice
                 </el-radio>
               </div>
             </div>
@@ -78,7 +78,7 @@
                 class="action--slide-button"
                 @click="cancelOrder()"
               >
-                {{$t('general.yes')}}
+                Yes
               </button>
               <button
                 type="button"
@@ -86,7 +86,7 @@
                 class="action--slide-button"
                 @click="cancelToggle()"
               >
-                {{$t('general.no')}}
+                No
               </button>
             </div>
           </div>
@@ -95,7 +95,9 @@
             class="cancelOptions--content-wrap"
           >
             <div class="cancelOptions--content-message">
-              {{$t('general.call_rider_and_right_destination')}}
+              Did you know after your order is confirmed you can
+              call your rider and give him the right destination?
+              We will recalculate the cost and deliver your item.
             </div>
             <div class="cancelOptions--content-buttons">
               <button
@@ -104,7 +106,7 @@
                 class="action--slide-button"
                 @click="cancelToggle(cancel_reason)"
               >
-                {{$t('general.ok_call_the_rider')}}
+                Okay, I'll call the rider
               </button>
               <button
                 type="button"
@@ -112,7 +114,7 @@
                 class="default action--slide-button"
                 @click="cancelOrder()"
               >
-               {{$t('general.cancel_order')}}
+                Cancel Order
               </button>
             </div>
           </div>
@@ -179,19 +181,19 @@ export default {
     cancel_reason(reason) {
       switch (reason) {
         case 4: {
-          this.cancel_desc = this.$t('general.placed_wrong_location');
+          this.cancel_desc = 'I placed the wrong locations';
           break;
         }
         case 5: {
-          this.cancel_desc = this.$t('general.order_not_ready');
+          this.cancel_desc = 'My order is not ready';
           break;
         }
         case 7: {
-          this.cancel_desc = this.$t('general.no_driver_allocated');
+          this.cancel_desc = 'No driver has been allocated';
           break;
         }
         case 8: {
-          this.cancel_desc = this.$t('general.placed_order_twice');
+          this.cancel_desc = 'I placed this order twice';
           break;
         }
         default:
@@ -300,15 +302,15 @@ export default {
               } else {
                 that.doNotification(
                   2,
-                  this.$t('general.order_cancellation_failed'),
-                  this.$t('general.not_cancel_order_contact_support')
+                  'Order cancellation failed',
+                  'Could not cancel the order. Please contact Customer Care at 0709779779.',
                 );
               }
             });
           }
         });
       } else {
-        this.doNotification(3,  this.$t('general.order_cancellation_failed'),  this.$t('general.select_cancellation_reason'));
+        this.doNotification(3, 'Order cancellation failed', 'Please select cancellation reason.');
       }
     },
     doNotification(level, title, message) {

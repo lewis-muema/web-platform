@@ -9,11 +9,11 @@
           v-if="sessionData.default === 'biz'"
           v-model="filterData.user"
           class="section--filter-input"
-          :placeholder="$t('general.users')"
+          placeholder="Users"
           filterable
         >
           <el-option
-            :label="$t('general.all_users')"
+            label="All Users"
             value="-1"
           />
           <el-option
@@ -30,7 +30,7 @@
           type="date"
           name="from_date"
           value=""
-          :placeholder="$t('general.from')"
+          placeholder="From"
         />
         <el-date-picker
           v-model="filterData.to_date"
@@ -38,7 +38,7 @@
           type="date"
           name="to_date"
           value=""
-          :placeholder="$t('general.to')"
+          placeholder="To"
         />
       </div>
       <div class="section--filter-action-wrap">
@@ -79,7 +79,7 @@
             type="primary"
             size="mini"
           >
-            {{$t('general.download')}}<i class="el-icon-arrow-down el-icon--right" />
+            Download<i class="el-icon-arrow-down el-icon--right" />
           </el-button>
           <el-dropdown-menu
             id="order_hist"
@@ -87,10 +87,10 @@
             class="export_dropdown"
           >
             <el-dropdown-item command="a">
-              {{$t('general.excel')}}
+              Excel
             </el-dropdown-item>
             <el-dropdown-item command="b">
-              {{$t('general.pdf')}}
+              PDF
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -117,12 +117,12 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('general.txn')"
+        label="Txn"
         prop="order_no"
         width="180"
       />
       <el-table-column
-        :label="$t('general.date')"
+        label="Date"
         prop="order_date"
       >
         <template slot-scope="props">
@@ -133,12 +133,12 @@
       <el-table-column
         v-if="sessionData.default === 'biz'"
         key="1"
-        :label="$t('general.user')"
+        label="User"
         prop="user_details.name"
         width="120"
       />
       <el-table-column
-        :label="$t('general.amount')"
+        label="Amount"
         width="150"
         header-align="center"
         align="center"
@@ -175,7 +175,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('general.deliveries')"
+        label="Deliveries"
         prop="path"
         width="80"
         header-align="center"
@@ -186,7 +186,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('general.from')"
+        label="From"
         prop="path"
       >
         <template slot-scope="scope">
@@ -194,7 +194,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('general.to')"
+        label="To"
         prop="path"
       >
         <template slot-scope="scope">
@@ -273,13 +273,13 @@ export default {
   mixins: [TimezoneMxn],
   data() {
     return {
-      empty_orders_state: this.$t('general.fetching_order_history'),
-      empty_users_state: this.$t('general.fetching_cop_users'),
+      empty_orders_state: 'Fetching Order History',
+      empty_users_state: 'Fetching Cop Users',
       expand_id: 0,
       expand_keys: [],
       pagination_limit: 10,
       pagination_page: 1,
-      order_history_text: this.$t('general.search'),
+      order_history_text: 'Search',
       filterData: {
         user: '',
         from_date: '',
@@ -408,7 +408,7 @@ export default {
       this.loading = true;
 
       // reset filter
-      this.empty_orders_state = this.$t('general.searching_orders');
+      this.empty_orders_state = 'Searching Orders';
 
       const { user } = this.filterData;
       let { from_date: fromDate, to_date: toDate } = this.filterData;
@@ -453,7 +453,7 @@ export default {
           to: toDate,
         };
       }
-      this.order_history_text = this.$t('general.searching');
+      this.order_history_text = 'Searching ...';
       this.requestOrderHistory(payload);
       this.loading = false;
     },
@@ -528,17 +528,17 @@ export default {
       };
       this.$store.dispatch('$_transactions/requestOrderHistoryOrders', fullPayload).then(
         () => {
-          this.order_history_text = this.$t('general.search');
-          this.empty_orders_state = this.$t('general.order_history_not_found');
+          this.order_history_text = 'Search';
+          this.empty_orders_state = 'Order History Not Found';
         },
         (error) => {
           this.setOrderHistoryOrders([]);
-          this.order_history_text = this.$t('general.search');
+          this.order_history_text = 'Search';
 
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'data')) {
-            this.empty_orders_state = this.$t('general.no_order_history_for_user')
+            this.empty_orders_state = 'No Order History for user';
           } else {
-            this.empty_orders_state = this.$t('general.order_history_failed');
+            this.empty_orders_state = 'Order History Failed to Fetch';
           }
         },
       );
@@ -556,10 +556,10 @@ export default {
       };
       this.$store.dispatch('$_transactions/requestCopUsers', fullUsersPayload).then(
         () => {
-          this.empty_users_state = this.$t('general.cop_user_not_found');
+          this.empty_users_state = 'Cop Users Not Found';
         },
         () => {
-          this.empty_users_state = this.$t('general.cop_user_failed_to_fetch');
+          this.empty_users_state = 'Cop Users Failed to Fetch';
         },
       );
     },
@@ -600,15 +600,15 @@ export default {
       } else {
         const pdfBdy = [
           [
-            this.$t('general.order_number'),
-            this.$t('general.order_amount'),
-            this.$t('general.order_date'),
-            this.$t('general.order_distance_in_km'),
-            this.$t('general.user'),
-            this.$t('general.from'),
-            this.$t('general.to'),
-            this.$t('general.riders_name'),
-            this.$t('general.riders_phone'),
+            'Order Number',
+            'Order Amount',
+            'Order Date',
+            'Order Distance in KM',
+            'User',
+            'From',
+            'To',
+            'Riders Name',
+            'Riders Phone',
           ],
         ];
         this.orderHistoryData.forEach((item) => {

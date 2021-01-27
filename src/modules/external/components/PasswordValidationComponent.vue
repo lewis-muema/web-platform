@@ -1,20 +1,20 @@
 <template lang="html">
   <div class="screen-three">
     <div class="onboarding-user-header">
-      {{$t('passwordValidationComponent.set_password')}}
+      Set a Password
     </div>
     <div class="form-inputs">
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>{{$t('passwordValidationComponent.create_password')}}</span>
+            <span>Create Password</span>
           </label>
           <input
             id="password"
             v-model="password"
             class="form-control"
             type="password"
-            :placeholder="$t('passwordValidationComponent.enter_password')"
+            placeholder="Enter your password"
             @focus="setCurrentStep(1)"
           >
         </div>
@@ -22,14 +22,14 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>{{$t('passwordValidationComponent.confirm_password')}}</span>
+            <span>Confirm Password</span>
           </label>
           <input
             id="password"
             v-model="cpassword"
             class="form-control"
             type="password"
-            placeholder="$t('passwordValidationComponent.confirm_your_password')"
+            placeholder="Confirm your password"
             @focus="setCurrentStep(2)"
           >
         </div>
@@ -41,7 +41,7 @@
         class="waves-effect waves-teal btn-flat"
         @click="last_view"
       >
-        {{$t('passwordValidationComponent.back')}}
+        Back
       </a>
       <button
         class="btn-submit"
@@ -50,7 +50,7 @@
         :disabled="!is_valid"
         @click="next_view"
       >
-        {{$t('passwordValidationComponent.next')}}
+        Next
       </button>
     </div>
   </div>
@@ -80,7 +80,7 @@ export default {
     }),
     next_view() {
       if (this.password !== this.cpassword) {
-        this.doNotification(2, this.$t('passwordValidationComponent.set_password'), $t('passwordValidationComponent.not_match'));
+        this.doNotification(2, 'Set Password', 'Password does not match. Please try again');
       } else {
         let payload = {};
         this.updatePassPlain(this.cpassword);

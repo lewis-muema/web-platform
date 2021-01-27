@@ -5,7 +5,7 @@
   >
     <div class="sign-inner">
       <div class="sign-top">
-        {{$t('signIn.login_sendy') }}
+        Log in to Sendy
       </div>
 
       <p class="sign-in-error">
@@ -24,7 +24,7 @@
             v-model="email"
             class="input-control sign-form"
             type="text"
-            :placeholder="$t('signIn.enter_email')"
+            placeholder="Enter Email"
           >
         </div>
 
@@ -34,7 +34,7 @@
             class="input-control sign-form"
             type="password"
             name="password"
-            :placeholder="$t('signIn.password')"
+            placeholder="Password"
           >
         </div>
 
@@ -52,16 +52,16 @@
             class="sign-holder__link"
             to="/auth/forgot_password"
           >
-            {{ $t('signIn.forgot_password') }}
+            Forgot password?
           </router-link>
         </div>
         <div class="sign-holder sign-sign-up sign-smaller">
-          {{$t('signIn.have_account')}}
+          Don't have an Account?
           <router-link
             class="sign-holder__link"
             to="/auth/sign_up"
           >
-            {{$t('signIn.sign_up')}}
+            Sign Up
           </router-link>
         </div>
       </div>
@@ -83,7 +83,7 @@ export default {
       email: '',
       password: '',
       message: '',
-      login_text: this.$t('signIn.login'),
+      login_text: 'Login',
     };
   },
   mounted() {
@@ -98,7 +98,7 @@ export default {
       window.ga('send', {
         hitType: 'pageview',
         page: location.pathname,
-        title: this.$t('signIn.view'),
+        title: 'View Page - Sign In - Web Platform',
       });
     },
     clearSession() {
@@ -109,7 +109,7 @@ export default {
     },
     sign_in() {
       if (this.email !== '' && this.password !== '') {
-        this.login_text = this.$t('signIn.login_status');
+        this.login_text = 'Logging in ...';
         // erase any existing session
         this.deleteSession();
         const params = {
@@ -127,10 +127,10 @@ export default {
               const errorResponse = response.data;
               if (errorResponse.code === 1) {
                 this.login_text = 'Login';
-                this.doNotification(2, this.$t('signIn.login_failed'), this.$t('signIn.wrong_password'));
+                this.doNotification(2, 'Login failed', 'Wrong password or email.');
               } else {
                 this.login_text = 'Login';
-                this.doNotification(2, this.$t('signIn.login_failed'), this.$t('signIn.account_deactivated') );
+                this.doNotification(2, 'Login failed', 'Account deactivated');
               }
             } else {
               try {
@@ -208,17 +208,17 @@ export default {
                 }
               } catch (error) {
                 // @todo Log the error (central logging)
-                this.login_text = this.$t('signIn.login');
+                this.login_text = 'Login';
               }
             }
           },
           (error) => {
             this.login_text = 'Login';
-            this.doNotification(2, this.$t('signIn.login_failed'), this.$t('signIn.login_failed_status'));
+            this.doNotification(2, 'Login failed', 'Login failed. Please try again');
           },
         );
       } else {
-        this.message = this.$t('signIn.provide_all');
+        this.message = 'Provide all values';
       }
     },
     doNotification(level, title, message) {

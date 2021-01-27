@@ -33,7 +33,7 @@
         </div>
 
         <div class="order_details_desc_item">
-          {{$t('general.distance')}}: {{ order_details.order_details.distance }} KMs
+          Distance : {{ order_details.order_details.distance }} KMs
         </div>
         <!-- TODO: add this in later with the duration the order took -->
         <!-- <div class="order_details_desc_item">
@@ -41,20 +41,20 @@
               </div>-->
         <div class="order_details_desc_item--wrapper">
           <div class="order_details_desc_item">
-            {{$t('general.date')}} : {{ convertToUTCToLocal(order_details.order_date) | moment }}
+            Date : {{ convertToUTCToLocal(order_details.order_date) | moment }}
           </div>
           <span v-for="j in order_details.logs">
             <div
               v-if="j.log_type === 3"
               class="order_details_desc_item"
             >
-              {{$t('general.picked')}} : {{ j.log_time | moment }}
+              Picked : {{ j.log_time | moment }}
             </div>
             <div
               v-if="j.log_type === 4"
               class="order_details_desc_item"
             >
-              {{$t('general.delivered')}} : {{ j.log_time | moment }}
+              Delivered : {{ j.log_time | moment }}
             </div>
           </span>
         </div>
@@ -90,7 +90,7 @@
               "
               class="recepient-padded"
             >
-              {{$t('general.recieved_by')}} {{ order_details.rider_deliver_img[index - 1].name }}
+              Recieved by {{ order_details.rider_deliver_img[index - 1].name }}
             </div>
           </div>
         </template>
@@ -99,13 +99,13 @@
             v-if="order_details.extra_distance_amount > 0"
             class="order_details_desc_item"
           >
-           {{$t('general.distance_bill')}} : {{ order_details.extra_distance_amount }}
+            Extra Distance Bill : {{ order_details.extra_distance_amount }}
           </div>
           <div
             v-if="order_details.waiting_time_amount > 0"
             class="order_details_desc_item"
           >
-            {{$t('general.waiting_charges')}}: {{ order_details.waiting_time_amount }}
+            Waiting Time Charges : {{ order_details.waiting_time_amount }}
           </div>
         </div>
       </div>
@@ -148,7 +148,7 @@
                 type="button"
                 @click="trackOrder(order_details.order_no)"
               >
-                {{$t('general.track')}}
+                Track
               </button>
             </div>
           </div>
@@ -162,7 +162,7 @@
                 type="button"
                 @click="dialogVisible = true"
               >
-                {{$t('general.view_delivery_doc')}}
+                View Delivery Docs
               </button>
             </div>
             <el-dialog
@@ -170,14 +170,14 @@
               class="delivery_image_dialog"
               :visible.sync="dialogVisible"
             >
-              <span slot="title"> {{$t('general.delivery_doc_for')}}{{ order_details.order_no }} </span><br>
+              <span slot="title"> Delivery Documents for {{ order_details.order_no }} </span><br>
               <template
                 v-for="(locations, index) in order_details.path"
                 v-if="index >= 1"
               >
                 <div class="delivery_documents_info">
                   <div class="delivery_image_details">
-                    {{$t('general.delivery_at')}} {{ order_details.path[index].name }}
+                    Delivery at {{ order_details.path[index].name }}
                   </div>
 
                   <template
@@ -216,7 +216,7 @@
                     "
                     class="delivery_image_details"
                   >
-                    {{$t('general.delivery_signature')}}: {{ order_details.rider_deliver_img[index - 1].name }}
+                    Delivery signature by : {{ order_details.rider_deliver_img[index - 1].name }}
                   </div>
                 </div>
               </template>
@@ -226,7 +226,7 @@
                   type="button"
                   @click="disputeDocsOption"
                 >
-                  {{$t('general.dispute_delivery_docs')}}
+                  Dispute Delivery Docs
                 </button>
               </div>
             </el-dialog>
@@ -236,7 +236,7 @@
               @close="closeDialog()"
             >
               <span slot="title">
-                {{$t('general.dispute_delivery_docs_order')}} {{ order_details.order_no }} </span><br>
+                Dispute Delivery Documents - Order {{ order_details.order_no }} </span><br>
               <div class="dispute_documents_body">
                 <div>
                   <select
@@ -248,14 +248,14 @@
                       disabled
                       selected
                     >
-                      {{$t('general.dispute_type')}}
+                      Dispute Type
                     </option>
 
                     <option value="1">
-                      {{$t('general.waiting_time')}}
+                      Waiting time
                     </option>
                     <option value="2">
-                     {{$t('general.extra_distance')}}
+                      Extra distance
                     </option>
                   </select>
                 </div>
@@ -269,26 +269,26 @@
                       disabled
                       selected
                     >
-                      {{$t('general.dispute_reason')}}
+                      Dispute Reason
                     </option>
 
                     <option value="1">
-                      {{$t('general.was_overcharge_order')}}
+                      I was overcharged for this order
                     </option>
                     <option value="2">
-                      {{$t('general.driver_took_too_long')}}
+                      My driver took too long
                     </option>
                     <option value="3">
-                      {{$t('general.driver_went_wrong_location')}}
+                      My driver went to a wrong location
                     </option>
                     <option value="4">
-                      {{$t('general.different_issue')}}
+                      I had a different issue
                     </option>
                   </select>
                 </div>
                 <textarea
                   v-model="disputeDescription"
-                  :placeholder="$t('general.description')"
+                  placeholder="Description"
                   class="form-control dispute_description"
                 />
                 <div class="rider_details_action">
@@ -297,7 +297,7 @@
                     type="button"
                     @click="disputeDeliveryDocs"
                   >
-                    {{$t('general.submit')}}
+                    Submit
                   </button>
                 </div>
               </div>
@@ -427,20 +427,20 @@ export default {
             } else {
               this.doNotification(
                 2,
-                this.$t('general.delivery_dispute'),
-                this.$t('general.failure_doc_dispute'),
+                'Delivery dispute',
+                'Failure to dispute documents due to an existing dispute request !',
               );
             }
           },
           (error) => {
-            this.doNotification(2, this.$t('general.delivery_dispute'), this.$t('general.something_went_wrong_please_try'));
+            this.doNotification(2, 'Delivery dispute', 'Something went wrong, please retry .');
           },
         );
       } else {
         this.doNotification(
           2,
-          this.$t('general.dispute_delivery_docs'),
-         this.$t('general.sorry_no_extra_charges'),
+          'Dispute delivery docs',
+          'Sorry there were no extra charges for this order',
         );
       }
     },
@@ -464,19 +464,19 @@ export default {
         this.requestDisputeDeliveryDocs(fullPayload).then(
           (response) => {
             if (response.status) {
-              this.doNotification(2, this.$t('general.delivery_dispute'), this.$t('general.delivery_dispute_successful'));
+              this.doNotification(2, 'Delivery dispute', 'Delivery dispute successful !');
               this.closeDialog();
             } else {
-              this.doNotification(2, this.$t('general.delivery_dispute'), response.message);
+              this.doNotification(2, 'Delivery dispute', response.message);
             }
           },
           (error) => {
-            this.doNotification(2, this.$t('general.delivery_dispute'), this.$t('general.something_went_wrong_please_try'));
+            this.doNotification(2, 'Delivery dispute', 'Something went wrong, please retry .');
           },
         );
       } else {
         this.message = 'Please provide all details';
-        this.doNotification(2, 'Delivery dispute failed', this.$t('general.please_provide_all_details'));
+        this.doNotification(2, 'Delivery dispute failed', 'Provide all details');
       }
     },
     doNotification(level, title, message) {

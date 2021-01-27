@@ -10,7 +10,7 @@
           class="section__link"
           to="/analytics/report"
         >
-          {{ $t('analytics.report') }}
+          Report
         </router-link>
       </div>
       <div class="">

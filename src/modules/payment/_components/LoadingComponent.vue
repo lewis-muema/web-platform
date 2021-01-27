@@ -10,7 +10,7 @@
         class="button-primary paymentbody--input-button"
         @click="cancelPaymentRequest"
       >
-        {{$t('general.cancel')}}
+        Cancel
       </button>
     </div>
   </div>
@@ -35,10 +35,10 @@ export default {
   computed: {
     payment_loading_title() {
       if (this.pay_method === 'mpesa') {
-        return this.$t('general.please_follow_mpesa_instructions');
+        return 'Please follow the M-Pesa instructions on your phone screen';
       }
       if (this.pay_method === 'card') {
-        return this.$t('general.processing_your_card_operation');
+        return 'Processing your card operation';
       }
     },
   },

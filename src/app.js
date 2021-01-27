@@ -52,7 +52,6 @@ import VueMask from 'v-mask';
 import { createStore } from './store';
 import { createRouter } from './router';
 import App from './App.vue';
-import i18n from './i18n';
 
 Vue.prototype.moment = moment;
 // configure language
@@ -152,7 +151,6 @@ export function createApp() {
   const app = new Vue({
     router,
     store,
-    i18n,
     render: h => h(App),
   });
 

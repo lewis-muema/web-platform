@@ -16,11 +16,11 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title .center-align">
-                  {{$('general.timeliness')}}
+                  Timeliness
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{$('general.delivery_late')}}</p>
+                <p>The delivery was late</p>
               </div>
               <div class="card-action">
                 <a
@@ -30,7 +30,7 @@
                   class="fancybox"
                   @click="selectReason(1)"
                 >
-                  {{$('general.comment')}}
+                  Comment
                 </a>
               </div>
             </div>
@@ -39,12 +39,12 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{$('general.politeness')}}
+                  Politeness
                 </span>
               </div>
               <div class="card-content grey-text">
                 <span class="card-title" />
-                <p> {{$('general.rider_not_polite')}}</p>
+                <p>The rider was not polite</p>
               </div>
               <div class="card-action">
                 <a
@@ -54,7 +54,7 @@
                   class="fancybox"
                   @click="selectReason(5)"
                 >
-                  {{$('general.comment')}}
+                  Comment
                 </a>
               </div>
             </div>
@@ -63,13 +63,11 @@
             <div class="card ">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{$('general.pricing')}}
+                  Pricing
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>
-                  {{$('general.pricing_not_fair')}}
-                  </p>
+                <p>The pricing was not fair</p>
               </div>
               <div class="card-action">
                 <a
@@ -79,7 +77,7 @@
                   class="fancybox"
                   @click="selectReason(6)"
                 >
-                  {{$('general.comment')}}
+                  Comment
                 </a>
               </div>
             </div>
@@ -88,12 +86,12 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{$('general.payment')}}
+                  Payment
                 </span>
               </div>
               <div class="card-content grey-text">
                 <span class="card-title" />
-                <p>{{$('general.payment_process_was_complex')}}</p>
+                <p>The payment process was complex</p>
               </div>
               <div class="card-action">
                 <a
@@ -103,7 +101,7 @@
                   class="fancybox"
                   @click="selectReason(2)"
                 >
-                  {{$('general.comment')}}
+                  Comment
                 </a>
               </div>
             </div>
@@ -112,11 +110,11 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{$('general.app')}}
+                  App
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{$('general.app_not_easy_to_use')}}</p>
+                <p>The app is not easy to use</p>
               </div>
               <div class="card-action">
                 <a
@@ -126,7 +124,7 @@
                   class="fancybox"
                   @click="selectReason(7)"
                 >
-                  {{$('general.comment')}}
+                  Comment
                 </a>
               </div>
             </div>
@@ -135,11 +133,11 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{$('general.directions')}}
+                  Directions
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{$('general.rider_was_lost')}}</p>
+                <p>The rider was lost</p>
               </div>
               <div class="card-action">
                 <a
@@ -149,7 +147,7 @@
                   class="fancybox"
                   @click="selectReason(3)"
                 >
-                  {{$('general.comment')}}
+                  Comment
                 </a>
               </div>
             </div>
@@ -160,11 +158,11 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title .center-align">
-                  {{$('general.timeliness')}}
+                  Timeliness
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{$('general.deliver_on_time')}}</p>
+                <p>Deliver on time</p>
               </div>
               <div class="card-action">
                 <a
@@ -174,7 +172,7 @@
                   class="fancybox"
                   @click="selectReason(1)"
                 >
-                  {{$('general.comment')}}
+                  Comment
                 </a>
               </div>
             </div>
@@ -183,12 +181,12 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{$('general.payment')}}
+                  Payment
                 </span>
               </div>
               <div class="card-content grey-text">
                 <span class="card-title" />
-                <p>{{$('general.make_payment_process_easier')}}</p>
+                <p>Make payment process easier</p>
               </div>
               <div class="card-action">
                 <a
@@ -198,7 +196,7 @@
                   class="fancybox"
                   @click="selectReason(2)"
                 >
-                  {{$('general.comment')}}
+                  Comment
                 </a>
               </div>
             </div>
@@ -207,11 +205,11 @@
             <div class="card ">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{$('general.directions')}}
+                  Directions
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{$('general.send_rider_farmiliar_with_the_location')}}</p>
+                <p>Send a rider farmiliar with the location</p>
               </div>
               <div class="card-action">
                 <a
@@ -221,7 +219,7 @@
                   class="fancybox"
                   @click="selectReason(3)"
                 >
-                  {{$('general.comment')}}
+                  Comment
                 </a>
               </div>
             </div>
@@ -232,11 +230,11 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title .center-align">
-                  {{$('general.timeliness')}}
+                  Timeliness
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{$('general.speedy_delivery')}}</p>
+                <p>Speedy delivery</p>
               </div>
               <div class="card-action">
                 <a
@@ -245,7 +243,7 @@
                   class="fancybox"
                   @click="selectReason(1)"
                 >
-                  {{$('general.comment')}}
+                  Comment
                 </a>
               </div>
             </div>
@@ -254,12 +252,12 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{$('general.politeness')}}
+                  Politeness
                 </span>
               </div>
               <div class="card-content grey-text">
                 <span class="card-title" />
-                <p>{{$('general.polite_riders')}}</p>
+                <p>Polite riders</p>
               </div>
               <div class="card-action">
                 <a
@@ -268,7 +266,7 @@
                   class="fancybox"
                   @click="selectReason(5)"
                 >
-                  {{$('general.comment')}}
+                  Comment
                 </a>
               </div>
             </div>
@@ -277,11 +275,11 @@
             <div class="card ">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{$('general.directions')}}
+                  Directions
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{$('general.clear_directions')}}</p>
+                <p>Clear directions</p>
               </div>
               <div class="card-action">
                 <a
@@ -290,7 +288,7 @@
                   class="fancybox"
                   @click="selectReason(3)"
                 >
-                  {{$('general.comment')}}
+                  Comment
                 </a>
               </div>
             </div>
@@ -302,14 +300,14 @@
           style="display:none"
         >
           <div class="rate-rider-thank">
-            {{$('general.thank_you')}}
+            Thank You
           </div>
           <div
             id="rated1"
             class="rider3-rate"
           />
           <div class="rate-rider-tell">
-            {{$('general.please_share_your_experience')}}
+            Please take a moment to share your experience with us
           </div>
           <form
             action=""
@@ -378,14 +376,14 @@
         <span class="rider-spaceless" />
         <div id="writecomment">
           <div class="rate-rider-thank">
-            {{$('general.thank_you')}}
+            Thank You
           </div>
           <div
             id="rated1"
             class="rider3-rate"
           />
           <div class="rate-rider-tell">
-            {{$('general.please_share_your_experience')}}
+            Please take a moment to share your experience with us
           </div>
           <form
             action=""
@@ -497,13 +495,13 @@ export default {
     }),
     getCommentsTitle() {
       if (this.getScore <= 2) {
-        return this.$('general.what_did_we_messUp_on');
+        return 'Ooh no! What did we mess up on?';
       }
       if (this.getScore === 3) {
-        return this.$('general.how_to_do_better_next_time');
+        return 'How can we do better next time?';
       }
       if (this.getScore === 4) {
-        return this.$('general.like_us_improve_on');
+        return 'What would you like us to improve on?';
       }
       return '';
     },
@@ -528,7 +526,7 @@ export default {
       this.$store.dispatch('$_rating/requestRatingUpdate', payload).then(
         (response) => {},
         (error) => {
-          const notification = { title: '', level: 2, message: this.$('general.something_went_wrong') }; // notification object
+          const notification = { title: '', level: 2, message: 'Something went wrong.' }; // notification object
           this.displayNotification(notification);
         },
       );

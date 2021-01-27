@@ -6,25 +6,27 @@
           class="section__link"
           to="/user/free-deliveries"
         >
-         {{ $t('general.free_delivery') }}
+          Free delivery
         </router-link>
       </div>
       <div class="free-deliveries--background">
         <div class="free-delivery--intro">
           <div class="free-delivery--title1">
-            {{ $t('general.get_free_deliveries') }}
+            GET FREE DELIVERIES
           </div>
           <div class="free-delivery--text">
             <p>
-              {{ $t('general.send_a_friend_free_delivery') }}
+              Send a friend a free delivery and you will get one too, up to KES 500.
               <a href="">
-               {{ $t('general.more_details') }}
+                More details
               </a>
             </p>
             <p class="free-text--hidden">
-             {{ $t('general.invite_a_friend') }}
+              Every time you invite a friend, they will receive a free delivery up to KES 500. Once
+              they complete their first order, you will automatically get a similar free delivery
+              credit into your account.
             </p>
-            <p>{{ $t('general.share_link_below') }}</p>
+            <p>Share the link below or use code 39HNBP</p>
           </div>
         </div>
         <div class="free-deliveries--inner">
@@ -40,7 +42,7 @@
                 <font-awesome-icon icon="star" />
               </div>
               <div class="custom_copy">
-                {{ $t('general.copy') }}
+                Copy
               </div>
             </div>
           </div>
@@ -53,7 +55,7 @@
                 style="display: inline-block"
                 class="custom_mail"
               >
-                {{ $t('general.mail') }}
+                Mail
               </div>
               <div class="share_img" />
             </div>
@@ -62,13 +64,13 @@
                 style="display: inline-block"
                 class="custom_fb"
               >
-                {{ $t('general.share') }}
+                Share
               </div>
               <div class="share_img3" />
             </div>
             <div class="free-display">
               <div class="custom_tw">
-                {{ $t('general.tweet') }}
+                Tweet
               </div>
               <div class="share_img2" />
             </div>
@@ -79,20 +81,20 @@
         </div>
         <div class="free-delivery--stats">
           <div class="free-delivery--text">
-            {{ $t('general.refferal_stats') }}
+            Referral Stats
           </div>
           <div class="stats">
             <span>
               6600 <br>
-              {{ $t('general.credit_earned') }}
+              Credits earned
             </span>
             <span>
               1 <br>
-              {{ $t('general.friend_referred') }}
+              Friends referred
             </span>
             <span>
               1 <br>
-               {{ $t('general.friends_joined') }}
+              Friends joined
             </span>
           </div>
         </div>

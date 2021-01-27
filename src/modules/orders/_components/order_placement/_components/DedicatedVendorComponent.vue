@@ -5,7 +5,7 @@
   >
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
-      {{$t('general.load_size_and_delivery_type')}}
+      Load Size And Delivery Type
     </div>
     <div class="home-view-vendor-classes">
       <div class="home-view-vendor-classes--body">
@@ -88,13 +88,13 @@
                 >
                   <div class="home-view-vendor-types-item--cost-wrapper__cost">
                     <span v-if="!isFixedCost(j)">
-                      {{$t('general.price_to_be_confirmed')}}
+                      Price to be confirmed
                     </span>
                     <span v-else> {{ getVendorCurrency(j) }} {{ getVendorPrice(j) }} </span>
                   </div>
                   <div class="home-view-vendor-types-item--cost-wrapper_time">
                     <span v-if="j.price_type">
-                      {{$t('general.type')}}: {{ formatPriceType(j.price_type) }}
+                      Type: {{ formatPriceType(j.price_type) }}
                     </span>
                   </div>
                 </div>
@@ -141,7 +141,7 @@
                   class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-right info-icon-spacer"
                 >
                   <el-popover
-                    :placement="$t('general.right')"
+                    placement="right"
                     width="350"
                     trigger="hover"
                     popper-class="vendorExtraInfo"
@@ -180,7 +180,7 @@
         name="button"
         @click="goToNextStep"
       >
-        {{$t('general.continue')}}
+        Continue
       </button>
     </div>
   </div>
@@ -257,7 +257,7 @@
                   class="home-view-truck-options-vehicle-type-title"
                   @click="vehicleDetailsStatus = !vehicleDetailsStatus; $root.$emit('tour class hidden', 1);"
                 >
-                  {{$t('general.vehicle_type')}}
+                  Vehicle type
                   <i class="el-icon-arrow-down home-view-truck-options-vehicle-arrow" />
                 </div>
               </div>
@@ -271,7 +271,7 @@
                   class="home-view-truck-options-vehicle-type-title"
                   @click="vehicleDetailsStatus = !vehicleDetailsStatus"
                 >
-                  {{$t('general.vehicle_type')}}
+                  Vehicle type
                   <i class="el-icon-arrow-up home-view-truck-options-vehicle-arrow" />
                 </div>
                 <div
@@ -305,7 +305,7 @@
             </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
-                {{$t('general.want_delivered')}}
+                What do you want delivered?
               </div>
               <div>
                 <el-input
@@ -320,20 +320,20 @@
               class="home-view-truck-options-inner-wrapper"
             >
               <div class="home-view-truck-options-label">
-                {{$t('general.test_specifications')}}
+                Test Specifications
               </div>
               <div>
                 <el-input
                   v-model.trim="test_specifications"
                   autocomplete="true"
-                  :placeholder="$t('general.specification')"
+                  placeholder="Specifications ..."
                   @change="dispatchTestSpecs"
                 />
               </div>
             </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
-                {{$t('general.pickup_time_for_order')}}
+                Pick up time for your order
               </div>
               <div class="block">
                 <el-date-picker
@@ -341,7 +341,7 @@
                   class="vendor_component-actions__element-date"
                   type="date"
                   format="dd-MM-yyyy"
-                  :placeholder="$t('general.asap')"
+                  placeholder="As soon as possible"
                   prefix-icon="el-icon-date"
                   :picker-options="dueDatePickerOptions"
                   @change="dispatchScheduleTime"
@@ -353,7 +353,7 @@
                 class="block vendor_component-actions__element-time"
               >
                 <p class="vendor_component-actions__title">
-                  {{$t('general.select_time')}}
+                  SELECT TIME
                 </p>
                 <el-time-picker
                   v-model="time_range_from"
@@ -361,7 +361,7 @@
                   class="vendor_component-actions__input-time"
                   type="date"
                   format="hh:mm:ss a"
-                  :placeholder="$t('general.from')"
+                  placeholder="From"
                   :picker-options="{selectableRange: `${StartTime} - ${EndTime}`}"
                   @change="setStartHours"
                 />
@@ -372,7 +372,7 @@
                   class="vendor_component-actions__input-time"
                   type="date"
                   format="hh:mm:ss a"
-                  :placeholder="$t('general.to')"
+                  placeholder="To"
                   :picker-options="{selectableRange: `${toStartTime} - ${EndTime}`}"
                   @change="setEndHours"
                 />
@@ -381,18 +381,18 @@
             </div>
             <div class="home-view-truck-options-inner-wrapper recipient-section">
               <p class="home-view-truck-options-label no-margin">
-                {{$t('general.recipient_details')}}
+                Recipient Details
               </p>
               <input
                 v-model="recipientName"
                 type="text"
-                :placeholder="$t('general.name')"
+                placeholder="Name"
                 class="el-input__inner bottom-spacer"
               >
               <input
                 v-model="recipientPhone"
                 type="number"
-                :placeholder="$t('general.phone_number')"
+                placeholder="Phone number"
                 class="el-input__inner"
               >
             </div>
@@ -410,7 +410,7 @@
                   name="name"
                   rows="5"
                   class="textarea-control"
-                  :placeholder=" $t('general.instructions')"
+                  placeholder=" Instructions.."
                 />
               </div>
             </div>
@@ -419,7 +419,7 @@
             <div v-if="hasLargeVendor">
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$t('general.provide_with_loaders')}}
+                  Do you want us to provide you with Loader/s?
                 </div>
                 <div class="">
                   <el-radio
@@ -427,14 +427,14 @@
                     label="1"
                     @change="dispatchAdditionalLoaderStatus"
                   >
-                    {{$t('general.yes')}}
+                    Yes
                   </el-radio>
                   <el-radio
                     v-model="additional_loader"
                     label="0"
                     @change="dispatchAdditionalLoaderStatus"
                   >
-                    {{$t('general.no')}}
+                    No
                   </el-radio>
                 </div>
               </div>
@@ -444,7 +444,7 @@
                 class="home-view-truck-options-inner-wrapper"
               >
                 <div class="home-view-truck-options-label">
-                  {{$t('general.loaders_required')}}
+                  How many Loaders do you require?
                 </div>
                 <div class="home-view-truck-options-inner--number-of-loaders">
                   <el-input-number
@@ -504,29 +504,29 @@ export default {
       baseTruckOptions: [
         {
           value: '0',
-          label: this.$t('general.open'),
+          label: 'Open',
         },
         {
           value: '1',
-          label: this.$t('general.closed'),
+          label: 'Closed',
         },
         {
           value: '2',
-          label: this.$t('general.any'),
+          label: 'Any',
         }
       ],
       smallVendorOptions: [
         {
           value: '0',
-          label: this.$t('general.bike_without_box'),
+          label: 'Bike without box',
         },
         {
           value: '1',
-          label: this.$t('general.bike_with_box'),
+          label: 'Bike with box',
         },
         {
           value: '2',
-          label: this.$t('general.any'),
+          label: 'Any',
         },
       ],
       visible2: false,
@@ -789,8 +789,8 @@ export default {
       } else {
         this.doNotification(
           2,
-          this.$t('general.no_vendor_selected'),
-          this.$t('general.select_no_of_vehicle_per_vendor'),
+          'No vendors have been selected',
+          'Please select the number of vehicles you would like per vendor',
         );
       }
     },
@@ -949,13 +949,13 @@ export default {
       const timeHrs = this.moment(localTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
 
       if (day === 'Sunday' && timeHrs >= '17') {
-        return this.$t('general.schedule_for_tommorow');
+        return 'Schedule for tommorow';
       }
       if (day === 'Saturday' && timeHrs >= '17') {
-        return this.$t('general.schedule_for_monday_eight');
+        return 'Schedule for Monday 8:00 AM';
       }
       if (timeHrs < '07') {
-        return this.$t('general.schedule_for_eight');
+        return 'Schedule for 8:00 AM';
       }
       if (timeHrs >= '17') {
         return 'Schedule for tommorow';
@@ -1072,13 +1072,13 @@ export default {
     getVendorDescription(vendorObject) {
       const standardOrders = [22, 24];
       if (this.standardOptions.includes(vendorObject.vendor_id) && !vendorObject.available) {
-        return this.$t('general.unavailable_right_now');
+        return 'Unavailable right now';
       }
       if (standardOrders.includes(vendorObject.vendor_id)) {
-        return this.$t('general.in_2_4_hours');
+        return 'In 2 to 4 hours';
       }
       if (vendorObject.vendor_id === 25) {
-        return this.$t('general.from_eighteen_tonnes');
+        return 'From 18 Tonnes';
       }
       return vendorObject.vendor_description;
     },
@@ -1104,7 +1104,7 @@ export default {
       const fields = {
         fields: [
           {
-            name: this.$t('general.open'),
+            name: 'recipient_name',
             value: this.recipientName,
           },
           {

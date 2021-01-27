@@ -1,14 +1,40 @@
 <template>
   <div class="paymentbody--form">
-    <div class="paymentbody--list" v-if="promoCodes !== null && promoCodes.length !== 0">
+    <div
+      v-if="promoCodes !== null && promoCodes.length !== 0"
+      class="paymentbody--list"
+    >
       <div class="promocodestitle main-header">
-        {{$t('general.valid_promo_codes')}}
+        Valid Promo Codes
       </div>
-      <div class="promocodeinfo" v-for="(promocode, index) in promoCodes" :key="index" :class="{ 'last-item': index === Object.keys(promoCodes).length - 1 }">
-        <div class="promocodestitle promocode-sub-header">{{ promocode.couponName }}</div>
-        <div v-if="promocode.couponCodeType === 1" class="promocode-value">{{promocode.currency }} {{ promocode.couponBalance }}</div>
-        <div v-else class="promocode-value">{{ promocode.couponBalance * 100 }}% {{$t('general.off')}} ({{$t('general.max')}} {{ promocode.currency }} {{ formatNumber(promocode.maxDiscountAmount) }})</div>
-        <div class="promocode-date" :class="{ 'to-expire' : formatExpiryDate(promocode.couponEndDate).status === 'red' } ">Expiry: {{ formatExpiryDate(promocode.couponEndDate).expiryDate }}</div>
+      <div
+        v-for="(promocode, index) in promoCodes"
+        :key="index"
+        class="promocodeinfo"
+        :class="{ 'last-item': index === Object.keys(promoCodes).length - 1 }"
+      >
+        <div class="promocodestitle promocode-sub-header">
+          {{ promocode.couponName }}
+        </div>
+        <div
+          v-if="promocode.couponCodeType === 1"
+          class="promocode-value"
+        >
+          {{ promocode.currency }} {{ promocode.couponBalance }}
+        </div>
+        <div
+          v-else
+          class="promocode-value"
+        >
+          {{ promocode.couponBalance * 100 }}% OFF (Max. {{ promocode.currency }}
+          {{ formatNumber(promocode.maxDiscountAmount) }})
+        </div>
+        <div
+          class="promocode-date"
+          :class="{ 'to-expire' : formatExpiryDate(promocode.couponEndDate).status === 'red' } "
+        >
+          Expiry: {{ formatExpiryDate(promocode.couponEndDate).expiryDate }}
+        </div>
       </div>
     </div>
     <div class="paymentbody--input-wrap">
@@ -16,7 +42,7 @@
         v-model="promocode_payment_data.sendy_coupon"
         type="text"
         name="sendy_coupon"
-        :placeholder="$t('general.promo_code')"
+        placeholder="Promo Code"
         class="input-control paymentbody--input"
       >
     </div>
@@ -29,8 +55,8 @@
         :class="{ 'paymentbody--input-button button--primary-inactive' : !valid_payment || processing }"
         @click="redeem_coupon"
       >
-        {{$t('general.redeem')}}
-         <i
+        Redeem
+        <i
           v-if="processing"
           class="el-icon-loading tracking-loading-spinner promocode-spinner"
         />
@@ -129,4 +155,5 @@ export default {
 .last-item {
     border-bottom: none;
 }
+
 </style>

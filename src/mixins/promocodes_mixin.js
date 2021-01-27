@@ -47,7 +47,7 @@ const promocode = {
             level = 2;
           }
           const notification = {
-            title: this.$t('general.use_promocodes'),
+            title: 'Use promocode',
             level,
             message: `${message}`,
             valid,
@@ -61,7 +61,7 @@ const promocode = {
           const level = 2;
           valid = false;
           const notification = {
-            title: this.$t('general.use_promocodes'),
+            title: 'Use promocode',
             level,
             message: `${message}`,
             valid,
@@ -141,11 +141,11 @@ const promocode = {
             this.requestPromoCodes();
           } else {
             valid = false;
-            message = this.$t('general.unable_to_redeem_promocode');
+            message = 'Unable to redeem promocode';
             level = 2;
           }
           const notification = {
-            title: this.$t('general.redeem_promocode'),
+            title: 'Redeem promocode',
             level,
             message: `${message}`,
             valid,
@@ -160,7 +160,7 @@ const promocode = {
           const level = 2;
           valid = false;
           const notification = {
-            title:  this.$t('general.redeem_promocode'),
+            title: 'Redeem promocode',
             level,
             message: `${message}`,
             valid,

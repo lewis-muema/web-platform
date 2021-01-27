@@ -12,7 +12,7 @@
         class="button-primary paymentbody--input-button"
         @click="backToPaymentRequest"
       >
-        {{$t('general.ok')}}
+        Ok
       </button>
     </div>
   </div>
@@ -67,10 +67,9 @@ export default {
   },
   computed: {
     payment_loading_title() {
-      return this.$t('general.payment_was_successful');
+      return 'Your payment was successful';
     },
   },
-  
 };
 </script>
 

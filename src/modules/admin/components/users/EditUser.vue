@@ -13,7 +13,7 @@
       </div>
 
       <div class="admin-edit2-details">
-       {{$t( 'editUser.edit_user')}}
+        Edit User
       </div>
       <div class="edit-position">
         <div class="edit-holder edit-dimen">
@@ -23,7 +23,7 @@
             type="text"
             style="margin-top: 14%;"
             name="name"
-            :placeholder="$t( 'editUser.name')"
+            placeholder="Name"
             autocomplete="off"
           >
         </div>
@@ -34,7 +34,7 @@
             class="input-control edit-form"
             type="text"
             name="email"
-            :placeholder="$t( 'editUser.email')"
+            placeholder="Email"
           >
         </div>
 
@@ -44,7 +44,7 @@
             class="input-control edit-form"
             type="text"
             name="phone"
-            :placeholder="$t( 'editUser.phone')"
+            placeholder="Phone"
           >
         </div>
 
@@ -52,7 +52,7 @@
           <el-select
             v-model="userDetails.department_id"
             class="addUser--select edit-select"
-            :placeholder="$t( 'editUser.department')"
+            placeholder="Department"
             filterable
           >
             <el-option
@@ -68,7 +68,7 @@
           <el-select
             v-model="userDetails.status"
             class="addUser--select edit-select"
-            :placeholder="$t('editUser.status')"
+            placeholder="Status"
             filterable
           >
             <el-option
@@ -84,7 +84,7 @@
           <el-select
             v-model="userDetails.type"
             class="addUser--select edit-select"
-            :placeholder="$t('editUser.user_type')"
+            placeholder="User Type"
             filterable
           >
             <el-option
@@ -103,7 +103,7 @@
             type="submit"
             @click="update_edit"
           >
-            {{$t( 'editUser.update')}}
+            Update
           </button>
         </div>
       </div>
@@ -126,21 +126,21 @@ export default {
       statuses: [
         {
           status: 1,
-          status_label: this.$t( 'editUser.active'),
+          status_label: 'Active',
         },
         {
           status: 2,
-          status_label: this.$t( 'editUser.deactivate'),
+          status_label: 'Deactivate',
         },
       ],
       types: [
         {
           type: 1,
-          type_name: this.$t( 'editUser.normal'),
+          type_name: 'Normal',
         },
         {
           type: 2,
-          type_name: this.$t( 'editUser.admin'),
+          type_name: 'Admin',
         },
       ],
     };
@@ -185,14 +185,14 @@ export default {
       this.$store.dispatch('$_admin/editAdminUser', editUserFullPayload).then(
         (response) => {
           const level = 1; // success
-          this.message = $t( 'editUser.edit_successful');
+          this.message = 'Edit Successful!';
 
           const notification = { title: '', level, message: this.message }; // notification object
           this.displayNotification(notification);
         },
         (error) => {
           const level = 3;
-          this.message = $t( 'editUser.something_went_wrong');
+          this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object
           this.displayNotification(notification);
 

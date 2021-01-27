@@ -8,7 +8,7 @@
   >
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
-      {{$t('general.load_size_and_delivery_type')}}
+      Load Size And Delivery Type
     </div>
     <div class="home-view-vendor-classes">
       <div class="home-view-vendor-classes--body">
@@ -87,7 +87,7 @@
                 >
                   <div class="home-view-vendor-types-item--cost-wrapper__cost">
                     <span v-if="!isFixedCost(j)">
-                      {{$t('general.price_to_be_confirmed')}}
+                      Price to be confirmed
                     </span>
                     <span v-else> {{ getVendorCurrency(j) }} {{ getVendorPrice(j) }} </span>
                   </div>
@@ -95,7 +95,7 @@
                     v-if="$route.path === '/orders/dedicated/multi-destination'"
                     class="home-view-vendor-types-item--cost-wrapper_time"
                   >
-                    {{$t('general.type')}}: {{ formatPriceType(j.price_type) }}
+                    Type: {{ formatPriceType(j.price_type) }}
                   </div>
                   <div
                     v-else
@@ -104,7 +104,7 @@
                     <span v-if="isStandardUnavailable(j)">
                       {{ scheduleTimeFrame(j) }}
                     </span>
-                    <span v-else> {{$t('general.pickup_by')}} {{ transformDate(j) }} </span>
+                    <span v-else> Pickup by {{ transformDate(j) }} </span>
                   </div>
                 </div>
 
@@ -151,7 +151,7 @@
         name="button"
         @click="goToNextStep"
       >
-        {{$t('general.continue')}}
+        Continue
       </button>
     </div>
   </div>
@@ -192,7 +192,7 @@
             <div class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper-left">
               <div class="home-view-vendor-types-item--cost-wrapper__cost">
                 <span v-if="!isFixedCost(activeVendorPriceData)">
-                  {{$t('general.price_to_be_confirmed')}}
+                  Price to be confirmed
                 </span>
                 <span v-else>
                   {{ getVendorCurrency(activeVendorPriceData) }}
@@ -203,7 +203,7 @@
                 <span v-if="isStandardUnavailable(activeVendorPriceData)">
                   {{ scheduleTimeFrame(activeVendorPriceData) }}
                 </span>
-                <span v-else> {{$t('general.pickup_by')}} {{ transformDate(activeVendorPriceData) }}</span>
+                <span v-else> Pickup by {{ transformDate(activeVendorPriceData) }}</span>
               </div>
             </div>
           </div>
@@ -218,7 +218,7 @@
               class="home-view-truck-options-inner-wrapper"
             >
               <div class="home-view-truck-options-dedicated-notes">
-                <p>{{$t('general.add_notes_each_destination')}}</p>
+                <p>Add notes for each destination (optional)</p>
                 <div
                   v-for="(path, index) in getStoreOrderPath"
                   :key="index"
@@ -248,7 +248,7 @@
             <div v-if="activeVendorPriceData.vendor_id === 26">
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$t('general.want_delivered')}}
+                  What do you want delivered?
                 </div>
                 <div class="home-view-truck-options-inner--full-select">
                   <el-select
@@ -269,7 +269,7 @@
 
               <div class="home-view-truck-options-inner-wrapper" v-if="intercounty_load === 'PARCEL'">
                 <div class="home-view-truck-options-label">
-                  {{$('general.approximate_package_weight')}}
+                  What is the approximate weight of the package?
                 </div>
                 <div class="home-view-truck-options-inner--full-select">
                   <el-select
@@ -291,7 +291,7 @@
               <div class="" v-if="hubCoordinator">
                 <div class="home-view-truck-options-inner-wrapper">
                   <div class="home-view-truck-options-label">
-                    {{$('general.sender_of_package')}}
+                    Who is sending the package?
                   </div>
                   <div>
                     <button
@@ -301,20 +301,20 @@
                       @click="openNotesDialog(0)"
                     >
                       <a class="instructions-holder">
-                        {{$('general.add_senders_info')}}
+                        Add sender’s information
                       </a>
                       <i class="el-icon-circle-plus-outline align-instructions-icon" />
                     </button>
                   </div>
                 </div>
                 <div v-if="isSenderDataSet()" class="instructions-set">
-                  <i class="el-icon-success" /> {{$('general.added_senders_info')}}
+                  <i class="el-icon-success" /> Sender's information added
                 </div>
               </div>
 
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$t('general.want_package_picked')}}
+                  How do you want your package to be picked?
                 </div>
                 <div class="home-view-truck-options-inner--full-select">
                   <el-select
@@ -335,7 +335,7 @@
 
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$('general.nearest_collection_center')}}
+                  Nearest collection centre from  pickup location
                 </div>
                 <div>
                   <textarea
@@ -349,7 +349,7 @@
               <div v-if="pickupInstructions">
                 <div class="home-view-truck-options-inner-wrapper">
                   <div class="home-view-truck-options-label">
-                    {{$t('general.pickup_instructions_at')}} {{ orderPath[0].name }}
+                    Pickup instructions at {{ orderPath[0].name }}
                   </div>
                   <div>
                     <button
@@ -359,21 +359,21 @@
                       @click="openNotesDialog(1)"
                     >
                       <a class="instructions-holder">
-                        {{$t('general.add_pickup_instructions')}}
+                        Add pickup instructions
                       </a>
                       <i class="el-icon-circle-plus-outline align-instructions-icon" />
                     </button>
                   </div>
                 </div>
                 <div v-if="isPickUpSet()" class="instructions-set">
-                  <i class="el-icon-success" /> {{$t('general.pickup_instructions_added')}}
+                  <i class="el-icon-success" /> Pickup instructions added
                 </div>
               </div>
 
               <div class="">
                 <div class="home-view-truck-options-inner-wrapper">
                   <div class="home-view-truck-options-label">
-                    {{$t('general.package_recipient')}}
+                    Who are you sending the package to?
                   </div>
                   <div>
                     <button
@@ -383,20 +383,20 @@
                       @click="openNotesDialog(2)"
                     >
                       <a class="instructions-holder">
-                        {{$t('general.add_reciept_information')}}
+                        Add recipient’s information
                       </a>
                       <i class="el-icon-circle-plus-outline align-instructions-icon" />
                     </button>
                   </div>
                 </div>
                 <div v-if="isDropOffSet()" class="instructions-set">
-                  <i class="el-icon-success" /> {{$t('general.drop_off_instructions_added')}}
+                  <i class="el-icon-success" /> Drop off instructions added
                 </div>
               </div>
 
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$t('general.how_delivered')}}
+                  How do you want your package delivered from the collection centre?
                 </div>
                 <div class="home-view-truck-options-inner--full-select">
                   <el-select
@@ -417,7 +417,7 @@
 
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$t('general.will_be_delivered_to_cc_at')}}
+                  The package will be delivered to the collection centre at
                 </div>
                 <div>
                   <textarea
@@ -431,7 +431,7 @@
               <div class="home-view-truck-options-inner-wrapper price-estimate-container">
                 <div class="delivery-estimate-info">
                   <div class="estimate-icon-container">
-                    {{$t('general.delivery_estimate')}}
+                    Delivery Estimate
                   </div>
                   <div class="estimate-value">
                     <p class="estimate-info-body">
@@ -441,7 +441,8 @@
                 </div>
 
                 <div class="extra-intercounty-info">
-                  {{$t('general.notified_of_actual_cost')}}
+                  (You will be notified of the actual order cost
+                  once the package is weighed at our collection center)
                 </div>
               </div>
 
@@ -452,7 +453,7 @@
             <div v-else>
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$t('general.want_delivered')}}
+                  What do you want delivered?
                 </div>
                 <div>
                   <el-input
@@ -465,13 +466,13 @@
 
               <div v-if="isTestAccount()" class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$t('general.test_specifications')}}
+                  Test Specifications
                 </div>
                 <div>
                   <el-input
                     v-model.trim="test_specifications"
                     autocomplete="true"
-                    :placeholder="$t('general.specification')"
+                    placeholder="Specifications ..."
                     @change="dispatchTestSpecs"
                   />
                 </div>
@@ -485,7 +486,7 @@
                   class="home-view-truck-options-inner-wrapper"
                 >
                   <div class="home-view-truck-options-label">
-                    {{$t('general.bike_type')}}
+                    What type of bike do you want?
                   </div>
                   <div class="home-view-truck-options-inner--full-select">
                     <el-select
@@ -516,11 +517,10 @@
                     v-if="large_vendors.includes(activeVendorPriceData.vendor_id)"
                     class="home-view-truck-options-label"
                   >
-                    {{$t('general.truck_type')}}
+                    What type of truck do you want?
                   </div>
                   <div v-else class="home-view-truck-options-label">
-                    <!-- What type of {{ getVendorNameOnCarrierType }} do you want? -->
-                    {{$t('general.carrier_type')}}
+                    What type of {{ getVendorNameOnCarrierType }} do you want?
                   </div>
                   <div class="home-view-truck-options-inner--full-select">
                     <el-select
@@ -545,7 +545,7 @@
                 class="home-view-truck-options-inner-wrapper load-weight-outer"
               >
                 <div class="home-view-truck-options-label">
-                  {{$t('general.weight_load')}}
+                  What is the weight of your load?
                 </div>
                 <div>
                   <input
@@ -559,7 +559,7 @@
                     max="33"
                     @keyup="dispatchLoadWeight"
                   />
-                  <span class="tonage-value-text">{{$t('general.tonnes')}}</span>
+                  <span class="tonage-value-text">Tonnes</span>
                 </div>
                 <p class="tonnage-validate-error">
                   {{ pass_msg }}
@@ -575,7 +575,7 @@
                     class="vendor_component-actions__element-date"
                     type="datetime"
                     format="dd-MM-yyyy h:mm a"
-                    :placeholder="$t('general.asap')"
+                    placeholder="As soon as possible"
                     prefix-icon="el-icon-date"
                     :default-time="default_value"
                     :picker-options="dueDatePickerOptions"
@@ -586,13 +586,13 @@
                   v-if="isStandardUnavailable(activeVendorPriceData)"
                   class="vendor_component-schedule"
                 >
-                 {{$t('general.delivery_2_4_hours')}}
+                  Delivery is in 2 to 4 hours from the scheduled time
                 </span>
               </div>
               <div v-if="displayNotesAddition()">
                 <div class="home-view-truck-options-inner-wrapper">
                   <div class="home-view-truck-options-label">
-                    {{$t('general.pickup_instructions_at')}}  {{ orderPath[0].name }}
+                    Pickup instructions at {{ orderPath[0].name }}
                   </div>
                   <div>
                     <button
@@ -602,14 +602,14 @@
                       @click="openNotesDialog(1)"
                     >
                       <a class="instructions-holder">
-                        {{$t('general.add_pickup_instructions')}}
+                        Add pickup instructions
                       </a>
                       <i class="el-icon-circle-plus-outline align-instructions-icon" />
                     </button>
                   </div>
                 </div>
                 <div v-if="isPickUpSet()" class="instructions-set">
-                  <i class="el-icon-success" /> {{$t('general.pickup_instructions_added')}}
+                  <i class="el-icon-success" /> Pickup instructions added
                 </div>
                 <div class="home-view-truck-options-inner-wrapper">
                   <div class="home-view-truck-options-label">
@@ -623,19 +623,19 @@
                       @click="openNotesDialog(2)"
                     >
                       <a class="instructions-holder">
-                        {{$t('general.add_drop_instructions')}}
+                        Add drop off instructions
                       </a>
                       <i class="el-icon-circle-plus-outline align-instructions-icon" />
                     </button>
                   </div>
                 </div>
                 <div v-if="isDropOffSet()" class="instructions-set">
-                  <i class="el-icon-success" /> {{$t('general.drop_off_instructions_added')}}
+                  <i class="el-icon-success" /> Drop off instructions added
                 </div>
               </div>
               <div class="home-view-truck-options-inner-wrapper recipient-section">
                 <p class="home-view-truck-options-label no-margin">
-                  {{$t('general.recipient_details')}}
+                  Recipient Details
                 </p>
                 <input
                   v-model="recipientName"
@@ -658,7 +658,7 @@
                   class="home-view-truck-options-inner-wrapper"
                 >
                   <div class="home-view-truck-options-label">
-                    {{$t('general.temperature_should_not_exceed')}}
+                    Temperature shouldn't exceed? (°C)
                   </div>
                   <div class="home-view-truck-options-inner--number-of-loaders">
                     <el-input-number
@@ -675,7 +675,7 @@
                   class="home-view-truck-options-inner-wrapper"
                 >
                   <div class="home-view-truck-options-label">
-                    {{$t('general.offer_to_pay_for_order')}}
+                    How much are you offering to pay for this order?
                   </div>
                   <div>
                     <el-input
@@ -690,7 +690,7 @@
 
                 <div class="home-view-truck-options-inner-wrapper">
                   <div class="home-view-truck-options-label">
-                    {{$t('general.provide_with_loaders')}}
+                    Do you want us to provide you with Loader/s?
                   </div>
                   <div class="">
                     <el-radio
@@ -698,14 +698,14 @@
                       label="1"
                       @change="dispatchAdditionalLoaderStatus"
                     >
-                      {{$t('general.yes')}}
+                      Yes
                     </el-radio>
                     <el-radio
                       v-model="additional_loader"
                       label="0"
                       @change="dispatchAdditionalLoaderStatus"
                     >
-                      {{$t('general.no')}}
+                      No
                     </el-radio>
                   </div>
                 </div>
@@ -715,7 +715,7 @@
                   class="home-view-truck-options-inner-wrapper"
                 >
                   <div class="home-view-truck-options-label">
-                    {{$t('general.loaders_required')}}
+                    How many Loaders do you require?
                   </div>
                   <div class="home-view-truck-options-inner--number-of-loaders">
                     <el-input-number
@@ -732,7 +732,7 @@
               <div v-if="![22, 24].includes(activeVendorPriceData.vendor_id)">
                 <div class="home-view-truck-options-inner-wrapper">
                   <div class="home-view-truck-options-label">
-                    {{ $t('general.have_preffered') }} {{ riderNameDisplay }} {{ $t('general.at_your_location') }}
+                    Do you have a preferred {{ riderNameDisplay }} at your pick up location ?
                   </div>
                   <div class="">
                     <el-select
@@ -742,20 +742,19 @@
                       filterable
                       @change="dispatchPairStatus"
                     >
-                      <el-option :label="$t('general.yes')" value="1" />
-                      <el-option :label="$t('general.no')" value="2" />
+                      <el-option label="Yes" value="1" />
+                      <el-option label="No" value="2" />
                     </el-select>
                   </div>
                 </div>
                 <div v-if="pair_rider === '1'" class="home-view-truck-options-inner-wrapper">
                   <div class="home-view-truck-options-label">
                     <div v-if="[21].includes(activeVendorPriceData.vendor_id)">
-                      {{$t('general.enter_phone_number_pair')}}
+                      Enter their phone number to pair
                     </div>
                     <div v-else>
-                      {{$t('general.enter_phone_number_pair_text')}}
-                      <!-- Enter their phone number or the {{ getVendorNameOnCarrierType }}'s number
-                      plate to pair -->
+                      Enter their phone number or the {{ getVendorNameOnCarrierType }}'s number
+                      plate to pair
                     </div>
                   </div>
                   <div class="">
@@ -796,8 +795,7 @@
                             <el-col :span="8" class="pairing-error-display">
                               <div class="share-option">
                                 <div class="pairing-error-header">
-                                  <!-- {{ riderNameDisplay }} not found -->
-                                  {{$t('general.rider_name_not_displayed')}}
+                                  {{ riderNameDisplay }} not found
                                 </div>
                                 <div class="pair-model-info">
                                   {{ failure_text }}
@@ -872,11 +870,11 @@
             <p class="add-instructions-setup" v-if="activeVendorPriceData.vendor_id === 26">
 
               <span v-if="route_point === 1">
-                {{$t('general.add_inter_county_pickup_instructions')}}
+                Add inter-county pickup instructions
               </span>
 
               <span v-else>
-                {{$t('general.add_inter_recipient_instructions')}}
+                Add inter-county recepient instruction
               </span>
 
             </p>
@@ -903,7 +901,7 @@
                 </div>
                 <div class="">
                   <div class="add-instructions-setup-contact">
-                    {{$t('general.contact_person')}}
+                    Contact person
                   </div>
                   <div class="" />
                   <div
@@ -931,14 +929,14 @@
                     :onclick="setSendSms(get_order_path[0], 0)"
                   />
                   <span>
-                    {{$t('general.notify_them_of_pickup')}}
+                    Notify them of the pickup via SMS
                   </span>
                 </div>
               </div>
               <div v-else-if="route_point === 0" class="instructions--inner-section">
                 <div class="">
                   <div class="add-instructions-setup-label" v-if="activeVendorPriceData.vendor_id === 26">
-                    {{$t('general.name_of_sender')}}
+                    Name of the sender
                   </div>
                   <div class="" />
                   <div class="">
@@ -953,7 +951,7 @@
                 </div>
                 <div class="">
                   <div class="add-instructions-setup-contact">
-                    {{$t('general.contact_person')}}
+                    Contact person
                   </div>
                   <div class="" />
                   <div class="" @change="addRecipientContact()">
@@ -978,7 +976,7 @@
               >
                 <div class="">
                   <div class="add-instructions-setup-label" v-if="activeVendorPriceData.vendor_id === 26">
-                    {{$t('general.recipient_info')}}
+                    Recipient information
                   </div>
                   <div class="add-instructions-setup-label" v-else>
                     {{ instructionsInnerLabel() }} {{ data.name }}
@@ -997,7 +995,7 @@
                 </div>
                 <div class="">
                   <div class="add-instructions-setup-contact">
-                    {{$t('general.contact_person')}}
+                    Contact person
                   </div>
                   <div class="" />
                   <div
@@ -1025,7 +1023,7 @@
                     :onclick="setSendSms(data, index + 1)"
                   />
                   <span>
-                    {{ $t('general.notify_them_of_Pickup') }}
+                    Notify them of the pickup via SMS
                   </span>
                 </div>
               </div>
@@ -1036,7 +1034,7 @@
                 <input
                   class="button-primary add-instructions-submit"
                   type="submit"
-                  :value="$t('general.done')"
+                  value="Done"
                   @click="saveAdditionaNotes(route_point)"
                 />
               </div>
@@ -1076,62 +1074,62 @@ export default {
       discount_timed_out: false,
       customer_min_amount: '',
       vendors_with_fixed_carrier_type: [
-        this.$t('general.standard'),
-        this.$t('general.runner'),
-        this.$t('general.van'),
-        this.$t('general.three_tone_truck'),
-        this.$t('general.five_tone_truck'),
-        this.$t('general.seven_tone_truck'),
-        this.$t('general.ten_tone_truck'),
-        this.$t('general.fourteen_tone_truck'),
-        this.$t('general.twenty_tone_truck'),
-        this.$t('general.twenty_four_tone_truck'),
+        'Standard',
+        'Runner',
+        'Van',
+        '3T Truck',
+        '5T Truck',
+        '7T Truck',
+        '10T Truck',
+        '14T Truck',
+        '20T Truck',
+        '24T Truck',
       ],
-      vendors_without_return: [this.$t('general.standard'), this.$t('general.runner')],
+      vendors_without_return: ['Standard', 'Runner'],
       baseTruckOptions: [
         {
           value: '0',
-          label: this.$t('general.open'),
+          label: 'Open',
         },
         {
           value: '1',
-          label: this.$t('general.closed'),
+          label: 'Closed',
         },
       ],
       smallVendorOptions: [
         {
           value: '2',
-          label: this.$t('general.any'),
+          label: 'Any',
         },
         {
           value: '1',
-          label: this.$t('general.bike_with_box'),
+          label: 'Bike with box',
         },
         {
           value: '0',
-          label: this.$t('general.bike_without_box'),
+          label: 'Bike without box',
         },
       ],
       freightVendorOptions: [
         {
           value: '1',
-          label: this.$t('general.closed_boxed_body'),
+          label: 'Closed/Boxed body',
         },
         {
           value: '4',
-          label: this.$t('general.flatbed_skeleton'),
+          label: 'Flatbed/Skeleton',
         },
         {
           value: '5',
-          label: this.$t('general.tipper'),
+          label: 'Tipper',
         },
         {
           value: '6',
-          label: this.$t('general.refeer'),
+          label: 'Refeer',
         },
         {
           value: '7',
-          label: this.$t('general.highside'),
+          label: 'Highside',
         },
       ],
       schedule_time: '',
@@ -1183,7 +1181,7 @@ export default {
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
-        placeholder: this.$t('general.enter_phone_number'),
+        placeholder: 'Enter a phone number',
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
@@ -1225,11 +1223,11 @@ export default {
       interCountyOptions: [
         {
           value: 'PARCEL',
-          label: this.$t('general.parcel'),
+          label: 'Parcel',
         },
         {
           value: 'DOCUMENT',
-          label: this.$t('general.documents'),
+          label: 'Documents',
         },
       ],
       estimate_amount : 0 ,
@@ -1289,7 +1287,7 @@ export default {
       let options = [
         {
           value: '',
-          label: this.$t('general.take_to_nearest_collection_center'),
+          label: 'I’ll take it to the nearest collection centre',
         }
       ] ;
 
@@ -1302,8 +1300,7 @@ export default {
             options.push({
               amount : intercountyPickUp[i].cost,
               value: intercountyPickUp[i].id,
-              label : this.$t('general.like_vendor_to_pick_it_up_at', {vendor_name:intercountyPickUp[i].vendor_name, name:this.get_order_path[0].name } ),
-              //`I’d like a ${intercountyPickUp[i].vendor_name} to pick it at ${this.get_order_path[0].name} (Pick up fee will be charged)`
+              label : `I’d like a ${intercountyPickUp[i].vendor_name} to pick it at ${this.get_order_path[0].name} (Pick up fee will be charged)`,
               vendor_name : intercountyPickUp[i].vendor_name,
             })
             }
@@ -1318,7 +1315,7 @@ export default {
       let options = [
         {
           value: '',
-          label: this.$t('general.pick_it_up_from_cc_near_them'),
+          label: 'Pick it from a collection centre near them',
         }
       ] ;
 
@@ -1326,7 +1323,7 @@ export default {
 
             options.push({
               value: -1,
-              label: this.$t('general.door_step_delivery_to') + this.get_order_path[1].name,
+              label: `Doorstep delivery to ${this.get_order_path[1].name}`,
             })
 
       }
@@ -1339,7 +1336,7 @@ export default {
             options.push({
               amount : intercountyDeliveries[i].cost,
               value: intercountyDeliveries[i].id,
-              label: this.$t('general.door_step_delivery_to') + this.get_order_path[1].name + this.$t('general.by_a_sendy') + intercountyDeliveries[i].vendor_name + this.$t('general.delivery_fee_charged'),
+              label: `Doorstep delivery to ${this.get_order_path[1].name} by a Sendy ${intercountyDeliveries[i].vendor_name} (Delivery fee will be charged)`,
               vendor_name : intercountyDeliveries[i].vendor_name,
             })
             }
@@ -1384,7 +1381,7 @@ export default {
       const customVendorOptions = [
         {
           value: '2',
-          label: this.$t('general.any'),
+          label: 'Any',
         },
       ];
 
@@ -1396,12 +1393,12 @@ export default {
         if (Object.prototype.hasOwnProperty.call(this.activeVendorPriceData, 'available_options')) {
           if (this.activeVendorPriceData.available_options.refrigerated) {
             customVendorOptions.value = '3';
-            customVendorOptions.label = this.$t('general.refrigirated');
+            customVendorOptions.label = 'Refrigerated';
           }
 
           if (this.activeVendorPriceData.available_options.flatbed) {
             customVendorOptions.value = '4';
-            customVendorOptions.label = this.$t('general.flatbed');
+            customVendorOptions.label = 'Flatbed';
           }
         }
 
@@ -1430,24 +1427,24 @@ export default {
       }
     },
     riderNameDisplay() {
-      let displayPairName = this.$t('general.rider');
+      let displayPairName = 'rider';
       if (this.small_vendors.includes(this.activeVendorPriceData.vendor_id)) {
-        displayPairName = this.$t('general.rider');
+        displayPairName = 'rider';
       } else {
-        displayPairName = this.$t('general.driver');
+        displayPairName = 'driver';
       }
       return displayPairName.toLowerCase();
     },
     additionalInstructionsPlaceholder() {
-      let display = this.$t('general.pickup_package');
+      let display = 'E.g Pick package at the reception ...';
       if (this.small_vendors.includes(this.activeVendorPriceData.vendor_id)) {
-        display = this.$t('general.pickup_package');
+        display = 'E.g Pick package at the reception ...';
       }
       else if (this.activeVendorPriceData.vendor_id === 26 ) {
         display = '';
       }
       else {
-        display = this.$t('general.pick_up_load');
+        display = 'E.g Pick load at the reception ...';
       }
       return display;
     },
@@ -1762,14 +1759,14 @@ export default {
       this.setLoadWeightStatus(false);
       const val = this.load_weight;
       if (val === '') {
-        this.pass_msg = this.$t('general.enter_load_weight');
+        this.pass_msg = 'Please enter the weight of your load';
       } else if (val >= 18.0 && val <= 33.0) {
         this.handleLoadweight(val);
         this.setLoadWeightStatus(true);
         this.pass_msg = '';
       } else {
         this.setLoadWeightStatus(false);
-        this.pass_msg = this.$t('general.load_weight_limits');
+        this.pass_msg = 'The input should be between 18.00 and 33.00 Tonnes';
       }
     },
     handleLoadweight(val) {
@@ -1829,8 +1826,8 @@ export default {
       if (vehicleDetails === '') {
         this.doNotification(
           '2',
-          this.$t('general.vehicle_number_plate'),
-         this.$t('general.please_provide_the_vehicle_details_to_pair'),
+          'Vehicle number plate is not provided',
+          'Please provide the vehicle details to pair',
         );
         this.setPairWithRiderStatus(false);
         this.visible2 = false;
@@ -1992,16 +1989,16 @@ export default {
       const timeHrs = this.moment(localTime, 'YYYY-MM-DD HH:mm:ss').format('HH');
 
       if (day === 'Sunday' && timeHrs >= '17') {
-        return this.$t('general.schedule_for_tommorow');
+        return 'Schedule for tommorow';
       }
       if (day === 'Saturday' && timeHrs >= '17') {
-        return this.$t('general.schedule_for_monday_eight');
+        return 'Schedule for Monday 8:00 AM';
       }
       if (timeHrs < '07') {
-        return this.$t('general.schedule_for_eight');
+        return 'Schedule for 8:00 AM';
       }
       if (timeHrs >= '17') {
-        return this.$t('general.schedule_for_tommorow');
+        return 'Schedule for tommorow';
       }
       return '';
     },
@@ -2032,11 +2029,11 @@ export default {
     },
 
     getCarrierBoxName() {
-      return this.get_active_package_class === 'small' ? this.$t('general.box') : this.$t('general.closed');
+      return this.get_active_package_class === 'small' ? 'Box' : 'Closed';
     },
 
     getCarrierNoBoxName() {
-      return this.get_active_package_class === 'small' ? this.$t('general.no_box') : this.$t('general.open');
+      return this.get_active_package_class === 'small' ? 'No Box' : 'Open';
     },
 
     expandVendorOptions(vendor) {
@@ -2127,25 +2124,25 @@ export default {
     getVendorDescription(vendorObject) {
       const standardOrders = [22, 24];
       if (this.standardOptions.includes(vendorObject.vendor_id) && !vendorObject.available) {
-        return this.$t('general.unavailable_right_now');
+        return 'Unavailable right now';
       }
       if (standardOrders.includes(vendorObject.vendor_id)) {
-        return this.$t('general.in_2_4_hours');
+        return 'In 2 to 4 hours';
       }
       if (vendorObject.vendor_id === 25) {
-        return this.$t('general.from_18_tonnes');
+        return 'From 18 Tonnes';
       }
       if (vendorObject.vendor_id === 26) {
-        return this.$t('general.send_package_upcountry');
+        return 'Send packages upcountry';
       }
 
       return vendorObject.vendor_description;
     },
     getPickUpDescriptText(vendorObject) {
       if (this.standardOptions.includes(vendorObject.vendor_id) && !vendorObject.available) {
-        return this.$t('general.schedule_time');
+        return 'Schedule time';
       }
-      return this.$t('general.pickup_time_for_order');
+      return 'Pick up time for your order';
     },
     isTestAccount() {
       const session = this.$store.getters.getSession;
@@ -2236,18 +2233,18 @@ export default {
         .catch(err => err);
     },
     destinationNotesLabel() {
-      let name = this.$t('general.drop_off_instructions');
+      let name = 'Drop off instructions';
 
       if (this.get_order_path.length <= 2) {
-        name = this.$t('general.drop_off_instructions_at')+ this.get_order_path[1].name;
+        name = `Drop off instructions at ${this.get_order_path[1].name}`;
       }
       return name;
     },
     instructionsInnerLabel() {
-      let name = this.$t('general.drop_off_instructions_at');
+      let name = 'Drop off instructions at ';
 
       if (this.route_point === 1) {
-        name = this.$t('general.pickup_instructions_at');
+        name = 'Pickup Instructions at';
       }
 
       return name;
@@ -2258,10 +2255,10 @@ export default {
       this.addDeliveryInfo = true;
     },
     instructionsOuterLabel() {
-      let name = this.$t('general.add_drop_off_instructions');
+      let name = 'Add drop off instructions';
 
       if (this.route_point === 1) {
-        name = this.$t('general.add_pickup_instructions');
+        name = 'Add pickup instructions';
       }
 
       return name;
@@ -2381,8 +2378,8 @@ export default {
         if (this.sender_name === '' || this.sender_phone === '' || !this.validPhone) {
           this.doNotification(
             2,
-            this.$t('general.sender_info_error'),
-            this.$t('general.kindly_provide_valid_details'),
+            'Sendor Information Error!!',
+            'Kindly provide valid details to submit data.',
           );
         }
         else {
@@ -2403,11 +2400,11 @@ export default {
             if (this.instructions_data.length === 0) {
               this.doNotification(
                 2,
-                this.$t('general.add_instructions_error'),
-                this.$t('general.provide_instructions_to_submit'),
+                'Add Instructions Error!!',
+                'Kindly provide instructions to submit data.',
               );
             } else if (this.validPhone) {
-              this.doNotification(1, this.$t('general.additional_instructions_saved_successfully'));
+              this.doNotification(1, 'Additional Instructions saved successfully!!');
 
               if (this.activeVendorPriceData.vendor_id === 26) {
                 this.handleIntercountyAdditionalDetails(val , this.instructions_data);
@@ -2420,8 +2417,8 @@ export default {
             } else {
               this.doNotification(
                 2,
-                this.$t('general.phone_verification_error'),
-                this.$t('general.provide_valid_phone_no'),
+                'Phone verifications Error!!',
+                'Kindly provide a valid phone number.',
               );
             }
           }, 2000);
@@ -2430,8 +2427,8 @@ export default {
           if (this.instructions_data.length === 0 || !this.validPhone) {
             this.doNotification(
               2,
-              this.$t('general.add_instructions_error'),
-              this.$t('general.provide_instructions_to_submit'),
+              'Add Instructions Error!',
+              'Kindly provide instructions to submit data.',
             );
           }
           else {

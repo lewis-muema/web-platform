@@ -5,18 +5,18 @@
   >
     <div class="sign-inner">
       <div class="sign-top">
-        {{$t('forgotPassword.forgot_password')}}
+        Forgot your password?
       </div>
       <div
         v-if="this.option"
         class="reset-link-details"
       >
-        {{$t('forgotPassword.pending_password')}}
+        You have a pending password change request sent to your email awaiting your confirmation
         <a
           class="reset-pass-link"
           @click="resend_link"
         >
-          {{$t('forgotPassword.resend')}}
+          Resend?
         </a>
       </div>
 
@@ -36,7 +36,7 @@
             type="text"
             data-vv-validate-on="blur"
             name="email"
-            :placeholder="$t('forgotPassword.enter_email')" 
+            placeholder="Enter Email"
           >
           <br>
           <span class="sign-up-email-error">
@@ -49,7 +49,7 @@
           class=""
         >
           <span class="forgot-paswword-moreinfo">
-            {{$t('forgotPassword.two_accounts')}}
+            Looks like you have two accounts with us. Select one.
           </span>
 
           <div style="margin-top: 3%;">
@@ -57,13 +57,13 @@
               v-model="radio"
               label="1"
             >
-              {{$t('forgotPassword.business')}}
+              Business
             </el-radio>
             <el-radio
               v-model="radio"
               label="2"
             >
-              {{$t('forgotPassword.peer')}}
+              Peer
             </el-radio>
           </div>
         </div>
@@ -72,7 +72,7 @@
           <input
             class="button-primary forgot-btn-color"
             type="submit"
-            :value="$t('forgotPassword.reset_password')"
+            value="Reset Password"
             :disabled="!this.is_valid"
             @click="request_pass"
           >
@@ -82,7 +82,7 @@
             class="sign-holder__link"
             to="/auth/sign_in"
           >
-            {{$t('forgotPassword.sign_in')}}
+            Sign In
           </router-link>
         </div>
       </div>
@@ -182,7 +182,7 @@ export default {
             }
             if (response.status === true) {
               this.option = false;
-              this.message = this.$t('forgetPassword.password_change');
+              this.message = 'Password change reset link has been sent to your email';
               // Reset link set to user email.
             } else if (response.status === 'stall') {
               // Activate select account option
@@ -191,7 +191,7 @@ export default {
               // update nonce data
             } else if (response.status === false) {
               // Account does not exist
-              this.message = this.$t('forgetPassword.account_not_exist');
+              this.message = 'Account does not exist.Please sign-up to create a sendy account';
             } else if (response.status === 'exists') {
               // Existing password reset option
               this.message = '';
@@ -199,16 +199,16 @@ export default {
               this.option = true;
             } else {
               // Invalid request
-              this.message = this.$t('forgetPassword.invalid_request');
+              this.message = 'Invalid Request';
             }
           },
           (error) => {
-            this.message = this.$t('forgetPassword.reset_failed');
+            this.message = 'Password reset request failed, Kindly retry again';
           },
         );
       } else {
         const level = 3;
-        const notification = { title: '', level, message: this.$t('forgetPassword.invalid_email') }; // notification object
+        const notification = { title: '', level, message: 'Invalid Email provided' }; // notification object
         this.displayNotification(notification);
       }
     },

@@ -36,30 +36,30 @@
       </template>
 
       <el-table-column
-        :label="$t('api.username')"
+        label="Username"
         prop="api_username"
       />
       <el-table-column
-        :label="$t('api.api_key')"
+        label="API Key"
         prop="api_key"
       />
       <el-table-column
-        :label="$t('api.created_updated')"
+        label="Created or Last Updated"
         prop="api_date_created"
       />
-      <el-table-column :label="$t('api.api_status')">
+      <el-table-column label="API Status">
         <template slot-scope="scope">
           <span>{{ get_api_status(scope.$index, 'sandbox') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('api.account_status')">
+      <el-table-column label="Account Status">
         <template slot-scope="scope">
           <span>{{ get_account_status(scope.$index, 'sandbox') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('api.api_environment')">
+      <el-table-column label="API Enviroment">
         <template slot-scope="scope">
-          <span>{{$t('api.sandbox')}}</span>
+          <span>Sandbox</span>
         </template>
       </el-table-column>
     </el-table>
@@ -75,30 +75,30 @@
       </template>
 
       <el-table-column
-        :label="$t('api.username')"
+        label="Username"
         prop="api_username"
       />
       <el-table-column
-        :label="$t('api.api_key')"
+        label="API Key"
         prop="api_key"
       />
       <el-table-column
-        :label="$t('api.created_updated')"
+        label="Created or Last Updated"
         prop="api_date_created"
       />
-      <el-table-column :label="$t('api.api_status')">
+      <el-table-column label="API Status">
         <template slot-scope="scope">
           <span>{{ get_api_status(scope.$index, 'live') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('api.account_status')">
+      <el-table-column label="Account Status">
         <template slot-scope="scope">
           <span>{{ get_account_status(scope.$index, 'live') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('api.api_environment')">
+      <el-table-column label="API Enviroment">
         <template slot-scope="scope">
-          <span>{{$t('api.live')}}</span>
+          <span>Live</span>
         </template>
       </el-table-column>
     </el-table>
@@ -106,13 +106,13 @@
     <div class="api--help-content">
       <p>
         <span class="content--bold">
-         {{$t('api.ready_to_start')}}
+          Ready to start using the Sendy API?
         </span>
-        {{$t('api.head_over')}}
+        Head over to the
         <a
           href="http://docs.sendypublicapi.apiary.io/#"
           target="_blank"
-        > {{$t('api.developer_site')}} </a>&nbsp;{{$t('api.complete_doc')}}
+        > developer site </a>&nbsp;for complete documentation.
       </p>
     </div>
   </div>
@@ -128,11 +128,11 @@ export default {
   data() {
     return {
       registered: false,
-      empty_payments_state: this.$t('api.api_credentials'),
+      empty_payments_state: 'Fetching API Credentials',
       pagination_limit: 5,
       pagination_page: 1,
-      update_api_text: this.$t('api.update_key'),
-      generate_api_text: this.$t('api.generate_api_key'),
+      update_api_text: 'Update API Key',
+      generate_api_text: 'Generate API Key',
       button_name: '',
     };
   },
@@ -167,7 +167,7 @@ export default {
     updateApiKey() {
       const session = this.$store.getters.getSession;
       let cop_id = 0;
-      this.update_api_text =  this.$t('api.updating');
+      this.update_api_text = 'Updating..';
       if (String(session.default) === 'biz') {
         cop_id = session[session.default].cop_id;
       }
@@ -182,16 +182,16 @@ export default {
       };
       this.$store.dispatch('$_admin/generateAPIKey', newKeyFullPayload).then(
         (response) => {
-          this.update_api_text = this.$t('api.update_key');
+          this.update_api_text = 'Update API Key';
           const level = 1; // success
-          this.message = this.$t('api.key_updated');
+          this.message = 'Key Updated!';
           const notification = { title: '', level, message: this.message }; // notification object
           this.displayNotification(notification);
         },
         (error) => {
-          this.update_api_text = this.$t('api.update_key');
+          this.update_api_text = 'Update API Key';
           const level = 3;
-          this.message = this.$t('api.something_went_wrong');
+          this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object
           this.displayNotification(notification);
         },
@@ -199,7 +199,7 @@ export default {
     },
     generateAPIKey() {
       const session = this.$store.getters.getSession;
-      this.generate_api_text = this.$t('api.generating');
+      this.generate_api_text = 'Generating..';
       let cop_id = 0;
       if (String(session.default) === 'biz') {
         cop_id = session[session.default].cop_id;
@@ -215,16 +215,16 @@ export default {
       };
       this.$store.dispatch('$_admin/generateAPIKey', newKeyFullPayload).then(
         (response) => {
-          this.generate_api_text = this.$t('api.generate_api_key');
+          this.generate_api_text = 'Generate API Key';
           const level = 1; // success
-          this.message = this.$t('api.key_generated');
+          this.message = 'Key Generated!';
           const notification = { title: '', level, message: this.message }; // notification object
           this.displayNotification(notification);
         },
         (error) => {
-          this.generate_api_text = this.$t('api.generate_api_key');
+          this.generate_api_text = 'Generate API Key';
           const level = 3;
-          this.message = this.$t('api.something_went_wrong');
+          this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object
           this.displayNotification(notification);
         },
@@ -245,17 +245,17 @@ export default {
         if (this.fetchedData.sandbox.length > 0) {
           resp = this.fetchedData.sandbox[index].account_status;
           if (resp === 1) {
-            resp = this.$t('api.active');
+            resp = 'Active';
           } else {
-            resp = this.$t('api.deactivated');
+            resp = 'Deactivated';
           }
         }
       } else if (this.fetchedData.live.length > 0) {
         resp = this.fetchedData.live[index].account_status;
         if (resp === 1) {
-          resp = this.$t('api.active');
+          resp = 'Active';
         } else {
-          resp = this.$t('api.deactivated');
+          resp = 'Deactivated';
         }
       }
       return resp;
@@ -266,25 +266,25 @@ export default {
         if (this.fetchedData.sandbox.length > 0) {
           resp = this.fetchedData.sandbox[index].api_status;
           if (resp === 1) {
-            resp = this.$t('api.registered');
+            resp = 'Registered';
             this.registered = true;
           } else {
-            resp = this.$t('api.not_registered');
+            resp = 'Not Registered';
             this.registered = false;
           }
         }
-        this.empty_payments_state = this.$t('api.no_api_cred');
+        this.empty_payments_state = 'No API Credentials For Account';
       } else if (this.fetchedData.live.length > 0) {
         resp = this.fetchedData.live[index].api_status;
         if (resp === 1) {
-          resp = this.$t('api.registered');
+          resp = 'Registered';
           this.registered = true;
         } else {
-          resp = this.$t('api.not_registered');
+          resp = 'Not Registered';
           this.registered = false;
         }
       }
-      this.empty_payments_state = this.$t('api.no_api_cred');
+      this.empty_payments_state = 'No API Credentials For Account';
       return resp;
     },
   },

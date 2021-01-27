@@ -11,25 +11,25 @@ n-container"
           class="section__link"
           to="/admin/users"
         >
-        {{ $t('admin.user')}}
+          Users
         </router-link>
         <router-link
           class="section__link"
           to="/admin/department"
         >
-          {{ $t('admin.department')}}
+          Department
         </router-link>
         <router-link
           class="section__link"
           to="/admin/api"
         >
-          {{ $t('admin.api')}}
+          API
         </router-link>
         <router-link
           class="section__link"
           to="/admin/company_details"
         >
-          {{ $t('admin.details') }}
+          Company details
         </router-link>
       </div>
       <div class="">
@@ -52,7 +52,7 @@ const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
-  getMessage: field => this.$t('admin.phone_invalid'),
+  getMessage: field => 'The phone number not valid',
   validate: (value) => {
     let validity = false;
     try {
