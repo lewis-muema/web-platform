@@ -2,7 +2,7 @@
   <div>
     <span>{{ count }}</span>
     <button @click="increment">
-      {{$('count.increment')}}
+      Increment
     </button>
   </div>
 </template>

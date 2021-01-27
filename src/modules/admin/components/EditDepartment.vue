@@ -12,7 +12,7 @@
         />
       </div>
       <div class="admin-edit2-details position--details">
-        {{$t('editDepartment.edit_department_details')}}
+        Edit Department Details
       </div>
       <div class="edit-position">
         <div class="edit-holder edit-dimen">
@@ -21,14 +21,14 @@
             class="input-control edit-form"
             type="text"
             name="department_name"
-            :placeholder="$t('editDepartment.name')"
+            placeholder="Name"
           >
         </div>
         <div class="edit-holder">
           <el-select
             v-model="deptDetails.cop_user_id"
             class="addUser--select edit-select"
-            :placeholder="$t('editDepartment.admin')"
+            placeholder="Admin"
             filterable
           >
             <el-option
@@ -46,7 +46,7 @@
             type="submit"
             @click="update_department"
           >
-            {{$t('editDepartment.update')}}
+            Update
           </button>
         </div>
       </div>
@@ -127,13 +127,13 @@ export default {
       this.$store.dispatch('$_admin/editAdminDepartment', editDeptFullPayload).then(
         (response) => {
           const level = 1; // success
-          this.message = this.$t('editDepartment.details_updated_successfully');
+          this.message = 'Details updated successfully';
           const notification = { title: 'Edit Department', level, message: this.message }; // notification object
           this.displayNotification(notification);
         },
         (error) => {
           const level = 2;
-          this.message = this.$t('editDepartment.something_went_wrong');
+          this.message = 'Something went wrong.';
           const notification = { title: '', level, message: this.message }; // notification object
           this.displayNotification(notification);
         },

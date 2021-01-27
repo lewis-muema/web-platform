@@ -17,7 +17,7 @@
             :class="get_current_active_order_option_class('payment')"
           >
             <span class="home-view-actions--items__span">
-              {{ pay_order_text }}   
+              {{ pay_order_text }}
             </span>
             <font-awesome-icon
               icon="chevron-down"
@@ -44,7 +44,7 @@
           >
             <div class="home-view-payments-wrapper--left">
               <div class="home-view-payments-wrapper--left__amount-label">
-                {{$t('general.total_payment')}}
+                Total Payment
               </div>
               <div class="home-view-payments-wrapper--left__amount-figure">
                 {{ rb_currency }} {{ pending_amount }}
@@ -91,7 +91,7 @@
               <div class="payment-options-cards-container">
                 <div v-if="!addCardStatus && get_saved_cards.length > 0">
                   <div v-if="deletedCardIndex === ''">
-                    <p class="payment-options-cards-title">{{$t('general.save_cards')}}</p>
+                    <p class="payment-options-cards-title">Saved Cards</p>
                     <div
                       v-for="(cards, index) in get_saved_cards"
                       :key="index"
@@ -120,7 +120,7 @@
                           class="payment-options-add-card-icon"
                         />
                       </span>
-                      <span class="payment-options-add-card">{{$t('general.add_new_card')}}</span>
+                      <span class="payment-options-add-card">Add a new Card</span>
                     </div>
                   </div>
                   <div
@@ -128,19 +128,18 @@
                     class="delete-saved-card-dialogue"
                   >
                     <p class="delete-saved-card-dialogue-label">
-                      <!-- Are you sure you want to delete this card -->
-                      {{$t('general.sure_delete_card')}}
+                      Are you sure you want to delete this card
                       <strong>{{ get_saved_cards[deletedCardIndex].card }}</strong>?
                     </p>
                     <p class="delete-saved-card-dialogue-label">
                       <span
                         class="delete-saved-card-dialogue-buttons"
                         @click="deleteSavedCard(deletedCardIndex)"
-                      >{{$t('general.yes')}}</span>
+                      >Yes</span>
                       <span
                         class="delete-saved-card-dialogue-buttons"
                         @click="deletedCardIndex = ''"
-                      >{{$t('general.no')}}</span>
+                      >No</span>
                     </p>
                   </div>
                 </div>
@@ -158,9 +157,9 @@
                       icon="arrow-left"
                       class="payment-options-add-card-icon"
                     />
-                    {{$t('general.back')}}
+                    Back
                   </span>
-                  <p class="payment-options-cards-title">{{$t('general.add_new_card')}}</p>
+                  <p class="payment-options-cards-title">Add a new card</p>
                   <div
                     id="cc-number"
                     class="form-group"
@@ -198,7 +197,7 @@
                       >
                       <span
                         class="fake-checkbox-label-1"
-                      >{{$t('general.save_card_for_future_orders')}}</span>
+                      >I want to save my card for future orders</span>
                     </div>
                   </div>
                 </form>
@@ -208,34 +207,32 @@
               <p
                 v-if="country === 'KE'"
                 class="card-option-disabled-notification"
-                v-html="$t('general.technical_mantainance_still_pay')"
               >
-                <!-- Dear {{ user_name }}, <br>
+                Dear {{ user_name }}, <br>
                 Card payments will be momentarily unavailable as we undergo technical maintenance.
                 You can still pay for your Sendy deliveries using M-Pesa, or pay cash upon delivery.
-                Contact Support on +254709779779 for any queries. -->
+                Contact Support on +254709779779 for any queries.
               </p>
               <p
                 v-if="country === 'UG'"
                 class="card-option-disabled-notification"
-                v-html="$t('general.technical_mantainance_contact_customer_care')"
               >
-                <!-- Dear {{ user_name }}, <br>
+                Dear {{ user_name }}, <br>
                 Card payments will be momentarily unavailable as we undergo technical maintenance.
-                Contact Support on +256393239706 for any queries. -->
+                Contact Support on +256393239706 for any queries.
               </p>
             </div>
           </span>
         </div>
         <span v-else-if="getPriceRequestObject.payment_option === 2">
           <div class="home-view-payments--postpay">
-            <p>{{$t('general.post_pay_account')}}</p>
-            <p> {{ $t('general.delivery_cost_added_to_balance') }} </p>
+            <p>This is a postpay account</p>
+            <p>The delivery costs will be added to your balance.</p>
           </div>
         </span>
         <span v-else>
           <div class="home-view-payments--postpay">
-            <p>{{ $t('general.delivery_cost_charged_from_balance') }} </p>
+            <p>The delivery costs will be charged from your balance.</p>
           </div>
         </span>
       </div>
@@ -273,7 +270,7 @@
           name="button"
           @click="cancelMpesaPaymentRequest()"
         >
-          {{ $t('general.cancel_payment') }}
+          Cancel Payment
         </button>
       </div>
     </div>
@@ -291,14 +288,14 @@
         >
           <div class="order_final_summary">
             <p class="confirm-label">
-            {{ $t('general.confirm_order_details') }}
+              Confirm your order details
             </p>
             <div class="">
               <div class="">
                 <ul class="summary_timeline order_summary_timeline">
                   <li>
                     <p class="delivery_label">
-                      {{ $t('general.pickup_location') }}
+                      Pickup Location
                     </p>
                     <p class="delivery_points">
                       {{ getHomeLocations[0] }}
@@ -320,7 +317,7 @@
                       v-else
                       class="delivery_label"
                     >
-                      {{ $t('general.destination') }}
+                      Destination
                     </p>
                     <p class="delivery_points">
                       {{ val }}
@@ -328,7 +325,7 @@
                   </li>
                 </ul>
               </div>
-              <label class="delivery_label">{{$t('general.type_of_order')}}</label>
+              <label class="delivery_label">Type of order</label>
               <div class="order_summary-types-item order_summary--vendor-wrapper">
                 <div class="order_summary__img">
                   <img
@@ -349,7 +346,7 @@
                 class="order_summary--outline"
               >
                 <label class="delivery_label">
-                  {{$t('general.type_of_package_delivered')}}
+                  Type of package to be delivered
                 </label>
                 <p>{{ getInterCountyPayload.package_type }}</p>
               </div>
@@ -359,7 +356,7 @@
                 class="order_summary--outline"
               >
                 <label class="delivery_label">
-                  {{$t('general.type_of')}} {{ activeVendorPriceData.vendor_name.toLowerCase() }}
+                  Type of {{ activeVendorPriceData.vendor_name.toLowerCase() }}
                 </label>
                 <p>{{ carrierTypeSummary() }}</p>
               </div>
@@ -370,14 +367,14 @@
                   class="order_summary--outline"
                 >
                   <label class="delivery_label">
-                    {{ $t('general.approximate_weight') }}
+                    Approximate weight of Parcel (Highest in the limit)
                   </label>
                   <p>{{ getInterCountyPayload.approximate_weight }}kg</p>
                 </div>
 
                 <div class="order_summary--outline">
                   <label class="delivery_label">
-                    {{ $t('general.want_package_picked') }}
+                    How do you want your package picked?
                   </label>
                   <p>{{ interCountyPickUpOption() }}</p>
                 </div>
@@ -387,7 +384,7 @@
                   class="order_summary--outline"
                 >
                   <label class="delivery_label">
-                    {{ $t('general.nearest_collection_center_to_you') }}
+                    The nearest collection centre to you is
                   </label>
                   <p>
                     {{ activeVendorPriceData.inter_county_info.pickup_collection_center.address }}
@@ -396,7 +393,7 @@
 
                 <div class="order_summary--outline">
                   <label class="delivery_label">
-                    {{ $t('general.recipient_contact_info_small') }}
+                    Recipient contact information
                   </label>
                   <p>{{ getInterCountyPayload.recipient_info.name }}</p>
                   <p>{{ getInterCountyPayload.recipient_info.phone_number }}</p>
@@ -409,7 +406,7 @@
                   class="order_summary--outline"
                 >
                   <label class="delivery_label">
-                    {{ $t('general.package_will_be_delivered_cc_at') }}
+                    The package will be delivered to the collection centre at
                   </label>
                   <p>
                     {{
@@ -420,7 +417,7 @@
               </div>
 
               <div class="order_summary--outline">
-                <label class="delivery_label">{{ $t('general.pick_up_time_of_order') }}</label>
+                <label class="delivery_label">The pickup time of your order</label>
                 <div class="order_summary-types-item order_summary--vendor-wrapper">
                   <div class="order_summary__img">
                     <i class="el-icon-date order_summary-item__image calender--icon" />
@@ -437,7 +434,7 @@
                 class="order_summary--outline"
               >
                 <label class="delivery_label">
-                  {{ $t('general.pickup_instructions_at') }} {{ getInstructionNotes[0].name }}
+                  Pickup instructions at {{ getInstructionNotes[0].name }}
                 </label>
                 <div
                   v-if="getInstructionNotes[0].notes !== ''"
@@ -470,7 +467,7 @@
                   v-for="(data, index) in deliveryNotesData()"
                   :key="index"
                 >
-                  <label class="delivery_label"> {{ $t('general.drop_off_instructions_at_name') }} </label>
+                  <label class="delivery_label"> Drop off instructions at {{ data.name }} </label>
                   <div
                     v-if="data.notes !== ''"
                     class="order_summary-wrapper__vendor instructions-notes"
@@ -499,7 +496,7 @@
                 v-if="get_order_notes.length > 0"
                 class="order_summary--outline"
               >
-                <label class="delivery_label">{{ $t('general.notes') }}</label>
+                <label class="delivery_label">Notes</label>
                 <p>{{ get_order_notes }}</p>
               </div>
 
@@ -507,8 +504,8 @@
 
               <div class="count_down_section">
                 <p class="timeout_text">
-                  {{ $t('general.order_will_be_placed_in') }}
-                  <a class="timeout_count">{{ $t('general.time_seconds') }}</a>
+                  Order will be placed in
+                  <a class="timeout_count">{{ time }} seconds</a>
                 </p>
               </div>
 
@@ -516,7 +513,7 @@
                 <input
                   class="button-primary btn-edit-order"
                   type="submit"
-                  :value="$t('general.edit_order')"
+                  value="EDIT ORDER"
                   @click="editOrder"
                 >
 
@@ -588,8 +585,8 @@ export default {
         },
       },
       price_request_response_received: false,
-      vendors_without_return: [ this.$t('general.standard'), this.$t('general.runner')],
-      vendors_with_fixed_carrier_type: [this.$t('general.standard'), this.$t('general.runner'), this.$t('general.van')],
+      vendors_without_return: ['Standard', 'Runner'],
+      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
       return_status: false,
       showing: 1,
       country_code: 'KE',
@@ -736,18 +733,18 @@ export default {
     },
 
     place_order_text() {
-      let text = this.$t('general.confirm');
+      let text = 'Confirm ';
       if (this.order_is_scheduled) {
-        text = this.$t('general.schedule');
+        text = 'Schedule ';
       }
-      return `${text}${this.get_active_vendor_name} ${this.$t('general.order')}`;
+      return `${text}${this.get_active_vendor_name} Order`;
     },
     pay_order_text() {
-      let text = this.$t('general.payment_options');
+      let text = 'Payment Options';
       if (this.getPriceRequestObject.payment_option === 2) {
-        text = this.$t('general.post_pay');
+        text = 'Post Pay';
       } else if (this.getRunningBalance - this.order_cost >= 0) {
-        text = this.$t('general.running_balance');
+        text = 'Running Balance';
       }
 
       return text;
@@ -804,9 +801,9 @@ export default {
     balance_quote_label() {
       let text = '';
       if (this.getRunningBalance < 0) {
-        text = this.$t('general.you_owe');
+        text = 'You Owe';
       } else {
-        text = this.$t('general.your_balance');
+        text = 'Your Balance';
       }
       return text;
     },
@@ -972,7 +969,7 @@ export default {
         css: {
           'letter-spacing': '0.03em',
         },
-        placeholder: this.$t('general.card_number'),
+        placeholder: 'Card Number',
         validations: ['required', 'validCardNumber'],
       });
 
@@ -1044,18 +1041,18 @@ export default {
                     this.loading = false;
                     this.doNotification(
                       2,
-                      this.$t('general.insufficient_balance'),
-                      this.$t('general.amount_charge_not_sufficient'),
+                      'Insufficient balance',
+                      'The amount charge is not sufficient to place the order, please try again',
                     );
                   }
                 } else {
                   this.loading = false;
-                  this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
+                  this.doNotification(2, 'Failed to charge card', res.message);
                 }
               });
             } else {
               this.loading = false;
-              this.doNotification(2, this.$t('general.failed_to_charge_card'), response.message);
+              this.doNotification(2, 'Failed to charge card', response.message);
             }
           },
         );
@@ -1063,8 +1060,8 @@ export default {
         this.loading = false;
         this.doNotification(
           2,
-          this.$t('general.failed_to_charge_card'),
-          this.$t('general.enter_card_details_try_again'),
+          'Failed to charge card',
+          'Please enter all the card details and try again',
         );
       }
     },
@@ -1105,20 +1102,20 @@ export default {
                 this.loading = false;
                 this.doNotification(
                   2,
-                  this.$t('general.insufficient_balance'),
-                  this.$t('general.amount_charge_not_sufficient'),
+                  'Insufficient balance',
+                  'The amount charge is not sufficient to place the order please try again',
                 );
               }
             } else {
               this.loading = false;
-              this.doNotification(2, this.$t('general.failed_to_charge_card'), response.message);
+              this.doNotification(2, 'Failed to charge card', response.message);
             }
           },
           error => false,
         );
       } else {
         this.loading = false;
-        this.doNotification(2, this.$t('general.failed_to_charge_card'), this.$t('general.select_one_of_your_saved_cards'));
+        this.doNotification(2, 'Failed to charge card', 'Please select one of your saved cards');
       }
     },
 
@@ -1144,8 +1141,8 @@ export default {
         } else {
           this.doNotification(
             2,
-            this.$t('general.failed_to_delete_saved_card'),
-            this.$t('general.failed_to_delete_saved_card_text'),
+            'Failed to delete saved card',
+            'Failed to delete saved card. Please try again later',
           );
         }
       });
@@ -1199,8 +1196,8 @@ export default {
       ) {
         this.doNotification(
           '2',
-          this.$t('general.missing_minimum_amount'),
-          this.$t('general.minimum_order_amount_missing'),
+          'Missing Minimum Order Amount',
+          'The minimum order amount is missing, please fill it to enable the drivers bid effectively.',
         );
         return false;
       }
@@ -1212,7 +1209,7 @@ export default {
       if (this.getPairWithRiderState && this.getPairRiderPhone === '') {
         this.initiatePairingFailureNotification();
       } else if (this.getPairWithRiderState && !this.getPairWithRiderStatus) {
-        this.doNotification(2, this.$t('general.pairing_failure'), this.getPairErrorMessage);
+        this.doNotification(2, 'Pairing Failure', this.getPairErrorMessage);
       } else if (this.activeVendorPriceData.vendor_id === 26) {
         this.initiateInterCountyCheck();
       } else if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
@@ -1240,23 +1237,23 @@ export default {
     initiateInterCountyCheck() {
       let msg = '';
       if (this.getInterCountyPayload.package_type === '') {
-        msg = this.$t('general.kindly_provide_type_of_package');
-        this.doNotification(2, this.$t('general.order_completion_failure'), msg);
+        msg = 'Kindly provide type of package you want delivered';
+        this.doNotification(2, 'Order Completion Failure', msg);
       } else if (
         this.getInterCountyPayload.package_type === 'PARCEL'
         && this.getInterCountyPayload.approximate_weight === ''
       ) {
-        msg = this.$t('general.provide_weight_of_package');
-        this.doNotification(2, this.$t('general.order_completion_failure'), msg);
+        msg = 'Kindly provide weight of package you want delivered';
+        this.doNotification(2, 'Order Completion Failure', msg);
       } else if (
         this.getInterCountyPayload.package_type === 'PARCEL'
         && this.getInterCountyPayload.approximate_weight === ''
       ) {
-        msg = this.$t('general.provide_weight_of_package');
-        this.doNotification(2, this.$t('general.order_completion'), msg);
+        msg = 'Kindly provide weight of package you want delivered';
+        this.doNotification(2, 'Order Completion Failure', msg);
       } else if (Object.keys(this.getInterCountyPayload.recipient_info).length === 0) {
-        msg = this.$t('general.provide_recipient_info')
-        this.doNotification(2, this.$t('general.order_completion_failure'), msg);
+        msg = 'Kindly provide recipient information';
+        this.doNotification(2, 'Order Completion Failure', msg);
       } else {
         this.initiateOrderSummaryDialog();
       }
@@ -1266,10 +1263,10 @@ export default {
       if (this.getPairErrorMessage !== '') {
         msg = this.getPairErrorMessage;
       } else {
-        msg = this.$t('general.provide_partner_details');
+        msg = 'Kindly provide partner details while initiating pairing requests';
       }
 
-      this.doNotification(2, this.$t('general.pairing_failure'), msg);
+      this.doNotification(2, 'Pairing Failure', msg);
     },
     editOrder() {
       this.confirmFinal = false;
@@ -1359,9 +1356,9 @@ export default {
             }
             if (this.activeVendorPriceData.vendor_id === 26) {
               if (this.getPriceRequestObject.payment_option === 2) {
-                this.payment_type = this.$t('general.postpay');
+                this.payment_type = 'postpay';
               } else {
-                this.payment_type = this.$t('general.prepay');
+                this.payment_type = 'prepay';
               }
               this.doCompleteOrder();
             } else {
@@ -1373,8 +1370,8 @@ export default {
           () => {
             this.doNotification(
               2,
-              this.$t('general.running_balance_check'),
-              this.$t('general.running_balance_check_failed'),
+              'Running balance check',
+              'Running balance check has failed, please try again.',
             );
             this.loading = false;
           },
@@ -1386,8 +1383,8 @@ export default {
       if (this.get_active_vendor_name === '') {
         this.doNotification(
           '2',
-          this.$t('general.select_vehicle_type'),
-          this.$t('general.vehicle_type_not_set_please_try_again'),
+          'Select a vehicle type',
+          'The vehicle type not been set, please set and try again.',
         );
         return false;
       }
@@ -1407,8 +1404,8 @@ export default {
         } else {
           this.doNotification(
             '2',
-            this.$t('general.choose_payment_method'),
-            this.$t('general.select_payment_method_try_again'),
+            'Choose a payment method',
+            'Please select a payment method and try again.',
           );
           return false;
         }
@@ -1523,7 +1520,7 @@ export default {
               this.trackEcommerceData(ecommercePayload);
 
               if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
-                this.doNotification(1, this.$t('general.successfull_placed_freight_order'), '');
+                this.doNotification(1, 'Successfully placed freight order', '');
               }
               this.shouldDestroy = true;
               this.should_destroy = true;
@@ -1627,19 +1624,19 @@ export default {
             } else {
               this.doNotification(
                 2,
-                this.$t('general.order_completion_failed'),
-                this.$t('general.price_request_failed_please_try_again'),
+                'Order completion failed',
+                'Price request failed. Please try again',
               );
             }
           },
           (error) => {
             if (Object.prototype.hasOwnProperty.call(error, 'reason')) {
-              this.doNotification(2, this.$t('general.order_completion_failed'), error.reason);
+              this.doNotification(2, 'Order completion failed', error.reason);
             } else {
               this.doNotification(
                 2,
-                this.$t('general.order_completion_failed'),
-                this.$t('general.order_completion_failed_text'),
+                'Order completion failed',
+                'Order completion failed. Please check your internet connection and try again.',
               );
             }
             this.loading = false;
@@ -1803,43 +1800,43 @@ export default {
 
     payMethodName(id) {
       if (id === 1) {
-        return this.$t('general.mpesa');
+        return 'Mpesa';
       }
       if (id === 2) {
-        return this.$t('general.card');
+        return 'Card';
       }
       if (id === 3) {
-        return this.$t('general.promo_code');
+        return 'Promo code';
       }
       if (id === 5) {
-        return this.$t('general.cash');
+        return 'Cash';
       }
       if (id === 11) {
-        return this.$t('general.running_balance');
+        return 'Running balance';
       }
       if (id === 12) {
-        return this.$t('general.post_pay');
+        return 'Post pay';
       }
-      return this.$t('general.unknown_payment_method');
+      return 'Unknown payment method';
     },
 
     carrierTypeName(id, vendor) {
       if (vendor === 1) {
         if (id === '0') {
-          return this.$t('general.bike_without_box');
+          return 'Bike without box';
         }
         if (id === '1') {
-          return this.$t('general.bike_with_box');
+          return 'Bike with box';
         }
-        return this.$t('general.any');
+        return 'Any';
       }
       if (id === '0') {
-        return this.$t('general.open');
+        return 'Open';
       }
       if (id === '1') {
-        return this.$t('general.closed');
+        return 'Closed';
       }
-      return this.$t('general.any');
+      return 'Any';
     },
 
     refreshRunningBalance() {
@@ -2011,17 +2008,16 @@ export default {
           }
 
           if (response.status === 200) {
-            this.doNotification('0', this.$t('general.mpesa_payment'), this.$t('general.request_for_payment_sent',{userPhone: userPhone}));
+            this.doNotification('0', 'M-Pesa Payment', `Request for payment sent to ${userPhone}.`);
             this.requestMpesaPaymentPoll();
           } else {
             this.refreshRunningBalance();
             this.doNotification(
               '0',
-              this.$t('general.mpesa_payment'),
-              this.$t('general.mpesa-request_failed',{userPhone: userPhone, referenceNumber: referenceNumber}) + this.pending_amount,
-              // `M-Pesa request to ${userPhone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
-              //   this.pending_amount
-              // }.`,
+              'M-Pesa Payment',
+              `M-Pesa request to ${userPhone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
+                this.pending_amount
+              }.`,
             );
             this.payment_state = 0;
             this.loading = false;
@@ -2031,11 +2027,10 @@ export default {
           this.refreshRunningBalance();
           this.doNotification(
             '0',
-            this.$t('general.mpesa_payment'),
-            this.$t('general.mpesa-request_failed',{userPhone: userPhone, referenceNumber: referenceNumber}) + this.pending_amount,
-            // `M-Pesa request to ${userPhone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
-            //   this.pending_amount
-            // }.`,
+            'M-Pesa Payment',
+            `M-Pesa request to ${userPhone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
+              this.pending_amount
+            }.`,
           );
           this.payment_state = 0;
           this.loading = false;
@@ -2094,7 +2089,7 @@ export default {
               pollCount = pollLimit;
               that.payment_state = 0;
               that.loading = false;
-              that.doNotification('1', this.$t('general.payment_successful'), this.$t('general.completing_your_order'));
+              that.doNotification('1', 'Payment successful', 'Completing your order...');
               that.doCompleteOrder();
               that.mpesa_payment = false;
               that.mpesa_payment_state = true;
@@ -2105,8 +2100,8 @@ export default {
               if (pollCount === 5 && !that.mpesa_payment_state) {
                 that.doNotification(
                   '0',
-                  this.$t('general.payment_not_recieved'),
-                  this.$t('general.will_keep_trying_checking_payment'),
+                  'Payment not received',
+                  "We'll keep retrying to check your payment status and complete your order once the payment is received.",
                 );
                 that.payment_state = 0;
                 that.loading = false;
@@ -2153,8 +2148,8 @@ export default {
       this.loading = 0;
       this.doNotification(
         '2',
-        this.$t('general.mpesa_payment_cancelled'),
-        this.$t('general.mpesa_payment_cancelled_text'),
+        'M-Pesa Payment cancelled',
+        'M-Pesa payment has been cancelled, please try again.',
       );
       this.requestMpesaPaymentPoll(60);
     },
@@ -2241,8 +2236,8 @@ export default {
         () => {
           this.doNotification(
             '2',
-            this.$t('general.running_balance_check'),
-            this.$t('general.running_balance_check_failed'),
+            'Running balance check',
+            'Running balance check has failed, please try again.',
           );
           this.loading = false;
         },
@@ -2329,32 +2324,32 @@ export default {
         if (day === 'Sunday' && timeHrs >= '17') {
           this.doNotification(
             2,
-            this.$t('general.standard_option'),
-            this.$t('general.kindly_schedule_for_monday_eight'),
+            'Standard option is unavailable right now',
+            'Kindly schedule for tommorow 8AM',
           );
           return false;
         }
         if (day === 'Saturday' && timeHrs >= '17') {
           this.doNotification(
             2,
-           this.$t('general.standard_option'),
-           this.$t('general.kindly_schedule_for_monday_eight'),
+            'Standard option is unavailable right now',
+            'Kindly schedule for Monday 8AM',
           );
           return false;
         }
         if (timeHrs < '07') {
           this.doNotification(
             2,
-            this.$t('general.standard_option'),
-            this.$t('general.kindly_schedule_for_monday_eight')
+            'Standard option is unavailable right now',
+            'Kindly schedule for 8AM',
           );
           return false;
         }
         if (timeHrs >= '17') {
           this.doNotification(
             2,
-            this.$t('general.standard_option'),
-           this.$t('general.kindly_schedule_for_monday_eight')
+            'Standard option is unavailable right now',
+            'Kindly schedule for tommorow 8AM',
           );
           return false;
         }
@@ -2366,8 +2361,8 @@ export default {
     handleOrderPlacementError(data) {
       this.doNotification(
         2,
-        this.$t('general.order_completion_failed'),
-        this.$t('general.ensure_using_biz_account'),
+        'Order Completion Failed',
+        'Kindly ensure you are using your Business account and retry .',
       );
       this.trackMixpanelEvent('Business Order Fail Alert', {
         'Account ': data.type,
@@ -2395,7 +2390,7 @@ export default {
       return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
     },
     scheduleTimeSummary() {
-      let resp = this.$t('general.asap');
+      let resp = 'As soon as possible';
       if (this.order_is_scheduled) {
         resp = this.scheduled_time;
       }
@@ -2425,46 +2420,46 @@ export default {
     },
     carrierTypeSummary() {
       const carrierType = this.final_carrier_type;
-      let resp = this.$t('general.any');
+      let resp = 'Any';
       if (this.largeVendors.includes(this.activeVendorPriceData.vendor_id)) {
         if (carrierType === 3) {
-          resp = this.$t('general.refrigirated');
+          resp = 'Refrigerated';
         } else if (carrierType === 4) {
-          resp = this.$t('general.flatbed_skeleton');
+          resp = 'Flatbed/Skeleton';
         } else if (carrierType === 5) {
-          resp = this.$t('general.tipper');
+          resp = 'Tipper';
         } else if (carrierType === 6) {
-          resp = this.$t('general.refeer');
+          resp = 'Refeer';
         } else if (carrierType === 7) {
-          resp = this.$t('general.highside');
+          resp = 'Highside';
         } else {
-          resp = this.$t('general.closed_boxed_body');
+          resp = 'Closed/Boxed body';
         }
       } else if (this.mediumVendors.includes(this.activeVendorPriceData.vendor_id)) {
         if (carrierType === 0) {
-          resp = this.$t('general.open');
+          resp = 'Open';
         } else if (carrierType === 1) {
-          resp = this.$t('general.closed');
+          resp = 'Closed';
         } else {
-          resp = this.$t('general.any');
+          resp = 'Any';
         }
       } else if (carrierType === 0) {
-        resp = this.$t('general.bike_without_box');
+        resp = 'Bike without box';
       } else if (carrierType === 1) {
-        resp = this.$t('general.bike_with_box');
+        resp = 'Bike with box';
       } else if (carrierType === 3) {
-        resp = this.$t('general.refrigirated');
+        resp = 'Refrigerated';
       } else if (carrierType === 4) {
-        resp = this.$t('general.flatbed');
+        resp = 'Flatbed';
       } else {
-        resp = this.$t('general.any');
+        resp = 'Any';
       }
       return resp;
     },
     interCountyPickUpOption() {
-      let resp = this.$t('general.sendy_rider_will_pick_packege');
+      let resp = 'A sendy rider will pick the package and deliver to the nearest collection centre ';
       if (this.getInterCountyPayload.pickup_pricing_uuid === '') {
-        resp = this.$t('general.take_to_nearest_collection_center');
+        resp = " I'll take it to the nearest collection centre";
       }
       return resp;
     },

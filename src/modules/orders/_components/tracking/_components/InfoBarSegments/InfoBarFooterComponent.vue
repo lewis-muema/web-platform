@@ -27,7 +27,7 @@
             @click="sharedialog()"
           >
             <i class="el-icon-share top-bar-info" />
-            {{$t('general.share')}}
+            SHARE
           </div>
         </el-col>
       </el-row>

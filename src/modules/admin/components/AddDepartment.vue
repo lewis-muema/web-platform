@@ -11,7 +11,7 @@
         />
       </div>
       <div class="admin-edit2-details position--details">
-        {{ $t('addDepartment.add_department') }}
+        Add Department
       </div>
       <div class="edit-position">
         <div class="edit-holder edit-dimen">
@@ -19,14 +19,14 @@
             v-model="department_name"
             class="input-control edit-form"
             type="text"
-            :placeholder="$t('addDepartment.name')"
+            placeholder="Name"
           >
         </div>
         <div class="edit-holder">
           <el-select
             v-model="filterData.user"
             class="addUser--select edit-select"
-            :placeholder="$t('addDepartment.admin')"
+            placeholder="Admin"
             filterable
           >
             <el-option
@@ -48,7 +48,7 @@
             "
             @click="add_department"
           >
-            {{ $t('addDepartment.add')}}
+            Add
           </button>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default {
   mixins: [NotificationMxn],
   data() {
     return {
-      empty_departments_state: this.$t('addDepartment.adding_department'),
+      empty_departments_state: 'Adding Department',
       department_name: '',
       disabled: 0,
       filterData: {
@@ -126,9 +126,9 @@ export default {
             const level = 1;
             this.disabled = 1;
             const notification = {
-              title: this.$t('addDepartment.add_department'),
+              title: 'Add Department',
               level,
-              message: this.$t('addDepartment.added_successful'),
+              message: 'Department added successfully',
             };
             this.displayNotification(notification);
             setTimeout(() => {
@@ -137,16 +137,16 @@ export default {
           },
           (error) => {
             const level = 2;
-            const notification = { title: '', level, message: this.$t('addDepartment.something_went_wrong') };
+            const notification = { title: '', level, message: 'Something went wrong.' };
             this.displayNotification(notification);
           },
         );
       } else {
         const level = 2;
         const notification = {
-          title: this.$t('addDepartment.add_department_error'),
+          title: 'Add Department Error !',
           level,
-          message: this.$t('addDepartment.department_name'),
+          message: 'Please provide Department name and Admin',
         };
         this.displayNotification(notification);
       }

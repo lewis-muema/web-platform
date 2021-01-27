@@ -57,9 +57,6 @@ export default {
   getPickUpFilledStatus(state) {
     return state.pick_up_filled_status;
   },
-  getLanguage(state) {
-    return state.language;
-  }
 };
 
 function isEmpty(obj) {

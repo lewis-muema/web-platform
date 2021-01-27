@@ -6,7 +6,7 @@
     >
       <p class="personal-info-padding">
         <label class="input-descript">
-          <span> {{ $t('general.name') }}</span>
+          <span>Name</span>
         </label>
         <input
           v-model="user_name"
@@ -17,7 +17,7 @@
       </p>
       <p class="personal-info-padding">
         <label class="input-descript">
-          <span> {{ $t('general.email') }}</span>
+          <span>Email</span>
         </label>
         <input
           v-model="user_email"
@@ -28,7 +28,7 @@
       </p>
       <p class="personal-info-padding">
         <label class="input-descript">
-          <span> {{ $t('general.phone_number') }}</span>
+          <span>Phone Number</span>
         </label>
         <vue-tel-input
           v-model.trim="phone"
@@ -48,7 +48,7 @@
           id="save_personal"
           type="submit"
           class="button-primary btn-content"
-          :value="$t('general.save')"
+          value="Save"
           @click="save_personal"
         >
       </p>
@@ -64,7 +64,8 @@
         </span>
         <div>
           <div class="phone-validation-description">
-             {{ $t('general.sendy_security_sms') }}
+            For your security, Sendy wants to make sure it's really you. We will send a message with
+            your verification code.
           </div>
 
           <div class="phone-verification-input">
@@ -72,7 +73,7 @@
               id="phone-validation-verify--input"
               v-model="code"
               type="text"
-              :placeholder="$t('general.enter_verification_code')"
+              placeholder="Enter Verification Code"
             >
           </div>
         </div>
@@ -82,14 +83,14 @@
             class="phone-validation-cancel"
             @click="phoneVerificationCancel"
           >
-            {{ $t('general.cancel') }}
+            Cancel
           </button>
           <button
             type="button"
             class="phone-validation-verify"
             @click="phoneVerificationVerify"
           >
-            {{ $t('general.verify') }}
+            Verify
           </button>
         </div>
       </el-dialog>
@@ -125,7 +126,7 @@ export default {
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
-        placeholder: this.$t('general.enter_phone_number'),
+        placeholder: 'Enter a phone number',
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
@@ -190,7 +191,7 @@ export default {
           if (oldPhone !== phone) {
             this.validate = true;
             this.proceed_update = false;
-            this.doNotification(1, this.$t('general.phone_verification'), this.$t('general.phone_verification_sent'));
+            this.doNotification(1, 'Phone Verification', 'Phone verification code sent !');
             this.sendVerificationCode(phone);
           }
           if (this.proceed_update) {
@@ -198,7 +199,7 @@ export default {
           }
         } else {
           const level = 3;
-          this.message = this.$t('general.invalid_phone_number');
+          this.message = 'Invalid Phone Number';
           const notification = {
             title: '',
             level,
@@ -209,7 +210,7 @@ export default {
         }
       } else {
         const level = 3;
-        this.message = this.$t('general.provide_all_details');
+        this.message = 'Provide all details';
         const notification = {
           title: '',
           level,
@@ -224,8 +225,8 @@ export default {
       this.validate = false;
       this.doNotification(
         2,
-        this.$t('general.phone_verification'),
-        this.$t('general.phone_verification_failed'),
+        'Phone Verification',
+        'Phone Verification Failed . Retry to again after 15 minutes',
       );
     },
     phoneVerificationVerify() {
@@ -241,19 +242,19 @@ export default {
       this.requestPhoneVerificationVerify(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.doNotification(1, this.$t('general.phone_verification'), this.$t('general.phone_verification_successful'));
+            this.doNotification(1, 'Phone Verification', 'Phone verification successful !');
             this.proceed_update = true;
             this.validate = false;
             this.updateSessionData();
           } else {
-            this.doNotification(3, this.$t('general.phone_verification'), response.message);
+            this.doNotification(3, 'Phone Verification', response.message);
           }
         },
         (error) => {
           this.doNotification(
             2,
-            this.$t('general.phone_verification_error'),
-            this.$t('general.check_internet_connection'),
+            'Phone Verification Error ',
+            'Check Internet connection and retry',
           );
         },
       );
@@ -272,14 +273,14 @@ export default {
           if (response.status) {
             this.request_id = response.request_id;
           } else {
-            this.doNotification(3, this.$t('general.phone_verification'), response.message);
+            this.doNotification(3, 'Phone Verification', response.message);
           }
         },
         (error) => {
           this.doNotification(
             2,
-            this.$t('general.phone_verification_error'),
-            this.$t('general.check_internet_connection'),
+            'Phone Verification Error ',
+            'Check Internet connection and retry',
           );
         },
       );
@@ -320,7 +321,7 @@ export default {
               const newSession = JSON.stringify(updatedSession);
               this.setSession(newSession);
               const level = 1; // success
-              this.message = this.$t('general.details_saved');
+              this.message = 'Details Saved!';
               const notification = {
                 title: '',
                 level,
@@ -329,7 +330,7 @@ export default {
               this.displayNotification(notification);
             } else {
               const level = 3;
-              this.message = this.$t('general.something_went_wrong');
+              this.message = 'Something went wrong.';
               const notification = {
                 title: '',
                 level,
@@ -340,7 +341,7 @@ export default {
           },
           (error) => {
             const level = 3;
-            this.message = this.$t('general.something_went_wrong');
+            this.message = 'Something went wrong.';
             const notification = {
               title: '',
               level,
@@ -383,7 +384,7 @@ export default {
               this.$store.commit('setSession', updatedSession);
 
               const level = 1;
-              this.message = this.$t('general.details_saved');
+              this.message = 'Details Saved!';
               const notification = {
                 title: '',
                 level,
@@ -392,7 +393,7 @@ export default {
               this.displayNotification(notification);
             } else {
               const level = 3;
-              this.message = this.$t('general.something_went_wrong');
+              this.message = 'Something went wrong.';
               const notification = {
                 title: '',
                 level,
@@ -403,7 +404,7 @@ export default {
           },
           (error) => {
             const level = 3;
-            this.message = this.$t('general.something_went_wrong');
+            this.message = 'Something went wrong.';
             const notification = {
               title: '',
               level,

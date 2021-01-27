@@ -3,11 +3,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">{{ $t('preferences.branch') }}</span>
+          <span class="card__image--title">Branch</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            {{$t('preferences.group_staff')}}
+            Group your staff and orders into branches and view reporting at branch level.
           </p>
         </div>
         <div class="card__action">
@@ -21,11 +21,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title card__image--bg">{{ $t('preferences.ecommerce') }}</span>
+          <span class="card__image--title card__image--bg">Ecommerce orders</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            {{ $t('preferences.make_bulk_order') }}
+            Make bulk orders with smart routing and zoning for maximum efficiency.
           </p>
         </div>
         <div class="card__action">
@@ -39,11 +39,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title card__image--bg">{{$t('preferences.order_history')}}</span>
+          <span class="card__image--title card__image--bg">Order history details</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            {{ $t('preferences.view_extra_detail') }}
+            View the little extra details that you care about in your order history report.
           </p>
         </div>
         <div class="card__action">
@@ -57,11 +57,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">{{$t('preferences.order_breakdown')}}</span>
+          <span class="card__image--title">Order breakdown</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            {{$t('preferences.pick_through')}}
+            Pick through your bulked orders and see how much each costs you.
           </p>
         </div>
         <div class="card__action">
@@ -75,11 +75,12 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">{{$t('preferences.insuarence')}}</span>
+          <span class="card__image--title">Insurance</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            {{$t('preferences.third_party')}}
+            A third party flexible and affordable extra insurance for your orders with the power to
+            choose your desired cover limit per order.
           </p>
         </div>
         <div class="card__action">
@@ -93,11 +94,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">{{$t('preferences.sms_password')}} </span>
+          <span class="card__image--title">SMS Password change</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            {{$t('preferences.recieve_password')}}
+            Receive a password change link via sms.
           </p>
         </div>
         <div class="card__action">
@@ -111,11 +112,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-            <span class="card__image--title">{{$t('preferences.delivery_picture')}} </span>
+          <span class="card__image--title">Delivery picture</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            {{$t('preferences.delivery_request')}}
+            Request your driver to take a delivery picture at the destination
           </p>
         </div>
         <div class="card__action">

@@ -29,5 +29,4 @@ module.exports = merge(prodEnv, {
   CUSTOMERS_APP: '"https://authtest.sendyit.com/customers/"',
   VGS_VAULT_ID: '"tnts91uunnd"',
   VGS_ENVIRONMENT: '"sandbox"',
-  CUSTOMERS_APP_AUTH:'"https://authtest.sendyit.com/customers/"',
 });

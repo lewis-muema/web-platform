@@ -2,23 +2,21 @@
   <div class="">
     <div class="inv-container">
       <div class="end-header">
-        {{ $t('endComponent.invite_sent') }}
-        
+        Invites Sent
       </div>
       <div class="end-text">
-        {{ $t('endComponent.invite_sent_successful') }}
-        <!-- The invites have been sent successfully. They will show up on your users page when they
-        accept the invite. -->
+        The invites have been sent successfully. They will show up on your users page when they
+        accept the invite.
       </div>
       <div class="end-btn">
         <a
           class="end--back-link"
           @click="back_btn"
-        >{{ $t('endComponent.back') }}</a>
+        >Back</a>
         <a
           :href="getBaseUrl + '/admin/users'"
           class="button-primary end--button-return"
-        >{{ $t('endComponent.return_to_users') }}</a>
+        >Return to Users</a>
       </div>
     </div>
   </div>

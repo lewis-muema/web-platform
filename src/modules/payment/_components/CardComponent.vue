@@ -9,7 +9,7 @@
     >
       <div class="saved-cards-delete-dialogue-container">
         <p>
-          {{$t('general.sure_like_delete_card')}}
+          Are you sure you would like to delete this card
           <strong>{{ get_saved_cards[deleteCardIndex].card }}</strong>?
         </p>
         <p>
@@ -17,13 +17,13 @@
             class="delete-saved-card-dialogue-buttons"
             @click="deleteSavedCard(deleteCardIndex)"
           >
-            {{$t('general.yes')}}
+            Yes
           </span>
           <span
             class="delete-saved-card-dialogue-buttons"
             @click="deleteCardIndex = ''"
           >
-            {{$t('general.no')}}
+            No
           </span>
         </p>
       </div>
@@ -33,10 +33,10 @@
       class="saved-cards-container"
     >
       <p class="card-payment-saved-cards-title">
-        {{$t('general.cards')}}
+        Cards
       </p>
       <p class="card-payment-saved-cards-label">
-        {{$t('general.select_card')}}
+        Select a Card to top-up your account
       </p>
       <div
         v-for="(cards, index) in get_saved_cards"
@@ -70,7 +70,7 @@
         <span
           class="card-payment-add-card"
           @click="addCardStatus = !addCardStatus"
-        >{{$t('general.add_a_new_card')}}</span>
+        >Add a new Card</span>
       </div>
       <div class="card-payment-flex">
         <span class="prepend-currency">{{ getActiveCurrency }}</span>
@@ -92,7 +92,7 @@
           "
           @click="chargeSavedCard()"
         >
-          {{$t('general.make_payment')}}
+          Make payment
         </button>
       </div>
     </div>
@@ -112,7 +112,7 @@
           />
         </span>
         <span class="card-payment-back-option">
-        {{$t('geneneral.back')}}
+          Back
         </span>
       </div>
       <div
@@ -152,7 +152,7 @@
           >
           <span
             class="fake-checkbox-label"
-          >{{$t('general.save_card_details')}}</span>
+          >Save your card details for easier payment in future</span>
         </div>
       </div>
       <div
@@ -176,7 +176,7 @@
               : '.paymentbody--input-button card--input button--primary-inactive inactive-payment-button'
           "
         >
-          {{$t('general.make_payment_capital')}}
+          Make payment
         </button>
       </div>
     </form>
@@ -184,12 +184,20 @@
       <p
         v-if="country === 'KE'"
         class="card-payment-disabled-notification"
-      v-html="$t('general.technical_mantainance_still_pay')">
+      >
+        Dear {{ user_name }}, <br>
+        Card payments will be momentarily unavailable as we undergo technical maintenance. You can
+        still pay for your Sendy deliveries using M-Pesa, or pay cash upon delivery. Contact Support
+        on +254709779779 for any queries.
       </p>
       <p
         v-if="country === 'UG'"
         class="card-payment-disabled-notification"
-        v-html="$t('general.technical_mantainance_contact_customer_care')"/>
+      >
+        Dear {{ user_name }}, <br>
+        Card payments will be momentarily unavailable as we undergo technical maintenance. Contact
+        Support on +256393239706 for any queries.
+      </p>
     </div>
   </div>
 </template>
@@ -349,12 +357,12 @@ export default {
       );
 
       this.form.field('#cc-number .fake-input', {
-        type: this.$t('general.card_no'),
-        name: this.$t('general.card_num'),
+        type: 'card-number',
+        name: 'cardno',
         successColor: '#4F8A10',
         errorColor: '#D8000C',
         fontSize: '13px',
-        placeholder: this.$t('general.card_number'),
+        placeholder: 'Card Number',
         validations: ['required', 'validCardNumber'],
       });
 
@@ -367,7 +375,7 @@ export default {
       });
 
       this.form.field('#cc-expiration-date .fake-input', {
-        type: this.$t('general.card_expiration_date'),
+        type: 'card-expiration-date',
         name: 'expiry_date',
         fontSize: '13px',
         placeholder: 'Card Expiry (MM/YYYY)',
@@ -378,7 +386,7 @@ export default {
         type: 'number',
         name: 'amount',
         fontSize: '13px',
-        placeholder: this.$t('general.amount_to_topup'),
+        placeholder: 'Amount to top-up',
         validations: ['required'],
       });
     },
@@ -421,16 +429,16 @@ export default {
               this.loadingStatus = false;
               if (res.status) {
                 const notification = {
-                  title: this.$t('general.top_up'),
+                  title: 'Top up',
                   level: 1,
-                  message: this.$t('general.account_toppedup_successfully'),
+                  message: 'Your account has been topped up successfully.',
                 };
                 this.clearInputs();
                 this.displayNotification(notification);
                 this.$store.commit('setRunningBalance', res.running_balance);
               } else {
                 const notification = {
-                  title: this.$t('general.failed_to_charge_card'),
+                  title: 'Failed to charge card',
                   level: 2,
                   message: res.message,
                 };
@@ -440,7 +448,7 @@ export default {
           } else {
             this.loadingStatus = false;
             const notification = {
-              title: this.$t('general.failed_to_charge_card'),
+              title: 'Failed to charge card',
               level: 2,
               message: response.message,
             };
@@ -486,14 +494,14 @@ export default {
             this.selectedSavedCard = '';
             this.clearInputs();
             const notification = {
-              title: this.$t('general.top_up'),
+              title: 'Top up',
               level: 1,
-              message: this.$t('general.account_toppedup_successfully'),
+              message: 'Your account has been topped up successfully.',
             };
             this.displayNotification(notification);
           } else {
             const notification = {
-              title: this.$t('general.top_up'),
+              title: 'Top up',
               level: 2,
               message: response.message,
             };
@@ -533,9 +541,9 @@ export default {
           this.getUserCards();
         } else {
           const notification = {
-            title: this.$t('general.failed_to_delete_saved_card'),
+            title: 'Failed to delete saved card',
             level: 2,
-            message: this.$t('general.try_again_later'),
+            message: 'Please try again later.',
           };
           this.displayNotification(notification);
         }

@@ -8,13 +8,13 @@
         class="homeview--outer-selections"
         @click="switchMode('/orders')"
       >
-        {{$t('general.on_demand')}}
+        On Demand
       </div>
       <div
         class="homeview--outer-selections homeview--outer-selections__active"
         @click="switchMode('/orders/dedicated/no-destination')"
       >
-        {{$t('general.dedicated')}}
+        Dedicated
       </div>
     </div>
     <div>
@@ -31,7 +31,7 @@
           >
           <span class="tour-pointer-2" />
           <br>
-          <label for="no-destination">{{$t('general.open_destination')}}</label>
+          <label for="no-destination">Open destination</label>
         </div>
         <div class="homeview--outer-mode-options">
           <input
@@ -40,7 +40,7 @@
             type="radio"
             value="/orders/dedicated/multi-destination"
           ><br>
-          <label for="multi-destination">{{$t('general.multi_destination')}}</label>
+          <label for="multi-destination">Multi destination</label>
         </div>
       </div>
       <DedicatedOrderPlacement />

@@ -20,10 +20,8 @@ module.exports = {
   HUBSPOT_URL: '"https://api.hsforms.com/submissions/v3/integration/submit/"',
   ADONIS_PRIVATE_API: '"https://auth.staging.sendyit.com/adonis/"',
   ORDERS_APP: '"https://auth.sendyit.com/orders/"',
-  CUSTOMERS_APP: '"https://auth.sendyit.com/customers/"',
   OWNER_SEARCH: '"https://gate.sendyit.com/solr/owner/"',
   CUSTOMERS_APP: '"https://auth.sendyit.com/customers/"',
   VGS_VAULT_ID: '"tntr6hr8zz0"',
   VGS_ENVIRONMENT: '"live"',
-  CUSTOMERS_APP_AUTH:'"https://authtest.sendyit.com/customers/"',
 };

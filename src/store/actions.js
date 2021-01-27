@@ -99,7 +99,6 @@ export default {
         return true;
       }
     }
-    config.headers['Accept-Language'] = state.language;
 
     return new Promise((resolve, reject) => {
       axios
@@ -228,7 +227,6 @@ export default {
       }
     }
 
-    config.headers['Accept-Language'] = state.language;
     return new Promise((resolve, reject) => {
       axios
         .patch(`${url}${payload.endpoint}`, payload.values, config)
@@ -279,6 +277,7 @@ export default {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
     let config = {};
+
     // check if payload is a string here and change the content type
     const requestedPayload = payload.endpoint;
     const externalEndpoints = [
@@ -299,7 +298,6 @@ export default {
       'request_verification',
       'token',
     ];
-
     if (externalEndpoints.includes(requestedPayload)) {
       config = {
         headers: {
@@ -323,8 +321,7 @@ export default {
       }, 5000);
       return true;
     }
-    config.headers['Accept-Language'] = state.language;
-    console.log(config);
+
     return new Promise((resolve, reject) => {
       axios
         .get(`${url}${payload.endpoint}`, config)
@@ -427,4 +424,5 @@ export default {
       );
     });
   },
+
 };

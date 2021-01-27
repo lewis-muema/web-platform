@@ -5,12 +5,12 @@
       <div class="new-card new-card__inner">
         <a class="my-profile__adj">
           <router-link class="profile--link" to="/profile/personal_information">
-            {{$t('general.personal_info')}}
+            Personal Information
           </router-link>
         </a>
         <div class="my-profile__adj">
           <router-link class="profile--link" to="/profile/change_password">
-            {{$t('general.change_password')}}
+            Change Password
           </router-link>
         </div>
       </div>

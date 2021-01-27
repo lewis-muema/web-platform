@@ -5,12 +5,12 @@
   >
     <div class="sign-up-verification-inner">
       <div class="sign-up-verification-top">
-        {{$t('signUpVerification.work_for_business') }}
+        Do you work for a Business?
       </div>
 
       <div class="sign-up-verification-text">
-        {{$t('signUpVerification.offer_best_experience')}} <br>
-        {{$t('signUpVerification.dedicated_account')}}
+        We'd like to offer you the best experience possible. <br>
+        We'll create a dedicated account for you.
       </div>
 
       <p class="sign-up-error">
@@ -30,7 +30,7 @@
             class="input-control sign-form"
             type="text"
             name="cop_name"
-            :placeholder="$t('signUpVerification.business_name')"
+            placeholder="Business name"
             autocomplete="on"
           >
         </div>
@@ -42,14 +42,14 @@
           <input
             class="button-primary btn-sign-up-check style-sign-btn"
             type="submit"
-            :value="$t('signUpVerification.no')"
+            value="No"
             @click="peer_set"
           >
 
           <input
             class="button-primary btn-sign-up-check"
             type="submit"
-            :value="$t('signUpVerification.done')"
+            value="Done"
             @click="cop_set"
           >
         </div>
@@ -156,11 +156,11 @@ export default {
           } else {
             // failed to login
             // show some sort of error
-            this.doNotification(2, this.$t('signUpVerification.signup_error'), response.message);
+            this.doNotification(2, 'Sign Up Error ', response.message);
           }
         },
         (error) => {
-          this.doNotification(2, this.$t('signUpVerification.signup_error'), this.$t('signUpVerification.check_internet'));
+          this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
         },
       );
     },
@@ -230,15 +230,15 @@ export default {
             } else {
               // failed to login
               // show some sort of error
-              this.doNotification(2, this.$t('signUpVerification.signup_error'), response.message);
+              this.doNotification(2, 'Sign Up Error ', response.message);
             }
           },
           (error) => {
-            this.doNotification(2, this.$t('signUpVerification.signup_error'), this.$t('signUpVerification.check_internet'));
+            this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
           },
         );
       } else {
-        this.message = this.$t('signUpVerification.provide_biz_name');
+        this.message = 'Provide Business Name';
       }
     },
     checkUserLocation() {
@@ -262,10 +262,10 @@ export default {
             const errorResponse = response.data;
             if (errorResponse.code === 1) {
               this.login_text = 'Login';
-              this.doNotification(2, this.$t('signUpVerification.login_failed'), 'Wrong password or email.');
+              this.doNotification(2, 'Login failed', 'Wrong password or email.');
             } else {
-              this.login_text = this.$t('signUpVerification.login');
-              this.doNotification(2, this.$t('signUpVerification.login_failed'), this.$t('signUpVerification.account_deactivated'));
+              this.login_text = 'Login';
+              this.doNotification(2, 'Login failed', 'Account deactivated');
             }
           } else {
             try {
@@ -326,7 +326,7 @@ export default {
           }
         },
         (error) => {
-          this.doNotification(2, this.$t('signUpVerification.login_failed'), this.$t('signUpVerification.login_failed_text'));
+          this.doNotification(2, 'Login failed', 'Login failed. Please try again');
           this.$router.push('/auth/sign_in');
         },
       );

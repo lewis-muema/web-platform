@@ -14,7 +14,7 @@
               class="back-freight-btn"
               @click="backToTransporters()"
             >
-              <i class="el-icon-arrow-left view-transporter-info" /> {{$t('general.back')}}
+              <i class="el-icon-arrow-left view-transporter-info" /> Back
             </div>
             <div class="transporter-listing transporter-summary-data">
               <div class="transporter-detail--info">
@@ -34,7 +34,7 @@
                       alt=""
                       class="transporters-img highlight-icon"
                     >
-                    {{ owner_details.place_orders }} {{$t('transporterComponent.completed_orders')}}
+                    {{ owner_details.place_orders }} completed orders
                   </div>
                 </div>
 
@@ -45,12 +45,12 @@
                       alt=""
                       class="transporters-img highlight-icon"
                     >
-                    {{ owner_details.average_rating }} ({{ owner_details.review_count }} {{$t('transporterComponent.reviews')}})
+                    {{ owner_details.average_rating }} ({{ owner_details.review_count }} Reviews)
                   </div>
                 </div>
 
                 <div class="transporter-name align-contacts-data">
-                  {{$t('transporterComponent.contacts')}}
+                  Contacts
                 </div>
                 <div class="transporters-filters transporters-highlight">
                   <div class="truck-add-info truck-add-rating-align">
@@ -76,7 +76,7 @@
             </div>
             <div class="">
               <div class="transporter-doucuments-title align-contacts-data">
-                {{$t('transporterComponent.documents')}}
+                Documents
               </div>
               <div
                 v-for="(val, index) in owner_details.documents"
@@ -93,11 +93,11 @@
 
             <div class="">
               <div class="transporter-doucuments-title align-contacts-data">
-                {{$t('transporterComponent.vehicles')}}
+                Vehicles
               </div>
               <div v-if="owner_details.vehicles === null">
                 <div class="transporter-detail-rating no-reviews-outer transporter-vehicle-rating">
-                 {{$t('transporterComponent.no_vehicle')}}
+                  No vehicle details available for transporter .
                 </div>
               </div>
               <div v-else>
@@ -119,7 +119,7 @@
                     >
                       <div class="truck-add-info">
                         <i class="el-icon-circle-check check-tranporters" />
-                        {{$t('transporterComponent.log_book')}}
+                        log book
                       </div>
                     </div>
                     <div class="vehicles-split" />
@@ -130,14 +130,14 @@
 
             <div class="">
               <div class="transporter-doucuments-title align-contacts-data reviews-section">
-                {{$t('transporterComponent.reviews')}}
+                Reviews
               </div>
               <div
                 v-if="owner_details.ratings === null || owner_details.ratings === 'null'"
                 class=""
               >
                 <div class="transporter-detail-rating no-reviews-outer transporter-vehicle-rating">
-                  {{$t('transporterComponent.no_ratings')}}
+                  No ratings available for transporter .
                 </div>
               </div>
               <div v-else-if="owner_details.ratings.length > 0">
@@ -185,7 +185,7 @@
               </div>
               <div v-else>
                 <div class="transporter-detail-rating no-reviews-outer transporter-vehicle-rating">
-                  {{$t('transporterComponent.no_ratings')}}
+                  No ratings available for transporter .
                 </div>
               </div>
             </div>
@@ -194,7 +194,7 @@
           <div class="transporters-quote-section">
             <div class="">
               <p class="transporters-quotes-input--label">
-                {{$t('transporterComponent.quote')}}
+                Quote
               </p>
               <input
                 v-model="quote_text"
@@ -206,7 +206,7 @@
 
             <div class="">
               <p class="transporters-quotes-input--label">
-                {{$t('transporterComponent.link_tranporters')}}
+                Link with this transporter to access financing
               </p>
               <input
                 v-model="financing_text"
@@ -229,13 +229,13 @@
           >
             <div class="">
               <div class="quote-text-option decline-documemt-extend">
-                {{$t('transporterComponent.request_quote')}}
+                Request Quote
               </div>
             </div>
             <div class="quote-find-section">
               <div class="">
                 <p class="freight-input--label">
-                  {{$t('transporterComponent.pickup_location')}}
+                  Pick up location
                 </p>
                 <gmap-autocomplete
                   v-model="locations[0]"
@@ -249,7 +249,7 @@
 
               <div class="">
                 <p class="freight-input--label">
-                  {{$t('transporterComponent.destination')}}
+                  Destination
                 </p>
                 <gmap-autocomplete
                   v-model="locations[1]"
@@ -262,7 +262,7 @@
               </div>
               <div class="">
                 <p class="freight-input--label">
-                  {{$t('transporterComponent.pickup_time')}}
+                  Pick up time
                 </p>
                 <div class="transporters-select">
                   <el-date-picker
@@ -279,7 +279,7 @@
 
               <div class="">
                 <p class="freight-input--label">
-                  {{$t('transporterComponent.when_bids_submitted')}}
+                  By when should bids be submitted?
                 </p>
                 <div class="transporters-select">
                   <el-date-picker
@@ -296,7 +296,7 @@
 
               <div class="">
                 <p class="freight-input--label">
-                  {{$t('transporterComponent.truck_type')}}
+                  Type of truck
                 </p>
                 <div class="transporters-select">
                   <el-select
@@ -316,7 +316,7 @@
 
               <div class="">
                 <p class="freight-input--label">
-                  {{$t('transporterComponent.weight')}}
+                  What is the weight of the load?
                 </p>
                 <div>
                   <input
@@ -326,13 +326,13 @@
                     placeholder=""
                     autocomplete="on"
                   >
-                  <span class="tonage-value-text">{{$t('transporterComponent.tonnes')}}</span>
+                  <span class="tonage-value-text">Tonnes</span>
                 </div>
               </div>
 
               <div class="">
                 <p class="freight-input--label">
-                  {{$t('transporterComponent.tranported')}}
+                  What is being transported?
                 </p>
                 <div class="transporters-select">
                   <el-select
@@ -377,9 +377,9 @@ export default {
   mixins: [NotificationMxn],
   data() {
     return {
-      quote_text: this.$t('transporterComponent.request_for_quote'),
-      financing_text: this.$t('transporterComponent.create_order'),
-      submit_text: this.$t('transporterComponent.request'),
+      quote_text: 'Request for quote',
+      financing_text: 'Place Order',
+      submit_text: 'Request',
       rating: 5.0,
       quoteDialog: false,
       locations: [],
@@ -441,8 +441,8 @@ export default {
           } else {
             this.doNotification(
               2,
-              this.$t('transporterComponent.failed_to_load'),
-              this.$t('transporterComponent.unable_to_load'),
+              'Failed to load transporter details !',
+              'Unable to load transporter details',
             );
             this.backToTransporters();
             this.owner_details = [];
@@ -451,8 +451,8 @@ export default {
         (error) => {
           this.doNotification(
             2,
-            this.$t('transporterComponent.failed_to_load'),
-            this.$t('transporterComponent.unable_to_load'),
+            'Failed to load transporter details !',
+            'Unable to load transporter details',
           );
           this.backToTransporters();
           this.owner_detail = [];
@@ -607,7 +607,7 @@ export default {
       ) {
         this.sendQuoteFinal();
       } else {
-        this.doNotification(2, this.$t('transporterComponent.find_transporter_error'), this.$t('transporterComponent.provide_all'),);
+        this.doNotification(2, 'Find transporters error !', 'Kindly provide all values');
       }
     },
     sendQuoteFinal() {
@@ -648,20 +648,20 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, this.$t('transporterComponent.quatations_sent'), '');
+            this.doNotification(1, 'Quotations sent successfully!', '');
           } else {
-            this.doNotification(2, this.$t('transporterComponent.unable_request'), workingResponse.message);
+            this.doNotification(2, 'Unable to request for quotation!', workingResponse.message);
           }
           this.backToTransporters();
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error, 'message')) {
-            this.doNotification(2, this.$t('transporterComponent.quote_request_failed'), error.message);
+            this.doNotification(2, 'Quote request failed', error.message);
           } else {
             this.doNotification(
               2,
-              this.$t('transporterComponent.quote_request_failed'),
-              this.$t('transporterComponent.quote_request_failed_text'),
+              'Quote request failed',
+              'Quote request failed. Please check your internet connection and try again.',
             );
             this.backToTransporters();
           }

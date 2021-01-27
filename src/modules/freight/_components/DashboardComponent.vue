@@ -10,9 +10,7 @@
           class="no-activity-img"
         >
         <div class="no-activity-label">
-          {{$t('dashboardComponent.no_activity')}}
-          <!-- No Activity at the moment -->
-
+          No Activity at the moment
         </div>
       </div>
       <div
@@ -28,7 +26,7 @@
             v-if="index === 0"
             class="dashboard-name"
           >
-            {{$t('dashboardComponent.recent_activity')}}
+            Recent Activity
           </div>
           <div class="transporters-filters transporters-highlight">
             <div class="truck-add-info dashboard-align-inner">
@@ -43,7 +41,7 @@
               class="truck-add-info dashboard-align-inner view-document"
               @click="viewDocument(val.data.url, val.data.document_name)"
             >
-              {{$t('dashboardComponent.view_document')}} >
+              View document >
             </div>
           </div>
           <div
@@ -60,7 +58,7 @@
                 name="create_order_text"
                 @click="approveThisDocument(val)"
               >
-                {{$t('dashboardComponent.approve')}}
+                Approve
               </button>
               <button
                 type="button"
@@ -68,7 +66,7 @@
                 name="create_order_text"
                 @click="declineDialog(val)"
               >
-                {{$t('dashboardComponent.decline')}}
+                Decline
               </button>
             </div>
           </div>
@@ -91,8 +89,7 @@
         >
           <div class="">
             <div class="document-text-option ">
-              <!-- {{ src_name }} document -->
-              {{$t('dashboardComponent.name_doc')}}
+              {{ src_name }} document
             </div>
             <div class="document-divider" />
             <div class="document-view-inner">
@@ -111,7 +108,7 @@
         >
           <div class="">
             <div class="decline-text-option decline-documemt-extend">
-              {{$t('dashboardComponent.decline_document')}}
+              Decline Document
             </div>
           </div>
           <div class="decline-documemt-extend decline-documemt-input">
@@ -130,7 +127,7 @@
               class="decline-action--slide-button"
               @click="declineDocument()"
             >
-              {{$t('dashboardComponent.decline')}}
+              Decline
             </button>
           </div>
         </el-dialog>
@@ -273,23 +270,23 @@ export default {
               workingResponse = response[0];
             }
             if (workingResponse.status) {
-              this.doNotification(1, `${this.$t('dashboardComponent.decline_document')}!`, this.$t('dashboardComponent.doc_declined_successfully'));
+              this.doNotification(1, 'Document declined!', 'Document declined successfully');
               this.fetchDashboardData();
             } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
-              this.doNotification(2, this.$t('dashboardComponent.decline_document_title'), workingResponse.message);
+              this.doNotification(2, 'Failed to decline document!', workingResponse.message);
             } else {
-              this.doNotification(2, this.$t('dashboardComponent.decline_doc_text'), workingResponse.reason);
+              this.doNotification(2, 'Failed to decline document!', workingResponse.reason);
             }
             this.closeDeclineDialog();
           },
           (error) => {
             if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
-              this.doNotification(2, this.$t('dashboardComponent.decline_document_title'), error.response.data.reason);
+              this.doNotification(2, 'Failed to decline document!', error.response.data.reason);
             } else {
               this.doNotification(
                 2,
-                this.$t('dashboardComponent.decline_document_title'),
-                this.$t('dashboardComponent.decline_doc_text'),
+                'Failed to decline document!',
+                'Failed to decline document, Kindly retry again or contact customer support ',
               );
             }
             this.closeDeclineDialog();
@@ -298,8 +295,8 @@ export default {
       } else {
         this.doNotification(
           2,
-          this.$t('dashboardComponent.decline_document_title'),
-          this.$t('dashboardComponent.reason_decline'),
+          'Failed to declined document',
+          'Kinly provide the reason to decline',
         );
       }
     },
@@ -345,22 +342,22 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, this.$t('dashboardComponent.doc_approval'), this.$t('dashboardComponent.doc_approved'));
+            this.doNotification(1, 'Document approval!', 'Document approved successfully');
             this.fetchDashboardData();
           } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
-            this.doNotification(2, this.$t('dashboardComponent.failed_approve'), workingResponse.message);
+            this.doNotification(2, 'Failed to approve document!', workingResponse.message);
           } else {
-            this.doNotification(2, this.$t('dashboardComponent.failed_approve'), workingResponse.reason);
+            this.doNotification(2, 'Failed to approve document!', workingResponse.reason);
           }
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
-            this.doNotification(2, this.$t('dashboardComponent.failed_approve'), error.response.data.reason);
+            this.doNotification(2, 'Failed to approve document!', error.response.data.reason);
           } else {
             this.doNotification(
               2,
-              this.$t('dashboardComponent.failed_approve'),
-              this.$t('dashboardComponent.failed_approve_text'),
+              'Failed to approve document!',
+              'Failed to approve document, Kindly retry again or contact customer support ',
             );
           }
         },

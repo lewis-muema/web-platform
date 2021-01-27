@@ -2,7 +2,7 @@
   <div class="terms-main">
     <div v-if="checkFreightStatus() === 0">
       <div class="terms-header">
-        {{ $t('verifyComponent.terms_of_service') }}
+        Our terms of services
       </div>
       <div class="terms-inner">
         <iframe
@@ -20,7 +20,7 @@
           class="hiddeny"
         >
         <span class="sign-holder__smaller">
-          {{ $t('verifyComponent.acknowledge') }}
+          I acknowledge that i have read and understood the terms of service
         </span>
       </div>
       <div class="next-terms-holder-btn">
@@ -40,14 +40,14 @@
             <i class="el-icon-success warning-icon" />
           </div>
           <div class="cancelOptions--content-message verification-header">
-            {{ $t('verifyComponent.application_submitted') }}
+            Your Application has been submitted
           </div>
           <div class="cancelOptions--content-message verification-description">
-            <!-- Thanks {{ logged_user }} we have received your registration. -->
-            {{ $t('verifyComponent.thanks') }}
+            Thanks {{ logged_user }} we have received your registration.
           </div>
           <div class="cancelOptions--content-message verification-description">
-            {{ $t('verifyComponent.customer_rep') }}
+            Our customer representative will contact you within 24 hrs with the next steps to
+            activate your account and get you started.
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@ export default {
       let resp = 0;
       if (Object.prototype.hasOwnProperty.call(session[session.default], 'freight_status')) {
         if (session[session.default].freight_status === 2) {
-          this.$router.push('/freight/dashboard');
+          this.$router.push('/freight/transporters');
         } else {
           resp = session[session.default].freight_status;
         }
@@ -144,7 +144,7 @@ export default {
               this.setSession(newSession);
               this.$router.push('/freight/verify');
               const level = 1; // success
-              this.message = this.$t('verifyComponent.terms_conditions_accepted');
+              this.message = 'Terms and Conditions accepted!';
               const notification = {
                 title: '',
                 level,
@@ -153,7 +153,7 @@ export default {
               this.displayNotification(notification);
             } else {
               const level = 3;
-              this.message = this.$t('verifyComponent.something_went_wrong');
+              this.message = 'Something went wrong.';
               const notification = {
                 title: '',
                 level,
@@ -164,7 +164,7 @@ export default {
           },
           () => {
             const level = 3;
-            this.message = this.$t('verifyComponent.something_went_wrong');
+            this.message = 'Something went wrong.';
             const notification = {
               title: '',
               level,
@@ -174,7 +174,7 @@ export default {
           },
         );
       } else {
-        this.doNotification(2, this.$t('verifyComponent.freight_final_setup'), this.$t('verifyComponent.agree_terms_condition'));
+        this.doNotification(2, 'Freight final setup failed', 'Agree to Terms and Conditions');
       }
     },
     doNotification(level, title, message) {

@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="screen-two">
     <div class="onboarding-user-header">
-      {{$t('emailValidation.connect')}}
+      Connect your personal Sendy account
     </div>
     <p class="onboard-error">
       {{ message }}
@@ -10,7 +10,7 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>{{$t('emailValidation.personal_email')}}</span>
+            <span>Personal Email</span>
           </label>
           <input
             v-model="peerEmail"
@@ -18,7 +18,7 @@
             class="form-control"
             type="email"
             name="email"
-            :placeholder="$t('emailValidation.email')"
+            placeholder="you@email.com"
             @focus="setCurrentStep(1)"
           >
           <br>
@@ -34,7 +34,7 @@
         class="waves-effect waves-teal btn-flat"
         @click="last_view"
       >
-        {{$t('emailValidation.back')}}
+        Back
       </a>
       <button
         id="nextBtn"
@@ -59,7 +59,7 @@ export default {
       peerEmail: '',
       message: '',
       emailValid: true,
-      btn_txt: this.$t('emailValidation.skip'),
+      btn_txt: 'Skip',
     };
   },
   computed: {
@@ -70,9 +70,9 @@ export default {
   watch: {
     peerEmail(val) {
       if (val === '') {
-        this.btn_txt = this.$t('emailValidation.skip');
+        this.btn_txt = 'Skip';
       } else {
-        this.btn_txt = this.$t('emailValidation.next');
+        this.btn_txt = 'Next';
       }
     },
   },
@@ -99,10 +99,10 @@ export default {
           this.updateViewStep(0);
           this.setViewState(3);
         } else {
-          this.message = this.$t('emailValidation.provide');
+          this.message = 'Provide a Personal Email';
         }
       } else {
-        this.message = this.$t('emailValidation.provide_valid');
+        this.message = 'Provide valid Email ';
       }
     },
     last_view() {

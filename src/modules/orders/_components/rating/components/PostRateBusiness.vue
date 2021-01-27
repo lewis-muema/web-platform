@@ -17,10 +17,10 @@
             >
           </div>
           <div class="rate-rider-thank">
-            {{$('general.rating_submitted')}}
+            Rating submitted
           </div>
           <div class="rate-rider-thank">
-             {{$('general.thanks_for_using_sendy')}}
+            Thank You for using Sendy!
           </div>
         </div>
       </div>
@@ -66,9 +66,9 @@ export default {
     },
     handleRedirect() {
       const notification = {
-        title: this.$('general.rating_submitted'),
+        title: 'Rating submitted!',
         level: 1,
-        message: this.$('general.thanks_for_using_sendy_text'),
+        message: 'Thank You for using Sendy.You will be redirected to the home page.',
       };
       this.displayNotification(notification);
       setTimeout(() => {

@@ -10,14 +10,14 @@
           class="section--filter-input"
           type="date"
           name="from_date"
-          :placeholder="$t('general.from')"
+          placeholder="From"
         />
         <el-date-picker
           v-model="filterData.to_date"
           class="section--filter-input"
           type="date"
           name="to_date"
-          :placeholder="$t('general.to')"
+          placeholder="To"
         />
       </div>
       <div class="section--filter-action-wrap">
@@ -58,17 +58,17 @@
             type="primary"
             size="mini"
           >
-            {{$t('general.download')}}<i class="el-icon-arrow-down el-icon--right" />
+            Download<i class="el-icon-arrow-down el-icon--right" />
           </el-button>
           <el-dropdown-menu
             slot="dropdown"
             class="export_dropdown"
           >
             <el-dropdown-item command="a">
-              {{$t('general.excel')}}
+              Excel
             </el-dropdown-item>
             <el-dropdown-item command="b">
-              {{$t('general.pdf')}}
+              PDF
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -92,37 +92,37 @@
         {{ empty_statement_state }}
       </template>
       <el-table-column
-        :label="$t('general.txn')"
+        label="Txn"
         prop="txn"
         min-width="80"
       />
       <el-table-column
-        :label="$t('general.date')"
+        label="Date"
         prop="date_time"
         :formatter="formatDate"
         width="170"
       />
       <el-table-column
-        :label="$t('general.description')"
+        label="Description"
         prop="description"
         min-width="80"
       />
       <el-table-column
-        :label="$t('general.debit')"
+        label="Debit"
         prop="amount"
         width="110"
         :formatter="formatDebitAmount"
         class-name="amount--table-format"
       />
       <el-table-column
-        :label="$t('general.credit')"
+        label="Credit"
         prop="amount"
         width="110"
         :formatter="formatCreditAmount"
         class-name="amount--table-format"
       />
       <el-table-column
-        :label="$t('general.running_balance')"
+        label="Running Balance"
         prop="running_balance"
         width="125"
         :formatter="formatRunningBalance"
@@ -163,10 +163,10 @@ export default {
   mixins: [TimezoneMxn],
   data() {
     return {
-      empty_statement_state: this.$t('general.fetching_statement'),
+      empty_statement_state: 'Fetching Statement',
       pagination_limit: 10,
       pagination_page: 1,
-      order_statement_text: this.$t('general.search'),
+      order_statement_text: 'Search',
       filterState: false,
       filterData: {
         from_date: '',
@@ -254,10 +254,10 @@ export default {
 
         this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(
           () => {
-            this.empty_statement_state = this.$t('general.statement_not_found');
+            this.empty_statement_state = 'Statement Not Found';
           },
           () => {
-            this.empty_statement_state = this.$t('general.statement_failed_to_fetch');
+            this.empty_statement_state = 'Statement Failed to Fetch';
           },
         );
       }
@@ -306,7 +306,7 @@ export default {
       const sessionData = this.$store.getters.getSession;
 
       this.filterState = false;
-      this.empty_statement_state = this.$t('general.searching_payments');
+      this.empty_statement_state = 'Searching Payments';
 
       let { from_date: fromDate, to_date: toDate } = this.filterData;
 
@@ -330,7 +330,7 @@ export default {
         };
       }
 
-      this.order_statement_text = this.$t('general.searching');
+      this.order_statement_text = 'Searching...';
       this.requestStatement(payload);
       // console.log(this.statementData);
 
@@ -348,12 +348,12 @@ export default {
       };
       this.$store.dispatch('$_transactions/requestStatement', fullPayload).then(
         () => {
-          this.order_statement_text = this.$t('general.search');
-          this.empty_statement_state = this.$t('general.statement_not_found');
+          this.order_statement_text = 'Search';
+          this.empty_statement_state = 'Statement Not Found';
         },
         () => {
-          this.order_statement_text = this.$t('general.search');
-          this.empty_statement_state = this.$t('general.statement_failed_to_fetch');
+          this.order_statement_text = 'Search';
+          this.empty_statement_state = 'Statement Failed to Fetch';
         },
       );
     },
@@ -390,13 +390,13 @@ export default {
       } else {
         const pdfBody = [
           [
-            this.$t('general.date'),
-            this.$t('general.description'),
-            this.$t('general.payment_method'),
-            this.$t('general.debit'),
-            this.$t('general.credit'),
-            this.$t('general.running_balance'),
-            this.$t('general.transaction'),
+            'Date',
+            'Description',
+            'Payment Method',
+            'Debit',
+            'Credit',
+            'Running Balance',
+            'Transaction',
           ],
         ];
 

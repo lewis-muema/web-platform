@@ -21,7 +21,7 @@
               type="button"
               class="btn btn-secondary likely side-btn"
             >
-              {{ $t('NPSFooter.not_likey') }}
+              0 Not Likely
             </button>
             <span class="score-holder">
               <span
@@ -40,8 +40,7 @@
               type="button"
               class="btn btn-secondary unlikely side-btn"
             >
-            {{ $t('NPSFooter.very_likey') }}
-              <!-- 10 Very Likely -->
+              10 Very Likely
             </button>
             <button
               type="button"
@@ -67,8 +66,7 @@
               :class="`btn btn-primary form-control action-button ${disableClass}`"
               :disabled="isDisabled"
             >
-            {{ $t('NPSFooter.submit') }}
-              <!-- Submit -->
+              Submit
             </button>
             <span class="clearfix">&nbsp;</span>
             <button :class="`btn btn-primary form-control action-button reason-dismiss ${disableClass}`">
@@ -100,7 +98,7 @@ export default {
       scores: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       score: null,
       reason: '',
-      heading: this.$t('NPSFooter.how_likely'),
+      heading: 'How likely are you to recommend a friend or colleague to use Sendy?',
       submitted: false,
       isValid: null,
       disableClass: '',
@@ -167,7 +165,7 @@ export default {
     },
     onChange(event, score) {
       this.score = score;
-      this.heading = this.$t('NPSFooter.like_most');
+      this.heading = 'What do you like most about Sendy? (Optional)';
     },
     dismiss() {
       this.disableClass = 'disabled';
@@ -224,7 +222,7 @@ export default {
         (response) => {
           if (response.data.success) {
             this.submitted = true;
-            this.heading = this.$t('NPSFooter.thank_you');
+            this.heading = 'Thank you. We will use your feedback to improve our service';
             this.hideForm();
           }
         },

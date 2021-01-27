@@ -20,7 +20,7 @@
           <a
             class="segmentation-tab"
             @click="linkRoute('/orders')"
-          >{{ $t('mainHeader.transportation') }}</a>
+          >Transportation</a>
           <div
             :class="
               freightPages.includes(route_path)
@@ -37,7 +37,7 @@
           <a
             class="segmentation-tab"
             @click="linkRoute('/freight')"
-          >{{ $t('mainHeader.freight') }}</a>
+          >Freight</a>
           <div
             :class="
               freightPages.includes(route_path)
@@ -52,72 +52,72 @@
       <nav>
         <ul>
           <li class="nav--menu-inactive">
-            <a> {{ $t('mainHeader.helpline') }} : {{ helpline_contact }}</a>
+            <a> Helpline : {{ helpline_contact }}</a>
           </li>
           <li class="nav--menu-inactive">
-            <a> {{ $t('mainHeader.hi')}} {{ logged_user }}</a>
+            <a>Hi {{ logged_user }}</a>
           </li>
           <li class="nav--menu-dropdown">
             <a class="nav--menu-dropdown-link">
-              {{$t('mainHeader.menu')}}
+              Menu
               <i class="el-icon-arrow-down" />
             </a>
             <ul class="nav--menu-dropdown-list">
               <div v-if="!admin_details">
                 <li v-show="switchValid">
                   <a @click="switchAccount()">
-                    {{$t('mainHeader.switch_to')}}
-                    <span v-if="this.$store.getters.getSession.default === 'peer'"> {{$t('mainHeader.business' )}} </span>
+                    Switch to
+                    <span v-if="this.$store.getters.getSession.default === 'peer'"> Business </span>
                     <span v-else>
-                      {{$t('mainHeader.personal')}}
+                      Personal
                     </span>
-                    {{$t('mainHeader.account')}}
+                    account
                   </a>
                 </li>
                 <li v-show="isUpgradeValid">
                   <a @click="linkRoute('/user/upgrade_acc')">
-                    {{$t('mainHeader.create_business_account' )}}
+                    Create Business Account
                   </a>
                 </li>
                 <li>
                   <a @click="linkRoute('/orders')">
-                    {{$t('mainHeader.new_delivery')}}
+                    New Delivery
                   </a>
                 </li>
                 <li>
                   <a @click="linkPayments()">
-                    {{$t('mainHeader.payment')}}
+                    Payment
                   </a>
                 </li>
                 <li>
                   <a @click="linkRoute('/transactions/order_history')">
-                    {{$t('mainHeader.orders')}}
+                    Orders
                   </a>
                 </li>
                 <li>
                   <a @click="linkRoute('/orders/freight')">
-                    {{$t('mainHeader.freight')}}
+                    Freight
                   </a>
                 </li>
                 <li v-if="admin_user">
                   <a @click="linkRoute('/admin/users')">
-                    {{$t('mainHeader.settings')}}
+                    Settings
                   </a>
                 </li>
                 <li v-if="admin_user">
                   <a @click="linkRoute('/analytics/report')">
-                    {{ $t('mainHeader.analytics' )}}
+                    Analytics
                   </a>
                 </li>
                 <li>
                   <a @click="linkRoute('/user/profile/personal_information')">
-                    {{$t('mainHeader.profile')}}
+                    Profile
                   </a>
                 </li>
               </div>
               <li v-if="admin_details">
                 <a @click="linkRoute('/orders/freight')">
-                  {{$t('mainHeader.freight' )}}
+                  Freight
                 </a>
               </li>
               <li class="menu--last-child">
@@ -125,7 +125,7 @@
                   class="menu--last-child-link"
                   @click="logOut"
                 >
-                  {{$t('mainHeader.logout')}}
+                  Log Out
                 </a>
               </li>
             </ul>

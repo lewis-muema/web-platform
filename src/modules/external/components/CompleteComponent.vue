@@ -1,13 +1,13 @@
 <template lang="html">
   <div class="complete-outer">
     <div class="complete-header">
-      {{$t('completeComponent.congrats')}}
+      Congratulations
     </div>
     <div class="complete-contents">
       <div class="complete-pair">
-        <p>{{$t('completeComponent.enjoy_services')}}</p>
+        <p>You can now enjoy Sendy services at work and at home!</p>
         <p v-if="getPerEmail !== ''">
-          {{$t('completeComponent.double_convinience')}}
+          Woah - that’s double the convenience!
         </p>
       </div>
       <div
@@ -15,24 +15,25 @@
         class="complete-pair"
       >
         <p>
-          {{$t('completeComponent.account_connected')}}
+          Your two accounts have now been connected and you can access either account with your one
+          selected password.
         </p>
-        <p>{{$t('completeComponent.login_account')}}</p>
+        <p>Login at any time to your two account profiles using the emails below.</p>
       </div>
       <div
         v-else
         class="complete-pair"
       >
         <p>
-          {{$t('completeComponent.account_created')}}
+          Your account has now been created and you can access the account with your
+          selected password.
         </p>
-        <p>{{$t('completeComponent.login_any_time')}}</p>
+        <p>Login at any time to your account profile using the email below.</p>
       </div>
       <div class="complete-pair">
         <p>{{ getBizName }}: {{ getBizEmail }}</p>
         <p v-if="getPerEmail !== ''">
-          {{$t('completeComponent.personal')}}
-          <!-- Personal: {{ getPerEmail }} -->
+          Personal: {{ getPerEmail }}
         </p>
       </div>
     </div>
@@ -57,7 +58,7 @@ export default {
   mixins: [NotificationMxn, SessionMxn],
   data() {
     return {
-      login_text: this.$t('completeComponent.continue'),
+      login_text: 'Continue to App',
     };
   },
   computed: {
@@ -76,7 +77,7 @@ export default {
     }),
     directSignInViaAuth() {
       this.deleteSession();
-      this.login_text = this.$t('completeComponent.login_in');
+      this.login_text = 'Logging in ...';
       const params = {
         email: this.getBizEmail,
         password: this.getPass,
@@ -91,11 +92,11 @@ export default {
           if (Object.prototype.hasOwnProperty.call(response, 'status')) {
             const errorResponse = response.data;
             if (errorResponse.code === 1) {
-              this.login_text = this.$t('completeComponent.continue');
-              this.doNotification(2, this.$t('completeComponent.login_failed'), this.$t('completeComponent.login_failed_text'));
+              this.login_text = 'Continue to App';
+              this.doNotification(2, 'Login failed', 'Wrong password or email.');
             } else {
-              this.login_text = this.$t('completeComponent.continue');
-              this.doNotification(2, this.$t('completeComponent.login_failed'), this.$t('completeComponent.account_deactivated'));
+              this.login_text = 'Continue to App';
+              this.doNotification(2, 'Login failed', 'Account deactivated');
             }
           } else {
             try {
@@ -156,8 +157,8 @@ export default {
           }
         },
         (error) => {
-          this.login_text = this.$t('completeComponent.continue');
-          this.doNotification(2, this.$t('completeComponent.login_failed'), this.$t('completeComponent.login_failed_text'));
+          this.login_text = 'Continue to App';
+          this.doNotification(2, 'Login failed', 'Login failed. Please try again');
           this.$router.push('/auth/sign_in');
         },
       );

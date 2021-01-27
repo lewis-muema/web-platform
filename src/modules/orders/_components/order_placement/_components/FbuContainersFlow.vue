@@ -22,7 +22,7 @@
             <gmap-autocomplete
               v-model="locations[0]"
               :options="map_options"
-              :placeholder="$t('general.enter_pickup_location')"
+              placeholder="Enter a pickup location"
               :select-first-on-enter="true"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
               @place_changed="setLocation($event, 0)"
@@ -50,7 +50,7 @@
               <gmap-autocomplete
                 v-model="locations[1]"
                 :options="map_options"
-                :placeholder="$t('general.enter_destination_location')"
+                placeholder="Enter a destination location"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
                 @place_changed="setLocation($event, 1)"
@@ -77,11 +77,11 @@
               min="5"
               max="50"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input input-spacer"
-              :placeholder="$t('general.no_of_containers')"
+              placeholder="No of containers"
             >
             <div class="home-view-truck-options-inner-wrapper homeview--input-pickup">
               <div class="home-view-truck-options-label">
-                {{$t('general.pickup_time_for_order')}}
+                Pick up time for your order
               </div>
               <div class="block">
                 <el-date-picker
@@ -89,7 +89,7 @@
                   class="vendor_component-actions__element-date discount-input-width--nondiscounted"
                   type="datetime"
                   format="dd-MM-yyyy h:mm a"
-                  :placeholder="$t('general.asap')"
+                  placeholder="As soon as possible"
                   prefix-icon="el-icon-date"
                   :default-time="moment().format('HH:mm:ss')"
                   :picker-options="dueDatePickerOptions"
@@ -102,13 +102,13 @@
                 v-model="returnStatus"
                 type="checkbox"
                 @change="resetDestination()"
-              > {{$t('general.return_empty_containers')}}
+              > Return empty containers to the same location
             </div>
             <gmap-autocomplete
               v-if="returnStatus"
               v-model="locations[3]"
               :options="map_options"
-              :placeholder="$t('general.enter_destination_location')"
+              placeholder="Enter a destination location"
               :select-first-on-enter="true"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--return-destination"
               @place_changed="setReturnDestination($event)"
@@ -121,13 +121,13 @@
       <div>
         <div class="homeview--proceed">
           <p class="home-view--upload-par">
-            {{$t('general.destination_location')}}
+            OR
           </p>
           <p
             class="home-view--upload-button"
             @click="initiateUpload()"
           >
-            {{$t('general.upload_profile')}}
+            Upload file
           </p>
           <button
             type="button"
@@ -136,7 +136,7 @@
             :disabled="nextStatus === 'button--primary-inactive inactive-1'"
             @click="productPhase(2)"
           >
-            {{$t('general.continue')}}
+            Continue
           </button>
         </div>
       </div>
@@ -147,15 +147,15 @@
           class="homeview--order-details-edit"
           @click="productPhase(1)"
         >
-          {{$t('general.editSmall')}}
+          edit
           <i class="el-icon-edit" />
         </div>
         <tr class="homeview--top-details">
           <td class="homeview---top-details-left col-left">
-            {{$t('general.order_details')}}
+            Order details
           </td>
           <td class="homeview---top-details-right col-right">
-            {{$t('general.totoal_containers')}} 
+            Total containers  {{ noOfContainers }}
           </td>
         </tr>
         <tr class="homeview--bottom-details">
@@ -165,7 +165,7 @@
               size="xs"
               class="homeview--row__font-awesome homeview--input-bundler__img .homeview--input-bundler__destination-input sendy-orange"
               width="10px"
-            /> {{$t('general.pick_up')}} <br>
+            /> Pick-Up <br>
             <span class="homeview--top-locations">{{ locations[0] }}</span>
           </td>
           <td class="homeview--bottom-details-right col-right">
@@ -174,7 +174,7 @@
               size="xs"
               class="homeview--row__font-awesome homeview--input-bundler__img sendy-blue"
               width="10px"
-            /> {{$t('general.destination')}} <br>
+            /> Destination <br>
             <span class="homeview--top-locations">{{ locations[1] }}</span>
           </td>
         </tr>
@@ -185,21 +185,21 @@
           class="homeview--form homeview--row homeview--form__scrollable homeview--input-freight-containers"
         >
           <p class="homeview--input-header">
-            {{$t('general.container_details')}}
+            Container details
           </p>
           <input
             v-model="cont_no"
             type="text"
             class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
-            :placeholder="$t('general.container_number')"
+            placeholder="Container Number"
           >
-          <input∫∫
+          <input
             v-model.number="cont_weight"
             type="number"
             min="5"
             max="50"
             class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
-            :placeholder="$t('general.container_weight_in_tonnes')"
+            placeholder="Container Weight in Tonnes"
           >
           <gmap-autocomplete
             v-model="destination.name"
@@ -218,19 +218,19 @@
               class=""
               value="none"
             >
-              {{$t('general.container_size')}}
+              Container Size
             </option>
             <option
               class=""
               value="20"
             >
-              {{$t('general.twenty_feet')}}
+              20 Feet
             </option>
             <option
               class=""
               value="40"
             >
-              {{$t('general.fourty_feet')}}
+              40 Feet
             </option>
           </select>
           <input
@@ -246,7 +246,7 @@
             :disabled="buttonStatus === 'button--primary-inactive inactive-1'"
             @click="addContainer()"
           >
-            {{$t('general.add_container_details')}}
+            Add Container Details
           </button>
           <button
             v-else
@@ -255,7 +255,7 @@
             :disabled="editStatus === 'button--primary-inactive inactive-1'"
             @click="applyContainerChanges()"
           >
-            {{$t('general.edit_container_details')}}
+            Edit container details
           </button>
           <button
             v-if="selectedContainer === null"
@@ -264,7 +264,7 @@
             :disabled="placeOrderStatus === 'button--primary-inactive inactive-2'"
             @click="getQuote()"
           >
-            {{$t('general.place_order')}}
+            Place Order
           </button>
         </div>
         <div
@@ -283,7 +283,7 @@
                 @click="removeContainer(index)"
               >
                 <p class="homeview--edit__text">
-                  {{$t('general.remove')}}
+                  Remove
                 </p>
                 <i class="el-icon-delete" />
               </div>
@@ -292,7 +292,7 @@
                 @click="editContainer(index)"
               >
                 <p class="homeview--edit__text">
-                  {{$t('general.edit')}}
+                  Edit
                 </p>
                 <i class="el-icon-edit" />
               </div>
@@ -301,7 +301,7 @@
               <tr>
                 <td class="homeview--container-card">
                   <p class="homeview--heading__container">
-                    {{$t('general.container_number')}}
+                    Container Number
                   </p>
                   <p class="homeview--heading__container-details">
                     {{ container.container_number }}
@@ -309,7 +309,7 @@
                 </td>
                 <td class="homeview--container-card">
                   <p class="homeview--heading__container">
-                    {{$t('general.empty_container_destination')}}
+                    Empty Container Destination
                   </p>
                   <p class="homeview--heading__container-details">
                     {{ container.container_destination.name }}
@@ -317,17 +317,17 @@
                 </td>
                 <td class="homeview--container-card">
                   <p class="homeview--heading__container">
-                    {{$t('general.container_size')}}
+                    Container size
                   </p>
                   <p class="homeview--heading__container-details">
-                    {{ container.container_size_feet }} {{$t('general.feet')}}
+                    {{ container.container_size_feet }} Feet
                   </p>
                 </td>
               </tr>
               <tr>
                 <td class="homeview--container-card">
                   <p class="homeview--heading__container">
-                    {{$t('general.consignee')}}
+                    Consignee
                   </p>
                   <p class="homeview--heading__container-details">
                     {{ container.consignee }}
@@ -335,7 +335,7 @@
                 </td>
                 <td class="homeview--container-card">
                   <p class="homeview--heading__container">
-                    {{$t('general.container_weight')}}
+                    Container weight
                   </p>
                   <p class="homeview--heading__container-details">
                     {{ container.container_weight_tonnes }}T
@@ -362,24 +362,24 @@
         <table class="homeview--order-confirm">
           <tr>
             <td class="homeview--order-confirm-row__top color-blue">
-              {{$t('general.order_status_pending')}}
+              Order Status: Pending
             </td>
             <td class="homeview--order-confirm-row__top color-orange">
-              {{$t('general.cost')}}: {{ getEconomicPriceTiers.currency }} {{ getEconomicPriceTiers.cost }}
+              Cost: {{ getEconomicPriceTiers.currency }} {{ getEconomicPriceTiers.cost }}
             </td>
           </tr>
           <tr>
             <td class="homeview--order-confirm-row__middle">
-              {{$t('general.order_details')}}
+              Order Details
             </td>
             <td class="homeview--order-confirm-row__middle">
-              {{$t('general.truck_size')}}
+              Truck Size
             </td>
           </tr>
           <tr>
             <td class="homeview--order-confirm-row__middle">
               <p class="homeview--order-confirm-header">
-                {{$t('general.pickup_solo')}}
+                Pick Up
               </p>
               <p class="homeview--order-confirm-body">
                 {{ getOuterPriceRequestData.from_name }}
@@ -387,17 +387,17 @@
             </td>
             <td class="homeview--order-confirm-row__middle">
               <p class="homeview--order-confirm-header">
-                {{$t('general.twenty_feet')}}
+                20 Feet
               </p>
               <p class="homeview--order-confirm-body">
-                {{$t('general.twentyfoot_flat_bed_trucks')}}
+                {{ twentyfoot }} Flatbed trucks
               </p>
             </td>
           </tr>
           <tr>
             <td class="homeview--order-confirm-row__bottom">
               <p class="homeview--order-confirm-header">
-                {{$t('general.drop_off')}}
+                Drop Off
               </p>
               <p class="homeview--order-confirm-body">
                 {{ getOuterPriceRequestData.to_name }}
@@ -405,9 +405,10 @@
             </td>
             <td class="homeview--order-confirm-row__bottom">
               <p class="homeview--order-confirm-header">
-                {{$t('general.fourty_feet')}}              </p>
+                40 Feet
+              </p>
               <p class="homeview--order-confirm-body">
-                {{$t('general.fourty_feet_flat_bed_trucks')}}
+                {{ fourtyfoot }} Flatbed trucks
               </p>
             </td>
           </tr>
@@ -977,7 +978,7 @@ export default {
             if (Object.prototype.hasOwnProperty.call(response, 'crisis_notification') && response.crisis_notification.msg) {
               this.doNotification(3, `${response.reason}`, response.crisis_notification.msg);
             } else {
-              this.doNotification(3, this.$t('general.price_request_failed'), this.$t('general.price_request_failed_text'));
+              this.doNotification(3, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
             }
             this.loading = false;
           }
@@ -1003,7 +1004,7 @@ export default {
           if (Object.prototype.hasOwnProperty.call(error, 'crisis_notification') && error.crisis_notification.msg) {
             this.doNotification(2, `${error.reason}`, error.crisis_notification.msg);
           } else {
-            this.doNotification(2, this.$t('general.price_request_failed'), this.$t('general.price_request_failed_text'));
+            this.doNotification(2, 'Price request failed', 'Price request failed. Please try again after a few minutes.');
           }
 
           this.loading = false;

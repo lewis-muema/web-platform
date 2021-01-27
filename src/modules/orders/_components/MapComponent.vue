@@ -246,7 +246,6 @@ export default {
       } else {
         this.infoWinOpen = false;
       }
-      
     },
     orderStatus(data) {
       this.checkRiderPosition();
@@ -300,16 +299,15 @@ export default {
         } else if (data.delivery_status === 2) {
           // return 'In Transit';
           if (!riderLocations) {
-            this.infoHeader = this.$t('general.delivery_still_inprogress',{vendor_name:this.vendor_name});
-            //  `Your delivery is still in progress. We are working to restore the ${
-            //   this.vendor_name
-            // }'s location.`;
+            this.infoHeader = `Your delivery is still in progress. We are working to restore the ${
+              this.vendor_name
+            }'s location.`;
             this.infoDescription = '';
             this.iconLabel = 'destination';
             this.vendor_icon_id = 'location';
           } else {
-            this.infoHeader = this.$t('general.delivery_in_progress');
-            this.infoDescription = `${this.$t('general.order_arrival_time')} ${this.deliveryEta}`;
+            this.infoHeader = 'Your delivery is in progress.';
+            this.infoDescription = `Order arrival time ${this.deliveryEta}`;
             this.iconLabel = 'destination';
           }
         } else if (
@@ -318,30 +316,28 @@ export default {
           && waiting !== undefined
         ) {
           // return 'Waiting at pick up location';
-          this.infoHeader = this.$t('general.order_arrived', {vendor_name:this.vendor_name});
-          // `Your ${
-          //   this.vendor_name
-          // } has arrived and is waiting at the pickup location.`;
+          this.infoHeader = `Your ${
+            this.vendor_name
+          } has arrived and is waiting at the pickup location.`;
           this.infoDescription = '';
           this.iconLabel = 'pickup';
         } else if (data.delivery_status === 0 && data.confirm_status === 1) {
           // return 'Confirmed';
           if (!riderLocations) {
-            this.infoHeader = this.$t('general.order_still_on_the_way', {vendor_name:this.vendor_name});
-            // `Your ${
-            //   this.vendor_name
-            // } is still on the way. We are working to restore the ${this.vendor_name}'s location`;
+            this.infoHeader = `Your ${
+              this.vendor_name
+            } is still on the way. We are working to restore the ${this.vendor_name}'s location`;
             this.infoDescription = '';
             this.iconLabel = 'pickup';
             this.vendor_icon_id = 'location';
           } else {
-            this.infoHeader = this.$t('general.your_driver_on_the_way', {vendor_name:this.vendor_name});
-            this.infoDescription = this.$t('general.order_pickup_time', {pickUpEta:this.pickUpEta});
+            this.infoHeader = `Your ${this.vendor_name} is on the way.`;
+            this.infoDescription = `Order pickup time ${this.pickUpEta}`;
             this.iconLabel = 'pickup';
           }
         } else {
           // return 'Pending';
-          this.infoHeader = this.$t('general.matching_order_with', {vendor_name:this.vendor_name});
+          this.infoHeader = `We are matching your order with a ${this.vendor_name}. `;
           this.infoDescription = '';
           this.iconLabel = 'pickup';
         }

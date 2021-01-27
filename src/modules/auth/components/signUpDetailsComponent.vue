@@ -4,7 +4,7 @@
   >
     <div v-if="setUpState === 1">
       <p class="sign-up--extra">
-        {{$t('signUpDetails.signup_sendy')}}
+        Sign up for Sendy
       </p>
       <div class="account-type--selector">
         <el-radio
@@ -12,20 +12,20 @@
           label="biz"
           border
         >
-          {{$t('signUpDetails.business')}}
+          Business
         </el-radio>
         <el-radio
           v-model="account"
           label="peer"
           border
         >
-          {{$t('signUpDetails.personal')}}
+          Personal
         </el-radio>
       </div>
       <div class="account-details--wrapper">
         <div class="">
           <p class="input--label">
-            {{$t('signUpDetails.your_name')}}
+            Your Name
           </p>
           <input
             v-model="name"
@@ -40,7 +40,7 @@
           class=""
         >
           <p class="input--label">
-            {{$t('signUpDetails.business_name')}}
+            Business Name
           </p>
           <input
             v-model="cop_name"
@@ -52,7 +52,7 @@
         </div>
         <div class=" ">
           <p class="input--label">
-            {{$t('signUpDetails.email')}}
+            Email
           </p>
           <input
             v-model="email"
@@ -68,7 +68,7 @@
         </div>
         <div class=" ">
           <p class="input--label">
-            {{$t('signUpDetails.phone_number')}}
+            Phone number
           </p>
           <vue-tel-input
             v-model.trim="phone"
@@ -85,7 +85,7 @@
         </div>
         <div class=" ">
           <p class="input--label">
-            {{$t('signUpDetails.order_type')}}
+            Order type
           </p>
           <div class="sign-up-order-type">
             <label class="input--label radio--label"><input
@@ -99,19 +99,19 @@
               type="radio"
               class="radio--label"
               value="USD"
-            >{{$t('signUpDetails.usd')}}</label>
+            >USD</label>
           </div>
         </div>
         <div class=" ">
           <p class="input--label">
-            {{$t('signUpDetails.password')}}
+            Password
           </p>
           <input
             v-model="password"
             class="input-control sign-up-form"
             type="password"
             name="password"
-            :placeholder="$t('signUpDetails.password')"
+            placeholder="Password"
             @keyup="validate_pass"
           >
           <p class="sign-up-data-error">
@@ -128,12 +128,12 @@
             class="hiddeny"
           >
           <span class="sign-holder__smaller">
-            {{$t('signUpDetails.by_creating')}}
+            By creating a Sendy account you’re agreeing to the
             <a
               class="signup-holder__link"
               href="https://sendyit.com/terms"
             >
-             {{$t('signUpDetails.terms')}}
+              terms and conditions
             </a>
           </span>
         </div>
@@ -155,21 +155,21 @@
       </div>
       <div class="sign-up--info">
         <div class="sign-up-text-inner">
-          {{$t('signUpDetails.have_account')}}
+          Do you already have an account?
           <router-link
             class="signup-holder__link"
             to="/auth/sign_in"
           >
-            {{$t('signUpDetails.login')}}
+            Login
           </router-link>
         </div>
         <div class="sign-up-text-inner">
-          {{$t('signUpDetails.drive_for_sendy')}}
+          Want to drive for Sendy?
           <a
             class="signup-holder__link"
             href="https://partner.sendyit.com/onboarding_portal/"
           >
-            {{$t('signUpDetails.click_here')}}
+            Click here
           </a>
         </div>
       </div>
@@ -182,33 +182,34 @@
         />
       </div>
       <p class="sign-up--extra">
-        {{$t('signUpDetails.verification')}}
+        Verification
       </p>
 
       <div class="account-details--wrapper">
         <div class=" ">
           <p class="verification-code-info">
-            {{$t('signUpDetails.sendy_sms')}}
+            For your security, Sendy wants to make sure it's really you.
+            An SMS with your verification code was sent to
             <a class="verification-code-recepient">{{ phone }}</a>
           </p>
         </div>
         <div class="">
           <p class="input--label verify-code-header">
-            {{$t('signUpDetails.verification_code')}}
+            Enter verification code
           </p>
           <input
             v-model="code"
             class="input-control sign-up-form"
             type="number"
             name="password"
-            :placeholder="$t('signUpDetails.code')"
+            placeholder="Code"
           >
         </div>
         <div
           class=" verify-code-holder"
         >
           <input
-            :value="$t('signUpDetails.verify_code')"
+            value="VERIFY CODE"
             class="button-primary sign-btn-color verify-code-btn"
             type="submit"
             name="login_text"
@@ -256,7 +257,7 @@ export default {
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
-        placeholder: this.$t('signUpDetails.enter_phone_number'),
+        placeholder: 'Enter a phone number',
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
@@ -272,7 +273,7 @@ export default {
         },
       },
       next_step: true,
-      sign_up_text: this.$t('signUpDetails.sign_up'),
+      sign_up_text: 'SIGN UP',
     };
   },
   watch: {
@@ -347,7 +348,7 @@ export default {
                 if (response.status) {
                   this.setUpState = 2;
                   this.sendVerificationCode();
-                  this.trackMixpanelEvent(this.$t('signUpDetails.user_verification'), {
+                  this.trackMixpanelEvent('User verification initiated', {
                     'Client Email ': this.email,
                     'Client Type': 'Web Platform',
                     'Client Phone': phone,
@@ -355,23 +356,23 @@ export default {
                 } else {
                   this.sign_up_text = 'SIGN UP';
                   this.next_step = true;
-                  this.doNotification(2, this.$t('signUpDetails.account_verification'), response.data.reason);
+                  this.doNotification(2, 'Account Verification failed', response.data.reason);
                 }
               },
               (error) => {
                 this.sign_up_text = 'SIGN UP';
                 this.next_step = true;
-                this.doNotification(2, this.$t('signUpDetails.sign_up_error'), this.$t('signUpDetails.unable_connect_server'));
+                this.doNotification(2, 'Sign Up Error ', 'Unable to connect to the server . Please try again');
               },
             );
           } else {
-            this.doNotification(2, this.$t('signUpDetails.signup_failed'), this.$t('signUpDetails.agree_terms'))
+            this.doNotification(2, 'Sign Up failed', 'Agree to Terms and Conditions');
           }
         } else {
-          this.doNotification(2, this.$t('signUpDetails.signup_failed'), this.$t('signUpDetails.invalid_details'));
+          this.doNotification(2, 'Sign Up failed', 'Invalid details');
         }
       } else {
-        this.doNotification(2, this.$t('signUpDetails.signup_failed'), this.$t('signUpDetails.provide_all'));
+        this.doNotification(2, 'Sign Up failed', 'Provide all details');
       }
     },
     sendVerificationCode() {
@@ -388,7 +389,7 @@ export default {
         (response) => {
           if (response.status) {
             localStorage.setItem('request_id', response.request_id);
-            this.doNotification(1, this.$t('signUpDetails.phone_verification'), this.$t('signUpDetails.code_send'));
+            this.doNotification(1, 'Phone Verification', 'Phone verification code has been sent');
             this.trackMixpanelEvent('Verification Code Received', {
               'Client Email ': this.email,
               'Client Type': 'Web Platform',
@@ -411,14 +412,14 @@ export default {
           this.sign_up_text = 'SIGN UP';
           this.doNotification(
             2,
-            this.$t('signUpDetails.phone_verification_error'),
-            this.$t('signUpDetails.unable_connect_server_text'),
+            'Phone Verification Error ',
+            'Unable to connect to the server . Please try again after 15 minutes .',
           );
           this.trackMixpanelEvent('Verification Code Failure', {
             'Client Email ': this.email,
             'Client Type': 'Web Platform',
             'Client Phone': phone,
-            Reason: this.$t('signUpDetails.internal_systems_error'),
+            Reason: 'Unable to connect to the server . Please try again after 15 minutes .',
           });
         },
       );
@@ -427,7 +428,7 @@ export default {
       if (this.code !== '') {
         const requestId = localStorage.getItem('request_id');
         if (requestId === '' || requestId === null) {
-          this.doNotification(2, this.$t('signUpDetails.phone_verification_error'), this.$t('signUpDetails.internal_systems_error'));
+          this.doNotification(2, 'Phone Verification Error', 'Internal system error .Kindly try after 15 minutes');
           setTimeout(() => {
             this.setUpState = 1;
             this.next_step = true;
@@ -447,16 +448,16 @@ export default {
           this.requestSignUpVerificationVerify(fullPayload).then(
             (response) => {
               if (response.status) {
-                this.doNotification(1, this.$t('signUpDetails.phone_verification'), this.$t('signUpDetails.phone_verification_successful'));
+                this.doNotification(1, 'Phone Verification', 'Phone verification successful! Your Account will be created shortly ...');
                 this.create_account();
               } else {
-                this.doNotification(2, this.$t('signUpDetails.phone_verification'), response.message);
+                this.doNotification(2, 'Phone Verification', response.message);
               }
             },
             (error) => {
               this.doNotification(
                 2,
-                this.$t('signUpDetails.phone_verification_error'),
+                'Phone Verification Error ',
                 error.response.data.message,
               );
             },
@@ -465,8 +466,8 @@ export default {
       } else {
         this.doNotification(
           2,
-          this.$t('signUpDetails.missing_verification_code'),
-          this.$t('signUpDetails.enter_verification_code'),
+          'Missing Verification Code',
+          'Please enter a verification code',
         );
       }
     },
@@ -541,11 +542,11 @@ export default {
           } else {
             // failed to login
             // show some sort of error
-            this.doNotification(2, this.$t('signUpDetails.signup_error') , response.message);
+            this.doNotification(2, 'Sign Up Error ', response.message);
           }
         },
         (error) => {
-          this.doNotification(2, this.$t('signUpDetails.signup_error'), error.response.message);
+          this.doNotification(2, 'Sign Up Error ', error.response.message);
         },
       );
     },
@@ -558,7 +559,7 @@ export default {
       const patt = new RegExp('^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9@#$%^&+=]*$');
       const res = patt.test(this.password);
       if (!res) {
-        this.pass_msg = this.$t('signUpDetails.password_error')
+        this.pass_msg = 'Password must be at least 8 characters long, contain at least one number and have a mixture of uppercase and lowercase letters.';
       } else {
         this.pass_msg = '';
         this.pass_validation = true;
@@ -590,10 +591,10 @@ export default {
             const errorResponse = response.data;
             if (errorResponse.code === 1) {
               this.login_text = 'Login';
-              this.doNotification(2, this.$t('signUpDetails.login_failed'), this.$t('signUpDetails.wrong_password'));
+              this.doNotification(2, 'Login failed', 'Wrong password or email.');
             } else {
-              this.login_text = this.$t('signUpDetails.login');
-              this.doNotification(2, this.$t('signUpDetails.login_failed'), this.$t('signUpDetails.account_deactivated'));
+              this.login_text = 'Login';
+              this.doNotification(2, 'Login failed', 'Account deactivated');
             }
           } else {
             try {
@@ -654,7 +655,7 @@ export default {
           }
         },
         (error) => {
-          this.doNotification(2, this.$t('signUpDetails.login_failed'), this.$t('signUpDetails.login_failed_text'));
+          this.doNotification(2, 'Login failed', 'Login failed. Please try again');
           this.$router.push('/auth/sign_in');
         },
       );
