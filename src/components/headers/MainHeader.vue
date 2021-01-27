@@ -51,7 +51,7 @@
     <div class="header--item__right">
       <nav>
         <ul>
-          <li class="nav--menu-inactive">
+          <li class="nav--menu-inactive helpline-contact">
             <a> Helpline : {{ helpline_contact }}</a>
           </li>
           <li class="nav--menu-inactive">
