@@ -704,3 +704,6 @@ div.pac-container {
 .el-upload-list__item-name{
   display: none !important;
 }
+.requestShipmentOptions > .el-dialog > .el-dialog__header{
+  padding: 0 !important;
+}
