@@ -65,6 +65,22 @@
 .pair_rider_section {
   width: 100%;
 }
+.pair_rider_section-variant {
+  width: -webkit-fill-available;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  border: 1px solid #dcdfe5;
+  border-radius: 5px;
+  padding: 0px 15px;
+  cursor: pointer;
+}
+
+.pair-plus-icon {
+  margin-left: auto;
+  font-size: 17px;
+  color: #464343c9;
+}
 .home-view-vendor-classes--label {
   padding: 5px 0px;
   margin-top: 5px;

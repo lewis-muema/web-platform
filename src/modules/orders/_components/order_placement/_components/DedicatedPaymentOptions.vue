@@ -1138,11 +1138,11 @@ export default {
               this.$router.push(`/orders/tracking/${order}`);
             }
           },
-          () => {
+          (error) => {
             this.doNotification(
               3,
               'Order completion failed',
-              'Order completion failed. Please check your internet connection and try again.',
+              error.response.data.error.reason,
             );
             this.loading = false;
           },
@@ -1213,6 +1213,13 @@ export default {
         // support new pricing
         if (row.order_no === undefined) {
           payload.pricing_uuid = row.id;
+        }
+        if (row.pair_status === '2' && row.vehicle_plate) {
+          payload.rider_details = {
+            sim_card_sn: row.pair_rider_sim_card_sn,
+            rider_phone: row.pair_rider_phone,
+            order_no: 'order_no' in row ? row.order_no : row.id,
+          };
         }
         fullPayload.push(payload);
       });

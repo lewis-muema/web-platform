@@ -238,6 +238,136 @@
             </div>
           </div>
         </div>
+        <div
+          v-if="pairing_status"
+          :key="renderKey"
+          class="pairing-popup"
+        >
+          <div class="pair-vehicles-popup">
+            <div class="pair-vehicles-title">
+              Pair with driver/s
+              <i
+                slot="suffix"
+                class="close el-input__icon el-icon-error"
+                @click="closePairingPopup()"
+              />
+            </div>
+            <div class="pair-vehicles-title-description">
+              Enter their phone number or the vehicle's number plate to pair
+            </div>
+            <div class="pair-vehicles-list">
+              <div
+                v-for="(activeVendor, index) in pairing_data"
+                :key="index"
+                class="pair-vehicle-rows"
+              >
+                <div class="pair-vehicles-vendor-title">
+                  <span>Pair with driver {{ index + 1 }}</span><span class="pair-vehicles-vendor-id">({{ activeVendor.vendor_name }})</span>
+                </div>
+                <div class="">
+                  <el-input
+                    :id="`input${index}`"
+                    v-model="activeVendor.vehicle_plate"
+                    :placeholder="vehicleDetailsPlaceholder"
+                    autocomplete="true"
+                    @input="checkVehicleDetails(activeVendor, index)"
+                  >
+                    <i
+                      v-if="activeVendor.searchOption"
+                      slot="suffix"
+                      class="el-icon-loading el-input__icon"
+                    />
+                    <i
+                      v-if="activeVendor.pair_status !== ''"
+                      slot="suffix"
+                      class="el-icon-close el-input__icon"
+                      @click="clearVehicleDetails(activeVendor, index)"
+                    />
+                  </el-input>
+                  <div
+                    v-if="activeVendor.searchOption"
+                    class="pair-info-loading"
+                  >
+                    <div class="pairing-loading-holder">
+                      <i class="el-icon-loading pairing-alert-icon" />
+                      <div class="pair-model-info-variant">
+                        Finding the driver details
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    v-if="activeVendor.visible2"
+                    class="pair_info_text_content"
+                  >
+                    <div
+                      v-if="activeVendor.pair_status === '1'"
+                      class="pair-info-warning"
+                    >
+                      <div class="pairing-error-icon-holder">
+                        <i class="el-icon-warning pairing-alert-icon" />
+                      </div>
+                      <div class="share-option pairing-error-holder">
+                        <div class="pairing-error-header pairing-error-header-variant">
+                          driver not found
+                        </div>
+                        <div class="pair-model-info-variant">
+                          {{ activeVendor.failure_text }}
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      v-if="activeVendor.pair_status === '2'"
+                      class="pair-info-success"
+                    >
+                      <div class="pair-info-rider-details">
+                        <img
+                          align="middle"
+                          class="display_paired_rider_img"
+                          :src="activeVendor.pair_rider_image"
+                        >
+                        <div class="display_paired_rider_details">
+                          <div class="pair-rider-name pair-rider-name-variant">
+                            {{ activeVendor.pair_rider_name }}
+                          </div>
+                          <div class="pair-rider-rating-icons">
+                            <div class="pair-rider-rating-icons-val">
+                              {{ `${activeVendor.pair_rider_rating}${Number.isInteger(activeVendor.pair_rider_rating) ? '.0' : ''}` }}
+                            </div>
+                            <div class="pair-rider-rating-icons-holder">
+                              <el-rate
+                                v-model="activeVendor.pair_rider_rating"
+                                disabled
+                                disabled-void-color="#C0C4CC"
+                                :colors="['#1782C5', '#1782C5', '#1782C5']"
+                                class="pair-info-rider-rate-icons"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="share-option pair-info-vehicle-details">
+                        <div class="pair-model-info">
+                          {{ activeVendor.pair_rider_make }} {{ activeVendor.pair_rider_model }}
+                        </div>
+                        <div>
+                          {{ activeVendor.pair_rider_plate }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pair-button-section">
+              <button
+                class="button-primary pair-button"
+                @click="closePairingPopup()"
+              >
+                DONE
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <map-component />
       <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
@@ -505,6 +635,8 @@ export default {
       upload_status: false,
       tour_status: false,
       locations_status: false,
+      pairing_status: false,
+      pairing_data: '',
       location: '',
       uploadButton: '',
       success_status: false,
@@ -525,6 +657,8 @@ export default {
       activeTab: '',
       primary_business_unit: '',
       activeRow: 0,
+      renderKey: 1,
+      focusedInput: '',
       map_options: {
         componentRestrictions: {
           country: ['ke', 'ug', 'tz'],
@@ -594,6 +728,7 @@ export default {
       getDedicatedAccessStatus: 'getDedicatedAccessStatus',
       get_session: 'getSession',
       getSuggestions: '$_orders/getSuggestions',
+      getExpandedActiveVendorTally: '$_orders/getExpandedActiveVendorTally',
     }),
     uploadBtn() {
       if (this.uploadButton) {
@@ -620,6 +755,9 @@ export default {
     },
     waypointType() {
       return this.waypoint_type === 'PICKUP' ? 'pick up' : 'drop off';
+    },
+    vehicleDetailsPlaceholder() {
+      return 'Enter Full Number plate / Phone Number';
     },
   },
   watch: {
@@ -715,10 +853,18 @@ export default {
   methods: {
     ...mapActions({
       requestIndustries: '$_orders/requestIndustries',
+      requestPairRider: '$_orders/$_home/requestPairRider',
     }),
     ...mapMutations({
       clearVendorMarkers: '$_orders/clearVendorMarkers',
       setDedicatedAccessStatus: 'setDedicatedAccessStatus',
+      setPairWithRiderStatus: '$_orders/$_home/setPairWithRiderStatus',
+      setPairWithRiderState: '$_orders/$_home/setPairWithRiderState',
+      setPairSerialNumber: '$_orders/$_home/setPairSerialNumber',
+      setPairRiderPhone: '$_orders/$_home/setPairRiderPhone',
+      setVehicleDetails: '$_orders/$_home/setVehicleDetails',
+      setPairErrorMessage: '$_orders/$_home/setPairErrorMessage',
+      setExpandedActiveVendorTally: '$_orders/setExpandedActiveVendorTally',
     }),
     ...mapActions({
       fetchSuggestions: '$_orders/fetchSuggestions',
@@ -783,6 +929,148 @@ export default {
           this.industriesOptions = [];
         },
       );
+    },
+    parseRating(data) {
+      parseInt(data, 10);
+    },
+    closePairingPopup() {
+      this.blinder_status = false;
+      this.pairing_status = false;
+    },
+    vendorOptions(id) {
+      if (this.small_vendors.includes(id)) {
+        return this.smallVendorOptions;
+      }
+      return this.baseTruckOptions;
+    },
+    clearVehicleDetails(vehicle, i) {
+      this.pairing_data[i].vehicle_plate = '';
+      this.pairing_data[i].visible2 = false;
+      this.pairing_data[i].pair_status = '';
+      this.forceUpdate();
+    },
+    checkVehicleDetails(vehicle, i) {
+      const vehicleDetails = vehicle.vehicle_plate;
+      this.focusedInput = i;
+      this.forceUpdate();
+      if (vehicleDetails === '') {
+        this.doNotification(
+          '2',
+          'Vehicle number plate is not provided',
+          'Please provide the vehicle details to pair',
+        );
+        this.pairing_data[i].visible2 = false;
+        this.pairing_data[i].searchOption = false;
+        this.pairing_data[i].pair_status = '';
+      } else {
+        this.pairing_data[i].searchOption = true;
+        this.handlePairRequest(vehicleDetails, vehicle, i);
+      }
+    },
+    updateData(value, vehicle, i) {
+      const val = value;
+      this.pairing_data[i].pair_rider_image = val.rider_photo;
+      this.pairing_data[i].pair_rider_name = val.rider_name;
+      this.pairing_data[i].pair_rider_rating = parseFloat(val.rider_rating);
+      this.pairing_data[i].pair_rider_make = val.make;
+      this.pairing_data[i].pair_rider_model = val.model;
+      this.pairing_data[i].pair_rider_plate = val.registration_no;
+      this.pairing_data[i].pair_rider_sim_card_sn = val.sim_card_sn;
+      this.pairing_data[i].pair_rider_phone = val.rider_phone;
+      this.pairing_data[i].visible2 = true;
+      this.pairing_data[i].pair_status = '2';
+      this.setExpandedActiveVendorTally(this.pairing_data);
+    },
+    handlePairRequest(plate, vehicle, i) {
+      this.pairing_data[i].visible2 = false;
+      this.pairing_data[i].pair_status = '';
+      const checkInputType = new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$');
+      const res = checkInputType.test(plate.replace(/\s/g, ''));
+      const payload = {};
+      payload.vendor_type = vehicle.vendor_id;
+      if (res) {
+        payload.phone_no = plate.replace(/\s/g, '');
+      } else {
+        payload.registration_no = plate.replace(/\s/g, '');
+      }
+      const fullPayload = {
+        values: payload,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'pair_order_rider_details',
+      };
+      this.requestPairRider(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.trackMixpanelEvent('Paired Order With Rider', { 'Paired Rider': plate });
+            this.triggerGAEvent('Paired Order With Rider', { 'Paired Rider': plate });
+            this.updateData(response.data, vehicle, i);
+          } else {
+            this.pairing_data[i].pair_status = '1';
+            this.pairing_data[i].failure_text = response.message;
+            this.pairing_data[i].visible2 = true;
+            this.setExpandedActiveVendorTally(this.pairing_data);
+          }
+          this.pairing_data[i].searchOption = false;
+          this.forceUpdate();
+        },
+        (error) => {
+          const msg = error.response.data.message;
+          this.pairing_data[i].pair_status = '1';
+          this.pairing_data[i].failure_text = msg;
+          this.pairing_data[i].visible2 = true;
+          this.setExpandedActiveVendorTally(this.pairing_data);
+          this.pairing_data[i].searchOption = false;
+          this.forceUpdate();
+        },
+      );
+    },
+    forceUpdate() {
+      this.renderKey += 1;
+      setTimeout(() => {
+        document.querySelectorAll(`#input${this.focusedInput}`)[0].focus();
+      }, 1);
+    },
+    triggerGAEvent(field, value) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          window.ga('send', 'event', {
+            eventCategory: 'Order Placement',
+            eventAction: 'Click',
+            eventLabel: field,
+            eventValue: value,
+          });
+        }
+      } catch (er) {
+        // ...
+      }
+    },
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+          // this.$ga.event({
+          //   eventCategory: 'Orders',
+          //   eventAction: 'Price Request',
+          //   eventLabel: name,
+          //   eventValue: 14,
+          // });
+        }
+      } catch (er) {
+        // ...
+      }
     },
     checkTourStatus() {
       if (
@@ -940,6 +1228,26 @@ export default {
         this.blinder_status = arg1;
         this.locations_status = arg1;
         this.waypoint_type = arg2;
+      });
+      this.$root.$on('Pairing status', (arg1) => {
+        this.blinder_status = arg1;
+        this.pairing_status = arg1;
+        this.pairing_data = this.getExpandedActiveVendorTally;
+        this.pairing_data.forEach((row, i) => {
+          this.pairing_data[i].vehicle_plate = row.vehicle_plate ? row.vehicle_plate : '';
+          this.pairing_data[i].pair_status = row.pair_status ? row.pair_status : '';
+          this.pairing_data[i].failure_text = row.failure_text ? row.failure_text : '';
+          this.pairing_data[i].pair_rider_image = row.pair_rider_image ? row.pair_rider_image : '';
+          this.pairing_data[i].pair_rider_name = row.pair_rider_name ? row.pair_rider_name : '';
+          this.pairing_data[i].pair_rider_rating = row.pair_rider_rating ? row.pair_rider_rating : '';
+          this.pairing_data[i].pair_rider_make = row.pair_rider_make ? row.pair_rider_make : '';
+          this.pairing_data[i].pair_rider_model = row.pair_rider_model ? row.pair_rider_model : '';
+          this.pairing_data[i].pair_rider_plate = row.pair_rider_plate ? row.pair_rider_plate : '';
+          this.pairing_data[i].pair_rider_sim_card_sn = row.pair_rider_sim_card_sn ? row.pair_rider_sim_card_sn : '';
+          this.pairing_data[i].pair_rider_phone = row.pair_rider_phone ? row.pair_rider_phone : '';
+          this.pairing_data[i].visible2 = row.visible2 ? row.visible2 : false;
+          this.pairing_data[i].searchOption = row.searchOption ? row.searchOption : false;
+        });
       });
     },
     hideLocationsManagement() {
@@ -1542,5 +1850,104 @@ cancel-pop-up > div > div > div.el-dialog__header{
 .saved-locations-message {
   font-size: 14px;
   margin: 10px;
+}
+.pair-vehicles-popup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 5%;
+}
+.pair-vehicle-rows {
+  padding: 0px;
+  width: -webkit-fill-available;
+}
+.pair-vehicles-list {
+  max-height: 370px;
+  overflow-y: auto;
+  width: -webkit-fill-available;
+}
+.pair-vehicles-title {
+  width: -webkit-fill-available;
+  text-align: left;
+}
+.pair-button {
+  width: -webkit-fill-available;
+}
+.pair-button-section {
+  width: -webkit-fill-available;
+  padding: 15px 0px 5px 0px;
+}
+.pair-info-warning, .pair-info-success, .pair-info-loading {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #dcdfe4;
+}
+.pair-info-rider-details {
+  display: flex;
+  align-items: center;
+  padding: 5%;
+}
+.pair-info-vehicle-details {
+  padding: 5%;
+  border-left: 1px solid #dcdfe4;
+}
+.pair-info-rider-rate-icons span i {
+  font-size: 10px !important;
+  margin-right: 3px;
+}
+.pair-rider-rating-icons {
+  display: flex;
+  align-items: baseline;
+  padding: 0px 8px;
+}
+.pair-rider-rating-icons-val {
+  font-size: 14px;
+  margin-right: 5px;
+  font-weight: 500;
+  color: #1682c5;
+}
+.pair-rider-name-variant {
+  text-align: left;
+}
+.display_paired_rider_details {
+  padding-left: 8px;
+}
+.pair-rider-rating-icons-holder {
+  width: max-content;
+}
+.pair-model-info-variant {
+  font-size: 12px;
+  font-weight: 400;
+}
+.pairing-error-header-variant {
+  font-size: 14px;
+  font-weight: 500;
+}
+.pairing-error-holder {
+  text-align: left;
+  padding: 8px;
+}
+.pairing-error-icon-holder {
+  padding: 15px;
+}
+.pairing-loading-holder {
+  width: -webkit-fill-available;
+  padding: 15px;
+}
+.pair-vehicles-title-description {
+  text-align: left;
+  font-size: 13px;
+  margin: 15px 0px;
+}
+.pair-vehicles-vendor-title {
+  text-align: left;
+  font-size: 13px;
+  padding: 10px 0px;
+}
+.pair-vehicles-vendor-id {
+  color: #1682c5;
+  padding-left: 4px;
+  font-size: 14px;
 }
 </style>
