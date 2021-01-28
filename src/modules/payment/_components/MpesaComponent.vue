@@ -31,12 +31,13 @@
       <button
         type="button"
         name="button"
+        :disabled="isClicked"
         :class="
           valid_payment
             ? 'button-primary paymentbody--input-button'
             : 'button--primary-inactive paymentbody--input-button'
         "
-        @click="requestMpesaPayment"
+        @click.once="requestMpesaPayment"
       >
         Pay
       </button>
@@ -63,6 +64,9 @@ export default {
       },
       payment_state: 'Mpesa Payment Not Initiated',
       mpesa_number_invalid: false,
+      isClicked: false,
+      running_balance_interval: null,
+      running_balance_timeout:null,
     };
   },
   computed: {
@@ -84,10 +88,10 @@ export default {
       // validate amount
       // validate mpesa number
       return (
-        this.mpesa_payment_data.amount !== ''
-        && this.mpesa_payment_data.amount !== 0
-        && this.mpesa_payment_data.phone_number !== ''
-        && this.valid_phone
+        this.mpesa_payment_data.amount !== '' &&
+        this.mpesa_payment_data.amount !== 0 &&
+        this.mpesa_payment_data.phone_number !== '' &&
+        this.valid_phone
       );
     },
     valid_phone() {
@@ -159,7 +163,7 @@ export default {
       if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
       }
-      const oldRb = Math.abs(this.$store.getters.getRunningBalance);
+      const oldRb = this.$store.getters.getRunningBalance;
 
       const runningBalancePayload = {
         values: {
@@ -174,66 +178,49 @@ export default {
         endpoint: 'running_balance',
       };
 
-      const poll_limit = 6; // 10secs * 6  = 60sec = 1min
-      // poll the dispatch
-      for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
-        // wait 10 seconds
-        const that = this;
-        (function (poll_count) {
-          setTimeout(() => {
-            const res = that.checkRunningBalance(oldRb, payload);
+      //timeout the check after a minute
+      this.running_balance_timeout = setTimeout(()=>{
+        clearInterval(this.running_balance_interval);
+        this._terminateMpesaPaymentRequest({});
+        return 0;
+      }, 1000 * 60);
 
-            if (res) {
-              poll_count = poll_limit;
-              // let notification = {
-              //   level: 1,
-              //   title: "Payment successful",
-              //   message: "M-Pesa payment was successful."
-              // };
-              // that.$store.dispatch("show_notification", notification, {
-              //   root: true
-              // });
-              that._completeMpesaPaymentRequest({});
-              return true;
-            }
-            if (poll_count === 5) {
-              // let notification = {
-              //   level: 2,
-              //   title: "Payment failed",
-              //   message:
-              //     "Please select your preferred payment method and try again."
-              // };
-              // that.$store.dispatch("show_notification", notification, {
-              //   root: true
-              // });
-              that._terminateMpesaPaymentRequest({});
-            }
-          }, 10000 * poll_count);
-        }(poll_count));
-      }
+
+      // Running balance check, runs every 10s
+      this.running_balance_interval = setInterval(()=>{
+        this.checkRunningBalance(oldRb, payload).then(response => {
+          if(response === true){
+            clearInterval(this.running_balance_interval);
+            clearTimeout(this.running_balance_timeout);
+          }
+        })
+      }, 1000 * 10);
+
     },
 
     checkRunningBalance(oldRb, payload) {
       const that = this;
-      this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
+      return new Promise((resolve)=>{
+        this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
         (response) => {
           if (response.length > 0) {
             response = response[0];
           }
           if (response.status === 200) {
             // check if rb has changed
-            const newRb = Math.abs(response.data.running_balance);
+            const newRb = response.data.running_balance * -1;
 
             if (newRb > oldRb) {
               that._completeMpesaPaymentRequest({});
-              return true;
+              resolve(true);
             }
           }
           // commit  to the global store here
-          return false;
+          resolve(false);
         },
-        error => false,
+        (error) => resolve(false)
       );
+      });
     },
 
     requestMpesaPayment() {
@@ -293,7 +280,7 @@ export default {
         },
         (error) => {
           this.payment_state = 'Mpesa Payment Failed';
-        },
+        }
       );
     },
   },
