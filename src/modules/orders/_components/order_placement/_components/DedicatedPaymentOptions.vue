@@ -977,7 +977,6 @@ export default {
         ? this.getPriceRequestObject.client_id - profile_id === 100000000
         : this.getPriceRequestObject.user_id - profile_id === 100000000;
       this.setSecondaryProfile(secondaryProfile);
-
       if (this.payment_method === '') {
         if (this.checkAccountPaymentOption()) {
           this.handlePostPaidPayments();
@@ -1127,11 +1126,13 @@ export default {
                   'Vendor Type ID': data.vendor_type,
                 });
               } else {
-                this.doNotification(
-                  2,
-                  'Order completion failed',
-                  'Price request failed. Please try again',
-                );
+                setTimeout(() => {
+                  this.doNotification(
+                    3,
+                    'Order completion failed',
+                    `${row.reason}`,
+                  );
+                }, 10);
               }
             });
             if (order) {
@@ -1139,11 +1140,15 @@ export default {
             }
           },
           (error) => {
-            this.doNotification(
-              3,
-              'Order completion failed',
-              error.response.data.error.reason,
-            );
+            error.response.data.forEach((row) => {
+              setTimeout(() => {
+                this.doNotification(
+                  3,
+                  'Order completion failed',
+                  `${row.reason}`,
+                );
+              }, 10);
+            });
             this.loading = false;
           },
         );
@@ -1155,14 +1160,6 @@ export default {
       const session = this.$store.getters.getSession;
       if ('default' in session) {
         acc = session[session.default];
-      }
-      if (
-        this.getPriceRequestObject.payment_option === 1
-        && this.getRunningBalance - this.order_cost >= 0
-      ) {
-        this.payment_method = 11;
-      } else if (this.getPriceRequestObject.payment_option === 2) {
-        this.payment_method = 12;
       }
 
       const fullPayload = [];

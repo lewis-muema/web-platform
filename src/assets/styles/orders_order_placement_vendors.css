@@ -81,6 +81,16 @@
   font-size: 17px;
   color: #464343c9;
 }
+.pair-success-icon {
+  font-size: 17px;
+  color: #1682c5;
+  margin-right: 5px;
+}
+.pair-success-container {
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
 .home-view-vendor-classes--label {
   padding: 5px 0px;
   margin-top: 5px;
