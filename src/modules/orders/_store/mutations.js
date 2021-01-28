@@ -149,6 +149,9 @@ const clearVendorMarkers = (state) => {
 const setParentOrder = (state, payload) => {
   state.parent_order = payload;
 };
+const setSuggestions = (state, payload) => {
+  state.suggestions = payload;
+};
 export default {
   setPage,
   toggleOngoing,
@@ -176,4 +179,5 @@ export default {
   setWaypointNotes,
   clearVendorMarkers,
   setParentOrder,
+  setSuggestions,
 };
