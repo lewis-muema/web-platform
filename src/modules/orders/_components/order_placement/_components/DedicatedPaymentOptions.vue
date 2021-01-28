@@ -979,7 +979,6 @@ export default {
         ? this.getPriceRequestObject.client_id - profile_id === 100000000
         : this.getPriceRequestObject.user_id - profile_id === 100000000;
       this.setSecondaryProfile(secondaryProfile);
-
       if (this.payment_method === '') {
         if (this.checkAccountPaymentOption()) {
           this.handlePostPaidPayments();
@@ -1133,7 +1132,7 @@ export default {
                   this.doNotification(
                     3,
                     this.$t('general.order_completion_failed'),
-                    this.$t('general.price_request_failed_please_try_again'),
+                    `${row.reason}`,
                   );
                 }, 10);
               }
@@ -1163,14 +1162,6 @@ export default {
       const session = this.$store.getters.getSession;
       if ('default' in session) {
         acc = session[session.default];
-      }
-      if (
-        this.getPriceRequestObject.payment_option === 1
-        && this.getRunningBalance - this.order_cost >= 0
-      ) {
-        this.payment_method = 11;
-      } else if (this.getPriceRequestObject.payment_option === 2) {
-        this.payment_method = 12;
       }
 
       const fullPayload = [];

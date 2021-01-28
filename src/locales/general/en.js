@@ -801,7 +801,7 @@ const translations = {
   additional_instructions: 'Additional Instructions',
   have_preffered_drivers: 'Do you have a preferred driver/s at your pick up location ?',
   pair_with_driver: 'Pair with driver/s',
-  you_have_selected_to_pair: 'You have selected to pair with { pairedDriversTally } driver',
+  you_have_selected_to_pair: 'You have selected to pair with',
   select: 'Select',
   saved_and_frequently_used: 'Saved and Frequently used',
   add_remove_saved_loc: 'Add or remove saved locations ',
