@@ -1068,6 +1068,7 @@ export default {
         disabledDate: this.disabledDueDate,
       },
       cancellation_step : false,
+      price_request_object : {},
     };
   },
   computed: {
@@ -1410,12 +1411,14 @@ export default {
       updateNotesInStore: '$_orders/$_tracking/updateNotesInStore',
       showScheduleTimeDialog: '$_orders/$_tracking/showScheduleTimeDialog',
       updatePickUpTimeInStore: '$_orders/$_tracking/updatePickUpTimeInStore',
+      setExtraDestination: '$_orders/$_tracking/setExtraDestination',
     }),
     ...mapActions({
       requestPriceQuote: '$_orders/$_home/requestPriceQuote',
       requestPaymentOptions: '$_orders/$_home/requestPaymentOptions',
       requestSavedCards: '$_orders/$_home/requestSavedCards',
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
+      completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
 
     }),
     dispatchScheduleTime(){
@@ -1518,6 +1521,11 @@ export default {
     handleLocationPath(){
       if (this.tracking_data !== undefined) {
         if (Object.keys(this.tracking_data).length > 0) {
+
+           if (this.tracking_data.path.length > 1) {
+             this.setExtraDestination(this.tracking_data.path.length - 2);
+           }
+
           for (let i = 0; i < this.tracking_data.path.length; i++) {
             this.locations[i] = this.tracking_data.path[i].name ;
             const pathObj = {
@@ -1881,7 +1889,7 @@ export default {
           }
         },
         (error) => {
-          this.doNotification(2, 'Save Details Error ', 'Check Internet connection and retry');
+          this.doNotification(2, 'Save Details Error ', 'Something went wrong . Please try again');
         },
       );
     },
@@ -2032,18 +2040,21 @@ export default {
                       'Insufficient balance',
                       'The amount charge is not sufficient to place the order, please try again',
                     );
+                    this.loading_payment = false;
                   }
                 } else {
                   this.doNotification(2, 'Failed to charge card', res.message);
+                  this.loading_payment = false;
                 }
               });
             } else {
               this.doNotification(2, 'Failed to charge card', response.message);
+              this.loading_payment = false;
             }
           },
         );
       } else {
-        this.loading = false;
+        this.loading_payment = false;
         this.doNotification(
           2,
           'Failed to charge card',
@@ -2082,7 +2093,7 @@ export default {
         this.requestSavedCards(savedCardPayload).then(
           (response) => {
             if (response.status) {
-              if (response.running_balance >= parseInt(this.getAmountDue.replace(',', ''), 10)) {
+              if (response.running_balance >= parseInt(this.getAmountDue, 10)) {
                 this.doCompleteOrder();
               } else {
                 this.loading_payment = false;
@@ -2364,6 +2375,7 @@ export default {
       return finalObj;
     },
     doPriceRequest() {
+      this.price_request_object = {};
       const payload = {
         values: this.createPriceRequestObject(),
         app: 'ADONIS_PRIVATE_API',
@@ -2406,6 +2418,7 @@ export default {
                                locations` ;
             }
             else {
+              this.price_request_object = response.values;
               this.checkOrderValidityState(checkTrackingVendorId);
             }
           }
@@ -2525,7 +2538,6 @@ export default {
       } else {
          this.payment_methods.push(exist);
       }
-      this.payment_method = this.tracking_data.payment_method;
 
       this.payment_methods.forEach((row) => {
         if (row.payment_method_id === 2) {
@@ -2688,7 +2700,7 @@ export default {
           this.doNotification(
             2,
             'Locations update failed',
-            'Locations update failed. Please check your internet connection and try again.',
+            'Something went wrong . Please try again',
           );
           this.loading_payment = false;
         },
@@ -2782,7 +2794,7 @@ export default {
       }
 
       const mpesaPayload = {
-        amount: this.getAmountDue.replace(',', ''),
+        amount: this.getAmountDue,
         sourceMobile: userPhone,
         referenceNumber,
         user_id: userId,
@@ -2855,8 +2867,8 @@ export default {
         : session[session.default].user_id;
       const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
       const secondaryProfile = session.default === 'biz'
-        ? this.getPriceRequestObject.client_id - profile_id === 100000000
-        : this.getPriceRequestObject.user_id - profile_id === 100000000;
+        ? this.price_request_object.client_id - profile_id === 100000000
+        : this.price_request_object.user_id - profile_id === 100000000;
       const oldRb = this.$store.getters.getRunningBalance;
       const runningBalancePayload = {
         [profile_name]: profile_id,
@@ -3054,7 +3066,7 @@ export default {
           this.doNotification(
             2,
             'Additional instructions update failed',
-            'Additional instructions update failed. Please check your internet connection and try again.',
+            'Something went wrong . Please try again',
           );
         },
       );
@@ -3113,7 +3125,7 @@ export default {
               this.doNotification(
                 2,
                 'Pick up time update failed',
-                'Pick up time update failed. Please check your internet connection and try again.',
+                'Something went wrong . Please try again',
               );
             }
           },
