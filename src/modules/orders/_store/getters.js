@@ -12,6 +12,7 @@ const getExpandedActiveVendorTally = state => state.expanded_active_vendor_tally
 const getOuterActiveVendorDetails = state => state.outer_active_vendor_data;
 const getOuterActivePackageClass = state => state.outer_active_package_data;
 const getParentOrder = state => state.parent_order;
+const getSuggestions = state => state.suggestions;
 
 export default {
   getPage,
@@ -28,4 +29,5 @@ export default {
   getOuterActiveVendorDetails,
   getOuterActivePackageClass,
   getParentOrder,
+  getSuggestions,
 };
