@@ -470,6 +470,13 @@
                     <i class="el-icon-circle-plus-outline pair-plus-icon" />
                   </div>
                 </div>
+                <div
+                  v-if="pairedDriversTally > 0"
+                  class="pair-success-container"
+                >
+                  <i class="el-icon-success pair-success-icon" />
+                  You have selected to pair with {{ pairedDriversTally }} driver
+                </div>
               </div>
             </div>
             <div class="home-view-truck-options-inner-wrapper">
@@ -594,6 +601,8 @@ export default {
       getOrderNotes: '$_orders/$_home/getOrderNotes',
       getVehicleDetails: '$_orders/$_home/getVehicleDetails',
       getCarrierType: '$_orders/$_home/getCarrierType',
+      getExpandedActiveVendorTally: '$_orders/getExpandedActiveVendorTally',
+      pairedDriversTally: '$_orders/getPairedDriversTally',
 
     }),
 

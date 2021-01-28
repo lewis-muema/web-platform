@@ -594,6 +594,7 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import { mapMutations, mapGetters, mapActions } from 'vuex';
 import S3 from 'aws-s3';
 import orderStore from './_store';
@@ -865,6 +866,7 @@ export default {
       setVehicleDetails: '$_orders/$_home/setVehicleDetails',
       setPairErrorMessage: '$_orders/$_home/setPairErrorMessage',
       setExpandedActiveVendorTally: '$_orders/setExpandedActiveVendorTally',
+      setPairedDriversTally: '$_orders/setPairedDriversTally',
     }),
     ...mapActions({
       fetchSuggestions: '$_orders/fetchSuggestions',
@@ -933,7 +935,17 @@ export default {
     parseRating(data) {
       parseInt(data, 10);
     },
+    pairTally() {
+      let tally = 0;
+      this.getExpandedActiveVendorTally.forEach((row) => {
+        if (row.vehicle_plate && row.pair_status === '2') {
+          tally += 1;
+        }
+      });
+      return tally;
+    },
     closePairingPopup() {
+      this.setPairedDriversTally(this.pairTally());
       this.blinder_status = false;
       this.pairing_status = false;
     },
@@ -947,9 +959,11 @@ export default {
       this.pairing_data[i].vehicle_plate = '';
       this.pairing_data[i].visible2 = false;
       this.pairing_data[i].pair_status = '';
+      this.setExpandedActiveVendorTally(this.pairing_data);
       this.forceUpdate();
     },
-    checkVehicleDetails(vehicle, i) {
+    // eslint-disable-next-line func-names
+    checkVehicleDetails: _.debounce(function (vehicle, i) {
       const vehicleDetails = vehicle.vehicle_plate;
       this.focusedInput = i;
       this.forceUpdate();
@@ -966,7 +980,7 @@ export default {
         this.pairing_data[i].searchOption = true;
         this.handlePairRequest(vehicleDetails, vehicle, i);
       }
-    },
+    }, 500),
     updateData(value, vehicle, i) {
       const val = value;
       this.pairing_data[i].pair_rider_image = val.rider_photo;
