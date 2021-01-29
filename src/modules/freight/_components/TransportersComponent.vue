@@ -534,7 +534,6 @@ export default {
         Array.isArray(this.locations)
         && this.locations.length > 1
         && this.truck_type !== ''
-        // && this.load_weight !== ''
         && this.goods !== ''
         && this.pick_up_time !== ''
         && this.owners_list.length > 1
@@ -725,7 +724,6 @@ export default {
         Array.isArray(this.locations)
         && this.locations.length > 1
         && this.truck_type !== ''
-        // && this.load_weight !== ''
         && this.goods !== ''
         && this.pick_up_time !== ''
       ) {
@@ -737,7 +735,6 @@ export default {
     doFilterOwners() {
       const payload = {
         cargo_type: parseInt(this.goods, 10),
-        // load_weight: parseInt(this.load_weight, 10),
         carrier_type: parseInt(this.truck_type, 10),
         pick_up: this.order_path[0].address_components,
         destination: this.order_path[1].address_components,
@@ -819,7 +816,6 @@ export default {
           peer_id: 'cop_id' in acc ? null : acc.user_id,
           owners: this.filteredCheckedOwners,
           cargo_type: parseInt(this.goods, 10),
-          // load_weight: parseInt(this.load_weight, 10),
           carrier_type: parseInt(this.truck_type, 10),
           pick_up: this.main_order_path[0],
           destination: this.main_order_path[1],
