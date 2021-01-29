@@ -80,6 +80,9 @@ const addExtraDestination = (state) => {
 const removeExtraDestination = (state) => {
   state.extra_destinations--;
 };
+const setExtraDestination = (state, val) => {
+  state.extra_destinations = val;
+};
 
 export default {
   setTrackingData,
@@ -109,4 +112,5 @@ export default {
   setLocationName,
   addExtraDestination,
   removeExtraDestination,
+  setExtraDestination,
 };
