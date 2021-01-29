@@ -8,6 +8,8 @@ module.exports = merge(prodEnv, {
   AUTH: '"https://authtest.sendyit.com/"',
   NODE_PRIVATE_API: '"https://authtest.sendyit.com/v1/"',
   PRIVATE_API: '"https://authtest.sendyit.com/parcel/"',
+  PARTNERS_APP: '"https://authtest.sendyit.com/partners/"',
+  FREIGHT_APP: '"https://authtest.sendyit.com/freight/"',
   BACKEND_CUSTOMERS_APP: '"https://customerstest.sendyit.com/customers/"',
   PAYMENT_SERVICE: '"https://authtest.sendyit.com/localisation/"',
   BACKEND_API_KEY: '"4RNNeyATKN6B6S6XiOyJdPMEJ3oLRKBT"',
@@ -26,8 +28,6 @@ module.exports = merge(prodEnv, {
   ADONIS_PRIVATE_API: '"https://authtest.sendyit.com/adonis/"',
   OWNER_SEARCH: '"https://gate.sendyit.com/solr/ownerstaging/"',
   ORDERS_APP: '"https://authtest.sendyit.com/orders/"',
-  PARTNERS_APP: '"https://authtest.sendyit.com/partners/"',
-  FREIGHT_APP: '"https://authtest.sendyit.com/freight/"',
   VGS_VAULT_ID: '"tnts91uunnd"',
   VGS_ENVIRONMENT: '"sandbox"',
 });
