@@ -26,6 +26,8 @@ module.exports = merge(prodEnv, {
   ADONIS_PRIVATE_API: '"https://authtest.sendyit.com/adonis/"',
   OWNER_SEARCH: '"https://gate.sendyit.com/solr/ownerstaging/"',
   ORDERS_APP: '"https://authtest.sendyit.com/orders/"',
+  PARTNERS_APP: '"https://authtest.sendyit.com/partners/"',
+  FREIGHT_APP: '"https://authtest.sendyit.com/freight/"',
   VGS_VAULT_ID: '"tnts91uunnd"',
   VGS_ENVIRONMENT: '"sandbox"',
 });

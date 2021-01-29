@@ -745,8 +745,8 @@ export default {
 
       const fullPayload = {
         values: payload,
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/owners',
+        app: 'PARTNERS_APP',
+        endpoint: 'transporters',
       };
 
       this.getFilteredOwnersListing(fullPayload).then(
