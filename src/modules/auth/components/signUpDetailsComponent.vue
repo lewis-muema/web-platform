@@ -353,13 +353,13 @@ export default {
                     'Client Phone': phone,
                   });
                 } else {
-                  this.sign_up_text = 'SIGN UP';
+                  this.sign_up_text = this.$t('signUpDetails.sign_up');
                   this.next_step = true;
                   this.doNotification(2, this.$t('signUpDetails.account_verification'), response.data.reason);
                 }
               },
               (error) => {
-                this.sign_up_text = 'SIGN UP';
+                this.sign_up_text = this.$t('signUpDetails.sign_up');
                 this.next_step = true;
                 this.doNotification(2, this.$t('signUpDetails.sign_up_error'), this.$t('signUpDetails.unable_connect_server'));
               },
@@ -408,7 +408,7 @@ export default {
         },
         (error) => {
           this.next_step = true;
-          this.sign_up_text = 'SIGN UP';
+          this.sign_up_text = this.$t('signUpDetails.sign_up');
           this.doNotification(
             2,
             this.$t('signUpDetails.phone_verification_error'),
@@ -431,7 +431,7 @@ export default {
           setTimeout(() => {
             this.setUpState = 1;
             this.next_step = true;
-            this.sign_up_text = 'SIGN UP';
+            this.sign_up_text = this.$t('signUpDetails.sign_up');
             localStorage.removeItem('request_id');
           }, 2000);
         } else {
@@ -589,7 +589,7 @@ export default {
           if (Object.prototype.hasOwnProperty.call(response, 'status')) {
             const errorResponse = response.data;
             if (errorResponse.code === 1) {
-              this.login_text = 'Login';
+              this.login_text = this.$t('signUpDetails.login');
               this.doNotification(2, this.$t('signUpDetails.login_failed'), this.$t('signUpDetails.wrong_password'));
             } else {
               this.login_text = this.$t('signUpDetails.login');

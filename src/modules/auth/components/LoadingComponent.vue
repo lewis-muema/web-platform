@@ -16,7 +16,6 @@ export default {
       loading: true,
     };
   },
-
   computed: {
     stats_loading_title() {
       return this.$t('loadingComponent.verify');

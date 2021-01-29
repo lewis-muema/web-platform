@@ -50,7 +50,7 @@
                   <input
                     type="submit"
                     class="btn btn-primary reset-pass-input"
-                    value="Change Password"
+                    :value="$t('resetPassword.change_password')"
                     :disabled="!this.is_valid"
                     @click="reset_pass"
                   >

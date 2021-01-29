@@ -88,8 +88,7 @@
       <div v-else>
         <div v-if="loading === false">
           <div class="signup-validation-description">
-            <!-- For your security, Sendy wants to make sure it's really you. We will send a message with
-            your verification code. -->
+            
             {{$t('byPassLogin.message_verify_code' )}}
 
           </div>

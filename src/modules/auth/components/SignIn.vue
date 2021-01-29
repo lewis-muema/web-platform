@@ -126,10 +126,10 @@ export default {
             if (Object.prototype.hasOwnProperty.call(response, 'status')) {
               const errorResponse = response.data;
               if (errorResponse.code === 1) {
-                this.login_text = 'Login';
+                this.login_text = this.$t('signIn.login');
                 this.doNotification(2, this.$t('signIn.login_failed'), this.$t('signIn.wrong_password'));
               } else {
-                this.login_text = 'Login';
+                this.login_text =  this.$t('signIn.login');
                 this.doNotification(2, this.$t('signIn.login_failed'), this.$t('signIn.account_deactivated') );
               }
             } else {
