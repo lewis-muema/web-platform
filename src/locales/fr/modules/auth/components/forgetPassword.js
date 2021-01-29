@@ -1,6 +1,5 @@
 
 
-
 const fr = {
   forgot_password: 'FR_Forgot your password?',
   pending_password: 'FR_You have a pending password change request sent to your email awaiting your confirmation',
@@ -18,7 +17,6 @@ const fr = {
   enter_email: 'FR_Enter email',
   reset_password: 'FR_RESET PASSWORD',
 };
-
 
 
 export default fr;

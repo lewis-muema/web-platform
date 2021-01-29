@@ -46,8 +46,8 @@
               <p
                 class="sign-up--extra extra-text"
               >
-                Join
-                <a class="partners-brand-text">5000+ Customers </a>who trust Sendy
+                {{$t('signUp.join')}}
+                <a class="partners-brand-text">{{ $t('signUp.customers') }} </a>{{ $t('signUp.trust') }}
               </p>
             </div>
           </div>

@@ -19,7 +19,7 @@ const translations = {
   signUpDetails,
   signUpVerification,
   successComponent,
- 
+
 
 };
 
