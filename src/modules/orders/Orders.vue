@@ -489,6 +489,7 @@ export default {
       tour_status: false,
       locations_status: false,
       location: '',
+      suggestion: '',
       uploadButton: '',
       success_status: false,
       countdown: '',
@@ -977,8 +978,10 @@ export default {
           const notification = {
             title: '',
             level: 3,
-            message: response.message === 'Location limit exceeded' ? `Limit allowed for saved ${this.waypointType} locations has been reached` : response.message,
+            message: response.message,
           };
+          this.location = '';
+          this.suggestion = '';
           this.displayNotification(notification);
         }
         this.locationSavingStatus = false;
