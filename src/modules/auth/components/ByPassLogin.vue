@@ -8,7 +8,8 @@
         v-if="!loading"
         class="sign-top"
       >
-        Super User Login
+        {{$t('byPassLogin.super_user')}}
+
       </div>
 
       <p class="sign-in-error">
@@ -31,7 +32,7 @@
             class="input-control sign-form"
             type="text"
             name="email"
-            placeholder="Enter Super User Email"
+            :placeholder="$t('byPassLogin.enter_email')"
             autocomplete="on"
           >
         </div>
@@ -42,14 +43,14 @@
             class="input-control sign-form"
             type="password"
             name="password"
-            placeholder="Enter Super User Password"
+            :placeholder="$t('byPassLogin.enter_password')"
           >
         </div>
         <div class="sign-holder dimen">
           <el-select
             v-model="account_type"
             class="sign-form"
-            placeholder="Select Account Type"
+            :placeholder="$t('byPassLogin.account_type')"
             @change="dispatchAccountType"
           >
             <el-option
@@ -69,7 +70,7 @@
             class="input-control sign-form"
             type="text"
             name="email"
-            placeholder="Enter Client Email"
+            :placeholder="$t('byPassLogin.client_email')"
             autocomplete="on"
           >
         </div>
@@ -87,15 +88,16 @@
       <div v-else>
         <div v-if="loading === false">
           <div class="signup-validation-description">
-            For your security, Sendy wants to make sure it's really you. We will send a message with
-            your verification code.
+            
+            {{$t('byPassLogin.message_verify_code' )}}
+
           </div>
           <div class="sign-holder dimen">
             <input
               v-model="code"
               class="input-control sign-form"
               type="text"
-              placeholder="Enter Verification Code"
+              :placeholder="$t('byPassLogin.enter_verification_code')"
             >
           </div>
           <div class="bypass-verify-button">
@@ -104,14 +106,14 @@
               class="bypass-cancel"
               @click="byPassVerificationCancel"
             >
-              Cancel
+              {{$t('byPassLogin.cancel')}}
             </button>
             <button
               type="button"
               class="bypass-verify"
               @click="byPassVerificationVerify"
             >
-              Verify
+              {{$t('byPassLogin.verify')}}
             </button>
           </div>
         </div>
@@ -151,14 +153,14 @@ export default {
       client_email: '',
       message: '',
       code: '',
-      login_text: 'Log In',
+      login_text: this.$t('byPassLogin.log_in'),
       account_options: [{
         value: 'peer',
-        label: 'Peer',
+        label: this.$t('byPassLogin.peer'),
       },
       {
         value: 'biz',
-        label: 'Business',
+        label: $t('byPassLogin.biz'),
       }],
       account_selected: false,
       by_pass_verify: false,
@@ -188,7 +190,7 @@ export default {
     },
     by_pass_sign_in() {
       if (this.email !== '' && this.password !== '' && this.account_type !== '' && this.client_email !== '') {
-        this.login_text = 'Logging In ...';
+        this.login_text = this.$t('byPassLogin.login_in');
         // erase any existing session
         this.deleteSession();
         const params = {
@@ -207,8 +209,8 @@ export default {
           (response) => {
             if (Object.prototype.hasOwnProperty.call(response, 'status')) {
               if (!response.status) {
-                this.login_text = 'Log In';
-                this.doNotification(2, 'Login failed', response.message);
+                this.login_text = this.$t('byPassLogin.login');
+                this.doNotification(2, this.$t('byPassLogin.login_failed'), response.message);
               }
             } else {
               try {
@@ -233,16 +235,16 @@ export default {
                 }
               } catch (error) {
                 // @todo Log the error (central logging)
-                this.login_text = 'Log In';
+                this.login_text = this.$t('byPassLogin.login');
               }
             }
           },
           (error) => {
-            this.login_text = 'Log In';
+            this.login_text = this.$t('byPassLogin.login');
           },
         );
       } else {
-        this.doNotification(2, 'Login failed', 'Provide all values');
+        this.doNotification(2, this.$t('byPassLogin.login_failed'), this.$t('byPassLogin.provide_all_values'));
       }
     },
     validateSuperUser(superUser) {
@@ -276,22 +278,22 @@ export default {
             if (response.status) {
               this.request_id = response.request_id;
             } else {
-              this.doNotification(2, 'Phone Verification', response.message);
+              this.doNotification(2, this.$t('byPassLogin.phone_verification'), response.message);
             }
           },
           () => {
             this.doNotification(
               2,
-              'Phone Verification Error ',
-              'Check Internet connection and retry',
+              this.$t('byPassLogin.phone_verification_error'),
+              this.$t('byPassLogin.check_internet'),
             );
           },
         );
       } else {
         this.doNotification(
           2,
-          'Missing Phone Number',
-          'Kindly add phone number on the Staff Portal / Contact HR ',
+          this.$t('byPassLogin.missing_no'),
+          this.$t('byPassLogin.add_phone_no'),
         );
       }
     },
@@ -299,8 +301,8 @@ export default {
       this.by_pass_verify = false;
       this.doNotification(
         2,
-        'Phone Verification',
-        'Phone Verification Failed . Retry to again after 15 minutes',
+        this.$t('byPassLogin.phone_verification'),
+        this.$t('byPassLogin.phone_verification_failed'),
       );
     },
     byPassVerificationVerify() {
@@ -316,20 +318,20 @@ export default {
       this.requestByPassVerificationVerify(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.doNotification(1, 'Phone Verification', 'Phone verification successful !');
+            this.doNotification(1, this.$t('byPassLogin.phone_verification'), this.$t('byPassLogin.phone_verification_successful'));
             this.loading = true;
             setTimeout(() => {
               this.directToOrdersPage();
             }, 3000);
           } else {
-            this.doNotification(2, 'Phone Verification', response.message);
+            this.doNotification(2, this.$t('byPassLogin.phone_verification'), response.message);
           }
         },
         () => {
           this.doNotification(
             2,
-            'Phone Verification Error ',
-            'Check Internet connection and retry',
+            this.$t('byPassLogin.phone_verification_error'),
+            this.$t('byPassLogin.check_internet'),
           );
         },
       );
@@ -378,7 +380,7 @@ export default {
           'Client Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
         });
       }
-      this.loading = 'success';
+      this.loading = this.$t('byPassLogin.success');
       setTimeout(() => {
         this.$router.push('/orders');
       }, 5000);
