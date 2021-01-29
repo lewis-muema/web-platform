@@ -30,6 +30,7 @@
   margin-right: 2%;
   border: 1px solid #d8dfe6;
   padding: 2rem;
+  height: 40%;
 }
 .transporters-results-section{
   -webkit-box-flex: 2;
@@ -42,7 +43,7 @@
 }
 .transporters-details-section{
   -webkit-box-flex: 2;
-  flex: 2;
+  flex: 2.5;
   -webkit-box-orient: vertical;
   flex-direction: column;
   display: flex;
@@ -99,6 +100,7 @@
 }
 .search-flex{
   flex: 1;
+  margin-right: 2%;
 }
 .request-quote-btn{
   width: 53%;
@@ -224,10 +226,11 @@
   margin-left: 3%;
 }
 .transporter-listing .el-checkbox__input {
-    padding-bottom: 8% !important;
+  padding-bottom: 8% !important;
+  display: none;
 }
 .transporter-listing .el-checkbox__label {
-    width: 100%;
+  width: 100%;
 }
 .request-quote-header{
   font-size: 18px;
@@ -519,4 +522,11 @@
 }
 .upload-new-doc--outer{
   margin-bottom: 9%;
+}
+.requestShipmentOptions > div {
+  margin-top: 18vh !important;
+  width: 30% !important;
+}
+.requestShipmentOptions >.el-dialog >.el-dialog__body {
+  margin: 2% !important;
 }

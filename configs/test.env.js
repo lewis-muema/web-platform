@@ -23,6 +23,8 @@ module.exports = {
   ORDERS_APP: '"https://authtest.sendyit.com/orders/"',
   CUSTOMERS_APP: '"https://authtest.sendyit.com/customers/"',
   OWNER_SEARCH: '"https://gate.sendyit.com/solr/ownerstaging/"',
+  PARTNERS_APP: '"https://authtest.sendyit.com/partners/"',
+  FREIGHT_APP: '"https://authtest.sendyit.com/freight/"',
   VGS_VAULT_ID: '"tnts91uunnd"',
   VGS_ENVIRONMENT: '"sandbox"',
   CUSTOMERS_APP_AUTH:'"https://authtest.sendyit.com/customers/"',

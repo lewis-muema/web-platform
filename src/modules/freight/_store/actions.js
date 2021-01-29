@@ -83,8 +83,8 @@ const getFreightOrderDetail = function getFreightOrderDetail({ dispatch }, paylo
 };
 const getOwnersListing = function getOwnersListing({ dispatch }) {
   const payload = {
-    app: 'ORDERS_APP',
-    endpoint: 'v2/freight/owners',
+    app: 'PARTNERS_APP',
+    endpoint: 'transporters',
   };
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosGet', payload, {

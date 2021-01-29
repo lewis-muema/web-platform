@@ -732,7 +732,7 @@ export default {
           const bizSession = session[session.default];
           this.copId = bizSession.cop_id;
           const { verified_social_media_business, social_media_business_approval_status } = bizSession;
-          if (social_media_business_approval_status === 0) {
+          if (social_media_business_approval_status === 1) {
             this.showSocialMediaApprovalDialog = true;
             this.socialMediaApprovalStatus = verified_social_media_business;
           }
