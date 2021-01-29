@@ -261,8 +261,8 @@ export default {
           if (Object.prototype.hasOwnProperty.call(response, 'status')) {
             const errorResponse = response.data;
             if (errorResponse.code === 1) {
-              this.login_text = 'Login';
-              this.doNotification(2, this.$t('signUpVerification.login_failed'), 'Wrong password or email.');
+              this.login_text = this.$t('signUpVerification.login');
+              this.doNotification(2, this.$t('signUpVerification.login_failed'), this.$t('signUpVerification.wrong_password'));
             } else {
               this.login_text = this.$t('signUpVerification.login');
               this.doNotification(2, this.$t('signUpVerification.login_failed'), this.$t('signUpVerification.account_deactivated'));

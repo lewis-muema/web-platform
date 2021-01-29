@@ -23,6 +23,8 @@ const en = {
   add_phone_no: 'Kindly add phone number on the Staff Portal / Contact HR',
   phone_verification_failed: 'Phone Verification Failed . Retry to again after 15 minutes',
   phone_verfication_successful: ' Phone verification successful !',
+  success: 'success',
+
 
 };
 

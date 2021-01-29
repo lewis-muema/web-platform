@@ -327,7 +327,7 @@ export default {
           if (this.u_terms) {
             localStorage.removeItem('request_id');
             this.next_step = false;
-            this.sign_up_text = 'SIGNING UP ...';
+            this.sign_up_text = this.$t('signUpDetails.sign_up_status');
             const phone = this.phone.replace(/[()\-\s]+/g, '');
             this.phone = phone;
             const values = {};

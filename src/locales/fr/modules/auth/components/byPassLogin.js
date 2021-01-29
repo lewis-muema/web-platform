@@ -24,6 +24,7 @@ const fr = {
   add_phone_no: 'FR_Kindly add phone number on the Staff Portal / Contact HR',
   phone_verification_failed: 'FR_Phone Verification Failed . Retry to again after 15 minutes',
   phone_verfication_successful: ' FR_Phone verification successful !',
+  success: 'FR_success',
 };
 
 

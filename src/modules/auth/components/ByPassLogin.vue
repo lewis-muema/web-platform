@@ -380,7 +380,7 @@ export default {
           'Client Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
         });
       }
-      this.loading = 'success';
+      this.loading = this.$t('byPassLogin.success');
       setTimeout(() => {
         this.$router.push('/orders');
       }, 5000);
