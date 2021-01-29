@@ -591,7 +591,7 @@
   width: 300px;
   height: max-content;
 }
-.discounts_popup, .upload-popup, .tour-popup, .locations-popup {
+.discounts_popup, .upload-popup, .tour-popup, .locations-popup, .pairing-popup {
   padding: 20px;
   border-radius: 20px;
   text-align: center;
@@ -614,6 +614,11 @@
 }
 .tour-popup {
   width: 30%;
+  height: max-content;
+  border-radius: 10px;
+}
+.pairing-popup {
+  width: 25%;
   height: max-content;
   border-radius: 10px;
 }
