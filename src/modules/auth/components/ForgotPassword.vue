@@ -182,7 +182,7 @@ export default {
             }
             if (response.status === true) {
               this.option = false;
-              this.message = this.$t('forgetPassword.password_change');
+              this.message = this.$t('forgotPassword.password_change');
               // Reset link set to user email.
             } else if (response.status === 'stall') {
               // Activate select account option
@@ -191,7 +191,7 @@ export default {
               // update nonce data
             } else if (response.status === false) {
               // Account does not exist
-              this.message = this.$t('forgetPassword.account_not_exist');
+              this.message = this.$t('forgotPassword.account_not_exist');
             } else if (response.status === 'exists') {
               // Existing password reset option
               this.message = '';
@@ -199,16 +199,16 @@ export default {
               this.option = true;
             } else {
               // Invalid request
-              this.message = this.$t('forgetPassword.invalid_request');
+              this.message = this.$t('forgotPassword.invalid_request');
             }
           },
           (error) => {
-            this.message = this.$t('forgetPassword.reset_failed');
+            this.message = `${this.$t('forgotPassword.reset_failed')}`;
           },
         );
       } else {
         const level = 3;
-        const notification = { title: '', level, message: this.$t('forgetPassword.invalid_email') }; // notification object
+        const notification = { title: '', level, message: this.$t('forgotPassword.invalid_email') }; // notification object
         this.displayNotification(notification);
       }
     },
