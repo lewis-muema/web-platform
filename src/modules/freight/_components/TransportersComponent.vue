@@ -61,7 +61,7 @@
                 <el-option
                   v-for="item in truckTypes"
                   :key="item.id"
-                  :label="item.carrier_type"
+                  :label="item.carrierType"
                   :value="item.id"
                 />
               </el-select>
@@ -81,7 +81,7 @@
                 <el-option
                   v-for="item in goodsType"
                   :key="item.id"
-                  :label="item.cargo_type"
+                  :label="item.cargoType"
                   :value="item.id"
                 />
               </el-select>
@@ -103,11 +103,11 @@
         >
           <div v-if="ownersListing.length === 0">
             <img
-              src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/freight/unavailable.svg"
+              src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/freight/freight_truck.svg"
               class="no-transporters-img "
             >
             <div class="no-transporters-label">
-              No Transporters based on the filter options
+              No Transporters found at the moment, Try again with other details.
             </div>
           </div>
           <div v-else>
@@ -589,23 +589,13 @@ export default {
     },
     fetchGoodsTypes() {
       const fullPayload = {
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/cargo_types',
+        app: 'FREIGHT_APP',
+        endpoint: 'cargo_types',
       };
 
       this.getCargoTypes(fullPayload).then(
         (response) => {
-          let workingResponse = response;
-          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-          if (response.length > 1) {
-            workingResponse = response[0];
-          }
-
-          if (workingResponse.status) {
-            this.goodsType = workingResponse.cargo_types;
-          } else {
-            this.goodsType = [];
-          }
+          this.goodsType = response;
         },
         (error) => {
           this.goodsType = [];
@@ -614,23 +604,13 @@ export default {
     },
     fetchCarrierTypes() {
       const fullPayload = {
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/carrier_types',
+        app: 'FREIGHT_APP',
+        endpoint: 'carrier_types',
       };
 
       this.getCarrierTypes(fullPayload).then(
         (response) => {
-          let workingResponse = response;
-          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-          if (response.length > 1) {
-            workingResponse = response[0];
-          }
-
-          if (workingResponse.status) {
-            this.truckTypes = workingResponse.carrier_types;
-          } else {
-            this.truckTypes = [];
-          }
+          this.truckTypes = response;
         },
         (error) => {
           this.truckTypes = [];
