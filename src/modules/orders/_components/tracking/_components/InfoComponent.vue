@@ -3004,13 +3004,15 @@ export default {
       }
     },
     initiateSaveInstructionsRequest(){
+      
       let newData = [
         {
            coordinates : this.storedNotes.coordinates,
            name : this.storedNotes.name,
-           notes : this.editedNotes,
-           recipient_phone : this.editedContact,
+           notes : this.editedNotes === '' ? null : this.editedNotes ,
+           recipient_phone : this.editedContact === '' ? null : this.editedContact ,
            notify : this.send_sms,
+
         }
       ];
       for (let i = 0; i < this.tracking_data.path.length; i++) {
@@ -3018,8 +3020,8 @@ export default {
           newData.push({
             coordinates : this.tracking_data.path[i].coordinates,
             name: this.tracking_data.path[i].name,
-            notes : this.tracking_data.path[i].notes,
-            recipient_phone : this.tracking_data.path[i].recipient_phone,
+            notes : this.tracking_data.path[i].notes === '' ? null : this.tracking_data.path[i].notes,
+            recipient_phone : this.tracking_data.path[i].recipient_phone === "" ? null : this.tracking_data.path[i].recipient_phone,
             notify : this.tracking_data.path[i].notify,
           })
         }
