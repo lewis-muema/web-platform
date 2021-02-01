@@ -307,7 +307,7 @@
                     <el-option
                       v-for="item in truckTypes"
                       :key="item.id"
-                      :label="item.carrier_type"
+                      :label="item.carrierType"
                       :value="item.id"
                     />
                   </el-select>
@@ -343,7 +343,7 @@
                     <el-option
                       v-for="item in goodsType"
                       :key="item.id"
-                      :label="item.cargo_type"
+                      :label="item.cargoType"
                       :value="item.id"
                     />
                   </el-select>
@@ -491,23 +491,13 @@ export default {
     },
     fetchGoodsTypes() {
       const fullPayload = {
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/cargo_types',
+        app: 'FREIGHT_APP',
+        endpoint: 'cargo_types',
       };
 
       this.getCargoTypes(fullPayload).then(
         (response) => {
-          let workingResponse = response;
-          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-          if (response.length > 1) {
-            workingResponse = response[0];
-          }
-
-          if (workingResponse.status) {
-            this.goodsType = workingResponse.cargo_types;
-          } else {
-            this.goodsType = [];
-          }
+          this.goodsType = response;
         },
         (error) => {
           this.goodsType = [];
@@ -516,23 +506,13 @@ export default {
     },
     fetchCarrierTypes() {
       const fullPayload = {
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/carrier_types',
+        app: 'FREIGHT_APP',
+        endpoint: 'carrier_types',
       };
 
       this.getCarrierTypes(fullPayload).then(
         (response) => {
-          let workingResponse = response;
-          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-          if (response.length > 1) {
-            workingResponse = response[0];
-          }
-
-          if (workingResponse.status) {
-            this.truckTypes = workingResponse.carrier_types;
-          } else {
-            this.truckTypes = [];
-          }
+          this.truckTypes = response;
         },
         (error) => {
           this.truckTypes = [];
