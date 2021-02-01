@@ -150,9 +150,9 @@ export function createApp() {
 
   // create the app instance, injecting both the router and the store
   const app = new Vue({
-    i18n,
     router,
     store,
+    i18n,
     render: h => h(App),
   });
 
