@@ -95,27 +95,35 @@
               <div class="transporter-doucuments-title align-contacts-data">
                 Vehicles
               </div>
-              <div
-                v-for="(val, index) in owner_details.vehicles"
-                :key="index"
-              >
-                <div class="">
-                  <div class="truck-title-info">
-                    {{ val.vendor_type }}
-                  </div>
-                  <div class="transporter-vehicle-info">
-                    {{ val.vehicle_registration }}
-                  </div>
-                  <div
-                    v-if="val.verified"
-                    class="transporters-filters transporters-highlight"
-                  >
-                    <div class="truck-add-info">
-                      <i class="el-icon-circle-check check-tranporters" />
-                      log book
+              <div v-if="owner_details.vehicles === null">
+                <div class="transporter-detail-rating no-reviews-outer transporter-vehicle-rating">
+                  No vehicle details available for transporter .
+                </div>
+              </div>
+              <div v-else>
+                <div
+                  v-for="(val, index) in owner_details.vehicles"
+                  :key="index"
+                >
+                  {{ val }}
+                  <div class="">
+                    <div class="truck-title-info">
+                      {{ val.vendor_type }}
                     </div>
+                    <div class="transporter-vehicle-info">
+                      {{ val.vehicle_registration }}
+                    </div>
+                    <div
+                      v-if="val.verified"
+                      class="transporters-filters transporters-highlight"
+                    >
+                      <div class="truck-add-info">
+                        <i class="el-icon-circle-check check-tranporters" />
+                        log book
+                      </div>
+                    </div>
+                    <div class="vehicles-split" />
                   </div>
-                  <div class="vehicles-split" />
                 </div>
               </div>
             </div>
@@ -124,7 +132,15 @@
               <div class="transporter-doucuments-title align-contacts-data reviews-section">
                 Reviews
               </div>
-              <div v-if="owner_details.ratings.length > 0">
+              <div
+                v-if="owner_details.ratings === null || owner_details.ratings === 'null'"
+                class=""
+              >
+                <div class="transporter-detail-rating no-reviews-outer transporter-vehicle-rating">
+                  No ratings available for transporter .
+                </div>
+              </div>
+              <div v-else-if="owner_details.ratings.length > 0">
                 <div
                   v-for="(val, index) in owner_details.ratings"
                   :key="index"
@@ -418,12 +434,7 @@ export default {
 
       this.getOwnersDetail(fullPayload).then(
         (response) => {
-          let workingResponse = response;
-          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-          if (response.length > 1) {
-            workingResponse = response[0];
-          }
-
+          const workingResponse = response;
           if (workingResponse.status) {
             this.owner_details = workingResponse.owner_details;
             this.loading = false;
@@ -480,8 +491,8 @@ export default {
     },
     fetchGoodsTypes() {
       const fullPayload = {
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/cargo_types',
+        app: 'FREIGHT_APP',
+        endpoint: 'cargo_types',
       };
 
       this.getCargoTypes(fullPayload).then(
@@ -505,8 +516,8 @@ export default {
     },
     fetchCarrierTypes() {
       const fullPayload = {
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/carrier_types',
+        app: 'FREIGHT_APP',
+        endpoint: 'carrier_types',
       };
 
       this.getCarrierTypes(fullPayload).then(
@@ -759,6 +770,7 @@ padding: 1rem;
 }
 .no-reviews-outer{
   width: 73%;
+  text-align: center;
 }
 .transporter-detail-rating{
   border: 1px solid #d8dfe6;

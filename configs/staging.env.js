@@ -6,6 +6,7 @@ module.exports = {
   PRIVATE_API: '"https://auth.sendyit.com/parcel/"',
   BACKEND_CUSTOMERS_APP: '"https://customers.staging.sendyit.com/customers/"',
   BACKEND_API_KEY: '"4RNNeyATKN6B6S6XiOyJdPMEJ3oLRKBT"',
+  FREIGHT_API_KEY: '"VbgJTYDPsfXGbERAMVeSWHu7uZHwzKW32X27mAStmN6vXEHKm8"',
   DOMAIN: '"app.staging.sendyit.com"',
   SENTRY_DSN: '"https://f399dc8511c14d6ea9022d28a8955641@sentry.io/1336627"',
   IMAGES_BASE: '"https://images.sendyit.com/"',
@@ -22,7 +23,7 @@ module.exports = {
   ORDERS_APP: '"https://auth.sendyit.com/orders/"',
   OWNER_SEARCH: '"https://gate.sendyit.com/solr/owner/"',
   PARTNERS_APP: '"https://auth.sendyit.com/partners/"',
-  FREIGHT_APP: '"https://auth.sendyit.com/freight/"',
+  FREIGHT_APP: '"https://auth.sendyit.com/freight-service/"',
   VGS_VAULT_ID: '"tntr6hr8zz0"',
   VGS_ENVIRONMENT: '"live"',
 };
