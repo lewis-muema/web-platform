@@ -307,7 +307,7 @@
                     <el-option
                       v-for="item in truckTypes"
                       :key="item.id"
-                      :label="item.carrier_type"
+                      :label="item.carrierType"
                       :value="item.id"
                     />
                   </el-select>
@@ -343,7 +343,7 @@
                     <el-option
                       v-for="item in goodsType"
                       :key="item.id"
-                      :label="item.cargo_type"
+                      :label="item.cargoType"
                       :value="item.id"
                     />
                   </el-select>
@@ -497,17 +497,7 @@ export default {
 
       this.getCargoTypes(fullPayload).then(
         (response) => {
-          let workingResponse = response;
-          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-          if (response.length > 1) {
-            workingResponse = response[0];
-          }
-
-          if (workingResponse.status) {
-            this.goodsType = workingResponse.cargo_types;
-          } else {
-            this.goodsType = [];
-          }
+          this.goodsType = response;
         },
         (error) => {
           this.goodsType = [];
@@ -522,17 +512,7 @@ export default {
 
       this.getCarrierTypes(fullPayload).then(
         (response) => {
-          let workingResponse = response;
-          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-          if (response.length > 1) {
-            workingResponse = response[0];
-          }
-
-          if (workingResponse.status) {
-            this.truckTypes = workingResponse.carrier_types;
-          } else {
-            this.truckTypes = [];
-          }
+          this.truckTypes = response;
         },
         (error) => {
           this.truckTypes = [];
