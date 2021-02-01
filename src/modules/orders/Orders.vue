@@ -380,6 +380,7 @@
                     <div class="final-upper-padding">
                       <el-select
                         v-model="industry_type"
+                        filterable
                         placeholder="Select"
                         class="compliance-select-final"
                       >
@@ -394,7 +395,9 @@
                   </div>
 
                   <div class="final-upper-padding">
-                    <label class="final-label">Is social media your main source of clients?</label>
+                    <label class="final-label">Are you a social commerce business?</label>
+                    <p style="margin-top:5px;font-size:11px"> (A business that mainly trades through facebook and instagram e.g. 
+                      An online shoe store)</p>
                     <div class="final-upper-padding">
                       <el-select
                         v-model="social_media_option"
