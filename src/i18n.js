@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import axios from 'axios';
-import { createStore } from './store'
+import { createStore } from './store';
 
 Vue.use(VueI18n);
 
