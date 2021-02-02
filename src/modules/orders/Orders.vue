@@ -1024,8 +1024,8 @@ export default {
       this.requestPairRider(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.trackMixpanelEvent('Paired Order With Rider', { 'Paired Rider': plate });
-            this.triggerGAEvent('Paired Order With Rider', { 'Paired Rider': plate });
+            this.trackMixpanelEvent('Paired Open Destination Order With Rider', { 'Paired Rider': plate });
+            this.triggerGAEvent('Paired Open Destination Order With Rider', { 'Paired Rider': plate });
             this.updateData(response.data, vehicle, i);
           } else {
             this.pairing_data[i].pair_status = '1';

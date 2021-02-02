@@ -489,9 +489,15 @@ export default {
       handler(val, oldVal) {
         if (val) {
           this.hiddenStatus();
-          document.getElementById(val).onkeydown = this.hiddenStatus;
+          const inputValue = document.getElementById(val);
+          if (inputValue) {
+            inputValue.onkeydown = this.hiddenStatus;
+          }
         } else {
-          document.getElementById(oldVal).onkeydown = '';
+          const oldValue = document.getElementById(oldVal);
+          if (oldValue) {
+            oldValue.onkeydown = '';
+          }
         }
       },
       deep: true,
@@ -582,7 +588,9 @@ export default {
     removeFocusListener() {
       document.removeEventListener('focus', this.focusedInput, true);
       document.removeEventListener('blur', this.blurredInput, true);
-      document.querySelector('.homeview--form__scrollable').removeEventListener('scroll', this.scrollingDiv, true);
+      if (document.querySelector('.homeview--form__scrollable')) {
+        document.querySelector('.homeview--form__scrollable').removeEventListener('scroll', this.scrollingDiv, true);
+      }
     },
 
     removeExtraDestinationWrapper(index) {
@@ -695,6 +703,10 @@ export default {
         index,
         name: pathObj.name,
       };
+      if (type === 2) {
+        this.trackMixpanelEvent(`Populate ${index === 0 ? 'pickup' : 'destination'} input with location suggestion`, pathObj);
+        this.fireGAEvent(`Populate ${index === 0 ? 'pickup' : 'destination'} input with location suggestion`);
+      }
       this.hiddenSuggestionsStatus = true;
       this.resetPathLocation(index);
       this.setMarker(parseFloat(pathObj.coordinates.split(',')[0]), parseFloat(pathObj.coordinates.split(',')[1]), index);
