@@ -649,6 +649,7 @@ export default {
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
       setSecondaryProfile: 'setSecondaryProfile',
       setCardPaymentStatus: '$_payment/setCardPaymentStatus',
+      setPairedDriversTally: '$_orders/setPairedDriversTally',
     }),
 
     ...mapActions({
@@ -1087,6 +1088,7 @@ export default {
                   order = row.respond.order_no;
                 }
                 this.mixpanelTrackPricingServiceCompletion(row.respond.order_no);
+                this.setPairedDriversTally(0);
                 let accData = {};
                 const data = row.original_data;
                 const session = this.$store.getters.getSession;
