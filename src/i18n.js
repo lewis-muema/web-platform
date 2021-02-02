@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import axios from 'axios';
-import { createStore } from './store'
+import { createStore } from './store';
 
 Vue.use(VueI18n);
 
@@ -31,8 +31,8 @@ const i18n = new VueI18n({
 function fetchCountry() {
   axios('https://extreme-ip-lookup.com/json')
     .then((response) => {
-      i18n.locale = response.data.countryCode === 'CIV' ? 'fr' : 'en';
-      const lang = response.data.countryCode === 'CIV' ? 'fr' : 'en-US,en;q=0.9';
+      i18n.locale = response.data.countryCode === 'FR' ? 'fr' : 'en';
+      const lang = response.data.countryCode === 'FR' ? 'fr' : 'en-US,en;q=0.9';
       store.commit('setLanguage', lang);
     })
     .catch(error => error);
