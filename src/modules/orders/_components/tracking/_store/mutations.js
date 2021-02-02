@@ -83,6 +83,9 @@ const removeExtraDestination = (state) => {
 const setExtraDestination = (state, val) => {
   state.extra_destinations = val;
 };
+const setAmountDue = (state, val) => {
+  state.amount_due = val;
+};
 
 export default {
   setTrackingData,
@@ -113,4 +116,5 @@ export default {
   addExtraDestination,
   removeExtraDestination,
   setExtraDestination,
+  setAmountDue,
 };
