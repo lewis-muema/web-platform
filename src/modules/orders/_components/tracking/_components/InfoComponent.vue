@@ -1097,6 +1097,7 @@ export default {
       get_saved_cards: '$_orders/$_home/getSavedCards',
       getCardPaymentStatus: '$_payment/getCardPaymentStatus',
       getSession: 'getSession',
+      getAmountDue: '$_orders/$_tracking/getAmountDue',
     }),
     order_is_scheduled() {
       return this.moment(this.current_time).isBefore(this.schedule_time);
@@ -1123,11 +1124,6 @@ export default {
         this.tracking_data.payment_method === 12
         || this.getRunningBalance - this.getAmountDue >= 0
       );
-    },
-    getAmountDue(){
-
-      return (this.new_cost - this.tracking_data.amount) ;
-
     },
 
     show_payment() {
@@ -1412,6 +1408,7 @@ export default {
       showScheduleTimeDialog: '$_orders/$_tracking/showScheduleTimeDialog',
       updatePickUpTimeInStore: '$_orders/$_tracking/updatePickUpTimeInStore',
       setExtraDestination: '$_orders/$_tracking/setExtraDestination',
+      setAmountDue: '$_orders/$_tracking/setAmountDue',
     }),
     ...mapActions({
       requestPriceQuote: '$_orders/$_home/requestPriceQuote',
@@ -2487,6 +2484,7 @@ export default {
             this.order_currency = trackingVendorId.currency;
             this.new_cost = trackingVendorId.cost;
             this.new_pricing_uuid = trackingVendorId.id;
+            this.setAmountDue(trackingVendorId.cost - this.tracking_data.amount)
             this.setDefaultPaymentOptions(trackingVendorId);
           }
           else {
@@ -3004,7 +3002,7 @@ export default {
       }
     },
     initiateSaveInstructionsRequest(){
-      
+
       let newData = [
         {
            coordinates : this.storedNotes.coordinates,
