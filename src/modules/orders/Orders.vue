@@ -464,6 +464,7 @@
                         <el-select
                           v-model="industry_type"
                           filterable
+                          popper-append-to-body="false"
                           placeholder="Select"
                           class="compliance-select-final"
                         >
