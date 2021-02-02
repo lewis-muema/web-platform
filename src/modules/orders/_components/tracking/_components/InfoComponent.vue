@@ -716,30 +716,6 @@
                                 </div>
                               </div>
 
-
-                              <div v-if="!getCardPaymentStatus">
-                                <p
-                                  v-if="country === 'KE'"
-                                  class="card-option-disabled-notification"
-                                >
-                                  Dear {{ user_name }}, <br />
-                                  Card payments will be momentarily unavailable as we undergo
-                                  technical maintenance. You can still pay for your Sendy deliveries
-                                  using M-Pesa, or pay cash upon delivery. Contact Support on
-                                  +254709779779 for any queries.
-                                </p>
-                                <p
-                                  v-if="country === 'UG'"
-                                  class="card-option-disabled-notification"
-                                >
-                                  Dear {{ user_name }}, <br />
-                                  Card payments will be momentarily unavailable as we undergo
-                                  technical maintenance. Contact Support on +256393239706 for any
-                                  queries.
-                                </p>
-                              </div>
-
-
                             </span>
                           </div>
                           <span v-else-if="getOrderPaymentMethod === 2">
@@ -2529,12 +2505,28 @@ export default {
     },
     determinePaymentOptions(data) {
 
+      this.payment_methods = [];
+
       const exist = data.payment_methods.find(available => available.payment_method_id === this.tracking_data.payment_method);
+
 
       if (exist === undefined || exist === null) {
         this.payment_methods = data.payment_methods;
       } else {
-         this.payment_methods.push(exist);
+        if (this.tracking_data.payment_method === 5) {
+          this.payment_methods.push(exist);
+        }
+        else {
+          let payment = [];
+          payment = data.payment_methods;
+
+          const cashIndex = data.payment_methods.findIndex(
+            index => index.payment_method_id === 5,
+          );
+          payment = data.payment_methods.splice(cashIndex, 1);
+
+          this.payment_methods = data.payment_methods;
+        }
       }
 
       this.payment_methods.forEach((row) => {

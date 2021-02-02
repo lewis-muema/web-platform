@@ -1022,8 +1022,8 @@ export default {
       this.requestPairRider(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.trackMixpanelEvent('Paired Order With Rider', { 'Paired Rider': plate });
-            this.triggerGAEvent('Paired Order With Rider', { 'Paired Rider': plate });
+            this.trackMixpanelEvent('Paired Open Destination Order With Rider', { 'Paired Rider': plate });
+            this.triggerGAEvent('Paired Open Destination Order With Rider', { 'Paired Rider': plate });
             this.updateData(response.data, vehicle, i);
           } else {
             this.pairing_data[i].pair_status = '1';
@@ -1331,6 +1331,8 @@ export default {
             message: response.message,
           };
           this.displayNotification(notification);
+          this.trackMixpanelEvent('Save location suggestion', data);
+          this.triggerGAEvent('Save location suggestion', data);
           this.location = '';
           this.suggestion = '';
           this.triggerFetchsuggestions();
@@ -1364,6 +1366,8 @@ export default {
             message: response.message,
           };
           this.displayNotification(notification);
+          this.trackMixpanelEvent('Remove location suggestion', data);
+          this.triggerGAEvent('Remove location suggestion', data);
           this.location = '';
           this.suggestion = '';
           this.triggerFetchsuggestions();
