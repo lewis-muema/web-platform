@@ -84,7 +84,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import SessionMxn from '../../../mixins/session_mixin';
+import SessionMxn from '../../../../mixins/session_mixin';
 
 export default {
   name: 'SocialApprovalDialog',
