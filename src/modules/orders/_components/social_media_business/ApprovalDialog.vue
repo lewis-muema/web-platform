@@ -83,10 +83,13 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import SessionMxn from '../../../mixins/session_mixin';
 
 export default {
   name: 'SocialApprovalDialog',
+  mixins: [SessionMxn],
+
   props: {
     approvalStatus: {
       type: Number,
@@ -104,8 +107,13 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    ...mapGetters({
+      get_session: 'getSession',
+    }),
+  },
   methods: {
+
     updateApprovalView() {
       this.showDialog = false;
 
@@ -117,6 +125,13 @@ export default {
         };
         this.updateSocialApprovalStatus(fullPayload).then((res) => {
           console.log('socialResponse', res);
+
+          // uppdate session
+          const session = this.$store.getters.getSession;
+          const updatedSession = session;
+          updatedSession[session.default].social_media_business_approval_status = 2;
+          const newSession = JSON.stringify(updatedSession);
+          this.setSession(newSession);
         });
       }
     },
