@@ -268,7 +268,7 @@
             </div>
             <div class="decline-documemt-extend decline-documemt-input">
               <p class="shipment-input--label">
-                Where is the pickup facility at Mombasa port
+                Where is the pickup facility at {{ locations[0] }}
               </p>
               <div class="block">
                 <el-input
@@ -646,7 +646,6 @@ export default {
       const mainPathObj = {
         name: place.name,
         coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
-        waypoint_details_status: true,
         type: 'coordinates',
         country_code: place.address_components[countryIndex].short_name,
         more: {
@@ -786,11 +785,20 @@ export default {
       }
     },
     sendFinalQuote() {
-      if (this.filteredCheckedOwners.length === 0 || this.quotation_time === '') {
+      if (
+        this.filteredCheckedOwners.length === 0
+        || this.facility_location === ''
+        || this.return_option === ''
+        || this.trucks_no === ''
+        || this.load_weight === ''
+        || this.shipment_offer === ''
+        || this.quotation_time === ''
+        || (this.shipment_offer && (this.bid_amount === '' || this.negotiability === ''))
+      ) {
         this.doNotification(
           2,
-          'Unable to request for quotation!',
-          'Kindly provide time for quotation to to submitted',
+          'Unable to create shipment request!',
+          'Kindly provide time for request to to submitted',
         );
       } else {
         let acc = {};
@@ -802,19 +810,28 @@ export default {
           cop_id: 'cop_id' in acc ? acc.cop_id : 0,
           cop_user_id: 'cop_id' in acc ? acc.user_id : 0,
           peer_id: 'cop_id' in acc ? null : acc.user_id,
-          owners: this.filteredCheckedOwners,
+          transporters: this.filteredCheckedOwners,
           cargo_type: parseInt(this.goods, 10),
           carrier_type: parseInt(this.truck_type, 10),
-          pick_up: this.main_order_path[0],
+          pickup: this.main_order_path[0],
           destination: this.main_order_path[1],
-          pick_up_time: this.moment(this.pick_up_time).format('YYYY-MM-DD HH:mm:ss'),
-          quotation_deadline: this.moment(this.quotation_time).format('YYYY-MM-DD HH:mm:ss'),
+          pickup_time: this.moment(this.pick_up_time).format('DD-MM-YYYY HH:mm:ss'),
+          bidding_deadline: this.moment(this.quotation_time).format('DD-MM-YYYY HH:mm:ss'),
+          pickup_facility: this.facility_location,
+          is_return: this.return_option,
+          total_trucks: this.trucks_no,
+          tonnes_per_truck: this.load_weight,
         };
+
+        if (this.shipment_offer) {
+          payload.offer_amount = this.bid_amount;
+          payload.is_negotiable = this.negotiability;
+        }
 
         const fullPayload = {
           values: payload,
-          app: 'ORDERS_APP',
-          endpoint: 'v2/freight/quotations',
+          app: 'FREIGHT_APP',
+          endpoint: 'shipments',
         };
         this.sendCustomerQuote(fullPayload).then(
           (response) => {
@@ -826,21 +843,21 @@ export default {
             }
 
             if (workingResponse.status) {
-              this.doNotification(1, 'Quotations sent successfully!', '');
-              this.fetchOwnersListing();
+              this.doNotification(1, 'Shipment sent successfully!', '');
+              this.$router.push('/freight/orders');
             } else {
-              this.doNotification(2, 'Unable to request for quotation!', workingResponse.message);
+              this.doNotification(2, 'Unable to request for shipment!', workingResponse.message);
             }
             this.resetQuatationDialog();
           },
           (error) => {
             if (Object.prototype.hasOwnProperty.call(error, 'message')) {
-              this.doNotification(2, 'Quote request failed', error.message);
+              this.doNotification(2, 'Shipment request failed', error.message);
             } else {
               this.doNotification(
                 2,
-                'Quote request failed',
-                'Quote request failed. Please check your internet connection and try again.',
+                'Shipment request failed',
+                'Something went wrong.Please try again',
               );
               this.resetQuatationDialog();
             }
@@ -851,6 +868,13 @@ export default {
     resetQuatationDialog() {
       this.quoteDialogVisible = false;
       this.quotation_time = '';
+      this.facility_location = '';
+      this.return_option = '';
+      this.trucks_no = '';
+      this.load_weight = '';
+      this.shipment_offer = '';
+      this.bid_amount = '';
+      this.negotiability = '';
     },
     returnCount(val) {
       let resp = `${val} Trucks`;
