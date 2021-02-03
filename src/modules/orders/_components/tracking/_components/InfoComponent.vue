@@ -1228,8 +1228,11 @@ export default {
         //should also clear stored locations
       }
       else {
-          // this.attemptPriceRequest();
-          this.handleLocationPath();
+          this.refreshAccountBalance();
+          setTimeout(() => {
+            this.handleLocationPath();
+          }, 800);
+
       }
     },
     tracking_data(data) {
@@ -1353,6 +1356,7 @@ export default {
   created() {
     this.order_number = this.$route.params.order_no;
     this.checkPreviousRoute();
+    this.refreshAccountBalance();
   },
   methods: {
     ...mapMutations({
@@ -2359,6 +2363,7 @@ export default {
       // const definedLocations = this.locations;
       this.$store.dispatch('$_orders/$_tracking/requestPriceQuote', payload).then(
         (response) => {
+          this.refreshAccountBalance();
           this.location_loading = false;
           this.show_price_split = false ;
           if (this.large_vendors.includes(this.tracking_data.rider.vendor_id)) {
@@ -2813,7 +2818,7 @@ export default {
             this.doNotification('0', 'M-Pesa Payment', `Request for payment sent to ${userPhone}.`);
             this.requestMpesaPaymentPoll();
           } else {
-            this.refreshRunningBalance();
+            this.refreshAccountBalance();
             this.doNotification(
               '0',
               'M-Pesa Payment',
@@ -2826,7 +2831,7 @@ export default {
           }
         },
         () => {
-          this.refreshRunningBalance();
+          this.refreshAccountBalance();
           this.doNotification(
             '0',
             'M-Pesa Payment',
@@ -3164,6 +3169,49 @@ export default {
         show = this.tracking_data.edit_config.add_drop_off;
       }
       return show;
+    },
+    refreshAccountBalance() {
+      return new Promise((resolve, reject) => {
+        const session = this.$store.getters.getSession;
+        const profile_id = session.default === 'biz'
+          ? session[session.default].cop_id
+          : session[session.default].user_id;
+        const profile_name = session.default === 'biz' ? 'cop_id' : 'user_id';
+        const secondaryProfile = session.default === 'biz'
+          ? this.price_request_object.client_id - profile_id === 100000000
+          : this.price_request_object.user_id - profile_id === 100000000;
+        const runningBalancePayload = {
+          [profile_name]: profile_id,
+          phone: session[session.default].user_phone,
+          default_currency: session[session.default].default_currency,
+          rb_currency: session[session.default].default_currency,
+          secondary_profile: secondaryProfile,
+        };
+
+        const payload = {
+          values: runningBalancePayload,
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'running_balance',
+        };
+        this.requestRunningBalanceFromAPI(payload).then(
+          (response) => {
+            if (response.length > 0) {
+              // eslint-disable-next-line no-param-reassign,prefer-destructuring
+              response = response[0];
+            }
+            if (response.status === 200) {
+              const resp = response.data;
+              this.$store.commit('setRunningBalance', resp.data.running_balance);
+              resolve(response.data);
+            } else {
+              reject(response.data);
+            }
+          },
+          (error) => {
+            reject(error);
+          },
+        );
+      });
     },
   },
 };
