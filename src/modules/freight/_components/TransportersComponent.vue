@@ -844,7 +844,7 @@ export default {
 
             if (workingResponse.status) {
               this.doNotification(1, 'Shipment sent successfully!', '');
-              this.fetchOwnersListing();
+              this.$router.push('/freight/orders');
             } else {
               this.doNotification(2, 'Unable to request for shipment!', workingResponse.message);
             }
