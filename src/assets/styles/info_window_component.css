@@ -248,6 +248,7 @@
 ul.timeline {
   list-style-type: none;
   position: relative;
+  margin-top: -3%;
 }
 ul.timeline:before {
   content: ' ';
@@ -423,7 +424,7 @@ ul.timeline > li#timeline_right.payedReached:before {
   color: #8a8a8a;
 }
 .infobar--truck-cont-item {
-  padding-bottom: 5px;
+  padding-bottom: 0%;
 }
 .cancel-reason-option {
   text-align: center;
@@ -472,7 +473,7 @@ ul.timeline > li#timeline_right.payedReached:before {
   padding-left: 30px;
 }
 .tracking-loader {
-  padding-bottom: 10px;
+  padding-bottom: 11%;
   width: 120%;
 }
 .tracking-loader-inner {
@@ -480,7 +481,7 @@ ul.timeline > li#timeline_right.payedReached:before {
 }
 .tracking-loader-outer {
   padding-left: 58px;
-  padding-top: 12px;
+  padding-top: 3%;
 }
 .tracking-notes-inner {
   padding-top: 5px;
@@ -619,10 +620,10 @@ ul.inforbar_order_timeline:before {
   margin-bottom: 0px !important;
 }
 .status-text {
-  width: 234px !important;
+  width: 19% !important;
 }
 .minimise-icon {
-  padding-left: 6% !important;
+  padding-left: 5% !important;
 }
 .saveDetailsDisable {
   display: none;
@@ -703,6 +704,9 @@ ul.inforbar_order_timeline:before {
 }
 .inforbar_order_content {
   padding-left: 5% !important;
+  overflow-y: scroll;
+  height: 190px;
+  font-size: 12px;
 }
 .stagePending {
   margin-bottom: 7px !important;
@@ -739,7 +743,7 @@ button.default.action--slide-button {
 .cancel-reason-title{
   color: #000000;
   margin-left: 9%;
-  font-size: 18px;
+  font-size: 17px;
   line-height: 3;
 }
 .cancel-reason-subtitle{
@@ -869,7 +873,111 @@ button.default.action--slide-button {
   border-radius: 4px;
   margin-right: 3%;
   margin-left: 8%;
+  margin-top: 5%;
 }
 .cancellation-info--inner{
   padding: 1%;
+}
+.infor-top-change-details{
+  margin: 3% 0px -2% 0px;
+  font-style: italic;
+  color: #1B7FC3;
+  cursor: pointer;
+}
+.cancel-reason-description{
+  color: #000000;
+  margin-left: 9%;
+  font-size: 12px;
+  line-height: 3;
+  margin-bottom: 2%;
+}
+.edit-location-inner{
+  width: 73% !important;
+  margin-left: 8% !important;
+}
+.homeview--row__font-awesome-edit{
+  padding-right: 0px;
+  font-size: 13px;
+}
+.pac-container {
+  z-index: 2014 !important;
+}
+.location-notify{
+  width: 81% !important;
+  margin-left: 8% !important;
+}
+.price-split-separator{
+  border-top: 1px solid #6663;
+  margin-top: 4%;
+}
+.price-split-container{
+  color: rgb(85, 85, 85);
+  font-size: 14px;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  width: 95%;
+  height: 97px;
+  background: #FAFAFA;
+}
+.price-split-cost{
+  margin-left: 30%;
+}
+.price-split-info{
+  display: flex;
+  justify-content: flex-start;
+  flex: 1;
+  color: rgb(85, 85, 85);
+  height: 15%;
+  margin-top: 3%;
+}
+.price-split-icon-container{
+  display: flex;
+  align-items: center;
+  margin: 10px 7% 10px 20px;
+  width: 42%;
+}
+.price-split-estimate-value{
+  display: block; */
+  width: 50%;
+  text-align: center;
+  margin-top: -3%;
+  margin-left: 16%;
+}
+.price-split-info-cost{
+  color: #000000;
+  font-weight: 500;
+}
+.price-split-currency-highlight{
+  padding: 0px 5px;
+}
+.price-estimate-header{
+  margin-left: 9%;
+  margin-bottom: 3%;
+}
+.price-summary-icon{
+  font-size: 14px !important;
+  color: #181818 !important;
+  margin-top: 4%;
+  margin-right: 2%;
+}
+.payment-methods-section{
+  margin: 9%;
+}
+.edit-locations-payments--postpay {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  padding: 20px;
+  color: #1782c5;
+  margin-bottom: -15px;
+}
+.edit-locations--place-order {
+  margin-top: 8%;
+  width: 100%;
+  text-transform: uppercase;
+}
+.edit-payment-loading-container {
+  margin-top: 12% !important;
+  height: 1rem;
+  margin-bottom: 10px;
 }
