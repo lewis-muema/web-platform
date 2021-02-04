@@ -242,6 +242,57 @@ const computeCancellationFee = function computeCancellationFee({ dispatch }, dat
     );
   });
 };
+
+const requestPriceQuote = function requestPriceQuote({ dispatch }, data) {
+  const payload = data;
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then((response) => {
+      if (response.data.status) {
+        resolve(response.data);
+      } else {
+        reject(response.data);
+      }
+    });
+  });
+};
+const requestEditOrder = function requestEditOrder({ dispatch }, data) {
+  const payload = data;
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        if (response.data.status) {
+          resolve(response.data);
+        } else {
+          resolve(response.data);
+        }
+      },
+      (error) => {
+        reject(error);
+        // handle failure to dispatch to global store
+      },
+    );
+  });
+};
+
+const requestPaymentOptions = function requestPaymentOptions({ dispatch }, data) {
+  const payload = data;
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 const cancelCoupon = function cancelCoupon({ dispatch }, data) {
   const payload = {
     values: data,
@@ -272,5 +323,8 @@ export default {
   requestRiderLastPosition,
   requestCancellationReasons,
   computeCancellationFee,
+  requestPriceQuote,
+  requestEditOrder,
+  requestPaymentOptions,
   cancelCoupon,
 };
