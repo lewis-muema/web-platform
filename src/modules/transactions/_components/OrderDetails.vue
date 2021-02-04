@@ -92,6 +92,12 @@
             >
               Recieved by {{ order_details.rider_deliver_img[index - 1].name }}
             </div>
+            <div
+              v-if="order_details.path[index].reference_number"
+              class="reference-number"
+            >
+              <span class="reference-number-title">Notes:</span> The order number is {{ order_details.path[index].reference_number }}
+            </div>
           </div>
         </template>
         <div class="order_details_desc_item--wrapper">
@@ -589,6 +595,12 @@ export default {
   margin-left: 19%;
 }
 .el-rate__icon {
-    font-size: 20px !important;
+  font-size: 20px !important;
+}
+.reference-number {
+  margin: 5px 0px 0px 22px;
+}
+.reference-number-title {
+  font-weight: 500;
 }
 </style>
