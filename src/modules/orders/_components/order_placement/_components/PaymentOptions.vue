@@ -1001,6 +1001,14 @@ export default {
 
     onSubmit() {
       if (this.vgs_valid_payment) {
+        let pendingAmount = this.pending_amount.replace(',', '');
+        if (this.couponDetails !== null) {
+          const discountedAmount = this.calculateCouponAmount(pendingAmount, this.couponDetails);
+          const couponAmount = pendingAmount < discountedAmount ? pendingAmount : discountedAmount;
+          // eslint-disable-next-line operator-assignment
+          pendingAmount = pendingAmount - couponAmount;
+        }
+
         const session = this.$store.getters.getSession;
         const accData = session[session.default];
         const firstName = accData.user_name.split(' ')[0];
@@ -1008,7 +1016,7 @@ export default {
         const newCardPayload = {
           currency: this.activeVendorPriceData.currency,
           country: this.getCountryCode,
-          amount: this.pending_amount.replace(',', ''),
+          amount: pendingAmount,
           email: accData.user_email,
           phonenumber: accData.user_phone,
           firstname: firstName,
@@ -1070,6 +1078,13 @@ export default {
 
     chargeSavedCard() {
       if (this.valid_vgs_saved_card) {
+        let pendingAmount = this.pending_amount.replace(',', '');
+        if (this.couponDetails !== null) {
+          const discountedAmount = this.calculateCouponAmount(pendingAmount, this.couponDetails);
+          const couponAmount = pendingAmount < discountedAmount ? pendingAmount : discountedAmount;
+          // eslint-disable-next-line operator-assignment
+          pendingAmount = pendingAmount - couponAmount;
+        }
         const session = this.$store.getters.getSession;
         const accData = session[session.default];
         const firstName = accData.user_name.split(' ')[0];
@@ -1080,7 +1095,7 @@ export default {
               ? this.get_saved_cards[this.activeSavedCard].card
               : '',
           currency: this.activeVendorPriceData.currency,
-          amount: this.pending_amount.replace(',', ''),
+          amount: pendingAmount,
           country: this.getCountryCode,
           email: accData.user_email,
           phonenumber: accData.user_phone,
@@ -1983,8 +1998,17 @@ export default {
         userEmail = session.peer.user_email;
       }
 
+      let rawAmount = this.raw_pending_amount.replace(',', '');
+
+      if (this.couponDetails !== null) {
+        const discountedAmount = this.calculateCouponAmount(rawAmount, this.couponDetails);
+        const couponAmount = rawAmount < discountedAmount ? rawAmount : discountedAmount;
+        // eslint-disable-next-line operator-assignment
+        rawAmount = rawAmount - couponAmount;
+      }
+
       const mpesaPayload = {
-        amount: this.raw_pending_amount.replace(',', ''),
+        amount: rawAmount,
         sourceMobile: userPhone,
         referenceNumber,
         user_id: userId,
