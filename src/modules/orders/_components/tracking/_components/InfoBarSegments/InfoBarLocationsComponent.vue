@@ -118,7 +118,9 @@ export default {
         Object.prototype.hasOwnProperty.call(this.trackingData, 'edit_config')
         && this.user_state
       ) {
-        show = this.trackingData.edit_config.add_drop_off;
+        if (this.trackingData.edit_config !== null) {
+          show = this.trackingData.edit_config.add_drop_off;
+        }
       }
       return show;
     },

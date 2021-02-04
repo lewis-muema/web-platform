@@ -1357,7 +1357,6 @@ export default {
   created() {
     this.order_number = this.$route.params.order_no;
     this.checkPreviousRoute();
-    this.refreshAccountBalance();
   },
   methods: {
     ...mapMutations({
@@ -1482,6 +1481,7 @@ export default {
           this.checkVendorName();
           this.orderETA();
           this.confirmUser();
+          this.refreshAccountBalance();
           const session = this.$store.getters.getSession;
           this.country = session[session.default].country_code;
         }
@@ -3171,7 +3171,9 @@ export default {
         Object.prototype.hasOwnProperty.call(this.tracking_data, 'edit_config')
         && this.user_state
       ) {
-        show = this.tracking_data.edit_config.add_drop_off;
+        if (this.tracking_data.edit_config !== null) {
+          show = this.tracking_data.edit_config.add_drop_off;
+        }
       }
       return show;
     },
