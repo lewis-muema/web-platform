@@ -35,6 +35,57 @@ const setPickUpEta = (state, data) => {
 const setDeliveryEta = (state, data) => {
   state.delivery_eta = data;
 };
+const setEditLocationDialog = (state, data) => {
+  state.edit_location = data;
+};
+const showNotesDialog = (state, data) => {
+  state.edit_notes = data;
+};
+const showScheduleTimeDialog = (state, data) => {
+  state.edit_scheduled_time = data;
+};
+const updatePickUpTimeInStore = (state, data) => {
+  state.pick_up_time = data;
+};
+const updateNotesInStore = (state, data) => {
+  state.stored_notes = data;
+};
+const setPickUpFilled = (state, data) => {
+  state.pickup_filled = data;
+};
+const setPickUpFilledStatus = (state, data) => {
+  state.pick_up_filled_status = data;
+};
+const unsetOrderPath = (state, index) => {
+  state.order_path.splice(index, 1);
+};
+const unsetLocationName = (state, index) => {
+  state.location_names.splice(index, 1);
+};
+const setOrderPath = (state, val) => {
+  state.order_path.splice(val.index, val.index === 0 ? 0 : 1, val.path);
+};
+const clearStorePath = (state) => {
+  state.order_path = [];
+};
+const unsetStorePath = (state, index) => {
+  state.order_path.splice(index, 1);
+};
+const setLocationName = (state, val) => {
+  state.location_names.splice(val.index, val.index === 0 ? 0 : 1, val.name);
+};
+const addExtraDestination = (state) => {
+  state.extra_destinations++;
+};
+const removeExtraDestination = (state) => {
+  state.extra_destinations--;
+};
+const setExtraDestination = (state, val) => {
+  state.extra_destinations = val;
+};
+const setAmountDue = (state, val) => {
+  state.amount_due = val;
+};
 
 export default {
   setTrackingData,
@@ -49,4 +100,21 @@ export default {
   setConfirmEta,
   setPickUpEta,
   setDeliveryEta,
+  setEditLocationDialog,
+  showNotesDialog,
+  showScheduleTimeDialog,
+  updatePickUpTimeInStore,
+  updateNotesInStore,
+  setPickUpFilled,
+  setPickUpFilledStatus,
+  unsetOrderPath,
+  unsetLocationName,
+  setOrderPath,
+  clearStorePath,
+  unsetStorePath,
+  setLocationName,
+  addExtraDestination,
+  removeExtraDestination,
+  setExtraDestination,
+  setAmountDue,
 };
