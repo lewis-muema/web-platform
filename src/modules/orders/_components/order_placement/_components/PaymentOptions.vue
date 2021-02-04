@@ -1005,7 +1005,8 @@ export default {
         if (this.couponDetails !== null) {
           const discountedAmount = this.calculateCouponAmount(pendingAmount, this.couponDetails);
           const couponAmount = pendingAmount < discountedAmount ? pendingAmount : discountedAmount;
-          pendingAmount -= couponAmount;
+          // eslint-disable-next-line operator-assignment
+          pendingAmount = pendingAmount - couponAmount;
         }
 
         const session = this.$store.getters.getSession;
@@ -1081,7 +1082,8 @@ export default {
         if (this.couponDetails !== null) {
           const discountedAmount = this.calculateCouponAmount(pendingAmount, this.couponDetails);
           const couponAmount = pendingAmount < discountedAmount ? pendingAmount : discountedAmount;
-          pendingAmount -= couponAmount;
+          // eslint-disable-next-line operator-assignment
+          pendingAmount = pendingAmount - couponAmount;
         }
         const session = this.$store.getters.getSession;
         const accData = session[session.default];
@@ -2001,7 +2003,8 @@ export default {
       if (this.couponDetails !== null) {
         const discountedAmount = this.calculateCouponAmount(rawAmount, this.couponDetails);
         const couponAmount = rawAmount < discountedAmount ? rawAmount : discountedAmount;
-        rawAmount -= couponAmount;
+        // eslint-disable-next-line operator-assignment
+        rawAmount = rawAmount - couponAmount;
       }
 
       const mpesaPayload = {
