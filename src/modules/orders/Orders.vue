@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable camelcase */
 <template lang="html">
   <div class="">
     <main-header />
@@ -369,7 +371,7 @@
       </div>
       <map-component />
       <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
-      <ongoing-componentx
+      <ongoing-component
         v-if="
           this.$route.name !== 'freight_order_tracking' &&
             this.$route.name !== 'freight_order_placement'
@@ -608,6 +610,7 @@ import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
 import OngoingComponent from './_components/OngoingComponent.vue';
+import ApprovalDialog from './_components/social_media_business/ApprovalDialog.vue';
 import FbuChildOrders from './_components/FbuChildOrders.vue';
 import NPSFooter from '../../components/footers/NPSFooter.vue';
 import NpsMixin from '../../mixins/nps_mixin';
@@ -623,11 +626,15 @@ export default {
     MapComponent,
     OngoingComponent,
     FbuChildOrders,
+    ApprovalDialog,
     NPSFooter,
   },
   mixins: [RegisterStoreModule, NpsMixin, SessionMxn, NotificationMxn],
   data() {
     return {
+      showSocialMediaApprovalDialog: false,
+      socialMediaApprovalStatus: 0,
+      copId: 0,
       icon_class: '',
       message: '',
       loading_status: false,
@@ -838,6 +845,7 @@ export default {
     const session = this.$store.getters.getSession;
     if (session.default === 'biz') {
       this.setDedicatedAccessStatus(true);
+      this.checkSocialMediaApproval();
     }
     this.redirectToOrders();
   },
@@ -874,6 +882,20 @@ export default {
       saveSuggestions: '$_orders/saveSuggestions',
       removeSuggestions: '$_orders/removeSuggestions',
     }),
+    checkSocialMediaApproval() {
+      const session = this.$store.getters.getSession;
+      if (Object.keys(session).length > 0) {
+        if (session.default === 'biz') {
+          const bizSession = session[session.default];
+          this.copId = bizSession.cop_id;
+          const { verified_social_media_business, social_media_business_approval_status } = bizSession;
+          if (social_media_business_approval_status === 1) {
+            this.showSocialMediaApprovalDialog = true;
+            this.socialMediaApprovalStatus = verified_social_media_business;
+          }
+        }
+      }
+    },
     isNewCopAcc() {
       let isSet = false;
       let kraSection = false;
@@ -1002,8 +1024,8 @@ export default {
       this.requestPairRider(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.trackMixpanelEvent('Paired Order With Rider', { 'Paired Rider': plate });
-            this.triggerGAEvent('Paired Order With Rider', { 'Paired Rider': plate });
+            this.trackMixpanelEvent('Paired Open Destination Order With Rider', { 'Paired Rider': plate });
+            this.triggerGAEvent('Paired Open Destination Order With Rider', { 'Paired Rider': plate });
             this.updateData(response.data, vehicle, i);
           } else {
             this.pairing_data[i].pair_status = '1';
@@ -1311,6 +1333,8 @@ export default {
             message: response.message,
           };
           this.displayNotification(notification);
+          this.trackMixpanelEvent('Save location suggestion', data);
+          this.triggerGAEvent('Save location suggestion', data);
           this.location = '';
           this.suggestion = '';
           this.triggerFetchsuggestions();
@@ -1344,6 +1368,8 @@ export default {
             message: response.message,
           };
           this.displayNotification(notification);
+          this.trackMixpanelEvent('Remove location suggestion', data);
+          this.triggerGAEvent('Remove location suggestion', data);
           this.location = '';
           this.suggestion = '';
           this.triggerFetchsuggestions();
@@ -1556,6 +1582,10 @@ export default {
               updatedSession[session.default].tax_authority_pin = this.kra_pin;
             } else if (this.updateSetIndustry) {
               updatedSession[session.default].industry_id = this.industry_type;
+            }
+
+            if (this.social_media_option) {
+              this.showSocialMediaApprovalDialog = true;
             }
 
             const newSession = JSON.stringify(updatedSession);
