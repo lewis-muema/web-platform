@@ -397,6 +397,7 @@
                         @place_changed="setLocation($event, 0)"
                         @keyup="checkChangeEvents($event, 0)"
                         @change="checkChangeEvents($event, 0)"
+                        disabled
                       />
                       <font-awesome-icon
                         icon="times"
@@ -2663,6 +2664,10 @@ export default {
         client_type: 'corporate',
         update : true
       };
+
+      if (this.paymentStatusOption && this.show_payment && this.getOrderPaymentMethod === 1) {
+        value.payment_method = parseInt(this.payment_method , 10);
+      }
 
       const payload = {
         values: value,
