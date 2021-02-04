@@ -82,6 +82,9 @@
             @onBlur="validate_phone"
             @country-changed="checkCountryCode"
           />
+          <p class="sign-up-data-error">
+              {{ countryNotSupported }}
+          </p>
         </div>
         <div class=" ">
           <p class="input--label">
@@ -225,6 +228,7 @@ import { mapActions } from 'vuex';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import axios from 'axios';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 const currencyConversion = require('country-tz-currency');
@@ -250,6 +254,8 @@ export default {
       localCountry: '',
       localCountryCode: '',
       selectedCountry: '',
+      countryNotSupported: '',
+      preferredCountries: [],
       phoneInputProps: {
         mode: 'international',
         defaultCountry: 'ke',
@@ -260,7 +266,7 @@ export default {
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
-        preferredCountries: ['ke', 'ug', 'tz'],
+        preferredCountries: [],
         autocomplete: 'off',
         name: 'telephone',
         maxLen: 25,
@@ -283,6 +289,18 @@ export default {
     localCountry(val) {
       this.selectedCountry = val;
     },
+    preferredCountries(val) {
+       switch (true){
+        case (val.includes(this.localCountryCode.toLowerCase())):
+          this.countryNotSupported = '';
+          this.next_step = true;
+          break;
+        default:
+           this.countryNotSupported = this.$t('signUpDetails.country_not_supported');
+          this.next_step = false;
+          break;
+      }
+    }
   },
   methods: {
     ...mapActions({
@@ -298,6 +316,16 @@ export default {
     checkCountryCode(country) {
       this.localCountryCode = country.iso2;
       this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
+      switch (true){
+        case (this.phoneInputProps.preferredCountries.includes(this.localCountryCode.toLowerCase())):
+          this.countryNotSupported = '';
+          this.next_step = true;
+          break;
+        default:
+           this.countryNotSupported = this.$t('signUpDetails.country_not_supported');
+          this.next_step = false;
+          break;
+      }
     },
     validateDetails() {
       let valid = false;
@@ -675,6 +703,23 @@ export default {
         // ...
       }
     },
+    fetchSupportedCountries(){ 
+      axios('https://authtest.sendyit.com/currency/get_supported_countries')
+      .then((response) => {
+        this.phoneInputProps.preferredCountries=[];
+        // const numbers = [];
+        response.data.countries.forEach((country) => {
+          this.phoneInputProps.preferredCountries.push(country.country_code.toLowerCase());
+          this.preferredCountries.push(country.country_code.toLowerCase());
+        });
+      })
+      .catch( (error) => {
+        console.log(error);
+      })
+    },
+  },
+  created(){
+    this.fetchSupportedCountries();
   },
 };
 </script>
