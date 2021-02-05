@@ -228,7 +228,6 @@ import { mapActions } from 'vuex';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
-import axios from 'axios';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 const currencyConversion = require('country-tz-currency');
@@ -309,6 +308,7 @@ export default {
       requestSignUpCheck: '$_auth/requestSignUpCheck',
       requestSignUpSegmentation: '$_auth/requestSignUpSegmentation',
       authSignIn: '$_auth/requestSignIn',
+      performGetActions: '$_auth/performGetActions',
     }),
     validate_phone() {
       this.$validator.validate();
@@ -704,17 +704,26 @@ export default {
       }
     },
     fetchSupportedCountries(){ 
-      axios('https://authtest.sendyit.com/currency/get_supported_countries')
+      const fullPayload = {
+        app: 'AUTH',
+        endpoint: 'currency/get_supported_countries',
+      }
+
+      this.phoneInputProps.preferredCountries = [];
+
+      this.performGetActions(fullPayload)
       .then((response) => {
-        this.phoneInputProps.preferredCountries=[];
-        // const numbers = [];
-        response.data.countries.forEach((country) => {
+        if (response.request_status) {
+          response.countries.forEach((country) => {
           this.phoneInputProps.preferredCountries.push(country.country_code.toLowerCase());
           this.preferredCountries.push(country.country_code.toLowerCase());
         });
+        } else {
+          this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
+        }  
       })
       .catch( (error) => {
-        console.log(error);
+        this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
       })
     },
   },

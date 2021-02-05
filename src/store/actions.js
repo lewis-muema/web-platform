@@ -298,6 +298,7 @@ export default {
       'admin_bypass',
       'request_verification',
       'token',
+      'currency/get_supported_countries',
     ];
     if (externalEndpoints.includes(requestedPayload)) {
       config = {
