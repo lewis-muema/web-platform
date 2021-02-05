@@ -82,6 +82,9 @@
             @onBlur="validate_phone"
             @country-changed="checkCountryCode"
           />
+          <p class="sign-up-data-error">
+              {{ countryNotSupported }}
+          </p>
         </div>
         <div class=" ">
           <p class="input--label">
@@ -250,6 +253,8 @@ export default {
       localCountry: '',
       localCountryCode: '',
       selectedCountry: '',
+      countryNotSupported: '',
+      preferredCountries: [],
       phoneInputProps: {
         mode: 'international',
         defaultCountry: 'ke',
@@ -260,7 +265,7 @@ export default {
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
-        preferredCountries: ['ke', 'ug', 'tz'],
+        preferredCountries: [],
         autocomplete: 'off',
         name: 'telephone',
         maxLen: 25,
@@ -283,6 +288,18 @@ export default {
     localCountry(val) {
       this.selectedCountry = val;
     },
+    preferredCountries(val) {
+       switch (true){
+        case (val.includes(this.localCountryCode.toLowerCase())):
+          this.countryNotSupported = '';
+          this.next_step = true;
+          break;
+        default:
+           this.countryNotSupported = this.$t('signUpDetails.country_not_supported');
+          this.next_step = false;
+          break;
+      }
+    }
   },
   methods: {
     ...mapActions({
@@ -291,6 +308,7 @@ export default {
       requestSignUpCheck: '$_auth/requestSignUpCheck',
       requestSignUpSegmentation: '$_auth/requestSignUpSegmentation',
       authSignIn: '$_auth/requestSignIn',
+      performGetActions: '$_auth/performGetActions',
     }),
     validate_phone() {
       this.$validator.validate();
@@ -298,6 +316,16 @@ export default {
     checkCountryCode(country) {
       this.localCountryCode = country.iso2;
       this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
+      switch (true){
+        case (this.phoneInputProps.preferredCountries.includes(this.localCountryCode.toLowerCase())):
+          this.countryNotSupported = '';
+          this.next_step = true;
+          break;
+        default:
+           this.countryNotSupported = this.$t('signUpDetails.country_not_supported');
+          this.next_step = false;
+          break;
+      }
     },
     validateDetails() {
       let valid = false;
@@ -675,6 +703,32 @@ export default {
         // ...
       }
     },
+    fetchSupportedCountries(){ 
+      const fullPayload = {
+        app: 'AUTH',
+        endpoint: 'currency/get_supported_countries',
+      }
+
+      this.phoneInputProps.preferredCountries = [];
+
+      this.performGetActions(fullPayload)
+      .then((response) => {
+        if (response.request_status) {
+          response.countries.forEach((country) => {
+          this.phoneInputProps.preferredCountries.push(country.country_code.toLowerCase());
+          this.preferredCountries.push(country.country_code.toLowerCase());
+        });
+        } else {
+          this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
+        }  
+      })
+      .catch( (error) => {
+        this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
+      })
+    },
+  },
+  created(){
+    this.fetchSupportedCountries();
   },
 };
 </script>

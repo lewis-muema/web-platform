@@ -48,7 +48,7 @@ const fr = {
   verify_code: 'FR_VERIFY CODE',
   unable_connect_server_text: 'FR_Unable to connect to the server . Please try again after 15 minutes .',
   signup_error: 'FR_Sign Up Error',
-
+  country_not_supported: 'FR_The country you selected is not supported',
 };
 
 
