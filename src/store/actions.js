@@ -100,6 +100,7 @@ export default {
       }
     }
 
+    config.headers['Accept-Language'] = state.language;
     return new Promise((resolve, reject) => {
       axios
         .post(`${url}${payload.endpoint}`, payload.values, config)
@@ -226,7 +227,7 @@ export default {
         return true;
       }
     }
-
+    config.headers['Accept-Language'] = state.language;
     return new Promise((resolve, reject) => {
       axios
         .patch(`${url}${payload.endpoint}`, payload.values, config)
@@ -297,6 +298,7 @@ export default {
       'admin_bypass',
       'request_verification',
       'token',
+      'currency/get_supported_countries',
     ];
     if (externalEndpoints.includes(requestedPayload)) {
       config = {
@@ -321,7 +323,7 @@ export default {
       }, 5000);
       return true;
     }
-
+    config.headers['Accept-Language'] = state.language;
     return new Promise((resolve, reject) => {
       axios
         .get(`${url}${payload.endpoint}`, config)
