@@ -46,7 +46,7 @@ const en = {
   verify_code: 'VERIFY CODE',
   unable_connect_server_text: 'Unable to connect to the server . Please try again after 15 minutes .',
   signup_error: 'Sign Up Error',
-
+  country_not_supported: 'The country you selected is not supported',
 };
 
 
