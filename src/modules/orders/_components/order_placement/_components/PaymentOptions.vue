@@ -711,9 +711,16 @@ export default {
     },
 
     hide_payment() {
+      // check if running balance plus promocode will cover the order amount
+      let couponAmount = 0;
+      if (this.couponDetails !== null) {
+        const discountedAmount = this.calculateCouponAmount(this.order_cost, this.couponDetails);
+        couponAmount = this.order_cost < discountedAmount ? this.order_cost : discountedAmount;
+      }
+
       return (
         this.getPriceRequestObject.payment_option === 2
-        || this.getRunningBalance - this.order_cost >= 0
+        || this.getRunningBalance + couponAmount - this.order_cost >= 0
       );
     },
 
@@ -2491,6 +2498,8 @@ export default {
       return resp;
     },
     setPromoCodeDetails(promoCodeDetails) {
+      // eslint-disable-next-line no-console
+      console.log('promoCodeDetails', promoCodeDetails);
       this.couponDetails = promoCodeDetails;
     },
     calculateCouponAmount(orderAmount, couponDetails) {
