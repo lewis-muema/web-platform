@@ -2512,6 +2512,9 @@ export default {
         // eslint-disable-next-line max-len
         amount = calculatedAmount > couponDetails.maxDiscountAmount ? couponDetails.maxDiscountAmount : calculatedAmount;
       }
+
+      const couponAmount = orderAmount < amount ? orderAmount : amount;
+      this.payment_method = this.getRunningBalance + couponAmount - orderAmount >= 0 ? 11 : this.payment_method;
       return amount;
     },
   },
