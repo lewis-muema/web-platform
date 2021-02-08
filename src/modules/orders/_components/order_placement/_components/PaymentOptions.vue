@@ -711,9 +711,16 @@ export default {
     },
 
     hide_payment() {
+      // check if running balance plus promocode will cover the order amount
+      let couponAmount = 0;
+      if (this.couponDetails !== null) {
+        const discountedAmount = this.calculateCouponAmount(this.order_cost, this.couponDetails);
+        couponAmount = this.order_cost < discountedAmount ? this.order_cost : discountedAmount;
+      }
+
       return (
         this.getPriceRequestObject.payment_option === 2
-        || this.getRunningBalance - this.order_cost >= 0
+        || this.getRunningBalance + couponAmount - this.order_cost >= 0
       );
     },
 
@@ -2503,6 +2510,9 @@ export default {
         // eslint-disable-next-line max-len
         amount = calculatedAmount > couponDetails.maxDiscountAmount ? couponDetails.maxDiscountAmount : calculatedAmount;
       }
+
+      const couponAmount = orderAmount < amount ? orderAmount : amount;
+      this.payment_method = this.getRunningBalance + couponAmount - orderAmount >= 0 ? 11 : this.payment_method;
       return amount;
     },
   },
