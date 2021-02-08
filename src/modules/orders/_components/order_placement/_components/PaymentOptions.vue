@@ -68,7 +68,10 @@
               :key="method.payment_method_id"
               class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
             >
-              <div class="home-view-notes-wrapper--item__option">
+              <div
+                v-if="method.name !== 'Promocode'"
+                class="home-view-notes-wrapper--item__option"
+              >
                 <div class="home-view-notes-wrapper--item__option-div payment__radio-button-label">
                   <input
                     v-model="payment_method"
