@@ -266,6 +266,7 @@
                 Create a Shipment Request
               </div>
             </div>
+
             <div class="decline-documemt-extend decline-documemt-input">
               <p class="shipment-input--label">
                 Where is the pickup facility at {{ locations[0] }}
@@ -590,6 +591,7 @@ export default {
     fetchGoodsTypes() {
       const fullPayload = {
         app: 'FREIGHT_APP',
+        operator: '?',
         endpoint: 'cargo_types',
       };
 
@@ -609,6 +611,7 @@ export default {
     fetchCarrierTypes() {
       const fullPayload = {
         app: 'FREIGHT_APP',
+        operator: '?',
         endpoint: 'carrier_types',
       };
 
@@ -831,6 +834,7 @@ export default {
         const fullPayload = {
           values: payload,
           app: 'FREIGHT_APP',
+          operator: '?',
           endpoint: 'shipments',
         };
         this.sendCustomerQuote(fullPayload).then(

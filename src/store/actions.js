@@ -15,7 +15,9 @@ export default {
 
     // add api key - if request is going to the FREIGHT APP
     if (payload.app === 'FREIGHT_APP') {
-      payload.endpoint = `${payload.endpoint}?authkey=${state.ENV.FREIGHT_API_KEY}`;
+      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
+        state.ENV.FREIGHT_API_KEY
+      }`;
     }
 
     let config = {};
@@ -154,7 +156,9 @@ export default {
 
     // add api key - if request is going to the FREIGHT APP
     if (payload.app === 'FREIGHT_APP') {
-      payload.endpoint = `${payload.endpoint}?authkey=${state.ENV.FREIGHT_API_KEY}`;
+      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
+        state.ENV.FREIGHT_API_KEY
+      }`;
     }
 
     let config = {};
@@ -293,7 +297,9 @@ export default {
 
     // add api key - if request is going to the FREIGHT APP
     if (payload.app === 'FREIGHT_APP') {
-      payload.endpoint = `${payload.endpoint}?authkey=${state.ENV.FREIGHT_API_KEY}`;
+      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
+        state.ENV.FREIGHT_API_KEY
+      }`;
     }
 
     let config = {};
