@@ -2498,8 +2498,6 @@ export default {
       return resp;
     },
     setPromoCodeDetails(promoCodeDetails) {
-      // eslint-disable-next-line no-console
-      console.log('promoCodeDetails', promoCodeDetails);
       this.couponDetails = promoCodeDetails;
     },
     calculateCouponAmount(orderAmount, couponDetails) {
