@@ -105,7 +105,6 @@
                   v-for="(val, index) in owner_details.vehicles"
                   :key="index"
                 >
-                  {{ val }}
                   <div class="">
                     <div class="truck-title-info">
                       {{ val.vendor_type }}
