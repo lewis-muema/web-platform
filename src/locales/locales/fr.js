@@ -1,13 +1,13 @@
 
-import byPassLogin from '../fr/modules/auth/components/byPassLogin';
-import forgetPassword from '../fr/modules/auth/components/forgetPassword';
-import loadingComponent from '../fr/modules/auth/components/loadingComponent';
-import resetPassword from '../fr/modules/auth/components/resetPassword';
-import signIn from '../fr/modules/auth/components/signIn';
-import signUp from '../fr/modules/auth/components/signUp';
-import signUpDetails from '../fr/modules/auth/components/signUpDetails';
-import signUpVerification from '../fr/modules/auth/components/signUpVerification';
-import successComponent from '../fr/modules/auth/components/successComponent';
+import byPassLogin from '../auth/fr/components/byPassLogin';
+import forgetPassword from '../auth/fr/components/forgetPassword';
+import loadingComponent from '../auth/fr/components/loadingComponent';
+import resetPassword from '../auth/fr/components/resetPassword';
+import signIn from '../auth/fr/components/signIn';
+import signUp from '../auth/fr/components/signUp';
+import signUpDetails from '../auth/fr/components/signUpDetails';
+import signUpVerification from '../auth/fr/components/signUpVerification';
+import successComponent from '../auth/fr/components/successComponent';
 
 
 const translations = {
