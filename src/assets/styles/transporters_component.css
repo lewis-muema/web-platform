@@ -334,21 +334,23 @@
   width: 85%;
 }
 .freight-order-details-wrapper {
-  width: 64%;
+  width: 95%;
   display: inline-block;
 }
-.order_details_map {
-  width: 38%;
+.freight_order_details_map {
+  width: 33%;
   display: inline-block;
   float: left;
+  margin-top: 2%;
 }
 .back-freight-orders{
   margin-bottom: 3%;
 }
 .order_details_desc {
   display: inline-block;
-  padding-left: 48px;
+  padding-left: 2;
   font-size: 14px;
+  width: 61%;
 }
 .order_details_price {
   margin-top: 1%;
@@ -369,12 +371,13 @@
   margin-right: 5px;
 }
 .order-details-schedule-time{
-  margin-top: 10%;
+  margin-top: 5%;
 }
 .freight-order-info-extra{
   margin-left: 6%;
   margin-top: 5%;
   margin-bottom: 2%;
+  font-size: 14px;
 }
 .order-info-header{
   font-size: 15px;
@@ -407,7 +410,7 @@
 }
 .freight-orders-main-summary{
   margin-bottom: 2%;
-  height: 300px;
+  min-height: 300px;
 }
 .order-order-documents{
   width: 94%;

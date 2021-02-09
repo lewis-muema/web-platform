@@ -1,9 +1,6 @@
 <template lang="html">
   <div class="transporters-main">
-    <div
-      class="transporters-container transporters-main--inner"
-      style="display : flex"
-    >
+    <div class="transporters-container transporters-main--inner flex-div">
       <div v-if="loading">
         <loading-component />
       </div>
@@ -16,104 +13,152 @@
         </div>
         <div class="freight-orders-main-summary">
           <div class="freight-order-details-wrapper">
-            <div class="order_details_map">
+            <div class="freight_order_details_map">
               <Img
-                :src="
-                  createStaticMapUrl(freightOrderDetail.destination, freightOrderDetail.pick_up)
-                "
+                :src="createStaticMapUrl(freightOrderDetail.destination, freightOrderDetail.pickup)"
               />
             </div>
-            <div class="order_details_desc">
-              <div class="order_details_price">
-                Order amount: {{ freightOrderDetail.currency }}
-                {{ formatCurrency(freightOrderDetail.amount) }}
-              </div>
-
-              <div class="order_details_desc_item">
-                <img
-                  src="../../../assets/img/maroon_button.png"
-                  class="order_details_desc_image"
-                >
-                <span class="order-info-header">Pick up location</span>
-                <div class="freight-order-info-extra">
-                  {{ freightOrderDetail.pick_up_name }}
-                </div>
-              </div>
-              <div class="order_details_desc_item order_details_desc_item--no-space">
-                <img
-                  src="../../../assets/img/blue_button.png"
-                  class="order_details_desc_image"
-                >
-                <span class="order-info-header">Destination</span>
-                <div class="freight-order-info-extra">
-                  {{ freightOrderDetail.destination_name }}
-                </div>
-              </div>
-              <div class="order_details_desc_item order-details-schedule-time">
-                <img
-                  src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/freight/time.svg"
-                  class="order_details_desc_image"
-                >
-                <span class="order-info-header">Pick up time</span>
-                <div class="freight-order-info-extra">
-                  {{ convertToUTCToLocal(freightOrderDetail.pick_up_time) }}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="rider_details_wrap">
-            <div class="">
-              <div class="transporter-infor--header">
-                Transporter
-              </div>
-              <div class="transporter-info-extra">
-                {{ freightOrderDetail.transporter_name }}
-              </div>
-              <div
-                class="transporter-info-extra view-transporter-mark"
-                @click="goToTransporter(freightOrderDetail.owner_id)"
-              >
-                View
-              </div>
-              <div
-                v-if="!freightOrderDetail.rated"
-                class="rating-section"
-              >
-                <div class="rating-title">
-                  How was your experience with {{ freightOrderDetail.transporter_name }} ?
-                </div>
-                <div class="decline-documemt-extend">
-                  <button
-                    type="button"
-                    name="button"
-                    class="decline-action--slide-button rate-freight-order"
-                    @click="openRatingDialog"
-                  >
-                    Rate order
-                  </button>
-                </div>
-              </div>
-              <div v-else>
-                <div class="transporters-filters transporters-highlight">
-                  <div class="truck-add-info">
-                    <div class="transporter-infor--header freight-ratings-section">
-                      Order Ratings
+            <div class="flex-div">
+              <div class="inner-content-flex">
+                <div class="order_details_desc">
+                  <div class="order_details_desc_item">
+                    <img
+                      src="../../../assets/img/maroon_button.png"
+                      class="order_details_desc_image"
+                    >
+                    <span class="order-info-header">Pick up location</span>
+                    <div class="freight-order-info-extra">
+                      {{ freightOrderDetail.pickup.name }}
                     </div>
-                    <el-rate
-                      :value="freightOrderDetail.rating.rating"
-                      disabled
-                      disabled-void-color="#C0C4CC"
-                      :colors="['#99A9BF', '#F57f20', '#1782C5']"
-                    />
                   </div>
+                  <div class="order_details_desc_item order-details-schedule-time">
+                    <img
+                      src="../../../assets/img/blue_button.png"
+                      class="order_details_desc_image"
+                    >
+                    <span class="order-info-header">Destination</span>
+                    <div class="freight-order-info-extra">
+                      {{ freightOrderDetail.destination.name }}
+                    </div>
+                  </div>
+                  <div class="order_details_desc_item order-details-schedule-time">
+                    <img
+                      src="../../../assets/img/freight/delivery_time.png"
+                      class="order_details_desc_image"
+                    >
+                    <span class="order-info-header">Pick up time</span>
+                    <div class="freight-order-info-extra">
+                      {{ convertToUTCToLocal(freightOrderDetail.pickup_time) }}
+                    </div>
+                  </div>
+                  <div class="order_details_desc_item order-details-schedule-time">
+                    <img
+                      src="../../../assets/img/freight/load_type.png"
+                      class="order_details_desc_image"
+                    >
+                    <span class="order-info-header">Type of load </span>
+                    <div class="freight-order-info-extra">
+                      {{ freightOrderDetail.cargo_type }}
+                    </div>
+                  </div>
+                  <div class="order_details_desc_item order-details-schedule-time">
+                    <img
+                      src="../../../assets/img/freight/price_offer.png"
+                      class="order_details_desc_image"
+                    >
+                    <span class="order-info-header">Price offer </span>
+                    <div class="freight-order-info-extra">
+                      USD {{ freightOrderDetail.offer_amount }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="freight-order-etra-info">
+                <div class="">
+                  <div class="order_details_desc_item order-details-schedule-time">
+                    <img
+                      src="../../../assets/img/freight/trucks_no.png"
+                      class="order_details_desc_image"
+                    >
+                    <span class="order-info-header">Number of Trucks needed</span>
+                    <div class="freight-order-info-extra">
+                      {{ freightOrderDetail.total_trucks }}
+                    </div>
+                  </div>
+                  <div class="order_details_desc_item order-details-schedule-time">
+                    <img
+                      src="../../../assets/img/freight/truck_type.png"
+                      class="order_details_desc_image"
+                    >
+                    <span class="order-info-header">Type of truck</span>
+                    <div class="freight-order-info-extra">
+                      {{ freightOrderDetail.carrier_type }}
+                    </div>
+                  </div>
+                  <div class="order_details_desc_item order-details-schedule-time">
+                    <img
+                      src="../../../assets/img/freight/load_weight.png"
+                      class="order_details_desc_image"
+                    >
+                    <span class="order-info-header">Weight of load per mover</span>
+                    <div class="freight-order-info-extra">
+                      {{ freightOrderDetail.tonnes_per_truck }} Tonnes
+                    </div>
+                  </div>
+                  <div class="order_details_desc_item order-details-schedule-time">
+                    <img
+                      src="../../../assets/img/freight/return.png"
+                      class="order_details_desc_image"
+                    >
+                    <span class="order-info-header">Will the container be returned?</span>
+                    <div class="freight-order-info-extra">
+                      {{ freightOrderDetail.returned === true ? 'Yes' : 'No' }}
+                    </div>
+                  </div>
+
+                  <!-- <div
+                    v-if="!freightOrderDetail.rated"
+                    class="rating-section"
+                  >
+                    <div class="rating-title">
+                      How was your experience with {{ freightOrderDetail.transporter_name }} ?
+                    </div>
+                    <div class="decline-documemt-extend">
+                      <button
+                        type="button"
+                        name="button"
+                        class="decline-action--slide-button rate-freight-order"
+                        @click="openRatingDialog"
+                      >
+                        Rate order
+                      </button>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <div class="transporters-filters transporters-highlight">
+                      <div class="truck-add-info">
+                        <div class="transporter-infor--header freight-ratings-section">
+                          Order Ratings
+                        </div>
+                        <el-rate
+                          :value="freightOrderDetail.rating.rating"
+                          disabled
+                          disabled-void-color="#C0C4CC"
+                          :colors="['#99A9BF', '#F57f20', '#1782C5']"
+                        />
+                      </div>
+                    </div>
+                  </div> -->
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="freight-border-line" />
-        <div class="">
+        <div
+          v-if="Object.prototype.hasOwnProperty.call(this.freightOrderDetail, 'documents')"
+          class=""
+        >
           <div class="transporter-doucuments-title align-documents-data">
             Documents
           </div>
@@ -147,8 +192,7 @@
                       freightOrderDetail.documents[index].created_by === 'OWNER' &&
                       checkActionableBtnState
                   "
-                  class="freight-documents-approve"
-                  style="display : flex"
+                  class="freight-documents-approve flex-div"
                 >
                   <button
                     type="button"
@@ -169,8 +213,7 @@
                 </div>
                 <div
                   v-else
-                  class="freight-documents-approve"
-                  style="display : flex"
+                  class="freight-documents-approve flex-div"
                 >
                   <div class="freight-approval-reason">
                     {{ freightOrderDetail.documents[index].message }}
@@ -345,16 +388,10 @@ export default {
       rateFreightOrder: '$_freight/rateFreightOrder',
     }),
     fetchOrderDetail(orderId) {
-      const sessionData = this.$store.getters.getSession;
-      const payload = {
-        order_id: orderId,
-        user_type: sessionData.default === 'biz' ? 1 : 3,
-      };
-
       const fullPayload = {
-        values: payload,
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/order/details',
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: `shipments/${orderId}`,
       };
 
       this.getFreightOrderDetail(fullPayload).then(
@@ -367,7 +404,7 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.freightOrderDetail = workingResponse.order;
+            this.freightOrderDetail = workingResponse.shipment;
             this.loading = false;
           } else {
             this.doNotification(2, 'Failed to retrieve order details', workingResponse.message);
@@ -644,5 +681,14 @@ export default {
   margin-top: 14%;
   margin-bottom: 10%;
   font-weight: 500;
+}
+.flex-div{
+  display: flex;
+}
+.inner-content-flex{
+  flex: 0.9;
+}
+.freight-order-etra-info{
+  width: 35%;
 }
 </style>
