@@ -71,7 +71,7 @@ const requestFreightOrders = function requestFreightOrders({ commit, dispatch },
 
 const getFreightOrderDetail = function getFreightOrderDetail({ dispatch }, payload) {
   return new Promise((resolve, reject) => {
-    dispatch('requestAxiosPost', payload, { root: true }).then(
+    dispatch('requestAxiosGet', payload, { root: true }).then(
       (response) => {
         resolve(response.data);
       },
