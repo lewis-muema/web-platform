@@ -613,7 +613,7 @@ import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
 import OngoingComponent from './_components/OngoingComponent.vue';
-import ApprovalDialog from './_components/social_media_business/ApprovalDialog.vue';
+import ApprovalDialog from './_components/social_media/ApprovalDialog.vue';
 import FbuChildOrders from './_components/FbuChildOrders.vue';
 import NPSFooter from '../../components/footers/NPSFooter.vue';
 import NpsMixin from '../../mixins/nps_mixin';

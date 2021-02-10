@@ -22,7 +22,7 @@ import { mapActions } from 'vuex';
 export default {
   name: 'PaymentLoading',
   props: {
-    pay_method: {
+    payMethod: {
       type: String,
       default: 'mpesa',
     },

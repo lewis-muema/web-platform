@@ -536,10 +536,8 @@
 </template>
 
 <script>
-/* eslint-disable no-unreachable */
 /* eslint-disable camelcase */
 /* eslint-disable max-len */
-
 
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import numeral from 'numeral';
@@ -1645,7 +1643,6 @@ export default {
                   },
                 });
               }
-              // eslint-disable-next-line no-console
               const discountedAmount = this.calculateCouponAmount(this.full_order_cost, this.couponDetails);
 
               const couponData = {
@@ -1745,6 +1742,7 @@ export default {
           order_no: this.order_no,
         };
       }
+
       if (this.couponDetails !== null) {
         const discountedAmount = this.calculateCouponAmount(this.full_order_cost, this.couponDetails);
         payload.promo_code_details = {
@@ -2515,6 +2513,7 @@ export default {
       this.payment_method = this.getRunningBalance + couponAmount - orderAmount >= 0 ? 11 : this.payment_method;
       return amount;
     },
+
   },
 };
 </script>
