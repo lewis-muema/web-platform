@@ -236,6 +236,34 @@ const requestUsersList = function requestUsersList({ dispatch }, payload) {
     );
   });
 };
+const awardShipment = function awardShipment({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+const declineShipment = function declineShipment({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPatch', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 const requestApproveApprover = function requestApproveApprover({ dispatch }, payload) {
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosPatch', payload, {
@@ -299,4 +327,6 @@ export default {
   requestApproveApprover,
   requestApproversList,
   getDocumentTypes,
+  awardShipment,
+  declineShipment,
 };

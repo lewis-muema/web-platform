@@ -992,21 +992,4 @@ export default {
   color: #000;
   margin-top: 2%;
 }
-.next-shipment-btn{
-  border-width: 0px !important;
-  width: 100%;
-  background: #EA7125 !important;
-}
-.send-final-quote-btn{
-  margin-left: 0px !important;
-  width: 100% !important;
-}
-.send-quote--outer{
-  width: 109% !important;
-  display: flex;
-}
-.back-shipment-btn{
-  background-color: #EA7125 !important;
-  border: #EA7125 !important;
-}
 </style>
