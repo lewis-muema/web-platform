@@ -175,6 +175,7 @@ const fetchSuggestions = function fetchSuggestions({ dispatch, commit }, values)
     }).then(
       (response) => {
         const concatenated = [];
+
         if (response.data.saved_locations) {
           response.data.saved_locations.reverse().forEach((row) => {
             row.location_type = 'saved';
@@ -184,6 +185,7 @@ const fetchSuggestions = function fetchSuggestions({ dispatch, commit }, values)
             concatenated.push(row);
           });
         }
+        
         if (response.data.frequent_locations) {
           response.data.frequent_locations.reverse().forEach((row) => {
             row.location_type = 'frequent';
