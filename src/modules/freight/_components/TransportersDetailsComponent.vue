@@ -307,12 +307,14 @@
                 </div>
 
                 <div class="next-terms-holder">
-                  <input
-                    v-model="next_text"
-                    class="button-primary next-shipment-btn search-transporter"
-                    type="submit"
-                    @click="nextShipmentFlow"
+                  <button
+                    type="button"
+                    name="button"
+                    class="quote-action--slide-button send-final-quote-btn back-shipment-btn"
+                    @click="nextShipmentFlow()"
                   >
+                    Next
+                  </button>
                 </div>
               </div>
 
@@ -466,6 +468,14 @@
                   <button
                     type="button"
                     name="button"
+                    class="quote-action--slide-button send-final-quote-btn back-shipment-btn"
+                    @click="oneStepBack()"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    name="button"
                     class="quote-action--slide-button send-final-quote-btn"
                     @click="sendFinalQuote()"
                   >
@@ -525,7 +535,7 @@ export default {
       dueDatePickerOptions: {
         disabledDate: this.disabledDueDate,
       },
-      shipment_state: 2,
+      shipment_state: 1,
       returnOptions: [
         {
           value: true,
@@ -556,6 +566,13 @@ export default {
   },
   computed: {
     ...mapGetters({}),
+  },
+  watch: {
+    quoteDialog(val) {
+      if (!val) {
+        this.resetQuatationDialog();
+      }
+    },
   },
   mounted() {
     this.loading = true;
@@ -746,10 +763,21 @@ export default {
         );
       }
     },
+    oneStepBack() {
+      this.facility_location = '';
+      this.return_option = '';
+      this.trucks_no = '';
+      this.load_weight = '';
+      this.shipment_offer = '';
+      this.quotation_time = '';
+      this.shipment_offer = '';
+      this.bid_amount = '';
+      this.negotiability = '';
+      this.shipment_state = 1;
+    },
     sendFinalQuote() {
       if (
-        this.filteredCheckedOwners.length === 0
-        || this.facility_location === ''
+        this.facility_location === ''
         || this.return_option === ''
         || this.trucks_no === ''
         || this.load_weight === ''
@@ -832,7 +860,7 @@ export default {
       }
     },
     resetQuatationDialog() {
-      this.quoteDialogVisible = false;
+      this.quoteDialog = false;
       this.quotation_time = '';
       this.facility_location = '';
       this.return_option = '';
@@ -963,17 +991,5 @@ export default {
   font-weight: 200;
   color: #000;
   margin-top: 2%;
-}
-.next-shipment-btn{
-  border-width: 0px !important;
-  width: 100%;
-  background: #EA7125 !important;
-}
-.send-final-quote-btn{
-  margin-left: 0px !important;
-  width: 100% !important;
-}
-.send-quote--outer{
-  width: 100% !important;
 }
 </style>
