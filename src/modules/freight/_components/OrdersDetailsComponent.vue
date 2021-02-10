@@ -68,7 +68,11 @@
                     >
                     <span class="order-info-header">Price offer </span>
                     <div class="freight-order-info-extra">
-                      USD {{ freightOrderDetail.offer_amount }}
+                      {{
+                        freightOrderDetail.offer_amount === 0
+                          ? 'Transporters to bid'
+                          : `USD ${freightOrderDetail.offer_amount}`
+                      }}
                     </div>
                   </div>
                 </div>
@@ -155,7 +159,94 @@
           </div>
         </div>
         <div class="freight-border-line" />
+
+        <!-- Quatations List -->
+
         <div
+          v-if="Object.prototype.hasOwnProperty.call(freightOrderDetail, 'quotations')"
+          class=""
+        >
+          <div class="transporter-doucuments-title align-documents-data">
+            Quatations
+            {{
+              freightOrderDetail.quotations.length > 0
+                ? `(${freightOrderDetail.quotations.length})`
+                : ''
+            }}
+          </div>
+          <div class="">
+            <div class="order_details_desc_item ">
+              <img
+                src="../../../assets/img/freight/truck_type.png"
+                class="order_details_desc_image"
+              >
+              <span
+                class="order-info-header"
+              >{{ freightOrderDetail.total_trucks }} trucks needed
+              </span>
+            </div>
+          </div>
+          <div class="transporter-listing order-order-documents">
+            <div v-if="freightOrderDetail.quotations.length > 0">
+              <div
+                v-for="(val, index) in freightOrderDetail.quotations"
+                v-if="index >= 0"
+                class="doc-detail"
+              >
+                <div class="transporters-filters documents-highlight orders-freight-documents ">
+                  <div class=" freight-documents-title">
+                    {{
+                      freightOrderDetail.quotations[index].company_name === null
+                        ? freightOrderDetail.quotations[index].name
+                        : freightOrderDetail.quotations[index].company_name
+                    }}
+                  </div>
+                  <div class=" freight-documents-date">
+                    {{ freightOrderDetail.quotations[index].trucks_available }} Trucks
+                  </div>
+                  <div class=" freight-documents-date">
+                    USD {{ freightOrderDetail.quotations[index].price_per_truck }} /Truck
+                  </div>
+
+                  <div
+                    v-if="checkActionableBtnState"
+                    class="freight-documents-approve flex-div"
+                  >
+                    <button
+                      type="button"
+                      class="button-primary section--filter-action freight-approve-doc"
+                      name="create_order_text"
+                      @click="awardBid(freightOrderDetail.quotations[index])"
+                    >
+                      {{ approve_quatation_text }}
+                    </button>
+                    <button
+                      type="button"
+                      class="section--filter-action freight-decline-doc"
+                      name="create_order_text"
+                      @click="declineBid(freightOrderDetail.quotations[index])"
+                    >
+                      {{ decline_quatation_text }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else>
+              <div class="doc-detail waiting-quatation">
+                <img
+                  src="../../../assets/img/freight/no_quatations.svg"
+                  class="no-quatations-img "
+                >
+                <div class="no-transporters-label">
+                  Awaiting quotations from transporters
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div
           v-if="Object.prototype.hasOwnProperty.call(this.freightOrderDetail, 'documents')"
           class=""
         >
@@ -228,12 +319,191 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         <transition
           name="fade"
           mode="out-in"
         >
           <div class="">
+            <el-dialog
+              :visible.sync="awardDialogVisible"
+              class="requestShipmentOptions"
+            >
+              <div v-if="!verification_stage">
+                <div class="">
+                  <div class="decline-text-option decline-documemt-extend request-shipment-header">
+                    Award Shipment to
+                    {{
+                      awardedTransporter.company_name === null
+                        ? awardedTransporter.name
+                        : awardedTransporter.company_name
+                    }}
+                  </div>
+                </div>
+
+                <div class="award-sub-details doc-detail">
+                  <div class="award-inner-info">
+                    <div class="quatations-outline-info">
+                      Available trucks:
+                      <span class="outline-info-value">
+                        {{ awardedTransporter.trucks_available }}
+                      </span>
+                    </div>
+                    <div class="quatations-outline-info">
+                      Rate per truck:
+                      <span
+                        class="outline-info-value"
+                      >USD {{ awardedTransporter.price_per_truck }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="award-shipment-input">
+                  <p class="award-input--label">
+                    How many of
+                    {{
+                      awardedTransporter.company_name === null
+                        ? awardedTransporter.name
+                        : awardedTransporter.company_name
+                    }}’s available trucks do you want to assign to this shipment?
+                  </p>
+                  <div class="block">
+                    <el-input-number
+                      v-model="trucks_no"
+                      :min="1"
+                      :max="10"
+                    />
+                  </div>
+                </div>
+
+                <div class="award-shipment-input">
+                  <p class="award-input--label upload-landing">
+                    Upload the bill of lading
+                  </p>
+                  <div class="document-image">
+                    <div class="download-uploaded-img">
+                      <el-upload
+                        class="upload-demo"
+                        drag
+                        action="handleLandingCardPreview"
+                        :before-upload="beforeLandingUpload"
+                        :http-request="handleLandingCardPreview"
+                        :on-remove="handleRemoveLanding"
+                      >
+                        <img
+                          id="ladingImagePreview"
+                          class="upload_image"
+                          src="https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg"
+                        >
+                        <i class="el-icon-upload" />
+                        <div v-if="billOfLandingName !== ''">
+                          {{ landing_text }}
+                        </div>
+                        <div v-else>
+                          Drop file here or <em>click to upload</em>
+                        </div>
+                      </el-upload>
+                      <div v-if="billOfLandingName !== '' && landing_text === 'Change'">
+                        <span class="document-upload-label">
+                          Bill of lading added successfully .
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="award-shipment-input payment-terms">
+                  <p class="award-input--label">
+                    What are your payment terms?
+                  </p>
+                  <div class="block">
+                    <el-select
+                      v-model="payment_terms"
+                      placeholder=""
+                      class="transporters-element-inputs"
+                      filterable
+                    >
+                      <el-option
+                        v-for="item in terms"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                </div>
+
+                <div class="decline-button-align">
+                  <button
+                    type="button"
+                    name="button"
+                    class="quote-action--slide-button award-shipment-btn"
+                    @click="awardDocument()"
+                  >
+                    Award
+                  </button>
+                </div>
+              </div>
+              <div v-else>
+                <div class="">
+                  <div class="decline-text-option decline-documemt-extend request-shipment-header">
+                    Are you sure you want to award
+                    {{
+                      awardedTransporter.company_name === null
+                        ? awardedTransporter.name
+                        : awardedTransporter.company_name
+                    }}
+                    ?
+                  </div>
+                </div>
+                <div class="shipment-summary-outer">
+                  <div class="quatations-outline-info-summary">
+                    Price per truck
+                    <p class="outline-info-value summary-inner-value">
+                      USD {{ awardedTransporter.price_per_truck }}
+                    </p>
+                  </div>
+                  <div class="quatations-outline-info-summary">
+                    Trucks assigned
+                    <p class="outline-info-value summary-inner-value">
+                      {{ trucks_no }}
+                    </p>
+                  </div>
+                  <div class="quatations-outline-info-summary">
+                    Total amount
+                    <p class="outline-info-value summary-inner-value">
+                      USD {{ trucks_no * awardedTransporter.price_per_truck }}
+                    </p>
+                  </div>
+                  <div class="quatations-outline-info-summary">
+                    Payment terms
+                    <p class="outline-info-value summary-inner-value">
+                      Payment in {{ payment_terms }} days
+                    </p>
+                  </div>
+
+                  <div class="decline-documemt-extend decline-button-align send-quote--outer">
+                    <button
+                      type="button"
+                      name="button"
+                      class="quote-action--slide-button send-final-quote-btn back-shipment-btn"
+                      @click="goBack()"
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="button"
+                      name="button"
+                      class="quote-action--slide-button send-final-quote-btn"
+                      @click="awardFinal()"
+                    >
+                      Yes, Award bid
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </el-dialog>
+
             <el-dialog
               :visible.sync="viewDocumentOption"
               class="documentOptions"
@@ -262,7 +532,7 @@
                   Decline Document
                 </div>
               </div>
-              <div class="decline-documemt-extend decline-documemt-input">
+              <div class="decline-documemt-extend award-shipment-input">
                 <el-input
                   v-model.trim="reason"
                   :min="0"
@@ -298,7 +568,7 @@
                   :colors="['#99A9BF', '#F57f20', '#1782C5']"
                 />
               </span>
-              <div class="decline-documemt-input">
+              <div class="award-shipment-input">
                 <el-input
                   v-model.trim="comment"
                   :min="0"
@@ -327,11 +597,16 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import numeral from 'numeral';
+import S3 from 'aws-s3';
+import $ from 'jquery';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
 import LoadingComponent from './LoadingComponent.vue';
 import NotificationMxn from '../../../mixins/notification_mixin';
+
+let s3 = '';
 
 export default {
   name: 'Transporters',
@@ -345,6 +620,8 @@ export default {
       loading: true,
       approve_doc_text: 'Approve',
       decline_doc_text: 'Decline',
+      approve_quatation_text: 'Award',
+      decline_quatation_text: 'Decline',
       viewDocumentOption: false,
       src_link: '',
       src_name: '',
@@ -356,6 +633,32 @@ export default {
       comment: '',
       showRatingDialog: false,
       rated_score: 1,
+      awardDialogVisible: false,
+      payment_terms: '',
+      trucks_no: 1,
+      billOfLandingData: {},
+      landing_text: 'Change',
+      billOfLandingName: '',
+      awardedTransporter: {},
+      verification_stage: false,
+      terms: [
+        {
+          value: 7,
+          label: 'Payment in 7 days',
+        },
+        {
+          value: 14,
+          label: 'Payment in 14 days',
+        },
+        {
+          value: 21,
+          label: 'Payment in 21 days',
+        },
+        {
+          value: 28,
+          label: 'Payment in 28 days',
+        },
+      ],
     };
   },
   computed: {
@@ -373,12 +676,18 @@ export default {
         this.closeDeclineDialog();
       }
     },
+    awardDialogVisible(val) {
+      if (!val) {
+        this.resetShipmentDialog();
+      }
+    },
   },
   mounted() {
     this.loading = true;
     const sessionData = this.$store.getters.getSession;
     if (Object.keys(sessionData).length > 0) {
       this.fetchOrderDetail(this.$route.params.id);
+      this.initiateS3();
     }
   },
   methods: {
@@ -386,7 +695,31 @@ export default {
       getFreightOrderDetail: '$_freight/getFreightOrderDetail',
       approveDocument: '$_freight/approveDocument',
       rateFreightOrder: '$_freight/rateFreightOrder',
+      awardShipment: '$_freight/awardShipment',
     }),
+    initiateS3() {
+      const script = document.createElement('script');
+      script.onload = () => {
+        const albumBucketName = 'sendy-partner-docs';
+        const bucketRegion = 'eu-west-1';
+        const IdentityPoolId = 'eu-west-1:2812c134-0c22-4755-be2d-8fa850a041ee';
+
+        AWS.config.update({
+          region: bucketRegion,
+          credentials: new AWS.CognitoIdentityCredentials({
+            IdentityPoolId,
+          }),
+        });
+
+        s3 = new AWS.S3({
+          apiVersion: '2006-03-01',
+          params: { Bucket: albumBucketName },
+        });
+      };
+      script.src = 'https://sdk.amazonaws.com/js/aws-sdk-2.7.20.min.js';
+
+      document.head.appendChild(script);
+    },
     fetchOrderDetail(orderId) {
       const fullPayload = {
         app: 'FREIGHT_APP',
@@ -454,6 +787,186 @@ export default {
       this.src_link = url;
       this.src_name = name;
       this.viewDocumentOption = true;
+    },
+    handleRemoveLanding() {
+      this.billOfLandingName = '';
+      this.billOfLandingData = {};
+      this.landing_text = 'Change';
+    },
+    beforeLandingUpload(file) {
+      const isPdf = file.type === 'application/pdf';
+
+      if (!isPdf) {
+        this.doNotification(2, 'Document upload error !', 'Document must be in PDF format');
+      }
+      return isPdf;
+    },
+    handleLandingCardPreview(file) {
+      this.billOfLandingData = file;
+      this.uploadBillOfLanding();
+    },
+    uploadBillOfLanding() {
+      if (Object.keys(this.billOfLandingData).length === 0) {
+        this.doNotification(2, 'Kindly upload bill of landing document', '');
+      } else {
+        const imageId = 'ladingImagePreview';
+        let src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
+        $(`#${imageId}`).attr('src', src);
+
+        this.landing_text = 'Uploading ...';
+        const { file } = this.billOfLandingData;
+        const fileType = file.type;
+        const fileName = this.sanitizeFilename(file.name, 'bill');
+        this.billOfLandingName = fileName;
+        const albumPhotosKey = `${encodeURIComponent('freight_docs')}/`;
+        const photoKey = albumPhotosKey + fileName;
+        this.billOfLandingName = photoKey;
+        s3.upload(
+          {
+            Key: photoKey,
+            Body: file,
+            ACL: 'public-read',
+            ContentType: fileType,
+          },
+          (err) => {
+            if (err) {
+              this.landing_text = 'Change';
+              console.log('There was an error uploading your document: ', err.message);
+            } else {
+              src = 'https://images.sendyit.com/web_platform/freight/complete.svg';
+              $(`#${imageId}`).attr('src', src);
+              this.landing_text = 'Change';
+            }
+            // eslint-disable-next-line comma-dangle
+          }
+        );
+      }
+    },
+    sanitizeFilename(name, type) {
+      const session = this.$store.getters.getSession;
+      let tempName = '';
+      let values = '';
+      if (session.default === 'biz') {
+        values = session[session.default].cop_id;
+      } else {
+        values = session[session.default].user_id;
+      }
+      if (type === 'bill') {
+        tempName = `bill_of_landing_${values}_${new Date().getTime()}.${name.split('.').pop()}`;
+      } else if (type === 'other') {
+        tempName = `add_new_document_${values}_${new Date().getTime()}.${name.split('.').pop()}`;
+      }
+      tempName = `terms_of_delivery_${values}_${new Date().getTime()}.${name.split('.').pop()}`;
+
+      return tempName;
+    },
+    awardBid(val) {
+      this.awardedTransporter = val;
+      this.awardDialogVisible = true;
+    },
+    declineBid(val) {
+      const payload = {};
+      const fullPayload = {
+        values: payload,
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: `shipments/quotations/${val.quotation_id}`,
+      };
+
+      this.$store.dispatch('$_freight/declineShipment', fullPayload).then(
+        (response) => {
+          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+
+          let workingResponse = response;
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
+            this.doNotification(1, 'Bid rejected successfully!', '');
+          } else {
+            this.doNotification(2, 'Unable to reject bid!', workingResponse.message);
+          }
+          this.fetchOrderDetail(this.$route.params.id);
+        },
+        (error) => {
+          if (Object.prototype.hasOwnProperty.call(error.response.data, 'message')) {
+            this.doNotification(2, 'Reject bid request failed', error.response.data.message);
+          } else {
+            this.doNotification(
+              2,
+              'Reject bid request failed',
+              'Something went wrong.Please try again',
+            );
+            this.$router.push('/freight/orders');
+          }
+        },
+      );
+    },
+    awardDocument() {
+      if (this.billOfLandingName !== '' && this.trucks_no !== '' && this.payment_terms !== '') {
+        this.verification_stage = true;
+      } else {
+        this.doNotification(2, 'Award Shipment error !', 'Kindly provide all values');
+      }
+    },
+    goBack() {
+      this.verification_stage = false;
+    },
+    awardFinal() {
+      const payload = {
+        quotation_id: this.awardedTransporter.quotation_id,
+        trucks_available: this.trucks_no,
+        payment_terms: this.payment_terms,
+        document: `https://sendy-partner-docs.s3-eu-west-1.amazonaws.com/${this.billOfLandingName}`,
+      };
+      const fullPayload = {
+        values: payload,
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: 'shipments/quotations',
+      };
+      this.awardShipment(fullPayload).then(
+        (response) => {
+          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+
+          let workingResponse = response;
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
+            this.doNotification(1, 'Shipment awarded successfully!', '');
+          } else {
+            this.doNotification(2, 'Unable to award shipment!', workingResponse.message);
+          }
+          this.resetShipmentDialog();
+          this.fetchOrderDetail(this.$route.params.id);
+        },
+        (error) => {
+          if (Object.prototype.hasOwnProperty.call(error.response.data, 'message')) {
+            this.doNotification(2, 'Award Shipment request failed', error.response.data.message);
+          } else {
+            this.doNotification(
+              2,
+              'Award Shipment request failed',
+              'Something went wrong.Please try again',
+            );
+            this.$router.push('/freight/orders');
+          }
+        },
+      );
+    },
+    resetShipmentDialog() {
+      this.verification_stage = false;
+      this.awardDialogVisible = false;
+      this.payment_terms = '';
+      this.trucks_no = 1;
+      this.billOfLandingData = {};
+      this.landing_text = 'Change';
+      this.billOfLandingName = '';
+      this.awardedTransporter = {};
+      this.loading = true;
     },
     approveDoc(val) {
       let acc = {};
@@ -693,5 +1206,70 @@ export default {
 }
 .freight-order-etra-info{
   width: 35%;
+}
+.no-quatations-img{
+  width: 28%;
+  display: block;
+  margin: auto;
+}
+.no-transporters-label{
+  text-align: center;
+}
+.waiting-quatation{
+  width: 100%;
+  height: 395px;
+}
+.transporters-element-inputs{
+  background-color: white !important;
+  width: 100% !important;
+}
+.request-shipment-header{
+  display: flex;
+  align-items: center;
+  color: #000000;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 18px;
+}
+.award-sub-details{
+  margin: 0px 10px 10px 10px;
+  padding-right: 20px;
+  min-height: 55px;
+}
+.award-inner-info{
+  color: #000000;
+  margin: 2%;
+  font-size: 13px;
+  line-height: 25px;
+  font-weight: 300;
+}
+.quatations-outline-info{
+  margin-bottom: 2%;
+}
+.outline-info-value{
+  color: #000000;
+  font-weight: 600;
+}
+.payment-terms{
+   margin-top: 9% !important;
+   margin-bottom : 9% !important;
+}
+.award-shipment-input{
+  margin: 0px 0px 10px 10px;
+}
+.award-shipment-btn{
+  margin: 0px 0px 10px 10px !important;
+  width: 98% !important;
+  background: #EA7125 !important;
+  border: 1px solid #EA7125 !important;
+}
+.summary-inner-value{
+  margin-top: 2%;
+}
+.shipment-summary-outer{
+  margin-left: 3%;
+}
+.quatations-outline-info-summary{
+  margin-bottom: 6%;
 }
 </style>
