@@ -387,6 +387,7 @@
       >
         <router-view />
       </transition>
+
       <transition
         v-if="showSocialMediaApprovalDialog"
         name="fade"
@@ -397,6 +398,7 @@
           :cop-id="copId"
         />
       </transition>
+
       <transition
         name="fade"
         mode="out-in"
@@ -413,180 +415,186 @@
               <p class="crm-setup">
                 Finish account set up
               </p>
-              <div class="">
-                <div v-if="updateKraSection">
-                  <div class="">
-                    <label
-                      class="final-label"
-                    >Does your business file VAT returns? (optional)</label>
-                    <div class="final-upper-padding">
-                      <el-select
-                        v-model="tax_compliance"
-                        placeholder="Select"
-                        class="compliance-select-final"
-                      >
-                        <el-option
-                          v-for="item in selectOptions"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                        />
-                      </el-select>
-                    </div>
-                  </div>
 
-                  <div
-                    v-if="tax_compliance"
-                    class="final-upper-padding"
-                  >
-                    <label class="final-label">Enter your business KRA pin</label>
-                    <div class="final-upper-padding">
-                      <input
-                        v-model="kra_pin"
-                        class="input-control upgrade-final"
-                        type="text"
-                        name="kra_pin"
-                        placeholder="KRA PIN"
-                        autocomplete="on"
-                      >
-                      <span
-                        v-show="!valid_kra_pin"
-                        class="invalid-kra"
-                      >
-                        Please enter a valid KRA PIN
-                      </span>
-                    </div>
-                  </div>
 
-                  <div class="final-upper-padding">
-                    <label class="final-label">
-                      Select the primary vehicle you will be using for your business.
-                    </label>
-                    <p class="final-inner">
-                      (This will not restrict you from using other vehicles)
-                    </p>
-                    <div class="final-upper-padding">
-                      <div class="vendors-final-outerline">
-                        <div
-                          class="vendor-final-cards"
-                          :class="{ vendor_active_final: activeTab === 'mbu' }"
-                          @click="selectCard('mbu', 1)"
-                        >
-                          <img
-                            class="vendor-types-final"
-                            :src="getVendorIcon(1)"
-                            alt=""
-                          >
-                        </div>
-                        <div
-                          class="vendor-final-cards"
-                          :class="{ vendor_active_final: activeTab === 'ebu' }"
-                          @click="selectCard('ebu', 2)"
-                        >
-                          <img
-                            class="vendor-types-final"
-                            :src="getVendorIcon(6)"
-                            alt=""
-                          >
-                        </div>
-                        <div
-                          class="vendor-final-cards"
-                          :class="{ vendor_active_final: activeTab === 'fbu' }"
-                          @click="selectCard('fbu', 3)"
-                        >
-                          <img
-                            class="vendor-types-final"
-                            :src="getVendorIcon(25)"
-                            alt=""
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  v-if="updateSetIndustry"
-                  class="final-upper-padding"
-                >
-                  <div class="final-upper-padding">
-                    <label class="final-label">What industry is your business in?</label>
-                    <div class="final-upper-padding">
-                      <el-select
-                        v-model="industry_type"
-                        placeholder="Select"
-                        class="compliance-select-final"
-                      >
-                        <el-option
-                          v-for="item in industriesOptions"
-                          :key="item.industry_id"
-                          :label="item.name"
-                          :value="item.industry_id"
-                        />
-                      </el-select>
-                    </div>
-                  </div>
-
-                  <div class="final-upper-padding">
-                    <label class="final-label">Is social media your main source of clients?</label>
-                    <div class="final-upper-padding">
-                      <el-select
-                        v-model="social_media_option"
-                        placeholder="Select"
-                        class="compliance-select-final"
-                      >
-                        <el-option
-                          v-for="item in selectOptions"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                        />
-                      </el-select>
-                    </div>
-                  </div>
-
-                  <div
-                    v-if="social_media_option"
-                    class="final-upper-padding"
-                  >
-                    <label class="final-label">What is your business instragram handle?</label>
-                    <div class="final-upper-padding">
-                      <input
-                        v-model="ig_media_handle"
-                        class="input-control upgrade-final"
-                        type="text"
-                        placeholder="@mystore"
-                        autocomplete="on"
-                      >
-                    </div>
-                  </div>
-
-                  <div
-                    v-if="social_media_option"
-                    class="final-upper-padding"
-                  >
-                    <label
-                      class="final-label"
-                    >What is the link to your business facebook page?</label>
-                    <div class="final-upper-padding">
-                      <input
-                        v-model="facebook_media_handle"
-                        class="input-control upgrade-final"
-                        type="text"
-                        placeholder="www.facebook.com/pages/mystore"
-                        autocomplete="on"
-                      >
-                    </div>
-                  </div>
-                </div>
-
+              <div v-if="updateKraSection">
                 <div class="">
+                  <label
+                    class="final-label"
+                  >Does your business file VAT returns? (optional)</label>
+
+                  <div class="final-upper-padding">
+                    <el-select
+                      v-model="tax_compliance"
+                      placeholder="Select"
+                      class="compliance-select-final"
+                    >
+                      <el-option
+                        v-for="item in selectOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                v-if="tax_compliance"
+                class="final-upper-padding"
+              >
+                <label class="final-label">Enter your business KRA pin</label>
+                <div class="final-upper-padding">
                   <input
-                    class="button-primary final-step-submit"
-                    type="submit"
-                    value="Submit"
-                    @click="submit"
+                    v-model="kra_pin"
+                    class="input-control upgrade-final"
+                    type="text"
+                    name="kra_pin"
+                    placeholder="KRA PIN"
+                    autocomplete="on"
+                  >
+                  <span
+                    v-show="!valid_kra_pin"
+                    class="invalid-kra"
+                  >
+                    Please enter a valid KRA PIN
+                  </span>
+                </div>
+              </div>
+
+              <div
+                v-if="updateSetIndustry"
+                class="final-upper-padding"
+              >
+                <label class="final-label">What industry is your business in?</label>
+                <div class="final-upper-padding">
+                  <el-select
+                    v-model="industry_type"
+                    filterable
+                    popper-append-to-body="false"
+                    placeholder="Select"
+                    class="compliance-select-final"
+                  >
+                    <el-option
+                      v-for="item in industriesOptions"
+                      :key="item.industry_id"
+                      :label="item.name"
+                      :value="item.industry_id"
+                    />
+                  </el-select>
+                </div>
+              </div>
+
+              <div class="final-upper-padding">
+                <label class="final-label">Are you a social commerce business?</label>
+                <p style="margin-top:5px;font-size:11px">
+                  (A business that mainly trades through facebook and instagram e.g.
+                  An online shoe store)
+                </p>
+                <div class="final-upper-padding">
+                  <el-select
+                    v-model="social_media_option"
+                    placeholder="Select"
+                    class="compliance-select-final"
+                  >
+                    <el-option
+                      v-for="item in selectOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
+              </div>
+
+              <div
+                v-if="social_media_option"
+                class="final-upper-padding"
+              >
+                <label class="final-label">What is your business instragram handle?</label>
+                <div class="final-upper-padding">
+                  <input
+                    v-model="ig_media_handle"
+                    class="input-control upgrade-final"
+                    type="text"
+                    placeholder="@mystore"
+                    autocomplete="on"
                   >
                 </div>
+              </div>
+
+              <div
+                v-if="social_media_option"
+                class="final-upper-padding"
+              >
+                <label
+                  class="final-label"
+                >What is the link to your business facebook page?</label>
+                <div class="final-upper-padding">
+                  <input
+                    v-model="facebook_media_handle"
+                    class="input-control upgrade-final"
+                    type="text"
+                    placeholder="www.facebook.com/pages/mystore"
+                    autocomplete="on"
+                  >
+                </div>
+              </div>
+
+              <div class="final-upper-padding">
+                <label class="final-label">
+                  Select the primary vehicle you will be using for your business.
+                </label>
+                <p class="final-inner">
+                  (This will not restrict you from using other vehicles)
+                </p>
+                <div class="final-upper-padding">
+                  <div class="vendors-final-outerline">
+                    <div
+                      class="vendor-final-cards"
+                      :class="{ vendor_active_final: activeTab === 'mbu' }"
+                      @click="selectCard('mbu', 1)"
+                    >
+                      <img
+                        class="vendor-types-final"
+                        :src="getVendorIcon(1)"
+                        alt=""
+                      >
+                    </div>
+                    <div
+                      class="vendor-final-cards"
+                      :class="{ vendor_active_final: activeTab === 'ebu' }"
+                      @click="selectCard('ebu', 2)"
+                    >
+                      <img
+                        class="vendor-types-final"
+                        :src="getVendorIcon(6)"
+                        alt=""
+                      >
+                    </div>
+                    <div
+                      class="vendor-final-cards"
+                      :class="{ vendor_active_final: activeTab === 'fbu' }"
+                      @click="selectCard('fbu', 3)"
+                    >
+                      <img
+                        class="vendor-types-final"
+                        :src="getVendorIcon(25)"
+                        alt=""
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="">
+                <input
+                  class="button-primary final-step-submit"
+                  type="submit"
+                  value="Submit"
+                  @click="submit"
+                >
               </div>
             </div>
           </el-dialog>
@@ -605,7 +613,7 @@ import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
 import OngoingComponent from './_components/OngoingComponent.vue';
-import ApprovalDialog from './_components/social_media_business/ApprovalDialog.vue';
+import ApprovalDialog from './_components/social_media/ApprovalDialog.vue';
 import FbuChildOrders from './_components/FbuChildOrders.vue';
 import NPSFooter from '../../components/footers/NPSFooter.vue';
 import NpsMixin from '../../mixins/nps_mixin';

@@ -51,4 +51,7 @@ export default {
   setPickUpFilledStatus(state, status) {
     state.pick_up_filled_status = status;
   },
+  setLanguage(state, status) {
+    state.language = status;
+  },
 };

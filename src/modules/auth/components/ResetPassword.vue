@@ -10,7 +10,7 @@
       >
         <p>&nbsp;</p>
         <p class="reset-pass-text">
-          Enter new password
+          {{ $t('resetPassword.new_password') }}
         </p>
         <p
           id="pass_change_info"
@@ -27,7 +27,7 @@
                   <input
                     v-model="new_password"
                     class="form__input form__longyy"
-                    placeholder="New Password"
+                    :placeholder="$t('resetPassword.new_pass')"
                     type="password"
                     name="new_password"
                   >
@@ -38,7 +38,7 @@
                   <input
                     v-model="confirm_password"
                     class="form__input form__longyy"
-                    placeholder="Confirm New Password"
+                    :placeholder="$t('resetPassword.confirm_new_password')"
                     type="password"
                     name="confirm password"
                   >
@@ -50,7 +50,7 @@
                   <input
                     type="submit"
                     class="btn btn-primary reset-pass-input"
-                    value="Change Password"
+                    :value="$t('resetPassword.change_password')"
                     :disabled="!this.is_valid"
                     @click="reset_pass"
                   >
@@ -123,20 +123,20 @@ export default {
             // console.warn("Invalid Token");
             this.doNotification(
               2,
-              'Invalid Link',
-              'Invalid Password Reset Link. Redirected to Login Page',
+              this.$t('resetPassword.invalid_link'),
+              this.$t('resetPassword.invalid_reset_link'),
             );
             this.$router.push('/auth');
           }
         },
         (error) => {
-          this.message = 'Reset Password Failed, Kindly retry again';
+          this.message = this.$t('resetPassword.reset_password_failed');
         },
       );
     },
     reset_pass() {
       if (this.new_password !== this.confirm_password) {
-        this.doNotification(2, 'Password Failed', 'Password does not match. Please try again');
+        this.doNotification(2, this.$t('resetPassword.password_failed'), this.$t('resetPassword.password_not_match'));
       } else {
         const payload = {};
         payload.password = this.new_password;
@@ -163,8 +163,8 @@ export default {
             } else {
               this.doNotification(
                 2,
-                'Password Reset Failed',
-                'Password Reset failed. Please try again',
+                this.$t('resetPassword.password_reset_failed'),
+                this.$t('resetPassword.password_reset_failed_text'),
               );
               // this.$router.push("/auth");
             }
@@ -175,7 +175,7 @@ export default {
             };
             this.doNotification(
               2,
-              'Password Reset Failed',
+              this.$t('resetPassword.password_reset_failed'),
               e.response.data.reason,
             );
           });
@@ -197,9 +197,9 @@ export default {
           if (Object.prototype.hasOwnProperty.call(response, 'status')) {
             const errorResponse = response.data;
             if (errorResponse.code === 1) {
-              this.doNotification(2, 'Login Attempt failed', '');
+              this.doNotification(2, this.$t('resetPassword.login_attempt_failed'), '');
             } else {
-              this.doNotification(2, 'Login Attempt failed', 'Account deactivated');
+              this.doNotification(2, this.$t('resetPassword.login_attempt_failed'), this.$t('resetPassword.account_deactivated'));
             }
           } else {
             try {
@@ -254,8 +254,8 @@ export default {
                 }
                 this.doNotification(
                   1,
-                  'Password Reset Successfull',
-                  'Password Reset Successfull. You will automatically be logged in',
+                  this.$t('resetPassword.password_reset_successful'),
+                  this.$t('resetPassword.password_reset_successful_text'),
                 );
                 setTimeout(() => {
                   this.$router.push('/orders');
@@ -267,7 +267,7 @@ export default {
           }
         },
         (error) => {
-          this.doNotification(2, 'Login failed', 'Login failed. Please try again');
+          this.doNotification(2, this.$t('resetPassword.login_failed'), this.$t('resetPassword.login_failed_text') );
         },
       );
     },

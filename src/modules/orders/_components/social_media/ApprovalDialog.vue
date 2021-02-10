@@ -1,5 +1,4 @@
-/* eslint-disable max-len */
-"use strict";
+/* eslint-disable max-len */ "use strict";
 <template lang="html">
   <div class="cancel-pop-up">
     <el-dialog
@@ -45,7 +44,8 @@
           </div>
           <div class="dialog--content-text">
             <p>
-              Congrats! your application to join the Sendy Social Club has been approved. You will now enjoy discounted prices on your orders among other benefits.
+              Congrats! your application to join the Sendy Social Club has been approved. You will
+              now enjoy discounted prices on your orders among other benefits.
             </p>
           </div>
         </div>
@@ -64,7 +64,9 @@
           </div>
           <div class="dialog--content-text">
             <p>
-              Sorry, your application to join the Sendy social club has been declined. Your business doesn’t qualify as a social commerce business, however, you can still place Sendy orders
+              Sorry, your application to join the Sendy social club has been declined. Your business
+              doesn’t qualify as a social commerce business, however, you can still place Sendy
+              orders
             </p>
           </div>
         </div>
@@ -83,10 +85,13 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import SessionMxn from '../../../../mixins/session_mixin';
 
 export default {
-  name: 'SocialApprovalDialog',
+  name: 'ApprovalDialog',
+  mixins: [SessionMxn],
+
   props: {
     approvalStatus: {
       type: Number,
@@ -104,7 +109,11 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    ...mapGetters({
+      get_session: 'getSession',
+    }),
+  },
   methods: {
     updateApprovalView() {
       this.showDialog = false;
@@ -117,6 +126,13 @@ export default {
         };
         this.updateSocialApprovalStatus(fullPayload).then((res) => {
           console.log('socialResponse', res);
+
+          // uppdate session
+          const session = this.$store.getters.getSession;
+          const updatedSession = session;
+          updatedSession[session.default].social_media_business_approval_status = 2;
+          const newSession = JSON.stringify(updatedSession);
+          this.setSession(newSession);
         });
       }
     },
@@ -148,5 +164,4 @@ export default {
     width: 150px;
     margin: auto;
 }
-
 </style>
