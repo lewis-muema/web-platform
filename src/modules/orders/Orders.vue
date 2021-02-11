@@ -444,7 +444,7 @@
                 v-if="tax_compliance"
                 class="final-upper-padding"
               >
-                <label class="final-label">{{ fetchKraHeader }}</label>
+                <label class="final-label">Enter your business {{ fetchKraHeader }}</label>
                 <div class="final-upper-padding">
                   <input
                     v-model="kra_pin"

@@ -1,6 +1,6 @@
 // import promoCodeComponent from '../orders/en/components/orderPlacement/PromoCodesComponent';
 
-var translations = {
+const translations = {
   // order_detail
   distance: 'Distance',
   date: 'Date',
@@ -220,7 +220,7 @@ var translations = {
   cash: 'Cash',
   unknown_payment_method: 'Unknown payment method',
   request_for_payment_sent: 'Request for payment sent to {userPhone}',
-  completing_your_order: 'Completing your order…',
+  completing_your_order: 'Completing your order...',
   invalid_load_weight: 'Invalid Load Weight',
   provide_a_valid_load_weight: 'Kindly provide a valid load weight',
   standard_option: 'Standard option is unavailable right now',
@@ -417,8 +417,8 @@ var translations = {
   price_has_been_confirmed_to_be: 'Price has been confirmed to be',
   choose_payment_option_below: 'Choose payment option below',
   mpessa: 'M-Pesa',
-  matched_parter_to_package: 'We have matched a {{ getTrackPartnerName }} to your {{ getTrackPackageName }}',
-  finding_partner_to_package: 'We are finding a {{ getTrackPartnerName }} for your {{ getTrackPackageName }}',
+  matched_parter_to_package: 'We have matched a {getTrackPartnerName} to your {getTrackPackageName}',
+  finding_partner_to_package: 'We are finding a {getTrackPartnerName} for your {getTrackPackageName}',
   your: 'your',
   has_picked: 'has picked',
   has_picked_your: 'has picked your',
@@ -797,16 +797,41 @@ var translations = {
   deliveries: 'Deliveries',
   additional_instructions: 'Additional Instructions',
   have_preffered_drivers: 'Do you have a preferred driver/s at your pick up location ?',
-  pair_with_driver:'Pair with driver/s',
-  you_have_selected_to_pair:'You have selected to pair with { pairedDriversTally } driver',
+  pair_with_driver: 'Pair with driver/s',
+  you_have_selected_to_pair: 'You have selected to pair with { pairedDriversTally } driver',
   select: 'Select',
   saved_and_frequently_used: 'Saved and Frequently used',
   add_remove_saved_loc: 'Add or remove saved locations ',
-  pick_up_time:'Pick up time',
+  pick_up_time: 'Pick up time',
   Reschedule_pickup_time: 'Reschedule pick up time',
   edit_instructions: 'Edit Instructions',
-  
-
+  add_change_locations: 'Add or change locations',
+  // infoComponent
+  wrong_delivery_locations: 'Wrong delivery locations?',
+  edit_locations: 'Edit locations',
+  schedule_for_later: 'Schedule order for later?',
+  schedule_order: 'Schedule order',
+  do_still_cancel_order: 'Do you still want to cancel the order?',
+  continue_cancel: 'CONTINUE TO CANCEL',
+  incur_cost_updating_loc: 'You may incur cost on updating locations',
+  total_order_cost: 'Total order cost',
+  amount_paid: 'Amount paid',
+  amount_due: 'Amount due',
+  update_locations: 'Update Locations',
+  instructions_word: 'Instructions',
+  schedule_pick_up_time_of_order: 'Schedule pick up time of the order',
+  sorry_could_not_update_location: 'Sorry, we could not update the order because the location entered cannot be serviced by a {vendor_name } . Please try again with other locations',
+  edit_location_failure: 'Edit location failure',
+  location_updated_successfully: 'Locations updated successfully',
+  locations_update_failed: 'Locations update failed',
+  edit_instructions_error: 'Edit instructions error',
+  kindly_provide_valid_phone_number_notify_recipient: 'Kindly provide a valid phone number for the recipient to be notified',
+  additional_instructions_updated_successfully: 'Additional instructions updated successfully',
+  additonal_instructions_update_failed: 'Additional instructions update failed',
+  something_went_wrong_please_try_again: 'Something went wrong . Please try again',
+  pickup_time_updated: 'Pick up time updated successfully',
+  pickup_time_update_failed: 'Pick up time update failed',
+  edit_pickup_time: 'Edit pick up time error',
 };
 
 const en = {
