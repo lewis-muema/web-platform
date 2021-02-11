@@ -190,7 +190,7 @@
             :class="location && !locationSavingStatus ? 'locations-popup-button-active' : 'locations-popup-button-inactive'"
             @click="saveLocation()"
           >
-            {{ locationSavingStatus ? {{$t('general.saving')}} : {{$t('general.save')}} }} {{$t('general.location_capital')}}
+            {{ locationSavingStatus ? `${$t('general.saving')}` : `${$t('general.save')}` }} {{$t('general.location_capital')}}
           </button>
           <div>
             <p class="locations-popup-saved-title">
