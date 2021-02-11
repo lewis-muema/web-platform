@@ -1223,9 +1223,13 @@ export default {
           session.default === 'biz'
           && Object.prototype.hasOwnProperty.call(session[session.default], 'tax_authority_pin')
         ) {
+          this.kra_pin = session[session.default].tax_authority_pin;
           if (session[session.default].tax_authority_pin === null) {
             this.tax_compliance = '';
             this.kra_pin = '';
+          } else if (session[session.default].tax_authority_pin !== '' && !this.valid_kra_pin) {
+            this.tax_compliance = false;
+            this.kra_pin = session[session.default].tax_authority_pin;
           } else if (session[session.default].tax_authority_pin !== '') {
             this.tax_compliance = true;
             this.kra_pin = session[session.default].tax_authority_pin;
@@ -1510,10 +1514,16 @@ export default {
       return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
     },
     handleKraAndIndustry() {
+      let kraName = 'TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        kraName = 'KRA PIN';
+      }
+
       if (this.primary_business_unit === '') {
         this.doNotification(2, 'Final set up error !', 'Please select primary type vehicle');
       } else if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
-        this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
+        this.doNotification(2, 'Final set up error !', `Please enter valid ${kraName}`);
       } else if (this.industry_type === '' || this.social_media_option === '') {
         this.doNotification(2, 'Final set up error !', 'Please select industry preference');
       } else if (
@@ -1522,7 +1532,6 @@ export default {
       ) {
         this.doNotification(2, 'Final set up error !', 'Please provide social media handle');
       } else {
-        const session = this.$store.getters.getSession;
         const payload = {
           cop_id: session[session.default].cop_id,
           cop_name: session[session.default].cop_name,
@@ -1544,12 +1553,16 @@ export default {
       }
     },
     handleKraSetUp() {
+      let kraName = 'TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        kraName = 'KRA PIN';
+      }
       if (this.primary_business_unit === '') {
         this.doNotification(2, 'Final set up error !', 'Please select primary type vehicle');
       } else if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
-        this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
+        this.doNotification(2, 'Final set up error !', `Please enter valid ${kraName}`);
       } else {
-        const session = this.$store.getters.getSession;
         const payload = {
           cop_id: session[session.default].cop_id,
           cop_name: session[session.default].cop_name,
