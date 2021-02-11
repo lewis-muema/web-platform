@@ -160,13 +160,116 @@
         </div>
         <div class="freight-border-line" />
 
+        <!-- Transporters List -->
+
+        <div
+          v-if="Object.prototype.hasOwnProperty.call(freightOrderDetail, 'awarded_bids')"
+          class=""
+        >
+          <div v-if="freightOrderDetail.awarded_bids.length > 0">
+            <div class="order-info-header align-documents-data">
+              Awarded Transporters
+            </div>
+
+            <div class="transporter-listing order-order-documents">
+              <div
+                v-for="(data, index) in freightOrderDetail.awarded_bids"
+                :key="index"
+                class="doc-detail"
+                :class="getItemPosition(freightOrderDetail.awarded_bids, index)"
+              >
+                <div
+                  class="transporters-filters documents-highlight
+                  orders-freight-documents transporters-doc-align"
+                  @click="toggleRow(index)"
+                >
+                  <div class="transporter-content freight-documents-title">
+                    {{ data.company_name === null ? data.name : data.company_name }}
+                  </div>
+                  <div class="transporter-content">
+                    {{ data.available_trucks }} Trucks
+                  </div>
+                  <div class="transporter-content">
+                    USD {{ data.price_per_truck }}/Truck
+                  </div>
+                  <div class="transporter-content view-transporter-documents">
+                    View document details
+                    <span
+                      v-if="opened.includes(index)"
+                      class=""
+                    >
+                      <i class="el-icon-arrow-up" />
+                    </span>
+                    <span
+                      v-if="!opened.includes(index)"
+                      class=""
+                    >
+                      <i class="el-icon-arrow-down" />
+                    </span>
+                  </div>
+                </div>
+                <div
+                  v-if="opened.includes(index)"
+                  class="documents-divider"
+                />
+                <div
+                  v-if="opened.includes(index)"
+                  class="documents-highlight orders-freight-documents transporters-doc-align"
+                >
+                  <div class="transporters-documents">
+                    Documents
+                  </div>
+                  <div class="transporters-filters ">
+                    <div
+                      v-for="(val, index) in data.documents"
+                      v-if="index >= 0"
+                      class="freight-documents--inner"
+                    >
+                      <div class="transporter-content">
+                        {{ val.document_name }}
+                      </div>
+                      <div class="transporter-content">
+                        {{ val.date_created }}
+                      </div>
+                      <div
+                        class="transporter-content view-transporter-documents"
+                        @click="viewDocument(val.url, val.document_name)"
+                      >
+                        View Document <i class="el-icon-arrow-right view-transporter-info" />
+                      </div>
+                      <div class="freight-documents-approve flex-div transporter-content">
+                        <button
+                          type="button"
+                          class="button-primary approve-documents-action freight-approve-doc"
+                          name="create_order_text"
+                          @click="approveDoc(val)"
+                        >
+                          {{ approve_doc_text }}
+                        </button>
+                        <button
+                          type="button"
+                          class="approve-documents-action freight-decline-doc"
+                          name="create_order_text"
+                          @click="declineDialog(val)"
+                        >
+                          {{ decline_doc_text }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Quatations List -->
 
         <div
           v-if="Object.prototype.hasOwnProperty.call(freightOrderDetail, 'quotations')"
           class=""
         >
-          <div class="transporter-doucuments-title align-documents-data">
+          <div class="order-info-header align-documents-data">
             Quatations
             {{
               freightOrderDetail.quotations.length > 0
@@ -181,7 +284,7 @@
                 class="order_details_desc_image"
               >
               <span
-                class="order-info-header"
+                class="freight-documents-date trucks-listing"
               >{{ freightOrderDetail.total_trucks }} trucks needed
               </span>
             </div>
@@ -192,16 +295,17 @@
                 v-for="(val, index) in freightOrderDetail.quotations"
                 v-if="index >= 0"
                 class="doc-detail"
+                :class="getItemPosition(freightOrderDetail.quotations, index)"
               >
                 <div class="transporters-filters documents-highlight orders-freight-documents ">
-                  <div class=" freight-documents-title">
+                  <div class="freight-documents-title">
                     {{
                       freightOrderDetail.quotations[index].company_name === null
                         ? freightOrderDetail.quotations[index].name
                         : freightOrderDetail.quotations[index].company_name
                     }}
                   </div>
-                  <div class=" freight-documents-date">
+                  <div class=" freight-documents-date order-info-header">
                     {{ freightOrderDetail.quotations[index].trucks_available }} Trucks
                   </div>
                   <div class=" freight-documents-date">
@@ -246,80 +350,6 @@
           </div>
         </div>
 
-        <!-- <div
-          v-if="Object.prototype.hasOwnProperty.call(this.freightOrderDetail, 'documents')"
-          class=""
-        >
-          <div class="transporter-doucuments-title align-documents-data">
-            Documents
-          </div>
-          <div class="transporter-listing order-order-documents">
-            <div
-              v-for="(val, index) in freightOrderDetail.documents"
-              v-if="index >= 0"
-              class="doc-detail"
-            >
-              <div class="transporters-filters documents-highlight orders-freight-documents ">
-                <div class=" freight-documents-title">
-                  {{ freightOrderDetail.documents[index].document_name }}
-                </div>
-                <div class=" freight-documents-date">
-                  {{ freightOrderDetail.documents[index].date_created }}
-                </div>
-                <div
-                  class="freight-documents-name view-freight-document"
-                  @click="
-                    viewDocument(
-                      freightOrderDetail.documents[index].url,
-                      freightOrderDetail.documents[index].document_name
-                    )
-                  "
-                >
-                  View Document <i class="el-icon-arrow-right view-transporter-info" />
-                </div>
-                <div
-                  v-if="
-                    freightOrderDetail.documents[index].status === 'PENDING' &&
-                      freightOrderDetail.documents[index].created_by === 'OWNER' &&
-                      checkActionableBtnState
-                  "
-                  class="freight-documents-approve flex-div"
-                >
-                  <button
-                    type="button"
-                    class="button-primary section--filter-action freight-approve-doc"
-                    name="create_order_text"
-                    @click="approveDoc(freightOrderDetail.documents[index])"
-                  >
-                    {{ approve_doc_text }}
-                  </button>
-                  <button
-                    type="button"
-                    class="section--filter-action freight-decline-doc"
-                    name="create_order_text"
-                    @click="declineDialog(freightOrderDetail.documents[index])"
-                  >
-                    {{ decline_doc_text }}
-                  </button>
-                </div>
-                <div
-                  v-else
-                  class="freight-documents-approve flex-div"
-                >
-                  <div class="freight-approval-reason">
-                    {{ freightOrderDetail.documents[index].message }}
-                    <div
-                      v-if="freightOrderDetail.documents[index].status === 'DECLINED'"
-                      class="freight-decline-reason"
-                    >
-                      Reason : {{ freightOrderDetail.documents[index].reason }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
         <transition
           name="fade"
           mode="out-in"
@@ -597,7 +627,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import numeral from 'numeral';
 import S3 from 'aws-s3';
@@ -659,6 +688,7 @@ export default {
           label: 'Payment in 28 days',
         },
       ],
+      opened: [],
     };
   },
   computed: {
@@ -801,6 +831,14 @@ export default {
       }
       return isPdf;
     },
+    getItemPosition(data, index) {
+      let name = '';
+
+      if (index >= 0 && index < data.length - 1) {
+        name = 'no-transporter-top-margin';
+      }
+      return name;
+    },
     handleLandingCardPreview(file) {
       this.billOfLandingData = file;
       this.uploadBillOfLanding();
@@ -859,6 +897,14 @@ export default {
       tempName = `terms_of_delivery_${values}_${new Date().getTime()}.${name.split('.').pop()}`;
 
       return tempName;
+    },
+    toggleRow(i) {
+      if (this.opened.includes(i)) {
+        const index = this.opened.indexOf(i);
+        this.opened.splice(index, 1);
+      } else {
+        this.opened.push(i);
+      }
     },
     awardBid(val) {
       this.awardedTransporter = val;
@@ -1271,5 +1317,41 @@ export default {
 }
 .quatations-outline-info-summary{
   margin-bottom: 6%;
+}
+.transporter-content{
+  width: 38%;
+  font-size: 15px;
+  margin-top: 1%;
+}
+.transporters-documents{
+  width: 11%;
+  color: #000000;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  margin-bottom: 1%;
+  margin-top: 3%;
+}
+.documents-divider{
+  border-top: 1px solid #d8dfe6 !important;
+}
+.trucks-listing{
+  font-size: 14px !important;
+}
+.transporters-doc-align{
+  margin-left: 2 !important;
+}
+.no-transporter-top-margin{
+  border-bottom: 1px solid transparent;
+}
+.freight-documents--inner{
+  width: 100%;
+  display: flex;
+}
+.approve-documents-action{
+  float: right;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  margin-right: 13px;
 }
 </style>
