@@ -487,6 +487,7 @@
 .doc-detail{
   border: 1px solid #d8dfe6;
   border-radius: 1px;
+  min-height: 96px;
 }
 .document-text-option {
   text-align: left;
