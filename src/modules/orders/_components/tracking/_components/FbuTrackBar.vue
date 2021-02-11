@@ -12,20 +12,20 @@
         <div class="homeview--childinfo-card-left">
           <div class="">
             <p class="homeview--childinfo-order-status">
-              Order Status: {{ statusName(orderData.freight_order_details.freight_status) }}
+              {{$t('general.order_status')}}: {{ statusName(orderData.freight_order_details.freight_status) }}
             </p>
           </div>
           <div class="childinfo-container">
             <div class="full-width">
               <div>
                 <p class="homeview--childinfo-order-details">
-                  Order details
+                  {{$t('general.order_details')}}
                 </p>
               </div>
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
                   <p class="no-margin">
-                    Pick Up
+                    {{$t('general.pickup_time')}}
                   </p>
                   <p class="no-margin homeview--field">
                     {{ orderData.path[0].name }}
@@ -33,17 +33,17 @@
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">
-                    Order type
+                    {{$t('general.order_type')}}
                   </p>
                   <p class="no-margin homeview--field">
-                    Container order, {{ orderData.freight_order_details.containers.container_details[0].container_size_feet }}ft Container, {{ orderData.freight_order_details.containers.container_details[0].container_weight_tonnes }}T
+                    {{$t('general.container_order')}}, {{ orderData.freight_order_details.containers.container_details[0].container_size_feet }}ft Container, {{ orderData.freight_order_details.containers.container_details[0].container_weight_tonnes }}T
                   </p>
                 </div>
               </div>
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
                   <p class="no-margin">
-                    Drop-off
+                    {{$t('general.drop_off')}}
                   </p>
                   <p class="no-margin homeview--field">
                     {{ orderData.path[1].name }}
@@ -51,7 +51,7 @@
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">
-                    Container number
+                    {{$t('general.container_number')}}
                   </p>
                   <p class="no-margin homeview--field">
                     {{ orderData.freight_order_details.containers.container_details[0].container_number }}
@@ -61,7 +61,7 @@
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
                   <p class="no-margin">
-                    Empty Container Destination
+                    {{$t('general.empty_container_distribution')}}
                   </p>
                   <p class="no-margin homeview--field">
                     {{ orderData.path[2].name }}
@@ -69,7 +69,7 @@
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">
-                    Consignee
+                    {{$t('general.cosignee')}}
                   </p>
                   <p class="no-margin homeview--field">
                     {{ orderData.freight_order_details.containers.container_details[0].consignee }}
@@ -86,7 +86,7 @@
               class="button-primary"
               @click="$emit('clicked', true)"
             >
-              CANCEL ORDER
+              {{$t('general.cancel_order_capital')}}
             </button>
           </div>
           <div
@@ -124,7 +124,7 @@
           <div class="" />
           <div class="">
             <p class="homeview--childinfo-order-details">
-              Order Timeline
+             {{$t('general.order_timeline')}}
             </p>
           </div>
           <div
@@ -175,57 +175,57 @@ export default {
       actions: [
         {
           actionClass: 'homeview--icon-pending',
-          actionText: 'Your rider is on the way',
+          actionText: this.$t('general.rider_on_the_way'),
           actionTextClass: 'homeview--field-inactive',
-          freight_status: 'confirmed',
+          freight_status: this.$t('general.confirmed'),
         },
         {
           actionClass: 'homeview--icon-pending',
-          actionText: 'Your truck has Gated-In',
+          actionText: this.$t('general.truck_gated_in'),
           actionTextClass: 'homeview--field-inactive',
-          freight_status: 'gated_in',
+          freight_status: this.$t('general.gated_in'),
         },
         {
           actionClass: 'homeview--icon-pending',
-          actionText: 'Your truck has Gated-Out',
+          actionText: this.$t('general.truck_gated_out'),
           actionTextClass: 'homeview--field-inactive',
-          freight_status: 'gated_out',
+          freight_status: this.$t('general.gated_out'),
         },
         {
           actionClass: 'homeview--icon-pending',
-          actionText: 'Your cargo is on the way to the destination',
+          actionText: this.$t('general.cargo_on_the_way_to_destination'),
           actionTextClass: 'homeview--field-inactive',
-          freight_status: 'in_transit',
+          freight_status: this.$t('general.intransit'),
         },
         {
           actionClass: 'homeview--icon-pending',
-          actionText: 'Your cargo has arrived at the destination',
+          actionText: this.$t('general.cargo_arrived_at_destination'),
           actionTextClass: 'homeview--field-inactive',
-          freight_status: 'arrived',
+          freight_status: this.$t('general.arrived'),
         },
         {
           actionClass: 'homeview--icon-pending',
-          actionText: 'Your cargo has been delivered and offloaded',
+          actionText: this.$t('general.cargo_delivered_offloaded'),
           actionTextClass: 'homeview--field-inactive',
-          freight_status: 'offloaded',
+          freight_status: this.$t('general.offloaded'),
         },
         {
           actionClass: 'homeview--icon-pending',
-          actionText: 'The empty container is in-transit to the empty container destination',
+          actionText: this.$t('general.empty_container_in_transit_return'),
           actionTextClass: 'homeview--field-inactive',
           freight_status: 'ec_returned',
         },
         {
           actionClass: 'homeview--icon-pending',
-          actionText: 'The empty container has been delivered',
+          actionText: this.$t('general.empty_container_delivered'),
           actionTextClass: 'homeview--field-inactive',
           freight_status: 'delivered',
         },
       ],
       container_no: '',
       truck_size: '',
-      destination: 'the destination',
-      container_destination: 'the empty container destination',
+      destination: this.$t('general.the_destination'),
+      container_destination: this.$t('general.the_empty_container_destination'),
       delivery_status: 1,
       order_number: '',
       loading: false,
@@ -350,9 +350,9 @@ export default {
         .then((response) => {
           if (response.data.status) {
             this.orderData = response.data;
-            this.actions[3].actionText = `Your cargo is on the way to ${this.orderData.path[1].name}`;
-            this.actions[4].actionText = `Your cargo has arrived at ${this.orderData.path[1].name}`;
-            this.actions[6].actionText = `The empty container is in-transit to ${this.orderData.path[2].name}`;
+            this.actions[3].actionText = this.$t('general.cargo_on_the_way') + this.orderData.path[1].name;
+            this.actions[4].actionText = this.$t('general.cargo_arrived_at') + this.orderData.path[1].name;
+            this.actions[6].actionText = this.$t('general.empty_container_in_transit')+ this.orderData.path[2].name;
             this.set_tracked_order(this.$route.params.order_no);
             this.set_tracking_data(response.data);
             this.set_polyline(response.data.polyline);
@@ -371,13 +371,13 @@ export default {
             });
             const that = this;
             if (this.tracking_data.delivery_status === 3) {
-              that.doNotification('1', 'Order delivered', 'Your order has been delivered.');
+              that.doNotification('1', this.$t('general.order_delivered'), this.$t('general.order_has_been_delivered'));
               that.set_tracking_data({});
               that.clearVendorMarkers();
               this.set_parent_order('');
               this.$router.push('/orders/freight');
             } else if (this.tracking_data.main_status === 2) {
-              that.doNotification('2', 'Order cancelled', 'Your order has been cancelled.');
+              that.doNotification('2', this.$t('general.order_cancelled'), this.$t('general.your_order_cancelled'));
               that.set_tracking_data({});
               that.clearVendorMarkers();
               this.set_parent_order('');
@@ -396,7 +396,7 @@ export default {
               };
             });
           } else {
-            this.doNotification('2', 'Failed to fetch child orders', 'Please retry after a few minutes');
+            this.doNotification('2', this.$t('general.failed_to_fetch_child_orders'), this.$t('general.please_retry_after_afew'));
           }
         });
     },
