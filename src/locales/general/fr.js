@@ -406,8 +406,8 @@ const translations = {
   price_has_been_confirmed_to_be: 'FR_Price has been confirmed to be',
   choose_payment_option_below: 'FR_Choose payment option below',
   mpessa: 'FR_M-Pesa',
-  matched_parter_to_package: 'FR_FR_We have matched a {{ getTrackPartnerName }} to your {{ getTrackPackageName }}',
-  finding_partner_to_package: 'FR_FR_We are finding a {{ getTrackPartnerName }} for your {{ getTrackPackageName }}',
+  matched_parter_to_package: 'FR_FR_We have matched a {getTrackPartnerName} to your {getTrackPackageName}',
+  finding_partner_to_package: 'FR_FR_We are finding a {getTrackPartnerName} for your {getTrackPackageName}',
   your: 'FR_FR_your',
   has_picked: 'FR_has picked',
   has_picked_your: 'FR_has picked your',
@@ -778,6 +778,10 @@ const translations = {
   select: "FR_Select",
   saved_and_frequently_used: 'FR_Saved and Frequently used',
   add_remove_saved_loc: 'FR_Add or remove saved locations ',
+  pick_up_time:'FR_Pick up time',
+  Reschedule_pickup_time: 'FR_Reschedule pick up time',
+  edit_instructions: 'FR_Edit Instructions',
+  add_change_locations: 'FR_Add or change locations',
 };
 
 const en = {
