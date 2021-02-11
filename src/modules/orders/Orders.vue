@@ -444,7 +444,7 @@
                 v-if="tax_compliance"
                 class="final-upper-padding"
               >
-                <label class="final-label">Enter your business KRA pin</label>
+                <label class="final-label">Enter your business {{ fetchKraHeader }}</label>
                 <div class="final-upper-padding">
                   <input
                     v-model="kra_pin"
@@ -458,7 +458,7 @@
                     v-show="!valid_kra_pin"
                     class="invalid-kra"
                   >
-                    Please enter a valid KRA PIN
+                    {{ kraFailResponse }}
                   </span>
                 </div>
               </div>
@@ -749,11 +749,35 @@ export default {
       }
       return 'button--primary-inactive inactive-1';
     },
+    fetchKraHeader() {
+      let kraName = 'TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        kraName = 'KRA PIN';
+      }
+      let resp = `Enter your business ${kraName}`;
+      if (session.default === 'peer') {
+        resp = `Enter your ${kraName}`;
+      }
+      return resp;
+    },
+    kraFailResponse() {
+      let resp = 'Please enter a valid TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        resp = 'Please enter a valid KRA PIN';
+      }
+      return resp;
+    },
     valid_kra_pin() {
       const pin = this.kra_pin;
+      const session = this.$store.getters.getSession;
 
       if (pin !== '') {
-        return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+        if (session[session.default].country_code === 'KE') {
+          return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+        }
+        return /^\d{10}$/.test(pin);
       }
       return true;
     },
