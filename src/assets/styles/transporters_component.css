@@ -374,7 +374,7 @@
   margin-top: 5%;
 }
 .freight-order-info-extra{
-  margin-left: 6%;
+  margin-left: 8%;
   margin-top: 5%;
   margin-bottom: 2%;
   font-size: 14px;
@@ -383,6 +383,7 @@
   font-size: 15px;
   line-height: 18px;
   color: #000000;
+  font-weight: 500 !important;
 }
 .rider_details_wrap {
   width: 34%;
@@ -428,18 +429,25 @@
   margin-top: 1%;
 }
 .freight-documents-approve{
-  width: 45%;
+  width: 38%;
   font-size: 15px;
+  margin-top: 1%;
 }
 .freight-documents-date{
-  width: 20%;
+  width: 38%;
   font-size: 15px;
   margin-top: 1%;
 }
 .freight-documents-title{
-  width: 20%;
+  width: 38%;
   font-size: 15px;
   margin-top: 1%;
+  font-weight: 500;
+  color: #1B7FC3;
+}
+.view-transporter-documents{
+  color: #1B7FC3;
+  cursor: pointer;
 }
 .documents-highlight{
   font-size: 12px;
