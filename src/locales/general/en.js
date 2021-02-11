@@ -833,7 +833,7 @@ const translations = {
   pickup_time_updated: 'Pick up time updated successfully',
   pickup_time_update_failed: 'Pick up time update failed',
   edit_pickup_time: 'Edit pick up time error',
-  //Orders.vue
+  // Orders.vue
   are_you_in_social_media_biz: 'Are you a social commerce business?',
   manage_saved_locations: 'Manage saved {waypointType} locations',
   enter_waypoint_type_location: 'Enter a {waypointType} location',
