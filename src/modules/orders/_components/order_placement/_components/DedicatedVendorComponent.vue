@@ -816,7 +816,7 @@ export default {
         this.doNotification(
           2,
           this.$t('general.no_vendor_selected'),
-          this.$t('general.select_no_of_vehicle_per_vendor'),
+          this.$t('general.select_no_of_vehicles_per_vendor'),
         );
       }
     },
