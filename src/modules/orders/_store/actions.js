@@ -199,7 +199,7 @@ const fetchSuggestions = function fetchSuggestions({ dispatch, commit }, values)
               : row.more.Address.replace(`${row.name}, `, '');
             concatenated.push(row);
           });
-        }    
+        }
         if (response.data.frequent_locations) {
           response.data.frequent_locations.reverse().forEach((row) => {
             row.location_type = 'frequent';
