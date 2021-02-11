@@ -417,8 +417,8 @@ var translations = {
   price_has_been_confirmed_to_be: 'Price has been confirmed to be',
   choose_payment_option_below: 'Choose payment option below',
   mpessa: 'M-Pesa',
-  matched_parter_to_package: 'We have matched a {{ getTrackPartnerName }} to your {{ getTrackPackageName }}',
-  finding_partner_to_package: 'We are finding a {{ getTrackPartnerName }} for your {{ getTrackPackageName }}',
+  matched_parter_to_package: 'We have matched a {getTrackPartnerName} to your {getTrackPackageName}',
+  finding_partner_to_package: 'We are finding a {getTrackPartnerName} for your {getTrackPackageName}',
   your: 'your',
   has_picked: 'has picked',
   has_picked_your: 'has picked your',
@@ -805,7 +805,7 @@ var translations = {
   pick_up_time:'Pick up time',
   Reschedule_pickup_time: 'Reschedule pick up time',
   edit_instructions: 'Edit Instructions',
-  
+  add_change_locations: 'Add or change locations',
 
 };
 
