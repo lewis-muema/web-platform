@@ -8,7 +8,8 @@ import signUp from '../auth/fr/components/signUp';
 import signUpDetails from '../auth/fr/components/signUpDetails';
 import signUpVerification from '../auth/fr/components/signUpVerification';
 import successComponent from '../auth/fr/components/successComponent';
-
+import promoCodeComponent from '../orders/fr/components/orderPlacement/PromoCodesComponent';
+import genFrenchTranslations from '../general/fr';
 
 const translations = {
   byPassLogin,
@@ -20,6 +21,8 @@ const translations = {
   signUpDetails,
   signUpVerification,
   successComponent,
+  promoCodeComponent,
+  general: genFrenchTranslations,
 };
 
 export default translations;
