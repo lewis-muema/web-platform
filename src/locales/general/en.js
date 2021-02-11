@@ -26,6 +26,7 @@ const translations = {
   description: 'Description',
   submit: 'Submit',
   done: 'Done',
+  done_capital: 'DONE',
   delivery_dispute: 'Delivery dispute',
   failure_doc_dispute: 'Failure to dispute documents due to an existing dispute request !',
   sorry_no_extra_charges: 'Sorry there were no extra charges for this order',
@@ -832,6 +833,27 @@ const translations = {
   pickup_time_updated: 'Pick up time updated successfully',
   pickup_time_update_failed: 'Pick up time update failed',
   edit_pickup_time: 'Edit pick up time error',
+  //Orders.vue
+  are_you_in_social_media_biz: 'Are you a social commerce business?',
+  manage_saved_locations: 'Manage saved {waypointType} locations',
+  enter_waypoint_type_location: 'Enter a {waypointType} location',
+  location_capital: 'Location',
+  saving: 'Saving',
+  saved_locations: 'Saved locations',
+  no_saved_locations: 'No saved {waypointType} locations',
+  enter_phone_number_vehicle_to_pair: "Enter their phone number or the vehicle's number plate to pair",
+  pair_with_driver_single: 'Pair with driver',
+  finding_driver_details: 'Finding the driver details',
+  driver_not_found: 'driver not found',
+  enter_your_business: 'Enter your business',
+  pin: 'PIN',
+  business_man_trades_facebook: '(FR_A business that mainly trades through facebook and instagram e.g. An online shoe store)',
+  tin_number: 'TIN number',
+  enter_your: 'Enter your',
+  pickup_lowercase: 'pick up',
+  drop_off_lowercase: 'drop off',
+
+
 };
 
 const en = {
