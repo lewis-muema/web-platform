@@ -1,6 +1,6 @@
 // import promoCodeComponent from '../orders/en/components/orderPlacement/PromoCodesComponent';
 
-var translations = {
+const translations = {
   // order_detail
   distance: 'Distance',
   date: 'Date',
@@ -797,12 +797,12 @@ var translations = {
   deliveries: 'Deliveries',
   additional_instructions: 'Additional Instructions',
   have_preffered_drivers: 'Do you have a preferred driver/s at your pick up location ?',
-  pair_with_driver:'Pair with driver/s',
-  you_have_selected_to_pair:'You have selected to pair with { pairedDriversTally } driver',
+  pair_with_driver: 'Pair with driver/s',
+  you_have_selected_to_pair: 'You have selected to pair with { pairedDriversTally } driver',
   select: 'Select',
   saved_and_frequently_used: 'Saved and Frequently used',
   add_remove_saved_loc: 'Add or remove saved locations ',
-  pick_up_time:'Pick up time',
+  pick_up_time: 'Pick up time',
   Reschedule_pickup_time: 'Reschedule pick up time',
   edit_instructions: 'Edit Instructions',
   add_change_locations: 'Add or change locations',
@@ -813,25 +813,25 @@ var translations = {
   schedule_order: 'Schedule order',
   do_still_cancel_order: 'Do you still want to cancel the order?',
   continue_cancel: 'CONTINUE TO CANCEL',
-  incur_cost_updating_loc:'You may incur cost on updating locations',
+  incur_cost_updating_loc: 'You may incur cost on updating locations',
   total_order_cost: 'Total order cost',
   amount_paid: 'Amount paid',
   amount_due: 'Amount due',
   update_locations: 'Update Locations',
-  instructions_word:'Instructions',
-  schedule_pick_up_time_of_order:'Schedule pick up time of the order',
+  instructions_word: 'Instructions',
+  schedule_pick_up_time_of_order: 'Schedule pick up time of the order',
   sorry_could_not_update_location: 'Sorry, we could not update the order because the location entered cannot be serviced by a {vendor_name } . Please try again with other locations',
   edit_location_failure: 'Edit location failure',
   location_updated_successfully: 'Locations updated successfully',
   locations_update_failed: 'Locations update failed',
   edit_instructions_error: 'Edit instructions error',
-  kindly_provide_valid_phone_number_notify_recipient:'Kindly provide a valid phone number for the recipient to be notified',
-  additional_instructions_updated_successfully:'Additional instructions updated successfully',
+  kindly_provide_valid_phone_number_notify_recipient: 'Kindly provide a valid phone number for the recipient to be notified',
+  additional_instructions_updated_successfully: 'Additional instructions updated successfully',
   additonal_instructions_update_failed: 'Additional instructions update failed',
   something_went_wrong_please_try_again: 'Something went wrong . Please try again',
   pickup_time_updated: 'Pick up time updated successfully',
- pickup_time_update_failed: 'Pick up time update failed',
- edit_pickup_time: 'Edit pick up time error',
+  pickup_time_update_failed: 'Pick up time update failed',
+  edit_pickup_time: 'Edit pick up time error',
 };
 
 const en = {
