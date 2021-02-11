@@ -456,9 +456,6 @@
                 </div>
               </div>
             </div>
-<<<<<<< HEAD
-
-=======
             <div v-if="![22, 24].includes(activeVendorPriceData.vendor_id)">
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
@@ -482,7 +479,6 @@
                 </div>
               </div>
             </div>
->>>>>>> 5b78c7b9... Replaced strings in Dedicated paymentOption and dedicatedVendor Components
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-vendor-classes--label">
                 <payment-options @destroyOrderOptions="destroyVendorComponent()" />
@@ -538,11 +534,7 @@ export default {
         },
         {
           value: '2',
-<<<<<<< HEAD
-          label: 'Any',
-=======
           label: this.$t('general.any'),
->>>>>>> 5b78c7b9... Replaced strings in Dedicated paymentOption and dedicatedVendor Components
         }
       ],
       smallVendorOptions: [
@@ -741,14 +733,11 @@ export default {
       const name = type.replace(/_/g, ' ');
       return name.charAt(0).toUpperCase() + name.slice(1);
     },
-<<<<<<< HEAD
-=======
     
     pairWithDrivers() {
       this.$root.$emit('Pairing status', true);
     },
->>>>>>> 5b78c7b9... Replaced strings in Dedicated paymentOption and dedicatedVendor Components
-
+    
     vendorOptions(id) {
       if (this.small_vendors.includes(id)) {
         return this.smallVendorOptions;
