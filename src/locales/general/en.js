@@ -802,6 +802,11 @@ var translations = {
   select: 'Select',
   saved_and_frequently_used: 'Saved and Frequently used',
   add_remove_saved_loc: 'Add or remove saved locations ',
+  pick_up_time:'Pick up time',
+  Reschedule_pickup_time: 'Reschedule pick up time',
+  edit_instructions: 'Edit Instructions',
+  
+
 };
 
 const en = {
