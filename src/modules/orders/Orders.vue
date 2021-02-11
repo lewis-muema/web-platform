@@ -451,7 +451,7 @@
                     class="input-control upgrade-final"
                     type="text"
                     name="kra_pin"
-                    placeholder="KRA PIN"
+                    placeholder="PIN"
                     autocomplete="on"
                   >
                   <span
