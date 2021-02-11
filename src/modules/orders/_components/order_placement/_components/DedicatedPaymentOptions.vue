@@ -41,7 +41,7 @@
           >
             <div class="home-view-payments-wrapper--left">
               <div class="home-view-payments-wrapper--left__amount-label">
-                Total Payment
+                {{$t('general.total_payment')}}
               </div>
               <div class="home-view-payments-wrapper--left__amount-figure">
                 {{ rb_currency }} {{ pending_amount }}
@@ -85,7 +85,7 @@
               <div class="payment-options-cards-container">
                 <div v-if="!addCardStatus && get_saved_cards.length > 0">
                   <div v-if="deletedCardIndex === ''">
-                    <p class="payment-options-cards-title">Saved Cards</p>
+                    <p class="payment-options-cards-title">{{$t('general.saved_cards')}}</p>
                     <div
                       v-for="(cards, index) in get_saved_cards"
                       :key="index"
@@ -114,7 +114,7 @@
                           class="payment-options-add-card-icon"
                         />
                       </span>
-                      <span class="payment-options-add-card">Add a new Card</span>
+                      <span class="payment-options-add-card">{{$t('general.add_new_card')}}</span>
                     </div>
                   </div>
                   <div
@@ -122,18 +122,18 @@
                     class="delete-saved-card-dialogue"
                   >
                     <p class="delete-saved-card-dialogue-label">
-                      Are you sure you want to delete this card
+                      {{$t('general.sure_delete_card')}}
                       <strong>{{ get_saved_cards[deletedCardIndex].card }}</strong>?
                     </p>
                     <p class="delete-saved-card-dialogue-label">
                       <span
                         class="delete-saved-card-dialogue-buttons"
                         @click="deleteSavedCard(deletedCardIndex)"
-                      >Yes</span>
+                      >{{$t('general.yes')}}</span>
                       <span
                         class="delete-saved-card-dialogue-buttons"
                         @click="deletedCardIndex = ''"
-                      >No</span>
+                      >{{$t('general.no')}}</span>
                     </p>
                   </div>
                 </div>
@@ -151,9 +151,9 @@
                       icon="arrow-left"
                       class="payment-options-add-card-icon"
                     />
-                    Back
+                    {{$t('general.back')}}
                   </span>
-                  <p class="payment-options-cards-title">Add a new card</p>
+                  <p class="payment-options-cards-title">{{$t('general.add_new_card')}}</p>
                   <div
                     id="cc-number"
                     class="form-group"
@@ -191,7 +191,7 @@
                       >
                       <span
                         class="fake-checkbox-label-1"
-                      >I want to save my card for future orders</span>
+                      >{{$t('general.save_card_for_future_orders')}}</span>
                     </div>
                   </div>
                 </form>
@@ -201,32 +201,34 @@
               <p
                 v-if="country === 'KE'"
                 class="card-option-disabled-notification"
+                v-html="$t('general.technical_mantainance_still_pay', {user_name: user_name })"
               >
-                Dear {{ user_name }}, <br>
+                <!-- Dear {{ user_name }}, <br>
                 Card payments will be momentarily unavailable as we undergo technical maintenance.
                 You can still pay for your Sendy deliveries using M-Pesa. Contact Support on
-                +254709779779 for any queries.
+                +254709779779 for any queries. -->
               </p>
               <p
                 v-if="country === 'UG'"
                 class="card-option-disabled-notification"
+                v-html="$t('general.technical_mantainance_contact_customer_care', {user_name: user_name })"
               >
-                Dear {{ user_name }}, <br>
+                <!-- Dear {{ user_name }}, <br>
                 Card payments will be momentarily unavailable as we undergo technical maintenance.
-                Contact Support on +256393239706 for any queries.
+                Contact Support on +256393239706 for any queries. -->
               </p>
             </div>
           </span>
         </div>
         <span v-else-if="getPriceRequestObject.payment_option === 2">
           <div class="home-view-payments--postpay">
-            <p>This is a postpay account</p>
-            <p>The delivery costs will be added to your balance.</p>
+            <p>{{$t('general.post_pay_account')}}</p>
+            <p>{{$t( 'general.delivery_cost_added_to_balance' )}}</p>
           </div>
         </span>
         <span v-else>
           <div class="home-view-payments--postpay">
-            <p>The delivery costs will be charged from your balance.</p>
+            <p>{{$t( 'general.delivery_cost_charged_from_balance' )}}</p>
           </div>
         </span>
       </div>
@@ -261,7 +263,7 @@
           name="button"
           @click="cancelMpesaPaymentRequest()"
         >
-          Cancel Payment
+          {{$t('general.cancel_payment' )}}
         </button>
       </div>
     </div>
@@ -306,7 +308,7 @@ export default {
       loading: false,
       card_token: '',
       customer_token: '',
-      payment_type: 'prepay',
+      payment_type: this.$t('general.prepay'),
       payment_state: 0, // 0- initial 1- loading 2- success 3- cancelled
       shouldDestroy: false,
       schedule_picker_options: {
@@ -315,8 +317,8 @@ export default {
         },
       },
       price_request_response_received: false,
-      vendors_without_return: ['Standard', 'Runner'],
-      vendors_with_fixed_carrier_type: ['Standard', 'Runner', 'Van'],
+      vendors_without_return: [this.$t('general.standard'), this.$t('general.runner')],
+      vendors_with_fixed_carrier_type: [this.$t('general.standard'), this.$t('general.runner') , this.$t('general.van') ],
       return_status: false,
       showing: 1,
       country_code: 'KE',
@@ -444,18 +446,18 @@ export default {
     },
 
     place_order_text() {
-      let text = 'Confirm ';
+      let text = this.$t('general.confirm');
       if (this.order_is_scheduled) {
-        text = 'Schedule ';
+        text = this.$t('general.schedule');
       }
-      return `${text} Order`;
+      return text + this.$t('general.order');
     },
     pay_order_text() {
-      let text = 'Payment Options';
+      let text = this.$t('general.payment_options');
       if (this.getPriceRequestObject.payment_option === 2) {
-        text = 'Post Pay';
+        text = this.$t('general.post_pay');
       } else if (this.getRunningBalance - this.order_cost >= 0) {
-        text = 'Running Balance';
+        text = this.$t('general.running_balance');
       }
 
       return text;
@@ -518,9 +520,9 @@ export default {
     balance_quote_label() {
       let text = '';
       if (this.getRunningBalance < 0) {
-        text = 'You Owe';
+        text = this.$t('general.you_owe');
       } else {
-        text = 'Your Balance';
+        text = this.$t('general.your_balance');
       }
       return text;
     },
@@ -682,7 +684,7 @@ export default {
         css: {
           'letter-spacing': '0.03em',
         },
-        placeholder: 'Card Number',
+        placeholder: this.$t('general.card_number'),
         validations: ['required', 'validCardNumber'],
       });
 
@@ -763,18 +765,18 @@ export default {
                     this.loading = false;
                     this.doNotification(
                       2,
-                      'Insufficient balance',
-                      'The amount charge is not sufficient to place the order, please try again',
+                      this.$t('general.insufficient_balance'),
+                      this.$t('general.amount_charge_not_sufficient'),
                     );
                   }
                 } else {
                   this.loading = false;
-                  this.doNotification(2, 'Failed to charge card', res.message);
+                  this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
                 }
               });
             } else {
               this.loading = false;
-              this.doNotification(2, 'Failed to charge card', response.message);
+              this.doNotification(2, this.$t('general.enter_card_details_try_again'), response.message);
             }
           },
         );
@@ -782,8 +784,8 @@ export default {
         this.loading = false;
         this.doNotification(
           2,
-          'Failed to charge card',
-          'Please enter all the card details and try again',
+          this.$t('general.failed_to_charge_card'),
+          this.$t('general.please'),
         );
       }
     },
@@ -830,20 +832,20 @@ export default {
                 this.loading = false;
                 this.doNotification(
                   2,
-                  'Insufficient balance',
-                  'The amount charge is not sufficient to place the order please try again',
+                  this.$t('general.insufficient_balance'),
+                  this.$t('general.ammount_charge_not_sufficient'),
                 );
               }
             } else {
               this.loading = false;
-              this.doNotification(2, 'Failed to charge card', response.message);
+              this.doNotification(2, this.$t('general.failed_to_charge_card'), response.message);
             }
           },
           error => false,
         );
       } else {
         this.loading = false;
-        this.doNotification(2, 'Failed to charge card', 'Please select one of your saved cards');
+        this.doNotification(2, this.$t('general.failed_to_charge_card'), this.$t('general.select_one_of_your_saved_cards'));
       }
     },
 
@@ -869,8 +871,8 @@ export default {
         } else {
           this.doNotification(
             2,
-            'Failed to delete saved card',
-            'Failed to delete saved card. Please try again later',
+            this.$t('general.failed_to_delete_saved_card'),
+            this.$t('general.failed_to_delete_saved_card_text'),
           );
         }
       });
@@ -924,8 +926,8 @@ export default {
       if (unsetCarriers.length > 0) {
         this.doNotification(
           2,
-          'Vehicle type not set',
-          'Please set the vehicle type for all of the vehicles selected',
+          this.$t('general.vehicle_type_not_set'),
+          this.$t('general.set_vehicle_type'),
         );
         return false;
       }
@@ -940,21 +942,21 @@ export default {
           () => {
             this.doNotification(
               2,
-              'Running balance check',
-              'Running balance check has failed, please try again.',
+              this.$t('general.running_balance_check'),
+              this.$t('general.running_balance_check_text'),
             );
             this.loading = false;
           },
         );
       } else if (this.isValidateScheduleTime() === 2) {
-        this.doNotification(2, 'Schedule time not set', 'Please enter starting time.');
+        this.doNotification(2, this.$t('general.shedule_time_not_set'), this.$t('general.please_enter_starting_time'));
       } else if (this.isValidateScheduleTime() === 3) {
-        this.doNotification(2, 'Schedule time not set', 'Please enter ending time.');
+        this.doNotification(2, this.$t('general.shedule_time_not_set'), this.$t('general.please_enter_starting_time'));
       } else if (this.isValidateScheduleTime() === 4) {
         this.doNotification(
           2,
-          'Schedule time not set',
-          'Please enter starting time and ending time.',
+          this.$t('general.shedule_time_not_set'),
+          this.$t('general.please_select_start_and_ending_time'),
         );
       }
     },
@@ -963,8 +965,8 @@ export default {
       if (this.getExpandedActiveVendorTally.length === 0) {
         this.doNotification(
           '2',
-          'Select a vehicle type',
-          'The vehicle type not been set, please set and try again.',
+          this.$t('general.select_vehicle_type'),
+          this.$t('general.vehicle_type_not_set_please_try_again'),     
         );
         return false;
       }
@@ -984,8 +986,8 @@ export default {
         } else {
           this.doNotification(
             '2',
-            'Choose a payment method',
-            'Please select a payment method and try again.',
+            this.$t('general.choose_payment_method'),
+            this.$t('general.select_payment_method_try_again'),
           );
           return false;
         }
@@ -1127,23 +1129,46 @@ export default {
                   'Vendor Type ID': data.vendor_type,
                 });
               } else {
+<<<<<<< HEAD
                 this.doNotification(
                   2,
                   'Order completion failed',
                   'Price request failed. Please try again',
                 );
+=======
+                setTimeout(() => {
+                  this.doNotification(
+                    3,
+                    this.$t('general.order_completion_failed'),
+                    `${row.reason}`,
+                  );
+                }, 10);
+>>>>>>> 5b78c7b9... Replaced strings in Dedicated paymentOption and dedicatedVendor Components
               }
             });
             if (order) {
               this.$router.push(`/orders/tracking/${order}`);
             }
           },
+<<<<<<< HEAD
           () => {
             this.doNotification(
               3,
               'Order completion failed',
               'Order completion failed. Please check your internet connection and try again.',
             );
+=======
+          (error) => {
+            error.response.data.forEach((row) => {
+              setTimeout(() => {
+                this.doNotification(
+                  3,
+                  this.$t('general.order_completion_failed'),
+                  `${row.reason}`,
+                );
+              }, 10);
+            });
+>>>>>>> 5b78c7b9... Replaced strings in Dedicated paymentOption and dedicatedVendor Components
             this.loading = false;
           },
         );
@@ -1241,43 +1266,43 @@ export default {
 
     payMethodName(id) {
       if (id === 1) {
-        return 'Mpesa';
+        return this.$t('general.mpesa');
       }
       if (id === 2) {
-        return 'Card';
+        return this.$t('general.card');
       }
       if (id === 3) {
-        return 'Promo code';
+        return this.$t('general.promo_code');
       }
       if (id === 5) {
-        return 'Cash';
+        return this.$t('general.cash');
       }
       if (id === 11) {
-        return 'Running balance';
+        return this.$t('general.running_balance');
       }
       if (id === 12) {
         return 'Post pay';
       }
-      return 'Unknown payment method';
+      return this.$t('general.unknown_payment_method');
     },
 
     carrierTypeName(id, vendor) {
       if (vendor === 1) {
         if (id === '0') {
-          return 'Bike without box';
+          return this.$t('general.bike_without_box');
         }
         if (id === '1') {
-          return 'Bike with box';
+          return this.$t('general.bike_with_box');
         }
-        return 'Any';
+        return this.$t('general.any');
       }
       if (id === '0') {
-        return 'Open';
+        return this.$t('general.open');
       }
       if (id === '1') {
-        return 'Closed';
+        return this.$t('general.closed');
       }
-      return 'Any';
+      return this.$t('general.any');
     },
 
     retrieveFromStore() {
@@ -1373,7 +1398,7 @@ export default {
           mixpanel.identify(email);
         }
       } catch (er) {
-        this.doNotification('3', 'Something went wrong', '');
+        this.doNotification('3', this.$t('general.something_went_wrong'), '');
       }
     },
 
@@ -1455,16 +1480,14 @@ export default {
           }
 
           if (response.status === 200) {
-            this.doNotification('0', 'M-Pesa Payment', `Request for payment sent to ${userPhone}.`);
+            this.doNotification('0', this.$t('general.mpesa_payment'), this.$t('general.request_for_payement_sent', {userPhone: userPhone }) );
             this.requestMpesaPaymentPoll();
           } else {
             this.refreshRunningBalance();
             this.doNotification(
               '0',
-              'M-Pesa Payment',
-              `M-Pesa request to ${userPhone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
-                this.pending_amount
-              }.`,
+              this.$t('general.mpesa_payment'),
+              this.$t('general.mpesa_request_failed', {userphone: userPhone, referenceNumber: referenceNumber }) + this.pending_amount
             );
             this.payment_state = 0;
             this.loading = false;
@@ -1474,10 +1497,8 @@ export default {
           this.refreshRunningBalance();
           this.doNotification(
             '0',
-            'M-Pesa Payment',
-            `M-Pesa request to ${userPhone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
-              this.pending_amount
-            }.`,
+            this.$t('general.mpesa_payment'),
+            this.$t('general.mpesa_request_failed', {userphone: userPhone, referenceNumber: referenceNumber }) + this.pending_amount
           );
           this.payment_state = 0;
           this.loading = false;
@@ -1537,7 +1558,7 @@ export default {
               pollCount = pollLimit;
               that.payment_state = 0;
               that.loading = false;
-              that.doNotification('1', 'Payment successful', 'Completing your order...');
+              that.doNotification('1', this.$t('general.payment_successful'), this.$t('general.completing_your_order'));
               that.doCompleteOrder();
               that.mpesa_payment = false;
               that.mpesa_payment_state = true;
@@ -1548,9 +1569,9 @@ export default {
               if (pollCount === 5 && !that.mpesa_payment_state) {
                 that.doNotification(
                   '0',
-                  'Payment not received',
-                  "We'll keep retrying to check your payment status and complete your order once the payment is received.",
-                );
+                  this.$t('general.payment_not_recieved'),
+                  this.$t('general.will_keep_trying_checking_payment')
+                  );
                 that.payment_state = 0;
                 that.loading = false;
                 that.requestMpesaPaymentPoll(60);
@@ -1596,8 +1617,8 @@ export default {
       this.loading = 0;
       this.doNotification(
         '2',
-        'M-Pesa Payment cancelled',
-        'M-Pesa payment has been cancelled, please try again.',
+        this.$t('general.mpesa_payment_cancelled'),
+        this.$t('general.mpesa_payment_cancelled_text'),
       );
       this.requestMpesaPaymentPoll(60);
     },
@@ -1684,8 +1705,8 @@ export default {
         () => {
           this.doNotification(
             '2',
-            'Running balance check',
-            'Running balance check has failed, please try again.',
+            this.$t('general.running_balance_check'),
+            this.$t('general.running_balance_check_failed'),
           );
           this.loading = false;
         },
@@ -1762,8 +1783,8 @@ export default {
     handleOrderPlacementError(data) {
       this.doNotification(
         2,
-        'Order Completion Failed',
-        'Kindly ensure you are using your Business account and retry .',
+        this.$t('general.order_completion_failed'),
+        this.$t('general.ensure_using_biz_account'),
       );
       this.trackMixpanelEvent('Business Order Fail Alert', {
         'Account ': data.type,
