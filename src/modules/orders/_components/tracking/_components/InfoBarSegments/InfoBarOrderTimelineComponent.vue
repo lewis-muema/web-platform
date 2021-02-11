@@ -31,7 +31,7 @@
             >
               <div class="">
                 <p class="infor-top-bar-text stagePassed">
-                  Your Order has been scheduled
+                  {{$t('general.your_order_has_been_scheduled')}}
                 </p>
                 <p class="eta_data">
                   {{ convertToUTCToLocal(trackingData.date_time) | moment }}
@@ -50,7 +50,7 @@
                   class="infor-top-bar-text"
                   :class="{ payedActive: setPayed }"
                 >
-                  Price Confirmation
+                  {{$t('general.price_confirmation')}}
                 </p>
                 <div
                   v-if="getStatus === 'Pending'"
@@ -63,7 +63,7 @@
                       class=""
                     >
                       <p>
-                        Price has been confirmed to be
+                        {{$t('general.price_has_been_confirmed_to_be')}}
                         {{
                           trackingData.price_tier.currency
                             ? trackingData.price_tier.currency
@@ -78,7 +78,7 @@
                     >
                       <div v-if="myRb <= 0">
                         <p>
-                          Price has been confirmed to be
+                          {{$t('general.price_has_been_confirmed_to_be')}}
                           {{
                             trackingData.price_tier.currency
                               ? trackingData.price_tier.currency
@@ -89,20 +89,20 @@
                       </div>
                       <div v-else>
                         <p>
-                          Price has been confirmed to be
+                          {{$t('general.price_has_been_confirmed_to_be')}}
                           {{
                             trackingData.price_tier.currency
                               ? trackingData.price_tier.currency
                               : trackingData.currency
                           }}
-                          {{ trackingData.amount }}.Choose payment option below
+                          {{ trackingData.amount }}.{{$t('general.choose_payment_option_below')}}
                         </p>
                         <div class="">
                           <el-radio
                             v-model="paymentOption"
                             label="1"
                           >
-                            M-Pesa
+                            {{$t('general.mpesa')}}
                           </el-radio>
                         </div>
                         <div class="">
@@ -110,7 +110,7 @@
                             v-model="paymentOption"
                             label="2"
                           >
-                            Card
+                            {{$t('general.card')}}
                           </el-radio>
                         </div>
                         <div class="info-payment-button">
@@ -143,13 +143,15 @@
               >
                 <span v-if="trackingData.confirm_status > 0">
                   <p class="stagePassed">
-                    We have matched a {{ getTrackPartnerName }} to your {{ getTrackPackageName }}
+                    <!-- We have matched a {{ getTrackPartnerName }} to your {{ getTrackPackageName }} -->
+                    {{$t('general.matched_partner_to_package', {getTrackPartnerName: getTrackPartnerName, getTrackPackageName: getTrackPackageName })}}
                   </p>
                   <p class="eta_data">{{ getConfirmEta }}</p>
                 </span>
                 <span v-else>
                   <p class="stagePending">
-                    We are finding a {{ getTrackPartnerName }} for your {{ getTrackPackageName }}
+                    <!-- We are finding a {{ getTrackPartnerName }} for your {{ getTrackPackageName }} -->
+                    {{$t('general.finding_partner_to_package',{getTrackPartnerName: getTrackPartnerName, getTrackPackageName: getTrackPackageName })}}
                   </p>
                   <p
                     class="eta_data"
@@ -175,15 +177,15 @@
               >
                 <span v-if="trackingData.delivery_status > 0">
                   <p class="stagePassed">
-                    Your {{ getTrackPartnerName }} {{ trackingData.rider.rider_name }} has picked
-                    your
+                    {{$t('general.your')}} {{ getTrackPartnerName }} {{ trackingData.rider.rider_name }} {{$t('general.has_picked_your')}}
+                    
                     {{ getTrackPackageName }}
                   </p>
                   <p class="eta_data">{{ getPickUpEta }}</p>
                 </span>
                 <span v-else>
                   <p class="stagePending">
-                    Your {{ getTrackPartnerName }} is on the way to pick your
+                    {{$t('general.your')}}  {{ getTrackPartnerName }} {{$t('general.is_on_the_way_to_pick')}} 
                     {{ getTrackPackageName }}
                   </p>
                   <p class="eta_data">{{ getPickUpEta }}</p>
@@ -212,26 +214,26 @@
                 >
                   <span v-if="trackingData.delivery_status < 3 && !val.visited">
                     <p class="stagePending">
-                      Your {{ getTrackPartnerName }} is on the way to pick your
+                      {{$t('general.your')}}  {{ getTrackPartnerName }} {{$t('general.is_on_the_way_to_pick')}} 
                       {{ getTrackPackageName }} at
                       {{ val.name }}
                     </p>
                   </span>
                   <span v-else>
                     <p class="stagePassed">
-                      Your {{ getTrackPackageName }} at {{ val.name }} has been picked.
+                      {{$t('general.your')}}  {{ getTrackPackageName }} at {{ val.name }} {{$t('general.has_been_picked')}}
                     </p>
                   </span>
                 </span>
                 <span v-else>
                   <span v-if="trackingData.delivery_status < 3 && !val.visited">
                     <p class="stagePending">
-                      Your {{ getTrackPackageName }} is on the way to {{ val.name }}
+                      {{$t('general.your')}} {{ getTrackPackageName }} {{$t('general.is_on_the_way_to')}} {{ val.name }}
                     </p>
                   </span>
                   <span v-else>
                     <p class="stagePassed">
-                      Your {{ getTrackPackageName }} has been delivered to {{ val.name }}
+                      {{$t('general.your')}} {{ getTrackPackageName }} {{$t('general.has_been_delivered_to')}}{{ val.name }}
                     </p>
                   </span>
                 </span>
@@ -251,7 +253,7 @@
               >
                 <span>
                   <p :class="{ stagePassed: setComplete }">
-                    Delivery complete
+                    {{$t('general.delivery_complete')}}
                   </p>
                 </span>
               </div>
@@ -314,25 +316,25 @@ export default {
       getDeliveryEta: '$_orders/$_tracking/getDeliveryEta',
     }),
     orderPlaced() {
-      const text = 'Your order has been received';
+      const text = this.$t('general.order_recieved');
 
       return text;
     },
     getStatus() {
       switch (this.trackingData.delivery_status) {
         case 3: {
-          return 'Delivered';
+          return this.$t('general.delivered');
         }
         case 2: {
-          return 'In Transit';
+          return this.$t('general.in_transit');
         }
         default: {
           switch (this.trackingData.confirm_status) {
             case 1: {
-              return 'Confirmed';
+              return this.$t('general.confirmed');
             }
             default: {
-              return 'Pending';
+              return this.$t('general.pending');
             }
           }
         }
@@ -384,7 +386,7 @@ export default {
       } else if (this.paymentOption === 2) {
         this.$router.push('/payment/card');
       } else {
-        this.doNotification('2', 'Payment Failure', 'Choose a Payment Option.');
+        this.doNotification('2', this.$t('general.payment_failure'), this.$t('general.choose_payment_option'));
       }
     },
     setTimeLineIconState() {
