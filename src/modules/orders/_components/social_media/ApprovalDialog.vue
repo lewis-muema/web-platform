@@ -16,16 +16,14 @@
             <img src="../../../../assets/img/sendy-biker.png">
           </div>
           <div class="dialog--title-text">
-            Your application has been received
+            {{$t('approvalDialogue.your_application_has_been_recieved')}}
           </div>
           <div class="dialog--content-text">
             <p>
-              By filling out that you are a social commerce business, you will be enrolled to the
-              Sendy Social Club (after verification).
+              {{$t('approvalDialogue.by_filling_social_commerce_business')}}
             </p>
             <p>
-              You will enjoy discounted prices, exclusive trainings, events and other benefits
-              intended to help you grow your business.
+              {{$t('approvalDialogue.enjoy_discounted_prices')}}
             </p>
           </div>
         </div>
@@ -40,12 +38,11 @@
             >
           </div>
           <div class="dialog--title-text">
-            Your application has been approved
+             {{$t('approvalDialogue.your_application_has_been_approved')}}
           </div>
           <div class="dialog--content-text">
             <p>
-              Congrats! your application to join the Sendy Social Club has been approved. You will
-              now enjoy discounted prices on your orders among other benefits.
+            {{$t('approvalDialogue.congrats_your_application_has_been_approved')}}
             </p>
           </div>
         </div>
@@ -60,13 +57,11 @@
             >
           </div>
           <div class="dialog--title-text">
-            Your application has been declined
+            {{$t('approvalDialogue.your_application_has_been_declined')}}
           </div>
           <div class="dialog--content-text">
             <p>
-              Sorry, your application to join the Sendy social club has been declined. Your business
-              doesn’t qualify as a social commerce business, however, you can still place Sendy
-              orders
+            {{$t('approvalDialogue.sorry_your_application_declined')}}
             </p>
           </div>
         </div>

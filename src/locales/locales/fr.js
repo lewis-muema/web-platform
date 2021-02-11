@@ -9,6 +9,7 @@ import signUpDetails from '../auth/fr/components/signUpDetails';
 import signUpVerification from '../auth/fr/components/signUpVerification';
 import successComponent from '../auth/fr/components/successComponent';
 import promoCodeComponent from '../orders/fr/components/orderPlacement/PromoCodesComponent';
+import approvalDialogue from '../orders/fr/components/social_media/approvalDialogue';
 import genFrenchTranslations from '../general/fr';
 
 const translations = {
@@ -22,6 +23,7 @@ const translations = {
   signUpVerification,
   successComponent,
   promoCodeComponent,
+  approvalDialogue,
   general: genFrenchTranslations,
 };
 
