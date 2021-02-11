@@ -21,7 +21,7 @@
               id="homeview--pick-up-location-input"
               v-model="locations[0]"
               :options="map_options"
-              placeholder="Enter a pickup location"
+              :placeholder="$t('general.enter_pickup_location')"
               :select-first-on-enter="true"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
               @place_changed="setLocation($event, 0, 1)"
@@ -37,7 +37,7 @@
             />
           </no-ssr>
         </div>
-        <div
+          <div
           v-if="activeEl === 'homeview--pick-up-location-input' && hiddenSuggestionsStatus"
           class="homeview--input-suggestions"
           :style="{ marginTop: `${(scrollFromTop - 15)}px`, width: `${suggestionsWidth}px`, left: `${leftDisplacement}px` }"
@@ -45,7 +45,7 @@
           @mouseout="activeSuggestionList = false"
         >
           <div class="homeview--input-suggetions-title">
-            Saved and Frequently used
+            {{$t('general.saved_and_frequently_used')}}
           </div>
           <div
             v-for="(suggestion, index) in pickUpSuggestions"
@@ -85,7 +85,7 @@
             class="homeview--input-suggetions-link"
             @click="triggerLocationsManagementPopUp(true, 'PICKUP')"
           >
-            Add or remove saved locations >
+            {{$t('general.add_remove_saved_loc')}} >
           </div>
         </div>
         <div class="homeview--destinations">
@@ -101,7 +101,7 @@
                 id="destination"
                 v-model="dropOffRegion"
                 :options="map_options"
-                placeholder="Enter region"
+                :placeholder="$t('general.enter_region')"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
                 @place_changed="addRegion($event)"
@@ -125,7 +125,7 @@
             @mouseout="activeSuggestionList = false"
           >
             <div class="homeview--input-suggetions-title">
-              Saved and Frequently used
+              {{$t('general.saved_and_frequently_used')}}
             </div>
             <div
               v-for="(suggestion, index) in destinationSuggestions"
@@ -165,7 +165,7 @@
               class="homeview--input-suggetions-link"
               @click="triggerLocationsManagementPopUp(true, 'DROPOFF')"
             >
-              Add or remove saved locations >
+              {{$t('general.add_remove_saved_loc')}} >
             </div>
           </div>
         </div>
@@ -176,10 +176,10 @@
                 id="return"
                 v-model="locations[1]"
                 :options="map_options"
-                placeholder="Return location (Optional)"
+                :placeholder="$t('general.return_location')"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-return-location"
-                @place_changed="setLocation($event, 1, 1)"
+                @place_changed="setLocation($event, 1)"
                 @keyup="checkChangeEvents($event, 1)"
                 @change="checkChangeEvents($event, 1)"
               />
@@ -200,7 +200,7 @@
             @mouseout="activeSuggestionList = false"
           >
             <div class="homeview--input-suggetions-title">
-              Saved and Frequently used
+              {{$t('general.saved_and_frequently_used')}}
             </div>
             <div
               v-for="(suggestion, index) in destinationSuggestions"
@@ -240,19 +240,19 @@
               class="homeview--input-suggetions-link"
               @click="triggerLocationsManagementPopUp(true, 'DROPOFF')"
             >
-              Add or remove saved locations >
+              {{$t('general.add_remove_saved_loc')}} >
             </div>
           </div>
         </div>
         <div v-if="fileUploadStatus">
           <p class="home-view--upload-par">
-            OR
+            {{$t('general.or')}}
           </p>
           <p
             class="home-view--upload-button"
             @click="initiateUpload()"
           >
-            Upload file
+           {{$t('general.upload_file')}}
           </p>
         </div>
       </div>
@@ -275,7 +275,7 @@
           type="button"
           class="button--primary-inactive home-view--place-order"
         >
-          Continue
+          {{$t('general.continue')}}
         </button>
       </div>
     </div>
@@ -502,7 +502,7 @@ export default {
       this.$root.$emit('Upload status', true);
     },
 
-    addFocusListener() {
+addFocusListener() {
       document.addEventListener('focus', this.focusedInput, true);
       document.addEventListener('blur', this.blurredInput, true);
       document.querySelector('.homeview--form__scrollable').addEventListener('scroll', this.scrollingDiv, true);
@@ -817,8 +817,8 @@ export default {
           } else {
             this.doNotification(
               3,
-              'Price request failed',
-              'Price request failed. Please try again after a few minutes.',
+              this.$t('general.price_request_failed'),
+              this.$t('general.price_request_failed_text'),
             );
           }
 
