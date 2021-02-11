@@ -781,26 +781,6 @@ export default {
       }
       return true;
     },
-    fetchKraHeader() {
-      let kraName = 'TIN number';
-      const session = this.$store.getters.getSession;
-      if (session[session.default].country_code === 'KE') {
-        kraName = 'KRA PIN';
-      }
-      let resp = `Enter your business ${kraName}`;
-      if (session.default === 'peer') {
-        resp = `Enter your ${kraName}`;
-      }
-      return resp;
-    },
-    kraFailResponse() {
-      let resp = 'Please enter a valid TIN number';
-      const session = this.$store.getters.getSession;
-      if (session[session.default].country_code === 'KE') {
-        resp = 'Please enter a valid KRA PIN';
-      }
-      return resp;
-    },
     suggestions() {
       const rows = [];
       this.getSuggestions.forEach((row) => {
