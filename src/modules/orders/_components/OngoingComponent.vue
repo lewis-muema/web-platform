@@ -232,6 +232,7 @@ export default {
   max-height: 55%;
   overflow-x: hidden;
   margin-right : 19px;
+  max-width: 32%;
 }
 .ongoing--count
 {
@@ -299,6 +300,6 @@ border-radius: 0px 0px 3px 3px;
   width: 105%;
 }
 .ongoing-card-text{
-  color: #555 !important;
+  color: #555;
 }
 </style>

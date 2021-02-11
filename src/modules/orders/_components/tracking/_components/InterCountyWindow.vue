@@ -1194,6 +1194,7 @@ export default {
         error => error,
       );
     },
+
     cancelOrder() {
       if (this.cancel_reason !== '' && Object.keys(this.$store.getters.getSession).length > 0) {
         if (this.cancel_reason === 0 && this.cancel_desc === '') {
@@ -1228,6 +1229,7 @@ export default {
             eventLabel: 'Yes Button - Order Cancellation Page - WebApp',
           };
           this.fireGAEvent(eventPayload);
+
           this.cancelPromocode();
 
           this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then((response) => {

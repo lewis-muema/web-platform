@@ -260,6 +260,7 @@ export default {
         error => error,
       );
     },
+
     cancelOrder() {
       if (this.cancel_reason !== '') {
         const payload = {
@@ -277,7 +278,6 @@ export default {
             eventLabel: 'Submit cancel reason input - Order Cancellation Page - WebApp',
           });
         }
-
         this.cancelPromocode();
 
         this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then((response) => {

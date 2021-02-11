@@ -20,6 +20,7 @@ const getPickUpFilledStatus = state => state.pick_up_filled_status;
 const getStorePath = state => state.order_path;
 const getExtraDestinations = state => state.extra_destinations;
 const getMaxDestinations = state => state.max_destinations;
+const getAmountDue = state => state.amount_due;
 
 export default {
   getTrackingData,
@@ -44,4 +45,5 @@ export default {
   getNotesInStore,
   getScheduleTimeDialog,
   getPickUpTime,
+  getAmountDue,
 };

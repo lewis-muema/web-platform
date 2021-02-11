@@ -8,7 +8,7 @@
         <ul class="timeline inforbar_route_timeline">
           <li>
             <p class="info-text-transform infor-top-bar-text">
-              Pickup Location
+              {{$t('general.pickup_location')}}
             </p>
             <p>{{ trackingData.path[0].name }}</p>
             <p
@@ -17,7 +17,7 @@
               @click="showEditLocationsDialog()"
             >
               <i class="el-icon-edit-outline" />
-              Add or change locations
+              {{$t('general.add_change_locations')}}
             </p>
           </li>
 
@@ -44,7 +44,7 @@
               v-if="Object.prototype.hasOwnProperty.call(val, 'notes') && val.notes"
               class="infor-top-bar-text-notes"
             >
-              Notes: {{ val.notes }}
+              {{$t('general.notes')}}: {{ val.notes }}
             </p>
           </li>
         </ul>
@@ -118,7 +118,9 @@ export default {
         Object.prototype.hasOwnProperty.call(this.trackingData, 'edit_config')
         && this.user_state
       ) {
-        show = this.trackingData.edit_config.add_drop_off;
+        if (this.trackingData.edit_config !== null) {
+          show = this.trackingData.edit_config.add_drop_off;
+        }
       }
       return show;
     },

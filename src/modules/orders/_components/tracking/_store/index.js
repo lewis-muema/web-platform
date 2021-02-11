@@ -27,6 +27,7 @@ const state = {
   max_destinations: 24,
   edit_notes: false,
   stored_notes: {},
+  amount_due: 0,
 };
 
 export default {
