@@ -852,6 +852,7 @@ const translations = {
   enter_your: 'Enter your',
   pickup_lowercase: 'pick up',
   drop_off_lowercase: 'drop off',
+  no_notes_provided: 'No notes provided.',
 
 
 };
