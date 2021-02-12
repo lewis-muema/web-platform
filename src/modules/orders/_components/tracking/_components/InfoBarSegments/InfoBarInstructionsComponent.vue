@@ -36,7 +36,7 @@
                 class="infobar-truck-img"
               >
               <span class="info-text-transform infor-top-bar-text align-top-bar">
-                 {{$t('general.scheduled_pick_up_time')}}
+                 {{$t('general.schedule_pick_up_time')}}
               </span>
             </div>
             <div class="tracking-loader-inner align-inner-bar">

@@ -13,7 +13,7 @@
       id="rate-rider-content"
       class="rate-rider-content"
     >
-      <div class="rate-rider-please">{{$t('general.please_rate_drivername')}}</div>
+      <div class="rate-rider-please">{{$t('general.please_rate_drivername', {driver_name: driver_name})}}</div>
 
       <div class="rate-rider-star">
         <div class="submit-stars">
