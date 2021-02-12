@@ -623,7 +623,7 @@
                       @click="openNotesDialog(2)"
                     >
                       <a class="instructions-holder">
-                        {{$t('general.add_drop_instructions')}}
+                        {{$t('general.add_drop_off_instructions')}}
                       </a>
                       <i class="el-icon-circle-plus-outline align-instructions-icon" />
                     </button>
