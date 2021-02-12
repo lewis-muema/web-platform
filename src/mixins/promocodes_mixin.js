@@ -18,7 +18,6 @@ const promocode = {
 
       const copID = session.default === 'biz' ? session[session.default].cop_id : 0;
       const individualID = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
-
       const promoPayload = {
         cop_id: copID,
         individual_id: individualID,

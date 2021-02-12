@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable camelcase */
 <template lang="html">
   <div class="">
     <main-header />
@@ -236,6 +238,136 @@
             </div>
           </div>
         </div>
+        <div
+          v-if="pairing_status"
+          :key="renderKey"
+          class="pairing-popup"
+        >
+          <div class="pair-vehicles-popup">
+            <div class="pair-vehicles-title">
+              Pair with driver/s
+              <i
+                slot="suffix"
+                class="close el-input__icon el-icon-error"
+                @click="closePairingPopup()"
+              />
+            </div>
+            <div class="pair-vehicles-title-description">
+              Enter their phone number or the vehicle's number plate to pair
+            </div>
+            <div class="pair-vehicles-list">
+              <div
+                v-for="(activeVendor, index) in pairing_data"
+                :key="index"
+                class="pair-vehicle-rows"
+              >
+                <div class="pair-vehicles-vendor-title">
+                  <span>Pair with driver {{ index + 1 }}</span><span class="pair-vehicles-vendor-id">({{ activeVendor.vendor_name }})</span>
+                </div>
+                <div class="">
+                  <el-input
+                    :id="`input${index}`"
+                    v-model="activeVendor.vehicle_plate"
+                    :placeholder="vehicleDetailsPlaceholder"
+                    autocomplete="true"
+                    @input="checkVehicleDetails(activeVendor, index)"
+                  >
+                    <i
+                      v-if="activeVendor.searchOption"
+                      slot="suffix"
+                      class="el-icon-loading el-input__icon"
+                    />
+                    <i
+                      v-if="activeVendor.pair_status !== ''"
+                      slot="suffix"
+                      class="el-icon-close el-input__icon"
+                      @click="clearVehicleDetails(activeVendor, index)"
+                    />
+                  </el-input>
+                  <div
+                    v-if="activeVendor.searchOption"
+                    class="pair-info-loading"
+                  >
+                    <div class="pairing-loading-holder">
+                      <i class="el-icon-loading pairing-alert-icon" />
+                      <div class="pair-model-info-variant">
+                        Finding the driver details
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    v-if="activeVendor.visible2"
+                    class="pair_info_text_content"
+                  >
+                    <div
+                      v-if="activeVendor.pair_status === '1'"
+                      class="pair-info-warning"
+                    >
+                      <div class="pairing-error-icon-holder">
+                        <i class="el-icon-warning pairing-alert-icon" />
+                      </div>
+                      <div class="share-option pairing-error-holder">
+                        <div class="pairing-error-header pairing-error-header-variant">
+                          driver not found
+                        </div>
+                        <div class="pair-model-info-variant">
+                          {{ activeVendor.failure_text }}
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      v-if="activeVendor.pair_status === '2'"
+                      class="pair-info-success"
+                    >
+                      <div class="pair-info-rider-details">
+                        <img
+                          align="middle"
+                          class="display_paired_rider_img"
+                          :src="activeVendor.pair_rider_image"
+                        >
+                        <div class="display_paired_rider_details">
+                          <div class="pair-rider-name pair-rider-name-variant">
+                            {{ activeVendor.pair_rider_name }}
+                          </div>
+                          <div class="pair-rider-rating-icons">
+                            <div class="pair-rider-rating-icons-val">
+                              {{ `${activeVendor.pair_rider_rating}${Number.isInteger(activeVendor.pair_rider_rating) ? '.0' : ''}` }}
+                            </div>
+                            <div class="pair-rider-rating-icons-holder">
+                              <el-rate
+                                v-model="activeVendor.pair_rider_rating"
+                                disabled
+                                disabled-void-color="#C0C4CC"
+                                :colors="['#1782C5', '#1782C5', '#1782C5']"
+                                class="pair-info-rider-rate-icons"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="share-option pair-info-vehicle-details">
+                        <div class="pair-model-info">
+                          {{ activeVendor.pair_rider_make }} {{ activeVendor.pair_rider_model }}
+                        </div>
+                        <div>
+                          {{ activeVendor.pair_rider_plate }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pair-button-section">
+              <button
+                class="button-primary pair-button"
+                @click="closePairingPopup()"
+              >
+                DONE
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <map-component />
       <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
@@ -252,6 +384,18 @@
       >
         <router-view />
       </transition>
+
+      <transition
+        v-if="showSocialMediaApprovalDialog"
+        name="fade"
+        mode="out-in"
+      >
+        <approval-dialog
+          :approval-status="socialMediaApprovalStatus"
+          :cop-id="copId"
+        />
+      </transition>
+
       <transition
         name="fade"
         mode="out-in"
@@ -268,180 +412,186 @@
               <p class="crm-setup">
                 Finish account set up
               </p>
-              <div class="">
-                <div v-if="updateKraSection">
-                  <div class="">
-                    <label
-                      class="final-label"
-                    >Does your business file VAT returns? (optional)</label>
-                    <div class="final-upper-padding">
-                      <el-select
-                        v-model="tax_compliance"
-                        placeholder="Select"
-                        class="compliance-select-final"
-                      >
-                        <el-option
-                          v-for="item in selectOptions"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                        />
-                      </el-select>
-                    </div>
-                  </div>
 
-                  <div
-                    v-if="tax_compliance"
-                    class="final-upper-padding"
-                  >
-                    <label class="final-label">{{ fetchKraHeader }}</label>
-                    <div class="final-upper-padding">
-                      <input
-                        v-model="kra_pin"
-                        class="input-control upgrade-final"
-                        type="text"
-                        name="kra_pin"
-                        placeholder="PIN"
-                        autocomplete="on"
-                      >
-                      <span
-                        v-show="!valid_kra_pin"
-                        class="invalid-kra"
-                      >
-                        {{ kraFailResponse }}
-                      </span>
-                    </div>
-                  </div>
 
-                  <div class="final-upper-padding">
-                    <label class="final-label">
-                      Select the primary vehicle you will be using for your business.
-                    </label>
-                    <p class="final-inner">
-                      (This will not restrict you from using other vehicles)
-                    </p>
-                    <div class="final-upper-padding">
-                      <div class="vendors-final-outerline">
-                        <div
-                          class="vendor-final-cards"
-                          :class="{ vendor_active_final: activeTab === 'mbu' }"
-                          @click="selectCard('mbu', 1)"
-                        >
-                          <img
-                            class="vendor-types-final"
-                            :src="getVendorIcon(1)"
-                            alt=""
-                          >
-                        </div>
-                        <div
-                          class="vendor-final-cards"
-                          :class="{ vendor_active_final: activeTab === 'ebu' }"
-                          @click="selectCard('ebu', 2)"
-                        >
-                          <img
-                            class="vendor-types-final"
-                            :src="getVendorIcon(6)"
-                            alt=""
-                          >
-                        </div>
-                        <div
-                          class="vendor-final-cards"
-                          :class="{ vendor_active_final: activeTab === 'fbu' }"
-                          @click="selectCard('fbu', 3)"
-                        >
-                          <img
-                            class="vendor-types-final"
-                            :src="getVendorIcon(25)"
-                            alt=""
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  v-if="updateSetIndustry"
-                  class="final-upper-padding"
-                >
-                  <div class="final-upper-padding">
-                    <label class="final-label">What industry is your business in?</label>
-                    <div class="final-upper-padding">
-                      <el-select
-                        v-model="industry_type"
-                        placeholder="Select"
-                        class="compliance-select-final"
-                      >
-                        <el-option
-                          v-for="item in industriesOptions"
-                          :key="item.industry_id"
-                          :label="item.name"
-                          :value="item.industry_id"
-                        />
-                      </el-select>
-                    </div>
-                  </div>
-
-                  <div class="final-upper-padding">
-                    <label class="final-label">Is social media your main source of clients?</label>
-                    <div class="final-upper-padding">
-                      <el-select
-                        v-model="social_media_option"
-                        placeholder="Select"
-                        class="compliance-select-final"
-                      >
-                        <el-option
-                          v-for="item in selectOptions"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                        />
-                      </el-select>
-                    </div>
-                  </div>
-
-                  <div
-                    v-if="social_media_option"
-                    class="final-upper-padding"
-                  >
-                    <label class="final-label">What is your business instragram handle?</label>
-                    <div class="final-upper-padding">
-                      <input
-                        v-model="ig_media_handle"
-                        class="input-control upgrade-final"
-                        type="text"
-                        placeholder="@mystore"
-                        autocomplete="on"
-                      >
-                    </div>
-                  </div>
-
-                  <div
-                    v-if="social_media_option"
-                    class="final-upper-padding"
-                  >
-                    <label
-                      class="final-label"
-                    >What is the link to your business facebook page?</label>
-                    <div class="final-upper-padding">
-                      <input
-                        v-model="facebook_media_handle"
-                        class="input-control upgrade-final"
-                        type="text"
-                        placeholder="www.facebook.com/pages/mystore"
-                        autocomplete="on"
-                      >
-                    </div>
-                  </div>
-                </div>
-
+              <div v-if="updateKraSection">
                 <div class="">
+                  <label
+                    class="final-label"
+                  >Does your business file VAT returns? (optional)</label>
+
+                  <div class="final-upper-padding">
+                    <el-select
+                      v-model="tax_compliance"
+                      placeholder="Select"
+                      class="compliance-select-final"
+                    >
+                      <el-option
+                        v-for="item in selectOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                v-if="tax_compliance"
+                class="final-upper-padding"
+              >
+                <label class="final-label">Enter your business KRA pin</label>
+                <div class="final-upper-padding">
                   <input
-                    class="button-primary final-step-submit"
-                    type="submit"
-                    value="Submit"
-                    @click="submit"
+                    v-model="kra_pin"
+                    class="input-control upgrade-final"
+                    type="text"
+                    name="kra_pin"
+                    placeholder="KRA PIN"
+                    autocomplete="on"
+                  >
+                  <span
+                    v-show="!valid_kra_pin"
+                    class="invalid-kra"
+                  >
+                    Please enter a valid KRA PIN
+                  </span>
+                </div>
+              </div>
+
+              <div
+                v-if="updateSetIndustry"
+                class="final-upper-padding"
+              >
+                <label class="final-label">What industry is your business in?</label>
+                <div class="final-upper-padding">
+                  <el-select
+                    v-model="industry_type"
+                    filterable
+                    popper-append-to-body="false"
+                    placeholder="Select"
+                    class="compliance-select-final"
+                  >
+                    <el-option
+                      v-for="item in industriesOptions"
+                      :key="item.industry_id"
+                      :label="item.name"
+                      :value="item.industry_id"
+                    />
+                  </el-select>
+                </div>
+              </div>
+
+              <div class="final-upper-padding">
+                <label class="final-label">Are you a social commerce business?</label>
+                <p style="margin-top:5px;font-size:11px">
+                  (A business that mainly trades through facebook and instagram e.g.
+                  An online shoe store)
+                </p>
+                <div class="final-upper-padding">
+                  <el-select
+                    v-model="social_media_option"
+                    placeholder="Select"
+                    class="compliance-select-final"
+                  >
+                    <el-option
+                      v-for="item in selectOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
+              </div>
+
+              <div
+                v-if="social_media_option"
+                class="final-upper-padding"
+              >
+                <label class="final-label">What is your business instragram handle?</label>
+                <div class="final-upper-padding">
+                  <input
+                    v-model="ig_media_handle"
+                    class="input-control upgrade-final"
+                    type="text"
+                    placeholder="@mystore"
+                    autocomplete="on"
                   >
                 </div>
+              </div>
+
+              <div
+                v-if="social_media_option"
+                class="final-upper-padding"
+              >
+                <label
+                  class="final-label"
+                >What is the link to your business facebook page?</label>
+                <div class="final-upper-padding">
+                  <input
+                    v-model="facebook_media_handle"
+                    class="input-control upgrade-final"
+                    type="text"
+                    placeholder="www.facebook.com/pages/mystore"
+                    autocomplete="on"
+                  >
+                </div>
+              </div>
+
+              <div class="final-upper-padding">
+                <label class="final-label">
+                  Select the primary vehicle you will be using for your business.
+                </label>
+                <p class="final-inner">
+                  (This will not restrict you from using other vehicles)
+                </p>
+                <div class="final-upper-padding">
+                  <div class="vendors-final-outerline">
+                    <div
+                      class="vendor-final-cards"
+                      :class="{ vendor_active_final: activeTab === 'mbu' }"
+                      @click="selectCard('mbu', 1)"
+                    >
+                      <img
+                        class="vendor-types-final"
+                        :src="getVendorIcon(1)"
+                        alt=""
+                      >
+                    </div>
+                    <div
+                      class="vendor-final-cards"
+                      :class="{ vendor_active_final: activeTab === 'ebu' }"
+                      @click="selectCard('ebu', 2)"
+                    >
+                      <img
+                        class="vendor-types-final"
+                        :src="getVendorIcon(6)"
+                        alt=""
+                      >
+                    </div>
+                    <div
+                      class="vendor-final-cards"
+                      :class="{ vendor_active_final: activeTab === 'fbu' }"
+                      @click="selectCard('fbu', 3)"
+                    >
+                      <img
+                        class="vendor-types-final"
+                        :src="getVendorIcon(25)"
+                        alt=""
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="">
+                <input
+                  class="button-primary final-step-submit"
+                  type="submit"
+                  value="Submit"
+                  @click="submit"
+                >
               </div>
             </div>
           </el-dialog>
@@ -452,6 +602,7 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import { mapMutations, mapGetters, mapActions } from 'vuex';
 import S3 from 'aws-s3';
 import orderStore from './_store';
@@ -459,6 +610,7 @@ import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
 import OngoingComponent from './_components/OngoingComponent.vue';
+import ApprovalDialog from './_components/social_media/ApprovalDialog.vue';
 import FbuChildOrders from './_components/FbuChildOrders.vue';
 import NPSFooter from '../../components/footers/NPSFooter.vue';
 import NpsMixin from '../../mixins/nps_mixin';
@@ -474,11 +626,15 @@ export default {
     MapComponent,
     OngoingComponent,
     FbuChildOrders,
+    ApprovalDialog,
     NPSFooter,
   },
   mixins: [RegisterStoreModule, NpsMixin, SessionMxn, NotificationMxn],
   data() {
     return {
+      showSocialMediaApprovalDialog: false,
+      socialMediaApprovalStatus: 0,
+      copId: 0,
       icon_class: '',
       message: '',
       loading_status: false,
@@ -488,6 +644,8 @@ export default {
       upload_status: false,
       tour_status: false,
       locations_status: false,
+      pairing_status: false,
+      pairing_data: '',
       location: '',
       suggestion: '',
       uploadButton: '',
@@ -509,6 +667,8 @@ export default {
       activeTab: '',
       primary_business_unit: '',
       activeRow: 0,
+      renderKey: 1,
+      focusedInput: '',
       map_options: {
         componentRestrictions: {
           country: ['ke', 'ug', 'tz'],
@@ -578,6 +738,7 @@ export default {
       getDedicatedAccessStatus: 'getDedicatedAccessStatus',
       get_session: 'getSession',
       getSuggestions: '$_orders/getSuggestions',
+      getExpandedActiveVendorTally: '$_orders/getExpandedActiveVendorTally',
     }),
     uploadBtn() {
       if (this.uploadButton) {
@@ -630,6 +791,9 @@ export default {
     },
     waypointType() {
       return this.waypoint_type === 'PICKUP' ? 'pick up' : 'drop off';
+    },
+    vehicleDetailsPlaceholder() {
+      return 'Enter Full Number plate / Phone Number';
     },
   },
   watch: {
@@ -707,6 +871,7 @@ export default {
     const session = this.$store.getters.getSession;
     if (session.default === 'biz') {
       this.setDedicatedAccessStatus(true);
+      this.checkSocialMediaApproval();
     }
     this.redirectToOrders();
   },
@@ -724,16 +889,39 @@ export default {
   methods: {
     ...mapActions({
       requestIndustries: '$_orders/requestIndustries',
+      requestPairRider: '$_orders/$_home/requestPairRider',
     }),
     ...mapMutations({
       clearVendorMarkers: '$_orders/clearVendorMarkers',
       setDedicatedAccessStatus: 'setDedicatedAccessStatus',
+      setPairWithRiderStatus: '$_orders/$_home/setPairWithRiderStatus',
+      setPairWithRiderState: '$_orders/$_home/setPairWithRiderState',
+      setPairSerialNumber: '$_orders/$_home/setPairSerialNumber',
+      setPairRiderPhone: '$_orders/$_home/setPairRiderPhone',
+      setVehicleDetails: '$_orders/$_home/setVehicleDetails',
+      setPairErrorMessage: '$_orders/$_home/setPairErrorMessage',
+      setExpandedActiveVendorTally: '$_orders/setExpandedActiveVendorTally',
+      setPairedDriversTally: '$_orders/setPairedDriversTally',
     }),
     ...mapActions({
       fetchSuggestions: '$_orders/fetchSuggestions',
       saveSuggestions: '$_orders/saveSuggestions',
       removeSuggestions: '$_orders/removeSuggestions',
     }),
+    checkSocialMediaApproval() {
+      const session = this.$store.getters.getSession;
+      if (Object.keys(session).length > 0) {
+        if (session.default === 'biz') {
+          const bizSession = session[session.default];
+          this.copId = bizSession.cop_id;
+          const { verified_social_media_business, social_media_business_approval_status } = bizSession;
+          if (social_media_business_approval_status === 1) {
+            this.showSocialMediaApprovalDialog = true;
+            this.socialMediaApprovalStatus = verified_social_media_business;
+          }
+        }
+      }
+    },
     isNewCopAcc() {
       let isSet = false;
       let kraSection = false;
@@ -778,6 +966,160 @@ export default {
           this.industriesOptions = [];
         },
       );
+    },
+    parseRating(data) {
+      parseInt(data, 10);
+    },
+    pairTally() {
+      let tally = 0;
+      this.getExpandedActiveVendorTally.forEach((row) => {
+        if (row.vehicle_plate && row.pair_status === '2') {
+          tally += 1;
+        }
+      });
+      return tally;
+    },
+    closePairingPopup() {
+      this.setPairedDriversTally(this.pairTally());
+      this.blinder_status = false;
+      this.pairing_status = false;
+    },
+    vendorOptions(id) {
+      if (this.small_vendors.includes(id)) {
+        return this.smallVendorOptions;
+      }
+      return this.baseTruckOptions;
+    },
+    clearVehicleDetails(vehicle, i) {
+      this.pairing_data[i].vehicle_plate = '';
+      this.pairing_data[i].visible2 = false;
+      this.pairing_data[i].pair_status = '';
+      this.setExpandedActiveVendorTally(this.pairing_data);
+      this.forceUpdate();
+    },
+    // eslint-disable-next-line func-names
+    checkVehicleDetails: _.debounce(function (vehicle, i) {
+      const vehicleDetails = vehicle.vehicle_plate;
+      this.focusedInput = i;
+      this.forceUpdate();
+      if (vehicleDetails === '') {
+        this.doNotification(
+          '2',
+          'Vehicle number plate is not provided',
+          'Please provide the vehicle details to pair',
+        );
+        this.pairing_data[i].visible2 = false;
+        this.pairing_data[i].searchOption = false;
+        this.pairing_data[i].pair_status = '';
+      } else {
+        this.pairing_data[i].searchOption = true;
+        this.handlePairRequest(vehicleDetails, vehicle, i);
+      }
+    }, 500),
+    updateData(value, vehicle, i) {
+      const val = value;
+      this.pairing_data[i].pair_rider_image = val.rider_photo;
+      this.pairing_data[i].pair_rider_name = val.rider_name;
+      this.pairing_data[i].pair_rider_rating = parseFloat(val.rider_rating);
+      this.pairing_data[i].pair_rider_make = val.make;
+      this.pairing_data[i].pair_rider_model = val.model;
+      this.pairing_data[i].pair_rider_plate = val.registration_no;
+      this.pairing_data[i].pair_rider_sim_card_sn = val.sim_card_sn;
+      this.pairing_data[i].pair_rider_phone = val.rider_phone;
+      this.pairing_data[i].visible2 = true;
+      this.pairing_data[i].pair_status = '2';
+      this.setExpandedActiveVendorTally(this.pairing_data);
+    },
+    handlePairRequest(plate, vehicle, i) {
+      this.pairing_data[i].visible2 = false;
+      this.pairing_data[i].pair_status = '';
+      const checkInputType = new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$');
+      const res = checkInputType.test(plate.replace(/\s/g, ''));
+      const payload = {};
+      payload.vendor_type = vehicle.vendor_id;
+      if (res) {
+        payload.phone_no = plate.replace(/\s/g, '');
+      } else {
+        payload.registration_no = plate.replace(/\s/g, '');
+      }
+      const fullPayload = {
+        values: payload,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'pair_order_rider_details',
+      };
+      this.requestPairRider(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.trackMixpanelEvent('Paired Open Destination Order With Rider', { 'Paired Rider': plate });
+            this.triggerGAEvent('Paired Open Destination Order With Rider', { 'Paired Rider': plate });
+            this.updateData(response.data, vehicle, i);
+          } else {
+            this.pairing_data[i].pair_status = '1';
+            this.pairing_data[i].failure_text = response.message;
+            this.pairing_data[i].visible2 = true;
+            this.setExpandedActiveVendorTally(this.pairing_data);
+          }
+          this.pairing_data[i].searchOption = false;
+          this.forceUpdate();
+        },
+        (error) => {
+          const msg = error.response.data.message;
+          this.pairing_data[i].pair_status = '1';
+          this.pairing_data[i].failure_text = msg;
+          this.pairing_data[i].visible2 = true;
+          this.setExpandedActiveVendorTally(this.pairing_data);
+          this.pairing_data[i].searchOption = false;
+          this.forceUpdate();
+        },
+      );
+    },
+    forceUpdate() {
+      this.renderKey += 1;
+      setTimeout(() => {
+        document.querySelectorAll(`#input${this.focusedInput}`)[0].focus();
+      }, 1);
+    },
+    triggerGAEvent(field, value) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          window.ga('send', 'event', {
+            eventCategory: 'Order Placement',
+            eventAction: 'Click',
+            eventLabel: field,
+            eventValue: value,
+          });
+        }
+      } catch (er) {
+        // ...
+      }
+    },
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+          // this.$ga.event({
+          //   eventCategory: 'Orders',
+          //   eventAction: 'Price Request',
+          //   eventLabel: name,
+          //   eventValue: 14,
+          // });
+        }
+      } catch (er) {
+        // ...
+      }
     },
     checkTourStatus() {
       if (
@@ -940,6 +1282,26 @@ export default {
         this.locations_status = arg1;
         this.waypoint_type = arg2;
       });
+      this.$root.$on('Pairing status', (arg1) => {
+        this.blinder_status = arg1;
+        this.pairing_status = arg1;
+        this.pairing_data = this.getExpandedActiveVendorTally;
+        this.pairing_data.forEach((row, i) => {
+          this.pairing_data[i].vehicle_plate = row.vehicle_plate ? row.vehicle_plate : '';
+          this.pairing_data[i].pair_status = row.pair_status ? row.pair_status : '';
+          this.pairing_data[i].failure_text = row.failure_text ? row.failure_text : '';
+          this.pairing_data[i].pair_rider_image = row.pair_rider_image ? row.pair_rider_image : '';
+          this.pairing_data[i].pair_rider_name = row.pair_rider_name ? row.pair_rider_name : '';
+          this.pairing_data[i].pair_rider_rating = row.pair_rider_rating ? row.pair_rider_rating : '';
+          this.pairing_data[i].pair_rider_make = row.pair_rider_make ? row.pair_rider_make : '';
+          this.pairing_data[i].pair_rider_model = row.pair_rider_model ? row.pair_rider_model : '';
+          this.pairing_data[i].pair_rider_plate = row.pair_rider_plate ? row.pair_rider_plate : '';
+          this.pairing_data[i].pair_rider_sim_card_sn = row.pair_rider_sim_card_sn ? row.pair_rider_sim_card_sn : '';
+          this.pairing_data[i].pair_rider_phone = row.pair_rider_phone ? row.pair_rider_phone : '';
+          this.pairing_data[i].visible2 = row.visible2 ? row.visible2 : false;
+          this.pairing_data[i].searchOption = row.searchOption ? row.searchOption : false;
+        });
+      });
     },
     hideLocationsManagement() {
       this.blinder_status = false;
@@ -1001,6 +1363,8 @@ export default {
             message: response.message,
           };
           this.displayNotification(notification);
+          this.trackMixpanelEvent('Save location suggestion', data);
+          this.triggerGAEvent('Save location suggestion', data);
           this.location = '';
           this.suggestion = '';
           this.triggerFetchsuggestions();
@@ -1034,6 +1398,8 @@ export default {
             message: response.message,
           };
           this.displayNotification(notification);
+          this.trackMixpanelEvent('Remove location suggestion', data);
+          this.triggerGAEvent('Remove location suggestion', data);
           this.location = '';
           this.suggestion = '';
           this.triggerFetchsuggestions();
@@ -1256,6 +1622,10 @@ export default {
               updatedSession[session.default].tax_authority_pin = this.kra_pin;
             } else if (this.updateSetIndustry) {
               updatedSession[session.default].industry_id = this.industry_type;
+            }
+
+            if (this.social_media_option) {
+              this.showSocialMediaApprovalDialog = true;
             }
 
             const newSession = JSON.stringify(updatedSession);
@@ -1549,5 +1919,104 @@ cancel-pop-up > div > div > div.el-dialog__header{
 .saved-locations-message {
   font-size: 14px;
   margin: 10px;
+}
+.pair-vehicles-popup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 5%;
+}
+.pair-vehicle-rows {
+  padding: 0px;
+  width: -webkit-fill-available;
+}
+.pair-vehicles-list {
+  max-height: 370px;
+  overflow-y: auto;
+  width: -webkit-fill-available;
+}
+.pair-vehicles-title {
+  width: -webkit-fill-available;
+  text-align: left;
+}
+.pair-button {
+  width: -webkit-fill-available;
+}
+.pair-button-section {
+  width: -webkit-fill-available;
+  padding: 15px 0px 5px 0px;
+}
+.pair-info-warning, .pair-info-success, .pair-info-loading {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #dcdfe4;
+}
+.pair-info-rider-details {
+  display: flex;
+  align-items: center;
+  padding: 5%;
+}
+.pair-info-vehicle-details {
+  padding: 5%;
+  border-left: 1px solid #dcdfe4;
+}
+.pair-info-rider-rate-icons span i {
+  font-size: 10px !important;
+  margin-right: 3px;
+}
+.pair-rider-rating-icons {
+  display: flex;
+  align-items: baseline;
+  padding: 0px 8px;
+}
+.pair-rider-rating-icons-val {
+  font-size: 14px;
+  margin-right: 5px;
+  font-weight: 500;
+  color: #1682c5;
+}
+.pair-rider-name-variant {
+  text-align: left;
+}
+.display_paired_rider_details {
+  padding-left: 8px;
+}
+.pair-rider-rating-icons-holder {
+  width: max-content;
+}
+.pair-model-info-variant {
+  font-size: 12px;
+  font-weight: 400;
+}
+.pairing-error-header-variant {
+  font-size: 14px;
+  font-weight: 500;
+}
+.pairing-error-holder {
+  text-align: left;
+  padding: 8px;
+}
+.pairing-error-icon-holder {
+  padding: 15px;
+}
+.pairing-loading-holder {
+  width: -webkit-fill-available;
+  padding: 15px;
+}
+.pair-vehicles-title-description {
+  text-align: left;
+  font-size: 13px;
+  margin: 15px 0px;
+}
+.pair-vehicles-vendor-title {
+  text-align: left;
+  font-size: 13px;
+  padding: 10px 0px;
+}
+.pair-vehicles-vendor-id {
+  color: #1682c5;
+  padding-left: 4px;
+  font-size: 14px;
 }
 </style>
