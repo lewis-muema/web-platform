@@ -387,7 +387,7 @@ const translations = {
   thanks_for_using_sendy: 'Thank You for using Sendy!',
   thanks_for_using_sendy_text: 'Thank You for using Sendy.You will be redirected to the home page.',
 
-  please_rate_drivername: 'Please Rate {{ driver_name }}',
+  please_rate_drivername: 'Please Rate {driver_name}',
   very_bad: 'Very Bad',
   very_good: 'Very Good',
   submitCapital: 'SUBMIT',
@@ -853,6 +853,7 @@ const translations = {
   pickup_lowercase: 'pick up',
   drop_off_lowercase: 'drop off',
   no_notes_provided: 'No notes provided.',
+  matched_partner_to_package: '',
 
 
 };

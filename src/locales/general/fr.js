@@ -376,7 +376,7 @@ const translations = {
   thanks_for_using_sendy: 'FR_Thank You for using Sendy!',
   thanks_for_using_sendy_text: 'FR_Thank You for using Sendy.You will be redirected to the home page.',
 
-  please_rate_drivername: 'FR_Please Rate {{ driver_name }}',
+  please_rate_drivername: 'FR_Please Rate {driver_name}',
   very_bad: 'FR_Very Bad',
   very_good: 'FR_Very Good',
   submitCapital: 'FR_SUBMIT',
