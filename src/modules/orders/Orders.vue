@@ -141,7 +141,7 @@
           class="tour-popup"
         >
           <p class="tour-popup-description">
-            {{$t('general.new_featuer_added')}}
+            {{$t('general.new_feature_added')}}
           </p>
           <p
             class="tour-popup-get-started"
