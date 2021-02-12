@@ -236,7 +236,7 @@
                     v-if="index > 0"
                     class=""
                     autocomplete="true"
-                    placeholder="Notes"
+                    :placeholder="$t('general.notes')"
                     @input="addDestinationNotes($event, path, index)"
                   />
                 </div>
@@ -520,7 +520,7 @@
                   </div>
                   <div v-else class="home-view-truck-options-label">
                     <!-- What type of {{ getVendorNameOnCarrierType }} do you want? -->
-                    {{$t('general.carrier_type')}}
+                    {{$t('general.carrier_type',{getVendorNameOnCarrierType: getVendorNameOnCarrierType})}}
                   </div>
                   <div class="home-view-truck-options-inner--full-select">
                     <el-select
@@ -623,7 +623,7 @@
                       @click="openNotesDialog(2)"
                     >
                       <a class="instructions-holder">
-                        {{$t('general.add_drop_instructions')}}
+                        {{$t('general.add_drop_off_instructions')}}
                       </a>
                       <i class="el-icon-circle-plus-outline align-instructions-icon" />
                     </button>
@@ -640,13 +640,13 @@
                 <input
                   v-model="recipientName"
                   type="text"
-                  placeholder="Name"
+                  :placeholder="$t('general.name')"
                   class="el-input__inner bottom-spacer"
                 />
                 <input
                   v-model="recipientPhone"
                   type="number"
-                  placeholder="Phone number"
+                  :placeholder="$t('general.phone_no')"
                   class="el-input__inner"
                 />
               </div>
@@ -739,7 +739,7 @@
                     <el-select
                       v-model="pair_rider"
                       class="pair_rider_section"
-                      placeholder="Select"
+                      :placeholder="$t('general.select')"
                       filterable
                       @change="dispatchPairStatus"
                     >

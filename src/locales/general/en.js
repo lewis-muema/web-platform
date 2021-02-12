@@ -255,7 +255,7 @@ const translations = {
   notified_of_actual_cost: '(You will be notified of the actual order cost once the package is weighed at our collection center)',
   bike_type: 'What type of bike do you want?',
   truck_type: 'What type of truck do you want?',
-  carrier_type: 'What type of {{ getVendorNameOnCarrierType }} do you want?',
+  carrier_type: 'What type of {getVendorNameOnCarrierType} do you want?',
   weight_load: 'What is the weight of your load?',
   tonnes: 'Tonnes',
   deliver_in_2_4_hours: 'Delivery is in 2 to 4 hours from the scheduled time',
@@ -387,7 +387,7 @@ const translations = {
   thanks_for_using_sendy: 'Thank You for using Sendy!',
   thanks_for_using_sendy_text: 'Thank You for using Sendy.You will be redirected to the home page.',
 
-  please_rate_drivername: 'Please Rate {{ driver_name }}',
+  please_rate_drivername: 'Please Rate {driver_name}',
   very_bad: 'Very Bad',
   very_good: 'Very Good',
   submitCapital: 'SUBMIT',
@@ -852,6 +852,8 @@ const translations = {
   enter_your: 'Enter your',
   pickup_lowercase: 'pick up',
   drop_off_lowercase: 'drop off',
+  no_notes_provided: 'No notes provided.',
+  matched_partner_to_package: '',
 
 
 };
