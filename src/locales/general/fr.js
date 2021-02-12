@@ -23,6 +23,8 @@ const translations = {
   different_issue: 'FR_I had a different issue',
   description: 'FR_Description',
   submit: 'FR_Submit',
+  done: 'FR_Done',
+  done_capital: 'FR_DONE',
   delivery_dispute: 'FR_Delivery dispute',
   failure_doc_dispute: 'FR_Failure to dispute documents due to an existing dispute request !',
   sorry_no_extra_charges: 'FR_Sorry there were no extra charges for this order',
@@ -808,7 +810,21 @@ const translations = {
   pickup_time_update_failed: 'FR_Pick up time update failed',
   edit_pickup_time: 'FR_Edit pick up time error',
   kindly_provide_pickup_time: 'FR_Kindly provide order pick up time',
-
+  are_you_in_social_media_biz: 'FR_Are you a social commerce business?',
+  manage_saved_locations: 'FR_Manage saved {waypointType} locations',
+  enter_waypoint_type_location: 'FR_Enter a {waypointType} location',
+  saved_locations: 'FR_Saved locations',
+  enter_phone_number_vehicle_to_pair: "FR_Enter their phone number or the vehicle's number plate to pair",
+  pair_with_driver_single: 'FR_Pair with driver',
+  finding_driver_details: 'FR_Finding the driver details',
+  driver_not_found: 'FR_driver not found',
+  enter_your_business: 'FR_Enter your business',
+  pin: 'FR_PIN',
+  business_man_trades_facebook: '(FR_A business that mainly trades through facebook and instagram e.g. An online shoe store)',
+  tin_number: 'FR_TIN number',
+  enter_your: 'FR_Enter your',
+  pickup_lowercase: 'FR_pick up',
+  drop_off_lowercase: 'FR_drop off',
 
 };
 
