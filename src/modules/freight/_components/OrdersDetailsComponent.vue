@@ -285,7 +285,7 @@
               >
               <span
                 class="freight-documents-date trucks-listing"
-              >{{ freightOrderDetail.total_trucks }} trucks needed
+              >{{ getTrucksNeeded(freightOrderDetail.total_trucks) }}
               </span>
             </div>
           </div>
@@ -790,6 +790,13 @@ export default {
     getRowKey(row) {
       return row.id;
     },
+    getTrucksNeeded(val) {
+      let resp = `${val} trucks needed`;
+      if (val === 1) {
+        resp = `${val} truck needed`;
+      }
+      return resp;
+    },
     backToOrders() {
       this.$router.push('/freight/orders');
     },
@@ -1012,7 +1019,6 @@ export default {
       this.landing_text = 'Change';
       this.billOfLandingName = '';
       this.awardedTransporter = {};
-      this.loading = true;
     },
     approveDoc(val) {
       let acc = {};
