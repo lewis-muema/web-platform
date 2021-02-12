@@ -399,7 +399,7 @@ export default {
       activeSuggestionList: false,
       map_options: {
         componentRestrictions: {
-          country: ['ke', 'ug', 'tz'],
+          country: ['ke', 'ug', 'tz', 'ci' ],
         },
         bounds: {
           north: 35.6,
