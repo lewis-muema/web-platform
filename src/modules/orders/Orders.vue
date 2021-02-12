@@ -448,7 +448,7 @@
                     class="input-control upgrade-final"
                     type="text"
                     name="kra_pin"
-                    placeholder="KRA PIN"
+                    placeholder="Tax Authority Number"
                     autocomplete="on"
                   >
                   <span
