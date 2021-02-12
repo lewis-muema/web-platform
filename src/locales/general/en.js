@@ -255,7 +255,7 @@ const translations = {
   notified_of_actual_cost: '(You will be notified of the actual order cost once the package is weighed at our collection center)',
   bike_type: 'What type of bike do you want?',
   truck_type: 'What type of truck do you want?',
-  carrier_type: 'What type of {{ getVendorNameOnCarrierType }} do you want?',
+  carrier_type: 'What type of {getVendorNameOnCarrierType} do you want?',
   weight_load: 'What is the weight of your load?',
   tonnes: 'Tonnes',
   deliver_in_2_4_hours: 'Delivery is in 2 to 4 hours from the scheduled time',

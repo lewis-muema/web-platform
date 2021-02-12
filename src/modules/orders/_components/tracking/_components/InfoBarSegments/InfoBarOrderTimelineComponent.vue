@@ -143,14 +143,12 @@
               >
                 <span v-if="trackingData.confirm_status > 0">
                   <p class="stagePassed">
-                    <!-- We have matched a {{ getTrackPartnerName }} to your {{ getTrackPackageName }} --> 
                     {{$t('general.matched_parter_to_package', {getTrackPartnerName: getTrackPartnerName, getTrackPackageName: getTrackPackageName })}}
                   </p>
                   <p class="eta_data">{{ getConfirmEta }}</p>
                 </span>
                 <span v-else>
                   <p class="stagePending">
-                    <!-- We are finding a {{ getTrackPartnerName }} for your {{ getTrackPackageName }} -->
                     {{$t('general.finding_partner_to_package',{getTrackPartnerName: getTrackPartnerName, getTrackPackageName: getTrackPackageName })}}
                   </p>
                   <p
