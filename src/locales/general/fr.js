@@ -827,6 +827,9 @@ const translations = {
   pickup_lowercase: 'FR_pick up',
   drop_off_lowercase: 'FR_drop off',
   no_notes_provided: 'FR_No notes provided.',
+  valid_promo_codes: 'Valid Promo Codes',
+  off: 'FR)OFF',
+  max: 'FR_Max',
 
 
 };
