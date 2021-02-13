@@ -12,7 +12,7 @@
         v-model="add_card_payment_data.card_no"
         type="text"
         name="card_payment_card_no"
-        placeholder="Card Number"
+        :placeholder = "$t('general.card_number')"
         class="input-control paymentbody--input"
         @change="creditCardMask()"
         @keyup="creditCardMask()"
@@ -35,7 +35,7 @@
       <div class="input-control-small">
         <el-input
           v-model="add_card_payment_data.cvv"
-          placeholder="CVV"
+          :placeholder="$t('general.cvv')"
           type="number"
           name="card_payment_cvv"
           class="paymentbody--input"
@@ -54,11 +54,10 @@
           class="payment--cvv-info-wrap"
         >
           <div class="sendy_payments_form_cvv_title">
-            CVV
+            {{$t('general.cvv')}}
           </div>
           <div class="sendy_payments_form_cvv_description">
-            A three or four digit code on your credit or debit card. You can find this at the back
-            of your card.
+            {{$t('general.three_or_four_card_digit_code')}}
           </div>
           <div class="sendy_payments_form_cvv_body">
             <img
@@ -81,7 +80,7 @@
         "
         @click="handleAddCard"
       >
-        Add Card
+      {{$t('general.add_card')}}
       </button>
     </div>
   </div>
@@ -106,7 +105,7 @@ export default {
         cvv: '',
         card_no: '',
       },
-      payment_state: 'Adding a new card',
+      payment_state: this.$t('general.adding_new_card'),
       show_cvv: false,
     };
   },
@@ -234,9 +233,9 @@ export default {
 
           if (response.data.status) {
             const notification = {
-              title: 'Add Card Success',
+              title: this.$t('general.add_card_success'),
               level: 1,
-              message: 'card was added successfully',
+              message: this.$t('general.card_was_added_successfully'),
             };
             this.$router.push({
               name: 'order_placement',
@@ -244,7 +243,7 @@ export default {
                 action: 'add_card',
               },
             });
-            this.payment_state = 'Payment Success';
+            this.payment_state = this.$t('general.payment_success');
             const acc = this.$store.getters.getSession;
 
             this.trackMixpanelEvent('Card Payment', {
@@ -254,7 +253,8 @@ export default {
             this.displayNotification(notification);
           } else {
             const notification = {
-              title: 'Add Card Failed',
+              // eslint-disable-next-line no-undef
+              title: $t('general.add_card_failed'),
               level: 2,
               message: response.data.message,
             };
@@ -263,9 +263,9 @@ export default {
         },
         (error) => {
           const notification = {
-            title: 'Add Card Failed',
+            title: this.$t('general.add_card_failed'),
             level: 2,
-            message: 'something went wrong while adding new card',
+            message: this.$t('general.something_went_wrong_while_adding_new_card'),
           };
           this.displayNotification(notification);
         },
