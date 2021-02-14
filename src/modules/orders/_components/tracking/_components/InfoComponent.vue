@@ -1566,7 +1566,7 @@ export default {
                   that.$router.push(`/external/rating/${from}`);
                 }
               } else if (this.tracking_data.main_status === 2) {
-                that.doNotification('2', this.$t('general.order_cancelled'), this.$t('general.order_has_been_cancelled'));
+                that.doNotification('2', this.$t('general.order_cancelled'), this.$t('general.your_order_cancelled'));
                 that.place();
               } else if (this.tracked_order === from) {
                 setTimeout(() => {
