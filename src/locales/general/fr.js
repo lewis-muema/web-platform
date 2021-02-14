@@ -256,7 +256,7 @@ const translations = {
   tonnes: 'FR_Tonnes',
   deliver_in_2_4_hours: 'FR_Delivery is in 2 to 4 hours from the scheduled time',
   add_pickup_instructions: 'FR_Add pickup instructions',
-  add_drop_off_instructions: 'FR_Add drop off instructions',
+  add_drop_off_instructions: 'FRAdd drop off instructions',
   temperature_should_not_exceed: "FR_Temperature shouldn't exceed? (°C)",
   offer_to_pay_for_order: 'FR_How much are you offering to pay for this order?',
   have_preffered_rider: 'FR_Do you have a preferred { riderNameDisplay } at your pick up location ?',
