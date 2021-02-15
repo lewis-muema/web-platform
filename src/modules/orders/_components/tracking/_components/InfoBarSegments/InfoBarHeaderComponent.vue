@@ -60,7 +60,7 @@
               </span>
               <span v-else>
                 <span class="infor-top-bar-text">
-                  Cost :
+                   {{$t('general.cost')}} :
                 </span>
                 <span>
                   {{
@@ -74,7 +74,7 @@
             </span>
             <span v-else>
               <span class="infor-top-bar-text">
-                Cost :
+                {{$t('general.cost')}} :
               </span>
               <span>
                 {{
