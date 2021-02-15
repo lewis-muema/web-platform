@@ -23,7 +23,7 @@
               :placeholder="$t('general.enter_pickup_location')"
               :select-first-on-enter="true"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
-              @place_changed="setLocation($event, 0)"
+              @place_changed="setLocation($event, 0, 1)"
               @keyup="checkChangeEvents($event, 0)"
               @change="checkChangeEvents($event, 0)"
             />
@@ -799,8 +799,10 @@ export default {
       this.locations[index] = name;
       const activeElement = this.activeEl;
       setTimeout(() => {
-        if (!document.getElementById(activeElement).value) {
-          document.getElementById(activeElement).value = name;
+        if (document.getElementById(activeElement) !== null) {
+          if (!document.getElementById(activeElement).value) {
+            document.getElementById(activeElement).value = name;
+          }
         }
       }, 100);
     },
