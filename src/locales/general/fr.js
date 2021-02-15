@@ -827,7 +827,7 @@ const translations = {
   pickup_lowercase: 'FR_pick up',
   drop_off_lowercase: 'FR_drop off',
   no_notes_provided: 'FR_No notes provided.',
-
+  confirm_password: 'FR_Confirm Password',
 
 };
 
