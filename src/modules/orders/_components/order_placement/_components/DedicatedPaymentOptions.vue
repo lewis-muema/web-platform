@@ -1129,46 +1129,29 @@ export default {
                   'Vendor Type ID': data.vendor_type,
                 });
               } else {
-<<<<<<< HEAD
-                this.doNotification(
-                  2,
-                  'Order completion failed',
-                  'Price request failed. Please try again',
-                );
-=======
                 setTimeout(() => {
                   this.doNotification(
                     3,
                     this.$t('general.order_completion_failed'),
-                    `${row.reason}`,
+                    this.$t('general.price_request_failed_please_try_again'),
                   );
                 }, 10);
->>>>>>> 5b78c7b9... Replaced strings in Dedicated paymentOption and dedicatedVendor Components
               }
             });
             if (order) {
               this.$router.push(`/orders/tracking/${order}`);
             }
           },
-<<<<<<< HEAD
-          () => {
-            this.doNotification(
-              3,
-              'Order completion failed',
-              'Order completion failed. Please check your internet connection and try again.',
-            );
-=======
           (error) => {
             error.response.data.forEach((row) => {
               setTimeout(() => {
                 this.doNotification(
                   3,
                   this.$t('general.order_completion_failed'),
-                  `${row.reason}`,
+                  this.$t('general.order_completion_failed_text'),
                 );
               }, 10);
             });
->>>>>>> 5b78c7b9... Replaced strings in Dedicated paymentOption and dedicatedVendor Components
             this.loading = false;
           },
         );
