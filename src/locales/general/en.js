@@ -865,7 +865,7 @@ const translations = {
   card_payment_did_not_go_through: 'card payment did not go through',
   payment_failed: 'Payment Failed',
   use_promocode: 'Use promocode',
-
+  expiry: 'Expiry',
 
 
 };

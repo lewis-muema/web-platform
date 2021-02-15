@@ -843,10 +843,7 @@ const translations = {
   card_payment_did_not_go_through: 'FR_card payment did not go through',
   payment_failed: 'FR_Payment Failed',
   use_promocode: 'FR_Use promocode',
-
-
-
-
+  expiry: 'FR_Expiry',
 
 
 };
