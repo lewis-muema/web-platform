@@ -866,6 +866,8 @@ const translations = {
   payment_failed: 'Payment Failed',
   use_promocode: 'Use promocode',
   expiry: 'Expiry',
+  confirm_password: 'Confirm Password',
+
 
 
 };
