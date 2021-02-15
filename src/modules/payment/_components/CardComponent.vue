@@ -184,12 +184,12 @@
       <p
         v-if="country === 'KE'"
         class="card-payment-disabled-notification"
-      v-html="$t('general.technical_mantainance_still_pay')">
+      v-html="$t('general.technical_mantainance_still_pay', {user_name: user_name})">
       </p>
       <p
         v-if="country === 'UG'"
         class="card-payment-disabled-notification"
-        v-html="$t('general.technical_mantainance_contact_customer_care')"/>
+        v-html="$t('general.technical_mantainance_contact_customer_care', {user_name: user_name})"/>
     </div>
   </div>
 </template>
