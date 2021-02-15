@@ -744,7 +744,7 @@ export default {
       if (this.order_is_scheduled) {
         text = this.$t('general.schedule');
       }
-      return `${text}${this.get_active_vendor_name} ${this.$t('general.order')}`;
+      return `${text} ${this.get_active_vendor_name} ${this.$t('general.order')}`;
     },
     pay_order_text() {
       let text = this.$t('general.payment_options');
