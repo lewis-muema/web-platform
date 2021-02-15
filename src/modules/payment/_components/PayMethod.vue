@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="paymethod">
     <router-link class="paymethod--link menu-links" :key="method.Payment_method_id" v-for="method in payment_methods" :to="`/payment/${method.name.replace(/-/g, '').toLowerCase()}`">
-      {{ method.name === 'Promocode' ? 'Promo Code' : method.name }}
+    {{ method.name }}
 </router-link>
   </div>
 </template>
