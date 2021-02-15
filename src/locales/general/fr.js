@@ -844,6 +844,7 @@ const translations = {
   payment_failed: 'FR_Payment Failed',
   use_promocode: 'FR_Use promocode',
   expiry: 'FR_Expiry',
+  confirm_password: 'FR_Confirm Password',
 
 
 };
