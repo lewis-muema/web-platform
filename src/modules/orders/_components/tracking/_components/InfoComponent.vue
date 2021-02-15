@@ -850,7 +850,7 @@
                             class="vendor_component-actions__element-date"
                             type="datetime"
                             format="dd-MM-yyyy h:mm a"
-                            placeholder="As soon as possible"
+                            placeholder="$t('general.asap')"
                             prefix-icon="el-icon-date"
                             :default-time="default_value"
                             :picker-options="dueDatePickerOptions"
@@ -866,7 +866,7 @@
                       <input
                         class="button-primary add-instructions-submit"
                         type="submit"
-                        value="Schedule order"
+                        :value="$t('general.schedule_order')"
                         @click="updateScheduledTime()"
                       />
                     </div>
