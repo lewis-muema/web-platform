@@ -850,7 +850,7 @@
                             class="vendor_component-actions__element-date"
                             type="datetime"
                             format="dd-MM-yyyy h:mm a"
-                            placeholder="$t('general.asap')"
+                            :placeholder="$t('general.asap')"
                             prefix-icon="el-icon-date"
                             :default-time="default_value"
                             :picker-options="dueDatePickerOptions"
