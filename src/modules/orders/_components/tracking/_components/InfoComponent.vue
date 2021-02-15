@@ -222,7 +222,7 @@
                       <div class="cancel-reason-text" id="cancel-reason-text">
                         <div class="">
                           <el-radio v-model="cancel_reason" :label="reasons.cancel_reason_id">
-                            {{ reasons.cancel_reason }}
+                            {{ reasons.cancel_reason }} reason
                           </el-radio>
                         </div>
                       </div>
@@ -1801,7 +1801,7 @@ export default {
           });
         }
       } else {
-        this.doNotification(3, this.$t('general.order_cancellation_failed'), this.$t('general.select_cancellaton_reason'));
+        this.doNotification(3, this.$t('general.order_cancellation_failed'), this.$t('general.select_cancellation_reason'));
       }
     },
     trackMixpanelEvent(name) {
@@ -2236,6 +2236,7 @@ export default {
         (response) => {
           if (response.status) {
             this.cancellation_reasons = response.data;
+            console.log(response.data);
             this.cancellation_state = true;
           } else {
             this.cancellation_state = false;
