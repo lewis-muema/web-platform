@@ -280,7 +280,7 @@ export default {
 
         this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then((response) => {
           if (response.status) {
-            that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+            that.doNotification('1', this.$t('general.order_cancelled'), this.$t('general.order_cancelled_succesfully'));
             that.cancelToggle();
             that.set_parent_order('');
             that.$router.push('/orders/freight');
@@ -293,7 +293,7 @@ export default {
             };
             this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then((response2) => {
               if (response2.status) {
-                that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+                that.doNotification('1', this.$t('general.order_cancelled'), this.$t('general.order_cancelled_succesfully'));
                 that.cancelToggle();
                 that.set_parent_order('');
                 that.$router.push('/orders/freight');
