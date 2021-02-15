@@ -810,8 +810,8 @@ export default {
           acc = session[session.default];
         }
         const payload = {
-          cop_id: 'cop_id' in acc ? acc.cop_id : 0,
-          cop_user_id: 'cop_id' in acc ? acc.user_id : 0,
+          cop_id: 'cop_id' in acc ? acc.cop_id : null,
+          cop_user_id: 'cop_id' in acc ? acc.user_id : null,
           peer_id: 'cop_id' in acc ? null : acc.user_id,
           transporters: this.filteredCheckedOwners,
           cargo_type: parseInt(this.goods, 10),
