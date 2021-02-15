@@ -827,7 +827,22 @@ const translations = {
   pickup_lowercase: 'FR_pick up',
   drop_off_lowercase: 'FR_drop off',
   no_notes_provided: 'FR_No notes provided.',
-  confirm_password: 'FR_Confirm Password',
+  valid_promo_codes: 'Valid Promo Codes',
+  off: 'FR_OFF',
+  max: 'FR_Max',
+  card_payment_success: 'FR_card payment success',
+  card_payment_processed_successfully: 'FR_card payment was processed successfully',
+  payment_success: 'FR_Payment Success',
+  card_payment_failed: 'FR_Card Payment Failed',
+  card_payment_failed_text: 'FR_Card payment failed, please try again.',
+  card_payment_did_not_go_through: 'FR_card payment did not go through',
+  payment_failed: 'FR_Payment Failed',
+  use_promocode: 'FR_Use promocode',
+
+
+
+
+
 
 };
 

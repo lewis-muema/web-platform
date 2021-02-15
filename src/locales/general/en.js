@@ -854,7 +854,18 @@ const translations = {
   drop_off_lowercase: 'drop off',
   no_notes_provided: 'No notes provided.',
   matched_partner_to_package: '',
-  confirm_password: 'Confirm Password',
+  valid_promo_codes: 'Valid Promo Codes',
+  off: 'OFF',
+  max: 'Max',
+  card_payment_success: 'card payment success',
+  card_payment_processed_successfully: 'card payment was processed successfully',
+  payment_success: 'Payment Success',
+  card_payment_failed: 'Card Payment Failed',
+  card_payment_failed_text: 'Card payment failed, please try again.',
+  card_payment_did_not_go_through: 'card payment did not go through',
+  payment_failed: 'Payment Failed',
+  use_promocode: 'Use promocode',
+
 
 
 };
