@@ -854,6 +854,7 @@ const translations = {
   drop_off_lowercase: 'drop off',
   no_notes_provided: 'No notes provided.',
   matched_partner_to_package: '',
+  tax_authority_number: 'Tax Authority Number',
 
 
 };

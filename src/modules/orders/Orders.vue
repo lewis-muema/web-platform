@@ -447,7 +447,7 @@
                     class="input-control upgrade-final"
                     type="text"
                     name="kra_pin"
-                    placeholder="Tax Authority Number"
+                    :placeholder="$t('general.tax_authority_number')"
                     autocomplete="on"
                   >
                   <span
