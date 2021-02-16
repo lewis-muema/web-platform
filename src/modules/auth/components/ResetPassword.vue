@@ -325,12 +325,12 @@ export default {
 }
 .btn-primary {
   color: #fff;
-  background-color: #1782c5;
+  background-color: #007FFF;
   border-color: #357ebd;
   margin-right: 27%;
 }
 .form__input:focus {
-  border-color: #1782c5;
+  border-color: #007FFF;
   -webkit-box-shadow: none;
   box-shadow: none;
 }

@@ -237,7 +237,7 @@ const moment = require('moment');
 const cssText = `
   table {
     font-size: 85%;
-    font-family: sans-serif;
+    font-family: 'Nunito', sans-serif;
     border-spacing: 0;
     border-collapse: collapse;
     text-align: center;

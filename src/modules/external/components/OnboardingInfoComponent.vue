@@ -94,7 +94,7 @@
     >
       <span slot="title">
         <img
-          src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
+          src="https://images.sendyit.com/web_platform/logo/rebrand_main_logo.png"
           style="width:85px;"
         >
       </span>
@@ -320,7 +320,7 @@ export default {
   font-size: 28px !important;
   font-weight: 300 !important;
   margin-bottom: 2rem;
-  font-family: Slack-Lato,appleLogo,sans-serif;
+  font-family: 'Nunito', sans-serif;
   margin: 0 0 1rem;
   display: block;
   -webkit-margin-after: 0.67em;
@@ -411,15 +411,15 @@ export default {
 .onboarding-email-error{
   margin-right: 45%;
   font-size: 13px;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
   color: #e08445;
 }
 .onboard-error{
   color: #e08445;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 #app > div > div.user-invite-body > div > div > div.panel-card > div > div > div.el-dialog__wrapper.onboarding-phone-validation > div > div.el-dialog__header{
-  background-color: #1782c5;
+  background-color: #007FFF;
   text-align: center;
 }
 .onboarding-phone-validation > div
@@ -431,7 +431,7 @@ export default {
   text-align: left;
   line-height: 1.5;
   padding: 10px 0px;
-  font-family: "Rubik", sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 .onboarding-verification-input{
   display: flex;
@@ -442,7 +442,7 @@ export default {
   padding: 2px;
   border-bottom: 1px solid #ccc;
   width: 50%;
-  font-family: "Rubik", sans-serif;
+  font-family: 'Nunito', sans-serif;
   font-size: 16px;
 }
 .onboarding-verif-button{
@@ -453,7 +453,7 @@ export default {
 }
 .onboarding-verify{
     color: #ecf0f1;
-    background-color: #1782c5;
+    background-color: #007FFF;
     border-color: #1b7fc3;
     cursor: pointer;
     border-radius: 4px;
@@ -472,6 +472,6 @@ export default {
     padding-right: 20px;
     font-size: 13px;
     border:none;
-    font-family: "Rubik", sans-serif;
+    font-family: 'Nunito', sans-serif;
 }
 </style>

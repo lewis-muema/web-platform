@@ -267,7 +267,7 @@ export default {
   max-width: 60rem;
   border-radius: 4px;
   padding: 2rem;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
   display: flex;
  }
  .edit-cop-info-position > div:nth-child(4) > div > div > ul {

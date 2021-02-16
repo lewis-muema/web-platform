@@ -407,7 +407,7 @@ export default {
   text-transform: capitalize;
   font-size: 14px;
   letter-spacing: 1.1px;
-  background-color: #1782c5;
+  background-color: #007FFF;
   color: #fff;
   width: 100%;
   height: 30px;

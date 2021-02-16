@@ -226,7 +226,7 @@ export default {
   font-size: 28px !important;
   font-weight: 300 !important;
   margin-bottom: 2rem;
-  font-family: Slack-Lato,appleLogo,sans-serif;
+  font-family: 'Nunito', sans-serif;
   margin: 0 0 1rem;
   display: block;
   -webkit-margin-after: 0.67em;
