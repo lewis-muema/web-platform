@@ -210,7 +210,7 @@ export default {
     border: 1px solid transparent;
     border-radius: 3px;
     color: #fff;
-    background-color: #1782C5;
+    background-color: #007FFF;
     border-color: #357ebd;
     text-decoration: none;
 }

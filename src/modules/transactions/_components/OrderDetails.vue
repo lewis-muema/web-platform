@@ -137,7 +137,7 @@
               disabled
               class="el-rate__icon"
               disabled-void-color="#C0C4CC"
-              :colors="['#1782C5', '#1782C5', '#1782C5']"
+              :colors="['#007FFF', '#007FFF', '#007FFF']"
               score-template="{value} points"
             />
           </div>

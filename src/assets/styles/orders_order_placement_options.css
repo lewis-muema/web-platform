@@ -1,5 +1,5 @@
 .home-view-actions--items:hover {
-  color: #1782c5;
+  color: #007FFF;
 }
 
 .home-view-notes-wrapper--item,
@@ -15,7 +15,7 @@
 }
 
 .home-view-notes-wrapper--item__link:hover {
-  color: #1782c5;
+  color: #007FFF;
   cursor: pointer;
 }
 
@@ -290,8 +290,8 @@ ul.summary_timeline > li:before {
   color: white;
 }
 .order_summary_timeline li:first-child:before {
-    background: #f57f20;
-    border: 4px solid #f57f20;
+    background: #EE7D00;
+    border: 4px solid #EE7D00;
     content: '';
 }
 .delivery_label{
@@ -342,7 +342,7 @@ ul.summary_timeline > li:before {
 }
 .btn-submit-order{
   color: #FFFFFF !important;
-  background: #F57F20 !important;
+  background: #EE7D00 !important;
   border-color: #FF7900 !important;
   width: 45% !important;
 }

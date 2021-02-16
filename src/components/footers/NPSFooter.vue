@@ -245,108 +245,107 @@ export default {
 </script>
 <style scoped>
 .nps-footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-   left: 0;
-    background-color: #fff;
-    color: #555;
-    font-size: 13px;
-    min-height: 90px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
-    border-radius: 3px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  background-color: #fff;
+  color: #555;
+  font-size: 13px;
+  min-height: 90px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
+  border-radius: 3px;
   text-align: center;
 }
 .nps-header {
-    width: 100%;
-    margin-top: 25px;
-    font-size: 15px;
+  width: 100%;
+  margin-top: 25px;
+  font-size: 15px;
 }
 .nps-info {
-    width: 100%;
-    margin-bottom: 6px;
-    margin-left: 5em;
+  width: 100%;
+  margin-bottom: 6px;
+  margin-left: 5em;
 }
 .btn-holder {
-    width: 35px;
-    height: 35px;
-    border-radius: 100%;
-    background: #FFFFFF;
-    border: 1px solid #BDBDBD;
-    box-sizing: border-box;
-    margin-right: 13px;
-    cursor: pointer;
-    transition-duration: 0.4s;
-    padding: 0;
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  background: #ffffff;
+  border: 1px solid #bdbdbd;
+  box-sizing: border-box;
+  margin-right: 13px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  padding: 0;
 }
 
 .btn-holder:hover {
-  background-color: #F57F20;
+  background-color: #ee7d00;
   color: white;
   font-weight: 700;
   border: none;
 }
 .score-holder {
-    margin-left: 10px;
-    margin-right: 20px;
+  margin-left: 10px;
+  margin-right: 20px;
 }
 .side-btn {
-    color: #474747;
-    border: none;
-    font-size: 12px;
+  color: #474747;
+  border: none;
+  font-size: 12px;
 }
 .dismiss {
-    color: #041F38;
-    border: none;
-    font-size: 19px;
-    margin-left: 15px;
-    cursor: pointer;
+  color: #041f38;
+  border: none;
+  font-size: 19px;
+  margin-left: 15px;
+  cursor: pointer;
 }
 .nps-header h3 {
-    color: #064773;
-    font-weight: 500;
+  color: #064773;
+  font-weight: 500;
 }
 .reason-box {
-    width: 34%;
-    height: 52px;
+  width: 34%;
+  height: 52px;
 }
 .action-button {
-    position: absolute;
-    width: 7%;
-    margin-top: 6px;
-    background: #f57f20;
-    color: #ffffff;
-    border-radius: 4px;
-    cursor: pointer;
-    line-height: 30px;
-    height: 36px;
-    outline: 0;
-    padding: 0 15px;
-    border: 1px solid #dcdfe6;
+  position: absolute;
+  width: 7%;
+  margin-top: 6px;
+  background: #ee7d00;
+  color: #ffffff;
+  border-radius: 4px;
+  cursor: pointer;
+  line-height: 30px;
+  height: 36px;
+  outline: 0;
+  padding: 0 15px;
+  border: 1px solid #dcdfe6;
 }
 .clearfix {
-     margin-right: 7em;
+  margin-right: 7em;
 }
 .reason-dismiss {
-    background: #ffffff;
-    border: none;
-    color: #041F38;
-    border: none;
-    font-size: 28px;
-    margin-left: 15px;
-    cursor: pointer;
-    width: 1%;
+  background: #ffffff;
+  border: none;
+  color: #041f38;
+  border: none;
+  font-size: 28px;
+  margin-left: 15px;
+  cursor: pointer;
+  width: 1%;
 }
 button span {
-    display: block;
-    padding: 0;
+  display: block;
+  padding: 0;
 }
 .form-group {
-    margin-bottom: .3em;
+  margin-bottom: 0.3em;
 }
 .disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
-
 </style>
