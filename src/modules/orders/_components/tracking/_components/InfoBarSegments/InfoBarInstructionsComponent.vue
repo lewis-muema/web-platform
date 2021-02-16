@@ -415,7 +415,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import "../../../../../../assets/styles/info_window_component.css";
+@import "../../../../../../assets/styles/info_window_component.css?v=4";
 .info-scheduled-time{
   margin: 3% 0px -2% 0px;
   font-style: italic;
