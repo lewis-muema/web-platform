@@ -1,0 +1,22 @@
+const en = {
+  email: 'name@example.com',
+  full_name: 'Full Name (Optional)',
+  department: 'Department',
+  add_many: 'add many at once',
+  add_another: 'Add another',
+  or: 'or',
+  get_invite_link: 'Get an invite link to share',
+  send_invites: 'Send Invites',
+  Sending: 'Sending...',
+  add_user: 'Add Users',
+  invitations_sent_succesful: 'Invitations sent successfully',
+  select_department: 'Please select a department',
+  valid_email: 'Please enter at least one valid email address.',
+  invite_link: 'Invite Link',
+  error_occured: 'An error occurred',
+  link_created: 'Link created!',
+
+};
+
+
+export default en;
