@@ -85,5 +85,5 @@ export default {
 
 <style lang="css" scoped>
 
-@import "../../../../src/assets/styles/sign_up.css";
+@import "../../../../src/assets/styles/sign_up.css?v=4";
 </style>
