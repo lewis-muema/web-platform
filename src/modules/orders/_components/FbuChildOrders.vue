@@ -352,11 +352,11 @@ export default {
   display: flex;
   justify-content: space-between;
   background-color: #fff;
-  color: #1782c5;
+  color: #007FFF;
   padding: 9px 18px 9px 60px;
   font-size: 13px;
   cursor: pointer;
-  border: 0px solid #1782c5;
+  border: 0px solid #007FFF;
   border-radius: 2px;
   box-shadow: 0 3px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
   max-width: 72%;
@@ -365,7 +365,7 @@ export default {
 {
     font-size: 13px;
     margin-top: 15px;
-    border: 0px solid #1782C5;
+    border: 0px solid #007FFF;
     cursor: pointer;
     transition: all .5s ease-in-out;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
@@ -374,7 +374,7 @@ export default {
 }
 .ongoing--card:hover,.ongoing--card.active
 {
-  border-color: #f57f20;
+  border-color: #EE7D00;
 }
 .ongoing--card-location
 {
@@ -409,10 +409,10 @@ export default {
   margin-right: 10px;
 }
 .Pending {
-  background-color: #f57f20;
+  background-color: #EE7D00;
 }
 .Ongoing {
-  background-color: #1782c5;
+  background-color: #007FFF;
 }
 .Delivered {
   background-color: #43A047;

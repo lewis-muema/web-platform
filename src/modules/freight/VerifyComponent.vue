@@ -201,14 +201,14 @@ export default {
   border-radius: 4px;
   margin: 2rem auto;
   padding: 2rem;
-  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Nunito', sans-serif;
   height: 25rem;
 }
 
 .terms-header {
   font-weight: 500;
   text-align: left;
-  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Nunito', sans-serif;
   font-size: 18px;
   line-height: 0px;
   display: flex;
@@ -237,7 +237,7 @@ export default {
   border-radius: 4px;
   margin: 1rem auto;
   padding: 2rem;
-  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Nunito', sans-serif;
 }
 .warning-icon{
   font-size: 57px !important;

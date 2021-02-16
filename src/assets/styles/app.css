@@ -6,7 +6,7 @@ html, .body{
   overflow: scroll !important;
 }
 .app {
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #555;
@@ -41,10 +41,10 @@ html, .body{
   overflow-y: auto;
 }
 .sendy-blue{
-    color: #1782c5;
+    color: #007FFF;
 }
 .sendy-orange{
-    color: #f57f20;
+    color: #EE7D00;
 }
 .align-left {
   float: left !important;

@@ -1,5 +1,4 @@
-/* eslint-disable max-len */
-/* eslint-disable camelcase */
+/* eslint-disable max-len */ /* eslint-disable camelcase */
 <template lang="html">
   <div class="">
     <main-header />
@@ -187,7 +186,11 @@
             />
           </div>
           <button
-            :class="location && !locationSavingStatus ? 'locations-popup-button-active' : 'locations-popup-button-inactive'"
+            :class="
+              location && !locationSavingStatus
+                ? 'locations-popup-button-active'
+                : 'locations-popup-button-inactive'
+            "
             @click="saveLocation()"
           >
             {{ locationSavingStatus ? `${$t('general.saving')}` : `${$t('general.save')}` }} {{$t('general.location_capital')}}
@@ -1843,7 +1846,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
 }
 .invalid-kra {
   display: block;
-  color: #f57f20;
+  color: #EE7D00;
   font-size: 14px;
 }
 .final-upper-padding{
@@ -1896,7 +1899,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
 .tour-popup-get-started {
   font-size: 15px;
   font-weight: 500;
-  color: #1782c5;
+  color: #007FFF;
   cursor: pointer;
   margin: 20px 0px 10px 0px;
 }
@@ -1908,7 +1911,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
 }
 .tour-end {
   font-weight: 500;
-  color: #1782c5;
+  color: #007FFF;
   cursor: pointer;
 }
 .saved-locations-message {

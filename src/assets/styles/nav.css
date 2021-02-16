@@ -21,7 +21,7 @@
   display: block;
   margin-bottom: 2%;
   color: #000;
-  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Nunito', sans-serif;
 }
 .screen-name {
   display: block;
@@ -30,7 +30,7 @@
   font-size: 14px;
   display: block;
   margin-bottom: 1%;
-  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Nunito', sans-serif;
 }
 .screen-no-details-found {
   font-style: italic;
@@ -40,7 +40,7 @@
 }
 .searching-results {
   text-align: center;
-  color: #f57f20;
+  color: #EE7D00;
   font-size: 14px;
   margin-top: -20px;
 }
@@ -58,7 +58,7 @@
   font-style: italic;
   display: block;
   padding: 30px;
-  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Nunito', sans-serif;
   font-weight: 400;
   font-size: 13px;
   color: #000;

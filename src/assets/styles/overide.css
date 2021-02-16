@@ -9,7 +9,7 @@ button span {
 
 .button-primary {
   color: #ecf0f1;
-  background-color: #1782c5;
+  background-color: #007FFF;
   border-color: #1b7fc3;
   cursor: pointer;
   position: relative;
@@ -20,12 +20,13 @@ button span {
   padding-left: 20px;
   padding-right: 20px;
   font-size: 13px;
+  border-width: 0px !important;
 }
 
 .button-primary:focus,
 .button-primary:hover {
-  background: #285e8e;
-  border-color: #285e8e;
+  background: #0062DB;
+  border-color: #0062DB;
   color: #ecf0f1;
   cursor: pointer;
 }
@@ -35,7 +36,7 @@ button span {
   letter-spacing: 0.01em;
   cursor: not-allowed;
   /* background: rgba(44, 130, 197, 0.7); */
-  background: rgba(0,0,0,0.50);
+  background: #CCEFFF;
   position: relative;
   display: block;
   border-radius: 4px;
@@ -44,8 +45,7 @@ button span {
   padding-left: 20px;
   padding-right: 20px;
   color: #fff;
-  border: 1px solid #69a6d8;
-  border: 1px solid rgba(0,0,0,0.50);
+  border-width: 0px !important;
 }
 .inactive-1 {
   background: #BDBDBD !important;
@@ -56,7 +56,7 @@ button span {
   border: 1px solid #dedbdb !important;
 }
 .button-primary--naked {
-  color: #1782c5;
+  color: #007FFF;
   background-color: #fff;
   border-color: #f6f6f6;
   cursor: pointer;
@@ -72,8 +72,8 @@ button span {
 
 .button-primary--naked:focus,
 .button-primary--naked:hover {
-  background: #285e8e;
-  border-color: #285e8e;
+  background: #0062DB;
+  border-color: #0062DB;
   color: #ecf0f1;
 }
 
@@ -99,7 +99,7 @@ button span {
   margin-right: 30px;
 }
 .form-control:focus {
-  border-color: #1782c5;
+  border-color: #007FFF;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
@@ -125,7 +125,7 @@ button span {
 }
 
 .input-control:focus {
-  border-color: #1782c5;
+  border-color: #007FFF;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
@@ -150,7 +150,7 @@ button span {
 .textarea-control:focus,
 .textarea-control:hover,
 .textarea-control:active {
-  border: 1px solid #1782c5;
+  border: 1px solid #007FFF;
 }
 .input-checkbox,
 .input-radio {
@@ -188,14 +188,14 @@ button span {
 }
 .input-checkbox:checked:after,
 .input-radio:checked:after {
-  background-color: #1782c5;
-  border: 1px solid #1782c5;
+  background-color: #007FFF;
+  border: 1px solid #007FFF;
   color: transparent;
   background-position: center;
 }
 .input-checkbox:hover:after,
 .input-radio:hover:after {
-  border-color: #1782c5;
+  border-color: #007FFF;
 }
 
 .btn-save {
@@ -216,7 +216,12 @@ button span {
 .btn-save:hover{
   cursor: pointer;
 }
-
+.forgot-btn-color:hover {
+ background: #0062DB !important;
+ border-color: #0062DB !important;
+ color: #ecf0f1;
+ cursor: pointer;
+}
 .btn-submit {
   -webkit-appearance: none;
   background-color: #fff;
@@ -238,8 +243,8 @@ button span {
 }
 .btn-submit:focus,
 .btn-submit:hover {
-  background: #285e8e;
-  border-color: #285e8e;
+  background: #0062DB;
+  border-color: #0062DB;
   color: #ecf0f1;
 }
 
@@ -266,8 +271,8 @@ button span {
 .btn-cancel:focus,
 .btn-cancel:hover {
   background: #fff;
-  background: #285e8e;
-  border-color: #285e8e;
+  background: #0062DB;
+  border-color: #0062DB;
 }
 
 .amount--table-format {
@@ -292,11 +297,11 @@ button span {
   background-color: #f9f9f9 !important;
 }
 .el-table__row a {
-  color: #1782c5 !important;
+  color: #007FFF !important;
 }
 .el-dropdown-menu__item:focus,
 .el-dropdown-menu__item:not(.is-disabled):hover {
-  background-color: #1782c5 !important;
+  background-color: #007FFF !important;
   color: #fff !important;
 }
 .el-dropdown-menu__item:focus a,
@@ -347,7 +352,7 @@ button span {
 }
 .el-pagination__sizes .el-input .el-input__inner:hover,
 .el-pagination__sizes .el-input .el-input__inner:focus {
-  border-color: #1782c5;
+  border-color: #007FFF;
 }
 .el-pagination__editor.el-input {
   -webkit-appearance: none;
@@ -371,7 +376,7 @@ button span {
 }
 .el-pagination__editor.el-input:hover,
 .el-pagination__editor.el-input:focus {
-  border-color: #1782c5;
+  border-color: #007FFF;
 }
 
 .el-pagination__editor.el-input .el-input__inner {
@@ -379,7 +384,7 @@ button span {
 }
 
 .el-select-dropdown__item.selected {
-  color: #1782c5 !important;
+  color: #007FFF !important;
   font-weight: normal !important;
   background: #fff !important;
 }
@@ -387,7 +392,7 @@ button span {
 .el-select-dropdown__item:hover,
 .el-select-dropdown__item:focus {
   color: #fff !important;
-  background: #1782c5 !important;
+  background: #007FFF !important;
   font-weight: normal !important;
 }
 
@@ -401,13 +406,13 @@ button span {
 .el-pagination__total {
   padding-top: 6px;
   padding-right: 20px;
-  color: #1782c5 !important;
+  color: #007FFF !important;
   padding-left: 20px;
   padding-bottom: 6px;
 }
 span.el-pagination__jump {
   padding-right: 20px;
-  color: #1782c5 !important;
+  color: #007FFF !important;
   padding-left: 20px;
 }
 .el-pagination__editor.el-input {
@@ -420,7 +425,7 @@ span.el-pagination__jump {
 }
 .el-pager li.active {
   font-size: 16px !important;
-  color: #1782c5 !important;
+  color: #007FFF !important;
 }
 
 .el-pagination .btn-next .el-icon,
@@ -550,17 +555,17 @@ span.el-pagination__jump {
 }
 
 .el-radio__input.is-checked + .el-radio__label {
-  color: #1782c5 !important;
+  color: #007FFF !important;
 }
 
 .el-radio__input.is-checked .el-radio__inner {
-  border-color: #1782c5 !important;
-  background: #1782c5 !important;
+  border-color: #007FFF !important;
+  background: #007FFF !important;
 }
 
 .home-view-truck-options-inner--load-weight .el-input-group__append{
   width: 28%;
-  background-color: #1782c5 !important;
+  background-color: #007FFF !important;
   color: #ffffff !important;
   border-color: transparent !important;
   border-left: 1px solid transparent !important;
@@ -571,7 +576,7 @@ span.el-pagination__jump {
 }
 .home-view-truck-options-inner--load-weight .el-input-group--append .el-select .el-input.is-focus .el-input__inner,
 .home-view-truck-options-inner--load-weight .el-input-group__append div.el-select .el-input__inner, .el-input-group__append div.el-select:hover .el-input__inner{
-  border: 5px solid #1782C5;
+  border: 5px solid #007FFF;
 }
 
 .el-input-group__append,
@@ -595,11 +600,11 @@ span.el-pagination__jump {
 }
 
 .el-popover{
-    background-color: #1782c5;
+    background-color: #007FFF;
     color: #fff !important;
 }
 .el-popper[x-placement^=right] .popper__arrow::after{
-    border-right-color: #1782c5 !important;
+    border-right-color: #007FFF !important;
 }
 .el-popover__title{
     color: #fff !important;
@@ -613,7 +618,7 @@ span.el-pagination__jump {
 }
 
 .el-checkbox__input.is-checked+.el-checkbox__label{
-  color:#f57f20 !important;
+  color:#EE7D00 !important;
 }
 .home-view-truck-options-inner--full-select .el-select{
   width: 100%;
@@ -622,21 +627,21 @@ span.el-pagination__jump {
   padding: unset;
 }
 .home-view-truck-options-inner--number-of-loaders .el-input-number__decrease, .home-view-truck-options-inner--number-of-loaders .el-input-number__increase{
-  background-color: #1782c5;
+  background-color: #007FFF;
   color:#ffffff !important;
 }
 .home-view-truck-options-inner--number-of-loaders .el-input-number{
   width: 37%;
 }
 .home-view-truck-options-inner--full-select .el-input__inner{
-  color: #1782c5;
+  color: #007FFF;
 }
 .home-view-truck-options-inner--number-of-loaders .el-input-number .el-input__inner{
-  border: 1px solid #1782c5;
+  border: 1px solid #007FFF;
 }
 .el-button.download_history{
   color: #ecf0f1 !important;
-  background-color: #1782c5 !important;
+  background-color: #007FFF !important;
   border-color: #1b7fc3 !important;
   cursor: pointer;
   position: relative;
@@ -676,7 +681,7 @@ span.el-pagination__jump {
 .el-dialog::-webkit-scrollbar-thumb {
   border-radius: 10px;
   box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-  background-color: #1782C5;
+  background-color: #007FFF;
   border: 1px solid #000;
 }
 .el-upload--picture-card {
@@ -751,8 +756,8 @@ div.pac-container {
 }
 .el-button--primary.is-disabled:hover, .button--primary-inactive:hover, .button--primary-inactive:focus {
   color: #fff !important;
-  background-color:  rgba(0,0,0,0.50) !important;
-  border-color: rgba(0,0,0,0.50) !important;
+  background-color:  #CCEFFF !important;
+  border-color: #CCEFFF !important;
   cursor: not-allowed;
 
 }

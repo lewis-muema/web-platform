@@ -298,7 +298,7 @@ export default {
     padding-top: 15px;
     line-height: 1.6;
     text-align: center;
-    font-family: 'Rubik', sans-serif;
+    font-family: 'Nunito', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #555;
