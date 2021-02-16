@@ -537,7 +537,7 @@ export default {
         && this.truck_type !== ''
         && this.goods !== ''
         && this.pick_up_time !== ''
-        && this.owners_list.length > 1
+        && this.owners_list.length > 0
         && this.checkAll
       );
     },
