@@ -148,7 +148,7 @@ export default {
       const session = this.$store.getters.getSession;
 
       if (pin !== '') {
-        if (session[session.default].default_currency === 'KES') {
+        if (session[session.default].country_code === 'KE') {
           return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
         }
         return /^\d{10}$/.test(pin);
@@ -158,7 +158,7 @@ export default {
     fetchKraHeader() {
       let kraName = 'TIN number';
       const session = this.$store.getters.getSession;
-      if (session[session.default].default_currency === 'KES') {
+      if (session[session.default].country_code === 'KE') {
         kraName = 'KRA PIN';
       }
       let resp = `Enter your business ${kraName}`;
@@ -170,7 +170,7 @@ export default {
     kraFailResponse() {
       let resp = 'Please enter a valid TIN number';
       const session = this.$store.getters.getSession;
-      if (session[session.default].default_currency === 'KES') {
+      if (session[session.default].country_code === 'KE') {
         resp = 'Please enter a valid KRA PIN';
       }
       return resp;
@@ -219,11 +219,11 @@ export default {
       }
     },
     initiatePage() {
-      this.isNewCopAcc();
+      this.KraFrefill();
       this.peerIdFrefill();
+      this.isNewCopAcc();
       this.bizRegistrationFrefill();
       this.industryFrefill();
-      this.KraFrefill();
     },
     KraFrefill() {
       const session = this.$store.getters.getSession;
@@ -231,9 +231,13 @@ export default {
         Object.keys(session).length > 0
         && Object.prototype.hasOwnProperty.call(session[session.default], 'tax_authority_pin')
       ) {
+        this.kra_pin = session[session.default].tax_authority_pin;
         if (session[session.default].tax_authority_pin === null) {
           this.tax_compliance = false;
           this.kra_pin = '';
+        } else if (session[session.default].tax_authority_pin !== '' && !this.valid_kra_pin) {
+          this.tax_compliance = false;
+          this.kra_pin = session[session.default].tax_authority_pin;
         } else if (session[session.default].tax_authority_pin !== '') {
           this.tax_compliance = true;
           this.kra_pin = session[session.default].tax_authority_pin;
@@ -328,6 +332,7 @@ export default {
           if (
             session[session.default].tax_authority_pin === null
             || session[session.default].tax_authority_pin === ''
+            || (session[session.default].tax_authority_pin !== '' && !this.valid_kra_pin)
           ) {
             isSet = true;
             kraSection = true;
@@ -379,14 +384,18 @@ export default {
       }
     },
     submitBizData() {
+      let kraName = 'TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        kraName = 'KRA PIN';
+      }
       if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
-        this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
+        this.doNotification(2, 'Final set up error !', `Please enter valid ${kraName}`);
       } else if (this.industry_type === '') {
         this.doNotification(2, 'Final set up error !', 'Please select industry preference');
       } else if (this.biz_registration === '') {
         this.doNotification(2, 'Final set up error !', 'Please enter business registration');
       } else {
-        const session = this.$store.getters.getSession;
         const payload = {
           cop_id: session[session.default].cop_id,
           cop_name: session[session.default].cop_name,
@@ -406,12 +415,17 @@ export default {
       }
     },
     submitPeerData() {
+      let kraName = 'TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        kraName = 'KRA PIN';
+      }
+
       if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
-        this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
+        this.doNotification(2, 'Final set up error !', `Please enter valid ${kraName}`);
       } else if (this.id_number === '') {
         this.doNotification(2, 'Final set up error !', 'Please enter your ID number');
       } else {
-        const session = this.$store.getters.getSession;
         const payload = {
           user_id: session[session.default].user_id,
           tax_authority_pin: this.kra_pin,

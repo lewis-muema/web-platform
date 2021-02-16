@@ -5,13 +5,13 @@
     <div id="transactions_container" class="container">
       <div class="section">
         <router-link class="section__link" to="/transactions/order_history">
-          Orders
+          {{$t('general.orders')}}
         </router-link>
         <router-link class="section__link" to="/transactions/statement">
-          Statement
+          {{$t('general.statement')}}
         </router-link>
         <router-link class="section__link" to="/transactions/payments">
-          Payments
+          {{$t('general.payments')}}
         </router-link>
       </div>
       <div class="">

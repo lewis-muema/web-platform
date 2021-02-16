@@ -75,11 +75,11 @@ const PaymentMxn = {
 
           if (response.data.status) {
             const notification = {
-              title: 'card payment success',
+              title: this.$t('general.card_payment_success'),
               level: 1,
-              message: 'card payment was processed successfully',
+              message: this.$t('general.card_payment_processed_successfully'),
             };
-            this.payment_state = 'Payment Success';
+            this.payment_state = this.$t('general.payment_success');
             this.$store.dispatch('show_notification', notification, {
               root: true,
             });
@@ -112,11 +112,11 @@ const PaymentMxn = {
             });
           } else {
             const notification = {
-              title: 'Card Payment Failed',
+              title: this.$t('general.card_payment_failed'),
               level: 2,
-              message: 'Card payment failed, please try again.',
+              message: this.$t('general.card_payment_failed_text'),
             };
-            this.payment_state = 'Payment Failed';
+            this.payment_state = this.$t('general.payment_failed');
             this.$store.dispatch('show_notification', notification, {
               root: true,
             });
@@ -126,9 +126,9 @@ const PaymentMxn = {
         },
         () => {
           const notification = {
-            title: 'card payment failed',
+            title: this.$t('general.card_payment_failed'),
             level: 2,
-            message: 'card payment did not go through',
+            message: this.$t('general.card_payment_did_not_go_through'),
           };
           this.$store.dispatch('show_notification', notification, {
             root: true,
@@ -194,9 +194,9 @@ const PaymentMxn = {
 
           if (response.data.status) {
             const notification = {
-              title: 'card payment success',
+              title: this.$t('general.card_payment_success'),
               level: 1,
-              message: 'card payment was processed successfully',
+              message: this.$t('general.card_payment_processed_successfully'),
             };
             this.payment_state = 'Payment Success';
             this.$store.dispatch('show_notification', notification, {
@@ -226,9 +226,9 @@ const PaymentMxn = {
               this.loading = 0;
             });
           } else {
-            this.payment_state = 'Payment Failed';
+            this.payment_state = this.$t('general.payment_failed');
             const notification = {
-              title: 'card payment failed',
+              title: this.$t('general.card_payment_failed'),
               level: 2,
               message: response.data.message,
             };
@@ -238,11 +238,11 @@ const PaymentMxn = {
           }
         },
         () => {
-          this.payment_state = 'Payment Failed';
+          this.payment_state = this.$t('general.payment_failed');
           const notification = {
-            title: 'card payment failed',
+            title: this.$t('general.card_payment_failed'),
             level: 2,
-            message: 'card payment did not go through',
+            message: this.$t('general.card_payment_did_not_go_through'),
           };
           this.$store.dispatch('show_notification', notification, {
             root: true,

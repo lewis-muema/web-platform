@@ -13,7 +13,7 @@
         v-model="mpesa_payment_data.amount"
         type="number"
         name="amount"
-        placeholder="Amount"
+        :placeholder="$t('general.amount')"
         class="input-control paymentbody--input"
       >
     </div>
@@ -23,7 +23,7 @@
         type="text"
         disabled
         name="phone_no"
-        placeholder="Safaricom Phone Number"
+        :placeholder="$t('general.safaricon_phone_number')"
         class="input-control paymentbody--input"
       >
     </div>
@@ -31,15 +31,14 @@
       <button
         type="button"
         name="button"
-        :disabled="isClicked"
         :class="
           valid_payment
             ? 'button-primary paymentbody--input-button'
             : 'button--primary-inactive paymentbody--input-button'
         "
-        @click.once="requestMpesaPayment"
+        @click="requestMpesaPayment"
       >
-        Pay
+        {{$t('general.pay')}}
       </button>
     </div>
   </div>
@@ -62,11 +61,8 @@ export default {
         amount: '',
         phone_number: 0,
       },
-      payment_state: 'Mpesa Payment Not Initiated',
+      payment_state: this.$t('general.mpesa_payment_not_inititated'),
       mpesa_number_invalid: false,
-      isClicked: false,
-      running_balance_interval: null,
-      running_balance_timeout:null,
     };
   },
   computed: {
@@ -88,10 +84,10 @@ export default {
       // validate amount
       // validate mpesa number
       return (
-        this.mpesa_payment_data.amount !== '' &&
-        this.mpesa_payment_data.amount !== 0 &&
-        this.mpesa_payment_data.phone_number !== '' &&
-        this.valid_phone
+        this.mpesa_payment_data.amount !== ''
+        && this.mpesa_payment_data.amount !== 0
+        && this.mpesa_payment_data.phone_number !== ''
+        && this.valid_phone
       );
     },
     valid_phone() {
@@ -163,7 +159,7 @@ export default {
       if (session.default === 'biz') {
         cop_id = session.biz.cop_id;
       }
-      const oldRb = this.$store.getters.getRunningBalance;
+      const oldRb = Math.abs(this.$store.getters.getRunningBalance);
 
       const runningBalancePayload = {
         values: {
@@ -178,49 +174,66 @@ export default {
         endpoint: 'running_balance',
       };
 
-      //timeout the check after a minute
-      this.running_balance_timeout = setTimeout(()=>{
-        clearInterval(this.running_balance_interval);
-        this._terminateMpesaPaymentRequest({});
-        return 0;
-      }, 1000 * 60);
+      const poll_limit = 6; // 10secs * 6  = 60sec = 1min
+      // poll the dispatch
+      for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
+        // wait 10 seconds
+        const that = this;
+        (function (poll_count) {
+          setTimeout(() => {
+            const res = that.checkRunningBalance(oldRb, payload);
 
-
-      // Running balance check, runs every 10s
-      this.running_balance_interval = setInterval(()=>{
-        this.checkRunningBalance(oldRb, payload).then(response => {
-          if(response === true){
-            clearInterval(this.running_balance_interval);
-            clearTimeout(this.running_balance_timeout);
-          }
-        })
-      }, 1000 * 10);
-
+            if (res) {
+              poll_count = poll_limit;
+              // let notification = {
+              //   level: 1,
+              //   title: "Payment successful",
+              //   message: "M-Pesa payment was successful."
+              // };
+              // that.$store.dispatch("show_notification", notification, {
+              //   root: true
+              // });
+              that._completeMpesaPaymentRequest({});
+              return true;
+            }
+            if (poll_count === 5) {
+              // let notification = {
+              //   level: 2,
+              //   title: "Payment failed",
+              //   message:
+              //     "Please select your preferred payment method and try again."
+              // };
+              // that.$store.dispatch("show_notification", notification, {
+              //   root: true
+              // });
+              that._terminateMpesaPaymentRequest({});
+            }
+          }, 10000 * poll_count);
+        }(poll_count));
+      }
     },
 
     checkRunningBalance(oldRb, payload) {
       const that = this;
-      return new Promise((resolve)=>{
-        this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
+      this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
         (response) => {
           if (response.length > 0) {
             response = response[0];
           }
           if (response.status === 200) {
             // check if rb has changed
-            const newRb = response.data.running_balance * -1;
+            const newRb = Math.abs(response.data.running_balance);
 
             if (newRb > oldRb) {
               that._completeMpesaPaymentRequest({});
-              resolve(true);
+              return true;
             }
           }
           // commit  to the global store here
-          resolve(false);
+          return false;
         },
-        (error) => resolve(false)
+        error => false,
       );
-      });
     },
 
     requestMpesaPayment() {
@@ -262,7 +275,7 @@ export default {
         endpoint: 'initiate_mpesa',
       };
 
-      this.payment_state = 'requesting Mpesa Payment';
+      this.payment_state = this.$t('general.requesting_mpesa_payment');
 
       this._requestMpesaPayment(fullPayload).then(
         (response) => {
@@ -270,7 +283,7 @@ export default {
             // request poll here
             this.requestMpesaPaymentPoll();
           }
-          this.payment_state = 'Mpesa Payment Success';
+          this.payment_state = this.$t('general.mpesa_payment_success');
           const acc = this.$store.getters.getSession;
 
           this.trackMixpanelEvent('Mpesa Payment', {
@@ -279,8 +292,8 @@ export default {
           });
         },
         (error) => {
-          this.payment_state = 'Mpesa Payment Failed';
-        }
+          this.payment_state = this.$t('general.mpesa_payment_failed');
+        },
       );
     },
   },

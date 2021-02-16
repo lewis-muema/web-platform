@@ -694,6 +694,9 @@ span.el-pagination__jump {
 .el-upload-list__item-name {
   display: none;
 }
+.requestShipmentOptions > .el-dialog > .el-dialog__header{
+  padding: 0 !important;
+}
 .el-upload-list__item{
   margin-top: 0;
   margin-bottom: -2%;
