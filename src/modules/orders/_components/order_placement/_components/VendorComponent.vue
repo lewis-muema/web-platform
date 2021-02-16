@@ -2237,7 +2237,7 @@ export default {
       let name = this.$t('general.drop_off_instructions');
 
       if (this.get_order_path.length <= 2) {
-        name = this.$t('general.drop_off_instructions_at')+ this.get_order_path[1].name;
+        name = this.$t('general.drop_off_instructions_at') + this.get_order_path[1].name;
       }
       return name;
     },

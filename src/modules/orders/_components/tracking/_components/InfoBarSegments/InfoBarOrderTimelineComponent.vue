@@ -213,13 +213,12 @@
                   <span v-if="trackingData.delivery_status < 3 && !val.visited">
                     <p class="stagePending">
                       {{$t('general.your')}}  {{ getTrackPartnerName }} {{$t('general.is_on_the_way_to_pick')}} 
-                      {{ getTrackPackageName }} at
-                      {{ val.name }}
+                      {{ getTrackPackageName }} {{$t('general.at')}} 
                     </p>
                   </span>
                   <span v-else>
                     <p class="stagePassed">
-                      {{$t('general.your')}}  {{ getTrackPackageName }} at {{ val.name }} {{$t('general.has_been_picked')}}
+                      {{$t('general.your')}}  {{ getTrackPackageName }} {{$t('general.at')}}  {{ val.name }} {{$t('general.has_been_picked')}}
                     </p>
                   </span>
                 </span>
