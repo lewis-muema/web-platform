@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../assets/styles/internal_header.css";
+@import "../../assets/styles/internal_header.css?v=4";
 .external-header__img{
     cursor: pointer;
     width: 60%;
