@@ -198,7 +198,7 @@ export default {
             break;
           }
           case 2: {
-            return this.$t('general.intransit');
+            return this.$t('general.in_transit');
             break;
           }
           default: {
