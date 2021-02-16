@@ -18,12 +18,12 @@
             class="form-control"
             type="text"
             name="name"
-            placeholder="Full Name (Optional)"
+            :placeholder="$t('inviteComponent.full_name')"
           >
           <el-select
             v-model="element.department"
             class="addUser--select"
-            placeholder="Department"
+            :placeholder="$t('inviteComponent.department')"
             filterable
           >
             <el-option
@@ -42,13 +42,13 @@
           <a
             class="add-anchor"
             @click="addElement"
-          ><i class="el-icon-circle-plus-outline" />&nbsp;Add another</a>
+          ><i class="el-icon-circle-plus-outline" />&nbsp;{{ $t('inviteComponent.add_another')}}</a>
           <span> or </span>
           <a
             class="add-anchor"
             href="#"
             @click="invite_many"
-          >add many at once</a>
+          >{{$t('inviteComponent.add_many')}}</a>
         </div>
       </div>
       <div class="addUser--submit">
@@ -69,7 +69,7 @@
           <a
             class="add-anchor inviteMany--anchor"
             @click="getInviteLink"
-          ><i class="el-icon-share" /><span>&nbsp;Get an invite link to share</span></a>
+          ><i class="el-icon-share" /><span>&nbsp;{{$t('inviteComponent.get_invite_link')}}</span></a>
         </div>
       </div>
     </div>
@@ -87,7 +87,7 @@ export default {
   data() {
     return {
       value: '',
-      button: 'Send Invites',
+      button: this.$t('inviteComponent.send_invites'),
       elements: [
         {
           email: '',
@@ -157,7 +157,7 @@ export default {
       for (let i = 0, iLen = this.elements.length; i < iLen; i += 1) {
         const { email } = this.elements[0];
         if (email !== '') {
-          this.button = 'Sending...';
+          this.button = this.$t('inviteComponent.sending');
           const session = this.$store.getters.getSession;
           let cop_id = 0;
           if (session.default === 'biz') {
@@ -190,9 +190,9 @@ export default {
                 if (response.status) {
                   const level = 1;
                   const notification = {
-                    title: 'Add Users',
+                    title: this.$t('inviteComponent.add_user'),
                     level,
-                    message: 'Invitations sent successfully',
+                    message: this.$t('inviteComponent.invitations_sent_successful'),
                   };
                   this.inviteLog(payload);
                   this.displayNotification(notification);
@@ -204,22 +204,23 @@ export default {
               },
             );
           } else if (!this.invitation) {
-            this.button = 'Send Invites';
+            this.button = this.$t('inviteComponent.send_invites');
             const level = 2;
             const notification = {
-              title: 'Send Invites',
+              title: this.$t('inviteComponent.send_invites'),
               level,
-              message: 'Please select a department',
+              message: this.$t('inviteComponent.select_department'),
             };
             this.displayNotification(notification);
           }
         } else {
-          this.button = 'Send Invites';
+          this.button = this.$t('inviteComponent.send_invites');
+
           const level = 2;
           const notification = {
-            title: 'Send Invites',
+            title: this.$t('inviteComponent.send_invites'),
             level,
-            message: 'Please enter at least one valid email address.',
+            message: this.$t('inviteComponent.valid_email'),
           }; // notification object
           this.displayNotification(notification);
         }
@@ -269,18 +270,18 @@ export default {
           this.updateViewState(5);
           const level = 1; // success
           const notification = {
-            title: 'Invite Link',
+            title: this.$t('inviteComponent.send_invites'),
             level,
-            message: 'Link created!',
+            message: this.$t('inviteComponent.link_created'),
           }; // notification object
           this.displayNotification(notification);
         },
         (error) => {
           const level = 2;
           const notification = {
-            title: 'Invite Link',
+            title: this.$t('inviteComponent.invite_link'),
             level,
-            message: 'An error occurred.',
+            message: this.$t('inviteComponent.error_occurred'),
           }; // notification object
           this.displayNotification(notification);
         },
