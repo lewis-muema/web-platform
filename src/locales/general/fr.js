@@ -191,7 +191,7 @@ const translations = {
   package_will_be_delivered_cc_at: 'The package will be delivered to the collection centre at',
   pick_up_time_of_order: 'FR_The pickup time of your order',
   pickup_instructions: 'FR_Pickup instructions at {{ getInstructionNotes[0].name }}',
-  drop_off_instructions_at_name: 'FR_Drop off instructions at {{ data.name }}',
+  drop_off_instructions_at_name: 'FR_Drop off instructions at {name}',
   order_will_be_placed: 'FR_Order will be placed in',
   time_seconds: 'FR_ {time} seconds',
   confirm: 'FR_Confirm',
@@ -315,7 +315,7 @@ const translations = {
   send_package_upcountry: 'FR_Send packages upcountry',
   schedule_time: 'SFR_chedule time',
   drop_off_instructions: 'Drop off instructions',
-  drop_off_instructions_at: 'FR_Drop off instructions at',
+  drop_off_instructions_at: 'FR_Drop off instructions at ',
   sender_info_error: 'FR_Sendor Information Error!!',
   kinldy_provide_valid_details: 'FR_Kindly provide valid details to submit data.',
   add_instructions_error: 'FR_Add Instructions Error!!',
@@ -411,7 +411,7 @@ const translations = {
   mpessa: 'FR_M-Pesa',
   matched_parter_to_package: 'FR_FR_We have matched a {getTrackPartnerName} to your {getTrackPackageName}',
   finding_partner_to_package: 'FR_FR_We are finding a {getTrackPartnerName} for your {getTrackPackageName}',
-  your: 'FR_FR_your',
+  your: 'FR_Your',
   has_picked: 'FR_has picked',
   has_picked_your: 'FR_has picked your',
   has_been_picked: 'FR_has been picked.',
@@ -511,8 +511,8 @@ const translations = {
   ready_to_deliver_your_order: 'FR_FR_is ready to deliver your order',
   has_arrived_at_destination: 'FR_FR_has arrived and is waiting at the destination.',
   delivery_still_inprogress: "FR_FR_Your delivery is still in progress. We are working to restore the {vendor_name}'s location.`",
-  destination: 'FR_FR_destination',
-  location: 'FR_FR_location',
+  destination: 'FR_Destination',
+  location: 'FR_location',
   delivery_in_progress: 'FR_FR_Your delivery is in progress.',
   order_arrival_time: 'FR_FR_Order arrival time ',
   order_arrived: 'FR_FR_Your {vendor_name} has arrived and is waiting at the pickup location.',
@@ -845,7 +845,6 @@ const translations = {
   use_promocode: 'FR_Use promocode',
   expiry: 'FR_Expiry',
   confirm_password: 'FR_Confirm Password',
-
 
 };
 
