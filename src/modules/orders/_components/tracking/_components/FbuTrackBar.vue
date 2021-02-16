@@ -25,7 +25,7 @@
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
                   <p class="no-margin">
-                    {{$t('general.pickup_time')}}
+                    {{$t('general.pickup_solo')}}
                   </p>
                   <p class="no-margin homeview--field">
                     {{ orderData.path[0].name }}
@@ -36,7 +36,7 @@
                     {{$t('general.order_type')}}
                   </p>
                   <p class="no-margin homeview--field">
-                    {{$t('general.container_order')}}, {{ orderData.freight_order_details.containers.container_details[0].container_size_feet }}ft Container, {{ orderData.freight_order_details.containers.container_details[0].container_weight_tonnes }}T
+                    {{$t('general.container_order')}}, {{ orderData.freight_order_details.containers.container_details[0].container_size_feet }}ft {{$t('general.container_capital')}}, {{ orderData.freight_order_details.containers.container_details[0].container_weight_tonnes }}T
                   </p>
                 </div>
               </div>
@@ -61,7 +61,7 @@
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
                   <p class="no-margin">
-                    {{$t('general.empty_container_distribution')}}
+                    {{$t('general.empty_container_destination')}}
                   </p>
                   <p class="no-margin homeview--field">
                     {{ orderData.path[2].name }}
@@ -69,7 +69,7 @@
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">
-                    {{$t('general.cosignee')}}
+                    {{$t('general.consignee')}}
                   </p>
                   <p class="no-margin homeview--field">
                     {{ orderData.freight_order_details.containers.container_details[0].consignee }}
