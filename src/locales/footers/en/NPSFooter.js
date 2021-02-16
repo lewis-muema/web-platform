@@ -24,6 +24,7 @@ const en = {
   business: 'FR_Business',
   business_acc: '(Business Acc)',
   personal_acc: '(Personal Acc)',
+  write_feedback: 'Write your feedback here',
 };
 
 export default en;
