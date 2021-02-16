@@ -216,7 +216,12 @@ button span {
 .btn-save:hover{
   cursor: pointer;
 }
-
+.forgot-btn-color:hover {
+ background: #0062DB !important;
+ border-color: #0062DB !important;
+ color: #ecf0f1;
+ cursor: pointer;
+}
 .btn-submit {
   -webkit-appearance: none;
   background-color: #fff;
@@ -752,10 +757,4 @@ div.pac-container {
   border-color: #CCEFFF !important;
   cursor: not-allowed;
 
-}
-.forgot-btn-color:hover {
- background: #0062DB !important;
- border-color: #0062DB !important;
- color: #ecf0f1;
- cursor: pointer;
 }
