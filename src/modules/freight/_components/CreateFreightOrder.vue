@@ -1027,7 +1027,7 @@ export default {
 }
 .create-order-main{
    border-radius: 4px;
-   font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+   font-family: 'Nunito', sans-serif;
    width: 44% !important;
    padding-bottom: 0;
    margin-top: 0;

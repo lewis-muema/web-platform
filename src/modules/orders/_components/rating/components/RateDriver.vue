@@ -21,7 +21,7 @@
             <p class="rate-text rate-text-right">Very Bad</p>
             <el-rate
               v-model="rated_score"
-              :colors="['#99A9BF', '#F57f20', '#1782C5']"
+              :colors="['#99A9BF', '#EE7D00', '#007FFF']"
             />
             <p class="rate-text rate-text-left">Very Good</p>
           </span>
@@ -168,7 +168,7 @@ export default {
     color: #595d62 !important;
     margin-top: 20px;
     padding: 15px;
-    font-family: 'Rubik', sans-serif;
+    font-family: 'Nunito', sans-serif;
 }
 
 .rate-rider-please {
@@ -180,7 +180,7 @@ export default {
 .rate-rider-primary {
     margin: 0 auto;
     color: #ecf0f1;
-    background-color: #1782c5;
+    background-color: #007FFF;
     border-color: #1b7fc3;
     cursor: pointer;
     position: relative;
@@ -195,8 +195,8 @@ export default {
 }
 
 .rate-rider-primary:focus, .button-primary:hover {
-    background: #285e8e;
-    border-color: #285e8e;
+    background: #0062DB;
+    border-color: #0062DB;
     color: #ecf0f1;
 }
 .submit-stars{
@@ -214,7 +214,7 @@ export default {
     width: 200px !important;
 }
 .rate-comment--textareabox:focus{
-    border: 1px solid #1782c5 !important;
+    border: 1px solid #007FFF !important;
     -webkit-box-shadow: none !important;
     outline:none;
     box-shadow: none !important;

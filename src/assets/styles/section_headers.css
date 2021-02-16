@@ -27,12 +27,12 @@
 }
 
 .section__link:hover {
-    color: #1782c5 !important;
+    color: #007FFF !important;
 }
 .router-link-active{
   font-weight: normal !important;
-  border-bottom: 3px solid #1782c5;
-  color: #1782c5 !important;
+  border-bottom: 3px solid #007FFF;
+  color: #007FFF !important;
   margin-bottom: -3px;
 }
 

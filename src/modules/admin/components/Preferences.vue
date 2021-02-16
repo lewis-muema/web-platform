@@ -166,7 +166,7 @@ export default {
 }
 .card__paragraph{
     font-size: 14px;
-    font-family: 'Rubik', sans-serif;
+    font-family: 'Nunito', sans-serif;
     color: #606266;
     font-weight: 300;
 }
@@ -196,7 +196,7 @@ export default {
     text-transform: capitalize !important;
     text-align: center;
     text-decoration: none;
-    font-family: 'Rubik', sans-serif;
+    font-family: 'Nunito', sans-serif;
 
 }
 .card__content{
@@ -253,11 +253,11 @@ export default {
 }
 
 input:checked + .slider {
-  background-color: #1782c5;
+  background-color: #007FFF;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #1782c5;
+  box-shadow: 0 0 1px #007FFF;
 }
 
 input:checked + .slider:before {

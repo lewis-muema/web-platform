@@ -541,7 +541,7 @@ final-set-up-pop > div > div > div.el-dialog__header{
 }
 .invalid-kra {
   display: block;
-  color: #f57f20;
+  color: #EE7D00;
   font-size: 14px;
 }
 .final-upper-padding{

@@ -58,7 +58,7 @@
       >
         <span slot="title">
           <img
-            src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
+            src="https://images.sendyit.com/web_platform/logo/rebrand_main_logo.png"
             class="signup-sendy-logo"
           >
         </span>
@@ -480,17 +480,17 @@ export default {
     .my-profile__menu__balance {
         float: right;
         font-size: 14px;
-        color: #1782C5;
+        color: #007FFF;
     }
 
     .my-profile__inner__menu {
         margin-bottom: 50px;
-        border-bottom: 1px solid #1782c5;
+        border-bottom: 1px solid #007FFF;
         padding-bottom: 2px;
     }
 
     .my-profile__inner__menu__link {
-        color: #1782c5;
+        color: #007FFF;
         text-transform: uppercase;
         text-align: center;
         padding: 2px 25px;
@@ -499,7 +499,7 @@ export default {
 
     .my-profile__inner__menu__selected {
         font-weight: 400;
-        border-bottom: 3px solid #1782c5;
+        border-bottom: 3px solid #007FFF;
         text-decoration: none;
     }
 
@@ -539,7 +539,7 @@ export default {
         line-height: 1.33;
         border-radius: 3px;
         color: #fff;
-        background-color: #1782C5;
+        background-color: #007FFF;
         border-color: #357ebd;
         display: inline-block;
         margin-bottom: 0;
@@ -629,7 +629,7 @@ export default {
       text-align: left;
       line-height: 1.5;
       padding: 10px 0px;
-      font-family: "Rubik", sans-serif;
+      font-family: 'Nunito', sans-serif;
     }
     .phone-verification-input{
       display: flex;
@@ -640,7 +640,7 @@ export default {
       padding: 2px;
       border-bottom: 1px solid #ccc;
       width: 50%;
-      font-family: "Rubik", sans-serif;
+      font-family: 'Nunito', sans-serif;
       font-size: 16px;
     }
     .phone-validation-verify--button{
@@ -651,7 +651,7 @@ export default {
     }
     .phone-validation-verify{
       color: #ecf0f1;
-        background-color: #1782c5;
+        background-color: #007FFF;
         border-color: #1b7fc3;
         cursor: pointer;
         border-radius: 4px;
@@ -663,7 +663,7 @@ export default {
     }
     .phone-validation-cancel{
       color: #ecf0f1;
-        background-color: #1782c5;
+        background-color: #007FFF;
         border-color: #1b7fc3;
         cursor: pointer;
         border-radius: 4px;
@@ -677,6 +677,6 @@ export default {
         width:85px;
     }
     #auth_container > div > div:nth-child(2) > div > div > div > div > div.el-dialog__header{
-      background-color: #1782c5;
+      background-color: #007FFF;
     }
 </style>

@@ -1,5 +1,4 @@
-/* eslint-disable max-len */
-/* eslint-disable camelcase */
+/* eslint-disable max-len */ /* eslint-disable camelcase */
 <template lang="html">
   <div class="">
     <main-header />
@@ -188,7 +187,11 @@
             />
           </div>
           <button
-            :class="location && !locationSavingStatus ? 'locations-popup-button-active' : 'locations-popup-button-inactive'"
+            :class="
+              location && !locationSavingStatus
+                ? 'locations-popup-button-active'
+                : 'locations-popup-button-inactive'
+            "
             @click="saveLocation()"
           >
             {{ locationSavingStatus ? 'Saving' : 'Save' }} Location
@@ -731,7 +734,10 @@ export default {
         if (session.default === 'biz') {
           const bizSession = session[session.default];
           this.copId = bizSession.cop_id;
-          const { verified_social_media_business, social_media_business_approval_status } = bizSession;
+          const {
+            verified_social_media_business,
+            social_media_business_approval_status,
+          } = bizSession;
           if (social_media_business_approval_status === 0) {
             this.showSocialMediaApprovalDialog = true;
             this.socialMediaApprovalStatus = verified_social_media_business;
@@ -1009,7 +1015,10 @@ export default {
           const notification = {
             title: '',
             level: 3,
-            message: response.message === 'Location limit exceeded' ? `Limit allowed for saved ${this.waypointType} locations has been reached` : response.message,
+            message:
+              response.message === 'Location limit exceeded'
+                ? `Limit allowed for saved ${this.waypointType} locations has been reached`
+                : response.message,
           };
           this.displayNotification(notification);
         }
@@ -1471,7 +1480,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
 }
 .invalid-kra {
   display: block;
-  color: #f57f20;
+  color: #EE7D00;
   font-size: 14px;
 }
 .final-upper-padding{
@@ -1524,7 +1533,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
 .tour-popup-get-started {
   font-size: 15px;
   font-weight: 500;
-  color: #1782c5;
+  color: #007FFF;
   cursor: pointer;
   margin: 20px 0px 10px 0px;
 }
@@ -1536,7 +1545,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
 }
 .tour-end {
   font-weight: 500;
-  color: #1782c5;
+  color: #007FFF;
   cursor: pointer;
 }
 .saved-locations-message {

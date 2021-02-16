@@ -228,7 +228,7 @@ border: 1px solid #D8DFE6;
 border-radius: 4px;
 margin: 2rem auto;
 padding: 2rem;
-font-family: "Helvetica Nueu", "Helvetica", "Arial", "sans-serif";
+font-family: 'Nunito', sans-serif;
 }
 .sign-top{
 font-size: 1.3rem;
@@ -251,13 +251,13 @@ display: block;
  height: 30px;
 }
 .sign-holder input[type="submit"] {
- background-color: #1782c5;
+ background-color: #007FFF;
  color: #fff;
  letter-spacing: 1.1px;
  font-weight: inherit;
  padding: 6px;
  height: 42px;
- border: 1px solid #1782c5;
+ border: 1px solid #007FFF;
  text-transform: uppercase;
  font-size: medium;
 }
@@ -265,7 +265,7 @@ display: block;
 width: 83%;
 }
 .sign-holder__link{
-color: #1782c5;
+color: #007FFF;
 text-decoration:none;
 }
 .forgot-form{
@@ -273,12 +273,12 @@ text-decoration:none;
   width: 110%!important;
 }
 .forgot-paswword-moreinfo{
-    font-family: "Rubik", sans-serif;
+    font-family: 'Nunito', sans-serif;
     font-size: 14px;
 }
 .reset-pass-link{
   cursor: pointer;
-  color: #1782c5;
+  color: #007FFF;
   text-decoration: none;
 }
 .reset-link-details{
@@ -287,7 +287,7 @@ text-decoration:none;
   text-align: center;
   font-size: 13px;
   color: #e08445;
-  font-family: "Rubik", sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 .forgot-btn-color{
   border-width: 0px !important;

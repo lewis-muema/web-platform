@@ -246,7 +246,7 @@ export default {
   border-radius: 4px;
   margin: 2rem auto;
   padding: 2rem;
-  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Nunito', sans-serif;
 }
 
 .sign-top {
@@ -314,7 +314,7 @@ export default {
 }
 
 .sign-holder__link {
-  color: #1782c5;
+  color: #007FFF;
   text-decoration: none;
 }
 
@@ -333,7 +333,7 @@ export default {
 
 .sign-in-error {
   color: #e08445;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 
 .sign-btn-color {

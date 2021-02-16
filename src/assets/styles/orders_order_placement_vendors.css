@@ -1,5 +1,5 @@
 .reset-font {
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 .home-view--seperator {
   border-top: 1px solid #6663;
@@ -27,7 +27,7 @@
   flex-basis: 11% !important;
 }
 .home-next-step {
-  color: #1782c5;
+  color: #007FFF;
 }
 .back-to-home-btn {
   padding-left: 6px;
@@ -58,7 +58,7 @@
 .vendor_component-actions__divider {
   margin-left: 3%;
   margin-right: 2%;
-  color: #1782c5;
+  color: #007FFF;
   font-size: 16px;
   font-weight: 600;
 }
@@ -101,12 +101,12 @@
   padding-top: 4px;
   padding-bottom: 4px;
   background-color: transparent;
-  color: #1782c5;
+  color: #007FFF;
 }
 .home-view-vendor-types--item:hover,
 .home-view-vendor-types--item:active,
 .home-view-vendor-types--item__active {
-  border: 2px solid #1782c5;
+  border: 2px solid #007FFF;
   background-color: #fff;
 }
 
@@ -205,7 +205,7 @@
 }
 .home-view-actions--schedule {
   margin-bottom: 15px;
-  color: #1782c5;
+  color: #007FFF;
   font-size: small;
   margin-top: 20px;
 }
@@ -219,17 +219,17 @@
 }
 
 .home-view-section__link:hover {
-  color: #1782c5 !important;
+  color: #007FFF !important;
   cursor: pointer;
 }
 .home-view-section__link-active {
   font-weight: normal !important;
-  color: #1782c5 !important;
+  color: #007FFF !important;
   margin-bottom: -3px;
 }
 .home-view-actions__element-date .el-input__inner,
 .home-view-actions__element-date .el-input__icon {
-  color: #1782c5;
+  color: #007FFF;
 }
 .home-view-actions--note {
   margin-left: 20px;
@@ -254,7 +254,7 @@
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  border: 1px solid #1782c5;
+  border: 1px solid #007FFF;
   border-radius: 5px;
   padding: 5px;
   margin-top: 20px;
@@ -286,7 +286,7 @@
   text-align: center;
   font-size: 12px;
   padding: 20px;
-  color: #1782c5;
+  color: #007FFF;
   margin-bottom: -15px;
 }
 
@@ -329,7 +329,7 @@
   text-transform: capitalize;
 }
 .pair_info_text_content {
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
   color: #555;
   font-weight: 300;
 }
@@ -360,7 +360,7 @@
   opacity: 0;
 }
 .tier_description_background {
-  background-color: #1782c5;
+  background-color: #007FFF;
 }
 .extra_info_background {
   background-color: #fff;
@@ -375,7 +375,7 @@
 }
 .tonnage-validate-error {
   color: #e08445;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
   text-align: left;
   font-size: 13px;
   width: 320px;
@@ -387,7 +387,7 @@
   background-color: white !important;
 }
 .el-time-panel {
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 .home-view-vendor-types--item__unavailable {
   background: #fbfbfb;
@@ -491,7 +491,7 @@
   text-transform: capitalize;
 }
 .vendorExtraInfo{
-  background-color: #1782c5 !important;
+  background-color: #007FFF !important;
 }
 /* end transitions */
 .button-additional-notes{

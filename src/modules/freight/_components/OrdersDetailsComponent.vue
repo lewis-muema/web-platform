@@ -104,7 +104,7 @@
                       :value="freightOrderDetail.rating.rating"
                       disabled
                       disabled-void-color="#C0C4CC"
-                      :colors="['#99A9BF', '#F57f20', '#1782C5']"
+                      :colors="['#99A9BF', '#EE7D00', '#007FFF']"
                     />
                   </div>
                 </div>
@@ -252,7 +252,7 @@
                 <el-rate
                   v-model="rated_score"
                   class="freight-rating"
-                  :colors="['#99A9BF', '#F57f20', '#1782C5']"
+                  :colors="['#99A9BF', '#EE7D00', '#007FFF']"
                 />
               </span>
               <div class="decline-documemt-input">

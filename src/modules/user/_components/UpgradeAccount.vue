@@ -563,7 +563,7 @@ export default {
   border-radius: 4px;
   margin: 2rem auto;
   padding: 2rem;
-  font-family: "Rubik", sans-serif;
+  font-family: 'Nunito', sans-serif;
   margin-top: 5%;
 }
 .upgrade-account-top {
@@ -673,7 +673,7 @@ export default {
 }
 .invalid-pin {
   display: block;
-  color: #f57f20;
+  color: #EE7D00;
   font-size: 14px;
 }
 .upgrade-margin{

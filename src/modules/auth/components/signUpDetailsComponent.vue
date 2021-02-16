@@ -704,4 +704,7 @@ body > div.el-select-dropdown.el-popper{
   font-size: 13px;
   pointer-events: none;
 }
+.sign-btn-color {
+  border-width: 0px !important;
+}
 </style>

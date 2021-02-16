@@ -84,7 +84,7 @@ export default {
 .profile--link
 {
   color: #555;
-  font-family: Slack-Lato,appleLogo,sans-serif;
+  font-family: 'Nunito', sans-serif;
   /* font-size: 1rem !important; */
   text-align: center;
   padding: 2px;
@@ -111,7 +111,7 @@ export default {
 .new-card__inner{
   margin-top:5%;
   margin-left:20%;
-  border-right:5px solid #1782C5;
+  border-right:5px solid #007FFF;
   height:400px;
 }
 </style>

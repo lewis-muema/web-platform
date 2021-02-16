@@ -9,7 +9,7 @@
     border-radius: 4px;
     margin: 2rem auto;
     padding: 2rem;
-    font-family: "Helvetica Nueu", "Helvetica", "Arial", "sans-serif";
+    font-family: 'Nunito', sans-serif;
 }
 
 .sign-top {
@@ -77,7 +77,7 @@
 }
 
 .sign-holder__link {
-    color: #1782c5;
+    color: #007FFF;
     text-decoration: none;
 }
 
@@ -96,7 +96,7 @@
 
 .sign-in-error {
     color: #e08445;
-    font-family: "Rubik", sans-serif;
+    font-family: 'Nunito', sans-serif;
 }
 
 .sign-btn-color {
@@ -109,7 +109,7 @@
 }
 .bypass-verify{
   color: #ecf0f1;
-    background-color: #1782c5;
+    background-color: #007FFF;
     border-color: #1b7fc3;
     cursor: pointer;
     border-radius: 4px;
@@ -121,7 +121,7 @@
 }
 .bypass-cancel{
   color: #ecf0f1;
-    background-color: #1782c5;
+    background-color: #007FFF;
     border-color: #1b7fc3;
     cursor: pointer;
     border-radius: 4px;
