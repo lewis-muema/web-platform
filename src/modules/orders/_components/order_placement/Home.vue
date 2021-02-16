@@ -135,7 +135,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../../assets/styles/orders_order_placement.css?v=2";
+@import "../../../../assets/styles/orders_order_placement.css?v=4";
 .tour-pointer-1 {
   position: relative;
   left: 20px;

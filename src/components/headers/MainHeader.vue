@@ -357,5 +357,5 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../assets/styles/internal_header.css?v=2';
+@import '../../assets/styles/internal_header.css?v=4';
 </style>

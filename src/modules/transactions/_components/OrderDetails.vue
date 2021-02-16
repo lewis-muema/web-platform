@@ -521,7 +521,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../assets/styles/order_details.css";
+@import "../../../assets/styles/order_details.css?v=4";
 .order-details-wrapper {
   width: 50%;
   display: inline-block;
