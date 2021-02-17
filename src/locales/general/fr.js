@@ -152,12 +152,12 @@ const translations = {
   pickup_solo: 'FR_Pick Up',
   destination_capital: 'FR_Destination',
   container_details: 'FR_Container details',
-  container_number: 'Container Number',
+  container_number: 'FR_Container Number',
   container_weight_in_tonnes: 'FR_Container Weight in Tonnes',
   container_size: 'FR_Container Size',
   twenty_feet: 'FR_20 Feet',
   fourty_feet: 'FR_40 Feet',
-  consignee: 'Consignee',
+  consignee: 'FR_Consignee',
   add_container_details: 'FR_Add Container Details',
   edit_container_details: 'FR_Edit container details',
   place_order: 'FR_Place Order',
@@ -335,7 +335,7 @@ const translations = {
 
   enter_pickup_location: 'FR_Enter a pickup location',
   enter_region: 'FR_Enter region',
-  no_of_container: 'FR_no_of_containers',
+  no_of_container: 'FR_No of containers',
   return_location: 'FR_Return location (Optional)',
 
   goods_type: 'FR_Goods Type',
@@ -428,6 +428,8 @@ const translations = {
   order_type: 'FR_FR_Order type',
   container_order: 'FR_FR_Container order',
   empty_container_destination: 'FR_FR_Empty Container Destination',
+  consignee_name: 'FR_Consignee (name)',
+
   cancel_order_capital: 'FR_FR_CANCEL ORDER',
   cargo_on_the_way: 'FR_FR_Your cargo is on the way to ',
   cargo_arrived_at: 'FR_FR_Your cargo has arrived at',
@@ -500,7 +502,8 @@ const translations = {
   ongoing_fbu_orders: 'FR_FR_ongoing FBU orders',
   containers: 'FR_FR_containers',
   goods_quantity: 'FR_FR_Goods Quantity',
-  container: 'FR_FR_container',
+  container: 'FR_container',
+  container_capital: 'FR_Container',
   order_status: 'FR_FR_Order Status',
   container_return: 'FR_FR_container return',
 
