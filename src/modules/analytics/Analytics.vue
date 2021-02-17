@@ -10,7 +10,7 @@
           class="section__link"
           to="/analytics/report"
         >
-          Report
+          {{ $t('analytics.report') }}
         </router-link>
       </div>
       <div class="">
@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../assets/styles/section_headers.css';
+@import '../../assets/styles/section_headers.css?v=4';
 .body--grey
 {
   background-color: #F9FBFC;

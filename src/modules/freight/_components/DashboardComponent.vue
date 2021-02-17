@@ -10,7 +10,7 @@
           class="no-activity-img"
         >
         <div class="no-activity-label">
-          No Activity at the moment
+          {{$t('dashboardComponent.no_activity')}}
         </div>
       </div>
       <div
@@ -26,7 +26,7 @@
             v-if="index === 0"
             class="dashboard-name"
           >
-            Recent Activity
+            {{$t('dashboardComponent.recent_activity')}}
           </div>
           <div class="transporters-filters transporters-highlight">
             <div class="truck-add-info dashboard-align-inner">
@@ -41,7 +41,7 @@
               class="truck-add-info dashboard-align-inner view-document"
               @click="viewDocument(val.data.url, val.data.document_name)"
             >
-              View document >
+              {{$t('dashboardComponent.view_document')}} >
             </div>
           </div>
           <div
@@ -58,7 +58,7 @@
                 name="create_order_text"
                 @click="approveThisDocument(val)"
               >
-                Approve
+                {{$t('dashboardComponent.approve')}}
               </button>
               <button
                 type="button"
@@ -66,7 +66,7 @@
                 name="create_order_text"
                 @click="declineDialog(val)"
               >
-                Decline
+                {{$t('dashboardComponent.decline')}}
               </button>
             </div>
           </div>
@@ -89,7 +89,7 @@
         >
           <div class="">
             <div class="document-text-option ">
-              {{ src_name }} document
+              {{$t('dashboardComponent.name_doc', {src_name: src_name})}}
             </div>
             <div class="document-divider" />
             <div class="document-view-inner">
@@ -108,7 +108,7 @@
         >
           <div class="">
             <div class="decline-text-option decline-documemt-extend">
-              Decline Document
+              {{$t('dashboardComponent.decline_document')}}
             </div>
           </div>
           <div class="decline-documemt-extend decline-documemt-input">
@@ -127,7 +127,7 @@
               class="decline-action--slide-button"
               @click="declineDocument()"
             >
-              Decline
+              {{$t('dashboardComponent.decline')}}
             </button>
           </div>
         </el-dialog>
@@ -270,23 +270,23 @@ export default {
               workingResponse = response[0];
             }
             if (workingResponse.status) {
-              this.doNotification(1, 'Document declined!', 'Document declined successfully');
+              this.doNotification(1, `${this.$t('dashboardComponent.decline_document')}!`, this.$t('dashboardComponent.doc_declined_successfully'));
               this.fetchDashboardData();
             } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
-              this.doNotification(2, 'Failed to decline document!', workingResponse.message);
+              this.doNotification(2, this.$t('dashboardComponent.decline_document_title'), workingResponse.message);
             } else {
-              this.doNotification(2, 'Failed to decline document!', workingResponse.reason);
+              this.doNotification(2, this.$t('dashboardComponent.decline_document_title'), workingResponse.reason);
             }
             this.closeDeclineDialog();
           },
           (error) => {
             if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
-              this.doNotification(2, 'Failed to decline document!', error.response.data.reason);
+              this.doNotification(2, this.$t('dashboardComponent.decline_document_title'), error.response.data.reason);
             } else {
               this.doNotification(
                 2,
-                'Failed to decline document!',
-                'Failed to decline document, Kindly retry again or contact customer support ',
+                this.$t('dashboardComponent.decline_document_title'),
+                this.$t('dashboardComponent.decline_doc_text'),
               );
             }
             this.closeDeclineDialog();
@@ -295,8 +295,8 @@ export default {
       } else {
         this.doNotification(
           2,
-          'Failed to declined document',
-          'Kinly provide the reason to decline',
+          this.$t('dashboardComponent.decline_document_title'),
+          this.$t('dashboardComponent.reason_decline'),
         );
       }
     },
@@ -342,22 +342,22 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, 'Document approval!', 'Document approved successfully');
+            this.doNotification(1, this.$t('dashboardComponent.doc_approval'), this.$t('dashboardComponent.doc_approved'));
             this.fetchDashboardData();
           } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
-            this.doNotification(2, 'Failed to approve document!', workingResponse.message);
+            this.doNotification(2, this.$t('dashboardComponent.failed_approve'), workingResponse.message);
           } else {
-            this.doNotification(2, 'Failed to approve document!', workingResponse.reason);
+            this.doNotification(2, this.$t('dashboardComponent.failed_approve'), workingResponse.reason);
           }
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
-            this.doNotification(2, 'Failed to approve document!', error.response.data.reason);
+            this.doNotification(2, this.$t('dashboardComponent.failed_approve'), error.response.data.reason);
           } else {
             this.doNotification(
               2,
-              'Failed to approve document!',
-              'Failed to approve document, Kindly retry again or contact customer support ',
+              this.$t('dashboardComponent.failed_approve'),
+              this.$t('dashboardComponent.failed_approve_text'),
             );
           }
         },
@@ -382,8 +382,8 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../assets/styles/transporters_component.css?v=1';
-@import '../../../assets/styles/nav.css?v=1';
+@import '../../../assets/styles/transporters_component.css?v=4';
+@import '../../../assets/styles/nav.css?v=4';
 .no-activity-img {
   width: 35%;
   display: block;

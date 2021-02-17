@@ -58,7 +58,7 @@
                   v-model="cancel_reason"
                   label="8"
                 >
-                  {{$t('general.place_order_twice')}}
+                  {{$t('general.placed_order_twice')}}
                 </el-radio>
               </div>
             </div>

@@ -18,10 +18,14 @@ import VueRouter from 'vue-router';
 // import AddUser from '../../components/users/AddUser.vue';
 // import EditUser from '../../components/users/EditUser.vue';
 // import ListUsers from '../../components/users/ListUsers.vue';
+import VueI18n from 'vue-i18n';
 import EndComponent from '../../components/users/invite_users/EndComponent.vue';
 // import InviteComponent from '../../components/users/invite_users/InviteComponent.vue';
 import LinkShowComponent from '../../components/users/invite_users/LinkShowComponent.vue';
 import ManyComponent from '../../components/users/invite_users/ManyComponent.vue';
+
+Vue.use(VueI18n);
+const i18n = new VueI18n({});
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -173,6 +177,7 @@ describe('EndComponent.vue', () => {
   it('checks back button after sucessfull user invite ', () => {
     const wrapper = mount(EndComponent, {
       sync: false,
+      i18n,
       store,
     });
     wrapper.find('.end--back-link').trigger('click');
@@ -207,6 +212,7 @@ describe('LinkShowComponent.vue', () => {
     const wrapper = mount(LinkShowComponent, {
       sync: false,
       store,
+      i18n,
     });
     const input = wrapper.find('#in_link');
     input.element.value = 'linkurl';
@@ -233,6 +239,7 @@ describe('ManyComponent.vue', () => {
     const wrapper = mount(ManyComponent, {
       sync: false,
       store,
+      i18n,
     });
     wrapper.setData({
       emailSet: 'clinton@sendy.co.ke',
@@ -243,6 +250,7 @@ describe('ManyComponent.vue', () => {
     const wrapper = mount(ManyComponent, {
       sync: false,
       store,
+      i18n,
     });
     wrapper.find('.show-link-justify').trigger('click');
     wrapper.vm.get_inv();
@@ -252,6 +260,7 @@ describe('ManyComponent.vue', () => {
     const wrapper = mount(ManyComponent, {
       sync: false,
       store,
+      i18n,
     });
     wrapper.setData({
       emailSet: 'clinton@sendy.co.ke',

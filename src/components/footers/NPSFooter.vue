@@ -21,7 +21,7 @@
               type="button"
               class="btn btn-secondary likely side-btn"
             >
-              0 Not Likely
+              {{ $t('NPSFooter.not_likey') }}
             </button>
             <span class="score-holder">
               <span
@@ -40,7 +40,8 @@
               type="button"
               class="btn btn-secondary unlikely side-btn"
             >
-              10 Very Likely
+            {{ $t('NPSFooter.very_likey') }}
+              <!-- 10 Very Likely -->
             </button>
             <button
               type="button"
@@ -59,14 +60,15 @@
               v-model="reason"
               type="text"
               name="reason"
-              placeholder="Write your feedback here"
+              :placeholder="$t('NPSFooter.write_feedback')"
               class="form-control reason-box"
             />
             <button
               :class="`btn btn-primary form-control action-button ${disableClass}`"
               :disabled="isDisabled"
             >
-              Submit
+            {{ $t('NPSFooter.submit') }}
+              <!-- Submit -->
             </button>
             <span class="clearfix">&nbsp;</span>
             <button :class="`btn btn-primary form-control action-button reason-dismiss ${disableClass}`">
@@ -98,7 +100,7 @@ export default {
       scores: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       score: null,
       reason: '',
-      heading: 'How likely are you to recommend a friend or colleague to use Sendy?',
+      heading: this.$t('NPSFooter.how_likely'),
       submitted: false,
       isValid: null,
       disableClass: '',
@@ -165,7 +167,7 @@ export default {
     },
     onChange(event, score) {
       this.score = score;
-      this.heading = 'What do you like most about Sendy? (Optional)';
+      this.heading = this.$t('NPSFooter.like_most');
     },
     dismiss() {
       this.disableClass = 'disabled';
@@ -222,7 +224,7 @@ export default {
         (response) => {
           if (response.data.success) {
             this.submitted = true;
-            this.heading = 'Thank you. We will use your feedback to improve our service';
+            this.heading = this.$t('NPSFooter.thank_you');
             this.hideForm();
           }
         },

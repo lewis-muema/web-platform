@@ -8,7 +8,7 @@
         <el-input
           v-model="filterData.department"
           class="section--filter-input"
-          placeholder="Search Department"
+          :placeholder="$t('departments.search_department')"
         />
 
         <button
@@ -21,7 +21,7 @@
           :disabled="active_filter == true ? false : true"
           @click="filterUserTableData"
         >
-          Search
+          {{this.$t('departments.search')}}
         </button>
       </div>
       <div class="section--filter-action-wrap">
@@ -29,7 +29,7 @@
           class="button-primary section--filter-action btn-dprts"
           @click="addDepartment"
         >
-          Add Department
+          {{this.$t('departments.add_department')}}
         </button>
       </div>
     </div>
@@ -43,11 +43,11 @@
         {{ empty_departments_state }}
       </template>
       <el-table-column
-        label="Name"
+        :label="$t('departments.name')"
         prop="department_name"
       />
       <el-table-column
-        label="Admin"
+        :label="$t('departments.admin')"
         prop="department_admin"
       />
       <el-table-column label="Action">
@@ -55,7 +55,7 @@
           <a
             class="btn-dpt-edit"
             @click="edit_department(departments_data[scope.$index]['department_id'])"
-          >Edit</a>
+          >{{$t('departments.edit')}}</a>
         </template>
       </el-table-column>
     </el-table>
@@ -82,7 +82,7 @@ export default {
   name: 'Departments',
   data() {
     return {
-      empty_departments_state: 'Fetching Departments',
+      empty_departments_state: this.$t('departments.fetch_department'),
       pagination_limit: 10,
       pagination_page: 1,
       filterState: false,
@@ -112,7 +112,7 @@ export default {
     this.$store.dispatch('$_admin/requestDepartmentsList', usersFullPayload).then(
       (response) => {},
       (error) => {
-        this.empty_departments_state = 'No Departments For Account';
+        this.empty_departments_state = this.$t('departments.no_department');
       },
     );
     this.filteredUserData = this.deptData;
@@ -184,7 +184,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../assets/styles/datatable.css";
+@import "../../../assets/styles/datatable.css?v=4";
 
 .button {
     float: right;

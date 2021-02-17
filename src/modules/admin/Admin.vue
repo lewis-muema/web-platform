@@ -11,25 +11,25 @@ n-container"
           class="section__link"
           to="/admin/users"
         >
-          Users
+        {{ $t('admin.user')}}
         </router-link>
         <router-link
           class="section__link"
           to="/admin/department"
         >
-          Department
+          {{ $t('admin.department')}}
         </router-link>
         <router-link
           class="section__link"
           to="/admin/api"
         >
-          API
+          {{ $t('admin.api')}}
         </router-link>
         <router-link
           class="section__link"
           to="/admin/company_details"
         >
-          Company details
+          {{ $t('admin.details') }}
         </router-link>
       </div>
       <div class="">
@@ -52,7 +52,7 @@ const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
-  getMessage: field => 'The phone number not valid',
+  getMessage: field => this.$t('admin.phone_invalid'),
   validate: (value) => {
     let validity = false;
     try {
@@ -115,7 +115,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../assets/styles/section_headers.css";
-@import "../../assets/styles/section_filters.css";
-@import "../../assets/styles/section_pagination.css";
+@import "../../assets/styles/section_headers.css?v=4";
+@import "../../assets/styles/section_filters.css?v=4";
+@import "../../assets/styles/section_pagination.css?v=4";
 </style>
