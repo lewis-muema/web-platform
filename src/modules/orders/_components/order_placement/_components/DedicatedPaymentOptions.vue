@@ -649,6 +649,7 @@ export default {
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
       setSecondaryProfile: 'setSecondaryProfile',
       setCardPaymentStatus: '$_payment/setCardPaymentStatus',
+      setPairedDriversTally: '$_orders/setPairedDriversTally',
     }),
 
     ...mapActions({
@@ -979,7 +980,6 @@ export default {
         ? this.getPriceRequestObject.client_id - profile_id === 100000000
         : this.getPriceRequestObject.user_id - profile_id === 100000000;
       this.setSecondaryProfile(secondaryProfile);
-
       if (this.payment_method === '') {
         if (this.checkAccountPaymentOption()) {
           this.handlePostPaidPayments();
@@ -1088,6 +1088,7 @@ export default {
                   order = row.respond.order_no;
                 }
                 this.mixpanelTrackPricingServiceCompletion(row.respond.order_no);
+                this.setPairedDriversTally(0);
                 let accData = {};
                 const data = row.original_data;
                 const session = this.$store.getters.getSession;
@@ -1133,7 +1134,7 @@ export default {
                   this.doNotification(
                     3,
                     this.$t('general.order_completion_failed'),
-                    this.$t('general.price_request_failed_please_try_again'),
+                    `${row.reason}`,
                   );
                 }, 10);
               }
@@ -1148,7 +1149,7 @@ export default {
                 this.doNotification(
                   3,
                   this.$t('general.order_completion_failed'),
-                  this.$t('general.order_completion_failed_text'),
+                  `${row.reason}`,
                 );
               }, 10);
             });
@@ -1163,14 +1164,6 @@ export default {
       const session = this.$store.getters.getSession;
       if ('default' in session) {
         acc = session[session.default];
-      }
-      if (
-        this.getPriceRequestObject.payment_option === 1
-        && this.getRunningBalance - this.order_cost >= 0
-      ) {
-        this.payment_method = 11;
-      } else if (this.getPriceRequestObject.payment_option === 2) {
-        this.payment_method = 12;
       }
 
       const fullPayload = [];
@@ -1221,6 +1214,13 @@ export default {
         // support new pricing
         if (row.order_no === undefined) {
           payload.pricing_uuid = row.id;
+        }
+        if (row.pair_status === '2' && row.vehicle_plate) {
+          payload.rider_details = {
+            sim_card_sn: row.pair_rider_sim_card_sn,
+            rider_phone: row.pair_rider_phone,
+            order_no: 'order_no' in row ? row.order_no : row.id,
+          };
         }
         fullPayload.push(payload);
       });

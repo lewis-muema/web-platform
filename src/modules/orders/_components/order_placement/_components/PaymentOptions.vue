@@ -1658,13 +1658,13 @@ export default {
             }
           },
           (error) => {
-            if (Object.prototype.hasOwnProperty.call(error, 'reason')) {
-              this.doNotification(2, this.$t('general.order_completion_failed'), error.reason);
+            if (Object.prototype.hasOwnProperty.call(error.response.data.error, 'reason')) {
+              this.doNotification(2, this.$t('general.order_completion_failed'), error.response.data.error.reason);
             } else {
               this.doNotification(
                 2,
                 this.$t('general.order_completion_failed'),
-                this.$t('general.order_completion_failed_text'),
+                error.response.data.message,
               );
             }
             this.loading = false;

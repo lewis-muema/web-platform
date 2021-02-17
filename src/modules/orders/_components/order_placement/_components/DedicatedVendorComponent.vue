@@ -5,7 +5,7 @@
   >
     <div class="home-view--seperator" />
     <div class="homeview--form__header homeview--form__header-lower">
-      {{$t('general.load_size_and_delivery_type')}}
+      {{ $t('general.load_size_and_delivery_type') }}
     </div>
     <div class="home-view-vendor-classes">
       <div class="home-view-vendor-classes--body">
@@ -88,13 +88,13 @@
                 >
                   <div class="home-view-vendor-types-item--cost-wrapper__cost">
                     <span v-if="!isFixedCost(j)">
-                      {{$t('general.price_to_be_confirmed')}}
+                      {{ $t('general.price_to_be_confirmed') }}
                     </span>
                     <span v-else> {{ getVendorCurrency(j) }} {{ getVendorPrice(j) }} </span>
                   </div>
                   <div class="home-view-vendor-types-item--cost-wrapper_time">
                     <span v-if="j.price_type">
-                      {{$t('general.type')}}: {{ formatPriceType(j.price_type) }}
+                      {{ $t('general.type') }}: {{ formatPriceType(j.price_type) }}
                     </span>
                   </div>
                 </div>
@@ -180,7 +180,7 @@
         name="button"
         @click="goToNextStep"
       >
-        {{$t('general.continue')}}
+        {{ $t('general.continue') }}
       </button>
     </div>
   </div>
@@ -257,7 +257,7 @@
                   class="home-view-truck-options-vehicle-type-title"
                   @click="vehicleDetailsStatus = !vehicleDetailsStatus; $root.$emit('tour class hidden', 1);"
                 >
-                  {{$t('general.vehicle_type')}}
+                  {{ $t('general.vehicle_type') }}
                   <i class="el-icon-arrow-down home-view-truck-options-vehicle-arrow" />
                 </div>
               </div>
@@ -271,7 +271,7 @@
                   class="home-view-truck-options-vehicle-type-title"
                   @click="vehicleDetailsStatus = !vehicleDetailsStatus"
                 >
-                  {{$t('general.vehicle_type')}}
+                  {{ $t('general.vehicle_type') }}
                   <i class="el-icon-arrow-up home-view-truck-options-vehicle-arrow" />
                 </div>
                 <div
@@ -305,7 +305,7 @@
             </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
-                {{$t('general.want_delivered')}}
+                {{ $t('general.want_delivered') }}
               </div>
               <div>
                 <el-input
@@ -320,7 +320,7 @@
               class="home-view-truck-options-inner-wrapper"
             >
               <div class="home-view-truck-options-label">
-                {{$t('general.test_specifications')}}
+                {{ $t('general.test_specifications') }}
               </div>
               <div>
                 <el-input
@@ -333,7 +333,7 @@
             </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
-                {{$t('general.pickup_time_for_order')}}
+                {{ $t('general.pickup_time_for_order') }}
               </div>
               <div class="block">
                 <el-date-picker
@@ -353,7 +353,7 @@
                 class="block vendor_component-actions__element-time"
               >
                 <p class="vendor_component-actions__title">
-                  {{$t('general.select_time')}}
+                  {{ $t('general.select_time') }}
                 </p>
                 <el-time-picker
                   v-model="time_range_from"
@@ -381,7 +381,7 @@
             </div>
             <div class="home-view-truck-options-inner-wrapper recipient-section">
               <p class="home-view-truck-options-label no-margin">
-                {{$t('general.recipient_details')}}
+                {{ $t('general.recipient_details') }}
               </p>
               <input
                 v-model="recipientName"
@@ -398,7 +398,7 @@
             </div>
             <div class="home-view-truck-options-inner-wrapper">
               <div class="home-view-truck-options-label">
-                {{$t('general.additional_instructions')}}
+                {{ $t('general.additional_instructions') }}
               </div>
               <div class="" />
               <div
@@ -419,7 +419,7 @@
             <div v-if="hasLargeVendor">
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$t('general.provide_with_loaders')}}
+                  {{ $t('general.provide_with_loaders') }}
                 </div>
                 <div class="">
                   <el-radio
@@ -427,14 +427,14 @@
                     label="1"
                     @change="dispatchAdditionalLoaderStatus"
                   >
-                    {{$t('general.yes')}}
+                    {{ $t('general.yes') }}
                   </el-radio>
                   <el-radio
                     v-model="additional_loader"
                     label="0"
                     @change="dispatchAdditionalLoaderStatus"
                   >
-                    {{$t('general.no')}}
+                    {{ $t('general.no') }}
                   </el-radio>
                 </div>
               </div>
@@ -444,7 +444,7 @@
                 class="home-view-truck-options-inner-wrapper"
               >
                 <div class="home-view-truck-options-label">
-                  {{$t('general.loaders_required')}}
+                  {{ $t('general.loaders_required') }}
                 </div>
                 <div class="home-view-truck-options-inner--number-of-loaders">
                   <el-input-number
@@ -459,14 +459,14 @@
             <div v-if="![22, 24].includes(activeVendorPriceData.vendor_id)">
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$t('general.have_preffered_drivers')}}
+                  {{ $t('general.have_preffered_drivers') }}
                 </div>
                 <div class="">
                   <div
                     class="pair_rider_section-variant"
                     @click="pairWithDrivers()"
                   >
-                    {{$t('general.pair_with_driver')}}
+                    {{ $t('general.pair_with_driver') }}
                     <i class="el-icon-circle-plus-outline pair-plus-icon" />
                   </div>
                 </div>
@@ -475,7 +475,7 @@
                   class="pair-success-container"
                 >
                   <i class="el-icon-success pair-success-icon" />
-                {{$t('general.you_have_selected_to_pair',{pairedDriversTally: pairedDriversTally})}}
+                  {{ $t('general.you_have_selected_to_pair') }} {{ pairedDriversTally }} {{ $t('general.driver') }}
                 </div>
               </div>
             </div>
@@ -601,6 +601,8 @@ export default {
       getOrderNotes: '$_orders/$_home/getOrderNotes',
       getVehicleDetails: '$_orders/$_home/getVehicleDetails',
       getCarrierType: '$_orders/$_home/getCarrierType',
+      getExpandedActiveVendorTally: '$_orders/getExpandedActiveVendorTally',
+      pairedDriversTally: '$_orders/getPairedDriversTally',
 
     }),
 
