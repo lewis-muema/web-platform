@@ -18,14 +18,14 @@
           >
             <div class="finish-setup-outer">
               <p class="crm-setup">
-                Finish freight account set up
+                {{$t('freight.finish_freight')}}
               </p>
               <div class="">
                 <div
                   v-if="acc_type === 'biz' && updateSetIndustry"
                   class=""
                 >
-                  <label class="final-label">What industry is your business in?</label>
+                  <label class="final-label">{{$t('freight.industry')}}</label>
                   <div class="final-upper-padding">
                     <el-select
                       v-model="industry_type"
@@ -46,7 +46,7 @@
                   v-if="acc_type === 'peer' && updatePeerId"
                   class="final-upper-padding"
                 >
-                  <label class="final-label">Your ID Number</label>
+                  <label class="final-label">{{$t('freight.id_no')}}</label>
                   <div class="final-upper-padding">
                     <input
                       v-model="id_number"
@@ -86,7 +86,7 @@
                   v-if="acc_type === 'biz' && updateBizRegistration"
                   class="final-upper-padding"
                 >
-                  <label class="final-label">Enter your business registration number</label>
+                  <label class="final-label">{{$t('freight.enter_biz_regno')}}</label>
                   <div class="final-upper-padding">
                     <input
                       v-model="biz_registration"
@@ -148,7 +148,7 @@ export default {
       const session = this.$store.getters.getSession;
 
       if (pin !== '') {
-        if (session[session.default].country_code === 'KE') {
+         if (session[session.default].country_code === 'KE') {
           return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
         }
         return /^\d{10}$/.test(pin);
@@ -156,22 +156,22 @@ export default {
       return true;
     },
     fetchKraHeader() {
-      let kraName = 'TIN number';
+      let kraName = this.$t('freight.tin_no');
       const session = this.$store.getters.getSession;
       if (session[session.default].country_code === 'KE') {
-        kraName = 'KRA PIN';
+        kraName = this.$t('freight.kra_pin');
       }
-      let resp = `Enter your business ${kraName}`;
+      let resp = this.$t('freight.enter_biz') + kraName;
       if (session.default === 'peer') {
-        resp = `Enter your ${kraName}`;
+        resp = this.$t('freight.enter_your') + kraName;
       }
       return resp;
     },
     kraFailResponse() {
-      let resp = 'Please enter a valid TIN number';
+      let resp = this.$t('freight.valid_tin_no');
       const session = this.$store.getters.getSession;
       if (session[session.default].country_code === 'KE') {
-        resp = 'Please enter a valid KRA PIN';
+        resp = this.$t('freight.valid_kra');
       }
       return resp;
     },
@@ -206,9 +206,9 @@ export default {
       const sessionData = Object.keys(session).length;
       if (sessionData === 0) {
         const notification = {
-          title: 'Your session has expired!',
+          title: this.$t('freight.session_expired'),
           level: 2,
-          message: 'You will be redirected to the login page within 5 seconds.',
+          message: this.$t('freight.redirected'),
         };
         this.displayNotification(notification);
         setTimeout(() => {
@@ -384,18 +384,19 @@ export default {
       }
     },
     submitBizData() {
-      let kraName = 'TIN number';
+      let kraName = this.$t('freight.tin_no');
       const session = this.$store.getters.getSession;
       if (session[session.default].country_code === 'KE') {
-        kraName = 'KRA PIN';
+        kraName = this.$t('freight.kra_pin');
       }
       if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
-        this.doNotification(2, 'Final set up error !', `Please enter valid ${kraName}`);
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_valid_kraname', {kraName:kraName}));
       } else if (this.industry_type === '') {
-        this.doNotification(2, 'Final set up error !', 'Please select industry preference');
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.select_industry'));
       } else if (this.biz_registration === '') {
-        this.doNotification(2, 'Final set up error !', 'Please enter business registration');
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.please_enter_biz_regno'));
       } else {
+        const session = this.$store.getters.getSession;
         const payload = {
           cop_id: session[session.default].cop_id,
           cop_name: session[session.default].cop_name,
@@ -415,17 +416,18 @@ export default {
       }
     },
     submitPeerData() {
-      let kraName = 'TIN number';
+      let kraName = this.$t('freight.tin_no');
       const session = this.$store.getters.getSession;
       if (session[session.default].country_code === 'KE') {
-        kraName = 'KRA PIN';
+        kraName = this.$t('freight.kra_pin');
       }
 
       if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
-        this.doNotification(2, 'Final set up error !', `Please enter valid ${kraName}`);
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_valid_kraname', {kraName:kraName}));
       } else if (this.id_number === '') {
-        this.doNotification(2, 'Final set up error !', 'Please enter your ID number');
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_id_no'));
       } else {
+        const session = this.$store.getters.getSession;
         const payload = {
           user_id: session[session.default].user_id,
           tax_authority_pin: this.kra_pin,
@@ -463,7 +465,7 @@ export default {
             const newSession = JSON.stringify(updatedSession);
             this.setSession(newSession);
             const level = 1; // success
-            this.message = 'Account information accepted!';
+            this.message = this.$t('freight.info_accepted');
             const notification = {
               title: '',
               level,
@@ -473,7 +475,7 @@ export default {
             this.$router.push('/freight/verify');
           } else {
             const level = 3;
-            this.message = 'Something went wrong.';
+            this.message = this.$t('freight.something_wrong');
             const notification = {
               title: '',
               level,
@@ -484,7 +486,7 @@ export default {
         },
         () => {
           const level = 3;
-          this.message = 'Something went wrong.';
+          this.message = this.$t('freight.something_wrong');
           const notification = {
             title: '',
             level,
