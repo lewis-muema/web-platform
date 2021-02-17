@@ -9,26 +9,26 @@
           class="section__link"
           to="/freight/transporters"
         >
-          Transporters
+          {{$t('mainComponent.transporters')}}
         </router-link>
         <router-link
           class="section__link"
           to="/freight/orders"
         >
-          Shipments
+          {{$t('mainComponent.shipment')}}
         </router-link>
         <router-link
           class="section__link"
           to="/freight/dashboard"
         >
-          Activity Log
+          {{$t('mainComponent.activity_log')}}
         </router-link>
         <router-link
           v-if="copAcc"
           class="section__link"
           to="/freight/settings"
         >
-          Settings
+          {{$t('mainComponent.settings')}}
         </router-link>
       </div>
       <div class="">
