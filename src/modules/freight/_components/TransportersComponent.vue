@@ -61,7 +61,7 @@
                 <el-option
                   v-for="item in truckTypes"
                   :key="item.id"
-                  :label="item.carrierType"
+                  :label="item.carrier_type"
                   :value="item.id"
                 />
               </el-select>
@@ -101,152 +101,157 @@
           class="transporters-results-section
           transporters-details-section"
         >
-          <div v-if="ownersListing.length === 0">
-            <img
-              src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/freight/freight_truck.svg"
-              class="no-transporters-img "
-            >
-            <div class="no-transporters-label">
-              No Transporters found at the moment, Try again with other details.
-            </div>
+          <div v-if="loading">
+            <loading-component />
           </div>
           <div v-else>
-            <div class="transporters-filters align-filters-section">
-              <div class="quote-flex">
-                <div v-if="show_quote">
-                  <div class="transporter-listing-outer">
-                    <div class="listing-info">
-                      <div class="listing-info-count">
-                        {{ ownersListing.length }} Transporters Found
-                      </div>
-                      <div class="shipment-dialog">
-                        <input
-                          v-model="quote_text"
-                          class="request-shipment-btn-color"
-                          type="submit"
-                          @click="showQuoteDialog"
-                        >
+            <div v-if="ownersListing.length === 0">
+              <img
+                src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/freight/freight_truck.svg"
+                class="no-transporters-img "
+              >
+              <div class="no-transporters-label">
+                No Transporters found at the moment, Try again with other details.
+              </div>
+            </div>
+            <div v-else>
+              <div class="transporters-filters align-filters-section">
+                <div class="quote-flex">
+                  <div v-if="show_quote">
+                    <div class="transporter-listing-outer">
+                      <div class="listing-info">
+                        <div class="listing-info-count">
+                          {{ ownersListing.length }} Transporters Found
+                        </div>
+                        <div class="shipment-dialog">
+                          <input
+                            v-model="quote_text"
+                            class="request-shipment-btn-color"
+                            type="submit"
+                            @click="showQuoteDialog"
+                          >
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div
-                v-if="!show_quote"
-                class="search-flex"
-              >
-                <el-input
-                  v-model="query"
-                  placeholder="Search by name"
-                  autocomplete="off"
-                  :prepare-response-data="prepareResponseData"
-                  @keydown.down="down"
-                  @keydown.up="up"
-                  @keydown.enter="hit"
-                  @keydown.esc="reset"
-                  @blur="reset"
-                  @input="update"
+                <div
+                  v-if="!show_quote"
+                  class="search-flex"
                 >
-                  <i
-                    slot="suffix"
-                    class="el-input__icon el-icon-search"
-                  />
-                </el-input>
+                  <el-input
+                    v-model="query"
+                    placeholder="Search by name"
+                    autocomplete="off"
+                    :prepare-response-data="prepareResponseData"
+                    @keydown.down="down"
+                    @keydown.up="up"
+                    @keydown.enter="hit"
+                    @keydown.esc="reset"
+                    @blur="reset"
+                    @input="update"
+                  >
+                    <i
+                      slot="suffix"
+                      class="el-input__icon el-icon-search"
+                    />
+                  </el-input>
 
-                <ul
-                  v-show="hasItems"
-                  class="search-results-ul"
-                >
-                  <li
-                    v-for="(item, $item) in items"
-                    :key="$item"
-                    class="suggestions_solr"
-                    :class="activeClass($item)"
-                    @mousedown="hit"
-                    @mousemove="setActive($item)"
+                  <ul
+                    v-show="hasItems"
+                    class="search-results-ul"
                   >
-                    <span
-                      class="name"
-                      v-text="item.name"
-                    />
-                    <span
-                      class="screen-name"
-                      v-text="item.phone"
-                    />
-                    <span
-                      class="screen-name"
-                      v-text="item.id_no"
-                    />
-                  </li>
-                </ul>
-                <ul
-                  v-show="!hasItems && !isEmpty"
-                  class="search-results-ul"
-                >
-                  <span class="screen-no-details-found">
-                    No Details Found
-                  </span>
-                </ul>
+                    <li
+                      v-for="(item, $item) in items"
+                      :key="$item"
+                      class="suggestions_solr"
+                      :class="activeClass($item)"
+                      @mousedown="hit"
+                      @mousemove="setActive($item)"
+                    >
+                      <span
+                        class="name"
+                        v-text="item.name"
+                      />
+                      <span
+                        class="screen-name"
+                        v-text="item.phone"
+                      />
+                      <span
+                        class="screen-name"
+                        v-text="item.id_no"
+                      />
+                    </li>
+                  </ul>
+                  <ul
+                    v-show="!hasItems && !isEmpty"
+                    class="search-results-ul"
+                  >
+                    <span class="screen-no-details-found">
+                      No Details Found
+                    </span>
+                  </ul>
+                </div>
               </div>
-            </div>
-            <div class="transporter-outer">
-              <div class="transporter-listing">
-                <el-checkbox-group
-                  v-model="checkedOwners"
-                  class="minnne"
-                  @change="handleCheckedCitiesChange"
-                >
-                  <el-checkbox
-                    v-for="(val, index) in ownersListing"
-                    :key="index"
-                    :label="val"
-                    class="transporter-detail transporters-segment"
+              <div class="transporter-outer">
+                <div class="transporter-listing">
+                  <el-checkbox-group
+                    v-model="checkedOwners"
+                    class="minnne"
+                    @change="handleCheckedCitiesChange"
                   >
-                    <div class="transporter-name">
-                      {{ ownersListing[index].name }}
-                      <img
-                        src="https://images.sendyit.com/web_platform/freight/verified.svg"
-                        alt=""
-                        class="transporters-img highlight-icon"
-                      >
-                    </div>
-                    <div class="transporters-filters transporters-highlight">
-                      <div class="truck-add-info truck-add-info-align">
+                    <el-checkbox
+                      v-for="(val, index) in ownersListing"
+                      :key="index"
+                      :label="val"
+                      class="transporter-detail transporters-segment"
+                    >
+                      <div class="transporter-name">
+                        {{ ownersListing[index].name }}
                         <img
-                          src="https://images.sendyit.com/web_platform/freight/vehicle.svg"
+                          src="https://images.sendyit.com/web_platform/freight/verified.svg"
                           alt=""
                           class="transporters-img highlight-icon"
                         >
-                        {{ returnCount(ownersListing[index].vehicle_count) }}
                       </div>
-                      <div class="truck-add-info trans-completed_orders">
-                        <img
-                          src="https://images.sendyit.com/web_platform/freight/highlight.svg"
-                          alt=""
-                          class="transporters-img highlight-icon"
+                      <div class="transporters-filters transporters-highlight">
+                        <div class="truck-add-info truck-add-info-align">
+                          <img
+                            src="https://images.sendyit.com/web_platform/freight/vehicle.svg"
+                            alt=""
+                            class="transporters-img highlight-icon"
+                          >
+                          {{ returnCount(ownersListing[index].vehicle_count) }}
+                        </div>
+                        <div class="truck-add-info trans-completed_orders">
+                          <img
+                            src="https://images.sendyit.com/web_platform/freight/highlight.svg"
+                            alt=""
+                            class="transporters-img highlight-icon"
+                          >
+                          {{ ownersListing[index].complete_orders }} completed orders
+                        </div>
+                        <div
+                          class="truck-add-info view-transporter-info"
+                          @click="viewTransporterInfo(ownersListing[index].id)"
                         >
-                        {{ ownersListing[index].complete_orders }} completed orders
+                          View <i class="el-icon-arrow-right view-transporter-info" />
+                        </div>
                       </div>
-                      <div
-                        class="truck-add-info view-transporter-info"
-                        @click="viewTransporterInfo(ownersListing[index].id)"
-                      >
-                        View <i class="el-icon-arrow-right view-transporter-info" />
+                      <div class="transporters-filters transporters-highlight">
+                        <div class="truck-add-info truck-add-rating-align">
+                          <img
+                            src="https://images.sendyit.com/web_platform/freight/rating.svg"
+                            alt=""
+                            class="transporters-img highlight-icon"
+                          >
+                          {{ ownersListing[index].avg_rating }} (
+                          {{ ownersListing[index].avg_rating }} Reviews)
+                        </div>
                       </div>
-                    </div>
-                    <div class="transporters-filters transporters-highlight">
-                      <div class="truck-add-info truck-add-rating-align">
-                        <img
-                          src="https://images.sendyit.com/web_platform/freight/rating.svg"
-                          alt=""
-                          class="transporters-img highlight-icon"
-                        >
-                        {{ ownersListing[index].avg_rating }} (
-                        {{ ownersListing[index].avg_rating }} Reviews)
-                      </div>
-                    </div>
-                  </el-checkbox>
-                </el-checkbox-group>
+                    </el-checkbox>
+                  </el-checkbox-group>
+                </div>
               </div>
             </div>
           </div>
@@ -435,11 +440,13 @@ import { mapGetters, mapActions } from 'vuex';
 import VueTypeahead from 'vue-typeahead';
 import Axios from 'axios';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import LoadingComponent from './LoadingComponent.vue';
 
 Vue.prototype.$http = Axios;
 
 export default {
   name: 'Transporters',
+  components: { LoadingComponent },
   extends: VueTypeahead,
   mixins: [NotificationMxn],
   data() {
@@ -513,6 +520,7 @@ export default {
       shipment_offer: '',
       negotiability: '',
       bid_amount: '',
+      loading: true,
     };
   },
   computed: {
@@ -544,6 +552,7 @@ export default {
   },
   watch: {},
   mounted() {
+    this.loading = true;
     this.fetchOwnersListing();
     this.fetchGoodsTypes();
     this.fetchCarrierTypes();
@@ -582,9 +591,11 @@ export default {
           } else {
             this.owners_list = [];
           }
+          this.loading = false;
         },
         (error) => {
           this.owners_list = [];
+          this.loading = false;
         },
       );
     },
@@ -598,7 +609,7 @@ export default {
       this.getCargoTypes(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.goodsType = response.cargo_types;
+            this.goodsType = response.data;
           } else {
             this.goodsType = [];
           }
@@ -618,7 +629,7 @@ export default {
       this.getCarrierTypes(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.truckTypes = response.carrier_types;
+            this.truckTypes = response.data;
           } else {
             this.truckTypes = [];
           }
@@ -801,7 +812,7 @@ export default {
         this.doNotification(
           2,
           'Unable to create shipment request!',
-          'Kindly provide time for request to to submitted',
+          'Kindly provide all values for request to to submitted',
         );
       } else {
         let acc = {};
@@ -820,6 +831,7 @@ export default {
           destination: this.main_order_path[1],
           pickup_time: this.moment(this.pick_up_time).format('DD-MM-YYYY HH:mm:ss'),
           bidding_deadline: this.moment(this.quotation_time).format('DD-MM-YYYY HH:mm:ss'),
+          currency: 'USD',
           pickup_facility: this.facility_location,
           is_return: this.return_option,
           total_trucks: this.trucks_no,
@@ -850,7 +862,11 @@ export default {
               this.doNotification(1, 'Shipment sent successfully!', '');
               this.$router.push('/freight/orders');
             } else {
-              this.doNotification(2, 'Unable to request for shipment!', workingResponse.message);
+              this.doNotification(
+                2,
+                'Unable to request for shipment!',
+                workingResponse.data.message,
+              );
             }
             this.resetQuatationDialog();
           },

@@ -279,7 +279,7 @@
                       <el-option
                         v-for="item in truckTypes"
                         :key="item.id"
-                        :label="item.carrierType"
+                        :label="item.carrier_type"
                         :value="item.id"
                       />
                     </el-select>
@@ -660,7 +660,7 @@ export default {
       this.getCargoTypes(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.goodsType = response.cargo_types;
+            this.goodsType = response.data;
           } else {
             this.goodsType = [];
           }
@@ -680,7 +680,7 @@ export default {
       this.getCarrierTypes(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.truckTypes = response.carrier_types;
+            this.truckTypes = response.data;
           } else {
             this.truckTypes = [];
           }
@@ -788,7 +788,7 @@ export default {
         this.doNotification(
           2,
           'Unable to create shipment request!',
-          'Kindly provide time for request to to submitted',
+          'Kindly provide all values for request to to submitted',
         );
       } else {
         let acc = {};
@@ -810,6 +810,7 @@ export default {
           destination: this.main_order_path[1],
           pickup_time: this.moment(this.pick_up_time).format('DD-MM-YYYY HH:mm:ss'),
           bidding_deadline: this.moment(this.quotation_time).format('DD-MM-YYYY HH:mm:ss'),
+          currency: 'USD',
           pickup_facility: this.facility_location,
           is_return: this.return_option,
           total_trucks: this.trucks_no,
@@ -840,7 +841,11 @@ export default {
               this.doNotification(1, 'Shipment sent successfully!', '');
               this.$router.push('/freight/orders');
             } else {
-              this.doNotification(2, 'Unable to request for shipment!', workingResponse.message);
+              this.doNotification(
+                2,
+                'Unable to request for shipment!',
+                workingResponse.data.message,
+              );
             }
             this.resetQuatationDialog();
           },
