@@ -871,7 +871,6 @@ const translations = {
   confirm_password: 'Confirm Password',
 
 
-
 };
 
 const en = {

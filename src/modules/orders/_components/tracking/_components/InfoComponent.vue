@@ -176,24 +176,24 @@
                     <div class="edit-information-outer">
                       <p class="cancellation-edit-options align-inner-bar" v-if="checkEditOption()">
                         <i class="el-icon-location edit-location-icon" />
-                        {{$t('general.wrong_delivery_locations')}} 
+                        {{$t('general.wrong_delivery_locations')}}
                         <div class="cancellation-edit-inner" @click="showEditLocationsDialog()">
-                          {{$t('general.edit_locations')}} 
+                          {{$t('general.edit_locations')}}
                         </div>
                       </p>
 
                       <p class="cancellation-edit-options align-inner-bar" v-if="checkScheduleOption()">
                       <img src="https://images.sendyit.com/web_platform/tracking/calendar.svg" alt="" class="infobar-truck-img">
-                         {{$t('general.schedule_for_later')}} 
+                         {{$t('general.schedule_for_later')}}
                         <div class="cancellation-edit-inner" @click="showEditPickUpTime()">
-                        {{$t('general.schedule_order')}} 
+                        {{$t('general.schedule_order')}}
                         </div>
                       </p>
 
                     </div>
                     <div class="">
                       <div class="cancel-reason-title">
-                        {{$t('general.do_still_cancel_order')}} 
+                        {{$t('general.do_still_cancel_order')}}
                       </div>
                       <div class="action--slide-desc">
                         <button
@@ -202,7 +202,7 @@
                           class="action--slide-button cancellation-submit accept-cancell-btn"
                           @click="cancelStep(true)"
                         >
-                          {{$t('general.continue_cancel')}} 
+                          {{$t('general.continue_cancel')}}
                         </button>
                         <button
                           type="button"
@@ -210,7 +210,7 @@
                           class="action--slide-button cancellation-submit"
                           @click="cancelStep(false)"
                         >
-                          {{$t('general.no_cancel')}} 
+                          {{$t('general.no_cancel')}}
                         </button>
                       </div>
                     </div>
@@ -222,7 +222,7 @@
                       <div class="cancel-reason-text" id="cancel-reason-text">
                         <div class="">
                           <el-radio v-model="cancel_reason" :label="reasons.cancel_reason_id">
-                            {{ reasons.cancel_reason }} reason
+                            {{ reasons.cancel_reason }}
                           </el-radio>
                         </div>
                       </div>
@@ -2140,7 +2140,7 @@ export default {
         if (this.tracking_data.rider.vendor_id !== 26) {
           if (this.tracking_data.confirm_status === 0) {
             const confirmEta = this.tracking_data.eta_data.etc;
-            const etaSplit = confirmEta.split('to');
+            const etaSplit = confirmEta !== undefined ? confirmEta.split('to') : 'Not Available';
             const start = etaSplit[0].replace(/\s+/g, '');
             const end = etaSplit[1].replace(/\s+/g, '');
 
@@ -2156,7 +2156,7 @@ export default {
           ) {
             const pickUpEta = this.tracking_data.eta_data.etp;
             const confirmedEta = this.tracking_data.eta_data.confirmed;
-            const etaSplit = pickUpEta.split('to');
+            const etaSplit = pickUpEta !== undefined ? pickUpEta.split('to') : 'Not Available';
             const start = etaSplit[0].replace(/\s+/g, '');
             const end = etaSplit[1].replace(/\s+/g, '');
 
@@ -2232,11 +2232,17 @@ export default {
         .catch(err => err);
     },
     retrieveCancellationReasons() {
+      const riderInfo = this.tracking_data.rider;
       this.$store.dispatch('$_orders/$_tracking/requestCancellationReasons').then(
         (response) => {
           if (response.status) {
-            this.cancellation_reasons = response.data;
-            console.log(response.data);
+            const cancellationReasons = response.data;
+            if (riderInfo.rider_name !== 'Sendy Rider') {
+              this.cancellation_reasons = cancellationReasons.filter(reason => reason.cancel_reason_id !== 7)
+            } else {
+              this.cancellation_reasons = response.data;
+            }
+            console.log(this.cancellation_reasons);
             this.cancellation_state = true;
           } else {
             this.cancellation_state = false;
@@ -2248,20 +2254,16 @@ export default {
       );
     },
     cancelBtnState() {
-      if (this.tracking_data.delivery_status < 2 && this.user_state && this.cancellation_state) {
-        return true;
-      }
-      return false;
+      console.log(this.tracking_data.delivery_status, this.user_state, this.cancellation_state);
+      return this.tracking_data.delivery_status < 2 && this.user_state && this.cancellation_state;
     },
     disablePop() {
       this.cancelToggle();
       this.pop_state = false;
     },
     extendedDialog() {
-      if (this.cancel_reason === 4 || this.pop_state === 5 || this.pop_state === 13) {
-        return false;
-      }
-      return true;
+      return !(this.cancel_reason === 4 || this.pop_state === 5 || this.pop_state === 13);
+
     },
     interCountyInforBar() {
       let resp = false;
