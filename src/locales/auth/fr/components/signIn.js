@@ -6,7 +6,7 @@ const fr = {
   forgot_password: 'mot de passe oublié? ',
   have_account: "Vous n'avez pas de compte?",
   sign_up: "S'inscrire ",
-  login: 'Se connecter ...',
+  login: 'Se connecter',
   view: 'Afficher la page - Connexion - Plateforme Web ',
   login_status: 'Se connecter ...',
   login_failed: 'Échec de la connexion ',
