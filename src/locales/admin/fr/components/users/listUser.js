@@ -13,7 +13,7 @@ const fr = {
   status: 'Status',
   action: 'Action',
   edit_user: "Modifier l'utilisateur",
-  fetching_user: "Récupération des utilisateurs",
+  fetching_user: 'Récupération des utilisateurs',
   fetching_department: 'Récupération des Département...',
   normal: 'Normal',
   admin: 'Admin',
