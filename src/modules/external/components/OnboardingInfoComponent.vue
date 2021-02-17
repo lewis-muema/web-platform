@@ -2,7 +2,6 @@
   <div class="screen-one">
     <div class="onboarding-user-header">
       {{$t('onboardingComponent.join', {getBizName: getBizName})}}
-      <!-- Join the {{ getBizName }} business account on Sendy -->
     </div>
 
     <p class="onboard-error">
