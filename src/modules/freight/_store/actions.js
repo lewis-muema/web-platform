@@ -56,7 +56,7 @@ const requestFreightOrders = function requestFreightOrders({ commit, dispatch },
           workingResponse = response[0];
         }
         if (workingResponse.data.status) {
-          commit('setFreightOrders', workingResponse.data.shipments);
+          commit('setFreightOrders', workingResponse.data.data);
           resolve(workingResponse.data);
         } else {
           reject(workingResponse.data);

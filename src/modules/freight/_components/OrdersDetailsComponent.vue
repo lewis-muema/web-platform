@@ -69,7 +69,8 @@
                     <span class="order-info-header">{{$t('orderDetail.price_offer')}}</span>
                     <div class="freight-order-info-extra">
                       {{
-                        freightOrderDetail.offer_amount === 0
+                        freightOrderDetail.offer_amount === 0 ||
+                          freightOrderDetail.offer_amount === null
                           ? 'Transporters to bid'
                           : `USD ${freightOrderDetail.offer_amount}`
                       }}
@@ -184,7 +185,7 @@
                   @click="toggleRow(index)"
                 >
                   <div class="transporter-content freight-documents-title">
-                    {{ data.company_name === null ? data.name : data.company_name }}
+                    {{ data.name }}
                   </div>
                   <div class="transporter-content">
                     {{ data.available_trucks }} {{$t('orderDetail.trucks')}}
@@ -233,7 +234,7 @@
                       </div>
                       <div
                         class="transporter-content view-transporter-documents"
-                        @click="viewDocument(val.url, val.document_name)"
+                        @click="viewDocument(val.document_url, val.document_name)"
                       >
                         {{$t('orderDetail.view_doc')}} <i class="el-icon-arrow-right view-transporter-info" />
                       </div>
@@ -299,11 +300,7 @@
               >
                 <div class="transporters-filters documents-highlight orders-freight-documents ">
                   <div class="freight-documents-title">
-                    {{
-                      freightOrderDetail.quotations[index].company_name === null
-                        ? freightOrderDetail.quotations[index].name
-                        : freightOrderDetail.quotations[index].company_name
-                    }}
+                    {{ freightOrderDetail.quotations[index].name }}
                   </div>
                   <div class=" freight-documents-date order-info-header">
                     {{ freightOrderDetail.quotations[index].trucks_available }} {{$t('orderDetail.trucks')}}
@@ -362,12 +359,8 @@
               <div v-if="!verification_stage">
                 <div class="">
                   <div class="decline-text-option decline-documemt-extend request-shipment-header">
-                    {{$t('orderDetail.award_shipment')}}
-                    {{
-                      awardedTransporter.company_name === null
-                        ? awardedTransporter.name
-                        : awardedTransporter.company_name
-                    }}
+                    Award Shipment to
+                    {{ awardedTransporter.name }}
                   </div>
                 </div>
 
@@ -390,12 +383,9 @@
 
                 <div class="award-shipment-input">
                   <p class="award-input--label">
-                    {{$t('orderDetail.how_many_of')}}
-                    {{
-                      awardedTransporter.company_name === null
-                        ? awardedTransporter.name
-                        : awardedTransporter.company_name
-                    }}’s {{$t('orderDetail.availabe_trucks_assign')}}
+                    How many of
+                    {{ awardedTransporter.name }}’s available trucks do you want to assign to this
+                    shipment?
                   </p>
                   <div class="block">
                     <el-input-number
@@ -477,12 +467,8 @@
               <div v-else>
                 <div class="">
                   <div class="decline-text-option decline-documemt-extend request-shipment-header">
-                    {{$t('orderDetail.sure_want_award')}}
-                    {{
-                      awardedTransporter.company_name === null
-                        ? awardedTransporter.name
-                        : awardedTransporter.company_name
-                    }}
+                    Are you sure you want to award
+                    {{ awardedTransporter.name }}
                     ?
                   </div>
                 </div>
@@ -768,7 +754,7 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.freightOrderDetail = workingResponse.shipment;
+            this.freightOrderDetail = workingResponse.data;
             this.loading = false;
           } else {
             this.doNotification(2, this.$t('orderDetail.failed_retrieve_order'), workingResponse.message);
@@ -992,7 +978,7 @@ export default {
           if (workingResponse.status) {
             this.doNotification(1,  this.$t('orderDetail.shipment_awarded_successfully'), '');
           } else {
-            this.doNotification(2, this.$t('orderDetail.unable_award_shipment'), workingResponse.message);
+            this.doNotification(2, 'Unable to award shipment!', workingResponse.data.message);
           }
           this.resetShipmentDialog();
           this.fetchOrderDetail(this.$route.params.id);
