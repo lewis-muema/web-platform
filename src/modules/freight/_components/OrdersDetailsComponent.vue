@@ -9,7 +9,7 @@
           class="back-freight-btn back-freight-orders"
           @click="backToOrders()"
         >
-          <i class="el-icon-arrow-left view-transporter-info" /> Back
+          <i class="el-icon-arrow-left view-transporter-info" /> {{$t('general.back')}}
         </div>
         <div class="freight-orders-main-summary">
           <div class="freight-order-details-wrapper">
@@ -26,29 +26,29 @@
                       src="../../../assets/img/maroon_button.png"
                       class="order_details_desc_image"
                     >
-                    <span class="order-info-header">Pick up location</span>
+                    <span class="order-info-header">{{$t('orderDetail.pickup_location')}}</span>
                     <div class="freight-order-info-extra">
                       {{ freightOrderDetail.pickup.name }}
                     </div>
                   </div>
-                  <div class="order_details_desc_item order-details-schedule-time">
+                  <div class="order_details_desc_item order_details_desc_item--no-space">
                     <img
                       src="../../../assets/img/blue_button.png"
                       class="order_details_desc_image"
                     >
-                    <span class="order-info-header">Destination</span>
+                    <span class="order-info-header">{{$t('orderDetail.destination')}}</span>
                     <div class="freight-order-info-extra">
-                      {{ freightOrderDetail.destination.name }}
+                      {{ freightOrderDetail.destination_name }}
                     </div>
                   </div>
                   <div class="order_details_desc_item order-details-schedule-time">
                     <img
-                      src="../../../assets/img/freight/delivery_time.png"
+                      src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/freight/time.svg"
                       class="order_details_desc_image"
                     >
-                    <span class="order-info-header">Pick up time</span>
+                    <span class="order-info-header">{{$t('orderDetail.pickup_time')}}</span>
                     <div class="freight-order-info-extra">
-                      {{ convertToUTCToLocal(freightOrderDetail.pickup_time) }}
+                      {{ convertToUTCToLocal(freightOrderDetail.pick_up_time) }}
                     </div>
                   </div>
                   <div class="order_details_desc_item order-details-schedule-time">
@@ -56,7 +56,7 @@
                       src="../../../assets/img/freight/load_type.png"
                       class="order_details_desc_image"
                     >
-                    <span class="order-info-header">Type of load </span>
+                    <span class="order-info-header">{{$t('orderDetail.type_of_load')}} </span>
                     <div class="freight-order-info-extra">
                       {{ freightOrderDetail.cargo_type }}
                     </div>
@@ -66,7 +66,7 @@
                       src="../../../assets/img/freight/price_offer.png"
                       class="order_details_desc_image"
                     >
-                    <span class="order-info-header">Price offer </span>
+                    <span class="order-info-header">{{$t('orderDetail.price_offer')}}</span>
                     <div class="freight-order-info-extra">
                       {{
                         freightOrderDetail.offer_amount === 0 ||
@@ -78,14 +78,14 @@
                   </div>
                 </div>
               </div>
-              <div class="freight-order-etra-info">
+             <div class="freight-order-etra-info">
                 <div class="">
                   <div class="order_details_desc_item order-details-schedule-time">
                     <img
                       src="../../../assets/img/freight/trucks_no.png"
                       class="order_details_desc_image"
                     >
-                    <span class="order-info-header">Number of Trucks needed</span>
+                    <span class="order-info-header">{{$t('orderDetail.no_of_trucks_needed')}}</span>
                     <div class="freight-order-info-extra">
                       {{ freightOrderDetail.total_trucks }}
                     </div>
@@ -95,7 +95,7 @@
                       src="../../../assets/img/freight/truck_type.png"
                       class="order_details_desc_image"
                     >
-                    <span class="order-info-header">Type of truck</span>
+                    <span class="order-info-header">{{$t('orderDetail.type_of_truck')}}</span>
                     <div class="freight-order-info-extra">
                       {{ freightOrderDetail.carrier_type }}
                     </div>
@@ -105,9 +105,9 @@
                       src="../../../assets/img/freight/load_weight.png"
                       class="order_details_desc_image"
                     >
-                    <span class="order-info-header">Weight of load per mover</span>
+                    <span class="order-info-header">{{$t('orderDetail.weight_of_load_per_move')}}</span>
                     <div class="freight-order-info-extra">
-                      {{ freightOrderDetail.tonnes_per_truck }} Tonnes
+                      {{ freightOrderDetail.tonnes_per_truck }} {{$t('orderDetail.tonnes')}} 
                     </div>
                   </div>
                   <div class="order_details_desc_item order-details-schedule-time">
@@ -115,9 +115,9 @@
                       src="../../../assets/img/freight/return.png"
                       class="order_details_desc_image"
                     >
-                    <span class="order-info-header">Will the container be returned?</span>
+                    <span class="order-info-header"> {{$t('orderDetail.container_returned')}}</span>
                     <div class="freight-order-info-extra">
-                      {{ freightOrderDetail.returned === true ? 'Yes' : 'No' }}
+                      {{ freightOrderDetail.returned === true ? `${$t('general.yes')}` : `${$t('general.no')}` }}
                     </div>
                   </div>
 
@@ -169,10 +169,10 @@
         >
           <div v-if="freightOrderDetail.awarded_bids.length > 0">
             <div class="order-info-header align-documents-data">
-              Awarded Transporters
+              {{$t('orderDetail.awarded_transporter')}}
             </div>
 
-            <div class="transporter-listing order-order-documents">
+           <div class="transporter-listing order-order-documents">
               <div
                 v-for="(data, index) in freightOrderDetail.awarded_bids"
                 :key="index"
@@ -188,13 +188,13 @@
                     {{ data.name }}
                   </div>
                   <div class="transporter-content">
-                    {{ data.available_trucks }} Trucks
+                    {{ data.available_trucks }} {{$t('orderDetail.trucks')}}
                   </div>
                   <div class="transporter-content">
-                    USD {{ data.price_per_truck }}/Truck
+                    USD {{ data.price_per_truck }}/{{$t('orderDetail.truck')}}
                   </div>
                   <div class="transporter-content view-transporter-documents">
-                    View document details
+                    {{$t('orderDetail.view_doc_details')}}
                     <span
                       v-if="opened.includes(index)"
                       class=""
@@ -218,7 +218,7 @@
                   class="documents-highlight orders-freight-documents transporters-doc-align"
                 >
                   <div class="transporters-documents">
-                    Documents
+                     {{$t('orderDetail.doc')}}
                   </div>
                   <div class="transporters-filters ">
                     <div
@@ -236,7 +236,7 @@
                         class="transporter-content view-transporter-documents"
                         @click="viewDocument(val.document_url, val.document_name)"
                       >
-                        View Document <i class="el-icon-arrow-right view-transporter-info" />
+                        {{$t('orderDetail.view_doc')}} <i class="el-icon-arrow-right view-transporter-info" />
                       </div>
                       <div class="freight-documents-approve flex-div transporter-content">
                         <button
@@ -271,7 +271,7 @@
           class=""
         >
           <div class="order-info-header align-documents-data">
-            Quatations
+            {{$t('orderDetail.quotation')}}
             {{
               freightOrderDetail.quotations.length > 0
                 ? `(${freightOrderDetail.quotations.length})`
@@ -303,10 +303,10 @@
                     {{ freightOrderDetail.quotations[index].name }}
                   </div>
                   <div class=" freight-documents-date order-info-header">
-                    {{ freightOrderDetail.quotations[index].trucks_available }} Trucks
+                    {{ freightOrderDetail.quotations[index].trucks_available }} {{$t('orderDetail.trucks')}}
                   </div>
                   <div class=" freight-documents-date">
-                    USD {{ freightOrderDetail.quotations[index].price_per_truck }} /Truck
+                    USD {{ freightOrderDetail.quotations[index].price_per_truck }} /{{$t('orderDetail.truck')}}
                   </div>
 
                   <div
@@ -340,7 +340,7 @@
                   class="no-quatations-img "
                 >
                 <div class="no-transporters-label">
-                  Awaiting quotations from transporters
+                  {{$t('orderDetail.awaiting_quotation')}}
                 </div>
               </div>
             </div>
@@ -367,13 +367,13 @@
                 <div class="award-sub-details doc-detail">
                   <div class="award-inner-info">
                     <div class="quatations-outline-info">
-                      Available trucks:
+                      {{$t('orderDetail.available_trucks')}}:
                       <span class="outline-info-value">
                         {{ awardedTransporter.trucks_available }}
                       </span>
                     </div>
                     <div class="quatations-outline-info">
-                      Rate per truck:
+                      {{$t('orderDetail.rate_per_truck')}}:
                       <span
                         class="outline-info-value"
                       >USD {{ awardedTransporter.price_per_truck }}</span>
@@ -397,8 +397,8 @@
                 </div>
 
                 <div class="award-shipment-input">
-                  <p class="award-input--label upload-landing">
-                    Upload the bill of lading
+                  <p class="award-input--label upload-landing"> 
+                    {{$t('orderDetail.upload_bill_of_lading')}}
                   </p>
                   <div class="document-image">
                     <div class="download-uploaded-img">
@@ -420,12 +420,12 @@
                           {{ landing_text }}
                         </div>
                         <div v-else>
-                          Drop file here or <em>click to upload</em>
+                          {{$t('orderDetail.drop_files_here')}} <em>{{$t('orderDetail.click_to_upload')}}</em>
                         </div>
                       </el-upload>
                       <div v-if="billOfLandingName !== '' && landing_text === 'Change'">
                         <span class="document-upload-label">
-                          Bill of lading added successfully .
+                          {{$t('orderDetail.bill_lading_added_successfully')}}
                         </span>
                       </div>
                     </div>
@@ -434,7 +434,7 @@
 
                 <div class="award-shipment-input payment-terms">
                   <p class="award-input--label">
-                    What are your payment terms?
+                    {{$t('orderDetail.what_payment_terms')}}
                   </p>
                   <div class="block">
                     <el-select
@@ -460,7 +460,7 @@
                     class="quote-action--slide-button award-shipment-btn"
                     @click="awardDocument()"
                   >
-                    Award
+                    {{$t('orderDetail.award')}}
                   </button>
                 </div>
               </div>
@@ -474,27 +474,27 @@
                 </div>
                 <div class="shipment-summary-outer">
                   <div class="quatations-outline-info-summary">
-                    Price per truck
+                    {{$t('orderDetail.price_per_truck')}} 
                     <p class="outline-info-value summary-inner-value">
                       USD {{ awardedTransporter.price_per_truck }}
                     </p>
                   </div>
                   <div class="quatations-outline-info-summary">
-                    Trucks assigned
+                    {{$t('orderDetail.trucks_assigned')}}
                     <p class="outline-info-value summary-inner-value">
                       {{ trucks_no }}
                     </p>
                   </div>
                   <div class="quatations-outline-info-summary">
-                    Total amount
+                    {{$t('orderDetail.total_amount')}}
                     <p class="outline-info-value summary-inner-value">
                       USD {{ trucks_no * awardedTransporter.price_per_truck }}
                     </p>
                   </div>
                   <div class="quatations-outline-info-summary">
-                    Payment terms
+                    {{$t('orderDetail.payment_terms')}} 
                     <p class="outline-info-value summary-inner-value">
-                      Payment in {{ payment_terms }} days
+                     {{$t('orderDetail.payment_in_days', {payment_terms: payment_terms})}}
                     </p>
                   </div>
 
@@ -505,7 +505,7 @@
                       class="quote-action--slide-button send-final-quote-btn back-shipment-btn"
                       @click="goBack()"
                     >
-                      Back
+                      {{$t('general.back')}}
                     </button>
                     <button
                       type="button"
@@ -513,20 +513,20 @@
                       class="quote-action--slide-button send-final-quote-btn"
                       @click="awardFinal()"
                     >
-                      Yes, Award bid
+                      {{$t('general.yes_award_bid')}}
                     </button>
                   </div>
                 </div>
               </div>
             </el-dialog>
-
             <el-dialog
               :visible.sync="viewDocumentOption"
               class="documentOptions"
             >
               <div class="">
                 <div class="document-text-option ">
-                  {{ src_name }} document
+                <!-- {{ src_name }} document -->
+                  {{$t('orderDetail.name_doc', {src_name:src_name})}}
                 </div>
                 <div class="document-divider" />
                 <div class="document-view-inner">
@@ -545,7 +545,7 @@
             >
               <div class="">
                 <div class="decline-text-option decline-documemt-extend">
-                  Decline Document
+                  {{$t('orderDetail.decline_doc')}}
                 </div>
               </div>
               <div class="decline-documemt-extend award-shipment-input">
@@ -564,7 +564,7 @@
                   class="decline-action--slide-button"
                   @click="declineDocument()"
                 >
-                  Decline
+                  {{$t('orderDetail.decline')}}
                 </button>
               </div>
             </el-dialog>
@@ -574,7 +574,8 @@
             >
               <div class="">
                 <div class="decline-text-option rating-header">
-                  How was your experience with {{ freightOrderDetail.transporter_name }} ?
+                  <!-- How was your experience with {{ freightOrderDetail.transporter_name }} ? -->
+                  {{$t('orderDetail.experience_with',{transporter_name: freightOrderDetail.transporter_name  } )}}
                 </div>
               </div>
               <span class="freight-stars-container">
@@ -584,11 +585,11 @@
                   :colors="['#99A9BF', '#EE7D00', '#007FFF']"
                 />
               </span>
-              <div class="award-shipment-input">
+              <div class="decline-documemt-input">
                 <el-input
                   v-model.trim="comment"
                   :min="0"
-                  placeholder="Tell us more (Optional)"
+                  :placeholder="$t('orderDetail.tell_us_more')"
                   type="textarea"
                   autocomplete="true"
                 />
@@ -601,7 +602,7 @@
                   class="decline-action--slide-button"
                   @click="submitRating(freightOrderDetail)"
                 >
-                  Submit
+                  {{$t('orderDetail.submit')}}
                 </button>
               </div>
             </el-dialog>
@@ -629,12 +630,12 @@ export default {
   mixins: [TimezoneMxn, NotificationMxn],
   data() {
     return {
-      quote_text: 'Request for quote',
-      financing_text: 'Place Order',
+      quote_text: this.$t('orderDetail.request_quote'),
+      financing_text: this.$t('orderDetail.create_order'),
       rating: 5.0,
       loading: true,
-      approve_doc_text: 'Approve',
-      decline_doc_text: 'Decline',
+      approve_doc_text: this.$t('orderDetail.approve'),
+      decline_doc_text: this.$t('orderDetail.decline'),
       approve_quatation_text: 'Award',
       decline_quatation_text: 'Decline',
       viewDocumentOption: false,
@@ -659,19 +660,19 @@ export default {
       terms: [
         {
           value: 7,
-          label: 'Payment in 7 days',
+          label: this.$t('orderDetail.payment_seven_days'),
         },
         {
           value: 14,
-          label: 'Payment in 14 days',
+          label: this.$t('orderDetail.payment_fourteen_days'),
         },
         {
           value: 21,
-          label: 'Payment in 21 days',
+          label: this.$t('orderDetail.payment_twentyone_days'),
         },
         {
           value: 28,
-          label: 'Payment in 28 days',
+          label: this.$t('orderDetail.payment_twenty_eight_days'),
         },
       ],
       opened: [],
@@ -756,15 +757,15 @@ export default {
             this.freightOrderDetail = workingResponse.data;
             this.loading = false;
           } else {
-            this.doNotification(2, 'Failed to retrieve order details', workingResponse.message);
+            this.doNotification(2, this.$t('orderDetail.failed_retrieve_order'), workingResponse.message);
             this.$router.push('/freight/orders');
           }
         },
         (error) => {
           this.doNotification(
             2,
-            'Order details retrival failure !',
-            'Failed to fetch order , Kindly retry again or contact customer support ',
+            this.$t('orderDetail.order_retrival_failure'),
+            this.$t('orderDetail.failed_to_fetch'),
           );
           this.$router.push('/freight/orders');
         },
@@ -777,9 +778,9 @@ export default {
       return row.id;
     },
     getTrucksNeeded(val) {
-      let resp = `${val} trucks needed`;
+      let resp = `${val} ${this.$t('orderDetail.trucks_needed')}`;
       if (val === 1) {
-        resp = `${val} truck needed`;
+        resp = `${val} ${this.$t('orderDetail.truck_needed')}`;
       }
       return resp;
     },
@@ -820,7 +821,7 @@ export default {
       const isPdf = file.type === 'application/pdf';
 
       if (!isPdf) {
-        this.doNotification(2, 'Document upload error !', 'Document must be in PDF format');
+        this.doNotification(2, this.$t('orderDetail.document_error'), this.$t('orderDetail.document_must_be_pdf'));
       }
       return isPdf;
     },
@@ -837,8 +838,8 @@ export default {
       this.uploadBillOfLanding();
     },
     uploadBillOfLanding() {
-      if (Object.keys(this.billOfLandingData).length === 0) {
-        this.doNotification(2, 'Kindly upload bill of landing document', '');
+      if (Object.keys(this.billOfLandingData).length === 0) { 
+        this.doNotification(2, this.$t('orderDetail.kindly_upload_bill_doc'), '');
       } else {
         const imageId = 'ladingImagePreview';
         let src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
@@ -922,20 +923,20 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, 'Bid rejected successfully!', '');
+            this.doNotification(1, this.$t('orderDetail.bid_rejected'), '');
           } else {
-            this.doNotification(2, 'Unable to reject bid!', workingResponse.message);
+            this.doNotification(2, this.$t('orderDetail.unable_reject_bid'), workingResponse.message);
           }
           this.fetchOrderDetail(this.$route.params.id);
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'message')) {
-            this.doNotification(2, 'Reject bid request failed', error.response.data.message);
+            this.doNotification(2, this.$t('orderDetail.reject_bid_request_failed'), error.response.data.message);
           } else {
             this.doNotification(
               2,
-              'Reject bid request failed',
-              'Something went wrong.Please try again',
+              this.$t('orderDetail.reject_bid_request_failed'),
+              this.$t('orderDetail.something_went_wrong'),
             );
             this.$router.push('/freight/orders');
           }
@@ -943,10 +944,10 @@ export default {
       );
     },
     awardDocument() {
-      if (this.billOfLandingName !== '' && this.trucks_no !== '' && this.payment_terms !== '') {
+      if (this.billOfLandingName !== '' && this.trucks_no !== '' && this.payment_terms !== '') { 
         this.verification_stage = true;
       } else {
-        this.doNotification(2, 'Award Shipment error !', 'Kindly provide all values');
+        this.doNotification(2, this.$t('orderDetail.award_shipment_error'), this.$t('orderDetail.kindly_provide_all_values'));
       }
     },
     goBack() {
@@ -975,7 +976,7 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, 'Shipment awarded successfully!', '');
+            this.doNotification(1,  this.$t('orderDetail.shipment_awarded_successfully'), '');
           } else {
             this.doNotification(2, 'Unable to award shipment!', workingResponse.data.message);
           }
@@ -984,12 +985,12 @@ export default {
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'message')) {
-            this.doNotification(2, 'Award Shipment request failed', error.response.data.message);
+            this.doNotification(2, this.$t('orderDetail.award_shipment_failed'), error.response.data.message);
           } else {
             this.doNotification(
               2,
-              'Award Shipment request failed',
-              'Something went wrong.Please try again',
+              this.$t('orderDetail.award_shipment_failed'),
+              this.$t('orderDetail.something_went_wrong'),
             );
             this.$router.push('/freight/orders');
           }
@@ -1043,22 +1044,22 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, 'Document approval!', 'Document approved successfully');
+            this.doNotification(1, this.$t('orderDetail.document_approval'), this.$t('orderDetail.doc_approved_succesful'));
             this.fetchOrderDetail(this.$route.params.id);
           } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
-            this.doNotification(2, 'Failed to approve document!', workingResponse.message);
+            this.doNotification(2, this.$t('orderDetail.failed_to_approve'), workingResponse.message);
           } else {
-            this.doNotification(2, 'Failed to approve document!', workingResponse.reason);
+            this.doNotification(2, this.$t('orderDetail.failed_to_approve'), workingResponse.reason);
           }
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
-            this.doNotification(2, 'Failed to approve document!', error.response.data.reason);
+            this.doNotification(2, this.$t('orderDetail.failed_to_approve'), error.response.data.reason);
           } else {
             this.doNotification(
               2,
-              'Failed to approve document!',
-              'Failed to approve document, Kindly retry again or contact customer support ',
+              this.$t('orderDetail.failed_to_approve'),
+              this.$t('orderDetail.failed_to_approve_text'),
             );
           }
         },
@@ -1106,23 +1107,23 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, 'Document declined!', 'Document declined successfully');
+            this.doNotification(1, this.$t('orderDetail.document_declined'), this.$t('orderDetail.doc_declined_successful'));
             this.fetchOrderDetail(this.$route.params.id);
           } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
-            this.doNotification(2, 'Failed to decline document!', workingResponse.message);
+            this.doNotification(2, this.$t('orderDetail.doc_declined_failed'), workingResponse.message);
           } else {
-            this.doNotification(2, 'Failed to decline document!', workingResponse.reason);
+            this.doNotification(2, this.$t('orderDetail.doc_declined_failed'), workingResponse.reason);
           }
           this.closeDeclineDialog();
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
-            this.doNotification(2, 'Failed to decline document!', error.response.data.reason);
+            this.doNotification(2, this.$t('orderDetail.doc_declined_failed'), error.response.data.reason);
           } else {
             this.doNotification(
               2,
-              'Failed to decline document!',
-              'Failed to decline document, Kindly retry again or contact customer support ',
+              this.$t('orderDetail.doc_declined_failed'),
+              this.$t('orderDetail.doc_declined_failed_text'),
             );
           }
           this.closeDeclineDialog();
@@ -1157,19 +1158,19 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, 'Order rated successfully!', '');
+            this.doNotification(1, this.$t('orderDetail.order_rated'), '');
             this.closeRatingDialog();
             this.backToOrders();
           } else {
-            this.doNotification(2, 'Failed to rate order!', workingResponse.message);
+            this.doNotification(2, this.$t('orderDetail.failed_rate_order'), workingResponse.message);
             this.closeRatingDialog();
           }
         },
         (error) => {
           this.doNotification(
             2,
-            'Failed to rate order!',
-            'Failed to rate order, Kindly retry again or contact customer support ',
+            this.$t('orderDetail.failed_rate_order'),
+            this.$t('orderDetail.failed_rate_order_text'),
           );
           this.closeRatingDialog();
         },

@@ -14,7 +14,7 @@
               class="back-freight-btn"
               @click="backToTransporters()"
             >
-              <i class="el-icon-arrow-left view-transporter-info" /> Back
+              <i class="el-icon-arrow-left view-transporter-info" /> {{$t('general.back')}}
             </div>
             <div class="transporter-listing transporter-summary-data">
               <div class="transporter-detail--info">
@@ -34,7 +34,7 @@
                       alt=""
                       class="transporters-img highlight-icon"
                     >
-                    {{ owner_details.place_orders }} completed orders
+                    {{ owner_details.place_orders }} {{$t('transporterComponent.completed_orders')}}
                   </div>
                 </div>
 
@@ -45,12 +45,12 @@
                       alt=""
                       class="transporters-img highlight-icon"
                     >
-                    {{ owner_details.average_rating }} ({{ owner_details.review_count }} Reviews)
+                    {{ owner_details.average_rating }} ({{ owner_details.review_count }} {{$t('transporterComponent.reviews')}})
                   </div>
                 </div>
 
                 <div class="transporter-name align-contacts-data">
-                  Contacts
+                  {{$t('transporterComponent.contacts')}}
                 </div>
                 <div class="transporters-filters transporters-highlight">
                   <div class="truck-add-info truck-add-rating-align">
@@ -76,7 +76,7 @@
             </div>
             <div class="">
               <div class="transporter-doucuments-title align-contacts-data">
-                Documents
+                {{$t('transporterComponent.documents')}}
               </div>
               <div
                 v-for="(val, index) in owner_details.documents"
@@ -93,11 +93,11 @@
 
             <div class="">
               <div class="transporter-doucuments-title align-contacts-data">
-                Vehicles
+                {{$t('transporterComponent.vehicles')}}
               </div>
               <div v-if="owner_details.vehicles === null">
                 <div class="transporter-detail-rating no-reviews-outer transporter-vehicle-rating">
-                  No vehicle details available for transporter .
+                 {{$t('transporterComponent.no_vehicle')}}
                 </div>
               </div>
               <div v-else>
@@ -105,6 +105,7 @@
                   v-for="(val, index) in owner_details.vehicles"
                   :key="index"
                 >
+                  {{ val }}
                   <div class="">
                     <div class="truck-title-info">
                       {{ val.vendor_type }}
@@ -118,7 +119,7 @@
                     >
                       <div class="truck-add-info">
                         <i class="el-icon-circle-check check-tranporters" />
-                        log book
+                        {{$t('transporterComponent.log_book')}}
                       </div>
                     </div>
                     <div class="vehicles-split" />
@@ -129,14 +130,14 @@
 
             <div class="">
               <div class="transporter-doucuments-title align-contacts-data reviews-section">
-                Reviews
+                {{$t('transporterComponent.reviews')}}
               </div>
               <div
                 v-if="owner_details.ratings === null || owner_details.ratings === 'null'"
                 class=""
               >
                 <div class="transporter-detail-rating no-reviews-outer transporter-vehicle-rating">
-                  No ratings available for transporter .
+                  {{$t('transporterComponent.no_ratings')}}
                 </div>
               </div>
               <div v-else-if="owner_details.ratings.length > 0">
@@ -146,7 +147,7 @@
                   class="transporter-detail reviews-outer"
                 >
                   <div class="">
-                    {{ val.pickup }} to {{ val.destination }}
+                    {{ val.pickup }} {{$t('transporterComponent.to')}} {{ val.destination }}
                   </div>
                   <div class="transporters-filters transporters-highlight">
                     <div class="truck-add-info">
@@ -184,7 +185,7 @@
               </div>
               <div v-else>
                 <div class="transporter-detail-rating no-reviews-outer transporter-vehicle-rating">
-                  No ratings available for transporter .
+                  {{$t('transporterComponent.no_ratings')}}
                 </div>
               </div>
             </div>
@@ -193,7 +194,7 @@
           <div class="transporters-quote-section">
             <div class="">
               <p class="transporters-quotes-input--label">
-                Engage Transporter
+                {{$t('transporterComponent.engage_transporter')}}
               </p>
               <input
                 v-model="quote_text"
@@ -216,14 +217,14 @@
           >
             <div class="">
               <div class="quote-text-option decline-documemt-extend">
-                Create a Shipment Request
+                {{$t('transporterComponent.create_shipment_request')}}
               </div>
             </div>
             <div class="quote-find-section">
               <div v-if="shipment_state === 1">
                 <div class="">
                   <p class="freight-input--label">
-                    Pick up location
+                    {{$t('transporterComponent.pickup_location')}}
                   </p>
                   <gmap-autocomplete
                     v-model="locations[0]"
@@ -237,12 +238,12 @@
 
                 <div class="">
                   <p class="freight-input--label">
-                    Destination
+                    {{$t('transporterComponent.destination')}}
                   </p>
                   <gmap-autocomplete
                     v-model="locations[1]"
                     :options="map_options"
-                    placeholder="Enter a destination location"
+                    :placeholder="$t('transporterComponent.enter_destination_location')"
                     :select-first-on-enter="true"
                     class="input-control"
                     @place_changed="setLocation($event, 1)"
@@ -251,7 +252,7 @@
 
                 <div class="">
                   <p class="freight-input--label">
-                    Pick up time
+                    {{$t('transporterComponent.pickup_time')}}
                   </p>
                   <div class="transporters-select">
                     <el-date-picker
@@ -259,7 +260,7 @@
                       class="bids-time"
                       type="datetime"
                       format="dd-MM-yyyy h:mm a"
-                      placeholder="Select time"
+                      :placeholder="$t('transporterComponent.select_time')"
                       prefix-icon="el-icon-date"
                       :default-time="default_value"
                     />
@@ -268,7 +269,7 @@
 
                 <div class="">
                   <p class="freight-input--label">
-                    Type of truck
+                    {{$t('transporterComponent.truck_type')}}
                   </p>
                   <div class="transporters-select">
                     <el-select
@@ -288,7 +289,7 @@
 
                 <div class="">
                   <p class="freight-input--label">
-                    What is being transported?
+                    {{$t('transporterComponent.item_transported')}}
                   </p>
                   <div class="transporters-select">
                     <el-select
@@ -313,7 +314,7 @@
                     class="quote-action--slide-button send-final-quote-btn back-shipment-btn"
                     @click="nextShipmentFlow()"
                   >
-                    Next
+                     {{$t('transporterComponent.next')}} 
                   </button>
                 </div>
               </div>
@@ -321,21 +322,21 @@
               <div v-else-if="shipment_state === 2">
                 <div class="">
                   <p class="shipment-input--label">
-                    Where is the pickup facility at {{ locations[0] }}
+                    {{$t('transporterComponent.where_pickup_facility')}}{{ locations[0] }}
                   </p>
                   <div class="block">
                     <el-input
                       v-model="facility_location"
                       type="textarea"
                       :rows="2"
-                      placeholder="Please input"
+                      :placeholder="$t('transporterComponent.please_input')"
                     />
                   </div>
                 </div>
 
                 <div class="">
-                  <p class="shipment-input--label">
-                    Will the container be returned to the pickup location?
+                  <p class="shipment-input--label"> 
+                    {{$t('transporterComponent.will_container_returned')}}
                   </p>
                   <div class="block">
                     <el-select
@@ -356,7 +357,7 @@
 
                 <div class="">
                   <p class="shipment-input--label">
-                    How many trucks do you need?
+                    {{$t('transporterComponent.how_many_trucks_need')}}
                   </p>
                   <div class="block">
                     <el-input-number
@@ -369,7 +370,7 @@
 
                 <div class="">
                   <p class="shipment-input--label">
-                    How many tonnes should each truck carry per move?
+                    {{$t('transporterComponent.tonnes_truck_carry_per_move')}}
                   </p>
                   <div class="block">
                     <input
@@ -379,13 +380,13 @@
                       placeholder=""
                       autocomplete="on"
                     >
-                    <span class="tonage-value-text">Tonnes</span>
+                    <span class="tonage-value-text">{{$t('transporterComponent.tonnes')}}</span>
                   </div>
                 </div>
 
                 <div class="">
                   <p class="shipment-input--label">
-                    Do you want to make an offer for this shipment?
+                    {{$t('transporterComponent.make_offer')}}
                   </p>
                   <div class="block">
                     <el-select
@@ -407,7 +408,7 @@
                 <div v-if="shipment_offer">
                   <div class="">
                     <p class="shipment-input--label">
-                      How much do you want to pay per truck?
+                      {{$t('transporterComponent.how_much_pay_per_truck')}}
                     </p>
                     <div class="freight-input">
                       <div class="freight-input-icon">
@@ -426,7 +427,7 @@
 
                   <div>
                     <p class="shipment-input--label">
-                      Is this price negotiable?
+                      {{$t('transporterComponent.is_this_price_negotiable')}}
                     </p>
                     <div class="block">
                       <el-select
@@ -447,8 +448,8 @@
                 </div>
 
                 <div>
-                  <p class="shipment-input--label">
-                    By when should bids be submitted?
+                  <p class="shipment-input--label"> 
+                    {{$t('transporterComponent.when_bids_submitted')}}
                   </p>
                   <div class="block">
                     <el-date-picker
@@ -456,7 +457,7 @@
                       class="transporters-element-inputs"
                       type="datetime"
                       format="dd-MM-yyyy h:mm a"
-                      placeholder="Select time"
+                      :placeholder="$t('transporterComponent.select_time')"
                       prefix-icon="el-icon-date"
                       :default-time="default_value"
                       :picker-options="dueDatePickerOptions"
@@ -471,7 +472,7 @@
                     class="quote-action--slide-button send-final-quote-btn back-shipment-btn"
                     @click="oneStepBack()"
                   >
-                    Back
+                    {{$t('general.back')}}
                   </button>
                   <button
                     type="button"
@@ -479,7 +480,7 @@
                     class="quote-action--slide-button send-final-quote-btn"
                     @click="sendFinalQuote()"
                   >
-                    Submit
+                    {{$t('general.submit')}}
                   </button>
                 </div>
               </div>
@@ -502,9 +503,9 @@ export default {
   mixins: [NotificationMxn],
   data() {
     return {
-      quote_text: 'Create Shipment Request',
-      financing_text: 'Place Order',
-      next_text: 'Next',
+      quote_text: this.$t('transporterComponent.create_shipment_request'),
+      financing_text: this.$t('transporterComponent.place_order'),
+      next_text: this.$t('transporterComponent.next'),
       rating: 5.0,
       quoteDialog: false,
       locations: [],
@@ -539,21 +540,21 @@ export default {
       returnOptions: [
         {
           value: true,
-          label: 'Yes',
+          label: this.$t('general.yes'),
         },
         {
           value: false,
-          label: 'No',
+          label: this.$t('general.no'),
         },
       ],
       shipmentOffer: [
         {
           value: true,
-          label: 'Yes, i want to make a price offer',
+          label: this.$t('transporterComponent.yes_want_to_make_price_offer'),
         },
         {
           value: false,
-          label: 'No, i want transporters to bid',
+          label: this.$t('transporterComponent.want_tranporters_bid'),
         },
       ],
       trucks_no: 1,
@@ -603,8 +604,8 @@ export default {
           } else {
             this.doNotification(
               2,
-              'Failed to load transporter details !',
-              'Unable to load transporter details',
+              this.$t('transporterComponent.failed_to_load'),
+              this.$t('transporterComponent.unable_to_load'),
             );
             this.backToTransporters();
             this.owner_details = [];
@@ -613,8 +614,8 @@ export default {
         (error) => {
           this.doNotification(
             2,
-            'Failed to load transporter details !',
-            'Unable to load transporter details',
+            this.$t('transporterComponent.failed_to_load'),
+            this.$t('transporterComponent.unable_to_load'),
           );
           this.backToTransporters();
           this.owner_detail = [];
@@ -758,9 +759,9 @@ export default {
       } else {
         this.doNotification(
           2,
-          'Create Shipment error !',
-          'Kindly provide all values to proceed to the next step',
-        );
+          this.$t('transporterComponent.create_shipment_error'),
+          this.$t('transporterComponent.provide_all_values_to_proceed'),
+          );
       }
     },
     oneStepBack() {
@@ -838,7 +839,7 @@ export default {
             }
 
             if (workingResponse.status) {
-              this.doNotification(1, 'Shipment sent successfully!', '');
+              this.doNotification(1, this.$t('transporterComponent.shipment_sent'), '');
               this.$router.push('/freight/orders');
             } else {
               this.doNotification(
@@ -851,12 +852,12 @@ export default {
           },
           (error) => {
             if (Object.prototype.hasOwnProperty.call(error, 'message')) {
-              this.doNotification(2, 'Shipment request failed', error.message);
+              this.doNotification(2, this.$t('transporterComponent.shipment_request_failed'), error.message);
             } else {
               this.doNotification(
                 2,
-                'Shipment request failed',
-                'Something went wrong.Please try again',
+                this.$t('transporterComponent.shipment_request_failed'),
+                this.$t('transporterComponent.something_went_wrong'),
               );
               this.resetQuatationDialog();
             }
