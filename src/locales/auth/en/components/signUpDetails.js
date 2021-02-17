@@ -29,7 +29,7 @@ const en = {
   unable_connect_server: 'Unable to connect to the server . Please try again',
   signup_failed: 'Sign Up failed',
   agree_terms: 'Agree to Terms and Conditions',
-  invalid_details: 'Agree to Terms and Conditions',
+  invalid_details: 'Invalid details',
   provide_all: 'Provide all details',
   phone_verification: 'Phone Verification',
   code_send: 'Phone verification code has been sent',

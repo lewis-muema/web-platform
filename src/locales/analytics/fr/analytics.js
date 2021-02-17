@@ -1,6 +1,6 @@
 
 const fr = {
-  report: 'FR_Report',
+  report: 'Signaler',
 };
 
 
