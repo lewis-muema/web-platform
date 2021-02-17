@@ -13,7 +13,7 @@ const fr = {
   deactivate: 'Deactive',
   normal: 'Normal',
   admin: 'Admin',
-  edit_successful: "Modification reussite",
+  edit_successful: 'Modification reussite',
   something_went_wrong: "Quelque chose s'est mal passé",
 };
 

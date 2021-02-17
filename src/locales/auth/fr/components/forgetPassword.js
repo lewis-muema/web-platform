@@ -1,21 +1,21 @@
 
 
 const fr = {
-  forgot_password: 'FR_Forgot your password?',
-  pending_password: 'FR_You have a pending password change request sent to your email awaiting your confirmation',
-  resend: 'FR_Resend?',
-  two_accounts: 'FR_Looks like you have two accounts with us. Select one.',
-  'business ': ' FR_Business',
-  peer: 'FR_Peer',
-  reset: 'FR_Reset Password',
-  sign_in: 'FR_Sign In',
-  password_change: 'FR_Password change reset link has been sent to your email',
-  account_not_exist: 'FR_Account does not exist.Please sign-up to create a sendy account',
-  invalid_request: 'FR_Invalid Request',
-  reset_failed: 'FR_Password reset request failed, Kindly retry again',
-  invalid_email: 'FR_Invalid Email provided',
-  enter_email: 'FR_Enter email',
-  reset_password: 'FR_RESET PASSWORD',
+  forgot_password: 'Vous avez oublié votre mot de passe?',
+  pending_password: 'Vous avez une demande de changement de mot de passe en attente envoyée à votre adresse e-mail en attente de votre confirmation',
+  resend: 'Renvoyer? ',
+  two_accounts: 'Il semble que vous ayez deux comptes chez nous. Sélectionnez-en un.',
+  'business ': ' Entreprise ',
+  peer: 'Entreprise ',
+  reset: 'réinitialiser le mot de passe',
+  sign_in: "S'identifier",
+  password_change: 'Le lien de réinitialisation du changement de mot de passe a été envoyé à votre adresse e-mail ',
+  account_not_exist: "Le compte n'existe pas, veuillez vous inscrire pour créer un compte sendy ",
+  invalid_request: 'Demande invalide',
+  reset_failed: 'La demande de réinitialisation du mot de passe a échoué, veuillez réessayer ',
+  invalid_email: 'Adresse e-mail non valide fournie',
+  enter_email: "Saisir l'email ",
+  reset_password: 'RÉINITIALISER LE MOT DE PASSE ',
 };
 
 

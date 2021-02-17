@@ -1,19 +1,19 @@
 
 const fr = {
-  login_sendy: 'FR_Log in to Sendy',
-  enter_email: 'FR_Enter Email',
-  password: 'FR_Password',
-  forgot_password: 'FR_Forgot password?',
-  have_account: "FR_Don't have an Account?",
-  sign_up: 'FR_Sign Up',
-  login: 'FR_Login',
-  view: 'FR_View Page - Sign In - Web Platform',
-  login_status: 'FR_Logging in ...',
-  login_failed: 'FR_Login failed',
-  wrong_password: 'FR_Wrong password or email.',
-  account_deactivated: 'FR_Account deactivated',
-  login_failed_text: 'FR_Login failed. Please try again',
-  provide_all: 'FR_Provide all values',
+  login_sendy: 'Connectez-vous à Sendy ',
+  enter_email: 'Saisir votre e-mail ',
+  password: 'Mot de passe ',
+  forgot_password: 'mot de passe oublié? ',
+  have_account: "Vous n'avez pas de compte?",
+  sign_up: "S'inscrire ",
+  login: 'Se connecter',
+  view: 'Afficher la page - Connexion - Plateforme Web ',
+  login_status: 'Se connecter ...',
+  login_failed: 'Échec de la connexion ',
+  wrong_password: 'Mot de passe ou e-mail incorrect. ',
+  account_deactivated: 'Compte désactivé ',
+  login_failed_text: 'Échec de la connexion. Veuillez réessayer ',
+  provide_all: 'Fournir toutes les valeurs ',
 
 };
 

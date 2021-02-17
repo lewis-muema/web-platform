@@ -24,7 +24,7 @@ const fr = {
   logout: ' Déconnecter',
   business: 'FR_Business',
   business_acc: "(Compte d'affaires)",
-  personal_acc: "(Compte personnel)",
+  personal_acc: '(Compte personnel)',
   write_feedback: 'FR_Write your feedback here',
 
 };

@@ -11,7 +11,7 @@ const fr = {
   new_delivery: 'Nouvelle livraison',
   payment: 'Paiement',
   orders: 'Commandes',
-  freight_small: 'fret',
+  freight_small: 'Fret',
   settings: 'Parametres',
   analytics: 'Analytique',
   profile: 'Profil',
