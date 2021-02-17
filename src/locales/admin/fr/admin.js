@@ -1,11 +1,11 @@
 
 const fr = {
-  user: 'FR_Users',
-  department: 'FR_Department',
-  api: 'FR_API',
-  details: 'FR_Company details',
+  user: 'Utilisateurs ',
+  department: 'Département',
+  api: "Détails de l'entreprise ",
+  details: 'Le numéro de téléphone n’est pas valide',
   phone_invalid: 'FR_The phone number not valid',
-  select_settings: 'FR_Select Admin Settings Menu',
+  select_settings: 'Le numéro de téléphone n’est pas valide',
 
 };
 
