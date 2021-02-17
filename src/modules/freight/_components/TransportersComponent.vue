@@ -8,6 +8,7 @@
               {{ $t('transporterComponent.pickup_location') }}
             </p>
             <gmap-autocomplete
+              id="pickup"
               v-model="locations[0]"
               :options="map_options"
               :placeholder="$t('transporterComponent.enter_pickup_location')"
@@ -22,6 +23,7 @@
               {{$t('transporterComponent.destination')}}
             </p>
             <gmap-autocomplete
+              id="destination"
               v-model="locations[1]"
               :options="map_options"
               :placeholder="$t('transporterComponent.enter_destination')"
@@ -521,6 +523,9 @@ export default {
       negotiability: '',
       bid_amount: '',
       loading: true,
+      DOM: '',
+      pickup_value: '',
+      destination_value: '',
     };
   },
   computed: {
@@ -547,10 +552,22 @@ export default {
         && this.pick_up_time !== ''
         && this.owners_list.length > 0
         && this.checkAll
+        && this.pickup_value !== ''
+        && this.destination_value !== ''
       );
     },
   },
-  watch: {},
+  watch: {
+    DOM: {
+      handler(val, oldVal) {
+        this.addFocusListener();
+      },
+      deep: true,
+    },
+  },
+  created() {
+    this.DOM = process;
+  },
   mounted() {
     this.loading = true;
     this.fetchOwnersListing();
@@ -568,6 +585,18 @@ export default {
     handleCheckAllChange(val) {
       this.checkedOwners = val ? this.owners_list : [];
       this.isIndeterminate = false;
+    },
+    addFocusListener() {
+      document.addEventListener('keyup', this.keyUpInput, true);
+    },
+    keyUpInput() {
+      if (document.activeElement.id === 'pickup') {
+        this.pickup_value = document.getElementById('pickup').value;
+      }
+
+      if (document.activeElement.id === 'destination') {
+        this.destination_value = document.getElementById('destination').value;
+      }
     },
     disabledDueDate(date) {
       return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
@@ -727,6 +756,8 @@ export default {
         && this.truck_type !== ''
         && this.goods !== ''
         && this.pick_up_time !== ''
+        && this.pickup_value !== ''
+        && this.destination_value !== ''
       ) {
         this.doFilterOwners();
       } else {

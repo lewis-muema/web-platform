@@ -227,6 +227,7 @@
                     {{$t('transporterComponent.pickup_location')}}
                   </p>
                   <gmap-autocomplete
+                    id="pickup"
                     v-model="locations[0]"
                     :options="map_options"
                     placeholder="Enter a pickup location"
@@ -241,6 +242,7 @@
                     {{$t('transporterComponent.destination')}}
                   </p>
                   <gmap-autocomplete
+                    id="destination"
                     v-model="locations[1]"
                     :options="map_options"
                     :placeholder="$t('transporterComponent.enter_destination_location')"
@@ -563,6 +565,9 @@ export default {
       shipment_offer: '',
       negotiability: '',
       bid_amount: '',
+      DOM: '',
+      pickup_value: '',
+      destination_value: '',
     };
   },
   computed: {
@@ -574,6 +579,15 @@ export default {
         this.resetQuatationDialog();
       }
     },
+    DOM: {
+      handler(val, oldVal) {
+        this.addFocusListener();
+      },
+      deep: true,
+    },
+  },
+  created() {
+    this.DOM = process;
   },
   mounted() {
     this.loading = true;
@@ -624,6 +638,18 @@ export default {
     },
     disabledDueDate(date) {
       return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
+    },
+    addFocusListener() {
+      document.addEventListener('keyup', this.keyUpInput, true);
+    },
+    keyUpInput() {
+      if (document.activeElement.id === 'pickup') {
+        this.pickup_value = document.getElementById('pickup').value;
+      }
+
+      if (document.activeElement.id === 'destination') {
+        this.destination_value = document.getElementById('destination').value;
+      }
     },
     backToTransporters() {
       this.$router.push('/freight/transporters');
@@ -754,6 +780,8 @@ export default {
         && this.truck_type !== ''
         && this.goods !== ''
         && this.pick_up_time !== ''
+        && this.pickup_value !== ''
+        && this.destination_value !== ''
       ) {
         this.shipment_state = 2;
       } else {
@@ -881,6 +909,8 @@ export default {
       this.pick_up_time = '';
       this.quotation_time = '';
       this.locations = [];
+      this.pickup_value = '';
+      this.destination_value = '';
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };
