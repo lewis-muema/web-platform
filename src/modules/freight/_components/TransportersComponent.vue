@@ -5,12 +5,12 @@
         <div class="transporters-find-section">
           <div class="">
             <p class="freight-input--label">
-              Pick up location
+              {{ $t('transporterComponent.pickup_location') }}
             </p>
             <gmap-autocomplete
               v-model="locations[0]"
               :options="map_options"
-              placeholder="Enter a pickup location"
+              :placeholder="$t('transporterComponent.enter_pickup_location')"
               :select-first-on-enter="true"
               class="input-control"
               @place_changed="setLocation($event, 0)"
@@ -19,12 +19,12 @@
 
           <div class="">
             <p class="freight-input--label">
-              Destination
+              {{$t('transporterComponent.destination')}}
             </p>
             <gmap-autocomplete
               v-model="locations[1]"
               :options="map_options"
-              placeholder="Enter a destination location"
+              :placeholder="$t('transporterComponent.enter_destination')"
               :select-first-on-enter="true"
               class="input-control"
               @place_changed="setLocation($event, 1)"
@@ -32,7 +32,7 @@
           </div>
           <div class="">
             <p class="freight-input--label">
-              Pick up time
+              {{$t('transporterComponent.pickup_time')}}
             </p>
             <div class="transporters-select">
               <el-date-picker
@@ -40,7 +40,7 @@
                 class="bids-time"
                 type="datetime"
                 format="dd-MM-yyyy h:mm a"
-                placeholder="Select time"
+                :placeholder="$t('transporterComponent.select_time')"
                 prefix-icon="el-icon-date"
                 :default-time="default_value"
                 :picker-options="dueDatePickerOptions"
@@ -50,7 +50,7 @@
 
           <div class="">
             <p class="freight-input--label">
-              Type of truck
+              {{$t('transporterComponent.truck_type')}}
             </p>
             <div class="transporters-select">
               <el-select
@@ -70,7 +70,7 @@
 
           <div class="">
             <p class="freight-input--label">
-              What is being transported?
+              {{$t('transporterComponent.item_transported')}} 
             </p>
             <div class="transporters-select">
               <el-select
@@ -107,7 +107,7 @@
               class="no-transporters-img "
             >
             <div class="no-transporters-label">
-              No Transporters found at the moment, Try again with other details.
+              {{$t('transporterComponent.no_transport_found')}}
             </div>
           </div>
           <div v-else>
@@ -117,7 +117,7 @@
                   <div class="transporter-listing-outer">
                     <div class="listing-info">
                       <div class="listing-info-count">
-                        {{ ownersListing.length }} Transporters Found
+                        {{ ownersListing.length }} {{$t('transporterComponent.transporters_found')}}
                       </div>
                       <div class="shipment-dialog">
                         <input
@@ -137,7 +137,7 @@
               >
                 <el-input
                   v-model="query"
-                  placeholder="Search by name"
+                  :placeholder="$t('transporterComponent.search_by_name')"
                   autocomplete="off"
                   :prepare-response-data="prepareResponseData"
                   @keydown.down="down"
@@ -184,7 +184,7 @@
                   class="search-results-ul"
                 >
                   <span class="screen-no-details-found">
-                    No Details Found
+                    {{$t('transporterComponent.no_details')}}
                   </span>
                 </ul>
               </div>
@@ -225,13 +225,13 @@
                           alt=""
                           class="transporters-img highlight-icon"
                         >
-                        {{ ownersListing[index].complete_orders }} completed orders
+                        {{ ownersListing[index].complete_orders }} {{$t('transporterComponent.completed_orders')}}
                       </div>
                       <div
                         class="truck-add-info view-transporter-info"
                         @click="viewTransporterInfo(ownersListing[index].id)"
                       >
-                        View <i class="el-icon-arrow-right view-transporter-info" />
+                        {{$t('transporterComponent.view')}} <i class="el-icon-arrow-right view-transporter-info" />
                       </div>
                     </div>
                     <div class="transporters-filters transporters-highlight">
@@ -242,7 +242,7 @@
                           class="transporters-img highlight-icon"
                         >
                         {{ ownersListing[index].avg_rating }} (
-                        {{ ownersListing[index].avg_rating }} Reviews)
+                        {{ ownersListing[index].avg_rating }} {{$t('transporterComponent.reviews')}})
                       </div>
                     </div>
                   </el-checkbox>
@@ -263,27 +263,27 @@
           >
             <div class="">
               <div class="decline-text-option decline-documemt-extend request-shipment-header">
-                Create a Shipment Request
+                {{$t('transporterComponent.create_shipment_request')}}
               </div>
             </div>
 
             <div class="decline-documemt-extend decline-documemt-input">
               <p class="shipment-input--label">
-                Where is the pickup facility at {{ locations[0] }}
+                {{$t('transporterComponent.where_pickup_facility')}}{{ locations[0] }} 
               </p>
               <div class="block">
                 <el-input
                   v-model="facility_location"
                   type="textarea"
                   :rows="2"
-                  placeholder="Please input"
+                  :placeholder="$t('transporterComponent.please_input')"
                 />
               </div>
             </div>
 
             <div class="decline-documemt-extend decline-documemt-input">
               <p class="shipment-input--label">
-                Will the container be returned to the pickup location?
+                {{$t('transporterComponent.will_container_returned')}}
               </p>
               <div class="block">
                 <el-select
@@ -304,7 +304,7 @@
 
             <div class="decline-documemt-extend decline-documemt-input">
               <p class="shipment-input--label">
-                How many trucks do you need?
+               {{$t('transporterComponent.how_many_trucks_need')}}
               </p>
               <div class="block">
                 <el-input-number
@@ -315,9 +315,9 @@
               </div>
             </div>
 
-            <div class="decline-documemt-extend decline-documemt-input">
+            <div class="decline-documemt-extend decline-documemt-input"> 
               <p class="shipment-input--label">
-                How many tonnes should each truck carry per move?
+                {{$t('transporterComponent.tonnes_truck_carry_per_move')}}
               </p>
               <div class="block">
                 <input
@@ -327,13 +327,13 @@
                   placeholder=""
                   autocomplete="on"
                 >
-                <span class="tonage-value-text">Tonnes</span>
+                <span class="tonage-value-text">{{$t('transporterComponent.tonnes')}}</span>
               </div>
             </div>
 
             <div class="decline-documemt-extend decline-documemt-input">
-              <p class="shipment-input--label">
-                Do you want to make an offer for this shipment?
+              <p class="shipment-input--label"> 
+                {{$t('transporterComponent.make_offer')}} 
               </p>
               <div class="block">
                 <el-select
@@ -355,7 +355,7 @@
             <div v-if="shipment_offer">
               <div class="decline-documemt-extend decline-documemt-input">
                 <p class="shipment-input--label">
-                  How much do you want to pay per truck?
+                  {{$t('transporterComponent.how_much_pay_per_truck')}} 
                 </p>
                 <div class="freight-input">
                   <div class="freight-input-icon">
@@ -374,7 +374,7 @@
 
               <div class="decline-documemt-extend decline-documemt-input">
                 <p class="shipment-input--label">
-                  Is this price negotiable?
+                  {{$t('transporterComponent.is_this_price_negotiable')}}
                 </p>
                 <div class="block">
                   <el-select
@@ -394,9 +394,9 @@
               </div>
             </div>
 
-            <div class="decline-documemt-extend decline-documemt-input">
+            <div class="decline-documemt-extend decline-documemt-input"> 
               <p class="shipment-input--label">
-                By when should bids be submitted?
+                {{$t('transporterComponent.when_bids_submitted')}}
               </p>
               <div class="block">
                 <el-date-picker
@@ -404,7 +404,7 @@
                   class="transporters-element-inputs"
                   type="datetime"
                   format="dd-MM-yyyy h:mm a"
-                  placeholder="Select time"
+                  :placeholder="$t('transporterComponent.select_time')"
                   prefix-icon="el-icon-date"
                   :default-time="default_value"
                   :picker-options="dueDatePickerOptions"
@@ -419,7 +419,7 @@
                 class="quote-action--slide-button"
                 @click="sendFinalQuote()"
               >
-                Submit
+                {{$t('transporterComponent.submit')}}
               </button>
             </div>
           </el-dialog>
@@ -444,8 +444,8 @@ export default {
   mixins: [NotificationMxn],
   data() {
     return {
-      submit_text: 'Find Transporters',
-      quote_text: 'Create Shipment Request',
+      submit_text: this.$t('transporterComponent.find_transporter'),
+      quote_text: this.$t('transporterComponent.create_shipment_request'),
       locations: [],
       order_path: [],
       main_order_path: [],
@@ -490,21 +490,21 @@ export default {
       returnOptions: [
         {
           value: true,
-          label: 'Yes',
+          label: this.$t('general.yes'),
         },
         {
           value: false,
-          label: 'No',
+          label: this.$t('general.no'),
         },
       ],
       shipmentOffer: [
         {
           value: true,
-          label: 'Yes, i want to make a price offer',
+          label: this.$t('transporterComponent.yes_want_to_make_price_offer'), 
         },
         {
           value: false,
-          label: 'No, i want transporters to bid',
+          label: this.$t('transporterComponent.want_tranporters_bid'),
         },
       ],
       trucks_no: 1,
@@ -660,7 +660,7 @@ export default {
           Otherdescription: '',
           Road: '',
           Typed: '',
-          Vicinity: 'Not Indicated',
+          Vicinity: this.$t('transporterComponent.not_indicated'),
           landmark: '',
           place_idcustom: place.place_id,
           viewport: {
@@ -719,12 +719,13 @@ export default {
       ) {
         this.doFilterOwners();
       } else {
-        this.doNotification(2, 'Find transporters error !', 'Kindly provide all values');
+        this.doNotification(2, this.$t('transporterComponent.find_tranporter_error'), this.$t('transporterComponent.provide_all'));
       }
     },
     doFilterOwners() {
       const payload = {
         cargo_type: parseInt(this.goods, 10),
+        load_weight: parseInt(this.load_weight, 10),
         carrier_type: parseInt(this.truck_type, 10),
         pick_up: this.order_path[0].address_components,
         destination: this.order_path[1].address_components,
@@ -754,14 +755,14 @@ export default {
               this.owners_list = workingResponse.owners_listing;
               this.doNotification(
                 2,
-                'No available Transporters ',
-                'No available transporters based on the filters',
+                this.$t('transporterComponent.no_available'),
+                this.$t('transporterComponent.no_available_text'),
               );
               this.handleCheckAllChange(false);
               this.checkAll = false;
             }
           } else {
-            this.doNotification(2, 'Unable to filter transporters!', workingResponse.message);
+            this.doNotification(2, this.$t('transporterComponent.unable_filter'), workingResponse.message);
             this.owners_list = [];
           }
         },
@@ -782,8 +783,8 @@ export default {
       } else {
         this.doNotification(
           2,
-          'Unable to request for quotation!',
-          'Kindly select a transporter to request quotation',
+          this.$t('transporterComponent.unable_request'),
+          this.$t('transporterComponent.select_transporter'),
         );
       }
     },
@@ -800,8 +801,8 @@ export default {
       ) {
         this.doNotification(
           2,
-          'Unable to create shipment request!',
-          'Kindly provide time for request to to submitted',
+          this.$t('transporterComponent.unable_request'),
+          this.$t('transporterComponent.provide_time'),
         );
       } else {
         let acc = {};
@@ -810,7 +811,7 @@ export default {
           acc = session[session.default];
         }
         const payload = {
-          cop_id: 'cop_id' in acc ? acc.cop_id : null,
+           cop_id: 'cop_id' in acc ? acc.cop_id : null,
           cop_user_id: 'cop_id' in acc ? acc.user_id : null,
           peer_id: 'cop_id' in acc ? null : acc.user_id,
           transporters: this.filteredCheckedOwners,
@@ -847,21 +848,21 @@ export default {
             }
 
             if (workingResponse.status) {
-              this.doNotification(1, 'Shipment sent successfully!', '');
+              this.doNotification(1, this.$t('transporterComponent.shipment_sent'), '');
               this.$router.push('/freight/orders');
             } else {
-              this.doNotification(2, 'Unable to request for shipment!', workingResponse.message);
+              this.doNotification(2, this.$t('transporterComponent.unable_request_shipment'), workingResponse.message);
             }
             this.resetQuatationDialog();
           },
           (error) => {
             if (Object.prototype.hasOwnProperty.call(error, 'message')) {
-              this.doNotification(2, 'Shipment request failed', error.message);
+              this.doNotification(2, this.$t('transporterComponent.shipment_request_failed'), error.message);
             } else {
               this.doNotification(
                 2,
-                'Shipment request failed',
-                'Something went wrong.Please try again',
+                this.$t('transporterComponent.shipment_request_failed'),
+                this.$t('transporterComponent.something_went_wrong'),
               );
               this.resetQuatationDialog();
             }
@@ -881,10 +882,10 @@ export default {
       this.negotiability = '';
     },
     returnCount(val) {
-      let resp = `${val} Trucks`;
+      let resp = `${val} ${this.$t('transporterComponent.trucks')}`;
 
       if (val === 1) {
-        resp = `${val} Truck`;
+        resp = `${val} ${this.$t('transporterComponent.truck')}`;
       }
       return resp;
     },
