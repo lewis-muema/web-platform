@@ -30,7 +30,7 @@
         prop="order_date"
       >
         <template slot-scope="scope">
-          {{ order_history_data[scope.$index]['pickup']['name'] }}
+          {{ order_history_data[scope.$index]['pickup'] }}
         </template>
       </el-table-column>
       <el-table-column
@@ -38,7 +38,7 @@
         prop="order_date"
       >
         <template slot-scope="scope">
-          {{ order_history_data[scope.$index]['destination']['name'] }}
+          {{ order_history_data[scope.$index]['destination'] }}
         </template>
       </el-table-column>
 
