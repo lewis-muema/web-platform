@@ -4,7 +4,7 @@
       <div class="section--filter-input-wrap">
         <el-input
           v-model="search"
-          :placeholder="$t('ordersComponent.search')"
+          placeholder="Search"
           class="freight-orders-search"
         >
           <i
@@ -26,7 +26,7 @@
         {{ empty_orders_state }}
       </template>
       <el-table-column
-        :label="$t('ordersComponent.pickup_loc')"
+        label="Pick up location"
         prop="order_date"
       >
         <template slot-scope="scope">
@@ -34,7 +34,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('ordersComponent.destination')"
+        label="Destination"
         prop="order_date"
       >
         <template slot-scope="scope">
@@ -44,26 +44,26 @@
 
       <el-table-column
         key="1"
-        :label="$t('ordersComponent.type_of_load')"
+        label="Type of load"
         prop="cargo_type"
         width="200"
       />
       <el-table-column
-        :label="$t('ordersComponent.type_of_truck')"
+        label="Type of truck"
         prop="carrier_type"
         width="200"
       />
       <el-table-column
-        :label="$t('ordersComponent.pickup_date')"
+        label="Pick up date"
         prop="order_date"
       >
         <template slot-scope="props">
-           {{ convertToUTCToLocal(order_history_data[props.$index]['pickup_time']) | moment }}
+          {{ convertToUTCToLocal(order_history_data[props.$index]['pickup_time']) | moment }}
         </template>
       </el-table-column>
 
       <el-table-column
-        :label="$t('ordersComponent.status')"
+        label="Status"
         prop="path"
         header-align="center"
         align="center"
@@ -73,7 +73,7 @@
             class="view-orders-transporter-info"
             @click="viewOrdersInfo(order_history_data[props.$index]['id'])"
           >
-            {{$t('ordersComponent.view')}} <i class="el-icon-arrow-right view-transporter-info" />
+            View <i class="el-icon-arrow-right view-transporter-info" />
           </div>
         </template>
       </el-table-column>
@@ -81,7 +81,7 @@
 
     <div class="section--pagination-wrap">
       <el-pagination
-        layout="$t('ordersComponent.total'), $t('ordersComponent.sizes'), $t('ordersComponent.prev'), $t('ordersComponent.pager'), $t('ordersComponent.next'), $t('ordersComponent.jumper')"
+        layout="total, sizes, prev, pager, next, jumper"
         :total="order_history_total"
         :page-size="pagination_limit"
         :current-page.sync="pagination_page"
@@ -110,11 +110,11 @@ export default {
   mixins: [TimezoneMxn],
   data() {
     return {
-      empty_orders_state: this.$t('ordersComponent.freight_shipments'),
+      empty_orders_state: 'Fetching freight shipments',
       search: '',
       pagination_limit: 10,
       pagination_page: 1,
-      create_order_text: this.$t('ordersComponent.place_order'),
+      create_order_text: 'Place an order',
       loading: false,
       sessionData: {},
     };
@@ -206,15 +206,15 @@ export default {
       };
       this.$store.dispatch('$_freight/requestFreightOrders', fullPayload).then(
         () => {
-          this.empty_orders_state = this.$t('ordersComponent.not_available');
+          this.empty_orders_state = 'No available freight shipments';
         },
         (error) => {
           this.setFreightOrders([]);
 
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'data')) {
-            this.empty_orders_state = this.$t('ordersComponent.not_available');
+            this.empty_orders_state = 'No available freight shipments';
           } else {
-            this.empty_orders_state = this.$t('ordersComponent.not_available');
+            this.empty_orders_state = 'No available freight shipments';
           }
         },
       );
