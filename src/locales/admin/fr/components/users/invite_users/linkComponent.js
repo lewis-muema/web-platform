@@ -2,22 +2,22 @@
 
 
 const fr = {
-  select: 'FR_Select',
-  create_link: 'FR_Create Link',
-  cancel: 'FR_Cancel',
-  use_link_to_join: 'FR_Anyone can use this link to join {{ getBizName }} on Sendy',
-  Option1: 'FR_Option1',
-  Option2: 'FR_Option2',
-  Option3: 'FR_Option3',
-  Option4: 'FR_Option4',
+  select: 'Selectioner',
+  create_link: 'Creer un lien',
+  cancel: 'Annuler',
+  use_link_to_join: 'N’importe qui peut utiliser ce lien pour rejoindre {getBizName} sur Sendy',
+  Option1: "L'option 1",
+  Option2: "L'option 2",
+  Option3: "L'option 3",
+  Option4: "L'option 4",
   Option5: 'FR_Option5',
-  invite_link: 'FR_Invite link for {{ bizName }}',
-  back: 'FR_BACK',
-  copy_to_clipboard: 'FR_Copy to clipboard',
-  copied: 'FR_Copied',
-  multipe_email: 'FR_Enter multiple email addresses separated by a comma',
-  add_invitees: 'FR_Add Invitees',
-  valid_email: 'FR_Please enter valid email address separated by a comma.',
+  invite_link: 'Invite lien pour {bizName}',
+  back: 'DE RETOUR',
+  copy_to_clipboard: 'Copier dans le presse-papier ',
+  copied: 'Copié ',
+  multipe_email: 'Entrez plusieurs adresses email séparées par une virgule',
+  add_invitees: 'Ajoutez les invitees',
+  valid_email: 'Veuillez saisir une adresse email valide séparée par une virgule.',
 };
 
 

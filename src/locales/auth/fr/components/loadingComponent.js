@@ -1,7 +1,7 @@
 
 
 const fr = {
-  verify: 'FR_Verifying Super User Details',
+  verify: 'Adresse e-mail non valide fournie',
 };
 
 
