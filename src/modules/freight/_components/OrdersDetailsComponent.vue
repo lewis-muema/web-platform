@@ -69,7 +69,8 @@
                     <span class="order-info-header">Price offer </span>
                     <div class="freight-order-info-extra">
                       {{
-                        freightOrderDetail.offer_amount === 0
+                        freightOrderDetail.offer_amount === 0 ||
+                          freightOrderDetail.offer_amount === null
                           ? 'Transporters to bid'
                           : `USD ${freightOrderDetail.offer_amount}`
                       }}
@@ -184,7 +185,7 @@
                   @click="toggleRow(index)"
                 >
                   <div class="transporter-content freight-documents-title">
-                    {{ data.company_name === null ? data.name : data.company_name }}
+                    {{ data.name }}
                   </div>
                   <div class="transporter-content">
                     {{ data.available_trucks }} Trucks
@@ -233,7 +234,7 @@
                       </div>
                       <div
                         class="transporter-content view-transporter-documents"
-                        @click="viewDocument(val.url, val.document_name)"
+                        @click="viewDocument(val.document_url, val.document_name)"
                       >
                         View Document <i class="el-icon-arrow-right view-transporter-info" />
                       </div>
@@ -299,11 +300,7 @@
               >
                 <div class="transporters-filters documents-highlight orders-freight-documents ">
                   <div class="freight-documents-title">
-                    {{
-                      freightOrderDetail.quotations[index].company_name === null
-                        ? freightOrderDetail.quotations[index].name
-                        : freightOrderDetail.quotations[index].company_name
-                    }}
+                    {{ freightOrderDetail.quotations[index].name }}
                   </div>
                   <div class=" freight-documents-date order-info-header">
                     {{ freightOrderDetail.quotations[index].trucks_available }} Trucks
@@ -363,11 +360,7 @@
                 <div class="">
                   <div class="decline-text-option decline-documemt-extend request-shipment-header">
                     Award Shipment to
-                    {{
-                      awardedTransporter.company_name === null
-                        ? awardedTransporter.name
-                        : awardedTransporter.company_name
-                    }}
+                    {{ awardedTransporter.name }}
                   </div>
                 </div>
 
@@ -391,11 +384,8 @@
                 <div class="award-shipment-input">
                   <p class="award-input--label">
                     How many of
-                    {{
-                      awardedTransporter.company_name === null
-                        ? awardedTransporter.name
-                        : awardedTransporter.company_name
-                    }}’s available trucks do you want to assign to this shipment?
+                    {{ awardedTransporter.name }}’s available trucks do you want to assign to this
+                    shipment?
                   </p>
                   <div class="block">
                     <el-input-number
@@ -478,11 +468,7 @@
                 <div class="">
                   <div class="decline-text-option decline-documemt-extend request-shipment-header">
                     Are you sure you want to award
-                    {{
-                      awardedTransporter.company_name === null
-                        ? awardedTransporter.name
-                        : awardedTransporter.company_name
-                    }}
+                    {{ awardedTransporter.name }}
                     ?
                   </div>
                 </div>
@@ -767,7 +753,7 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.freightOrderDetail = workingResponse.shipment;
+            this.freightOrderDetail = workingResponse.data;
             this.loading = false;
           } else {
             this.doNotification(2, 'Failed to retrieve order details', workingResponse.message);
@@ -991,7 +977,7 @@ export default {
           if (workingResponse.status) {
             this.doNotification(1, 'Shipment awarded successfully!', '');
           } else {
-            this.doNotification(2, 'Unable to award shipment!', workingResponse.message);
+            this.doNotification(2, 'Unable to award shipment!', workingResponse.data.message);
           }
           this.resetShipmentDialog();
           this.fetchOrderDetail(this.$route.params.id);
