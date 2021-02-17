@@ -9,7 +9,7 @@
           v-model="value"
           class="addUser--select"
           filterable
-          placeholder="Select"
+          :placeholder="$t('linkComponent.select')"
         >
           <el-option
             v-for="item in options"
@@ -24,7 +24,7 @@
           v-model="value"
           class="addUser--select"
           filterable
-          placeholder="Select"
+          :placeholder="$t('linkComponent.select')"
         >
           <el-option
             v-for="item in options"
@@ -35,19 +35,19 @@
         </el-select>
       </div>
       <div class="side-flex mid-btn">
-        <a @click="get_inv">Cancel</a>
+        <a @click="get_inv">{{ $t('linkComponent.cancel') }}</a>
         <button
           class="button-primary"
           type="submit"
           name="action"
           @click="get_link"
         >
-          Create Link
+          {{ $t('linkComponent.create_link') }}
         </button>
       </div>
     </div>
     <div class="side-flex side-desc">
-      Anyone can use this link to join {{ getBizName }} on Sendy
+      {{ $t('linkComponent.use_link_to_join') }}
     </div>
   </div>
 </template>

@@ -342,7 +342,7 @@ const translations = {
 
   // dedicatedOrderPlacement
   enter_pickup_location: 'Enter a pickup location',
-  no_of_container: 'no_of_containers',
+  no_of_container: 'No of containers',
   enter_region: 'Enter region',
   return_location: 'Return location (Optional)',
 
@@ -439,6 +439,7 @@ const translations = {
   order_type: 'Order type',
   container_order: 'Container order',
   empty_container_destination: 'Empty Container Destination',
+  consignee_name: 'Consignee (name)',
   cancel_order_capital: 'CANCEL ORDER',
   cargo_on_the_way: 'Your cargo is on the way to ',
   cargo_arrived_at: 'Your cargo has arrived at',
@@ -515,6 +516,7 @@ const translations = {
   containers: 'containers',
   goods_quantity: 'Goods Quantity',
   container: 'container',
+  container_capital: 'Container',
   order_status: 'Order Status',
   container_return: 'container return',
 
@@ -869,7 +871,6 @@ const translations = {
   use_promocode: 'Use promocode',
   expiry: 'Expiry',
   confirm_password: 'Confirm Password',
-
 
 
 };
