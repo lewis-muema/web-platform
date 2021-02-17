@@ -25,6 +25,7 @@ const fr = {
   business: 'FR_Business',
   business_acc: '(FR-Business Acc)',
   personal_acc: '(FR-Personal Acc)',
+  write_feedback: 'FR_Write your feedback here',
 
 };
 
