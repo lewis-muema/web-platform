@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="freight-settings">
     <div class="">
-      {{$t('settingsComponent.manage_approvers')}}
+      Manage Approvers
     </div>
     <div class="">
       <button
@@ -10,7 +10,7 @@
         name="create_order_text"
         @click="addApprover"
       >
-        {{$t('settingsComponent.add_approver')}}
+        Add approver
       </button>
     </div>
     <div class="list-freight-approvers">
@@ -25,12 +25,12 @@
         <template slot="empty">
           {{ empty_orders_state }}
         </template>
-        <el-table-column :label="$t('settingsComponent.name')">
+        <el-table-column label="Name">
           <template slot-scope="scope">
             {{ approvers_list_data[scope.$index]['name'] }}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('settingsComponent.phone')">
+        <el-table-column label="Phone">
           <template slot-scope="scope">
             {{ approvers_list_data[scope.$index]['phone'] }}
           </template>
@@ -38,21 +38,21 @@
 
         <el-table-column
           key="1"
-          :label="$t('settingsComponent.email')"
+          label="Email"
           prop="email"
         />
 
         <el-table-column
-          :label="$t('settingsComponent.status')"
+          label="Status"
           prop="order_date"
         >
           <template slot-scope="props">
-            {{$t('settingsComponent.active')}}
+            Active
           </template>
         </el-table-column>
 
         <el-table-column
-          :label="$t('settingsComponent.action')"
+          label="Action"
           prop="path"
           header-align="center"
           align="center"
@@ -62,7 +62,7 @@
               class="view-orders-transporter-info remove-approver"
               @click="removeApprover(approvers_list_data[props.$index]['copUserId'])"
             >
-             {{ $t('settingsComponent.remove')}}
+              Remove
             </div>
           </template>
         </el-table-column>
@@ -92,12 +92,12 @@
         >
           <div class="">
             <div class="decline-text-option  approver-header">
-              {{$t('settingsComponent.add_approver')}}
+              Add Approver
             </div>
           </div>
           <div class="">
             <div class="approver-highlight">
-              {{$t('settingsComponent.select_user')}}
+              Select user to approve freight orders
             </div>
             <el-select
               v-model="approver"
@@ -121,7 +121,7 @@
               class="decline-action--slide-button"
               @click="submitApproval"
             >
-              {{$t('settingsComponent.approve')}}
+              Approve
             </button>
           </div>
         </el-dialog>
@@ -143,7 +143,7 @@ export default {
       approver: '',
       users: [],
       approvers_list: [],
-      empty_orders_state: this.$t('settingsComponent.fetch_approvers'),
+      empty_orders_state: 'Fetching approvers list',
       pagination_limit: 10,
       pagination_page: 1,
       loading: false,
@@ -204,11 +204,11 @@ export default {
           } else {
             this.users = [];
           }
-          this.empty_orders_state = this.$t('settingsComponent.no_approvers');
+          this.empty_orders_state = 'No approvers available';
         },
         (error) => {
           this.users = [];
-          this.empty_orders_state = this.$t('settingsComponent.no_approvers');
+          this.empty_orders_state = 'No approvers available';
         },
       );
     },
@@ -231,17 +231,17 @@ export default {
             workingResponse = response[0];
           }
           if (workingResponse.status) {
-            this.doNotification(1, this.$t('settingsComponent.approver_updated'), this.$t('settingsComponent.approver_removed'));
+            this.doNotification(1, 'Approver updated!', 'Approver removed successfully');
             this.fetchApproversList();
           } else {
-            this.doNotification(2, this.$t('settingsComponent.failed_remove_approver'), '');
+            this.doNotification(2, 'Failed to remove approver!', '');
           }
         },
         (error) => {
           this.doNotification(
             2,
-            this.$t('settingsComponent.failed_remove_approver'),
-            this.$t('settingsComponent.failed_remove_approver_text'),
+            'Failed to remove approver!',
+            'Failed to remove approver, Kindly retry again or contact customer support ',
           );
         },
       );
@@ -293,18 +293,18 @@ export default {
               workingResponse = response[0];
             }
             if (workingResponse.status) {
-              this.doNotification(1, this.$t('settingsComponent.approver_updated'), this.$t('settingsComponent.approver_updated_successfully'));
+              this.doNotification(1, 'Approver updated!', 'Approver updated successfully');
               this.fetchApproversList();
             } else {
-              this.doNotification(2, this.$t('settingsComponent.failed_add_approver'), '');
+              this.doNotification(2, 'Failed to add approvers!', '');
             }
             this.closeApproversDialog();
           },
           (error) => {
             this.doNotification(
               2,
-              this.$t('settingsComponent.failed_add_approver'),
-              this.$t('settingsComponent.failed_add_approver_text')
+              'Failed to add approvers!',
+              'Failed to add approvers, Kindly retry again or contact customer support ',
             );
             this.closeApproversDialog();
           },
@@ -312,8 +312,8 @@ export default {
       } else {
         this.doNotification(
           2,
-          this.$t('settingsComponent.failed_add_approver'),
-          his.$t('settingsComponent.failed_add_approver_single'),
+          'Failed to add approvers!',
+          'Failed to add approvers, Kindly select a single user',
         );
       }
     },
