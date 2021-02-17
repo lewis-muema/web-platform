@@ -1,15 +1,15 @@
 
 
 const fr = {
-  add_department: 'FR_Add Department',
-  name: 'FR_Name',
-  admin: 'FR_Admin',
-  add: 'FR_Add',
-  adding_department: 'FR_Adding Department',
-  added_successful: 'FR_Department added successfully',
-  something_went_wrong: 'FR_Something went wrong.',
-  add_department_error: 'FR_Add Department Error !',
-  department_name: 'FR_Please provide Department name and Admin',
+  add_department: 'Ajouter le Département',
+  name: 'Nom',
+  admin: 'Admin',
+  add: 'Ajoiuter',
+  adding_department: "Ajout d'un  département",
+  added_successful: 'Département a ajouté avec succès',
+  something_went_wrong: "Quelque chose s'est mal passé.",
+  add_department_error: "Erreur d'ajout de department!",
+  department_name: 'Département',
 };
 
 
