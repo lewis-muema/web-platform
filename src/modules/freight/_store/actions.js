@@ -209,7 +209,7 @@ const requestActivity = function requestActivity({ dispatch }, payload) {
 
 const getOwnersDetail = function getOwnersDetail({ dispatch }, payload) {
   return new Promise((resolve, reject) => {
-    dispatch('requestAxiosGet', payload, {
+    dispatch('requestAxiosPost', payload, {
       root: true,
     }).then(
       (response) => {
