@@ -885,7 +885,7 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../assets/styles/transporters_component.css?v=4';
+@import '../../../assets/styles/transporters_component.css?v=1';
 
 .back-freight-btn{
   font-size: 14px;

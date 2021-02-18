@@ -897,8 +897,8 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../assets/styles/transporters_component.css?v=4';
-@import '../../../assets/styles/nav.css?v=4';
+@import '../../../assets/styles/transporters_component.css?v=1';
+@import '../../../assets/styles/nav.css?v=1';
 .view-transporter-info{
   cursor :pointer ;
 }

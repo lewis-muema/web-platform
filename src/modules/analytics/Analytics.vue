@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../assets/styles/section_headers.css?v=4';
+@import '../../assets/styles/section_headers.css?v=1';
 .body--grey
 {
   background-color: #F9FBFC;

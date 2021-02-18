@@ -2512,5 +2512,5 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../../../assets/styles/orders_order_placement_options.css?v=4';
+@import '../../../../../assets/styles/orders_order_placement_options.css?v=1';
 </style>
