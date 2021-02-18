@@ -64,7 +64,7 @@
         </span>
         <div>
           <div class="phone-validation-description">
-             {{ $t('general.sendy_security_sms') }}
+            {{ $t('general.sendy_security_sms') }}
           </div>
 
           <div class="phone-verification-input">
@@ -98,10 +98,7 @@
 </template>
 
 <script>
-import {
-  mapGetters,
-  mapActions,
-} from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
 
@@ -190,7 +187,11 @@ export default {
           if (oldPhone !== phone) {
             this.validate = true;
             this.proceed_update = false;
-            this.doNotification(1, this.$t('general.phone_verification'), this.$t('general.phone_verification_sent'));
+            this.doNotification(
+              1,
+              this.$t('general.phone_verification'),
+              this.$t('general.phone_verification_sent'),
+            );
             this.sendVerificationCode(phone);
           }
           if (this.proceed_update) {
@@ -241,7 +242,11 @@ export default {
       this.requestPhoneVerificationVerify(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.doNotification(1, this.$t('general.phone_verification'), this.$t('general.phone_verification_successful'));
+            this.doNotification(
+              1,
+              this.$t('general.phone_verification'),
+              this.$t('general.phone_verification_successful'),
+            );
             this.proceed_update = true;
             this.validate = false;
             this.updateSessionData();
@@ -651,7 +656,7 @@ export default {
     .phone-validation-verify{
       color: #ecf0f1;
         background-color: #007FFF;
-        border-color: #1b7fc3;
+        border-color: #0062DB;
         cursor: pointer;
         border-radius: 4px;
         height: 40px;
@@ -663,7 +668,7 @@ export default {
     .phone-validation-cancel{
       color: #ecf0f1;
         background-color: #007FFF;
-        border-color: #1b7fc3;
+        border-color: #0062DB;
         cursor: pointer;
         border-radius: 4px;
         height: 40px;
