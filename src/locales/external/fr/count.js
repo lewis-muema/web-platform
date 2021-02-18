@@ -1,7 +1,7 @@
 
 const fr = {
-  increment: 'FR_Increment',
-  phone: 'FR_The phone number not valid',
+  increment: 'augmentation',
+  phone: 'Le numéro de téléphone n’est pas valide',
 
 };
 
