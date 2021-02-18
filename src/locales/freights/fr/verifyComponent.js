@@ -1,14 +1,14 @@
 
 const fr = {
-  terms_of_service: 'FR_Our terms of services',
-  acknowledge: 'FR_acknowledge that i have read and understood the terms of service',
-  application_submitted: 'FR_Your Application has been submitted',
-  thanks: 'FR_Thanks {logged_user} we have received your registration.',
-  customer_rep: 'FR_Our customer representative will contact you within 24 hrs with the next steps to activate your account and get you started.',
-  something_went_wrong: 'FR_Something went wrong.',
-  freight_final_setup: 'FR_Freight final setup failed',
-  agree_terms_condition: 'FR_Agree to Terms and Conditions',
-  terms_conditions_accepted: 'FR_Terms and Conditions accepted!',
+  terms_of_service: 'Nos conditions de services ',
+  acknowledge: 'Je reconnais avoir lu et compris les conditions de service.',
+  application_submitted: 'Votre candidature a été soumise ',
+  thanks: 'Merci {logged_user} nous avons reçu votre inscription.',
+  customer_rep: 'Notre représentant client vous contactera dans les 24 heures pour vous indiquer les prochaines étapes à suivre pour activer votre compte et vous aider à démarrer.',
+  something_went_wrong: "Quelque chose s'est mal passé.",
+  freight_final_setup: 'Échec de la configuration finale du fret',
+  agree_terms_condition: 'Accepter les termes et conditions ',
+  terms_conditions_accepted: 'Termes et conditions acceptés! ',
 };
 
 export default fr;
