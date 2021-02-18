@@ -381,6 +381,6 @@ export default {
 
 <style lang="css">
 @import 'https://fonts.googleapis.com/css?family=Nunito:300,400,500,700';
-@import './assets/styles/app.css?v=4';
-@import './assets/styles/overide.css?v=4';
+@import './assets/styles/app.css?v=1';
+@import './assets/styles/overide.css?v=1';
 </style>

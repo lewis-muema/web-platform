@@ -414,5 +414,5 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../../src/assets/styles/by_pass.css?v=4";
+@import "../../../../src/assets/styles/by_pass.css?v=1";
 </style>
