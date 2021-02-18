@@ -9,7 +9,7 @@ const en = {
   account: 'account',
   create_business_account: 'Create Business Account',
   new_delivery: 'New Delivery',
-  payment: 'payment',
+  payment: 'Payment',
   orders: 'Orders',
   freight_small: 'Freight',
   settings: 'Settings',
