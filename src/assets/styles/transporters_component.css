@@ -106,7 +106,7 @@
   width: 53%;
 }
 .request-quote-btn-color {
-  color: #1B7FC3;
+  color: #0062DB;
   border-width: 1px !important;
   background-color: white;
   cursor: pointer;
@@ -118,7 +118,7 @@
   padding-left: 20px;
   padding-right: 20px;
   font-size: 13px;
-  border-color: #1B7FC3;
+  border-color: #0062DB;
 }
 .freight-terms{
   margin-top: 6%;
@@ -136,7 +136,7 @@
   margin-bottom: 3%;
 }
 .transporter-name{
-  color: #1B7FC3;
+  color: #0062DB;
   margin-left: 5%;
 }
 .verification-success{
@@ -167,7 +167,7 @@
   width: 61%;
 }
 .view-transporter-info{
-  color: #1B7FC3;
+  color: #0062DB;
   font-weight: bold;
 }
 .truck-add-rating-align{
@@ -247,7 +247,7 @@
   text-transform: capitalize;
   font-size: 13px;
   letter-spacing: 1.1px;
-  background-color: #1B7FC3;;
+  background-color: #0062DB;;
   color: #fff;
   width: 94%;
   height: 46px;
@@ -298,10 +298,10 @@
   width: 2%;
 }
 .check-tranporters{
-  color: #1B7FC3;
+  color: #0062DB;
 }
 .transporter-doucuments-title{
-  color: #1B7FC3;
+  color: #0062DB;
 }
 .truck-title-info{
   font-weight: bold;
@@ -402,7 +402,7 @@
 }
 .view-transporter-mark{
   margin-top: 6%;
-  color: #1B7FC3;
+  color: #0062DB;
   cursor: pointer;
 }
 .freight-border-line{
@@ -443,10 +443,10 @@
   font-size: 15px;
   margin-top: 1%;
   font-weight: 500;
-  color: #1B7FC3;
+  color: #0062DB;
 }
 .view-transporter-documents{
-  color: #1B7FC3;
+  color: #0062DB;
   cursor: pointer;
 }
 .documents-highlight{
@@ -456,7 +456,7 @@
   margin: 2%;
 }
 .view-freight-document{
-  color: #1B7FC3;
+  color: #0062DB;
   cursor: pointer;
 }
 .freight-create-order{
@@ -686,7 +686,7 @@ li.suggestions_solr:last-child {
 }
 .document-upload-extra{
   font-size: 14px;
-  color: #1B7FC3;
+  color: #0062DB;
   font-weight: 500;
   cursor: pointer;
   margin-top: 11%;

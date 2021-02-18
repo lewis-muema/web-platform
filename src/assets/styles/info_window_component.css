@@ -320,19 +320,19 @@ ul.timeline > li#timeline_right.timelinePay:before {
   padding-left: 3px;
 }
 ul.timeline > li#timeline_right.confirmedReached:before {
-  background: #1b7fc3;
-  border: 4px solid #1b7fc3;
+  background: #0062DB;
+  border: 4px solid #0062DB;
   content: '';
 }
 ul.timeline > li#timeline_right.confirmedExpressReached:before {
-  background: #1b7fc3;
-  border: 4px solid #1b7fc3;
+  background: #0062DB;
+  border: 4px solid #0062DB;
   content: '';
   animation: pulse-blue 2s infinite;
 }
 ul.timeline > li#timeline_right.confirmedScheduled:before {
-  background: #1b7fc3;
-  border: 4px solid #1b7fc3;
+  background: #0062DB;
+  border: 4px solid #0062DB;
   content: '';
   animation: pulse-blue 2s infinite;
 }
@@ -342,8 +342,8 @@ ul.timeline > li#timeline_right.pickedReached:before {
   content: '';
 }
 ul.timeline > li#timeline_right.pickedExpressReached:before {
-  background: #1b7fc3;
-  border: 4px solid #1b7fc3;
+  background: #0062DB;
+  border: 4px solid #0062DB;
   content: '';
   animation: pulse-blue 2s infinite;
 }
@@ -353,8 +353,8 @@ ul.timeline > li#timeline_right.deliveredReached:before {
   content: '';
 }
 ul.timeline > li#timeline_right.deliveryEnrouteReached:before {
-  background: #1b7fc3;
-  border: 4px solid #1b7fc3;
+  background: #0062DB;
+  border: 4px solid #0062DB;
   content: '';
   animation: pulse-blue 2s infinite;
 }
@@ -592,19 +592,19 @@ ul.timeline > li#timeline_right.payedReached:before {
   /* width: 103px!important; */
 }
 .confirmedActive {
-  color: #1b7fc3;
+  color: #0062DB;
 }
 .pickedActive {
-  color: #1b7fc3;
+  color: #0062DB;
 }
 .deliveredActive {
-  color: #1b7fc3;
+  color: #0062DB;
 }
 .payedActive {
-  color: #1b7fc3;
+  color: #0062DB;
 }
 ul.inforbar_route_timeline:before {
-  background: #1b7fc3 !important;
+  background: #0062DB !important;
   height: 82% !important;
 }
 ul.inforbar_order_timeline:before {
@@ -769,10 +769,10 @@ button.default.action--slide-button {
 .pop_btn{
    width: 24% !important;
    background: #FFFFFF;
-   border: 1px solid #1B7FC3;
+   border: 1px solid #0062DB;
    box-sizing: border-box;
    border-radius: 3px;
-   color: #1B7FC3;
+   color: #0062DB;
 }
 .pop-message{
    font-size: 18px;
@@ -781,7 +781,7 @@ button.default.action--slide-button {
 }
 .warning-icon{
   font-size: 57px !important;
-  color: #1B7FC3 !important;
+  color: #0062DB !important;
 }
 .warning-icon-pstn{
   display: block;
@@ -799,8 +799,8 @@ button.default.action--slide-button {
 }
 .accept-cancell-btn{
   background: #FFFFFF !important;
-  color: #1B7FC3 !important;
-  border: 1px solid #1B7FC3 !important;
+  color: #0062DB !important;
+  border: 1px solid #0062DB !important;
 }
 .additional-notes-recipient{
   padding: 3px;
@@ -881,7 +881,7 @@ button.default.action--slide-button {
 .infor-top-change-details{
   margin: 3% 0px -2% 0px;
   font-style: italic;
-  color: #1B7FC3;
+  color: #0062DB;
   cursor: pointer;
 }
 .cancel-reason-description{

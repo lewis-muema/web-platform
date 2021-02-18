@@ -3255,12 +3255,12 @@ export default {
   margin-bottom: 2%;
 }
 .edit-location-icon{
-  color: #1B7FC3 !important;
+  color: #0062DB !important;
 }
 .cancellation-edit-inner{
   margin: 3% 0px 5% 0px;
   font-style: italic;
-  color: #1B7FC3;
+  color: #0062DB;
   cursor: pointer;
   font-size: 12px;
   padding-left: 19px;

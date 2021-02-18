@@ -10,7 +10,7 @@ button span {
 .button-primary {
   color: #ecf0f1;
   background-color: #007FFF;
-  border-color: #1b7fc3;
+  border-color: #0062DB;
   cursor: pointer;
   position: relative;
   display: block;
@@ -642,7 +642,7 @@ span.el-pagination__jump {
 .el-button.download_history{
   color: #ecf0f1 !important;
   background-color: #007FFF !important;
-  border-color: #1b7fc3 !important;
+  border-color: #0062DB !important;
   cursor: pointer;
   position: relative;
   display: block;
