@@ -52,7 +52,7 @@ nav ul li {
 	float: left;
 }
 nav ul li:hover {
-	background: #144e64;
+	background: #0062DB;
 }
 nav ul li:hover ul{
 
@@ -107,7 +107,7 @@ nav ul li .router-link-active{
     border-bottom: unset;
     cursor: auto;
     font-weight: 400;
-    color: #144e64 !important;
+    color: #0062DB !important;
 
 }
 .header__menuitem--active{

@@ -241,7 +241,7 @@ export default {
 }
 .warning-icon{
   font-size: 57px !important;
-  color: #1B7FC3 !important;
+  color: #0062DB !important;
 }
 .warning-icon-pstn{
   display: block;

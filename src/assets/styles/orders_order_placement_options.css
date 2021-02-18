@@ -250,7 +250,7 @@
 .confirm-label{
   font-size: 19px;
   font-weight: 400;
-  color: #1B7FC3;
+  color: #0062DB;
   letter-spacing: 0.02em;
 }
 ul.summary_timeline {
@@ -276,11 +276,11 @@ ul.summary_timeline > li {
 }
 ul.summary_timeline > li:before {
   /* content: ' '; */
-  background: #1B7FC3;
+  background: #0062DB;
   display: inline-block;
   position: absolute;
   border-radius: 50%;
-  border: 3px solid #1B7FC3;
+  border: 3px solid #0062DB;
   left: 20px;
   width: 14px;
   height: 14px;
@@ -371,7 +371,7 @@ ul.summary_timeline > li:before {
   color: #000000;
 }
 .timeout_count{
-  color: #1B7FC3;
+  color: #0062DB;
 }
 .summary-pop-up > div.el-dialog__wrapper > div > div.el-dialog__header{
   padding-top: 0% !important;

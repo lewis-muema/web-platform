@@ -176,24 +176,24 @@
                     <div class="edit-information-outer">
                       <p class="cancellation-edit-options align-inner-bar" v-if="checkEditOption()">
                         <i class="el-icon-location edit-location-icon" />
-                        {{$t('general.wrong_delivery_locations')}} 
+                        {{$t('general.wrong_delivery_locations')}}
                         <div class="cancellation-edit-inner" @click="showEditLocationsDialog()">
-                          {{$t('general.edit_locations')}} 
+                          {{$t('general.edit_locations')}}
                         </div>
                       </p>
 
                       <p class="cancellation-edit-options align-inner-bar" v-if="checkScheduleOption()">
                       <img src="https://images.sendyit.com/web_platform/tracking/calendar.svg" alt="" class="infobar-truck-img">
-                         {{$t('general.schedule_for_later')}} 
+                         {{$t('general.schedule_for_later')}}
                         <div class="cancellation-edit-inner" @click="showEditPickUpTime()">
-                        {{$t('general.schedule_order')}} 
+                        {{$t('general.schedule_order')}}
                         </div>
                       </p>
 
                     </div>
                     <div class="">
                       <div class="cancel-reason-title">
-                        {{$t('general.do_still_cancel_order')}} 
+                        {{$t('general.do_still_cancel_order')}}
                       </div>
                       <div class="action--slide-desc">
                         <button
@@ -202,7 +202,7 @@
                           class="action--slide-button cancellation-submit accept-cancell-btn"
                           @click="cancelStep(true)"
                         >
-                          {{$t('general.continue_cancel')}} 
+                          {{$t('general.continue_cancel')}}
                         </button>
                         <button
                           type="button"
@@ -210,7 +210,7 @@
                           class="action--slide-button cancellation-submit"
                           @click="cancelStep(false)"
                         >
-                          {{$t('general.no_cancel')}} 
+                          {{$t('general.no_cancel')}}
                         </button>
                       </div>
                     </div>
@@ -3253,12 +3253,12 @@ export default {
   margin-bottom: 2%;
 }
 .edit-location-icon{
-  color: #1B7FC3 !important;
+  color: #0062DB !important;
 }
 .cancellation-edit-inner{
   margin: 3% 0px 5% 0px;
   font-style: italic;
-  color: #1B7FC3;
+  color: #0062DB;
   cursor: pointer;
   font-size: 12px;
   padding-left: 19px;

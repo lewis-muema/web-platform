@@ -921,10 +921,10 @@ export default {
   width: 2%;
 }
 .check-tranporters{
-  color: #1B7FC3;
+  color: #0062DB;
 }
 .transporter-doucuments-title{
-  color: #1B7FC3;
+  color: #0062DB;
 }
 .truck-title-info{
   font-weight: bold;

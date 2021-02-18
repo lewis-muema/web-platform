@@ -930,7 +930,7 @@ export default {
   overflow-y: auto;
 }
 .listing-info{
-  border: 1px solid #1B7FC3;
+  border: 1px solid #0062DB;
   padding: 1rem;
   border-radius: 4px;
   width: 94% !important;
@@ -954,8 +954,8 @@ export default {
   height: 40px;
   transition: background-color 0.3s;
   font-size: 13px;
-  border-color: #1B7FC3;
-  background: #1B7FC3;
+  border-color: #0062DB;
+  background: #0062DB;
   border-radius: 4px;
   width: 30%;
 }

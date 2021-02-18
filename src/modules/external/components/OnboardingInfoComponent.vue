@@ -454,7 +454,7 @@ export default {
 .onboarding-verify{
     color: #ecf0f1;
     background-color: #007FFF;
-    border-color: #1b7fc3;
+    border-color: #0062DB;
     cursor: pointer;
     border-radius: 4px;
     height: 40px;
