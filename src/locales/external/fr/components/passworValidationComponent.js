@@ -1,14 +1,14 @@
 
 const fr = {
-  set_a_password: 'FR_Set a Password',
-  create_password: 'FR_Create Password',
-  enter_password: 'FR_Enter your password',
-  confirm_password: 'FR_Confirm Password',
-  confirm_your_password: 'FR_Confirm your password',
-  back: 'FR_Back',
-  Next: 'FR_next',
-  set_password: 'FR_Set Password',
-  not_match: 'FR_Password does not match. Please try again',
+  set_a_password: 'configurer un mot de passe',
+  create_password: 'Créer un mot de passe',
+  enter_password: 'Tapez votre mot de passe',
+  confirm_password: 'Confirmez le mot de passe ',
+  confirm_your_password: 'confirmer votre mot de passe',
+  back: 'Retour',
+  Next: 'Suivant',
+  set_password: 'Définir le mot de passe',
+  not_match: 'Le mot de passe ne correspond pas. Veuillez réessayer',
 
 };
 

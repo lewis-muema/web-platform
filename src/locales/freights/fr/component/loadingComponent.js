@@ -1,6 +1,6 @@
 
 const fr = {
-  loading_Data: 'FR_Loading Data',
+  loading_Data: 'chargement des données',
 };
 
 export default fr;

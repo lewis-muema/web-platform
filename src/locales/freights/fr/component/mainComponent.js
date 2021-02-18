@@ -1,9 +1,9 @@
 
 const fr = {
-  dashboard: 'FR_Dashboard',
-  transporters: 'FR_Transporters',
-  orders: 'FR_Orders',
-  settings: 'FR_Settings',
+  dashboard: 'tableau de bord',
+  transporters: 'transporteurs',
+  orders: 'Les commandes',
+  settings: 'Parametres',
   shipment: 'FR_Shipments',
   activity_log: 'FR_Activity Log',
 

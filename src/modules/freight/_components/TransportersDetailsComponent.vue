@@ -603,9 +603,13 @@ export default {
     }),
     fetchOwnerDetail() {
       this.loading = true;
+      const payload = {
+        owner_id: parseInt(this.$route.params.id, 10),
+      };
       const fullPayload = {
-        app: 'ORDERS_APP',
-        endpoint: `v2/freight/owner/${parseInt(this.$route.params.id, 10)}`,
+        values: payload,
+        app: 'PARTNERS_APP',
+        endpoint: 'transporter_details',
       };
 
       this.getOwnersDetail(fullPayload).then(
