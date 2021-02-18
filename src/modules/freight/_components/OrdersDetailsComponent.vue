@@ -271,7 +271,7 @@
           class=""
         >
           <div class="order-info-header align-documents-data">
-            Quatations
+            Quotations
             {{
               freightOrderDetail.quotations.length > 0
                 ? `(${freightOrderDetail.quotations.length})`
