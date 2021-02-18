@@ -271,7 +271,7 @@
           class=""
         >
           <div class="order-info-header align-documents-data">
-            Quatations
+            Quotations
             {{
               freightOrderDetail.quotations.length > 0
                 ? `(${freightOrderDetail.quotations.length})`
@@ -358,7 +358,9 @@
             >
               <div v-if="!verification_stage">
                 <div class="">
-                  <div class="decline-text-option decline-documemt-extend request-shipment-header">
+                  <div
+                    class="decline-text-option decline-documemt-extend request-shipment-header outline-info-value"
+                  >
                     Award Shipment to
                     {{ awardedTransporter.name }}
                   </div>
@@ -466,7 +468,9 @@
               </div>
               <div v-else>
                 <div class="">
-                  <div class="decline-text-option decline-documemt-extend request-shipment-header">
+                  <div
+                    class="decline-text-option decline-documemt-extend request-shipment-header outline-info-value"
+                  >
                     Are you sure you want to award
                     {{ awardedTransporter.name }}
                     ?

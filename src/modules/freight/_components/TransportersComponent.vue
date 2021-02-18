@@ -843,7 +843,7 @@ export default {
         this.doNotification(
           2,
           'Unable to create shipment request!',
-          'Kindly provide all values for request to to submitted',
+          'Kindly provide all values for request to be submitted',
         );
       } else {
         let acc = {};
