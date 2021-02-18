@@ -52,7 +52,7 @@ nav ul li {
 	float: left;
 }
 nav ul li:hover {
-	background: #0062DB;
+	background: #0062DB !important;
 }
 nav ul li:hover ul{
 
