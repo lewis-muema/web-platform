@@ -2254,7 +2254,6 @@ export default {
       );
     },
     cancelBtnState() {
-      console.log(this.tracking_data.delivery_status, this.user_state, this.cancellation_state);
       return this.tracking_data.delivery_status < 2 && this.user_state && this.cancellation_state;
     },
     disablePop() {
