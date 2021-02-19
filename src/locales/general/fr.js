@@ -850,7 +850,7 @@ const translations = {
   confirm_password: 'FR_Confirm Password',
   price_update:'Mise à jour des prix',
   today: 'FR_Today',
-  tommorow: 'demain',
+  tommorow: 'Demain',
 
 };
 
