@@ -442,7 +442,7 @@ const translations = {
   failed_to_fetch_child_orders: 'Les ordres enfants ont été échoué à récupérer',
   minimum_amount: 'Montant minimum',
   share_status: "Partager l'état",
-  expand_info: 'FR_FR_Expand Info',
+  expand_info: 'Développer les informations ',
   cancel_order: 'Annuler la commande',
   sure_to_cancel: 'Vous etes sûr de vouloir annuler ?',
   incur_cancelation_cost: 'FR_FR_You may incur cost on cancellation. Please confirm order details in future before placing an order',
