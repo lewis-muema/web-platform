@@ -473,7 +473,7 @@ export default {
           this.vehicleRegistration = `Vehicle \u00A0:\u00A0 ${data.rider.number_plate}`;
           this.speedData = `Speed \u00A0:\u00A0 ${riderLocationDetails.speed.toFixed(2)}kmph`;
           this.riderLastSeen = 'Tracker \u00A0:\u00A0 No Signal';
-          this.extraNotificationInfo = '(This could be due to network issues)';
+          this.extraNotificationInfo = `(${this.$t('general.network_issues')})`;
           this.activeStateIcon = `${this.vendor_icon_id}_offline`;
           this.vendorStatus = 'offline';
         }

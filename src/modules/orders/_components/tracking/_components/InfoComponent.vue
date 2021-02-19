@@ -511,7 +511,7 @@
                 <div v-if="show_price_split && price_request_validity && !location_loading">
                   <div class="price-split-separator">
                     <div class="price-estimate-header">
-                      <i class="el-icon-circle-check price-summary-icon"></i>Price update
+                      <i class="el-icon-circle-check price-summary-icon"></i> {{$t('general.price_update')}} 
                     </div>
                   </div>
 
@@ -866,7 +866,7 @@
                       <input
                         class="button-primary add-instructions-submit"
                         type="submit"
-                        value="Schedule order"
+                        :value="$t('general.schedule_order')"
                         @click="updateScheduledTime()"
                       />
                     </div>
