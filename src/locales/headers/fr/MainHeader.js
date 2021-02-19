@@ -1,7 +1,7 @@
 const fr = {
-  transportation: 'FR_TRANSPORTATION',
+  transportation: 'TRANSPORTATION',
   freight: 'Fret',
-  helpline: 'FR_Helpline',
+  helpline: 'Assistance téléphonique',
   hi: 'Salut',
   menu: 'Carte',
   switch_to: 'Passer à to',

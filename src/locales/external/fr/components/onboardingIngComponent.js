@@ -6,7 +6,7 @@ const fr = {
   back: 'Retour',
   next: 'Suivant',
   enter_verification_code: 'code de vérification',
-  verification_sms: "Pour votre sécurité, Sendy veut s’assurer que c’est vraiment vous. Nous enverrons un message avec votre code de vérification.",
+  verification_sms: 'Pour votre sécurité, Sendy veut s’assurer que c’est vraiment vous. Nous enverrons un message avec votre code de vérification.',
   cancel: 'Annuler',
   verify: 'vérifier',
   enter_phone: 'Entrer un numéro de téléphone',
