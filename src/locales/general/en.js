@@ -871,7 +871,7 @@ const translations = {
   use_promocode: 'Use promocode',
   expiry: 'Expiry',
   confirm_password: 'Confirm Password',
-  price_update:'Price update',
+  price_update: 'Price update',
   today: 'Today',
   tommorow: 'tommorrow',
 

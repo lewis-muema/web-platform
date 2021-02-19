@@ -21,7 +21,7 @@ const fr = {
   sendy_sms: 'Pour votre sécurité, Sendy veut s’assurer que c’est vraiment vous. Un SMS avec votre code de vérification',
   verification_code: 'Entrez le code de vérification',
   code: 'Code',
-  enter_phone_number:'Saisir numero de telephone',
+  enter_phone_number: 'Saisir numero de telephone',
   telephone: 'Téléphone ',
   sign_up: "S'inscrire ",
   sign_up_status: "L'inscription en cours",
