@@ -2,7 +2,7 @@
 const fr = {
   congrats: 'Toutes nos félicitations ',
   enjoy_services: 'Vous pouvez maintenant profiter des services Sendy au travail et à la maison!',
-  double_convinience: "Woah - c’est le double de la commodité!",
+  double_convinience: 'Woah - c’est le double de la commodité!',
   account_connected: "Vos deux comptes sont maintenant connectés et vous pouvez accéder à l'un ou l'autre compte avec le mot de passe que vous avez sélectionné.",
   login_account: 'Connectez-vous à tout moment à vos deux profils de compte en utilisant les e-mails ci-dessous.',
   account_created: 'Votre compte a maintenant été créé et vous pouvez accéder au compte avec votre. mot de passe sélectionné.',

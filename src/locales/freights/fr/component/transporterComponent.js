@@ -44,7 +44,7 @@ const fr = {
   failed_to_load: 'Échec du chargement des détails du transporteur ',
   unable_to_load: 'Impossible de charger les détails du transporteur',
   find_transporter_error: 'Trouver une erreur de transporteur! ',
-  search_by_name: "Veuillez fournir toutes les valeurs.",
+  search_by_name: 'Veuillez fournir toutes les valeurs.',
   not_indicated: 'FR_Not Indicated!',
   create_shipment_request: 'FR_Create a Shipment Request',
   shipment_sent: 'FR_Shipment sent successfully!',
