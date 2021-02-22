@@ -58,7 +58,7 @@
         prop="order_date"
       >
         <template slot-scope="props">
-          {{ convertToUTCToLocal(order_history_data[props.$index]['pickup_time']) | moment }}
+          {{ order_history_data[props.$index]['pickup_time'] | moment }}
         </template>
       </el-table-column>
 

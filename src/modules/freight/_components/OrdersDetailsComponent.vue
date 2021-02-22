@@ -48,7 +48,7 @@
                     >
                     <span class="order-info-header">Pick up time</span>
                     <div class="freight-order-info-extra">
-                      {{ convertToUTCToLocal(freightOrderDetail.pickup_time) }}
+                      {{ moment(freightOrderDetail.pickup_time).format('DD-MM-YYYY HH:mm') }}
                     </div>
                   </div>
                   <div class="order_details_desc_item order-details-schedule-time">
