@@ -22,6 +22,7 @@ module.exports = {
   HUBSPOT_URL: '"https://api.hsforms.com/submissions/v3/integration/submit/"',
   ADONIS_PRIVATE_API: '"https://authtest.sendyit.com/adonis/"',
   ORDERS_APP: '"https://authtest.sendyit.com/orders/"',
+  CUSTOMERS_APP: '"https://authtest.sendyit.com/customers/"',
   OWNER_SEARCH: '"https://gate.sendyit.com/solr/ownerstaging/"',
   PARTNERS_APP: '"https://authtest.sendyit.com/partners/"',
   FREIGHT_APP: '"https://authtest.sendyit.com/freight-service/"',

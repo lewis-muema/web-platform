@@ -68,7 +68,10 @@
               :key="method.payment_method_id"
               class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
             >
-              <div class="home-view-notes-wrapper--item__option">
+              <div
+                v-if="method.name !== 'Promocode'"
+                class="home-view-notes-wrapper--item__option"
+              >
                 <div class="home-view-notes-wrapper--item__option-div payment__radio-button-label">
                   <input
                     v-model="payment_method"
@@ -237,7 +240,10 @@
         </span>
       </div>
     </div>
-
+    <PromoCodesComponent
+      :hide-payment="hide_payment"
+      @promoCodeDetails="setPromoCodeDetails"
+    />
     <div
       class="home-view-place-order"
       :class="loader_class"
@@ -530,6 +536,9 @@
 </template>
 
 <script>
+/* eslint-disable camelcase */
+/* eslint-disable max-len */
+
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import numeral from 'numeral';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -544,6 +553,8 @@ import PaymentMxn from '../../../../../mixins/payment_mixin';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
+import PromoCodesComponent from './PromoCodesComponent.vue';
+import PromocodesMixin from '../../../../../mixins/promocodes_mixin';
 
 library.add(faChevronDown, faPlusCircle, faArrowLeft, faTrashAlt);
 
@@ -552,8 +563,8 @@ const TRUCK_VENDORS = [20, 25];
 
 export default {
   name: 'OrderOptions',
-  components: {},
-  mixins: [Mcrypt, PaymentMxn, TimezoneMxn, EventsMixin, NotificationMxn],
+  components: { PromoCodesComponent },
+  mixins: [Mcrypt, PaymentMxn, TimezoneMxn, EventsMixin, NotificationMxn, PromocodesMixin],
   data() {
     return {
       schedule_time: this.moment(),
@@ -601,6 +612,7 @@ export default {
       activeSavedCard: '',
       saveCardState: false,
       deletedCardIndex: '',
+      couponDetails: null,
     };
   },
 
@@ -697,9 +709,16 @@ export default {
     },
 
     hide_payment() {
+      // check if running balance plus promocode will cover the order amount
+      let couponAmount = 0;
+      if (this.couponDetails !== null) {
+        const discountedAmount = this.calculateCouponAmount(this.order_cost, this.couponDetails);
+        couponAmount = this.order_cost < discountedAmount ? this.order_cost : discountedAmount;
+      }
+
       return (
         this.getPriceRequestObject.payment_option === 2
-        || this.getRunningBalance - this.order_cost >= 0
+        || this.getRunningBalance + couponAmount - this.order_cost >= 0
       );
     },
 
@@ -831,6 +850,9 @@ export default {
   },
 
   watch: {
+    notification(obj) {
+      this.displayNotification(obj);
+    },
     addCardStatus(val) {
       if (val) {
         setTimeout(() => {
@@ -987,6 +1009,8 @@ export default {
 
     onSubmit() {
       if (this.vgs_valid_payment) {
+        const amountToPay = this.effectDiscount(this.pending_amount);
+
         const session = this.$store.getters.getSession;
         const accData = session[session.default];
         const firstName = accData.user_name.split(' ')[0];
@@ -994,7 +1018,7 @@ export default {
         const newCardPayload = {
           currency: this.activeVendorPriceData.currency,
           country: this.getCountryCode,
-          amount: this.pending_amount.replace(',', ''),
+          amount: amountToPay,
           email: accData.user_email,
           phonenumber: accData.user_phone,
           firstname: firstName,
@@ -1056,6 +1080,8 @@ export default {
 
     chargeSavedCard() {
       if (this.valid_vgs_saved_card) {
+        const amountToPay = this.effectDiscount(this.pending_amount);
+
         const session = this.$store.getters.getSession;
         const accData = session[session.default];
         const firstName = accData.user_name.split(' ')[0];
@@ -1066,7 +1092,7 @@ export default {
               ? this.get_saved_cards[this.activeSavedCard].card
               : '',
           currency: this.activeVendorPriceData.currency,
-          amount: this.pending_amount.replace(',', ''),
+          amount: amountToPay,
           country: this.getCountryCode,
           email: accData.user_email,
           phonenumber: accData.user_phone,
@@ -1284,7 +1310,7 @@ export default {
       const session = this.$store.getters.getSession;
       const acc = session.default;
       accData = session[session.default];
-      this.trackMixpanelEvent('Order Summary Confirm Button - Clicked', {
+      this.trackMixpanelEvent('Confirm Order', {
         'Account Type': acc === 'peer' ? 'Personal' : 'Business',
         'Client Type': 'Web Platform',
         'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,
@@ -1408,10 +1434,15 @@ export default {
         } else if (Number(this.payment_method) === 11) {
           this.handleRunningBalancePayments();
         } else if (Number(this.payment_method) === 2) {
-          if (this.addCardStatus) {
-            this.onSubmit();
+          const amountToPay = this.effectDiscount(this.raw_pending_amount);
+          if (amountToPay > 0) {
+            if (this.addCardStatus) {
+              this.onSubmit();
+            } else {
+              this.chargeSavedCard();
+            }
           } else {
-            this.chargeSavedCard();
+            this.doCompleteOrder();
           }
         } else {
           // console.log('not handled payment method', this.payment_method);
@@ -1420,9 +1451,21 @@ export default {
 
       return true;
     },
+    effectDiscount(amount) {
+      let rawAmount = amount.replace(',', '');
 
+      if (this.couponDetails !== null) {
+        const discountedAmount = this.calculateCouponAmount(rawAmount, this.couponDetails);
+        const couponAmount = rawAmount < discountedAmount ? rawAmount : discountedAmount;
+        // eslint-disable-next-line operator-assignment
+        rawAmount = rawAmount - couponAmount;
+      }
+      return rawAmount;
+    },
     handleMpesaPayments() {
-      if (this.payment_is_to_be_requested) {
+      const amountToPay = this.effectDiscount(this.raw_pending_amount);
+
+      if (this.payment_is_to_be_requested && amountToPay > 0) {
         this.requestMpesaPayment();
         return false;
       }
@@ -1600,6 +1643,15 @@ export default {
                   },
                 });
               }
+              const discountedAmount = this.calculateCouponAmount(this.full_order_cost, this.couponDetails);
+
+              const couponData = {
+                coupon_code: this.couponDetails.couponName,
+                coupon_amount: this.full_order_cost < discountedAmount ? this.full_order_cost : discountedAmount,
+                is_cancelled: false,
+                coupon_type: this.couponDetails.couponCodeType,
+              };
+              this.useCoupon(couponData);
             } else {
               this.doNotification(
                 2,
@@ -1688,6 +1740,14 @@ export default {
           sim_card_sn: this.getPairSerialNumber,
           rider_phone: this.getPairRiderPhone,
           order_no: this.order_no,
+        };
+      }
+
+      if (this.couponDetails !== null) {
+        const discountedAmount = this.calculateCouponAmount(this.full_order_cost, this.couponDetails);
+        payload.promo_code_details = {
+          discount_amount: this.full_order_cost < discountedAmount ? this.full_order_cost : discountedAmount,
+          promo_code: this.couponDetails.couponName,
         };
       }
 
@@ -1951,9 +2011,10 @@ export default {
         userPhone = session.peer.user_phone;
         userEmail = session.peer.user_email;
       }
+      const amountToPay = this.effectDiscount(this.raw_pending_amount);
 
       const mpesaPayload = {
-        amount: this.raw_pending_amount.replace(',', ''),
+        amount: amountToPay,
         sourceMobile: userPhone,
         referenceNumber,
         user_id: userId,
@@ -2434,6 +2495,25 @@ export default {
       }
       return resp;
     },
+    setPromoCodeDetails(promoCodeDetails) {
+      this.couponDetails = promoCodeDetails;
+    },
+    calculateCouponAmount(orderAmount, couponDetails) {
+      // eslint-disable-next-line no-unused-vars
+      let amount = orderAmount;
+      if (couponDetails.couponCodeType === 1) {
+        amount = couponDetails.couponBalance;
+      } else {
+        const calculatedAmount = couponDetails.couponBalance * orderAmount;
+        // eslint-disable-next-line max-len
+        amount = calculatedAmount > couponDetails.maxDiscountAmount ? couponDetails.maxDiscountAmount : calculatedAmount;
+      }
+
+      const couponAmount = orderAmount < amount ? orderAmount : amount;
+      this.payment_method = this.getRunningBalance + couponAmount - orderAmount >= 0 ? 11 : this.payment_method;
+      return amount;
+    },
+
   },
 };
 </script>

@@ -1096,8 +1096,10 @@ export default {
           if (workingResponse.status) {
             this.doNotification(1, 'Document approval!', 'Document approved successfully');
             this.fetchOrderDetail(this.$route.params.id);
-          } else {
+          } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
             this.doNotification(2, 'Failed to approve document!', workingResponse.message);
+          } else {
+            this.doNotification(2, 'Failed to approve document!', workingResponse.reason);
           }
         },
         (error) => {
@@ -1156,12 +1158,13 @@ export default {
 
           if (workingResponse.status) {
             this.doNotification(1, 'Document declined!', 'Document declined successfully');
-            this.closeDeclineDialog();
             this.fetchOrderDetail(this.$route.params.id);
-          } else {
+          } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
             this.doNotification(2, 'Failed to decline document!', workingResponse.message);
-            this.closeDeclineDialog();
+          } else {
+            this.doNotification(2, 'Failed to decline document!', workingResponse.reason);
           }
+          this.closeDeclineDialog();
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {

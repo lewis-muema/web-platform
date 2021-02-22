@@ -175,20 +175,24 @@ const fetchSuggestions = function fetchSuggestions({ dispatch, commit }, values)
     }).then(
       (response) => {
         const concatenated = [];
-        response.data.saved_locations.reverse().forEach((row) => {
-          row.location_type = 'saved';
-          row.address = row.more.Address === 'Not Indicated'
-            ? row.name
-            : row.more.Address.replace(`${row.name}, `, '');
-          concatenated.push(row);
-        });
-        response.data.frequent_locations.reverse().forEach((row) => {
-          row.location_type = 'frequent';
-          row.address = row.more.Address === 'Not Indicated'
-            ? row.name
-            : row.more.Address.replace(`${row.name}, `, '');
-          concatenated.push(row);
-        });
+        if (response.data.saved_locations) {
+          response.data.saved_locations.reverse().forEach((row) => {
+            row.location_type = 'saved';
+            row.address = row.more.Address === 'Not Indicated'
+              ? row.name
+              : row.more.Address.replace(`${row.name}, `, '');
+            concatenated.push(row);
+          });
+        }
+        if (response.data.frequent_locations) {
+          response.data.frequent_locations.reverse().forEach((row) => {
+            row.location_type = 'frequent';
+            row.address = row.more.Address === 'Not Indicated'
+              ? row.name
+              : row.more.Address.replace(`${row.name}, `, '');
+            concatenated.push(row);
+          });
+        }
         commit('setSuggestions', concatenated);
       },
       (error) => {
@@ -215,6 +219,36 @@ const requestIndustries = function requestIndustries({ dispatch }, payload) {
     );
   });
 };
+const requestPromoCodePayment = function requestPromoCodePayment({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
+const updateSocialApprovalStatus = function updateSocialApprovalStatus({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPatch', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   fetchOngoingOrders,
   connectMqtt,
@@ -227,4 +261,6 @@ export default {
   saveSuggestions,
   removeSuggestions,
   requestIndustries,
+  requestPromoCodePayment,
+  updateSocialApprovalStatus,
 };

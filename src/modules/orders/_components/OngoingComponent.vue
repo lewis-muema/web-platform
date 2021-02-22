@@ -27,10 +27,10 @@
           >
             <div class="ongoing--card-location">
               <div class="ongoing--card-padded">
-                <span>{{ order.from_name }}</span>
+                <span class="ongoing-card-text">{{ order.from_name }}</span>
               </div>
               <div class="">
-                <span>{{ order.to_name }}</span>
+                <span class="ongoing-card-text">{{ order.to_name }}</span>
               </div>
             </div>
             <div class="ongoing--card-status">
@@ -298,5 +298,8 @@ border-radius: 0px 0px 3px 3px;
 }
 .ongoing--column{
   width: 105%;
+}
+.ongoing-card-text{
+  color: #555;
 }
 </style>

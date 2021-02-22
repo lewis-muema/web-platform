@@ -1,7 +1,5 @@
 <template lang="html">
-  <div
-    class="homeview--inner"
-  >
+  <div class="homeview--inner">
     <!-- <div class="homeview--form__header">
          New Delivery
      </div> -->
@@ -811,7 +809,11 @@ export default {
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'crisis_notification')) {
-            this.doNotification(3, error.response.data.reason, error.response.data.crisis_notification.msg);
+            this.doNotification(
+              3,
+              error.response.data.reason,
+              error.response.data.crisis_notification.msg,
+            );
           } else {
             this.doNotification(
               3,

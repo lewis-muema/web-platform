@@ -661,6 +661,9 @@ span.el-pagination__jump {
 .updateNotificationsDialog > div > div.el-dialog__header{
   padding: 0px 20px 10px !important;
 }
+.scheduleDialog > div{
+  width: 23% !important;
+}
 .el-dialog{
   max-height: 75%;
   overflow-y: auto;
@@ -712,4 +715,50 @@ div.pac-container {
 }
 .el-upload-list__item-name{
   display: none !important;
+}
+.promocode-input >.el-input-group__append {
+  color: #fff !important;
+  background: #527CBD !important;
+  border-radius: 8px;
+  vertical-align: inherit;
+}
+.promocode-redeem > .el-input__inner {
+  margin-left: -50px;
+  color: white;
+  -webkit-appearance: none;
+  width: 6em;
+  background: #527CBD;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 0;
+}
+.promocode-redeem {
+  margin-left: -50px;
+  color: white;
+  -webkit-appearance: none;
+  width: 6em;
+  background: #527CBD;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 0;
+}
+.promocode-redeem-input > .el-input__inner{
+    border-radius: 8px 0 0 8px;
+    flex-grow:2;
+    border:none;
+}
+
+.promocode-redeem-input > .el-input__inner:focus {
+  outline: none;
+}
+.redeem-button span {
+  display: block;
+  padding: 0;
+}
+.el-button--primary.is-disabled:hover, .button--primary-inactive:hover, .button--primary-inactive:focus {
+  color: #fff !important;
+  background-color:  rgba(0,0,0,0.50) !important;
+  border-color: rgba(0,0,0,0.50) !important;
+  cursor: not-allowed;
+
 }

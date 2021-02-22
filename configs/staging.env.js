@@ -20,10 +20,11 @@ module.exports = {
   ELASTIC_APM_DISTRIBUTED_TRACING_ORIGINS: '"https://authtest.sendyit.com"',
   HUBSPOT_URL: '"https://api.hsforms.com/submissions/v3/integration/submit/"',
   ADONIS_PRIVATE_API: '"https://auth.staging.sendyit.com/adonis/"',
-  ORDERS_APP: '"https://auth.sendyit.com/orders/"',
-  OWNER_SEARCH: '"https://gate.sendyit.com/solr/owner/"',
   PARTNERS_APP: '"https://auth.sendyit.com/partners/"',
   FREIGHT_APP: '"https://auth.sendyit.com/freight-service/"',
+  ORDERS_APP: '"https://auth.sendyit.com/orders/"',
+  OWNER_SEARCH: '"https://gate.sendyit.com/solr/owner/"',
+  CUSTOMERS_APP: '"https://auth.sendyit.com/customers/"',
   VGS_VAULT_ID: '"tntr6hr8zz0"',
   VGS_ENVIRONMENT: '"live"',
 };

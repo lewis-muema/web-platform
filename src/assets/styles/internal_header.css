@@ -23,7 +23,7 @@
 
 }
 .header--item__right{
-    margin-right: 5em;
+    margin-right: 2em;
 }
 .logo{
     height: 50px;
@@ -196,25 +196,26 @@ a.menu--last-child-link {
 .active_segmentation_menu{
   background: #FFFFFF;
   border-radius: 6px;
-  margin-top: 8%;
+  margin-top: 15%;
   width: 105%;
   margin-left: -1%;
-  height: 21% !important;
+  height: 8% !important;
 }
 .header--icon{
   display: flex;
 }
 .segmentation-align{
-  margin-left: 1%;
-  padding: 1.7em 39px;
+  margin-left: 3%;
+  margin-left: 3%;
+  padding: 1.5em 40px;
 }
 .disable_segmentation_menu{
   background: none;
   border-radius: 6px;
-  margin-top: 8%;
+  margin-top: 15%;
   width: 105%;
   margin-left: -1%;
-  height: 21% !important;
+  height: 8% !important;
 }
 .logistics-tab{
   margin-right: 20%;
@@ -223,7 +224,7 @@ a.menu--last-child-link {
   color: #fff !important;
   text-transform: uppercase;
 }
-@media only screen and (max-width: 1342px) {
+@media only screen and (max-width: 1294px) {
   .helpline-contact {
     display: none !important;
   }

@@ -436,4 +436,19 @@ export default {
       );
     });
   },
+  requestPromoCodePayment({ dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosPost', payload, {
+        root: true,
+      }).then(
+        (response) => {
+          resolve(response);
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
+
 };
