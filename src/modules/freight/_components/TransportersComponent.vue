@@ -90,7 +90,16 @@
             </div>
           </div>
 
-          <div class="next-terms-holder">
+          <div
+            v-if="processing"
+            v-loading="processing"
+            class="freight-loading-container"
+          />
+
+          <div
+            v-if="!processing"
+            class="next-terms-holder"
+          >
             <input
               v-model="submit_text"
               class="button-primary terms-btn-color search-transporter"
@@ -143,7 +152,7 @@
                 >
                   <el-input
                     v-model="query"
-                    placeholder="Search by name"
+                    placeholder="Search for a Transporter"
                     autocomplete="off"
                     :prepare-response-data="prepareResponseData"
                     @keydown.down="down"
@@ -155,7 +164,7 @@
                   >
                     <i
                       slot="suffix"
-                      class="el-input__icon el-icon-search"
+                      class="el-input__icon el-icon-search freight-search"
                     />
                   </el-input>
 
@@ -419,7 +428,16 @@
               </div>
             </div>
 
-            <div class="decline-documemt-extend decline-button-align">
+            <div
+              v-if="process_shipment"
+              v-loading="process_shipment"
+              class="freight-loading-container"
+            />
+
+            <div
+              v-if="!process_shipment"
+              class="decline-documemt-extend decline-button-align"
+            >
               <button
                 type="button"
                 name="button"
@@ -509,11 +527,11 @@ export default {
       shipmentOffer: [
         {
           value: true,
-          label: 'Yes, i want to make a price offer',
+          label: 'Yes, I want to make a price offer',
         },
         {
           value: false,
-          label: 'No, i want transporters to bid',
+          label: 'No, I want transporters to bid',
         },
       ],
       trucks_no: 1,
@@ -526,6 +544,8 @@ export default {
       DOM: '',
       pickup_value: '',
       destination_value: '',
+      processing: false,
+      process_shipment: false,
     };
   },
   computed: {
@@ -759,6 +779,7 @@ export default {
         && this.pickup_value !== ''
         && this.destination_value !== ''
       ) {
+        this.processing = true;
         this.doFilterOwners();
       } else {
         this.doNotification(2, 'Find transporters error !', 'Kindly provide all values');
@@ -806,9 +827,11 @@ export default {
             this.doNotification(2, 'Unable to filter transporters!', workingResponse.message);
             this.owners_list = [];
           }
+          this.processing = false;
         },
         (error) => {
           this.fetchOwnersListing();
+          this.processing = false;
         },
       );
     },
@@ -846,6 +869,7 @@ export default {
           'Kindly provide all values for request to be submitted',
         );
       } else {
+        this.process_shipment = true;
         let acc = {};
         const session = this.$store.getters.getSession;
         if ('default' in session) {
@@ -900,6 +924,7 @@ export default {
               );
             }
             this.resetQuatationDialog();
+            this.process_shipment = false;
           },
           (error) => {
             if (Object.prototype.hasOwnProperty.call(error, 'message')) {
@@ -912,6 +937,7 @@ export default {
               );
               this.resetQuatationDialog();
             }
+            this.process_shipment = false;
           },
         );
       }
@@ -1057,6 +1083,14 @@ export default {
   width: 100%;
 }
 .align-filters-section{
-  margin-bottom: 7%;
+  margin-bottom: 4%;
+}
+.freight-loading-container {
+  height: 1rem;
+  margin-bottom: 10px;
+  margin-top: 15%;
+}
+.freight-search{
+  color : #1782c5;
 }
 </style>

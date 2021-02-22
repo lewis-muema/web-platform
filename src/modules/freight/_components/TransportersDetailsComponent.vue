@@ -466,7 +466,16 @@
                   </div>
                 </div>
 
-                <div class="decline-documemt-extend decline-button-align send-quote--outer">
+                <div
+                  v-if="process_shipment"
+                  v-loading="process_shipment"
+                  class="freight-loading-container"
+                />
+
+                <div
+                  v-if="!process_shipment"
+                  class="decline-documemt-extend decline-button-align send-quote--outer"
+                >
                   <button
                     type="button"
                     name="button"
@@ -551,11 +560,11 @@ export default {
       shipmentOffer: [
         {
           value: true,
-          label: 'Yes, i want to make a price offer',
+          label: 'Yes, I want to make a price offer',
         },
         {
           value: false,
-          label: 'No, i want transporters to bid',
+          label: 'No, I want transporters to bid',
         },
       ],
       trucks_no: 1,
@@ -567,6 +576,7 @@ export default {
       DOM: '',
       pickup_value: '',
       destination_value: '',
+      process_shipment: false,
     };
   },
   computed: {
@@ -823,6 +833,7 @@ export default {
           'Kindly provide all values for request to be submitted',
         );
       } else {
+        this.process_shipment = true;
         let acc = {};
         const session = this.$store.getters.getSession;
         if ('default' in session) {
@@ -880,6 +891,7 @@ export default {
               );
             }
             this.resetQuatationDialog();
+            this.process_shipment = false;
           },
           (error) => {
             if (Object.prototype.hasOwnProperty.call(error, 'message')) {
@@ -892,6 +904,7 @@ export default {
               );
               this.resetQuatationDialog();
             }
+            this.process_shipment = false;
           },
         );
       }
