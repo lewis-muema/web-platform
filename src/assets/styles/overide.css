@@ -707,3 +707,10 @@ div.pac-container {
 .el-upload-list__item-name{
   display: none !important;
 }
+.el-progress__text{
+  font-size: 11px !important;
+}
+.el-progress-circle{
+  height: 40px !important;
+  width: 40px !important;
+}
