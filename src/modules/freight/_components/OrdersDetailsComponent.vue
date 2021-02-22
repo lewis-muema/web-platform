@@ -262,23 +262,24 @@
                         <div
                           v-if="checkActionableBtnState"
                           class=""
-                        />
-                        <button
-                          type="button"
-                          class="button-primary approve-documents-action freight-approve-doc"
-                          name="create_order_text"
-                          @click="approveDoc(val)"
                         >
-                          {{ approve_doc_text }}
-                        </button>
-                        <button
-                          type="button"
-                          class="approve-documents-action freight-decline-doc"
-                          name="create_order_text"
-                          @click="declineDialog(val)"
-                        >
-                          {{ decline_doc_text }}
-                        </button>
+                          <button
+                            type="button"
+                            class="button-primary approve-documents-action freight-approve-doc"
+                            name="create_order_text"
+                            @click="approveDoc(val)"
+                          >
+                            {{ approve_doc_text }}
+                          </button>
+                          <button
+                            type="button"
+                            class="approve-documents-action freight-decline-doc"
+                            name="create_order_text"
+                            @click="declineDialog(val)"
+                          >
+                            {{ decline_doc_text }}
+                          </button>
+                        </div>
                       </div>
                     </div>
                     <div v-else>
