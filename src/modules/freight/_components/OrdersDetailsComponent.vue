@@ -171,6 +171,26 @@
             <div class="order-info-header align-documents-data">
               Awarded Transporters
             </div>
+            <div
+              class=""
+              style="display: flex;"
+            >
+              <div class="">
+                <el-progress
+                  type="circle"
+                  :percentage="
+                    getTruckPercentage(
+                      freightOrderDetail.available_trucks,
+                      freightOrderDetail.total_trucks
+                    )
+                  "
+                />
+              </div>
+              <div class="awarded-highlight">
+                {{ freightOrderDetail.available_trucks }}/{{ freightOrderDetail.total_trucks }}
+                Trucks awarded
+              </div>
+            </div>
 
             <div class="transporter-listing order-order-documents">
               <div
@@ -223,7 +243,7 @@
                   <div class="transporters-filters ">
                     <div
                       v-for="(val, index) in data.documents"
-                      v-if="index >= 0"
+                      v-if="index >= 0 && val.created_by === 'OWNER'"
                       class="freight-documents--inner"
                     >
                       <div class="transporter-content">
@@ -239,22 +259,32 @@
                         View Document <i class="el-icon-arrow-right view-transporter-info" />
                       </div>
                       <div class="freight-documents-approve flex-div transporter-content">
-                        <button
-                          type="button"
-                          class="button-primary approve-documents-action freight-approve-doc"
-                          name="create_order_text"
-                          @click="approveDoc(val)"
+                        <div
+                          v-if="checkActionableBtnState"
+                          class=""
                         >
-                          {{ approve_doc_text }}
-                        </button>
-                        <button
-                          type="button"
-                          class="approve-documents-action freight-decline-doc"
-                          name="create_order_text"
-                          @click="declineDialog(val)"
-                        >
-                          {{ decline_doc_text }}
-                        </button>
+                          <button
+                            type="button"
+                            class="button-primary approve-documents-action freight-approve-doc"
+                            name="create_order_text"
+                            @click="approveDoc(val)"
+                          >
+                            {{ approve_doc_text }}
+                          </button>
+                          <button
+                            type="button"
+                            class="approve-documents-action freight-decline-doc"
+                            name="create_order_text"
+                            @click="declineDialog(val)"
+                          >
+                            {{ decline_doc_text }}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <div class="no-document-content">
+                        No document available
                       </div>
                     </div>
                   </div>
@@ -286,7 +316,12 @@
               >
               <span
                 class="freight-documents-date trucks-listing"
-              >{{ getTrucksNeeded(freightOrderDetail.total_trucks) }}
+              >{{
+                getTrucksNeeded(
+                  freightOrderDetail.available_trucks,
+                  freightOrderDetail.total_trucks
+                )
+              }}
               </span>
             </div>
           </div>
@@ -780,10 +815,11 @@ export default {
     getRowKey(row) {
       return row.id;
     },
-    getTrucksNeeded(val) {
-      let resp = `${val} trucks needed`;
-      if (val === 1) {
-        resp = `${val} truck needed`;
+    getTrucksNeeded(available, total) {
+      const pendingTrucks = total - available;
+      let resp = `${pendingTrucks} trucks needed`;
+      if (pendingTrucks === 1) {
+        resp = `${pendingTrucks} truck needed`;
       }
       return resp;
     },
@@ -1201,6 +1237,11 @@ export default {
       }
       return true;
     },
+    getTruckPercentage(availableTrucks, totalTrucks) {
+      const resp = (availableTrucks / totalTrucks) * 100;
+
+      return parseInt(resp, 10);
+    },
     doNotification(level, title, message) {
       const notification = { title, level, message };
       this.displayNotification(notification);
@@ -1356,5 +1397,16 @@ export default {
   font-size: 13px;
   letter-spacing: 0.01em;
   margin-right: 13px;
+}
+.awarded-highlight{
+  margin-top: 1%;
+  margin-left: 1%;
+  color: #000000;
+  font-weight: 600;
+  font-size: 14px;
+}
+.no-document-content{
+  font-size: 15px;
+  margin-top: 1%;
 }
 </style>

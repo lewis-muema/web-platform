@@ -598,7 +598,13 @@ span.el-pagination__jump {
   text-align: left;
   padding-right: 10px;
 }
-
+.el-progress__text{
+  font-size: 11px !important;
+}
+.el-progress-circle{
+  height: 40px !important;
+  width: 40px !important;
+}
 .el-popover{
     background-color: #007FFF;
     color: #fff !important;
