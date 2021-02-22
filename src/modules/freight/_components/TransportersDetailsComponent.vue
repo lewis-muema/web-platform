@@ -740,7 +740,6 @@ export default {
       const mainPathObj = {
         name: place.name,
         coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
-        waypoint_details_status: true,
         type: 'coordinates',
         country_code: place.address_components[countryIndex].short_name,
         more: {
