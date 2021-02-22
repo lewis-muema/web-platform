@@ -188,7 +188,7 @@
                     {{ data.name }}
                   </div>
                   <div class="transporter-content">
-                    {{ data.available_trucks }} Trucks
+                    {{ getAvailableTrucks(data.trucks_available) }}
                   </div>
                   <div class="transporter-content">
                     USD {{ data.price_per_truck }}/Truck
@@ -784,6 +784,13 @@ export default {
       let resp = `${val} trucks needed`;
       if (val === 1) {
         resp = `${val} truck needed`;
+      }
+      return resp;
+    },
+    getAvailableTrucks(val) {
+      let resp = `${val} Trucks`;
+      if (val === 1) {
+        resp = `${val} Truck`;
       }
       return resp;
     },
