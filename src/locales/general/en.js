@@ -873,7 +873,7 @@ const translations = {
   confirm_password: 'Confirm Password',
   price_update: 'Price update',
   today: 'Today',
-  tommorow: 'tommorrow',
+  tommorow: 'Tommorrow',
 
 
 };
