@@ -469,7 +469,7 @@
                 <div
                   v-if="process_shipment"
                   v-loading="process_shipment"
-                  class="freight-loading-container"
+                  class="freight-loading-container transporter-details-loader"
                 />
 
                 <div
@@ -519,6 +519,7 @@ export default {
       rating: 5.0,
       quoteDialog: false,
       locations: [],
+      main_order_path: [],
       order_path: [],
       map_options: {
         componentRestrictions: {
@@ -736,7 +737,7 @@ export default {
         return;
       }
       const countryIndex = place.address_components.findIndex(country_code => country_code.types.includes('country'));
-      const pathObj = {
+      const mainPathObj = {
         name: place.name,
         coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
         waypoint_details_status: true,
@@ -766,12 +767,24 @@ export default {
           },
         },
       };
+      const pathObj = {
+        address_components: place.address_components,
+      };
       const pathPayload = {
         index,
         path: pathObj,
       };
+      const mainPathPayload = {
+        index,
+        path: mainPathObj,
+      };
       this.resetPathLocation(index);
       this.order_path.splice(pathPayload.index, pathPayload.index === 0 ? 0 : 1, pathPayload.path);
+      this.main_order_path.splice(
+        mainPathPayload.index,
+        mainPathPayload.index === 0 ? 0 : 1,
+        mainPathPayload.path,
+      );
       this.setLocationInModel(index, `${place.name}`);
     },
     setLocationInModel(index, name) {
@@ -780,6 +793,7 @@ export default {
     resetPathLocation(index) {
       if (index === 0) {
         this.order_path.splice(index, 1);
+        this.main_order_path.splice(index, 1);
       }
       this.deleteLocationInModel(index);
     },
@@ -1043,5 +1057,8 @@ export default {
   font-weight: 200;
   color: #000;
   margin-top: 2%;
+}
+.transporter-details-loader{
+  margin-top: 15%;
 }
 </style>
