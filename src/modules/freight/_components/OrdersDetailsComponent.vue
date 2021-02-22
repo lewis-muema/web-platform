@@ -188,7 +188,11 @@
               </div>
               <div class="awarded-highlight">
                 {{ freightOrderDetail.available_trucks }}/{{ freightOrderDetail.total_trucks }}
-                Trucks awarded
+                Trucks confirmed
+
+                <span class="align-awarded-total-sum">
+                  Total cost: USD {{ freightOrderDetail.awarded_amount.toLocaleString() }}
+                </span>
               </div>
             </div>
 
@@ -243,7 +247,7 @@
                   <div class="transporters-filters ">
                     <div
                       v-for="(val, index) in data.documents"
-                      v-if="index >= 0 && val.created_by === 'OWNER'"
+                      v-if="index >= 0"
                       class="freight-documents--inner"
                     >
                       <div class="transporter-content">
@@ -260,7 +264,7 @@
                       </div>
                       <div class="freight-documents-approve flex-div transporter-content">
                         <div
-                          v-if="checkActionableBtnState"
+                          v-if="checkActionableBtnState && val.created_by === 'OWNER'"
                           class=""
                         >
                           <button
@@ -1401,9 +1405,13 @@ export default {
   color: #000000;
   font-weight: 600;
   font-size: 14px;
+  width: 90%;
 }
 .no-document-content{
   font-size: 15px;
   margin-top: 1%;
+}
+.align-awarded-total-sum{
+  margin-left: 2%;
 }
 </style>
