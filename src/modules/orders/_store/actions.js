@@ -125,22 +125,6 @@ const requestCopInfo = function requestCopInfo({ dispatch }, values) {
     );
   });
 };
-const requestIndustries = function requestIndustries({ dispatch }, payload) {
-  return new Promise((resolve, reject) => {
-    dispatch('requestAxiosGet', payload, { root: true }).then(
-      (response) => {
-        if (response.status === 200) {
-          resolve(response.data);
-        } else {
-          reject(response.data);
-        }
-      },
-      (error) => {
-        reject(error);
-      },
-    );
-  });
-};
 const saveSuggestions = function saveSuggestions({ dispatch }, values) {
   const payload = {
     app: 'AUTH',
@@ -219,6 +203,22 @@ const fetchSuggestions = function fetchSuggestions({ dispatch, commit }, values)
     );
   });
 };
+const requestIndustries = function requestIndustries({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, { root: true }).then(
+      (response) => {
+        if (response.status === 200) {
+          resolve(response.data);
+        } else {
+          reject(response.data);
+        }
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 const requestPromoCodePayment = function requestPromoCodePayment({ dispatch }, payload) {
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosPost', payload, {
@@ -234,6 +234,20 @@ const requestPromoCodePayment = function requestPromoCodePayment({ dispatch }, p
   });
 };
 
+const updateSocialApprovalStatus = function updateSocialApprovalStatus({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPatch', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
 export default {
   fetchOngoingOrders,
@@ -243,9 +257,10 @@ export default {
   riderDetails,
   requestCountryCode,
   requestCopInfo,
-  requestIndustries,
-  requestPromoCodePayment,
   fetchSuggestions,
   saveSuggestions,
   removeSuggestions,
+  requestIndustries,
+  requestPromoCodePayment,
+  updateSocialApprovalStatus,
 };

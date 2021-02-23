@@ -1307,7 +1307,7 @@ export default {
       const session = this.$store.getters.getSession;
       const acc = session.default;
       accData = session[session.default];
-      this.trackMixpanelEvent('Order Summary Confirm Button - Clicked', {
+      this.trackMixpanelEvent('Confirm Order', {
         'Account Type': acc === 'peer' ? 'Personal' : 'Business',
         'Client Type': 'Web Platform',
         'Client Mode': 'cop_id' in accData ? accData.cop_id : 0,

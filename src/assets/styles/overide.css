@@ -593,7 +593,13 @@ span.el-pagination__jump {
   text-align: left;
   padding-right: 10px;
 }
-
+.el-progress__text{
+  font-size: 11px !important;
+}
+.el-progress-circle{
+  height: 40px !important;
+  width: 40px !important;
+}
 .el-popover{
     background-color: #1782c5;
     color: #fff !important;
@@ -688,6 +694,9 @@ span.el-pagination__jump {
 }
 .el-upload-list__item-name {
   display: none;
+}
+.requestShipmentOptions > .el-dialog > .el-dialog__header{
+  padding: 0 !important;
 }
 .el-upload-list__item{
   margin-top: 0;

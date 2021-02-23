@@ -232,6 +232,7 @@ export default {
   max-height: 55%;
   overflow-x: hidden;
   margin-right : 19px;
+  max-width: 32%;
 }
 .ongoing--count
 {
