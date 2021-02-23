@@ -26,14 +26,14 @@
             class="tour-end"
             @click="skipTour()"
           >
-            End tour
+            {{$t('general.end_tour')}}
           </p>
           <p
             v-if="activeClass === 1"
             class="tour-end"
             @click="selectPickup()"
           >
-            NEXT
+             {{$t('general.next')}}
           </p>
         </div>
       </div>
@@ -59,10 +59,10 @@
             <span
               class="upload-link"
               @click="simulateClick()"
-            >Click here</span> to upload
+            >{{$t('general.click_here')}}</span> {{$t('general.to_upload')}}
           </p>
           <p class="no-margin upload-text">
-            (We support .csv .xlsx and .xml)
+            ({{$t('general.we_support_file_formats')}})
           </p>
           <input
             id="upload-input"
@@ -78,7 +78,7 @@
             :disabled="uploadBtn === 'button--primary-inactive inactive-1'"
             @click="upload()"
           >
-            Upload CSV
+            {{$t('general.upload_csv')}}
           </button>
         </div>
         <div
@@ -95,7 +95,7 @@
             class="upload-photo"
           >
           <p class="no-margin upload-par">
-            Your file has been uploaded! An order will be generated shortly.
+            {{$t('general.files_uploaded')}}
           </p>
         </div>
         <div
@@ -108,30 +108,30 @@
           >
           <div class="countdown-container">
             <p class="countdown-heading">
-              SENDY FREIGHT
+              {{$t('general.sendy_freight')}}
             </p>
             <p class="countdown-par">
-              LAUNCHING SOON
+              {{$t('general.launching_soon')}}
             </p>
             <div class="timer">
               <span class="countdown-time">
                 <p class="timer-digits">{{ days }}</p>
-                <p class="timer-description">DAYS</p>
+                <p class="timer-description">{{$t('general.days')}}</p>
               </span>
               <span class="countdown-divider">:</span>
               <span class="countdown-time">
                 <p class="timer-digits">{{ hours }}</p>
-                <p class="timer-description">HOURS</p>
+                <p class="timer-description">{{$t('general.hours')}}</p>
               </span>
               <span class="countdown-divider">:</span>
               <span class="countdown-time">
                 <p class="timer-digits">{{ minutes }}</p>
-                <p class="timer-description">MINUTES</p>
+                <p class="timer-description">{{$t('general.minutes')}}</p>
               </span>
               <span class="countdown-divider">:</span>
               <span class="countdown-time">
                 <p class="timer-digits">{{ seconds }}</p>
-                <p class="timer-description">SECONDS</p>
+                <p class="timer-description">{{$t('general.seconds')}}</p>
               </span>
             </div>
           </div>
@@ -141,20 +141,19 @@
           class="tour-popup"
         >
           <p class="tour-popup-description">
-            Hello! We’ve added a new feature, the open destination orders. We’d like to give you a
-            quick tour of this new feature.
+            {{$t('general.new_feature_added')}}
           </p>
           <p
             class="tour-popup-get-started"
             @click="startTour()"
           >
-            Let’s get started!
+           {{$t('general.get_started')}}
           </p>
           <p
             class="tour-popup-skip"
             @click="skipTour()"
           >
-            Skip tour
+            {{$t('general.skip_tour')}}
           </p>
         </div>
         <div
@@ -163,7 +162,7 @@
         >
           <div class="locations-popup-title">
             <p class="locations-popup-title-text">
-              Manage saved {{ waypointType }} locations
+              {{$t('general.manage_saved_locations', {waypointType: waypointType})}}
             </p>
             <i
               slot="suffix"
@@ -181,7 +180,7 @@
             <gmap-autocomplete
               v-model="location"
               :options="map_options"
-              :placeholder="`Enter a ${waypointType} location`"
+              :placeholder="$t('general.enter_waypoint_type_location', {waypointType: waypointType})"
               :select-first-on-enter="true"
               class="input-control homeview--input-bundler__input input-control manage-locations-input"
               @place_changed="setLocation($event)"
@@ -191,11 +190,11 @@
             :class="location && !locationSavingStatus ? 'locations-popup-button-active' : 'locations-popup-button-inactive'"
             @click="saveLocation()"
           >
-            {{ locationSavingStatus ? 'Saving' : 'Save' }} Location
+            {{ locationSavingStatus ? `${$t('general.saving')}` : `${$t('general.save')}` }} {{$t('general.location_capital')}}
           </button>
           <div>
             <p class="locations-popup-saved-title">
-              Saved locations
+              {{$t('general.saved_locations')}}
             </p>
             <div class="locations-popup-saved-list">
               <div
@@ -226,26 +225,25 @@
                   class="locations-popup-saved-remove"
                   @click="removeLocation(suggestion)"
                 >
-                  Remove
+                  {{$t('general.remove')}}
                 </span>
               </div>
               <div
                 v-if="suggestions.length === 0"
                 class="saved-locations-message"
               >
-                No saved {{ waypointType }} locations
+                {{$t('general.no_saved_locations', {waypointType: waypointType})}}
               </div>
             </div>
           </div>
         </div>
         <div
           v-if="pairing_status"
-          :key="renderKey"
           class="pairing-popup"
         >
           <div class="pair-vehicles-popup">
             <div class="pair-vehicles-title">
-              Pair with driver/s
+              {{$t('general.pair_with_driver')}}
               <i
                 slot="suffix"
                 class="close el-input__icon el-icon-error"
@@ -253,7 +251,7 @@
               />
             </div>
             <div class="pair-vehicles-title-description">
-              Enter their phone number or the vehicle's number plate to pair
+              {{$t('general.enter_phone_number_vehicle_to_pair')}}
             </div>
             <div class="pair-vehicles-list">
               <div
@@ -261,8 +259,12 @@
                 :key="index"
                 class="pair-vehicle-rows"
               >
+                <div
+                  :key="renderKey"
+                  :name="activeVendor.pair_rider_name"
+                />
                 <div class="pair-vehicles-vendor-title">
-                  <span>Pair with driver {{ index + 1 }}</span><span class="pair-vehicles-vendor-id">({{ activeVendor.vendor_name }})</span>
+                  <span>{{$t('general.pair_with_driver_single')}} {{ index + 1 }}</span><span class="pair-vehicles-vendor-id">({{ activeVendor.vendor_name }})</span>
                 </div>
                 <div class="">
                   <el-input
@@ -291,7 +293,7 @@
                     <div class="pairing-loading-holder">
                       <i class="el-icon-loading pairing-alert-icon" />
                       <div class="pair-model-info-variant">
-                        Finding the driver details
+                        {{$t('general.finding_driver_details')}}
                       </div>
                     </div>
                   </div>
@@ -308,7 +310,7 @@
                       </div>
                       <div class="share-option pairing-error-holder">
                         <div class="pairing-error-header pairing-error-header-variant">
-                          driver not found
+                          {{$t('general.driver_not_found')}}
                         </div>
                         <div class="pair-model-info-variant">
                           {{ activeVendor.failure_text }}
@@ -363,7 +365,7 @@
                 class="button-primary pair-button"
                 @click="closePairingPopup()"
               >
-                DONE
+                {{$t('general.done_capital')}}
               </button>
             </div>
           </div>
@@ -410,7 +412,7 @@
           >
             <div class="finish-setup-outer">
               <p class="crm-setup">
-                Finish account set up
+                {{$t('general.finish_account_setup')}}
               </p>
 
 
@@ -418,12 +420,12 @@
                 <div class="">
                   <label
                     class="final-label"
-                  >Does your business file VAT returns? (optional)</label>
+                  >{{$t('general.does_biz_file_vat_optional')}}</label>
 
                   <div class="final-upper-padding">
                     <el-select
                       v-model="tax_compliance"
-                      placeholder="Select"
+                      :placeholder="$t('general.select')"
                       class="compliance-select-final"
                     >
                       <el-option
@@ -441,21 +443,21 @@
                 v-if="tax_compliance"
                 class="final-upper-padding"
               >
-                <label class="final-label">Enter your business KRA pin</label>
+                <label class="final-label">{{ fetchKraHeader }}</label>
                 <div class="final-upper-padding">
                   <input
                     v-model="kra_pin"
                     class="input-control upgrade-final"
                     type="text"
                     name="kra_pin"
-                    placeholder="KRA PIN"
+                    :placeholder="$t('general.tax_authority_number')"
                     autocomplete="on"
                   >
                   <span
                     v-show="!valid_kra_pin"
                     class="invalid-kra"
                   >
-                    Please enter a valid KRA PIN
+                    {{ kraFailResponse }}
                   </span>
                 </div>
               </div>
@@ -464,13 +466,13 @@
                 v-if="updateSetIndustry"
                 class="final-upper-padding"
               >
-                <label class="final-label">What industry is your business in?</label>
+                <label class="final-label">{{$t('general.industry')}}</label>
                 <div class="final-upper-padding">
                   <el-select
                     v-model="industry_type"
                     filterable
                     popper-append-to-body="false"
-                    placeholder="Select"
+                    :placeholder="$t('general.select')"
                     class="compliance-select-final"
                   >
                     <el-option
@@ -484,15 +486,16 @@
               </div>
 
               <div class="final-upper-padding">
-                <label class="final-label">Are you a social commerce business?</label>
+                <label class="final-label">{{ $t('general.are_you_in_social_media_biz')}}</label>
                 <p style="margin-top:5px;font-size:11px">
-                  (A business that mainly trades through facebook and instagram e.g.
-                  An online shoe store)
+                  <!-- (A business that mainly trades through facebook and instagram e.g.
+                  An online shoe store) -->
+                  {{$t('general.business_man_trades_facebook')}}
                 </p>
                 <div class="final-upper-padding">
                   <el-select
                     v-model="social_media_option"
-                    placeholder="Select"
+                    :placeholder="$t('general.select')"
                     class="compliance-select-final"
                   >
                     <el-option
@@ -509,7 +512,7 @@
                 v-if="social_media_option"
                 class="final-upper-padding"
               >
-                <label class="final-label">What is your business instragram handle?</label>
+                <label class="final-label">{{ $t('general.biz_insta_handle')}}</label>
                 <div class="final-upper-padding">
                   <input
                     v-model="ig_media_handle"
@@ -527,7 +530,7 @@
               >
                 <label
                   class="final-label"
-                >What is the link to your business facebook page?</label>
+                >{{ $t('general.link_business_face_book_page')}}</label>
                 <div class="final-upper-padding">
                   <input
                     v-model="facebook_media_handle"
@@ -541,10 +544,10 @@
 
               <div class="final-upper-padding">
                 <label class="final-label">
-                  Select the primary vehicle you will be using for your business.
+                  {{$t('general.select_primary_vehicle')}}
                 </label>
                 <p class="final-inner">
-                  (This will not restrict you from using other vehicles)
+                  {{$t('general.not_restrict_you')}}
                 </p>
                 <div class="final-upper-padding">
                   <div class="vendors-final-outerline">
@@ -589,7 +592,7 @@
                 <input
                   class="button-primary final-step-submit"
                   type="submit"
-                  value="Submit"
+                  :value="$t('general.submit')"
                   @click="submit"
                 >
               </div>
@@ -697,36 +700,33 @@ export default {
       locationSavingStatus: false,
       dedicatedTourPoints: [
         {
-          title: 'Order Type: Dedicated vehicles',
-          description:
-            'Get a truck for a whole day to do all your deliveries. We handle your logistics while you focus on your core business',
+          title: this.$t('general.order_type_dedicated_vehicles'),
+          description:this.$t('general.get_truck_whole_day'),
           class: '.tour-pointer-1',
         },
         {
-          title: 'Order Type: No Destination',
-          description:
-            'With no destination vehicles you can skip adding a destination or add a general region to deliver in and the driver will check off each delivery stop. Enter the pick up location input to continue',
+          title: this.$t('general.order_type_no_destination'),
+          description: this.$t('general.skip_adding_destination'),
           class: '.tour-pointer-2',
         },
         {
-          title: 'Vehicle Type',
-          description:
-            'Select multiple vehicle types and multiple vehicles of the same vehicle type',
+          title: this.$t('general.vehicle_type'),
+          description:this.$t('general.select_multiple_vehicle'),
           class: '.tour-pointer-3',
         },
         {
-          title: 'Select Vehicle type',
-          description: 'Select open or closed vehicles for pick ups and bikes',
+          title: this.$t('general.select_vehicle_type'),
+          description: this.$t('general.select_open_or_closed_vehicles'),
           class: '.tour-pointer-4',
         },
         {
-          title: 'Schedule',
-          description: 'Select the date for your deliveries',
+          title: this.$t('general.schedule'),
+          description: this.$t('general.select_date_for_delivery'),
           class: '.tour-pointer-5',
         },
         {
-          title: 'Schedule: Time',
-          description: 'Select the time-frame you’d like your deliveries done',
+          title: this.$t('general.schedule_time_capital'),
+          description: this.$t('general.select_time_frame'),
           class: '.tour-pointer-6',
         },
       ],
@@ -746,14 +746,40 @@ export default {
       }
       return 'button--primary-inactive inactive-1';
     },
+    fetchKraHeader() {
+      let kraName = this.$t('general.tin_number');
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        kraName = this.$t('general.kra_pin');
+      }
+      let resp = `${this.$t('general.enter_your_business')} ${kraName}`;
+      if (session.default === 'peer') {
+        resp = `${this.$t('general.enter_your ')} ${kraName}`;
+      }
+      return resp;
+    },
+    kraFailResponse() {
+      let resp = 'Please enter a valid TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        resp = 'Please enter a valid KRA PIN';
+      }
+      return resp;
+    },
+
     valid_kra_pin() {
       const pin = this.kra_pin;
+      const session = this.$store.getters.getSession;
 
       if (pin !== '') {
-        return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+        if (session[session.default].country_code === 'KE') {
+          return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+        }
+        return /^\d{10}$/.test(pin);
       }
       return true;
     },
+
     suggestions() {
       const rows = [];
       this.getSuggestions.forEach((row) => {
@@ -764,7 +790,10 @@ export default {
       return rows;
     },
     waypointType() {
-      return this.waypoint_type === 'PICKUP' ? 'pick up' : 'drop off';
+      return this.waypoint_type === 'PICKUP' ? this.$t('general.pickup_lowercase') : this.$t('general.drop_off_lowercase');
+    },
+    vehicleDetailsPlaceholder() {
+      return  this.$t('general.enter_no_plate');
     },
     vehicleDetailsPlaceholder() {
       return 'Enter Full Number plate / Phone Number';
@@ -979,8 +1008,8 @@ export default {
       if (vehicleDetails === '') {
         this.doNotification(
           '2',
-          'Vehicle number plate is not provided',
-          'Please provide the vehicle details to pair',
+          this.$t('general.vehicle_number_plate'),
+          this.$t('general.please_provide_the_vehicle_details_to_pair'),
         );
         this.pairing_data[i].visible2 = false;
         this.pairing_data[i].searchOption = false;
@@ -1049,9 +1078,6 @@ export default {
     },
     forceUpdate() {
       this.renderKey += 1;
-      setTimeout(() => {
-        document.querySelectorAll(`#input${this.focusedInput}`)[0].focus();
-      }, 1);
     },
     triggerGAEvent(field, value) {
       let analyticsEnv = '';
@@ -1199,9 +1225,13 @@ export default {
           session.default === 'biz'
           && Object.prototype.hasOwnProperty.call(session[session.default], 'tax_authority_pin')
         ) {
+          this.kra_pin = session[session.default].tax_authority_pin;
           if (session[session.default].tax_authority_pin === null) {
             this.tax_compliance = '';
             this.kra_pin = '';
+          } else if (session[session.default].tax_authority_pin !== '' && !this.valid_kra_pin) {
+            this.tax_compliance = false;
+            this.kra_pin = session[session.default].tax_authority_pin;
           } else if (session[session.default].tax_authority_pin !== '') {
             this.tax_compliance = true;
             this.kra_pin = session[session.default].tax_authority_pin;
@@ -1446,8 +1476,8 @@ export default {
         .catch((err) => {
           this.doNotification(
             2,
-            'Failed to upload file',
-            'Please check your connection and try again',
+            this.$t('general.failed_upload_file'),
+            this.$t('general.check_connection_try_again'),
           );
         });
     },
@@ -1456,9 +1486,9 @@ export default {
       const sessionData = Object.keys(session).length;
       if (sessionData === 0) {
         const notification = {
-          title: 'Your session has expired!',
+          title: this.$t('general.session_has_expired'),
           level: 2,
-          message: 'You will be redirected to the login page within 5 seconds.',
+          message: this.$t('general.redirected_to_login'),
         };
         this.displayNotification(notification);
         setTimeout(() => {
@@ -1486,17 +1516,23 @@ export default {
       return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
     },
     handleKraAndIndustry() {
+      let kraName = 'TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        kraName = 'KRA PIN';
+      }
+
       if (this.primary_business_unit === '') {
-        this.doNotification(2, 'Final set up error !', 'Please select primary type vehicle');
+        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.select_primary_type_vehicle'));
       } else if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
-        this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
+        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.enter_valid_kra'));
       } else if (this.industry_type === '' || this.social_media_option === '') {
-        this.doNotification(2, 'Final set up error !', 'Please select industry preference');
+        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.select_industry_preference'),);
       } else if (
         this.social_media_option
         && (this.ig_media_handle === '' && this.facebook_media_handle === '')
       ) {
-        this.doNotification(2, 'Final set up error !', 'Please provide social media handle');
+        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.social_media_handle'));
       } else {
         const session = this.$store.getters.getSession;
         const payload = {
@@ -1520,12 +1556,17 @@ export default {
       }
     },
     handleKraSetUp() {
+      let kraName = 'TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        kraName = 'KRA PIN';
+      }
+
       if (this.primary_business_unit === '') {
-        this.doNotification(2, 'Final set up error !', 'Please select primary type vehicle');
+        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.select_primary_type_vehicle'));
       } else if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
-        this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
+        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.enter_valid_kra'));
       } else {
-        const session = this.$store.getters.getSession;
         const payload = {
           cop_id: session[session.default].cop_id,
           cop_name: session[session.default].cop_name,
@@ -1540,12 +1581,12 @@ export default {
     },
     handleIndustrySetUp() {
       if (this.industry_type === '' || this.social_media_option === '') {
-        this.doNotification(2, 'Final set up error !', 'Please select industry preference');
+        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.select_industry_preference'));
       } else if (
         this.social_media_option
         && (this.ig_media_handle === '' && this.facebook_media_handle === '')
       ) {
-        this.doNotification(2, 'Final set up error !', 'Please provide social media handle');
+        this.doNotification(2, this.$t('general.final_setup_error'), this.$t('general.social_media_handle'));
       } else {
         const session = this.$store.getters.getSession;
         const payload = {
@@ -1601,7 +1642,7 @@ export default {
             this.displayNotification(notification);
           } else {
             const level = 3;
-            this.message = 'Something went wrong.';
+            this.message = this.$t('general.something_went_wrong');
             const notification = {
               title: '',
               level,
@@ -1612,7 +1653,7 @@ export default {
         },
         (error) => {
           const level = 3;
-          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+          const notification = { title: '', level, message:this.$t('general.something_went_wrong') }; // notification object
           this.displayNotification(notification);
         },
       );
