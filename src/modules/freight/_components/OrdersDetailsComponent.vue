@@ -244,7 +244,7 @@
                   <div class="transporters-documents">
                     Documents
                   </div>
-                  <div class="transporters-filters ">
+                  <div v-if="data.documents.length > 0">
                     <div
                       v-for="(val, index) in data.documents"
                       v-if="index >= 0"
@@ -262,10 +262,12 @@
                       >
                         View Document <i class="el-icon-arrow-right view-transporter-info" />
                       </div>
-                      <div class="freight-documents-approve flex-div transporter-content">
+                      <div
+                        class="freight-documents-approve flex-div transporter-content approve-freight-section"
+                      >
                         <div
                           v-if="checkActionableBtnState && val.created_by === 'OWNER'"
-                          class=""
+                          class="align-approval-btn"
                         >
                           <button
                             type="button"
@@ -291,6 +293,9 @@
                         No document available
                       </div>
                     </div>
+                  </div>
+                  <div v-else>
+                    No document available
                   </div>
                 </div>
               </div>
@@ -1395,12 +1400,14 @@ export default {
 .freight-documents--inner{
   width: 100%;
   display: flex;
+  height: 42px;
+  margin-bottom: 1%;
 }
 .approve-documents-action{
   float: right;
   font-size: 13px;
   letter-spacing: 0.01em;
-  margin-right: 13px;
+  margin-right: 8%;
 }
 .awarded-highlight{
   margin-top: 1%;
@@ -1416,5 +1423,11 @@ export default {
 }
 .align-awarded-total-sum{
   margin-left: 2%;
+}
+.approve-freight-section{
+  margin-top: 0 !important;
+}
+.align-approval-btn{
+  display: flex;
 }
 </style>
