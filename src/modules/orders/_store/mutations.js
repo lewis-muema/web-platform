@@ -131,6 +131,9 @@ const setActiveVendorTally = (state, payload) => {
 const setExpandedActiveVendorTally = (state, payload) => {
   state.expanded_active_vendor_tally = payload;
 };
+const setPairedDriversTally = (state, payload) => {
+  state.paired_drivers_tally = payload;
+};
 const clearOuterPriceRequestObject = (state) => {
   state.outer_price_request = {};
 };
@@ -148,6 +151,9 @@ const clearVendorMarkers = (state) => {
 };
 const setParentOrder = (state, payload) => {
   state.parent_order = payload;
+};
+const setSuggestions = (state, payload) => {
+  state.suggestions = payload;
 };
 export default {
   setPage,
@@ -176,4 +182,6 @@ export default {
   setWaypointNotes,
   clearVendorMarkers,
   setParentOrder,
+  setSuggestions,
+  setPairedDriversTally,
 };

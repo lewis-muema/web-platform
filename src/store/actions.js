@@ -12,6 +12,14 @@ export default {
     if (payload.app === 'BACKEND_CUSTOMERS_APP') {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
+
+    // add api key - if request is going to the FREIGHT APP
+    if (payload.app === 'FREIGHT_APP') {
+      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
+        state.ENV.FREIGHT_API_KEY
+      }`;
+    }
+
     let config = {};
 
     // check if payload is a string here and change the content type
@@ -100,6 +108,7 @@ export default {
       }
     }
 
+    config.headers['Accept-Language'] = state.language;
     return new Promise((resolve, reject) => {
       axios
         .post(`${url}${payload.endpoint}`, payload.values, config)
@@ -140,10 +149,19 @@ export default {
     const baseUrl = window.location.origin;
     const loginUrl = `${baseUrl}/sign_in`;
     const url = state.ENV[payload.app];
+
     // add api key - if request is going to the backend
     if (payload.app === 'BACKEND_CUSTOMERS_APP') {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
+
+    // add api key - if request is going to the FREIGHT APP
+    if (payload.app === 'FREIGHT_APP') {
+      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
+        state.ENV.FREIGHT_API_KEY
+      }`;
+    }
+
     let config = {};
 
     // check if payload is a string here and change the content type
@@ -226,7 +244,7 @@ export default {
         return true;
       }
     }
-
+    config.headers['Accept-Language'] = state.language;
     return new Promise((resolve, reject) => {
       axios
         .patch(`${url}${payload.endpoint}`, payload.values, config)
@@ -272,10 +290,19 @@ export default {
     }
     const loginUrl = `${baseUrl}/sign_in`;
     const url = state.ENV[payload.app];
+
     // add api key - if request is going to the backend
     if (payload.app === 'BACKEND_CUSTOMERS_APP') {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
+
+    // add api key - if request is going to the FREIGHT APP
+    if (payload.app === 'FREIGHT_APP') {
+      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
+        state.ENV.FREIGHT_API_KEY
+      }`;
+    }
+
     let config = {};
 
     // check if payload is a string here and change the content type
@@ -297,6 +324,7 @@ export default {
       'admin_bypass',
       'request_verification',
       'token',
+      'currency/get_supported_countries',
     ];
     if (externalEndpoints.includes(requestedPayload)) {
       config = {
@@ -321,7 +349,7 @@ export default {
       }, 5000);
       return true;
     }
-
+    config.headers['Accept-Language'] = state.language;
     return new Promise((resolve, reject) => {
       axios
         .get(`${url}${payload.endpoint}`, config)
@@ -410,4 +438,19 @@ export default {
       );
     });
   },
+  requestPromoCodePayment({ dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosPost', payload, {
+        root: true,
+      }).then(
+        (response) => {
+          resolve(response);
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
+
 };

@@ -105,7 +105,6 @@
                   v-for="(val, index) in owner_details.vehicles"
                   :key="index"
                 >
-                  {{ val }}
                   <div class="">
                     <div class="truck-title-info">
                       {{ val.vendor_type }}
@@ -194,25 +193,13 @@
           <div class="transporters-quote-section">
             <div class="">
               <p class="transporters-quotes-input--label">
-                Quote
+                Engage Transporter
               </p>
               <input
                 v-model="quote_text"
                 class="quote-btn button-primary terms-btn-color next-freight-btn"
                 type="submit"
                 @click="showQuoteDialog()"
-              >
-            </div>
-
-            <div class="">
-              <p class="transporters-quotes-input--label">
-                Link with this transporter to access financing
-              </p>
-              <input
-                v-model="financing_text"
-                class=" financing-btn button-primary terms-btn-color next-freight-btn"
-                type="submit"
-                @click="directToCreateOrder()"
               >
             </div>
           </div>
@@ -229,134 +216,283 @@
           >
             <div class="">
               <div class="quote-text-option decline-documemt-extend">
-                Request Quote
+                Create a Shipment Request
               </div>
             </div>
             <div class="quote-find-section">
-              <div class="">
-                <p class="freight-input--label">
-                  Pick up location
-                </p>
-                <gmap-autocomplete
-                  v-model="locations[0]"
-                  :options="map_options"
-                  placeholder="Enter a pickup location"
-                  :select-first-on-enter="true"
-                  class="input-control"
-                  @place_changed="setLocation($event, 0)"
-                />
-              </div>
-
-              <div class="">
-                <p class="freight-input--label">
-                  Destination
-                </p>
-                <gmap-autocomplete
-                  v-model="locations[1]"
-                  :options="map_options"
-                  placeholder="Enter a destination location"
-                  :select-first-on-enter="true"
-                  class="input-control"
-                  @place_changed="setLocation($event, 1)"
-                />
-              </div>
-              <div class="">
-                <p class="freight-input--label">
-                  Pick up time
-                </p>
-                <div class="transporters-select">
-                  <el-date-picker
-                    v-model="pick_up_time"
-                    class="bids-time"
-                    type="datetime"
-                    format="dd-MM-yyyy h:mm a"
-                    placeholder="Select time"
-                    prefix-icon="el-icon-date"
-                    :default-time="default_value"
+              <div v-if="shipment_state === 1">
+                <div class="">
+                  <p class="freight-input--label">
+                    Pick up location
+                  </p>
+                  <gmap-autocomplete
+                    id="pickup"
+                    v-model="locations[0]"
+                    :options="map_options"
+                    placeholder="Enter a pickup location"
+                    :select-first-on-enter="true"
+                    class="input-control"
+                    @place_changed="setLocation($event, 0)"
                   />
                 </div>
-              </div>
 
-              <div class="">
-                <p class="freight-input--label">
-                  By when should bids be submitted?
-                </p>
-                <div class="transporters-select">
-                  <el-date-picker
-                    v-model="quotation_time"
-                    class="bids-time"
-                    type="datetime"
-                    format="dd-MM-yyyy h:mm a"
-                    placeholder="Select time"
-                    prefix-icon="el-icon-date"
-                    :default-time="default_value"
+                <div class="">
+                  <p class="freight-input--label">
+                    Destination
+                  </p>
+                  <gmap-autocomplete
+                    id="destination"
+                    v-model="locations[1]"
+                    :options="map_options"
+                    placeholder="Enter a destination location"
+                    :select-first-on-enter="true"
+                    class="input-control"
+                    @place_changed="setLocation($event, 1)"
                   />
                 </div>
-              </div>
 
-              <div class="">
-                <p class="freight-input--label">
-                  Type of truck
-                </p>
-                <div class="transporters-select">
-                  <el-select
-                    v-model="truck_type"
-                    placeholder=""
-                    filterable
-                  >
-                    <el-option
-                      v-for="item in truckTypes"
-                      :key="item.id"
-                      :label="item.carrier_type"
-                      :value="item.id"
+                <div class="">
+                  <p class="freight-input--label">
+                    Pick up time
+                  </p>
+                  <div class="transporters-select">
+                    <el-date-picker
+                      v-model="pick_up_time"
+                      class="bids-time"
+                      type="datetime"
+                      format="dd-MM-yyyy h:mm a"
+                      placeholder="Select time"
+                      prefix-icon="el-icon-date"
+                      :default-time="default_value"
                     />
-                  </el-select>
+                  </div>
+                </div>
+
+                <div class="">
+                  <p class="freight-input--label">
+                    Type of truck
+                  </p>
+                  <div class="transporters-select">
+                    <el-select
+                      v-model="truck_type"
+                      placeholder=""
+                      filterable
+                    >
+                      <el-option
+                        v-for="item in truckTypes"
+                        :key="item.id"
+                        :label="item.carrier_type"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </div>
+                </div>
+
+                <div class="">
+                  <p class="freight-input--label">
+                    What is being transported?
+                  </p>
+                  <div class="transporters-select">
+                    <el-select
+                      v-model="goods"
+                      placeholder=""
+                      filterable
+                    >
+                      <el-option
+                        v-for="item in goodsType"
+                        :key="item.id"
+                        :label="item.cargo_type"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </div>
+                </div>
+
+                <div class="next-terms-holder">
+                  <button
+                    type="button"
+                    name="button"
+                    class="quote-action--slide-button send-final-quote-btn back-shipment-btn"
+                    @click="nextShipmentFlow()"
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
 
-              <div class="">
-                <p class="freight-input--label">
-                  What is the weight of the load?
-                </p>
+              <div v-else-if="shipment_state === 2">
+                <div class="">
+                  <p class="shipment-input--label">
+                    Where is the pickup facility at {{ locations[0] }}
+                  </p>
+                  <div class="block">
+                    <el-input
+                      v-model="facility_location"
+                      type="textarea"
+                      :rows="2"
+                      placeholder="Please input"
+                    />
+                  </div>
+                </div>
+
+                <div class="">
+                  <p class="shipment-input--label">
+                    Will the container be returned to the pickup location?
+                  </p>
+                  <div class="block">
+                    <el-select
+                      v-model="return_option"
+                      placeholder=""
+                      class="transporters-element-inputs"
+                      filterable
+                    >
+                      <el-option
+                        v-for="item in returnOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                </div>
+
+                <div class="">
+                  <p class="shipment-input--label">
+                    How many trucks do you need?
+                  </p>
+                  <div class="block">
+                    <el-input-number
+                      v-model="trucks_no"
+                      :min="1"
+                      :max="10"
+                    />
+                  </div>
+                </div>
+
+                <div class="">
+                  <p class="shipment-input--label">
+                    How many tonnes should each truck carry per move?
+                  </p>
+                  <div class="block">
+                    <input
+                      v-model="load_weight"
+                      class="input-control freight-load-weight"
+                      type="text"
+                      placeholder=""
+                      autocomplete="on"
+                    >
+                    <span class="tonage-value-text">Tonnes</span>
+                  </div>
+                </div>
+
+                <div class="">
+                  <p class="shipment-input--label">
+                    Do you want to make an offer for this shipment?
+                  </p>
+                  <div class="block">
+                    <el-select
+                      v-model="shipment_offer"
+                      placeholder=""
+                      class="transporters-element-inputs"
+                      filterable
+                    >
+                      <el-option
+                        v-for="item in shipmentOffer"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                </div>
+
+                <div v-if="shipment_offer">
+                  <div class="">
+                    <p class="shipment-input--label">
+                      How much do you want to pay per truck?
+                    </p>
+                    <div class="freight-input">
+                      <div class="freight-input-icon">
+                        <span>USD</span>
+                      </div>
+                      <div class="freight-input-area">
+                        <input
+                          v-model.trim="bid_amount"
+                          type="number"
+                          name="amount"
+                          class="transporter-selector freight-selector"
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p class="shipment-input--label">
+                      Is this price negotiable?
+                    </p>
+                    <div class="block">
+                      <el-select
+                        v-model="negotiability"
+                        placeholder=""
+                        class="transporters-element-inputs"
+                        filterable
+                      >
+                        <el-option
+                          v-for="item in returnOptions"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </div>
+                  </div>
+                </div>
+
                 <div>
-                  <input
-                    v-model.trim="load_weight"
-                    class="input-control freight-load-weight"
-                    type="text"
-                    placeholder=""
-                    autocomplete="on"
-                  >
-                  <span class="tonage-value-text">Tonnes</span>
-                </div>
-              </div>
-
-              <div class="">
-                <p class="freight-input--label">
-                  What is being transported?
-                </p>
-                <div class="transporters-select">
-                  <el-select
-                    v-model="goods"
-                    placeholder=""
-                    filterable
-                  >
-                    <el-option
-                      v-for="item in goodsType"
-                      :key="item.id"
-                      :label="item.cargo_type"
-                      :value="item.id"
+                  <p class="shipment-input--label">
+                    By when should bids be submitted?
+                  </p>
+                  <div class="block">
+                    <el-date-picker
+                      v-model="quotation_time"
+                      class="transporters-element-inputs"
+                      type="datetime"
+                      format="dd-MM-yyyy h:mm a"
+                      placeholder="Select time"
+                      prefix-icon="el-icon-date"
+                      :default-time="default_value"
+                      :picker-options="dueDatePickerOptions"
                     />
-                  </el-select>
+                  </div>
                 </div>
-              </div>
 
-              <div class="next-terms-holder">
-                <input
-                  v-model="submit_text"
-                  class="button-primary terms-btn-color search-transporter"
-                  type="submit"
-                  @click="sendQuote"
+                <div
+                  v-if="process_shipment"
+                  v-loading="process_shipment"
+                  class="freight-loading-container transporter-details-loader"
+                />
+
+                <div
+                  v-if="!process_shipment"
+                  class="decline-documemt-extend decline-button-align send-quote--outer"
                 >
+                  <button
+                    type="button"
+                    name="button"
+                    class="quote-action--slide-button send-final-quote-btn back-shipment-btn"
+                    @click="oneStepBack()"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    name="button"
+                    class="quote-action--slide-button send-final-quote-btn"
+                    @click="sendFinalQuote()"
+                  >
+                    Submit
+                  </button>
+                </div>
               </div>
             </div>
           </el-dialog>
@@ -377,12 +513,13 @@ export default {
   mixins: [NotificationMxn],
   data() {
     return {
-      quote_text: 'Request for quote',
+      quote_text: 'Create Shipment Request',
       financing_text: 'Place Order',
-      submit_text: 'Request',
+      next_text: 'Next',
       rating: 5.0,
       quoteDialog: false,
       locations: [],
+      main_order_path: [],
       order_path: [],
       map_options: {
         componentRestrictions: {
@@ -407,10 +544,60 @@ export default {
       goodsType: [],
       owner_details: [],
       loading: false,
+      dueDatePickerOptions: {
+        disabledDate: this.disabledDueDate,
+      },
+      shipment_state: 1,
+      returnOptions: [
+        {
+          value: true,
+          label: 'Yes',
+        },
+        {
+          value: false,
+          label: 'No',
+        },
+      ],
+      shipmentOffer: [
+        {
+          value: true,
+          label: 'Yes, I want to make a price offer',
+        },
+        {
+          value: false,
+          label: 'No, I want transporters to bid',
+        },
+      ],
+      trucks_no: 1,
+      facility_location: '',
+      return_option: '',
+      shipment_offer: '',
+      negotiability: '',
+      bid_amount: '',
+      DOM: '',
+      pickup_value: '',
+      destination_value: '',
+      process_shipment: false,
     };
   },
   computed: {
     ...mapGetters({}),
+  },
+  watch: {
+    quoteDialog(val) {
+      if (!val) {
+        this.resetQuatationDialog();
+      }
+    },
+    DOM: {
+      handler(val, oldVal) {
+        this.addFocusListener();
+      },
+      deep: true,
+    },
+  },
+  created() {
+    this.DOM = process;
   },
   mounted() {
     this.loading = true;
@@ -427,9 +614,13 @@ export default {
     }),
     fetchOwnerDetail() {
       this.loading = true;
+      const payload = {
+        owner_id: parseInt(this.$route.params.id, 10),
+      };
       const fullPayload = {
-        app: 'ORDERS_APP',
-        endpoint: `v2/freight/owner/${parseInt(this.$route.params.id, 10)}`,
+        values: payload,
+        app: 'PARTNERS_APP',
+        endpoint: 'transporter_details',
       };
 
       this.getOwnersDetail(fullPayload).then(
@@ -459,12 +650,23 @@ export default {
         },
       );
     },
+    disabledDueDate(date) {
+      return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
+    },
+    addFocusListener() {
+      document.addEventListener('keyup', this.keyUpInput, true);
+    },
+    keyUpInput() {
+      if (document.activeElement.id === 'pickup') {
+        this.pickup_value = document.getElementById('pickup').value;
+      }
 
+      if (document.activeElement.id === 'destination') {
+        this.destination_value = document.getElementById('destination').value;
+      }
+    },
     backToTransporters() {
       this.$router.push('/freight/transporters');
-    },
-    directToCreateOrder() {
-      this.$router.push('/freight/orders/create');
     },
     showQuoteDialog() {
       this.quoteDialog = true;
@@ -491,20 +693,15 @@ export default {
     },
     fetchGoodsTypes() {
       const fullPayload = {
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/cargo_types',
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: 'cargo_types',
       };
 
       this.getCargoTypes(fullPayload).then(
         (response) => {
-          let workingResponse = response;
-          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-          if (response.length > 1) {
-            workingResponse = response[0];
-          }
-
-          if (workingResponse.status) {
-            this.goodsType = workingResponse.cargo_types;
+          if (response.status) {
+            this.goodsType = response.data;
           } else {
             this.goodsType = [];
           }
@@ -516,20 +713,15 @@ export default {
     },
     fetchCarrierTypes() {
       const fullPayload = {
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/carrier_types',
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: 'carrier_types',
       };
 
       this.getCarrierTypes(fullPayload).then(
         (response) => {
-          let workingResponse = response;
-          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-          if (response.length > 1) {
-            workingResponse = response[0];
-          }
-
-          if (workingResponse.status) {
-            this.truckTypes = workingResponse.carrier_types;
+          if (response.status) {
+            this.truckTypes = response.data;
           } else {
             this.truckTypes = [];
           }
@@ -545,10 +737,9 @@ export default {
         return;
       }
       const countryIndex = place.address_components.findIndex(country_code => country_code.types.includes('country'));
-      const pathObj = {
+      const mainPathObj = {
         name: place.name,
         coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
-        waypoint_details_status: true,
         type: 'coordinates',
         country_code: place.address_components[countryIndex].short_name,
         more: {
@@ -575,12 +766,24 @@ export default {
           },
         },
       };
+      const pathObj = {
+        address_components: place.address_components,
+      };
       const pathPayload = {
         index,
         path: pathObj,
       };
+      const mainPathPayload = {
+        index,
+        path: mainPathObj,
+      };
       this.resetPathLocation(index);
       this.order_path.splice(pathPayload.index, pathPayload.index === 0 ? 0 : 1, pathPayload.path);
+      this.main_order_path.splice(
+        mainPathPayload.index,
+        mainPathPayload.index === 0 ? 0 : 1,
+        mainPathPayload.path,
+      );
       this.setLocationInModel(index, `${place.name}`);
     },
     setLocationInModel(index, name) {
@@ -589,84 +792,154 @@ export default {
     resetPathLocation(index) {
       if (index === 0) {
         this.order_path.splice(index, 1);
+        this.main_order_path.splice(index, 1);
       }
       this.deleteLocationInModel(index);
     },
     deleteLocationInModel(index) {
       this.locations.splice(index, 1);
     },
-    sendQuote() {
+    nextShipmentFlow() {
       if (
         Array.isArray(this.locations)
         && this.locations.length > 1
         && this.truck_type !== ''
-        && this.load_weight !== ''
         && this.goods !== ''
         && this.pick_up_time !== ''
-        && this.quotation_time !== ''
+        && this.pickup_value !== ''
+        && this.destination_value !== ''
       ) {
-        this.sendQuoteFinal();
+        this.shipment_state = 2;
       } else {
-        this.doNotification(2, 'Find transporters error !', 'Kindly provide all values');
+        this.doNotification(
+          2,
+          'Create Shipment error !',
+          'Kindly provide all values to proceed to the next step',
+        );
       }
     },
-    sendQuoteFinal() {
-      let acc = {};
-      const session = this.$store.getters.getSession;
-      if ('default' in session) {
-        acc = session[session.default];
+    oneStepBack() {
+      this.facility_location = '';
+      this.return_option = '';
+      this.trucks_no = '';
+      this.load_weight = '';
+      this.shipment_offer = '';
+      this.quotation_time = '';
+      this.shipment_offer = '';
+      this.bid_amount = '';
+      this.negotiability = '';
+      this.shipment_state = 1;
+    },
+    sendFinalQuote() {
+      if (
+        this.facility_location === ''
+        || this.return_option === ''
+        || this.trucks_no === ''
+        || this.load_weight === ''
+        || this.shipment_offer === ''
+        || this.quotation_time === ''
+        || (this.shipment_offer && (this.bid_amount === '' || this.negotiability === ''))
+      ) {
+        this.doNotification(
+          2,
+          'Unable to create shipment request!',
+          'Kindly provide all values for request to be submitted',
+        );
+      } else {
+        this.process_shipment = true;
+        let acc = {};
+        const session = this.$store.getters.getSession;
+        if ('default' in session) {
+          acc = session[session.default];
+        }
+        const filteredOwner = [];
+        filteredOwner.push(parseInt(this.$route.params.id, 10));
+
+        const payload = {
+          cop_id: 'cop_id' in acc ? acc.cop_id : null,
+          cop_user_id: 'cop_id' in acc ? acc.user_id : null,
+          peer_id: 'cop_id' in acc ? null : acc.user_id,
+          transporters: filteredOwner,
+          cargo_type: parseInt(this.goods, 10),
+          carrier_type: parseInt(this.truck_type, 10),
+          pickup: this.main_order_path[0],
+          destination: this.main_order_path[1],
+          pickup_time: this.moment(this.pick_up_time).format('DD-MM-YYYY HH:mm:ss'),
+          bidding_deadline: this.moment(this.quotation_time).format('DD-MM-YYYY HH:mm:ss'),
+          currency: 'USD',
+          pickup_facility: this.facility_location,
+          is_return: this.return_option,
+          total_trucks: this.trucks_no,
+          tonnes_per_truck: this.load_weight,
+        };
+
+        if (this.shipment_offer) {
+          payload.offer_amount = this.bid_amount;
+          payload.is_negotiable = this.negotiability;
+        }
+
+        const fullPayload = {
+          values: payload,
+          app: 'FREIGHT_APP',
+          operator: '?',
+          endpoint: 'shipments',
+        };
+        this.sendCustomerQuote(fullPayload).then(
+          (response) => {
+            /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+
+            let workingResponse = response;
+            if (response.length > 1) {
+              workingResponse = response[0];
+            }
+
+            if (workingResponse.status) {
+              this.doNotification(1, 'Shipment sent successfully!', '');
+              this.$router.push('/freight/orders');
+            } else {
+              this.doNotification(
+                2,
+                'Unable to request for shipment!',
+                workingResponse.data.message,
+              );
+            }
+            this.resetQuatationDialog();
+            this.process_shipment = false;
+          },
+          (error) => {
+            if (Object.prototype.hasOwnProperty.call(error, 'message')) {
+              this.doNotification(2, 'Shipment request failed', error.message);
+            } else {
+              this.doNotification(
+                2,
+                'Shipment request failed',
+                'Something went wrong.Please try again',
+              );
+              this.resetQuatationDialog();
+            }
+            this.process_shipment = false;
+          },
+        );
       }
-      const filteredOwner = [];
-      filteredOwner.push(parseInt(this.$route.params.id, 10));
-
-      const payload = {
-        cop_id: 'cop_id' in acc ? acc.cop_id : 0,
-        cop_user_id: 'cop_id' in acc ? acc.user_id : 0,
-        peer_id: 'cop_id' in acc ? null : acc.user_id,
-        owners: filteredOwner,
-        cargo_type: parseInt(this.goods, 10),
-        load_weight: parseInt(this.load_weight, 10),
-        carrier_type: parseInt(this.truck_type, 10),
-        pick_up: this.order_path[0],
-        destination: this.order_path[1],
-        pick_up_time: this.moment(this.pick_up_time).format('YYYY-MM-DD HH:mm:ss'),
-        quotation_deadline: this.moment(this.quotation_time).format('YYYY-MM-DD HH:mm:ss'),
-      };
-
-      const fullPayload = {
-        values: payload,
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/quotations',
-      };
-      this.sendCustomerQuote(fullPayload).then(
-        (response) => {
-          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-
-          let workingResponse = response;
-          if (response.length > 1) {
-            workingResponse = response[0];
-          }
-
-          if (workingResponse.status) {
-            this.doNotification(1, 'Quotations sent successfully!', '');
-          } else {
-            this.doNotification(2, 'Unable to request for quotation!', workingResponse.message);
-          }
-          this.backToTransporters();
-        },
-        (error) => {
-          if (Object.prototype.hasOwnProperty.call(error, 'message')) {
-            this.doNotification(2, 'Quote request failed', error.message);
-          } else {
-            this.doNotification(
-              2,
-              'Quote request failed',
-              'Quote request failed. Please check your internet connection and try again.',
-            );
-            this.backToTransporters();
-          }
-        },
-      );
+    },
+    resetQuatationDialog() {
+      this.quoteDialog = false;
+      this.quotation_time = '';
+      this.facility_location = '';
+      this.return_option = '';
+      this.trucks_no = '';
+      this.load_weight = '';
+      this.shipment_offer = '';
+      this.bid_amount = '';
+      this.negotiability = '';
+      this.shipment_state = 1;
+      this.truck_type = '';
+      this.goods = '';
+      this.pick_up_time = '';
+      this.quotation_time = '';
+      this.locations = [];
+      this.pickup_value = '';
+      this.destination_value = '';
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };
@@ -751,13 +1024,13 @@ export default {
 }
 .quote-find-section{
   -webkit-box-flex: 1;
-flex: 1;
--webkit-box-orient: vertical;
-flex-direction: column;
-display: flex;
--webkit-box-direction: normal;
-margin-right: 2%;
-padding: 1rem;
+  flex: 1;
+  -webkit-box-orient: vertical;
+  flex-direction: column;
+  display: flex;
+  -webkit-box-direction: normal;
+  margin-right: 2%;
+  padding: 1rem;
 }
 .quote-text-option{
   margin-bottom: 0%;
@@ -783,5 +1056,8 @@ padding: 1rem;
   font-weight: 200;
   color: #000;
   margin-top: 2%;
+}
+.transporter-details-loader{
+  margin-top: 15%;
 }
 </style>

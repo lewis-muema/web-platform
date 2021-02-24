@@ -9,9 +9,11 @@ const getStorePath = state => state.location_path;
 const getOuterPriceRequestData = state => state.outer_price_request;
 const getActiveVendorTally = state => state.active_vendor_tally;
 const getExpandedActiveVendorTally = state => state.expanded_active_vendor_tally;
+const getPairedDriversTally = state => state.paired_drivers_tally;
 const getOuterActiveVendorDetails = state => state.outer_active_vendor_data;
 const getOuterActivePackageClass = state => state.outer_active_package_data;
 const getParentOrder = state => state.parent_order;
+const getSuggestions = state => state.suggestions;
 
 export default {
   getPage,
@@ -25,7 +27,9 @@ export default {
   getOuterPriceRequestData,
   getActiveVendorTally,
   getExpandedActiveVendorTally,
+  getPairedDriversTally,
   getOuterActiveVendorDetails,
   getOuterActivePackageClass,
   getParentOrder,
+  getSuggestions,
 };
