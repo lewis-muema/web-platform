@@ -960,7 +960,21 @@ export default {
       this.awardDialogVisible = true;
     },
     declineBid(val) {
+      let acc = {};
+      const session = this.$store.getters.getSession;
+      if ('default' in session) {
+        acc = session[session.default];
+      }
+
       const payload = {};
+
+      if (session.default === 'biz') {
+        payload.cop_id = acc.cop_id;
+        payload.cop_user_id = acc.user_id;
+      } else {
+        payload.peer_id = acc.user_id;
+      }
+
       const fullPayload = {
         values: payload,
         app: 'FREIGHT_APP',
@@ -1009,12 +1023,26 @@ export default {
       this.verification_stage = false;
     },
     awardFinal() {
+      let acc = {};
+      const session = this.$store.getters.getSession;
+      if ('default' in session) {
+        acc = session[session.default];
+      }
+
       const payload = {
         quotation_id: this.awardedTransporter.quotation_id,
         trucks_available: this.trucks_no,
         payment_terms: this.payment_terms,
         document: `https://sendy-partner-docs.s3-eu-west-1.amazonaws.com/${this.billOfLandingName}`,
       };
+
+      if (session.default === 'biz') {
+        payload.cop_id = acc.cop_id;
+        payload.cop_user_id = acc.user_id;
+      } else {
+        payload.peer_id = acc.user_id;
+      }
+
       const fullPayload = {
         values: payload,
         app: 'FREIGHT_APP',
