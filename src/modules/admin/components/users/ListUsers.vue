@@ -256,7 +256,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons';
+@import 'https://fonts.googleapis.com/css?family=Nunito:300,400,500,700|Material+Icons';
 .btn_users {
     border-width: 0px !important;
 }

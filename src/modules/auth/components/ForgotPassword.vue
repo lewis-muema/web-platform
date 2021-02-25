@@ -228,7 +228,7 @@ border: 1px solid #D8DFE6;
 border-radius: 4px;
 margin: 2rem auto;
 padding: 2rem;
-font-family: "Helvetica Nueu", "Helvetica", "Arial", "sans-serif";
+font-family: 'Nunito', sans-serif;
 }
 .sign-top{
 font-size: 1.3rem;
