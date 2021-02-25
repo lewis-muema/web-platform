@@ -112,7 +112,7 @@
           class="transporters-results-section
           transporters-details-section"
         >
-          <div v-if="loading">
+          <div v-if="loader">
             <loading-component />
           </div>
           <div v-else>
@@ -539,7 +539,7 @@ export default {
       shipment_offer: '',
       negotiability: '',
       bid_amount: '',
-      loading: true,
+      loader: true,
       DOM: '',
       pickup_value: '',
       destination_value: '',
@@ -588,7 +588,7 @@ export default {
     this.DOM = process;
   },
   mounted() {
-    this.loading = true;
+    this.loader = true;
     this.fetchOwnersListing();
     this.fetchGoodsTypes();
     this.fetchCarrierTypes();
@@ -639,11 +639,11 @@ export default {
           } else {
             this.owners_list = [];
           }
-          this.loading = false;
+          this.loader = false;
         },
         (error) => {
           this.owners_list = [];
-          this.loading = false;
+          this.loader = false;
         },
       );
     },
