@@ -306,7 +306,7 @@ export default {
 }
 
 a {
-    color: #039be5;
+    color: #1782c5;
     text-decoration: none;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
