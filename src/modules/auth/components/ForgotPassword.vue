@@ -228,7 +228,7 @@ border: 1px solid #D8DFE6;
 border-radius: 4px;
 margin: 2rem auto;
 padding: 2rem;
-font-family: "Helvetica Nueu", "Helvetica", "Arial", "sans-serif";
+font-family: 'Nunito', sans-serif;
 }
 .sign-top{
 font-size: 1.3rem;
@@ -273,7 +273,7 @@ text-decoration:none;
   width: 110%!important;
 }
 .forgot-paswword-moreinfo{
-    font-family: "Rubik", sans-serif;
+    font-family: 'Nunito', sans-serif;
     font-size: 14px;
 }
 .reset-pass-link{
@@ -287,7 +287,7 @@ text-decoration:none;
   text-align: center;
   font-size: 13px;
   color: #e08445;
-  font-family: "Rubik", sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 .forgot-btn-color{
   border-width: 0px !important;
