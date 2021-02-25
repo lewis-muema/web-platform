@@ -3,7 +3,7 @@
     <div class="header--item">
       <div class="external--item__left">
         <img
-          src="https://images.sendyit.com/web_platform/logo/rebrand_main_logo.png"
+          src="https://images.sendyit.com/web_platform/logo/rebrand_logo.png"
           alt="logo"
           class="external-logo"
           onclick="location.href='https://sendyit.com/';"

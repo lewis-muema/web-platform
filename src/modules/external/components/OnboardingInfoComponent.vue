@@ -93,7 +93,7 @@
     >
       <span slot="title">
         <img
-          src="https://images.sendyit.com/web_platform/logo/rebrand_main_logo.png"
+          src="https://images.sendyit.com/web_platform/logo/rebrand_logo.png"
           style="width:85px;"
         >
       </span>
