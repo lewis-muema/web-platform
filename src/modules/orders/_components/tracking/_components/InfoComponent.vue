@@ -3215,9 +3215,9 @@ export default {
 
 <style lang="css" scoped>
 @import "../../../../../assets/styles/info_window_component.css";
-@import "../../../../../assets/styles/orders_order_placement.css?v=3";
-@import '../../../../../assets/styles/orders_order_placement_options.css?v=1';
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=4';
+@import "../../../../../assets/styles/orders_order_placement.css";
+@import '../../../../../assets/styles/orders_order_placement_options.css';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css';
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */

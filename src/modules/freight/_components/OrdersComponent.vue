@@ -230,7 +230,7 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../assets/styles/transporters_component.css?v=1';
+@import '../../../assets/styles/transporters_component.css';
 
 .freight-orders-search{
   width: 37% !important;

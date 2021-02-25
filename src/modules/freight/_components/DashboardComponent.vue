@@ -382,8 +382,8 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../assets/styles/transporters_component.css?v=1';
-@import '../../../assets/styles/nav.css?v=1';
+@import '../../../assets/styles/transporters_component.css';
+@import '../../../assets/styles/nav.css';
 .no-activity-img {
   width: 35%;
   display: block;
