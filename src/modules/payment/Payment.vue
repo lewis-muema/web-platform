@@ -133,5 +133,5 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../assets/styles/payment.css?v=1";
+@import "../../assets/styles/payment.css?v=4";
 </style>

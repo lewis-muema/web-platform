@@ -1166,7 +1166,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=4';
 .tour-pointer-3 {
   float: right;
   position: relative;
