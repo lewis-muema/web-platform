@@ -13,7 +13,7 @@ export default {
         polyline: {
           path: '',
           options: {
-            strokeColor: '#007FFF',
+            strokeColor: '#1782c5',
             strokeOpacity: 1.0,
             strokeWeight: 2,
           },

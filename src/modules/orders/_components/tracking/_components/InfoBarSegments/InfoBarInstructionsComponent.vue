@@ -419,7 +419,7 @@ export default {
 .info-scheduled-time{
   margin: 3% 0px -2% 0px;
   font-style: italic;
-  color: #0062DB;
+  color: #1B7FC3;
   cursor: pointer;
   font-size: 12px;
   padding-left: 19px;

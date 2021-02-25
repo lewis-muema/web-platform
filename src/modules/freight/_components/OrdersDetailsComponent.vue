@@ -629,7 +629,7 @@
                 <el-rate
                   v-model="rated_score"
                   class="freight-rating"
-                  :colors="['#99A9BF', '#EE7D00', '#007FFF']"
+                  :colors="['#99A9BF', '#F57f20', '#1782C5']"
                 />
               </span>
               <div class="award-shipment-input">

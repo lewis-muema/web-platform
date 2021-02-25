@@ -45,7 +45,7 @@
   color: #4D4D4D;
 }
 .homeview--input-suggetions-link {
-  color: #0062DB;
+  color: #1B7FC3;
   text-align: center;
   padding: 15px 0px 15px 0px;
   cursor: pointer;
@@ -144,14 +144,14 @@
   margin-bottom: 10px;
 }
 .bg-button-orange {
-  background-color: #EE7D00;
-  border-color: #EE7D00;
+  background-color: #F57F20;
+  border-color: #F57F20;
 }
 .color-blue {
- color: #0062DB;
+ color: #1B7FC3;
 }
 .color-orange {
-  color: #EE7D00;
+  color: #F57F20;
 }
 .inactive-1, .inactive-1:hover {
   background: #BDBDBD;
@@ -210,20 +210,20 @@
   display: flex;
   margin-right: 10%;
   cursor: pointer;
-  color: #0062DB;
+  color: #1B7FC3;
 }
 .homeview--edit__icon {
   display: flex;
   margin-left: 0;
   margin-right: 0;
   cursor: pointer;
-  color: #0062DB;
+  color: #1B7FC3;
 }
 .homeview--edit__text {
   margin-top: 3px;
   margin-right: 5px;
   font-size: 10px;
-  color: #0062DB;
+  color: #1B7FC3;
   text-decoration: underline;
 }
 .homeview--heading {
@@ -233,7 +233,7 @@
 .homeview--heading__container {
   font-size: 11px;
   text-align: left;
-  color: #0062DB;
+  color: #1B7FC3;
   margin-top: 0px;
   margin-bottom: 0px;
 }
@@ -250,7 +250,7 @@
   margin-top: 0;
   font-size: 10px;
   margin-bottom: 0px;
-  color: #0062DB;
+  color: #1B7FC3;
   padding-right: 10px;
 }
 .homeview--outer-override {
@@ -294,7 +294,7 @@
   padding: 18px;
 }
 .homeview---top-details-left, .homeview---top-details-right {
-  color: #007FFF;
+  color: #1782c5;
 }
 .homeview---top-details-right {
   font-size: 13px;
@@ -329,7 +329,7 @@
 }
 .homeview--stops {
   text-decoration: none;
-  color: #007FFF;
+  color: #1782c5;
   font-size: 13px;
   padding-top: 10px;
 }
@@ -349,7 +349,7 @@
 }
 .homeview--add {
   text-decoration: none;
-  color: #007FFF;
+  color: #1782c5;
   font-size: 13px;
   padding-left: 10px;
 }
@@ -487,7 +487,7 @@
   margin-left: 19px;
 }
 .payments-orange {
-  color: #EE7D00;
+  color: #F57F20;
 }
 .home-view-vendor-types-item--vendor-wrapper__vendor {
   flex-direction: column;
@@ -529,7 +529,7 @@
 .home-view-truck-options-dedicated-notes-icon {
   width: 10px;
   height: 10px;
-  background: #0062DB;
+  background: #1B7FC3;
   border-radius: 10px;
   margin: 2px;
   margin-right: 10px;
@@ -564,7 +564,7 @@
   border-radius: 13px;
   height: 15px;
   width: 15px;
-  background: #0062DB;
+  background: #1B7FC3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -671,7 +671,7 @@
 .locations-popup-saved-remove {
   margin-left: auto;
   font-size: 12px;
-  color: #EE7D00;
+  color: #F57F20;
   margin-right: 15px;
 }
 .locations-popup-saved-name {
@@ -695,7 +695,7 @@
 .upload-link {
   text-decoration: underline;
   cursor: pointer;
-  color: #007FFF;
+  color: #1782c5;
 }
 .upload-link:hover {
   color: #0d517b;
@@ -743,7 +743,7 @@
   color: #bc5000 !important;
 }
 .el-icon-loading {
-  color: #0062DB !important;
+  color: #1B7FC3 !important;
 }
 #icon_override {
   width: 100%;
@@ -766,8 +766,8 @@
 }
 .el-popper[x-placement^='bottom'] {
   margin-top: 0px !important;
-  background-color: #007FFF;
-  border: 0px solid #007FFF;
+  background-color: #1782c5;
+  border: 0px solid #1782c5;
 }
 .el-popper[x-placement^='bottom'] .popper__arrow {
   display: none;
@@ -776,7 +776,7 @@
 .el-select-dropdown__item.hover,
 .el-select-dropdown__item.selected {
   color: #ffffff !important;
-  background-color: #007FFF !important;
+  background-color: #1782c5 !important;
 }
 .el-select-dropdown__list {
   padding: unset !important;
@@ -851,7 +851,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
-  color: #EE7D00;
+  color: #F57F20;
   margin-bottom: 15px;
   margin-top: 10px;
 }
@@ -859,7 +859,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
-  color: #0062DB;
+  color: #1B7FC3;
   margin-bottom: 10px;
   margin-top: 5px;
 }
@@ -930,9 +930,9 @@
   border-radius: 30px;
 }
 .homeview--icon-ongoing {
-  color: #EE7D00;
+  color: #F57F20;
   margin-right: 10px;
-  background: #EE7D00;
+  background: #F57F20;
   border-radius: 30px;
 }
 .homeview--field {
@@ -985,7 +985,7 @@
   justify-content: center;
   align-items: center;
   font-size: 12px;
-  color: #0062DB;
+  color: #1B7FC3;
 }
 .homeview--outer-modes {
   display: flex;
@@ -997,9 +997,9 @@
 .homeview--outer-mode-options {
   text-align: center;
   width: 45%;
-  color: #0062DB;
+  color: #1B7FC3;
 }
 .homeview--outer-selections__active {
   color: white !important;
-  background: #0062DB !important;
+  background: #1B7FC3 !important;
 }

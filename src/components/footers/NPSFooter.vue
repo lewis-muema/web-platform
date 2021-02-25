@@ -283,7 +283,7 @@ export default {
 }
 
 .btn-holder:hover {
-  background-color: #ee7d00;
+  background-color: #F57F20;
   color: white;
   font-weight: 700;
   border: none;
@@ -316,7 +316,7 @@ export default {
   position: absolute;
   width: 7%;
   margin-top: 6px;
-  background: #ee7d00;
+  background: #F57F20;
   color: #ffffff;
   border-radius: 4px;
   cursor: pointer;

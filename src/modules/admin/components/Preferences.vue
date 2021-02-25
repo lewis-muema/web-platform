@@ -252,11 +252,11 @@ export default {
 }
 
 input:checked + .slider {
-  background-color: #007FFF;
+  background-color: #1782C5;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #007FFF;
+  box-shadow: 0 0 1px #1782C5;
 }
 
 input:checked + .slider:before {

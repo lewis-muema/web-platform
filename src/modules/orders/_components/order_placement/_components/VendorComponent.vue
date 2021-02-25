@@ -822,7 +822,7 @@
                                     v-model="pair_rider_rating"
                                     disabled
                                     disabled-void-color="#C0C4CC"
-                                    :colors="['#007FFF', '#007FFF', '#007FFF']"
+                                    :colors="['#1782C5', '#1782C5', '#1782C5']"
                                   />
                                 </div>
                               </div>
@@ -2542,7 +2542,7 @@ min-height: 45px;
  height: 37px;
  font-weight: 400;
  font-size: 13px;
- color: #007FFF;
+ color: #1782C5;
 }
 .delivery-estimate-info{
  display: flex;

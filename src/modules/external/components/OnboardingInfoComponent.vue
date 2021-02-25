@@ -418,7 +418,7 @@ export default {
   font-family: 'Nunito', sans-serif;
 }
 #app > div > div.user-invite-body > div > div > div.panel-card > div > div > div.el-dialog__wrapper.onboarding-phone-validation > div > div.el-dialog__header{
-  background-color: #007FFF;
+  background-color: #1782C5;
   text-align: center;
 }
 .onboarding-phone-validation > div
@@ -452,8 +452,8 @@ export default {
 }
 .onboarding-verify{
     color: #ecf0f1;
-    background-color: #007FFF;
-    border-color: #0062DB;
+    background-color: #1782C5;
+    border-color: #1b7fc3;
     cursor: pointer;
     border-radius: 4px;
     height: 40px;
