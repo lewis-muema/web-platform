@@ -365,7 +365,6 @@
                     <el-input-number
                       v-model="trucks_no"
                       :min="1"
-                      :max="10"
                     />
                   </div>
                 </div>
@@ -1060,5 +1059,22 @@ export default {
 }
 .transporter-details-loader{
   margin-top: 15%;
+}
+.transporters-element-inputs{
+  background-color: white !important;
+  width: 100% !important;
+}
+.freight-input-area {
+  width: 90%;
+  border-radius: 0 .25rem .25rem 0;
+}
+.transporter-selector {
+  border: 0px solid #dcdfe6;
+  box-sizing: border-box;
+  height: 40px;
+  line-height: 40px;
+  outline: 0;
+  padding: 0 15px;
+  width: 100%;
 }
 </style>
