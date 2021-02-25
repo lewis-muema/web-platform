@@ -184,7 +184,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../assets/styles/datatable.css?v=1";
+@import "../../../assets/styles/datatable.css?v=4";
 
 .button {
     float: right;
