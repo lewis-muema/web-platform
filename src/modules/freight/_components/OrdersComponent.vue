@@ -58,7 +58,7 @@
         prop="order_date"
       >
         <template slot-scope="props">
-          {{ order_history_data[props.$index]['pickup_time'] | moment }}
+          {{ getFormattedDate(order_history_data[props.$index]['pickup_time']) }}
         </template>
       </el-table-column>
 
@@ -158,6 +158,9 @@ export default {
     getOrderFromName(path) {
       const splittedName = path[0].name.split(',', 2);
       return splittedName[0];
+    },
+    getFormattedDate(data) {
+      return moment(data, 'MM-DD-YYYY HH:mm:ss').format('MMMM Do YYYY, HH:mm');
     },
     getOrderToName(path) {
       const pathLength = path.length;
