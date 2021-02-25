@@ -168,7 +168,7 @@ export default {
     color: #595d62 !important;
     margin-top: 20px;
     padding: 15px;
-    font-family: 'Rubik', sans-serif;
+    font-family: 'Nunito', sans-serif;
 }
 
 .rate-rider-please {

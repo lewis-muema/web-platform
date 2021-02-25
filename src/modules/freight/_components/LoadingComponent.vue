@@ -65,7 +65,7 @@ export default {
 }
 .loader--title {
   font-size: 19px;
-  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Nunito', sans-serif;
   font-weight: 300;
 }
 </style>

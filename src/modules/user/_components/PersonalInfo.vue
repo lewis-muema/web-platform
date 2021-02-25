@@ -58,7 +58,7 @@
       >
         <span slot="title">
           <img
-            src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
+            src="https://images.sendyit.com/web_platform/logo/rebrand_logo.png"
             class="signup-sendy-logo"
           >
         </span>
@@ -518,7 +518,7 @@ export default {
         padding: 10px;
         width: 300px;
         margin-top: 9px;
-        font-family: inherit;
+        font-family: 'Nunito', sans-serif;
         font-size: inherit;
         line-height: inherit;
         color: #575757;
@@ -629,7 +629,7 @@ export default {
       text-align: left;
       line-height: 1.5;
       padding: 10px 0px;
-      font-family: "Rubik", sans-serif;
+      font-family: 'Nunito', sans-serif;
     }
     .phone-verification-input{
       display: flex;
@@ -640,7 +640,7 @@ export default {
       padding: 2px;
       border-bottom: 1px solid #ccc;
       width: 50%;
-      font-family: "Rubik", sans-serif;
+      font-family: 'Nunito', sans-serif;
       font-size: 16px;
     }
     .phone-validation-verify--button{

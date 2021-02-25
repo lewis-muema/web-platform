@@ -1,5 +1,5 @@
 .reset-font {
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 .home-view--seperator {
   border-top: 1px solid #6663;
@@ -329,7 +329,7 @@
   text-transform: capitalize;
 }
 .pair_info_text_content {
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
   color: #555;
   font-weight: 300;
 }
@@ -375,7 +375,7 @@
 }
 .tonnage-validate-error {
   color: #e08445;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
   text-align: left;
   font-size: 13px;
   width: 320px;
@@ -387,7 +387,7 @@
   background-color: white !important;
 }
 .el-time-panel {
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 .home-view-vendor-types--item__unavailable {
   background: #fbfbfb;

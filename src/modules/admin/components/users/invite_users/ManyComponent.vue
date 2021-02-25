@@ -131,7 +131,7 @@ export default {
 .inviteMany--textareabox {
     width: 100% !important;
     height: 120px!important;
-    font-family: 'Rubik', sans-serif !important;
+    font-family: 'Nunito', sans-serif !important;
     font-size: 14px !important;
     color: #555 !important;
     border: 1px solid #dcdfe6 !important;
