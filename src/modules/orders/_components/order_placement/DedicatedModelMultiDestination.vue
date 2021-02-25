@@ -134,5 +134,5 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../../assets/styles/orders_order_placement.css?v=1";
+@import "../../../../assets/styles/orders_order_placement.css?v=2";
 </style>

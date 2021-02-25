@@ -674,7 +674,7 @@ export default {
 }
 .invalid-pin {
   display: block;
-  color: #EE7D00;
+  color: #f57f20;
   font-size: 14px;
 }
 .upgrade-margin{
@@ -736,7 +736,7 @@ export default {
 }
 .vendor_active{
   background: #EDF8FF;
-  border: 2px solid #0062DB;
+  border: 2px solid #1B7FC3;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
   animation: flip-scale-down-diag-2 0.5s linear ;
 }

@@ -239,11 +239,11 @@ export default {
   display: flex;
   justify-content: space-between;
   background-color: #fff;
-  color: #007FFF;
+  color: #1782c5;
   padding: 9px 18px 9px 60px;
   font-size: 13px;
   cursor: pointer;
-  border: 0px solid #007FFF;
+  border: 0px solid #1782c5;
   border-radius: 2px;
   box-shadow: 0 3px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
 }
@@ -251,7 +251,7 @@ export default {
 {
     font-size: 13px;
     margin-top: 15px;
-    border: 0px solid #007FFF;
+    border: 0px solid #1782c5;
     cursor: pointer;
     transition: all .5s ease-in-out;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
@@ -260,7 +260,7 @@ export default {
 }
 .ongoing--card:hover,.ongoing--card.active
 {
-  border-color: #EE7D00;
+  border-color: #f57f20;
 }
 .ongoing--card-location
 {
@@ -275,14 +275,14 @@ export default {
   display: flex;
 justify-content: space-between;
 padding: 14px;
-background-color: #007FFF;
+background-color: #1782c5;
 color: #fff;
 transition: all .5s ease-in-out;
 border-radius: 0px 0px 3px 3px;
 }
 .ongoing--card:hover .ongoing--card-status, .ongoing--card.active .ongoing--card-status
 {
-  background-color: #EE7D00;
+  background-color: #f57f20;
 }
 .ongoing--card-padded
 {

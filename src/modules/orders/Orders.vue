@@ -1727,7 +1727,7 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../assets/styles/section_headers.css?v=1';
+@import '../../assets/styles/section_headers.css';
 
 .module-container {
   margin: 8px;
@@ -1900,7 +1900,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
 }
 .invalid-kra {
   display: block;
-  color: #EE7D00;
+  color: #f57f20;
   font-size: 14px;
 }
 .final-upper-padding{
@@ -1953,7 +1953,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
 .tour-popup-get-started {
   font-size: 15px;
   font-weight: 500;
-  color: #007FFF;
+  color: #1782c5;
   cursor: pointer;
   margin: 20px 0px 10px 0px;
 }
@@ -1965,7 +1965,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
 }
 .tour-end {
   font-weight: 500;
-  color: #007FFF;
+  color: #1782c5;
   cursor: pointer;
 }
 .saved-locations-message {

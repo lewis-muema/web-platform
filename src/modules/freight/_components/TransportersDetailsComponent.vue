@@ -155,7 +155,7 @@
                         disabled
                         show-score
                         disabled-void-color="#C0C4CC"
-                        :colors="['#007FFF', '#007FFF', '#007FFF']"
+                        :colors="['#1782C5', '#1782C5', '#1782C5']"
                         score-template="{value}"
                       />
                     </div>
@@ -986,10 +986,10 @@ export default {
   width: 2%;
 }
 .check-tranporters{
-  color: #0062DB;
+  color: #1B7FC3;
 }
 .transporter-doucuments-title{
-  color: #0062DB;
+  color: #1B7FC3;
 }
 .truck-title-info{
   font-weight: bold;

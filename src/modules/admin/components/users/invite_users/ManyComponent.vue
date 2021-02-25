@@ -139,7 +139,7 @@ export default {
     margin-top: 1.3rem !important;
 }
 .inviteMany--textareabox:focus{
-    border: 1px solid #007FFF !important;
+    border: 1px solid #1782c5 !important;
     -webkit-box-shadow: none !important;
     outline:none;
     box-shadow: none !important;

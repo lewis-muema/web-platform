@@ -404,7 +404,7 @@ export default {
   margin-left: 5.3%;
 }
 .view-document{
-  color: #0062DB;
+  color: #1B7FC3;
   font-weight: 400;
   cursor: pointer;
 }

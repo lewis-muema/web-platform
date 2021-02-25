@@ -3214,10 +3214,10 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import "../../../../../assets/styles/info_window_component.css?v=1";
-@import "../../../../../assets/styles/orders_order_placement.css?v=1";
+@import "../../../../../assets/styles/info_window_component.css";
+@import "../../../../../assets/styles/orders_order_placement.css?v=3";
 @import '../../../../../assets/styles/orders_order_placement_options.css?v=1';
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1.0';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=4';
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */
@@ -3234,7 +3234,7 @@ export default {
 ::-webkit-scrollbar-thumb {
   -webkit-border-radius: 5px;
   border-radius: 5px;
-  background: #007FFF;
+  background: #1782c5;
 }
 ::-webkit-scrollbar-thumb:window-inactive {
   background-color: rgba(0, 0, 0, 0.2);
@@ -3254,12 +3254,12 @@ export default {
   margin-bottom: 2%;
 }
 .edit-location-icon{
-  color: #0062DB !important;
+  color: #1B7FC3 !important;
 }
 .cancellation-edit-inner{
   margin: 3% 0px 5% 0px;
   font-style: italic;
-  color: #0062DB;
+  color: #1B7FC3;
   cursor: pointer;
   font-size: 12px;
   padding-left: 19px;

@@ -822,7 +822,7 @@
                                     v-model="pair_rider_rating"
                                     disabled
                                     disabled-void-color="#C0C4CC"
-                                    :colors="['#007FFF', '#007FFF', '#007FFF']"
+                                    :colors="['#1782C5', '#1782C5', '#1782C5']"
                                   />
                                 </div>
                               </div>
@@ -2526,7 +2526,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1.0';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=4';
 .collection_centre{
 min-height: 45px;
  background: rgba(231, 231, 231, 0.42);
@@ -2542,7 +2542,7 @@ min-height: 45px;
  height: 37px;
  font-weight: 400;
  font-size: 13px;
- color: #007FFF;
+ color: #1782C5;
 }
 .delivery-estimate-info{
  display: flex;

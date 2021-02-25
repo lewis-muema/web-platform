@@ -58,7 +58,7 @@
       >
         <span slot="title">
           <img
-            src="https://images.sendyit.com/web_platform/logo/rebrand_main_logo.png"
+            src="https://images.sendyit.com/web_platform/logo/rebrand_logo.png"
             class="signup-sendy-logo"
           >
         </span>
@@ -484,17 +484,17 @@ export default {
     .my-profile__menu__balance {
         float: right;
         font-size: 14px;
-        color: #007FFF;
+        color: #1782C5;
     }
 
     .my-profile__inner__menu {
         margin-bottom: 50px;
-        border-bottom: 1px solid #007FFF;
+        border-bottom: 1px solid #1782C5;
         padding-bottom: 2px;
     }
 
     .my-profile__inner__menu__link {
-        color: #007FFF;
+        color: #1782C5;
         text-transform: uppercase;
         text-align: center;
         padding: 2px 25px;
@@ -503,7 +503,7 @@ export default {
 
     .my-profile__inner__menu__selected {
         font-weight: 400;
-        border-bottom: 3px solid #007FFF;
+        border-bottom: 3px solid #1782C5;
         text-decoration: none;
     }
 
@@ -543,7 +543,7 @@ export default {
         line-height: 1.33;
         border-radius: 3px;
         color: #fff;
-        background-color: #007FFF;
+        background-color: #1782C5;
         border-color: #357ebd;
         display: inline-block;
         margin-bottom: 0;
@@ -655,8 +655,8 @@ export default {
     }
     .phone-validation-verify{
       color: #ecf0f1;
-        background-color: #007FFF;
-        border-color: #0062DB;
+        background-color: #1782C5;
+        border-color: #1b7fc3;
         cursor: pointer;
         border-radius: 4px;
         height: 40px;
@@ -667,8 +667,8 @@ export default {
     }
     .phone-validation-cancel{
       color: #ecf0f1;
-        background-color: #007FFF;
-        border-color: #0062DB;
+        background-color: #1782C5;
+        border-color: #1b7fc3;
         cursor: pointer;
         border-radius: 4px;
         height: 40px;
@@ -681,6 +681,6 @@ export default {
         width:85px;
     }
     #auth_container > div > div:nth-child(2) > div > div > div > div > div.el-dialog__header{
-      background-color: #007FFF;
+      background-color: #1782C5;
     }
 </style>

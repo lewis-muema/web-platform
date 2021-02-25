@@ -365,7 +365,7 @@ export default {
   width: 86%;
 }
 .remove-approver{
-  color: #0062DB;
+  color: #1B7FC3;
   cursor: pointer;
 }
 </style>
