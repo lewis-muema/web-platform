@@ -252,7 +252,7 @@ const awardShipment = function awardShipment({ dispatch }, payload) {
 };
 const declineShipment = function declineShipment({ dispatch }, payload) {
   return new Promise((resolve, reject) => {
-    dispatch('requestAxiosPatch', payload, {
+    dispatch('requestAxiosPut', payload, {
       root: true,
     }).then(
       (response) => {
