@@ -1113,7 +1113,7 @@ export default {
         values: payload,
         app: 'FREIGHT_APP',
         operator: '?',
-        endpoint: 'shipments/quotations/documents',
+        endpoint: 'shipments/quotations/documents/approve',
       };
 
       this.approveDocument(fullPayload).then(
@@ -1171,7 +1171,7 @@ export default {
         values: payload,
         app: 'FREIGHT_APP',
         operator: '?',
-        endpoint: 'shipments/quotations/documents',
+        endpoint: 'shipments/quotations/documents/decline',
       };
 
       this.approveDocument(fullPayload).then(
