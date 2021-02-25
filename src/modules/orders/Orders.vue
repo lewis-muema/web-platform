@@ -1727,7 +1727,7 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../assets/styles/section_headers.css?v=4';
+@import '../../assets/styles/section_headers.css';
 
 .module-container {
   margin: 8px;

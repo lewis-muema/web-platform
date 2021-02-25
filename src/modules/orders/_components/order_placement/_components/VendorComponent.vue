@@ -2526,7 +2526,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=4.0';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=4';
 .collection_centre{
 min-height: 45px;
  background: rgba(231, 231, 231, 0.42);

@@ -415,8 +415,8 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../../../assets/styles/orders_order_placement.css?v=4';
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=4';
+@import '../../../../../assets/styles/orders_order_placement.css?v=2';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=2';
 </style>
 <style lang="css">
 .tracking-loading-spinner {
