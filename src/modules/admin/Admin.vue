@@ -115,7 +115,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../assets/styles/section_headers.css?v=4";
-@import "../../assets/styles/section_filters.css?v=4";
-@import "../../assets/styles/section_pagination.css?v=4";
+@import "../../assets/styles/section_headers.css";
+@import "../../assets/styles/section_filters.css";
+@import "../../assets/styles/section_pagination.css";
 </style>

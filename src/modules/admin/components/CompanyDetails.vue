@@ -223,7 +223,7 @@ export default {
 </script>
 
 <style lang="css">
- @import "../../../assets/styles/datatable.css?v=4";
+ @import "../../../assets/styles/datatable.css";
 
  .company-edit2-details {
   font-size: 1.3rem;

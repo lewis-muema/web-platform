@@ -596,5 +596,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import "../../../assets/styles/map_component.css?v=4";
+@import "../../../assets/styles/map_component.css";
 </style>

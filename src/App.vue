@@ -380,7 +380,7 @@ export default {
 </script>
 
 <style lang="css">
-@import 'https://fonts.googleapis.com/css?family=Nunito:300,400,500,700';
-@import './assets/styles/app.css?v=4';
-@import './assets/styles/overide.css?v=4';
+@import 'https://fonts.googleapis.com/css?family=Rubik:300,400,500,700';
+@import './assets/styles/app.css';
+@import './assets/styles/overide.css?v=2';
 </style>
