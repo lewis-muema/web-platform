@@ -264,6 +264,7 @@
                       placeholder="Select time"
                       prefix-icon="el-icon-date"
                       :default-time="default_value"
+                      :picker-options="dueDatePickerOptions"
                     />
                   </div>
                 </div>
