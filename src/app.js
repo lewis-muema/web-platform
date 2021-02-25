@@ -45,6 +45,7 @@ import {
   Autocomplete,
   Upload,
   CheckboxGroup,
+  Progress,
 } from 'element-ui';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -90,6 +91,7 @@ Vue.use(VueMask);
 Vue.use(Upload);
 Vue.use(vueCountryRegionSelect);
 Vue.use(CheckboxGroup);
+Vue.use(Progress);
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$msgbox = MessageBox;

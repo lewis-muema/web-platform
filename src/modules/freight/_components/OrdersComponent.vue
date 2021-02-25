@@ -13,16 +13,6 @@
           />
         </el-input>
       </div>
-      <div class="section--filter-action-wrap">
-        <button
-          type="button"
-          class="button-primary section--filter-action freight-create-order"
-          name="create_order_text"
-          @click="createNewOrder"
-        >
-          {{ create_order_text }}
-        </button>
-      </div>
     </div>
     <el-table
       v-loading="loading"
@@ -40,7 +30,7 @@
         prop="order_date"
       >
         <template slot-scope="scope">
-          {{ order_history_data[scope.$index]['pick_up_name'] }}
+          {{ order_history_data[scope.$index]['pickup'] }}
         </template>
       </el-table-column>
       <el-table-column
@@ -48,34 +38,27 @@
         prop="order_date"
       >
         <template slot-scope="scope">
-          {{ order_history_data[scope.$index]['destination_name'] }}
+          {{ order_history_data[scope.$index]['destination'] }}
         </template>
       </el-table-column>
 
       <el-table-column
         key="1"
-        label="Transporter"
-        prop="transporter_name"
+        label="Type of load"
+        prop="cargo_type"
         width="200"
       />
-
       <el-table-column
-        label="Amount"
-        prop="path"
-        width="150"
-      >
-        <template slot-scope="scope">
-          {{ order_history_data[scope.$index]['currency'] }}
-          {{ formatCurrency(order_history_data[scope.$index]['amount']) }}
-        </template>
-      </el-table-column>
-
+        label="Type of truck"
+        prop="carrier_type"
+        width="200"
+      />
       <el-table-column
-        label="Date"
+        label="Pick up date"
         prop="order_date"
       >
         <template slot-scope="props">
-          {{ convertToUTCToLocal(order_history_data[props.$index]['date_created']) | moment }}
+          {{ getFormattedDate(order_history_data[props.$index]['pickup_time']) }}
         </template>
       </el-table-column>
 
@@ -88,7 +71,7 @@
         <template slot-scope="props">
           <div
             class="view-orders-transporter-info"
-            @click="viewOrdersInfo(order_history_data[props.$index]['order_id'])"
+            @click="viewOrdersInfo(order_history_data[props.$index]['id'])"
           >
             View <i class="el-icon-arrow-right view-transporter-info" />
           </div>
@@ -176,6 +159,9 @@ export default {
       const splittedName = path[0].name.split(',', 2);
       return splittedName[0];
     },
+    getFormattedDate(data) {
+      return moment(data, 'MM-DD-YYYY HH:mm:ss').format('MMMM Do YYYY, HH:mm');
+    },
     getOrderToName(path) {
       const pathLength = path.length;
       const splittedName = path[pathLength - 1].name.split(',', 2);
@@ -187,15 +173,13 @@ export default {
       if (Object.keys(sessionData).length > 0) {
         this.sessionData = sessionData;
 
-        const ordersPayload = {
-          user_id:
-            sessionData.default === 'biz'
-              ? sessionData.biz.cop_id
-              : sessionData[sessionData.default].user_id,
-          user_type: sessionData.default === 'biz' ? 1 : 3,
-        };
+        let label = `peer_id=${sessionData[sessionData.default].user_id}`;
 
-        this.requestFreightOrders(ordersPayload);
+        if (sessionData.default === 'biz') {
+          label = `cop_id=${sessionData.biz.cop_id}&cop_user_id=${sessionData.biz.user_id}`;
+        }
+
+        this.requestFreightOrders(label);
       }
     },
     changeSize(val) {
@@ -215,13 +199,13 @@ export default {
       return numeral(currency).format('0,0');
     },
     getRowKey(row) {
-      return row.order_id;
+      return row.id;
     },
-    requestFreightOrders(payload) {
+    requestFreightOrders(label) {
       const fullPayload = {
-        values: payload,
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/list',
+        app: 'FREIGHT_APP',
+        operator: '&',
+        endpoint: `shipments?${label}`,
       };
       this.$store.dispatch('$_freight/requestFreightOrders', fullPayload).then(
         () => {
