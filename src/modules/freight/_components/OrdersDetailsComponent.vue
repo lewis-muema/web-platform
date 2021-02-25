@@ -437,7 +437,7 @@
                     <el-input-number
                       v-model="trucks_no"
                       :min="1"
-                      :max="10"
+                      :max="1000"
                     />
                   </div>
                 </div>
