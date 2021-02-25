@@ -204,15 +204,6 @@ a.menu--last-child-link {
 .header--icon{
   display: flex;
 }
-.external-logo{
-  height: 50px;
-  display: inline-flex;
-  align-self: center;
-}
-.external--item__left{
-  margin: auto;
-  display: block;
-}
 .segmentation-align{
   margin-left: 3%;
   margin-left: 3%;
