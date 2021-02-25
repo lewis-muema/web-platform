@@ -101,91 +101,58 @@ export default {
           const notification = { title: '', level, message: this.message }; // notification object
           this.displayNotification(notification);
         } else {
+          let acc = {};
           const session = this.$store.getters.getSession;
-
-          if (session.biz.cop_id > 0) {
-            const values = {
-              cop_user_id: session[session.default].user_id,
-              old_password: this.old_password,
-              new_password: this.new_password,
-              password: this.confirm_password,
-            };
-
-            const fullPayload = {
-              values,
-              vm: this,
-              app: 'NODE_PRIVATE_API',
-              endpoint: 'update_user',
-            };
-
-            this.requestChangePassword(fullPayload).then(
-              (response) => {
-                if (response.status) {
-                  this.trackMixpanelEvent('Change Password');
-                  
-                  const level = 1; // success
-                  this.message = 'Password Changed. You will be redirected to the login page within 5 seconds';
-                  const notification = { title: 'Password Change', level, message: this.message }; // notification object
-                  this.displayNotification(notification);
-                  setTimeout(() => {
-                    this.deleteSession();
-                    this.$router.push('/auth/sign_in');
-                  }, 5000);
-                } else {
-                  const level = 3;
-                  this.message = 'Something went wrong.';
-                  const notification = { title: '', level, message: this.message }; // notification object
-                  this.displayNotification(notification);
-                }
-              },
-              (error) => {
-                const level = 3;
-                this.message = 'Something went wrong.';
-                const notification = { title: '', level, message: this.message }; // notification object
-                this.displayNotification(notification);
-              },
-            );
-          } else if (session.peer.user_id > 0) {
-            const values = {
-              user_id: session[session.default].user_id,
-              old_password: this.old_password,
-              password: this.new_password,
-            };
-
-            const fullPayload = {
-              values,
-              vm: this,
-              app: 'NODE_PRIVATE_API',
-              endpoint: 'update_user',
-            };
-
-            this.requestChangePassword(fullPayload).then(
-              (response) => {
-                if (response.status) {
-                  const level = 1; // success
-                  this.message = 'Password Changed. You will be redirected to the login page within 5 seconds';
-                  const notification = { title: 'Password Change', level, message: this.message }; // notification object
-                  this.displayNotification(notification);
-                  setTimeout(() => {
-                    this.$router.push('/auth/sign_in');
-                  }, 5000);
-                } else {
-                  const level = 3;
-                  this.message = 'Something went wrong.';
-                  const notification = { title: '', level, message: this.message }; // notification object
-                  this.displayNotification(notification);
-                }
-              },
-              (error) => {
-                const level = 3;
-                this.message = 'Something went wrong.';
-                const notification = { title: '', level, message: this.message }; // notification object
-                this.displayNotification(notification);
-              },
-            );
-          } else {
-            this.$router.push('/auth');
+          if ('default' in session) {
+            acc = session[session.default];
           }
+
+          const payload = {
+            old_password: this.old_password,
+            new_password: this.new_password,
+            password: this.confirm_password,
+          };
+
+          if (session.default === 'biz') {
+            payload.cop_user_id = acc.user_id;
+          } else {
+            payload.user_id = acc.user_id;
+          }
+
+          const fullPayload = {
+            values: payload,
+            vm: this,
+            app: 'NODE_PRIVATE_API',
+            endpoint: 'update_user',
+          };
+
+          this.requestChangePassword(fullPayload).then(
+            (response) => {
+              if (response.status) {
+                this.trackMixpanelEvent('Change Password');
+
+                const level = 1; // success
+                this.message = 'Password Changed. You will be redirected to the login page within 5 seconds';
+                const notification = { title: 'Password Change', level, message: this.message }; // notification object
+                this.displayNotification(notification);
+                setTimeout(() => {
+                  this.deleteSession();
+                  this.$router.push('/auth/sign_in');
+                }, 5000);
+              } else {
+                const level = 3;
+                this.message = 'Something went wrong.';
+                const notification = { title: '', level, message: this.message }; // notification object
+                this.displayNotification(notification);
+              }
+            },
+            (error) => {
+              const level = 3;
+              this.message = 'Something went wrong.';
+              const notification = { title: '', level, message: this.message }; // notification object
+              this.displayNotification(notification);
+            },
+          );
         }
       } else {
         const level = 3;
