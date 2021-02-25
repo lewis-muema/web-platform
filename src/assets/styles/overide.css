@@ -392,7 +392,7 @@ button span {
 }
 
 .el-select-dropdown__item {
-  font-family: "Rubik", sans-serif !important;
+  font-family: 'Nunito', sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #555 !important;
@@ -452,7 +452,7 @@ span.el-pagination__jump {
   border-radius: 4px;
   line-height: 30px;
   margin: 5px 0;
-  font-family: "Rubik", sans-serif !important;
+  font-family: 'Nunito', sans-serif !important;
 }
 .el-date-table td span {
   color: #555;
@@ -535,7 +535,7 @@ span.el-pagination__jump {
 
 .el-notification__title {
   font-size: 14px !important;
-  font-family: "Rubik", sans-serif !important;
+  font-family: 'Nunito', sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #333 !important;
@@ -543,7 +543,7 @@ span.el-pagination__jump {
 }
 .el-notification__content {
   font-size: 13px !important;
-  font-family: "Rubik", sans-serif !important;
+  font-family: 'Nunito', sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #555 !important;

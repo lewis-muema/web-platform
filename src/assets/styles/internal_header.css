@@ -144,7 +144,7 @@ nav ul li .router-link-active{
 .nav--menu-dropdown-list li a {
     color: #555 !important;
     cursor: pointer;
-    font-family: 'Rubik', sans-serif  !important;
+    font-family: 'Nunito', sans-serif !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -201,6 +201,16 @@ a.menu--last-child-link {
   margin-left: -1%;
   height: 8% !important;
 }
+.external-logo{
+  height: 50px;
+  display: inline-flex;
+  align-self: center;
+}
+.external--item__left{
+  margin: auto;
+  display: block;
+}
+
 .header--icon{
   display: flex;
 }

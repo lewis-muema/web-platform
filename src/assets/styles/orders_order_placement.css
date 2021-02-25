@@ -66,12 +66,12 @@
 }
 .homeview--input-suggestion-place-name {
   font-size: 13px;
-  font-family: sans-serif;
+  font-family: 'Nunito', sans-serif;
   color: black;
 }
 .homeview--input-suggestion-address-name {
   font-size: 12px;
-  font-family: sans-serif;
+  font-family: 'Nunito', sans-serif;
   color: rgba(0, 0, 0, 0.34);
   margin: 5px;
 }
@@ -1003,4 +1003,3 @@
   color: white !important;
   background: #1B7FC3 !important;
 }
-

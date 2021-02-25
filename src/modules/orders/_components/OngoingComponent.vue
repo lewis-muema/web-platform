@@ -300,6 +300,6 @@ border-radius: 0px 0px 3px 3px;
   width: 105%;
 }
 .ongoing-card-text{
-  color: #555;
+  color: #555 !important;
 }
 </style>

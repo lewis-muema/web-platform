@@ -166,7 +166,7 @@ export default {
 }
 .card__paragraph{
     font-size: 14px;
-    font-family: 'Rubik', sans-serif;
+    font-family: 'Nunito', sans-serif;
     color: #606266;
     font-weight: 300;
 }
@@ -196,7 +196,7 @@ export default {
     text-transform: capitalize !important;
     text-align: center;
     text-decoration: none;
-    font-family: 'Rubik', sans-serif;
+    font-family: 'Nunito', sans-serif;
 
 }
 .card__content{

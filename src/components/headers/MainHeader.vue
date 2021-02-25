@@ -7,7 +7,7 @@
           @click="linkRoute('/orders')"
         >
           <img
-            src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
+            src="https://images.sendyit.com/web_platform/logo/rebrand_logo.png"
             alt="logo"
             class="logo"
           >

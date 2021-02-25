@@ -80,7 +80,7 @@ export default {
 .profile--link
 {
   color: #555;
-  font-family: Slack-Lato,appleLogo,sans-serif;
+  font-family: 'Nunito', sans-serif;
   /* font-size: 1rem !important; */
   text-align: center;
   padding: 2px;
