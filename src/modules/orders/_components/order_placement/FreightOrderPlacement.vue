@@ -204,7 +204,7 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../../assets/styles/orders_order_placement.css?v=1';
+@import '../../../../assets/styles/orders_order_placement.css?v=2';
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */
@@ -221,7 +221,7 @@ export default {
 ::-webkit-scrollbar-thumb {
   -webkit-border-radius: 5px;
   border-radius: 5px;
-  background: #007FFF;
+  background: #1782c5;
 }
 ::-webkit-scrollbar-thumb:window-inactive {
   background-color: rgba(0, 0, 0, 0.2);

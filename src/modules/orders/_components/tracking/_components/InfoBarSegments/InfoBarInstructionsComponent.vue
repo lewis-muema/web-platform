@@ -415,11 +415,11 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import "../../../../../../assets/styles/info_window_component.css?v=1";
+@import "../../../../../../assets/styles/info_window_component.css";
 .info-scheduled-time{
   margin: 3% 0px -2% 0px;
   font-style: italic;
-  color: #0062DB;
+  color: #1B7FC3;
   cursor: pointer;
   font-size: 12px;
   padding-left: 19px;

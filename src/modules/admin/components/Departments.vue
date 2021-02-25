@@ -184,7 +184,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../assets/styles/datatable.css?v=1";
+@import "../../../assets/styles/datatable.css";
 
 .button {
     float: right;
@@ -210,7 +210,7 @@ export default {
     border: 1px solid transparent;
     border-radius: 3px;
     color: #fff;
-    background-color: #007FFF;
+    background-color: #1782C5;
     border-color: #357ebd;
     text-decoration: none;
 }

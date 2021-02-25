@@ -251,13 +251,13 @@ display: block;
  height: 30px;
 }
 .sign-holder input[type="submit"] {
- background-color: #007FFF;
+ background-color: #1782C5;
  color: #fff;
  letter-spacing: 1.1px;
  font-weight: inherit;
  padding: 6px;
  height: 42px;
- border: 1px solid #007FFF;
+ border: 1px solid #1782C5;
  text-transform: uppercase;
  font-size: medium;
 }
@@ -265,7 +265,7 @@ display: block;
 width: 83%;
 }
 .sign-holder__link{
-color: #007FFF;
+color: #1782C5;
 text-decoration:none;
 }
 .forgot-form{
@@ -278,7 +278,7 @@ text-decoration:none;
 }
 .reset-pass-link{
   cursor: pointer;
-  color: #007FFF;
+  color: #1782C5;
   text-decoration: none;
 }
 .reset-link-details{

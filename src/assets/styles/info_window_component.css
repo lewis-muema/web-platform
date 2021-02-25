@@ -73,7 +73,7 @@
   flex: 1;
 }
 .infobar--driver a {
-  color: #007FFF;
+  color: #1782c5;
   text-decoration: none;
   font-size: 80%;
 }
@@ -94,7 +94,7 @@
 }
 .infobar--actions-hover:hover {
   cursor: pointer;
-  color: #007FFF;
+  color: #1782c5;
 }
 .infobar--action-slide {
   display: flex;
@@ -165,7 +165,7 @@
   text-transform: capitalize;
   font-size: 13px;
   letter-spacing: 1.1px;
-  background-color: #007FFF;
+  background-color: #1782c5;
   color: #fff;
   width: 100%;
   height: 46px;
@@ -320,52 +320,52 @@ ul.timeline > li#timeline_right.timelinePay:before {
   padding-left: 3px;
 }
 ul.timeline > li#timeline_right.confirmedReached:before {
-  background: #0062DB;
-  border: 4px solid #0062DB;
+  background: #1B7FC3;
+  border: 4px solid #1B7FC3;
   content: '';
 }
 ul.timeline > li#timeline_right.confirmedExpressReached:before {
-  background: #0062DB;
-  border: 4px solid #0062DB;
+  background: #1B7FC3;
+  border: 4px solid #1B7FC3;
   content: '';
   animation: pulse-blue 2s infinite;
 }
 ul.timeline > li#timeline_right.confirmedScheduled:before {
-  background: #0062DB;
-  border: 4px solid #0062DB;
+  background: #1B7FC3;
+  border: 4px solid #1B7FC3;
   content: '';
   animation: pulse-blue 2s infinite;
 }
 ul.timeline > li#timeline_right.pickedReached:before {
-  background: #EE7D00;
-  border: 4px solid #EE7D00;
+  background: #f57f20;
+  border: 4px solid #f57f20;
   content: '';
 }
 ul.timeline > li#timeline_right.pickedExpressReached:before {
-  background: #0062DB;
-  border: 4px solid #0062DB;
+  background: #1B7FC3;
+  border: 4px solid #1B7FC3;
   content: '';
   animation: pulse-blue 2s infinite;
 }
 ul.timeline > li#timeline_right.deliveredReached:before {
-  background: #EE7D00;
-  border: 4px solid #EE7D00;
+  background: #f57f20;
+  border: 4px solid #f57f20;
   content: '';
 }
 ul.timeline > li#timeline_right.deliveryEnrouteReached:before {
-  background: #0062DB;
-  border: 4px solid #0062DB;
+  background: #1B7FC3;
+  border: 4px solid #1B7FC3;
   content: '';
   animation: pulse-blue 2s infinite;
 }
 ul.timeline > li#timeline_right.payedReached:before {
-  background: #EE7D00;
-  border: 4px solid #EE7D00;
+  background: #f57f20;
+  border: 4px solid #f57f20;
   content: '';
 }
 .inforbar_route_timeline li:first-child:before {
-  background: #EE7D00;
-  border: 4px solid #EE7D00;
+  background: #f57f20;
+  border: 4px solid #f57f20;
   content: '';
 }
 .inforbar_order_timeline li:first-child:before {
@@ -387,7 +387,7 @@ ul.timeline > li#timeline_right.payedReached:before {
   padding-bottom: 10px;
 }
 .top-bar-info {
-  color: #007FFF;
+  color: #1782c5;
   font-size: 15px;
 }
 .top-bar-img {
@@ -564,8 +564,8 @@ ul.timeline > li#timeline_right.payedReached:before {
   font-weight: 400 !important;
 }
 .el-step__head.is-process {
-  color: #EE7D00 !important;
-  border-color: #EE7D00 !important;
+  color: #f57f20 !important;
+  border-color: #f57f20 !important;
 }
 .infor-top-bar-text {
   color: #8a8a8a;
@@ -592,19 +592,19 @@ ul.timeline > li#timeline_right.payedReached:before {
   /* width: 103px!important; */
 }
 .confirmedActive {
-  color: #0062DB;
+  color: #1B7FC3;
 }
 .pickedActive {
-  color: #0062DB;
+  color: #1B7FC3;
 }
 .deliveredActive {
-  color: #0062DB;
+  color: #1B7FC3;
 }
 .payedActive {
-  color: #0062DB;
+  color: #1B7FC3;
 }
 ul.inforbar_route_timeline:before {
-  background: #0062DB !important;
+  background: #1B7FC3 !important;
   height: 82% !important;
 }
 ul.inforbar_order_timeline:before {
@@ -769,10 +769,10 @@ button.default.action--slide-button {
 .pop_btn{
    width: 24% !important;
    background: #FFFFFF;
-   border: 1px solid #0062DB;
+   border: 1px solid #1B7FC3;
    box-sizing: border-box;
    border-radius: 3px;
-   color: #0062DB;
+   color: #1B7FC3;
 }
 .pop-message{
    font-size: 18px;
@@ -781,7 +781,7 @@ button.default.action--slide-button {
 }
 .warning-icon{
   font-size: 57px !important;
-  color: #0062DB !important;
+  color: #1B7FC3 !important;
 }
 .warning-icon-pstn{
   display: block;
@@ -799,8 +799,8 @@ button.default.action--slide-button {
 }
 .accept-cancell-btn{
   background: #FFFFFF !important;
-  color: #0062DB !important;
-  border: 1px solid #0062DB !important;
+  color: #1B7FC3 !important;
+  border: 1px solid #1B7FC3 !important;
 }
 .additional-notes-recipient{
   padding: 3px;
@@ -864,7 +864,7 @@ button.default.action--slide-button {
 }
 .warning-cancellation-icon{
   font-size: 14px !important;
-  color: #EE7D00 !important;
+  color: #f57f20 !important;
   margin-top: 4%;
   margin-right: 2%;
 }
@@ -881,7 +881,7 @@ button.default.action--slide-button {
 .infor-top-change-details{
   margin: 3% 0px -2% 0px;
   font-style: italic;
-  color: #0062DB;
+  color: #1B7FC3;
   cursor: pointer;
 }
 .cancel-reason-description{
@@ -968,7 +968,7 @@ button.default.action--slide-button {
   text-align: center;
   font-size: 12px;
   padding: 20px;
-  color: #007FFF;
+  color: #1782c5;
   margin-bottom: -15px;
 }
 .edit-locations--place-order {

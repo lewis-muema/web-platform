@@ -288,8 +288,8 @@ export default {
 }
 .active-currency {
   color: white;
-  background: #0062DB;
-  border: 1px solid #0062DB !important;
+  background: #1B7FC3;
+  border: 1px solid #1B7FC3 !important;
 }
 .payinfo-icon-container {
   width: 50px;

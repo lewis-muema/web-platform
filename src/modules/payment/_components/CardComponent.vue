@@ -599,7 +599,7 @@ export default {
   width: 100%;
 }
 .payments-orange {
-  color: #EE7D00;
+  color: #f57f20;
 }
 .card--saved-expiry {
   margin-left: 43px;

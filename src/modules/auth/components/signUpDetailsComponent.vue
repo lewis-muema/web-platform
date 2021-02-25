@@ -734,7 +734,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import "../../../../src/assets/styles/sign_up.css?v=1";
+@import "../../../../src/assets/styles/sign_up.css";
 .cards--align > div > div > div:nth-child(3) > div:nth-child(1) > div > div{
   width: 182%;
 }

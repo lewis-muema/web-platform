@@ -94,7 +94,7 @@ export default {
   /* font-weight: bold !important; */
   font-weight: 500 !important;
   border-bottom: none!important;
-  background-color: #007FFF;;
+  background-color: #1782C5;
   color: #fff !important;
 
   /* background-color: red; */
@@ -102,7 +102,7 @@ export default {
 .profile--inner{
   margin-top:5%;
   margin-left:20%;
-  border-right:5px solid #007FFF;
+  border-right:5px solid #1782C5;
   height:400px;
 }
 </style>

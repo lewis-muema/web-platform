@@ -137,7 +137,7 @@
               disabled
               class="el-rate__icon"
               disabled-void-color="#C0C4CC"
-              :colors="['#007FFF', '#007FFF', '#007FFF']"
+              :colors="['#1782C5', '#1782C5', '#1782C5']"
               score-template="{value} points"
             />
           </div>
@@ -521,7 +521,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../../assets/styles/order_details.css?v=1";
+@import "../../../assets/styles/order_details.css";
 .order-details-wrapper {
   width: 50%;
   display: inline-block;

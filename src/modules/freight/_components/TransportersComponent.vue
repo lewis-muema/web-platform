@@ -478,7 +478,7 @@ export default {
       main_order_path: [],
       map_options: {
         componentRestrictions: {
-          country: ['ke', 'ug', 'tz'],
+          country: ['ke', 'ug', 'tz', 'ss', 'rw'],
         },
         bounds: {
           north: 35.6,
@@ -1003,7 +1003,7 @@ export default {
   overflow-y: auto;
 }
 .listing-info{
-  border: 1px solid #0062DB;
+  border: 1px solid #1B7FC3;
   padding: 1rem;
   border-radius: 4px;
   width: 94% !important;
@@ -1027,8 +1027,8 @@ export default {
   height: 40px;
   transition: background-color 0.3s;
   font-size: 13px;
-  border-color: #0062DB;
-  background: #0062DB;
+  border-color: #1B7FC3;
+  background: #1B7FC3;
   border-radius: 4px;
   width: 30%;
 }

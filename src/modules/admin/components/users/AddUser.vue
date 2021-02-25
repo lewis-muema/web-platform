@@ -89,13 +89,13 @@ export default {
 
 .dropdown-content li>a, .dropdown-content li>span
 {
-  color: #007FFF;
+  color: #1782c5;
   font-size: 14px;
 }
 
 .blue
 {
-  background-color: #007FFF !important;
+  background-color: #1782c5 !important;
 }
 
 .select-wrapper input.select-dropdown
@@ -110,8 +110,8 @@ export default {
 
 input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):focus:not([readonly]), input[type=password]:not(.browser-default):focus:not([readonly]), input[type=email]:not(.browser-default):focus:not([readonly]), input[type=url]:not(.browser-default):focus:not([readonly]), input[type=time]:not(.browser-default):focus:not([readonly]), input[type=date]:not(.browser-default):focus:not([readonly]), input[type=datetime]:not(.browser-default):focus:not([readonly]), input[type=datetime-local]:not(.browser-default):focus:not([readonly]), input[type=tel]:not(.browser-default):focus:not([readonly]), input[type=number]:not(.browser-default):focus:not([readonly]), input[type=search]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly])
 {
-  border-bottom: 1px solid #007FFF;
-  -webkit-box-shadow: 0 1px 0 0 #007FFF;
-  box-shadow: 0 1px 0 0 #007FFF;
+  border-bottom: 1px solid #1782c5;
+  -webkit-box-shadow: 0 1px 0 0 #1782c5;
+  box-shadow: 0 1px 0 0 #1782c5;
 } */
 </style>

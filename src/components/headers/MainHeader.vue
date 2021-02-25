@@ -7,7 +7,7 @@
           @click="linkRoute('/orders')"
         >
           <img
-            src="https://images.sendyit.com/web_platform/logo/rebrand_main_logo.png"
+            src="https://images.sendyit.com/web_platform/logo/rebrand_logo.png"
             alt="logo"
             class="logo"
           >
@@ -357,5 +357,5 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../assets/styles/internal_header.css?v=1';
+@import '../../assets/styles/internal_header.css?v=2';
 </style>

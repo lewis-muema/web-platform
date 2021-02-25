@@ -27,7 +27,7 @@
   flex-basis: 11% !important;
 }
 .home-next-step {
-  color: #007FFF;
+  color: #1782c5;
 }
 .back-to-home-btn {
   padding-left: 6px;
@@ -58,7 +58,7 @@
 .vendor_component-actions__divider {
   margin-left: 3%;
   margin-right: 2%;
-  color: #007FFF;
+  color: #1782c5;
   font-size: 16px;
   font-weight: 600;
 }
@@ -127,12 +127,12 @@
   padding-top: 4px;
   padding-bottom: 4px;
   background-color: transparent;
-  color: #007FFF;
+  color: #1782c5;
 }
 .home-view-vendor-types--item:hover,
 .home-view-vendor-types--item:active,
 .home-view-vendor-types--item__active {
-  border: 2px solid #007FFF;
+  border: 2px solid #1782c5;
   background-color: #fff;
 }
 
@@ -231,7 +231,7 @@
 }
 .home-view-actions--schedule {
   margin-bottom: 15px;
-  color: #007FFF;
+  color: #1782c5;
   font-size: small;
   margin-top: 20px;
 }
@@ -245,17 +245,17 @@
 }
 
 .home-view-section__link:hover {
-  color: #007FFF !important;
+  color: #1782c5 !important;
   cursor: pointer;
 }
 .home-view-section__link-active {
   font-weight: normal !important;
-  color: #007FFF !important;
+  color: #1782c5 !important;
   margin-bottom: -3px;
 }
 .home-view-actions__element-date .el-input__inner,
 .home-view-actions__element-date .el-input__icon {
-  color: #007FFF;
+  color: #1782c5;
 }
 .home-view-actions--note {
   margin-left: 20px;
@@ -280,7 +280,7 @@
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  border: 1px solid #007FFF;
+  border: 1px solid #1782c5;
   border-radius: 5px;
   padding: 5px;
   margin-top: 20px;
@@ -312,7 +312,7 @@
   text-align: center;
   font-size: 12px;
   padding: 20px;
-  color: #007FFF;
+  color: #1782c5;
   margin-bottom: -15px;
 }
 
@@ -386,7 +386,7 @@
   opacity: 0;
 }
 .tier_description_background {
-  background-color: #007FFF;
+  background-color: #1782c5;
 }
 .extra_info_background {
   background-color: #fff;
@@ -473,7 +473,7 @@
   width: 70px;
 }
 .home-view-vendor-select-vendor-number .el-input__inner {
-  color: #0062DB;
+  color: #1b7fc3;
 }
 .home-view-vendor-types--extra__unavailable {
   background: rgba(173, 173, 173, 0.97) !important;
@@ -517,7 +517,7 @@
   text-transform: capitalize;
 }
 .vendorExtraInfo{
-  background-color: #007FFF !important;
+  background-color: #1782c5 !important;
 }
 /* end transitions */
 .button-additional-notes{

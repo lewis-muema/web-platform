@@ -506,7 +506,7 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../assets/styles/section_headers.css?v=1';
+@import '../../assets/styles/section_headers.css';
 .module-container {
   margin: 8px;
 }
@@ -557,7 +557,7 @@ final-set-up-pop > div > div > div.el-dialog__header{
 }
 .invalid-kra {
   display: block;
-  color: #EE7D00;
+  color: #f57f20;
   font-size: 14px;
 }
 .final-upper-padding{

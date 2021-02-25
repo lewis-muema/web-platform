@@ -117,7 +117,7 @@
                     >
                     <span class="order-info-header">Will the container be returned?</span>
                     <div class="freight-order-info-extra">
-                      {{ freightOrderDetail.returned === true ? 'Yes' : 'No' }}
+                      {{ freightOrderDetail.is_return === true ? 'Yes' : 'No' }}
                     </div>
                   </div>
 
@@ -629,7 +629,7 @@
                 <el-rate
                   v-model="rated_score"
                   class="freight-rating"
-                  :colors="['#99A9BF', '#EE7D00', '#007FFF']"
+                  :colors="['#99A9BF', '#F57f20', '#1782C5']"
                 />
               </span>
               <div class="award-shipment-input">
@@ -1070,25 +1070,22 @@ export default {
       }
 
       const payload = {
-        order_id: this.freightOrderDetail.order_id,
         document_id: val.document_id,
-        owner_id: this.freightOrderDetail.owner_id,
         status: 2,
       };
 
       if (session.default === 'biz') {
         payload.cop_id = acc.cop_id;
         payload.cop_user_id = acc.user_id;
-        payload.created_by = 1;
       } else {
         payload.peer_id = acc.user_id;
-        payload.created_by = 3;
       }
 
       const fullPayload = {
         values: payload,
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/order/documents',
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: 'shipments/quotations/documents',
       };
 
       this.approveDocument(fullPayload).then(
@@ -1132,26 +1129,23 @@ export default {
       }
 
       const payload = {
-        order_id: this.freightOrderDetail.order_id,
         document_id: this.decline_doc.document_id,
-        owner_id: this.freightOrderDetail.owner_id,
-        status: 3,
+        status: -1,
         reason: this.reason,
       };
 
       if (session.default === 'biz') {
         payload.cop_id = acc.cop_id;
         payload.cop_user_id = acc.user_id;
-        payload.created_by = 1;
       } else {
         payload.peer_id = acc.user_id;
-        payload.created_by = 3;
       }
 
       const fullPayload = {
         values: payload,
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/order/documents',
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: 'shipments/quotations/documents',
       };
 
       this.approveDocument(fullPayload).then(
@@ -1238,13 +1232,13 @@ export default {
     },
     checkActionableBtnState() {
       const session = this.$store.getters.getSession;
+      let resp = false;
       if (session.default === 'biz') {
         if (session[session.default].freight_approver === 1) {
-          return true;
+          resp = true;
         }
-        return false;
       }
-      return true;
+      return resp;
     },
     getTruckPercentage(availableTrucks, totalTrucks) {
       const resp = (availableTrucks / totalTrucks) * 100;

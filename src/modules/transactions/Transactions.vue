@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "../../assets/styles/section_headers.css?v=1";
-@import "../../assets/styles/section_filters.css?v=1";
-@import "../../assets/styles/section_pagination.css?v=1";
+@import "../../assets/styles/section_headers.css";
+@import "../../assets/styles/section_filters.css";
+@import "../../assets/styles/section_pagination.css";
 </style>
