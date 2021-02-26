@@ -105,7 +105,7 @@
                       src="../../../assets/img/freight/load_weight.png"
                       class="order_details_desc_image"
                     >
-                    <span class="order-info-header">Weight of load per mover</span>
+                    <span class="order-info-header">Weight of load per truck</span>
                     <div class="freight-order-info-extra">
                       {{ freightOrderDetail.tonnes_per_truck }} Tonnes
                     </div>
@@ -965,7 +965,9 @@ export default {
         acc = session[session.default];
       }
 
-      const payload = {};
+      const payload = {
+        quotation_id: val.quotation_id,
+      };
 
       if (session.default === 'biz') {
         payload.cop_id = acc.cop_id;
@@ -978,7 +980,7 @@ export default {
         values: payload,
         app: 'FREIGHT_APP',
         operator: '?',
-        endpoint: `shipments/quotations/${val.quotation_id}`,
+        endpoint: 'shipments/quotations',
       };
 
       this.$store.dispatch('$_freight/declineShipment', fullPayload).then(
