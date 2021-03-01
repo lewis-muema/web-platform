@@ -849,7 +849,7 @@ const translations = {
   expiry: 'FR_Expiry',
   confirm_password: 'FR_Confirm Password',
   price_update: 'Mise à jour des prix',
-  today: 'FR_Today',
+  today: "Aujourd'hui",
   tommorow: 'Demain',
 
 };
