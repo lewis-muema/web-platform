@@ -48,7 +48,7 @@ import verifyComponent from '../freights/en/verifyComponent';
 import genTranslationsEnglish from '../general/en';
 
 const translations = {
-  npsFooter: NPSFooter,
+  NPSFooter,
   mainHeader,
   byPassLogin,
   forgotPassword: forgetPassword,

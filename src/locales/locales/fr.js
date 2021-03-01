@@ -49,7 +49,7 @@ import verifyComponent from '../freights/fr/verifyComponent';
 import genFrenchTranslations from '../general/fr';
 
 const translations = {
-  npsFooter: NPSFooter,
+  NPSFooter,
   mainHeader,
   byPassLogin,
   forgotPassword: forgetPassword,
