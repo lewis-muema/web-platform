@@ -78,7 +78,7 @@
               <!-- end vendor wrapper -->
 
               <!-- start cost wrapper -->
-              <div 
+              <div
                 class="home-view-vendor-types-item home-view-vendor-types-item--cost-wrapper"
                 :class="vendorCounter === 'select' ? 'dedicated-vendor-items-select': ''"
               >
@@ -475,7 +475,7 @@
                   class="pair-success-container"
                 >
                   <i class="el-icon-success pair-success-icon" />
-                  {{ $t('general.you_have_selected_to_pair') }} {{ pairedDriversTally }} {{ $t('general.driver') }}
+                  {{ $t('general.you_have_selected_to_pair',{pairedDriversTally: pairedDriversTally}) }}
                 </div>
               </div>
             </div>
@@ -535,7 +535,7 @@ export default {
         {
           value: '2',
           label: this.$t('general.any'),
-        }
+        },
       ],
       smallVendorOptions: [
         {
@@ -735,11 +735,11 @@ export default {
       const name = type.replace(/_/g, ' ');
       return name.charAt(0).toUpperCase() + name.slice(1);
     },
-    
+
     pairWithDrivers() {
       this.$root.$emit('Pairing status', true);
     },
-    
+
     vendorOptions(id) {
       if (this.small_vendors.includes(id)) {
         return this.smallVendorOptions;
@@ -1166,7 +1166,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=1';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css';
 .tour-pointer-3 {
   float: right;
   position: relative;

@@ -3,11 +3,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">Branch</span>
+          <span class="card__image--title">{{ $t('preferences.branch') }}</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            Group your staff and orders into branches and view reporting at branch level.
+            {{$t('preferences.group_staff')}}
           </p>
         </div>
         <div class="card__action">
@@ -21,11 +21,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title card__image--bg">Ecommerce orders</span>
+          <span class="card__image--title card__image--bg">{{ $t('preferences.ecommerce') }}</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            Make bulk orders with smart routing and zoning for maximum efficiency.
+            {{ $t('preferences.make_bulk_order') }}
           </p>
         </div>
         <div class="card__action">
@@ -39,11 +39,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title card__image--bg">Order history details</span>
+          <span class="card__image--title card__image--bg">{{$t('preferences.order_history')}}</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            View the little extra details that you care about in your order history report.
+            {{ $t('preferences.view_extra_detail') }}
           </p>
         </div>
         <div class="card__action">
@@ -57,11 +57,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">Order breakdown</span>
+          <span class="card__image--title">{{$t('preferences.order_breakdown')}}</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            Pick through your bulked orders and see how much each costs you.
+            {{$t('preferences.pick_through')}}
           </p>
         </div>
         <div class="card__action">
@@ -75,12 +75,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">Insurance</span>
+          <span class="card__image--title">{{$t('preferences.insuarence')}}</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            A third party flexible and affordable extra insurance for your orders with the power to
-            choose your desired cover limit per order.
+            {{$t('preferences.third_party')}}
           </p>
         </div>
         <div class="card__action">
@@ -94,11 +93,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">SMS Password change</span>
+          <span class="card__image--title">{{$t('preferences.sms_password')}} </span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            Receive a password change link via sms.
+            {{$t('preferences.recieve_password')}}
           </p>
         </div>
         <div class="card__action">
@@ -112,11 +111,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">Delivery picture</span>
+            <span class="card__image--title">{{$t('preferences.delivery_picture')}} </span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            Request your driver to take a delivery picture at the destination
+            {{$t('preferences.delivery_request')}}
           </p>
         </div>
         <div class="card__action">
@@ -253,11 +252,11 @@ export default {
 }
 
 input:checked + .slider {
-  background-color: #1782c5;
+  background-color: #1782C5;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #1782c5;
+  box-shadow: 0 0 1px #1782C5;
 }
 
 input:checked + .slider:before {

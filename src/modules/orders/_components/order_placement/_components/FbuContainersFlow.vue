@@ -77,7 +77,7 @@
               min="5"
               max="50"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input input-spacer"
-              :placeholder="$t('general.no_of_containers')"
+              :placeholder="$t('general.no_of_container')"
             >
             <div class="home-view-truck-options-inner-wrapper homeview--input-pickup">
               <div class="home-view-truck-options-label">
@@ -121,13 +121,13 @@
       <div>
         <div class="homeview--proceed">
           <p class="home-view--upload-par">
-            {{$t('general.destination_location')}}
+            {{$t('general.or')}}
           </p>
           <p
             class="home-view--upload-button"
             @click="initiateUpload()"
           >
-            {{$t('general.upload_profile')}}
+            {{$t('general.upload_file')}}
           </p>
           <button
             type="button"
@@ -155,7 +155,7 @@
             {{$t('general.order_details')}}
           </td>
           <td class="homeview---top-details-right col-right">
-            {{$t('general.totoal_containers')}} 
+            {{$t('general.totoal_containers')}}
           </td>
         </tr>
         <tr class="homeview--bottom-details">
@@ -204,7 +204,7 @@
           <gmap-autocomplete
             v-model="destination.name"
             :options="map_options"
-            placeholder="Empty Container Destination"
+            :placeholder="$t('general.empty_container_destination')"
             :select-first-on-enter="true"
             class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details homeview--return-destination-input"
             @place_changed="setReturnDestination($event, 2)"
@@ -237,7 +237,7 @@
             v-model="consignee"
             type="text"
             class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
-            placeholder="Consignee (name)"
+            :placeholder="$t('general.consignee_name')"
           >
           <button
             v-if="selectedContainer === null"
@@ -1154,8 +1154,8 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../../../assets/styles/orders_order_placement.css?v=2';
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=2';
+@import '../../../../../assets/styles/orders_order_placement.css';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css';
 </style>
 <style scoped>
 /* unfortunately browser vendors dont care about BEM */

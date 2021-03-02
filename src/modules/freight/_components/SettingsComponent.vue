@@ -330,7 +330,7 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../assets/styles/transporters_component.css?v=1';
+@import '../../../assets/styles/transporters_component.css';
 .manage-approvers {
   font-size: 13px;
   letter-spacing: 0.01em;

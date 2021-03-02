@@ -21,7 +21,7 @@
             <p class="rate-text rate-text-right">{{$t('general.very_bad')}}</p>
             <el-rate
               v-model="rated_score"
-              :colors="['#99A9BF', '#F57f20', '#1782C5']"
+              :colors="['#99A9BF', '#EE7D00', '#1782C5']"
             />
             <p class="rate-text rate-text-left">{{$t('general.very_good')}}</p>
           </span>
@@ -180,7 +180,7 @@ export default {
 .rate-rider-primary {
     margin: 0 auto;
     color: #ecf0f1;
-    background-color: #1782c5;
+    background-color: #1782C5;
     border-color: #1b7fc3;
     cursor: pointer;
     position: relative;
@@ -214,7 +214,7 @@ export default {
     width: 200px !important;
 }
 .rate-comment--textareabox:focus{
-    border: 1px solid #1782c5 !important;
+    border: 1px solid #1782C5 !important;
     -webkit-box-shadow: none !important;
     outline:none;
     box-shadow: none !important;

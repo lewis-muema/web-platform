@@ -166,8 +166,8 @@ export default {
       const localTime = this.convertToUTCToLocal(date);
       return this.moment(localTime).calendar(null, {
         lastWeek: 'MMM-D hh:mm a',
-        sameDay: '[Today] hh:mm a',
-        nextDay: '[Tomorrow] hh:mm a',
+        sameDay: `[${this.$t('general.today')}] hh:mm a`,
+        nextDay: `[${this.$t('general.tommorow')}] hh:mm a`,
         nextWeek: 'ddd',
         sameElse() {
           return 'MMM D, hh:mm a';
@@ -251,7 +251,7 @@ export default {
 {
     font-size: 13px;
     margin-top: 15px;
-    border: 0px solid #1782C5;
+    border: 0px solid #1782c5;
     cursor: pointer;
     transition: all .5s ease-in-out;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);

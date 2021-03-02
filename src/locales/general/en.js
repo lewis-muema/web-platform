@@ -342,7 +342,7 @@ const translations = {
 
   // dedicatedOrderPlacement
   enter_pickup_location: 'Enter a pickup location',
-  no_of_container: 'no_of_containers',
+  no_of_container: 'No of containers',
   enter_region: 'Enter region',
   return_location: 'Return location (Optional)',
 
@@ -439,6 +439,7 @@ const translations = {
   order_type: 'Order type',
   container_order: 'Container order',
   empty_container_destination: 'Empty Container Destination',
+  consignee_name: 'Consignee (name)',
   cancel_order_capital: 'CANCEL ORDER',
   cargo_on_the_way: 'Your cargo is on the way to ',
   cargo_arrived_at: 'Your cargo has arrived at',
@@ -515,6 +516,7 @@ const translations = {
   containers: 'containers',
   goods_quantity: 'Goods Quantity',
   container: 'container',
+  container_capital: 'Container',
   order_status: 'Order Status',
   container_return: 'container return',
 
@@ -801,7 +803,7 @@ const translations = {
   additional_instructions: 'Additional Instructions',
   have_preffered_drivers: 'Do you have a preferred driver/s at your pick up location ?',
   pair_with_driver: 'Pair with driver/s',
-  you_have_selected_to_pair: 'You have selected to pair with',
+  you_have_selected_to_pair: 'You have selected to pair with { pairedDriversTally } driver',
   select: 'Select',
   saved_and_frequently_used: 'Saved and Frequently used',
   add_remove_saved_loc: 'Add or remove saved locations ',
@@ -856,7 +858,22 @@ const translations = {
   drop_off_lowercase: 'drop off',
   no_notes_provided: 'No notes provided.',
   matched_partner_to_package: '',
-  tax_authority_number: 'Tax Authority Number',
+  valid_promo_codes: 'Valid Promo Codes',
+  off: 'OFF',
+  max: 'Max',
+  card_payment_success: 'card payment success',
+  card_payment_processed_successfully: 'card payment was processed successfully',
+  payment_success: 'Payment Success',
+  card_payment_failed: 'Card Payment Failed',
+  card_payment_failed_text: 'Card payment failed, please try again.',
+  card_payment_did_not_go_through: 'card payment did not go through',
+  payment_failed: 'Payment Failed',
+  use_promocode: 'Use promocode',
+  expiry: 'Expiry',
+  confirm_password: 'Confirm Password',
+  price_update: 'Price update',
+  today: 'Today',
+  tommorow: 'Tommorrow',
 
 
 };

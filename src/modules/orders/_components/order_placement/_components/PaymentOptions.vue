@@ -44,7 +44,7 @@
           >
             <div class="home-view-payments-wrapper--left">
               <div class="home-view-payments-wrapper--left__amount-label">
-                {{$t('general.total_payment')}}
+                {{ $t('general.total_payment') }}
               </div>
               <div class="home-view-payments-wrapper--left__amount-figure">
                 {{ rb_currency }} {{ pending_amount }}
@@ -94,7 +94,7 @@
               <div class="payment-options-cards-container">
                 <div v-if="!addCardStatus && get_saved_cards.length > 0">
                   <div v-if="deletedCardIndex === ''">
-                    <p class="payment-options-cards-title">{{$t('general.save_cards')}}</p>
+                    <p class="payment-options-cards-title">{{ $t('general.save_cards') }}</p>
                     <div
                       v-for="(cards, index) in get_saved_cards"
                       :key="index"
@@ -123,7 +123,7 @@
                           class="payment-options-add-card-icon"
                         />
                       </span>
-                      <span class="payment-options-add-card">{{$t('general.add_new_card')}}</span>
+                      <span class="payment-options-add-card">{{ $t('general.add_new_card') }}</span>
                     </div>
                   </div>
                   <div
@@ -131,18 +131,18 @@
                     class="delete-saved-card-dialogue"
                   >
                     <p class="delete-saved-card-dialogue-label">
-                      {{$t('general.sure_delete_card')}}
+                      {{ $t('general.sure_delete_card') }}
                       <strong>{{ get_saved_cards[deletedCardIndex].card }}</strong>?
                     </p>
                     <p class="delete-saved-card-dialogue-label">
                       <span
                         class="delete-saved-card-dialogue-buttons"
                         @click="deleteSavedCard(deletedCardIndex)"
-                      >{{$t('general.yes')}}</span>
+                      >{{ $t('general.yes') }}</span>
                       <span
                         class="delete-saved-card-dialogue-buttons"
                         @click="deletedCardIndex = ''"
-                      >{{$t('general.no')}}</span>
+                      >{{ $t('general.no') }}</span>
                     </p>
                   </div>
                 </div>
@@ -160,9 +160,9 @@
                       icon="arrow-left"
                       class="payment-options-add-card-icon"
                     />
-                    {{$t('general.back')}}
+                    {{ $t('general.back') }}
                   </span>
-                  <p class="payment-options-cards-title">{{$t('general.add_new_card')}}</p>
+                  <p class="payment-options-cards-title">{{ $t('general.add_new_card') }}</p>
                   <div
                     id="cc-number"
                     class="form-group"
@@ -200,7 +200,7 @@
                       >
                       <span
                         class="fake-checkbox-label-1"
-                      >{{$t('general.save_card_for_future_orders')}}</span>
+                      >{{ $t('general.save_card_for_future_orders') }}</span>
                     </div>
                   </div>
                 </form>
@@ -211,22 +211,18 @@
                 v-if="country === 'KE'"
                 class="card-option-disabled-notification"
                 v-html="$t('general.technical_mantainance_still_pay, { user_name: user_name }')"
-              >
-                
-              </p>
+              />
               <p
                 v-if="country === 'UG'"
                 class="card-option-disabled-notification"
                 v-html="$t('general.technical_mantainance_contact_customer_care', {user_name: user_name})"
-              >
-                
-              </p>
+              />
             </div>
           </span>
         </div>
         <span v-else-if="getPriceRequestObject.payment_option === 2">
           <div class="home-view-payments--postpay">
-            <p>{{$t('general.post_pay_account')}}</p>
+            <p>{{ $t('general.post_pay_account') }}</p>
             <p> {{ $t('general.delivery_cost_added_to_balance') }} </p>
           </div>
         </span>
@@ -288,7 +284,7 @@
         >
           <div class="order_final_summary">
             <p class="confirm-label">
-            {{ $t('general.confirm_order_details') }}
+              {{ $t('general.confirm_order_details') }}
             </p>
             <div class="">
               <div class="">
@@ -325,7 +321,7 @@
                   </li>
                 </ul>
               </div>
-              <label class="delivery_label">{{$t('general.type_of_order')}}</label>
+              <label class="delivery_label">{{ $t('general.type_of_order') }}</label>
               <div class="order_summary-types-item order_summary--vendor-wrapper">
                 <div class="order_summary__img">
                   <img
@@ -346,7 +342,7 @@
                 class="order_summary--outline"
               >
                 <label class="delivery_label">
-                  {{$t('general.type_of_package_delivered')}}
+                  {{ $t('general.type_of_package_delivered') }}
                 </label>
                 <p>{{ getInterCountyPayload.package_type }}</p>
               </div>
@@ -356,7 +352,7 @@
                 class="order_summary--outline"
               >
                 <label class="delivery_label">
-                  {{$t('general.type_of')}} {{ activeVendorPriceData.vendor_name.toLowerCase() }}
+                  {{ $t('general.type_of') }} {{ activeVendorPriceData.vendor_name.toLowerCase() }}
                 </label>
                 <p>{{ carrierTypeSummary() }}</p>
               </div>
@@ -1263,7 +1259,7 @@ export default {
         msg = this.$t('general.provide_weight_of_package');
         this.doNotification(2, this.$t('general.order_completion'), msg);
       } else if (Object.keys(this.getInterCountyPayload.recipient_info).length === 0) {
-        msg = this.$t('general.provide_recipient_info')
+        msg = this.$t('general.provide_recipient_info');
         this.doNotification(2, this.$t('general.order_completion_failure'), msg);
       } else {
         this.initiateOrderSummaryDialog();
@@ -1658,13 +1654,13 @@ export default {
             }
           },
           (error) => {
-            if (Object.prototype.hasOwnProperty.call(error.response.data.error, 'reason')) {
-              this.doNotification(2, this.$t('general.order_completion_failed'), error.response.data.error.reason);
+            if (Object.prototype.hasOwnProperty.call(error, 'reason')) {
+              this.doNotification(2, this.$t('general.order_completion_failed'), error.reason);
             } else {
               this.doNotification(
                 2,
                 this.$t('general.order_completion_failed'),
-                error.response.data.message,
+                this.$t('general.order_completion_failed_text'),
               );
             }
             this.loading = false;
@@ -2008,7 +2004,7 @@ export default {
         userPhone = session.peer.user_phone;
         userEmail = session.peer.user_email;
       }
- const amountToPay = this.effectDiscount(this.raw_pending_amount);
+      const amountToPay = this.effectDiscount(this.raw_pending_amount);
 
       const mpesaPayload = {
         amount: amountToPay,
@@ -2037,14 +2033,14 @@ export default {
           }
 
           if (response.status === 200) {
-            this.doNotification('0', this.$t('general.mpesa_payment'), this.$t('general.request_for_payment_sent',{userPhone: userPhone}));
+            this.doNotification('0', this.$t('general.mpesa_payment'), this.$t('general.request_for_payment_sent', { userPhone }));
             this.requestMpesaPaymentPoll();
           } else {
             this.refreshRunningBalance();
             this.doNotification(
               '0',
               this.$t('general.mpesa_payment'),
-              this.$t('general.mpesa_request_failed',{userPhone: userPhone, referenceNumber: referenceNumber}) + this.pending_amount,
+              this.$t('general.mpesa_request_failed', { userPhone, referenceNumber }) + this.pending_amount,
             );
             this.payment_state = 0;
             this.loading = false;
@@ -2055,7 +2051,7 @@ export default {
           this.doNotification(
             '0',
             this.$t('general.mpesa_payment'),
-            this.$t('general.mpesa_request_failed',{userPhone: userPhone, referenceNumber: referenceNumber}) + this.pending_amount,
+            this.$t('general.mpesa_request_failed', { userPhone, referenceNumber }) + this.pending_amount,
           );
           this.payment_state = 0;
           this.loading = false;
@@ -2357,8 +2353,8 @@ export default {
         if (day === 'Saturday' && timeHrs >= '17') {
           this.doNotification(
             2,
-           this.$t('general.standard_option'),
-           this.$t('general.kindly_schedule_for_monday_eight'),
+            this.$t('general.standard_option'),
+            this.$t('general.kindly_schedule_for_monday_eight'),
           );
           return false;
         }
@@ -2366,7 +2362,7 @@ export default {
           this.doNotification(
             2,
             this.$t('general.standard_option'),
-            this.$t('general.kindly_schedule_for_monday_eight')
+            this.$t('general.kindly_schedule_for_monday_eight'),
           );
           return false;
         }
@@ -2374,7 +2370,7 @@ export default {
           this.doNotification(
             2,
             this.$t('general.standard_option'),
-           this.$t('general.kindly_schedule_for_monday_eight')
+            this.$t('general.kindly_schedule_for_monday_eight'),
           );
           return false;
         }
@@ -2512,5 +2508,5 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../../../assets/styles/orders_order_placement_options.css?v=1';
+@import '../../../../../assets/styles/orders_order_placement_options.css';
 </style>

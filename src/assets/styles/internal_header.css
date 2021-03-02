@@ -1,7 +1,7 @@
 .header{
     top: 0px;
     color: #fff;
-    background-color: #1782C5;
+    background-color: #1782c5;
     z-index: 999;
     outline: none;
     /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); */
@@ -52,7 +52,7 @@ nav ul li {
 	float: left;
 }
 nav ul li:hover {
-	background: #144e64;
+	background: #144e64 ;
 }
 nav ul li:hover ul{
 

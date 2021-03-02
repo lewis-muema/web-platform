@@ -320,19 +320,19 @@ ul.timeline > li#timeline_right.timelinePay:before {
   padding-left: 3px;
 }
 ul.timeline > li#timeline_right.confirmedReached:before {
-  background: #1b7fc3;
-  border: 4px solid #1b7fc3;
+  background: #1B7FC3;
+  border: 4px solid #1B7FC3;
   content: '';
 }
 ul.timeline > li#timeline_right.confirmedExpressReached:before {
-  background: #1b7fc3;
-  border: 4px solid #1b7fc3;
+  background: #1B7FC3;
+  border: 4px solid #1B7FC3;
   content: '';
   animation: pulse-blue 2s infinite;
 }
 ul.timeline > li#timeline_right.confirmedScheduled:before {
-  background: #1b7fc3;
-  border: 4px solid #1b7fc3;
+  background: #1B7FC3;
+  border: 4px solid #1B7FC3;
   content: '';
   animation: pulse-blue 2s infinite;
 }
@@ -342,8 +342,8 @@ ul.timeline > li#timeline_right.pickedReached:before {
   content: '';
 }
 ul.timeline > li#timeline_right.pickedExpressReached:before {
-  background: #1b7fc3;
-  border: 4px solid #1b7fc3;
+  background: #1B7FC3;
+  border: 4px solid #1B7FC3;
   content: '';
   animation: pulse-blue 2s infinite;
 }
@@ -353,8 +353,8 @@ ul.timeline > li#timeline_right.deliveredReached:before {
   content: '';
 }
 ul.timeline > li#timeline_right.deliveryEnrouteReached:before {
-  background: #1b7fc3;
-  border: 4px solid #1b7fc3;
+  background: #1B7FC3;
+  border: 4px solid #1B7FC3;
   content: '';
   animation: pulse-blue 2s infinite;
 }
@@ -592,19 +592,19 @@ ul.timeline > li#timeline_right.payedReached:before {
   /* width: 103px!important; */
 }
 .confirmedActive {
-  color: #1b7fc3;
+  color: #1B7FC3;
 }
 .pickedActive {
-  color: #1b7fc3;
+  color: #1B7FC3;
 }
 .deliveredActive {
-  color: #1b7fc3;
+  color: #1B7FC3;
 }
 .payedActive {
-  color: #1b7fc3;
+  color: #1B7FC3;
 }
 ul.inforbar_route_timeline:before {
-  background: #1b7fc3 !important;
+  background: #1B7FC3 !important;
   height: 82% !important;
 }
 ul.inforbar_order_timeline:before {
@@ -864,7 +864,7 @@ button.default.action--slide-button {
 }
 .warning-cancellation-icon{
   font-size: 14px !important;
-  color: #F57F20 !important;
+  color: #f57f20 !important;
   margin-top: 4%;
   margin-right: 2%;
 }

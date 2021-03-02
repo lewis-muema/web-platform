@@ -315,7 +315,7 @@ export default {
 }
 
 .sign-holder__link {
-  color: #1782c5;
+  color: #1782C5;
   text-decoration: none;
 }
 

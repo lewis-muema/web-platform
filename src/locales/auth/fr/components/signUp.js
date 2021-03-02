@@ -1,9 +1,9 @@
 
 
 const fr = {
-  join: 'FR_Join',
-  customers: 'FR_5000+ Customers',
-  trust: 'FR_who trust Sendy',
+  join: 'Fournir toutes les valeurs',
+  customers: '5000+ clients',
+  trust: 'qui font confiance à Sendy ',
 };
 
 

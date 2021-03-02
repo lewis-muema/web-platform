@@ -12,14 +12,14 @@
         class="button-primary align-left"
         @click="backToPaymentRequest"
       >
-        Help
+        {{$t('general.help')}}
       </button>
       <button
         type="button"
         class="button-primary align-right"
         @click="backToPaymentRequest"
       >
-        Ok
+        {{$t('general.ok')}}
       </button>
     </div>
   </div>
@@ -42,7 +42,7 @@ export default {
       if (session.default === 'biz') {
         accountNo = `SENDY ${session.biz.cop_id}`;
       }
-      return `Sorry, Safaricom cannot be reached. Instead, please pay to Pay Bill no. 848450 with Account Number.${accountNo}`;
+      return `${this.$t('general.sorry_safaricom')} ${accountNo}`;
     },
   },
   methods: {

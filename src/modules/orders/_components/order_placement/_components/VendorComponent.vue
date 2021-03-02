@@ -2526,7 +2526,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../../../assets/styles/orders_order_placement_vendors.css?v=4';
+@import '../../../../../assets/styles/orders_order_placement_vendors.css';
 .collection_centre{
 min-height: 45px;
  background: rgba(231, 231, 231, 0.42);
@@ -2542,7 +2542,7 @@ min-height: 45px;
  height: 37px;
  font-weight: 400;
  font-size: 13px;
- color: #1782c5;
+ color: #1782C5;
 }
 .delivery-estimate-info{
  display: flex;

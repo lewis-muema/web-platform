@@ -5,13 +5,13 @@
         <el-input
           v-model="filterData.user"
           class="section--filter-input"
-          placeholder="Search users"
+          :placeholder="$t('listUsers.search_users')"
         />
 
         <el-select
           v-model="filterData.department"
           class="section--filter-input"
-          placeholder="All Departments"
+          :placeholder="$t('listUsers.all_departments')"
           filterable
         >
           <el-option
@@ -23,7 +23,7 @@
         </el-select>
 
         <button
-          type="button"
+          type="$t('listUsers.button')"
           :class="
             active_filter
               ? 'button-primary section--filter-action align-left btn-users'
@@ -32,12 +32,12 @@
           :disabled="active_filter == true ? false : true"
           @click="filterUserTableData"
         >
-          Search
+          {{$t('listUsers.search')}}
         </button>
       </div>
       <div class="section--filter-action-wrap">
         <button class="button-primary section--filter-action btn-users" @click="addUser">
-          Add User
+          {{$t('listUsers.add_user')}} 
         </button>
       </div>
     </div>
@@ -46,24 +46,24 @@
       <template slot="empty">
         {{ empty_users_state }}
       </template>
-      <el-table-column label="Name" prop="name" />
-      <el-table-column label="Phone" prop="phone" />
-      <el-table-column label="Email" prop="email" width="250" />
-      <el-table-column label="Department" prop="department_name" />
-      <el-table-column label="Type">
+      <el-table-column :label="$t('listUsers.name')" prop="name" />
+      <el-table-column :label="$t('listUsers.phone')" prop="phone" />
+      <el-table-column :label="$t('listUsers.email')" prop="email" width="250" />
+      <el-table-column :label="$t('listUsers.department')" prop="department_name" />
+      <el-table-column :label="$t('listUsers.type')">
         <template slot-scope="scope">
           <span>{{ get_user_type(scope.$index) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Status">
+      <el-table-column :label="$t('listUsers.status')">
         <template slot-scope="scope">
           <span>{{ get_user_status(scope.$index) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Action">
+      <el-table-column :label="$t('listUsers.action')">
         <template slot-scope="scope">
           <a class="btn-edit-user" @click="edit_user(user_data[scope.$index]['cop_user_id'])"
-            >Edit User</a
+            >{{ $t('listUsers.edit_user') }}</a
           >
         </template>
       </el-table-column>
@@ -90,8 +90,8 @@ export default {
   name: 'ListUsers',
   data() {
     return {
-      empty_users_state: 'Fetching Users...',
-      empty_departments_state: 'Fetching Departments...',
+      empty_users_state: this.$t('listUsers.fetching_user'),
+      empty_departments_state: this.$t('listUsers.fetching_department'),
       pagination_limit: 10,
       pagination_page: 1,
       filteredUserData: [],
@@ -178,9 +178,9 @@ export default {
       if (this.user_data.length > 0) {
         resp = this.user_data[index].type;
         if (resp === 1) {
-          resp = 'Normal';
+          resp = this.$t('listUsers.normal');
         } else if (resp === 2) {
-          resp = 'Admin';
+          resp = this.$t('listUsers.admin');
         }
       }
       return resp;
@@ -190,11 +190,11 @@ export default {
       if (this.user_data.length > 0) {
         resp = this.user_data[index].status;
         if (resp === 1) {
-          resp = 'Active';
+          resp = this.$t('listUsers.active');
         } else if (resp === 2) {
-          resp = 'Deactivated';
+          resp = this.$t('listUsers.deactivated');
         } else if (resp === 0) {
-          resp = 'Deleted';
+          resp = this.$t('listUsers.deleated');
         }
       }
       return resp;
@@ -219,7 +219,7 @@ export default {
               user.department_id === department
             );
           }
-          vm.empty_users_state = 'Could not find users for the department.';
+          vm.empty_users_state = this.$t('listUsers.could_not_find');
         });
         this.filterState = true;
       } else if (userId !== '') {
@@ -236,7 +236,7 @@ export default {
           if (user.department_id === department) {
             return user.department_id === department;
           }
-          vm.empty_users_state = 'Could not find users for the department.';
+          vm.empty_users_state = this.$t('listUsers.could_not_find');
         });
         this.filterState = true;
       }
