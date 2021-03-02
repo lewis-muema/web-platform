@@ -266,7 +266,7 @@
                         class="freight-documents-approve flex-div transporter-content approve-freight-section"
                       >
                         <div
-                          v-if="checkActionableBtnState && val.created_by === 'OWNER'"
+                          v-if="checkActionableBtnState && val.created_by === 'OWNER' && val.document_status === 0"
                           class="align-approval-btn"
                         >
                           <button
@@ -285,6 +285,12 @@
                           >
                             {{ decline_doc_text }}
                           </button>
+                        </div>
+                        <div class="decline-document-reason" v-if="checkActionableBtnState && val.created_by === 'OWNER' && val.document_status === -1">
+                           Decline reason : {{val.message}}
+                        </div>
+                        <div class="approved-document-reason" v-if="checkActionableBtnState && val.created_by === 'OWNER' && val.document_status === 1">
+                          Document has been approved
                         </div>
                       </div>
                     </div>
@@ -1450,5 +1456,16 @@ export default {
 }
 .align-approval-btn{
   display: flex;
+}
+.decline-document-reason{
+  margin-top: 4%;
+  color: #f57f20 !important;
+  font-size: 14px;
+}
+.approved-document-reason{
+  margin-top: 4%;
+  color: #1782C5 !important;
+  font-size: 14px;
+  font-weight: 600;
 }
 </style>
