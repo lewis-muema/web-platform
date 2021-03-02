@@ -980,7 +980,6 @@ export default {
         ? this.getPriceRequestObject.client_id - profile_id === 100000000
         : this.getPriceRequestObject.user_id - profile_id === 100000000;
       this.setSecondaryProfile(secondaryProfile);
-
       if (this.payment_method === '') {
         if (this.checkAccountPaymentOption()) {
           this.handlePostPaidPayments();
