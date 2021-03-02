@@ -786,6 +786,7 @@ export default {
       }
       return true;
     },
+
     suggestions() {
       const rows = [];
       this.getSuggestions.forEach((row) => {

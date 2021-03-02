@@ -222,7 +222,7 @@
                       <div class="cancel-reason-text" id="cancel-reason-text">
                         <div class="">
                           <el-radio v-model="cancel_reason" :label="reasons.cancel_reason_id">
-                            {{ reasons.cancel_reason }}
+                            {{ reasons.cancel_reason }} reason
                           </el-radio>
                         </div>
                       </div>
@@ -511,7 +511,7 @@
                 <div v-if="show_price_split && price_request_validity && !location_loading">
                   <div class="price-split-separator">
                     <div class="price-estimate-header">
-                      <i class="el-icon-circle-check price-summary-icon"></i> {{$t('general.price_update')}} 
+                      <i class="el-icon-circle-check price-summary-icon"></i> {{$t('general.price_update')}}
                     </div>
                   </div>
 
@@ -850,7 +850,7 @@
                             class="vendor_component-actions__element-date"
                             type="datetime"
                             format="dd-MM-yyyy h:mm a"
-                            placeholder="As soon as possible"
+                            :placeholder="$t('general.asap')"
                             prefix-icon="el-icon-date"
                             :default-time="default_value"
                             :picker-options="dueDatePickerOptions"
@@ -2242,7 +2242,6 @@ export default {
             } else {
               this.cancellation_reasons = response.data;
             }
-            console.log(this.cancellation_reasons);
             this.cancellation_state = true;
           } else {
             this.cancellation_state = false;

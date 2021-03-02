@@ -155,7 +155,7 @@
             {{$t('general.order_details')}}
           </td>
           <td class="homeview---top-details-right col-right">
-            {{$t('general.totoal_containers')}} 
+            {{$t('general.totoal_containers')}}
           </td>
         </tr>
         <tr class="homeview--bottom-details">
