@@ -27,10 +27,10 @@
 }
 .paymethod--link:hover,
 .paymethod--link:focus {
-  color: #007FFF !important;
+  color: #1782c5 !important;
 }
 .paymethod--link.router-link-active {
-  color: #007FFF;
+  color: #1782c5;
   font-weight: normal;
   border-bottom: 3px solid #007FFF;
 }
