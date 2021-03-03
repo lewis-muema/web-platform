@@ -1661,13 +1661,13 @@ export default {
             }
           },
           (error) => {
-            if (Object.prototype.hasOwnProperty.call(error, 'reason')) {
-              this.doNotification(2, 'Order completion failed', error.reason);
+            if (Object.prototype.hasOwnProperty.call(error.response.data.error, 'reason')) {
+              this.doNotification(2, 'Order completion failed', error.response.data.error.reason);
             } else {
               this.doNotification(
                 2,
                 'Order completion failed',
-                'Order completion failed. Please check your internet connection and try again.',
+                error.response.data.message,
               );
             }
             this.loading = false;

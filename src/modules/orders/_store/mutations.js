@@ -131,6 +131,9 @@ const setActiveVendorTally = (state, payload) => {
 const setExpandedActiveVendorTally = (state, payload) => {
   state.expanded_active_vendor_tally = payload;
 };
+const setPairedDriversTally = (state, payload) => {
+  state.paired_drivers_tally = payload;
+};
 const clearOuterPriceRequestObject = (state) => {
   state.outer_price_request = {};
 };
@@ -180,4 +183,5 @@ export default {
   clearVendorMarkers,
   setParentOrder,
   setSuggestions,
+  setPairedDriversTally,
 };

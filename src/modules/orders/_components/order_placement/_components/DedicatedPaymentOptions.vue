@@ -647,6 +647,7 @@ export default {
       clearOuterActiveVendorDetails: '$_orders/clearOuterActiveVendorDetails',
       setSecondaryProfile: 'setSecondaryProfile',
       setCardPaymentStatus: '$_payment/setCardPaymentStatus',
+      setPairedDriversTally: '$_orders/setPairedDriversTally',
     }),
 
     ...mapActions({
@@ -977,7 +978,6 @@ export default {
         ? this.getPriceRequestObject.client_id - profile_id === 100000000
         : this.getPriceRequestObject.user_id - profile_id === 100000000;
       this.setSecondaryProfile(secondaryProfile);
-
       if (this.payment_method === '') {
         if (this.checkAccountPaymentOption()) {
           this.handlePostPaidPayments();
@@ -1086,6 +1086,7 @@ export default {
                   order = row.respond.order_no;
                 }
                 this.mixpanelTrackPricingServiceCompletion(row.respond.order_no);
+                this.setPairedDriversTally(0);
                 let accData = {};
                 const data = row.original_data;
                 const session = this.$store.getters.getSession;
@@ -1127,23 +1128,29 @@ export default {
                   'Vendor Type ID': data.vendor_type,
                 });
               } else {
-                this.doNotification(
-                  2,
-                  'Order completion failed',
-                  'Price request failed. Please try again',
-                );
+                setTimeout(() => {
+                  this.doNotification(
+                    3,
+                    'Order completion failed',
+                    `${row.reason}`,
+                  );
+                }, 10);
               }
             });
             if (order) {
               this.$router.push(`/orders/tracking/${order}`);
             }
           },
-          () => {
-            this.doNotification(
-              3,
-              'Order completion failed',
-              'Order completion failed. Please check your internet connection and try again.',
-            );
+          (error) => {
+            error.response.data.forEach((row) => {
+              setTimeout(() => {
+                this.doNotification(
+                  3,
+                  'Order completion failed',
+                  `${row.reason}`,
+                );
+              }, 10);
+            });
             this.loading = false;
           },
         );
@@ -1155,14 +1162,6 @@ export default {
       const session = this.$store.getters.getSession;
       if ('default' in session) {
         acc = session[session.default];
-      }
-      if (
-        this.getPriceRequestObject.payment_option === 1
-        && this.getRunningBalance - this.order_cost >= 0
-      ) {
-        this.payment_method = 11;
-      } else if (this.getPriceRequestObject.payment_option === 2) {
-        this.payment_method = 12;
       }
 
       const fullPayload = [];
@@ -1213,6 +1212,13 @@ export default {
         // support new pricing
         if (row.order_no === undefined) {
           payload.pricing_uuid = row.id;
+        }
+        if (row.pair_status === '2' && row.vehicle_plate) {
+          payload.rider_details = {
+            sim_card_sn: row.pair_rider_sim_card_sn,
+            rider_phone: row.pair_rider_phone,
+            order_no: 'order_no' in row ? row.order_no : row.id,
+          };
         }
         fullPayload.push(payload);
       });

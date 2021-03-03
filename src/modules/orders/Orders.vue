@@ -240,7 +240,6 @@
         </div>
         <div
           v-if="pairing_status"
-          :key="renderKey"
           class="pairing-popup"
         >
           <div class="pair-vehicles-popup">
@@ -261,6 +260,10 @@
                 :key="index"
                 class="pair-vehicle-rows"
               >
+                <div
+                  :key="renderKey"
+                  :name="activeVendor.pair_rider_name"
+                />
                 <div class="pair-vehicles-vendor-title">
                   <span>Pair with driver {{ index + 1 }}</span><span class="pair-vehicles-vendor-id">({{ activeVendor.vendor_name }})</span>
                 </div>
@@ -1049,9 +1052,6 @@ export default {
     },
     forceUpdate() {
       this.renderKey += 1;
-      setTimeout(() => {
-        document.querySelectorAll(`#input${this.focusedInput}`)[0].focus();
-      }, 1);
     },
     triggerGAEvent(field, value) {
       let analyticsEnv = '';
