@@ -1322,7 +1322,10 @@ export default {
       if (this.isRunning) {
         clearInterval(this.interval);
       } else {
-        this.interval = setInterval(this.incrementTime, 1000);
+        // eslint-disable-next-line no-lonely-if
+        if (!this.interval) {
+          this.interval = setInterval(this.incrementTime, 1000);
+        }
       }
       this.isRunning = !this.isRunning;
     },
