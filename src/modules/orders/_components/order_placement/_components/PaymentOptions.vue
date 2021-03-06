@@ -513,12 +513,12 @@
                   @click="editOrder"
                 >
 
-                <!-- <input
+                <input
                   class="button-primary btn-submit-order "
                   type="submit"
                   value="CONFIRM ORDER"
                   @click="confirmOrder"
-                > -->
+                >
               </div>
             </div>
           </div>
