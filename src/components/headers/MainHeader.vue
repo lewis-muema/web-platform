@@ -202,7 +202,6 @@ export default {
       this.superUserCheck();
       this.supportedFret();
     }
-    console.log(this.getSess);
   },
   methods: {
     loggedUser() {
@@ -359,7 +358,6 @@ export default {
       const session = this.$store.getters.getSession;
       const country = session[session.default].country_code;
       this.disableFret = country === 'CI' ? false : true;
-      console.log(country, this.disableFret);
       return this.disableFret;
     },
   },
