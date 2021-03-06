@@ -31,7 +31,7 @@
         </div>
 
         <div
-          v-if="checkFreightUser()"
+          v-if="checkFreightUser() && enabledFreightCountry"
           class=""
         >
           <a
@@ -165,6 +165,7 @@ export default {
         'freight_create_orders',
         'freight_settings',
       ],
+      enabledFreightCountry: false,
     };
   },
   computed: {
@@ -199,6 +200,7 @@ export default {
       this.switchOption();
       this.loggedUser();
       this.superUserCheck();
+      this.preferredFreightCountries();
     }
   },
   methods: {
@@ -351,6 +353,11 @@ export default {
       } catch (er) {
         // ...
       }
+    },
+    preferredFreightCountries() {
+      const session = this.$store.getters.getSession;
+      const country = session[session.default].country_code;
+      this.enabledFreightCountry = country === 'CI' ? false : true;
     },
   },
 };
