@@ -754,7 +754,7 @@
                       {{$t('general.enter_phone_number_pair')}}
                     </div>
                     <div v-else>
-                      {{$t('general.enter_phone_number_pair_text')}}
+                      {{$t('general.enter_phone_number_pair_text', {getVendorNameOnCarrierType: getVendorNameOnCarrierType})}}
                     </div>
                   </div>
                   <div class="">
