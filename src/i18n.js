@@ -33,7 +33,6 @@ function fetchCountry() {
     .then((response) => {
       i18n.locale = response.data.countryCode === 'FR' || response.data.countryCode === 'CI' ? 'fr' : 'en';
       const lang = response.data.countryCode === 'FR' || response.data.countryCode === 'CI' ? `fr-${response.data.countryCode}` : 'en-US,en;q=0.9';
-      console.log('Set Language: ', lang);
       store.commit('setLanguage', lang);
       localStorage.setItem('language', lang);
     })
