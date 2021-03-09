@@ -100,7 +100,7 @@ const translations = {
   price_request_failed_please_try_again: 'La demande de prix a échoué. Veuillez réessayer',
   bike_without_box: 'La moto sans boîte ',
   bike_with_box: 'La moto avec boîte ',
-  any: "n'importe",
+  any: "N'importe",
   open: 'Ouvrir',
   closed: 'Fermee',
   mpesa_payment: 'Paiement M-Pesa',
@@ -347,6 +347,7 @@ const translations = {
   enter_destination_location: 'Saisir un emplacement de destination ',
   add_destination: 'Ajouter une destination',
   confirm_order: 'Confirmer la commande',
+  confirm_order_capital: 'CONFIRMER LA COMMANDE',
   enter_delivery_location: 'Saisir le lieu de livraison pour plusieurs destinations',
 
   timeliness: 'Ponctualité',
@@ -778,8 +779,13 @@ const translations = {
   order_not_ready: 'My order is not ready',
   no_driver_allocated: "Aucun chauffeur n'a été attribué ",
   placed_order_twice: "J'ai passé cette commande deux fois ",
+  payment_method: 'méthode de paiement',
+  transaction: 'Transaction',
+  update: 'FR_Update',
+  provide_all_values: 'Fournir toutes les valeurs.',
 
   enter_verification_code: 'Saisir le code de vérification',
+  please_provide_all_values: 'Veuillez fournir toutes les chiffres',
   place_another_one_any_time: 'Vous pouvez en placer un autre à tout moment. ',
   deliveries: 'LIVRAISONS',
   additional_instructions: 'Instructions additionnelles',
@@ -851,6 +857,7 @@ const translations = {
   price_update: 'Mise à jour des prix',
   today: "Aujourd'hui",
   tommorow: 'Demain',
+  update_instructions: 'Instructions de mise à jour'
 
 };
 
