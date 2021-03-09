@@ -181,7 +181,7 @@ export default {
                 this.displayNotification(notification);
               } else {
                 const level = 3;
-                this.message = 'Something went wrong.';
+                this.message = this.$t('companyDetails.somthing_went_wrong') //'Something went wrong.';
                 const notification = {
                   title: '',
                   level,
@@ -193,13 +193,13 @@ export default {
             },
             (error) => {
               const level = 3;
-              const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+              const notification = { title: '', level, message: this.$t('companyDetails.somthing_went_wrong') }; // notification object
               this.displayNotification(notification);
             },
           );
         } else {
           const level = 3;
-          this.message = 'Invalid Phone Number';
+          this.message = this.$t('companyDetails.invalid_phone');
           const notification = {
             title: '',
             level,
@@ -209,7 +209,7 @@ export default {
         }
       } else {
         const level = 3;
-        this.message = 'Provide all details';
+        this.message = this.$t('companyDetails.all_details');
         const notification = {
           title: '',
           level,

@@ -1024,7 +1024,7 @@
                     :onclick="setSendSms(data, index + 1)"
                   />
                   <span>
-                    {{ $t('general.notify_them_of_Pickup') }}
+                    {{ $t('general.notify_them_of_pickup') }}
                   </span>
                 </div>
               </div>
@@ -1268,7 +1268,7 @@ export default {
     }),
 
     vehicleDetailsPlaceholder() {
-      return 'Enter Full Number plate / Phone Number';
+      return this.$t('general.enter_no_plate');
     },
 
     activePackageClassPriceData() {

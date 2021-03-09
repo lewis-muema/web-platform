@@ -819,7 +819,7 @@
                       <input
                         class="button-primary add-instructions-submit"
                         type="submit"
-                        value="Update Instructions"
+                        :value="$t('general.update_instructions')"
                         @click="saveUpdatedInstructions()"
                       />
                     </div>
