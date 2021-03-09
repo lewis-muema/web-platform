@@ -857,7 +857,7 @@ const translations = {
   price_update: 'Mise à jour des prix',
   today: "Aujourd'hui",
   tommorow: 'Demain',
-  update_instructions: 'Instructions de mise à jour'
+  update_instructions: 'Instructions de mise à jour',
 
 };
 
