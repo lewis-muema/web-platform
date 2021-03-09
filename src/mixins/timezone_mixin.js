@@ -60,7 +60,11 @@ moment.locale('fr', {
     doy: 4, // Used to determine first week of the year.
   },
 });
-moment.locale(localStorage.getItem('timeLocale'));
+
+if (process.isClient) {
+  moment.locale(localStorage.getItem('timeLocale'));
+}
+
 const timezone = {
   methods: {
     convertToUTCToLocal(date) {
