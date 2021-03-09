@@ -516,7 +516,7 @@
                 <input
                   class="button-primary btn-submit-order "
                   type="submit"
-                  value="CONFIRM ORDER"
+                  :value="$t('general.confirm_order_capital')"
                   @click="confirmOrder"
                 >
               </div>
@@ -995,7 +995,7 @@ export default {
           'letter-spacing': '0.03em',
         },
         serializers: [{ name: 'replace', options: { old: ' ', new: '' } }],
-        placeholder: 'Card Expiry (MM/YYYY)',
+        placeholder: this.$t('general.card_expiry'),
         validations: ['required', 'validCardExpirationDate'],
       });
     },
