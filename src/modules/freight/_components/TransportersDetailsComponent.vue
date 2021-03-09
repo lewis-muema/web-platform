@@ -336,24 +336,43 @@
                   </div>
                 </div>
 
-                <div class="">
-                  <p class="shipment-input--label">
-                    Will the container be returned to the pickup location?
-                  </p>
-                  <div class="block">
-                    <el-select
-                      v-model="return_option"
-                      placeholder=""
-                      class="transporters-element-inputs"
-                      filterable
+                <div
+                  v-for="(val, index) in carrier_options"
+                  v-if="goods === 1 && carrier_options.length > 0"
+                  :key="val.id"
+                  class=""
+                >
+                  <div class="">
+                    <p class="shipment-input--label">
+                      {{ val.description }}
+                    </p>
+                    <div
+                      v-if="val.data_type === 'boolean'"
+                      class="block"
                     >
-                      <el-option
-                        v-for="item in returnOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
+                      <el-select
+                        v-model="carrier_options[index].value"
+                        placeholder=""
+                        class="transporters-element-inputs"
+                        filterable
+                      >
+                        <el-option
+                          v-for="item in returnOptions"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </div>
+                    <div
+                      v-else
+                      class="block"
+                    >
+                      <el-input-number
+                        v-model="carrier_options[index].value"
+                        :min="0"
                       />
-                    </el-select>
+                    </div>
                   </div>
                 </div>
 
@@ -578,6 +597,7 @@ export default {
       pickup_value: '',
       destination_value: '',
       process_shipment: false,
+      carrier_options: [],
     };
   },
   computed: {
@@ -594,6 +614,19 @@ export default {
         this.addFocusListener();
       },
       deep: true,
+    },
+    goods(val) {
+      if (val === 1) {
+        const filteredData = this.goodsType.filter(pack => pack.id === val);
+        if (filteredData[0].options.length > 0) {
+          filteredData[0].options.map(v => Object.assign(v, { value: v.data_type === 'boolean' ? 'No' : 1 }));
+          this.carrier_options = filteredData[0].options;
+        } else {
+          this.carrier_options = [];
+        }
+      } else {
+        this.carrier_options = [];
+      }
     },
   },
   created() {
@@ -833,7 +866,6 @@ export default {
     sendFinalQuote() {
       if (
         this.facility_location === ''
-        || this.return_option === ''
         || this.trucks_no === ''
         || this.load_weight === ''
         || this.shipment_offer === ''
@@ -846,81 +878,82 @@ export default {
           'Kindly provide all values for request to be submitted',
         );
       } else {
-        this.process_shipment = true;
-        let acc = {};
-        const session = this.$store.getters.getSession;
-        if ('default' in session) {
-          acc = session[session.default];
-        }
-        const filteredOwner = [];
-        filteredOwner.push(parseInt(this.$route.params.id, 10));
-
-        const payload = {
-          cop_id: 'cop_id' in acc ? acc.cop_id : null,
-          cop_user_id: 'cop_id' in acc ? acc.user_id : null,
-          peer_id: 'cop_id' in acc ? null : acc.user_id,
-          transporters: filteredOwner,
-          cargo_type: parseInt(this.goods, 10),
-          carrier_type: parseInt(this.truck_type, 10),
-          pickup: this.main_order_path[0],
-          destination: this.main_order_path[1],
-          pickup_time: this.moment(this.pick_up_time).format('DD-MM-YYYY HH:mm:ss'),
-          bidding_deadline: this.moment(this.quotation_time).format('DD-MM-YYYY HH:mm:ss'),
-          currency: 'USD',
-          pickup_facility: this.facility_location,
-          is_return: this.return_option,
-          total_trucks: this.trucks_no,
-          tonnes_per_truck: this.load_weight,
-        };
-
-        if (this.shipment_offer) {
-          payload.offer_amount = this.bid_amount;
-          payload.is_negotiable = this.negotiability;
-        }
-
-        const fullPayload = {
-          values: payload,
-          app: 'FREIGHT_APP',
-          operator: '?',
-          endpoint: 'shipments',
-        };
-        this.sendCustomerQuote(fullPayload).then(
-          (response) => {
-            /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-
-            let workingResponse = response;
-            if (response.length > 1) {
-              workingResponse = response[0];
-            }
-
-            if (workingResponse.status) {
-              this.doNotification(1, 'Shipment sent successfully!', '');
-              this.$router.push('/freight/orders');
-            } else {
-              this.doNotification(
-                2,
-                'Unable to request for shipment!',
-                workingResponse.data.message,
-              );
-            }
-            this.resetQuatationDialog();
-            this.process_shipment = false;
-          },
-          (error) => {
-            if (Object.prototype.hasOwnProperty.call(error, 'message')) {
-              this.doNotification(2, 'Shipment request failed', error.message);
-            } else {
-              this.doNotification(
-                2,
-                'Shipment request failed',
-                'Something went wrong.Please try again',
-              );
-              this.resetQuatationDialog();
-            }
-            this.process_shipment = false;
-          },
-        );
+        this.processShipment();
       }
+    },
+    processShipment() {
+      this.process_shipment = true;
+      let acc = {};
+      const session = this.$store.getters.getSession;
+      if ('default' in session) {
+        acc = session[session.default];
+      }
+      const filteredOwner = [];
+      filteredOwner.push(parseInt(this.$route.params.id, 10));
+
+      const payload = {
+        cop_id: 'cop_id' in acc ? acc.cop_id : null,
+        cop_user_id: 'cop_id' in acc ? acc.user_id : null,
+        peer_id: 'cop_id' in acc ? null : acc.user_id,
+        transporters: filteredOwner,
+        cargo_type: parseInt(this.goods, 10),
+        carrier_type: parseInt(this.truck_type, 10),
+        pickup: this.main_order_path[0],
+        destination: this.main_order_path[1],
+        pickup_time: this.moment(this.pick_up_time).format('DD-MM-YYYY HH:mm:ss'),
+        bidding_deadline: this.moment(this.quotation_time).format('DD-MM-YYYY HH:mm:ss'),
+        currency: 'USD',
+        pickup_facility: this.facility_location,
+        total_trucks: this.trucks_no,
+        tonnes_per_truck: this.load_weight,
+      };
+
+      if (this.shipment_offer) {
+        payload.offer_amount = this.bid_amount;
+        payload.is_negotiable = this.negotiability;
+      }
+      if (this.goods === 1) {
+        payload.cargo_type_options = this.carrier_options;
+      }
+
+      const fullPayload = {
+        values: payload,
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: 'shipments',
+      };
+      this.sendCustomerQuote(fullPayload).then(
+        (response) => {
+          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+
+          let workingResponse = response;
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
+            this.doNotification(1, 'Shipment sent successfully!', '');
+            this.$router.push('/freight/orders');
+          } else {
+            this.doNotification(2, 'Unable to request for shipment!', workingResponse.data.message);
+          }
+          this.resetQuatationDialog();
+          this.process_shipment = false;
+        },
+        (error) => {
+          if (Object.prototype.hasOwnProperty.call(error, 'message')) {
+            this.doNotification(2, 'Shipment request failed', error.message);
+          } else {
+            this.doNotification(
+              2,
+              'Shipment request failed',
+              'Something went wrong.Please try again',
+            );
+            this.resetQuatationDialog();
+          }
+          this.process_shipment = false;
+        },
+      );
     },
     resetQuatationDialog() {
       this.quoteDialog = false;
