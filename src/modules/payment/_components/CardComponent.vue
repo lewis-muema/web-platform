@@ -370,7 +370,7 @@ export default {
         type: this.$t('general.card_expiration_date'),
         name: 'expiry_date',
         fontSize: '13px',
-        placeholder: 'Card Expiry (MM/YYYY)',
+        placeholder: this.$t('general.card_expiry'),
         serializers: [{ name: 'replace', options: { old: ' ', new: '' } }],
         validations: ['required', 'validCardExpirationDate'],
       });

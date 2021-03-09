@@ -355,6 +355,7 @@ const translations = {
   enter_destination_location: 'Enter a destination location',
   add_destination: 'Add Destination',
   confirm_order: 'Confirm Order',
+  confirm_order_capital: 'CONFIRM ORDER',
   enter_delivery_location: 'Enter delivery location for multi-destination',
   // comments
   timeliness: 'Timeliness',
@@ -874,6 +875,7 @@ const translations = {
   price_update: 'Price update',
   today: 'Today',
   tommorow: 'Tommorrow',
+  update_instructions: 'Update Instructions'
 
 
 };

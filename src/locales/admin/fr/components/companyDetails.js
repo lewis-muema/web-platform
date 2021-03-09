@@ -5,12 +5,12 @@ const fr = {
   contact_person: 'FR_Name of contact person',
   email_contact_person: 'FR_Email of Contact person',
   phone_contact_person: 'FR_Phone number of Contact person',
-  save: 'FR_Save',
-  phone: 'FR_Enter a phone number',
-  detail_saved: 'FR_Details Saved!',
-  somthing_went_wrong: 'FR_Something went wrong.',
-  invalid_phone: 'FR_Invalid Phone Number',
-  all_details: 'FR_Provide all details',
+  save: 'Enregistrer',
+  phone: 'Saisir un numéro de téléphone',
+  detail_saved: 'Détails enregistrés! ',
+  somthing_went_wrong: "Quelque chose s'est mal passé",
+  invalid_phone: 'Numéro de téléphone invalide',
+  all_details: 'Fournir tous les détails',
 
 };
 
