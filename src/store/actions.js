@@ -108,7 +108,8 @@ export default {
       }
     }
 
-    config.headers['Accept-Language'] = state.language;
+    const lang = localStorage.getItem('language');
+    config.headers['Accept-Language'] = lang;
     return new Promise((resolve, reject) => {
       axios
         .post(`${url}${payload.endpoint}`, payload.values, config)
@@ -244,7 +245,8 @@ export default {
         return true;
       }
     }
-    config.headers['Accept-Language'] = state.language;
+    const lang = localStorage.getItem('language');
+    config.headers['Accept-Language'] = lang;
     return new Promise((resolve, reject) => {
       axios
         .patch(`${url}${payload.endpoint}`, payload.values, config)
@@ -349,7 +351,8 @@ export default {
       }, 5000);
       return true;
     }
-    config.headers['Accept-Language'] = state.language;
+    const lang = localStorage.getItem('language');
+    config.headers['Accept-Language'] = lang;
     return new Promise((resolve, reject) => {
       axios
         .get(`${url}${payload.endpoint}`, config)
@@ -485,7 +488,8 @@ export default {
         return true;
       }
     }
-
+    const lang = localStorage.getItem('language');
+    config.headers['Accept-Language'] = lang;
     return new Promise((resolve, reject) => {
       axios
         .put(`${url}${payload.endpoint}`, payload.values, config)
