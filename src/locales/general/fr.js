@@ -61,7 +61,7 @@ const translations = {
   yes: 'Oui',
   no: 'Non',
   back: 'En retour',
-  save: 'enregistrer',
+  save: 'Enregistrer',
   save_card_for_future_orders: 'Je veux enregistrer ma carte pour les futures commandes',
   technical_mantainance_still_pay: 'Cher {user_name}, Les paiements par carte seront momentanément indisponibles car nous subissons une maintenance technique. Vous pouvez toujours payer vos livraisons Sendy en utilisant M-Pesa, ou payer en espèces à la livraison. Contactez le support au +254709779779 pour toute question ',
   technical_mantainance_contact_customer_care: 'Cher {user_name}, Les paiements par carte seront momentanément indisponibles car nous subissons une maintenance technique. Contactez le support au +256393239706 pour toute question. ',
