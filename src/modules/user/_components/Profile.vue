@@ -22,6 +22,14 @@
             {{$t('general.change_password')}}
           </router-link>
         </div>
+        <div class="my-profile__adj">
+          <router-link
+            class="profile--link"
+            to="/user/profile/change_language"
+          >
+            {{$t('general.change_language')}}
+          </router-link>
+        </div>
       </div>
       <div class="">
         <router-view />
