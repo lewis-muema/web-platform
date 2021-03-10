@@ -452,7 +452,7 @@
             <div v-else>
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$t('general.want_delivered')}}
+                  {{$t('general.want_delivered')}} <span class="home-view-truck-options-mandatory-field">*</span>
                 </div>
                 <div>
                   <el-input
