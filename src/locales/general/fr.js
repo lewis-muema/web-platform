@@ -724,6 +724,8 @@ const translations = {
   details_saved: 'Détails enregistrés! ',
 
   change_password: 'changer le mot de passe',
+  change_language: 'FR_Change Language',
+  choose_preffered_language: 'FR_Choose your preferred language ',
 
   manage_business_account: 'Comment voulez-vous gérer votre compte d’entreprise?',
   account_is_free: "Peu n'importe ce que vous décidez, le compte est gratuit.",
