@@ -738,6 +738,8 @@ const translations = {
   details_saved: 'Details Saved!',
 
   change_password: 'Change Password',
+  change_language: 'Change Language',
+  choose_preffered_language: 'Choose your preferred language ',
 
   // upgradeAccount
   manage_business_account: 'How do you want to manage your business account?',

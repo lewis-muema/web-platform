@@ -443,6 +443,10 @@ export function createRouter() {
                 path: 'change_password',
                 component: () => import('../modules/user/_components/ChangePassword.vue'),
               },
+              {
+                path: 'change_language',
+                component: () => import('../modules/user/_components/changeLanguage.vue'),
+              },
             ],
           },
           {
