@@ -37,6 +37,7 @@ function fetchCountry() {
       const locale = response.data.countryCode === 'FR' || response.data.countryCode === 'CI' ? 'fr' : 'en';
       localStorage.setItem('timeLocale', locale);
       localStorage.setItem('language', lang);
+      localStorage.setItem('countryCode', response.data.countryCode);
     })
     .catch(error => error);
 }

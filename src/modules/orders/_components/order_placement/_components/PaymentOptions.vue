@@ -1213,7 +1213,13 @@ export default {
     },
 
     displayOrderHistory() {
-      if (this.getPairWithRiderState && this.getPairRiderPhone === '') {
+      if (!this.getDeliveryItem) {
+        this.doNotification(
+          2,
+          this.$t('general.delivery_item_not_set'),
+          this.$t('general.enter_delivery_item'),
+        );
+      } else if (this.getPairWithRiderState && this.getPairRiderPhone === '') {
         this.initiatePairingFailureNotification();
       } else if (this.getPairWithRiderState && !this.getPairWithRiderStatus) {
         this.doNotification(2, this.$t('general.pairing_failure'), this.getPairErrorMessage);
@@ -1351,7 +1357,6 @@ export default {
         eventLabel: 'Order Confirmation Button - Order Placement Page - Web App',
       };
       this.fireGAEvent(eventPayload);
-
       if (this.isValidateLoadWeightStatus() && this.isValidateScheduleTime()) {
         this.loading = true;
         this.refreshRunningBalance().then(

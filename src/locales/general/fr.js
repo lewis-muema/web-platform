@@ -197,6 +197,8 @@ const translations = {
   confirm: 'Confirmer',
   missing_minimum_amount: 'Montant minimum de commande manquant',
   minimum_order_amount_missing: 'Le montant minimum de la commande est manquant, veuillez le remplir pour permettre aux chauffeurs de soumissionner efficacement.',
+  delivery_item_not_set: 'FR_The delivery item is not set',
+  enter_delivery_item: 'FR_Please enter the delivery item',
   pairing_failure: 'Échec du couplage',
   kindly_provide_type_of_Package: 'Veuillez indiquer le type de colis que vous voulez livrer.',
   order_completion_failure: 'Échec de l’exécution de la commande',
@@ -724,6 +726,8 @@ const translations = {
   details_saved: 'Détails enregistrés! ',
 
   change_password: 'changer le mot de passe',
+  change_language: 'FR_Change Language',
+  choose_preffered_language: 'FR_Choose your preferred language ',
 
   manage_business_account: 'Comment voulez-vous gérer votre compte d’entreprise?',
   account_is_free: "Peu n'importe ce que vous décidez, le compte est gratuit.",

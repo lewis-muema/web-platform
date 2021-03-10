@@ -3,6 +3,16 @@
     class=""
   >
     <div v-if="setUpState === 1">
+      <el-row> 
+        <el-select v-model="locale" placeholder="Select" class="float-right">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-row>
       <p class="sign-up--extra">
         {{$t('signUpDetails.signup_sendy')}}
       </p>
@@ -278,6 +288,17 @@ export default {
       },
       next_step: true,
       sign_up_text: this.$t('signUpDetails.sign_up'),
+      options: [
+        {
+          value: 'en',
+          label: 'English (EN)'
+        },
+        {
+          value: 'fr',
+          label: 'Francais (FR)'
+        }, 
+      ],
+      locale: 'en',
     };
   },
   watch: {
@@ -299,8 +320,19 @@ export default {
           this.next_step = false;
           break;
       }
+    },
+    locale(val) {
+      this.$i18n.locale = val;
+      const countryCode = localStorage.getItem('countryCode');
+      const acceptLanguage = `${val}-${countryCode}`;
+      localStorage.setItem('timeLocale', val);
+      localStorage.setItem('language', acceptLanguage);
+
     }
   },
+  mounted() {
+    this.locale = localStorage.getItem('timeLocale');
+  }, 
   methods: {
     ...mapActions({
       requestSignUpPhoneVerification: '$_auth/requestSignUpPhoneVerification',
@@ -760,4 +792,10 @@ body > div.el-select-dropdown.el-popper{
 .sign-btn-color {
   border-width: 0px !important;
 }
+.float-right {
+  float: right;
+  height: 32px;
+  width: 150px;
+}
+
 </style>
