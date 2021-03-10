@@ -327,13 +327,11 @@ export default {
       const acceptLanguage = `${val}-${countryCode}`;
       localStorage.setItem('timeLocale', val);
       localStorage.setItem('language', acceptLanguage);
-      console.log(val, acceptLanguage);
 
     }
   },
   mounted() {
     this.locale = localStorage.getItem('timeLocale');
-    console.log(localStorage.getItem('timeLocale'), "timelocale");
   }, 
   methods: {
     ...mapActions({
