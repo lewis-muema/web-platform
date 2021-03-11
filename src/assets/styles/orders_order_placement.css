@@ -514,8 +514,8 @@
   padding: 10px;
 }
 .home-view-truck-options-mandatory-field {
-  color: #1682c5;
-  font-weight: 600;
+  color: #959596;
+  font-weight: 500;
 }
 .home-view-truck-options--load-units .el-input-group__append,
 .home-view-truck-options--load-units .el-input-group__prepend {
