@@ -199,7 +199,7 @@ const translations = {
   missing_minimum_amount: 'Montant minimum de commande manquant',
   minimum_order_amount_missing: 'Le montant minimum de la commande est manquant, veuillez le remplir pour permettre aux chauffeurs de soumissionner efficacement.',
   delivery_item_not_set: 'FR_The delivery item is not set',
-  enter_delivery_item: 'FR_Please enter the delivery item',
+  enter_delivery_item: 'FR_Please enter what you want delivered',
   pairing_failure: 'Échec du couplage',
   kindly_provide_type_of_Package: 'Veuillez indiquer le type de colis que vous voulez livrer.',
   order_completion_failure: 'Échec de l’exécution de la commande',
