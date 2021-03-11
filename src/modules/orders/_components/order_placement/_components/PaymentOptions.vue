@@ -1213,7 +1213,7 @@ export default {
     },
 
     displayOrderHistory() {
-      if (!this.getDeliveryItem) {
+      if (!this.getDeliveryItem && !this.smallVendors.includes(this.activeVendorPriceData.vendor_id)) {
         this.doNotification(
           2,
           this.$t('general.delivery_item_not_set'),
