@@ -372,17 +372,20 @@ export default {
       return valid;
     },
     ValidatePhoneCi() {
+      const phoneValid1 = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+      if (phoneValid1) {
+        return phoneValid1;
+      }
       const phoneTrim = this.phone.replace(/[()\-\s]+/g, '');
-      const trimcode = phoneTrim.split('+225')[1]
+      const trimcode = phoneTrim.includes('+225', 0) ? phoneTrim.split('+225')[1] : phoneTrim;
       const othernumbers = trimcode.length === 10 ? trimcode.slice(2) : trimcode;
-      
-      const phone = '+225' + othernumbers
+      const phone = '+225' + othernumbers;
       const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(phone));
       return phoneValid;
     },
     next() {
       if (this.validateDetails()) {
-        const phoneValid = this.countryCode === 'CI' ? this.ValidatePhoneCi() :  phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+        const phoneValid = this.countryCode === 'CI' ? this.ValidatePhoneCi() : phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
 
         let emailValid = true;
         for (let i = 0; i < this.errors.items.length; i++) {
