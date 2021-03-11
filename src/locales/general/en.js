@@ -204,7 +204,7 @@ const translations = {
   missing_minimum_amount: 'Missing Minimum Order Amount',
   minimum_order_amount_missing: 'The minimum order amount is missing, please fill it to enable the drivers bid effectively.',
   delivery_item_not_set: 'The delivery item is not set',
-  enter_delivery_item: 'Please enter the delivery item',
+  enter_delivery_item: 'Please enter what you want delivered',
   pairing_failure: 'Pairing Failure',
   kindly_provide_type_of_Package: 'Kindly provide type of package you want delivered',
   order_completion_failure: 'Order Completion Failure',
