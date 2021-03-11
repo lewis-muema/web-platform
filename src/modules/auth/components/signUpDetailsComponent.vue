@@ -371,9 +371,18 @@ export default {
 
       return valid;
     },
+    ValidatePhoneCi() {
+      const phoneTrim = this.phone.replace(/[()\-\s]+/g, '');
+      const trimcode = phoneTrim.split('+225')[1]
+      const othernumbers = trimcode.length === 10 ? trimcode.slice(2) : trimcode;
+      
+      const phone = '+225' + othernumbers
+      const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(phone));
+      return phoneValid;
+    },
     next() {
       if (this.validateDetails()) {
-        const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+        const phoneValid = this.countryCode === 'CI' ? this.ValidatePhoneCi() :  phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
 
         let emailValid = true;
         for (let i = 0; i < this.errors.items.length; i++) {
@@ -441,7 +450,7 @@ export default {
       const fullPayload = {
         values,
         vm: this,
-        app: 'NODE_PRIVATE_API',
+        app: 'CUSTOMERS_APP',
         endpoint: 'request_verification',
       };
       this.requestSignUpPhoneVerification(fullPayload).then(
@@ -501,7 +510,7 @@ export default {
           const fullPayload = {
             values,
             vm: this,
-            app: 'NODE_PRIVATE_API',
+            app: 'CUSTOMERS_APP',
             endpoint: 'check_verification',
           };
           this.requestSignUpVerificationVerify(fullPayload).then(
