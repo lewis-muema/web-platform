@@ -105,6 +105,7 @@ const translations = {
   any: 'Any',
   open: 'Open',
   closed: 'Closed',
+  required: 'Required',
   mpesa_payment: 'M-Pesa Payment',
   mpesa_request_failed: ' M-Pesa request to {userPhone} failed. Use paybill 848450 account number {referenceNumber} amount KES',
   mpesa_request_failed_userphone: ' M-Pesa request to {userPhone} failed. Use paybill 848450 account number {userPhone} amount KES',
