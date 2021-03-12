@@ -382,6 +382,84 @@
           </div>
         </div>
       </div>
+      <el-dialog
+        :visible.sync="automaticRescheduleStatus"
+        width="30%"
+        class="updateNotificationsDialog"
+        :modal-append-to-body="false"
+      >
+        <div class="add-instructions-outer">
+          <p class="add-instructions-setup schedule_time_outer reschedule-header">
+            {{ $t('general.order_has_been_rescheduled') }}
+          </p>
+          <div>
+            <div class="dotted-divider" />
+            <div class="reschedule-location-icons">
+              <font-awesome-icon
+                icon="circle"
+                size="xs"
+                class="sendy-orange"
+                width="10px"
+              />
+              <p class="reschedule-location-title">
+                {{ rescheduleNotification ? rescheduleNotification.data.pickup_name : '' }}
+              </p>
+            </div>
+            <div class="reschedule-location-icons">
+              <font-awesome-icon
+                icon="circle"
+                size="xs"
+                class="location-icons sendy-blue"
+                width="10px"
+              />
+              <p class="reschedule-location-title">
+                {{ rescheduleNotification ? rescheduleNotification.data.destination_name : '' }}
+              </p>
+            </div>
+          </div>
+          <p class="reschedule-locations-message">
+            {{ rescheduleNotification ? rescheduleNotification.notification.body : '' }}
+          </p>
+          <div class="solid-divider" />
+          <p class="reschedule-locations-prompt-message">
+            {{ $t('general.reschedule_pick_up_to_another_time') }}
+          </p>
+          <div class="">
+            <div
+              class="instructions--inner-section"
+            >
+              <div class="">
+                <div
+                  class=""
+                >
+                  <el-date-picker
+                    v-model="schedule_time"
+                    class="vendor_component-actions__element-date"
+                    type="datetime"
+                    format="dd-MM-yyyy h:mm a"
+                    :placeholder="$t('general.select_date_and_time')"
+                    prefix-icon="el-icon-date"
+                    :default-time="default_value"
+                    :picker-options="dueDatePickerOptions"
+                    @change="dispatchScheduleTime"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="">
+            <div class="">
+              <input
+                class="button-primary add-instructions-submit reschedule-button"
+                type="submit"
+                :value="$t('general.reschedule_order')"
+                @click="updateScheduledTime()"
+              >
+            </div>
+          </div>
+        </div>
+      </el-dialog>
       <map-component />
       <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
       <ongoing-component
@@ -626,6 +704,7 @@ import FbuChildOrders from './_components/FbuChildOrders.vue';
 import NPSFooter from '../../components/footers/NPSFooter.vue';
 import NpsMixin from '../../mixins/nps_mixin';
 import SessionMxn from '../../mixins/session_mixin';
+import TimezoneMxn from '../../mixins/timezone_mixin';
 import NotificationMxn from '../../mixins/notification_mixin';
 
 let interval = '';
@@ -640,7 +719,7 @@ export default {
     ApprovalDialog,
     NPSFooter,
   },
-  mixins: [RegisterStoreModule, NpsMixin, SessionMxn, NotificationMxn],
+  mixins: [RegisterStoreModule, NpsMixin, SessionMxn, TimezoneMxn, NotificationMxn],
   data() {
     return {
       showSocialMediaApprovalDialog: false,
@@ -706,6 +785,13 @@ export default {
       activeClass: -1,
       waypoint_type: '',
       locationSavingStatus: false,
+      automaticRescheduleStatus: false,
+      rescheduleNotification: '',
+      schedule_time: '',
+      default_value: this.moment().format('HH:mm:ss'),
+      dueDatePickerOptions: {
+        disabledDate: this.disabledDueDate,
+      },
       dedicatedTourPoints: [
         {
           title: this.$t('general.order_type_dedicated_vehicles'),
@@ -803,6 +889,17 @@ export default {
     },
     vehicleDetailsPlaceholder() {
       return this.$t('general.enter_no_plate');
+    },
+    order_is_scheduled() {
+      return this.moment(this.current_time).isBefore(this.schedule_time);
+    },
+    current_time() {
+      return this.moment().format('YYYY-MM-DD HH:mm:ss');
+    },
+    scheduled_time() {
+      return this.moment(this.schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
     },
   },
   watch: {
@@ -917,6 +1014,9 @@ export default {
       saveSuggestions: '$_orders/saveSuggestions',
       removeSuggestions: '$_orders/removeSuggestions',
     }),
+    dispatchScheduleTime() {
+      this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
+    },
     checkSocialMediaApproval() {
       const session = this.$store.getters.getSession;
       if (Object.keys(session).length > 0) {
@@ -1255,6 +1355,64 @@ export default {
         }
       }
     },
+    updateScheduledTime() {
+      if (this.schedule_time !== '') {
+        const time = this.order_is_scheduled
+          ? this.convertToUTC(this.scheduled_time)
+          : this.convertToUTC(this.current_time);
+
+        const scheduleTime = this.moment(time).utc().format('YYYY-MM-DD HH:mm:ss');
+
+        const value = {
+          order_no: this.rescheduleNotification.data.order_no,
+          client_type: 'corporate',
+          date_time: scheduleTime,
+        };
+
+        const payload = {
+          values: value,
+          app: 'ORDERS_APP',
+          endpoint: 'schedule_order',
+        };
+
+        this.$store.dispatch('$_orders/requestEditOrder', payload).then(
+          (response) => {
+            if (response.status) {
+              this.automaticRescheduleStatus = false;
+              this.schedule_time = '';
+              this.doNotification(
+                1,
+                this.$t('general.pickup_time_updated'),
+                '',
+              );
+            } else {
+              this.doNotification(
+                2,
+                this.$t('general.pickup_time_update_failed'),
+                this.$t('general.please_try_again'),
+              );
+            }
+          },
+          (error) => {
+            if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
+              this.doNotification(2, this.$t('general.pickup_time_update_failed'), error.response.data.reason);
+            } else {
+              this.doNotification(
+                2,
+                this.$t('general.pickup_time_update_failed'),
+                this.$t('general.something_went_wrong_please_try_again'),
+              );
+            }
+          },
+        );
+      } else {
+        this.doNotification(
+          2,
+          this.$t('general.edit_pickup_time'),
+          this.$t('general.kindly_provide_pickup_time'),
+        );
+      }
+    },
     rootListener() {
       this.$root.$on('Upload status', (arg1) => {
         this.blinder_status = arg1;
@@ -1294,6 +1452,10 @@ export default {
         this.blinder_status = arg1;
         this.locations_status = arg1;
         this.waypoint_type = arg2;
+      });
+      this.$root.$on('Show reschedule dialogue', (arg1) => {
+        this.automaticRescheduleStatus = true;
+        this.rescheduleNotification = arg1;
       });
       this.$root.$on('Pairing status', (arg1) => {
         this.blinder_status = arg1;
@@ -2071,5 +2233,37 @@ cancel-pop-up > div > div > div.el-dialog__header{
   color: #1682c5;
   padding-left: 4px;
   font-size: 14px;
+}
+.reschedule-location-icons {
+  display: flex;
+  align-items: center;
+}
+.reschedule-location-title {
+  margin-left: 15px;
+}
+.dotted-divider {
+  width: 0px;
+  height: 18px;
+  border-left: 1px dashed #767474;
+  position: absolute;
+  margin-top: 9%;
+  margin-left: 5px;
+}
+.reschedule-locations-message {
+  margin-top: 5px;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+.solid-divider {
+  border-top: 1px solid #D6D6D6;
+  margin: 20px 0px;
+}
+.reschedule-button {
+  font-size: 15px !important;
+}
+.reschedule-header {
+  color: black !important;
+  margin-bottom: 15px !important;
+  font-size: 20px !important;
 }
 </style>

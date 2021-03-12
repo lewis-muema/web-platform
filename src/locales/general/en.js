@@ -205,6 +205,10 @@ const translations = {
   minimum_order_amount_missing: 'The minimum order amount is missing, please fill it to enable the drivers bid effectively.',
   delivery_item_not_set: 'The delivery item is not set',
   enter_delivery_item: 'Please enter what you want delivered',
+  order_has_been_rescheduled: 'Your order has been rescheduled',
+  reschedule_pick_up_to_another_time: 'Reschedule pick up to another time?',
+  select_date_and_time: 'Select date and time ',
+  reschedule_order: 'Reschedule Order',
   pairing_failure: 'Pairing Failure',
   kindly_provide_type_of_Package: 'Kindly provide type of package you want delivered',
   order_completion_failure: 'Order Completion Failure',
@@ -843,6 +847,7 @@ const translations = {
   pickup_time_updated: 'Pick up time updated successfully',
   pickup_time_update_failed: 'Pick up time update failed',
   edit_pickup_time: 'Edit pick up time error',
+  kindly_provide_pickup_time: 'Kindly provide pickup time',
   // Orders.vue
   are_you_in_social_media_biz: 'Are you a social commerce business?',
   manage_saved_locations: 'Manage saved {waypointType} locations',
