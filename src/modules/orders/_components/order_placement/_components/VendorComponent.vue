@@ -1136,7 +1136,7 @@ export default {
       schedule_time: '',
       default_value: this.moment().format('HH:mm:ss'),
       order_notes: '',
-      small_vendors: [1, 22, 21, 23],
+      small_vendors: [1, 22, 21, 23, 12],
       medium_vendors: [2, 3],
       large_vendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
       pair_status: '',
