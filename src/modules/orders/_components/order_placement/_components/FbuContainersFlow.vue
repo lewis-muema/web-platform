@@ -193,7 +193,7 @@
             class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-container-details"
             :placeholder="$t('general.container_number')"
           >
-          <input∫∫
+          <input
             v-model.number="cont_weight"
             type="number"
             min="5"
