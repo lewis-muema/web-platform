@@ -330,8 +330,9 @@
                   class="block"
                 >
                   <el-input-number
-                    v-model="carrier_options[index].value"
+                    v-model.trim="carrier_option_value[index]"
                     :min="0"
+                    @change="setCarrierOptionValue(index)"
                   />
                 </div>
               </div>
@@ -564,6 +565,7 @@ export default {
       processing: false,
       process_shipment: false,
       carrier_options: [],
+      carrier_option_value: [],
     };
   },
   computed: {
@@ -633,6 +635,9 @@ export default {
       getFilteredOwnersListing: '$_freight/getFilteredOwnersListing',
       sendCustomerQuote: '$_freight/sendCustomerQuote',
     }),
+    setCarrierOptionValue(index) {
+      this.carrier_options[index].value = this.carrier_option_value[index];
+    },
     handleCheckAllChange(val) {
       this.checkedOwners = val ? this.owners_list : [];
       this.isIndeterminate = false;
