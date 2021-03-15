@@ -61,7 +61,7 @@ const translations = {
   yes: 'Oui',
   no: 'Non',
   back: 'En retour',
-  save: 'enregistrer',
+  save: 'Enregistrer',
   save_card_for_future_orders: 'Je veux enregistrer ma carte pour les futures commandes',
   technical_mantainance_still_pay: 'Cher {user_name}, Les paiements par carte seront momentanément indisponibles car nous subissons une maintenance technique. Vous pouvez toujours payer vos livraisons Sendy en utilisant M-Pesa, ou payer en espèces à la livraison. Contactez le support au +254709779779 pour toute question ',
   technical_mantainance_contact_customer_care: 'Cher {user_name}, Les paiements par carte seront momentanément indisponibles car nous subissons une maintenance technique. Contactez le support au +256393239706 pour toute question. ',
@@ -100,7 +100,7 @@ const translations = {
   price_request_failed_please_try_again: 'La demande de prix a échoué. Veuillez réessayer',
   bike_without_box: 'La moto sans boîte ',
   bike_with_box: 'La moto avec boîte ',
-  any: "n'importe",
+  any: "N'importe",
   open: 'Ouvrir',
   closed: 'Fermee',
   mpesa_payment: 'Paiement M-Pesa',
@@ -347,6 +347,7 @@ const translations = {
   enter_destination_location: 'Saisir un emplacement de destination ',
   add_destination: 'Ajouter une destination',
   confirm_order: 'Confirmer la commande',
+  confirm_order_capital: 'CONFIRMER LA COMMANDE',
   enter_delivery_location: 'Saisir le lieu de livraison pour plusieurs destinations',
 
   timeliness: 'Ponctualité',
@@ -723,6 +724,8 @@ const translations = {
   details_saved: 'Détails enregistrés! ',
 
   change_password: 'changer le mot de passe',
+  change_language: 'FR_Change Language',
+  choose_preffered_language: 'FR_Choose your preferred language ',
 
   manage_business_account: 'Comment voulez-vous gérer votre compte d’entreprise?',
   account_is_free: "Peu n'importe ce que vous décidez, le compte est gratuit.",
@@ -778,8 +781,13 @@ const translations = {
   order_not_ready: 'My order is not ready',
   no_driver_allocated: "Aucun chauffeur n'a été attribué ",
   placed_order_twice: "J'ai passé cette commande deux fois ",
+  payment_method: 'méthode de paiement',
+  transaction: 'Transaction',
+  update: 'FR_Update',
+  provide_all_values: 'Fournir toutes les valeurs.',
 
   enter_verification_code: 'Saisir le code de vérification',
+  please_provide_all_values: 'Veuillez fournir toutes les chiffres',
   place_another_one_any_time: 'Vous pouvez en placer un autre à tout moment. ',
   deliveries: 'LIVRAISONS',
   additional_instructions: 'Instructions additionnelles',
@@ -851,6 +859,7 @@ const translations = {
   price_update: 'Mise à jour des prix',
   today: "Aujourd'hui",
   tommorow: 'Demain',
+  update_instructions: 'Instructions de mise à jour',
 
 };
 

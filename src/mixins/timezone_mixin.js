@@ -1,7 +1,3 @@
-import { createStore } from '../store';
-
-const store = createStore();
-
 const moment = require('moment-timezone');
 
 moment.locale('fr', {
@@ -64,7 +60,11 @@ moment.locale('fr', {
     doy: 4, // Used to determine first week of the year.
   },
 });
-moment.locale(store.state.language === 'fr' ? 'fr' : 'en');
+
+if (process.isClient) {
+  moment.locale(localStorage.getItem('timeLocale'));
+}
+
 const timezone = {
   methods: {
     convertToUTCToLocal(date) {

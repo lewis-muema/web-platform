@@ -3,6 +3,16 @@
     class=""
   >
     <div v-if="setUpState === 1">
+      <el-row> 
+        <el-select v-model="locale" placeholder="Select" class="float-right">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-row>
       <p class="sign-up--extra">
         {{$t('signUpDetails.signup_sendy')}}
       </p>
@@ -278,6 +288,17 @@ export default {
       },
       next_step: true,
       sign_up_text: this.$t('signUpDetails.sign_up'),
+      options: [
+        {
+          value: 'en',
+          label: 'English (EN)'
+        },
+        {
+          value: 'fr',
+          label: 'Francais (FR)'
+        }, 
+      ],
+      locale: 'en',
     };
   },
   watch: {
@@ -299,8 +320,19 @@ export default {
           this.next_step = false;
           break;
       }
+    },
+    locale(val) {
+      this.$i18n.locale = val;
+      const countryCode = localStorage.getItem('countryCode');
+      const acceptLanguage = `${val}-${countryCode}`;
+      localStorage.setItem('timeLocale', val);
+      localStorage.setItem('language', acceptLanguage);
+
     }
   },
+  mounted() {
+    this.locale = localStorage.getItem('timeLocale');
+  }, 
   methods: {
     ...mapActions({
       requestSignUpPhoneVerification: '$_auth/requestSignUpPhoneVerification',
@@ -339,9 +371,21 @@ export default {
 
       return valid;
     },
+    ValidatePhoneCi() {
+      const phoneValid1 = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+      if (phoneValid1) {
+        return phoneValid1;
+      }
+      const phoneTrim = this.phone.replace(/[()\-\s]+/g, '');
+      const trimcode = phoneTrim.includes('+225', 0) ? phoneTrim.split('+225')[1] : phoneTrim;
+      const othernumbers = trimcode.length === 10 ? trimcode.slice(2) : trimcode;
+      const phone = '+225' + othernumbers;
+      const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(phone));
+      return phoneValid;
+    },
     next() {
       if (this.validateDetails()) {
-        const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+        const phoneValid = this.countryCode === 'CI' ? this.ValidatePhoneCi() : phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
 
         let emailValid = true;
         for (let i = 0; i < this.errors.items.length; i++) {
@@ -409,7 +453,7 @@ export default {
       const fullPayload = {
         values,
         vm: this,
-        app: 'NODE_PRIVATE_API',
+        app: 'CUSTOMERS_APP',
         endpoint: 'request_verification',
       };
       this.requestSignUpPhoneVerification(fullPayload).then(
@@ -469,7 +513,7 @@ export default {
           const fullPayload = {
             values,
             vm: this,
-            app: 'NODE_PRIVATE_API',
+            app: 'CUSTOMERS_APP',
             endpoint: 'check_verification',
           };
           this.requestSignUpVerificationVerify(fullPayload).then(
@@ -760,4 +804,10 @@ body > div.el-select-dropdown.el-popper{
 .sign-btn-color {
   border-width: 0px !important;
 }
+.float-right {
+  float: right;
+  height: 32px;
+  width: 150px;
+}
+
 </style>

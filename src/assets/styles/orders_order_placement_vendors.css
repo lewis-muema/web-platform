@@ -539,11 +539,12 @@ text-align: left;
 cursor: pointer;
 }
 .align-instructions-icon{
-  margin-left: 42% !important;
+  margin-left: auto !important;
+  float: right;
+  margin-top: 1em;
 }
 .instructions-holder{
   display: inline-block;
-  width: 50%;
 }
 .add-instructions-submit{
   margin-top: 6% !important;
