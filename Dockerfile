@@ -1,15 +1,11 @@
-FROM sendy-docker-local.jfrog.io/node:carbon AS build-stage
-RUN useradd -u 3000 sendy
+# FROM sendy-docker-local.jfrog.io/node:carbon AS build-stage
+FROM sendy-docker-local.jfrog.io/node-carbon-alpine AS build-stage
 
-# Create app directory
-#WORKDIR /usr/src/app
+RUN apk add git
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+RUN adduser -D sendy
 
-RUN mkdir /opt/sendy/ && \
-    mkdir /home/sendy
+RUN mkdir /opt/sendy/ 
 WORKDIR /opt/sendy/
 
 RUN chown -R sendy:sendy /opt/sendy/ 
@@ -24,8 +20,10 @@ USER sendy:sendy
 
 # Copy over the package.json
 COPY package.json .
+
 # Install the dependancies
-RUN npm install
+RUN npm install --only=production
+RUN npm install rimraf
 
 # Copy over the application files
 COPY . .
@@ -33,19 +31,15 @@ COPY . .
 # Build the application
 RUN npm run build
 
-################################
-#Used Carbon-alpine to maintain the same node version as build-stage
-FROM node:carbon-alpine as production
+FROM node:carbon-alpine
 
-# RUN useradd -u 3000 sendy
+RUN adduser -D sendy
 
+WORKDIR /usr/user/app
 
-WORKDIR /usr/src/app
+COPY --from=build-stage /opt/sendy .
 
-COPY --from=build-stage /opt/sendy/ .
-
-USER node
-
+USER sendy
 EXPOSE 8080
 CMD [ "npm", "start" ]
 
