@@ -155,7 +155,7 @@
             {{$t('general.order_details')}}
           </td>
           <td class="homeview---top-details-right col-right">
-            {{$t('general.totoal_containers')}}
+            {{$t('general.total_containers')}} {{ noOfContainers }}
           </td>
         </tr>
         <tr class="homeview--bottom-details">
@@ -390,7 +390,7 @@
                 {{$t('general.twenty_feet')}}
               </p>
               <p class="homeview--order-confirm-body">
-                {{$t('general.twentyfoot_flat_bed_trucks')}}
+                {{ twentyfoot }} {{$t('general.twentyfoot_flat_bed_trucks')}}
               </p>
             </td>
           </tr>
@@ -405,9 +405,10 @@
             </td>
             <td class="homeview--order-confirm-row__bottom">
               <p class="homeview--order-confirm-header">
-                {{$t('general.fourty_feet')}}              </p>
+                {{$t('general.fourty_feet')}}
+              </p>
               <p class="homeview--order-confirm-body">
-                {{$t('general.fourty_feet_flat_bed_trucks')}}
+                {{ fourtyfoot }} {{$t('general.fourtyfoot_flat_bed_trucks')}}
               </p>
             </td>
           </tr>
