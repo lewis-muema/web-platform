@@ -112,7 +112,6 @@ const timezone = {
   mounted() {
     const locale = this.getLanguage;
     moment.locale(locale);
-    console.log(locale);
   }
 };
 export default timezone;
