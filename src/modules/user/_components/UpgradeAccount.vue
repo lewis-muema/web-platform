@@ -27,7 +27,7 @@
             {{$t('general.use_current_login_details')}}
             <div class="upgrade-account-text--inner">
               <!-- Use your email {{ userData() }} and password to login -->
-              {{$t('general.use_email_password_login')}}
+              {{$t('general.use_email_password_login', { userData : userData() })}}
             </div>
           </el-radio>
           <el-radio
