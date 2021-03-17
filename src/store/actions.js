@@ -488,12 +488,8 @@ export default {
         return true;
       }
     }
-<<<<<<< HEAD
     const lang = localStorage.getItem('language');
     config.headers['Accept-Language'] = lang;
-=======
-
->>>>>>> 5430eaadaa295bed952ab8bb2c217cce0ca2ab69
     return new Promise((resolve, reject) => {
       axios
         .put(`${url}${payload.endpoint}`, payload.values, config)
