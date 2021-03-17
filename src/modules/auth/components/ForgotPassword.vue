@@ -5,18 +5,18 @@
   >
     <div class="sign-inner">
       <div class="sign-top">
-        Forgot your password?
+        {{$t('forgotPassword.forgot_password')}}
       </div>
       <div
         v-if="this.option"
         class="reset-link-details"
       >
-        You have a pending password change request sent to your email awaiting your confirmation
+        {{$t('forgotPassword.pending_password')}}
         <a
           class="reset-pass-link"
           @click="resend_link"
         >
-          Resend?
+          {{$t('forgotPassword.resend')}}
         </a>
       </div>
 
@@ -36,7 +36,7 @@
             type="text"
             data-vv-validate-on="blur"
             name="email"
-            placeholder="Enter Email"
+            :placeholder="$t('forgotPassword.enter_email')" 
           >
           <br>
           <span class="sign-up-email-error">
@@ -49,7 +49,7 @@
           class=""
         >
           <span class="forgot-paswword-moreinfo">
-            Looks like you have two accounts with us. Select one.
+            {{$t('forgotPassword.two_accounts')}}
           </span>
 
           <div style="margin-top: 3%;">
@@ -57,13 +57,13 @@
               v-model="radio"
               label="1"
             >
-              Business
+              {{$t('forgotPassword.business')}}
             </el-radio>
             <el-radio
               v-model="radio"
               label="2"
             >
-              Peer
+              {{$t('forgotPassword.peer')}}
             </el-radio>
           </div>
         </div>
@@ -72,7 +72,7 @@
           <input
             class="button-primary forgot-btn-color"
             type="submit"
-            value="Reset Password"
+            :value="$t('forgotPassword.reset_password')"
             :disabled="!this.is_valid"
             @click="request_pass"
           >
@@ -82,7 +82,7 @@
             class="sign-holder__link"
             to="/auth/sign_in"
           >
-            Sign In
+            {{$t('forgotPassword.sign_in')}}
           </router-link>
         </div>
       </div>
@@ -182,7 +182,7 @@ export default {
             }
             if (response.status === true) {
               this.option = false;
-              this.message = 'Password change reset link has been sent to your email';
+              this.message = this.$t('forgotPassword.password_change');
               // Reset link set to user email.
             } else if (response.status === 'stall') {
               // Activate select account option
@@ -191,7 +191,7 @@ export default {
               // update nonce data
             } else if (response.status === false) {
               // Account does not exist
-              this.message = 'Account does not exist.Please sign-up to create a sendy account';
+              this.message = this.$t('forgotPassword.account_not_exist');
             } else if (response.status === 'exists') {
               // Existing password reset option
               this.message = '';
@@ -199,16 +199,16 @@ export default {
               this.option = true;
             } else {
               // Invalid request
-              this.message = 'Invalid Request';
+              this.message = this.$t('forgotPassword.invalid_request');
             }
           },
           (error) => {
-            this.message = 'Password reset request failed, Kindly retry again';
+            this.message = `${this.$t('forgotPassword.reset_failed')}`;
           },
         );
       } else {
         const level = 3;
-        const notification = { title: '', level, message: 'Invalid Email provided' }; // notification object
+        const notification = { title: '', level, message: this.$t('forgotPassword.invalid_email') }; // notification object
         this.displayNotification(notification);
       }
     },
@@ -228,7 +228,7 @@ border: 1px solid #D8DFE6;
 border-radius: 4px;
 margin: 2rem auto;
 padding: 2rem;
-font-family: "Helvetica Nueu", "Helvetica", "Arial", "sans-serif";
+font-family: 'Nunito', sans-serif;
 }
 .sign-top{
 font-size: 1.3rem;
@@ -251,13 +251,13 @@ display: block;
  height: 30px;
 }
 .sign-holder input[type="submit"] {
- background-color: #1782c5;
+ background-color: #1782C5;
  color: #fff;
  letter-spacing: 1.1px;
  font-weight: inherit;
  padding: 6px;
  height: 42px;
- border: 1px solid #1782c5;
+ border: 1px solid #1782C5;
  text-transform: uppercase;
  font-size: medium;
 }
@@ -265,7 +265,7 @@ display: block;
 width: 83%;
 }
 .sign-holder__link{
-color: #1782c5;
+color: #1782C5;
 text-decoration:none;
 }
 .forgot-form{
@@ -273,12 +273,12 @@ text-decoration:none;
   width: 110%!important;
 }
 .forgot-paswword-moreinfo{
-    font-family: "Rubik", sans-serif;
+    font-family: 'Nunito', sans-serif;
     font-size: 14px;
 }
 .reset-pass-link{
   cursor: pointer;
-  color: #1782c5;
+  color: #1782C5;
   text-decoration: none;
 }
 .reset-link-details{
@@ -287,7 +287,7 @@ text-decoration:none;
   text-align: center;
   font-size: 13px;
   color: #e08445;
-  font-family: "Rubik", sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 .forgot-btn-color{
   border-width: 0px !important;

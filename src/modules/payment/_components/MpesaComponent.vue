@@ -13,7 +13,7 @@
         v-model="mpesa_payment_data.amount"
         type="number"
         name="amount"
-        placeholder="Amount"
+        :placeholder="$t('general.amount')"
         class="input-control paymentbody--input"
       >
     </div>
@@ -23,7 +23,7 @@
         type="text"
         disabled
         name="phone_no"
-        placeholder="Safaricom Phone Number"
+        :placeholder="$t('general.safaricon_phone_number')"
         class="input-control paymentbody--input"
       >
     </div>
@@ -38,7 +38,7 @@
         "
         @click="requestMpesaPayment"
       >
-        Pay
+        {{$t('general.pay')}}
       </button>
     </div>
   </div>
@@ -61,7 +61,7 @@ export default {
         amount: '',
         phone_number: 0,
       },
-      payment_state: 'Mpesa Payment Not Initiated',
+      payment_state: this.$t('general.mpesa_payment_not_inititated'),
       mpesa_number_invalid: false,
     };
   },
@@ -275,7 +275,7 @@ export default {
         endpoint: 'initiate_mpesa',
       };
 
-      this.payment_state = 'requesting Mpesa Payment';
+      this.payment_state = this.$t('general.requesting_mpesa_payment');
 
       this._requestMpesaPayment(fullPayload).then(
         (response) => {
@@ -283,7 +283,7 @@ export default {
             // request poll here
             this.requestMpesaPaymentPoll();
           }
-          this.payment_state = 'Mpesa Payment Success';
+          this.payment_state = this.$t('general.mpesa_payment_success');
           const acc = this.$store.getters.getSession;
 
           this.trackMixpanelEvent('Mpesa Payment', {
@@ -292,7 +292,7 @@ export default {
           });
         },
         (error) => {
-          this.payment_state = 'Mpesa Payment Failed';
+          this.payment_state = this.$t('general.mpesa_payment_failed');
         },
       );
     },

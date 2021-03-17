@@ -248,6 +248,26 @@ const updateSocialApprovalStatus = function updateSocialApprovalStatus({ dispatc
     );
   });
 };
+const requestEditOrder = function requestEditOrder({ dispatch }, data) {
+  const payload = data;
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        if (response.data.status) {
+          resolve(response.data);
+        } else {
+          resolve(response.data);
+        }
+      },
+      (error) => {
+        reject(error);
+        // handle failure to dispatch to global store
+      },
+    );
+  });
+};
 
 export default {
   fetchOngoingOrders,
@@ -263,4 +283,5 @@ export default {
   requestIndustries,
   requestPromoCodePayment,
   updateSocialApprovalStatus,
+  requestEditOrder,
 };

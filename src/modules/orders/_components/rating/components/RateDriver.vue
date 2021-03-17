@@ -13,17 +13,17 @@
       id="rate-rider-content"
       class="rate-rider-content"
     >
-      <div class="rate-rider-please">Please Rate {{ driver_name }}</div>
+      <div class="rate-rider-please">{{$t('general.please_rate_drivername', {driver_name: driver_name})}}</div>
 
       <div class="rate-rider-star">
         <div class="submit-stars">
           <span class="submit-stars-container">
-            <p class="rate-text rate-text-right">Very Bad</p>
+            <p class="rate-text rate-text-right">{{$t('general.very_bad')}}</p>
             <el-rate
               v-model="rated_score"
-              :colors="['#99A9BF', '#F57f20', '#1782C5']"
+              :colors="['#99A9BF', '#EE7D00', '#1782C5']"
             />
-            <p class="rate-text rate-text-left">Very Good</p>
+            <p class="rate-text rate-text-left">{{$t('general.very_good')}}</p>
           </span>
           <textarea
             v-model="rating_comment"
@@ -34,13 +34,13 @@
             class="rate-rider-primary"
             @click="postRating"
           >
-            SUBMIT
+            {{$t('general.submitCapital')}}
           </button>
         </div>
       </div>
 
       <div class="rate-rider-desc">
-        We will use your rating to match you with the best rider
+       {{$t('general.will_use_your_rating_to_match')}}
       </div>
     </div>
   </span>
@@ -106,7 +106,7 @@ export default {
         }
       },
       (error) => {
-        const notification = { title: '', level: 2, message: 'Something went wrong.' }; // notification object
+        const notification = { title: '', level: 2, message: this.$t('general.something_went_wrong') }; // notification object
         this.displayNotification(notification);
       },
     );
@@ -137,7 +137,7 @@ export default {
           this.updateScore(this.rated_score);
         },
         (error) => {
-          const notification = { title: '', level: 2, message: 'Something went wrong.' }; // notification object
+          const notification = { title: '', level: 2, message: this.$t('general.something_went_wrong') }; // notification object
           this.displayNotification(notification);
         },
       );
@@ -168,7 +168,7 @@ export default {
     color: #595d62 !important;
     margin-top: 20px;
     padding: 15px;
-    font-family: 'Rubik', sans-serif;
+    font-family: 'Nunito', sans-serif;
 }
 
 .rate-rider-please {
@@ -180,7 +180,7 @@ export default {
 .rate-rider-primary {
     margin: 0 auto;
     color: #ecf0f1;
-    background-color: #1782c5;
+    background-color: #1782C5;
     border-color: #1b7fc3;
     cursor: pointer;
     position: relative;
@@ -214,7 +214,7 @@ export default {
     width: 200px !important;
 }
 .rate-comment--textareabox:focus{
-    border: 1px solid #1782c5 !important;
+    border: 1px solid #1782C5 !important;
     -webkit-box-shadow: none !important;
     outline:none;
     box-shadow: none !important;

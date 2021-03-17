@@ -6,7 +6,7 @@
     >
       <p style="margin-bottom: 20px;">
         <label class="input-descript">
-          <span>Old Password</span>
+          <span>{{$t('general.old_password')}}</span>
         </label>
         <input
           v-model="old_password"
@@ -17,7 +17,7 @@
       </p>
       <p style="margin-bottom: 20px;">
         <label class="input-descript">
-          <span>New Password</span>
+          <span>{{$t('general.new_password')}}</span>
         </label>
         <input
           v-model="new_password"
@@ -28,7 +28,7 @@
       </p>
       <p style="margin-bottom: 20px;">
         <label class="input-descript">
-          <span>Confirm Password</span>
+          <span>{{$t('general.confirm_password')}}</span>
         </label>
         <input
           v-model="confirm_password"
@@ -42,7 +42,7 @@
         <input
           type="submit"
           class="button-primary btn-content"
-          value="Update"
+          :value="$t('general.update')"
           @click="update_password"
         >
       </p>
@@ -97,7 +97,7 @@ export default {
       if (this.old_password !== '' && this.new_password !== '' && this.confirm_password !== '') {
         if (this.new_password !== this.confirm_password) {
           const level = 3;
-          this.message = 'Password does not match. Please try again';
+          this.message = $t('general.password_not_match');
           const notification = { title: '', level, message: this.message }; // notification object
           this.displayNotification(notification);
         } else {
@@ -124,8 +124,8 @@ export default {
                   this.trackMixpanelEvent('Change Password');
                   
                   const level = 1; // success
-                  this.message = 'Password Changed. You will be redirected to the login page within 5 seconds';
-                  const notification = { title: 'Password Change', level, message: this.message }; // notification object
+                  this.message = this.$t('general.password_changed_redirected');
+                  const notification = { title: this.$t('general.password_change'), level, message: this.message }; // notification object
                   this.displayNotification(notification);
                   setTimeout(() => {
                     this.deleteSession();
@@ -133,14 +133,14 @@ export default {
                   }, 5000);
                 } else {
                   const level = 3;
-                  this.message = 'Something went wrong.';
+                  this.message = this.$t('general.something_went_wrong');
                   const notification = { title: '', level, message: this.message }; // notification object
                   this.displayNotification(notification);
                 }
               },
               (error) => {
                 const level = 3;
-                this.message = 'Something went wrong.';
+                this.message = this.$t('general.something_went_wrong');
                 const notification = { title: '', level, message: this.message }; // notification object
                 this.displayNotification(notification);
               },
@@ -163,22 +163,22 @@ export default {
               (response) => {
                 if (response.status) {
                   const level = 1; // success
-                  this.message = 'Password Changed. You will be redirected to the login page within 5 seconds';
-                  const notification = { title: 'Password Change', level, message: this.message }; // notification object
+                  this.message = this.$t('general.password_changed_redirected');
+                  const notification = { title: this.$t('general.password_change'), level, message: this.message }; // notification object
                   this.displayNotification(notification);
                   setTimeout(() => {
                     this.$router.push('/auth/sign_in');
                   }, 5000);
                 } else {
                   const level = 3;
-                  this.message = 'Something went wrong.';
+                  this.message = this.$t('general.something_went_wrong');
                   const notification = { title: '', level, message: this.message }; // notification object
                   this.displayNotification(notification);
                 }
               },
               (error) => {
                 const level = 3;
-                this.message = 'Something went wrong.';
+                this.message = this.$t('general.something_went_wrong');
                 const notification = { title: '', level, message: this.message }; // notification object
                 this.displayNotification(notification);
               },
@@ -189,7 +189,7 @@ export default {
         }
       } else {
         const level = 3;
-        this.message = 'Provide all values.';
+        this.message = this.$t('general.provide_all_values');
         const notification = { title: '', level, message: this.message };
         this.displayNotification(notification);
       }
@@ -222,12 +222,12 @@ export default {
 
 .my-profile__inner__menu {
     margin-bottom: 50px;
-    border-bottom: 1px solid #1782c5;
+    border-bottom: 1px solid #1782C5;
     padding-bottom: 2px;
 }
 
 .my-profile__inner__menu__link {
-    color: #1782c5;
+    color: #1782C5;
     text-transform: uppercase;
     text-align: center;
     padding: 2px 25px;
@@ -236,7 +236,7 @@ export default {
 
 .my-profile__inner__menu__selected {
     font-weight: 400;
-    border-bottom: 3px solid #1782c5;
+    border-bottom: 3px solid #1782C5;
     text-decoration: none;
 }
 

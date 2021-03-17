@@ -1,6 +1,6 @@
 .transporters-main{
   border-radius: 4px;
-  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Nunito', sans-serif;
   width: 97% !important;
   padding-bottom: 0;
   margin-top: 0;
@@ -30,6 +30,7 @@
   margin-right: 2%;
   border: 1px solid #d8dfe6;
   padding: 2rem;
+  height: 40%;
 }
 .transporters-results-section{
   -webkit-box-flex: 2;
@@ -42,13 +43,13 @@
 }
 .transporters-details-section{
   -webkit-box-flex: 2;
-  flex: 2;
+  flex: 2.5;
   -webkit-box-orient: vertical;
   flex-direction: column;
   display: flex;
   -webkit-box-direction: normal;
   border-radius: 4px;
-  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Nunito', sans-serif;
   padding-left: 2rem;
   padding-right: 0rem;
 }
@@ -99,6 +100,7 @@
 }
 .search-flex{
   flex: 1;
+  margin-right: 2%;
 }
 .request-quote-btn{
   width: 53%;
@@ -125,7 +127,7 @@
   color: #000;
 }
 .transporter-listing{
-  margin-top: 3%;
+  margin-top: 2%;
 }
 .transporter-detail{
   border: 1px solid #d8dfe6;
@@ -224,10 +226,11 @@
   margin-left: 3%;
 }
 .transporter-listing .el-checkbox__input {
-    padding-bottom: 8% !important;
+  padding-bottom: 8% !important;
+  display: none;
 }
 .transporter-listing .el-checkbox__label {
-    width: 100%;
+  width: 100%;
 }
 .request-quote-header{
   font-size: 18px;
@@ -244,7 +247,7 @@
   text-transform: capitalize;
   font-size: 13px;
   letter-spacing: 1.1px;
-  background-color: #1B7FC3;;
+  background-color: #1B7FC3;
   color: #fff;
   width: 94%;
   height: 46px;
@@ -331,21 +334,23 @@
   width: 85%;
 }
 .freight-order-details-wrapper {
-  width: 64%;
+  width: 95%;
   display: inline-block;
 }
-.order_details_map {
-  width: 38%;
+.freight_order_details_map {
+  width: 33%;
   display: inline-block;
   float: left;
+  margin-top: 2%;
 }
 .back-freight-orders{
   margin-bottom: 3%;
 }
 .order_details_desc {
   display: inline-block;
-  padding-left: 48px;
+  padding-left: 2;
   font-size: 14px;
+  width: 61%;
 }
 .order_details_price {
   margin-top: 1%;
@@ -366,17 +371,19 @@
   margin-right: 5px;
 }
 .order-details-schedule-time{
-  margin-top: 10%;
+  margin-top: 5%;
 }
 .freight-order-info-extra{
-  margin-left: 6%;
+  margin-left: 8%;
   margin-top: 5%;
   margin-bottom: 2%;
+  font-size: 14px;
 }
 .order-info-header{
   font-size: 15px;
   line-height: 18px;
   color: #000000;
+  font-weight: 500 !important;
 }
 .rider_details_wrap {
   width: 34%;
@@ -404,7 +411,7 @@
 }
 .freight-orders-main-summary{
   margin-bottom: 2%;
-  height: 300px;
+  min-height: 300px;
 }
 .order-order-documents{
   width: 94%;
@@ -422,18 +429,25 @@
   margin-top: 1%;
 }
 .freight-documents-approve{
-  width: 45%;
+  width: 38%;
   font-size: 15px;
+  margin-top: 1%;
 }
 .freight-documents-date{
-  width: 20%;
+  width: 38%;
   font-size: 15px;
   margin-top: 1%;
 }
 .freight-documents-title{
-  width: 20%;
+  width: 38%;
   font-size: 15px;
   margin-top: 1%;
+  font-weight: 500;
+  color: #1B7FC3;
+}
+.view-transporter-documents{
+  color: #1B7FC3;
+  cursor: pointer;
 }
 .documents-highlight{
   font-size: 12px;
@@ -473,6 +487,7 @@
 .doc-detail{
   border: 1px solid #d8dfe6;
   border-radius: 1px;
+  min-height: 96px;
 }
 .document-text-option {
   text-align: left;
@@ -519,4 +534,234 @@
 }
 .upload-new-doc--outer{
   margin-bottom: 9%;
+}
+.requestShipmentOptions > div {
+  margin-top: 18vh !important;
+  width: 30% !important;
+}
+.requestShipmentOptions >.el-dialog >.el-dialog__body {
+  margin: 2% !important;
+}
+.view-transporter-info{
+  cursor :pointer ;
+}
+.create-order-submit{
+  width: 100%;
+  margin-top: 4%;
+}
+.create-order-upper{
+  color: #000000;
+  margin-left: 7%;
+}
+.create-order-section{
+   padding-top: 1% !important;
+  -webkit-box-flex: 1;
+   flex: 1;
+   -webkit-box-orient: vertical;
+   flex-direction: column;
+   display: flex;
+   -webkit-box-direction: normal;
+   margin-right: 2%;
+   padding: 2rem;
+}
+.create-order-main{
+   border-radius: 4px;
+   font-family: 'Nunito', sans-serif;
+   width: 44% !important;
+   padding-bottom: 0;
+   margin-top: 0;
+   padding-top: 3%;
+}
+.back-order-btn{
+   margin-left: 7%;
+   font-size: 13px;
+   margin-bottom: 6%;
+   cursor: pointer;
+}
+.freight-input {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+}
+.freight-input>div {
+  display: table-cell;
+  border: 1px solid #ddd;
+  vertical-align: middle;
+}
+.freight-input-icon {
+  padding: 3%;
+  border-radius: .25rem 0 0 .25rem;
+  background: #eee;
+  color: #777;
+  width: 11%;
+  text-align: center;
+  font-size: 12px;
+}
+.freight-input-area {
+  width: 90%;
+  border-radius: 0 .25rem .25rem 0;
+}
+.freight-selector{
+  border: 0px solid #dcdfe6;
+}
+.freight-create-load-weight{
+  width: 80% !important;
+  font-style: italic;
+}
+.freight-tonage-value-text{
+  color: #555 !important;
+  padding-left: 36px;
+  width: 20% !important;
+  font-size: 12px;
+  font-style: italic;
+}
+.drag-image > div > div:nth-child(1) > div > input {
+  display: none;
+}
+.document-image> div > div:nth-child(1) > div > input {
+  display: none;
+}
+.add-document-image> div > div:nth-child(1) > div > input {
+  display: none;
+}
+.download-uploaded-img {
+  height: 200px;
+}
+.add-download-uploaded-img{
+  height: 200px;
+}
+.el-icon-upload {
+  font-size: 15px!important;
+  margin: 0!important;
+  line-height: 0!important;
+}
+.upload_image {
+  width: 100%;
+  height: 132px;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+.add-upload-image{
+  width: 100%;
+  height: 132px;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+.document-upload-label {
+  font-style: italic;
+  font-size: 14px;
+  color: #f18327;
+  font-weight: 700;
+  cursor: pointer;
+}
+.upload-demo{
+  font-size: 13px !important;
+}
+.add-upload-demo{
+  font-size: 13px !important;
+}
+.upload-landing{
+  margin-top: 7%;
+}
+.transporter-input-name{
+  pointer-events: none;
+}
+.hide {
+  display: none!important;
+}
+
+li.suggestions_solr {
+  padding: 10px 16px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+li.suggestions_solr:first-child {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+li.suggestions_solr:last-child {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-bottom: 0;
+}
+.document-upload-extra{
+  font-size: 14px;
+  color: #1B7FC3;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 11%;
+}
+.upload-document-header{
+  font-weight: 100;
+  font-size: 20px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+}
+.documents-highlight-label{
+  margin-left: 2%;
+  margin-bottom: 2%;
+  color: #000000;
+  font-weight : 200;
+}
+.select-documents{
+  width: 95%;
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-bottom: 8%;
+}
+.align-new-doc{
+  margin-left: 4%;
+  margin-top: 5%;
+}
+.download-uploaded-img-extra{
+  border: 1px solid #d8dfe6;
+  height: 200px;
+  margin-bottom: 9%;
+  margin-right: 5%;
+}
+.upload_image-extra{
+  width: 100%;
+  height: 132px;
+  margin-top: 6%;
+  margin-bottom: 2%;
+}
+.success-extra{
+  margin-top: 13%;
+}
+.documents--flex{
+  display: flex;
+  width: 82%;
+}
+.document-image-extra{
+  flex: 1;
+}
+.delete-upload{
+  margin-top: 22%;
+  cursor: pointer;
+  color :#ff0000;
+}
+.award-input--label{
+  margin-bottom: 4%;
+  font-size: 13px;
+  font-weight: 400;
+  color: #000;
+}
+.next-shipment-btn{
+  border-width: 0px !important;
+  width: 100%;
+  background: #EA7125 !important;
+}
+.send-final-quote-btn{
+  margin-left: 0px !important;
+  width: 100% !important;
+}
+.send-quote--outer{
+  width: 109% !important;
+  display: flex;
+}
+.back-shipment-btn{
+  background-color: #EA7125 !important;
+  border: #EA7125 !important;
 }

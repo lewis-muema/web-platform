@@ -11,7 +11,7 @@
         />
       </div>
       <div class="admin-edit2-details position--details">
-        Add Department
+        {{ $t('addDepartment.add_department') }}
       </div>
       <div class="edit-position">
         <div class="edit-holder edit-dimen">
@@ -19,14 +19,14 @@
             v-model="department_name"
             class="input-control edit-form"
             type="text"
-            placeholder="Name"
+            :placeholder="$t('addDepartment.name')"
           >
         </div>
         <div class="edit-holder">
           <el-select
             v-model="filterData.user"
             class="addUser--select edit-select"
-            placeholder="Admin"
+            :placeholder="$t('addDepartment.admin')"
             filterable
           >
             <el-option
@@ -48,7 +48,7 @@
             "
             @click="add_department"
           >
-            Add
+            {{ $t('addDepartment.add')}}
           </button>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default {
   mixins: [NotificationMxn],
   data() {
     return {
-      empty_departments_state: 'Adding Department',
+      empty_departments_state: this.$t('addDepartment.adding_department'),
       department_name: '',
       disabled: 0,
       filterData: {
@@ -126,9 +126,9 @@ export default {
             const level = 1;
             this.disabled = 1;
             const notification = {
-              title: 'Add Department',
+              title: this.$t('addDepartment.add_department'),
               level,
-              message: 'Department added successfully',
+              message: this.$t('addDepartment.added_successful'),
             };
             this.displayNotification(notification);
             setTimeout(() => {
@@ -137,16 +137,16 @@ export default {
           },
           (error) => {
             const level = 2;
-            const notification = { title: '', level, message: 'Something went wrong.' };
+            const notification = { title: '', level, message: this.$t('addDepartment.something_went_wrong') };
             this.displayNotification(notification);
           },
         );
       } else {
         const level = 2;
         const notification = {
-          title: 'Add Department Error !',
+          title: this.$t('addDepartment.add_department_error'),
           level,
-          message: 'Please provide Department name and Admin',
+          message: this.$t('addDepartment.department_name'),
         };
         this.displayNotification(notification);
       }
@@ -175,7 +175,7 @@ export default {
     max-width: 60rem;
     border-radius: 4px;
     padding: 2rem;
-    font-family: 'Rubik', sans-serif;
+    font-family: 'Nunito', sans-serif;
     display: flex;
 }
 

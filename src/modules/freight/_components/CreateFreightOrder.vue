@@ -4,17 +4,17 @@
       class="back-order-btn"
       @click="backToOrders()"
     >
-      <i class="el-icon-arrow-left view-transporter-info" /> Back
+      <i class="el-icon-arrow-left view-transporter-info" /> {{$t('general.back')}}
     </div>
     <div class="create-order-upper">
-      Place Order
+      {{ $t('createFreightOrder.create_order') }}
     </div>
     <div class="transporters-container transporters-main--inner">
       <div class="transporters-content">
         <div class="create-order-section">
           <div class="">
             <p class="freight-input--label">
-              Pick up location
+              {{ $t('createFreightOrder.pickup_location') }}
             </p>
             <gmap-autocomplete
               v-model="locations[0]"
@@ -28,12 +28,12 @@
 
           <div class="">
             <p class="freight-input--label">
-              Destination
+              {{ $t('createFreightOrder.destination') }}
             </p>
             <gmap-autocomplete
               v-model="locations[1]"
               :options="map_options"
-              placeholder="Enter a destination location"
+              :placeholder="$t('createFreightOrder.enter_destination')"
               :select-first-on-enter="true"
               class="input-control"
               @place_changed="setLocation($event, 1)"
@@ -42,7 +42,7 @@
 
           <div class="">
             <p class="freight-input--label">
-              Pick up time
+              {{ $t('createFreightOrder.pickup_time') }}
             </p>
             <div class="block">
               <el-date-picker
@@ -50,7 +50,7 @@
                 class="transporters-pickup-time"
                 type="datetime"
                 format="dd-MM-yyyy h:mm a"
-                placeholder="As soon as possible"
+                :placeholder="$t('createFreightOrder.asap')"
                 prefix-icon="el-icon-date"
                 :default-time="default_value"
                 :picker-options="dueDatePickerOptions"
@@ -60,7 +60,7 @@
 
           <div class="">
             <p class="freight-input--label">
-              What is the weight of the load?
+             {{ $t('createFreightOrder.load_weight') }}
             </p>
             <div>
               <input
@@ -70,13 +70,13 @@
                 placeholder=""
                 autocomplete="on"
               >
-              <span class="freight-tonage-value-text">Tonnes</span>
+              <span class="freight-tonage-value-text">{{$t('createFreightOrder.tonnes')}}</span>
             </div>
           </div>
 
           <div class="">
             <p class="freight-input--label">
-              What is the cost for this order?
+              {{$t('createFreightOrder.cost_order')}}
             </p>
             <div class="freight-input">
               <div class="freight-input-icon">
@@ -95,7 +95,7 @@
 
           <div class="">
             <p class="freight-input--label">
-              Select the transporter to assign this order
+              {{$t('createFreightOrder.select_transporter')}}
             </p>
             <div
               :class="`trigger ${hideInput}`"
@@ -113,7 +113,7 @@
               <input
                 v-model="query"
                 class="input-control"
-                placeholder="Search by name"
+                :placeholder="$t('createFreightOrder.search_by_name')"
                 autocomplete="off"
                 :prepare-response-data="prepareResponseData"
                 @keydown.down="down"
@@ -156,14 +156,14 @@
               class="search-transporter-ul"
             >
               <span class="screen-no-details-found">
-                No Details Found
+                {{ $t('createFreightOrder.no_details') }}
               </span>
             </ul>
           </div>
 
           <div class="">
             <p class="freight-input--label">
-              Will the container be returned?
+             {{$t('createFreightOrder.select_transporter')}}
             </p>
             <div class="transporters-select">
               <el-select
@@ -183,7 +183,7 @@
 
           <div class="">
             <p class="freight-input--label">
-              Upload the terms of the delivery
+              {{$t('createFreightOrder.upload_terms')}}
             </p>
             <div class="document-image">
               <div class="download-uploaded-img">
@@ -205,7 +205,7 @@
                     {{ terms_text }}
                   </div>
                   <div v-else>
-                    Drop file here or <em>click to upload</em>
+                    {{$t('createFreightOrder.drop_file')}} <em>{{$t('createFreightOrder.click_upload')}}</em>
                   </div>
                 </el-upload>
                 <div
@@ -213,7 +213,7 @@
                   class="underate"
                 >
                   <span class="document-upload-label">
-                    Terms of delivery uploaded successfully .
+                    {{$t('createFreightOrder.terms_of_delivery_uploaded')}}
                   </span>
                 </div>
               </div>
@@ -222,7 +222,7 @@
 
           <div class="">
             <p class="freight-input--label upload-landing">
-              Upload the bill of lading
+              {{$t('createFreightOrder.upload_bill_lading')}}
             </p>
             <div class="document-image">
               <div class="download-uploaded-img">
@@ -244,12 +244,12 @@
                     {{ landing_text }}
                   </div>
                   <div v-else>
-                    Drop file here or <em>click to upload</em>
+                    {{$t('createFreightOrder.drop_file')}}<em>{{$t('createFreightOrder.click_upload')}}</em>
                   </div>
                 </el-upload>
                 <div v-if="billOfLandingName !== '' && landing_text === 'Change'">
                   <span class="document-upload-label">
-                    Bill of lading successfully .
+                    {{$t('createFreightOrder.bill_lading_successfully')}}
                   </span>
                 </div>
               </div>
@@ -262,7 +262,7 @@
           >
             <div class="">
               <p class="freight-input--label upload-landing">
-                {{ val.document_name }} document
+                {{ val.document_name }} {{$t('createFreightOrder.document')}}
               </p>
               <div class="documents--flex">
                 <div class="document-image-extra">
@@ -278,7 +278,7 @@
                     </div>
                     <div class="success-extra">
                       <span class="document-upload-label">
-                        {{ val.document_name }} document uploaded successfully .
+                        {{ val.document_name }} {{$t('createFreightOrder.name_document_upload')}}
                       </span>
                     </div>
                   </div>
@@ -297,7 +297,7 @@
             class="document-upload-extra"
             @click="showExtraDocModal"
           >
-            <i class="el-icon-circle-plus" /> Add document
+            <i class="el-icon-circle-plus" /> {{$t('createFreightOrder.add_document')}}
           </div>
 
           <div class="next-terms-holder">
@@ -322,12 +322,12 @@
         >
           <div class="">
             <div class="decline-text-option  upload-document-header">
-              Add new document
+              {{$t('createFreightOrder.add_new_document')}}
             </div>
           </div>
           <div class="">
             <div class="documents-highlight-label">
-              Select additional type of document required
+             {{$t('createFreightOrder.additiona_doc_type')}}
             </div>
             <el-select
               v-model="doc_name"
@@ -349,7 +349,7 @@
             class=""
           >
             <div class="documents-highlight-label">
-              Additional document name
+              {{$t('createFreightOrder.additional_doc_name')}}
             </div>
             <el-input
               v-model="new_doc_name"
@@ -362,7 +362,7 @@
           <div class="upload-new-doc--outer">
             <div class="">
               <p class="documents-highlight-label">
-                Upload document
+                {{$t('createFreightOrder.upload_doc')}}
               </p>
               <div class="add-document-image">
                 <div class="download-uploaded-img">
@@ -384,12 +384,12 @@
                       {{ add_text }}
                     </div>
                     <div v-else>
-                      Drop file here or <em>click to upload</em>
+                      {{$t('createFreightOrder.drop_file')}} <em>{{$t('createFreightOrder.click_upload')}}</em>
                     </div>
                   </el-upload>
                   <div v-if="addNewName !== '' && add_text === 'Change'">
                     <span class="document-upload-label align-new-doc">
-                      Document added successfully .
+                      {{$t('createFreightOrder.doc_added_successfully')}}
                     </span>
                   </div>
                 </div>
@@ -404,7 +404,7 @@
               class="decline-action--slide-button"
               @click="submitNewData"
             >
-              Done
+              {{$t('createFreightOrder.done')}}
             </button>
           </div>
         </el-dialog>
@@ -432,8 +432,8 @@ export default {
   mixins: [NotificationMxn],
   data() {
     return {
-      submit_text: 'Place Order',
-      quote_text: 'Request for quote',
+      submit_text: 'Create Order',
+      quote_text: this.$t('createFreightOrder.request_quote'),
       locations: [],
       map_options: {
         componentRestrictions: {
@@ -460,12 +460,12 @@ export default {
       select_transporter: false,
       amount: '',
       billOfLandingData: {},
-      landing_text: 'Change',
+      landing_text: this.$t('createFreightOrder.change'),
       billOfLandingName: '',
       termsData: {},
-      terms_text: 'Change',
+      terms_text: this.$t('createFreightOrder.change'),
       termsName: '',
-      add_text: 'Change',
+      add_text: this.$t('createFreightOrder.change'),
       addNewDocData: {},
       addNewName: '',
       ownerDisplay: '',
@@ -540,7 +540,7 @@ export default {
       this.hide = '';
     },
     closeExtraDocumentDialog() {
-      this.add_text = 'Change';
+      this.add_text = this.$t('createFreightOrder.change');
       this.addNewDocData = {};
       this.addNewName = '';
       this.displayExtraDocument = false;
@@ -554,11 +554,11 @@ export default {
       if (this.doc_name === 1 && this.new_doc_name === '') {
         this.doNotification(
           2,
-          'Upload document error!',
-          'Kindly provide additional document name ',
+          this.$t('createFreightOrder.upload_document'),
+          this.$t('createFreightOrder.additional_document'),
         );
       } else if (this.doc_name === '' || this.addNewName === '') {
-        this.doNotification(2, 'Upload document error!', 'Kindly provide missing data ');
+        this.doNotification(2, this.$t('createFreightOrder.upload_document'), this.$t('createFreightOrder.missing_data'));
       } else {
         this.setToStore();
       }
@@ -582,7 +582,7 @@ export default {
     },
     removeRecord(val) {
       this.stored_documents.splice(val, 1);
-      this.doNotification(1, 'Document removed successfully', '');
+      this.doNotification(1, this.$t('createFreightOrder.doc_removed'), '');
     },
     fetchDocumentTypes() {
       const fullPayload = {
@@ -603,15 +603,15 @@ export default {
           } else {
             this.doNotification(
               2,
-              'Unable to fetch document types !',
-              'No available document types',
+              this.$t('createFreightOrder.doc_type_unable'),
+              this.$t('createFreightOrder.doc_type_unavailable'),
             );
             this.documents = [];
             this.displayExtraDocument = false;
           }
         },
         (error) => {
-          this.doNotification(2, 'Unable to fetch document types!', 'No available document types');
+          this.doNotification(2, this.$t('createFreightOrder.doc_type_unable'), this.$t('createFreightOrder.doc_type_unavailable'));
           this.documents = [];
           this.displayExtraDocument = false;
         },
@@ -667,7 +667,7 @@ export default {
       const isPdf = file.type === 'application/pdf';
 
       if (!isPdf) {
-        this.doNotification(2, 'Document upload error !', 'Document must be in PDF format');
+        this.doNotification(2, this.$t('createFreightOrder.doc_upload_error'), this.$t('createFreightOrder.doc_in_pdf'),);
       }
       return isPdf;
     },
@@ -675,7 +675,7 @@ export default {
       const isPdf = file.type === 'application/pdf';
 
       if (!isPdf) {
-        this.doNotification(2, 'Document upload error !', 'Document must be in PDF format');
+        this.doNotification(2, this.$t('createFreightOrder.doc_upload_error'), this.$t('createFreightOrder.doc_in_pdf'));
       }
       return isPdf;
     },
@@ -683,7 +683,7 @@ export default {
       const isPdf = file.type === 'application/pdf';
 
       if (!isPdf) {
-        this.doNotification(2, 'Document upload error !', 'Document must be in PDF format');
+        this.doNotification(2, this.$t('createFreightOrder.doc_upload_error'), this.$t('createFreightOrder.doc_in_pdf'));
       }
       return isPdf;
     },
@@ -716,13 +716,13 @@ export default {
     },
     uploadBillOfLanding() {
       if (Object.keys(this.billOfLandingData).length === 0) {
-        this.doNotification(2, 'Kindly upload bill of landing document', '');
+        this.doNotification(2, this.$t('createFreightOrder.upload_bill'), '');
       } else {
         const imageId = 'ladingImagePreview';
         let src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
         $(`#${imageId}`).attr('src', src);
 
-        this.landing_text = 'Uploading ...';
+        this.landing_text = this.$t('createFreightOrder.uploading');
         const { file } = this.billOfLandingData;
         const fileType = file.type;
         const fileName = this.sanitizeFilename(file.name, 'bill');
@@ -739,12 +739,12 @@ export default {
           },
           (err) => {
             if (err) {
-              this.landing_text = 'Change';
+              this.landing_text = this.$t('createFreightOrder.change');
               console.log('There was an error uploading your document: ', err.message);
             } else {
               src = 'https://images.sendyit.com/web_platform/freight/complete.svg';
               $(`#${imageId}`).attr('src', src);
-              this.landing_text = 'Change';
+              this.landing_text = this.$t('createFreightOrder.change');
             }
             // eslint-disable-next-line comma-dangle
           }
@@ -753,7 +753,7 @@ export default {
     },
     uploadTermsAndCondition() {
       if (Object.keys(this.termsData).length === 0) {
-        this.doNotification(2, 'Kindly upload terms and condition document', '');
+        this.doNotification(2, this.$t('createFreightOrder.kindly_upload'), '');
       } else {
         const imageId = 'imagePreview';
         let src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
@@ -776,12 +776,12 @@ export default {
           },
           (err) => {
             if (err) {
-              this.terms_text = 'Change';
+              this.terms_text = this.$t('createFreightOrder.change');
               console.log('There was an error uploading your document: ', err.message);
             } else {
               src = 'https://images.sendyit.com/web_platform/freight/complete.svg';
               $(`#${imageId}`).attr('src', src);
-              this.terms_text = 'Change';
+              this.terms_text = this.$t('createFreightOrder.change');
             }
             // eslint-disable-next-line comma-dangle
           }
@@ -790,13 +790,13 @@ export default {
     },
     uploadAddNewDocument() {
       if (Object.keys(this.addNewDocData).length === 0) {
-        this.doNotification(2, 'Kindly upload new document', '');
+        this.doNotification(2, this.$t('createFreightOrder.kindly_upload_doc'), '');
       } else {
         const imageId = 'addImagePreview';
         let src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
         $(`#${imageId}`).attr('src', src);
 
-        this.add_text = 'Uploading ...';
+        this.add_text = this.$t('createFreightOrder.uploading');
         const { file } = this.addNewDocData;
         const fileType = file.type;
         const fileName = this.sanitizeFilename(file.name, 'other');
@@ -913,7 +913,7 @@ export default {
       ) {
         this.doCompleteOrder();
       } else {
-        this.doNotification(2, 'Place Order error !', 'Kindly provide all values');
+        this.doNotification(2, this.$t('createFreightOrder.create_order_error'), this.$t('createFreightOrder.provide_all'));
       }
     },
     doCompleteOrder() {
@@ -941,12 +941,12 @@ export default {
         documents: [
           {
             document_type: 2,
-            document_name: 'Terms of delivery',
+            document_name: this.$t('createFreightOrder.terms'),
             url: `https://sendy-partner-docs.s3-eu-west-1.amazonaws.com/${this.termsName}`,
           },
           {
             document_type: 3,
-            document_name: 'Bill Of Lading',
+            document_name: this.$t('createFreightOrder.bol'),
             url: `https://sendy-partner-docs.s3-eu-west-1.amazonaws.com/${this.billOfLandingName}`,
           },
         ],
@@ -970,20 +970,20 @@ export default {
             workingResponse = response[0];
           }
           if (workingResponse.status) {
-            this.doNotification(1, 'Successfully placed freight order', '');
+            this.doNotification(1, this.$t('createFreightOrder.success_freight_order'), '');
             this.backToOrders();
           } else {
-            this.doNotification(2, 'Order Completion Failure', workingResponse.message);
+            this.doNotification(2, this.$t('createFreightOrder.order_completions_failure'), workingResponse.message);
           }
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error, 'message')) {
-            this.doNotification(2, 'Order completion failed', error.message);
+            this.doNotification(2,  this.$t('createFreightOrder.order_failed'), error.message);
           } else {
             this.doNotification(
               2,
-              'Order completion failed',
-              'Order completion failed. Please check your internet connection and try again.',
+              this.$t('createFreightOrder.order_failed'),
+              this.$t('createFreightOrder.order_failed_text'),
             );
           }
         },
@@ -1001,206 +1001,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../assets/styles/transporters_component.css?v=1';
-@import '../../../assets/styles/nav.css?v=1';
-.view-transporter-info{
-  cursor :pointer ;
-}
-.create-order-submit{
-  width: 100%;
-  margin-top: 4%;
-}
-.create-order-upper{
-  color: #000000;
-  margin-left: 7%;
-}
-.create-order-section{
-   padding-top: 1% !important;
-  -webkit-box-flex: 1;
-   flex: 1;
-   -webkit-box-orient: vertical;
-   flex-direction: column;
-   display: flex;
-   -webkit-box-direction: normal;
-   margin-right: 2%;
-   padding: 2rem;
-}
-.create-order-main{
-   border-radius: 4px;
-   font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
-   width: 44% !important;
-   padding-bottom: 0;
-   margin-top: 0;
-   padding-top: 3%;
-}
-.back-order-btn{
-   margin-left: 7%;
-   font-size: 13px;
-   margin-bottom: 6%;
-   cursor: pointer;
-}
-.freight-input {
-  width: 100%;
-  display: flex;
-  align-items: stretch;
-}
-.freight-input>div {
-  display: table-cell;
-  border: 1px solid #ddd;
-  vertical-align: middle;
-}
-.freight-input-icon {
-  padding: 3%;
-  border-radius: .25rem 0 0 .25rem;
-  background: #eee;
-  color: #777;
-  width: 11%;
-  text-align: center;
-  font-size: 12px;
-}
-.freight-input-area {
-  width: 90%;
-  border-radius: 0 .25rem .25rem 0;
-}
-.freight-selector{
-  border: 0px solid #dcdfe6;
-}
-.freight-create-load-weight{
-  width: 80% !important;
-  font-style: italic;
-}
-.freight-tonage-value-text{
-  color: #555 !important;
-  padding-left: 36px;
-  width: 20% !important;
-  font-size: 12px;
-  font-style: italic;
-}
-.drag-image > div > div:nth-child(1) > div > input {
-  display: none;
-}
-.document-image> div > div:nth-child(1) > div > input {
-  display: none;
-}
-.add-document-image> div > div:nth-child(1) > div > input {
-  display: none;
-}
-.download-uploaded-img {
-  height: 200px;
-}
-.add-download-uploaded-img{
-  height: 200px;
-}
-.el-icon-upload {
-  font-size: 15px!important;
-  margin: 0!important;
-  line-height: 0!important;
-}
-.upload_image {
-  width: 100%;
-  height: 132px;
-  margin-top: 2%;
-  margin-bottom: 2%;
-}
-.add-upload-image{
-  width: 100%;
-  height: 132px;
-  margin-top: 2%;
-  margin-bottom: 2%;
-}
-.document-upload-label {
-  font-style: italic;
-  font-size: 14px;
-  color: #f18327;
-  font-weight: 700;
-  cursor: pointer;
-}
-.upload-demo{
-  font-size: 13px !important;
-}
-.add-upload-demo{
-  font-size: 13px !important;
-}
-.upload-landing{
-  margin-top: 12%;
-}
-.transporter-input-name{
-  pointer-events: none;
-}
-.hide {
-  display: none!important;
-}
-
-li.suggestions_solr {
-  padding: 10px 16px;
-  border-bottom: 1px solid #ccc;
-  cursor: pointer;
-}
-li.suggestions_solr:first-child {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-}
-li.suggestions_solr:last-child {
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  border-bottom: 0;
-}
-.document-upload-extra{
-  font-size: 14px;
-  color: #1B7FC3;
-  font-weight: 500;
-  cursor: pointer;
-  margin-top: 11%;
-}
-.upload-document-header{
-  font-weight: 100;
-  font-size: 20px;
-  line-height: 18px;
-  display: flex;
-  align-items: center;
-  color: #000000;
-}
-.documents-highlight-label{
-  margin-left: 2%;
-  margin-bottom: 2%;
-  color: #000000;
-  font-weight : 200;
-}
-.select-documents{
-  width: 95%;
-  margin-left: 2%;
-  margin-right: 2%;
-  margin-bottom: 8%;
-}
-.align-new-doc{
-  margin-left: 4%;
-  margin-top: 5%;
-}
-.download-uploaded-img-extra{
-  border: 1px solid #d8dfe6;
-  height: 200px;
-  margin-bottom: 9%;
-  margin-right: 5%;
-}
-.upload_image-extra{
-  width: 100%;
-  height: 132px;
-  margin-top: 6%;
-  margin-bottom: 2%;
-}
-.success-extra{
-  margin-top: 13%;
-}
-.documents--flex{
-  display: flex;
-  width: 82%;
-}
-.document-image-extra{
-  flex: 1;
-}
-.delete-upload{
-  margin-top: 22%;
-  cursor: pointer;
-  color :#ff0000;
-}
+@import '../../../assets/styles/transporters_component.css';
+@import '../../../assets/styles/nav.css';
 </style>

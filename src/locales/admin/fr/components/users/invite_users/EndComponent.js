@@ -1,0 +1,12 @@
+
+const fr = {
+  invite_sent: 'Invitations envoyé',
+  invite_sent_successful: 'Les invitations ont été envoyées avec succès. Elles apparaîtront sur votre page d’utilisateurs quand ils accepteront',
+  back: 'De retour',
+  return_to_users: 'revenir aux utilisateurs',
+
+
+};
+
+
+export default fr;

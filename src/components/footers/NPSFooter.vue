@@ -21,7 +21,7 @@
               type="button"
               class="btn btn-secondary likely side-btn"
             >
-              0 Not Likely
+              {{ $t('NPSFooter.not_likey') }}
             </button>
             <span class="score-holder">
               <span
@@ -40,7 +40,8 @@
               type="button"
               class="btn btn-secondary unlikely side-btn"
             >
-              10 Very Likely
+            {{ $t('NPSFooter.very_likey') }}
+              <!-- 10 Very Likely -->
             </button>
             <button
               type="button"
@@ -59,14 +60,15 @@
               v-model="reason"
               type="text"
               name="reason"
-              placeholder="Write your feedback here"
+              :placeholder="$t('NPSFooter.write_feedback')"
               class="form-control reason-box"
             />
             <button
               :class="`btn btn-primary form-control action-button ${disableClass}`"
               :disabled="isDisabled"
             >
-              Submit
+            {{ $t('NPSFooter.submit') }}
+              <!-- Submit -->
             </button>
             <span class="clearfix">&nbsp;</span>
             <button :class="`btn btn-primary form-control action-button reason-dismiss ${disableClass}`">
@@ -98,7 +100,7 @@ export default {
       scores: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       score: null,
       reason: '',
-      heading: 'How likely are you to recommend a friend or colleague to use Sendy?',
+      heading: this.$t('NPSFooter.how_likely'),
       submitted: false,
       isValid: null,
       disableClass: '',
@@ -165,7 +167,7 @@ export default {
     },
     onChange(event, score) {
       this.score = score;
-      this.heading = 'What do you like most about Sendy? (Optional)';
+      this.heading = this.$t('NPSFooter.like_most');
     },
     dismiss() {
       this.disableClass = 'disabled';
@@ -222,7 +224,7 @@ export default {
         (response) => {
           if (response.data.success) {
             this.submitted = true;
-            this.heading = 'Thank you. We will use your feedback to improve our service';
+            this.heading = this.$t('NPSFooter.thank_you');
             this.hideForm();
           }
         },
@@ -245,39 +247,39 @@ export default {
 </script>
 <style scoped>
 .nps-footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-   left: 0;
-    background-color: #fff;
-    color: #555;
-    font-size: 13px;
-    min-height: 90px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
-    border-radius: 3px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  background-color: #fff;
+  color: #555;
+  font-size: 13px;
+  min-height: 90px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
+  border-radius: 3px;
   text-align: center;
 }
 .nps-header {
-    width: 100%;
-    margin-top: 25px;
-    font-size: 15px;
+  width: 100%;
+  margin-top: 25px;
+  font-size: 15px;
 }
 .nps-info {
-    width: 100%;
-    margin-bottom: 6px;
-    margin-left: 5em;
+  width: 100%;
+  margin-bottom: 6px;
+  margin-left: 5em;
 }
 .btn-holder {
-    width: 35px;
-    height: 35px;
-    border-radius: 100%;
-    background: #FFFFFF;
-    border: 1px solid #BDBDBD;
-    box-sizing: border-box;
-    margin-right: 13px;
-    cursor: pointer;
-    transition-duration: 0.4s;
-    padding: 0;
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  background: #ffffff;
+  border: 1px solid #bdbdbd;
+  box-sizing: border-box;
+  margin-right: 13px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  padding: 0;
 }
 
 .btn-holder:hover {
@@ -287,66 +289,65 @@ export default {
   border: none;
 }
 .score-holder {
-    margin-left: 10px;
-    margin-right: 20px;
+  margin-left: 10px;
+  margin-right: 20px;
 }
 .side-btn {
-    color: #474747;
-    border: none;
-    font-size: 12px;
+  color: #474747;
+  border: none;
+  font-size: 12px;
 }
 .dismiss {
-    color: #041F38;
-    border: none;
-    font-size: 19px;
-    margin-left: 15px;
-    cursor: pointer;
+  color: #041f38;
+  border: none;
+  font-size: 19px;
+  margin-left: 15px;
+  cursor: pointer;
 }
 .nps-header h3 {
-    color: #064773;
-    font-weight: 500;
+  color: #064773;
+  font-weight: 500;
 }
 .reason-box {
-    width: 34%;
-    height: 52px;
+  width: 34%;
+  height: 52px;
 }
 .action-button {
-    position: absolute;
-    width: 7%;
-    margin-top: 6px;
-    background: #f57f20;
-    color: #ffffff;
-    border-radius: 4px;
-    cursor: pointer;
-    line-height: 30px;
-    height: 36px;
-    outline: 0;
-    padding: 0 15px;
-    border: 1px solid #dcdfe6;
+  position: absolute;
+  width: 7%;
+  margin-top: 6px;
+  background: #F57F20;
+  color: #ffffff;
+  border-radius: 4px;
+  cursor: pointer;
+  line-height: 30px;
+  height: 36px;
+  outline: 0;
+  padding: 0 15px;
+  border: 1px solid #dcdfe6;
 }
 .clearfix {
-     margin-right: 7em;
+  margin-right: 7em;
 }
 .reason-dismiss {
-    background: #ffffff;
-    border: none;
-    color: #041F38;
-    border: none;
-    font-size: 28px;
-    margin-left: 15px;
-    cursor: pointer;
-    width: 1%;
+  background: #ffffff;
+  border: none;
+  color: #041f38;
+  border: none;
+  font-size: 28px;
+  margin-left: 15px;
+  cursor: pointer;
+  width: 1%;
 }
 button span {
-    display: block;
-    padding: 0;
+  display: block;
+  padding: 0;
 }
 .form-group {
-    margin-bottom: .3em;
+  margin-bottom: 0.3em;
 }
 .disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
-
 </style>

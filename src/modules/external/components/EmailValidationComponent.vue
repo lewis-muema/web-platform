@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="screen-two">
     <div class="onboarding-user-header">
-      Connect your personal Sendy account
+      {{$t('emailValidation.connect')}}
     </div>
     <p class="onboard-error">
       {{ message }}
@@ -10,7 +10,7 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>Personal Email</span>
+            <span>{{$t('emailValidation.personal_email')}}</span>
           </label>
           <input
             v-model="peerEmail"
@@ -18,7 +18,7 @@
             class="form-control"
             type="email"
             name="email"
-            placeholder="you@email.com"
+            :placeholder="$t('emailValidation.email')"
             @focus="setCurrentStep(1)"
           >
           <br>
@@ -34,7 +34,7 @@
         class="waves-effect waves-teal btn-flat"
         @click="last_view"
       >
-        Back
+        {{$t('emailValidation.back')}}
       </a>
       <button
         id="nextBtn"
@@ -59,7 +59,7 @@ export default {
       peerEmail: '',
       message: '',
       emailValid: true,
-      btn_txt: 'Skip',
+      btn_txt: this.$t('emailValidation.skip'),
     };
   },
   computed: {
@@ -70,9 +70,9 @@ export default {
   watch: {
     peerEmail(val) {
       if (val === '') {
-        this.btn_txt = 'Skip';
+        this.btn_txt = this.$t('emailValidation.skip');
       } else {
-        this.btn_txt = 'Next';
+        this.btn_txt = this.$t('emailValidation.next');
       }
     },
   },
@@ -99,10 +99,10 @@ export default {
           this.updateViewStep(0);
           this.setViewState(3);
         } else {
-          this.message = 'Provide a Personal Email';
+          this.message = this.$t('emailValidation.provide');
         }
       } else {
-        this.message = 'Provide valid Email ';
+        this.message = this.$t('emailValidation.provide_valid');
       }
     },
     last_view() {
@@ -123,7 +123,7 @@ export default {
   font-size: 28px !important;
   font-weight: 300 !important;
   margin-bottom: 2rem;
-  font-family: Slack-Lato,appleLogo,sans-serif;
+  font-family: 'Nunito', sans-serif;
   margin: 0 0 1rem;
   display: block;
   -webkit-margin-after: 0.67em;

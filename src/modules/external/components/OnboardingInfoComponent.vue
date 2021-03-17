@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="screen-one">
     <div class="onboarding-user-header">
-      Join the {{ getBizName }} business account on Sendy
+      {{$t('onboardingComponent.join', {getBizName: getBizName})}}
     </div>
 
     <p class="onboard-error">
@@ -12,7 +12,7 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>Name</span>
+            <span>{{$t('onboardingComponent.name')}}</span>
           </label>
           <input
             v-model="name"
@@ -27,7 +27,7 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>Email Address</span>
+            <span>{{ $t('onboardingComponent.email_address') }}</span>
           </label>
           <input
             v-model="email"
@@ -48,7 +48,7 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>Phone Number</span>
+            <span>{{$t('onboardingComponent.phone_no')}}</span>
           </label>
           <vue-tel-input
             v-model="phone"
@@ -73,7 +73,7 @@
     <div class="divide" />
     <div class="form-submits">
       <a class="waves-effect">
-        Back
+        {{$t('onboardingComponent.back')}}
       </a>
       <button
         id="nextBtn"
@@ -83,7 +83,7 @@
         :disabled="!is_valid"
         @click="next_view"
       >
-        Next
+        {{$t('onboardingComponent.next')}}
       </button>
     </div>
 
@@ -93,14 +93,13 @@
     >
       <span slot="title">
         <img
-          src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
+          src="https://images.sendyit.com/web_platform/logo/rebrand_logo.png"
           style="width:85px;"
         >
       </span>
       <div>
         <div class="onboarding-validation-description">
-          For your security, Sendy wants to make sure it's really you. We will send a message with
-          your verification code.
+          {{$t('onboardingComponent.verification_sms')}}
         </div>
 
         <div class="onboarding-verification-input">
@@ -108,7 +107,7 @@
             id="onboarding-verif_input"
             v-model="code"
             type="text"
-            placeholder="Enter Verification Code"
+            :placeholder="$t('onboardingComponent.enter_verification_code')"
           >
         </div>
       </div>
@@ -118,14 +117,14 @@
           class="onboarding-cancel "
           @click="onboardingVerificationCancel"
         >
-          Cancel
+          {{$t('onboardingComponent.cancel')}}
         </button>
         <button
           type="button"
           class="onboarding-verify"
           @click="onboardingVerificationVerify"
         >
-          Verify
+          {{$t('onboardingComponent.verify')}}
         </button>
       </div>
     </el-dialog>
@@ -156,7 +155,7 @@ export default {
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
-        placeholder: 'Enter a phone number',
+        placeholder: this.$t('onboardingComponent.enter_phone'),
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
@@ -224,7 +223,7 @@ export default {
         this.phoneVerification = true;
         this.sendVerificationCode();
       } else {
-        this.message = 'Provide valid Email ';
+        this.message = $t('onboardingComponent.prov_email');
       }
     },
     setCurrentStep(step) {
@@ -234,8 +233,8 @@ export default {
       this.phoneVerification = false;
       this.doNotification(
         2,
-        'Phone Verification',
-        'Phone Verification Failed . Retry to complete Onboarding process',
+        this.$t('onboardingComponent.phone_verification'),
+        this.$t('onboardingComponent.phone_verification_failed'),
       );
     },
 
@@ -254,7 +253,7 @@ export default {
           if (response.status) {
             this.requestId = response.request_id;
           } else {
-            this.doNotification(2, 'Phone Verification', response.message);
+            this.doNotification(2, this.$t('onboardingComponent.phone_verification'), response.message);
           }
         },
         (error) => {},
@@ -274,7 +273,7 @@ export default {
       this.requestOnboardingVerificationVerify(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.doNotification(2, 'Phone Verification', 'Phone verification successful !');
+            this.doNotification(2, this.$t('onboardingComponent.phone_verification'), this.$t('onboardingComponent.phone_verification_successful'));
 
             const phone = this.phone.replace(/[\(\)\-\s]+/g, '');
 
@@ -284,7 +283,7 @@ export default {
             this.updateBizEmail(this.email);
             this.updateViewStep(0);
           } else {
-            this.doNotification(2, 'Phone Verification', response.message);
+            this.doNotification(2, this.$t('onboardingComponent.phone_verification'), response.message);
           }
         },
         (error) => {},
@@ -320,7 +319,7 @@ export default {
   font-size: 28px !important;
   font-weight: 300 !important;
   margin-bottom: 2rem;
-  font-family: Slack-Lato,appleLogo,sans-serif;
+  font-family: 'Nunito', sans-serif;
   margin: 0 0 1rem;
   display: block;
   -webkit-margin-after: 0.67em;
@@ -411,15 +410,15 @@ export default {
 .onboarding-email-error{
   margin-right: 45%;
   font-size: 13px;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
   color: #e08445;
 }
 .onboard-error{
   color: #e08445;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 #app > div > div.user-invite-body > div > div > div.panel-card > div > div > div.el-dialog__wrapper.onboarding-phone-validation > div > div.el-dialog__header{
-  background-color: #1782c5;
+  background-color: #1782C5;
   text-align: center;
 }
 .onboarding-phone-validation > div
@@ -431,7 +430,7 @@ export default {
   text-align: left;
   line-height: 1.5;
   padding: 10px 0px;
-  font-family: "Rubik", sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 .onboarding-verification-input{
   display: flex;
@@ -442,7 +441,7 @@ export default {
   padding: 2px;
   border-bottom: 1px solid #ccc;
   width: 50%;
-  font-family: "Rubik", sans-serif;
+  font-family: 'Nunito', sans-serif;
   font-size: 16px;
 }
 .onboarding-verif-button{
@@ -453,7 +452,7 @@ export default {
 }
 .onboarding-verify{
     color: #ecf0f1;
-    background-color: #1782c5;
+    background-color: #1782C5;
     border-color: #1b7fc3;
     cursor: pointer;
     border-radius: 4px;
@@ -472,6 +471,6 @@ export default {
     padding-right: 20px;
     font-size: 13px;
     border:none;
-    font-family: "Rubik", sans-serif;
+    font-family: 'Nunito', sans-serif;
 }
 </style>

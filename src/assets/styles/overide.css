@@ -20,6 +20,7 @@ button span {
   padding-left: 20px;
   padding-right: 20px;
   font-size: 13px;
+  border-width: 0px !important;
 }
 
 .button-primary:focus,
@@ -216,7 +217,6 @@ button span {
 .btn-save:hover{
   cursor: pointer;
 }
-
 .btn-submit {
   -webkit-appearance: none;
   background-color: #fff;
@@ -392,7 +392,7 @@ button span {
 }
 
 .el-select-dropdown__item {
-  font-family: "Rubik", sans-serif !important;
+  font-family: 'Nunito', sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #555 !important;
@@ -452,7 +452,7 @@ span.el-pagination__jump {
   border-radius: 4px;
   line-height: 30px;
   margin: 5px 0;
-  font-family: "Rubik", sans-serif !important;
+  font-family: 'Nunito', sans-serif !important;
 }
 .el-date-table td span {
   color: #555;
@@ -535,7 +535,7 @@ span.el-pagination__jump {
 
 .el-notification__title {
   font-size: 14px !important;
-  font-family: "Rubik", sans-serif !important;
+  font-family: 'Nunito', sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #333 !important;
@@ -543,7 +543,7 @@ span.el-pagination__jump {
 }
 .el-notification__content {
   font-size: 13px !important;
-  font-family: "Rubik", sans-serif !important;
+  font-family: 'Nunito', sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #555 !important;
@@ -571,7 +571,7 @@ span.el-pagination__jump {
 }
 .home-view-truck-options-inner--load-weight .el-input-group--append .el-select .el-input.is-focus .el-input__inner,
 .home-view-truck-options-inner--load-weight .el-input-group__append div.el-select .el-input__inner, .el-input-group__append div.el-select:hover .el-input__inner{
-  border: 5px solid #1782C5;
+  border: 5px solid #1782c5;
 }
 
 .el-input-group__append,
@@ -593,7 +593,13 @@ span.el-pagination__jump {
   text-align: left;
   padding-right: 10px;
 }
-
+.el-progress__text{
+  font-size: 11px !important;
+}
+.el-progress-circle{
+  height: 40px !important;
+  width: 40px !important;
+}
 .el-popover{
     background-color: #1782c5;
     color: #fff !important;
@@ -676,7 +682,7 @@ span.el-pagination__jump {
 .el-dialog::-webkit-scrollbar-thumb {
   border-radius: 10px;
   box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-  background-color: #1782C5;
+  background-color: #1782c5;
   border: 1px solid #000;
 }
 .el-upload--picture-card {
@@ -688,6 +694,9 @@ span.el-pagination__jump {
 }
 .el-upload-list__item-name {
   display: none;
+}
+.requestShipmentOptions > .el-dialog > .el-dialog__header{
+  padding: 0 !important;
 }
 .el-upload-list__item{
   margin-top: 0;

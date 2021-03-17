@@ -3,8 +3,18 @@
     class=""
   >
     <div v-if="setUpState === 1">
+      <el-row> 
+        <el-select v-model="locale" placeholder="Select" class="float-right">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-row>
       <p class="sign-up--extra">
-        Sign up for Sendy
+        {{$t('signUpDetails.signup_sendy')}}
       </p>
       <div class="account-type--selector">
         <el-radio
@@ -12,20 +22,20 @@
           label="biz"
           border
         >
-          Business
+          {{$t('signUpDetails.business')}}
         </el-radio>
         <el-radio
           v-model="account"
           label="peer"
           border
         >
-          Personal
+          {{$t('signUpDetails.personal')}}
         </el-radio>
       </div>
       <div class="account-details--wrapper">
         <div class="">
           <p class="input--label">
-            Your Name
+            {{$t('signUpDetails.your_name')}}
           </p>
           <input
             v-model="name"
@@ -40,7 +50,7 @@
           class=""
         >
           <p class="input--label">
-            Business Name
+            {{$t('signUpDetails.business_name')}}
           </p>
           <input
             v-model="cop_name"
@@ -52,7 +62,7 @@
         </div>
         <div class=" ">
           <p class="input--label">
-            Email
+            {{$t('signUpDetails.email')}}
           </p>
           <input
             v-model="email"
@@ -68,7 +78,7 @@
         </div>
         <div class=" ">
           <p class="input--label">
-            Phone number
+            {{$t('signUpDetails.phone_number')}}
           </p>
           <vue-tel-input
             v-model.trim="phone"
@@ -82,10 +92,13 @@
             @onBlur="validate_phone"
             @country-changed="checkCountryCode"
           />
+          <p class="sign-up-data-error">
+              {{ countryNotSupported }}
+          </p>
         </div>
         <div class=" ">
           <p class="input--label">
-            Order type
+            {{$t('signUpDetails.order_type')}}
           </p>
           <div class="sign-up-order-type">
             <label class="input--label radio--label"><input
@@ -99,19 +112,19 @@
               type="radio"
               class="radio--label"
               value="USD"
-            >USD</label>
+            >{{$t('signUpDetails.usd')}}</label>
           </div>
         </div>
         <div class=" ">
           <p class="input--label">
-            Password
+            {{$t('signUpDetails.password')}}
           </p>
           <input
             v-model="password"
             class="input-control sign-up-form"
             type="password"
             name="password"
-            placeholder="Password"
+            :placeholder="$t('signUpDetails.password')"
             @keyup="validate_pass"
           >
           <p class="sign-up-data-error">
@@ -128,12 +141,12 @@
             class="hiddeny"
           >
           <span class="sign-holder__smaller">
-            By creating a Sendy account you’re agreeing to the
+            {{$t('signUpDetails.by_creating')}}
             <a
               class="signup-holder__link"
               href="https://sendyit.com/terms"
             >
-              terms and conditions
+             {{$t('signUpDetails.terms')}}
             </a>
           </span>
         </div>
@@ -155,21 +168,21 @@
       </div>
       <div class="sign-up--info">
         <div class="sign-up-text-inner">
-          Do you already have an account?
+          {{$t('signUpDetails.have_account')}}
           <router-link
             class="signup-holder__link"
             to="/auth/sign_in"
           >
-            Login
+            {{$t('signUpDetails.login')}}
           </router-link>
         </div>
         <div class="sign-up-text-inner">
-          Want to drive for Sendy?
+          {{$t('signUpDetails.drive_for_sendy')}}
           <a
             class="signup-holder__link"
             href="https://partner.sendyit.com/onboarding_portal/"
           >
-            Click here
+            {{$t('signUpDetails.click_here')}}
           </a>
         </div>
       </div>
@@ -182,34 +195,33 @@
         />
       </div>
       <p class="sign-up--extra">
-        Verification
+        {{$t('signUpDetails.verification')}}
       </p>
 
       <div class="account-details--wrapper">
         <div class=" ">
           <p class="verification-code-info">
-            For your security, Sendy wants to make sure it's really you.
-            An SMS with your verification code was sent to
+            {{$t('signUpDetails.sendy_sms')}}
             <a class="verification-code-recepient">{{ phone }}</a>
           </p>
         </div>
         <div class="">
           <p class="input--label verify-code-header">
-            Enter verification code
+            {{$t('signUpDetails.verification_code')}}
           </p>
           <input
             v-model="code"
             class="input-control sign-up-form"
             type="number"
             name="password"
-            placeholder="Code"
+            :placeholder="$t('signUpDetails.code')"
           >
         </div>
         <div
           class=" verify-code-holder"
         >
           <input
-            value="VERIFY CODE"
+            :value="$t('signUpDetails.verify_code')"
             class="button-primary sign-btn-color verify-code-btn"
             type="submit"
             name="login_text"
@@ -251,17 +263,19 @@ export default {
       localCountry: '',
       localCountryCode: '',
       selectedCountry: '',
+      countryNotSupported: '',
+      preferredCountries: [],
       phoneInputProps: {
         mode: 'international',
         defaultCountry: 'ke',
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
-        placeholder: 'Enter a phone number',
+        placeholder: this.$t('signUpDetails.enter_phone_number'),
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
-        preferredCountries: ['ke', 'ug', 'tz'],
+        preferredCountries: [],
         autocomplete: 'off',
         name: 'telephone',
         maxLen: 25,
@@ -273,7 +287,18 @@ export default {
         },
       },
       next_step: true,
-      sign_up_text: 'SIGN UP',
+      sign_up_text: this.$t('signUpDetails.sign_up'),
+      options: [
+        {
+          value: 'en',
+          label: 'English (EN)'
+        },
+        {
+          value: 'fr',
+          label: 'Francais (FR)'
+        }, 
+      ],
+      locale: 'en',
     };
   },
   watch: {
@@ -284,7 +309,30 @@ export default {
     localCountry(val) {
       this.selectedCountry = val;
     },
+    preferredCountries(val) {
+       switch (true){
+        case (val.includes(this.localCountryCode.toLowerCase())):
+          this.countryNotSupported = '';
+          this.next_step = true;
+          break;
+        default:
+           this.countryNotSupported = this.$t('signUpDetails.country_not_supported');
+          this.next_step = false;
+          break;
+      }
+    },
+    locale(val) {
+      this.$i18n.locale = val;
+      const countryCode = localStorage.getItem('countryCode');
+      const acceptLanguage = `${val}-${countryCode}`;
+      localStorage.setItem('timeLocale', val);
+      localStorage.setItem('language', acceptLanguage);
+
+    }
   },
+  mounted() {
+    this.locale = localStorage.getItem('timeLocale');
+  }, 
   methods: {
     ...mapActions({
       requestSignUpPhoneVerification: '$_auth/requestSignUpPhoneVerification',
@@ -292,6 +340,7 @@ export default {
       requestSignUpCheck: '$_auth/requestSignUpCheck',
       requestSignUpSegmentation: '$_auth/requestSignUpSegmentation',
       authSignIn: '$_auth/requestSignIn',
+      performGetActions: '$_auth/performGetActions',
     }),
     validate_phone() {
       this.$validator.validate();
@@ -299,6 +348,16 @@ export default {
     checkCountryCode(country) {
       this.localCountryCode = country.iso2;
       this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
+      switch (true){
+        case (this.phoneInputProps.preferredCountries.includes(this.localCountryCode.toLowerCase())):
+          this.countryNotSupported = '';
+          this.next_step = true;
+          break;
+        default:
+           this.countryNotSupported = this.$t('signUpDetails.country_not_supported');
+          this.next_step = false;
+          break;
+      }
     },
     validateDetails() {
       let valid = false;
@@ -312,9 +371,21 @@ export default {
 
       return valid;
     },
+    ValidatePhoneCi() {
+      const phoneValid1 = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+      if (phoneValid1) {
+        return phoneValid1;
+      }
+      const phoneTrim = this.phone.replace(/[()\-\s]+/g, '');
+      const trimcode = phoneTrim.includes('+225', 0) ? phoneTrim.split('+225')[1] : phoneTrim;
+      const othernumbers = trimcode.length === 10 ? trimcode.slice(2) : trimcode;
+      const phone = '+225' + othernumbers;
+      const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(phone));
+      return phoneValid;
+    },
     next() {
       if (this.validateDetails()) {
-        const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
+        const phoneValid = this.countryCode === 'CI' ? this.ValidatePhoneCi() : phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
 
         let emailValid = true;
         for (let i = 0; i < this.errors.items.length; i++) {
@@ -328,7 +399,7 @@ export default {
           if (this.u_terms) {
             localStorage.removeItem('request_id');
             this.next_step = false;
-            this.sign_up_text = 'SIGNING UP ...';
+            this.sign_up_text = this.$t('signUpDetails.sign_up_status');
             const phone = this.phone.replace(/[()\-\s]+/g, '');
             this.phone = phone;
             const values = {};
@@ -348,31 +419,31 @@ export default {
                 if (response.status) {
                   this.setUpState = 2;
                   this.sendVerificationCode();
-                  this.trackMixpanelEvent('User verification initiated', {
+                  this.trackMixpanelEvent(this.$t('signUpDetails.user_verification'), {
                     'Client Email ': this.email,
                     'Client Type': 'Web Platform',
                     'Client Phone': phone,
                   });
                 } else {
-                  this.sign_up_text = 'SIGN UP';
+                  this.sign_up_text = this.$t('signUpDetails.sign_up');
                   this.next_step = true;
-                  this.doNotification(2, 'Account Verification failed', response.data.reason);
+                  this.doNotification(2, this.$t('signUpDetails.account_verification'), response.data.reason);
                 }
               },
               (error) => {
-                this.sign_up_text = 'SIGN UP';
+                this.sign_up_text = this.$t('signUpDetails.sign_up');
                 this.next_step = true;
-                this.doNotification(2, 'Sign Up Error ', 'Unable to connect to the server . Please try again');
+                this.doNotification(2, this.$t('signUpDetails.sign_up_error'), this.$t('signUpDetails.unable_connect_server'));
               },
             );
           } else {
-            this.doNotification(2, 'Sign Up failed', 'Agree to Terms and Conditions');
+            this.doNotification(2, this.$t('signUpDetails.signup_failed'), this.$t('signUpDetails.agree_terms'))
           }
         } else {
-          this.doNotification(2, 'Sign Up failed', 'Invalid details');
+          this.doNotification(2, this.$t('signUpDetails.signup_failed'), this.$t('signUpDetails.invalid_details'));
         }
       } else {
-        this.doNotification(2, 'Sign Up failed', 'Provide all details');
+        this.doNotification(2, this.$t('signUpDetails.signup_failed'), this.$t('signUpDetails.provide_all'));
       }
     },
     sendVerificationCode() {
@@ -382,14 +453,14 @@ export default {
       const fullPayload = {
         values,
         vm: this,
-        app: 'NODE_PRIVATE_API',
+        app: 'CUSTOMERS_APP',
         endpoint: 'request_verification',
       };
       this.requestSignUpPhoneVerification(fullPayload).then(
         (response) => {
           if (response.status) {
             localStorage.setItem('request_id', response.request_id);
-            this.doNotification(1, 'Phone Verification', 'Phone verification code has been sent');
+            this.doNotification(1, this.$t('signUpDetails.phone_verification'), this.$t('signUpDetails.code_send'));
             this.trackMixpanelEvent('Verification Code Received', {
               'Client Email ': this.email,
               'Client Type': 'Web Platform',
@@ -409,17 +480,17 @@ export default {
         },
         (error) => {
           this.next_step = true;
-          this.sign_up_text = 'SIGN UP';
+          this.sign_up_text = this.$t('signUpDetails.sign_up');
           this.doNotification(
             2,
-            'Phone Verification Error ',
-            'Unable to connect to the server . Please try again after 15 minutes .',
+            this.$t('signUpDetails.phone_verification_error'),
+            this.$t('signUpDetails.unable_connect_server_text'),
           );
           this.trackMixpanelEvent('Verification Code Failure', {
             'Client Email ': this.email,
             'Client Type': 'Web Platform',
             'Client Phone': phone,
-            Reason: 'Unable to connect to the server . Please try again after 15 minutes .',
+            Reason: this.$t('signUpDetails.internal_systems_error'),
           });
         },
       );
@@ -428,11 +499,11 @@ export default {
       if (this.code !== '') {
         const requestId = localStorage.getItem('request_id');
         if (requestId === '' || requestId === null) {
-          this.doNotification(2, 'Phone Verification Error', 'Internal system error .Kindly try after 15 minutes');
+          this.doNotification(2, this.$t('signUpDetails.phone_verification_error'), this.$t('signUpDetails.internal_systems_error'));
           setTimeout(() => {
             this.setUpState = 1;
             this.next_step = true;
-            this.sign_up_text = 'SIGN UP';
+            this.sign_up_text = this.$t('signUpDetails.sign_up');
             localStorage.removeItem('request_id');
           }, 2000);
         } else {
@@ -442,22 +513,22 @@ export default {
           const fullPayload = {
             values,
             vm: this,
-            app: 'NODE_PRIVATE_API',
+            app: 'CUSTOMERS_APP',
             endpoint: 'check_verification',
           };
           this.requestSignUpVerificationVerify(fullPayload).then(
             (response) => {
               if (response.status) {
-                this.doNotification(1, 'Phone Verification', 'Phone verification successful! Your Account will be created shortly ...');
+                this.doNotification(1, this.$t('signUpDetails.phone_verification'), this.$t('signUpDetails.phone_verification_successful'));
                 this.create_account();
               } else {
-                this.doNotification(2, 'Phone Verification', response.message);
+                this.doNotification(2, this.$t('signUpDetails.phone_verification'), response.message);
               }
             },
             (error) => {
               this.doNotification(
                 2,
-                'Phone Verification Error ',
+                this.$t('signUpDetails.phone_verification_error'),
                 error.response.data.message,
               );
             },
@@ -466,8 +537,8 @@ export default {
       } else {
         this.doNotification(
           2,
-          'Missing Verification Code',
-          'Please enter a verification code',
+          this.$t('signUpDetails.missing_verification_code'),
+          this.$t('signUpDetails.enter_verification_code'),
         );
       }
     },
@@ -542,11 +613,11 @@ export default {
           } else {
             // failed to login
             // show some sort of error
-            this.doNotification(2, 'Sign Up Error ', response.message);
+            this.doNotification(2, this.$t('signUpDetails.signup_error') , response.message);
           }
         },
         (error) => {
-          this.doNotification(2, 'Sign Up Error ', error.response.message);
+          this.doNotification(2, this.$t('signUpDetails.signup_error'), error.response.message);
         },
       );
     },
@@ -559,7 +630,7 @@ export default {
       const patt = new RegExp('^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9@#$%^&+=]*$');
       const res = patt.test(this.password);
       if (!res) {
-        this.pass_msg = 'Password must be at least 8 characters long, contain at least one number and have a mixture of uppercase and lowercase letters.';
+        this.pass_msg = this.$t('signUpDetails.password_error')
       } else {
         this.pass_msg = '';
         this.pass_validation = true;
@@ -590,11 +661,11 @@ export default {
           if (Object.prototype.hasOwnProperty.call(response, 'status')) {
             const errorResponse = response.data;
             if (errorResponse.code === 1) {
-              this.login_text = 'Login';
-              this.doNotification(2, 'Login failed', 'Wrong password or email.');
+              this.login_text = this.$t('signUpDetails.login');
+              this.doNotification(2, this.$t('signUpDetails.login_failed'), this.$t('signUpDetails.wrong_password'));
             } else {
-              this.login_text = 'Login';
-              this.doNotification(2, 'Login failed', 'Account deactivated');
+              this.login_text = this.$t('signUpDetails.login');
+              this.doNotification(2, this.$t('signUpDetails.login_failed'), this.$t('signUpDetails.account_deactivated'));
             }
           } else {
             try {
@@ -655,7 +726,7 @@ export default {
           }
         },
         (error) => {
-          this.doNotification(2, 'Login failed', 'Login failed. Please try again');
+          this.doNotification(2, this.$t('signUpDetails.login_failed'), this.$t('signUpDetails.login_failed_text'));
           this.$router.push('/auth/sign_in');
         },
       );
@@ -676,6 +747,32 @@ export default {
         // ...
       }
     },
+    fetchSupportedCountries(){ 
+      const fullPayload = {
+        app: 'AUTH',
+        endpoint: 'currency/get_supported_countries',
+      }
+
+      this.phoneInputProps.preferredCountries = [];
+
+      this.performGetActions(fullPayload)
+      .then((response) => {
+        if (response.request_status) {
+          response.countries.forEach((country) => {
+          this.phoneInputProps.preferredCountries.push(country.country_code.toLowerCase());
+          this.preferredCountries.push(country.country_code.toLowerCase());
+        });
+        } else {
+          this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
+        }  
+      })
+      .catch( (error) => {
+        this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
+      })
+    },
+  },
+  created(){
+    this.fetchSupportedCountries();
   },
 };
 </script>
@@ -704,4 +801,13 @@ body > div.el-select-dropdown.el-popper{
   font-size: 13px;
   pointer-events: none;
 }
+.sign-btn-color {
+  border-width: 0px !important;
+}
+.float-right {
+  float: right;
+  height: 32px;
+  width: 150px;
+}
+
 </style>
