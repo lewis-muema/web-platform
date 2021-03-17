@@ -22,8 +22,7 @@ USER sendy:sendy
 COPY package.json .
 
 # Install the dependancies
-RUN npm install --only=production
-RUN npm install rimraf
+RUN npm install 
 
 # Copy over the application files
 COPY . .
