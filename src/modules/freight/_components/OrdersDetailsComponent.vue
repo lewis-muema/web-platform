@@ -110,14 +110,17 @@
                       {{ freightOrderDetail.tonnes_per_truck }} Tonnes
                     </div>
                   </div>
-                  <div class="order_details_desc_item order-details-schedule-time">
+                  <div
+                    v-if="checkContainerState(freightOrderDetail)"
+                    class="order_details_desc_item order-details-schedule-time"
+                  >
                     <img
                       src="../../../assets/img/freight/return.png"
                       class="order_details_desc_image"
                     >
                     <span class="order-info-header">Will the container be returned?</span>
                     <div class="freight-order-info-extra">
-                      {{ freightOrderDetail.is_return === true ? 'Yes' : 'No' }}
+                      {{ freightOrderDetail.cargo_type_options[0].value === 'true' ? 'Yes' : 'No' }}
                     </div>
                   </div>
 
@@ -846,6 +849,14 @@ export default {
     },
     backToOrders() {
       this.$router.push('/freight/orders');
+    },
+    checkContainerState(val) {
+      let resp = false;
+      if (Object.prototype.hasOwnProperty.call(val, 'cargo_type_options')) {
+        resp = true;
+      }
+
+      return resp;
     },
     createStaticMapUrl(destination, pickup) {
       const googleKey = process.env.CONFIGS_ENV.GOOGLE_API_KEY;
