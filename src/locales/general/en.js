@@ -743,7 +743,7 @@ const translations = {
   manage_business_account: 'How do you want to manage your business account?',
   account_is_free: 'No matter what you decide, the account is free.',
   use_current_login_details: 'Use your current login details',
-  use_email_password_login: 'Use your email {{ userData() }} and password to login',
+  use_email_password_login: 'Use your email {userData} and password to login',
   use_different_login_details: 'Use different login details',
   use_different_email_password_login: 'Use a different email address and password to login',
   deativate_personal_account: 'Deactivate my personal account',

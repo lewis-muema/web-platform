@@ -28,10 +28,10 @@
                 <img
                   :src="getPackageIcon(vendor_class.tier_group)"
                   class="home-view-vendor-classes-menu--img"
-                  alt="vendor_class.tier_group"
+                  alt="vendor_class.tier_name"
                 >
                 <span class="home-view-vendor-classes-menu--span">
-                  {{ vendor_class.tier_group }}
+                  {{ vendor_class.tier_name }}
                 </span>
               </a>
             </div>
