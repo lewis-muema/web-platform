@@ -312,10 +312,11 @@
                   class="block"
                 >
                   <el-select
-                    v-model="carrier_options[index].value"
+                    v-model="carrier_option_value[index]"
                     placeholder=""
                     class="transporters-element-inputs"
                     filterable
+                    @change="setCarrierOptionValue(index)"
                   >
                     <el-option
                       v-for="item in returnOptions"
@@ -358,7 +359,7 @@
                 <input
                   v-model="load_weight"
                   class="input-control freight-load-weight"
-                  type="text"
+                  type="number"
                   placeholder=""
                   autocomplete="on"
                 >
@@ -903,6 +904,29 @@ export default {
           'Unable to create shipment request!',
           'Kindly provide all values for request to be submitted',
         );
+      } else if (this.goods === 1) {
+        this.checkCarrierOptionValue();
+      } else {
+        this.processShipment();
+      }
+    },
+    checkCarrierOptionValue() {
+      if (
+        this.carrier_option_value[0] === undefined
+        || this.carrier_option_value[1] === undefined
+        || this.carrier_option_value[2] === undefined
+      ) {
+        this.doNotification(
+          2,
+          'Unable to create shipment request!',
+          'Kindly provide all values for request to be submitted',
+        );
+      } else if (this.carrier_option_value[1] === 0 && this.carrier_option_value[2] === 0) {
+        this.doNotification(
+          2,
+          'Unable to create shipment request!',
+          'Kindly provide atleast one container value that your moving',
+        );
       } else {
         this.processShipment();
       }
@@ -928,7 +952,7 @@ export default {
         currency: 'USD',
         pickup_facility: this.facility_location,
         total_trucks: this.trucks_no,
-        tonnes_per_truck: this.load_weight,
+        tonnes_per_truck: parseInt(this.load_weight, 10),
       };
 
       if (this.shipment_offer) {

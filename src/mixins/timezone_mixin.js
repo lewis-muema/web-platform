@@ -61,11 +61,12 @@ moment.locale('fr', {
   },
 });
 
-if (process.isClient) {
-  moment.locale(localStorage.getItem('timeLocale'));
-}
+import { mapGetters } from "vuex";
 
 const timezone = {
+  computed: {
+    ...mapGetters(['getLanguage']),
+  },
   methods: {
     convertToUTCToLocal(date) {
       const formated = moment
@@ -108,5 +109,9 @@ const timezone = {
       return { status, expiryDate: formattedDate };
     },
   },
+  mounted() {
+    const locale = this.getLanguage;
+    moment.locale(locale);
+  }
 };
 export default timezone;
