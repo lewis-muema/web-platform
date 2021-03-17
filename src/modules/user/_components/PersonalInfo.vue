@@ -522,7 +522,7 @@ export default {
         padding: 10px;
         width: 300px;
         margin-top: 9px;
-        font-family: inherit;
+        font-family: 'Nunito', sans-serif;
         font-size: inherit;
         line-height: inherit;
         color: #575757;
