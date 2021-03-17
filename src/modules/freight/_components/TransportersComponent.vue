@@ -358,7 +358,7 @@
                 <input
                   v-model="load_weight"
                   class="input-control freight-load-weight"
-                  type="text"
+                  type="number"
                   placeholder=""
                   autocomplete="on"
                 >
@@ -928,7 +928,7 @@ export default {
         currency: 'USD',
         pickup_facility: this.facility_location,
         total_trucks: this.trucks_no,
-        tonnes_per_truck: this.load_weight,
+        tonnes_per_truck: parseInt(this.load_weight, 10),
       };
 
       if (this.shipment_offer) {
