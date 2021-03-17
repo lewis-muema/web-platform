@@ -903,6 +903,16 @@ export default {
           'Unable to create shipment request!',
           'Kindly provide all values for request to be submitted',
         );
+      } else if (
+        this.goods === 1
+        && (this.carrier_option_value[1] === undefined || this.carrier_option_value[1] === 0)
+        && (this.carrier_option_value[2] === undefined || this.carrier_option_value[2] === 0)
+      ) {
+        this.doNotification(
+          2,
+          'Unable to create shipment request!',
+          'Kindly provide atleast one container value that your moving',
+        );
       } else {
         this.processShipment();
       }
