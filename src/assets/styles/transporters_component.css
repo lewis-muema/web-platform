@@ -514,7 +514,7 @@
   border-radius: 4px;
 }
 .sendQuoteOption > div {
-    margin-top: 30vh !important;
+    margin-top: 20vh !important;
     width: 33% !important;
 }
 .declineDocumentOptions >.el-dialog >.el-dialog__body {
@@ -764,4 +764,7 @@ li.suggestions_solr:last-child {
 .back-shipment-btn{
   background-color: #EA7125 !important;
   border: #EA7125 !important;
+}
+.createShipmentInnerDialog{
+  margin: 4% !important;
 }
