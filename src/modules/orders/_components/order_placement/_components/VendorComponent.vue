@@ -452,7 +452,7 @@
             <div v-else>
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$t('general.want_delivered')}} <span class="home-view-truck-options-mandatory-field" v-if="!small_vendors.includes(activeVendorPriceData.vendor_id)">({{$t('general.required')}})</span>
+                  {{$t('general.want_delivered')}}
                 </div>
                 <div>
                   <el-input
@@ -1136,7 +1136,7 @@ export default {
       schedule_time: '',
       default_value: this.moment().format('HH:mm:ss'),
       order_notes: '',
-      small_vendors: [1, 22, 21, 23, 12],
+      small_vendors: [1, 22, 21, 23],
       medium_vendors: [2, 3],
       large_vendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
       pair_status: '',
