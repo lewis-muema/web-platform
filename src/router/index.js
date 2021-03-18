@@ -292,9 +292,19 @@ export function createRouter() {
             name: 'card_payment',
           },
           {
+            path: 'carte',
+            component: () => import('../modules/payment/_components/CardComponent.vue'),
+            name: 'carte',
+          },
+          {
             path: 'promocode',
             component: () => import('../modules/payment/_components/PromoComponent.vue'),
             name: 'promo_payment',
+          },
+          {
+            path: 'codepromo',
+            component: () => import('../modules/payment/_components/PromoComponent.vue'),
+            name: 'codepromo',
           },
         ],
       },
