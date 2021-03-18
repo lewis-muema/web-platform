@@ -21,7 +21,7 @@
             <p class="rate-text rate-text-right">{{$t('general.very_bad')}}</p>
             <el-rate
               v-model="rated_score"
-              :colors="['#99A9BF', '#EE7D00', '#1782C5']"
+              :colors="['#99A9BF', '#F57f20', '#1782C5']"
             />
             <p class="rate-text rate-text-left">{{$t('general.very_good')}}</p>
           </span>
