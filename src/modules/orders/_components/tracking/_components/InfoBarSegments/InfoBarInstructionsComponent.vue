@@ -74,40 +74,40 @@
           </p>
         </div>
 
+        <div class="tracking-loader">
+          <div class="">
+            <img
+              src="https://images.sendyit.com/web_platform/tracking/goods.svg"
+              alt=""
+              class="infobar-truck-img"
+            >
+            <span class="info-text-transform infor-top-bar-text align-top-bar">
+              {{ $t('general.goods_to_be_delivered') }}
+            </span>
+          </div>
+          <div
+            v-if="'delivery_item' in trackingData.package_details"
+            class="tracking-loader-inner align-inner-bar"
+          >
+            <div v-if="trackingData.package_details.delivery_item === ''">
+              {{ $t('general.not_indicated') }}
+            </div>
+            <div v-else>
+              {{ trackingData.package_details.delivery_item }}
+            </div>
+          </div>
+          <div
+            v-else
+            class="tracking-loader-inner align-inner-bar"
+          >
+            {{ $t('general.not_indicated') }}
+          </div>
+        </div>
         <!-- Show for truck orders  -->
         <div
           v-if="![1, 2, 3, 23, 21].includes(trackingData.rider.vendor_id)"
           class=""
         >
-          <div class="tracking-loader">
-            <div class="">
-              <img
-                src="https://images.sendyit.com/web_platform/tracking/goods.svg"
-                alt=""
-                class="infobar-truck-img"
-              >
-              <span class="info-text-transform infor-top-bar-text align-top-bar">
-                {{ $t('general.goods_to_be_delivered') }}
-              </span>
-            </div>
-            <div
-              v-if="'delivery_item' in trackingData.package_details"
-              class="tracking-loader-inner align-inner-bar"
-            >
-              <div v-if="trackingData.package_details.delivery_item === ''">
-                {{ $t('general.not_indicated') }}
-              </div>
-              <div v-else>
-                {{ trackingData.package_details.delivery_item }}
-              </div>
-            </div>
-            <div
-              v-else
-              class="tracking-loader-inner align-inner-bar"
-            >
-              {{ $t('general.not_indicated') }}
-            </div>
-          </div>
           <div class="tracking-loader">
             <div class="">
               <img
