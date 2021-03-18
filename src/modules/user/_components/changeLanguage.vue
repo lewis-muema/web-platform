@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="new-card2">
-    <div class="help-card" style="width:400px;margin-left:30%;margin-top:30px;">
+    <div class="help-card" >
         <p> {{$t('general.choose_preffered_language')}}</p>
         <el-select v-model="locale" placeholder="Select" class="select">
           <el-option
@@ -66,9 +66,9 @@ export default {
   display: flex;
   -webkit-box-direction: normal;
   padding-top: 30px;
-  margin: -9% auto;
-  max-width: 32rem;
-
+  width:400px;
+  margin-left:30%;
+  margin-top:30px;
 }
 
 .new-card2 {
