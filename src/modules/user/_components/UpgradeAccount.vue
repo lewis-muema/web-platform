@@ -11,11 +11,11 @@
         class="upgrade-account-inner"
       >
         <div class="upgrade-account-top">
-          How do you want to manage your business account?
+          {{$t('general.manage_business_account')}}
         </div>
 
         <div class="upgrade-account-text">
-          No matter what you decide, the account is free.
+         {{$t('general.account_is_free')}}
         </div>
 
         <div class="">
@@ -24,9 +24,10 @@
             label="1"
             class="radio-options"
           >
-            Use your current login details
+            {{$t('general.use_current_login_details')}}
             <div class="upgrade-account-text--inner">
-              Use your email {{ userData() }} and password to login
+              <!-- Use your email {{ userData() }} and password to login -->
+              {{$t('general.use_email_password_login', { userData : userData() })}}
             </div>
           </el-radio>
           <el-radio
@@ -34,9 +35,9 @@
             label="2"
             class="radio-options"
           >
-            Use different login details
+            {{$t('general.use_different_login_details')}}
             <div class="upgrade-account-text--inner">
-              Use a different email address and password to login
+             {{$t('general.use_different_email_password_login')}}
             </div>
           </el-radio>
         </div>
@@ -51,7 +52,7 @@
             class="hiddeny"
           >
           <span class="upgrade-account-text--inner deactivate-details">
-            Deactivate my personal account
+             {{$t('general.deativate_personal_account')}}
           </span>
         </div>
 
@@ -61,7 +62,7 @@
           <input
             class="button-primary btn-upgrade-acc-check "
             type="submit"
-            value="Continue"
+            :value="$t('general.continue')"
             @click="next"
           >
         </div>
@@ -79,53 +80,53 @@
         <div
           class="upgrade-account-top upgrade-margin"
         >
-          Create a business account
+          {{$t('general.create_business_account')}}
         </div>
 
         <div class="upgrade-input">
           <div class="sign-up-verification-holder dimen-sign-up2">
-            <label>Your business name</label>
+            <label>{{$t('general.your_business_name')}}</label>
             <input
               v-model="cop_name"
               class="input-control upgrade-form"
               type="text"
               name="cop_name"
-              placeholder="Business name"
+              :placeholder="$t('general.business_name')"
               autocomplete="on"
             >
           </div>
 
           <div v-if="radio === '2'">
             <div class="sign-up-verification-holder dimen-sign-up2">
-              <label>Your business email address</label>
+              <label>{{$t('general.your_business_email_address')}}</label>
               <input
                 v-model="cop_email"
                 class="input-control upgrade-form"
                 type="text"
                 name="cop_email"
-                placeholder="Business email"
+                :placeholder="$t('general.business_email')"
                 autocomplete="on"
               >
             </div>
 
             <div class="sign-up-verification-holder dimen-sign-up2">
-              <label>Your business account password</label>
+              <label>{{$t('general.biz_account_password')}}</label>
               <input
                 v-model="cop_password"
                 class="input-control upgrade-form"
                 type="text"
                 name="cop_password"
-                placeholder="Business Password"
+                :placeholder="$t('general.business_password')"
                 autocomplete="on"
               >
             </div>
           </div>
 
           <div class="sign-up-verification-holder dimen-sign-up2">
-            <label>Is your business VAT compliant?</label>
+            <label>{{$t('general.biz_vat_compliant')}}</label>
             <el-select
               v-model="tax_compliance"
-              placeholder="Select"
+              :placeholder="$t('general.select')"
               class="compliance-select"
             >
               <el-option
@@ -141,26 +142,26 @@
             v-if="tax_compliance"
             class="sign-up-verification-holder dimen-sign-up2"
           >
-            <label>Enter your business KRA pin</label>
+            <label>{{$t('general.enter_biz_kra_pin')}}</label>
             <input
               v-model="kra_pin"
               class="input-control upgrade-form"
               type="text"
               name="kra_pin"
-              placeholder="KRA PIN"
+              :placeholder="$t('general.kra_pin')"
               autocomplete="on"
             >
             <span
               v-show="!valid_kra_pin"
               class="invalid-pin"
             >
-              Please enter a valid KRA PIN
+              {{$t('general.enter_valid_kra')}}
             </span>
           </div>
           <div class="primary-vehicle-outline">
-            <label> Select the primary type of vehicle you will use on Sendy</label>
+            <label> {{$t('general.select_primary_type_vehicle_use')}}</label>
             <p class="extra-info">
-              (This will not restrict you from using other vehicles)
+              {{$t('general.not_restrict_you')}}
             </p>
 
             <div class="vendors-outerline">
@@ -205,7 +206,7 @@
             <input
               class="button-primary btn-upgrade-acc-submit "
               type="submit"
-              value="Continue"
+              :value="$t('general.continue')"
               @click="verify"
             >
           </div>
@@ -224,24 +225,24 @@
         <div
           class="upgrade-account-top upgrade-margin upgrade-details-header"
         >
-          Confirm your business account details
+          {{$t('general.confirm_biz_account')}}
         </div>
 
         <div class="upgrade-input">
           <div class="sign-up-verification-holder dimen-summary">
-            <label class="summary-ouline">Email Address</label>
+            <label class="summary-ouline">{{$t('general.email_address')}}</label>
             <p class="user_details">
               {{ businessEmail() }}
             </p>
           </div>
           <div class="sign-up-verification-holder dimen-summary">
-            <label class="summary-ouline">Business name</label>
+            <label class="summary-ouline">{{$t('general.business_name')}}</label>
             <p class="user_details">
               {{ cop_name }}
             </p>
           </div>
           <div class="sign-up-verification-holder dimen-summary">
-            <label class="summary-ouline">Does your business file VAT returns?</label>
+            <label class="summary-ouline">{{$t('general.does_biz_file_vat')}}</label>
             <p class="user_details">
               {{ businessTaxCompliance() }}
             </p>
@@ -250,13 +251,13 @@
             v-if="tax_compliance"
             class="sign-up-verification-holder dimen-summary"
           >
-            <label class="summary-ouline">Your business KRA Pin</label>
+            <label class="summary-ouline">{{$t('general.biz_kra_pin')}}</label>
             <p class="user_details">
               {{ kra_pin }}
             </p>
           </div>
           <div class="sign-up-verification-holder dimen-summary">
-            <label class="summary-ouline">The primary type of vehicle you will use on Sendy</label>
+            <label class="summary-ouline">{{$t('general.primary_vehicle')}}</label>
             <div
               class="primary-vehicle-wrapper"
             >
@@ -273,7 +274,7 @@
           <input
             class="button-primary btn-upgrade-acc-submit final-upgrade-submit"
             type="submit"
-            value="Submit"
+            :value="$t('general.submit')"
             @click="submit"
           >
         </div>
@@ -355,7 +356,7 @@ export default {
       if (this.radio !== '') {
         this.upgrade_details = true;
       } else {
-        this.doNotification(2, 'Upgrade Account  Error !', 'Kindly select upgrade option to proceed');
+        this.doNotification(2, this.$t('general.upgrade_account'), this.$t('general.kindly_select_upgrade_proceed'));
       }
     },
     selectCard(tab, code) {
@@ -383,11 +384,11 @@ export default {
     vendorName() {
       let name = '';
       if (this.code === 1) {
-        name = 'Bikes';
+        name = this.$t('general.bikes');
       } else if (this.code === 2) {
-        name = 'Trucks and Vans';
+        name = this.$t('general.trucks_and_vans');
       } else {
-        name = 'Freight';
+        name = this.$t('general.freight');
       }
       return name;
     },
@@ -411,17 +412,17 @@ export default {
     },
     verify() {
       if (this.radio === '1' && (this.cop_name === '' || this.tax_compliance === '')) {
-        this.doNotification(2, 'Upgrade Account  Error !', 'Please provide all values');
+        this.doNotification(2, this.$t('general.upgrade_account'), this.$t('general.please_provide_all_values'));
       } else if (this.radio === '2' && (this.cop_name === '' || this.cop_email === '' || this.cop_password === '' || this.tax_compliance === '')) {
-        this.doNotification(2, 'Upgrade Account  Error !', 'Please provide all values');
+        this.doNotification(2, this.$t('general.upgrade_account'), this.$t('general.please_provide_all_values'));
       } else if (this.tax_compliance && this.kra_pin === '') {
-        this.doNotification(2, 'Upgrade Account  Error !', 'Please enter KRA PIN');
+        this.doNotification(2, this.$t('general.upgrade_account'), this.$t('general.enter_kra_pin'));
       } else if (this.tax_compliance && !this.valid_kra_pin) {
-        this.doNotification(2, 'Upgrade Account  Error !', 'Please enter valid KRA PIN');
+        this.doNotification(2, this.$t('general.upgrade_account'),  this.$t('general.enter_valid_kra'));
       } else if (this.primary_business_unit === '') {
-        this.doNotification(2, 'Upgrade Account  Error !', 'Please select primary type vehicle');
+        this.doNotification(2, this.$t('general.upgrade_account'), this.$t('general.select_primary_type_vehicle'));
       } else {
-        this.upgrade_details = 'verify';
+        this.upgrade_details = this.$t('general.verify');
       }
     },
     submit() {
@@ -498,7 +499,7 @@ export default {
                 'VAT Compliant': this.tax_compliance,
               });
             }
-            this.doNotification(1, 'Account Upgraded Successfully !', 'You will be redirected to the login page within 5 seconds.');
+            this.doNotification(1, this.$t('general.account_upgraded_successful'), this.$t('general.redirected_to_login'),);
             const baseUrl = window.location.origin;
             const loginUrl = `${baseUrl}/sign_in`;
 
@@ -510,12 +511,12 @@ export default {
               }
             }, 5000);
           } else {
-            this.doNotification(2, 'Upgrade Account Error ', response.message);
+            this.doNotification(2, this.$t('general.upgrade_account_error'), response.message);
           }
         },
         (error) => {
           const msg = error.response.data.message;
-          this.doNotification(2, 'Upgrade Account Error', msg);
+          this.doNotification(2, this.$t('general.upgrade_account_error'), msg);
         },
       );
     },

@@ -10,7 +10,7 @@
               class="inviteMany--textareabox"
             />
             <div class="active inviteMany--text">
-              Enter multiple email addresses separated by a comma
+              {{$t('linkComponent.multipe_email')}}
             </div>
           </div>
         </div>
@@ -20,7 +20,7 @@
           <a
             class="show-link-justify"
             @click="get_inv"
-          >Cancel</a>
+          > {{$t('linkComponent.cancel')}}</a>
         </div>
         <div class="column-flex">
           <button
@@ -29,7 +29,7 @@
             name="action"
             @click="inv_many"
           >
-            Add Invitees
+             {{$t('linkComponent.add_invitees')}}
           </button>
         </div>
       </div>
@@ -85,7 +85,7 @@ export default {
         const notification = {
           title: '',
           level,
-          message: 'Please enter valid email address separated by a comma.',
+          message:  this.$t('linkComponent.valid_email'),
         }; // notification object
         this.displayNotification(notification);
       }

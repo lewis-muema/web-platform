@@ -18,7 +18,7 @@ export default {
   },
   computed: {
     stats_loading_title() {
-      return 'Verifying Super User Details';
+      return this.$t('loadingComponent.verify');
     },
   },
   methods: {},

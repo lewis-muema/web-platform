@@ -105,7 +105,7 @@
                       src="../../../assets/img/freight/load_weight.png"
                       class="order_details_desc_image"
                     >
-                    <span class="order-info-header">Weight of load per truck</span>
+                    <span class="order-info-header">Weight of load per mover</span>
                     <div class="freight-order-info-extra">
                       {{ freightOrderDetail.tonnes_per_truck }} Tonnes
                     </div>
@@ -269,7 +269,7 @@
                         class="freight-documents-approve flex-div transporter-content approve-freight-section"
                       >
                         <div
-                          v-if="checkActionableBtnState && val.created_by === 'OWNER'"
+                          v-if="checkActionableBtnState && val.created_by === 'OWNER' && val.document_status === 0"
                           class="align-approval-btn"
                         >
                           <button
@@ -288,6 +288,12 @@
                           >
                             {{ decline_doc_text }}
                           </button>
+                        </div>
+                        <div class="decline-document-reason" v-if="checkActionableBtnState && val.created_by === 'OWNER' && val.document_status === -1">
+                           Decline reason : {{val.message}}
+                        </div>
+                        <div class="approved-document-reason" v-if="checkActionableBtnState && val.created_by === 'OWNER' && val.document_status === 1">
+                          Document has been approved
                         </div>
                       </div>
                     </div>
@@ -976,9 +982,7 @@ export default {
         acc = session[session.default];
       }
 
-      const payload = {
-        quotation_id: val.quotation_id,
-      };
+      const payload = {};
 
       if (session.default === 'biz') {
         payload.cop_id = acc.cop_id;
@@ -991,7 +995,7 @@ export default {
         values: payload,
         app: 'FREIGHT_APP',
         operator: '?',
-        endpoint: 'shipments/quotations',
+        endpoint: `shipments/quotations/${val.quotation_id}`,
       };
 
       this.$store.dispatch('$_freight/declineShipment', fullPayload).then(
@@ -1294,7 +1298,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../assets/styles/transporters_component.css?v=1';
+@import '../../../assets/styles/transporters_component.css';
 .rating-section{
   background: #FBFBFB;
   border: 1px solid #d8dfe6;
@@ -1463,5 +1467,16 @@ export default {
 }
 .align-approval-btn{
   display: flex;
+}
+.decline-document-reason{
+  margin-top: 4%;
+  color: #f57f20 !important;
+  font-size: 14px;
+}
+.approved-document-reason{
+  margin-top: 4%;
+  color: #1782C5 !important;
+  font-size: 14px;
+  font-weight: 600;
 }
 </style>

@@ -10,14 +10,14 @@
           class="section--filter-input"
           type="date"
           name="from_date"
-          placeholder="From"
+          :placeholder="$t('general.from')"
         />
         <el-date-picker
           v-model="filterData.to_date"
           class="section--filter-input"
           type="date"
           name="to_date"
-          placeholder="To"
+          :placeholder="$t('general.to')"
         />
 
         <button
@@ -40,7 +40,7 @@
           class="button-primary section--filter-action btn-payment"
           @click="take_to_payment"
         >
-          Pay
+          {{$t('general.pay')}}
         </button>
       </div>
     </div>
@@ -65,28 +65,28 @@
         {{ empty_payments_state }}
       </template>
       <el-table-column
-        label="Reciept Number"
+        :label="$t('general.reciept_number')"
         prop="txn"
         min-width="80"
       />
       <el-table-column
-        label="Date"
+        :label="$t('general.date')"
         prop="date_time"
         :formatter="formatDate"
         width="170"
       />
       <el-table-column
-        label="Method"
+        :label="$t('general.method')"
         prop="pay_method_name"
         width="125"
       />
       <el-table-column
-        label="Description"
+        :label="$t('general.description')"
         prop="description"
         min-width="80"
       />
       <el-table-column
-        label="Amount"
+        :label="$t('general.amount')"
         prop="amount"
         width="125"
         :formatter="formatAmount"
@@ -120,10 +120,10 @@ export default {
   mixins: [TimezoneMxn],
   data() {
     return {
-      empty_payments_state: 'Fetching Payments',
+      empty_payments_state: this.$t('general.fetching_payments'),
       pagination_limit: 10,
       pagination_page: 1,
-      order_payments_text: 'Search',
+      order_payments_text: this.$t('general.search'),
       filterState: false,
       filterData: {
         from_date: '',
@@ -211,10 +211,10 @@ export default {
         };
         this.$store.dispatch('$_transactions/requestPayments', fullPayload).then(
           () => {
-            this.empty_payments_state = 'Payments Not Found';
+            this.empty_payments_state = this.$t('general.payment_not_found');
           },
           () => {
-            this.empty_payments_state = 'Payments Failed to Fetch';
+            this.empty_payments_state = this.$t('general.payments_failed_to_fetch');
           },
         );
       }
@@ -235,7 +235,7 @@ export default {
       // reset filter
       const sessionData = this.$store.getters.getSession;
       this.filterState = false;
-      this.empty_payments_state = 'Searching Payments';
+      this.empty_payments_state = this.$t('general.searching_payments');
 
       let { from_date: fromDate, to_date: toDate } = this.filterData;
 
@@ -259,7 +259,7 @@ export default {
         };
       }
 
-      this.order_payments_text = 'Searching..';
+      this.order_payments_text = this.$t('general.searching');
       this.requestPayments(payload);
 
       this.filteredPaymentData = this.paymentData;
@@ -275,12 +275,12 @@ export default {
       };
       this.$store.dispatch('$_transactions/requestPayments', fullPayload).then(
         () => {
-          this.order_payments_text = 'Search';
-          this.empty_payments_state = 'Payment Statement Not Found';
+          this.order_payments_text = this.$t('general.search');
+          this.empty_payments_state = this.$t('general.payment_statement_not_found');
         },
         () => {
-          this.order_payments_text = 'Search';
-          this.empty_payments_state = 'Payment Statement Failed to Fetch';
+          this.order_payments_text = this.$t('general.search');
+          this.empty_payments_state = this.$t('general.payment_statement_failed_to_fetch');
         },
       );
     },

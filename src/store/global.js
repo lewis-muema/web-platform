@@ -24,6 +24,7 @@ const state = {
   dedicated_access_status: false,
   secondary_profile: '',
   pick_up_filled_status: false,
+  language: 'en',
 };
 
 export default {
