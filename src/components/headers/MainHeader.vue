@@ -94,7 +94,7 @@
                     {{$t('mainHeader.orders')}}
                   </a>
                 </li>
-                <li>
+                <li v-if="enabledFreightCountry">
                   <a @click="linkRoute('/orders/freight')">
                     {{$t('mainHeader.freight_small')}}
                   </a>
