@@ -214,231 +214,212 @@
             :visible.sync="quoteDialog"
             class="sendQuoteOption"
           >
-            <div class="">
-              <div class="quote-text-option decline-documemt-extend">
-                Create a Shipment Request
-              </div>
-            </div>
-            <div class="quote-find-section">
-              <div v-if="shipment_state === 1">
-                <div class="">
-                  <p class="freight-input--label">
-                    Pick up location
-                  </p>
-                  <gmap-autocomplete
-                    id="pickup"
-                    v-model="locations[0]"
-                    :options="map_options"
-                    placeholder="Enter a pickup location"
-                    :select-first-on-enter="true"
-                    class="input-control"
-                    @place_changed="setLocation($event, 0)"
-                  />
-                </div>
-
-                <div class="">
-                  <p class="freight-input--label">
-                    Destination
-                  </p>
-                  <gmap-autocomplete
-                    id="destination"
-                    v-model="locations[1]"
-                    :options="map_options"
-                    placeholder="Enter a destination location"
-                    :select-first-on-enter="true"
-                    class="input-control"
-                    @place_changed="setLocation($event, 1)"
-                  />
-                </div>
-
-                <div class="">
-                  <p class="freight-input--label">
-                    Pick up time
-                  </p>
-                  <div class="transporters-select">
-                    <el-date-picker
-                      v-model="pick_up_time"
-                      class="bids-time"
-                      type="datetime"
-                      format="dd-MM-yyyy h:mm a"
-                      placeholder="Select time"
-                      prefix-icon="el-icon-date"
-                      :default-time="default_value"
-                      :picker-options="dueDatePickerOptions"
-                    />
-                  </div>
-                </div>
-
-                <div class="">
-                  <p class="freight-input--label">
-                    Type of truck
-                  </p>
-                  <div class="transporters-select">
-                    <el-select
-                      v-model="truck_type"
-                      placeholder=""
-                      filterable
-                    >
-                      <el-option
-                        v-for="item in truckTypes"
-                        :key="item.id"
-                        :label="item.carrier_type"
-                        :value="item.id"
-                      />
-                    </el-select>
-                  </div>
-                </div>
-
-                <div class="">
-                  <p class="freight-input--label">
-                    What is being transported?
-                  </p>
-                  <div class="transporters-select">
-                    <el-select
-                      v-model="goods"
-                      placeholder=""
-                      filterable
-                    >
-                      <el-option
-                        v-for="item in goodsType"
-                        :key="item.id"
-                        :label="item.cargo_type"
-                        :value="item.id"
-                      />
-                    </el-select>
-                  </div>
-                </div>
-
-                <div class="next-terms-holder">
-                  <button
-                    type="button"
-                    name="button"
-                    class="quote-action--slide-button send-final-quote-btn back-shipment-btn"
-                    @click="nextShipmentFlow()"
-                  >
-                    Next
-                  </button>
+            <div class="createShipmentInnerDialog">
+              <div class="">
+                <div class="quote-text-option decline-documemt-extend">
+                  Create a Shipment Request
                 </div>
               </div>
-
-              <div v-else-if="shipment_state === 2">
-                <div class="">
-                  <p class="shipment-input--label">
-                    Where is the pickup facility at {{ locations[0] }}
-                  </p>
-                  <div class="block">
-                    <el-input
-                      v-model="facility_location"
-                      type="textarea"
-                      :rows="2"
-                      placeholder="Please input"
+              <div class="quote-find-section">
+                <div v-if="shipment_state === 1">
+                  <div class="">
+                    <p class="freight-input--label">
+                      Pick up location
+                    </p>
+                    <gmap-autocomplete
+                      id="pickup"
+                      v-model="locations[0]"
+                      :options="map_options"
+                      placeholder="Enter a pickup location"
+                      :select-first-on-enter="true"
+                      class="input-control"
+                      @place_changed="setLocation($event, 0)"
                     />
                   </div>
-                </div>
 
-                <div class="">
-                  <p class="shipment-input--label">
-                    Will the container be returned to the pickup location?
-                  </p>
-                  <div class="block">
-                    <el-select
-                      v-model="return_option"
-                      placeholder=""
-                      class="transporters-element-inputs"
-                      filterable
-                    >
-                      <el-option
-                        v-for="item in returnOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      />
-                    </el-select>
-                  </div>
-                </div>
-
-                <div class="">
-                  <p class="shipment-input--label">
-                    How many trucks do you need?
-                  </p>
-                  <div class="block">
-                    <el-input-number
-                      v-model="trucks_no"
-                      :min="1"
+                  <div class="">
+                    <p class="freight-input--label">
+                      Destination
+                    </p>
+                    <gmap-autocomplete
+                      id="destination"
+                      v-model="locations[1]"
+                      :options="map_options"
+                      placeholder="Enter a destination location"
+                      :select-first-on-enter="true"
+                      class="input-control"
+                      @place_changed="setLocation($event, 1)"
                     />
                   </div>
-                </div>
 
-                <div class="">
-                  <p class="shipment-input--label">
-                    How many tonnes should each truck carry per move?
-                  </p>
-                  <div class="block">
-                    <input
-                      v-model="load_weight"
-                      class="input-control freight-load-weight"
-                      type="text"
-                      placeholder=""
-                      autocomplete="on"
-                    >
-                    <span class="tonage-value-text">Tonnes</span>
-                  </div>
-                </div>
-
-                <div class="">
-                  <p class="shipment-input--label">
-                    Do you want to make an offer for this shipment?
-                  </p>
-                  <div class="block">
-                    <el-select
-                      v-model="shipment_offer"
-                      placeholder=""
-                      class="transporters-element-inputs"
-                      filterable
-                    >
-                      <el-option
-                        v-for="item in shipmentOffer"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
+                  <div class="">
+                    <p class="freight-input--label">
+                      Pick up time
+                    </p>
+                    <div class="transporters-select">
+                      <el-date-picker
+                        v-model="pick_up_time"
+                        class="bids-time"
+                        type="datetime"
+                        format="dd-MM-yyyy h:mm a"
+                        placeholder="Select time"
+                        prefix-icon="el-icon-date"
+                        :default-time="default_value"
+                        :picker-options="dueDatePickerOptions"
                       />
-                    </el-select>
+                    </div>
+                  </div>
+
+                  <div class="">
+                    <p class="freight-input--label">
+                      Type of truck
+                    </p>
+                    <div class="transporters-select">
+                      <el-select
+                        v-model="truck_type"
+                        placeholder=""
+                        filterable
+                      >
+                        <el-option
+                          v-for="item in truckTypes"
+                          :key="item.id"
+                          :label="item.carrier_type"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </div>
+                  </div>
+
+                  <div class="">
+                    <p class="freight-input--label">
+                      What is being transported?
+                    </p>
+                    <div class="transporters-select">
+                      <el-select
+                        v-model="goods"
+                        placeholder=""
+                        filterable
+                      >
+                        <el-option
+                          v-for="item in goodsType"
+                          :key="item.id"
+                          :label="item.cargo_type"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </div>
+                  </div>
+
+                  <div class="next-terms-holder">
+                    <button
+                      type="button"
+                      name="button"
+                      class="quote-action--slide-button send-final-quote-btn back-shipment-btn"
+                      @click="nextShipmentFlow()"
+                    >
+                      Next
+                    </button>
                   </div>
                 </div>
 
-                <div v-if="shipment_offer">
+                <div v-else-if="shipment_state === 2">
                   <div class="">
                     <p class="shipment-input--label">
-                      How much do you want to pay per truck?
+                      Where is the pickup facility at {{ locations[0] }}
                     </p>
-                    <div class="freight-input">
-                      <div class="freight-input-icon">
-                        <span>USD</span>
-                      </div>
-                      <div class="freight-input-area">
-                        <input
-                          v-model.trim="bid_amount"
-                          type="number"
-                          name="amount"
-                          class="transporter-selector freight-selector"
+                    <div class="block">
+                      <el-input
+                        v-model="facility_location"
+                        type="textarea"
+                        :rows="2"
+                        placeholder="Please input"
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    v-for="(val, index) in carrier_options"
+                    v-if="goods === 1 && carrier_options.length > 0"
+                    :key="val.id"
+                    class=""
+                  >
+                    <div class="">
+                      <p class="shipment-input--label">
+                        {{ val.description }}
+                      </p>
+                      <div
+                        v-if="val.data_type === 'boolean'"
+                        class="block"
+                      >
+                        <el-select
+                          v-model="carrier_option_value[index]"
+                          placeholder=""
+                          class="transporters-element-inputs"
+                          filterable
+                          @change="setCarrierOptionValue(index)"
                         >
+                          <el-option
+                            v-for="item in returnOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                          />
+                        </el-select>
+                      </div>
+                      <div
+                        v-else
+                        class="block"
+                      >
+                        <el-input-number
+                          v-model.trim="carrier_option_value[index]"
+                          :min="0"
+                          @change="setCarrierOptionValue(index)"
+                        />
                       </div>
                     </div>
                   </div>
 
-                  <div>
+                  <div class="">
                     <p class="shipment-input--label">
-                      Is this price negotiable?
+                      How many trucks do you need?
+                    </p>
+                    <div class="block">
+                      <el-input-number
+                        v-model="trucks_no"
+                        :min="1"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="">
+                    <p class="shipment-input--label">
+                      How many tonnes should each truck carry per move?
+                    </p>
+                    <div class="block">
+                      <input
+                        v-model="load_weight"
+                        class="input-control freight-load-weight"
+                        type="number"
+                        placeholder=""
+                        autocomplete="on"
+                      >
+                      <span class="tonage-value-text">Tonnes</span>
+                    </div>
+                  </div>
+
+                  <div class="">
+                    <p class="shipment-input--label">
+                      Do you want to make an offer for this shipment?
                     </p>
                     <div class="block">
                       <el-select
-                        v-model="negotiability"
+                        v-model="shipment_offer"
                         placeholder=""
                         class="transporters-element-inputs"
                         filterable
                       >
                         <el-option
-                          v-for="item in returnOptions"
+                          v-for="item in shipmentOffer"
                           :key="item.value"
                           :label="item.label"
                           :value="item.value"
@@ -446,52 +427,94 @@
                       </el-select>
                     </div>
                   </div>
-                </div>
 
-                <div>
-                  <p class="shipment-input--label">
-                    By when should bids be submitted?
-                  </p>
-                  <div class="block">
-                    <el-date-picker
-                      v-model="quotation_time"
-                      class="transporters-element-inputs"
-                      type="datetime"
-                      format="dd-MM-yyyy h:mm a"
-                      placeholder="Select time"
-                      prefix-icon="el-icon-date"
-                      :default-time="default_value"
-                      :picker-options="dueDatePickerOptions"
-                    />
+                  <div v-if="shipment_offer">
+                    <div class="">
+                      <p class="shipment-input--label">
+                        How much do you want to pay per truck?
+                      </p>
+                      <div class="freight-input">
+                        <div class="freight-input-icon">
+                          <span>USD</span>
+                        </div>
+                        <div class="freight-input-area">
+                          <input
+                            v-model.trim="bid_amount"
+                            type="number"
+                            name="amount"
+                            class="transporter-selector freight-selector"
+                          >
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <p class="shipment-input--label">
+                        Is this price negotiable?
+                      </p>
+                      <div class="block">
+                        <el-select
+                          v-model="negotiability"
+                          placeholder=""
+                          class="transporters-element-inputs"
+                          filterable
+                        >
+                          <el-option
+                            v-for="item in returnOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                          />
+                        </el-select>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                <div
-                  v-if="process_shipment"
-                  v-loading="process_shipment"
-                  class="freight-loading-container transporter-details-loader"
-                />
+                  <div>
+                    <p class="shipment-input--label">
+                      By when should bids be submitted?
+                    </p>
+                    <div class="block">
+                      <el-date-picker
+                        v-model="quotation_time"
+                        class="transporters-element-inputs"
+                        type="datetime"
+                        format="dd-MM-yyyy h:mm a"
+                        placeholder="Select time"
+                        prefix-icon="el-icon-date"
+                        :default-time="default_value"
+                        :picker-options="dueDatePickerOptions"
+                      />
+                    </div>
+                  </div>
 
-                <div
-                  v-if="!process_shipment"
-                  class="decline-documemt-extend decline-button-align send-quote--outer"
-                >
-                  <button
-                    type="button"
-                    name="button"
-                    class="quote-action--slide-button send-final-quote-btn back-shipment-btn"
-                    @click="oneStepBack()"
+                  <div
+                    v-if="process_shipment"
+                    v-loading="process_shipment"
+                    class="freight-loading-container transporter-details-loader"
+                  />
+
+                  <div
+                    v-if="!process_shipment"
+                    class="decline-documemt-extend decline-button-align send-quote--outer"
                   >
-                    Back
-                  </button>
-                  <button
-                    type="button"
-                    name="button"
-                    class="quote-action--slide-button send-final-quote-btn"
-                    @click="sendFinalQuote()"
-                  >
-                    Submit
-                  </button>
+                    <button
+                      type="button"
+                      name="button"
+                      class="quote-action--slide-button send-final-quote-btn back-shipment-btn"
+                      @click="oneStepBack()"
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="button"
+                      name="button"
+                      class="quote-action--slide-button send-final-quote-btn"
+                      @click="sendFinalQuote()"
+                    >
+                      Submit
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -578,6 +601,8 @@ export default {
       pickup_value: '',
       destination_value: '',
       process_shipment: false,
+      carrier_options: [],
+      carrier_option_value: [],
     };
   },
   computed: {
@@ -594,6 +619,19 @@ export default {
         this.addFocusListener();
       },
       deep: true,
+    },
+    goods(val) {
+      if (val === 1) {
+        const filteredData = this.goodsType.filter(pack => pack.id === val);
+        if (filteredData[0].options.length > 0) {
+          filteredData[0].options.map(v => Object.assign(v, { value: v.data_type === 'boolean' ? 'No' : 1 }));
+          this.carrier_options = filteredData[0].options;
+        } else {
+          this.carrier_options = [];
+        }
+      } else {
+        this.carrier_options = [];
+      }
     },
   },
   created() {
@@ -649,6 +687,9 @@ export default {
           this.owner_detail = [];
         },
       );
+    },
+    setCarrierOptionValue(index) {
+      this.carrier_options[index].value = this.carrier_option_value[index];
     },
     disabledDueDate(date) {
       return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
@@ -833,7 +874,6 @@ export default {
     sendFinalQuote() {
       if (
         this.facility_location === ''
-        || this.return_option === ''
         || this.trucks_no === ''
         || this.load_weight === ''
         || this.shipment_offer === ''
@@ -845,82 +885,106 @@ export default {
           'Unable to create shipment request!',
           'Kindly provide all values for request to be submitted',
         );
+      } else if (this.goods === 1) {
+        this.checkCarrierOptionValue();
       } else {
-        this.process_shipment = true;
-        let acc = {};
-        const session = this.$store.getters.getSession;
-        if ('default' in session) {
-          acc = session[session.default];
-        }
-        const filteredOwner = [];
-        filteredOwner.push(parseInt(this.$route.params.id, 10));
-
-        const payload = {
-          cop_id: 'cop_id' in acc ? acc.cop_id : null,
-          cop_user_id: 'cop_id' in acc ? acc.user_id : null,
-          peer_id: 'cop_id' in acc ? null : acc.user_id,
-          transporters: filteredOwner,
-          cargo_type: parseInt(this.goods, 10),
-          carrier_type: parseInt(this.truck_type, 10),
-          pickup: this.main_order_path[0],
-          destination: this.main_order_path[1],
-          pickup_time: this.moment(this.pick_up_time).format('DD-MM-YYYY HH:mm:ss'),
-          bidding_deadline: this.moment(this.quotation_time).format('DD-MM-YYYY HH:mm:ss'),
-          currency: 'USD',
-          pickup_facility: this.facility_location,
-          is_return: this.return_option,
-          total_trucks: this.trucks_no,
-          tonnes_per_truck: this.load_weight,
-        };
-
-        if (this.shipment_offer) {
-          payload.offer_amount = this.bid_amount;
-          payload.is_negotiable = this.negotiability;
-        }
-
-        const fullPayload = {
-          values: payload,
-          app: 'FREIGHT_APP',
-          operator: '?',
-          endpoint: 'shipments',
-        };
-        this.sendCustomerQuote(fullPayload).then(
-          (response) => {
-            /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-
-            let workingResponse = response;
-            if (response.length > 1) {
-              workingResponse = response[0];
-            }
-
-            if (workingResponse.status) {
-              this.doNotification(1, 'Shipment sent successfully!', '');
-              this.$router.push('/freight/orders');
-            } else {
-              this.doNotification(
-                2,
-                'Unable to request for shipment!',
-                workingResponse.data.message,
-              );
-            }
-            this.resetQuatationDialog();
-            this.process_shipment = false;
-          },
-          (error) => {
-            if (Object.prototype.hasOwnProperty.call(error, 'message')) {
-              this.doNotification(2, 'Shipment request failed', error.message);
-            } else {
-              this.doNotification(
-                2,
-                'Shipment request failed',
-                'Something went wrong.Please try again',
-              );
-              this.resetQuatationDialog();
-            }
-            this.process_shipment = false;
-          },
-        );
+        this.processShipment();
       }
+    },
+    checkCarrierOptionValue() {
+      if (
+        this.carrier_option_value[0] === undefined
+        || this.carrier_option_value[1] === undefined
+        || this.carrier_option_value[2] === undefined
+      ) {
+        this.doNotification(
+          2,
+          'Unable to create shipment request!',
+          'Kindly provide all values for request to be submitted',
+        );
+      } else if (this.carrier_option_value[1] === 0 && this.carrier_option_value[2] === 0) {
+        this.doNotification(
+          2,
+          'Unable to create shipment request!',
+          'Kindly provide atleast one container value that your moving',
+        );
+      } else {
+        this.processShipment();
+      }
+    },
+    processShipment() {
+      this.process_shipment = true;
+      let acc = {};
+      const session = this.$store.getters.getSession;
+      if ('default' in session) {
+        acc = session[session.default];
+      }
+      const filteredOwner = [];
+      filteredOwner.push(parseInt(this.$route.params.id, 10));
+
+      const payload = {
+        cop_id: 'cop_id' in acc ? acc.cop_id : null,
+        cop_user_id: 'cop_id' in acc ? acc.user_id : null,
+        peer_id: 'cop_id' in acc ? null : acc.user_id,
+        transporters: filteredOwner,
+        cargo_type: parseInt(this.goods, 10),
+        carrier_type: parseInt(this.truck_type, 10),
+        pickup: this.main_order_path[0],
+        destination: this.main_order_path[1],
+        pickup_time: this.moment(this.pick_up_time).format('DD-MM-YYYY HH:mm:ss'),
+        bidding_deadline: this.moment(this.quotation_time).format('DD-MM-YYYY HH:mm:ss'),
+        currency: 'USD',
+        pickup_facility: this.facility_location,
+        total_trucks: this.trucks_no,
+        tonnes_per_truck: parseInt(this.load_weight, 10),
+      };
+
+      if (this.shipment_offer) {
+        payload.offer_amount = this.bid_amount;
+        payload.is_negotiable = this.negotiability;
+      }
+      if (this.goods === 1) {
+        payload.cargo_type_options = this.carrier_options;
+      }
+
+      const fullPayload = {
+        values: payload,
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: 'shipments',
+      };
+      this.sendCustomerQuote(fullPayload).then(
+        (response) => {
+          /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
+
+          let workingResponse = response;
+          if (response.length > 1) {
+            workingResponse = response[0];
+          }
+
+          if (workingResponse.status) {
+            this.doNotification(1, 'Shipment sent successfully!', '');
+            this.$router.push('/freight/orders');
+          } else {
+            this.doNotification(2, 'Unable to request for shipment!', workingResponse.data.message);
+          }
+          this.resetQuatationDialog();
+          this.process_shipment = false;
+        },
+        (error) => {
+          if (Object.prototype.hasOwnProperty.call(error, 'message')) {
+            this.doNotification(2, 'Shipment request failed', error.message);
+          } else {
+            this.doNotification(
+              2,
+              'Shipment request failed',
+              'Something went wrong.Please try again',
+            );
+            this.resetQuatationDialog();
+          }
+          this.process_shipment = false;
+        },
+      );
     },
     resetQuatationDialog() {
       this.quoteDialog = false;
