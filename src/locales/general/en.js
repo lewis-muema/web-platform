@@ -886,6 +886,7 @@ const translations = {
   today: 'Today',
   tommorow: 'Tommorrow',
   update_instructions: 'Update Instructions',
+  language_changed: 'Your preferred Language Changed to English',
 
 
 };
