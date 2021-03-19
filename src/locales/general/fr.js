@@ -868,6 +868,7 @@ const translations = {
   today: "Aujourd'hui",
   tommorow: 'Demain',
   update_instructions: 'Instructions de mise à jour',
+  language_changed: 'Votre langue est définie sur le français',
 
 };
 
