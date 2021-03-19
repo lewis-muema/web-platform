@@ -853,7 +853,9 @@ export default {
     checkContainerState(val) {
       let resp = false;
       if (Object.prototype.hasOwnProperty.call(val, 'cargo_type_options')) {
-        resp = true;
+        if (val.cargo_type_options.length > 0) {
+          resp = true;
+        }
       }
 
       return resp;
