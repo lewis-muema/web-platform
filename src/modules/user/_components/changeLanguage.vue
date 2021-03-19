@@ -11,17 +11,19 @@
           </el-option>
         </el-select>
 
-        <button type="primary" class="button-primary home-view--place-order btn" >{{$t('general.save')}}</button>
+        <button type="primary" class="button-primary home-view--place-order btn" @click="changeLanguage" >{{$t('general.save')}}</button>
         
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions, mapGetters } from 'vuex';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 export default {
   name: 'changeLanguage',
+  mixins: [NotificationMxn],
   data() {
     return {
       options: [
@@ -36,6 +38,9 @@ export default {
       ],
       locale: 'en',
     }
+  },
+  computed: {
+    ...mapGetters(['getSession', 'getENV'])
   },
   watch: {
     locale(val) {
