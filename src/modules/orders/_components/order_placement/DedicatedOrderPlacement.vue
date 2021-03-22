@@ -179,7 +179,7 @@
                 :placeholder="$t('general.return_location')"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-return-location"
-                @place_changed="setLocation($event, 1, 1)
+                @place_changed="setLocation($event, 1, 1)"
                 @keyup="checkChangeEvents($event, 1)"
                 @change="checkChangeEvents($event, 1)"
               />
