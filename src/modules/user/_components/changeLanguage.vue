@@ -12,7 +12,7 @@
         </el-select>
 
         <button type="primary" class="button-primary home-view--place-order btn" @click="changeLanguage" >{{$t('general.save')}}</button>
-        
+
     </div>
   </div>
 </template>
@@ -34,7 +34,7 @@ export default {
         {
         value: 'fr',
         label: 'Francais (FR)'
-        }, 
+        },
       ],
       locale: 'en',
     }
@@ -54,7 +54,7 @@ export default {
   },
   mounted() {
     this.locale = localStorage.getItem('timeLocale');
-  }, 
+  },
   methods: {
     ...mapMutations(['setLanguage']),
     ...mapActions({
@@ -74,7 +74,7 @@ export default {
       };
 
       this.requestChangeLanguage(fullPayload).then((response) => {
-        const level = response.status ? 1 : 3 ; 
+        const level = response.status ? 1 : 3 ;
         this.message = response.status ? this.$t('general.language_changed') : this.$t('general.something_went_wrong');
         const notification = { title: '', level, message: this.message };
         this.displayNotification(notification);
