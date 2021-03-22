@@ -1,3 +1,5 @@
+import { mapGetters } from 'vuex';
+
 const moment = require('moment-timezone');
 
 moment.locale('fr', {
@@ -61,8 +63,6 @@ moment.locale('fr', {
   },
 });
 
-import { mapGetters } from "vuex";
-
 const timezone = {
   computed: {
     ...mapGetters(['getLanguage']),
@@ -112,6 +112,6 @@ const timezone = {
   mounted() {
     const locale = this.getLanguage;
     moment.locale(locale);
-  }
+  },
 };
 export default timezone;
