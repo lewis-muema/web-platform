@@ -6,7 +6,7 @@ const fr = {
   account_connected: "Vos deux comptes sont maintenant connectés et vous pouvez accéder à l'un ou l'autre compte avec le mot de passe que vous avez sélectionné.",
   login_account: 'Connectez-vous à tout moment à vos deux profils de compte en utilisant les e-mails ci-dessous.',
   account_created: 'Votre compte a maintenant été créé et vous pouvez accéder au compte avec votre. mot de passe sélectionné.',
-  selected_password: 'FR_selected password.',
+  selected_password: 'mot de passe sélectionné.',
   login_any_time: 'Connectez-vous à tout moment à votre profil de compte en utilisant le courriel ci-dessous.',
   personal: 'Personnel',
   continue: "Continuer vers l'application ",
