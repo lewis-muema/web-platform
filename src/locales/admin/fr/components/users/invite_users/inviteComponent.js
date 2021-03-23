@@ -15,8 +15,7 @@ const fr = {
   valid_email: 'Veuillez saisir au moins une adresse e-mail valide.',
   invite_link: "lien d'invitation",
   error_occured: "une erreur s'est produite",
-  link_created: 'FR_Link created!',
-
+  link_created: 'Lien créé!',
 };
 
 export default fr;
