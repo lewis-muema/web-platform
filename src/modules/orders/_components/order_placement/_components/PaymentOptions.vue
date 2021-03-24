@@ -592,7 +592,7 @@ export default {
       mpesa_payment: false,
       mpesa_payment_state: false,
       confirmFinal: false,
-      smallVendors: [1, 22, 21, 23],
+      smallVendors: [1, 22, 21, 23, 12],
       mediumVendors: [2, 3],
       largeVendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
       time: 15,
@@ -1213,7 +1213,13 @@ export default {
     },
 
     displayOrderHistory() {
-      if (this.getPairWithRiderState && this.getPairRiderPhone === '') {
+      if (!this.getDeliveryItem && !this.smallVendors.includes(this.activeVendorPriceData.vendor_id) && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+        this.doNotification(
+          2,
+          this.$t('general.delivery_item_not_set'),
+          this.$t('general.enter_delivery_item'),
+        );
+      } else if (this.getPairWithRiderState && this.getPairRiderPhone === '') {
         this.initiatePairingFailureNotification();
       } else if (this.getPairWithRiderState && !this.getPairWithRiderStatus) {
         this.doNotification(2, this.$t('general.pairing_failure'), this.getPairErrorMessage);
