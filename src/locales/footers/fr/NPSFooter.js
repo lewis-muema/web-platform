@@ -1,12 +1,12 @@
 
 const fr = {
   not_likely: '0 pas probable',
-  very_likely: 'Bonjour 10 Very Likely',
+  very_likely: '10 Très probable',
   submit: 'Soumettre',
-  how_likely: 'FR-How likely are you to recommend a friend or colleague to use Sendy?',
-  like_most: 'FR-What do you like most about Sendy? (Optional)',
-  thank_you: 'FR-Thank you. We will use your feedback to improve our service',
-  transportation: 'Transportation',
+  how_likely: 'Dans quelle mesure recommandez-vous un ami ou un collègue d’utiliser Sendy?',
+  like_most: 'Qu’est-ce qui vous plaisez le plus chez Sendy? (facultatif)',
+  thank_you: 'Merci. Nous utiliserons vos commentaires pour améliorer notre service',
+  transportation: 'Transport',
   freight: 'Fret',
   helpline: 'Assistance téléphonique',
   hi: 'Salut',
@@ -18,15 +18,14 @@ const fr = {
   new_delivery: 'Nouvelle livraison',
   payment: 'Paiement',
   orders: 'Commandes',
-  settings: 'FR-Settings',
+  settings: 'Paramètres',
   analytics: 'Analytique',
-  profile: 'FR-Profile',
+  profile: 'Profil',
   logout: ' Déconnecter',
-  business: 'FR_Business',
+  business: 'Entreprise',
   business_acc: "(Compte d'affaires)",
   personal_acc: '(Compte personnel)',
-  write_feedback: 'FR_Write your feedback here',
-
+  write_feedback: 'Écrire vos commentaires ici',
 };
 
 export default fr;
