@@ -9,7 +9,7 @@ const fr = {
   check_internet: 'Vérifier la connexion Internet et réessayer',
   signup_error: "Erreur d'inscription ",
   provide_biz_name: "Fournir le nom de l'entreprise ",
-  Provide: 'FR_Business Name',
+  Provide: "Nom de l'entreprise ",
   account_deactivated: 'Compte désactivé',
   wrong_password: 'Mauvais mot de passe ou courriel',
   login_failed_text: 'La connexion a échoué. Veuillez réessayer',
