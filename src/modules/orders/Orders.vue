@@ -1795,7 +1795,7 @@ export default {
 }
 .countdown-par, .countdown-heading {
   text-align: center;
-  color: #0062DB;
+  color: #1B7FC3;
   margin: 10px;
 }
 .timer {
@@ -1869,7 +1869,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
 }
 .vendor_active_final{
   background: #EDF8FF;
-  border: 2px solid #0062DB;
+  border: 2px solid #1B7FC3;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
   animation: flip-scale-down-diag-2 0.5s linear ;
 }

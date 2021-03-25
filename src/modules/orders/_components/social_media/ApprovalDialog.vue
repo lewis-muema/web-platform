@@ -84,7 +84,7 @@ import { mapActions, mapGetters } from 'vuex';
 import SessionMxn from '../../../../mixins/session_mixin';
 
 export default {
-  name: 'ApprovalDialog',
+  name: 'SocialApprovalDialog',
   mixins: [SessionMxn],
 
   props: {

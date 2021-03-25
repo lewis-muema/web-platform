@@ -950,14 +950,14 @@ export default {
           },
         );
       } else if (this.isValidateScheduleTime() === 2) {
-        this.doNotification(2, this.$t('general.shedule_time_not_set'), this.$t('general.please_enter_starting_time'));
+        this.doNotification(2, this.$t('general.schedule_time_not_set'), this.$t('general.please_enter_starting_time'));
       } else if (this.isValidateScheduleTime() === 3) {
-        this.doNotification(2, this.$t('general.shedule_time_not_set'), this.$t('general.please_enter_starting_time'));
+        this.doNotification(2, this.$t('general.schedule_time_not_set'), this.$t('general.please_enter_ending_time'));
       } else if (this.isValidateScheduleTime() === 4) {
         this.doNotification(
           2,
-          this.$t('general.shedule_time_not_set'),
-          this.$t('general.please_select_start_and_ending_time'),
+          this.$t('general.schedule_time_not_set'),
+          this.$t('general.please_enter_start_and_ending_time'),
         );
       }
     },

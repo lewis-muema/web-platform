@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="paymethod">
     <router-link class="paymethod--link menu-links" :key="method.Payment_method_id" v-for="method in payment_methods" :to="`/payment/${method.name.replace(/-|\s/g, '').toLowerCase()}`">
-    {{ method.name }}
+    {{ method.name === 'Promocode' ? 'Promo Code' : method.name }}
 </router-link>
   </div>
 </template>
@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     ...mapActions({ requestPaymentOptionsAction: '$_payment/requestPaymentOptions' }),
-    ...mapMutations({ setCardPaymentStatus: '$_payment/setCardPaymentStatus'}),
+    ...mapMutations({ setCardPaymentStatus: '$_payment/setCardPaymentStatus' }),
 
     getPaymentOptions() {
       const session = this.$store.getters.getSession;
@@ -67,7 +67,7 @@ export default {
         },
         (error) => {
           console.log('error', error);
-        }
+        },
       );
     },
   },
