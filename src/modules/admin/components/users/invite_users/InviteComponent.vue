@@ -186,13 +186,14 @@ export default {
             };
             this.$store.dispatch('$_admin/inviteNewUsers', fullPayload).then(
               (response) => {
-                this.button = 'Send Invites';
+                this.button = this.$t('inviteComponent.send_invites');
                 if (response.status) {
                   const level = 1;
                   const notification = {
                     title: this.$t('inviteComponent.add_user'),
                     level,
-                    message: this.$t('inviteComponent.invitations_sent_successful'),
+  invitations_sent_succesful: 'Invitations sent successfully',
+                    message: this.$t('inviteComponent.invitations_sent_succesful'),
                   };
                   this.inviteLog(payload);
                   this.displayNotification(notification);
