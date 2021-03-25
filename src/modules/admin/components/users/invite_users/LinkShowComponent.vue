@@ -2,7 +2,7 @@
   <div class="inv-container">
     <div class="show-out">
       <div class="show-txt">
-        <label class="inviteUser--text">{{ $t('linkComponent.invite_link') }}</label>
+        <label class="inviteUser--text">{{ $t('linkComponent.invite_link', {bizName: bizName}) }}</label>
         <input
           id="in_link"
           readonly
@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="show-in">
-      {{ $t('linkComponent.use_link_to_join') }}
+      {{ $t('linkComponent.use_link_to_join', {getBizName: getBizName}) }}
     </div>
   </div>
 </template>
