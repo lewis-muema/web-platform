@@ -452,7 +452,7 @@
             <div v-else>
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$t('general.want_delivered')}} <span class="home-view-truck-options-mandatory-field" v-if="!small_vendors.includes(activeVendorPriceData.vendor_id)">({{$t('general.required')}})</span>
+                  {{$t('general.want_delivered')}}
                 </div>
                 <div>
                   <el-input
