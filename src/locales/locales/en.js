@@ -13,7 +13,7 @@ import successComponent from '../auth/en/components/successComponent';
 import promoCodeComponent from '../orders/en/components/orderPlacement/PromoCodesComponent';
 import approvalDialogue from '../orders/en/components/social_media/approvalDialogue';
 // admin
-import EndComponent from '../admin/en/components/users/invite_users/EndComponent';
+import endComponent from '../admin/en/components/users/invite_users/EndComponent';
 import inviteComponent from '../admin/en/components/users/invite_users/inviteComponent';
 import linkComponent from '../admin/en/components/users/invite_users/linkComponent';
 import editUser from '../admin/en/components/users/editUser';
@@ -61,7 +61,7 @@ const translations = {
   successComponent,
   promoCodeComponent,
   approvalDialogue,
-  EndComponent,
+  endComponent,
   inviteComponent,
   linkComponent,
   editUser,

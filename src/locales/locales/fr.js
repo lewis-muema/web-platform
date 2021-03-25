@@ -14,7 +14,7 @@ import promoCodeComponent from '../orders/fr/components/orderPlacement/PromoCode
 import approvalDialogue from '../orders/fr/components/social_media/approvalDialogue';
 
 // admin
-import EndComponent from '../admin/fr/components/users/invite_users/EndComponent';
+import endComponent from '../admin/fr/components/users/invite_users/EndComponent';
 import inviteComponent from '../admin/fr/components/users/invite_users/inviteComponent';
 import linkComponent from '../admin/fr/components/users/invite_users/linkComponent';
 import editUser from '../admin/fr/components/users/editUser';
@@ -62,7 +62,7 @@ const translations = {
   successComponent,
   promoCodeComponent,
   approvalDialogue,
-  EndComponent,
+  endComponent,
   inviteComponent,
   linkComponent,
   editUser,

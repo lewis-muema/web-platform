@@ -47,7 +47,7 @@
       </div>
     </div>
     <div class="side-flex side-desc">
-      {{ $t('linkComponent.use_link_to_join') }}
+      {{ $t('linkComponent.use_link_to_join', {getBizName: getBizName}) }}
     </div>
   </div>
 </template>
