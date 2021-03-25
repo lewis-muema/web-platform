@@ -210,7 +210,7 @@
               <p
                 v-if="country === 'KE'"
                 class="card-option-disabled-notification"
-                v-html="$t('general.technical_mantainance_still_pay, { user_name: user_name }')"
+                v-html="$t('general.technical_mantainance_still_pay', { user_name: user_name })"
               />
               <p
                 v-if="country === 'UG'"
