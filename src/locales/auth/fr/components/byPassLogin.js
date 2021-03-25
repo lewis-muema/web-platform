@@ -24,7 +24,7 @@ const fr = {
   add_phone_no: 'Veuillez ajouter le numéro de téléphone sur le Portail du personnel / Contactez les RH',
   phone_verification_failed: 'Échec de la vérification du téléphone . Réessayer après 15 minutes',
   phone_verfication_successful: 'Vérification du téléphone réussie! ',
-  success: 'FR_success',
+  success: 'Avec succès',
 };
 
 

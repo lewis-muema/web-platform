@@ -23,6 +23,7 @@ export default {
   data() {
     return {
       fcmToken: '',
+      notificationData: '',
     };
   },
   computed: {
@@ -43,6 +44,7 @@ export default {
       if (val) {
         this.showNotification();
         this.trackMixpanelEvent('Notification initiated');
+        this.showReschedulePopup();
       }
     },
     // watch session so as to only update token on session
@@ -178,6 +180,11 @@ export default {
         // ...
       }
     },
+    showReschedulePopup() {
+      if (Object.prototype.hasOwnProperty.call(this.notificationData.data, 'scheduled') && JSON.parse(this.notificationData.data.scheduled)) {
+        this.$root.$emit('Show reschedule dialogue', this.notificationData);
+      }
+    },
     updateFirebaseToken() {
       const session = this.getSession;
       if (Object.keys(session).length > 0) {
@@ -229,7 +236,7 @@ export default {
 
         this.$messaging.onMessage((payload) => {
           const notificationData = payload.data;
-
+          this.notificationData = payload;
           this.$store.commit('setFCMData', notificationData);
           // fire internal notification
           const level = 1;

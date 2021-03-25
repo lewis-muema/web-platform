@@ -1,6 +1,6 @@
 
 const fr = {
-  verify_success: 'FR_Verifying Super User Successfull . You will be redirected to the Home Page within 5 seconds',
+  verify_success: "Vérification Réussie du Super-Utilisateur. Vous serez redirigé vers la page d'accueil dans 5 secondes",
 
 };
 
