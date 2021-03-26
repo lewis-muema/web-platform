@@ -805,6 +805,7 @@ const translations = {
   kindly_select_upgrade_proceed: 'Kindly select upgrade option to proceed',
   bikes: 'Bikes',
   trucks_and_vans: 'Trucks and Vans',
+  pickups_trucks_and_vans: 'Pick ups, Vans, Trucks',
   freight: 'Freight',
 
   enter_kra_pin: 'Please enter KRA PIN',
@@ -884,6 +885,10 @@ const translations = {
   edit_pickup_time: 'Edit pick up time error',
   kindly_provide_pickup_time: 'Kindly provide pickup time',
   // Orders.vue
+  business_categories: 'Does your business fall under any of the following categories?',
+  finetune: 'We’ll finetune your account based on your type of business',
+  delivery_option: 'Which delivery option will you mostly be using?',
+  not_restrict_other_delivery_options: 'This will not restrict you from using other delivery options',
   are_you_in_social_media_biz: 'Are you a social commerce business?',
   manage_saved_locations: 'Manage saved {waypointType} locations',
   enter_waypoint_type_location: 'Enter a {waypointType} location',
