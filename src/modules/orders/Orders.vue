@@ -1008,6 +1008,7 @@ export default {
       setPairErrorMessage: '$_orders/$_home/setPairErrorMessage',
       setExpandedActiveVendorTally: '$_orders/setExpandedActiveVendorTally',
       setPairedDriversTally: '$_orders/setPairedDriversTally',
+      setScheduleStatus: 'setScheduleStatus',
     }),
     ...mapActions({
       fetchSuggestions: '$_orders/fetchSuggestions',
@@ -1385,6 +1386,7 @@ export default {
                 this.$t('general.pickup_time_updated'),
                 '',
               );
+              this.setScheduleStatus(false);
             } else {
               this.doNotification(
                 2,
@@ -1456,6 +1458,7 @@ export default {
       this.$root.$on('Show reschedule dialogue', (arg1) => {
         this.automaticRescheduleStatus = true;
         this.rescheduleNotification = arg1;
+        this.setScheduleStatus(true);
       });
       this.$root.$on('Pairing status', (arg1) => {
         this.blinder_status = arg1;
