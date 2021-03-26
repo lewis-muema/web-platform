@@ -504,6 +504,145 @@
                 {{ $t('general.finish_account_setup') }}
               </p>
 
+              <div
+                v-if="updateSetIndustry"
+                class="final-upper-padding"
+              >
+                <label class="final-label">{{ $t('general.industry') }}</label>
+                <div class="final-upper-padding">
+                  <el-select
+                    v-model="industry_type"
+                    filterable
+                    popper-append-to-body="false"
+                    :placeholder="$t('general.select')"
+                    class="compliance-select-final"
+                  >
+                    <el-option
+                      v-for="item in industriesOptions"
+                      :key="item.industry_id"
+                      :label="item.name"
+                      :value="item.industry_id"
+                    />
+                  </el-select>
+                </div>
+              </div>
+
+              <div class="final-upper-padding">
+                <label class="final-label">{{ $t('general.business_categories') }}</label>
+                <p class="final-inner">
+                  ({{ $t('general.finetune') }})
+                </p>
+                <div class="final-upper-padding">
+                  <el-select
+                    v-model="business_category_option"
+                    :placeholder="$t('general.select')"
+                    class="compliance-select-final"
+                    popper-class="business-categories-options"
+                  >
+                    <el-option
+                      v-for="item in businessCategories"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                      <p class="business-categories-options-titles">
+                        {{ item.label }}
+                      </p> <br>
+                      <p class="business-categories-options-definitions">
+                        {{ item.definition }}
+                      </p>
+                    </el-option>
+                  </el-select>
+                </div>
+              </div>
+
+              <div
+                v-if="social_media_option"
+                class="final-upper-padding"
+              >
+                <label class="final-label">{{ $t('general.biz_insta_handle') }}</label>
+                <div class="final-upper-padding">
+                  <input
+                    v-model="ig_media_handle"
+                    class="input-control upgrade-final"
+                    type="text"
+                    placeholder="@mystore"
+                    autocomplete="on"
+                  >
+                </div>
+              </div>
+
+              <div
+                v-if="social_media_option"
+                class="final-upper-padding"
+              >
+                <label class="final-label">{{ $t('general.link_business_face_book_page') }}</label>
+                <div class="final-upper-padding">
+                  <input
+                    v-model="facebook_media_handle"
+                    class="input-control upgrade-final"
+                    type="text"
+                    placeholder="www.facebook.com/pages/mystore"
+                    autocomplete="on"
+                  >
+                </div>
+              </div>
+
+              <div class="final-upper-padding">
+                <label class="final-label">
+                  {{ $t('general.delivery_option') }}
+                </label>
+                <p class="final-inner">
+                  ({{ $t('general.not_restrict_other_delivery_options') }})
+                </p>
+                <div class="final-upper-padding">
+                  <div class="vendors-final-outerline">
+                    <div
+                      class="vendor-final-cards"
+                      :class="{ vendor_active_final: activeTab === 'mbu' }"
+                      @click="selectCard('mbu', 1)"
+                    >
+                      <img
+                        class="vendor-types-final"
+                        :src="getVendorIcon(1)"
+                        alt=""
+                      >
+                      <p class="vendor-type-icon-labels">
+                        {{ $t('general.bikes') }}
+                      </p>
+                    </div>
+                    <div
+                      class="vendor-final-cards"
+                      :class="{ vendor_active_final: activeTab === 'ebu' }"
+                      @click="selectCard('ebu', 2)"
+                    >
+                      <img
+                        class="vendor-types-final"
+                        :src="getVendorIcon(6)"
+                        alt=""
+                      >
+                      <p class="vendor-type-icon-labels">
+                        {{ $t('general.pickups_trucks_and_vans') }}
+                      </p>
+                    </div>
+                    <div
+                      class="vendor-final-cards"
+                      :class="{ vendor_active_final: activeTab === 'fbu' }"
+                      @click="selectCard('fbu', 3)"
+                    >
+                      <img
+                        class="vendor-types-final"
+                        :src="getVendorIcon(25)"
+                        alt=""
+                      >
+                      <p class="vendor-type-icon-labels">
+                        {{ $t('general.freight') }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div v-if="updateKraSection">
                 <div class="">
                   <label class="final-label">{{ $t('general.does_biz_file_vat_optional') }}</label>
@@ -547,130 +686,6 @@
                   >
                     {{ kraFailResponse }}
                   </span>
-                </div>
-              </div>
-
-              <div
-                v-if="updateSetIndustry"
-                class="final-upper-padding"
-              >
-                <label class="final-label">{{ $t('general.industry') }}</label>
-                <div class="final-upper-padding">
-                  <el-select
-                    v-model="industry_type"
-                    filterable
-                    popper-append-to-body="false"
-                    :placeholder="$t('general.select')"
-                    class="compliance-select-final"
-                  >
-                    <el-option
-                      v-for="item in industriesOptions"
-                      :key="item.industry_id"
-                      :label="item.name"
-                      :value="item.industry_id"
-                    />
-                  </el-select>
-                </div>
-              </div>
-
-              <div class="final-upper-padding">
-                <label class="final-label">{{ $t('general.are_you_in_social_media_biz') }}</label>
-                <p style="margin-top:5px;font-size:11px">
-                  <!-- (A business that mainly trades through facebook and instagram e.g.
-                  An online shoe store) -->
-                  {{ $t('general.business_man_trades_facebook') }}
-                </p>
-                <div class="final-upper-padding">
-                  <el-select
-                    v-model="social_media_option"
-                    :placeholder="$t('general.select')"
-                    class="compliance-select-final"
-                  >
-                    <el-option
-                      v-for="item in selectOptions"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
-                </div>
-              </div>
-
-              <div
-                v-if="social_media_option"
-                class="final-upper-padding"
-              >
-                <label class="final-label">{{ $t('general.biz_insta_handle') }}</label>
-                <div class="final-upper-padding">
-                  <input
-                    v-model="ig_media_handle"
-                    class="input-control upgrade-final"
-                    type="text"
-                    placeholder="@mystore"
-                    autocomplete="on"
-                  >
-                </div>
-              </div>
-
-              <div
-                v-if="social_media_option"
-                class="final-upper-padding"
-              >
-                <label class="final-label">{{ $t('general.link_business_face_book_page') }}</label>
-                <div class="final-upper-padding">
-                  <input
-                    v-model="facebook_media_handle"
-                    class="input-control upgrade-final"
-                    type="text"
-                    placeholder="www.facebook.com/pages/mystore"
-                    autocomplete="on"
-                  >
-                </div>
-              </div>
-
-              <div class="final-upper-padding">
-                <label class="final-label">
-                  {{ $t('general.select_primary_vehicle') }}
-                </label>
-                <p class="final-inner">
-                  {{ $t('general.not_restrict_you') }}
-                </p>
-                <div class="final-upper-padding">
-                  <div class="vendors-final-outerline">
-                    <div
-                      class="vendor-final-cards"
-                      :class="{ vendor_active_final: activeTab === 'mbu' }"
-                      @click="selectCard('mbu', 1)"
-                    >
-                      <img
-                        class="vendor-types-final"
-                        :src="getVendorIcon(1)"
-                        alt=""
-                      >
-                    </div>
-                    <div
-                      class="vendor-final-cards"
-                      :class="{ vendor_active_final: activeTab === 'ebu' }"
-                      @click="selectCard('ebu', 2)"
-                    >
-                      <img
-                        class="vendor-types-final"
-                        :src="getVendorIcon(6)"
-                        alt=""
-                      >
-                    </div>
-                    <div
-                      class="vendor-final-cards"
-                      :class="{ vendor_active_final: activeTab === 'fbu' }"
-                      @click="selectCard('fbu', 3)"
-                    >
-                      <img
-                        class="vendor-types-final"
-                        :src="getVendorIcon(25)"
-                        alt=""
-                      >
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -750,6 +765,7 @@ export default {
       updateSetIndustry: false,
       tax_compliance: '',
       social_media_option: '',
+      business_category_option: '',
       ig_media_handle: '',
       facebook_media_handle: '',
       industry_type: '',
@@ -780,6 +796,28 @@ export default {
         {
           value: false,
           label: 'No',
+        },
+      ],
+      businessCategories: [
+        {
+          label: this.$t('general.social_commerce_business'),
+          value: 1,
+          definition: `(${this.$t('general.social_commerce_business_definition')})`,
+        },
+        {
+          label: this.$t('general.Office'),
+          value: 2,
+          definition: `(${this.$t('general.Office_definition')})`,
+        },
+        {
+          label: this.$t('general.Corporate'),
+          value: 3,
+          definition: '',
+        },
+        {
+          label: this.$t('general.None_of_the_above'),
+          value: 0,
+          definition: '',
         },
       ],
       activeClass: -1,
@@ -945,6 +983,9 @@ export default {
       },
       deep: true,
     },
+    business_category_option(val) {
+      this.social_media_option = val === 1;
+    },
   },
 
   created() {
@@ -974,6 +1015,7 @@ export default {
     this.isNewCopAcc();
     this.sessionFrefill();
     this.triggerFetchsuggestions();
+    this.fetchBusinessCategories();
     const session = this.$store.getters.getSession;
     if (session.default === 'biz') {
       this.setDedicatedAccessStatus(true);
@@ -1039,6 +1081,10 @@ export default {
       let isSet = false;
       let kraSection = false;
       let setIndustry = false;
+      const session1 = this.$store.getters.getSession;
+      session1[session1.default].primary_business_unit = 0;
+      session1[session1.default].industry_id = null;
+      this.$store.commit('setSession', session1);
       const session = this.$store.getters.getSession;
       if (Object.keys(session).length > 0) {
         if (session.default === 'biz') {
@@ -1077,6 +1123,22 @@ export default {
         // eslint-disable-next-line no-unused-vars
         (error) => {
           this.industriesOptions = [];
+        },
+      );
+    },
+    fetchBusinessCategories() {
+      const payload = {
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'growth_business_categories',
+      };
+      this.requestIndustries(payload).then(
+        (response) => {
+          console.log(response);
+          // this.industriesOptions = response;
+        },
+        // eslint-disable-next-line no-unused-vars
+        (error) => {
+          // this.industriesOptions = [];
         },
       );
     },
@@ -1716,7 +1778,7 @@ export default {
           this.$t('general.final_setup_error'),
           this.$t('general.enter_valid_kra'),
         );
-      } else if (this.industry_type === '' || this.social_media_option === '') {
+      } else if (this.industry_type === '' || this.social_media_option === '' || this.business_category_option === '') {
         this.doNotification(
           2,
           this.$t('general.final_setup_error'),
@@ -1743,6 +1805,7 @@ export default {
           primary_business_unit: this.primary_business_unit,
           social_media_business: this.social_media_option,
           industry_id: this.industry_type,
+          growth_business_category_id: this.business_category_option,
         };
         if (this.ig_media_handle !== '') {
           payload.instagram_handle = this.ig_media_handle;
@@ -1785,7 +1848,7 @@ export default {
       }
     },
     handleIndustrySetUp() {
-      if (this.industry_type === '' || this.social_media_option === '') {
+      if (this.industry_type === '' || this.social_media_option === '' || this.business_category_option === '') {
         this.doNotification(
           2,
           this.$t('general.final_setup_error'),
@@ -1810,6 +1873,7 @@ export default {
           cop_phone: session[session.default].cop_biz_phone,
           social_media_business: this.social_media_option,
           industry_id: this.industry_type,
+          growth_business_category_id: this.business_category_option,
         };
         if (this.ig_media_handle !== '') {
           payload.instagram_handle = this.ig_media_handle;
@@ -2060,9 +2124,10 @@ cancel-pop-up > div > div > div.el-dialog__header{
  color: #000;
 }
 .final-inner{
- font-size: 12px;
- color: #8F8F8F;
- margin-bottom: 0;
+  font-size: 12px;
+  color: #8F8F8F;
+  margin-bottom: 0;
+  margin-top: 5px;
 }
 .invalid-kra {
   display: block;
@@ -2070,7 +2135,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
   font-size: 14px;
 }
 .final-upper-padding{
-  padding-top: 2%;
+  padding: 2% 0%;
 }
 .finish-setup-outer{
   margin-left: 6%;
@@ -2268,5 +2333,27 @@ cancel-pop-up > div > div > div.el-dialog__header{
   color: black !important;
   margin-bottom: 15px !important;
   font-size: 20px !important;
+}
+.business-categories-options div div ul li {
+  height: 60px;
+  line-height: 10px;
+  color: black !important;
+  background: white !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.business-categories-options-titles {
+  margin: 0px;
+  font-size: 15px;
+}
+.business-categories-options-definitions {
+  font-size: 12px;
+  margin: 0px;
+}
+.vendor-type-icon-labels {
+  text-align: center;
+  margin: 0px 0px 7px 0px;
+  font-size: 12px;
 }
 </style>
