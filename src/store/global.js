@@ -25,6 +25,7 @@ const state = {
   secondary_profile: '',
   pick_up_filled_status: false,
   language: 'en',
+  schedule_status: false,
 };
 
 export default {
