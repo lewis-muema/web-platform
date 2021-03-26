@@ -541,15 +541,15 @@
                   >
                     <el-option
                       v-for="item in businessCategories"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id"
                     >
                       <p class="business-categories-options-titles">
-                        {{ item.label }}
+                        {{ item.name }}
                       </p> <br>
                       <p class="business-categories-options-definitions">
-                        {{ item.definition }}
+                        {{ item.description }}
                       </p>
                     </el-option>
                   </el-select>
@@ -798,28 +798,7 @@ export default {
           label: 'No',
         },
       ],
-      businessCategories: [
-        {
-          label: this.$t('general.social_commerce_business'),
-          value: 1,
-          definition: `(${this.$t('general.social_commerce_business_definition')})`,
-        },
-        {
-          label: this.$t('general.Office'),
-          value: 2,
-          definition: `(${this.$t('general.Office_definition')})`,
-        },
-        {
-          label: this.$t('general.Corporate'),
-          value: 3,
-          definition: '',
-        },
-        {
-          label: this.$t('general.None_of_the_above'),
-          value: 0,
-          definition: '',
-        },
-      ],
+      businessCategories: [],
       activeClass: -1,
       waypoint_type: '',
       locationSavingStatus: false,
@@ -984,7 +963,7 @@ export default {
       deep: true,
     },
     business_category_option(val) {
-      this.social_media_option = val === 1;
+      this.social_media_option = val === 6;
     },
   },
 
@@ -1080,10 +1059,6 @@ export default {
       let isSet = false;
       let kraSection = false;
       let setIndustry = false;
-      const session1 = this.$store.getters.getSession;
-      session1[session1.default].primary_business_unit = 0;
-      session1[session1.default].industry_id = null;
-      this.$store.commit('setSession', session1);
       const session = this.$store.getters.getSession;
       if (Object.keys(session).length > 0) {
         if (session.default === 'biz') {
@@ -1132,12 +1107,10 @@ export default {
       };
       this.requestIndustries(payload).then(
         (response) => {
-          console.log(response);
-          // this.industriesOptions = response;
+          this.businessCategories = response;
         },
-        // eslint-disable-next-line no-unused-vars
         (error) => {
-          // this.industriesOptions = [];
+          this.businessCategories = [];
         },
       );
     },
