@@ -456,6 +456,8 @@ const translations = {
   order_has_been_delivered: 'Your order has been delivered.',
   order_cancelled: 'Order cancelled',
   your_order_cancelled: 'Your order has been cancelled.',
+  your_order_has_been_scheduled: 'Your order has been scheduled',
+  scheduled_by_1_hour: 'Your order has been re scheduled by 1 hour because your rider couldn’t reach you on phone.',
   failed_to_fetch_child_orders: 'Failed to fetch child orders',
 
   // infoComponent

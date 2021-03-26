@@ -60,6 +60,9 @@ export default {
   getLanguage(state) {
     return state.language;
   },
+  getScheduleStatus(state) {
+    return state.schedule_status;
+  },
 };
 
 function isEmpty(obj) {

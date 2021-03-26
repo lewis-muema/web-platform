@@ -447,6 +447,8 @@ const translations = {
   order_has_been_delivered: 'Votre commande a été livrée.',
   order_cancelled: 'La commande a annulée',
   your_order_cancelled: 'Votre commande a été annulée.',
+  your_order_has_been_scheduled: 'FR_Your order has been scheduled',
+  scheduled_by_1_hour: 'FR_Your order has been re scheduled by 1 hour because your rider couldn’t reach you on phone.',
   failed_to_fetch_child_orders: 'Les ordres enfants ont été échoué à récupérer',
   minimum_amount: 'Montant minimum',
   share_status: "Partager l'état",
