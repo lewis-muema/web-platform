@@ -1680,8 +1680,8 @@ export default {
             }
           },
           (error) => {
-            if (Object.prototype.hasOwnProperty.call(error, 'reason')) {
-              this.doNotification(2, this.$t('general.order_completion_failed'), error.reason);
+            if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
+              this.doNotification(2, this.$t('general.order_completion_failed'), error.response.data.reason);
             } else {
               this.doNotification(
                 2,
