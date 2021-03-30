@@ -198,9 +198,9 @@
                         v-model="saveCardState"
                         type="checkbox"
                       >
-                      <span
-                        class="fake-checkbox-label-1"
-                      >{{ $t('general.save_card_for_future_orders') }}</span>
+                      <span class="fake-checkbox-label-1">{{
+                        $t('general.save_card_for_future_orders')
+                      }}</span>
                     </div>
                   </div>
                 </form>
@@ -215,7 +215,11 @@
               <p
                 v-if="country === 'UG'"
                 class="card-option-disabled-notification"
-                v-html="$t('general.technical_mantainance_contact_customer_care', {user_name: user_name})"
+                v-html="
+                  $t('general.technical_mantainance_contact_customer_care', {
+                    user_name: user_name,
+                  })
+                "
               />
             </div>
           </span>
@@ -223,12 +227,12 @@
         <span v-else-if="getPriceRequestObject.payment_option === 2">
           <div class="home-view-payments--postpay">
             <p>{{ $t('general.post_pay_account') }}</p>
-            <p> {{ $t('general.delivery_cost_added_to_balance') }} </p>
+            <p>{{ $t('general.delivery_cost_added_to_balance') }}</p>
           </div>
         </span>
         <span v-else>
           <div class="home-view-payments--postpay">
-            <p>{{ $t('general.delivery_cost_charged_from_balance') }} </p>
+            <p>{{ $t('general.delivery_cost_charged_from_balance') }}</p>
           </div>
         </span>
       </div>
@@ -463,7 +467,9 @@
                   v-for="(data, index) in deliveryNotesData()"
                   :key="index"
                 >
-                  <label class="delivery_label"> {{ $t('general.drop_off_instructions_at_name'), { name: data.name } }} </label>
+                  <label class="delivery_label">
+                    {{ ($t('general.drop_off_instructions_at_name'), { name: data.name }) }}
+                  </label>
                   <div
                     v-if="data.notes !== ''"
                     class="order_summary-wrapper__vendor instructions-notes"
@@ -501,7 +507,7 @@
               <div class="count_down_section">
                 <p class="timeout_text">
                   {{ $t('general.order_will_be_placed') }}
-                  <a class="timeout_count">{{ $t('general.time_seconds',{time: time}) }}</a>
+                  <a class="timeout_count">{{ $t('general.time_seconds', { time: time }) }}</a>
                 </p>
               </div>
 
@@ -1122,7 +1128,11 @@ export default {
         );
       } else {
         this.loading = false;
-        this.doNotification(2, this.$t('general.failed_to_charge_card'), this.$t('general.select_one_of_your_saved_cards'));
+        this.doNotification(
+          2,
+          this.$t('general.failed_to_charge_card'),
+          this.$t('general.select_one_of_your_saved_cards'),
+        );
       }
     },
 
@@ -1213,7 +1223,11 @@ export default {
     },
 
     displayOrderHistory() {
-      if (!this.getDeliveryItem && !this.smallVendors.includes(this.activeVendorPriceData.vendor_id) && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
+      if (
+        !this.getDeliveryItem
+        && !this.smallVendors.includes(this.activeVendorPriceData.vendor_id)
+        && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')
+      ) {
         this.doNotification(
           2,
           this.$t('general.delivery_item_not_set'),
@@ -1644,11 +1658,15 @@ export default {
                   },
                 });
               }
-              const discountedAmount = this.calculateCouponAmount(this.full_order_cost, this.couponDetails);
+              const discountedAmount = this.calculateCouponAmount(
+                this.full_order_cost,
+                this.couponDetails,
+              );
 
               const couponData = {
                 coupon_code: this.couponDetails.couponName,
-                coupon_amount: this.full_order_cost < discountedAmount ? this.full_order_cost : discountedAmount,
+                coupon_amount:
+                  this.full_order_cost < discountedAmount ? this.full_order_cost : discountedAmount,
                 is_cancelled: false,
                 coupon_type: this.couponDetails.couponCodeType,
               };
@@ -1662,8 +1680,8 @@ export default {
             }
           },
           (error) => {
-            if (Object.prototype.hasOwnProperty.call(error, 'reason')) {
-              this.doNotification(2, this.$t('general.order_completion_failed'), error.reason);
+            if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
+              this.doNotification(2, this.$t('general.order_completion_failed'), error.response.data.reason);
             } else {
               this.doNotification(
                 2,
@@ -1745,9 +1763,13 @@ export default {
       }
 
       if (this.couponDetails !== null) {
-        const discountedAmount = this.calculateCouponAmount(this.full_order_cost, this.couponDetails);
+        const discountedAmount = this.calculateCouponAmount(
+          this.full_order_cost,
+          this.couponDetails,
+        );
         payload.promo_code_details = {
-          discount_amount: this.full_order_cost < discountedAmount ? this.full_order_cost : discountedAmount,
+          discount_amount:
+            this.full_order_cost < discountedAmount ? this.full_order_cost : discountedAmount,
           promo_code: this.couponDetails.couponName,
         };
       }
@@ -2041,14 +2063,19 @@ export default {
           }
 
           if (response.status === 200) {
-            this.doNotification('0', this.$t('general.mpesa_payment'), this.$t('general.request_for_payment_sent', { userPhone }));
+            this.doNotification(
+              '0',
+              this.$t('general.mpesa_payment'),
+              this.$t('general.request_for_payment_sent', { userPhone }),
+            );
             this.requestMpesaPaymentPoll();
           } else {
             this.refreshRunningBalance();
             this.doNotification(
               '0',
               this.$t('general.mpesa_payment'),
-              this.$t('general.mpesa_request_failed', { userPhone, referenceNumber }) + this.pending_amount,
+              this.$t('general.mpesa_request_failed', { userPhone, referenceNumber })
+                + this.pending_amount,
             );
             this.payment_state = 0;
             this.loading = false;
@@ -2059,7 +2086,8 @@ export default {
           this.doNotification(
             '0',
             this.$t('general.mpesa_payment'),
-            this.$t('general.mpesa_request_failed', { userPhone, referenceNumber }) + this.pending_amount,
+            this.$t('general.mpesa_request_failed', { userPhone, referenceNumber })
+              + this.pending_amount,
           );
           this.payment_state = 0;
           this.loading = false;
@@ -2118,7 +2146,11 @@ export default {
               pollCount = pollLimit;
               that.payment_state = 0;
               that.loading = false;
-              that.doNotification('1', this.$t('general.payment_successful'), this.$t('general.completing_your_order'));
+              that.doNotification(
+                '1',
+                this.$t('general.payment_successful'),
+                this.$t('general.completing_your_order'),
+              );
               that.doCompleteOrder();
               that.mpesa_payment = false;
               that.mpesa_payment_state = true;
@@ -2333,7 +2365,11 @@ export default {
         && !this.getLoadWeightStatus
         && !Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')
       ) {
-        this.doNotification('2', this.$t('general.invalid_load_weight'), this.$t('general.provide_a_valid_load_weight'));
+        this.doNotification(
+          '2',
+          this.$t('general.invalid_load_weight'),
+          this.$t('general.provide_a_valid_load_weight'),
+        );
         return false;
       }
       return true;
@@ -2503,14 +2539,15 @@ export default {
       } else {
         const calculatedAmount = couponDetails.couponBalance * orderAmount;
         // eslint-disable-next-line max-len
-        amount = calculatedAmount > couponDetails.maxDiscountAmount ? couponDetails.maxDiscountAmount : calculatedAmount;
+        amount = calculatedAmount > couponDetails.maxDiscountAmount
+          ? couponDetails.maxDiscountAmount
+          : calculatedAmount;
       }
 
       const couponAmount = orderAmount < amount ? orderAmount : amount;
       this.payment_method = this.getRunningBalance + couponAmount - orderAmount >= 0 ? 11 : this.payment_method;
       return amount;
     },
-
   },
 };
 </script>

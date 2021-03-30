@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     ...mapActions({ requestPaymentOptionsAction: '$_payment/requestPaymentOptions' }),
-    ...mapMutations({ setCardPaymentStatus: '$_payment/setCardPaymentStatus'}),
+    ...mapMutations({ setCardPaymentStatus: '$_payment/setCardPaymentStatus' }),
 
     getPaymentOptions() {
       const session = this.$store.getters.getSession;
@@ -66,8 +66,8 @@ export default {
           }
         },
         (error) => {
-          console.log('error', error);
-        }
+          throw error;
+        },
       );
     },
   },

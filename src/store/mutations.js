@@ -54,4 +54,7 @@ export default {
   setLanguage(state, status) {
     state.language = status;
   },
+  setScheduleStatus(state, status) {
+    state.schedule_status = status;
+  },
 };

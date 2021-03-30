@@ -33,6 +33,9 @@
                 <p class="infor-top-bar-text stagePassed">
                   {{$t('general.your_order_has_been_scheduled')}}
                 </p>
+                <p v-if="getScheduleStatus">
+                  {{$t('general.scheduled_by_1_hour')}}
+                </p>
                 <p class="eta_data">
                   {{ convertToUTCToLocal(trackingData.date_time) | moment }}
                 </p>
@@ -311,6 +314,7 @@ export default {
       getConfirmEta: '$_orders/$_tracking/getConfirmEta',
       getPickUpEta: '$_orders/$_tracking/getPickUpEta',
       getDeliveryEta: '$_orders/$_tracking/getDeliveryEta',
+      getScheduleStatus: 'getScheduleStatus',
     }),
     orderPlaced() {
       const text = this.$t('general.order_recieved');
