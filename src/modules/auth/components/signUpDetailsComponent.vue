@@ -327,6 +327,7 @@ export default {
       const acceptLanguage = `${val}-${countryCode}`;
       localStorage.setItem('timeLocale', val);
       localStorage.setItem('language', acceptLanguage);
+
     }
   },
   mounted() {
