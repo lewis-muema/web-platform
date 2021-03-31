@@ -676,13 +676,14 @@ import $ from 'jquery';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
 import LoadingComponent from './LoadingComponent.vue';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 let s3 = '';
 
 export default {
   name: 'Transporters',
   components: { LoadingComponent },
-  mixins: [TimezoneMxn, NotificationMxn],
+  mixins: [TimezoneMxn, NotificationMxn, MixpanelMixin],
   data() {
     return {
       quote_text: 'Request for quote',

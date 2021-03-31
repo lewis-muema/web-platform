@@ -142,11 +142,12 @@ import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
 import TimeZoneMxn from '../../../mixins/timezone_mixin';
 import LoadingComponent from './LoadingComponent.vue';
+import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 export default {
   name: 'Dashboard',
   components: { LoadingComponent },
-  mixins: [SessionMxn, NotificationMxn, TimeZoneMxn],
+  mixins: [SessionMxn, NotificationMxn, TimeZoneMxn, MixpanelMixin],
   data() {
     return {
       logs: [],

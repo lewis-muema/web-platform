@@ -481,6 +481,7 @@ import VueTypeahead from 'vue-typeahead';
 import Axios from 'axios';
 import NotificationMxn from '../../../mixins/notification_mixin';
 import LoadingComponent from './LoadingComponent.vue';
+import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 Vue.prototype.$http = Axios;
 
@@ -488,7 +489,7 @@ export default {
   name: 'Transporters',
   components: { LoadingComponent },
   extends: VueTypeahead,
-  mixins: [NotificationMxn],
+  mixins: [NotificationMxn, MixpanelMixin],
   data() {
     return {
       submit_text: 'Find Transporters',

@@ -120,10 +120,11 @@
 import { mapMutations, mapGetters, mapActions } from 'vuex';
 import SessionMxn from '../../mixins/session_mixin';
 import NotificationMxn from '../../mixins/notification_mixin';
+import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
 
 export default {
   name: 'Freight',
-  mixins: [SessionMxn, NotificationMxn],
+  mixins: [SessionMxn, NotificationMxn, MixpanelMixin],
   data() {
     return {
       id_number: '',

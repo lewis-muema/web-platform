@@ -529,11 +529,12 @@
 import { mapGetters, mapActions } from 'vuex';
 import NotificationMxn from '../../../mixins/notification_mixin';
 import LoadingComponent from './LoadingComponent.vue';
+import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 export default {
   name: 'Transporters',
   components: { LoadingComponent },
-  mixins: [NotificationMxn],
+  mixins: [NotificationMxn, MixpanelMixin],
   data() {
     return {
       quote_text: 'Create Shipment Request',
