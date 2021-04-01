@@ -158,6 +158,11 @@ export default {
                   // commit everything to the store
                   // redirect to orders
                   const sessionData = payload;
+                  const locale = sessionData[sessionData.default].preferred_language;
+                  const countryCode = localStorage.getItem('countryCode');
+                  this.$i18n.locale = locale;
+                  const acceptLanguageHeader = `${locale}-${countryCode}`
+                  localStorage.setItem('language', acceptLanguageHeader);
                   const jsonSession = JSON.stringify(sessionData);
                   this.setSession(jsonSession);
                   this.$store.commit('setSession', sessionData);
