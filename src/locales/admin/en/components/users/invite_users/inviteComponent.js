@@ -7,7 +7,7 @@ const en = {
   or: 'or',
   get_invite_link: 'Get an invite link to share',
   send_invites: 'Send Invites',
-  Sending: 'Sending...',
+  sending: 'Sending...',
   add_user: 'Add Users',
   invitations_sent_succesful: 'Invitations sent successfully',
   select_department: 'Please select a department',
