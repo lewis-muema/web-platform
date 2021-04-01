@@ -62,7 +62,12 @@ export default {
       }
       switch (session.default) {
         case 'biz': {
-          payload.cop_user_id = session[session.default].user_id;
+          if (session[session.default].user_type === 2) {
+            payload.cop_user_id = session[session.default].user_id;
+          }
+          else {
+            payload.user_id = session[session.default].user_id; 
+          }
           break;
         }
         default:{
