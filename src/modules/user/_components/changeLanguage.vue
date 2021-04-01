@@ -52,6 +52,45 @@ export default {
   }, 
   methods: {
     ...mapMutations(['setLanguage']),
+    ...mapActions({
+      requestChangeLanguage: '$_user/requestChangeLanguage',
+    }),
+    changeLanguage() {
+      const session = this.getSession;
+      const payload = {
+        preferred_language: this.locale,
+      }
+      switch (session.default) {
+        case 'biz': {
+          payload.cop_user_id = session[session.default].user_id;
+          break;
+        }
+        default:{
+          payload.user_id = session[session.default].user_id;
+          break;
+        }
+      }
+      const fullPayload = {
+        values: payload,
+        vm: this,
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'user-preferences',
+      };
+
+      this.requestChangeLanguage(fullPayload).then((response) => {
+        const level = response.status ? 1 : 3 ;
+        this.message = response.status ? this.$t('general.language_changed') : this.$t('general.something_went_wrong');
+        const notification = { title: '', level, message: this.message };
+        this.displayNotification(notification);
+      },
+      (error) => {
+        const level = 3;
+        this.message = this.$t('general.something_went_wrong');
+        const notification = { title: '', level, message: this.message };
+        this.displayNotification(notification);
+      });
+    }
+
   }
 
 }
