@@ -550,6 +550,7 @@ export default {
       values.password = this.password;
       values.country_code = this.countryCode;
       values.default_currency = this.currency;
+      values.preferred_language = this.locale;
 
       if (this.account === 'biz') {
         values.type = 'biz';
