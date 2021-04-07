@@ -335,7 +335,7 @@
 
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$('general.nearest_collection_center')}}
+                  {{$t('general.nearest_collection_center')}}
                 </div>
                 <div>
                   <textarea
