@@ -1,20 +1,20 @@
 <template lang="html">
   <div class="screen-three">
     <div class="onboarding-user-header">
-      {{$t('passwordValidationComponent.set_password')}}
+      {{$t('passwordValidation.set_password')}}
     </div>
     <div class="form-inputs">
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>{{$t('passwordValidationComponent.create_password')}}</span>
+            <span>{{$t('passwordValidation.create_password')}}</span>
           </label>
           <input
             id="password"
             v-model="password"
             class="form-control"
             type="password"
-            :placeholder="$t('passwordValidationComponent.enter_password')"
+            :placeholder="$t('passwordValidation.enter_password')"
             @focus="setCurrentStep(1)"
           >
         </div>
@@ -22,14 +22,14 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>{{$t('passwordValidationComponent.confirm_password')}}</span>
+            <span>{{$t('passwordValidation.confirm_password')}}</span>
           </label>
           <input
             id="password"
             v-model="cpassword"
             class="form-control"
             type="password"
-            placeholder="$t('passwordValidationComponent.confirm_your_password')"
+            :placeholder="$t('passwordValidation.confirm_your_password')"
             @focus="setCurrentStep(2)"
           >
         </div>
@@ -41,7 +41,7 @@
         class="waves-effect waves-teal btn-flat"
         @click="last_view"
       >
-        {{$t('passwordValidationComponent.back')}}
+        {{$t('passwordValidation.back')}}
       </a>
       <button
         class="btn-submit"
@@ -50,7 +50,7 @@
         :disabled="!is_valid"
         @click="next_view"
       >
-        {{$t('passwordValidationComponent.next')}}
+        {{$t('passwordValidation.Next')}}
       </button>
     </div>
   </div>
