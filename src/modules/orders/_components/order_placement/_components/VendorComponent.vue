@@ -875,7 +875,7 @@
               </span>
 
               <span v-else>
-                {{$t('general.add_inter_recipient_instructions')}}
+                {{$t('general.add_inter_recipient_instruction')}}
               </span>
 
             </p>

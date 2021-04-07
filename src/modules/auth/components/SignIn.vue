@@ -220,7 +220,7 @@ export default {
           },
           (error) => {
             this.login_text = this.$t('signIn.login');
-            this.doNotification(2, this.$t('signIn.login_failed'), this.$t('signIn.login_failed_status'));
+            this.doNotification(2, this.$t('signIn.login_failed'), this.$t('signIn.login_failed_text')); 
           },
         );
       } else {

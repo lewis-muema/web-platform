@@ -193,7 +193,7 @@ const translations = {
   confirm_order_details: 'Confirm your order details',
   pickup_location: 'Pickup Location',
   type_of_order: 'Type of order',
-  type_of_Package_delivered: 'Type of package to be delivered',
+  type_of_package_delivered: 'Type of package to be delivered',
   type_of: 'Type of ',
   approximate_weight: 'Approximate weight of Parcel (Highest in the limit)',
   want_package_picked: 'How do you want your package picked?',

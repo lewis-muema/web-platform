@@ -183,7 +183,7 @@ const translations = {
   confirm_order_details: 'Confirmez les détails de votre commande',
   pickup_location: 'Emplacement de collection',
   type_of_order: 'Type de la commande',
-  type_of_Package_delivered: 'Type de colis à livrer ',
+  type_of_package_delivered: 'Type de colis à livrer ',
   type_of: 'Type de',
   approximate_weight: 'Poids approximatif du colis (le plus élevé dans la limite)',
   want_package_picked: 'Comment voulez-vous que votre colis soit collecter? ',
