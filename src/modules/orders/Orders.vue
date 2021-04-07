@@ -848,7 +848,7 @@ export default {
       }
       let resp = `${this.$t('general.enter_your_business')} ${kraName}`;
       if (session.default === 'peer') {
-        resp = `${this.$t('general.enter_your ')} ${kraName}`;
+        resp = `${this.$t('general.enter_your')} ${kraName}`;
       }
       return resp;
     },
