@@ -63,8 +63,22 @@ export default {
     changeLanguage() {
       const session = this.getSession;
       const payload = {
-        user_id: session[session.default].user_id,
         preferred_language: this.locale,
+      }
+      switch (session.default) {
+        case 'biz': {
+          if (session[session.default].user_type === 2) {
+            payload.cop_user_id = session[session.default].user_id;
+          }
+          else {
+            payload.user_id = session[session.default].user_id; 
+          }
+          break;
+        }
+        default:{
+          payload.user_id = session[session.default].user_id;
+          break;
+        }
       }
       const fullPayload = {
         values: payload,

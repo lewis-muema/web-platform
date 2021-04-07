@@ -65,10 +65,8 @@ const translations = {
   back: 'Back',
   save: 'Save',
   save_card_for_future_orders: 'I want to save my card for future orders',
-  technical_mantainance_still_pay:
-    'Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance.You can still pay for your Sendy deliveries using M-Pesa. Contact Support on +254709779779 for any queries.',
-  technical_mantainance_contact_customer_care:
-    'Dear {{ user_name }}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance.Contact Support on +256393239706 for any queries.',
+  technical_mantainance_still_pay: 'Dear {user_name}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance.You can still pay for your Sendy deliveries using M-Pesa. Contact Support on +254709779779 for any queries.',
+  technical_mantainance_contact_customer_care: 'Dear {user_name}, <br> Card payments will be momentarily unavailable as we undergo technical maintenance.Contact Support on +256393239706 for any queries.',
   post_pay_account: 'This is a postpay account',
   delivery_cost_added_to_balance: 'The delivery costs will be added to your balance.',
   delivery_cost_charged_from_balance: 'The delivery costs will be charged from your balance.',
@@ -195,7 +193,7 @@ const translations = {
   confirm_order_details: 'Confirm your order details',
   pickup_location: 'Pickup Location',
   type_of_order: 'Type of order',
-  type_of_Package_delivered: 'Type of package to be delivered',
+  type_of_package_delivered: 'Type of package to be delivered',
   type_of: 'Type of ',
   approximate_weight: 'Approximate weight of Parcel (Highest in the limit)',
   want_package_picked: 'How do you want your package picked?',
@@ -471,6 +469,8 @@ const translations = {
   order_has_been_delivered: 'Your order has been delivered.',
   order_cancelled: 'Order cancelled',
   your_order_cancelled: 'Your order has been cancelled.',
+  your_order_has_been_scheduled: 'Your order has been scheduled',
+  scheduled_by_1_hour: 'Your order has been re scheduled by 1 hour because your rider couldn’t reach you on phone.',
   failed_to_fetch_child_orders: 'Failed to fetch child orders',
 
   // infoComponent
@@ -805,6 +805,7 @@ const translations = {
   kindly_select_upgrade_proceed: 'Kindly select upgrade option to proceed',
   bikes: 'Bikes',
   trucks_and_vans: 'Trucks and Vans',
+  pickups_trucks_and_vans: 'Pick ups, Vans, Trucks',
   freight: 'Freight',
 
   enter_kra_pin: 'Please enter KRA PIN',
@@ -884,6 +885,10 @@ const translations = {
   edit_pickup_time: 'Edit pick up time error',
   kindly_provide_pickup_time: 'Kindly provide pickup time',
   // Orders.vue
+  business_categories: 'Does your business fall under any of the following categories?',
+  finetune: 'We’ll finetune your account based on your type of business',
+  delivery_option: 'Which delivery option will you mostly be using?',
+  not_restrict_other_delivery_options: 'This will not restrict you from using other delivery options',
   are_you_in_social_media_biz: 'Are you a social commerce business?',
   manage_saved_locations: 'Manage saved {waypointType} locations',
   enter_waypoint_type_location: 'Enter a {waypointType} location',

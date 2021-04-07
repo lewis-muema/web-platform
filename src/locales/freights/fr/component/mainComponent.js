@@ -4,8 +4,8 @@ const fr = {
   transporters: 'transporteurs',
   orders: 'Les commandes',
   settings: 'Parametres',
-  shipment: 'FR_Shipments',
-  activity_log: 'FR_Activity Log',
+  shipment: 'Les expéditions',
+  activity_log: "Journal d'activité",
 
 };
 

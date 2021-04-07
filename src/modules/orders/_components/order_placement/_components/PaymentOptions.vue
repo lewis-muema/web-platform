@@ -69,7 +69,7 @@
               class="home-view-notes-wrapper--item home-view-notes-wrapper--item__row"
             >
               <div
-                v-if="method.name !== 'Promo Code'"
+                v-if="method.payment_method_id !== 3"
                 class="home-view-notes-wrapper--item__option"
               >
                 <div class="home-view-notes-wrapper--item__option-div payment__radio-button-label">
@@ -210,7 +210,7 @@
               <p
                 v-if="country === 'KE'"
                 class="card-option-disabled-notification"
-                v-html="$t('general.technical_mantainance_still_pay, { user_name: user_name }')"
+                v-html="$t('general.technical_mantainance_still_pay', { user_name: user_name })"
               />
               <p
                 v-if="country === 'UG'"
@@ -1680,8 +1680,8 @@ export default {
             }
           },
           (error) => {
-            if (Object.prototype.hasOwnProperty.call(error, 'reason')) {
-              this.doNotification(2, this.$t('general.order_completion_failed'), error.reason);
+            if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
+              this.doNotification(2, this.$t('general.order_completion_failed'), error.response.data.reason);
             } else {
               this.doNotification(
                 2,

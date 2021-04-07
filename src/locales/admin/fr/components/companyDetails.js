@@ -1,10 +1,10 @@
 
 const fr = {
-  edit: 'FR_Edit Company Details.',
-  company_name: 'FR_Company Name',
-  contact_person: 'FR_Name of contact person',
-  email_contact_person: 'FR_Email of Contact person',
-  phone_contact_person: 'FR_Phone number of Contact person',
+  edit: 'Modifier les détails de l’entreprise.',
+  company_name: 'Nom de l’entreprise',
+  contact_person: 'Prénom de la personne de contact',
+  email_contact_person: 'Adresse e-mail de la personne de contact',
+  phone_contact_person: 'Numéro de téléphone de la personne de contact',
   save: 'Enregistrer',
   phone: 'Saisir un numéro de téléphone',
   detail_saved: 'Détails enregistrés! ',
