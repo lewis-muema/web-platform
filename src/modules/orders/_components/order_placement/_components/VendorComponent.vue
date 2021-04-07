@@ -1668,6 +1668,7 @@ export default {
     },
     dispatchInterCountyLoad() {
       this.setIntercountyLoadType(this.intercounty_load);
+      this.setDeliveryItem(this.intercounty_load);
       if (this.intercounty_load === 'DOCUMENT') {
         this.setIntercountyParcelSize(this.activeVendorPriceData.inter_county_info.max_weight);
       }
