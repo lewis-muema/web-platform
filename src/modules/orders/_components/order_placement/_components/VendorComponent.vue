@@ -335,7 +335,7 @@
 
               <div class="home-view-truck-options-inner-wrapper">
                 <div class="home-view-truck-options-label">
-                  {{$('general.nearest_collection_center')}}
+                  {{$t('general.nearest_collection_center')}}
                 </div>
                 <div>
                   <textarea
@@ -1668,6 +1668,7 @@ export default {
     },
     dispatchInterCountyLoad() {
       this.setIntercountyLoadType(this.intercounty_load);
+      this.setDeliveryItem(this.intercounty_load);
       if (this.intercounty_load === 'DOCUMENT') {
         this.setIntercountyParcelSize(this.activeVendorPriceData.inter_county_info.max_weight);
       }
