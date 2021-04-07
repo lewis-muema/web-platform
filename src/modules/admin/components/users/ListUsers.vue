@@ -194,7 +194,7 @@ export default {
         } else if (resp === 2) {
           resp = this.$t('listUsers.deactivated');
         } else if (resp === 0) {
-          resp = this.$t('listUsers.deleated');
+          resp = this.$t('listUsers.deleted');
         }
       }
       return resp;
