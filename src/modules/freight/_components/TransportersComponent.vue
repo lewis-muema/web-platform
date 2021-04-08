@@ -481,6 +481,7 @@ import VueTypeahead from 'vue-typeahead';
 import Axios from 'axios';
 import NotificationMxn from '../../../mixins/notification_mixin';
 import LoadingComponent from './LoadingComponent.vue';
+import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 Vue.prototype.$http = Axios;
 
@@ -488,7 +489,7 @@ export default {
   name: 'Transporters',
   components: { LoadingComponent },
   extends: VueTypeahead,
-  mixins: [NotificationMxn],
+  mixins: [NotificationMxn, MixpanelMixin],
   data() {
     return {
       submit_text: 'Find Transporters',
@@ -567,6 +568,7 @@ export default {
       process_shipment: false,
       carrier_options: [],
       carrier_option_value: [],
+      currency: 'USD',
     };
   },
   computed: {
@@ -627,6 +629,16 @@ export default {
     this.fetchOwnersListing();
     this.fetchGoodsTypes();
     this.fetchCarrierTypes();
+    const session = this.$store.getters.getSession;
+    this.trackMixpanelEvent('Transporters Page Viewed', {
+      'User Id': session[session.default].user_id,
+      Email: session[session.default].user_email,
+      Phone: session[session.default].user_phone,
+      Name: session[session.default].user_name,
+      'Client Type': 'Web',
+      'Client Mode': session.default === 'peer' ? 'Peer' : 'Cop',
+      Device: 'Desktop',
+    });
   },
   methods: {
     ...mapActions({
@@ -830,6 +842,21 @@ export default {
         destination: this.order_path[1].address_components,
       };
 
+      const session = this.$store.getters.getSession;
+      this.trackMixpanelEvent('Transporters Searched', {
+        userId: session[session.default].user_id,
+        email: session[session.default].user_email,
+        phone: session[session.default].user_phone,
+        name: session[session.default].user_name,
+        pickUp: this.order_path[0].address_components,
+        destination: this.order_path[1].address_components,
+        carrierType: parseInt(this.truck_type, 10),
+        cargoType: parseInt(this.goods, 10),
+        clientType: 'Web',
+        clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+        device: 'Desktop',
+      });
+
       const fullPayload = {
         values: payload,
         app: 'PARTNERS_APP',
@@ -949,7 +976,7 @@ export default {
         destination: this.main_order_path[1],
         pickup_time: this.moment(this.pick_up_time).format('DD-MM-YYYY HH:mm:ss'),
         bidding_deadline: this.moment(this.quotation_time).format('DD-MM-YYYY HH:mm:ss'),
-        currency: 'USD',
+        currency: this.currency,
         pickup_facility: this.facility_location,
         total_trucks: this.trucks_no,
         tonnes_per_truck: parseInt(this.load_weight, 10),
@@ -981,6 +1008,22 @@ export default {
           if (workingResponse.status) {
             this.doNotification(1, 'Shipment sent successfully!', '');
             this.$router.push('/freight/orders');
+            this.trackMixpanelEvent('Shipment Request Placed', {
+              userId: session[session.default].user_id,
+              email: session[session.default].user_email,
+              phone: session[session.default].user_phone,
+              name: session[session.default].user_name,
+              isNegotiable: this.negotiability,
+              amountPerTruck: this.bid_amount,
+              currency: this.currency,
+              pickupFacility: this.main_order_path[0],
+              destinationFacility: this.main_order_path[1],
+              trucksNeeded: this.trucks_no,
+              transporters: this.filteredCheckedOwners,
+              clientType: 'Web',
+              clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+              device: 'Desktop',
+            });
           } else {
             this.doNotification(2, 'Unable to request for shipment!', workingResponse.data.message);
           }
