@@ -676,13 +676,14 @@ import $ from 'jquery';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
 import LoadingComponent from './LoadingComponent.vue';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 let s3 = '';
 
 export default {
   name: 'Transporters',
   components: { LoadingComponent },
-  mixins: [TimezoneMxn, NotificationMxn],
+  mixins: [TimezoneMxn, NotificationMxn, MixpanelMixin],
   data() {
     return {
       quote_text: 'Request for quote',
@@ -756,10 +757,20 @@ export default {
   },
   mounted() {
     this.loading = true;
-    const sessionData = this.$store.getters.getSession;
-    if (Object.keys(sessionData).length > 0) {
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0) {
       this.fetchOrderDetail(this.$route.params.id);
       this.initiateS3();
+      this.trackMixpanelEvent('Shipments Info Viewed', {
+        userId: session[session.default].user_id,
+        email: session[session.default].user_email,
+        phone: session[session.default].user_phone,
+        name: session[session.default].user_name,
+        shipmentId: parseInt(this.$route.params.id, 10),
+        clientType: 'Web',
+        clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+        device: 'Desktop',
+      });
     }
   },
   methods: {
@@ -1011,6 +1022,17 @@ export default {
 
           if (workingResponse.status) {
             this.doNotification(1, 'Bid rejected successfully!', '');
+            this.trackMixpanelEvent('Bid Rejected', {
+              userId: session[session.default].user_id,
+              email: session[session.default].user_email,
+              phone: session[session.default].user_phone,
+              name: session[session.default].user_name,
+              shipmentId: parseInt(this.$route.params.id, 10),
+              clientType: 'Web',
+              quotationId: val.quotation_id,
+              clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+              device: 'Desktop',
+            });
           } else {
             this.doNotification(2, 'Unable to reject bid!', workingResponse.message);
           }
@@ -1078,6 +1100,17 @@ export default {
 
           if (workingResponse.status) {
             this.doNotification(1, 'Shipment awarded successfully!', '');
+            this.trackMixpanelEvent('Bid Accepted', {
+              userId: session[session.default].user_id,
+              email: session[session.default].user_email,
+              phone: session[session.default].user_phone,
+              name: session[session.default].user_name,
+              shipmentId: parseInt(this.$route.params.id, 10),
+              clientType: 'Web',
+              quotationId: this.awardedTransporter.quotation_id,
+              clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+              device: 'Desktop',
+            });
           } else {
             this.doNotification(2, 'Unable to award shipment!', workingResponse.data.message);
           }

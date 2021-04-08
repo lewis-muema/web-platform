@@ -421,6 +421,7 @@ import $ from 'jquery';
 import VueTypeahead from 'vue-typeahead';
 import Axios from 'axios';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 Vue.prototype.$http = Axios;
 
@@ -429,7 +430,7 @@ let s3 = '';
 export default {
   name: 'CreateFreightOrder',
   extends: VueTypeahead,
-  mixins: [NotificationMxn],
+  mixins: [NotificationMxn, MixpanelMixin],
   data() {
     return {
       submit_text: 'Create Order',

@@ -141,10 +141,11 @@ import { mapGetters } from 'vuex';
 import axios from 'axios';
 import SessionMxn from '../../mixins/session_mixin';
 import EventsMixin from '../../mixins/events_mixin';
+import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
 
 export default {
   name: 'MainHeader',
-  mixins: [SessionMxn, EventsMixin],
+  mixins: [SessionMxn, EventsMixin, MixpanelMixin],
   data() {
     return {
       switchValid: false,
@@ -300,6 +301,19 @@ export default {
           'Client Type': 'Web Platform',
           'User Email': session[session.default].user_email,
           'User Phone': session[session.default].user_phone,
+        });
+      }
+
+      if (route === '/freight') {
+        const session = this.$store.getters.getSession;
+        this.trackMixpanelEvent('Freight Tab Navigated', {
+          userId: session[session.default].user_id,
+          email: session[session.default].user_email,
+          phone: session[session.default].user_phone,
+          name: session[session.default].user_name,
+          clientType: 'Web',
+          clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+          device: 'Desktop',
         });
       }
       let eventLabel;

@@ -133,10 +133,11 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 export default {
   name: 'Settings',
-  mixins: [NotificationMxn],
+  mixins: [NotificationMxn, MixpanelMixin],
   data() {
     return {
       showApproverDialog: false,
