@@ -150,7 +150,18 @@ export default {
     },
   },
   mounted() {
+    const session = this.$store.getters.getSession;
     this.populateFreightOrders();
+
+    this.trackMixpanelEvent('Shipments Page Viewed', {
+      userId: session[session.default].user_id,
+      email: session[session.default].user_email,
+      phone: session[session.default].user_phone,
+      name: session[session.default].user_name,
+      clientType: 'Web',
+      clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+      device: 'Desktop',
+    });
   },
   methods: {
     ...mapMutations({

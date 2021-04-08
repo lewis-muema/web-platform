@@ -301,6 +301,19 @@ export default {
           'User Phone': session[session.default].user_phone,
         });
       }
+
+      if (route === '/freight') {
+        const session = this.$store.getters.getSession;
+        this.trackMixpanelEvent('Freight Tab Navigated', {
+          userId: session[session.default].user_id,
+          email: session[session.default].user_email,
+          phone: session[session.default].user_phone,
+          name: session[session.default].user_name,
+          clientType: 'Web',
+          clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+          device: 'Desktop',
+        });
+      }
       let eventLabel;
       switch (route) {
         case '/user/upgrade_acc':

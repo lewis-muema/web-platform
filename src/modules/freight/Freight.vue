@@ -359,6 +359,16 @@ export default {
 
       if (!isSet) {
         this.$router.push('/freight/verify');
+      } else {
+        this.trackMixpanelEvent('Freight Application Started', {
+          userId: session[session.default].user_id,
+          email: session[session.default].user_email,
+          phone: session[session.default].user_phone,
+          name: session[session.default].user_name,
+          clientType: 'Web',
+          clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+          device: 'Desktop',
+        });
       }
     },
     fetchIndustries() {
@@ -465,6 +475,15 @@ export default {
             this.setSession(newSession);
             const level = 1; // success
             this.message = 'Account information accepted!';
+            this.trackMixpanelEvent('Freight Application Submitted', {
+              userId: session[session.default].user_id,
+              email: session[session.default].user_email,
+              phone: session[session.default].user_phone,
+              name: session[session.default].user_name,
+              clientType: 'Web',
+              clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+              device: 'Desktop',
+            });
             const notification = {
               title: '',
               level,

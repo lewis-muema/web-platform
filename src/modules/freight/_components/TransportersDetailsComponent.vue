@@ -604,6 +604,7 @@ export default {
       process_shipment: false,
       carrier_options: [],
       carrier_option_value: [],
+      currency: 'USD',
     };
   },
   computed: {
@@ -639,10 +640,21 @@ export default {
     this.DOM = process;
   },
   mounted() {
+    const session = this.$store.getters.getSession;
     this.loading = true;
     this.fetchOwnerDetail();
     this.fetchGoodsTypes();
     this.fetchCarrierTypes();
+    this.trackMixpanelEvent('Transporter Info Viewed', {
+      userId: session[session.default].user_id,
+      email: session[session.default].user_email,
+      phone: session[session.default].user_phone,
+      name: session[session.default].user_name,
+      transporterId: parseInt(this.$route.params.id, 10),
+      clientType: 'Web',
+      clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+      device: 'Desktop',
+    });
   },
   methods: {
     ...mapActions({
@@ -934,7 +946,7 @@ export default {
         destination: this.main_order_path[1],
         pickup_time: this.moment(this.pick_up_time).format('DD-MM-YYYY HH:mm:ss'),
         bidding_deadline: this.moment(this.quotation_time).format('DD-MM-YYYY HH:mm:ss'),
-        currency: 'USD',
+        currency: this.currency,
         pickup_facility: this.facility_location,
         total_trucks: this.trucks_no,
         tonnes_per_truck: parseInt(this.load_weight, 10),
@@ -966,6 +978,22 @@ export default {
           if (workingResponse.status) {
             this.doNotification(1, 'Shipment sent successfully!', '');
             this.$router.push('/freight/orders');
+            this.trackMixpanelEvent('Shipment Request Placed', {
+              userId: session[session.default].user_id,
+              email: session[session.default].user_email,
+              phone: session[session.default].user_phone,
+              name: session[session.default].user_name,
+              isNegotiable: this.negotiability,
+              amountPerTruck: this.bid_amount,
+              currency: this.currency,
+              pickupFacility: this.main_order_path[0],
+              destinationFacility: this.main_order_path[1],
+              trucksNeeded: this.trucks_no,
+              transporters: this.filteredCheckedOwners,
+              clientType: 'Web',
+              clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+              device: 'Desktop',
+            });
           } else {
             this.doNotification(2, 'Unable to request for shipment!', workingResponse.data.message);
           }
