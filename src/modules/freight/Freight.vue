@@ -475,6 +475,12 @@ export default {
             this.setSession(newSession);
             const level = 1; // success
             this.message = 'Account information accepted!';
+            const notification = {
+              title: '',
+              level,
+              message: this.message,
+            }; // notification object
+            this.displayNotification(notification);
             this.trackMixpanelEvent('Freight Application Submitted', {
               userId: session[session.default].user_id,
               email: session[session.default].user_email,
@@ -484,12 +490,6 @@ export default {
               clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
               device: 'Desktop',
             });
-            const notification = {
-              title: '',
-              level,
-              message: this.message,
-            }; // notification object
-            this.displayNotification(notification);
             this.$router.push('/freight/verify');
           } else {
             const level = 3;
