@@ -120,10 +120,11 @@
 import { mapMutations, mapGetters, mapActions } from 'vuex';
 import SessionMxn from '../../mixins/session_mixin';
 import NotificationMxn from '../../mixins/notification_mixin';
+import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
 
 export default {
   name: 'Freight',
-  mixins: [SessionMxn, NotificationMxn],
+  mixins: [SessionMxn, NotificationMxn, MixpanelMixin],
   data() {
     return {
       id_number: '',
@@ -358,6 +359,16 @@ export default {
 
       if (!isSet) {
         this.$router.push('/freight/verify');
+      } else {
+        this.trackMixpanelEvent('Freight Application Started', {
+          userId: session[session.default].user_id,
+          email: session[session.default].user_email,
+          phone: session[session.default].user_phone,
+          name: session[session.default].user_name,
+          clientType: 'Web',
+          clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+          device: 'Desktop',
+        });
       }
     },
     fetchIndustries() {
@@ -472,6 +483,15 @@ export default {
               message: this.message,
             }; // notification object
             this.displayNotification(notification);
+            this.trackMixpanelEvent('Freight Application Submitted', {
+              userId: session[session.default].user_id,
+              email: session[session.default].user_email,
+              phone: session[session.default].user_phone,
+              name: session[session.default].user_name,
+              clientType: 'Web',
+              clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+              device: 'Desktop',
+            });
             this.$router.push('/freight/verify');
           } else {
             const level = 3;

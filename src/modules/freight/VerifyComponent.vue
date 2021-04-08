@@ -58,11 +58,12 @@
 <script>
 import { mapActions } from 'vuex';
 import SessionMxn from '../../mixins/session_mixin';
+import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
 import NotificationMxn from '../../mixins/notification_mixin';
 
 export default {
   name: 'TermsAndCondition',
-  mixins: [SessionMxn, NotificationMxn],
+  mixins: [SessionMxn, NotificationMxn, MixpanelMixin],
 
   data() {
     return {
