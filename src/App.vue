@@ -15,6 +15,8 @@ import * as Sentry from '@sentry/browser';
 import Vue from 'vue';
 import firebase from 'firebase/app';
 import { mapGetters } from 'vuex';
+import VeeValidate, { Validator }  from 'vee-validate';
+import fr from 'vee-validate/dist/locale/fr';
 
 const ENV = process.env.CONFIGS_ENV;
 
@@ -30,6 +32,7 @@ export default {
     ...mapGetters({
       getSession: 'getSession',
       getPickUpFilledStatus: 'getPickUpFilledStatus',
+      getLanguage: 'getLanguage',
     }),
     notification_status() {
       return this.$store.getters.getNotificationStatus;
@@ -61,6 +64,11 @@ export default {
         this.autoPopBeacon(2);
       }
     },
+    getLanguage(val) {
+      if (val === 'fr') {
+        Validator.localize('fr', fr);
+      }
+    },
   },
   mounted() {
     // beacon click listener
@@ -83,6 +91,9 @@ export default {
         // ...
       }
     });
+    if (this.getLanguage === 'fr') {
+      Validator.localize('fr', fr);
+    }
   },
   beforeMount() {
     if (ENV.DOMAIN !== 'localhost') {
