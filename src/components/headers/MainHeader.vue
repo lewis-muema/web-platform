@@ -141,10 +141,11 @@ import { mapGetters } from 'vuex';
 import axios from 'axios';
 import SessionMxn from '../../mixins/session_mixin';
 import EventsMixin from '../../mixins/events_mixin';
+import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
 
 export default {
   name: 'MainHeader',
-  mixins: [SessionMxn, EventsMixin],
+  mixins: [SessionMxn, EventsMixin, MixpanelMixin],
   data() {
     return {
       switchValid: false,
