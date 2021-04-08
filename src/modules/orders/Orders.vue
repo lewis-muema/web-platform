@@ -670,7 +670,7 @@
               >
                 <label
                   class="final-label"
-                >{{ $t('general.enter_your_business') }} {{ fetchKraHeader }}</label>
+                >{{ fetchKraHeader }}</label>
                 <div class="final-upper-padding">
                   <input
                     v-model="kra_pin"
