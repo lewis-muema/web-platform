@@ -504,52 +504,6 @@
                 {{ $t('general.finish_account_setup') }}
               </p>
 
-              <div v-if="updateKraSection">
-                <div class="">
-                  <label class="final-label">{{ $t('general.does_biz_file_vat_optional') }}</label>
-
-                  <div class="final-upper-padding">
-                    <el-select
-                      v-model="tax_compliance"
-                      :placeholder="$t('general.select')"
-                      class="compliance-select-final"
-                    >
-                      <el-option
-                        v-for="item in selectOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      />
-                    </el-select>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                v-if="tax_compliance"
-                class="final-upper-padding"
-              >
-                <label
-                  class="final-label"
-                >{{ $t('general.enter_your_business') }} {{ fetchKraHeader }}</label>
-                <div class="final-upper-padding">
-                  <input
-                    v-model="kra_pin"
-                    class="input-control upgrade-final"
-                    type="text"
-                    name="kra_pin"
-                    :placeholder="$t('general.pin')"
-                    autocomplete="on"
-                  >
-                  <span
-                    v-show="!valid_kra_pin"
-                    class="invalid-kra"
-                  >
-                    {{ kraFailResponse }}
-                  </span>
-                </div>
-              </div>
-
               <div
                 v-if="updateSetIndustry"
                 class="final-upper-padding"
@@ -574,24 +528,30 @@
               </div>
 
               <div class="final-upper-padding">
-                <label class="final-label">{{ $t('general.are_you_in_social_media_biz') }}</label>
-                <p style="margin-top:5px;font-size:11px">
-                  <!-- (A business that mainly trades through facebook and instagram e.g.
-                  An online shoe store) -->
-                  {{ $t('general.business_man_trades_facebook') }}
+                <label class="final-label">{{ $t('general.business_categories') }}</label>
+                <p class="final-inner">
+                  ({{ $t('general.finetune') }})
                 </p>
                 <div class="final-upper-padding">
                   <el-select
-                    v-model="social_media_option"
+                    v-model="business_category_option"
                     :placeholder="$t('general.select')"
                     class="compliance-select-final"
+                    popper-class="business-categories-options"
                   >
                     <el-option
-                      v-for="item in selectOptions"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
+                      v-for="item in businessCategories"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id"
+                    >
+                      <p class="business-categories-options-titles">
+                        {{ item.name }}
+                      </p> <br>
+                      <p class="business-categories-options-definitions">
+                        {{ item.description }}
+                      </p>
+                    </el-option>
                   </el-select>
                 </div>
               </div>
@@ -630,10 +590,10 @@
 
               <div class="final-upper-padding">
                 <label class="final-label">
-                  {{ $t('general.select_primary_vehicle') }}
+                  {{ $t('general.delivery_option') }}
                 </label>
                 <p class="final-inner">
-                  {{ $t('general.not_restrict_you') }}
+                  ({{ $t('general.not_restrict_other_delivery_options') }})
                 </p>
                 <div class="final-upper-padding">
                   <div class="vendors-final-outerline">
@@ -647,6 +607,9 @@
                         :src="getVendorIcon(1)"
                         alt=""
                       >
+                      <p class="vendor-type-icon-labels">
+                        {{ $t('general.bikes') }}
+                      </p>
                     </div>
                     <div
                       class="vendor-final-cards"
@@ -658,6 +621,9 @@
                         :src="getVendorIcon(6)"
                         alt=""
                       >
+                      <p class="vendor-type-icon-labels">
+                        {{ $t('general.pickups_trucks_and_vans') }}
+                      </p>
                     </div>
                     <div
                       class="vendor-final-cards"
@@ -669,8 +635,57 @@
                         :src="getVendorIcon(25)"
                         alt=""
                       >
+                      <p class="vendor-type-icon-labels">
+                        {{ $t('general.freight') }}
+                      </p>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <div v-if="updateKraSection">
+                <div class="">
+                  <label class="final-label">{{ $t('general.does_biz_file_vat_optional') }}</label>
+
+                  <div class="final-upper-padding">
+                    <el-select
+                      v-model="tax_compliance"
+                      :placeholder="$t('general.select')"
+                      class="compliance-select-final"
+                    >
+                      <el-option
+                        v-for="item in selectOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                v-if="tax_compliance"
+                class="final-upper-padding"
+              >
+                <label
+                  class="final-label"
+                >{{ fetchKraHeader }}</label>
+                <div class="final-upper-padding">
+                  <input
+                    v-model="kra_pin"
+                    class="input-control upgrade-final"
+                    type="text"
+                    name="kra_pin"
+                    :placeholder="$t('general.pin')"
+                    autocomplete="on"
+                  >
+                  <span
+                    v-show="!valid_kra_pin"
+                    class="invalid-kra"
+                  >
+                    {{ kraFailResponse }}
+                  </span>
                 </div>
               </div>
 
@@ -750,6 +765,7 @@ export default {
       updateSetIndustry: false,
       tax_compliance: '',
       social_media_option: '',
+      business_category_option: '',
       ig_media_handle: '',
       facebook_media_handle: '',
       industry_type: '',
@@ -782,6 +798,7 @@ export default {
           label: 'No',
         },
       ],
+      businessCategories: [],
       activeClass: -1,
       waypoint_type: '',
       locationSavingStatus: false,
@@ -945,6 +962,9 @@ export default {
       },
       deep: true,
     },
+    business_category_option(val) {
+      this.social_media_option = val === 6;
+    },
   },
 
   created() {
@@ -974,6 +994,7 @@ export default {
     this.isNewCopAcc();
     this.sessionFrefill();
     this.triggerFetchsuggestions();
+    this.fetchBusinessCategories();
     const session = this.$store.getters.getSession;
     if (session.default === 'biz') {
       this.setDedicatedAccessStatus(true);
@@ -1077,6 +1098,20 @@ export default {
         // eslint-disable-next-line no-unused-vars
         (error) => {
           this.industriesOptions = [];
+        },
+      );
+    },
+    fetchBusinessCategories() {
+      const payload = {
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'growth_business_categories',
+      };
+      this.requestIndustries(payload).then(
+        (response) => {
+          this.businessCategories = response;
+        },
+        (error) => {
+          this.businessCategories = [];
         },
       );
     },
@@ -1716,7 +1751,7 @@ export default {
           this.$t('general.final_setup_error'),
           this.$t('general.enter_valid_kra'),
         );
-      } else if (this.industry_type === '' || this.social_media_option === '') {
+      } else if (this.industry_type === '' || this.social_media_option === '' || this.business_category_option === '') {
         this.doNotification(
           2,
           this.$t('general.final_setup_error'),
@@ -1743,6 +1778,7 @@ export default {
           primary_business_unit: this.primary_business_unit,
           social_media_business: this.social_media_option,
           industry_id: this.industry_type,
+          growth_business_category_id: this.business_category_option,
         };
         if (this.ig_media_handle !== '') {
           payload.instagram_handle = this.ig_media_handle;
@@ -1785,7 +1821,7 @@ export default {
       }
     },
     handleIndustrySetUp() {
-      if (this.industry_type === '' || this.social_media_option === '') {
+      if (this.industry_type === '' || this.social_media_option === '' || this.business_category_option === '') {
         this.doNotification(
           2,
           this.$t('general.final_setup_error'),
@@ -1810,6 +1846,7 @@ export default {
           cop_phone: session[session.default].cop_biz_phone,
           social_media_business: this.social_media_option,
           industry_id: this.industry_type,
+          growth_business_category_id: this.business_category_option,
         };
         if (this.ig_media_handle !== '') {
           payload.instagram_handle = this.ig_media_handle;
@@ -2060,9 +2097,10 @@ cancel-pop-up > div > div > div.el-dialog__header{
  color: #000;
 }
 .final-inner{
- font-size: 12px;
- color: #8F8F8F;
- margin-bottom: 0;
+  font-size: 12px;
+  color: #8F8F8F;
+  margin-bottom: 0;
+  margin-top: 5px;
 }
 .invalid-kra {
   display: block;
@@ -2070,7 +2108,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
   font-size: 14px;
 }
 .final-upper-padding{
-  padding-top: 2%;
+  padding: 2% 0%;
 }
 .finish-setup-outer{
   margin-left: 6%;
@@ -2268,5 +2306,27 @@ cancel-pop-up > div > div > div.el-dialog__header{
   color: black !important;
   margin-bottom: 15px !important;
   font-size: 20px !important;
+}
+.business-categories-options div div ul li {
+  height: 60px;
+  line-height: 10px;
+  color: black !important;
+  background: white !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.business-categories-options-titles {
+  margin: 0px;
+  font-size: 15px;
+}
+.business-categories-options-definitions {
+  font-size: 12px;
+  margin: 0px;
+}
+.vendor-type-icon-labels {
+  text-align: center;
+  margin: 0px 0px 7px 0px;
+  font-size: 12px;
 }
 </style>

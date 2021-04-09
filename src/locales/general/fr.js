@@ -761,6 +761,7 @@ const translations = {
   kindly_select_upgrade_proceed: 'Veuillez sélectionner l’option de mise à niveau pour continuer',
   bikes: 'Motomotocyclistes',
   trucks_and_vans: 'Camions et  Fourgonnettes. ',
+  pickups_trucks_and_vans: 'FR_Pick ups, Vans, Trucks',
   freight: 'Fret',
 
   enter_kra_pin: "Veuillez entrer un NIP de l'administration fiscale kényane (KRA) ",
@@ -836,6 +837,10 @@ const translations = {
   pickup_time_update_failed: "Échec de la mise à jour de l'heure de la collection",
   edit_pickup_time: "Modifier l'erreur d'heure de collection",
   kindly_provide_pickup_time: "Veuillez fournir l'heure de la collection de la commande",
+  business_categories: 'FR_Does your business fall under any of the following categories?',
+  finetune: 'FR_We’ll finetune your account based on your type of business',
+  delivery_option: 'FR_Which delivery option will you mostly be using?',
+  not_restrict_other_delivery_options: 'FR_This will not restrict you from using other delivery options',
   are_you_in_social_media_biz: 'Êtes-vous une entreprise de commerce social?',
   manage_saved_locations: 'Gérer les emplacements {waypointType} enregistrés',
   enter_waypoint_type_location: 'Entrez un emplacement {waypointType}',
