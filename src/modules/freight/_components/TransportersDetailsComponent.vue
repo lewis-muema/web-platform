@@ -434,17 +434,26 @@
                         How much do you want to pay per truck?
                       </p>
                       <div class="freight-input">
-                        <div class="freight-input-icon">
-                          <span>USD</span>
-                        </div>
-                        <div class="freight-input-area">
-                          <input
-                            v-model.trim="bid_amount"
-                            type="number"
-                            name="amount"
-                            class="transporter-selector freight-selector"
+                        <el-input
+                          v-model.trim="bid_amount"
+                          placeholder="Please input amount"
+                          class="transporter-selector freight-selector"
+                          min="0"
+                          type="number"
+                        >
+                          <el-select
+                            slot="prepend"
+                            v-model="currency"
+                            placeholder="Select"
                           >
-                        </div>
+                            <el-option
+                              v-for="value in supported_currencies"
+                              :key="value.code"
+                              :label="value.currency_code"
+                              :value="value.currency_code"
+                            />
+                          </el-select>
+                        </el-input>
                       </div>
                     </div>
 
@@ -605,6 +614,12 @@ export default {
       carrier_options: [],
       carrier_option_value: [],
       currency: 'USD',
+      supported_currencies: [
+        {
+          country_id: 2,
+          currency_code: 'USD',
+        },
+      ],
     };
   },
   computed: {
@@ -645,6 +660,7 @@ export default {
     this.fetchOwnerDetail();
     this.fetchGoodsTypes();
     this.fetchCarrierTypes();
+    this.fetchCurrencies();
     this.trackMixpanelEvent('Transporter Info Viewed', {
       userId: session[session.default].user_id,
       email: session[session.default].user_email,
@@ -698,6 +714,32 @@ export default {
           );
           this.backToTransporters();
           this.owner_detail = [];
+        },
+      );
+    },
+    fetchCurrencies() {
+      this.$store.dispatch('$_freight/requestSupportedCountries').then(
+        (response) => {
+          if (response.length > 0) {
+            for (let i = 0; i < response.length; i++) {
+              this.supported_currencies.push(response[i]);
+            }
+          } else {
+            this.supported_currencies = [
+              {
+                country_id: 2,
+                currency_code: 'USD',
+              },
+            ];
+          }
+        },
+        (error) => {
+          this.supported_currencies = [
+            {
+              country_id: 2,
+              currency_code: 'USD',
+            },
+          ];
         },
       );
     },
