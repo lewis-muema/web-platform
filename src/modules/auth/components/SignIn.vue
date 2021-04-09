@@ -158,8 +158,9 @@ export default {
                   // commit everything to the store
                   // redirect to orders
                   const sessionData = payload;
-                  const locale = sessionData[sessionData.default].preferred_language;
-                  const countryCode = localStorage.getItem('countryCode');
+                  const locale = sessionData[sessionData.default].preferred_language === null ? 'en' : sessionData[sessionData.default].preferred_language;
+                  const countryCode = sessionData[sessionData.default].country_code === null ? 'KE' : sessionData[sessionData.default].country_code;
+                  localStorage.setItem('countryCode', countryCode);
                   this.$i18n.locale = locale;
                   const acceptLanguageHeader = `${locale}-${countryCode}`
                   localStorage.setItem('language', acceptLanguageHeader);
