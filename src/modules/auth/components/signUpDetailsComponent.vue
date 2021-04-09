@@ -234,7 +234,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
@@ -325,9 +325,9 @@ export default {
       this.$i18n.locale = val;
       const countryCode = localStorage.getItem('countryCode');
       const acceptLanguage = `${val}-${countryCode}`;
+      this.setLanguage(val);
       localStorage.setItem('timeLocale', val);
       localStorage.setItem('language', acceptLanguage);
-
     }
   },
   mounted() {
@@ -342,6 +342,7 @@ export default {
       authSignIn: '$_auth/requestSignIn',
       performGetActions: '$_auth/performGetActions',
     }),
+    ...mapMutations({setLanguage: 'setLanguage'}),
     validate_phone() {
       this.$validator.validate();
     },
