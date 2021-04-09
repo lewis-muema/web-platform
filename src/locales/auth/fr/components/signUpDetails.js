@@ -28,7 +28,7 @@ const fr = {
   user_verification: "Vérification de l'utilisateur lancée",
   account_verification: 'La vérification du compte a échoué',
   sign_up_error: "Erreur d'inscription ",
-  unable_connect_server: 'FR_Unable to connect to the server . Please try again',
+  unable_connect_server: 'Impossible de se connecter au serveur . Veuillez réessayer dans 15 minutes .',
   signup_failed: 'Inscription échouée',
   agree_terms: 'Accepter les modalités',
   invalid_details: 'Détails invalides',
@@ -45,10 +45,10 @@ const fr = {
   login_failed: 'connexion a échoué',
   account_deactivated: 'Compte désactivé ',
   login_failed_text: 'La connexion a échoué. Veuillez réessayer',
-  verify_code: 'FR_VERIFY CODE',
-  unable_connect_server_text: 'FR_Unable to connect to the server . Please try again after 15 minutes .',
+  verify_code: 'VÉRIFIER LE CODE',
+  unable_connect_server_text: 'Impossible de se connecter au serveur . Veuillez réessayer dans 15 minutes .',
   signup_error: "Erreur d'inscription ",
-  country_not_supported: 'FR_The country you selected is not supported',
+  country_not_supported: 'Le pays que vous avez sélectionné n’est pas pris en charge',
 };
 
 

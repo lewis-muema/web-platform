@@ -10,7 +10,7 @@ const fr = {
   Option2: "L'option 2",
   Option3: "L'option 3",
   Option4: "L'option 4",
-  Option5: 'FR_Option5',
+  Option5: "L'option5",
   invite_link: 'Invite lien pour {bizName}',
   back: 'DE RETOUR',
   copy_to_clipboard: 'Copier dans le presse-papier ',

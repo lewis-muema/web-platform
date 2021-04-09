@@ -3,7 +3,7 @@ const en = {
   pending_password: 'You have a pending password change request sent to your email awaiting your confirmation',
   resend: 'Resend?',
   two_accounts: 'Looks like you have two accounts with us. Select one.',
-  'business ': ' Business',
+  business: ' Business',
   peer: 'Peer',
   reset: 'Reset Password',
   sign_in: 'Sign In',

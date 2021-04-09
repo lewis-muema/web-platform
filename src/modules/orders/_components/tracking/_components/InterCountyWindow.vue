@@ -532,7 +532,7 @@
                   >
                     <a>
                       <span class="">
-                        {{$t('general.payment_option')}}
+                        {{$t('general.payment_options')}}
                       </span>
                       <font-awesome-icon
                         icon="chevron-down"

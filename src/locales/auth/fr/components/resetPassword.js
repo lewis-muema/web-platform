@@ -8,7 +8,7 @@ const fr = {
   invalid_link: 'Lien invalide',
   invalid_reset_link: 'Lien de réinitialisation du mot de passe non valide. Redirigé vers la page de connexion',
   reset_password_failed: 'La réinitialisation du mot de passe a échoué, veuillez réessayer ',
-  password_failed: 'FR_Password Failed',
+  password_failed: 'Mot de passe a échoué',
   password_reset_failed: 'La réinitialisation du mot de passe a échoué ',
   password_reset_failed_text: 'La réinitialisation du mot de passe a échoué. Veuillez réessayer ',
   login_attempt_failed: 'La tentative de connexion a échoué ',
@@ -17,7 +17,7 @@ const fr = {
   password_reset_successful_text: 'Réinitialisation du mot de passe réussie. Vous serez automatiquement connecté ',
   login_failed: 'Échec de la connexion ',
   login_failed_text: 'Échec de la connexion. Veuillez réessayer',
-  password_not_match: 'FR_Le mot de passe ne correspond pas. Veuillez réessayer',
+  password_not_match: 'Le mot de passe ne correspond pas. Veuillez réessayer',
 };
 
 
