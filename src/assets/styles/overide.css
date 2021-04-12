@@ -587,10 +587,6 @@ span.el-pagination__jump {
   width: 1px;
   white-space: nowrap;
 }
-.el-input-group__prepend {
-  width: 20%;
-  border-right: 0 !important;
-}
 .el-notification__content p {
   margin: 0;
   text-align: left;
@@ -715,4 +711,7 @@ div.pac-container {
 }
 .el-upload-list__item-name{
   display: none !important;
+}
+.freight-selector > .el-input-group__prepend{
+  width: 20% !important;
 }

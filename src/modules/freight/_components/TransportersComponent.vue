@@ -393,11 +393,11 @@
                 <p class="shipment-input--label">
                   How much do you want to pay per truck?
                 </p>
-                <div class="freight-input">
+                <div class="">
                   <el-input
                     v-model.trim="bid_amount"
                     placeholder="Please input amount"
-                    class="transporter-selector freight-selector"
+                    class="freight-selector"
                     min="0"
                     type="number"
                   >
@@ -1224,7 +1224,6 @@ export default {
   height: 40px;
   line-height: 40px;
   outline: 0;
-  padding: 0 15px;
   width: 100%;
 }
 .align-filters-section{
