@@ -497,6 +497,11 @@
                       class="transporters-element-inputs"
                       filterable
                     >
+                      <div class="payment-terms-hint">
+                        <div class="hint--inner">
+                          Hint: The longer your payment period is, the higher your interest
+                        </div>
+                      </div>
                       <el-option
                         v-for="item in terms"
                         :key="item.value"
@@ -1513,5 +1518,14 @@ export default {
   color: #1782C5 !important;
   font-size: 14px;
   font-weight: 600;
+}
+.payment-terms-hint{
+  background: #fdedd3 !important;
+  font-size: 12px;
+  font-family: 'Nunito', sans-serif !important;
+  margin: 3% 10% 3% 10%;
+}
+.hint--inner{
+  padding: 4%;
 }
 </style>
