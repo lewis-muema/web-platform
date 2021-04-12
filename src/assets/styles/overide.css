@@ -587,6 +587,7 @@ span.el-pagination__jump {
   width: 1px;
   white-space: nowrap;
 }
+
 .el-notification__content p {
   margin: 0;
   text-align: left;
