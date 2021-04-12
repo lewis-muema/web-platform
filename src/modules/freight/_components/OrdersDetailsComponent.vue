@@ -1487,7 +1487,7 @@ export default {
   font-weight: 600;
 }
 .payment-terms-hint{
-  background: #fdedd3;
+  background: #fdedd3 !important;
   font-size: 12px;
   font-family: 'Nunito', sans-serif !important;
   margin: 3% 10% 3% 10%;
