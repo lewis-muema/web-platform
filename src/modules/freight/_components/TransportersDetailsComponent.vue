@@ -409,6 +409,27 @@
 
                   <div class="">
                     <p class="shipment-input--label">
+                      Which currency will you be transacting in?
+                    </p>
+                    <div class="block">
+                      <el-select
+                        v-model="currency"
+                        placeholder=""
+                        class="transporters-element-inputs"
+                        filterable
+                      >
+                        <el-option
+                          v-for="item in supported_currencies"
+                          :key="item.code"
+                          :label="item.currency_code"
+                          :value="item.currency_code"
+                        />
+                      </el-select>
+                    </div>
+                  </div>
+
+                  <div class="">
+                    <p class="shipment-input--label">
                       Do you want to make an offer for this shipment?
                     </p>
                     <div class="block">
@@ -433,27 +454,16 @@
                       <p class="shipment-input--label">
                         How much do you want to pay per truck?
                       </p>
-                      <div class="">
-                        <el-input
-                          v-model.trim="bid_amount"
-                          placeholder="Please input amount"
-                          class="freight-selector"
-                          min="0"
+                      <div class="block">
+                        <input
+                          v-model="bid_amount"
+                          class="input-control freight-load-weight"
                           type="number"
+                          placeholder="Please input amount"
+                          autocomplete="on"
+                          min="0"
                         >
-                          <el-select
-                            slot="prepend"
-                            v-model="currency"
-                            placeholder="Select"
-                          >
-                            <el-option
-                              v-for="value in supported_currencies"
-                              :key="value.code"
-                              :label="value.currency_code"
-                              :value="value.currency_code"
-                            />
-                          </el-select>
-                        </el-input>
+                        <span class="tonage-value-text"></span>
                       </div>
                     </div>
 
