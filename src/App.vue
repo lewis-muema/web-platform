@@ -15,7 +15,7 @@ import * as Sentry from '@sentry/browser';
 import Vue from 'vue';
 import firebase from 'firebase/app';
 import { mapGetters } from 'vuex';
-import VeeValidate, { Validator }  from 'vee-validate';
+import VeeValidate, { Validator } from 'vee-validate';
 import fr from 'vee-validate/dist/locale/fr';
 
 const ENV = process.env.CONFIGS_ENV;
@@ -383,6 +383,7 @@ export default {
         window.Beacon('close');
         window.Beacon('open');
         window.Beacon('navigate', '/answers/');
+
         setTimeout(() => {
           window.Beacon('suggest', ['59d5e11f2c7d3a40f0ed34fe']);
           this.trackMixpanelEvent('Auto pop up helpscout beacon for order placement', {
