@@ -98,6 +98,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import numeral from 'numeral';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
+import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 const moment = require('moment');
 
@@ -107,7 +108,7 @@ export default {
       return moment(date).format('MMM Do YYYY, h:mm a');
     },
   },
-  mixins: [TimezoneMxn],
+  mixins: [TimezoneMxn, MixpanelMixin],
   data() {
     return {
       empty_orders_state: 'Fetching freight shipments',
@@ -149,7 +150,18 @@ export default {
     },
   },
   mounted() {
+    const session = this.$store.getters.getSession;
     this.populateFreightOrders();
+
+    this.trackMixpanelEvent('Shipments Page Viewed', {
+      userId: session[session.default].user_id,
+      email: session[session.default].user_email,
+      phone: session[session.default].user_phone,
+      name: session[session.default].user_name,
+      clientType: 'Web',
+      clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+      device: 'Desktop',
+    });
   },
   methods: {
     ...mapMutations({

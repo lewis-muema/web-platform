@@ -409,6 +409,27 @@
 
                   <div class="">
                     <p class="shipment-input--label">
+                      Which currency will you be transacting in?
+                    </p>
+                    <div class="block">
+                      <el-select
+                        v-model="currency"
+                        placeholder=""
+                        class="transporters-element-inputs"
+                        filterable
+                      >
+                        <el-option
+                          v-for="item in supported_currencies"
+                          :key="item.code"
+                          :label="item.currency_code"
+                          :value="item.currency_code"
+                        />
+                      </el-select>
+                    </div>
+                  </div>
+
+                  <div class="">
+                    <p class="shipment-input--label">
                       Do you want to make an offer for this shipment?
                     </p>
                     <div class="block">
@@ -433,18 +454,16 @@
                       <p class="shipment-input--label">
                         How much do you want to pay per truck?
                       </p>
-                      <div class="freight-input">
-                        <div class="freight-input-icon">
-                          <span>USD</span>
-                        </div>
-                        <div class="freight-input-area">
-                          <input
-                            v-model.trim="bid_amount"
-                            type="number"
-                            name="amount"
-                            class="transporter-selector freight-selector"
-                          >
-                        </div>
+                      <div class="block">
+                        <input
+                          v-model="bid_amount"
+                          class="input-control freight-load-weight"
+                          type="number"
+                          placeholder="Please input amount"
+                          autocomplete="on"
+                          min="0"
+                        >
+                        <span class="tonage-value-text"></span>
                       </div>
                     </div>
 
@@ -529,11 +548,12 @@
 import { mapGetters, mapActions } from 'vuex';
 import NotificationMxn from '../../../mixins/notification_mixin';
 import LoadingComponent from './LoadingComponent.vue';
+import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 export default {
   name: 'Transporters',
   components: { LoadingComponent },
-  mixins: [NotificationMxn],
+  mixins: [NotificationMxn, MixpanelMixin],
   data() {
     return {
       quote_text: 'Create Shipment Request',
@@ -603,6 +623,13 @@ export default {
       process_shipment: false,
       carrier_options: [],
       carrier_option_value: [],
+      currency: 'USD',
+      supported_currencies: [
+        {
+          country_id: 2,
+          currency_code: 'USD',
+        },
+      ],
     };
   },
   computed: {
@@ -638,10 +665,22 @@ export default {
     this.DOM = process;
   },
   mounted() {
+    const session = this.$store.getters.getSession;
     this.loading = true;
     this.fetchOwnerDetail();
     this.fetchGoodsTypes();
     this.fetchCarrierTypes();
+    this.fetchCurrencies();
+    this.trackMixpanelEvent('Transporter Info Viewed', {
+      userId: session[session.default].user_id,
+      email: session[session.default].user_email,
+      phone: session[session.default].user_phone,
+      name: session[session.default].user_name,
+      transporterId: parseInt(this.$route.params.id, 10),
+      clientType: 'Web',
+      clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+      device: 'Desktop',
+    });
   },
   methods: {
     ...mapActions({
@@ -685,6 +724,32 @@ export default {
           );
           this.backToTransporters();
           this.owner_detail = [];
+        },
+      );
+    },
+    fetchCurrencies() {
+      this.$store.dispatch('$_freight/requestSupportedCountries').then(
+        (response) => {
+          if (response.length > 0) {
+            for (let i = 0; i < response.length; i++) {
+              this.supported_currencies.push(response[i]);
+            }
+          } else {
+            this.supported_currencies = [
+              {
+                country_id: 2,
+                currency_code: 'USD',
+              },
+            ];
+          }
+        },
+        (error) => {
+          this.supported_currencies = [
+            {
+              country_id: 2,
+              currency_code: 'USD',
+            },
+          ];
         },
       );
     },
@@ -933,7 +998,7 @@ export default {
         destination: this.main_order_path[1],
         pickup_time: this.moment(this.pick_up_time).format('DD-MM-YYYY HH:mm:ss'),
         bidding_deadline: this.moment(this.quotation_time).format('DD-MM-YYYY HH:mm:ss'),
-        currency: 'USD',
+        currency: this.currency,
         pickup_facility: this.facility_location,
         total_trucks: this.trucks_no,
         tonnes_per_truck: parseInt(this.load_weight, 10),
@@ -965,6 +1030,22 @@ export default {
           if (workingResponse.status) {
             this.doNotification(1, 'Shipment sent successfully!', '');
             this.$router.push('/freight/orders');
+            this.trackMixpanelEvent('Shipment Request Placed', {
+              userId: session[session.default].user_id,
+              email: session[session.default].user_email,
+              phone: session[session.default].user_phone,
+              name: session[session.default].user_name,
+              isNegotiable: this.negotiability,
+              amountPerTruck: this.bid_amount,
+              currency: this.currency,
+              pickupFacility: this.main_order_path[0],
+              destinationFacility: this.main_order_path[1],
+              trucksNeeded: this.trucks_no,
+              transporters: this.filteredCheckedOwners,
+              clientType: 'Web',
+              clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+              device: 'Desktop',
+            });
           } else {
             this.doNotification(2, 'Unable to request for shipment!', workingResponse.data.message);
           }
@@ -1138,7 +1219,6 @@ export default {
   height: 40px;
   line-height: 40px;
   outline: 0;
-  padding: 0 15px;
   width: 100%;
 }
 </style>

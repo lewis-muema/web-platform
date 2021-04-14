@@ -72,7 +72,7 @@
                         freightOrderDetail.offer_amount === 0 ||
                           freightOrderDetail.offer_amount === null
                           ? 'Transporters to bid'
-                          : `USD ${freightOrderDetail.offer_amount}`
+                          : `${freightOrderDetail.currency} ${freightOrderDetail.offer_amount}`
                       }}
                     </div>
                   </div>
@@ -194,7 +194,7 @@
                 Trucks confirmed
 
                 <span class="align-awarded-total-sum">
-                  Total cost: USD {{ freightOrderDetail.awarded_amount.toLocaleString() }}
+                  Total cost: {{freightOrderDetail.currency}} {{ freightOrderDetail.awarded_amount.toLocaleString() }}
                 </span>
               </div>
             </div>
@@ -218,7 +218,7 @@
                     {{ getAvailableTrucks(data.trucks_available) }}
                   </div>
                   <div class="transporter-content">
-                    USD {{ data.price_per_truck }}/Truck
+                    {{freightOrderDetail.currency}} {{ data.price_per_truck }}/Truck
                   </div>
                   <div class="transporter-content view-transporter-documents">
                     View document details
@@ -359,7 +359,7 @@
                     {{ freightOrderDetail.quotations[index].trucks_available }} Trucks
                   </div>
                   <div class=" freight-documents-date">
-                    USD {{ freightOrderDetail.quotations[index].price_per_truck }} /Truck
+                    {{freightOrderDetail.currency}} {{ freightOrderDetail.quotations[index].price_per_truck }} /Truck
                   </div>
 
                   <div
@@ -431,7 +431,7 @@
                       Rate per truck:
                       <span
                         class="outline-info-value"
-                      >USD {{ awardedTransporter.price_per_truck }}</span>
+                      >{{freightOrderDetail.currency}} {{ awardedTransporter.price_per_truck }}</span>
                     </div>
                   </div>
                 </div>
@@ -497,6 +497,11 @@
                       class="transporters-element-inputs"
                       filterable
                     >
+                      <!-- <div class="payment-terms-hint">
+                        <div class="hint--inner">
+                          Hint: The longer your payment period is, the higher your interest
+                        </div>
+                      </div> -->
                       <el-option
                         v-for="item in terms"
                         :key="item.value"
@@ -532,7 +537,7 @@
                   <div class="quatations-outline-info-summary">
                     Price per truck
                     <p class="outline-info-value summary-inner-value">
-                      USD {{ awardedTransporter.price_per_truck }}
+                      {{freightOrderDetail.currency}} {{ awardedTransporter.price_per_truck }}
                     </p>
                   </div>
                   <div class="quatations-outline-info-summary">
@@ -544,7 +549,7 @@
                   <div class="quatations-outline-info-summary">
                     Total amount
                     <p class="outline-info-value summary-inner-value">
-                      USD {{ trucks_no * awardedTransporter.price_per_truck }}
+                      {{freightOrderDetail.currency}} {{ trucks_no * awardedTransporter.price_per_truck }}
                     </p>
                   </div>
                   <div class="quatations-outline-info-summary">
@@ -676,13 +681,14 @@ import $ from 'jquery';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
 import LoadingComponent from './LoadingComponent.vue';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 let s3 = '';
 
 export default {
   name: 'Transporters',
   components: { LoadingComponent },
-  mixins: [TimezoneMxn, NotificationMxn],
+  mixins: [TimezoneMxn, NotificationMxn, MixpanelMixin],
   data() {
     return {
       quote_text: 'Request for quote',
@@ -756,10 +762,20 @@ export default {
   },
   mounted() {
     this.loading = true;
-    const sessionData = this.$store.getters.getSession;
-    if (Object.keys(sessionData).length > 0) {
+    const session = this.$store.getters.getSession;
+    if (Object.keys(session).length > 0) {
       this.fetchOrderDetail(this.$route.params.id);
       this.initiateS3();
+      this.trackMixpanelEvent('Shipments Info Viewed', {
+        userId: session[session.default].user_id,
+        email: session[session.default].user_email,
+        phone: session[session.default].user_phone,
+        name: session[session.default].user_name,
+        shipmentId: parseInt(this.$route.params.id, 10),
+        clientType: 'Web',
+        clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+        device: 'Desktop',
+      });
     }
   },
   methods: {
@@ -1011,6 +1027,17 @@ export default {
 
           if (workingResponse.status) {
             this.doNotification(1, 'Bid rejected successfully!', '');
+            this.trackMixpanelEvent('Bid Rejected', {
+              userId: session[session.default].user_id,
+              email: session[session.default].user_email,
+              phone: session[session.default].user_phone,
+              name: session[session.default].user_name,
+              shipmentId: parseInt(this.$route.params.id, 10),
+              clientType: 'Web',
+              quotationId: val.quotation_id,
+              clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+              device: 'Desktop',
+            });
           } else {
             this.doNotification(2, 'Unable to reject bid!', workingResponse.message);
           }
@@ -1078,6 +1105,17 @@ export default {
 
           if (workingResponse.status) {
             this.doNotification(1, 'Shipment awarded successfully!', '');
+            this.trackMixpanelEvent('Bid Accepted', {
+              userId: session[session.default].user_id,
+              email: session[session.default].user_email,
+              phone: session[session.default].user_phone,
+              name: session[session.default].user_name,
+              shipmentId: parseInt(this.$route.params.id, 10),
+              clientType: 'Web',
+              quotationId: this.awardedTransporter.quotation_id,
+              clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+              device: 'Desktop',
+            });
           } else {
             this.doNotification(2, 'Unable to award shipment!', workingResponse.data.message);
           }
@@ -1480,5 +1518,14 @@ export default {
   color: #1782C5 !important;
   font-size: 14px;
   font-weight: 600;
+}
+.payment-terms-hint{
+  background: #fdedd3 !important;
+  font-size: 12px;
+  font-family: 'Nunito', sans-serif !important;
+  margin: 3% 10% 3% 10%;
+}
+.hint--inner{
+  padding: 4%;
 }
 </style>
