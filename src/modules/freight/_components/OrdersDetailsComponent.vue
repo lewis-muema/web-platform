@@ -497,11 +497,11 @@
                       class="transporters-element-inputs"
                       filterable
                     >
-                      <div class="payment-terms-hint">
+                      <!-- <div class="payment-terms-hint">
                         <div class="hint--inner">
                           Hint: The longer your payment period is, the higher your interest
                         </div>
-                      </div>
+                      </div> -->
                       <el-option
                         v-for="item in terms"
                         :key="item.value"
