@@ -369,6 +369,27 @@
 
             <div class="decline-documemt-extend decline-documemt-input">
               <p class="shipment-input--label">
+                Which currency will you be transacting in?
+              </p>
+              <div class="block">
+                <el-select
+                  v-model="currency"
+                  placeholder=""
+                  class="transporters-element-inputs"
+                  filterable
+                >
+                  <el-option
+                    v-for="item in supported_currencies"
+                    :key="item.code"
+                    :label="item.currency_code"
+                    :value="item.currency_code"
+                  />
+                </el-select>
+              </div>
+            </div>
+
+            <div class="decline-documemt-extend decline-documemt-input">
+              <p class="shipment-input--label">
                 Do you want to make an offer for this shipment?
               </p>
               <div class="block">
@@ -393,18 +414,16 @@
                 <p class="shipment-input--label">
                   How much do you want to pay per truck?
                 </p>
-                <div class="freight-input">
-                  <div class="freight-input-icon">
-                    <span>USD</span>
-                  </div>
-                  <div class="freight-input-area">
-                    <input
-                      v-model.trim="bid_amount"
-                      type="number"
-                      name="amount"
-                      class="transporter-selector freight-selector"
-                    >
-                  </div>
+                <div class="block">
+                  <input
+                    v-model="bid_amount"
+                    class="input-control freight-load-weight"
+                    type="number"
+                    placeholder="Please input amount"
+                    autocomplete="on"
+                    min="0"
+                  >
+                  <span class="tonage-value-text"></span>
                 </div>
               </div>
 
@@ -569,6 +588,12 @@ export default {
       carrier_options: [],
       carrier_option_value: [],
       currency: 'USD',
+      supported_currencies: [
+        {
+          country_id: 2,
+          currency_code: 'USD',
+        },
+      ],
     };
   },
   computed: {
@@ -629,6 +654,7 @@ export default {
     this.fetchOwnersListing();
     this.fetchGoodsTypes();
     this.fetchCarrierTypes();
+    this.fetchCurrencies();
     const session = this.$store.getters.getSession;
     this.trackMixpanelEvent('Transporters Page Viewed', {
       'User Id': session[session.default].user_id,
@@ -648,6 +674,32 @@ export default {
       getFilteredOwnersListing: '$_freight/getFilteredOwnersListing',
       sendCustomerQuote: '$_freight/sendCustomerQuote',
     }),
+    fetchCurrencies() {
+      this.$store.dispatch('$_freight/requestSupportedCountries').then(
+        (response) => {
+          if (response.length > 0) {
+            for (let i = 0; i < response.length; i++) {
+              this.supported_currencies.push(response[i]);
+            }
+          } else {
+            this.supported_currencies = [
+              {
+                country_id: 2,
+                currency_code: 'USD',
+              },
+            ];
+          }
+        },
+        (error) => {
+          this.supported_currencies = [
+            {
+              country_id: 2,
+              currency_code: 'USD',
+            },
+          ];
+        },
+      );
+    },
     setCarrierOptionValue(index) {
       this.carrier_options[index].value = this.carrier_option_value[index];
     },
@@ -1182,7 +1234,6 @@ export default {
   height: 40px;
   line-height: 40px;
   outline: 0;
-  padding: 0 15px;
   width: 100%;
 }
 .align-filters-section{

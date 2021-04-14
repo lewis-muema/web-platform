@@ -308,6 +308,25 @@ const getDocumentTypes = function getDocumentTypes({ dispatch }, payload) {
   });
 };
 
+const requestSupportedCountries = function requestSupportedCountries({ dispatch }) {
+  const payload = {
+    app: 'AUTH',
+    endpoint: 'staffapi/countries',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   updateFreightStatus,
   requestFreightStatus,
@@ -329,4 +348,5 @@ export default {
   getDocumentTypes,
   awardShipment,
   declineShipment,
+  requestSupportedCountries,
 };
