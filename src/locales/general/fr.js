@@ -244,7 +244,7 @@ const translations = {
   pickup_by: 'Collecter è ',
   add_notes_each_destination: 'Ajouter des notes pour chaque destination (facultatif)',
   approximate_package_weight: 'Que voulez-vous livrer ?',
-  sender_of_Package: 'Quel est le poids approximatif du colis?',
+  sender_of_package: 'Quel est le poids approximatif du colis?',
   add_senders_info: "Ajouter les informations de l'expéditeur ",
   added_senders_info: "Les renseignements sur l'expéditeur ont ajouté ",
   nearest_collection_center: 'Centre de collecte le plus proche du emplacement de collection',
