@@ -255,7 +255,7 @@ const translations = {
   pickup_by: 'Pickup by ',
   add_notes_each_destination: 'Add notes for each destination (optional)',
   approximate_package_weight: 'What is the approximate weight of the package?',
-  sender_of_Package: 'Who is sending the package?',
+  sender_of_package: 'Who is sending the package?',
   add_senders_info: 'Add sender’s information',
   added_senders_info: "Sender's information added",
   nearest_collection_center: 'Nearest collection centre from  pickup location',
