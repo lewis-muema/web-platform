@@ -143,7 +143,7 @@ export function createApp() {
     config: {
       serviceName: process.env.CONFIGS_ENV.ELASTIC_APM_SERVICE_NAME,
       // agent configuration
-      serverUrl: process.env.CONFIGS_ENV.ELASTIC_APM_SERVER_URL,
+      serverUrl: process.env.ELASTIC_APM_SERVER_URL,
       serviceVersion: process.env.CONFIGS_ENV.ELASTIC_APM_SERVICE_VERSION,
       environment: process.env.CONFIGS_ENV.ELASTIC_APM_ENVIRONMENT,
       distributedTracingOrigins: [process.env.CONFIGS_ENV.ELASTIC_APM_DISTRIBUTED_TRACING_ORIGINS],
