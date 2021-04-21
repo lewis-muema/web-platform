@@ -50,11 +50,11 @@
     </div>
     <div class="header--item__right">
       <nav>
-        <ul>
+        <ul class="nav--menu-section-right">
           <li class="nav--menu-inactive helpline-contact">
             <a> {{ $t('mainHeader.helpline') }} : {{ helpline_contact }}</a>
           </li>
-          <li class="nav--menu-inactive">
+          <li class="nav--menu-inactive account-type">
             <a> {{ $t('mainHeader.hi')}} {{ logged_user }}</a>
           </li>
           <li class="nav--menu-dropdown">
