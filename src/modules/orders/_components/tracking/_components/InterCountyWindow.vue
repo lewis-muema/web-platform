@@ -380,7 +380,7 @@
                 </div>
                 <div
                   id="cancel-reason-subtitle"
-                  class="cancel-reason-subtitle"
+                  class="cancel-reason-subtitle cancel-reason-subtitle-mod"
                 >
                  {{$t('general.incur_cancelation_cost')}}
                 </div>
@@ -393,9 +393,9 @@
                   <div class="">
                     <el-radio
                       v-model="cancel_reason"
-                      :label="reasons.cancel_reason_id"
+                      :label="reasons.cancellation_reason_id"
                     >
-                      {{ reasons.cancel_reason }}
+                      {{ reasons.cancellation_reason }}
                     </el-radio>
                   </div>
                 </div>
@@ -717,6 +717,7 @@ export default {
       tracked_order: '$_orders/$_tracking/getTrackedOrder',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
       vendors: '$_orders/getVendors',
+      getCountryCode: 'getCountryCode',
     }),
     getStatus() {
       if (!this.loading) {
@@ -740,6 +741,21 @@ export default {
         }
       } else {
         return '';
+      }
+    },
+    getCancellationOrderStatus() {
+      const logTypes = [];
+      this.tracking_data.delivery_log.forEach((log) => {
+        logTypes.push(log.log_type);
+      });
+      if (this.tracking_data.confirm_status === 0 && this.tracking_data.delivery_status === 0) {
+        return 1;
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && !logTypes.includes(10)) {
+        return 2;
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes.includes(10)) {
+        return 3;
+      } else {
+        return 4;
       }
     },
     getStatusCode() {
@@ -879,6 +895,7 @@ export default {
     ...mapActions({
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
       completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
+      requestCancellationReasons: '$_orders/$_tracking/requestCancellationReasons',
     }),
     ...mapMutations({
       hide_vendors: '$_orders/hideVendors',
@@ -913,12 +930,12 @@ export default {
       this.more_info = false;
       this.cancel_desc = '';
       const data = this.cancellation_reasons.find(
-        position => position.cancel_reason_id === reason,
+        position => position.cancellation_reason_id === reason,
       );
       if (reason === 0) {
         this.more_info = true;
       } else {
-        this.cancel_desc = data.cancel_reason;
+        this.cancel_desc = data.cancellation_reason;
       }
     },
     initiateOrderData() {
@@ -1431,7 +1448,14 @@ export default {
         .catch(err => err);
     },
     retrieveCancellationReasons() {
-      this.$store.dispatch('$_orders/$_tracking/requestCancellationReasons').then(
+      const riderInfo = this.tracking_data.rider;
+      const params = {
+        vendor_id: riderInfo.vendor_id,
+        order_status: this.getCancellationOrderStatus ? this.getCancellationOrderStatus : 4,
+        country_code: this.getCountryCode,
+        status: 1,
+      };
+      this.requestCancellationReasons(params).then(
         (response) => {
           if (response.status) {
             this.cancellation_reasons = response.data;
