@@ -39,6 +39,17 @@
   background-color: white !important;
   width: 100% !important;
 }
+.vendor_component-actions__element-date-mod {
+  background-color: white !important;
+  width: 90% !important;
+  margin: 3% 5% 0% 5% !important;
+}
+.vendor_component-actions__element-date-mod input {
+  border-color: black;
+}
+.vendor_component-actions__element-date-mod span i {
+  color: black;
+}
 .vendor_component-actions__input-time {
   background-color: white !important;
   width: 45% !important;
@@ -549,6 +560,10 @@ cursor: pointer;
 .add-instructions-submit{
   margin-top: 6% !important;
   width: 100% !important;
+}
+.add-instructions-submit-mod {
+  width: 90% !important;
+  margin: 0% 5% !important;
 }
 .add-instructions-setup{
   margin-top: 3%;
