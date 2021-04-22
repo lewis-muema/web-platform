@@ -4,21 +4,28 @@
       {{ payment_loading_title }}
     </div>
     <div class="payment--mpesa-image">
-      <img src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/fail.png" />
+      <img src="https://s3-eu-west-1.amazonaws.com/sendy-web-apps-assets/biz/fail.png">
     </div>
     <div class="paymemt--mpesa-loader-actions">
-      <button type="button" class="button-primary align-left" @click="backToPaymentRequest">
-        Help
+      <button
+        type="button"
+        class="button-primary align-left"
+        @click="backToPaymentRequest"
+      >
+        {{$t('general.help')}}
       </button>
-      <button type="button" class="button-primary align-right" @click="backToPaymentRequest">
-        Ok
+      <button
+        type="button"
+        class="button-primary align-right"
+        @click="backToPaymentRequest"
+      >
+        {{$t('general.ok')}}
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import { resolve } from 'path';
 import { mapActions } from 'vuex';
 
 export default {
@@ -26,63 +33,28 @@ export default {
   data() {
     return {
       loading: true,
-      paybillCredentials: {},
     };
   },
   computed: {
     payment_loading_title() {
-      return `Sorry, Safaricom cannot be reached. Instead, please pay to Pay Bill no. ${
-        this.paybillCredentials.pay_bill
-      } with Account Number.${this.paybillCredentials.account_no}`;
+      const session = this.$store.getters.getSession;
+      let accountNo = session[session.default].user_phone;
+      if (session.default === 'biz') {
+        accountNo = `SENDY ${session.biz.cop_id}`;
+      }
+      return `${this.$t('general.sorry_safaricom')} ${accountNo}`;
     },
-    getSession(){
-      return this.$store.getters.getSession;
-    }
-  },
-  mounted() {
-    this.requestPaybillCredentials();
   },
   methods: {
-    ...mapActions({
-      _resetMpesaPaymentRequest: '$_payment/resetMpesaPaymentRequest',
-      getPaybill: '$_payment/fetchPaybillCredentials',
-    }),
+    ...mapActions(['$_payment/resetMpesaPaymentRequest']),
     backToPaymentRequest() {
       const payload = {};
-      this.$store.dispatch('resetMpesaPaymentRequest', payload).then(
+      this.$store.dispatch('$_payment/resetMpesaPaymentRequest', payload).then(
         (response) => {},
         (error) => {
           // ...
-        }
+        },
       );
-    },
-
-    requestPaybillCredentials() {
-      const defaultUser = this.getSession.default;
-
-      let copId = defaultUser === 'biz' ? this.getSession[defaultUser].cop_id : 0;
-
-      let userId = this.getSession[defaultUser].user_id;
-      const payload = { cop_id: copId, user_id: userId };
-
-      const full_payload = {
-        values: payload,
-        vm: this,
-        app: 'CUSTOMERS_APP_AUTH',
-        endpoint: 'mpesa/paybill',
-      };
-
-      return new Promise((resolve) => {
-        this.getPaybill(full_payload).then(
-          (response) => {
-            this.paybillCredentials = response;
-            resolve(true);
-          },
-          (error) => {
-            resolve(false);
-          }
-        );
-      });
     },
   },
 };

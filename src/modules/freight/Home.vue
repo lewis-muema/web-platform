@@ -15,6 +15,7 @@ import VeeValidate, { Validator } from 'vee-validate';
 import freightStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import SessionMxn from '../../mixins/session_mixin';
+import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
 import MainHeader from '../../components/headers/MainHeader.vue';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
@@ -22,7 +23,7 @@ const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
-  getMessage: field => 'The phone number not valid',
+  getMessage: field => this.$t('general.phone_number_not_valid'),
   validate: (value) => {
     let validity = false;
     try {
@@ -42,7 +43,7 @@ export default {
   components: {
     MainHeader,
   },
-  mixins: [RegisterStoreModule, SessionMxn],
+  mixins: [RegisterStoreModule, SessionMxn, MixpanelMixin],
   data() {
     return {
       sessionData: false,

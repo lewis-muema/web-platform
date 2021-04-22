@@ -1,11 +1,11 @@
 <template lang="html">
   <div class="header">
-    <div class="header--item external-header__img">
-      <div class="header--item__left">
+    <div class="header--item">
+      <div class="external--item__left">
         <img
-          src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
+          src="https://images.sendyit.com/web_platform/logo/rebrand_logo.png"
           alt="logo"
-          class="logo"
+          class="external-logo"
           onclick="location.href='https://sendyit.com/';"
         >
       </div>
@@ -21,6 +21,7 @@ export default {
 
 <style lang="css">
 @import "../../assets/styles/internal_header.css";
+
 .external-header__img{
     cursor: pointer;
     width: 60%;

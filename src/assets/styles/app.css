@@ -6,7 +6,7 @@ html, .body{
   overflow: scroll !important;
 }
 .app {
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Nunito', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #555;

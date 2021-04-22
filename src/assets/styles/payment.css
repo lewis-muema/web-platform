@@ -32,7 +32,7 @@
 .paymethod--link.router-link-active {
   color: #1782c5;
   font-weight: normal;
-  border-bottom: 3px solid #1782c5;
+  border-bottom: 3px solid #007FFF;
 }
 
 .payment--loading-title {

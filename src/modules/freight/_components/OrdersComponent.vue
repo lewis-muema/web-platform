@@ -13,16 +13,6 @@
           />
         </el-input>
       </div>
-      <div class="section--filter-action-wrap">
-        <button
-          type="button"
-          class="button-primary section--filter-action freight-create-order"
-          name="create_order_text"
-          @click="createNewOrder"
-        >
-          {{ create_order_text }}
-        </button>
-      </div>
     </div>
     <el-table
       v-loading="loading"
@@ -40,7 +30,7 @@
         prop="order_date"
       >
         <template slot-scope="scope">
-          {{ order_history_data[scope.$index]['pick_up_name'] }}
+          {{ order_history_data[scope.$index]['pickup'] }}
         </template>
       </el-table-column>
       <el-table-column
@@ -48,34 +38,27 @@
         prop="order_date"
       >
         <template slot-scope="scope">
-          {{ order_history_data[scope.$index]['destination_name'] }}
+          {{ order_history_data[scope.$index]['destination'] }}
         </template>
       </el-table-column>
 
       <el-table-column
         key="1"
-        label="Transporter"
-        prop="transporter_name"
+        label="Type of load"
+        prop="cargo_type"
         width="200"
       />
-
       <el-table-column
-        label="Amount"
-        prop="path"
-        width="150"
-      >
-        <template slot-scope="scope">
-          {{ order_history_data[scope.$index]['currency'] }}
-          {{ formatCurrency(order_history_data[scope.$index]['amount']) }}
-        </template>
-      </el-table-column>
-
+        label="Type of truck"
+        prop="carrier_type"
+        width="200"
+      />
       <el-table-column
-        label="Date"
+        label="Pick up date"
         prop="order_date"
       >
         <template slot-scope="props">
-          {{ convertToUTCToLocal(order_history_data[props.$index]['date_created']) | moment }}
+          {{ getFormattedDate(order_history_data[props.$index]['pickup_time']) }}
         </template>
       </el-table-column>
 
@@ -88,7 +71,7 @@
         <template slot-scope="props">
           <div
             class="view-orders-transporter-info"
-            @click="viewOrdersInfo(order_history_data[props.$index]['order_id'])"
+            @click="viewOrdersInfo(order_history_data[props.$index]['id'])"
           >
             View <i class="el-icon-arrow-right view-transporter-info" />
           </div>
@@ -115,6 +98,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import numeral from 'numeral';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
+import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 const moment = require('moment');
 
@@ -124,7 +108,7 @@ export default {
       return moment(date).format('MMM Do YYYY, h:mm a');
     },
   },
-  mixins: [TimezoneMxn],
+  mixins: [TimezoneMxn, MixpanelMixin],
   data() {
     return {
       empty_orders_state: 'Fetching freight shipments',
@@ -166,7 +150,18 @@ export default {
     },
   },
   mounted() {
+    const session = this.$store.getters.getSession;
     this.populateFreightOrders();
+
+    this.trackMixpanelEvent('Shipments Page Viewed', {
+      userId: session[session.default].user_id,
+      email: session[session.default].user_email,
+      phone: session[session.default].user_phone,
+      name: session[session.default].user_name,
+      clientType: 'Web',
+      clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+      device: 'Desktop',
+    });
   },
   methods: {
     ...mapMutations({
@@ -175,6 +170,9 @@ export default {
     getOrderFromName(path) {
       const splittedName = path[0].name.split(',', 2);
       return splittedName[0];
+    },
+    getFormattedDate(data) {
+      return moment(data, 'MM-DD-YYYY HH:mm:ss').format('MMMM Do YYYY, HH:mm');
     },
     getOrderToName(path) {
       const pathLength = path.length;
@@ -187,15 +185,13 @@ export default {
       if (Object.keys(sessionData).length > 0) {
         this.sessionData = sessionData;
 
-        const ordersPayload = {
-          user_id:
-            sessionData.default === 'biz'
-              ? sessionData.biz.cop_id
-              : sessionData[sessionData.default].user_id,
-          user_type: sessionData.default === 'biz' ? 1 : 3,
-        };
+        let label = `peer_id=${sessionData[sessionData.default].user_id}`;
 
-        this.requestFreightOrders(ordersPayload);
+        if (sessionData.default === 'biz') {
+          label = `cop_id=${sessionData.biz.cop_id}&cop_user_id=${sessionData.biz.user_id}`;
+        }
+
+        this.requestFreightOrders(label);
       }
     },
     changeSize(val) {
@@ -215,13 +211,13 @@ export default {
       return numeral(currency).format('0,0');
     },
     getRowKey(row) {
-      return row.order_id;
+      return row.id;
     },
-    requestFreightOrders(payload) {
+    requestFreightOrders(label) {
       const fullPayload = {
-        values: payload,
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/list',
+        app: 'FREIGHT_APP',
+        operator: '&',
+        endpoint: `shipments?${label}`,
       };
       this.$store.dispatch('$_freight/requestFreightOrders', fullPayload).then(
         () => {
@@ -249,7 +245,7 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../assets/styles/transporters_component.css?v=1';
+@import '../../../assets/styles/transporters_component.css';
 
 .freight-orders-search{
   width: 37% !important;

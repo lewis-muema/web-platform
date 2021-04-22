@@ -5,12 +5,12 @@
   >
     <div class="sign-up-verification-inner">
       <div class="sign-up-verification-top">
-        Do you work for a Business?
+        {{$t('signUpVerification.work_for_business') }}
       </div>
 
       <div class="sign-up-verification-text">
-        We'd like to offer you the best experience possible. <br>
-        We'll create a dedicated account for you.
+        {{$t('signUpVerification.offer_best_experience')}} <br>
+        {{$t('signUpVerification.dedicated_account')}}
       </div>
 
       <p class="sign-up-error">
@@ -30,7 +30,7 @@
             class="input-control sign-form"
             type="text"
             name="cop_name"
-            placeholder="Business name"
+            :placeholder="$t('signUpVerification.business_name')"
             autocomplete="on"
           >
         </div>
@@ -42,14 +42,14 @@
           <input
             class="button-primary btn-sign-up-check style-sign-btn"
             type="submit"
-            value="No"
+            :value="$t('signUpVerification.no')"
             @click="peer_set"
           >
 
           <input
             class="button-primary btn-sign-up-check"
             type="submit"
-            value="Done"
+            :value="$t('signUpVerification.done')"
             @click="cop_set"
           >
         </div>
@@ -156,11 +156,11 @@ export default {
           } else {
             // failed to login
             // show some sort of error
-            this.doNotification(2, 'Sign Up Error ', response.message);
+            this.doNotification(2, this.$t('signUpVerification.signup_error'), response.message);
           }
         },
         (error) => {
-          this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
+          this.doNotification(2, this.$t('signUpVerification.signup_error'), this.$t('signUpVerification.check_internet'));
         },
       );
     },
@@ -230,15 +230,15 @@ export default {
             } else {
               // failed to login
               // show some sort of error
-              this.doNotification(2, 'Sign Up Error ', response.message);
+              this.doNotification(2, this.$t('signUpVerification.signup_error'), response.message);
             }
           },
           (error) => {
-            this.doNotification(2, 'Sign Up Error ', 'Check Internet connection and retry');
+            this.doNotification(2, this.$t('signUpVerification.signup_error'), this.$t('signUpVerification.check_internet'));
           },
         );
       } else {
-        this.message = 'Provide Business Name';
+        this.message = this.$t('signUpVerification.provide_biz_name');
       }
     },
     checkUserLocation() {
@@ -261,11 +261,11 @@ export default {
           if (Object.prototype.hasOwnProperty.call(response, 'status')) {
             const errorResponse = response.data;
             if (errorResponse.code === 1) {
-              this.login_text = 'Login';
-              this.doNotification(2, 'Login failed', 'Wrong password or email.');
+              this.login_text = this.$t('signUpVerification.login');
+              this.doNotification(2, this.$t('signUpVerification.login_failed'), this.$t('signUpVerification.wrong_password'));
             } else {
-              this.login_text = 'Login';
-              this.doNotification(2, 'Login failed', 'Account deactivated');
+              this.login_text = this.$t('signUpVerification.login');
+              this.doNotification(2, this.$t('signUpVerification.login_failed'), this.$t('signUpVerification.account_deactivated'));
             }
           } else {
             try {
@@ -326,7 +326,7 @@ export default {
           }
         },
         (error) => {
-          this.doNotification(2, 'Login failed', 'Login failed. Please try again');
+          this.doNotification(2, this.$t('signUpVerification.login_failed'), this.$t('signUpVerification.login_failed_text'));
           this.$router.push('/auth/sign_in');
         },
       );
@@ -355,7 +355,7 @@ export default {
   border-radius: 4px;
   margin: 2rem auto;
   padding: 2rem;
-  font-family: "Rubik", sans-serif;
+  font-family: 'Nunito', sans-serif;
   margin-top: 7%;
 }
 .sign-up-verification-top {

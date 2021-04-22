@@ -115,9 +115,7 @@
             </button>
           </div>
         </div>
-        <div
-          v-else-if="loading === true"
-        >
+        <div v-else-if="loading === true">
           <LoadingComponent />
         </div>
         <div v-else>
@@ -152,14 +150,16 @@ export default {
       message: '',
       code: '',
       login_text: 'Log In',
-      account_options: [{
-        value: 'peer',
-        label: 'Peer',
-      },
-      {
-        value: 'biz',
-        label: 'Business',
-      }],
+      account_options: [
+        {
+          value: 'peer',
+          label: 'Peer',
+        },
+        {
+          value: 'biz',
+          label: 'Business',
+        },
+      ],
       account_selected: false,
       by_pass_verify: false,
       loading: false,
@@ -187,7 +187,12 @@ export default {
       localStorage.removeItem('jwtToken');
     },
     by_pass_sign_in() {
-      if (this.email !== '' && this.password !== '' && this.account_type !== '' && this.client_email !== '') {
+      if (
+        this.email !== ''
+        && this.password !== ''
+        && this.account_type !== ''
+        && this.client_email !== ''
+      ) {
         this.login_text = 'Logging In ...';
         // erase any existing session
         this.deleteSession();
@@ -229,7 +234,6 @@ export default {
                   this.sessionDataObject = sessionData;
                   this.validateSuperUser(sessionData.admin_details);
                 } else {
-
                 }
               } catch (error) {
                 // @todo Log the error (central logging)

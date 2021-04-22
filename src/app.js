@@ -45,6 +45,7 @@ import {
   Autocomplete,
   Upload,
   CheckboxGroup,
+  Progress,
 } from 'element-ui';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -52,6 +53,7 @@ import VueMask from 'v-mask';
 import { createStore } from './store';
 import { createRouter } from './router';
 import App from './App.vue';
+import i18n from './i18n';
 
 Vue.prototype.moment = moment;
 // configure language
@@ -90,6 +92,7 @@ Vue.use(VueMask);
 Vue.use(Upload);
 Vue.use(vueCountryRegionSelect);
 Vue.use(CheckboxGroup);
+Vue.use(Progress);
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$msgbox = MessageBox;
@@ -140,7 +143,7 @@ export function createApp() {
     config: {
       serviceName: process.env.CONFIGS_ENV.ELASTIC_APM_SERVICE_NAME,
       // agent configuration
-      serverUrl: process.env.CONFIGS_ENV.ELASTIC_APM_SERVER_URL,
+      serverUrl: process.env.ELASTIC_APM_SERVER_URL,
       serviceVersion: process.env.CONFIGS_ENV.ELASTIC_APM_SERVICE_VERSION,
       environment: process.env.CONFIGS_ENV.ELASTIC_APM_ENVIRONMENT,
       distributedTracingOrigins: [process.env.CONFIGS_ENV.ELASTIC_APM_DISTRIBUTED_TRACING_ORIGINS],
@@ -151,6 +154,7 @@ export function createApp() {
   const app = new Vue({
     router,
     store,
+    i18n,
     render: h => h(App),
   });
 

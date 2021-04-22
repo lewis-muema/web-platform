@@ -7,7 +7,7 @@
           @click="linkRoute('/orders')"
         >
           <img
-            src="https://images.sendyit.com/web_platform/logo/Sendy_logo_whitewhite.png"
+            src="https://images.sendyit.com/web_platform/logo/rebrand_logo.png"
             alt="logo"
             class="logo"
           >
@@ -20,7 +20,7 @@
           <a
             class="segmentation-tab"
             @click="linkRoute('/orders')"
-          >Transportation</a>
+          >{{ $t('mainHeader.transportation') }}</a>
           <div
             :class="
               freightPages.includes(route_path)
@@ -31,13 +31,13 @@
         </div>
 
         <div
-          v-if="checkFreightUser()"
+          v-if="checkFreightUser() && enabledFreightCountry"
           class=""
         >
           <a
             class="segmentation-tab"
             @click="linkRoute('/freight')"
-          >Freight</a>
+          >{{ $t('mainHeader.freight') }}</a>
           <div
             :class="
               freightPages.includes(route_path)
@@ -50,74 +50,74 @@
     </div>
     <div class="header--item__right">
       <nav>
-        <ul>
+        <ul class="nav--menu-section-right">
           <li class="nav--menu-inactive helpline-contact">
-            <a> Helpline : {{ helpline_contact }}</a>
+            <a> {{ $t('mainHeader.helpline') }} : {{ helpline_contact }}</a>
           </li>
-          <li class="nav--menu-inactive">
-            <a>Hi {{ logged_user }}</a>
+          <li class="nav--menu-inactive account-type">
+            <a> {{ $t('mainHeader.hi')}} {{ logged_user }}</a>
           </li>
           <li class="nav--menu-dropdown">
             <a class="nav--menu-dropdown-link">
-              Menu
+              {{$t('mainHeader.menu')}}
               <i class="el-icon-arrow-down" />
             </a>
             <ul class="nav--menu-dropdown-list">
               <div v-if="!admin_details">
                 <li v-show="switchValid">
                   <a @click="switchAccount()">
-                    Switch to
-                    <span v-if="this.$store.getters.getSession.default === 'peer'"> Business </span>
+                    {{$t('mainHeader.switch_to')}}
+                    <span v-if="this.$store.getters.getSession.default === 'peer'"> {{$t('mainHeader.business' )}} </span>
                     <span v-else>
-                      Personal
+                      {{$t('mainHeader.personal')}}
                     </span>
-                    account
+                    {{$t('mainHeader.account')}}
                   </a>
                 </li>
                 <li v-show="isUpgradeValid">
                   <a @click="linkRoute('/user/upgrade_acc')">
-                    Create Business Account
+                    {{$t('mainHeader.create_business_account' )}}
                   </a>
                 </li>
                 <li>
                   <a @click="linkRoute('/orders')">
-                    New Delivery
+                    {{$t('mainHeader.new_delivery')}}
                   </a>
                 </li>
                 <li>
                   <a @click="linkPayments()">
-                    Payment
+                    {{$t('mainHeader.payment')}}
                   </a>
                 </li>
                 <li>
                   <a @click="linkRoute('/transactions/order_history')">
-                    Orders
+                    {{$t('mainHeader.orders')}}
                   </a>
                 </li>
-                <li>
+                <li v-if="enabledFreightCountry">
                   <a @click="linkRoute('/orders/freight')">
-                    Freight
+                    {{$t('mainHeader.freight_small')}}
                   </a>
                 </li>
                 <li v-if="admin_user">
                   <a @click="linkRoute('/admin/users')">
-                    Settings
+                    {{$t('mainHeader.settings')}}
                   </a>
                 </li>
                 <li v-if="admin_user">
                   <a @click="linkRoute('/analytics/report')">
-                    Analytics
+                    {{ $t('mainHeader.analytics' )}}
                   </a>
                 </li>
                 <li>
                   <a @click="linkRoute('/user/profile/personal_information')">
-                    Profile
+                    {{$t('mainHeader.profile')}}
                   </a>
                 </li>
               </div>
               <li v-if="admin_details">
                 <a @click="linkRoute('/orders/freight')">
-                  Freight
+                  {{$t('mainHeader.freight' )}}
                 </a>
               </li>
               <li class="menu--last-child">
@@ -125,7 +125,7 @@
                   class="menu--last-child-link"
                   @click="logOut"
                 >
-                  Log Out
+                  {{$t('mainHeader.logout')}}
                 </a>
               </li>
             </ul>
@@ -141,10 +141,11 @@ import { mapGetters } from 'vuex';
 import axios from 'axios';
 import SessionMxn from '../../mixins/session_mixin';
 import EventsMixin from '../../mixins/events_mixin';
+import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
 
 export default {
   name: 'MainHeader',
-  mixins: [SessionMxn, EventsMixin],
+  mixins: [SessionMxn, EventsMixin, MixpanelMixin],
   data() {
     return {
       switchValid: false,
@@ -165,6 +166,7 @@ export default {
         'freight_create_orders',
         'freight_settings',
       ],
+      enabledFreightCountry: false,
     };
   },
   computed: {
@@ -199,6 +201,7 @@ export default {
       this.switchOption();
       this.loggedUser();
       this.superUserCheck();
+      this.preferredFreightCountries();
     }
   },
   methods: {
@@ -300,6 +303,19 @@ export default {
           'User Phone': session[session.default].user_phone,
         });
       }
+
+      if (route === '/freight') {
+        const session = this.$store.getters.getSession;
+        this.trackMixpanelEvent('Freight Tab Navigated', {
+          userId: session[session.default].user_id,
+          email: session[session.default].user_email,
+          phone: session[session.default].user_phone,
+          name: session[session.default].user_name,
+          clientType: 'Web',
+          clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
+          device: 'Desktop',
+        });
+      }
       let eventLabel;
       switch (route) {
         case '/user/upgrade_acc':
@@ -352,10 +368,15 @@ export default {
         // ...
       }
     },
+    preferredFreightCountries() {
+      const session = this.$store.getters.getSession;
+      const country = session[session.default].country_code;
+      this.enabledFreightCountry = country === 'CI' ? false : true;
+    },
   },
 };
 </script>
 
 <style lang="css">
-@import '../../assets/styles/internal_header.css?v=2';
+@import '../../assets/styles/internal_header.css';
 </style>

@@ -1,7 +1,7 @@
 .header{
     top: 0px;
     color: #fff;
-    background-color: #1782C5;
+    background-color: #1782c5;
     z-index: 999;
     outline: none;
     /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); */
@@ -23,7 +23,7 @@
 
 }
 .header--item__right{
-    margin-right: 5em;
+    margin-right: 2em;
 }
 .logo{
     height: 50px;
@@ -44,6 +44,12 @@ nav ul {
 	list-style: none;
     margin: unset;
 }
+.nav--menu-section-right {
+    display: flex;
+}
+.account-type {
+    width: max-content;
+}
 nav ul:after {
 	content: ""; clear: both; display: block;
 }
@@ -52,7 +58,7 @@ nav ul li {
 	float: left;
 }
 nav ul li:hover {
-	background: #144e64;
+	background: #144e64 ;
 }
 nav ul li:hover ul{
 
@@ -144,7 +150,7 @@ nav ul li .router-link-active{
 .nav--menu-dropdown-list li a {
     color: #555 !important;
     cursor: pointer;
-    font-family: 'Rubik', sans-serif  !important;
+    font-family: 'Nunito', sans-serif !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -196,25 +202,35 @@ a.menu--last-child-link {
 .active_segmentation_menu{
   background: #FFFFFF;
   border-radius: 6px;
-  margin-top: 8%;
+  margin-top: 15%;
   width: 105%;
   margin-left: -1%;
-  height: 21% !important;
+  height: 8% !important;
+}
+.external-logo{
+  height: 50px;
+  display: inline-flex;
+  align-self: center;
+}
+.external--item__left{
+  margin: auto;
+  display: block;
 }
 .header--icon{
   display: flex;
 }
 .segmentation-align{
-  margin-left: 1%;
-  padding: 1.7em 39px;
+  margin-left: 3%;
+  margin-left: 3%;
+  padding: 1.5em 40px;
 }
 .disable_segmentation_menu{
   background: none;
   border-radius: 6px;
-  margin-top: 8%;
+  margin-top: 15%;
   width: 105%;
   margin-left: -1%;
-  height: 21% !important;
+  height: 8% !important;
 }
 .logistics-tab{
   margin-right: 20%;
@@ -223,8 +239,18 @@ a.menu--last-child-link {
   color: #fff !important;
   text-transform: uppercase;
 }
-@media only screen and (max-width: 1342px) {
+@media only screen and (max-width: 1294px) {
   .helpline-contact {
     display: none !important;
   }
+}
+@media only screen and (max-width: 900px) {
+    .account-type {
+        display: none !important;
+    }
+  }
+@media only screen and  (max-width: 1200px) {
+    .infobar--outer {
+        width: 90% !important;
+    }
 }

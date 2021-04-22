@@ -10,7 +10,7 @@
         class="button-primary paymentbody--input-button"
         @click="cancelPaymentRequest"
       >
-        Cancel
+        {{$t('general.cancel')}}
       </button>
     </div>
   </div>
@@ -22,7 +22,7 @@ import { mapActions } from 'vuex';
 export default {
   name: 'PaymentLoading',
   props: {
-    pay_method: {
+    payMethod: {
       type: String,
       default: 'mpesa',
     },
@@ -35,10 +35,10 @@ export default {
   computed: {
     payment_loading_title() {
       if (this.pay_method === 'mpesa') {
-        return 'Please follow the M-Pesa instructions on your phone screen';
+        return this.$t('general.please_follow_mpesa_instructions');
       }
       if (this.pay_method === 'card') {
-        return 'Processing your card operation';
+        return this.$t('general.processing_your_card_operation');
       }
     },
   },

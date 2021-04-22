@@ -1,5 +1,4 @@
-/* eslint-disable max-len */
-/* eslint-disable camelcase */
+/* eslint-disable max-len */ /* eslint-disable camelcase */
 <template lang="html">
   <div class="">
     <main-header />
@@ -26,14 +25,14 @@
             class="tour-end"
             @click="skipTour()"
           >
-            End tour
+            {{ $t('general.end_tour') }}
           </p>
           <p
             v-if="activeClass === 1"
             class="tour-end"
             @click="selectPickup()"
           >
-            NEXT
+            {{ $t('general.next') }}
           </p>
         </div>
       </div>
@@ -59,10 +58,11 @@
             <span
               class="upload-link"
               @click="simulateClick()"
-            >Click here</span> to upload
+            >{{ $t('general.click_here') }}</span>
+            {{ $t('general.to_upload') }}
           </p>
           <p class="no-margin upload-text">
-            (We support .csv .xlsx and .xml)
+            ({{ $t('general.we_support_file_formats') }})
           </p>
           <input
             id="upload-input"
@@ -78,7 +78,7 @@
             :disabled="uploadBtn === 'button--primary-inactive inactive-1'"
             @click="upload()"
           >
-            Upload CSV
+            {{ $t('general.upload_csv') }}
           </button>
         </div>
         <div
@@ -95,7 +95,7 @@
             class="upload-photo"
           >
           <p class="no-margin upload-par">
-            Your file has been uploaded! An order will be generated shortly.
+            {{ $t('general.files_uploaded') }}
           </p>
         </div>
         <div
@@ -108,30 +108,30 @@
           >
           <div class="countdown-container">
             <p class="countdown-heading">
-              SENDY FREIGHT
+              {{ $t('general.sendy_freight') }}
             </p>
             <p class="countdown-par">
-              LAUNCHING SOON
+              {{ $t('general.launching_soon') }}
             </p>
             <div class="timer">
               <span class="countdown-time">
                 <p class="timer-digits">{{ days }}</p>
-                <p class="timer-description">DAYS</p>
+                <p class="timer-description">{{ $t('general.days') }}</p>
               </span>
               <span class="countdown-divider">:</span>
               <span class="countdown-time">
                 <p class="timer-digits">{{ hours }}</p>
-                <p class="timer-description">HOURS</p>
+                <p class="timer-description">{{ $t('general.hours') }}</p>
               </span>
               <span class="countdown-divider">:</span>
               <span class="countdown-time">
                 <p class="timer-digits">{{ minutes }}</p>
-                <p class="timer-description">MINUTES</p>
+                <p class="timer-description">{{ $t('general.minutes') }}</p>
               </span>
               <span class="countdown-divider">:</span>
               <span class="countdown-time">
                 <p class="timer-digits">{{ seconds }}</p>
-                <p class="timer-description">SECONDS</p>
+                <p class="timer-description">{{ $t('general.seconds') }}</p>
               </span>
             </div>
           </div>
@@ -141,20 +141,19 @@
           class="tour-popup"
         >
           <p class="tour-popup-description">
-            Hello! We’ve added a new feature, the open destination orders. We’d like to give you a
-            quick tour of this new feature.
+            {{ $t('general.new_feature_added') }}
           </p>
           <p
             class="tour-popup-get-started"
             @click="startTour()"
           >
-            Let’s get started!
+            {{ $t('general.get_started') }}
           </p>
           <p
             class="tour-popup-skip"
             @click="skipTour()"
           >
-            Skip tour
+            {{ $t('general.skip_tour') }}
           </p>
         </div>
         <div
@@ -163,7 +162,7 @@
         >
           <div class="locations-popup-title">
             <p class="locations-popup-title-text">
-              Manage saved {{ waypointType }} locations
+              {{ $t('general.manage_saved_locations', { waypointType: waypointType }) }}
             </p>
             <i
               slot="suffix"
@@ -181,21 +180,28 @@
             <gmap-autocomplete
               v-model="location"
               :options="map_options"
-              :placeholder="`Enter a ${waypointType} location`"
+              :placeholder="
+                $t('general.enter_waypoint_type_location', { waypointType: waypointType })
+              "
               :select-first-on-enter="true"
               class="input-control homeview--input-bundler__input input-control manage-locations-input"
               @place_changed="setLocation($event)"
             />
           </div>
           <button
-            :class="location && !locationSavingStatus ? 'locations-popup-button-active' : 'locations-popup-button-inactive'"
+            :class="
+              location && !locationSavingStatus
+                ? 'locations-popup-button-active'
+                : 'locations-popup-button-inactive'
+            "
             @click="saveLocation()"
           >
-            {{ locationSavingStatus ? 'Saving' : 'Save' }} Location
+            {{ locationSavingStatus ? `${$t('general.saving')}` : `${$t('general.save')}` }}
+            {{ $t('general.location_capital') }}
           </button>
           <div>
             <p class="locations-popup-saved-title">
-              Saved locations
+              {{ $t('general.saved_locations') }}
             </p>
             <div class="locations-popup-saved-list">
               <div
@@ -226,19 +232,234 @@
                   class="locations-popup-saved-remove"
                   @click="removeLocation(suggestion)"
                 >
-                  Remove
+                  {{ $t('general.remove') }}
                 </span>
               </div>
               <div
                 v-if="suggestions.length === 0"
                 class="saved-locations-message"
               >
-                No saved {{ waypointType }} locations
+                {{ $t('general.no_saved_locations', { waypointType: waypointType }) }}
               </div>
             </div>
           </div>
         </div>
+        <div
+          v-if="pairing_status"
+          class="pairing-popup"
+        >
+          <div class="pair-vehicles-popup">
+            <div class="pair-vehicles-title">
+              {{ $t('general.pair_with_driver') }}
+              <i
+                slot="suffix"
+                class="close el-input__icon el-icon-error"
+                @click="closePairingPopup()"
+              />
+            </div>
+            <div class="pair-vehicles-title-description">
+              {{ $t('general.enter_phone_number_vehicle_to_pair') }}
+            </div>
+            <div class="pair-vehicles-list">
+              <div
+                v-for="(activeVendor, index) in pairing_data"
+                :key="index"
+                class="pair-vehicle-rows"
+              >
+                <div
+                  :key="renderKey"
+                  :name="activeVendor.pair_rider_name"
+                />
+                <div class="pair-vehicles-vendor-title">
+                  <span>{{ $t('general.pair_with_driver_single') }} {{ index + 1 }}</span><span class="pair-vehicles-vendor-id">({{ activeVendor.vendor_name }})</span>
+                </div>
+                <div class="">
+                  <el-input
+                    :id="`input${index}`"
+                    v-model="activeVendor.vehicle_plate"
+                    :placeholder="vehicleDetailsPlaceholder"
+                    autocomplete="true"
+                    @input="checkVehicleDetails(activeVendor, index)"
+                  >
+                    <i
+                      v-if="activeVendor.searchOption"
+                      slot="suffix"
+                      class="el-icon-loading el-input__icon"
+                    />
+                    <i
+                      v-if="activeVendor.pair_status !== ''"
+                      slot="suffix"
+                      class="el-icon-close el-input__icon"
+                      @click="clearVehicleDetails(activeVendor, index)"
+                    />
+                  </el-input>
+                  <div
+                    v-if="activeVendor.searchOption"
+                    class="pair-info-loading"
+                  >
+                    <div class="pairing-loading-holder">
+                      <i class="el-icon-loading pairing-alert-icon" />
+                      <div class="pair-model-info-variant">
+                        {{ $t('general.finding_driver_details') }}
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    v-if="activeVendor.visible2"
+                    class="pair_info_text_content"
+                  >
+                    <div
+                      v-if="activeVendor.pair_status === '1'"
+                      class="pair-info-warning"
+                    >
+                      <div class="pairing-error-icon-holder">
+                        <i class="el-icon-warning pairing-alert-icon" />
+                      </div>
+                      <div class="share-option pairing-error-holder">
+                        <div class="pairing-error-header pairing-error-header-variant">
+                          {{ $t('general.driver_not_found') }}
+                        </div>
+                        <div class="pair-model-info-variant">
+                          {{ activeVendor.failure_text }}
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      v-if="activeVendor.pair_status === '2'"
+                      class="pair-info-success"
+                    >
+                      <div class="pair-info-rider-details">
+                        <img
+                          align="middle"
+                          class="display_paired_rider_img"
+                          :src="activeVendor.pair_rider_image"
+                        >
+                        <div class="display_paired_rider_details">
+                          <div class="pair-rider-name pair-rider-name-variant">
+                            {{ activeVendor.pair_rider_name }}
+                          </div>
+                          <div class="pair-rider-rating-icons">
+                            <div class="pair-rider-rating-icons-val">
+                              {{
+                                `${activeVendor.pair_rider_rating}${
+                                  Number.isInteger(activeVendor.pair_rider_rating) ? '.0' : ''
+                                }`
+                              }}
+                            </div>
+                            <div class="pair-rider-rating-icons-holder">
+                              <el-rate
+                                v-model="activeVendor.pair_rider_rating"
+                                disabled
+                                disabled-void-color="#C0C4CC"
+                                :colors="['#1782C5', '#1782C5', '#1782C5']"
+                                class="pair-info-rider-rate-icons"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="share-option pair-info-vehicle-details">
+                        <div class="pair-model-info">
+                          {{ activeVendor.pair_rider_make }} {{ activeVendor.pair_rider_model }}
+                        </div>
+                        <div>
+                          {{ activeVendor.pair_rider_plate }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pair-button-section">
+              <button
+                class="button-primary pair-button"
+                @click="closePairingPopup()"
+              >
+                {{ $t('general.done_capital') }}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
+      <el-dialog
+        :visible.sync="automaticRescheduleStatus"
+        width="30%"
+        class="updateNotificationsDialog"
+        :modal-append-to-body="false"
+      >
+        <div class="add-instructions-outer">
+          <p class="add-instructions-setup schedule_time_outer reschedule-header">
+            {{ $t('general.order_has_been_rescheduled') }}
+          </p>
+          <div>
+            <div class="dotted-divider" />
+            <div class="reschedule-location-icons">
+              <font-awesome-icon
+                icon="circle"
+                size="xs"
+                class="sendy-orange"
+                width="10px"
+              />
+              <p class="reschedule-location-title">
+                {{ rescheduleNotification ? rescheduleNotification.data.pickup_name : '' }}
+              </p>
+            </div>
+            <div class="reschedule-location-icons">
+              <font-awesome-icon
+                icon="circle"
+                size="xs"
+                class="location-icons sendy-blue"
+                width="10px"
+              />
+              <p class="reschedule-location-title">
+                {{ rescheduleNotification ? rescheduleNotification.data.destination_name : '' }}
+              </p>
+            </div>
+          </div>
+          <p class="reschedule-locations-message">
+            {{ rescheduleNotification ? rescheduleNotification.notification.body : '' }}
+          </p>
+          <div class="solid-divider" />
+          <p class="reschedule-locations-prompt-message">
+            {{ $t('general.reschedule_pick_up_to_another_time') }}
+          </p>
+          <div class="">
+            <div
+              class="instructions--inner-section"
+            >
+              <div class="">
+                <div
+                  class=""
+                >
+                  <el-date-picker
+                    v-model="schedule_time"
+                    class="vendor_component-actions__element-date"
+                    type="datetime"
+                    format="dd-MM-yyyy h:mm a"
+                    :placeholder="$t('general.select_date_and_time')"
+                    prefix-icon="el-icon-date"
+                    :default-time="default_value"
+                    :picker-options="dueDatePickerOptions"
+                    @change="dispatchScheduleTime"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="">
+            <div class="">
+              <input
+                class="button-primary add-instructions-submit reschedule-button"
+                type="submit"
+                :value="$t('general.reschedule_order')"
+                @click="updateScheduledTime()"
+              >
+            </div>
+          </div>
+        </div>
+      </el-dialog>
       <map-component />
       <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
       <ongoing-component
@@ -254,6 +475,7 @@
       >
         <router-view />
       </transition>
+
       <transition
         v-if="showSocialMediaApprovalDialog"
         name="fade"
@@ -264,6 +486,7 @@
           :cop-id="copId"
         />
       </transition>
+
       <transition
         name="fade"
         mode="out-in"
@@ -278,182 +501,201 @@
           >
             <div class="finish-setup-outer">
               <p class="crm-setup">
-                Finish account set up
+                {{ $t('general.finish_account_setup') }}
               </p>
-              <div class="">
-                <div v-if="updateKraSection">
-                  <div class="">
-                    <label
-                      class="final-label"
-                    >Does your business file VAT returns? (optional)</label>
-                    <div class="final-upper-padding">
-                      <el-select
-                        v-model="tax_compliance"
-                        placeholder="Select"
-                        class="compliance-select-final"
-                      >
-                        <el-option
-                          v-for="item in selectOptions"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                        />
-                      </el-select>
-                    </div>
-                  </div>
 
-                  <div
-                    v-if="tax_compliance"
-                    class="final-upper-padding"
+              <div
+                v-if="updateSetIndustry"
+                class="final-upper-padding"
+              >
+                <label class="final-label">{{ $t('general.industry') }}</label>
+                <div class="final-upper-padding">
+                  <el-select
+                    v-model="industry_type"
+                    filterable
+                    popper-append-to-body="false"
+                    :placeholder="$t('general.select')"
+                    class="compliance-select-final"
                   >
-                    <label class="final-label">Enter your business KRA pin</label>
-                    <div class="final-upper-padding">
-                      <input
-                        v-model="kra_pin"
-                        class="input-control upgrade-final"
-                        type="text"
-                        name="kra_pin"
-                        placeholder="KRA PIN"
-                        autocomplete="on"
-                      >
-                      <span
-                        v-show="!valid_kra_pin"
-                        class="invalid-kra"
-                      >
-                        Please enter a valid KRA PIN
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="final-upper-padding">
-                    <label class="final-label">
-                      Select the primary vehicle you will be using for your business.
-                    </label>
-                    <p class="final-inner">
-                      (This will not restrict you from using other vehicles)
-                    </p>
-                    <div class="final-upper-padding">
-                      <div class="vendors-final-outerline">
-                        <div
-                          class="vendor-final-cards"
-                          :class="{ vendor_active_final: activeTab === 'mbu' }"
-                          @click="selectCard('mbu', 1)"
-                        >
-                          <img
-                            class="vendor-types-final"
-                            :src="getVendorIcon(1)"
-                            alt=""
-                          >
-                        </div>
-                        <div
-                          class="vendor-final-cards"
-                          :class="{ vendor_active_final: activeTab === 'ebu' }"
-                          @click="selectCard('ebu', 2)"
-                        >
-                          <img
-                            class="vendor-types-final"
-                            :src="getVendorIcon(6)"
-                            alt=""
-                          >
-                        </div>
-                        <div
-                          class="vendor-final-cards"
-                          :class="{ vendor_active_final: activeTab === 'fbu' }"
-                          @click="selectCard('fbu', 3)"
-                        >
-                          <img
-                            class="vendor-types-final"
-                            :src="getVendorIcon(25)"
-                            alt=""
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    <el-option
+                      v-for="item in industriesOptions"
+                      :key="item.industry_id"
+                      :label="item.name"
+                      :value="item.industry_id"
+                    />
+                  </el-select>
                 </div>
-                <div
-                  v-if="updateSetIndustry"
-                  class="final-upper-padding"
-                >
-                  <div class="final-upper-padding">
-                    <label class="final-label">What industry is your business in?</label>
-                    <div class="final-upper-padding">
-                      <el-select
-                        v-model="industry_type"
-                        placeholder="Select"
-                        class="compliance-select-final"
-                      >
-                        <el-option
-                          v-for="item in industriesOptions"
-                          :key="item.industry_id"
-                          :label="item.name"
-                          :value="item.industry_id"
-                        />
-                      </el-select>
-                    </div>
-                  </div>
+              </div>
 
-                  <div class="final-upper-padding">
-                    <label class="final-label">Is social media your main source of clients?</label>
-                    <div class="final-upper-padding">
-                      <el-select
-                        v-model="social_media_option"
-                        placeholder="Select"
-                        class="compliance-select-final"
-                      >
-                        <el-option
-                          v-for="item in selectOptions"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                        />
-                      </el-select>
-                    </div>
-                  </div>
-
-                  <div
-                    v-if="social_media_option"
-                    class="final-upper-padding"
+              <div class="final-upper-padding">
+                <label class="final-label">{{ $t('general.business_categories') }}</label>
+                <p class="final-inner">
+                  ({{ $t('general.finetune') }})
+                </p>
+                <div class="final-upper-padding">
+                  <el-select
+                    v-model="business_category_option"
+                    :placeholder="$t('general.select')"
+                    class="compliance-select-final"
+                    popper-class="business-categories-options"
                   >
-                    <label class="final-label">What is your business instragram handle?</label>
-                    <div class="final-upper-padding">
-                      <input
-                        v-model="ig_media_handle"
-                        class="input-control upgrade-final"
-                        type="text"
-                        placeholder="@mystore"
-                        autocomplete="on"
-                      >
-                    </div>
-                  </div>
-
-                  <div
-                    v-if="social_media_option"
-                    class="final-upper-padding"
-                  >
-                    <label
-                      class="final-label"
-                    >What is the link to your business facebook page?</label>
-                    <div class="final-upper-padding">
-                      <input
-                        v-model="facebook_media_handle"
-                        class="input-control upgrade-final"
-                        type="text"
-                        placeholder="www.facebook.com/pages/mystore"
-                        autocomplete="on"
-                      >
-                    </div>
-                  </div>
+                    <el-option
+                      v-for="item in businessCategories"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id"
+                    >
+                      <p class="business-categories-options-titles">
+                        {{ item.name }}
+                      </p> <br>
+                      <p class="business-categories-options-definitions">
+                        {{ item.description }}
+                      </p>
+                    </el-option>
+                  </el-select>
                 </div>
+              </div>
 
-                <div class="">
+              <div
+                v-if="social_media_option"
+                class="final-upper-padding"
+              >
+                <label class="final-label">{{ $t('general.biz_insta_handle') }}</label>
+                <div class="final-upper-padding">
                   <input
-                    class="button-primary final-step-submit"
-                    type="submit"
-                    value="Submit"
-                    @click="submit"
+                    v-model="ig_media_handle"
+                    class="input-control upgrade-final"
+                    type="text"
+                    placeholder="@mystore"
+                    autocomplete="on"
                   >
                 </div>
+              </div>
+
+              <div
+                v-if="social_media_option"
+                class="final-upper-padding"
+              >
+                <label class="final-label">{{ $t('general.link_business_face_book_page') }}</label>
+                <div class="final-upper-padding">
+                  <input
+                    v-model="facebook_media_handle"
+                    class="input-control upgrade-final"
+                    type="text"
+                    placeholder="www.facebook.com/pages/mystore"
+                    autocomplete="on"
+                  >
+                </div>
+              </div>
+
+              <div class="final-upper-padding">
+                <label class="final-label">
+                  {{ $t('general.delivery_option') }}
+                </label>
+                <p class="final-inner">
+                  ({{ $t('general.not_restrict_other_delivery_options') }})
+                </p>
+                <div class="final-upper-padding">
+                  <div class="vendors-final-outerline">
+                    <div
+                      class="vendor-final-cards"
+                      :class="{ vendor_active_final: activeTab === 'mbu' }"
+                      @click="selectCard('mbu', 1)"
+                    >
+                      <img
+                        class="vendor-types-final"
+                        :src="getVendorIcon(1)"
+                        alt=""
+                      >
+                      <p class="vendor-type-icon-labels">
+                        {{ $t('general.bikes') }}
+                      </p>
+                    </div>
+                    <div
+                      class="vendor-final-cards"
+                      :class="{ vendor_active_final: activeTab === 'ebu' }"
+                      @click="selectCard('ebu', 2)"
+                    >
+                      <img
+                        class="vendor-types-final"
+                        :src="getVendorIcon(6)"
+                        alt=""
+                      >
+                      <p class="vendor-type-icon-labels">
+                        {{ $t('general.pickups_trucks_and_vans') }}
+                      </p>
+                    </div>
+                    <div
+                      class="vendor-final-cards"
+                      :class="{ vendor_active_final: activeTab === 'fbu' }"
+                      @click="selectCard('fbu', 3)"
+                    >
+                      <img
+                        class="vendor-types-final"
+                        :src="getVendorIcon(25)"
+                        alt=""
+                      >
+                      <p class="vendor-type-icon-labels">
+                        {{ $t('general.freight') }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="updateKraSection">
+                <div class="">
+                  <label class="final-label">{{ $t('general.does_biz_file_vat_optional') }}</label>
+
+                  <div class="final-upper-padding">
+                    <el-select
+                      v-model="tax_compliance"
+                      :placeholder="$t('general.select')"
+                      class="compliance-select-final"
+                    >
+                      <el-option
+                        v-for="item in selectOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                v-if="tax_compliance"
+                class="final-upper-padding"
+              >
+                <label
+                  class="final-label"
+                >{{ fetchKraHeader }}</label>
+                <div class="final-upper-padding">
+                  <input
+                    v-model="kra_pin"
+                    class="input-control upgrade-final"
+                    type="text"
+                    name="kra_pin"
+                    :placeholder="$t('general.pin')"
+                    autocomplete="on"
+                  >
+                  <span
+                    v-show="!valid_kra_pin"
+                    class="invalid-kra"
+                  >
+                    {{ kraFailResponse }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="">
+                <input
+                  class="button-primary final-step-submit"
+                  type="submit"
+                  :value="$t('general.submit')"
+                  @click="submit"
+                >
               </div>
             </div>
           </el-dialog>
@@ -464,6 +706,7 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import { mapMutations, mapGetters, mapActions } from 'vuex';
 import S3 from 'aws-s3';
 import orderStore from './_store';
@@ -471,11 +714,12 @@ import RegisterStoreModule from '../../mixins/register_store_module';
 import MainHeader from '../../components/headers/MainHeader.vue';
 import MapComponent from './_components/MapComponent.vue';
 import OngoingComponent from './_components/OngoingComponent.vue';
-import ApprovalDialog from './_components/social_media_business/ApprovalDialog.vue';
+import ApprovalDialog from './_components/social_media/ApprovalDialog.vue';
 import FbuChildOrders from './_components/FbuChildOrders.vue';
 import NPSFooter from '../../components/footers/NPSFooter.vue';
 import NpsMixin from '../../mixins/nps_mixin';
 import SessionMxn from '../../mixins/session_mixin';
+import TimezoneMxn from '../../mixins/timezone_mixin';
 import NotificationMxn from '../../mixins/notification_mixin';
 
 let interval = '';
@@ -490,7 +734,7 @@ export default {
     ApprovalDialog,
     NPSFooter,
   },
-  mixins: [RegisterStoreModule, NpsMixin, SessionMxn, NotificationMxn],
+  mixins: [RegisterStoreModule, NpsMixin, SessionMxn, TimezoneMxn, NotificationMxn],
   data() {
     return {
       showSocialMediaApprovalDialog: false,
@@ -505,7 +749,10 @@ export default {
       upload_status: false,
       tour_status: false,
       locations_status: false,
+      pairing_status: false,
+      pairing_data: '',
       location: '',
+      suggestion: '',
       uploadButton: '',
       success_status: false,
       countdown: '',
@@ -518,6 +765,7 @@ export default {
       updateSetIndustry: false,
       tax_compliance: '',
       social_media_option: '',
+      business_category_option: '',
       ig_media_handle: '',
       facebook_media_handle: '',
       industry_type: '',
@@ -525,6 +773,8 @@ export default {
       activeTab: '',
       primary_business_unit: '',
       activeRow: 0,
+      renderKey: 1,
+      focusedInput: '',
       map_options: {
         componentRestrictions: {
           country: ['ke', 'ug', 'tz'],
@@ -548,41 +798,46 @@ export default {
           label: 'No',
         },
       ],
+      businessCategories: [],
       activeClass: -1,
       waypoint_type: '',
       locationSavingStatus: false,
+      automaticRescheduleStatus: false,
+      rescheduleNotification: '',
+      schedule_time: '',
+      default_value: this.moment().format('HH:mm:ss'),
+      dueDatePickerOptions: {
+        disabledDate: this.disabledDueDate,
+      },
       dedicatedTourPoints: [
         {
-          title: 'Order Type: Dedicated vehicles',
-          description:
-            'Get a truck for a whole day to do all your deliveries. We handle your logistics while you focus on your core business',
+          title: this.$t('general.order_type_dedicated_vehicles'),
+          description: this.$t('general.get_truck_whole_day'),
           class: '.tour-pointer-1',
         },
         {
-          title: 'Order Type: No Destination',
-          description:
-            'With no destination vehicles you can skip adding a destination or add a general region to deliver in and the driver will check off each delivery stop. Enter the pick up location input to continue',
+          title: this.$t('general.order_type_no_destination'),
+          description: this.$t('general.skip_adding_destination'),
           class: '.tour-pointer-2',
         },
         {
-          title: 'Vehicle Type',
-          description:
-            'Select multiple vehicle types and multiple vehicles of the same vehicle type',
+          title: this.$t('general.vehicle_type'),
+          description: this.$t('general.select_multiple_vehicle'),
           class: '.tour-pointer-3',
         },
         {
-          title: 'Select Vehicle type',
-          description: 'Select open or closed vehicles for pick ups and bikes',
+          title: this.$t('general.select_vehicle_type'),
+          description: this.$t('general.select_open_or_closed_vehicles'),
           class: '.tour-pointer-4',
         },
         {
-          title: 'Schedule',
-          description: 'Select the date for your deliveries',
+          title: this.$t('general.schedule'),
+          description: this.$t('general.select_date_for_delivery'),
           class: '.tour-pointer-5',
         },
         {
-          title: 'Schedule: Time',
-          description: 'Select the time-frame you’d like your deliveries done',
+          title: this.$t('general.schedule_time_capital'),
+          description: this.$t('general.select_time_frame'),
           class: '.tour-pointer-6',
         },
       ],
@@ -594,6 +849,7 @@ export default {
       getDedicatedAccessStatus: 'getDedicatedAccessStatus',
       get_session: 'getSession',
       getSuggestions: '$_orders/getSuggestions',
+      getExpandedActiveVendorTally: '$_orders/getExpandedActiveVendorTally',
     }),
     uploadBtn() {
       if (this.uploadButton) {
@@ -601,14 +857,39 @@ export default {
       }
       return 'button--primary-inactive inactive-1';
     },
+    fetchKraHeader() {
+      let kraName = this.$t('general.tin_number');
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        kraName = this.$t('general.kra_pin');
+      }
+      let resp = `${this.$t('general.enter_your_business')} ${kraName}`;
+      if (session.default === 'peer') {
+        resp = `${this.$t('general.enter_your')} ${kraName}`;
+      }
+      return resp;
+    },
+    kraFailResponse() {
+      let resp = 'Please enter a valid TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        resp = 'Please enter a valid KRA PIN';
+      }
+      return resp;
+    },
     valid_kra_pin() {
       const pin = this.kra_pin;
+      const session = this.$store.getters.getSession;
 
       if (pin !== '') {
-        return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+        if (session[session.default].country_code === 'KE') {
+          return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+        }
+        return /^\d{10}$/.test(pin);
       }
       return true;
     },
+
     suggestions() {
       const rows = [];
       this.getSuggestions.forEach((row) => {
@@ -619,7 +900,23 @@ export default {
       return rows;
     },
     waypointType() {
-      return this.waypoint_type === 'PICKUP' ? 'pick up' : 'drop off';
+      return this.waypoint_type === 'PICKUP'
+        ? this.$t('general.pickup_lowercase')
+        : this.$t('general.drop_off_lowercase');
+    },
+    vehicleDetailsPlaceholder() {
+      return this.$t('general.enter_no_plate');
+    },
+    order_is_scheduled() {
+      return this.moment(this.current_time).isBefore(this.schedule_time);
+    },
+    current_time() {
+      return this.moment().format('YYYY-MM-DD HH:mm:ss');
+    },
+    scheduled_time() {
+      return this.moment(this.schedule_time, 'YYYY-MM-DD HH:mm:ss Z').format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
     },
   },
   watch: {
@@ -665,6 +962,9 @@ export default {
       },
       deep: true,
     },
+    business_category_option(val) {
+      this.social_media_option = val === 6;
+    },
   },
 
   created() {
@@ -694,6 +994,7 @@ export default {
     this.isNewCopAcc();
     this.sessionFrefill();
     this.triggerFetchsuggestions();
+    this.fetchBusinessCategories();
     const session = this.$store.getters.getSession;
     if (session.default === 'biz') {
       this.setDedicatedAccessStatus(true);
@@ -715,24 +1016,40 @@ export default {
   methods: {
     ...mapActions({
       requestIndustries: '$_orders/requestIndustries',
+      requestPairRider: '$_orders/$_home/requestPairRider',
     }),
     ...mapMutations({
       clearVendorMarkers: '$_orders/clearVendorMarkers',
       setDedicatedAccessStatus: 'setDedicatedAccessStatus',
+      setPairWithRiderStatus: '$_orders/$_home/setPairWithRiderStatus',
+      setPairWithRiderState: '$_orders/$_home/setPairWithRiderState',
+      setPairSerialNumber: '$_orders/$_home/setPairSerialNumber',
+      setPairRiderPhone: '$_orders/$_home/setPairRiderPhone',
+      setVehicleDetails: '$_orders/$_home/setVehicleDetails',
+      setPairErrorMessage: '$_orders/$_home/setPairErrorMessage',
+      setExpandedActiveVendorTally: '$_orders/setExpandedActiveVendorTally',
+      setPairedDriversTally: '$_orders/setPairedDriversTally',
+      setScheduleStatus: 'setScheduleStatus',
     }),
     ...mapActions({
       fetchSuggestions: '$_orders/fetchSuggestions',
       saveSuggestions: '$_orders/saveSuggestions',
       removeSuggestions: '$_orders/removeSuggestions',
     }),
+    dispatchScheduleTime() {
+      this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
+    },
     checkSocialMediaApproval() {
       const session = this.$store.getters.getSession;
       if (Object.keys(session).length > 0) {
         if (session.default === 'biz') {
           const bizSession = session[session.default];
           this.copId = bizSession.cop_id;
-          const { verified_social_media_business, social_media_business_approval_status } = bizSession;
-          if (social_media_business_approval_status === 0) {
+          const {
+            verified_social_media_business,
+            social_media_business_approval_status,
+          } = bizSession;
+          if (social_media_business_approval_status === 1) {
             this.showSocialMediaApprovalDialog = true;
             this.socialMediaApprovalStatus = verified_social_media_business;
           }
@@ -783,6 +1100,175 @@ export default {
           this.industriesOptions = [];
         },
       );
+    },
+    fetchBusinessCategories() {
+      const payload = {
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'growth_business_categories',
+      };
+      this.requestIndustries(payload).then(
+        (response) => {
+          this.businessCategories = response;
+        },
+        (error) => {
+          this.businessCategories = [];
+        },
+      );
+    },
+    parseRating(data) {
+      parseInt(data, 10);
+    },
+    pairTally() {
+      let tally = 0;
+      this.getExpandedActiveVendorTally.forEach((row) => {
+        if (row.vehicle_plate && row.pair_status === '2') {
+          tally += 1;
+        }
+      });
+      return tally;
+    },
+    closePairingPopup() {
+      this.setPairedDriversTally(this.pairTally());
+      this.blinder_status = false;
+      this.pairing_status = false;
+    },
+    vendorOptions(id) {
+      if (this.small_vendors.includes(id)) {
+        return this.smallVendorOptions;
+      }
+      return this.baseTruckOptions;
+    },
+    clearVehicleDetails(vehicle, i) {
+      this.pairing_data[i].vehicle_plate = '';
+      this.pairing_data[i].visible2 = false;
+      this.pairing_data[i].pair_status = '';
+      this.setExpandedActiveVendorTally(this.pairing_data);
+      this.forceUpdate();
+    },
+    // eslint-disable-next-line func-names
+    checkVehicleDetails: _.debounce(function (vehicle, i) {
+      const vehicleDetails = vehicle.vehicle_plate;
+      this.focusedInput = i;
+      this.forceUpdate();
+      if (vehicleDetails === '') {
+        this.doNotification(
+          '2',
+          this.$t('general.vehicle_number_plate'),
+          this.$t('general.please_provide_the_vehicle_details_to_pair'),
+        );
+        this.pairing_data[i].visible2 = false;
+        this.pairing_data[i].searchOption = false;
+        this.pairing_data[i].pair_status = '';
+      } else {
+        this.pairing_data[i].searchOption = true;
+        this.handlePairRequest(vehicleDetails, vehicle, i);
+      }
+    }, 500),
+    updateData(value, vehicle, i) {
+      const val = value;
+      this.pairing_data[i].pair_rider_image = val.rider_photo;
+      this.pairing_data[i].pair_rider_name = val.rider_name;
+      this.pairing_data[i].pair_rider_rating = parseFloat(val.rider_rating);
+      this.pairing_data[i].pair_rider_make = val.make;
+      this.pairing_data[i].pair_rider_model = val.model;
+      this.pairing_data[i].pair_rider_plate = val.registration_no;
+      this.pairing_data[i].pair_rider_sim_card_sn = val.sim_card_sn;
+      this.pairing_data[i].pair_rider_phone = val.rider_phone;
+      this.pairing_data[i].visible2 = true;
+      this.pairing_data[i].pair_status = '2';
+      this.setExpandedActiveVendorTally(this.pairing_data);
+    },
+    handlePairRequest(plate, vehicle, i) {
+      this.pairing_data[i].visible2 = false;
+      this.pairing_data[i].pair_status = '';
+      const checkInputType = new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$');
+      const res = checkInputType.test(plate.replace(/\s/g, ''));
+      const payload = {};
+      payload.vendor_type = vehicle.vendor_id;
+      if (res) {
+        payload.phone_no = plate.replace(/\s/g, '');
+      } else {
+        payload.registration_no = plate.replace(/\s/g, '');
+      }
+      const fullPayload = {
+        values: payload,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'pair_order_rider_details',
+      };
+      this.requestPairRider(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.trackMixpanelEvent('Paired Open Destination Order With Rider', {
+              'Paired Rider': plate,
+            });
+            this.triggerGAEvent('Paired Open Destination Order With Rider', {
+              'Paired Rider': plate,
+            });
+            this.updateData(response.data, vehicle, i);
+          } else {
+            this.pairing_data[i].pair_status = '1';
+            this.pairing_data[i].failure_text = response.message;
+            this.pairing_data[i].visible2 = true;
+            this.setExpandedActiveVendorTally(this.pairing_data);
+          }
+          this.pairing_data[i].searchOption = false;
+          this.forceUpdate();
+        },
+        (error) => {
+          const msg = error.response.data.message;
+          this.pairing_data[i].pair_status = '1';
+          this.pairing_data[i].failure_text = msg;
+          this.pairing_data[i].visible2 = true;
+          this.setExpandedActiveVendorTally(this.pairing_data);
+          this.pairing_data[i].searchOption = false;
+          this.forceUpdate();
+        },
+      );
+    },
+    forceUpdate() {
+      this.renderKey += 1;
+    },
+    triggerGAEvent(field, value) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production') {
+          window.ga('send', 'event', {
+            eventCategory: 'Order Placement',
+            eventAction: 'Click',
+            eventLabel: field,
+            eventValue: value,
+          });
+        }
+      } catch (er) {
+        // ...
+      }
+    },
+    trackMixpanelEvent(name) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+
+      try {
+        if (analyticsEnv === 'production') {
+          mixpanel.track(name);
+          // this.$ga.event({
+          //   eventCategory: 'Orders',
+          //   eventAction: 'Price Request',
+          //   eventLabel: name,
+          //   eventValue: 14,
+          // });
+        }
+      } catch (er) {
+        // ...
+      }
     },
     checkTourStatus() {
       if (
@@ -888,9 +1374,13 @@ export default {
           session.default === 'biz'
           && Object.prototype.hasOwnProperty.call(session[session.default], 'tax_authority_pin')
         ) {
+          this.kra_pin = session[session.default].tax_authority_pin;
           if (session[session.default].tax_authority_pin === null) {
             this.tax_compliance = '';
             this.kra_pin = '';
+          } else if (session[session.default].tax_authority_pin !== '' && !this.valid_kra_pin) {
+            this.tax_compliance = false;
+            this.kra_pin = session[session.default].tax_authority_pin;
           } else if (session[session.default].tax_authority_pin !== '') {
             this.tax_compliance = true;
             this.kra_pin = session[session.default].tax_authority_pin;
@@ -899,6 +1389,65 @@ export default {
             this.kra_pin = '';
           }
         }
+      }
+    },
+    updateScheduledTime() {
+      if (this.schedule_time !== '') {
+        const time = this.order_is_scheduled
+          ? this.convertToUTC(this.scheduled_time)
+          : this.convertToUTC(this.current_time);
+
+        const scheduleTime = this.moment(time).utc().format('YYYY-MM-DD HH:mm:ss');
+
+        const value = {
+          order_no: this.rescheduleNotification.data.order_no,
+          client_type: 'corporate',
+          date_time: scheduleTime,
+        };
+
+        const payload = {
+          values: value,
+          app: 'ORDERS_APP',
+          endpoint: 'schedule_order',
+        };
+
+        this.$store.dispatch('$_orders/requestEditOrder', payload).then(
+          (response) => {
+            if (response.status) {
+              this.automaticRescheduleStatus = false;
+              this.schedule_time = '';
+              this.doNotification(
+                1,
+                this.$t('general.pickup_time_updated'),
+                '',
+              );
+              this.setScheduleStatus(false);
+            } else {
+              this.doNotification(
+                2,
+                this.$t('general.pickup_time_update_failed'),
+                this.$t('general.please_try_again'),
+              );
+            }
+          },
+          (error) => {
+            if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
+              this.doNotification(2, this.$t('general.pickup_time_update_failed'), error.response.data.reason);
+            } else {
+              this.doNotification(
+                2,
+                this.$t('general.pickup_time_update_failed'),
+                this.$t('general.something_went_wrong_please_try_again'),
+              );
+            }
+          },
+        );
+      } else {
+        this.doNotification(
+          2,
+          this.$t('general.edit_pickup_time'),
+          this.$t('general.kindly_provide_pickup_time'),
+        );
       }
     },
     rootListener() {
@@ -940,6 +1489,35 @@ export default {
         this.blinder_status = arg1;
         this.locations_status = arg1;
         this.waypoint_type = arg2;
+      });
+      this.$root.$on('Show reschedule dialogue', (arg1) => {
+        this.automaticRescheduleStatus = true;
+        this.rescheduleNotification = arg1;
+        this.setScheduleStatus(true);
+      });
+      this.$root.$on('Pairing status', (arg1) => {
+        this.blinder_status = arg1;
+        this.pairing_status = arg1;
+        this.pairing_data = this.getExpandedActiveVendorTally;
+        this.pairing_data.forEach((row, i) => {
+          this.pairing_data[i].vehicle_plate = row.vehicle_plate ? row.vehicle_plate : '';
+          this.pairing_data[i].pair_status = row.pair_status ? row.pair_status : '';
+          this.pairing_data[i].failure_text = row.failure_text ? row.failure_text : '';
+          this.pairing_data[i].pair_rider_image = row.pair_rider_image ? row.pair_rider_image : '';
+          this.pairing_data[i].pair_rider_name = row.pair_rider_name ? row.pair_rider_name : '';
+          this.pairing_data[i].pair_rider_rating = row.pair_rider_rating
+            ? row.pair_rider_rating
+            : '';
+          this.pairing_data[i].pair_rider_make = row.pair_rider_make ? row.pair_rider_make : '';
+          this.pairing_data[i].pair_rider_model = row.pair_rider_model ? row.pair_rider_model : '';
+          this.pairing_data[i].pair_rider_plate = row.pair_rider_plate ? row.pair_rider_plate : '';
+          this.pairing_data[i].pair_rider_sim_card_sn = row.pair_rider_sim_card_sn
+            ? row.pair_rider_sim_card_sn
+            : '';
+          this.pairing_data[i].pair_rider_phone = row.pair_rider_phone ? row.pair_rider_phone : '';
+          this.pairing_data[i].visible2 = row.visible2 ? row.visible2 : false;
+          this.pairing_data[i].searchOption = row.searchOption ? row.searchOption : false;
+        });
       });
     },
     hideLocationsManagement() {
@@ -1002,6 +1580,8 @@ export default {
             message: response.message,
           };
           this.displayNotification(notification);
+          this.trackMixpanelEvent('Save location suggestion', data);
+          this.triggerGAEvent('Save location suggestion', data);
           this.location = '';
           this.suggestion = '';
           this.triggerFetchsuggestions();
@@ -1009,8 +1589,10 @@ export default {
           const notification = {
             title: '',
             level: 3,
-            message: response.message === 'Location limit exceeded' ? `Limit allowed for saved ${this.waypointType} locations has been reached` : response.message,
+            message: response.message,
           };
+          this.location = '';
+          this.suggestion = '';
           this.displayNotification(notification);
         }
         this.locationSavingStatus = false;
@@ -1033,6 +1615,8 @@ export default {
             message: response.message,
           };
           this.displayNotification(notification);
+          this.trackMixpanelEvent('Remove location suggestion', data);
+          this.triggerGAEvent('Remove location suggestion', data);
           this.location = '';
           this.suggestion = '';
           this.triggerFetchsuggestions();
@@ -1109,8 +1693,8 @@ export default {
         .catch((err) => {
           this.doNotification(
             2,
-            'Failed to upload file',
-            'Please check your connection and try again',
+            this.$t('general.failed_upload_file'),
+            this.$t('general.check_connection_try_again'),
           );
         });
     },
@@ -1119,9 +1703,9 @@ export default {
       const sessionData = Object.keys(session).length;
       if (sessionData === 0) {
         const notification = {
-          title: 'Your session has expired!',
+          title: this.$t('general.session_has_expired'),
           level: 2,
-          message: 'You will be redirected to the login page within 5 seconds.',
+          message: this.$t('general.redirected_to_login'),
         };
         this.displayNotification(notification);
         setTimeout(() => {
@@ -1149,17 +1733,39 @@ export default {
       return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
     },
     handleKraAndIndustry() {
+      let kraName = 'TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        kraName = 'KRA PIN';
+      }
+
       if (this.primary_business_unit === '') {
-        this.doNotification(2, 'Final set up error !', 'Please select primary type vehicle');
+        this.doNotification(
+          2,
+          this.$t('general.final_setup_error'),
+          this.$t('general.select_primary_type_vehicle'),
+        );
       } else if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
-        this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
-      } else if (this.industry_type === '' || this.social_media_option === '') {
-        this.doNotification(2, 'Final set up error !', 'Please select industry preference');
+        this.doNotification(
+          2,
+          this.$t('general.final_setup_error'),
+          this.$t('general.enter_valid_kra'),
+        );
+      } else if (this.industry_type === '' || this.social_media_option === '' || this.business_category_option === '') {
+        this.doNotification(
+          2,
+          this.$t('general.final_setup_error'),
+          this.$t('general.select_industry_preference'),
+        );
       } else if (
         this.social_media_option
         && (this.ig_media_handle === '' && this.facebook_media_handle === '')
       ) {
-        this.doNotification(2, 'Final set up error !', 'Please provide social media handle');
+        this.doNotification(
+          2,
+          this.$t('general.final_setup_error'),
+          this.$t('general.social_media_handle'),
+        );
       } else {
         const session = this.$store.getters.getSession;
         const payload = {
@@ -1172,6 +1778,7 @@ export default {
           primary_business_unit: this.primary_business_unit,
           social_media_business: this.social_media_option,
           industry_id: this.industry_type,
+          growth_business_category_id: this.business_category_option,
         };
         if (this.ig_media_handle !== '') {
           payload.instagram_handle = this.ig_media_handle;
@@ -1183,12 +1790,24 @@ export default {
       }
     },
     handleKraSetUp() {
+      let kraName = 'TIN number';
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        kraName = 'KRA PIN';
+      }
       if (this.primary_business_unit === '') {
-        this.doNotification(2, 'Final set up error !', 'Please select primary type vehicle');
+        this.doNotification(
+          2,
+          this.$t('general.final_setup_error'),
+          this.$t('general.select_primary_type_vehicle'),
+        );
       } else if ((this.tax_compliance && this.kra_pin === '') || !this.valid_kra_pin) {
-        this.doNotification(2, 'Final set up error !', 'Please enter valid KRA PIN');
+        this.doNotification(
+          2,
+          this.$t('general.final_setup_error'),
+          this.$t('general.enter_valid_kra'),
+        );
       } else {
-        const session = this.$store.getters.getSession;
         const payload = {
           cop_id: session[session.default].cop_id,
           cop_name: session[session.default].cop_name,
@@ -1202,13 +1821,21 @@ export default {
       }
     },
     handleIndustrySetUp() {
-      if (this.industry_type === '' || this.social_media_option === '') {
-        this.doNotification(2, 'Final set up error !', 'Please select industry preference');
+      if (this.industry_type === '' || this.social_media_option === '' || this.business_category_option === '') {
+        this.doNotification(
+          2,
+          this.$t('general.final_setup_error'),
+          this.$t('general.select_industry_preference'),
+        );
       } else if (
         this.social_media_option
         && (this.ig_media_handle === '' && this.facebook_media_handle === '')
       ) {
-        this.doNotification(2, 'Final set up error !', 'Please provide social media handle');
+        this.doNotification(
+          2,
+          this.$t('general.final_setup_error'),
+          this.$t('general.social_media_handle'),
+        );
       } else {
         const session = this.$store.getters.getSession;
         const payload = {
@@ -1219,6 +1846,7 @@ export default {
           cop_phone: session[session.default].cop_biz_phone,
           social_media_business: this.social_media_option,
           industry_id: this.industry_type,
+          growth_business_category_id: this.business_category_option,
         };
         if (this.ig_media_handle !== '') {
           payload.instagram_handle = this.ig_media_handle;
@@ -1264,7 +1892,7 @@ export default {
             this.displayNotification(notification);
           } else {
             const level = 3;
-            this.message = 'Something went wrong.';
+            this.message = this.$t('general.something_went_wrong');
             const notification = {
               title: '',
               level,
@@ -1275,7 +1903,11 @@ export default {
         },
         (error) => {
           const level = 3;
-          const notification = { title: '', level, message: 'Something went wrong.' }; // notification object
+          const notification = {
+            title: '',
+            level,
+            message: this.$t('general.something_went_wrong'),
+          }; // notification object
           this.displayNotification(notification);
         },
       );
@@ -1465,9 +2097,10 @@ cancel-pop-up > div > div > div.el-dialog__header{
  color: #000;
 }
 .final-inner{
- font-size: 12px;
- color: #8F8F8F;
- margin-bottom: 0;
+  font-size: 12px;
+  color: #8F8F8F;
+  margin-bottom: 0;
+  margin-top: 5px;
 }
 .invalid-kra {
   display: block;
@@ -1475,7 +2108,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
   font-size: 14px;
 }
 .final-upper-padding{
-  padding-top: 2%;
+  padding: 2% 0%;
 }
 .finish-setup-outer{
   margin-left: 6%;
@@ -1542,5 +2175,158 @@ cancel-pop-up > div > div > div.el-dialog__header{
 .saved-locations-message {
   font-size: 14px;
   margin: 10px;
+}
+.pair-vehicles-popup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 5%;
+}
+.pair-vehicle-rows {
+  padding: 0px;
+  width: -webkit-fill-available;
+}
+.pair-vehicles-list {
+  max-height: 370px;
+  overflow-y: auto;
+  width: -webkit-fill-available;
+}
+.pair-vehicles-title {
+  width: -webkit-fill-available;
+  text-align: left;
+}
+.pair-button {
+  width: -webkit-fill-available;
+}
+.pair-button-section {
+  width: -webkit-fill-available;
+  padding: 15px 0px 5px 0px;
+}
+.pair-info-warning, .pair-info-success, .pair-info-loading {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #dcdfe4;
+}
+.pair-info-rider-details {
+  display: flex;
+  align-items: center;
+  padding: 5%;
+}
+.pair-info-vehicle-details {
+  padding: 5%;
+  border-left: 1px solid #dcdfe4;
+}
+.pair-info-rider-rate-icons span i {
+  font-size: 10px !important;
+  margin-right: 3px;
+}
+.pair-rider-rating-icons {
+  display: flex;
+  align-items: baseline;
+  padding: 0px 8px;
+}
+.pair-rider-rating-icons-val {
+  font-size: 14px;
+  margin-right: 5px;
+  font-weight: 500;
+  color: #1682c5;
+}
+.pair-rider-name-variant {
+  text-align: left;
+}
+.display_paired_rider_details {
+  padding-left: 8px;
+}
+.pair-rider-rating-icons-holder {
+  width: max-content;
+}
+.pair-model-info-variant {
+  font-size: 12px;
+  font-weight: 400;
+}
+.pairing-error-header-variant {
+  font-size: 14px;
+  font-weight: 500;
+}
+.pairing-error-holder {
+  text-align: left;
+  padding: 8px;
+}
+.pairing-error-icon-holder {
+  padding: 15px;
+}
+.pairing-loading-holder {
+  width: -webkit-fill-available;
+  padding: 15px;
+}
+.pair-vehicles-title-description {
+  text-align: left;
+  font-size: 13px;
+  margin: 15px 0px;
+}
+.pair-vehicles-vendor-title {
+  text-align: left;
+  font-size: 13px;
+  padding: 10px 0px;
+}
+.pair-vehicles-vendor-id {
+  color: #1682c5;
+  padding-left: 4px;
+  font-size: 14px;
+}
+.reschedule-location-icons {
+  display: flex;
+  align-items: center;
+}
+.reschedule-location-title {
+  margin-left: 15px;
+}
+.dotted-divider {
+  width: 0px;
+  height: 18px;
+  border-left: 1px dashed #767474;
+  position: absolute;
+  margin-top: 9%;
+  margin-left: 5px;
+}
+.reschedule-locations-message {
+  margin-top: 5px;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+.solid-divider {
+  border-top: 1px solid #D6D6D6;
+  margin: 20px 0px;
+}
+.reschedule-button {
+  font-size: 15px !important;
+}
+.reschedule-header {
+  color: black !important;
+  margin-bottom: 15px !important;
+  font-size: 20px !important;
+}
+.business-categories-options div div ul li {
+  height: 60px;
+  line-height: 10px;
+  color: black !important;
+  background: white !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.business-categories-options-titles {
+  margin: 0px;
+  font-size: 15px;
+}
+.business-categories-options-definitions {
+  font-size: 12px;
+  margin: 0px;
+}
+.vendor-type-icon-labels {
+  text-align: center;
+  margin: 0px 0px 7px 0px;
+  font-size: 12px;
 }
 </style>

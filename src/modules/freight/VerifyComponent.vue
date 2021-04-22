@@ -2,7 +2,7 @@
   <div class="terms-main">
     <div v-if="checkFreightStatus() === 0">
       <div class="terms-header">
-        Our terms of services
+        {{ $t('verifyComponent.terms_of_service') }}
       </div>
       <div class="terms-inner">
         <iframe
@@ -20,12 +20,12 @@
           class="hiddeny"
         >
         <span class="sign-holder__smaller">
-          I acknowledge that i have read and understood the terms of service
+          {{ $t('verifyComponent.acknowledge') }}
         </span>
       </div>
       <div class="next-terms-holder-btn">
         <input
-          placeholder="Submit"
+          :placeholder="$t('general.submit')"
           class="button-primary terms-btn-color next-freight-submit"
           type="submit"
           name="login_text"
@@ -40,14 +40,14 @@
             <i class="el-icon-success warning-icon" />
           </div>
           <div class="cancelOptions--content-message verification-header">
-            Your Application has been submitted
+            {{ $t('verifyComponent.application_submitted') }}
           </div>
           <div class="cancelOptions--content-message verification-description">
-            Thanks {{ logged_user }} we have received your registration.
+            <!-- Thanks {{ logged_user }} we have received your registration. -->
+            {{ $t('verifyComponent.thanks',{logged_user: logged_user}) }}
           </div>
           <div class="cancelOptions--content-message verification-description">
-            Our customer representative will contact you within 24 hrs with the next steps to
-            activate your account and get you started.
+            {{ $t('verifyComponent.customer_rep') }}
           </div>
         </div>
       </div>
@@ -58,11 +58,12 @@
 <script>
 import { mapActions } from 'vuex';
 import SessionMxn from '../../mixins/session_mixin';
+import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
 import NotificationMxn from '../../mixins/notification_mixin';
 
 export default {
   name: 'TermsAndCondition',
-  mixins: [SessionMxn, NotificationMxn],
+  mixins: [SessionMxn, NotificationMxn, MixpanelMixin],
 
   data() {
     return {
@@ -144,7 +145,7 @@ export default {
               this.setSession(newSession);
               this.$router.push('/freight/verify');
               const level = 1; // success
-              this.message = 'Terms and Conditions accepted!';
+              this.message = this.$t('verifyComponent.terms_conditions_accepted');
               const notification = {
                 title: '',
                 level,
@@ -153,7 +154,7 @@ export default {
               this.displayNotification(notification);
             } else {
               const level = 3;
-              this.message = 'Something went wrong.';
+              this.message = this.$t('verifyComponent.something_went_wrong');
               const notification = {
                 title: '',
                 level,
@@ -164,7 +165,7 @@ export default {
           },
           () => {
             const level = 3;
-            this.message = 'Something went wrong.';
+            this.message = this.$t('verifyComponent.something_went_wrong');
             const notification = {
               title: '',
               level,
@@ -174,7 +175,7 @@ export default {
           },
         );
       } else {
-        this.doNotification(2, 'Freight final setup failed', 'Agree to Terms and Conditions');
+        this.doNotification(2, this.$t('verifyComponent.freight_final_setup'), this.$t('verifyComponent.agree_terms_condition'));
       }
     },
     doNotification(level, title, message) {
@@ -201,14 +202,14 @@ export default {
   border-radius: 4px;
   margin: 2rem auto;
   padding: 2rem;
-  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Nunito', sans-serif;
   height: 25rem;
 }
 
 .terms-header {
   font-weight: 500;
   text-align: left;
-  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Nunito', sans-serif;
   font-size: 18px;
   line-height: 0px;
   display: flex;
@@ -237,7 +238,7 @@ export default {
   border-radius: 4px;
   margin: 1rem auto;
   padding: 2rem;
-  font-family: 'Helvetica Nueu', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Nunito', sans-serif;
 }
 .warning-icon{
   font-size: 57px !important;

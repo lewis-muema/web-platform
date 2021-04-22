@@ -5,16 +5,13 @@
   >
     <!-- <main-header></main-header> -->
     <div class="profile-container">
-      <div
-        class="new-card"
-        style="margin-top:5%;margin-left:20%;border-right:5px solid #1782C5;height:400px;"
-      >
+      <div class="new-card profile--inner">
         <a class="my-profile__adj">
           <router-link
             class="profile--link"
             to="/user/profile/personal_information"
           >
-            Personal Information
+            {{$t('general.personal_info')}}
           </router-link>
         </a>
         <div class="my-profile__adj">
@@ -22,7 +19,15 @@
             class="profile--link"
             to="/user/profile/change_password"
           >
-            Change Password
+            {{$t('general.change_password')}}
+          </router-link>
+        </div>
+        <div class="my-profile__adj">
+          <router-link
+            class="profile--link"
+            to="/user/profile/change_language"
+          >
+            {{$t('general.change_language')}}
           </router-link>
         </div>
       </div>
@@ -80,7 +85,7 @@ export default {
 .profile--link
 {
   color: #555;
-  font-family: Slack-Lato,appleLogo,sans-serif;
+  font-family: 'Nunito', sans-serif;
   /* font-size: 1rem !important; */
   text-align: center;
   padding: 2px;
@@ -97,9 +102,15 @@ export default {
   /* font-weight: bold !important; */
   font-weight: 500 !important;
   border-bottom: none!important;
-  background-color: #1782C5;;
+  background-color: #1782C5;
   color: #fff !important;
 
   /* background-color: red; */
+}
+.profile--inner{
+  margin-top:5%;
+  margin-left:20%;
+  border-right:5px solid #1782C5;
+  height:400px;
 }
 </style>

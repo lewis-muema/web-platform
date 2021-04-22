@@ -133,10 +133,11 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 export default {
   name: 'Settings',
-  mixins: [NotificationMxn],
+  mixins: [NotificationMxn, MixpanelMixin],
   data() {
     return {
       showApproverDialog: false,
@@ -330,7 +331,7 @@ export default {
 </script>
 
 <style lang="css">
-@import '../../../assets/styles/transporters_component.css?v=1';
+@import '../../../assets/styles/transporters_component.css';
 .manage-approvers {
   font-size: 13px;
   letter-spacing: 0.01em;

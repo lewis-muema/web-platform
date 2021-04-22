@@ -48,7 +48,7 @@ const createFreightOrder = function createFreightOrder({ dispatch }, payload) {
 
 const requestFreightOrders = function requestFreightOrders({ commit, dispatch }, payload) {
   return new Promise((resolve, reject) => {
-    dispatch('requestAxiosPost', payload, { root: true }).then(
+    dispatch('requestAxiosGet', payload, { root: true }).then(
       (response) => {
         let workingResponse = response;
         /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
@@ -56,7 +56,7 @@ const requestFreightOrders = function requestFreightOrders({ commit, dispatch },
           workingResponse = response[0];
         }
         if (workingResponse.data.status) {
-          commit('setFreightOrders', workingResponse.data.orders);
+          commit('setFreightOrders', workingResponse.data.data);
           resolve(workingResponse.data);
         } else {
           reject(workingResponse.data);
@@ -71,7 +71,7 @@ const requestFreightOrders = function requestFreightOrders({ commit, dispatch },
 
 const getFreightOrderDetail = function getFreightOrderDetail({ dispatch }, payload) {
   return new Promise((resolve, reject) => {
-    dispatch('requestAxiosPost', payload, { root: true }).then(
+    dispatch('requestAxiosGet', payload, { root: true }).then(
       (response) => {
         resolve(response.data);
       },
@@ -83,8 +83,8 @@ const getFreightOrderDetail = function getFreightOrderDetail({ dispatch }, paylo
 };
 const getOwnersListing = function getOwnersListing({ dispatch }) {
   const payload = {
-    app: 'ORDERS_APP',
-    endpoint: 'v2/freight/owners',
+    app: 'PARTNERS_APP',
+    endpoint: 'transporters',
   };
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosGet', payload, {
@@ -147,7 +147,7 @@ const getFilteredOwnersListing = function getFilteredOwnersListing({ dispatch },
 
 const approveDocument = function approveDocument({ dispatch }, payload) {
   return new Promise((resolve) => {
-    dispatch('requestAxiosPatch', payload, { root: true }).then(
+    dispatch('requestAxiosPut', payload, { root: true }).then(
       (response) => {
         let workingResponse = response;
         if (response.length > 1) {
@@ -209,7 +209,7 @@ const requestActivity = function requestActivity({ dispatch }, payload) {
 
 const getOwnersDetail = function getOwnersDetail({ dispatch }, payload) {
   return new Promise((resolve, reject) => {
-    dispatch('requestAxiosGet', payload, {
+    dispatch('requestAxiosPost', payload, {
       root: true,
     }).then(
       (response) => {
@@ -225,6 +225,34 @@ const getOwnersDetail = function getOwnersDetail({ dispatch }, payload) {
 const requestUsersList = function requestUsersList({ dispatch }, payload) {
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+const awardShipment = function awardShipment({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+const declineShipment = function declineShipment({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPut', payload, {
       root: true,
     }).then(
       (response) => {
@@ -280,6 +308,25 @@ const getDocumentTypes = function getDocumentTypes({ dispatch }, payload) {
   });
 };
 
+const requestSupportedCountries = function requestSupportedCountries({ dispatch }) {
+  const payload = {
+    app: 'AUTH',
+    endpoint: 'staffapi/countries',
+  };
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   updateFreightStatus,
   requestFreightStatus,
@@ -299,4 +346,7 @@ export default {
   requestApproveApprover,
   requestApproversList,
   getDocumentTypes,
+  awardShipment,
+  declineShipment,
+  requestSupportedCountries,
 };

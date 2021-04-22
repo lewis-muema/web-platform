@@ -22,10 +22,10 @@
           >
             <div class="">
               <div class="cancel-reason-option">
-                Cancel this order?
+                {{$t('general.cancel_this_order')}}
               </div>
               <div class="cancel-reason-option">
-                You can place another one at any time.
+                {{$t('general.place_another_one_any_time')}}
               </div>
             </div>
             <div class="cancel-reason-text">
@@ -34,7 +34,7 @@
                   v-model="cancel_reason"
                   label="4"
                 >
-                  I placed the wrong locations
+                  {{$t('general.placed_wrong_location')}}
                 </el-radio>
               </div>
               <div class="">
@@ -42,7 +42,7 @@
                   v-model="cancel_reason"
                   label="5"
                 >
-                  My order is not ready
+                  {{$t('general.order_not_ready')}}
                 </el-radio>
               </div>
               <div class="">
@@ -50,7 +50,7 @@
                   v-model="cancel_reason"
                   label="7"
                 >
-                  No driver has been allocated
+                  {{$t('general.no_driver_allocated')}}
                 </el-radio>
               </div>
               <div class="">
@@ -58,7 +58,7 @@
                   v-model="cancel_reason"
                   label="8"
                 >
-                  I placed this order twice
+                  {{$t('general.placed_order_twice')}}
                 </el-radio>
               </div>
             </div>
@@ -78,7 +78,7 @@
                 class="action--slide-button"
                 @click="cancelOrder()"
               >
-                Yes
+                {{$t('general.yes')}}
               </button>
               <button
                 type="button"
@@ -86,7 +86,7 @@
                 class="action--slide-button"
                 @click="cancelToggle()"
               >
-                No
+                {{$t('general.no')}}
               </button>
             </div>
           </div>
@@ -95,9 +95,7 @@
             class="cancelOptions--content-wrap"
           >
             <div class="cancelOptions--content-message">
-              Did you know after your order is confirmed you can
-              call your rider and give him the right destination?
-              We will recalculate the cost and deliver your item.
+              {{$t('general.call_rider_and_right_destination')}}
             </div>
             <div class="cancelOptions--content-buttons">
               <button
@@ -106,7 +104,7 @@
                 class="action--slide-button"
                 @click="cancelToggle(cancel_reason)"
               >
-                Okay, I'll call the rider
+                {{$t('general.ok_call_the_rider')}}
               </button>
               <button
                 type="button"
@@ -114,7 +112,7 @@
                 class="default action--slide-button"
                 @click="cancelOrder()"
               >
-                Cancel Order
+               {{$t('general.cancel_order')}}
               </button>
             </div>
           </div>
@@ -181,19 +179,19 @@ export default {
     cancel_reason(reason) {
       switch (reason) {
         case 4: {
-          this.cancel_desc = 'I placed the wrong locations';
+          this.cancel_desc = this.$t('general.placed_wrong_location');
           break;
         }
         case 5: {
-          this.cancel_desc = 'My order is not ready';
+          this.cancel_desc = this.$t('general.order_not_ready');
           break;
         }
         case 7: {
-          this.cancel_desc = 'No driver has been allocated';
+          this.cancel_desc = this.$t('general.no_driver_allocated');
           break;
         }
         case 8: {
-          this.cancel_desc = 'I placed this order twice';
+          this.cancel_desc = this.$t('general.placed_order_twice');
           break;
         }
         default:
@@ -260,6 +258,7 @@ export default {
         error => error,
       );
     },
+
     cancelOrder() {
       if (this.cancel_reason !== '') {
         const payload = {
@@ -277,12 +276,11 @@ export default {
             eventLabel: 'Submit cancel reason input - Order Cancellation Page - WebApp',
           });
         }
-
         this.cancelPromocode();
 
         this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload).then((response) => {
           if (response.status) {
-            that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+            that.doNotification('1', this.$t('general.order_cancelled'), this.$t('general.order_cancelled_succesfully'));
             that.cancelToggle();
             that.set_parent_order('');
             that.$router.push('/orders/freight');
@@ -295,22 +293,22 @@ export default {
             };
             this.$store.dispatch('$_orders/$_tracking/cancelOrder', payload2).then((response2) => {
               if (response2.status) {
-                that.doNotification('1', 'Order cancelled', 'Order cancelled successfully.');
+                that.doNotification('1', this.$t('general.order_cancelled'), this.$t('general.order_cancelled_succesfully'));
                 that.cancelToggle();
                 that.set_parent_order('');
                 that.$router.push('/orders/freight');
               } else {
                 that.doNotification(
                   2,
-                  'Order cancellation failed',
-                  'Could not cancel the order. Please contact Customer Care at 0709779779.',
+                  this.$t('general.order_cancellation_failed'),
+                  this.$t('general.not_cancel_order_contact_support')
                 );
               }
             });
           }
         });
       } else {
-        this.doNotification(3, 'Order cancellation failed', 'Please select cancellation reason.');
+        this.doNotification(3,  this.$t('general.order_cancellation_failed'),  this.$t('general.select_cancellation_reason'));
       }
     },
     doNotification(level, title, message) {

@@ -1,20 +1,20 @@
 <template lang="html">
   <div class="screen-three">
     <div class="onboarding-user-header">
-      Set a Password
+      {{$t('passwordValidation.set_password')}}
     </div>
     <div class="form-inputs">
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>Create Password</span>
+            <span>{{$t('passwordValidation.create_password')}}</span>
           </label>
           <input
             id="password"
             v-model="password"
             class="form-control"
             type="password"
-            placeholder="Enter your password"
+            :placeholder="$t('passwordValidation.enter_password')"
             @focus="setCurrentStep(1)"
           >
         </div>
@@ -22,14 +22,14 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>Confirm Password</span>
+            <span>{{$t('passwordValidation.confirm_password')}}</span>
           </label>
           <input
             id="password"
             v-model="cpassword"
             class="form-control"
             type="password"
-            placeholder="Confirm your password"
+            :placeholder="$t('passwordValidation.confirm_your_password')"
             @focus="setCurrentStep(2)"
           >
         </div>
@@ -41,7 +41,7 @@
         class="waves-effect waves-teal btn-flat"
         @click="last_view"
       >
-        Back
+        {{$t('passwordValidation.back')}}
       </a>
       <button
         class="btn-submit"
@@ -50,7 +50,7 @@
         :disabled="!is_valid"
         @click="next_view"
       >
-        Next
+        {{$t('passwordValidation.Next')}}
       </button>
     </div>
   </div>
@@ -80,7 +80,7 @@ export default {
     }),
     next_view() {
       if (this.password !== this.cpassword) {
-        this.doNotification(2, 'Set Password', 'Password does not match. Please try again');
+        this.doNotification(2, this.$t('passwordValidationComponent.set_password'), $t('passwordValidationComponent.not_match'));
       } else {
         let payload = {};
         this.updatePassPlain(this.cpassword);
@@ -226,7 +226,7 @@ export default {
   font-size: 28px !important;
   font-weight: 300 !important;
   margin-bottom: 2rem;
-  font-family: Slack-Lato,appleLogo,sans-serif;
+  font-family: 'Nunito', sans-serif;
   margin: 0 0 1rem;
   display: block;
   -webkit-margin-after: 0.67em;

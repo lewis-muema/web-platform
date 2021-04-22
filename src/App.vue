@@ -15,6 +15,8 @@ import * as Sentry from '@sentry/browser';
 import Vue from 'vue';
 import firebase from 'firebase/app';
 import { mapGetters } from 'vuex';
+import VeeValidate, { Validator }  from 'vee-validate';
+import fr from 'vee-validate/dist/locale/fr';
 
 const ENV = process.env.CONFIGS_ENV;
 
@@ -23,12 +25,14 @@ export default {
   data() {
     return {
       fcmToken: '',
+      notificationData: '',
     };
   },
   computed: {
     ...mapGetters({
       getSession: 'getSession',
       getPickUpFilledStatus: 'getPickUpFilledStatus',
+      getLanguage: 'getLanguage',
     }),
     notification_status() {
       return this.$store.getters.getNotificationStatus;
@@ -43,6 +47,7 @@ export default {
       if (val) {
         this.showNotification();
         this.trackMixpanelEvent('Notification initiated');
+        this.showReschedulePopup();
       }
     },
     // watch session so as to only update token on session
@@ -57,6 +62,11 @@ export default {
         && (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders')
       ) {
         this.autoPopBeacon(2);
+      }
+    },
+    getLanguage(val) {
+      if (val === 'fr') {
+        Validator.localize('fr', fr);
       }
     },
   },
@@ -81,6 +91,9 @@ export default {
         // ...
       }
     });
+    if (this.getLanguage === 'fr') {
+      Validator.localize('fr', fr);
+    }
   },
   beforeMount() {
     if (ENV.DOMAIN !== 'localhost') {
@@ -178,6 +191,11 @@ export default {
         // ...
       }
     },
+    showReschedulePopup() {
+      if (Object.prototype.hasOwnProperty.call(this.notificationData.data, 'scheduled') && JSON.parse(this.notificationData.data.scheduled)) {
+        this.$root.$emit('Show reschedule dialogue', this.notificationData);
+      }
+    },
     updateFirebaseToken() {
       const session = this.getSession;
       if (Object.keys(session).length > 0) {
@@ -229,7 +247,7 @@ export default {
 
         this.$messaging.onMessage((payload) => {
           const notificationData = payload.data;
-
+          this.notificationData = payload;
           this.$store.commit('setFCMData', notificationData);
           // fire internal notification
           const level = 1;
@@ -380,7 +398,7 @@ export default {
 </script>
 
 <style lang="css">
-@import 'https://fonts.googleapis.com/css?family=Rubik:300,400,500,700';
+@import 'https://fonts.googleapis.com/css?family=Nunito:300,400,500,700';
 @import './assets/styles/app.css';
-@import './assets/styles/overide.css?v=2';
+@import './assets/styles/overide.css';
 </style>

@@ -13,7 +13,7 @@
               class="infobar-truck-img"
             >
             <span class="info-text-transform infor-top-bar-text align-top-bar">
-              Type of order
+              {{ $t('general.type_of_order') }}
             </span>
           </div>
           <div class="tracking-loader-inner align-inner-bar">
@@ -36,7 +36,7 @@
                 class="infobar-truck-img"
               >
               <span class="info-text-transform infor-top-bar-text align-top-bar">
-                Scheduled pick up time
+                {{ $t('general.schedule_pick_up_time') }}
               </span>
             </div>
             <div class="tracking-loader-inner align-inner-bar">
@@ -54,7 +54,7 @@
                 class="infobar-truck-img"
               >
               <span class="info-text-transform infor-top-bar-text align-top-bar">
-                Pick up time
+                {{ $t('general.pick_up_time') }}
               </span>
             </div>
             <div class="tracking-loader-inner align-inner-bar">
@@ -70,10 +70,39 @@
             @click="showEditPickUpTime()"
           >
             <i class="el-icon-edit-outline" />
-            Reschedule pick up time
+            {{ $t('general.Reschedule_pickup_time') }}
           </p>
         </div>
 
+        <div class="tracking-loader">
+          <div class="">
+            <img
+              src="https://images.sendyit.com/web_platform/tracking/goods.svg"
+              alt=""
+              class="infobar-truck-img"
+            >
+            <span class="info-text-transform infor-top-bar-text align-top-bar">
+              {{ $t('general.goods_to_be_delivered') }}
+            </span>
+          </div>
+          <div
+            v-if="'delivery_item' in trackingData.package_details"
+            class="tracking-loader-inner align-inner-bar"
+          >
+            <div v-if="trackingData.package_details.delivery_item === ''">
+              {{ $t('general.not_indicated') }}
+            </div>
+            <div v-else>
+              {{ trackingData.package_details.delivery_item }}
+            </div>
+          </div>
+          <div
+            v-else
+            class="tracking-loader-inner align-inner-bar"
+          >
+            {{ $t('general.not_indicated') }}
+          </div>
+        </div>
         <!-- Show for truck orders  -->
         <div
           v-if="![1, 2, 3, 23, 21].includes(trackingData.rider.vendor_id)"
@@ -82,41 +111,12 @@
           <div class="tracking-loader">
             <div class="">
               <img
-                src="https://images.sendyit.com/web_platform/tracking/goods.svg"
-                alt=""
-                class="infobar-truck-img"
-              >
-              <span class="info-text-transform infor-top-bar-text align-top-bar">
-                Goods to be delivered
-              </span>
-            </div>
-            <div
-              v-if="'delivery_item' in trackingData.package_details"
-              class="tracking-loader-inner align-inner-bar"
-            >
-              <div v-if="trackingData.package_details.delivery_item === ''">
-                Not Indicated
-              </div>
-              <div v-else>
-                {{ trackingData.package_details.delivery_item }}
-              </div>
-            </div>
-            <div
-              v-else
-              class="tracking-loader-inner align-inner-bar"
-            >
-              Not Indicated
-            </div>
-          </div>
-          <div class="tracking-loader">
-            <div class="">
-              <img
                 src="https://images.sendyit.com/web_platform/tracking/load_weight.svg"
                 alt=""
                 class="infobar-truck-img"
               >
               <span class="info-text-transform align-top-bar">
-                Weight of Load
+                {{ $t('general.weight_of_load') }}
               </span>
             </div>
             <div
@@ -130,7 +130,7 @@
               v-else
               class="tracking-loader-inner align-inner-bar"
             >
-              Not Indicated
+              {{ $t('general.not_indicated') }}
             </div>
           </div>
 
@@ -142,20 +142,20 @@
                 class="infobar-truck-img"
               >
               <span class="info-text-transform infor-top-bar-text align-top-bar">
-                Do you need a loader?
+                {{ $t('general.need_loader') }}
               </span>
             </div>
             <div
               v-if="trackingData.package_details.additional_loader"
               class="tracking-loader-inner align-inner-bar"
             >
-              Yes, {{ trackingData.package_details.no_of_loaders }}
+              {{ $t('general.yes') }}, {{ trackingData.package_details.no_of_loaders }}
             </div>
             <div
               v-else
               class="tracking-loader-inner align-inner-bar"
             >
-              No
+              {{ $t('general.no') }}
             </div>
           </div>
         </div>
@@ -168,7 +168,7 @@
     >
       <div class="tracking-notes">
         <div class="info-text-transform infor-top-bar-text">
-          PICKUP INSTRUCTIONS AT {{ trackingData.path[0].name }}
+          {{ $t('general.pickup_instructions_at_capital') }} {{ trackingData.path[0].name }}
         </div>
         <div
           v-if="checkPickUpNotes(trackingData.path[0])"
@@ -205,7 +205,7 @@
           v-else
           class=""
         >
-          No notes provided.
+          {{ $t('general.no_notes_provided') }}
         </div>
         <p
           v-if="checkEditOption()"
@@ -213,7 +213,7 @@
           @click="showEditInstructionsDialog(trackingData.path[0])"
         >
           <i class="el-icon-edit-outline" />
-          Edit Instructions
+          {{ $t('general.edit_instructions') }}
         </p>
       </div>
 
@@ -224,7 +224,7 @@
         class="tracking-notes"
       >
         <div class="info-text-transform infor-top-bar-text">
-          DROP OFF INSTRUCTIONS AT {{ val.name }}
+          {{ $t('general.drop_off_instructions_capital') }} {{ val.name }}
         </div>
         <div
           v-if="checkPickUpNotes(val)"
@@ -261,7 +261,7 @@
           v-else
           class=""
         >
-          No notes provided.
+          {{ $t('general.no_notes_provided') }}
         </div>
         <p
           v-if="checkEditOption()"
@@ -269,7 +269,7 @@
           @click="showEditInstructionsDialog(val)"
         >
           <i class="el-icon-edit-outline" />
-          Edit Instructions
+          {{ $t('general.edit_instructions') }}
         </p>
       </div>
     </el-col>
@@ -392,7 +392,9 @@ export default {
         Object.prototype.hasOwnProperty.call(this.trackingData, 'edit_config')
         && this.user_state
       ) {
-        show = this.trackingData.edit_config.change_notes;
+        if (this.trackingData.edit_config !== null) {
+          show = this.trackingData.edit_config.change_notes;
+        }
       }
       return show;
     },

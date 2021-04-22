@@ -5,12 +5,12 @@
       <div class="new-card new-card__inner">
         <a class="my-profile__adj">
           <router-link class="profile--link" to="/profile/personal_information">
-            Personal Information
+            {{$t('general.personal_info')}}
           </router-link>
         </a>
         <div class="my-profile__adj">
           <router-link class="profile--link" to="/profile/change_password">
-            Change Password
+            {{$t('general.change_password')}}
           </router-link>
         </div>
       </div>
@@ -84,7 +84,7 @@ export default {
 .profile--link
 {
   color: #555;
-  font-family: Slack-Lato,appleLogo,sans-serif;
+  font-family: 'Nunito', sans-serif;
   /* font-size: 1rem !important; */
   text-align: center;
   padding: 2px;
