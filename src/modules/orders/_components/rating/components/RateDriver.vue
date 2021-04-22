@@ -27,7 +27,7 @@
           </span>
           <textarea
             v-model="rating_comment"
-            :placeholder="$t('general.share_your_experience_with_us')"
+            :placeholder="$t('general.please_share_your_experience')" 
             class="rate-comment--textareabox"
           />
           <button
