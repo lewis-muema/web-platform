@@ -72,7 +72,7 @@
                         freightOrderDetail.offer_amount === 0 ||
                           freightOrderDetail.offer_amount === null
                           ? 'Transporters to bid'
-                          : `USD ${freightOrderDetail.offer_amount}`
+                          : `${freightOrderDetail.currency} ${freightOrderDetail.offer_amount}`
                       }}
                     </div>
                   </div>
@@ -194,7 +194,7 @@
                 Trucks confirmed
 
                 <span class="align-awarded-total-sum">
-                  Total cost: USD {{ freightOrderDetail.awarded_amount.toLocaleString() }}
+                  Total cost: {{freightOrderDetail.currency}} {{ freightOrderDetail.awarded_amount.toLocaleString() }}
                 </span>
               </div>
             </div>
@@ -218,7 +218,7 @@
                     {{ getAvailableTrucks(data.trucks_available) }}
                   </div>
                   <div class="transporter-content">
-                    USD {{ data.price_per_truck }}/Truck
+                    {{freightOrderDetail.currency}} {{ data.price_per_truck }}/Truck
                   </div>
                   <div class="transporter-content view-transporter-documents">
                     View document details
@@ -359,7 +359,7 @@
                     {{ freightOrderDetail.quotations[index].trucks_available }} Trucks
                   </div>
                   <div class=" freight-documents-date">
-                    USD {{ freightOrderDetail.quotations[index].price_per_truck }} /Truck
+                    {{freightOrderDetail.currency}} {{ freightOrderDetail.quotations[index].price_per_truck }} /Truck
                   </div>
 
                   <div
@@ -431,7 +431,7 @@
                       Rate per truck:
                       <span
                         class="outline-info-value"
-                      >USD {{ awardedTransporter.price_per_truck }}</span>
+                      >{{freightOrderDetail.currency}} {{ awardedTransporter.price_per_truck }}</span>
                     </div>
                   </div>
                 </div>
@@ -497,11 +497,11 @@
                       class="transporters-element-inputs"
                       filterable
                     >
-                      <div class="payment-terms-hint">
+                      <!-- <div class="payment-terms-hint">
                         <div class="hint--inner">
                           Hint: The longer your payment period is, the higher your interest
                         </div>
-                      </div>
+                      </div> -->
                       <el-option
                         v-for="item in terms"
                         :key="item.value"
@@ -537,7 +537,7 @@
                   <div class="quatations-outline-info-summary">
                     Price per truck
                     <p class="outline-info-value summary-inner-value">
-                      USD {{ awardedTransporter.price_per_truck }}
+                      {{freightOrderDetail.currency}} {{ awardedTransporter.price_per_truck }}
                     </p>
                   </div>
                   <div class="quatations-outline-info-summary">
@@ -549,7 +549,7 @@
                   <div class="quatations-outline-info-summary">
                     Total amount
                     <p class="outline-info-value summary-inner-value">
-                      USD {{ trucks_no * awardedTransporter.price_per_truck }}
+                      {{freightOrderDetail.currency}} {{ trucks_no * awardedTransporter.price_per_truck }}
                     </p>
                   </div>
                   <div class="quatations-outline-info-summary">
