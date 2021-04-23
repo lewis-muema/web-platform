@@ -27,4 +27,6 @@ module.exports = {
   CUSTOMERS_APP: '"https://auth.sendyit.com/customers/"',
   VGS_VAULT_ID: '"tntr6hr8zz0"',
   VGS_ENVIRONMENT: '"live"',
+  EXTREME_IP_KEY: '"dmmw1HciGEhld0FiG2ID"',
+
 };

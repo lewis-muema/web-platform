@@ -28,4 +28,5 @@ module.exports = {
   FREIGHT_APP: '"https://authtest.sendyit.com/freight-service/"',
   VGS_VAULT_ID: '"tnts91uunnd"',
   VGS_ENVIRONMENT: '"sandbox"',
+  EXTREME_IP_KEY: '"dmmw1HciGEhld0FiG2ID"',
 };
