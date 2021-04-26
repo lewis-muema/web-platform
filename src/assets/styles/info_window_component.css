@@ -792,6 +792,7 @@ button.default.action--slide-button {
   color: #000000;
   font-size: 14px !important;
   padding-left: 5px;
+  white-space: inherit !important;
 }
 #cancel-reason-text > div > label > span.el-radio__input > span{
   border: 1px solid #000;
@@ -805,6 +806,7 @@ button.default.action--slide-button {
   padding-left: 9%;
   color: #1c1c1c;
   margin: 5px 0px 15px 0px;
+  font-weight: 600;
 }
 .pop_btn{
    width: 24% !important;
@@ -845,8 +847,8 @@ button.default.action--slide-button {
 }
 .submit-cancell-btn{
   background: #FFFFFF !important;
-  color: #808080 !important;
-  border: 1px solid #808080 !important;
+  color: #1682c5 !important;
+  border: 1px solid #1682c5 !important;
 }
 .additional-notes-recipient{
   padding: 3px;
