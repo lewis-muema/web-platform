@@ -2318,7 +2318,7 @@ export default {
     },
     retrieveCancellationReasons() {
       const riderInfo = this.tracking_data.rider;
-      const countryCode = this.tracking_data.currency === 'USD' ? this.tracking_data.path[0].country_code : this.getCountryCode;
+      const countryCode = this.tracking_data.currency === 'USD' ? this.tracking_data.path[0].country_code : this.getSession[this.getSession.default].country_code;
       const params = {
         vendor_id: riderInfo.vendor_id,
         order_status: this.getCancellationOrderStatus ? this.getCancellationOrderStatus : 4,
