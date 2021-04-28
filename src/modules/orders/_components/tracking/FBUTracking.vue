@@ -104,7 +104,7 @@
                 class="action--slide-button"
                 @click="cancelToggle(cancel_reason)"
               >
-                {{$t('general.ok_call_the_rider')}}
+                {{$t('general.ok_call_rider')}}
               </button>
               <button
                 type="button"
