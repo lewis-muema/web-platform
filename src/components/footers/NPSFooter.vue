@@ -21,7 +21,7 @@
               type="button"
               class="btn btn-secondary likely side-btn"
             >
-              {{ $t('NPSFooter.not_likey') }}
+              {{ $t('NPSFooter.not_likely') }}
             </button>
             <span class="score-holder">
               <span
@@ -40,7 +40,7 @@
               type="button"
               class="btn btn-secondary unlikely side-btn"
             >
-            {{ $t('NPSFooter.very_likey') }}
+            {{ $t('NPSFooter.very_likely') }}
               <!-- 10 Very Likely -->
             </button>
             <button
