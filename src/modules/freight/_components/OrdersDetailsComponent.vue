@@ -1000,7 +1000,9 @@ export default {
         acc = session[session.default];
       }
 
-      const payload = {};
+      const payload = {
+        quotation_id: val.quotation_id,
+      };
 
       if (session.default === 'biz') {
         payload.cop_id = acc.cop_id;
@@ -1013,7 +1015,7 @@ export default {
         values: payload,
         app: 'FREIGHT_APP',
         operator: '?',
-        endpoint: `shipments/quotations/${val.quotation_id}`,
+        endpoint: 'shipments/quotations',
       };
 
       this.$store.dispatch('$_freight/declineShipment', fullPayload).then(
