@@ -356,13 +356,11 @@
                 How many tonnes should each truck carry per move?
               </p>
               <div class="block">
-                <input
+                <el-input-number
                   v-model="load_weight"
-                  class="input-control freight-load-weight"
-                  type="number"
-                  placeholder=""
-                  autocomplete="on"
-                >
+                  class="freight-load-weight"
+                  :min="1"
+                />
                 <span class="tonage-value-text">Tonnes</span>
               </div>
             </div>
@@ -423,7 +421,7 @@
                     autocomplete="on"
                     min="0"
                   >
-                  <span class="tonage-value-text"></span>
+                  <span class="tonage-value-text" />
                 </div>
               </div>
 
@@ -532,7 +530,7 @@ export default {
       truck_type: '',
       goods: '',
       query: '',
-      load_weight: '',
+      load_weight: 28,
       freight_selector: false,
       select_transporter: false,
       classes: 'typeahead',
