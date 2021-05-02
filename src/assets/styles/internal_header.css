@@ -44,6 +44,12 @@ nav ul {
 	list-style: none;
     margin: unset;
 }
+.nav--menu-section-right {
+    display: flex;
+}
+.account-type {
+    width: max-content;
+}
 nav ul:after {
 	content: ""; clear: both; display: block;
 }
@@ -237,4 +243,14 @@ a.menu--last-child-link {
   .helpline-contact {
     display: none !important;
   }
+}
+@media only screen and (max-width: 900px) {
+    .account-type {
+        display: none !important;
+    }
+  }
+@media only screen and  (max-width: 1200px) {
+    .infobar--outer {
+        width: 90% !important;
+    }
 }
