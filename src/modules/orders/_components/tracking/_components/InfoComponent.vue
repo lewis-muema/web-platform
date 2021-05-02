@@ -1758,7 +1758,7 @@ export default {
             this.cancellation_amount = 0;
             this.cancellation_message = '';
           } else {
-            this.cancellation_fee = true;
+            this.cancellation_fee = false;
             this.cancellation_amount = response.data.cancellation_fee;
             this.cancellation_message = response.data.description;
           }
