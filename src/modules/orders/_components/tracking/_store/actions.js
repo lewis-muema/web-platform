@@ -204,10 +204,10 @@ const requestRiderLastPosition = function requestRiderLastPosition({ dispatch },
     );
   });
 };
-const requestCancellationReasons = function requestCancellationReasons({ dispatch }) {
+const requestCancellationReasons = function requestCancellationReasons({ dispatch }, data) {
   const payload = {
     app: 'ADONIS_PRIVATE_API',
-    endpoint: 'cancel-reasons?platform=customer',
+    endpoint: `cancellation-reasons?vendor_type=${data.vendor_id}&order_status=${data.order_status}&status=${data.status}&country=${data.country_code}`,
   };
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosGet', payload, {

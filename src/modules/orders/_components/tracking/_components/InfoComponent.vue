@@ -155,46 +155,73 @@
 
               <el-dialog :visible.sync="cancelOption" class="cancelOptions">
                 <div class="cancelOptions--content-wrap" v-if="extendedDialog()">
-                  <div class="">
+                  <div class="" v-if="!cancellation_step">
+                    <div class="cancellation-title">
+                      {{$t('general.cancel_order')}} ?
+                    </div>
                     <div class="cancellation-info--outer">
                       <div class="cancellation-info--inner">
+                        <font-awesome-icon
+                          icon="exclamation-triangle"
+                          size="xs"
+                          class="warning-cancellation-triangle"
+                          width="10px"
+                        />
                         <div
                           v-if="!cancellation_fee"
-                          class="cancel-reason-subtitle"
+                          class="cancel-reason-subtitle-new"
                           id="cancel-reason-subtitle"
                         >
-                          {{$t('general.incur_cancelation_cost')}}
+                          {{$t('general.small_fee')}}
                         </div>
-                        <div v-else class="cancel-reason-subtitle" id="cancel-reason-subtitle">
-                          <i class="el-icon-warning warning-cancellation-icon"></i>
+                        <div v-else class="cancel-reason-subtitle-new" id="cancel-reason-subtitle">
                           {{ getCancellationInfo() }}
                         </div>
                       </div>
                     </div>
+                    <div class="cancellation-subheading">
+                      {{$t('general.before_you_cancel')}}
+                    </div>
                   </div>
-                  <div  v-if="!cancellation_step">
+                  <div v-if="!cancellation_step">
                     <div class="edit-information-outer">
-                      <p class="cancellation-edit-options align-inner-bar" v-if="checkEditOption()">
+                      <div class="cancellation-edit-options align-inner-bar" v-if="checkEditOption()">
                         <i class="el-icon-location edit-location-icon" />
-                        {{$t('general.wrong_delivery_locations')}}
-                        <div class="cancellation-edit-inner" @click="showEditLocationsDialog()">
-                          {{$t('general.edit_locations')}}
+                        <div>
+                          {{$t('general.entered_wrong_locations')}}
+                          <div class="cancellation-edit-inner" @click="showEditLocationsDialog()">
+                            {{$t('general.edit_locations')}}
+                          </div>
                         </div>
-                      </p>
+                      </div>
 
-                      <p class="cancellation-edit-options align-inner-bar" v-if="checkScheduleOption()">
-                      <img src="https://images.sendyit.com/web_platform/tracking/calendar.svg" alt="" class="infobar-truck-img">
-                         {{$t('general.schedule_for_later')}}
-                        <div class="cancellation-edit-inner" @click="showEditPickUpTime()">
-                        {{$t('general.schedule_order')}}
+                      <div class="cancellation-edit-options align-inner-bar" v-if="checkScheduleOption()">
+                        <font-awesome-icon
+                          icon="clock"
+                          size="xs"
+                          class="edit-location-icon"
+                          width="10px"
+                        />
+                        <div>
+                          {{$t('general.not_available')}}
+                          <div class="cancellation-edit-inner" @click="showEditPickUpTime()">
+                          {{$t('general.schedule_order')}}
+                          </div>
                         </div>
-                      </p>
+                      </div>
+
+                      <div class="cancellation-edit-options align-inner-bar" v-if="checkScheduleOption()">
+                        <i class="el-icon-question edit-location-icon" />
+                          <div>
+                            {{$t('general.isssue_with_order')}}
+                            <div class="cancellation-edit-inner" @click="showBeacon()">
+                            {{$t('general.contact_support')}}
+                            </div>
+                          </div>
+                      </div>
 
                     </div>
                     <div class="">
-                      <div class="cancel-reason-title">
-                        {{$t('general.do_still_cancel_order')}}
-                      </div>
                       <div class="action--slide-desc">
                         <button
                           type="button"
@@ -217,12 +244,20 @@
 
                   </div>
                   <div v-if="cancellation_step">
-
+                    <div class="cancel_step_back" @click="cancellation_step = false">
+                      <font-awesome-icon
+                        icon="arrow-left"
+                      />
+                      {{$t('general.back')}}
+                    </div>
+                    <div class="cancel-reason-title-name">
+                      {{$t('general.why_cancel')}}
+                    </div>
                     <div v-for="reasons in cancellation_reasons">
                       <div class="cancel-reason-text" id="cancel-reason-text">
                         <div class="">
-                          <el-radio v-model="cancel_reason" :label="reasons.cancel_reason_id">
-                            {{ reasons.cancel_reason }} reason
+                          <el-radio v-model="cancel_reason" :label="reasons.cancellation_reason_id">
+                            {{ reasons.cancellation_reason }}
                           </el-radio>
                         </div>
                       </div>
@@ -248,14 +283,14 @@
                       />
                     </div>
 
-                    <div class="action--slide-desc">
+                    <div class="action--slide-desc-confirm">
                       <button
                         type="button"
                         name="button"
-                        class="action--slide-button cancellation-submit accept-cancell-btn"
+                        class="action--slide-button cancellation-submit submit-cancell-btn"
                         @click="cancelOrder()"
                       >
-                        {{$t('general.yes_cancel')}}
+                        {{$t('general.submitCapital')}}
                       </button>
                       <button
                         type="button"
@@ -263,35 +298,12 @@
                         class="action--slide-button cancellation-submit"
                         @click="cancelToggle(true)"
                       >
-                        {{$t('general.no_cancel')}}
+                        {{$t('general.dont_cancel')}}
                       </button>
                     </div>
 
                   </div>
 
-                </div>
-                <div class="cancelOptions--content-wrap" v-if="cancel_reason === 4">
-                  <div class="cancelOptions--content-message">
-                    {{$t('general.call_rider_and_right_destination')}}
-                  </div>
-                  <div class="cancelOptions--content-buttons">
-                    <button
-                      type="button"
-                      name="button"
-                      class="action--slide-button"
-                      @click="cancelToggle(cancel_reason)"
-                    >
-                     {{$t('general.ok_call_rider')}}
-                    </button>
-                    <button
-                      type="button"
-                      name="button"
-                      class="default action--slide-button"
-                      @click="cancelOrder()"
-                    >
-                      {{$t('general.cancel_order')}}
-                    </button>
-                  </div>
                 </div>
                 <div class="cancelOptions--content-wrap" v-if="pop_state === 5">
                   <div class="warning-icon-pstn">
@@ -328,6 +340,18 @@
                       {{$t('general.ok_capital')}}
                     </button>
                   </div>
+                </div>
+              </el-dialog>
+
+              <!-- driver allocation dialogue -->
+              <el-dialog :visible.sync="driverAllocatedOptions" class="driverOptions">
+                <i class="el-icon-info cancelOptions--info-icon" />
+                <div class="cancelOptions--info-message">
+                  {{ cancelMessage }}
+                </div>
+                <div>
+                  <p class="cancel-option-or-alt">{{ $t('general.or') }}</p>
+                  <p class="cancel-option-confirm-alt" @click="cancelOrder()">{{ $t('general.cancel_order') }}</p>
                 </div>
               </el-dialog>
 
@@ -369,9 +393,12 @@
 
               <el-dialog :visible.sync="editLocationOption" class="cancelOptions">
                 <div class="cancel-reason-title" id="cancel-reason-title">
-                  {{$t('general.add_change_locations')}}
+                  {{$t('general.add_change_destination')}}
                 </div>
-                <div class="cancel-reason-description">
+                <div class="cancel-reason-description" v-if="cancelMessage && locationOptions">
+                  {{ cancelMessage }}
+                </div>
+                <div class="cancel-reason-description" v-else>
                   {{$t('general.incur_cost_updating_loc')}}
                 </div>
                 <div
@@ -391,7 +418,7 @@
                         :options="map_options"
                         placeholder="Enter a pickup location"
                         :select-first-on-enter="true"
-                        class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
+                        class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input disabled-location-input"
                         @place_changed="setLocation($event, 0)"
                         @keyup="checkChangeEvents($event, 0)"
                         @change="checkChangeEvents($event, 0)"
@@ -406,7 +433,7 @@
                       />
                     </no-ssr>
                   </div>
-
+                  <div class="location-divider" />
                   <div class="homeview--destinations">
                     <div class="homeview--input-bundler">
                       <no-ssr placeholder="">
@@ -443,6 +470,7 @@
                     class="homeview--destinations"
                     :data-index="n + 1"
                   >
+                    <div class="location-divider" />
                     <div class="homeview--input-bundler">
                       <no-ssr placeholder="">
                         <font-awesome-icon
@@ -748,6 +776,10 @@
                           {{$t('general.update_locations')}}
                         </button>
                       </div>
+                      <div v-if="locationOptions">
+                        <p class="cancel-option-or-alt">{{ $t('general.or') }}</p>
+                        <p class="cancel-option-confirm-alt" @click="cancelOrder()">{{ $t('general.cancel_order') }}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -834,8 +866,11 @@
                 :modal-append-to-body="false"
               >
                 <div class="add-instructions-outer">
-                  <p class="add-instructions-setup schedule_time_outer">
-                    {{$t('general.schedule_pick_up_time_of_order')}}
+                  <p class="add-instructions-setup schedule_time_outer-mod">
+                    {{$t('general.reschedule_order')}}
+                  </p>
+                  <p class="schedule_time_message" v-if="cancelMessage && rescheduleOptions">
+                    {{ cancelMessage }}
                   </p>
                   <div class="">
                     <div
@@ -847,10 +882,10 @@
                         >
                           <el-date-picker
                             v-model="schedule_time"
-                            class="vendor_component-actions__element-date"
+                            class="vendor_component-actions__element-date-mod"
                             type="datetime"
                             format="dd-MM-yyyy h:mm a"
-                            :placeholder="$t('general.asap')"
+                            :placeholder="$t('general.select_time_and_date')"
                             prefix-icon="el-icon-date"
                             :default-time="default_value"
                             :picker-options="dueDatePickerOptions"
@@ -864,12 +899,17 @@
                   <div class="">
                     <div class="">
                       <input
-                        class="button-primary add-instructions-submit"
+                        :class="schedule_time ? 'schedule-active-btn' : 'schedule-disabled-btn'"
+                        class="button-primary add-instructions-submit-mod"
                         type="submit"
                         :value="$t('general.schedule_order')"
                         @click="updateScheduledTime()"
                       />
                     </div>
+                  </div>
+                  <div v-if="rescheduleOptions">
+                    <p class="cancel-option-or-alt">{{ $t('general.or') }}</p>
+                    <p class="cancel-option-confirm-alt" @click="cancelOrder()">{{ $t('general.cancel_order') }}</p>
                   </div>
                 </div>
               </el-dialog>
@@ -910,6 +950,7 @@ import {
   faTimes,
   faMobileAlt,
   faStar,
+  faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -924,6 +965,7 @@ library.add(
   faStar,
   faCcVisa,
   faCcMastercard,
+  faExclamationTriangle,
 );
 
 const moment = require('moment');
@@ -1036,6 +1078,10 @@ export default {
       },
       editedNotes : '' ,
       editedContact : '',
+      cancelMessage: '',
+      rescheduleOptions: false,
+      locationOptions: false,
+      driverAllocatedOptions: false,
       send_sms : false,
       schedule_time: '',
       default_value: this.moment().format('HH:mm:ss'),
@@ -1153,6 +1199,21 @@ export default {
         return '';
       }
     },
+    getCancellationOrderStatus() {
+      const logTypes = [];
+      this.tracking_data.delivery_log.forEach(log => {
+        logTypes.push(log.log_type);
+      });
+      if (this.tracking_data.confirm_status === 0 && this.tracking_data.delivery_status === 0) {
+        return 1;
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && !logTypes.includes(10)) {
+        return 2;
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes.includes(10)) {
+        return 3;
+      } else {
+        return 4
+      }
+    },
     getStatusCode() {
       if (!this.loading) {
         switch (this.tracking_data.delivery_status) {
@@ -1223,6 +1284,8 @@ export default {
     },
     editLocationOption(val) {
       if (!val) {
+        this.cancelMessage = '';
+        this.locationOptions = false;
         this.setEditLocationDialog(false);
         //should also clear stored locations
       }
@@ -1257,6 +1320,22 @@ export default {
     cancel_reason(value) {
       if (value !== '') {
         this.cancelChange(value);
+        this.cancelMessage = '';
+      }
+      if (value === 5) {
+        this.showEditPickUpTime();
+        this.cancelMessage = this.$t('general.we_are_sorry_the_order_is_not_ready');
+        this.rescheduleOptions = true;
+      }
+      if (value === 4) {
+        this.showEditLocationsDialog();
+        this.cancelMessage = this.$t('general.we_are_sorry_you_entered_the_wrong_locations');
+        this.locationOptions = true;
+      }
+      if (value === 7) {
+        this.cancelOption = false;
+        this.driverAllocatedOptions = true;
+        this.cancelMessage = this.$t('general.doing_our_best_to_match_your_order');
       }
     },
     getShareOption(value) {
@@ -1274,7 +1353,6 @@ export default {
     },
     getScheduleTimeDialog(value) {
       this.editScheduledTimeOption = value;
-      this.schedule_time = this.convertToUTC(this.getPickUpTime);
       this.default_value = this.moment(this.getPickUpTime).format('HH:mm:ss');
     },
     editInstructionsOption(val) {
@@ -1289,6 +1367,8 @@ export default {
     },
     editScheduledTimeOption(val) {
       if (!val) {
+        this.cancelMessage = '';
+        this.rescheduleOptions = false;
         this.showScheduleTimeDialog(false);
         this.updatePickUpTimeInStore('');
       }
@@ -1394,6 +1474,7 @@ export default {
       requestSavedCards: '$_orders/$_home/requestSavedCards',
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
       completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
+      requestCancellationReasons: '$_orders/$_tracking/requestCancellationReasons',
 
     }),
     dispatchScheduleTime(){
@@ -1462,12 +1543,12 @@ export default {
       this.more_info = false;
       this.cancel_desc = '';
       const data = this.cancellation_reasons.find(
-        position => position.cancel_reason_id === reason,
+        position => position.cancellation_reason_id === reason,
       );
       if (reason === 0) {
         this.more_info = true;
       } else {
-        this.cancel_desc = data.cancel_reason;
+        this.cancel_desc = data.cancellation_reason;
       }
     },
     initiateOrderData() {
@@ -1677,7 +1758,7 @@ export default {
             this.cancellation_amount = 0;
             this.cancellation_message = '';
           } else {
-            this.cancellation_fee = true;
+            this.cancellation_fee = false;
             this.cancellation_amount = response.data.cancellation_fee;
             this.cancellation_message = response.data.description;
           }
@@ -1772,6 +1853,8 @@ export default {
             if (response.status) {
               that.doNotification('1', this.$t('general.order_cancelled'), this.$t('general.order_cancelled_succesfully'));
               that.cancelToggle();
+              this.showScheduleTimeDialog(false);
+              this.setEditLocationDialog(false);
               this.$store.dispatch('$_orders/fetchOngoingOrders');
               that.place();
             } else {
@@ -1787,6 +1870,8 @@ export default {
                   if (response2.status) {
                     that.doNotification('1', this.$t('general.order_cancelled'), this.$t('general.order_cancelled_succesfully'));
                     that.cancelToggle();
+                    this.showScheduleTimeDialog(false);
+                    this.setEditLocationDialog(false);
                     this.$store.dispatch('$_orders/fetchOngoingOrders');
                     that.place();
                   } else {
@@ -2233,15 +2318,17 @@ export default {
     },
     retrieveCancellationReasons() {
       const riderInfo = this.tracking_data.rider;
-      this.$store.dispatch('$_orders/$_tracking/requestCancellationReasons').then(
+      const countryCode = this.tracking_data.currency === 'USD' ? this.tracking_data.path[0].country_code : this.getSession[this.getSession.default].country_code;
+      const params = {
+        vendor_id: riderInfo.vendor_id,
+        order_status: this.getCancellationOrderStatus ? this.getCancellationOrderStatus : 4,
+        country_code: countryCode,
+        status: 1,
+      };
+      this.requestCancellationReasons(params).then(
         (response) => {
           if (response.status) {
-            const cancellationReasons = response.data;
-            if (riderInfo.rider_name !== 'Sendy Rider') {
-              this.cancellation_reasons = cancellationReasons.filter(reason => reason.cancel_reason_id !== 7)
-            } else {
-              this.cancellation_reasons = response.data;
-            }
+            this.cancellation_reasons = response.data;
             this.cancellation_state = true;
           } else {
             this.cancellation_state = false;
@@ -3146,6 +3233,11 @@ export default {
       this.setTrackMoreInfo(true);
       this.setEditLocationDialog(true);
     },
+    showBeacon() {
+      this.cancelOption = false;
+      window.Beacon('open');
+      window.Beacon('navigate', '/ask/chat/');
+    },
     checkScheduleOption() {
       let show = false;
       if (this.tracking_data.delivery_status < 2 && this.user_state) {
@@ -3241,26 +3333,76 @@ export default {
 .schedule_time_outer{
   margin-top: 11% !important;
 }
+.schedule_time_outer-mod {
+  margin: 11% 5% 11% 5% !important;
+}
+.schedule_time_message {
+  color: black;
+  margin: 5% !important;
+}
 .edit-information-outer{
-  margin-right: 3%;
-  margin-left: 9%;
-  border-bottom: 1px solid #74696942;
+  margin: 5% 3% 5% 7%;
 }
 .cancellation-edit-options{
   color: #2C2A2A;
   cursor: pointer;
   font-size: 14px;
   margin-bottom: 2%;
+  display: flex;
+  align-items: center;
 }
 .edit-location-icon{
-  color: #1B7FC3 !important;
+  color: #0c0c0c !important;
+  font-size: 15px;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
 .cancellation-edit-inner{
-  margin: 3% 0px 5% 0px;
-  font-style: italic;
+  margin: 2% 0px 5% 0px;
   color: #1B7FC3;
   cursor: pointer;
-  font-size: 12px;
-  padding-left: 19px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.cancel-option-or-alt {
+  text-align: center;
+  color: black;
+  text-transform: lowercase;
+}
+.cancel-option-confirm-alt {
+  width: fit-content;
+  margin: auto;
+  cursor: pointer;
+  color: #1682c5;
+}
+.schedule-disabled-btn {
+  color: white;
+  background: #7F7F7F;
+}
+.disabled-location-input {
+  border: 1px solid #CFCFCF;
+  background: #EDEDED;
+}
+.location-divider {
+  width: 0px;
+  height: 50px;
+  border-left: 1px solid #cfcfcf;
+  position: absolute;
+  margin-top: -8%;
+  margin-left: -10px;
+}
+.cancelOptions--info-icon {
+  text-align: center;
+  width: 100%;
+  font-size: 30px;
+  color: #1B7FC3;
+}
+.cancelOptions--info-message {
+  width: 70%;
+  text-align: center;
+  font-size: 17px;
+  margin: auto;
+  padding-top: 20px;
+  color: black;
 }
 </style>
