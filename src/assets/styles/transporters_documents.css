@@ -187,3 +187,17 @@
 .hint--inner{
   padding: 4%;
 }
+.documents-type-label{
+  margin-left: 2%;
+  margin-bottom: 2%;
+  flex:1
+}
+.documents-type-inner{
+  flex:0
+}
+.awarding-docs-subsection{
+  margin-left: 2%;
+}
+.freight-documents-flex{
+  display:flex
+}
