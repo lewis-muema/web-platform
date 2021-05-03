@@ -71,7 +71,7 @@ export default {
           }
         },
         (error) => {
-          console.log('error', error);
+          throw error;
         },
       );
     },

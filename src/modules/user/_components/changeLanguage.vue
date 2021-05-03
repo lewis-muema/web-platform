@@ -71,7 +71,7 @@ export default {
             payload.cop_user_id = session[session.default].user_id;
           }
           else {
-            payload.user_id = session[session.default].user_id; 
+            payload.user_id = session[session.default].user_id;
           }
           break;
         }
