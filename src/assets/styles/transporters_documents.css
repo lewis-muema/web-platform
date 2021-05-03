@@ -1,0 +1,189 @@
+.rating-section{
+  background: #FBFBFB;
+  border: 1px solid #d8dfe6;
+  padding: 1rem;
+  box-sizing: border-box;
+  border-radius: 4px;
+  width: 66%;
+  margin-top: 7%;
+  min-height: 138px;
+}
+.rating-title{
+  font-size: 13px;
+  margin-top: 1%;
+}
+.rate-freight-order{
+  margin-left: 0 !important;
+  height: 40px !important;
+  margin-top: 9% !important;
+  width: 61% !important;
+}
+.rating-header{
+  font-size: 18px;
+  line-height: 27px;
+  text-align: center;
+  color: #000000;
+}
+.freight-stars-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 17%;
+}
+.freight-ratings-section{
+  margin-top: 14%;
+  margin-bottom: 10%;
+  font-weight: 500;
+}
+.flex-div{
+  display: flex;
+}
+.inner-content-flex{
+  flex: 0.9;
+}
+.freight-order-etra-info{
+  width: 35%;
+}
+.no-quatations-img{
+  width: 28%;
+  display: block;
+  margin: auto;
+}
+.no-transporters-label{
+  text-align: center;
+}
+.waiting-quatation{
+  width: 100%;
+  height: 395px;
+}
+.transporters-element-inputs{
+  background-color: white !important;
+  width: 100% !important;
+}
+.request-shipment-header{
+  display: flex;
+  align-items: center;
+  color: #000000;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 18px;
+}
+.award-sub-details{
+  margin: 0px 10px 10px 10px;
+  padding-right: 20px;
+  min-height: 55px;
+}
+.award-inner-info{
+  color: #000000;
+  margin: 2%;
+  font-size: 13px;
+  line-height: 25px;
+  font-weight: 300;
+}
+.quatations-outline-info{
+  margin-bottom: 2%;
+}
+.outline-info-value{
+  color: #000000;
+  font-weight: 600;
+}
+.payment-terms{
+   margin-top: 9% !important;
+   margin-bottom : 9% !important;
+}
+.award-shipment-input{
+  margin: 0px 0px 10px 10px;
+}
+.award-shipment-btn{
+  margin: 0px 0px 10px 10px !important;
+  width: 98% !important;
+  background: #EA7125 !important;
+  border: 1px solid #EA7125 !important;
+}
+.summary-inner-value{
+  margin-top: 2%;
+}
+.shipment-summary-outer{
+  margin-left: 3%;
+}
+.quatations-outline-info-summary{
+  margin-bottom: 6%;
+}
+.transporter-content{
+  width: 38%;
+  font-size: 15px;
+  margin-top: 1%;
+}
+.transporters-documents{
+  width: 11%;
+  color: #000000;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  margin-bottom: 1%;
+  margin-top: 3%;
+}
+.documents-divider{
+  border-top: 1px solid #d8dfe6 !important;
+}
+.trucks-listing{
+  font-size: 14px !important;
+}
+.transporters-doc-align{
+  margin-left: 2 !important;
+}
+.no-transporter-top-margin{
+  border-bottom: 1px solid transparent;
+}
+.freight-documents--inner{
+  width: 100%;
+  display: flex;
+  height: 42px;
+  margin-bottom: 1%;
+}
+.approve-documents-action{
+  float: right;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  margin-right: 8%;
+}
+.awarded-highlight{
+  margin-top: 1%;
+  margin-left: 1%;
+  color: #000000;
+  font-weight: 600;
+  font-size: 14px;
+  width: 90%;
+}
+.no-document-content{
+  font-size: 15px;
+  margin-top: 1%;
+}
+.align-awarded-total-sum{
+  margin-left: 2%;
+}
+.approve-freight-section{
+  margin-top: 0 !important;
+}
+.align-approval-btn{
+  display: flex;
+}
+.decline-document-reason{
+  margin-top: 4%;
+  color: #f57f20 !important;
+  font-size: 14px;
+}
+.approved-document-reason{
+  margin-top: 4%;
+  color: #1782C5 !important;
+  font-size: 14px;
+  font-weight: 600;
+}
+.payment-terms-hint{
+  background: #fdedd3 !important;
+  font-size: 12px;
+  font-family: 'Nunito', sans-serif !important;
+  margin: 3% 10% 3% 10%;
+}
+.hint--inner{
+  padding: 4%;
+}
