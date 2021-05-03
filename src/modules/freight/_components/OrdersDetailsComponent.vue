@@ -48,7 +48,11 @@
                     >
                     <span class="order-info-header">Pick up time</span>
                     <div class="freight-order-info-extra">
-                      {{ moment(freightOrderDetail.pickup_time , 'MM-DD-YYYY HH:mm:ss').format('DD-MM-YYYY HH:mm') }}
+                      {{
+                        moment(freightOrderDetail.pickup_time, 'MM-DD-YYYY HH:mm:ss').format(
+                          'DD-MM-YYYY HH:mm'
+                        )
+                      }}
                     </div>
                   </div>
                   <div class="order_details_desc_item order-details-schedule-time">
@@ -166,151 +170,7 @@
 
         <!-- Transporters List -->
 
-        <div
-          v-if="Object.prototype.hasOwnProperty.call(freightOrderDetail, 'awarded_bids')"
-          class=""
-        >
-          <div v-if="freightOrderDetail.awarded_bids.length > 0">
-            <div class="order-info-header align-documents-data">
-              Awarded Transporters
-            </div>
-            <div
-              class=""
-              style="display: flex;"
-            >
-              <div class="">
-                <el-progress
-                  type="circle"
-                  :percentage="
-                    getTruckPercentage(
-                      freightOrderDetail.available_trucks,
-                      freightOrderDetail.total_trucks
-                    )
-                  "
-                />
-              </div>
-              <div class="awarded-highlight">
-                {{ freightOrderDetail.available_trucks }}/{{ freightOrderDetail.total_trucks }}
-                Trucks confirmed
-
-                <span class="align-awarded-total-sum">
-                  Total cost: {{freightOrderDetail.currency}} {{ freightOrderDetail.awarded_amount.toLocaleString() }}
-                </span>
-              </div>
-            </div>
-
-            <div class="transporter-listing order-order-documents">
-              <div
-                v-for="(data, index) in freightOrderDetail.awarded_bids"
-                :key="index"
-                class="doc-detail"
-                :class="getItemPosition(freightOrderDetail.awarded_bids, index)"
-              >
-                <div
-                  class="transporters-filters documents-highlight
-                  orders-freight-documents transporters-doc-align"
-                  @click="toggleRow(index)"
-                >
-                  <div class="transporter-content freight-documents-title">
-                    {{ data.name }}
-                  </div>
-                  <div class="transporter-content">
-                    {{ getAvailableTrucks(data.trucks_available) }}
-                  </div>
-                  <div class="transporter-content">
-                    {{freightOrderDetail.currency}} {{ data.price_per_truck }}/Truck
-                  </div>
-                  <div class="transporter-content view-transporter-documents">
-                    View document details
-                    <span
-                      v-if="opened.includes(index)"
-                      class=""
-                    >
-                      <i class="el-icon-arrow-up" />
-                    </span>
-                    <span
-                      v-if="!opened.includes(index)"
-                      class=""
-                    >
-                      <i class="el-icon-arrow-down" />
-                    </span>
-                  </div>
-                </div>
-                <div
-                  v-if="opened.includes(index)"
-                  class="documents-divider"
-                />
-                <div
-                  v-if="opened.includes(index)"
-                  class="documents-highlight orders-freight-documents transporters-doc-align"
-                >
-                  <div class="transporters-documents">
-                    Documents
-                  </div>
-                  <div v-if="data.documents.length > 0">
-                    <div
-                      v-for="(val, index) in data.documents"
-                      v-if="index >= 0"
-                      class="freight-documents--inner"
-                    >
-                      <div class="transporter-content">
-                        {{ val.document_name }}
-                      </div>
-                      <div class="transporter-content">
-                        {{ val.date_created }}
-                      </div>
-                      <div
-                        class="transporter-content view-transporter-documents"
-                        @click="viewDocument(val.document_url, val.document_name)"
-                      >
-                        View Document <i class="el-icon-arrow-right view-transporter-info" />
-                      </div>
-                      <div
-                        class="freight-documents-approve flex-div transporter-content approve-freight-section"
-                      >
-                        <div
-                          v-if="checkActionableBtnState && val.created_by === 'OWNER' && val.document_status === 0"
-                          class="align-approval-btn"
-                        >
-                          <button
-                            type="button"
-                            class="button-primary approve-documents-action freight-approve-doc"
-                            name="create_order_text"
-                            @click="approveDoc(val)"
-                          >
-                            {{ approve_doc_text }}
-                          </button>
-                          <button
-                            type="button"
-                            class="approve-documents-action freight-decline-doc"
-                            name="create_order_text"
-                            @click="declineDialog(val)"
-                          >
-                            {{ decline_doc_text }}
-                          </button>
-                        </div>
-                        <div class="decline-document-reason" v-if="checkActionableBtnState && val.created_by === 'OWNER' && val.document_status === -1">
-                           Decline reason : {{val.message}}
-                        </div>
-                        <div class="approved-document-reason" v-if="checkActionableBtnState && val.created_by === 'OWNER' && val.document_status === 1">
-                          Document has been approved
-                        </div>
-                      </div>
-                    </div>
-                    <div v-else>
-                      <div class="no-document-content">
-                        No document available
-                      </div>
-                    </div>
-                  </div>
-                  <div v-else>
-                    No document available
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <DocumentsSection :freight-order-detail="freightOrderDetail" />
 
         <!-- Quatations List -->
 
@@ -359,7 +219,8 @@
                     {{ freightOrderDetail.quotations[index].trucks_available }} Trucks
                   </div>
                   <div class=" freight-documents-date">
-                    {{freightOrderDetail.currency}} {{ freightOrderDetail.quotations[index].price_per_truck }} /Truck
+                    {{ freightOrderDetail.currency }}
+                    {{ freightOrderDetail.quotations[index].price_per_truck }} /Truck
                   </div>
 
                   <div
@@ -431,7 +292,8 @@
                       Rate per truck:
                       <span
                         class="outline-info-value"
-                      >{{freightOrderDetail.currency}} {{ awardedTransporter.price_per_truck }}</span>
+                      >{{ freightOrderDetail.currency }}
+                        {{ awardedTransporter.price_per_truck }}</span>
                     </div>
                   </div>
                 </div>
@@ -537,7 +399,7 @@
                   <div class="quatations-outline-info-summary">
                     Price per truck
                     <p class="outline-info-value summary-inner-value">
-                      {{freightOrderDetail.currency}} {{ awardedTransporter.price_per_truck }}
+                      {{ freightOrderDetail.currency }} {{ awardedTransporter.price_per_truck }}
                     </p>
                   </div>
                   <div class="quatations-outline-info-summary">
@@ -549,7 +411,8 @@
                   <div class="quatations-outline-info-summary">
                     Total amount
                     <p class="outline-info-value summary-inner-value">
-                      {{freightOrderDetail.currency}} {{ trucks_no * awardedTransporter.price_per_truck }}
+                      {{ freightOrderDetail.currency }}
+                      {{ trucks_no * awardedTransporter.price_per_truck }}
                     </p>
                   </div>
                   <div class="quatations-outline-info-summary">
@@ -674,7 +537,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import numeral from 'numeral';
 import S3 from 'aws-s3';
 import $ from 'jquery';
@@ -682,12 +545,13 @@ import TimezoneMxn from '../../../mixins/timezone_mixin';
 import LoadingComponent from './LoadingComponent.vue';
 import NotificationMxn from '../../../mixins/notification_mixin';
 import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
+import DocumentsSection from './FreightDocuments/Documents.vue';
 
 let s3 = '';
 
 export default {
   name: 'Transporters',
-  components: { LoadingComponent },
+  components: { LoadingComponent, DocumentsSection },
   mixins: [TimezoneMxn, NotificationMxn, MixpanelMixin],
   data() {
     return {
@@ -740,13 +604,21 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({}),
+    ...mapGetters({
+      getDocumentUrl: '$_freight/getDocumentUrl',
+      getDocumentName: '$_freight/getDocumentName',
+      getDocumentDialog: '$_freight/getDocumentDialog',
+      getOrderDetail: '$_freight/getOrderDetail',
+      getDeclineDocument: '$_freight/getDeclineDocument',
+      getDocumentDialogDocument: '$_freight/getDocumentDialogDocument',
+    }),
   },
   watch: {
     viewDocumentOption(val) {
       if (!val) {
-        this.src_link = '';
-        this.src_name = '';
+        this.setDocumentUrl('');
+        this.setDocumentName('');
+        this.setDocumentDialog(false);
       }
     },
     showDeclineDialog(val) {
@@ -758,6 +630,20 @@ export default {
       if (!val) {
         this.resetShipmentDialog();
       }
+    },
+    getDocumentDialog(value) {
+      this.viewDocumentOption = value;
+      this.src_link = this.getDocumentUrl;
+      this.src_name = this.getDocumentName;
+    },
+    getOrderDetail(val) {
+      if (val !== '') {
+        this.fetchOrderDetail(this.$route.params.id);
+      }
+    },
+    getDocumentDialogDocument(value) {
+      this.decline_doc = this.getDeclineDocument;
+      this.showDeclineDialog = value;
     },
   },
   mounted() {
@@ -781,9 +667,15 @@ export default {
   methods: {
     ...mapActions({
       getFreightOrderDetail: '$_freight/getFreightOrderDetail',
-      approveDocument: '$_freight/approveDocument',
       rateFreightOrder: '$_freight/rateFreightOrder',
       awardShipment: '$_freight/awardShipment',
+    }),
+    ...mapMutations({
+      setDocumentUrl: '$_freight/setDocumentUrl',
+      setDocumentName: '$_freight/setDocumentName',
+      setDocumentDialog: '$_freight/setDocumentDialog',
+      setDeclineDocument: '$_freight/setDocumentName',
+      setDocumentDialogDocument: '$_freight/setDocumentDialog',
     }),
     initiateS3() {
       const script = document.createElement('script');
@@ -856,13 +748,6 @@ export default {
       }
       return resp;
     },
-    getAvailableTrucks(val) {
-      let resp = `${val} Trucks`;
-      if (val === 1) {
-        resp = `${val} Truck`;
-      }
-      return resp;
-    },
     backToOrders() {
       this.$router.push('/freight/orders');
     },
@@ -895,11 +780,6 @@ export default {
     },
     formatCurrency(currency) {
       return numeral(currency).format('0,0');
-    },
-    viewDocument(url, name) {
-      this.src_link = url;
-      this.src_name = name;
-      this.viewDocumentOption = true;
     },
     handleRemoveLanding() {
       this.billOfLandingName = '';
@@ -980,14 +860,6 @@ export default {
       tempName = `terms_of_delivery_${values}_${new Date().getTime()}.${name.split('.').pop()}`;
 
       return tempName;
-    },
-    toggleRow(i) {
-      if (this.opened.includes(i)) {
-        const index = this.opened.indexOf(i);
-        this.opened.splice(index, 1);
-      } else {
-        this.opened.push(i);
-      }
     },
     awardBid(val) {
       this.awardedTransporter = val;
@@ -1148,65 +1020,6 @@ export default {
       this.billOfLandingName = '';
       this.awardedTransporter = {};
     },
-    approveDoc(val) {
-      let acc = {};
-      const session = this.$store.getters.getSession;
-      if ('default' in session) {
-        acc = session[session.default];
-      }
-
-      const payload = {
-        document_id: val.document_id,
-        status: 2,
-      };
-
-      if (session.default === 'biz') {
-        payload.cop_id = acc.cop_id;
-        payload.cop_user_id = acc.user_id;
-      } else {
-        payload.peer_id = acc.user_id;
-      }
-
-      const fullPayload = {
-        values: payload,
-        app: 'FREIGHT_APP',
-        operator: '?',
-        endpoint: 'shipments/quotations/documents/approve',
-      };
-
-      this.approveDocument(fullPayload).then(
-        (response) => {
-          let workingResponse = response;
-          if (response.length > 1) {
-            workingResponse = response[0];
-          }
-
-          if (workingResponse.status) {
-            this.doNotification(1, 'Document approval!', 'Document approved successfully');
-            this.fetchOrderDetail(this.$route.params.id);
-          } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
-            this.doNotification(2, 'Failed to approve document!', workingResponse.message);
-          } else {
-            this.doNotification(2, 'Failed to approve document!', workingResponse.reason);
-          }
-        },
-        (error) => {
-          if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
-            this.doNotification(2, 'Failed to approve document!', error.response.data.reason);
-          } else {
-            this.doNotification(
-              2,
-              'Failed to approve document!',
-              'Failed to approve document, Kindly retry again or contact customer support ',
-            );
-          }
-        },
-      );
-    },
-    declineDialog(val) {
-      this.decline_doc = val;
-      this.showDeclineDialog = true;
-    },
     declineDocument() {
       let acc = {};
       const session = this.$store.getters.getSession;
@@ -1266,8 +1079,8 @@ export default {
       );
     },
     closeDeclineDialog() {
-      this.decline_doc = {};
-      this.showDeclineDialog = false;
+      this.setDeclineDocument({});
+      this.setDocumentDialogDocument(false);
       this.reason = '';
     },
     openRatingDialog() {
@@ -1326,11 +1139,6 @@ export default {
       }
       return resp;
     },
-    getTruckPercentage(availableTrucks, totalTrucks) {
-      const resp = (availableTrucks / totalTrucks) * 100;
-
-      return parseInt(resp, 10);
-    },
     doNotification(level, title, message) {
       const notification = { title, level, message };
       this.displayNotification(notification);
@@ -1341,193 +1149,5 @@ export default {
 
 <style lang="css" scoped>
 @import '../../../assets/styles/transporters_component.css';
-.rating-section{
-  background: #FBFBFB;
-  border: 1px solid #d8dfe6;
-  padding: 1rem;
-  box-sizing: border-box;
-  border-radius: 4px;
-  width: 66%;
-  margin-top: 7%;
-  min-height: 138px;
-}
-.rating-title{
-  font-size: 13px;
-  margin-top: 1%;
-}
-.rate-freight-order{
-  margin-left: 0 !important;
-  height: 40px !important;
-  margin-top: 9% !important;
-  width: 61% !important;
-}
-.rating-header{
-  font-size: 18px;
-  line-height: 27px;
-  text-align: center;
-  color: #000000;
-}
-.freight-stars-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 17%;
-}
-.freight-ratings-section{
-  margin-top: 14%;
-  margin-bottom: 10%;
-  font-weight: 500;
-}
-.flex-div{
-  display: flex;
-}
-.inner-content-flex{
-  flex: 0.9;
-}
-.freight-order-etra-info{
-  width: 35%;
-}
-.no-quatations-img{
-  width: 28%;
-  display: block;
-  margin: auto;
-}
-.no-transporters-label{
-  text-align: center;
-}
-.waiting-quatation{
-  width: 100%;
-  height: 395px;
-}
-.transporters-element-inputs{
-  background-color: white !important;
-  width: 100% !important;
-}
-.request-shipment-header{
-  display: flex;
-  align-items: center;
-  color: #000000;
-  font-weight: 500;
-  font-size: 17px;
-  line-height: 18px;
-}
-.award-sub-details{
-  margin: 0px 10px 10px 10px;
-  padding-right: 20px;
-  min-height: 55px;
-}
-.award-inner-info{
-  color: #000000;
-  margin: 2%;
-  font-size: 13px;
-  line-height: 25px;
-  font-weight: 300;
-}
-.quatations-outline-info{
-  margin-bottom: 2%;
-}
-.outline-info-value{
-  color: #000000;
-  font-weight: 600;
-}
-.payment-terms{
-   margin-top: 9% !important;
-   margin-bottom : 9% !important;
-}
-.award-shipment-input{
-  margin: 0px 0px 10px 10px;
-}
-.award-shipment-btn{
-  margin: 0px 0px 10px 10px !important;
-  width: 98% !important;
-  background: #EA7125 !important;
-  border: 1px solid #EA7125 !important;
-}
-.summary-inner-value{
-  margin-top: 2%;
-}
-.shipment-summary-outer{
-  margin-left: 3%;
-}
-.quatations-outline-info-summary{
-  margin-bottom: 6%;
-}
-.transporter-content{
-  width: 38%;
-  font-size: 15px;
-  margin-top: 1%;
-}
-.transporters-documents{
-  width: 11%;
-  color: #000000;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 18px;
-  margin-bottom: 1%;
-  margin-top: 3%;
-}
-.documents-divider{
-  border-top: 1px solid #d8dfe6 !important;
-}
-.trucks-listing{
-  font-size: 14px !important;
-}
-.transporters-doc-align{
-  margin-left: 2 !important;
-}
-.no-transporter-top-margin{
-  border-bottom: 1px solid transparent;
-}
-.freight-documents--inner{
-  width: 100%;
-  display: flex;
-  height: 42px;
-  margin-bottom: 1%;
-}
-.approve-documents-action{
-  float: right;
-  font-size: 13px;
-  letter-spacing: 0.01em;
-  margin-right: 8%;
-}
-.awarded-highlight{
-  margin-top: 1%;
-  margin-left: 1%;
-  color: #000000;
-  font-weight: 600;
-  font-size: 14px;
-  width: 90%;
-}
-.no-document-content{
-  font-size: 15px;
-  margin-top: 1%;
-}
-.align-awarded-total-sum{
-  margin-left: 2%;
-}
-.approve-freight-section{
-  margin-top: 0 !important;
-}
-.align-approval-btn{
-  display: flex;
-}
-.decline-document-reason{
-  margin-top: 4%;
-  color: #f57f20 !important;
-  font-size: 14px;
-}
-.approved-document-reason{
-  margin-top: 4%;
-  color: #1782C5 !important;
-  font-size: 14px;
-  font-weight: 600;
-}
-.payment-terms-hint{
-  background: #fdedd3 !important;
-  font-size: 12px;
-  font-family: 'Nunito', sans-serif !important;
-  margin: 3% 10% 3% 10%;
-}
-.hint--inner{
-  padding: 4%;
-}
+@import '../../../assets/styles/transporters_documents.css';
 </style>
