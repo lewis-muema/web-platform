@@ -33,7 +33,7 @@
       class="awarding-docs-subsection"
     >
       <div class="freight-documents--inner">
-        <div class="transporter-content">
+        <div class="transporter-content documents-sub-highlight">
           Documents will be displayed here
         </div>
       </div>
