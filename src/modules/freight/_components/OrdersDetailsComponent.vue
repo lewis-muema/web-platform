@@ -550,7 +550,7 @@ import DocumentsSection from './FreightDocuments/Documents.vue';
 let s3 = '';
 
 export default {
-  name: 'Transporters',
+  name: 'OrderDetailsComponent',
   components: { LoadingComponent, DocumentsSection },
   mixins: [TimezoneMxn, NotificationMxn, MixpanelMixin],
   data() {
@@ -559,8 +559,6 @@ export default {
       financing_text: 'Place Order',
       rating: 5.0,
       loading: true,
-      approve_doc_text: 'Approve',
-      decline_doc_text: 'Decline',
       approve_quatation_text: 'Award',
       decline_quatation_text: 'Decline',
       viewDocumentOption: false,

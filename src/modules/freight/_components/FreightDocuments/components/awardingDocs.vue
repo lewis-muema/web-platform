@@ -98,13 +98,17 @@
           </div>
         </div>
         <div v-else>
-          <div class="no-document-content">
+          <div class="transporter-content documents-sub-highlight">
             No document available
           </div>
         </div>
       </div>
       <div v-else>
-        No document available
+        <div class="freight-documents--inner">
+          <div class="transporter-content documents-sub-highlight">
+            No document available
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -130,6 +134,8 @@ export default {
   data() {
     return {
       opened: [],
+      approve_doc_text: 'Approve',
+      decline_doc_text: 'Decline',
     };
   },
   mounted() {},

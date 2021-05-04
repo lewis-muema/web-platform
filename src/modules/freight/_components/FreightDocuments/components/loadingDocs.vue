@@ -2,7 +2,7 @@
   <div class="">
     <div
       class="transporter-listing order-order-documents"
-      @click="toggleRow(3)"
+      @click="toggleRow(2)"
     >
       <div class="freight-documents-flex">
         <div class="documents-type-label">
@@ -13,13 +13,13 @@
         </span>
         <div class="view-transporter-sub-documents documents-type-inner">
           <span
-            v-if="opened.includes(3)"
+            v-if="opened.includes(2)"
             class=""
           >
             <i class="el-icon-minus" />
           </span>
           <span
-            v-if="!opened.includes(3)"
+            v-if="!opened.includes(2)"
             class=""
           >
             <i class="el-icon-plus" />
@@ -27,17 +27,98 @@
         </div>
       </div>
       <div
-        v-if="opened.includes(3)"
+        v-if="opened.includes(2)"
         class="documents-divider"
       />
     </div>
     <div
-      v-if="opened.includes(3)"
+      v-if="opened.includes(2)"
       class="awarding-docs-subsection"
     >
-      <div class="freight-documents--inner">
-        <div class="transporter-content documents-sub-highlight">
-          Documents will be displayed here
+      <div v-if="documentDetail.length > 0">
+        <div
+          v-for="(val, index) in documentDetail"
+          v-if="index >= 0"
+          class="freight-loading-documents--inner"
+        >
+          <div class="transporter-content documents-sub-highlight">
+            <div class="documents-sub-highlight-label">
+              Vehicle Reg
+            </div>
+            <div class="documents-sub-highlight-inner">
+              KBC 123
+            </div>
+          </div>
+          <div class="transporter-content documents-sub-highlight">
+            <div class="documents-sub-highlight-label">
+              Trailer Number
+            </div>
+            <div class="documents-sub-highlight-inner">
+              ZC2682
+            </div>
+          </div>
+          <div class="transporter-content documents-sub-highlight">
+            <div class="documents-sub-highlight-label">
+              Driver Name
+            </div>
+            <div class="documents-sub-highlight-inner">
+              Peter Parker
+            </div>
+          </div>
+          <div class="transporter-content documents-sub-highlight">
+            <div class="documents-sub-highlight-label">
+              Driver Phone No.
+            </div>
+            <div class="documents-sub-highlight-inner">
+              +254 701 123456
+            </div>
+          </div>
+          <div class="transporter-content documents-sub-highlight">
+            <div class="documents-sub-highlight-label">
+              Driver ID
+            </div>
+            <div class="documents-sub-highlight-inner">
+              1234567
+            </div>
+          </div>
+          <div
+            v-if="!state"
+            class="transporter-content documents-sub-highlight"
+          >
+            <div class="view-loading-docs">
+              View Document
+            </div>
+            <div class="re-upload-loading-docs">
+              Re-upload doc
+            </div>
+          </div>
+          <div
+            v-else
+            class="freight-documents-approve transporter-content
+            approve-freight-section documents-sub-highlight"
+          >
+            <div class="align-approval-btn upload-loading-doc-btn">
+              <button
+                type="button"
+                class="button-primary approve-documents-action upload-loading-doc"
+                name="create_order_text"
+              >
+                {{ approve_doc_text }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div v-else>
+          <div class="transporter-content documents-sub-highlight">
+            No document available
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <div class="freight-documents--inner">
+          <div class="transporter-content documents-sub-highlight">
+            No document available
+          </div>
         </div>
       </div>
     </div>
@@ -56,10 +137,16 @@ export default {
       type: Object,
       required: true,
     },
+    documentDetail: {
+      type: Array,
+      required: true,
+    },
   },
   data() {
     return {
       opened: [],
+      approve_doc_text: 'Upload loading doc',
+      state: true,
     };
   },
   mounted() {},
