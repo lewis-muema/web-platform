@@ -201,3 +201,14 @@
 .freight-documents-flex{
   display:flex
 }
+.freight-documents{
+  font-size: 15px;
+  font-weight: 600;
+  color: #000;
+}
+.documents-sub-highlight{
+  font-weight: 100 !important;
+}
+.transporters-name-highlight{
+  font-weight: 600 !important;
+}

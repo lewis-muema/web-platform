@@ -45,13 +45,13 @@
             orders-freight-documents transporters-doc-align"
             @click="toggleRow(index)"
           >
-            <div class="transporter-content freight-documents-title">
+            <div class="transporter-content freight-documents-title transporters-name-highlight">
               {{ data.name }}
             </div>
             <div class="transporter-content">
               {{ getAvailableTrucks(data.trucks_available) }}
             </div>
-            <div class="transporter-content">
+            <div class="transporter-content transporters-name-highlight">
               {{ freightOrderDetail.currency }} {{ data.price_per_truck }}/Truck
             </div>
             <div class="transporter-content view-transporter-documents">
@@ -166,9 +166,4 @@ export default {
 <style lang="css" scoped>
 @import '../../../../assets/styles/transporters_component.css';
 @import '../../../../assets/styles/transporters_documents.css';
-.freight-documents{
-  font-size: 15px;
-  font-weight: 500;
-  color: #000;
-}
 </style>
