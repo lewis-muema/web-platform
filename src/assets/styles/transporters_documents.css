@@ -212,3 +212,12 @@
 .transporters-name-highlight{
   font-weight: 600 !important;
 }
+.notification-counter-highlight{
+  margin-right: 6%;
+  color: #EA7125 !important;
+  font-weight: 400 !important;
+}
+.view-transporter-sub-documents{
+  color: #000000;
+  cursor: pointer;
+}
