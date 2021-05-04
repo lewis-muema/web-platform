@@ -8,7 +8,10 @@
         <div class="documents-type-label">
           Fulfillment Document
         </div>
-        <div class="view-transporter-documents documents-type-inner">
+        <span class="notification-counter-highlight">
+          <i class="el-icon-warning" /> 2 docs not actioned
+        </span>
+        <div class="view-transporter-sub-documents documents-type-inner">
           <span
             v-if="opened.includes(2)"
             class=""
@@ -33,7 +36,7 @@
       class="awarding-docs-subsection"
     >
       <div class="freight-documents--inner">
-        <div class="transporter-content">
+        <div class="transporter-content documents-sub-highlight">
           Documents will be displayed here
         </div>
       </div>

@@ -8,7 +8,10 @@
         <div class="documents-type-label">
           Awarding Documents
         </div>
-        <div class="view-transporter-documents documents-type-inner">
+        <span class="notification-counter-highlight">
+          <i class="el-icon-warning" /> 2 docs not actioned
+        </span>
+        <div class="view-transporter-sub-documents">
           <span
             v-if="opened.includes(1)"
             class=""
@@ -38,20 +41,20 @@
           v-if="index >= 0"
           class="freight-documents--inner"
         >
-          <div class="transporter-content">
+          <div class="transporter-content documents-sub-highlight">
             {{ val.document_name }}
           </div>
-          <div class="transporter-content">
+          <div class="transporter-content documents-sub-highlight">
             {{ val.date_created }}
           </div>
           <div
-            class="transporter-content view-transporter-documents"
+            class="transporter-content view-transporter-documents documents-sub-highlight"
             @click="viewDocument(val.document_url, val.document_name)"
           >
             View Document <i class="el-icon-arrow-right view-transporter-info" />
           </div>
           <div
-            class="freight-documents-approve flex-div transporter-content approve-freight-section"
+            class="freight-documents-approve flex-div transporter-content approve-freight-section documents-sub-highlight"
           >
             <div
               v-if="
