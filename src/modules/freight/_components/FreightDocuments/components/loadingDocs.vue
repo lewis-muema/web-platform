@@ -8,7 +8,10 @@
         <div class="documents-type-label">
           Assigned Vehicles & Loading Documents
         </div>
-        <div class="view-transporter-documents documents-type-inner">
+        <span class="notification-counter-highlight">
+          <i class="el-icon-warning" /> 2 docs not actioned
+        </span>
+        <div class="view-transporter-sub-documents documents-type-inner">
           <span
             v-if="opened.includes(3)"
             class=""
