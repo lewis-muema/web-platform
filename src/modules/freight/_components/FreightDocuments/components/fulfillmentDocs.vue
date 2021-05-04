@@ -2,7 +2,7 @@
   <div class="">
     <div
       class="transporter-listing order-order-documents"
-      @click="toggleRow(2)"
+      @click="toggleRow(3)"
     >
       <div class="freight-documents-flex">
         <div class="documents-type-label">
@@ -13,13 +13,13 @@
         </span>
         <div class="view-transporter-sub-documents documents-type-inner">
           <span
-            v-if="opened.includes(2)"
+            v-if="opened.includes(3)"
             class=""
           >
             <i class="el-icon-minus" />
           </span>
           <span
-            v-if="!opened.includes(2)"
+            v-if="!opened.includes(3)"
             class=""
           >
             <i class="el-icon-plus" />
@@ -27,12 +27,12 @@
         </div>
       </div>
       <div
-        v-if="opened.includes(2)"
+        v-if="opened.includes(3)"
         class="documents-divider"
       />
     </div>
     <div
-      v-if="opened.includes(2)"
+      v-if="opened.includes(3)"
       class="awarding-docs-subsection"
     >
       <div class="freight-documents--inner">
