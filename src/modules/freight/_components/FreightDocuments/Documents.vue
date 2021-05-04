@@ -87,7 +87,10 @@
               v-if="opened.includes(index)"
               class="documents-divider"
             />
-            <loadingDocs :freight-order-detail="freightOrderDetail" />
+            <loadingDocs
+              :freight-order-detail="freightOrderDetail"
+              :document-detail="data.documents"
+            />
             <div
               v-if="opened.includes(index)"
               class="documents-divider"
