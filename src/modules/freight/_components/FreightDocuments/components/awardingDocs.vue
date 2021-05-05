@@ -138,10 +138,13 @@ export default {
       decline_doc_text: 'Decline',
     };
   },
-  mounted() {},
+  mounted() {
+    this.fetchDocumentOptions();
+  },
   methods: {
     ...mapActions({
       approveDocument: '$_freight/approveDocument',
+      getDocumentOptions: '$_freight/getDocumentOptions',
     }),
     ...mapMutations({
       setDocumentUrl: '$_freight/setDocumentUrl',
@@ -150,7 +153,40 @@ export default {
       setOrderDetail: '$_freight/setOrderDetail',
       setDeclineDocument: '$_freight/setDeclineDocument',
       setDocumentDialogDocument: '$_freight/setDocumentDialogDocument',
+      setAwardingDocumentOptions: '$_freight/setAwardingDocumentOptions',
     }),
+    fetchDocumentOptions() {
+      const fullPayload = {
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: 'document_types?stage=1',
+      };
+
+      this.getDocumentOptions(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.setAwardingDocumentOptions(response.data);
+          } else {
+            this.doNotification(
+              2,
+              'Failed to retrieve awarding documents options',
+              response.message,
+            );
+            this.$router.push('/freight/orders');
+            this.setAwardingDocumentOptions({});
+          }
+        },
+        (error) => {
+          this.doNotification(
+            2,
+            'Awarding document options retrival failure !',
+            'Failed to fetch document options , Kindly retry again or contact customer support ',
+          );
+          this.$router.push('/freight/orders');
+          this.setAwardingDocumentOptions({});
+        },
+      );
+    },
     toggleRow(i) {
       if (this.opened.includes(i)) {
         const index = this.opened.indexOf(i);

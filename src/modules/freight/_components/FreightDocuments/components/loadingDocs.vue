@@ -149,10 +149,48 @@ export default {
       state: true,
     };
   },
-  mounted() {},
+  mounted() {
+    this.fetchDocumentOptions();
+  },
   methods: {
-    ...mapActions({}),
-    ...mapMutations({}),
+    ...mapActions({
+      getDocumentOptions: '$_freight/getDocumentOptions',
+    }),
+    ...mapMutations({
+      setLoadingDocumentOptions: '$_freight/setLoadingDocumentOptions',
+    }),
+    fetchDocumentOptions() {
+      const fullPayload = {
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: 'document_types?stage=2',
+      };
+
+      this.getDocumentOptions(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.setLoadingDocumentOptions(response.data);
+          } else {
+            this.doNotification(
+              2,
+              'Failed to retrieve loading documents options',
+              response.message,
+            );
+            this.$router.push('/freight/orders');
+            this.setLoadingDocumentOptions({});
+          }
+        },
+        (error) => {
+          this.doNotification(
+            2,
+            'Loading document options retrival failure !',
+            'Failed to fetch document options , Kindly retry again or contact customer support ',
+          );
+          this.$router.push('/freight/orders');
+          this.setLoadingDocumentOptions({});
+        },
+      );
+    },
     toggleRow(i) {
       if (this.opened.includes(i)) {
         const index = this.opened.indexOf(i);
