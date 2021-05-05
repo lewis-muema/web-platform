@@ -96,7 +96,10 @@
               class="documents-divider"
             />
 
-            <fulfillmentDocs :freight-order-detail="freightOrderDetail" />
+            <fulfillmentDocs
+              :freight-order-detail="freightOrderDetail"
+              :document-detail="data.documents"
+            />
           </div>
         </div>
       </div>
