@@ -21,4 +21,13 @@ export default {
   setDocumentDialogDocument(state, val) {
     state.decline_dialog = val;
   },
+  setAwardingDocumentOptions(state, val) {
+    state.awarding_docs_options = val;
+  },
+  setLoadingDocumentOptions(state, val) {
+    state.loading_docs_options = val;
+  },
+  setFulfillmentDocumentOptions(state, val) {
+    state.fulfillment_docs_options = val;
+  },
 };

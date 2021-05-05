@@ -10,6 +10,9 @@ const state = {
   order_id: '',
   decline_doc: {},
   decline_dialog: false,
+  awarding_docs_options: [],
+  loading_docs_options: [],
+  fulfillment_docs_options: [],
 };
 
 export default {
