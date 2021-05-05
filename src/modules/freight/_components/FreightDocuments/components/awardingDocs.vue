@@ -156,6 +156,7 @@ export default {
       setAwardingDocumentOptions: '$_freight/setAwardingDocumentOptions',
     }),
     fetchDocumentOptions() {
+      const type = this.freightOrderDetail.cargo_type;
       const fullPayload = {
         app: 'FREIGHT_APP',
         operator: '?',
@@ -165,7 +166,21 @@ export default {
       this.getDocumentOptions(fullPayload).then(
         (response) => {
           if (response.status) {
-            this.setAwardingDocumentOptions(response.data);
+            const responseData = response.data;
+            const filteredDocs = [];
+            if (responseData.length > 0) {
+              for (let i = 0; i < responseData.length; i++) {
+                const filtered = responseData[i].cargo_types.find(
+                  location => location.cargo_type === type,
+                );
+                if (filtered !== undefined && filtered !== 'undefined') {
+                  filteredDocs.push(responseData[i]);
+                }
+              }
+              this.setAwardingDocumentOptions(filteredDocs);
+            } else {
+              this.setAwardingDocumentOptions({});
+            }
           } else {
             this.doNotification(
               2,
