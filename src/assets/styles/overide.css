@@ -766,3 +766,6 @@ div.pac-container {
   cursor: not-allowed;
 
 }
+.requestShipmentLoadingDocs > .el-dialog > .el-dialog__header{
+  padding: 0 !important;
+}
