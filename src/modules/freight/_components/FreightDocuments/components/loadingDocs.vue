@@ -8,8 +8,11 @@
         <div class="documents-type-label">
           Assigned Vehicles & Loading Documents
         </div>
-        <span class="notification-counter-highlight">
-          <i class="el-icon-warning" /> 2 docs not actioned
+        <span
+          v-if="doc_count > 0"
+          class="notification-counter-highlight"
+        >
+          <i class="el-icon-warning" /> {{ doc_count }} docs not actioned
         </span>
         <div class="view-transporter-sub-documents documents-type-inner">
           <span
@@ -147,10 +150,17 @@ export default {
       opened: [],
       approve_doc_text: 'Upload loading doc',
       state: true,
+      doc_count: 0,
     };
+  },
+  watch: {
+    documentDetail() {
+      this.checkDocumentActionableCount();
+    },
   },
   mounted() {
     this.fetchDocumentOptions();
+    this.checkDocumentActionableCount();
   },
   methods: {
     ...mapActions({
@@ -159,6 +169,22 @@ export default {
     ...mapMutations({
       setLoadingDocumentOptions: '$_freight/setLoadingDocumentOptions',
     }),
+    checkDocumentActionableCount() {
+      this.doc_count = 0;
+      if (this.documentDetail.length > 0) {
+        const store = [];
+        const details = this.documentDetail;
+        const filtered = details.find(set => set.actionable === true);
+        if (filtered !== undefined && filtered !== 'undefined') {
+          store.push(filtered);
+        }
+        if (this.checkActionableBtnState && filtered.created_by === 'OWNER') {
+          this.doc_count = store.length;
+        }
+      } else {
+        this.doc_count = 0;
+      }
+    },
     fetchDocumentOptions() {
       const type = this.freightOrderDetail.cargo_type;
       const fullPayload = {
