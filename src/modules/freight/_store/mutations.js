@@ -30,4 +30,10 @@ export default {
   setFulfillmentDocumentOptions(state, val) {
     state.fulfillment_docs_options = val;
   },
+  setLoadingDocs(state, val) {
+    state.loading_documents = val;
+  },
+  setLoadingDocumentDialog(state, val) {
+    state.loading_dialog = val;
+  },
 };

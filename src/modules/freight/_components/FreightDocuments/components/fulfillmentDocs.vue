@@ -172,13 +172,20 @@ export default {
         const details = this.documentDetail;
         const filtered = details.find(set => set.actionable === true);
         if (filtered !== undefined && filtered !== 'undefined') {
-          store.push(filtered);
+          if (filtered.created_by === 'OWNER') {
+            store.push(filtered);
+          }
         }
-        if (this.checkActionableBtnState && filtered.created_by === 'OWNER') {
-          this.doc_count = store.length;
+        if (store.length > 0) {
+          this.updateStoreCount(store);
         }
       } else {
         this.doc_count = 0;
+      }
+    },
+    updateStoreCount(store) {
+      if (this.checkActionableBtnState) {
+        this.doc_count = store.length;
       }
     },
     fetchDocumentOptions() {

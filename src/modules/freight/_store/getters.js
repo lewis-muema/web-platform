@@ -5,6 +5,8 @@ const getDocumentDialog = state => state.document_dialog;
 const getOrderDetail = state => state.order_id;
 const getDeclineDocument = state => state.decline_doc;
 const getDocumentDialogDocument = state => state.decline_dialog;
+const getLoadingDocs = state => state.loading_documents;
+const getLoadingDocumentDialog = state => state.loading_dialog;
 
 export default {
   getFreightOrders,
@@ -14,4 +16,6 @@ export default {
   getOrderDetail,
   getDeclineDocument,
   getDocumentDialogDocument,
+  getLoadingDocs,
+  getLoadingDocumentDialog,
 };
