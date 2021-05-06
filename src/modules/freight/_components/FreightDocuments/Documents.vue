@@ -104,11 +104,40 @@
         </div>
       </div>
     </div>
+    <transition
+      name="fade"
+      mode="out-in"
+    >
+      <div class="">
+        <el-dialog
+          :visible.sync="viewLoadingDocument"
+          class="documentOptions"
+        >
+          <div
+            v-for="(val, index) in loadingDocs"
+            v-if="index >= 0"
+          >
+            <div class="document-text-option freight-documents">
+              {{ val.document_name }} document
+            </div>
+            <div class="document-divider" />
+            <div class="document-view-inner loading-docs-image">
+              <iframe
+                :src="val.document_url"
+                frameBorder="0"
+                width="100%"
+                height="100%"
+              />
+            </div>
+          </div>
+        </el-dialog>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapMutations, mapActions, mapGetters } from 'vuex';
 import NotificationMxn from '../../../../mixins/notification_mixin';
 import awardingDocs from './components/awardingDocs.vue';
 import fulfillmentDocs from './components/fulfillmentDocs.vue';
@@ -127,12 +156,36 @@ export default {
   data() {
     return {
       opened: [],
+      viewLoadingDocument: false,
+      loadingDocs: [],
     };
+  },
+  computed: {
+    ...mapGetters({
+      getLoadingDocs: '$_freight/getLoadingDocs',
+      getLoadingDocumentDialog: '$_freight/getLoadingDocumentDialog',
+    }),
+  },
+  watch: {
+    viewLoadingDocument(val) {
+      if (!val) {
+        this.setLoadingDocumentDialog(false);
+        this.loadingDocs = [];
+        this.setLoadingDocs([]);
+      }
+    },
+    getLoadingDocumentDialog(value) {
+      this.loadingDocs = this.getLoadingDocs;
+      this.viewLoadingDocument = value;
+    },
   },
   mounted() {},
   methods: {
     ...mapActions({}),
-    ...mapMutations({}),
+    ...mapMutations({
+      setLoadingDocumentDialog: '$_freight/setLoadingDocumentDialog',
+      setLoadingDocs: '$_freight/setLoadingDocs',
+    }),
     toggleRow(i) {
       if (this.opened.includes(i)) {
         const index = this.opened.indexOf(i);

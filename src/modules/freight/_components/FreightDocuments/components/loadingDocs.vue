@@ -85,10 +85,13 @@
             </div>
           </div>
           <div
-            v-if="!state"
+            v-if="val.documents.length > 0"
             class="transporter-content documents-sub-highlight"
           >
-            <div class="view-loading-docs">
+            <div
+              class="view-loading-docs"
+              @click="viewLoadingDocs(val.documents)"
+            >
               View Document
             </div>
             <div class="re-upload-loading-docs">
@@ -96,7 +99,11 @@
             </div>
           </div>
           <div
-            v-else
+            v-if="
+              val.documents.length === 0 &&
+                checkActionableBtnState &&
+                isDocumentActionable(val.documents)
+            "
             class="freight-documents-approve transporter-content
             approve-freight-section documents-sub-highlight"
           >
@@ -168,22 +175,51 @@ export default {
     }),
     ...mapMutations({
       setLoadingDocumentOptions: '$_freight/setLoadingDocumentOptions',
+      setLoadingDocs: '$_freight/setLoadingDocs',
+      setLoadingDocumentDialog: '$_freight/setLoadingDocumentDialog',
     }),
     checkDocumentActionableCount() {
       this.doc_count = 0;
       if (this.documentDetail.length > 0) {
         const store = [];
         const details = this.documentDetail;
-        const filtered = details.find(set => set.actionable === true);
-        if (filtered !== undefined && filtered !== 'undefined') {
-          store.push(filtered);
-        }
-        if (this.checkActionableBtnState && filtered.created_by === 'OWNER') {
-          this.doc_count = store.length;
+        for (let i = 0; i < details.length; i++) {
+          if (details[i].documents.length > 0) {
+            const filtered = details[i].documents.find(set => set.actionable === true);
+            if (filtered !== undefined && filtered !== 'undefined') {
+              if (filtered.created_by === 'OWNER') {
+                store.push(filtered);
+              }
+            }
+            if (store.length > 0) {
+              this.updateStoreCount(store);
+            }
+          }
         }
       } else {
         this.doc_count = 0;
       }
+    },
+    updateStoreCount(store) {
+      if (this.checkActionableBtnState) {
+        this.doc_count = store.length;
+      }
+    },
+    isDocumentActionable(val) {
+      let resp = false;
+
+      if (val.length > 0) {
+        const filtered = val.find(set => set.actionable === true);
+        if (filtered !== undefined && filtered !== 'undefined') {
+          resp = filtered;
+        }
+      }
+
+      return resp;
+    },
+    viewLoadingDocs(val) {
+      this.setLoadingDocs(val);
+      this.setLoadingDocumentDialog(true);
     },
     fetchDocumentOptions() {
       const type = this.freightOrderDetail.cargo_type;
@@ -250,6 +286,16 @@ export default {
       }
 
       return url.protocol === 'http:' || url.protocol === 'https:';
+    },
+    checkActionableBtnState() {
+      const session = this.$store.getters.getSession;
+      let resp = false;
+      if (session.default === 'biz') {
+        if (session[session.default].freight_approver === 1) {
+          resp = true;
+        }
+      }
+      return resp;
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };

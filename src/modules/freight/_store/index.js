@@ -13,6 +13,8 @@ const state = {
   awarding_docs_options: [],
   loading_docs_options: [],
   fulfillment_docs_options: [],
+  loading_documents: [],
+  loading_dialog: false,
 };
 
 export default {
