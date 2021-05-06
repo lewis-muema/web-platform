@@ -274,3 +274,11 @@
 .upload-docs-btn{
   margin-top: 9%;
 }
+
+.requestShipmentLoadingDocs >.el-dialog >.el-dialog__body {
+  margin: 2% !important;
+}
+.requestShipmentLoadingDocs > div {
+  margin-top: 18vh !important;
+  width: 31% !important;
+}

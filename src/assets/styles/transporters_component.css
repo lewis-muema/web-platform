@@ -768,7 +768,3 @@ li.suggestions_solr:last-child {
 .createShipmentInnerDialog{
   margin: 4% !important;
 }
-.requestShipmentLoadingDocs > div {
-  margin-top: 18vh !important;
-  width: 31% !important;
-}
