@@ -36,4 +36,16 @@ export default {
   setLoadingDocumentDialog(state, val) {
     state.loading_dialog = val;
   },
+  setShipmentDetail(state, val) {
+    state.shipment_detail = val;
+  },
+  setUploadLoadingDocs(state, val) {
+    state.upload_loading_docs_state = val;
+  },
+  setVehicleId(state, val) {
+    state.vehicle_id = val;
+  },
+  setQuatationId(state, val) {
+    state.quotation_id = val;
+  },
 };

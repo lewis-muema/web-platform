@@ -15,6 +15,10 @@ const state = {
   fulfillment_docs_options: [],
   loading_documents: [],
   loading_dialog: false,
+  shipment_detail: {},
+  upload_loading_docs_state: false,
+  vehicle_id: '',
+  quotation_id: '',
 };
 
 export default {
