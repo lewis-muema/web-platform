@@ -338,6 +338,20 @@ const getDocumentOptions = function getDocumentOptions({ dispatch }, payload) {
     );
   });
 };
+const uploadLoadingDocuments = function uploadLoadingDocuments({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
 export default {
   updateFreightStatus,
@@ -362,4 +376,5 @@ export default {
   declineShipment,
   requestSupportedCountries,
   getDocumentOptions,
+  uploadLoadingDocuments,
 };
