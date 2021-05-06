@@ -46,7 +46,7 @@
               Vehicle Reg
             </div>
             <div class="documents-sub-highlight-inner">
-              KBC 123
+              {{ val.vehicle_registration !== null ? val.vehicle_registration : 'N/A' }}
             </div>
           </div>
           <div class="transporter-content documents-sub-highlight">
@@ -54,7 +54,7 @@
               Trailer Number
             </div>
             <div class="documents-sub-highlight-inner">
-              ZC2682
+              {{ val.trailer_no !== null ? val.trailer_no : 'N/A' }}
             </div>
           </div>
           <div class="transporter-content documents-sub-highlight">
@@ -62,7 +62,7 @@
               Driver Name
             </div>
             <div class="documents-sub-highlight-inner">
-              Peter Parker
+              {{ val.driver_name !== null ? val.driver_name : 'N/A' }}
             </div>
           </div>
           <div class="transporter-content documents-sub-highlight">
@@ -70,7 +70,7 @@
               Driver Phone No.
             </div>
             <div class="documents-sub-highlight-inner">
-              +254 701 123456
+              {{ val.driver_phone !== null ? val.driver_phone : 'N/A' }}
             </div>
           </div>
           <div class="transporter-content documents-sub-highlight">
@@ -78,7 +78,7 @@
               Driver ID
             </div>
             <div class="documents-sub-highlight-inner">
-              1234567
+              {{ val.driver_id_no !== null ? val.driver_id_no : 'N/A' }}
             </div>
           </div>
           <div

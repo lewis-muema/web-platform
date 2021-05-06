@@ -81,7 +81,7 @@
           >
             <awardingDocs
               :freight-order-detail="freightOrderDetail"
-              :document-detail="data.documents"
+              :document-detail="data.awarding_documents.documents"
             />
             <div
               v-if="opened.includes(index)"
@@ -89,7 +89,7 @@
             />
             <loadingDocs
               :freight-order-detail="freightOrderDetail"
-              :document-detail="data.documents"
+              :document-detail="data.loading_documents.vehicles"
             />
             <div
               v-if="opened.includes(index)"
@@ -98,7 +98,7 @@
 
             <fulfillmentDocs
               :freight-order-detail="freightOrderDetail"
-              :document-detail="data.documents"
+              :document-detail="data.fulfillment_documents.documents"
             />
           </div>
         </div>
