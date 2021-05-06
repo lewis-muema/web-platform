@@ -112,8 +112,9 @@
                 type="button"
                 class="button-primary approve-documents-action upload-loading-doc"
                 name="create_order_text"
+                @click="uploadLoadingDocs(freightOrderDetail, val)"
               >
-                {{ approve_doc_text }}
+                {{ upload_doc_text }}
               </button>
             </div>
           </div>
@@ -155,7 +156,7 @@ export default {
   data() {
     return {
       opened: [],
-      approve_doc_text: 'Upload loading doc',
+      upload_doc_text: 'Upload loading doc',
       state: true,
       doc_count: 0,
     };
@@ -177,6 +178,9 @@ export default {
       setLoadingDocumentOptions: '$_freight/setLoadingDocumentOptions',
       setLoadingDocs: '$_freight/setLoadingDocs',
       setLoadingDocumentDialog: '$_freight/setLoadingDocumentDialog',
+      setShipmentDetail: '$_freight/setShipmentDetail',
+      setUploadLoadingDocs: '$_freight/setUploadLoadingDocs',
+      setVehicleId: '$_freight/setVehicleId',
     }),
     checkDocumentActionableCount() {
       this.doc_count = 0;
@@ -220,6 +224,11 @@ export default {
     viewLoadingDocs(val) {
       this.setLoadingDocs(val);
       this.setLoadingDocumentDialog(true);
+    },
+    uploadLoadingDocs(details, val) {
+      this.setShipmentDetail(details);
+      this.setVehicleId(val.id);
+      this.setUploadLoadingDocs(true);
     },
     fetchDocumentOptions() {
       const type = this.freightOrderDetail.cargo_type;
