@@ -144,6 +144,12 @@
             </div>
           </div>
 
+          <div class="loading-docs-hint">
+            <div class="loading-docs-hint--inner">
+              Please upload the necessary loading document(s) required.
+            </div>
+          </div>
+
           <div
             v-for="(val, index) in loading_options"
             v-if="index >= 0"
