@@ -769,3 +769,6 @@ div.pac-container {
 .requestShipmentLoadingDocs > .el-dialog > .el-dialog__header{
   padding: 0 !important;
 }
+.requestShipmentOptions >.el-dialog >.el-dialog__body {
+  margin: 3% !important;
+}
