@@ -291,3 +291,6 @@
 .loading-docs-hint--inner{
   padding: 4%;
 }
+.reupload-unavailable{
+  margin-top: 6% !important;
+}

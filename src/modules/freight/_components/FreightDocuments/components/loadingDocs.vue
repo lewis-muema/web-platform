@@ -90,11 +90,15 @@
           >
             <div
               class="view-loading-docs"
+              :class="getReuploadClass(val.documents)"
               @click="viewLoadingDocs(val.documents)"
             >
               View Document
             </div>
-            <div class="re-upload-loading-docs">
+            <div
+              v-if="checkValidReupload(val.documents)"
+              class="re-upload-loading-docs"
+            >
               Re-upload doc
             </div>
           </div>
@@ -295,6 +299,26 @@ export default {
       }
 
       return url.protocol === 'http:' || url.protocol === 'https:';
+    },
+    checkValidReupload(val) {
+      let resp = false;
+      if (val.length > 0) {
+        const filtered = val.find(set => set.document_status === -1);
+        if (filtered !== undefined && filtered !== 'undefined') {
+          resp = filtered;
+        }
+      }
+      return resp;
+    },
+    getReuploadClass(val) {
+      let resp = '';
+      if (val.length > 0) {
+        const filtered = val.find(set => set.document_status === -1);
+        if (filtered === undefined || filtered === 'undefined') {
+          resp = ['reupload-unavailable'];
+        }
+      }
+      return resp;
     },
     checkActionableBtnState() {
       const session = this.$store.getters.getSession;
