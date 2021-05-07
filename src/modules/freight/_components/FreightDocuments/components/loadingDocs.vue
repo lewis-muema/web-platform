@@ -98,6 +98,7 @@
             <div
               v-if="checkValidReupload(val.documents)"
               class="re-upload-loading-docs"
+              @click="reUploadloadingDoc(val.documents)"
             >
               Re-upload doc
             </div>
@@ -185,6 +186,8 @@ export default {
       setShipmentDetail: '$_freight/setShipmentDetail',
       setUploadLoadingDocs: '$_freight/setUploadLoadingDocs',
       setVehicleId: '$_freight/setVehicleId',
+      setReuploadDialog: '$_freight/setReuploadDialog',
+      setReUploadData: '$_freight/setReUploadData',
     }),
     checkDocumentActionableCount() {
       this.doc_count = 0;
@@ -228,6 +231,17 @@ export default {
     viewLoadingDocs(val) {
       this.setLoadingDocs(val);
       this.setLoadingDocumentDialog(true);
+    },
+    reUploadloadingDoc(val) {
+      if (val.length > 0) {
+        const store = [];
+        const filtered = val.find(set => set.document_status === -1);
+        if (filtered !== undefined && filtered !== 'undefined') {
+          store.push(filtered);
+        }
+        this.setReuploadDialog(true);
+        this.setReUploadData(store);
+      }
     },
     uploadLoadingDocs(details, val) {
       this.setShipmentDetail(details);

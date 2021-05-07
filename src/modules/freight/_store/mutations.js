@@ -48,4 +48,10 @@ export default {
   setQuatationId(state, val) {
     state.quotation_id = val;
   },
+  setReuploadDialog(state, val) {
+    state.reupload_dialog = val;
+  },
+  setReUploadData(state, val) {
+    state.reupload_data = val;
+  },
 };
