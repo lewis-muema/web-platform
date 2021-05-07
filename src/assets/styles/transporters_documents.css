@@ -282,3 +282,12 @@
   margin-top: 18vh !important;
   width: 31% !important;
 }
+.loading-docs-hint{
+  background: #fdedd3 !important;
+  font-size: 12px;
+  font-family: 'Nunito', sans-serif !important;
+  margin: 3% 0% 3% 3%;
+}
+.loading-docs-hint--inner{
+  padding: 4%;
+}
