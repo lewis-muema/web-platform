@@ -104,11 +104,7 @@
             </div>
           </div>
           <div
-            v-if="
-              val.documents.length === 0 &&
-                checkActionableBtnState &&
-                isDocumentActionable(val.documents)
-            "
+            v-if="val.documents.length === 0 && checkActionableBtnState"
             class="freight-documents-approve transporter-content
             approve-freight-section documents-sub-highlight"
           >
