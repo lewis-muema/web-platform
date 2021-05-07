@@ -109,6 +109,8 @@
       mode="out-in"
     >
       <div class="">
+        <!-- View loading documents  -->
+
         <el-dialog
           :visible.sync="viewLoadingDocument"
           class="documentOptions"
@@ -131,6 +133,8 @@
             </div>
           </div>
         </el-dialog>
+
+        <!-- Upload loading documents -->
 
         <el-dialog
           :visible.sync="viewUploadLoadingDocs && loading_options.length > 0"
@@ -209,6 +213,84 @@
             </button>
           </div>
         </el-dialog>
+
+        <!-- Reupload loading documents -->
+
+        <el-dialog
+          :visible.sync="viewReuploadDocuments && re_upload_options.length > 0"
+          class="requestShipmentOptions requestShipmentLoadingDocs"
+        >
+          <div class="">
+            <div
+              class="decline-text-option decline-documemt-extend request-shipment-header outline-info-value"
+            >
+              Reupload loading documents
+            </div>
+          </div>
+
+          <div class="loading-docs-hint">
+            <div class="loading-docs-hint--inner">
+              Documents have been marked for inconsistencies .Kindly reupload all documents.
+            </div>
+          </div>
+
+          <div
+            v-for="(val, index) in re_upload_options"
+            v-if="index >= 0"
+            class="upload-loading-docs-dialog"
+          >
+            <div class="award-shipment-input">
+              <p class="award-input--label upload-landing">
+                Upload the <span>{{ val.document_name }} document </span>
+              </p>
+              <div class="document-image">
+                <div
+                  class="download-uploaded-img"
+                  @click="setIndex(index)"
+                >
+                  <el-upload
+                    class="upload-demo upload-T1s"
+                    drag
+                    action="handleReuploadPreview"
+                    :before-upload="beforeLandingUpload"
+                    :http-request="handleReuploadPreview"
+                    :on-remove="handleRemoveReupload"
+                  >
+                    <img
+                      :id="'ladingImagePreview_' + index"
+                      class="upload_image"
+                      src="https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg"
+                    >
+                    <i class="el-icon-upload" />
+                    <div v-if="reUploadName[index].url !== ''">
+                      {{ reupload_text[index].name }}
+                    </div>
+                    <div v-else>
+                      Drop file here or <em>click to upload</em>
+                    </div>
+                  </el-upload>
+                  <div
+                    v-if="reUploadName[index].url !== '' && reupload_text[index].name === 'Change'"
+                  >
+                    <span class="document-upload-label">
+                      {{ val.document_name }} added successfully .
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="decline-button-align upload-docs-btn">
+            <button
+              type="button"
+              name="button"
+              class="quote-action--slide-button award-shipment-btn"
+              @click="finalReuploadDocsUpload()"
+            >
+              Upload document
+            </button>
+          </div>
+        </el-dialog>
       </div>
     </transition>
   </div>
@@ -246,6 +328,11 @@ export default {
       billOfLandingName: [],
       billOfLandingData: [],
       upload_index: 0,
+      re_upload_options: [],
+      viewReuploadDocuments: false,
+      reupload_text: [],
+      reUploadName: [],
+      reUploadData: [],
     };
   },
   computed: {
@@ -257,6 +344,8 @@ export default {
       getLoadingDocumentOptions: '$_freight/getLoadingDocumentOptions',
       getQuatationId: '$_freight/getQuatationId',
       getVehicleId: '$_freight/getVehicleId',
+      getReuploadDialog: '$_freight/getReuploadDialog',
+      getReUploadData: '$_freight/getReUploadData',
     }),
   },
   watch: {
@@ -279,9 +368,21 @@ export default {
         this.resetUploadLoadingDocsDialog();
       }
     },
+    viewReuploadDocuments(val) {
+      if (!val) {
+        this.setReUploadData([]);
+        this.setReuploadDialog(false);
+        this.re_upload_options = [];
+        this.resetReUploadLoadingDocsDialog();
+      }
+    },
     getUploadLoadingDocs(value) {
       this.viewUploadLoadingDocs = value;
       this.loading_options = this.getLoadingDocumentOptions;
+    },
+    getReuploadDialog(value) {
+      this.viewReuploadDocuments = value;
+      this.re_upload_options = this.getReUploadData;
     },
     getLoadingDocumentOptions(value) {
       this.loading_options = value;
@@ -301,6 +402,23 @@ export default {
         });
       }
     },
+    getReUploadData(value) {
+      this.re_upload_options = value;
+      this.reUploadName = [];
+      this.reupload_text = [];
+      for (let i = 0; i < value.length; i++) {
+        this.reUploadName.push({
+          url: '',
+          document_id: '',
+        });
+        this.reupload_text.push({
+          name: 'Change',
+        });
+        this.reUploadData.push({
+          url: {},
+        });
+      }
+    },
   },
   mounted() {
     this.initiateS3();
@@ -314,6 +432,8 @@ export default {
       setShipmentDetail: '$_freight/setShipmentDetail',
       setQuatationId: '$_freight/setQuatationId',
       setOrderDetail: '$_freight/setOrderDetail',
+      setReuploadDialog: '$_freight/setReuploadDialog',
+      setReUploadData: '$_freight/setReUploadData',
     }),
     initiateS3() {
       const script = document.createElement('script');
@@ -375,6 +495,14 @@ export default {
       }
       return isPdf;
     },
+    beforeReupload(file) {
+      const isPdf = file.type === 'application/pdf';
+
+      if (!isPdf) {
+        this.doNotification(2, 'Document upload error !', 'Document must be in PDF format');
+      }
+      return isPdf;
+    },
     setIndex(index) {
       this.upload_index = index;
     },
@@ -386,12 +514,25 @@ export default {
       this.billOfLandingName[this.upload_index].type = this.loading_options[this.upload_index].id;
       this.uploadBillOfLanding();
     },
+    handleReuploadPreview(file) {
+      this.reUploadData[this.upload_index].url = file;
+      this.reUploadName[this.upload_index].document_id = this.re_upload_options[
+        this.upload_index
+      ].document_id;
+      this.uploadReuploadDocuments();
+    },
     handleRemoveLanding() {
       this.billOfLandingName[this.upload_index].name = '';
       this.billOfLandingName[this.upload_index].doc_name = '';
       this.billOfLandingName[this.upload_index].type = '';
       this.billOfLandingData[this.upload_index].name = {};
       this.landing_text[this.upload_index].name = 'Change';
+    },
+    handleRemoveReupload() {
+      this.reUploadName[this.upload_index].url = '';
+      this.reUploadName[this.upload_index].document_id = '';
+      this.reUploadData[this.upload_index].url = {};
+      this.reupload_text[this.upload_index].name = 'Change';
     },
     uploadBillOfLanding() {
       if (Object.keys(this.billOfLandingData[this.upload_index].name).length === 0) {
@@ -443,6 +584,43 @@ export default {
 
       return tempName;
     },
+    uploadReuploadDocuments() {
+      if (Object.keys(this.reUploadData[this.upload_index].url).length === 0) {
+        this.doNotification(2, 'Kindly upload the necessary loading document', '');
+      } else {
+        const imageId = `ladingImagePreview_${this.upload_index}`;
+        let src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
+        $(`#${imageId}`).attr('src', src);
+
+        this.reupload_text[this.upload_index].name = 'Uploading ...';
+        const { file } = this.reUploadData[this.upload_index].url;
+        const fileType = file.type;
+        const fileName = this.sanitizeFilename(file.name, 'loading_document');
+        this.reUploadName[this.upload_index].url = fileName;
+        const albumPhotosKey = `${encodeURIComponent('freight_docs')}/`;
+        const photoKey = albumPhotosKey + fileName;
+        this.reUploadName[this.upload_index].url = photoKey;
+        s3.upload(
+          {
+            Key: photoKey,
+            Body: file,
+            ACL: 'public-read',
+            ContentType: fileType,
+          },
+          (err) => {
+            if (err) {
+              this.reupload_text[this.upload_index].name = 'Change';
+              console.log('There was an error uploading your document: ', err.message);
+            } else {
+              src = 'https://images.sendyit.com/web_platform/freight/complete.svg';
+              $(`#${imageId}`).attr('src', src);
+              this.reupload_text[this.upload_index].name = 'Change';
+            }
+            // eslint-disable-next-line comma-dangle
+          }
+        );
+      }
+    },
     finalLoadingDocsUpload() {
       const docsOptionsLength = this.loading_options.length;
       const submittedDocsLength = this.billOfLandingName.length;
@@ -453,6 +631,21 @@ export default {
         const filtered = this.billOfLandingName.find(location => location.name !== '');
         if (filtered !== undefined && filtered !== 'undefined') {
           this.processRequest();
+        } else {
+          this.doNotification(2, 'Kindly upload all the necessary loading document(s)', '');
+        }
+      }
+    },
+    finalReuploadDocsUpload() {
+      const docsOptionsLength = this.re_upload_options.length;
+      const submittedDocsLength = this.reUploadName.length;
+
+      if (docsOptionsLength !== submittedDocsLength) {
+        this.doNotification(2, 'Kindly upload all the necessary loading document(s)', '');
+      } else {
+        const filtered = this.reUploadName.find(location => location.url !== '');
+        if (filtered !== undefined && filtered !== 'undefined') {
+          this.processReuploadRequest();
         } else {
           this.doNotification(2, 'Kindly upload all the necessary loading document(s)', '');
         }
@@ -524,11 +717,62 @@ export default {
         },
       );
     },
+    processReuploadRequest() {
+      const documentReUpload = [];
+      for (let i = 0; i < this.reUploadName.length; i++) {
+        if (this.reUploadName[i].url !== '') {
+          documentReUpload.push({
+            document_id: this.reUploadName[i].document_id,
+            url: `https://sendy-partner-docs.s3-eu-west-1.amazonaws.com/${
+              this.reUploadName[i].url
+            }`,
+          });
+        }
+      }
+      const fullPayload = {
+        values: documentReUpload,
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: 'shipments/quotations/documents/reload',
+      };
+
+      this.$store.dispatch('$_freight/reUploadLoadingDocuments', fullPayload).then(
+        (response) => {
+          if (response.status) {
+            this.doNotification(1, 'Loading documents re-uploaded successfully!', '');
+            this.resetReUploadLoadingDocsDialog();
+            this.setOrderDetail(this.$route.params.id);
+          } else {
+            this.doNotification(2, 'Unable to re-upload loading documernts!', response.message);
+          }
+        },
+        (error) => {
+          if (Object.prototype.hasOwnProperty.call(error.response.data, 'message')) {
+            this.doNotification(2, 'Document re-upload failed', error.response.data.message);
+          } else {
+            this.doNotification(
+              2,
+              'Document re-upload failed',
+              'Something went wrong.Please try again',
+            );
+            this.$router.push('/freight/orders');
+            this.resetReUploadLoadingDocsDialog();
+          }
+        },
+      );
+    },
     resetUploadLoadingDocsDialog() {
       this.viewUploadLoadingDocs = false;
       this.landing_text = [];
       this.billOfLandingName = [];
       this.billOfLandingData = [];
+      this.upload_index = 0;
+    },
+    resetReUploadLoadingDocsDialog() {
+      this.viewReuploadDocuments = false;
+      this.reupload_text = [];
+      this.reUploadName = [];
+      this.reUploadData = [];
       this.upload_index = 0;
     },
     doNotification(level, title, message) {

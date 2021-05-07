@@ -352,6 +352,20 @@ const uploadLoadingDocuments = function uploadLoadingDocuments({ dispatch }, pay
     );
   });
 };
+const reUploadLoadingDocuments = function reUploadLoadingDocuments({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPut', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
 export default {
   updateFreightStatus,
@@ -377,4 +391,5 @@ export default {
   requestSupportedCountries,
   getDocumentOptions,
   uploadLoadingDocuments,
+  reUploadLoadingDocuments,
 };
