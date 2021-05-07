@@ -12,6 +12,8 @@ const getUploadLoadingDocs = state => state.upload_loading_docs_state;
 const getLoadingDocumentOptions = state => state.loading_docs_options;
 const getVehicleId = state => state.vehicle_id;
 const getQuatationId = state => state.quotation_id;
+const getReuploadDialog = state => state.reupload_dialog;
+const getReUploadData = state => state.reupload_data;
 
 export default {
   getFreightOrders,
@@ -28,4 +30,6 @@ export default {
   getLoadingDocumentOptions,
   getVehicleId,
   getQuatationId,
+  getReuploadDialog,
+  getReUploadData,
 };

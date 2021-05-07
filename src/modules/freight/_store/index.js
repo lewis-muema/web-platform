@@ -19,6 +19,8 @@ const state = {
   upload_loading_docs_state: false,
   vehicle_id: '',
   quotation_id: '',
+  reupload_dialog: false,
+  reupload_data: [],
 };
 
 export default {
