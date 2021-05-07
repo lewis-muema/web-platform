@@ -450,8 +450,8 @@ export default {
       if (docsOptionsLength !== submittedDocsLength) {
         this.doNotification(2, 'Kindly upload all the necessary loading document(s)', '');
       } else {
-        const filtered = this.billOfLandingName.find(location => location.name === '');
-        if (filtered === undefined || filtered === 'undefined') {
+        const filtered = this.billOfLandingName.find(location => location.name !== '');
+        if (filtered !== undefined && filtered !== 'undefined') {
           this.processRequest();
         } else {
           this.doNotification(2, 'Kindly upload all the necessary loading document(s)', '');
@@ -462,14 +462,17 @@ export default {
       const documentUpload = [];
 
       for (let i = 0; i < this.billOfLandingName.length; i++) {
-        documentUpload.push({
-          document_type: this.billOfLandingName[i].type,
-          document_name: this.billOfLandingName[i].doc_name,
-          url: `https://sendy-partner-docs.s3-eu-west-1.amazonaws.com/${
-            this.billOfLandingName[i].name
-          }`,
-        });
+        if (this.billOfLandingName[i].name !== '') {
+          documentUpload.push({
+            document_type: this.billOfLandingName[i].type,
+            document_name: this.billOfLandingName[i].doc_name,
+            url: `https://sendy-partner-docs.s3-eu-west-1.amazonaws.com/${
+              this.billOfLandingName[i].name
+            }`,
+          });
+        }
       }
+
       let acc = {};
       const session = this.$store.getters.getSession;
       if ('default' in session) {
