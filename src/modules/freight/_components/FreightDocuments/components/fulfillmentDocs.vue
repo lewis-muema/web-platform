@@ -193,7 +193,7 @@ export default {
       const fullPayload = {
         app: 'FREIGHT_APP',
         operator: '?',
-        endpoint: 'document_types?stage=3',
+        endpoint: 'document_types/stages/3',
       };
 
       this.getDocumentOptions(fullPayload).then(
