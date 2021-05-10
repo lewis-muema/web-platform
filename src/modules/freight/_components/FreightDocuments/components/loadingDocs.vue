@@ -241,7 +241,7 @@ export default {
     },
     uploadLoadingDocs(details, val) {
       this.setShipmentDetail(details);
-      this.setVehicleId(val.id);
+      this.setVehicleId(val.vehicle_id);
       this.setUploadLoadingDocs(true);
     },
     fetchDocumentOptions() {
