@@ -767,6 +767,9 @@ export default {
       this.billOfLandingName = [];
       this.billOfLandingData = [];
       this.upload_index = 0;
+      this.setShipmentDetail({});
+      this.setUploadLoadingDocs(false);
+      this.loading_options = [];
     },
     resetReUploadLoadingDocsDialog() {
       this.viewReuploadDocuments = false;
@@ -774,6 +777,9 @@ export default {
       this.reUploadName = [];
       this.reUploadData = [];
       this.upload_index = 0;
+      this.setReUploadData([]);
+      this.setReuploadDialog(false);
+      this.re_upload_options = [];
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };
