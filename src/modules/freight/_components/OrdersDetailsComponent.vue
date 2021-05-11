@@ -635,8 +635,10 @@ export default {
       this.src_name = this.getDocumentName;
     },
     getOrderDetail(val) {
-      if (val !== '') {
+      if (val) {
+        this.loading = true;
         this.fetchOrderDetail(this.$route.params.id);
+        this.setOrderDetail(false);
       }
     },
     getDocumentDialogDocument(value) {
@@ -674,6 +676,7 @@ export default {
       setDocumentDialog: '$_freight/setDocumentDialog',
       setDeclineDocument: '$_freight/setDocumentName',
       setDocumentDialogDocument: '$_freight/setDocumentDialog',
+      setOrderDetail: '$_freight/setOrderDetail',
     }),
     initiateS3() {
       const script = document.createElement('script');

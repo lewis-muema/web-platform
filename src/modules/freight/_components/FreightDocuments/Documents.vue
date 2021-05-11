@@ -137,7 +137,7 @@
         <!-- Upload loading documents -->
 
         <el-dialog
-          :visible.sync="viewUploadLoadingDocs && loading_options.length > 0"
+          :visible.sync="viewUploadLoadingDocs"
           class="requestShipmentOptions requestShipmentLoadingDocs"
         >
           <div class="">
@@ -217,7 +217,7 @@
         <!-- Reupload loading documents -->
 
         <el-dialog
-          :visible.sync="viewReuploadDocuments && re_upload_options.length > 0"
+          :visible.sync="viewReuploadDocuments"
           class="requestShipmentOptions requestShipmentLoadingDocs"
         >
           <div class="">
@@ -362,23 +362,17 @@ export default {
     },
     viewUploadLoadingDocs(val) {
       if (!val) {
-        this.setShipmentDetail({});
-        this.setUploadLoadingDocs(false);
-        this.loading_options = [];
         this.resetUploadLoadingDocsDialog();
-      }
-    },
-    viewReuploadDocuments(val) {
-      if (!val) {
-        this.setReUploadData([]);
-        this.setReuploadDialog(false);
-        this.re_upload_options = [];
-        this.resetReUploadLoadingDocsDialog();
       }
     },
     getUploadLoadingDocs(value) {
       this.viewUploadLoadingDocs = value;
       this.loading_options = this.getLoadingDocumentOptions;
+    },
+    viewReuploadDocuments(val) {
+      if (!val) {
+        this.resetReUploadLoadingDocsDialog();
+      }
     },
     getReuploadDialog(value) {
       this.viewReuploadDocuments = value;
@@ -674,7 +668,7 @@ export default {
 
       const payload = {
         quotation_id: this.getQuatationId,
-        vehicle_id: this.getQuatationId,
+        vehicle_id: this.getVehicleId,
         documents: documentUpload,
       };
 
@@ -697,7 +691,7 @@ export default {
           if (response.status) {
             this.doNotification(1, 'Loading documents uploaded successfully!', '');
             this.resetUploadLoadingDocsDialog();
-            this.setOrderDetail(this.$route.params.id);
+            this.setOrderDetail(true);
           } else {
             this.doNotification(2, 'Unable to upload loading documernts!', response.message);
           }
@@ -741,7 +735,7 @@ export default {
           if (response.status) {
             this.doNotification(1, 'Loading documents re-uploaded successfully!', '');
             this.resetReUploadLoadingDocsDialog();
-            this.setOrderDetail(this.$route.params.id);
+            this.setOrderDetail(true);
           } else {
             this.doNotification(2, 'Unable to re-upload loading documernts!', response.message);
           }
@@ -762,24 +756,52 @@ export default {
       );
     },
     resetUploadLoadingDocsDialog() {
-      this.viewUploadLoadingDocs = false;
-      this.landing_text = [];
-      this.billOfLandingName = [];
-      this.billOfLandingData = [];
-      this.upload_index = 0;
-      this.setShipmentDetail({});
       this.setUploadLoadingDocs(false);
-      this.loading_options = [];
+
+      const value = this.getLoadingDocumentOptions;
+      this.loading_options = value;
+      this.billOfLandingName = [];
+      this.landing_text = [];
+      for (let i = 0; i < value.length; i++) {
+        this.billOfLandingName.push({
+          name: '',
+          type: '',
+          doc_name: '',
+        });
+        this.landing_text.push({
+          name: 'Change',
+        });
+        this.billOfLandingData.push({
+          name: {},
+        });
+      }
+      this.upload_index = 0;
+      const src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
+      $('.upload_image').attr('src', src);
     },
     resetReUploadLoadingDocsDialog() {
-      this.viewReuploadDocuments = false;
-      this.reupload_text = [];
-      this.reUploadName = [];
-      this.reUploadData = [];
-      this.upload_index = 0;
-      this.setReUploadData([]);
       this.setReuploadDialog(false);
-      this.re_upload_options = [];
+
+      const value = this.getReUploadData;
+      this.re_upload_options = value;
+      this.reUploadName = [];
+      this.reupload_text = [];
+      for (let i = 0; i < value.length; i++) {
+        this.reUploadName.push({
+          url: '',
+          document_id: '',
+        });
+        this.reupload_text.push({
+          name: 'Change',
+        });
+        this.reUploadData.push({
+          url: {},
+        });
+      }
+
+      this.upload_index = 0;
+      const src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
+      $('.upload_image').attr('src', src);
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };

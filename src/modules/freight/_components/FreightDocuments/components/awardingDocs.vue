@@ -312,7 +312,7 @@ export default {
 
           if (workingResponse.status) {
             this.doNotification(1, 'Document approval!', 'Document approved successfully');
-            this.setOrderDetail(this.$route.params.id);
+            this.setOrderDetail(true);
           } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
             this.doNotification(2, 'Failed to approve document!', workingResponse.message);
           } else {

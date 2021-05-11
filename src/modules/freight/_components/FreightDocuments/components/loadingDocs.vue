@@ -138,7 +138,7 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapMutations, mapActions, mapGetters } from 'vuex';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
 
 export default {
@@ -161,6 +161,11 @@ export default {
       state: true,
       doc_count: 0,
     };
+  },
+  computed: {
+    ...mapGetters({
+      getLoadingDocumentOptions: '$_freight/getLoadingDocumentOptions',
+    }),
   },
   watch: {
     documentDetail() {
@@ -198,9 +203,12 @@ export default {
                 store.push(filtered);
               }
             }
-            if (store.length > 0) {
-              this.updateStoreCount(store);
-            }
+          }
+          if (details[i].documents.length === 0) {
+            store.push(details[i]);
+          }
+          if (store.length > 0) {
+            this.updateStoreCount(store);
           }
         }
       } else {
@@ -235,14 +243,19 @@ export default {
         if (filtered !== undefined && filtered !== 'undefined') {
           store.push(filtered);
         }
-        this.setReuploadDialog(true);
         this.setReUploadData(store);
+
+        if (store.length > 0) {
+          this.setReuploadDialog(true);
+        }
       }
     },
     uploadLoadingDocs(details, val) {
-      this.setShipmentDetail(details);
-      this.setVehicleId(val.vehicle_id);
-      this.setUploadLoadingDocs(true);
+      if (this.getLoadingDocumentOptions.length > 0) {
+        this.setShipmentDetail(details);
+        this.setVehicleId(val.vehicle_id);
+        this.setUploadLoadingDocs(true);
+      }
     },
     fetchDocumentOptions() {
       const type = this.freightOrderDetail.cargo_type;
