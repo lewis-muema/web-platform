@@ -171,10 +171,9 @@ export default {
       if (this.documentDetail.length > 0) {
         const store = [];
         const details = this.documentDetail;
-        const filtered = details.find(set => set.actionable === true);
-        if (filtered !== undefined && filtered !== 'undefined') {
-          if (filtered.created_by === 'OWNER') {
-            store.push(filtered);
+        for (let i = 0; i < details.length; i++) {
+          if (details[i].actionable && details[i].created_by === 'OWNER') {
+            store.push(details[i]);
           }
         }
         if (store.length > 0) {
