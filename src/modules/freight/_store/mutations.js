@@ -13,7 +13,7 @@ export default {
     state.document_dialog = val;
   },
   setOrderDetail(state, val) {
-    state.order_id = val;
+    state.order_details_state = val;
   },
   setDeclineDocument(state, val) {
     state.decline_doc = val;

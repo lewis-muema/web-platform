@@ -7,7 +7,7 @@ const state = {
   document_url: '',
   document_name: '',
   document_dialog: false,
-  order_id: '',
+  order_details_state: false,
   decline_doc: {},
   decline_dialog: false,
   awarding_docs_options: [],
