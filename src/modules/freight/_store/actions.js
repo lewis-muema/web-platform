@@ -326,6 +326,46 @@ const requestSupportedCountries = function requestSupportedCountries({ dispatch 
     );
   });
 };
+const getDocumentOptions = function getDocumentOptions({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, { root: true }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+const uploadLoadingDocuments = function uploadLoadingDocuments({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPost', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+const reUploadLoadingDocuments = function reUploadLoadingDocuments({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosPut', payload, {
+      root: true,
+    }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
 
 export default {
   updateFreightStatus,
@@ -349,4 +389,7 @@ export default {
   awardShipment,
   declineShipment,
   requestSupportedCountries,
+  getDocumentOptions,
+  uploadLoadingDocuments,
+  reUploadLoadingDocuments,
 };

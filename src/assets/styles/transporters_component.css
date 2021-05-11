@@ -539,9 +539,6 @@
   margin-top: 18vh !important;
   width: 30% !important;
 }
-.requestShipmentOptions >.el-dialog >.el-dialog__body {
-  margin: 2% !important;
-}
 .view-transporter-info{
   cursor :pointer ;
 }
@@ -767,4 +764,8 @@ li.suggestions_solr:last-child {
 }
 .createShipmentInnerDialog{
   margin: 4% !important;
+}
+.reload-transporter-documents{
+  color: #EA7125 !important;;
+  cursor: pointer;
 }
