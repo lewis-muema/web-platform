@@ -12,7 +12,8 @@
           v-if="doc_count > 0"
           class="notification-counter-highlight"
         >
-          <i class="el-icon-warning" /> {{ doc_count }} docs not actioned
+          <i class="el-icon-warning" />
+          {{ doc_count }} {{ doc_count > 1 ? 'docs' : 'doc' }} not actioned
         </span>
         <div class="view-transporter-sub-documents documents-type-inner">
           <span
@@ -198,9 +199,15 @@ export default {
         for (let i = 0; i < details.length; i++) {
           if (details[i].documents.length > 0) {
             const filtered = details[i].documents.find(set => set.actionable === true);
+            const listed = details[i].documents.find(set => set.document_status === -1);
             if (filtered !== undefined && filtered !== 'undefined') {
               if (filtered.created_by === 'OWNER') {
                 store.push(filtered);
+              }
+            }
+            if (listed !== undefined && listed !== 'undefined') {
+              if (listed.created_by === 'COP') {
+                store.push(listed);
               }
             }
           }

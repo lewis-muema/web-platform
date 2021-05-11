@@ -224,7 +224,7 @@
             <div
               class="decline-text-option decline-documemt-extend request-shipment-header outline-info-value"
             >
-              Reupload loading documents
+              Reupload documents
             </div>
           </div>
 

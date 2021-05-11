@@ -12,7 +12,8 @@
           v-if="doc_count > 0"
           class="notification-counter-highlight"
         >
-          <i class="el-icon-warning" /> {{ doc_count }} docs not actioned
+          <i class="el-icon-warning" />
+          {{ doc_count }} {{ doc_count > 1 ? 'docs' : 'doc' }} not actioned
         </span>
         <div class="view-transporter-sub-documents">
           <span

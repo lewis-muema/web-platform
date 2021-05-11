@@ -12,7 +12,8 @@
           v-if="doc_count > 0"
           class="notification-counter-highlight"
         >
-          <i class="el-icon-warning" /> {{ doc_count }} docs not actioned
+          <i class="el-icon-warning" />
+          {{ doc_count }} {{ doc_count > 1 ? 'docs' : 'doc' }} not actioned
         </span>
         <div class="view-transporter-sub-documents">
           <span
@@ -55,6 +56,13 @@
             @click="viewDocument(val.document_url, val.document_name)"
           >
             View Document <i class="el-icon-arrow-right view-transporter-info" />
+          </div>
+          <div
+            v-if="checkValidReupload(val)"
+            class="transporter-content reload-transporter-documents documents-sub-highlight"
+            @click="reUploadloadingDoc(val)"
+          >
+            Re-upload doc <i class="el-icon-upload" />
           </div>
           <div
             class="freight-documents-approve flex-div transporter-content approve-freight-section documents-sub-highlight"
@@ -164,6 +172,8 @@ export default {
       setDeclineDocument: '$_freight/setDeclineDocument',
       setDocumentDialogDocument: '$_freight/setDocumentDialogDocument',
       setAwardingDocumentOptions: '$_freight/setAwardingDocumentOptions',
+      setReUploadData: '$_freight/setReUploadData',
+      setReuploadDialog: '$_freight/setReuploadDialog',
     }),
     checkDocumentActionableCount() {
       this.doc_count = 0;
@@ -171,9 +181,16 @@ export default {
         const store = [];
         const details = this.documentDetail;
         const filtered = details.find(set => set.actionable === true);
+        const listed = details.find(set => set.document_status === -1);
+
         if (filtered !== undefined && filtered !== 'undefined') {
           if (filtered.created_by === 'OWNER') {
             store.push(filtered);
+          }
+        }
+        if (listed !== undefined && listed !== 'undefined') {
+          if (listed.created_by === 'COP') {
+            store.push(listed);
           }
         }
         if (store.length > 0) {
@@ -276,6 +293,25 @@ export default {
         }
       }
       return resp;
+    },
+    checkValidReupload(val) {
+      let resp = false;
+
+      if (val.document_status === -1) {
+        resp = true;
+      }
+      return resp;
+    },
+    reUploadloadingDoc(val) {
+      const store = [];
+      if (val.document_status === -1) {
+        store.push(val);
+      }
+      this.setReUploadData(store);
+
+      if (store.length > 0) {
+        this.setReuploadDialog(true);
+      }
     },
     approveDoc(val) {
       let acc = {};
