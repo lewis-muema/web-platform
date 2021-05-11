@@ -193,7 +193,7 @@ export default {
       const fullPayload = {
         app: 'FREIGHT_APP',
         operator: '?',
-        endpoint: 'document_types?stage=3',
+        endpoint: 'document_types/stages/3',
       };
 
       this.getDocumentOptions(fullPayload).then(
@@ -203,10 +203,13 @@ export default {
             const filteredDocs = [];
             if (responseData.length > 0) {
               for (let i = 0; i < responseData.length; i++) {
-                const filtered = responseData[i].cargo_types.find(
+                const listed = responseData[i].cargo_types.find(
                   location => location.cargo_type === type,
                 );
-                if (filtered !== undefined && filtered !== 'undefined') {
+                if (listed !== undefined && listed !== 'undefined') {
+                  filteredDocs.push(responseData[i]);
+                }
+                if (responseData[i].cargo_types.length === 0) {
                   filteredDocs.push(responseData[i]);
                 }
               }
@@ -309,7 +312,7 @@ export default {
 
           if (workingResponse.status) {
             this.doNotification(1, 'Document approval!', 'Document approved successfully');
-            this.setOrderDetail(this.$route.params.id);
+            this.setOrderDetail(true);
           } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
             this.doNotification(2, 'Failed to approve document!', workingResponse.message);
           } else {
