@@ -765,3 +765,7 @@ li.suggestions_solr:last-child {
 .createShipmentInnerDialog{
   margin: 4% !important;
 }
+.reload-transporter-documents{
+  color: #EA7125 !important;;
+  cursor: pointer;
+}
