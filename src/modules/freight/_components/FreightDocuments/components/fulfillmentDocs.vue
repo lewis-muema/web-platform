@@ -203,10 +203,13 @@ export default {
             const filteredDocs = [];
             if (responseData.length > 0) {
               for (let i = 0; i < responseData.length; i++) {
-                const filtered = responseData[i].cargo_types.find(
+                const listed = responseData[i].cargo_types.find(
                   location => location.cargo_type === type,
                 );
-                if (filtered !== undefined && filtered !== 'undefined') {
+                if (listed !== undefined && listed !== 'undefined') {
+                  filteredDocs.push(responseData[i]);
+                }
+                if (responseData[i].cargo_types.length === 0) {
                   filteredDocs.push(responseData[i]);
                 }
               }
