@@ -669,6 +669,7 @@ export default {
       getFreightOrderDetail: '$_freight/getFreightOrderDetail',
       rateFreightOrder: '$_freight/rateFreightOrder',
       awardShipment: '$_freight/awardShipment',
+      approveDocument: '$_freight/approveDocument',
     }),
     ...mapMutations({
       setDocumentUrl: '$_freight/setDocumentUrl',
@@ -1057,6 +1058,9 @@ export default {
 
           if (workingResponse.status) {
             this.doNotification(1, 'Document declined!', 'Document declined successfully');
+            this.showDeclineDialog = false;
+            this.setDeclineDocument({});
+            this.setDocumentDialogDocument(false);
             this.fetchOrderDetail(this.$route.params.id);
           } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
             this.doNotification(2, 'Failed to decline document!', workingResponse.message);
