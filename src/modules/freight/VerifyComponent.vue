@@ -6,7 +6,7 @@
       </div>
       <div class="terms-inner">
         <iframe
-          src="https://sendy-web-apps-assets.s3-eu-west-1.amazonaws.com/t%26cs/FreightTermsandConditions_transporter.html"
+          src="https://sendy-web-apps-assets.s3-eu-west-1.amazonaws.com/t%26cs/FreightTermsandConditions_shipper.html"
           frameBorder="0"
           width="100%"
           height="100%"
