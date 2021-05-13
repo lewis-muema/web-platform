@@ -1475,7 +1475,6 @@ export default {
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
       completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
       requestCancellationReasons: '$_orders/$_tracking/requestCancellationReasons',
-
     }),
     dispatchScheduleTime(){
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
