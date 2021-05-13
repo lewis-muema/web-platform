@@ -63,6 +63,9 @@ export default {
   getScheduleStatus(state) {
     return state.schedule_status;
   },
+  getClosestCity(state) {
+    return state.closest_city;
+  },
 };
 
 function isEmpty(obj) {
