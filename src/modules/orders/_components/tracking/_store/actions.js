@@ -1,6 +1,6 @@
 /* eslint consistent-return: "error" */
 /* eslint no-unused-vars: "error" */
-/* eslint no-param-reassign */
+/* eslint-disable no-param-reassign */
 /* eslint consistent-return: ["error", { "treatUndefinedAsUnspecified": true }] */
 
 import mqtt from 'mqtt';
