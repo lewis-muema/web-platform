@@ -67,9 +67,9 @@ const cancelOrder = function cancelOrder({ dispatch }, data) {
 
 // eslint consistent-return: "error"
 const trackMQTT = function trackMQTT({ commit, state }) {
-  if (state.tracking_data.confirm_status > 0 && this.getters.getClosestCity) {
+  if (state.tracking_data.confirm_status > 0) {
     const trackingNo = state.tracking_data.rider.phone_no_1;
-    const cityCode = this.getters.getClosestCity;
+    const cityCode = this.getters.getClosestCity ? state.tracking_data.city_code : this.getters.getClosestCity;
 
     const uri = `${cityCode}/${trackingNo}`;
 
