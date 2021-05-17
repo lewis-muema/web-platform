@@ -1145,6 +1145,7 @@ export default {
 }
 .no-transporters-label{
   text-align: center;
+  margin-bottom: 2%;
 }
 .no-transporters-img  {
   width: 42%;
