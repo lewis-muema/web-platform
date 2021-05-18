@@ -599,6 +599,7 @@ export default {
         },
       ],
       opened: [],
+      billOfLadingOptions: {},
     };
   },
   computed: {
@@ -662,6 +663,7 @@ export default {
         clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
         device: 'Desktop',
       });
+      this.setBillOfLadingData();
     }
   },
   methods: {
@@ -670,6 +672,7 @@ export default {
       rateFreightOrder: '$_freight/rateFreightOrder',
       awardShipment: '$_freight/awardShipment',
       approveDocument: '$_freight/approveDocument',
+      getDocumentOptions: '$_freight/getDocumentOptions',
     }),
     ...mapMutations({
       setDocumentUrl: '$_freight/setDocumentUrl',
@@ -731,6 +734,44 @@ export default {
             2,
             'Order details retrival failure !',
             'Failed to fetch order , Kindly retry again or contact customer support ',
+          );
+          this.$router.push('/freight/orders');
+        },
+      );
+    },
+    setBillOfLadingData() {
+      const fullPayload = {
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: 'document_types/stages/1',
+      };
+      this.getDocumentOptions(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            const responseData = response.data;
+            if (responseData.length > 0) {
+              const listed = responseData.find(
+                location => location.document_type === 'Bill Of Lading',
+              );
+
+              if (listed !== undefined) {
+                this.billOfLadingOptions = listed;
+              }
+            }
+          } else {
+            this.doNotification(
+              2,
+              'Failed to retrieve awarding documents options',
+              response.message,
+            );
+            this.$router.push('/freight/orders');
+          }
+        },
+        (error) => {
+          this.doNotification(
+            2,
+            'Awarding document options retrival failure !',
+            'Failed to fetch document options , Kindly retry again or contact customer support ',
           );
           this.$router.push('/freight/orders');
         },
@@ -951,6 +992,7 @@ export default {
       }
 
       const payload = {
+        document_id: this.billOfLadingOptions.id,
         quotation_id: this.awardedTransporter.quotation_id,
         trucks_available: this.trucks_no,
         payment_terms: this.payment_terms,
