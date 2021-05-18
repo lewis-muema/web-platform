@@ -750,9 +750,9 @@ export default {
       });
       if (this.tracking_data.confirm_status === 0 && this.tracking_data.delivery_status === 0) {
         return 1;
-      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && !logTypes.includes(10)) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] !== 10) {
         return 2;
-      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes.includes(10)) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] === 10) {
         return 3;
       } else {
         return 4;
