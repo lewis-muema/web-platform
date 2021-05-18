@@ -154,7 +154,7 @@
               <!-- Order Cancellation Dialog -->
 
               <el-dialog :visible.sync="cancelOption" class="cancelOptions">
-                <div class="cancelOptions--content-wrap" v-if="extendedDialog()">
+                <div class="cancelOptions--content-wrap">
                   <div class="" v-if="!cancellation_step">
                     <div class="cancellation-title">
                       {{$t('general.cancel_order')}} ?
@@ -304,42 +304,6 @@
 
                   </div>
 
-                </div>
-                <div class="cancelOptions--content-wrap" v-if="pop_state === 5">
-                  <div class="warning-icon-pstn">
-                    <i class="el-icon-warning warning-icon"></i>
-                  </div>
-                  <div class="cancelOptions--content-message pop-message">
-                      {{$t('general.infuture_ensure_order_ready')}}
-                  </div>
-                  <div class="cancelOptions--content-buttons">
-                    <button
-                      type="button"
-                      name="button"
-                      class="action--slide-button pop_btn"
-                      @click="disablePop()"
-                    >
-                      {{$t('general.ok_capital')}}
-                    </button>
-                  </div>
-                </div>
-                <div class="cancelOptions--content-wrap" v-if="pop_state === 13">
-                  <div class="warning-icon-pstn">
-                    <i class="el-icon-warning warning-icon"></i>
-                  </div>
-                  <div class="cancelOptions--content-message pop-message">
-                     {{$t('general.preffered_rider_offline')}}
-                  </div>
-                  <div class="cancelOptions--content-buttons">
-                    <button
-                      type="button"
-                      name="button"
-                      class="action--slide-button pop_btn"
-                      @click="disablePop()"
-                    >
-                      {{$t('general.ok_capital')}}
-                    </button>
-                  </div>
                 </div>
               </el-dialog>
 
@@ -1320,22 +1284,6 @@ export default {
     cancel_reason(value) {
       if (value !== '') {
         this.cancelChange(value);
-        this.cancelMessage = '';
-      }
-      if (value === 5) {
-        this.showEditPickUpTime();
-        this.cancelMessage = this.$t('general.we_are_sorry_the_order_is_not_ready');
-        this.rescheduleOptions = true;
-      }
-      if (value === 4) {
-        this.showEditLocationsDialog();
-        this.cancelMessage = this.$t('general.we_are_sorry_you_entered_the_wrong_locations');
-        this.locationOptions = true;
-      }
-      if (value === 7) {
-        this.cancelOption = false;
-        this.driverAllocatedOptions = true;
-        this.cancelMessage = this.$t('general.doing_our_best_to_match_your_order');
       }
     },
     getShareOption(value) {
@@ -1475,7 +1423,6 @@ export default {
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
       completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
       requestCancellationReasons: '$_orders/$_tracking/requestCancellationReasons',
-
     }),
     dispatchScheduleTime(){
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
@@ -1542,9 +1489,38 @@ export default {
     cancelChange(reason) {
       this.more_info = false;
       this.cancel_desc = '';
+      this.cancelMessage = '';
       const data = this.cancellation_reasons.find(
         position => position.cancellation_reason_id === reason,
       );
+      const now = this.moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+      const timeDiff = (this.moment(this.convertToUTC(now).utc().format('YYYY-MM-DD HH:mm:ss')) - this.moment(this.tracking_data.date_time)) / (60 * 1000);
+      if (data.actions) {
+        data.actions.forEach(row => {
+          if (row.action_type === 1 && row.comparator === 0 ||
+            row.action_type === 1 && row.comparator === 1 && timeDiff < parseInt(row.duration, 10) && timeDiff > 0 ||
+            row.action_type === 1 && row.comparator === 2 && timeDiff > parseInt(row.duration, 10)
+          ) {
+            this.showEditPickUpTime();
+            this.cancelMessage = row.message;
+            this.rescheduleOptions = true;
+          } else if (row.action_type === 4 && row.comparator === 0 ||
+            row.action_type === 4 && row.comparator === 1 && timeDiff < parseInt(row.duration, 10) && timeDiff > 0 ||
+            row.action_type === 4 && row.comparator === 2 && timeDiff > parseInt(row.duration, 10)
+          ) {
+            this.showEditLocationsDialog();
+            this.cancelMessage = row.message;
+            this.locationOptions = true;
+          } else if (row.action_type === 5 && row.comparator === 0 ||
+            row.action_type === 5 && row.comparator === 1 && timeDiff < parseInt(row.duration, 10) && timeDiff > 0 ||
+            row.action_type === 5 && row.comparator === 2 && timeDiff > parseInt(row.duration, 10)
+          ) {
+            this.cancelOption = false;
+            this.driverAllocatedOptions = true;
+            this.cancelMessage = row.message;
+          }
+        });
+      }
       if (reason === 0) {
         this.more_info = true;
       } else {
@@ -2345,10 +2321,6 @@ export default {
     disablePop() {
       this.cancelToggle();
       this.pop_state = false;
-    },
-    extendedDialog() {
-      return !(this.cancel_reason === 4 || this.pop_state === 5 || this.pop_state === 13);
-
     },
     interCountyInforBar() {
       let resp = false;

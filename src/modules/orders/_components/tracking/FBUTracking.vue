@@ -21,45 +21,22 @@
             class="cancelOptions--content-wrap"
           >
             <div class="">
-              <div class="cancel-reason-option">
-                {{$t('general.cancel_this_order')}}
-              </div>
-              <div class="cancel-reason-option">
-                {{$t('general.place_another_one_any_time')}}
+              <div class="cancel-reason-title-name">
+                {{$t('general.why_cancel')}}
               </div>
             </div>
             <div class="cancel-reason-text">
-              <div class="">
-                <el-radio
-                  v-model="cancel_reason"
-                  label="4"
-                >
-                  {{$t('general.placed_wrong_location')}}
-                </el-radio>
-              </div>
-              <div class="">
-                <el-radio
-                  v-model="cancel_reason"
-                  label="5"
-                >
-                  {{$t('general.order_not_ready')}}
-                </el-radio>
-              </div>
-              <div class="">
-                <el-radio
-                  v-model="cancel_reason"
-                  label="7"
-                >
-                  {{$t('general.no_driver_allocated')}}
-                </el-radio>
-              </div>
-              <div class="">
-                <el-radio
-                  v-model="cancel_reason"
-                  label="8"
-                >
-                  {{$t('general.placed_order_twice')}}
-                </el-radio>
+              <div v-for="reason in cancellation_reasons" :key="reason.id">
+                <div class="cancel-reason-text" id="cancel-reason-text">
+                  <div class="">
+                    <el-radio
+                      v-model="cancel_reason"
+                      :label="JSON.stringify(reason.cancellation_reason_id)"
+                    >
+                      {{ reason.cancellation_reason }}
+                    </el-radio>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="cancel-reason-input">
@@ -71,22 +48,22 @@
                 placeholder="Enter cancel reason"
               >
             </div>
-            <div class="action--slide-desc">
+            <div class="action--slide-desc-confirm">
               <button
                 type="button"
                 name="button"
-                class="action--slide-button"
+                class="action--slide-button cancellation-submit submit-cancell-btn"
                 @click="cancelOrder()"
               >
-                {{$t('general.yes')}}
+                {{$t('general.submitCapital')}}
               </button>
               <button
                 type="button"
                 name="button"
-                class="action--slide-button"
+                class="action--slide-button cancellation-submit"
                 @click="cancelToggle()"
               >
-                {{$t('general.no')}}
+                {{$t('general.dont_cancel')}}
               </button>
             </div>
           </div>
@@ -101,7 +78,7 @@
               <button
                 type="button"
                 name="button"
-                class="action--slide-button"
+                class="action--slide-button cancellation-submit submit-cancell-btn"
                 @click="cancelToggle(cancel_reason)"
               >
                 {{$t('general.ok_call_rider')}}
@@ -109,7 +86,7 @@
               <button
                 type="button"
                 name="button"
-                class="default action--slide-button"
+                class="action--slide-button cancellation-submit"
                 @click="cancelOrder()"
               >
                {{$t('general.cancel_order')}}
@@ -119,13 +96,13 @@
         </el-dialog>
       </div>
     </transition>
-    <FbuTrackBar @clicked="cancelOption = true" />
+    <FbuTrackBar @fetchreasons="retrieveCancellationReasons()" @clicked="cancelOption = true" />
   </div>
 </template>
 
 <script>
 import _ from 'lodash';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faArrowLeft, faWallet } from '@fortawesome/free-solid-svg-icons';
 import TrackingStore from './_store';
@@ -148,6 +125,8 @@ export default {
       cancel_popup: '',
       inputCancelReason: '',
       cancel_desc: '',
+      cancellation_reasons: [],
+      cancellation_state: false,
     };
   },
   computed: {
@@ -216,6 +195,9 @@ export default {
       clearVendorMarkers: '$_orders/clearVendorMarkers',
       set_parent_order: '$_orders/setParentOrder',
     }),
+    ...mapActions({
+      requestCancellationReasons: '$_orders/$_tracking/requestCancellationReasons',
+    }),
     // eslint-disable-next-line func-names
     debounceCancelReason: _.debounce(function () {
       this.fireGAEvent({
@@ -237,6 +219,30 @@ export default {
       }
       this.cancelOption = false;
       this.cancel_reason = '';
+    },
+    retrieveCancellationReasons() {
+      const session = this.$store.getters.getSession;
+      const riderInfo = this.tracking_data.rider;
+      const countryCode = this.tracking_data.currency === 'USD' ? this.tracking_data.path[0].country_code : session[session.default].country_code;
+      const params = {
+        vendor_id: riderInfo.vendor_id,
+        order_status: 1,
+        country_code: countryCode,
+        status: 1,
+      };
+      this.requestCancellationReasons(params).then(
+        (response) => {
+          if (response.status) {
+            this.cancellation_reasons = response.data;
+            this.cancellation_state = true;
+          } else {
+            this.cancellation_state = false;
+          }
+        },
+        (error) => {
+          this.cancellation_state = false;
+        },
+      );
     },
     cancelPromocode() {
       const session = this.$store.getters.getSession;
@@ -390,7 +396,7 @@ export default {
   color: #555;
 }
 .cancelOptions .el-dialog {
-  width: 350px;
+  width: 400px;
 }
 .cancel-reason-option {
   text-align: center;
@@ -398,9 +404,6 @@ export default {
 .action--slide-desc {
   display: flex;
   justify-content: center;
-}
-.cancel-reason-text {
-  padding-left: 15%;
 }
 .action--slide-button {
   margin: 0px 10px 10px 10px;
@@ -425,5 +428,65 @@ export default {
   padding-left: 15px;
   margin-left: auto;
   margin-right: auto;
+}
+.cancel-reason-title-name {
+  font-size: 17px;
+  padding-left: 9%;
+  color: #1c1c1c;
+  margin: 5px 0px 15px 0px;
+  font-weight: 600;
+}
+.cancel-reason-text {
+  padding-left: 5%;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+#cancel-reason-text > div > label > span.el-radio__label{
+  line-height: 23px;
+  color: #000000;
+  font-size: 14px !important;
+  padding-left: 5px;
+  white-space: inherit !important;
+}
+#cancel-reason-text > div > label > span.el-radio__input > span{
+  border: 1px solid #000;
+}
+.cancellation-submit{
+  font-size: 12px !important;
+  border-radius: 7px;
+  height: 40px;
+  margin-left: 4% !important;
+}
+.accept-cancell-btn{
+  background: #FFFFFF !important;
+  color: #808080 !important;
+  border: 1px solid #808080 !important;
+}
+.submit-cancell-btn{
+  background: #FFFFFF !important;
+  color: #1682c5 !important;
+  border: 1px solid #1682c5 !important;
+}
+.action--slide-desc-confirm {
+  width: 90%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0px 0px 0px;
+}
+.cancelOptions--content-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  margin: auto;
+  padding-top: 15px;
+}
+.cancelOptions--content-message {
+  line-height: 23px;
+  color: #000000;
+  font-size: 14px !important;
+  padding-left: 5px;
+  white-space: inherit !important;
 }
 </style>
