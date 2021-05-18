@@ -1170,9 +1170,9 @@ export default {
       });
       if (this.tracking_data.confirm_status === 0 && this.tracking_data.delivery_status === 0) {
         return 1;
-      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && !logTypes.includes(10)) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] !== 10) {
         return 2;
-      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes.includes(10)) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] === 10) {
         return 3;
       } else {
         return 4
@@ -1486,6 +1486,25 @@ export default {
         eventLabel: 'Enter cancel reason input - Order Cancellation Page - WebApp',
       });
     }, 500),
+    timeDifference(logType) {
+      let timeDiff = '';
+      const now = this.moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+      this.tracking_data.delivery_log.forEach(log => {
+        if (log.log_type === logType) {
+          timeDiff = (this.moment(this.convertToUTC(now).utc().format('YYYY-MM-DD HH:mm:ss')) - this.moment(log.log_time)) / (60 * 1000);
+        }
+      });
+      return Math.round(timeDiff);
+    },
+    actionComparator(row, timeDiff) {
+      if (row.comparator === 0 ||
+        row.comparator === 1 && timeDiff < parseInt(row.duration, 10) ||
+        row.comparator === 2 && timeDiff > parseInt(row.duration, 10)
+      ) {
+        return true;
+      }
+      return false;
+    },
     cancelChange(reason) {
       this.more_info = false;
       this.cancel_desc = '';
@@ -1493,28 +1512,25 @@ export default {
       const data = this.cancellation_reasons.find(
         position => position.cancellation_reason_id === reason,
       );
-      const now = this.moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
-      const timeDiff = (this.moment(this.convertToUTC(now).utc().format('YYYY-MM-DD HH:mm:ss')) - this.moment(this.tracking_data.date_time)) / (60 * 1000);
+      let timeDiff = 0;
+      if (this.getCancellationOrderStatus === 1) {
+        timeDiff = this.timeDifference(1);
+      } else if (this.getCancellationOrderStatus === 2) {
+        timeDiff = this.timeDifference(2);
+      } else if (this.getCancellationOrderStatus === 3) {
+        timeDiff = this.timeDifference(10);
+      }
       if (data.actions) {
         data.actions.forEach(row => {
-          if (row.action_type === 1 && row.comparator === 0 ||
-            row.action_type === 1 && row.comparator === 1 && timeDiff < parseInt(row.duration, 10) && timeDiff > 0 ||
-            row.action_type === 1 && row.comparator === 2 && timeDiff > parseInt(row.duration, 10)
-          ) {
+          if (row.action_type === 1) {
             this.showEditPickUpTime();
             this.cancelMessage = row.message;
             this.rescheduleOptions = true;
-          } else if (row.action_type === 4 && row.comparator === 0 ||
-            row.action_type === 4 && row.comparator === 1 && timeDiff < parseInt(row.duration, 10) && timeDiff > 0 ||
-            row.action_type === 4 && row.comparator === 2 && timeDiff > parseInt(row.duration, 10)
-          ) {
+          } else if (row.action_type === 4) {
             this.showEditLocationsDialog();
             this.cancelMessage = row.message;
             this.locationOptions = true;
-          } else if (row.action_type === 5 && row.comparator === 0 ||
-            row.action_type === 5 && row.comparator === 1 && timeDiff < parseInt(row.duration, 10) && timeDiff > 0 ||
-            row.action_type === 5 && row.comparator === 2 && timeDiff > parseInt(row.duration, 10)
-          ) {
+          } else if (row.action_type === 5 && this.actionComparator(row, timeDiff)) {
             this.cancelOption = false;
             this.driverAllocatedOptions = true;
             this.cancelMessage = row.message;
