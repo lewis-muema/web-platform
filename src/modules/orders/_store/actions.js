@@ -63,17 +63,20 @@ const riderDetails = function riderDetails({ dispatch }, data) {
 };
 
 const getOrderData = function getOrderData({ dispatch }, data) {
+  data.closest_city = this.getters.getClosestCity === '' ? true : false;
   const payload = {
     app: 'NODE_PRIVATE_API',
     endpoint: 'pending_delivery',
     values: data,
   };
-
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosPost', payload, {
       root: true,
     }).then(
       (response) => {
+        if (this.getters.getClosestCity === '') {
+          this.commit('setClosestCity', response.data.city_code);
+        }
         resolve(response);
       },
       (error) => {
