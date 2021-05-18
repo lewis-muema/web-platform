@@ -1,22 +1,26 @@
 /* eslint consistent-return: "error" */
 /* eslint no-unused-vars: "error" */
+/* eslint-disable no-param-reassign */
 /* eslint consistent-return: ["error", { "treatUndefinedAsUnspecified": true }] */
 
 import mqtt from 'mqtt';
 
 const getTrackingData = function getTrackingData({ commit, dispatch, state }, data) {
+  data.closest_city = this.getters.getClosestCity === '' ? true : false;
   const payload = {
     app: 'NODE_PRIVATE_API',
     endpoint: 'pending_delivery',
     values: data,
   };
-
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosPost', payload, {
       root: true,
     }).then(
       (response) => {
         if (response.status) {
+          if (this.getters.getClosestCity === '') {
+            this.commit('setClosestCity', response.data.city_code);
+          }
           if (state.tracked_order === data.order_no) {
             commit('setTrackingData', response.data);
             commit('$_orders/setPolyline', response.data.polyline, {
@@ -65,7 +69,9 @@ const cancelOrder = function cancelOrder({ dispatch }, data) {
 const trackMQTT = function trackMQTT({ commit, state }) {
   if (state.tracking_data.confirm_status > 0) {
     const trackingNo = state.tracking_data.rider.phone_no_1;
-    const cityCode = state.tracking_data.city_code;
+    const cityCode = this.getters.getClosestCity
+      ? state.tracking_data.city_code
+      : this.getters.getClosestCity;
 
     const uri = `${cityCode}/${trackingNo}`;
 
