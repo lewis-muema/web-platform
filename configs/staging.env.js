@@ -6,7 +6,6 @@ module.exports = {
   PRIVATE_API: '"https://auth.sendyit.com/parcel/"',
   BACKEND_CUSTOMERS_APP: '"https://customers.staging.sendyit.com/customers/"',
   BACKEND_API_KEY: '"4RNNeyATKN6B6S6XiOyJdPMEJ3oLRKBT"',
-  FREIGHT_API_KEY: '"VbgJTYDPsfXGbERAMVeSWHu7uZHwzKW32X27mAStmN6vXEHKm8"',
   DOMAIN: '"app.staging.sendyit.com"',
   SENTRY_DSN: '"https://f399dc8511c14d6ea9022d28a8955641@sentry.io/1336627"',
   IMAGES_BASE: '"https://images.sendyit.com/"',

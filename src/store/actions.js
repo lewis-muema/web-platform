@@ -13,12 +13,6 @@ export default {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
 
-    // add api key - if request is going to the FREIGHT APP
-    if (payload.app === 'FREIGHT_APP') {
-      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
-        state.ENV.FREIGHT_API_KEY
-      }`;
-    }
 
     let config = {};
 
@@ -156,12 +150,6 @@ export default {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
 
-    // add api key - if request is going to the FREIGHT APP
-    if (payload.app === 'FREIGHT_APP') {
-      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
-        state.ENV.FREIGHT_API_KEY
-      }`;
-    }
 
     let config = {};
 
@@ -298,12 +286,6 @@ export default {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
 
-    // add api key - if request is going to the FREIGHT APP
-    if (payload.app === 'FREIGHT_APP') {
-      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
-        state.ENV.FREIGHT_API_KEY
-      }`;
-    }
 
     let config = {};
 
@@ -399,12 +381,6 @@ export default {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
 
-    // add api key - if request is going to the FREIGHT APP
-    if (payload.app === 'FREIGHT_APP') {
-      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
-        state.ENV.FREIGHT_API_KEY
-      }`;
-    }
 
     let config = {};
 
