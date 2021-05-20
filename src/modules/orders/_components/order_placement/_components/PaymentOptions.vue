@@ -2061,8 +2061,7 @@ export default {
             // eslint-disable-next-line no-param-reassign
             response = response[0];
           }
-
-          if (response.status === 200) {
+          if (response.status === 200 && response.data.status) {
             this.doNotification(
               '0',
               this.$t('general.mpesa_payment'),
