@@ -279,7 +279,7 @@ export default {
 
       this._requestMpesaPayment(fullPayload).then(
         (response) => {
-          if (response.status === 200) {
+          if (response.status === 200 && response.data.status) {
             // request poll here
             this.requestMpesaPaymentPoll();
           }
