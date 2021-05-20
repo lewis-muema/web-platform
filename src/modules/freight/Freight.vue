@@ -18,18 +18,18 @@
           >
             <div class="finish-setup-outer">
               <p class="crm-setup">
-                {{$t('freight.finish_freight')}}
+                {{ $t('freight.finish_freight') }}
               </p>
               <div class="">
                 <div
                   v-if="acc_type === 'biz' && updateSetIndustry"
                   class=""
                 >
-                  <label class="final-label">{{$t('freight.industry')}}</label>
+                  <label class="final-label">{{ $t('freight.industry') }}</label>
                   <div class="final-upper-padding">
                     <el-select
                       v-model="industry_type"
-                      placeholder="Select"
+                      :placeholder="$t('general.select')"
                       class="compliance-select-final"
                     >
                       <el-option
@@ -46,14 +46,14 @@
                   v-if="acc_type === 'peer' && updatePeerId"
                   class="final-upper-padding"
                 >
-                  <label class="final-label">{{$t('freight.id_no')}}</label>
+                  <label class="final-label">{{ $t('freight.id_no') }}</label>
                   <div class="final-upper-padding">
                     <input
                       v-model="id_number"
                       class="input-control upgrade-final"
                       type="text"
                       name="id_number"
-                      placeholder=""
+                      :placeholder="$t('freight.id_no_placeholder')"
                       autocomplete="on"
                     >
                   </div>
@@ -63,18 +63,18 @@
                   v-if="updateKraSection"
                   class="final-upper-padding"
                 >
-                  <label class="final-label">{{ fetchKraHeader }}</label>
+                  <label class="final-label">{{ userKraNoLabel }}</label>
                   <div class="final-upper-padding">
                     <input
                       v-model="kra_pin"
                       class="input-control upgrade-final"
                       type="text"
                       name="kra_pin"
-                      placeholder=""
+                      :placeholder="userKraNoPlaceholder"
                       autocomplete="on"
                     >
                     <span
-                      v-show="!valid_kra_pin"
+                      v-show="!kraPinValidation(kra_pin)"
                       class="invalid-kra"
                     >
                       {{ kraFailResponse }}
@@ -86,14 +86,14 @@
                   v-if="acc_type === 'biz' && updateBizRegistration"
                   class="final-upper-padding"
                 >
-                  <label class="final-label">{{$t('freight.enter_biz_regno')}}</label>
+                  <label class="final-label">{{ userBizRgLabel }}</label>
                   <div class="final-upper-padding">
                     <input
                       v-model="biz_registration"
                       class="input-control upgrade-final"
                       type="text"
                       name="biz_registration"
-                      placeholder=""
+                      :placeholder="userBizRgPlaceholder"
                       autocomplete="on"
                     >
                   </div>
@@ -103,7 +103,7 @@
                   <input
                     class="button-primary final-step-submit"
                     type="submit"
-                    value="Submit"
+                    :value="$t('general.submit')"
                     @click="submit"
                   >
                 </div>
@@ -121,10 +121,11 @@ import { mapMutations, mapGetters, mapActions } from 'vuex';
 import SessionMxn from '../../mixins/session_mixin';
 import NotificationMxn from '../../mixins/notification_mixin';
 import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
+import ValidationMixin from '../../mixins/validation_mixin';
 
 export default {
   name: 'Freight',
-  mixins: [SessionMxn, NotificationMxn, MixpanelMixin],
+  mixins: [SessionMxn, NotificationMxn, MixpanelMixin, ValidationMixin],
   data() {
     return {
       id_number: '',
@@ -144,38 +145,6 @@ export default {
     ...mapGetters({
       get_session: 'getSession',
     }),
-    valid_kra_pin() {
-      const pin = this.kra_pin;
-      const session = this.$store.getters.getSession;
-
-      if (pin !== '') {
-         if (session[session.default].country_code === 'KE') {
-          return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
-        }
-        return /^\d{10}$/.test(pin);
-      }
-      return true;
-    },
-    fetchKraHeader() {
-      let kraName = this.$t('freight.tin_no');
-      const session = this.$store.getters.getSession;
-      if (session[session.default].country_code === 'KE') {
-        kraName = this.$t('freight.kra_pin');
-      }
-      let resp = this.$t('freight.enter_biz') + kraName;
-      if (session.default === 'peer') {
-        resp = this.$t('freight.enter_your') + kraName;
-      }
-      return resp;
-    },
-    kraFailResponse() {
-      let resp = this.$t('freight.valid_tin_no');
-      const session = this.$store.getters.getSession;
-      if (session[session.default].country_code === 'KE') {
-        resp = this.$t('freight.valid_kra');
-      }
-      return resp;
-    },
     acc_type() {
       const session = this.$store.getters.getSession;
       return session.default;
@@ -236,7 +205,10 @@ export default {
         if (session[session.default].tax_authority_pin === null) {
           this.tax_compliance = false;
           this.kra_pin = '';
-        } else if (session[session.default].tax_authority_pin !== '' && !this.valid_kra_pin) {
+        } else if (
+          session[session.default].tax_authority_pin !== ''
+          && !this.kraPinValidation(this.kra_pin)
+        ) {
           this.tax_compliance = false;
           this.kra_pin = session[session.default].tax_authority_pin;
         } else if (session[session.default].tax_authority_pin !== '') {
@@ -333,7 +305,8 @@ export default {
           if (
             session[session.default].tax_authority_pin === null
             || session[session.default].tax_authority_pin === ''
-            || (session[session.default].tax_authority_pin !== '' && !this.valid_kra_pin)
+            || (session[session.default].tax_authority_pin !== ''
+              && !this.kraPinValidation(this.kra_pin))
           ) {
             isSet = true;
             kraSection = true;
@@ -395,19 +368,18 @@ export default {
       }
     },
     submitBizData() {
-      let kraName = this.$t('freight.tin_no');
       const session = this.$store.getters.getSession;
-      if (session[session.default].country_code === 'KE') {
-        kraName = this.$t('freight.kra_pin');
-      }
-      if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
-        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_valid_kraname', {kraName:kraName}));
+      if (this.kra_pin === '' || (this.kra_pin !== '' && !this.kraPinValidation(this.kra_pin))) {
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.kraFailResponse);
       } else if (this.industry_type === '') {
-        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.select_industry'));
+        this.doNotification(
+          2,
+          this.$t('freight.final_setup_error'),
+          this.$t('freight.select_industry'),
+        );
       } else if (this.biz_registration === '') {
-        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.please_enter_biz_regno'));
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.bizRegFailResponse);
       } else {
-        const session = this.$store.getters.getSession;
         const payload = {
           cop_id: session[session.default].cop_id,
           cop_name: session[session.default].cop_name,
@@ -427,18 +399,17 @@ export default {
       }
     },
     submitPeerData() {
-      let kraName = this.$t('freight.tin_no');
       const session = this.$store.getters.getSession;
-      if (session[session.default].country_code === 'KE') {
-        kraName = this.$t('freight.kra_pin');
-      }
 
-      if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
-        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_valid_kraname', {kraName:kraName}));
+      if (this.kra_pin === '' || (this.kra_pin !== '' && !this.kraPinValidation(this.kra_pin))) {
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.kraFailResponse);
       } else if (this.id_number === '') {
-        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_id_no'));
+        this.doNotification(
+          2,
+          this.$t('freight.final_setup_error'),
+          this.$t('freight.enter_id_no'),
+        );
       } else {
-        const session = this.$store.getters.getSession;
         const payload = {
           user_id: session[session.default].user_id,
           tax_authority_pin: this.kra_pin,
