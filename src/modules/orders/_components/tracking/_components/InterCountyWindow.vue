@@ -1626,7 +1626,7 @@ export default {
               that.payment_state = 0;
               that.loading_payment = false;
               that.showPaymentTab = false;
-              that.doNotification('1', this.$t('general.order_payment'), this.$t('general.payment_successful'));
+              that.doNotification('1', that.$t('general.order_payment'), that.$t('general.payment_successful'));
               that.payment_check = '';
               that.mpesa_payment = false;
               that.mpesa_payment_state = true;
@@ -1637,8 +1637,8 @@ export default {
               if (pollCount === 5 && !that.mpesa_payment_state) {
                 that.doNotification(
                   '0',
-                  this.$t('general.payment_not_recieved'),
-                  this.$t('general.will_keep_trying_checking_payment')
+                  that.$t('general.payment_not_recieved'),
+                  that.$t('general.will_keep_trying_checking_payment')
                 );
                 that.payment_state = 0;
                 that.loading_payment = false;
