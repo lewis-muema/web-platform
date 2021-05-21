@@ -691,7 +691,7 @@ export default {
       recipientPhone: '',
       externalTracking: false,
       setComplete: false,
-      small_vendors: [1],
+      small_vendors: [1, 28],
       setScheduled: false,
       partnerName: '',
       packageName: '',

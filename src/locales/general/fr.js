@@ -308,6 +308,7 @@ const translations = {
   motorbike: 'La moto',
   medium: 'Moyen',
   large: 'Grand',
+  cyclist: 'FR_cyclist',
   rider: 'Motocycliste',
   driver: 'Chauffeur',
   pickup_package: 'Par exemple, collecter un colis à la réception… ',
