@@ -520,7 +520,7 @@ export default {
       time_range_from: '',
       time_range_to: '',
       order_notes: '',
-      small_vendors: [1, 22, 21, 23],
+      small_vendors: [1, 22, 21, 23, 28],
       medium_vendors: [2, 3],
       large_vendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
       baseTruckOptions: [
@@ -1108,7 +1108,8 @@ export default {
       if (vendorObject.vendor_id === 25) {
         return this.$t('general.from_eighteen_tonnes');
       }
-      return vendorObject.vendor_description;
+      const description = vendorObject.vendor_description.replace("<p>", "").replace("</p>", "");
+      return description;
     },
     isTestAccount() {
       const session = this.$store.getters.getSession;

@@ -992,7 +992,7 @@ export default {
         },
         strictBounds: true,
       },
-      small_vendors: [1, 22, 21, 23],
+      small_vendors: [1, 22, 21, 23, 28],
       medium_vendors: [2, 3],
       large_vendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
       tier_group : '',

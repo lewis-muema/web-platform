@@ -324,6 +324,7 @@ const translations = {
   motorbike: 'motorbike',
   medium: 'medium',
   large: 'large',
+  cyclist: 'cyclist',
   rider: 'rider',
   driver: 'driver',
   pickup_package: 'E.g Pick package at the reception …',
