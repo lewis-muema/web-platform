@@ -96,7 +96,7 @@ export default {
       extraNotificationInfo: '',
       activeStateIcon: '',
       vendorStatus: 'active',
-      small_vendors: [1, 23],
+      small_vendors: [1, 23, 28],
     };
   },
   computed: {
