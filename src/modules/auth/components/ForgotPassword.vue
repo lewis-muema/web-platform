@@ -102,7 +102,6 @@ export default {
       radio: '',
       two_accnts: false,
       option: false,
-      nonce: '',
       message: '',
     };
   },
@@ -143,12 +142,10 @@ export default {
           // If password reset request exist
           else if (this.option) {
             const { email } = this;
-            const { nonce } = this;
             const resend = true;
 
             payload = {
               email,
-              nonce,
               resend,
             };
           }
@@ -157,12 +154,10 @@ export default {
         // Check for two accounts
         else if (this.two_accnts) {
           const { email } = this;
-          const { nonce } = this;
           const type = this.radio;
 
           payload = {
             email,
-            nonce,
             type,
           };
         }
@@ -187,15 +182,12 @@ export default {
             } else if (response.status === 'stall') {
               // Activate select account option
               this.two_accnts = true;
-              this.nonce = response.nonce;
-              // update nonce data
             } else if (response.status === false) {
               // Account does not exist
               this.message = this.$t('forgotPassword.account_not_exist');
             } else if (response.status === 'exists') {
               // Existing password reset option
               this.message = '';
-              this.nonce = response.nonce;
               this.option = true;
             } else {
               // Invalid request

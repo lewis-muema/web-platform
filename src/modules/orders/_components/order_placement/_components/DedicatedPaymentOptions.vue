@@ -1462,7 +1462,7 @@ export default {
             response = response[0];
           }
 
-          if (response.status === 200) {
+          if (response.status === 200 && response.data.status) {
             this.doNotification('0', this.$t('general.mpesa_payment'), this.$t('general.request_for_payement_sent', {userPhone: userPhone }) );
             this.requestMpesaPaymentPoll();
           } else {
@@ -1541,7 +1541,7 @@ export default {
               pollCount = pollLimit;
               that.payment_state = 0;
               that.loading = false;
-              that.doNotification('1', this.$t('general.payment_successful'), this.$t('general.completing_your_order'));
+              that.doNotification('1', that.$t('general.payment_successful'), that.$t('general.completing_your_order'));
               that.doCompleteOrder();
               that.mpesa_payment = false;
               that.mpesa_payment_state = true;
@@ -1552,8 +1552,8 @@ export default {
               if (pollCount === 5 && !that.mpesa_payment_state) {
                 that.doNotification(
                   '0',
-                  this.$t('general.payment_not_recieved'),
-                  this.$t('general.will_keep_trying_checking_payment')
+                  that.$t('general.payment_not_recieved'),
+                  that.$t('general.will_keep_trying_checking_payment')
                   );
                 that.payment_state = 0;
                 that.loading = false;

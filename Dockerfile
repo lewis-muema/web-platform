@@ -25,6 +25,7 @@ COPY . .
 
 RUN npm run build
 
+################
 FROM sendy-docker-local.jfrog.io/node-carbon-alpine 
 
 RUN adduser -D sendy
