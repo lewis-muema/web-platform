@@ -193,7 +193,7 @@ const translations = {
   package_will_be_delivered_cc_at: 'Le colis sera livré au centre de collecte à ',
   pick_up_time_of_order: 'Heure de collecte de votre collis ',
   pickup_instructions: 'Les consignes de collection à {{getInstructionNotes[0].name}}',
-  drop_off_instructions_at_name: 'Les consignes de déposer à {name}',
+  drop_off_instructions_at_name: 'Les consignes de déposer à ',
   order_will_be_placed: 'La commande sera passée dans ',
   time_seconds: '{time} secondes',
   confirm: 'Confirmer',

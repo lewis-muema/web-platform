@@ -203,7 +203,7 @@ const translations = {
   package_will_be_delivered_cc_at: 'The package will be delivered to the collection centre at',
   pick_up_time_of_order: 'The pickup time of your order',
   pickup_instructions: 'Pickup instructions at {{ getInstructionNotes[0].name }}',
-  drop_off_instructions_at_name: 'Drop off instructions at {name}',
+  drop_off_instructions_at_name: 'Drop off instructions at ',
   order_will_be_placed: 'Order will be placed in',
   time_seconds: '{time} seconds',
   confirm: 'Confirm',
