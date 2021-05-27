@@ -475,6 +475,9 @@ const translations = {
   yes_cancel: 'YES , CANCEL',
   no_cancel: "NO , DON'T CANCEL",
   dont_cancel: 'DON’T CANCEL',
+  cancellation_fee: 'Cancellation fee charge',
+  You_may_be_charged_a_cancellation_fee:
+  'You may be charged a cancellation fee of {fee} if you choose to proceed to cancel',
   call_rider_and_right_destination:
     'Did you know after your order is confirmed you can call your rider and give him the right destination? We will recalculate the cost and deliver your item.',
   ok_call_rider: "Okay, I'll call the rider",
@@ -856,6 +859,7 @@ const translations = {
   schedule_pick_up_time_of_order: 'Schedule pick up time of the order',
   sorry_could_not_update_location:
     'Sorry, we could not update the order because the location entered cannot be serviced by a {vendor_name} . Please try again with other locations',
+  
   edit_location_failure: 'Edit location failure',
   location_updated_successfully: 'Locations updated successfully',
   locations_update_failed: 'Locations update failed',
