@@ -468,7 +468,7 @@
                   :key="index"
                 >
                   <label class="delivery_label">
-                    {{ ($t('general.drop_off_instructions_at_name'), { name: data.name }) }}
+                    {{ $t('general.drop_off_instructions_at_name') }} {{ data.name }}
                   </label>
                   <div
                     v-if="data.notes !== ''"
