@@ -713,7 +713,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      tracking_data: '$_orders/$_tracking/getTrackingData',
+      tracking_data: '$_orders/$_tracking/trackingData',
       tracked_order: '$_orders/$_tracking/getTrackedOrder',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
       vendors: '$_orders/getVendors',
