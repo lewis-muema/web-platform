@@ -189,6 +189,7 @@
 .home-view-vendor-types-item--vendor-wrapper__img {
   padding-left: 10px;
   flex-basis: 25%;
+  width: 40px;
 }
 .home-view-vendor-types-item--cost-wrapper-left {
   flex-direction: column;

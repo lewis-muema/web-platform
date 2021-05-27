@@ -1075,6 +1075,7 @@ export default {
       discount_timed_out: false,
       customer_min_amount: '',
       vendors_with_fixed_carrier_type: [
+        'bicycle',
         'Standard',
         'Runner',
         'Van',
@@ -1136,7 +1137,7 @@ export default {
       schedule_time: '',
       default_value: this.moment().format('HH:mm:ss'),
       order_notes: '',
-      small_vendors: [1, 22, 21, 23, 12],
+      small_vendors: [1, 22, 21, 23, 12, 28],
       medium_vendors: [2, 3],
       large_vendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
       pair_status: '',
@@ -1409,12 +1410,7 @@ export default {
     },
 
     getVendorNameOnCarrierType() {
-      let vendorDispName = 'motorbike';
-      if (this.get_active_package_class === 'medium') {
-        vendorDispName = this.get_active_vendor_name;
-      } else if (this.get_active_package_class === 'large') {
-        vendorDispName = this.get_active_vendor_name;
-      }
+      let vendorDispName = this.get_active_vendor_name;
       return vendorDispName.toLowerCase();
     },
 
@@ -1429,7 +1425,9 @@ export default {
     },
     riderNameDisplay() {
       let displayPairName = this.$t('general.rider');
-      if (this.small_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+      if (this.activeVendorPriceData.vendor_id === 28) {
+        displayPairName = this.$t('general.cyclist');
+      } else if (this.small_vendors.includes(this.activeVendorPriceData.vendor_id)) {
         displayPairName = this.$t('general.rider');
       } else {
         displayPairName = this.$t('general.driver');
@@ -1630,7 +1628,7 @@ export default {
       }
 
       if (this.vendor_id !== this.activeVendorPriceData.vendor_id) {
-        if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+        if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id) || this.activeVendorPriceData.vendor_id === 28) {
           this.carrier_type = '1';
         } else if (
           this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)
@@ -2137,8 +2135,8 @@ export default {
       if (vendorObject.vendor_id === 26) {
         return this.$t('general.send_package_upcountry');
       }
-
-      return vendorObject.vendor_description;
+      const description = vendorObject.vendor_description.replace("<p>", "").replace("</p>", "");
+      return description;
     },
     getPickUpDescriptText(vendorObject) {
       if (this.standardOptions.includes(vendorObject.vendor_id) && !vendorObject.available) {

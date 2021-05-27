@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="new-card2">
-    <div class="help-card" >
+    <div class="help-card" style="width:400px;margin-left:30%;margin-top:30px;">
         <p> {{$t('general.choose_preffered_language')}}</p>
         <el-select v-model="locale" placeholder="Select" class="select">
           <el-option
@@ -12,7 +12,7 @@
         </el-select>
 
         <button type="primary" class="button-primary home-view--place-order btn" @click="changeLanguage" >{{$t('general.save')}}</button>
-        
+
     </div>
   </div>
 </template>
@@ -34,7 +34,7 @@ export default {
         {
         value: 'fr',
         label: 'Francais (FR)'
-        }, 
+        },
       ],
       locale: 'en',
     }
@@ -54,7 +54,7 @@ export default {
   },
   mounted() {
     this.locale = localStorage.getItem('timeLocale');
-  }, 
+  },
   methods: {
     ...mapMutations(['setLanguage']),
     ...mapActions({
@@ -71,7 +71,7 @@ export default {
             payload.cop_user_id = session[session.default].user_id;
           }
           else {
-            payload.user_id = session[session.default].user_id; 
+            payload.user_id = session[session.default].user_id;
           }
           break;
         }
@@ -115,9 +115,9 @@ export default {
   display: flex;
   -webkit-box-direction: normal;
   padding-top: 30px;
-  width:400px;
-  margin-left:30%;
-  margin-top:30px;
+  margin: -9% auto;
+  max-width: 32rem;
+
 }
 
 .new-card2 {
