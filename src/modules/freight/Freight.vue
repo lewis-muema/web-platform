@@ -96,6 +96,12 @@
                       :placeholder="userBizRgPlaceholder"
                       autocomplete="on"
                     >
+                    <span
+                      v-show="!bizRegValidation(biz_registration)"
+                      class="invalid-kra"
+                    >
+                      {{ bizRegFailResponse }}
+                    </span>
                   </div>
                 </div>
 
@@ -190,9 +196,9 @@ export default {
     },
     initiatePage() {
       this.KraFrefill();
+      this.bizRegistrationFrefill();
       this.peerIdFrefill();
       this.isNewCopAcc();
-      this.bizRegistrationFrefill();
       this.industryFrefill();
     },
     KraFrefill() {
@@ -314,6 +320,8 @@ export default {
           if (
             session[session.default].company_reg_no === null
             || session[session.default].company_reg_no === ''
+            || (session[session.default].company_reg_no !== ''
+              && !this.bizRegValidation(this.biz_registration))
           ) {
             isSet = true;
             bizRegistration = true;
@@ -377,7 +385,10 @@ export default {
           this.$t('freight.final_setup_error'),
           this.$t('freight.select_industry'),
         );
-      } else if (this.biz_registration === '') {
+      } else if (
+        this.biz_registration === ''
+        || (this.biz_registration !== '' && !this.bizRegValidation(this.biz_registration))
+      ) {
         this.doNotification(2, this.$t('freight.final_setup_error'), this.bizRegFailResponse);
       } else {
         const payload = {
