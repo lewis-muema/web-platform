@@ -79,7 +79,24 @@ const ValidationMxn = {
           return /^[apAP]\d{9}[a-zA-Z]$/.test(val);
         }
 
+        if (this.acc_default.country_code === 'CI') {
+          return /^[0-9]{7}[A-Z]{1}$/.test(val);
+        }
+
         return /^\d{10}$/.test(val);
+      }
+      return true;
+    },
+    bizRegValidation(val) {
+      if (val !== '') {
+        if (this.acc_default.country_code === 'KE') {
+          return /^[PVT]{3}[A-Z0-9]{7}$/.test(val);
+        }
+        if (this.acc_default.country_code === 'CI') {
+          return /^[A-Za-z0-9]*$/.test(val);
+        }
+
+        return /^[0-9]{5}$/.test(val);
       }
       return true;
     },
