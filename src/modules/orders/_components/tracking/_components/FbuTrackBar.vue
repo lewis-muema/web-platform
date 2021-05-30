@@ -395,6 +395,7 @@ export default {
                 vals: row,
               };
             });
+            this.$emit('fetchreasons', true);
           } else {
             this.doNotification('2', this.$t('general.failed_to_fetch_child_orders'), this.$t('general.please_retry_after_afew'));
           }
