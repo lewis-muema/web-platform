@@ -1,16 +1,11 @@
-FROM sendy-docker-local.jfrog.io/node:carbon
-RUN useradd -u 3000 sendy
+# FROM sendy-docker-local.jfrog.io/node:carbon AS build-stage
+FROM sendy-docker-local.jfrog.io/node-carbon-alpine AS build-stage
 
-# Create app directory
-#WORKDIR /usr/src/app
+RUN apk add git
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+RUN adduser -D sendy
 
-RUN mkdir /opt/sendy/ && \
-    mkdir /home/sendy
-COPY . /opt/sendy/
+RUN mkdir /opt/sendy/ 
 WORKDIR /opt/sendy/
 
 RUN chown -R sendy:sendy /opt/sendy/ 
@@ -22,15 +17,30 @@ ENV DOCKER_ENV=$DOCKER_ENV
 
 USER sendy:sendy
 
+COPY package*.json ./
 
-RUN npm install && npm run build
+RUN npm install 
 
-#RUN npm install -g npm
-# If you are building your code for production
-# RUN npm install --only=production
-
-# Bundle app source
 COPY . .
 
+RUN npm run build
+
+################
+FROM sendy-docker-local.jfrog.io/node-carbon-alpine 
+
+RUN adduser -D sendy
+
+WORKDIR /usr/user/app
+
+COPY --from=build-stage --chown=sendy:sendy /opt/sendy ./
+
+#this installs dumb-init - a minimalistic init system for docker containers
+RUN wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64
+RUN chmod +x /usr/local/bin/dumb-init
+
+USER sendy:sendy
+
 EXPOSE 8080
-CMD [ "npm", "start" ]
+
+CMD [ "dumb-init" ,"npm", "start" ] 
+

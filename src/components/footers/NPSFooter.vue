@@ -13,15 +13,13 @@
         v-if="!submitted"
         class="nps-info"
       >
-        <div
-          v-if="score === null"
-        >
+        <div v-if="score === null">
           <div class="btn-group">
             <button
               type="button"
               class="btn btn-secondary likely side-btn"
             >
-              {{ $t('NPSFooter.not_likey') }}
+              {{ $t('NPSFooter.not_likely') }}
             </button>
             <span class="score-holder">
               <span
@@ -33,14 +31,16 @@
                   type="button"
                   class="btn btn-secondary btn-holder"
                   @click="onChange($event, value)"
-                ><span class="score-value">{{ value }}</span></button>
+                >
+                  <span class="score-value">{{ value }}</span>
+                </button>
               </span>
             </span>
             <button
               type="button"
               class="btn btn-secondary unlikely side-btn"
             >
-            {{ $t('NPSFooter.very_likey') }}
+              {{ $t('NPSFooter.very_likely') }}
               <!-- 10 Very Likely -->
             </button>
             <button
@@ -67,11 +67,13 @@
               :class="`btn btn-primary form-control action-button ${disableClass}`"
               :disabled="isDisabled"
             >
-            {{ $t('NPSFooter.submit') }}
+              {{ $t('NPSFooter.submit') }}
               <!-- Submit -->
             </button>
             <span class="clearfix">&nbsp;</span>
-            <button :class="`btn btn-primary form-control action-button reason-dismiss ${disableClass}`">
+            <button
+              :class="`btn btn-primary form-control action-button reason-dismiss ${disableClass}`"
+            >
               <span
                 type="button"
                 class="close"
@@ -241,7 +243,6 @@ export default {
         this.setNPSStatus(true);
       }, 2000);
     },
-
   },
 };
 </script>
@@ -283,7 +284,7 @@ export default {
 }
 
 .btn-holder:hover {
-  background-color: #F57F20;
+  background-color: #f57f20;
   color: white;
   font-weight: 700;
   border: none;
@@ -316,7 +317,7 @@ export default {
   position: absolute;
   width: 7%;
   margin-top: 6px;
-  background: #F57F20;
+  background: #f57f20;
   color: #ffffff;
   border-radius: 4px;
   cursor: pointer;
