@@ -316,7 +316,7 @@ export default {
           'Content-Type': 'text/plain',
         },
       };
-    } else if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
+    } else if (typeof jwtToken !== 'undefined' || jwtToken !== null) {
       config = {
         headers: {
           'Content-Type': 'text/plain',
