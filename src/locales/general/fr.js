@@ -464,6 +464,9 @@ const translations = {
   yes_cancel: 'OUI,ANNULER',
   no_cancel: 'NON, PAS ANNULER',
   dont_cancel: 'FR_DON’T CANCEL',
+  cancellation_fee: 'Cancellation fee charge',
+  You_may_be_charged_a_cancellation_fee:
+  'FR_You may be charged a cancellation fee of {fee} if you choose to proceed to cancel',
   call_rider_and_right_destination: 'Saviez-vous qu’une fois votre commande confirmée, vous pouvez appeler votre motomotocyclistes et lui donner la bonne destination? Nous recalculons le coût et livrons votre article.',
   ok_call_rider: 'OK, j’appelle le motomotocyclistes',
   infuture_ensure_order_ready: 'À l’avenir, assurez-vous que votre commande est prête.',

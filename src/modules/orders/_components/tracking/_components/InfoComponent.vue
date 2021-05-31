@@ -916,6 +916,7 @@ import {
   faStar,
   faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
+import { resolve } from 'path';
 
 library.add(
   faPlus,
@@ -1507,6 +1508,7 @@ export default {
     },
     cancelChange(reason) {
       this.more_info = false;
+      this.calculateCancellationFee(reason);
       this.cancel_desc = '';
       this.cancelMessage = '';
       const data = this.cancellation_reasons.find(
@@ -1762,6 +1764,19 @@ export default {
           this.cancelOption = false;
           this.cancel_reason = '';
         },
+      );
+    },
+    calculateCancellationFee(reason) {
+      const payload = {
+        order_no: this.tracking_data.order_no,
+        cancellation_reason_id: reason, 
+      };
+      this.$store.dispatch('$_orders/$_tracking/computeCancellationFee', payload).then(
+        (response) => {
+          if (response.data.cancellation_fee) {
+            this.doNotification(2, this.$t('general.cancellation_fee'), this.$t('general.You_may_be_charged_a_cancellation_fee', {fee:`${response.data.currency} ${response.data.cancellation_fee}`}));
+          }
+        }
       );
     },
     getCancellationInfo(){
