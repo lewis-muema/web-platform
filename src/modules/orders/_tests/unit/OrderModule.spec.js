@@ -4,7 +4,6 @@
 import Vue from 'vue';
 import axios from 'axios';
 import moxios from 'moxios';
-// import { Store } from 'vuex-mock-store';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { mount, createLocalVue } from '@vue/test-utils';
@@ -26,14 +25,6 @@ import globalstore from '../../../../store/actions';
 import globals from '../../../../store/global';
 import orderMutations from '../../_store/mutations';
 import TimezoneMxn from '../../../../mixins/timezone_mixin';
-// import Order from '../../Orders.vue';
-// import OngoingComponent from '../../_components/OngoingComponent.vue';
-// import MapComponent from '../../_components/MapComponent.vue';
-// import OrderOptions from '../../_components/order_placement/_components/OrderOptions.vue';
-// import VendorComponent from '../../_components/order_placement/_components/VendorComponent.vue';
-// import Comments from '../../_components/rating/components/Comments.vue';
-// import PostRate from '../../_components/rating/components/PostRate.vue';
-// import PostRateBusiness from '../../_components/rating/components/PostRateBusiness.vue';
 import infoComponent from '../../_components/tracking/_components/InfoComponent.vue';
 import mutations from '../../../../store/mutations.js';
 
@@ -52,13 +43,6 @@ Vue.prototype.moment = moment;
 const router = new VueRouter();
 describe('Order.vue', () => {
   it('checks the order module', () => {});
-  // it('Check text', () => {
-  //   const wrapper = mount(HeaderComponent, {
-  //     store,
-  //   });
-  //   const message = wrapper.find('h1').text();
-  //   expect(message).to.equal('Am Here');
-  // });
 });
 describe('InfoComponent.vue', () => {
   let state;
