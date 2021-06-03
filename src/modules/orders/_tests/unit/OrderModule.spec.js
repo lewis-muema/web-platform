@@ -87,6 +87,7 @@ describe('InfoComponent.vue', () => {
       '$_payment/requestMpesaPayment': paymentstore.requestMpesaPayment,
       '$_payment/completeMpesaPaymentRequest': paymentstore.completeMpesaPaymentRequest,
       '$_orders/$_tracking/requestCancellationReasons': trackingstore.requestCancellationReasons,
+      '$_orders/$_tracking/computeCancellationFee': trackingstore.computeCancellationFee,
     };
     getters = {
       '$_orders/$_tracking/trackingData': () => localStorage.tracking_data,
@@ -169,19 +170,96 @@ describe('InfoComponent.vue', () => {
   afterEach(() => {
     moxios.uninstall();
   });
+  it('Checks the cancellation message when Placed the wrong locations is selected as a reason', () => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    wrapper.vm.cancelChange(4);
+    expect(wrapper.vm.cancelMessage).to.equal('We are sorry you entered the wrong locations. You can update the locations below. You may incur cost on updating your destinations.');
+  });
   it('Checks the cancellation message when my order is not ready is selected as a reason', () => {
     wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
     wrapper.vm.cancelChange(5);
     expect(wrapper.vm.cancelMessage).to.equal('We are sorry that your order is not ready. You can reschedule the pick up time of you order to another time like now.');
   });
+  it('Checks the cancellation message No driver has been allocated to my request is selected as a reason', () => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    wrapper.vm.cancelChange(7);
+    expect(wrapper.vm.cancelMessage).to.equal('We are sorry that your order has not been matched to a suitable driver. We are doing our best to find your a suitable driver to service your order');
+  });
   it('Checks if the cancellation state = 1 if the order status is pending', () => {
     wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
     expect(wrapper.vm.getCancellationOrderStatus).to.equal(1);
   });
-  it('Checks if the edit location dialog shows if the cancellation reason selected is my order is not ready', () => {
+  it('Checks if the edit location dialog shows if the cancellation reason selected is Placed the wrong locations', () => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    wrapper.vm.cancelChange(4);
+    expect(wrapper.vm.editLocationOption).to.equal(false);
+  });
+  it('Checks if the reschedule dialog shows if the cancellation reason selected is my order is not ready', () => {
     wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
     wrapper.vm.cancelChange(5);
     expect(wrapper.vm.rescheduleOptions).to.equal(true);
+  });
+  it('Checks if the notification dialog shows if the cancellation reason selected is No driver has been allocated to my request', () => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    wrapper.vm.cancelChange(7);
+    expect(wrapper.vm.driverAllocatedOptions).to.equal(true);
+  });
+  it('Checks if the notification action is shown before 5 minutes if comparator is less than', () => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    expect(wrapper.vm.actionComparator({
+      action_type: 5,
+      applicable_order_status: [1],
+      comparator: 1,
+      duration: "5",
+      message: "We are sorry that your order has not been matched to a suitable driver. We are doing our best to find your a suitable driver to service your order",
+    }, 4)).to.equal(true);
+  });
+  it('Checks if the notification action is shown after 5 minutes if comparator is more than', () => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    expect(wrapper.vm.actionComparator({
+      action_type: 5,
+      applicable_order_status: [1],
+      comparator: 2,
+      duration: "5",
+      message: "We are sorry that your order has not been matched to a suitable driver. We are doing our best to find your a suitable driver to service your order",
+    }, 6)).to.equal(true);
+  });
+  it('Checks if the cancellation reasons are fetched using the new endpoint', () => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    wrapper.vm.retrieveCancellationReasons();
+    expect(wrapper.vm.cancellation_reasons).to.equal(localStorage.cancellation_reasons.data);
+  });
+  it('Checks if the cancellation reasons contain an actions array', () => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    wrapper.vm.retrieveCancellationReasons();
+    expect(wrapper.vm.cancellation_reasons[0]).to.have.deep.property('actions');
+  });
+  it('Checks if the compute fee endpoint returns cancellation fee per reason', done => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    wrapper.vm.calculateCancellationFee();
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request
+        .respondWith({
+          status: 200,
+          response: {
+            cancellation_fee: 0,
+            currency: "KES",
+            description: "",
+            order_no: "AC94HW841-4FH",
+            vat: 0
+          },
+        })
+        .then((response) => {
+          expect(response.data).to.have.deep.property('cancellation_fee');
+          expect(response.data).to.have.deep.property('vat');
+          expect(response.data).to.have.deep.property('currency');
+          done();
+        })
+        .catch(error => {
+          console.log('caught', error.message);
+        });
+    });
   });
 });
 describe('OngoingComponent.vue', () => {

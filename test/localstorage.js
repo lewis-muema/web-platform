@@ -380,7 +380,15 @@ localStorage.cancellation_reasons = {
       "status": 1,
       "priority_key": 17,
       "allow_platform": "[\"CC\",\"CUSTOMER\"]",
-      "actions": null
+      "actions": [
+        {
+          "action_type": 5,
+          "applicable_order_status": [1],
+          "comparator": 2,
+          "duration": "5",
+          "message": "We are sorry that your order has not been matched to a suitable driver. We are doing our best to find your a suitable driver to service your order",
+        }
+      ],
     },
     {
       "id": 8,
