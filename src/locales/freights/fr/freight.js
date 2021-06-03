@@ -28,6 +28,7 @@ const fr = {
   default_biz_reg_placeholder: 'Saisir le numéro d’enregistrement de votre entreprise',
   ci_biz_reg_placeholder: 'Entrez votre numéro de registre de Commerce',
   enter_valid_kraname: 'FR_Please enter valid {kraName}',
+  loading_data: 'chargement des données',
 };
 
 export default fr;
