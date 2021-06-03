@@ -1,6 +1,6 @@
 const en = {
   search: 'Search',
-  pickup_loc: 'Pick up location',
+  pickup_location: 'Pick up location',
   destination: 'Destination',
   tranporter: 'Transporter',
   amount: 'Amount',
@@ -19,9 +19,7 @@ const en = {
   type_of_load: 'Type of load',
   type_of_truck: 'Type of truck',
   pickup_date: 'Pick up date',
-
-
+  create_order: 'Place an order',
 };
-
 
 export default en;
