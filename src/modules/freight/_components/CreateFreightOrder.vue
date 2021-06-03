@@ -4,7 +4,7 @@
       class="back-order-btn"
       @click="backToOrders()"
     >
-      <i class="el-icon-arrow-left view-transporter-info" /> {{$t('general.back')}}
+      <i class="el-icon-arrow-left view-transporter-info" /> {{ $t('general.back') }}
     </div>
     <div class="create-order-upper">
       {{ $t('createFreightOrder.create_order') }}
@@ -60,7 +60,7 @@
 
           <div class="">
             <p class="freight-input--label">
-             {{ $t('createFreightOrder.load_weight') }}
+              {{ $t('createFreightOrder.load_weight') }}
             </p>
             <div>
               <input
@@ -70,13 +70,13 @@
                 placeholder=""
                 autocomplete="on"
               >
-              <span class="freight-tonage-value-text">{{$t('createFreightOrder.tonnes')}}</span>
+              <span class="freight-tonage-value-text">{{ $t('createFreightOrder.tonnes') }}</span>
             </div>
           </div>
 
           <div class="">
             <p class="freight-input--label">
-              {{$t('createFreightOrder.cost_order')}}
+              {{ $t('createFreightOrder.cost_order') }}
             </p>
             <div class="freight-input">
               <div class="freight-input-icon">
@@ -95,7 +95,7 @@
 
           <div class="">
             <p class="freight-input--label">
-              {{$t('createFreightOrder.select_transporter')}}
+              {{ $t('createFreightOrder.select_transporter') }}
             </p>
             <div
               :class="`trigger ${hideInput}`"
@@ -163,7 +163,7 @@
 
           <div class="">
             <p class="freight-input--label">
-             {{$t('createFreightOrder.select_transporter')}}
+              {{ $t('createFreightOrder.select_transporter') }}
             </p>
             <div class="transporters-select">
               <el-select
@@ -183,7 +183,7 @@
 
           <div class="">
             <p class="freight-input--label">
-              {{$t('createFreightOrder.upload_terms')}}
+              {{ $t('createFreightOrder.upload_terms') }}
             </p>
             <div class="document-image">
               <div class="download-uploaded-img">
@@ -205,7 +205,8 @@
                     {{ terms_text }}
                   </div>
                   <div v-else>
-                    {{$t('createFreightOrder.drop_file')}} <em>{{$t('createFreightOrder.click_upload')}}</em>
+                    {{ $t('createFreightOrder.drop_file') }}
+                    <em>{{ $t('createFreightOrder.click_upload') }}</em>
                   </div>
                 </el-upload>
                 <div
@@ -213,7 +214,7 @@
                   class="underate"
                 >
                   <span class="document-upload-label">
-                    {{$t('createFreightOrder.terms_of_delivery_uploaded')}}
+                    {{ $t('createFreightOrder.terms_of_delivery_uploaded') }}
                   </span>
                 </div>
               </div>
@@ -222,7 +223,7 @@
 
           <div class="">
             <p class="freight-input--label upload-landing">
-              {{$t('createFreightOrder.upload_bill_lading')}}
+              {{ $t('createFreightOrder.upload_bill_lading') }}
             </p>
             <div class="document-image">
               <div class="download-uploaded-img">
@@ -244,12 +245,13 @@
                     {{ landing_text }}
                   </div>
                   <div v-else>
-                    {{$t('createFreightOrder.drop_file')}}<em>{{$t('createFreightOrder.click_upload')}}</em>
+                    {{ $t('createFreightOrder.drop_file')
+                    }}<em>{{ $t('createFreightOrder.click_upload') }}</em>
                   </div>
                 </el-upload>
                 <div v-if="billOfLandingName !== '' && landing_text === 'Change'">
                   <span class="document-upload-label">
-                    {{$t('createFreightOrder.bill_lading_successfully')}}
+                    {{ $t('createFreightOrder.bill_lading_successfully') }}
                   </span>
                 </div>
               </div>
@@ -262,7 +264,7 @@
           >
             <div class="">
               <p class="freight-input--label upload-landing">
-                {{ val.document_name }} {{$t('createFreightOrder.document')}}
+                {{ val.document_name }} {{ $t('createFreightOrder.document') }}
               </p>
               <div class="documents--flex">
                 <div class="document-image-extra">
@@ -278,7 +280,7 @@
                     </div>
                     <div class="success-extra">
                       <span class="document-upload-label">
-                        {{ val.document_name }} {{$t('createFreightOrder.name_document_upload')}}
+                        {{ val.document_name }} {{ $t('createFreightOrder.name_document_upload') }}
                       </span>
                     </div>
                   </div>
@@ -297,7 +299,7 @@
             class="document-upload-extra"
             @click="showExtraDocModal"
           >
-            <i class="el-icon-circle-plus" /> {{$t('createFreightOrder.add_document')}}
+            <i class="el-icon-circle-plus" /> {{ $t('createFreightOrder.add_document') }}
           </div>
 
           <div class="next-terms-holder">
@@ -322,12 +324,12 @@
         >
           <div class="">
             <div class="decline-text-option  upload-document-header">
-              {{$t('createFreightOrder.add_new_document')}}
+              {{ $t('createFreightOrder.add_new_document') }}
             </div>
           </div>
           <div class="">
             <div class="documents-highlight-label">
-             {{$t('createFreightOrder.additiona_doc_type')}}
+              {{ $t('createFreightOrder.additiona_doc_type') }}
             </div>
             <el-select
               v-model="doc_name"
@@ -349,7 +351,7 @@
             class=""
           >
             <div class="documents-highlight-label">
-              {{$t('createFreightOrder.additional_doc_name')}}
+              {{ $t('createFreightOrder.additional_doc_name') }}
             </div>
             <el-input
               v-model="new_doc_name"
@@ -362,7 +364,7 @@
           <div class="upload-new-doc--outer">
             <div class="">
               <p class="documents-highlight-label">
-                {{$t('createFreightOrder.upload_doc')}}
+                {{ $t('createFreightOrder.upload_doc') }}
               </p>
               <div class="add-document-image">
                 <div class="download-uploaded-img">
@@ -384,12 +386,13 @@
                       {{ add_text }}
                     </div>
                     <div v-else>
-                      {{$t('createFreightOrder.drop_file')}} <em>{{$t('createFreightOrder.click_upload')}}</em>
+                      {{ $t('createFreightOrder.drop_file') }}
+                      <em>{{ $t('createFreightOrder.click_upload') }}</em>
                     </div>
                   </el-upload>
                   <div v-if="addNewName !== '' && add_text === 'Change'">
                     <span class="document-upload-label align-new-doc">
-                      {{$t('createFreightOrder.doc_added_successfully')}}
+                      {{ $t('createFreightOrder.doc_added_successfully') }}
                     </span>
                   </div>
                 </div>
@@ -404,7 +407,7 @@
               class="decline-action--slide-button"
               @click="submitNewData"
             >
-              {{$t('createFreightOrder.done')}}
+              {{ $t('createFreightOrder.done') }}
             </button>
           </div>
         </el-dialog>
@@ -433,7 +436,7 @@ export default {
   mixins: [NotificationMxn, MixpanelMixin],
   data() {
     return {
-      submit_text: 'Create Order',
+      submit_text: this.$t('createFreightOrder.create_freight_btn'),
       quote_text: this.$t('createFreightOrder.request_quote'),
       locations: [],
       map_options: {
@@ -559,7 +562,11 @@ export default {
           this.$t('createFreightOrder.additional_document'),
         );
       } else if (this.doc_name === '' || this.addNewName === '') {
-        this.doNotification(2, this.$t('createFreightOrder.upload_document'), this.$t('createFreightOrder.missing_data'));
+        this.doNotification(
+          2,
+          this.$t('createFreightOrder.upload_document'),
+          this.$t('createFreightOrder.missing_data'),
+        );
       } else {
         this.setToStore();
       }
@@ -612,7 +619,11 @@ export default {
           }
         },
         (error) => {
-          this.doNotification(2, this.$t('createFreightOrder.doc_type_unable'), this.$t('createFreightOrder.doc_type_unavailable'));
+          this.doNotification(
+            2,
+            this.$t('createFreightOrder.doc_type_unable'),
+            this.$t('createFreightOrder.doc_type_unavailable'),
+          );
           this.documents = [];
           this.displayExtraDocument = false;
         },
@@ -668,7 +679,11 @@ export default {
       const isPdf = file.type === 'application/pdf';
 
       if (!isPdf) {
-        this.doNotification(2, this.$t('createFreightOrder.doc_upload_error'), this.$t('createFreightOrder.doc_in_pdf'),);
+        this.doNotification(
+          2,
+          this.$t('createFreightOrder.doc_upload_error'),
+          this.$t('createFreightOrder.doc_in_pdf'),
+        );
       }
       return isPdf;
     },
@@ -676,7 +691,11 @@ export default {
       const isPdf = file.type === 'application/pdf';
 
       if (!isPdf) {
-        this.doNotification(2, this.$t('createFreightOrder.doc_upload_error'), this.$t('createFreightOrder.doc_in_pdf'));
+        this.doNotification(
+          2,
+          this.$t('createFreightOrder.doc_upload_error'),
+          this.$t('createFreightOrder.doc_in_pdf'),
+        );
       }
       return isPdf;
     },
@@ -684,7 +703,11 @@ export default {
       const isPdf = file.type === 'application/pdf';
 
       if (!isPdf) {
-        this.doNotification(2, this.$t('createFreightOrder.doc_upload_error'), this.$t('createFreightOrder.doc_in_pdf'));
+        this.doNotification(
+          2,
+          this.$t('createFreightOrder.doc_upload_error'),
+          this.$t('createFreightOrder.doc_in_pdf'),
+        );
       }
       return isPdf;
     },
@@ -703,17 +726,17 @@ export default {
     handleRemoveLanding() {
       this.billOfLandingName = '';
       this.billOfLandingData = {};
-      this.landing_text = 'Change';
+      this.landing_text = this.$t('createFreightOrder.change');
     },
     handleRemoveAdd() {
       this.addNewName = '';
       this.addNewDocData = {};
-      this.add_text = 'Change';
+      this.add_text = this.$t('createFreightOrder.change');
     },
     handleRemoveTerms() {
       this.termsName = '';
       this.termsData = {};
-      this.terms_text = 'Change';
+      this.terms_text = this.$t('createFreightOrder.change');
     },
     uploadBillOfLanding() {
       if (Object.keys(this.billOfLandingData).length === 0) {
@@ -760,7 +783,7 @@ export default {
         let src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
         $(`#${imageId}`).attr('src', src);
 
-        this.terms_text = 'Uploading ...';
+        this.terms_text = this.$t('createFreightOrder.uploading');
         const { file } = this.termsData;
         const fileType = file.type;
         const fileName = this.sanitizeFilename(file.name, 'terms');
@@ -914,7 +937,11 @@ export default {
       ) {
         this.doCompleteOrder();
       } else {
-        this.doNotification(2, this.$t('createFreightOrder.create_order_error'), this.$t('createFreightOrder.provide_all'));
+        this.doNotification(
+          2,
+          this.$t('createFreightOrder.create_order_error'),
+          this.$t('createFreightOrder.provide_all'),
+        );
       }
     },
     doCompleteOrder() {
@@ -974,12 +1001,16 @@ export default {
             this.doNotification(1, this.$t('createFreightOrder.success_freight_order'), '');
             this.backToOrders();
           } else {
-            this.doNotification(2, this.$t('createFreightOrder.order_completions_failure'), workingResponse.message);
+            this.doNotification(
+              2,
+              this.$t('createFreightOrder.order_completions_failure'),
+              workingResponse.message,
+            );
           }
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error, 'message')) {
-            this.doNotification(2,  this.$t('createFreightOrder.order_failed'), error.message);
+            this.doNotification(2, this.$t('createFreightOrder.order_failed'), error.message);
           } else {
             this.doNotification(
               2,
