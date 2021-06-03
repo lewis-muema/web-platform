@@ -5,8 +5,6 @@ const en = {
   settings: 'Settings',
   shipment: 'Shipments',
   activity_log: 'Activity Log',
-
 };
-
 
 export default en;

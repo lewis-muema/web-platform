@@ -1,8 +1,6 @@
-
-
 const fr = {
   search: 'Chercher',
-  pickup_loc: 'Lieu de collection ',
+  pickup_location: 'Lieu de collection ',
   destination: 'Destination',
   tranporter: 'Transporteur',
   amount: 'Montant',
@@ -21,9 +19,7 @@ const fr = {
   type_of_load: 'FR_Type of load',
   type_of_truck: 'FR_Type of truck',
   pickup_date: 'FR_Pick up date',
-
-
+  create_order: 'FR_Place an order',
 };
-
 
 export default fr;
