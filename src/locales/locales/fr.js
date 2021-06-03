@@ -45,6 +45,7 @@ import settingsComponent from '../freights/fr/component/settingsComponent';
 import transporterComponent from '../freights/fr/component/transporterComponent';
 import freight from '../freights/fr/freight';
 import verifyComponent from '../freights/fr/verifyComponent';
+import orderDetailsComponent from '../freights/fr/component/orderDetailsComponent';
 
 import genFrenchTranslations from '../general/fr';
 
@@ -93,6 +94,8 @@ const translations = {
   transporterComponent,
   freight,
   verifyComponent,
+  orderDetailsComponent,
+
   general: genFrenchTranslations,
 };
 
