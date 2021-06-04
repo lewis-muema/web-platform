@@ -1510,6 +1510,7 @@ export default {
     },
     cancelChange(reason) {
       this.more_info = false;
+      this.calculateCancellationFee(reason);
       this.cancel_desc = '';
       this.cancelMessage = '';
       const data = this.cancellation_reasons.find(
@@ -1770,7 +1771,7 @@ export default {
     calculateCancellationFee(reason) {
       const payload = {
         order_no: this.tracking_data.order_no,
-        cancellation_reason_id: reason, 
+        cancellation_reason_id: reason,
       };
       this.computeCancellationFee(payload).then(
         (response) => {
