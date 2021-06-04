@@ -234,7 +234,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      tracking_data: '$_orders/$_tracking/getTrackingData',
+      tracking_data: '$_orders/$_tracking/trackingData',
       tracked_order: '$_orders/$_tracking/getTrackedOrder',
       parent_order: '$_orders/getParentOrder',
       date_time: '$_orders/$_tracking/getDateTime',
