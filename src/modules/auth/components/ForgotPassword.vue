@@ -5,18 +5,18 @@
   >
     <div class="sign-inner">
       <div class="sign-top">
-        {{$t('forgotPassword.forgot_password')}}
+        {{ $t('forgotPassword.forgot_password') }}
       </div>
       <div
-        v-if="this.option"
+        v-if="option"
         class="reset-link-details"
       >
-        {{$t('forgotPassword.pending_password')}}
+        {{ $t('forgotPassword.pending_password') }}
         <a
           class="reset-pass-link"
           @click="resend_link"
         >
-          {{$t('forgotPassword.resend')}}
+          {{ $t('forgotPassword.resend') }}
         </a>
       </div>
 
@@ -28,28 +28,12 @@
         <div class="sign-holder">
           <span id="pass_change_info" />
         </div>
-        <div class="sign-holder dimen">
-          <input
-            v-model="email"
-            v-validate="'required|email'"
-            class="input-control forgot-form"
-            type="text"
-            data-vv-validate-on="blur"
-            name="email"
-            :placeholder="$t('forgotPassword.enter_email')" 
-          >
-          <br>
-          <span class="sign-up-email-error">
-            {{ errors.first('email') }}
-          </span>
-        </div>
 
         <div
-          v-if="this.two_accnts === true"
           class=""
         >
           <span class="forgot-paswword-moreinfo">
-            {{$t('forgotPassword.two_accounts')}}
+            {{ $t('forgotPassword.two_accounts') }}
           </span>
 
           <div style="margin-top: 3%;">
@@ -57,15 +41,34 @@
               v-model="radio"
               label="1"
             >
-              {{$t('forgotPassword.business')}}
+              {{ $t('forgotPassword.business') }}
             </el-radio>
             <el-radio
               v-model="radio"
               label="2"
             >
-              {{$t('forgotPassword.peer')}}
+              {{ $t('forgotPassword.peer') }}
             </el-radio>
           </div>
+        </div>
+
+        <div
+          v-if="radio !==''"
+          class="sign-holder dimen"
+        >
+          <input
+            v-model="email"
+            v-validate="'required|email'"
+            class="input-control forgot-form"
+            type="text"
+            data-vv-validate-on="blur"
+            name="email"
+            :placeholder="$t('forgotPassword.enter_email')"
+          >
+          <br>
+          <span class="forget-pass-error">
+            {{ errors.first('email') }}
+          </span>
         </div>
 
         <div class="sign-holder">
@@ -73,7 +76,7 @@
             class="button-primary forgot-btn-color"
             type="submit"
             :value="$t('forgotPassword.reset_password')"
-            :disabled="!this.is_valid"
+            :disabled="!is_valid"
             @click="request_pass"
           >
         </div>
@@ -82,7 +85,7 @@
             class="sign-holder__link"
             to="/auth/sign_in"
           >
-            {{$t('forgotPassword.sign_in')}}
+            {{ $t('forgotPassword.sign_in') }}
           </router-link>
         </div>
       </div>
@@ -107,7 +110,7 @@ export default {
   },
   computed: {
     is_valid() {
-      return this.email !== '';
+      return this.email !== '' && this.radio !== '';
     },
   },
   methods: {
@@ -118,6 +121,8 @@ export default {
       this.request_pass();
     },
     request_pass() {
+      this.message = '';
+
       let emailValid = true;
       for (let i = 0; i < this.errors.items.length; i++) {
         if (this.errors.items[i].field === 'email') {
@@ -125,77 +130,34 @@ export default {
           break;
         }
       }
-      if (emailValid) {
-        let payload = {};
+      if (emailValid && this.radio !== '') {
+        const { email } = this;
 
-        // Check for one account
-        if (!this.two_accnts) {
-          // If password reset request does not exist
-          if (!this.option) {
-            const { email } = this;
-
-            payload = {
-              email,
-            };
-          }
-
-          // If password reset request exist
-          else if (this.option) {
-            const { email } = this;
-            const resend = true;
-
-            payload = {
-              email,
-              resend,
-            };
-          }
-        }
-
-        // Check for two accounts
-        else if (this.two_accnts) {
-          const { email } = this;
-          const type = this.radio;
-
-          payload = {
-            email,
-            type,
-          };
-        }
+        const payload = {
+          email,
+          account_type: this.radio === '1' ? 'peer' : 'cop',
+        };
 
         const fullPayload = {
           values: payload,
           vm: this,
-          app: 'NODE_PRIVATE_API',
-          endpoint: 'forgot_pass',
+          app: 'ADONIS_PRIVATE_API',
+          endpoint: 'auth/forgot-password',
         };
 
         this.requestForgotPassword(fullPayload).then(
           (response) => {
-            // check when response is dual
-            if (response.length > 0) {
-              response = response[0];
-            }
-            if (response.status === true) {
-              this.option = false;
+            if (response.status) {
               this.message = this.$t('forgotPassword.password_change');
-              // Reset link set to user email.
-            } else if (response.status === 'stall') {
-              // Activate select account option
-              this.two_accnts = true;
-            } else if (response.status === false) {
-              // Account does not exist
-              this.message = this.$t('forgotPassword.account_not_exist');
-            } else if (response.status === 'exists') {
-              // Existing password reset option
-              this.message = '';
-              this.option = true;
             } else {
-              // Invalid request
               this.message = this.$t('forgotPassword.invalid_request');
             }
           },
           (error) => {
             this.message = `${this.$t('forgotPassword.reset_failed')}`;
+            const level = 3;
+            const notification = { title: '', level, message: error.response.data.message };
+            this.displayNotification(notification);
           },
         );
       } else {
@@ -283,5 +245,10 @@ text-decoration:none;
 }
 .forgot-btn-color{
   border-width: 0px !important;
+}
+.forget-pass-error {
+  font-size: 13px;
+  font-family: 'Nunito', sans-serif;
+  color: #e08445;
 }
 </style>
