@@ -14,7 +14,7 @@ const fr = {
   login_attempt_failed: 'La tentative de connexion a échoué ',
   account_deactivated: 'Compte désactivé ',
   password_reset_successful: 'Réinitialisation du mot de passe réussie ',
-  password_reset_successful_text: 'FR_Password Reset Successfull. You will be directed to the login page',
+  password_reset_successful_text: 'Mot de passe réinitialisation Successfull.Vous serez redirigé vers la page de connexion',
   login_failed: 'Échec de la connexion ',
   login_failed_text: 'Échec de la connexion. Veuillez réessayer',
   password_not_match: 'Le mot de passe ne correspond pas. Veuillez réessayer',

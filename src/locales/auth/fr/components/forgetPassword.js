@@ -4,7 +4,7 @@ const fr = {
   forgot_password: 'Vous avez oublié votre mot de passe?',
   pending_password: 'Vous avez une demande de changement de mot de passe en attente envoyée à votre adresse e-mail en attente de votre confirmation',
   resend: 'Renvoyer? ',
-  two_accounts: 'FR_Select account type you want to reset password',
+  two_accounts: 'Sélectionnez le type de compte que vous souhaitez réinitialiser le mot de passe',
   business: ' Entreprise ',
   peer: "RÉSEAU D'HOMOLOGUES",
   reset: 'réinitialiser le mot de passe',

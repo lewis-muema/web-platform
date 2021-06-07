@@ -147,6 +147,9 @@ export default {
 
         this.requestForgotPassword(fullPayload).then(
           (response) => {
+            if (response.length > 0) {
+              response = response[0];
+            }
             if (response.status) {
               this.message = this.$t('forgotPassword.password_change');
             } else {
