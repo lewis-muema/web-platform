@@ -14,7 +14,7 @@ const fr = {
   login_attempt_failed: 'Login Attempt failed',
   account_deactivated: 'Account deactivated',
   password_reset_successful: 'Password Reset Successful',
-  password_reset_successful_text: 'Password Reset Successfull. You will automatically be logged in',
+  password_reset_successful_text: 'Password Reset Successfull. You will be directed to the login page',
   login_failed: 'Login failed',
   login_failed_text: 'Login failed. Please try again',
   password_not_match: 'Password does not match. Please try again',
