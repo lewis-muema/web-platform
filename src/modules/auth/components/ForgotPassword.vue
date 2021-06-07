@@ -135,7 +135,7 @@ export default {
 
         const payload = {
           email,
-          account_type: this.radio === '1' ? 'peer' : 'cop',
+          account_type: this.radio === '1' ? 'cop' : 'peer',
         };
 
         const fullPayload = {
