@@ -1683,7 +1683,6 @@ export default {
         const that = this;
         this.getTrackingData({ order_no: from })
           .then((response) => {
-            console.log(response);
             if (response) {
               if (!that.mpesa_payment_state) {
                 if (that.tracking_data.inter_county_order_details.status === 'approved') {
