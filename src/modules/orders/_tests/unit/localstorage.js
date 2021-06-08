@@ -199,6 +199,292 @@ localStorage.tracking_data = {
   payment_method: 12,
   payment_option: 1,
 };
+localStorage.tracking = {
+  '$_tracking': {
+    tracked_order: "",
+    tracking_data: {},
+    isMQTTConnected: false,
+    date_time: "",
+    share_option: false,
+    track_more_info: false,
+    track_vendor_name: "",
+    track_partner_name: "",
+    track_package_name: "",
+    confirm_eta: "",
+    pickup_eta: "",
+    delivery_eta: "",
+    edit_location: false,
+    edit_scheduled_time: false,
+    pick_up_time: "",
+    pick_up_filled_status: false,
+    pickup_filled: false,
+    order_path: [],
+    location_names: [],
+    location_path: [],
+    extra_destinations: 0,
+    max_destinations: 24,
+    edit_notes: false,
+    stored_notes: {},
+    amount_due: 0,
+  },
+};
+localStorage.map = {
+  markers: [],
+  polyline: {
+    path: "",
+    options: {
+      strokeColor: "#1782c5",
+      strokeOpacity: 1,
+      strokeWeight: 2
+    }
+  },
+  vendors: {},
+};
+localStorage.intercounty_tracking_data = {
+  "path": [
+    {
+      "coordinates": "-1.285554,36.826400",
+      "country_code": "KE",
+      "more": {
+        "Address": "",
+        "Estate": "",
+        "FlatName": "",
+        "HouseDoor": "",
+        "Label": "",
+        "Otherdescription": "",
+        "Road": "",
+        "Typed": "",
+        "Vicinity": "",
+        "landmark": "",
+        "place_idcustom": "",
+        "viewport": {
+          "northeast": {
+            "lat": 0,
+            "lng": 0
+          },
+          "southwest": {
+            "lat": 0,
+            "lng": 0
+          }
+        }
+      },
+      "name": "RNG Plaza",
+      "notes": null,
+      "notify": false,
+      "recipient_name": null,
+      "recipient_phone": null,
+      "waypoint_details_status": false,
+      "waypoint_type": "PICKUP",
+      "visited": false
+    },
+    {
+      "coordinates": "0.244244,35.066684",
+      "country_code": "KE",
+      "more": {
+        "Address": "",
+        "Estate": "",
+        "FlatName": "",
+        "HouseDoor": "",
+        "Label": "",
+        "Otherdescription": "",
+        "Road": "",
+        "Typed": "",
+        "Vicinity": "",
+        "landmark": "",
+        "place_idcustom": "",
+        "viewport": {
+          "northeast": {
+            "lat": 0,
+            "lng": 0
+          },
+          "southwest": {
+            "lat": 0,
+            "lng": 0
+          }
+        }
+      },
+      "name": "Baraton Plaza",
+      "notes": null,
+      "notify": false,
+      "recipient_name": null,
+      "recipient_phone": null,
+      "waypoint_details_status": false,
+      "waypoint_type": "DELIVERY",
+      "visited": false
+    }
+  ],
+  "description_head": "We are matching your order with a driver",
+  "marketing_message": "A driver will be allocated to your order",
+  "sliding_message": [
+    "Your order has been received. ",
+    "We are dispatching to Drivers in the area. ",
+    "The driver's details will appear here once confirmed."
+  ],
+  "slide_time_milliseconds": 5000,
+  "price_type": 1,
+  "main_status": 1,
+  "amount": 229,
+  "city_id": 1,
+  "order_no": "AD74ED615-TKM",
+  "parent_order_no": "AD74ED615-TKM",
+  "confirm_status": 0,
+  "delivery_status": 0,
+  "rate_status": 0,
+  "date_time": "2020-09-26 13:15:16",
+  "user": {
+    "name": "Faithshopy",
+    "email": "faithshop@gmail.com",
+    "phone": "+254709779779"
+  },
+  "rider": {
+    "rider_id": 1,
+    "rider_name": "Sendy Rider",
+    "rider_phone": "0709779779",
+    "number_plate": " WER 565t",
+    "vehicle_name": null,
+    "phone_no_1": "0709779779",
+    "rider_rating": "4.0",
+    "rider_photo": "https://s3-eu-west-1.amazonaws.com/sendy-partner-docs/photo/1533214131993profile_picture_placeholder.png",
+    "vendor_id": 26,
+    "vendor_description": "Inter-county",
+    "vendor_name": "Inter-county"
+  },
+  "delivery_log": [
+    {
+      "description": "Order AD74ED615-TKM created",
+      "log_type": 1,
+      "text_json": "{\"_push_description\":\"Order AD74ED615-TKM created\",\"_push_description_id\":1,\"_push_type\":6,\"client_mode\":669,\"delivery_id\":1354358,\"description\":\"New delivery request\",\"duration\":363,\"log_type\":1,\"order_no\":\"AD74ED615-TKM\",\"pickupduration\":355,\"rider_id\":1,\"rider_name\":\"Sendy Driver\"}",
+      "log_time": "2020-09-26T10:15:16.000Z"
+    }
+  ],
+  "order_notes": [
+    {
+      "msg": "none"
+    }
+  ],
+  "price_tier": {},
+  "package_details": {
+    "additional_loader": false,
+    "customer_min_amount": 0,
+    "delivery_item": "",
+    "load_units": "tonnes",
+    "load_weight": 0,
+    "max_temperature": 4,
+    "no_of_loaders": 0
+  },
+  "tier_name": "",
+  "polyline": "pazFgtw_Foc@z_@eg@cJe[bN{h@a^o`@uCiKzOwQ`e@m@UaF_NuEM_FhVqUdIkXnIwVhb@yUnYy^gIiVtBcM`P{PgAwP|O}Sdi@_d@`g@wp@rH{c@tj@sm@hfAe|@fg@eb@nLa`@hm@o{@~kAsRfGXhMyEnj@m`@fk@~CpXyJlP}u@bm@iS~q@os@ppBbQlsAyUttAWrm@iv@bGof@nKcMfi@jPl^}JaEop@mAai@aCgw@r@ir@dR{rAgD{g@{Gy{@~C_o@jS_uAz[wxB_^giAkVkvAbUil@lKm{AyUip@~KewAjq@wnAvj@wbAbSms@dm@yvA~tAeTfu@uk@vmAeEpVym@tn@{l@pa@idA|DgjA}Tya@@om@rXg|@~o@_sAbz@ydAvz@meA`g@oo@pi@qLh\\wQhv@coAb_Ck{Ar}AwtAng@ecBbpAanAdcAml@bwAu`BniC{x@b[saBr@cyAmD{pBnWciBbe@aq@fOq|CntBibBrt@}v@bx@u`CveAq_CxiAyl@nu@eo@nXg}BjqBsmBhdA}jCliAcmChcAkfBhiAyuAxhBkoAflBydAzhDsoCptCkk@z{@mm@`Sm{@dDif@|sAigAj{DxK|pA}Nl_@lAtMtWnhA|S|z@gbBrfFcOvu@y`Anr@unAzrFmW|lEuzEx_M_z@jjCpDjkAdYleBObk@xKjW{C|]aBtVhh@`L|e@dO`RrXbV|n@~HnbAig@|p@tB~r@iQvm@}RxW_\\bYsrAt[cv@to@s`AjUcxBbkBy[xMk_@rMw^l_@o^x]ms@Iaw@^{bAgYaqA|d@cy@tOgVxWsM~Zh@de@Rjl@mc@rRy_Bpc@kw@Bka@|Sug@nWaTtMqG`c@_]~k@ik@r\\_Tdx@wgAnzAfA~xBwM~d@tHl~@~Rxx@qf@~j@{p@bp@k_@~Le^cIsdBp@_cAyn@kO{Kk^tB_}@jE_\\sEad@_Uq|@lPgg@xWbLpYjIfaAr@zXiPnPs~@nj@c^zbA`B|{@uYrz@{f@~`@yv@v[ax@lXyo@uOu`@}DnBb\\lUve@_h@jvAuIjd@gi@xWk|@dtAg^f~A}a@xtAqw@d_BwTzh@iGt|@qYx`AdA`t@zJ`^kj@bz@yYlIgG`s@yX`s@x@|m@fMlmAvx@pY``Bnk@`Z|pCp@`s@@fQiRjQ_uAtd@qQjb@eb@||Am^hj@aKpw@m@zaCyYtv@iA`g@`TjkAcSnf@kPaAwMiIoh@sUwh@vD{NrZcG~e@aCl^hQ~a@k@dzBc_BjnA_r@|bAdv@ldAcAhF",
+  "eta_data": {
+    "order_no": "AD74ED615-TKM",
+    "reason": "The order does not exist.",
+    "status": false,
+    "cancelled": false,
+    "cancelled_message": ""
+  },
+  "fixed_cost": true,
+  "status": true,
+  "to_details": {
+    "to_name": "Baraton Plaza",
+    "to_cord": "0.244244,35.066684",
+    "to_lat": "0.244244",
+    "to_long": "35.066684"
+  },
+  "from_details": {
+    "from_name": "RNG Plaza",
+    "from_cord": "-1.285554,36.826400",
+    "to_lat": "-1.285554",
+    "to_long": "36.826400"
+  },
+  "city_code": "ke-nairobi",
+  "customer_care_number": "+254 709 779 779",
+  "currency": "KES",
+  "edit_config": null,
+  "payment_method": 12,
+  "payment_option": 2,
+  "inter_county_order_details": {
+    "approximate_weight": 15,
+    "destination_delivery_mode": null,
+    "destination_delivery_status": false,
+    "destination_order_no": null,
+    "destination_pricing_details": null,
+    "destination_pricing_uuid": null,
+    "destination_waypoint_instructions": null,
+    "final_price": {
+      "currency": "KES",
+      "partner_price": 180,
+      "sendy_price": 200
+    },
+    "final_weight": null,
+    "order_info": {
+      "destination_deliveries": null,
+      "pickup_deliveries": [
+        {
+          "id": "6aaf4b84-43f2-48c0-a236-bed733d2fcea"
+        }
+      ],
+      "route": {
+        "cost_per_kg": {
+          "currency": "KES",
+          "partner_cost": 70,
+          "sendy_up_charge": 30
+        },
+        "max_weight": 5,
+        "object_id": "5f58bf16fca68fb7dce38569",
+        "price": {
+          "currency": "KES",
+          "partner_price": 180,
+          "sendy_price": 200
+        }
+      }
+    },
+    "order_no": "AD74ED615-TKM",
+    "package_type": "PARCEL",
+    "pickup_delivery_status": false,
+    "pickup_order_no": null,
+    "pickup_pricing_details": null,
+    "pickup_pricing_uuid": null,
+    "pickup_waypoint_instructions": [],
+    "recipient_info": {
+      "name": "Dennis",
+      "phone_number": "+254 700 536660"
+    },
+    "sender_info": {
+      "name": "Faithshopy",
+      "phone_number": "+254709779779"
+    },
+    "status": "received",
+    "vat_amount": 29,
+    "total_cost": 229
+  },
+  "order_timeline": [
+    {
+      "message": "Your order has been received",
+      "status": "visited",
+      "timestamp": "2020-09-26T10:15:16.000Z"
+    },
+    {
+      "message": "Take your package to our collection center at RNG Plaza",
+      "status": "ongoing",
+      "timestamp": "2020-09-26T10:15:16.000Z"
+    },
+    {
+      "message": "Your package will be verified at the collection center and the final fees charged",
+      "status": "pending"
+    },
+    {
+      "message": "Your package will be delivered overnight to Baraton Plaza",
+      "status": "pending"
+    },
+    {
+      "message": "Your package is on the way to Baraton Plaza",
+      "status": "pending"
+    },
+    {
+      "message": "Delivery has been completed",
+      "status": "pending"
+    }
+  ]
+};
 localStorage.session = {
   "peer": {},
   "biz": {
