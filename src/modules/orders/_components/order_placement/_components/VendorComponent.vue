@@ -1075,6 +1075,7 @@ export default {
       discount_timed_out: false,
       customer_min_amount: '',
       vendors_with_fixed_carrier_type: [
+        'Bicycle',
         'bicycle',
         'Standard',
         'Runner',
