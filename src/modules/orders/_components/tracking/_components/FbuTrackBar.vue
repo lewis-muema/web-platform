@@ -158,7 +158,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import TrackingStore from '../_store';
 import RegisterStoreModule from '../../../../../mixins/register_store_module';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
@@ -291,6 +291,9 @@ export default {
       set_markers: '$_orders/setMarkers',
       clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
+    ...mapActions({
+      getOrderData: '$_orders/getOrderData',
+    }),
     statusName(status) {
       let statusName = '';
       status.split('_').forEach((name) => {
@@ -345,8 +348,7 @@ export default {
       return false;
     },
     poll(from) {
-      this.$store
-        .dispatch('$_orders/getOrderData', { order_no: this.$route.params.order_no })
+      this.getOrderData({ order_no: this.$route.params.order_no })
         .then((response) => {
           if (response.data.status) {
             this.orderData = response.data;

@@ -23,9 +23,12 @@ import paymentstore from '../../../payment/_store/actions';
 import globalMutations from '../../../../store/mutations';
 import globalstore from '../../../../store/actions';
 import globals from '../../../../store/global';
+import orderStore from '../../_store/actions';
 import orderMutations from '../../_store/mutations';
 import TimezoneMxn from '../../../../mixins/timezone_mixin';
+import FBUTracking from '../../_components/tracking/FBUTracking.vue';
 import infoComponent from '../../_components/tracking/_components/InfoComponent.vue';
+import InterCountyWindow from '../../_components/tracking/_components/InterCountyWindow.vue';
 import mutations from '../../../../store/mutations.js';
 
 Vue.use(VueI18n);
@@ -134,6 +137,8 @@ describe('InfoComponent.vue', () => {
       '$_orders/$_tracking/setAmountDue': trackingMutations.setAmountDue,
     };
     state = globals.state;
+    state['$_orders'] = localStorage.tracking;
+    state.map = localStorage.map;
     store = new Vuex.Store({
       actions,
       getters,
@@ -244,6 +249,158 @@ describe('InfoComponent.vue', () => {
           console.log('caught', error.message);
         });
     });
+  });
+});
+describe('FBUTracking.vue', () => {
+  let state;
+  let actions;
+  let getters;
+  let mutations;
+  let store;
+  const url = 'about:blank#/';
+  delete global.window.location;
+  global.window = Object.create(window);
+  global.window.location = {
+    origin: url,
+    href: url,
+  };
+  let wrapper;
+  beforeEach(() => {
+    actions = {
+      requestAxiosPost: globalstore.requestAxiosPost,
+      requestAxiosGet: globalstore.requestAxiosGet,
+      '$_orders/$_tracking/requestCancellationReasons': trackingstore.requestCancellationReasons,
+      '$_orders/getOrderData': orderStore.getOrderData,
+    };
+    getters = {
+      '$_orders/$_tracking/trackingData': () => localStorage.tracking_data,
+      '$_orders/$_tracking/getTrackedOrder': () => '',
+      '$_orders/$_tracking/getIsMQTTConnected': () => '',
+      '$_orders/getParentOrder': () => '',
+      '$_orders/getVendors': () => '',
+      getSession: ()=> localStorage.session,
+      '$_orders/$_tracking/getAmountDue': () => '',
+      getLanguage: () => 'en',
+      getFCMData: () => '',
+      '$_orders/$_tracking/getDateTime': () => '',
+    };
+    mutations = {
+      '$_orders/removePolyline': orderMutations.removePolyline,
+      '$_orders/removeMarkers': orderMutations.removeMarkers,
+      '$_orders/setPage': orderMutations.setPage,
+      '$_orders/hideVendors': orderMutations.hideVendors,
+      '$_orders/clearVendorMarkers': orderMutations.clearVendorMarkers,
+      '$_orders/setParentOrder': orderMutations.setParentOrder,
+    };
+    state = globals.state;
+    state['$_orders'] = localStorage.tracking;
+    state.map = localStorage.map;
+    store = new Vuex.Store({
+      actions,
+      getters,
+      mutations,
+      state,
+    });
+    moxios.install(axios);
+    wrapper = mount(FBUTracking, {
+      i18n,
+      store,
+      mixins: [TimezoneMxn],
+      localVue,
+      router,
+      sync: false,
+    });
+    wrapper.vm.moment = moment;
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+  it('Checks if the cancellation reasons contain an actions array for commercial freight', () => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    wrapper.vm.retrieveCancellationReasons();
+    expect(wrapper.vm.cancellation_reasons[0]).to.have.deep.property('actions');
+  });
+  it('Checks if the cancellation reasons are fetched using the new endpoint for commercial freight', () => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    wrapper.vm.retrieveCancellationReasons();
+    expect(wrapper.vm.cancellation_reasons).to.equal(localStorage.cancellation_reasons.data);
+  });
+});
+describe('InterCountyWindow.vue', () => {
+  let state;
+  let actions;
+  let getters;
+  let mutations;
+  let store;
+  const url = 'about:blank#/';
+  delete global.window.location;
+  global.window = Object.create(window);
+  global.window.location = {
+    origin: url,
+    href: url,
+  };
+  let wrapper;
+  beforeEach(() => {
+    actions = {
+      requestAxiosPost: globalstore.requestAxiosPost,
+      requestAxiosGet: globalstore.requestAxiosGet,
+      '$_orders/$_tracking/runningBalance': trackingstore.runningBalance,
+      '$_orders/$_tracking/getTrackingData': trackingstore.getTrackingData,
+      '$_payment/requestMpesaPayment': paymentstore.requestMpesaPayment,
+      '$_payment/completeMpesaPaymentRequest': paymentstore.completeMpesaPaymentRequest,
+      '$_orders/$_tracking/requestCancellationReasons': trackingstore.requestCancellationReasons,
+    };
+    getters = {
+      '$_orders/$_tracking/trackingData': () => localStorage.intercounty_tracking_data,
+      '$_orders/$_tracking/getTrackedOrder': () => '',
+      '$_orders/$_tracking/getIsMQTTConnected': () => '',
+      '$_orders/getVendors': () => '',
+      getSession: ()=> localStorage.session,
+      getLanguage: () => 'en',
+      getCountryCode: () => 'ke',
+    };
+    mutations = {
+      '$_orders/setPage': orderMutations.setPage,
+      '$_orders/hideVendors': orderMutations.hideVendors,
+      '$_orders/clearVendorMarkers': orderMutations.clearVendorMarkers,
+      '$_orders/$_tracking/setTrackedOrder': trackingMutations.setTrackedOrder,
+    };
+    state = globals.state;
+    state['$_orders'] = localStorage.tracking;
+    state.map = localStorage.map;
+    store = new Vuex.Store({
+      actions,
+      getters,
+      mutations,
+      state,
+    });
+    moxios.install(axios);
+    wrapper = mount(InterCountyWindow, {
+      i18n,
+      store,
+      mixins: [TimezoneMxn],
+      localVue,
+      router,
+      sync: false,
+    });
+    wrapper.vm.moment = moment;
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+  it('Checks if the cancellation reasons contain an actions array for Inter county orders', () => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    wrapper.vm.retrieveCancellationReasons();
+    expect(wrapper.vm.cancellation_reasons[0]).to.have.deep.property('actions');
+  });
+  it('Checks if the cancellation reasons are fetched using the new endpoint for Inter county orders', () => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    wrapper.vm.retrieveCancellationReasons();
+    expect(wrapper.vm.cancellation_reasons).to.equal(localStorage.cancellation_reasons.data);
+  });
+  it('Checks if the cancellation state = 1 if the order status is pending for Inter county orders', () => {
+    wrapper.vm.cancellation_reasons = localStorage.cancellation_reasons.data;
+    expect(wrapper.vm.getCancellationOrderStatus).to.equal(1);
   });
 });
 describe('OngoingComponent.vue', () => {
