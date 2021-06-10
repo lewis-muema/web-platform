@@ -1,10 +1,11 @@
 const en = {
   forgot_password: 'Forgot your password?',
-  pending_password: 'You have a pending password change request sent to your email awaiting your confirmation',
+  pending_password:
+    'You have a pending password change request sent to your email awaiting your confirmation',
   resend: 'Resend?',
-  two_accounts: 'Select account type you want to reset password',
+  two_accounts: 'Select the account type you want to reset password',
   business: ' Business',
-  peer: 'Peer',
+  peer: 'Personal',
   reset: 'Reset Password',
   sign_in: 'Sign In',
   password_change: 'Password change reset link has been sent to your email',
@@ -15,6 +16,5 @@ const en = {
   enter_email: 'Enter email',
   reset_password: 'RESET PASSWORD',
 };
-
 
 export default en;
