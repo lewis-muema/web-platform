@@ -1,15 +1,15 @@
-
-
 const fr = {
   forgot_password: 'Vous avez oublié votre mot de passe?',
-  pending_password: 'Vous avez une demande de changement de mot de passe en attente envoyée à votre adresse e-mail en attente de votre confirmation',
+  pending_password:
+    'Vous avez une demande de changement de mot de passe en attente envoyée à votre adresse e-mail en attente de votre confirmation',
   resend: 'Renvoyer? ',
-  two_accounts: 'FR_Select account type you want to reset password',
+  two_accounts: 'Sélectionnez le type de compte que vous souhaitez réinitialiser le mot de passe',
   business: ' Entreprise ',
-  peer: "RÉSEAU D'HOMOLOGUES",
+  peer: 'Personnel',
   reset: 'réinitialiser le mot de passe',
   sign_in: "S'identifier",
-  password_change: 'Le lien de réinitialisation du changement de mot de passe a été envoyé à votre adresse e-mail ',
+  password_change:
+    'Le lien de réinitialisation du changement de mot de passe a été envoyé à votre adresse e-mail ',
   account_not_exist: "Le compte n'existe pas, veuillez vous inscrire pour créer un compte sendy ",
   invalid_request: 'Demande invalide',
   reset_failed: 'La demande de réinitialisation du mot de passe a échoué, veuillez réessayer ',
@@ -17,6 +17,5 @@ const fr = {
   enter_email: "Saisir l'email ",
   reset_password: 'RÉINITIALISER LE MOT DE PASSE ',
 };
-
 
 export default fr;
