@@ -323,7 +323,7 @@ export default {
     },
 
     detectAndroid() {
-      if (navigator.userAgent.match(/Android/i) && !this.$route.path.includes('reset_password')) {
+      if (navigator.userAgent.match(/Android/i) && !this.$route.path.includes('reset_password') && !this.$route.path.includes('external')) {
         const notification = {
           title: 'Mobile redirect',
           level: 2,
@@ -345,6 +345,7 @@ export default {
         || navigator.userAgent.match(/iPad/i)
         || navigator.userAgent.match(/iPod/i))
         && !this.$route.path.includes('reset_password')
+        && !this.$route.path.includes('external')
       ) {
         const notification = {
           title: 'Mobile redirect',
