@@ -774,3 +774,11 @@ li.suggestions_solr:last-child {
   font-size: 24px;
   font-weight: 600 !important;
 }
+.shipment-tracking-container{
+  position: relative;
+}
+.vehicle-layout {
+  position: absolute;
+  top: 8%;
+  left: 1%;
+}

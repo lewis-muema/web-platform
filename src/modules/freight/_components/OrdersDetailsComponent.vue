@@ -15,7 +15,10 @@
         <div class="shipment-id-label">
           Shipment ID : {{ freightOrderDetail.id }}
         </div>
-        <shipment-tracking />
+        <div class="shipment-tracking-container">
+          <shipment-tracking />
+          <shipment-vehicles class="vehicle-layout" />
+        </div>
         <div class="freight-orders-main-summary">
           <div class="freight-order-details-wrapper">
             <div class="freight_order_details_map">
@@ -576,12 +579,18 @@ import NotificationMxn from '../../../mixins/notification_mixin';
 import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 import DocumentsSection from './FreightDocuments/Documents.vue';
 import ShipmentTracking from './tracking/FreightTracking.vue';
+import ShipmentVehicles from './tracking/ShipmentVehicles.vue';
 
 let s3 = '';
 
 export default {
   name: 'OrderDetailsComponent',
-  components: { LoadingComponent, DocumentsSection, ShipmentTracking },
+  components: {
+    LoadingComponent,
+    DocumentsSection,
+    ShipmentTracking,
+    ShipmentVehicles,
+  },
   mixins: [TimezoneMxn, NotificationMxn, MixpanelMixin],
   data() {
     return {
