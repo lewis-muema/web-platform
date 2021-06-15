@@ -12,9 +12,10 @@
           <i class="el-icon-arrow-left view-transporter-info" />
           {{ $t('orderDetailsComponent.back') }}
         </div>
-        <div class="">
-          <shipment-tracking />
+        <div class="shipment-id-label">
+          Shipment ID : {{ freightOrderDetail.id }}
         </div>
+        <shipment-tracking />
         <div class="freight-orders-main-summary">
           <div class="freight-order-details-wrapper">
             <div class="freight_order_details_map">

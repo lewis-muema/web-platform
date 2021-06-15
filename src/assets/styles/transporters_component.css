@@ -769,3 +769,8 @@ li.suggestions_solr:last-child {
   color: #EA7125 !important;;
   cursor: pointer;
 }
+.shipment-id-label{
+  color: #000000;
+  font-size: 24px;
+  font-weight: 600 !important;
+}
