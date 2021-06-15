@@ -769,3 +769,16 @@ li.suggestions_solr:last-child {
   color: #EA7125 !important;;
   cursor: pointer;
 }
+.shipment-id-label{
+  color: #000000;
+  font-size: 24px;
+  font-weight: 600 !important;
+}
+.shipment-tracking-container{
+  position: relative;
+}
+.vehicle-layout {
+  position: absolute;
+  top: 8%;
+  left: 1%;
+}
