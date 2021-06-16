@@ -24,6 +24,12 @@
 .ongoing-trucks-details-container{
   display: flex;
   cursor: pointer;
+  padding: 7px;
+}
+.ongoing-trucks-card.active{
+  background-color: #E8F3FC;
+  border-radius: 3px 3px 3px 3px;
+  color: #527CBD !important;
 }
 .truck-details-image{
   width: 22px;

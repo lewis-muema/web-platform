@@ -380,10 +380,11 @@
   font-size: 14px;
 }
 .order-info-header{
-  font-size: 15px;
+  font-size: 17px;
   line-height: 18px;
   color: #000000;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
+  line-height: 18px;
 }
 .rider_details_wrap {
   width: 34%;

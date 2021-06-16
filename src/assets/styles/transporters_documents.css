@@ -40,6 +40,10 @@
 .inner-content-flex{
   flex: 0.9;
 }
+.inner-content-flex.disable_tracking{
+  flex: 0.7 !important;
+  margin-left: 2%;
+}
 .freight-order-etra-info{
   width: 35%;
 }
