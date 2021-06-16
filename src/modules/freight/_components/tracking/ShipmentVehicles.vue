@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   name: 'ShipmentVehicles',
   data() {
@@ -75,6 +77,11 @@ export default {
     };
   },
   methods: {
+    ...mapMutations({
+      clearTruckMarkers: '$_freight/clearTruckMarkers',
+      setTruckMarkers: '$_freight/setTruckMarkers',
+      setTruckId: '$_freight/setTruckId',
+    }),
     active_shipment(shipmentNo) {
       if (this.set_shipemnt_id === shipmentNo) {
         return true;
@@ -82,7 +89,40 @@ export default {
       return false;
     },
     trackShipment(shipment) {
+      this.clearTruckMarkers();
       this.set_shipemnt_id = shipment.id;
+      this.setTruckLocationToStore();
+    },
+    setTruckLocationToStore() {
+      const partnerLocation = [
+        {
+          partner_city_id: 1,
+          altitude: 1628.0931158127214,
+          phone_no: '+254707941365',
+          lng: 36.8520796,
+          device_id: 0,
+          county_code: 'ke',
+          bearing: 0,
+          rating: 4,
+          partner_level: 3,
+          exclusive_status: 0,
+          license_status: 0,
+          speed: 0.0433949,
+          busy_state: true,
+          sim_card_sn: '89254021054194521174',
+          carrier_type: 0,
+          partner_id: 4838,
+          active_state: true,
+          course: 0,
+          currency: 'KES',
+          time: '2021-06-16 09:40:45',
+          rider_id: 4838,
+          lat: -1.2804102,
+          vendor_type: 3,
+        },
+      ];
+      this.setTruckMarkers(partnerLocation[0]);
+      this.setTruckId(partnerLocation[0].rider_id);
     },
   },
 };
