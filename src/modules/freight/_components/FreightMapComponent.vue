@@ -8,14 +8,23 @@
         map-type-id="roadmap"
         :options="mapOptions"
         style="width: 95%; height: 450px"
-      />
+      >
+        <gmap-marker
+          v-for="v in trucks"
+          :key="v.rider_id"
+          :ref="`marker${v.rider_id}`"
+          :position="v.position"
+          :icon="truck_icon(v.vendor_type, v.rotation)"
+          :visible="v.visible"
+        />
+      </GmapMap>
     </no-ssr>
   </div>
 </template>
 
 <script>
 import NoSSR from 'vue-no-ssr';
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'FreightMapComponent',
@@ -34,12 +43,28 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({}),
+    ...mapGetters({
+      trucks: '$_freight/getShipmentTrucks',
+      truckId: '$_freight/getTruckId',
+    }),
   },
-  watch: {},
+  watch: {
+    trucks(data) {
+      if (data !== undefined) {
+        const truck_data_location = data[this.truckId].position;
+
+        this.mapCentreLocation.lat = truck_data_location.lat;
+        this.mapCentreLocation.lng = truck_data_location.lng;
+      }
+    },
+  },
   methods: {
-    ...mapActions({}),
-    ...mapMutations({}),
+    truck_icon(id) {
+      return {
+        url: `https://images.sendyit.com/web_platform/vendor_type/top/${id}.png`,
+        scaledSize: new google.maps.Size(50, 50),
+      };
+    },
   },
 };
 </script>
