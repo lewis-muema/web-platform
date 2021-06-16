@@ -29,11 +29,11 @@
       child-src 'none';
       font-src 'self' *.googleapis.com *.gstatic.com data:;
       script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com *.verygoodproxy.com *.verygoodvault.com *.googletagmanager.com
-      *.gstatic.com *.google-analytics.com https://optimize.google.com
+      *.gstatic.com *.google-analytics.com https://optimize.google.com *.freshchat.com
       *.stats.g.doubleclick.net *.amazonaws.com/ *.mixpanel.com/
       *.helpscout.net cdn4.mxpnl.com *.hotjar.com *.www.google-analytics.com *.www.googletagmanager.com
       *.google-analytics.com data:;
-      style-src 'self' 'unsafe-eval' *.googleapis.com https://optimize.google.com 'unsafe-inline';
+      style-src 'self' 'unsafe-eval' *.googleapis.com https://optimize.google.com 'unsafe-inline' *.freshchat.com;
       img-src 'self' *.sendyit.com s3-eu-west-1.amazonaws.com images.mxpnl.com
       cdn.mxpnl.com *.gstatic.com *.googleapis.com https://www.google.co.ke/ *.cloudfront.net https://optimize.google.com
       *.googleusercontent.com *.s3-eu-west-1.amazonaws.com  *.hotjar.io *.hotjar.com *.google-analytics.com www.google-analytics.com https://*.google.com
@@ -43,7 +43,7 @@
       https://ip2c.org/s https://extreme-ip-lookup.com
       *.googleapis.com api.mixpanel.com *.helpscout.net *.pusher.com *.hotjar.com wss://chat.sendyit.com;
       frame-src 'self' *.sendyit.com *.s3-eu-west-1.amazonaws.com *.hotjar.com *.youtube.com https://optimize.google.com *.verygoodproxy.com *.verygoodvault.com
-      *.google-analytics.com www.google-analytics.com *.s3.eu-west-1.amazonaws.com
+      *.google-analytics.com www.google-analytics.com *.s3.eu-west-1.amazonaws.com *.freshchat.com
       *.stats.g.doubleclick.net;"
       />
 
@@ -150,7 +150,8 @@
       })(window, document, window.Beacon || function() {
       });
     </script>
-    <script type="text/javascript">
+    <!--Disabling mixpanel to replace it with freshchat-->
+    <!-- <script type="text/javascript">
       window.Beacon('init', 'bfdc6b7d-be53-41ea-9f6a-ac15569db113');
     </script>
     <script type="text/javascript">
@@ -158,6 +159,22 @@
         color: '#1782c5',
         showPrefilledCustomFields: true,
       });
+    </script> -->
+    <script>
+      function initFreshChat() {
+        window.fcWidget.init({
+          token: "88605441-3539-4e90-9e64-0fb1e4b1736f",
+          host: "https://wchat.freshchat.com",
+        });
+      }
+      function initialize(i,t) {
+        var e;
+        i.getElementById(t)?initFreshChat():((e=i.createElement("script")).id=t,e.async=!0,e.src="https://wchat.freshchat.com/js/widget.js",e.onload=initFreshChat,i.head.appendChild(e));
+      }
+      function initiateCall() {
+        initialize(document,"Freshchat-js-sdk");
+      }
+      window.addEventListener?window.addEventListener("load",initiateCall,!1):window.attachEvent("load",initiateCall,!1);
     </script>
     <!-- start Mixpanel --><script type="text/javascript">
       (function(c, a) {
