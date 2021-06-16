@@ -15,19 +15,28 @@
         <div class="shipment-id-label">
           Shipment ID : {{ freightOrderDetail.id }}
         </div>
-        <div class="shipment-tracking-container">
+        <div
+          v-if="view_tracking"
+          class="shipment-tracking-container"
+        >
           <shipment-tracking />
           <shipment-vehicles class="vehicle-layout" />
         </div>
         <div class="freight-orders-main-summary">
           <div class="freight-order-details-wrapper">
-            <div class="freight_order_details_map">
+            <div
+              v-if="!view_tracking"
+              class="freight_order_details_map"
+            >
               <Img
                 :src="createStaticMapUrl(freightOrderDetail.destination, freightOrderDetail.pickup)"
               />
             </div>
             <div class="flex-div">
-              <div class="inner-content-flex">
+              <div
+                class="inner-content-flex"
+                :class="{ disable_tracking: view_tracking }"
+              >
                 <div class="order_details_desc">
                   <div class="order_details_desc_item">
                     <img
@@ -639,6 +648,7 @@ export default {
       ],
       opened: [],
       billOfLadingOptions: {},
+      view_tracking: true,
     };
   },
   computed: {
