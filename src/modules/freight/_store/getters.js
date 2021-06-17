@@ -16,6 +16,7 @@ const getReuploadDialog = state => state.reupload_dialog;
 const getReUploadData = state => state.reupload_data;
 const getShipmentTrucks = state => state.freight_shipment.trucks;
 const getTruckId = state => state.truck_id;
+const getAllocatedTrucks = state => state.tracked_vehicles;
 
 export default {
   getFreightOrders,
@@ -36,4 +37,5 @@ export default {
   getReUploadData,
   getShipmentTrucks,
   getTruckId,
+  getAllocatedTrucks,
 };

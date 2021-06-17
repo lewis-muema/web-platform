@@ -58,15 +58,14 @@ export default {
   },
   setTruckMarkers(state, payload) {
     const visible = true;
-
-    const id = payload.partner_id;
+    const id = payload.vehicle_id;
     const value = {
       position: {
         lat: payload.lat,
         lng: payload.lng,
       },
       vendor_type: payload.vendor_type,
-      rotation: payload.bearing,
+      // rotation: payload.bearing,
       time: payload.time,
       speed: payload.speed,
       visible,
@@ -78,5 +77,8 @@ export default {
   },
   setTruckId(state, val) {
     state.truck_id = val;
+  },
+  setTrackingVehicles(state, val) {
+    state.tracked_vehicles = val;
   },
 };

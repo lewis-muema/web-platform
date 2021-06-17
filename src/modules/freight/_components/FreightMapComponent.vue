@@ -50,11 +50,11 @@ export default {
   },
   watch: {
     trucks(data) {
-      if (data !== undefined) {
-        const truck_data_location = data[this.truckId].position;
+      if (data !== undefined && Object.keys(data).length > 0) {
+        const truckDatalocation = data[this.truckId].position;
 
-        this.mapCentreLocation.lat = truck_data_location.lat;
-        this.mapCentreLocation.lng = truck_data_location.lng;
+        this.mapCentreLocation.lat = truckDatalocation.lat;
+        this.mapCentreLocation.lng = truckDatalocation.lng;
       }
     },
   },
