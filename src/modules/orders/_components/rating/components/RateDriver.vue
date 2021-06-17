@@ -30,12 +30,17 @@
             :placeholder="$t('general.please_share_your_experience')" 
             class="rate-comment--textareabox"
           />
-          <button
-            class="rate-rider-primary"
-            @click="postRating"
-          >
-            {{$t('general.submitCapital')}}
-          </button>
+          <div class="rate-buttons-container">
+            <button
+              class="rate-rider-primary"
+              @click="postRating"
+            >
+              {{$t('general.submitCapital')}}
+            </button>
+            <button class="skip-rider-primary" @click="skipRating">
+              {{$t('general.skip')}}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -55,7 +60,7 @@ export default {
   mixins: [NotificationMxn],
   data() {
     return {
-      rated_score: 1,
+      rated_score: 0,
       show_rating: false,
       driver_name: 'Sendy Driver',
       driver_photo: '',
@@ -117,30 +122,38 @@ export default {
       updateStep: '$_rating/updateStep',
     }),
     postRating() {
-      const payload = {
-        values: {
-          value: this.rated_score,
-          user_email: this.user_email,
-          package_id: this.order,
-          comment: this.rating_comment,
-        },
-      };
-      const ratingStatusFullPayload = {
-        values: payload,
-        vm: this,
-        app: 'PRIVATE_API',
-        endpoint: 'insert_rate',
-      };
-      this.$store.dispatch('$_rating/requestRatingStatus', ratingStatusFullPayload).then(
-        (response) => {
-          this.updateStep(3);
-          this.updateScore(this.rated_score);
-        },
-        (error) => {
-          const notification = { title: '', level: 2, message: this.$t('general.something_went_wrong') }; // notification object
-          this.displayNotification(notification);
-        },
-      );
+      if (this.rated_score > 0) {
+        const payload = {
+          values: {
+            value: this.rated_score,
+            user_email: this.user_email,
+            package_id: this.order,
+            comment: this.rating_comment,
+          },
+        };
+        const ratingStatusFullPayload = {
+          values: payload,
+          vm: this,
+          app: 'PRIVATE_API',
+          endpoint: 'insert_rate',
+        };
+        this.$store.dispatch('$_rating/requestRatingStatus', ratingStatusFullPayload).then(
+          (response) => {
+            this.updateStep(3);
+            this.updateScore(this.rated_score);
+          },
+          (error) => {
+            const notification = { title: '', level: 2, message: this.$t('general.something_went_wrong') }; // notification object
+            this.displayNotification(notification);
+          },
+        );
+      } else {
+        const notification = { title: '', level: 2, message: this.$t('general.please_enter_rating') };
+        this.displayNotification(notification);
+      }
+    },
+    skipRating() {
+      this.$router.push('/orders');
     },
     ...mapActions(['$_rating/requestRatingStatus', '$_rating/requestUpdateRating']),
   },
@@ -193,11 +206,33 @@ export default {
     padding-right: 20px;
     font-size: 14px;
 }
+.skip-rider-primary {
+    margin: 0 auto;
+    color: #1782C5;
+    background-color: #ecf0f1;
+    border-color: #1782C5;
+    cursor: pointer;
+    position: relative;
+    margin-top: 10px !important;
+    display: block;
+    border-radius: 4px;
+    height: 40px;
+    transition: background-color .3s;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 14px;
+    width: 90px;
+}
 
 .rate-rider-primary:focus, .button-primary:hover {
     background: #285e8e;
     border-color: #285e8e;
     color: #ecf0f1;
+}
+.rate-buttons-container {
+    display: flex;
+    width: 250px;
+    margin: auto;
 }
 .submit-stars{
     text-align: center;
