@@ -648,7 +648,7 @@ export default {
       ],
       opened: [],
       billOfLadingOptions: {},
-      view_tracking: true,
+      view_tracking: false,
     };
   },
   computed: {
@@ -722,6 +722,7 @@ export default {
       awardShipment: '$_freight/awardShipment',
       approveDocument: '$_freight/approveDocument',
       getDocumentOptions: '$_freight/getDocumentOptions',
+      getTrackingVehicles: '$_freight/getTrackingVehicles',
     }),
     ...mapMutations({
       setDocumentUrl: '$_freight/setDocumentUrl',
@@ -730,6 +731,7 @@ export default {
       setDeclineDocument: '$_freight/setDocumentName',
       setDocumentDialogDocument: '$_freight/setDocumentDialog',
       setOrderDetail: '$_freight/setOrderDetail',
+      setTrackingVehicles: '$_freight/setTrackingVehicles',
     }),
     initiateS3() {
       const script = document.createElement('script');
@@ -755,6 +757,7 @@ export default {
       document.head.appendChild(script);
     },
     fetchOrderDetail(orderId) {
+      this.fetchTrackingVehicles(orderId);
       const fullPayload = {
         app: 'FREIGHT_APP',
         operator: '?',
@@ -789,6 +792,34 @@ export default {
             this.$t('orderDetailsComponent.support_response'),
           );
           this.$router.push('/freight/orders');
+        },
+      );
+    },
+    fetchTrackingVehicles(orderId) {
+      const fullPayload = {
+        app: 'FREIGHT_APP',
+        operator: '?',
+        endpoint: `shipments/track/${orderId}`,
+      };
+      this.getTrackingVehicles(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            const responseData = response.data;
+            if (responseData.length > 0) {
+              this.view_tracking = true;
+              this.setTrackingVehicles(responseData);
+            } else {
+              this.view_tracking = false;
+              this.setTrackingVehicles([]);
+            }
+          } else {
+            this.view_tracking = false;
+            this.setTrackingVehicles([]);
+          }
+        },
+        (error) => {
+          this.view_tracking = false;
+          this.setTrackingVehicles([]);
         },
       );
     },
