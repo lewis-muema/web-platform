@@ -604,6 +604,8 @@ const translations = {
   new_feature_added:
     'Hello! We’ve added a new feature, the open destination orders. We’d like to give you a quick tour of this new feature.',
   get_started: 'Let’s get started!',
+  skip: 'SKIP',
+  please_enter_rating: 'Please enter a rating to proceed',
   skip_tour: 'Skip tour',
   finish_account_setup: 'Finish account set up',
   does_biz_file_vat_optional: 'Does your business file VAT returns? (optional)',
