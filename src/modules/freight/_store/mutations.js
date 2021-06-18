@@ -81,4 +81,7 @@ export default {
   setTrackingVehicles(state, val) {
     state.tracked_vehicles = val;
   },
+  setTruckDetailsToStore(state, val) {
+    state.truck_details = val;
+  },
 };
