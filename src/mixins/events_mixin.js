@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const EventsMixin = {
   methods: {
     fireGAEvent(payload) {
@@ -27,7 +29,7 @@ const EventsMixin = {
         // ...
       }
       try {
-        if (analyticsEnv === 'production' || analyticsEnv === 'development' || analyticsEnv === 'staging') {
+        if (analyticsEnv === 'production' || analyticsEnv === 'development' || analyticsEnv === 'testing') {
           gtag('event', payload.name, payload.parameters);
         }
       } catch (er) {

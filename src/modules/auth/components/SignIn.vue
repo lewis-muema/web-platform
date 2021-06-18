@@ -73,10 +73,11 @@
 import { mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import EventsMixin from '../../../mixins/events_mixin';
 
 export default {
   name: 'SignIn',
-  mixins: [SessionMxn, NotificationMxn],
+  mixins: [SessionMxn, NotificationMxn, EventsMixin],
 
   data() {
     return {
@@ -94,6 +95,13 @@ export default {
     ...mapActions({
       authSignIn: '$_auth/requestSignIn',
     }),
+    sendSignupGAEvents(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
     landOnSignInPage() {
       window.ga('send', {
         hitType: 'pageview',
@@ -200,6 +208,7 @@ export default {
                         'Client Type': 'Web Platform',
                       });
                     }
+                    this.sendSignupGAEvents('login');
                   }
                   // check for redirect status before push
                   const redirectStatus = this.$store.getters.getRedirectStatus;
