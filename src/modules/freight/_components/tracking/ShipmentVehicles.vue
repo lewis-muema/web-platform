@@ -3,7 +3,7 @@
     <div class="freight-vehicles-inner">
       <span
         class="ongoing-trucks-label"
-      >TRUCKS <a>{{ `(${vehicles.length})` }}</a>
+      >TRUCKS <a class="ongoing-trucks-counter">{{ `(${vehicles.length})` }}</a>
       </span>
       <div
         v-for="val in vehicles"
@@ -43,6 +43,10 @@ export default {
   watch: {
     getAllocatedTrucks(val) {
       this.vehicles = val;
+      if (this.set_truck_id !== '') {
+        const shipment = val.find(location => location.vehicle_id === this.set_truck_id);
+        this.setTruckLastLocationToStore(shipment);
+      }
     },
   },
   mounted() {

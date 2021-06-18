@@ -77,7 +77,11 @@ export default {
       this.infoWinOpen = false;
       this.infoContent = '';
       this.extraNotificationInfo = '';
-
+      this.setTrackingData(data);
+    },
+  },
+  methods: {
+    setTrackingData(data) {
       if (data !== undefined && Object.keys(data).length > 0) {
         const truckDatalocation = data[this.truckId].position;
 
@@ -92,8 +96,6 @@ export default {
         this.infoWinOpen = true;
       }
     },
-  },
-  methods: {
     truck_icon() {
       return {
         url: 'https://images.sendyit.com/web_platform/vendor_type/top/25_freight.png',
@@ -104,7 +106,9 @@ export default {
       const onlineTime = moment(details.time);
       const currentTime = moment();
       const truckOnlineTimeRange = currentTime.diff(onlineTime, 'minutes');
-      if (truckOnlineTimeRange > 0 && truckOnlineTimeRange <= 60) {
+      if (truckOnlineTimeRange <= 0) {
+        this.extraNotificationInfo = 'Location updated few seconds ago';
+      } else if (truckOnlineTimeRange > 0 && truckOnlineTimeRange <= 60) {
         this.extraNotificationInfo = `Location updated ${truckOnlineTimeRange} minutes ago`;
       } else {
         this.extraNotificationInfo = `(${this.$t('general.network_issues')})`;
@@ -115,6 +119,10 @@ export default {
                  <div class="freight_info_window_descript">
                    <div class="freight-tracking-header">${truckDetails.reg_no}</div>
                    <div class="align-truck-details">
+                   <div class ="set-extra-tracking-details">${
+  truckDetails.vehicle_size
+} Tonnes </div>
+                   <div class="freight-tracking-divider"></div>
                    <div class ="set-extra-tracking-details">${truckDetails.carrier_type}</div>
                    <div class="freight-tracking-divider"></div>
                    <div class ="set-extra-tracking-details">${truckDetails.cargo_type}</div>
