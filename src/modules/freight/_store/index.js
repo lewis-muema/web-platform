@@ -26,6 +26,7 @@ const state = {
   },
   truck_id: '',
   tracked_vehicles: [],
+  truck_details: {},
 };
 
 export default {
