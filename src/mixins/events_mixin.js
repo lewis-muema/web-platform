@@ -19,6 +19,21 @@ const EventsMixin = {
         // ...
       }
     },
+    fireGA4Event(payload) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production' || analyticsEnv === 'development' || analyticsEnv === 'staging') {
+          gtag('event', payload.name, payload.parameters);
+        }
+      } catch (er) {
+        // ...
+      }
+    },
     trackEcommerceData(payload) {
       let analyticsEnv = '';
       try {
