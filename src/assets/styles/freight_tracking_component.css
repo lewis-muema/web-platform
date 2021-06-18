@@ -67,6 +67,7 @@
   display: flex;
   margin-top: 14px;
   margin-bottom: 6%;
+  font-size: 11px !important;
 }
 .set-extra-tracking-details{
   margin-right: 3%;
