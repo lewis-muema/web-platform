@@ -17,6 +17,7 @@ const getReUploadData = state => state.reupload_data;
 const getShipmentTrucks = state => state.freight_shipment.trucks;
 const getTruckId = state => state.truck_id;
 const getAllocatedTrucks = state => state.tracked_vehicles;
+const getTruckDetailsFromStore = state => state.truck_details;
 
 export default {
   getFreightOrders,
@@ -38,4 +39,5 @@ export default {
   getShipmentTrucks,
   getTruckId,
   getAllocatedTrucks,
+  getTruckDetailsFromStore,
 };

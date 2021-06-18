@@ -53,6 +53,7 @@ export default {
       clearTruckMarkers: '$_freight/clearTruckMarkers',
       setTruckMarkers: '$_freight/setTruckMarkers',
       setTruckId: '$_freight/setTruckId',
+      setTruckDetailsToStore: '$_freight/setTruckDetailsToStore',
     }),
     active_shipment(truckId) {
       if (this.set_truck_id === truckId) {
@@ -67,6 +68,7 @@ export default {
     },
     setTruckLastLocationToStore(shipment) {
       this.clearTruckMarkers();
+      this.setTruckDetailsToStore(shipment);
       const partnerLocation = {
         lat: shipment.lat,
         lng: shipment.long,
