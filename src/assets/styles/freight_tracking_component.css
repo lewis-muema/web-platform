@@ -67,6 +67,7 @@
   display: flex;
   margin-top: 14px;
   margin-bottom: 6%;
+  font-size: 11px !important;
 }
 .set-extra-tracking-details{
   margin-right: 3%;
@@ -91,6 +92,7 @@
 }
 .gm-style-iw-c{
   min-width: 2.8% !important;
+  min-width: 3.0% !important;
 }
 .freight-tracking-header{
   color: #000000;
