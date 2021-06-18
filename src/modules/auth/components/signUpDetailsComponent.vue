@@ -419,6 +419,7 @@ export default {
             this.sign_up_text = this.$t('signUpDetails.sign_up_status');
             const phone = this.phone.replace(/[()\-\s]+/g, '');
             this.phone = phone;
+            this.sendSignupGAEvents('select_sign_up');
             this.sendSignupGAEvents('signup_page',
             {
               name: this.name,
