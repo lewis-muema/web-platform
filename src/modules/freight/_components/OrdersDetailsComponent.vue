@@ -808,6 +808,12 @@ export default {
             if (responseData.length > 0) {
               this.view_tracking = true;
               this.setTrackingVehicles(responseData);
+
+              // Testing Purpose will be removed
+
+              setTimeout(() => {
+                this.fetchTrackingVehicles(orderId);
+              }, 10000);
             } else {
               this.view_tracking = false;
               this.setTrackingVehicles([]);

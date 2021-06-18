@@ -60,6 +60,8 @@
   padding-top:5px;
   margin-bottom: 9%;
   color: #C0C4CC;
+  text-align: center;
+  width: 84% !important;
 }
 .align-truck-details{
   display: flex;
@@ -88,10 +90,13 @@
   overflow: visible !important;
 }
 .gm-style-iw-c{
-  min-width: 2% !important;
+  min-width: 2.8% !important;
 }
 .freight-tracking-header{
   color: #000000;
   font-size: 14px;
   font-weight: 600 !important;
+}
+.ongoing-trucks-counter{
+  color: #909399 !important;
 }
