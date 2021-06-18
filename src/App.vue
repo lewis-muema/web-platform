@@ -402,7 +402,7 @@ export default {
         window.fcWidget.user.get(function(resp) {
         let status = resp && resp.status,
             data = resp && resp.data;
-          if (status !== 200 || (status === 200 && data.email !== session[session.default].user_email)) {
+          if (status !== 200 || (session[session.default] && status === 200 && data.email !== session[session.default].user_email)) {
             window.fcWidget.user.setProperties({
               firstName: session[session.default].user_name,
               email: session[session.default].user_email,
