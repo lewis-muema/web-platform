@@ -516,6 +516,7 @@
                     popper-append-to-body="false"
                     :placeholder="$t('general.select')"
                     class="compliance-select-final"
+                    @change="sendSignupGAEvents('select_industry', {industry : industryType[0].name})"
                   >
                     <el-option
                       v-for="item in industriesOptions"
@@ -538,6 +539,7 @@
                     :placeholder="$t('general.select')"
                     class="compliance-select-final"
                     popper-class="business-categories-options"
+                    @change="sendSignupGAEvents('select_business_category', {business_category : businessCategory[0].name})"
                   >
                     <el-option
                       v-for="item in businessCategories"
@@ -568,6 +570,7 @@
                     type="text"
                     placeholder="@mystore"
                     autocomplete="on"
+                    @blur="sendSignupGAEvents('add_ig_handle', {instagram_handle : ig_media_handle})"
                   >
                 </div>
               </div>
@@ -584,6 +587,7 @@
                     type="text"
                     placeholder="www.facebook.com/pages/mystore"
                     autocomplete="on"
+                    @blur="sendSignupGAEvents('add_fb_handle', {facebook_link : facebook_media_handle})"
                   >
                 </div>
               </div>
@@ -600,7 +604,7 @@
                     <div
                       class="vendor-final-cards"
                       :class="{ vendor_active_final: activeTab === 'mbu' }"
-                      @click="selectCard('mbu', 1)"
+                      @click="selectCard('mbu', 1, 'Bikes')"
                     >
                       <img
                         class="vendor-types-final"
@@ -614,7 +618,7 @@
                     <div
                       class="vendor-final-cards"
                       :class="{ vendor_active_final: activeTab === 'ebu' }"
-                      @click="selectCard('ebu', 2)"
+                      @click="selectCard('ebu', 2, 'Pickups, trucks and vans')"
                     >
                       <img
                         class="vendor-types-final"
@@ -628,7 +632,7 @@
                     <div
                       class="vendor-final-cards"
                       :class="{ vendor_active_final: activeTab === 'fbu' }"
-                      @click="selectCard('fbu', 3)"
+                      @click="selectCard('fbu', 3, 'Freight')"
                     >
                       <img
                         class="vendor-types-final"
@@ -652,6 +656,7 @@
                       v-model="tax_compliance"
                       :placeholder="$t('general.select')"
                       class="compliance-select-final"
+                      @change="sendSignupGAEvents('select_vat_returns', {file_vat : tax_compliance ? 'Yes' : 'No'})"
                     >
                       <el-option
                         v-for="item in selectOptions"
@@ -721,6 +726,7 @@ import NpsMixin from '../../mixins/nps_mixin';
 import SessionMxn from '../../mixins/session_mixin';
 import TimezoneMxn from '../../mixins/timezone_mixin';
 import NotificationMxn from '../../mixins/notification_mixin';
+import EventsMixin from '../../mixins/events_mixin';
 
 let interval = '';
 
@@ -734,7 +740,7 @@ export default {
     ApprovalDialog,
     NPSFooter,
   },
-  mixins: [RegisterStoreModule, NpsMixin, SessionMxn, TimezoneMxn, NotificationMxn],
+  mixins: [RegisterStoreModule, NpsMixin, SessionMxn, TimezoneMxn, NotificationMxn, EventsMixin],
   data() {
     return {
       showSocialMediaApprovalDialog: false,
@@ -918,6 +924,16 @@ export default {
         'YYYY-MM-DD HH:mm:ss',
       );
     },
+    industryType() {
+      return this.industriesOptions.filter(
+        data => data.industry_id === this.industry_type,
+      );
+    },
+    businessCategory () {
+      return this.businessCategories.filter(
+        data => data.id === this.business_category_option,
+      );
+    },
   },
   watch: {
     $route(to, from) {
@@ -1038,6 +1054,13 @@ export default {
     }),
     dispatchScheduleTime() {
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
+    },
+    sendSignupGAEvents(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
     },
     checkSocialMediaApproval() {
       const session = this.$store.getters.getSession;
@@ -1725,9 +1748,10 @@ export default {
     handleClose() {
       // Do nothing ...
     },
-    selectCard(tab, code) {
+    selectCard(tab, code, type) {
       this.activeTab = tab;
       this.primary_business_unit = code;
+      this.sendSignupGAEvents('select_delivery_options', {vehicle_type : type});
     },
     getVendorIcon(id) {
       return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;

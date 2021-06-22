@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const EventsMixin = {
   methods: {
     fireGAEvent(payload) {
@@ -14,6 +16,21 @@ const EventsMixin = {
             eventAction: payload.eventAction,
             eventLabel: payload.eventLabel,
           });
+        }
+      } catch (er) {
+        // ...
+      }
+    },
+    fireGA4Event(payload) {
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // ...
+      }
+      try {
+        if (analyticsEnv === 'production' || analyticsEnv === 'development' || analyticsEnv === 'testing') {
+          gtag('event', payload.name, payload.parameters);
         }
       } catch (er) {
         // ...

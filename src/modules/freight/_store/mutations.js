@@ -1,4 +1,6 @@
 /* eslint no-param-reassign: "error" */
+import Vue from 'vue';
+
 export default {
   setFreightOrders(state, orders) {
     state.freight_orders = orders;
@@ -53,5 +55,33 @@ export default {
   },
   setReUploadData(state, val) {
     state.reupload_data = val;
+  },
+  setTruckMarkers(state, payload) {
+    const visible = true;
+    const id = payload.vehicle_id;
+    const value = {
+      position: {
+        lat: payload.lat,
+        lng: payload.lng,
+      },
+      vendor_type: payload.vendor_type,
+      // rotation: payload.bearing,
+      time: payload.time,
+      speed: payload.speed,
+      visible,
+    };
+    Vue.set(state.freight_shipment.trucks, id, value);
+  },
+  clearTruckMarkers(state) {
+    state.freight_shipment.trucks = {};
+  },
+  setTruckId(state, val) {
+    state.truck_id = val;
+  },
+  setTrackingVehicles(state, val) {
+    state.tracked_vehicles = val;
+  },
+  setTruckDetailsToStore(state, val) {
+    state.truck_details = val;
   },
 };

@@ -367,6 +367,19 @@ const reUploadLoadingDocuments = function reUploadLoadingDocuments({ dispatch },
   });
 };
 
+const getTrackingVehicles = function getTrackingVehicles({ dispatch }, payload) {
+  return new Promise((resolve, reject) => {
+    dispatch('requestAxiosGet', payload, { root: true }).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (error) => {
+        reject(error);
+      },
+    );
+  });
+};
+
 export default {
   updateFreightStatus,
   requestFreightStatus,
@@ -392,4 +405,5 @@ export default {
   getDocumentOptions,
   uploadLoadingDocuments,
   reUploadLoadingDocuments,
+  getTrackingVehicles,
 };

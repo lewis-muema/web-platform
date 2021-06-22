@@ -14,6 +14,10 @@ const getVehicleId = state => state.vehicle_id;
 const getQuatationId = state => state.quotation_id;
 const getReuploadDialog = state => state.reupload_dialog;
 const getReUploadData = state => state.reupload_data;
+const getShipmentTrucks = state => state.freight_shipment.trucks;
+const getTruckId = state => state.truck_id;
+const getAllocatedTrucks = state => state.tracked_vehicles;
+const getTruckDetailsFromStore = state => state.truck_details;
 
 export default {
   getFreightOrders,
@@ -32,4 +36,8 @@ export default {
   getQuatationId,
   getReuploadDialog,
   getReUploadData,
+  getShipmentTrucks,
+  getTruckId,
+  getAllocatedTrucks,
+  getTruckDetailsFromStore,
 };

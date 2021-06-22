@@ -63,6 +63,7 @@ export default {
       ) {
         this.autoPopBeacon(2);
       }
+      this.setFreshChatProfile(to, from);
     },
     getLanguage(val) {
       if (val === 'fr') {
@@ -393,6 +394,22 @@ export default {
             'user phone': session[session.default].user_phone,
           });
         }, 2000);
+      }
+    },
+    setFreshChatProfile(to, from) {
+      const session = this.$store.getters.getSession;
+      if (session !== null && to.path !== '/auth/sign_in') {
+        window.fcWidget.user.get(function(resp) {
+        let status = resp && resp.status,
+            data = resp && resp.data;
+          if (status !== 200 || (session[session.default] && status === 200 && data.email !== session[session.default].user_email)) {
+            window.fcWidget.user.setProperties({
+              firstName: session[session.default].user_name,
+              email: session[session.default].user_email,
+              phone: session[session.default].user_phone,
+            });
+          }
+        });
       }
     },
   },

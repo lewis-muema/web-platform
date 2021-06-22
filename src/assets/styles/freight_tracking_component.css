@@ -1,0 +1,104 @@
+.freight-vehicles-outer{
+  background-color: #fff;
+  border-radius: 5px;
+  min-width: 16%;
+  max-height: 70%;
+  overflow-x: hidden;
+}
+.freight-vehicles-inner{
+  margin: 8%;
+}
+.ongoing-trucks-label{
+  color: #909399;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 16px;
+}
+.ongoing-trucks-card{
+  font-size: 13px;
+  margin-top: 5%;
+  margin-bottom: 9%;
+  cursor: pointer;
+  transition: all .5s ease-in-out;
+}
+.ongoing-trucks-details-container{
+  display: flex;
+  cursor: pointer;
+  padding: 7px;
+}
+.ongoing-trucks-card.active{
+  background-color: #E8F3FC;
+  border-radius: 3px 3px 3px 3px;
+  color: #527CBD !important;
+}
+.truck-details-image{
+  width: 22px;
+  height: 18px;
+  margin-top: 0px;
+  margin-right: 7px;
+}
+.truck-registration-number{
+  font-size: 13px !important;
+  line-height: 20px;
+}
+.freight-maps{
+  margin-bottom: 2%;
+  margin-top: 2%;
+}
+.outer_freight_info_content_trackers{
+  min-height: 40px;
+}
+.freight_info_window_descript{
+  width: 100%;
+  display: inline-block;
+  float: left;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+.freight_info_window_trackers_extra{
+  font-size:10px;
+  padding-top:5px;
+  margin-bottom: 9%;
+  color: #C0C4CC;
+  text-align: center;
+  width: 84% !important;
+}
+.align-truck-details{
+  display: flex;
+  margin-top: 14px;
+  margin-bottom: 6%;
+  font-size: 11px !important;
+}
+.set-extra-tracking-details{
+  margin-right: 3%;
+}
+.freight-tracking-divider{
+  border-right: 1px solid #BBB9B9;
+  margin-right: 3%;
+}
+/* .shipment-tracking-container > div:nth-child(1) > div > div > div > div.vue-map > div > div > div:nth-child(1) > div:nth-child(3) > div > div:nth-child(4) > div > div > div > div{
+  min-width: 2.5% !important;
+  overflow: hidden !important;
+}
+.shipment-tracking-container > div:nth-child(1) > div > div > div > div.vue-map > div > div > div:nth-child(1) > div:nth-child(3) > div > div:nth-child(4) > div > div > div > div > div{
+  overflow: hidden !important;
+} */
+/* .gm-style-iw {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+} */
+.gm-style-iw > div {
+  overflow: visible !important;
+}
+.gm-style-iw-c{
+  min-width: 2.8% !important;
+  min-width: 3.0% !important;
+}
+.freight-tracking-header{
+  color: #000000;
+  font-size: 14px;
+  font-weight: 600 !important;
+}
+.ongoing-trucks-counter{
+  color: #909399 !important;
+}

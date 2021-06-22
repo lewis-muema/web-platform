@@ -1,4 +1,4 @@
-const getTrackingData = state => state.tracking_data;
+const trackingData = state => state.tracking_data;
 const getTrackedOrder = state => state.tracked_order;
 const getIsMQTTConnected = state => state.isMQTTConnected;
 const getDateTime = state => state.date_time;
@@ -23,7 +23,7 @@ const getMaxDestinations = state => state.max_destinations;
 const getAmountDue = state => state.amount_due;
 
 export default {
-  getTrackingData,
+  trackingData,
   getTrackedOrder,
   getIsMQTTConnected,
   getDateTime,

@@ -1,4 +1,3 @@
-
 const fr = {
   dashboard: 'tableau de bord',
   transporters: 'transporteurs',
@@ -6,8 +5,6 @@ const fr = {
   settings: 'Parametres',
   shipment: 'Les expéditions',
   activity_log: "Journal d'activité",
-
 };
-
 
 export default fr;
