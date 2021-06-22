@@ -239,13 +239,14 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import SessionMxn from '../../../mixins/session_mixin';
 import InputValidationMixin from '../../../mixins/fields_validations_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import EventsMixin from '../../../mixins/events_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 const currencyConversion = require('country-tz-currency');
 
 export default {
   name: 'BizDetailsComponent',
-  mixins: [InputValidationMixin, SessionMxn, NotificationMxn],
+  mixins: [SessionMxn, NotificationMxn, EventsMixin, InputValidationMixin],
   data() {
     return {
       account: 'biz',
