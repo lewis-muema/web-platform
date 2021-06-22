@@ -897,6 +897,9 @@ const translations = {
   update_instructions: 'Instructions de mise à jour',
   language_changed: 'Votre langue est définie sur le français',
 
+  // validations
+  user_name_error: 'FR_Kindly provide the first and last name',
+  biz_name_error: 'FR_Should contain atleast two names ',
 };
 
 const en = {
