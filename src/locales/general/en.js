@@ -918,7 +918,9 @@ const translations = {
   update_instructions: 'Update Instructions',
   language_changed: 'Your preferred Language Changed to English',
 
-
+  // validations
+  user_name_error: 'Kindly provide first and last name',
+  biz_name_error: 'Should contain atleast two names ',
 };
 
 const en = {
