@@ -242,6 +242,7 @@
 import { mapActions, mapMutations } from 'vuex';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import SessionMxn from '../../../mixins/session_mixin';
+import InputValidationMixin from '../../../mixins/fields_validations_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
 import EventsMixin from '../../../mixins/events_mixin';
 
@@ -250,7 +251,7 @@ const currencyConversion = require('country-tz-currency');
 
 export default {
   name: 'BizDetailsComponent',
-  mixins: [SessionMxn, NotificationMxn, EventsMixin],
+  mixins: [SessionMxn, NotificationMxn, EventsMixin, InputValidationMixin],
   data() {
     return {
       account: 'biz',
@@ -378,9 +379,25 @@ export default {
     },
     validateDetails() {
       let valid = false;
-      if (this.account === 'biz' && (this.name !== '' && this.cop_name && this.email !== '' && this.phone !== '' && this.password !== '')) {
+      if (
+        this.account === 'biz'
+        && (this.name !== ''
+          && this.cop_name
+          && this.email !== ''
+          && this.phone !== ''
+          && this.password !== ''
+          && this.fieldValidations('user_name', this.name)
+          && this.fieldValidations('biz_name', this.cop_name))
+      ) {
         valid = true;
-      } else if (this.account === 'peer' && (this.name !== '' && this.email !== '' && this.phone !== '' && this.password !== '')) {
+      } else if (
+        this.account === 'peer'
+        && (this.name !== ''
+          && this.email !== ''
+          && this.phone !== ''
+          && this.password !== ''
+          && this.fieldValidations('user_name', this.name))
+      ) {
         valid = true;
       } else {
         valid = false;
@@ -468,8 +485,19 @@ export default {
           this.doNotification(2, this.$t('signUpDetails.signup_failed'), this.$t('signUpDetails.invalid_details'));
         }
       } else {
-        this.doNotification(2, this.$t('signUpDetails.signup_failed'), this.$t('signUpDetails.provide_all'));
+        this.checkSignUpFailureResponse();
       }
+    },
+    checkSignUpFailureResponse() {
+      let errorDescription = this.$t('signUpDetails.provide_all');
+
+      if (!this.fieldValidations('user_name', this.name)) {
+        errorDescription = this.fieldValidationsError('user_name');
+      } else if (!this.fieldValidations('biz_name', this.cop_name) && this.account === 'biz') {
+        errorDescription = this.fieldValidationsError('biz_name');
+      }
+
+      this.doNotification(2, this.$t('signUpDetails.signup_failed'), errorDescription);
     },
     sendVerificationCode() {
       const phone = this.phone.replace(/[()\-\s]+/g, '');

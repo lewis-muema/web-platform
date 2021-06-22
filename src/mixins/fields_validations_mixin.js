@@ -13,11 +13,11 @@ const inputValidationMixin = {
       return true;
     },
     fieldValidationsError(input) {
-      const resp = validations.find(elem => elem.field === input);
-
-      if (resp !== undefined) {
-        const validationError = resp.error;
-        return validationError;
+      if (input === 'user_name') {
+        return this.$t('general.user_name_error');
+      }
+      if (input === 'biz_name') {
+        return this.$t('general.biz_name_error');
       }
 
       return '';
