@@ -467,11 +467,9 @@ export default {
     checkSignUpFailureResponse() {
       let errorDescription = this.$t('signUpDetails.provide_all');
 
-      if (this.fieldValidations('user_name', this.name)) {
+      if (!this.fieldValidations('user_name', this.name)) {
         errorDescription = this.fieldValidationsError('user_name');
-      }
-
-      if (this.fieldValidations('biz_name', this.cop_name)) {
+      } else if (!this.fieldValidations('biz_name', this.cop_name) && this.account === 'biz') {
         errorDescription = this.fieldValidationsError('biz_name');
       }
 
