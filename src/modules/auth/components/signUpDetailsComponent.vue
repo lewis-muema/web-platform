@@ -237,15 +237,15 @@
 import { mapActions, mapMutations } from 'vuex';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import SessionMxn from '../../../mixins/session_mixin';
-import NotificationMxn from '../../../mixins/notification_mixin';
 import InputValidationMixin from '../../../mixins/fields_validations_mixin';
+import NotificationMxn from '../../../mixins/notification_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 const currencyConversion = require('country-tz-currency');
 
 export default {
   name: 'BizDetailsComponent',
-  mixins: [SessionMxn, NotificationMxn, InputValidationMixin],
+  mixins: [SessionMxn, InputValidationMixin, NotificationMxn],
   data() {
     return {
       account: 'biz',
