@@ -952,7 +952,7 @@ const translations = {
 
   // validations
   user_name_error: 'Kindly provide the first and last name',
-  biz_name_error: 'Business contain atleast two names ',
+  biz_name_error: 'Business name should contain atleast two names',
 };
 
 const en = {
