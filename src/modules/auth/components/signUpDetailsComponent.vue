@@ -245,7 +245,7 @@ const currencyConversion = require('country-tz-currency');
 
 export default {
   name: 'BizDetailsComponent',
-  mixins: [SessionMxn, InputValidationMixin, NotificationMxn],
+  mixins: [InputValidationMixin, SessionMxn, NotificationMxn],
   data() {
     return {
       account: 'biz',
