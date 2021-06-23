@@ -653,11 +653,7 @@ export default {
       this.fireGA4Event(eventPayload);
     },
 
-    checkChangeEvents(evt, index) {
-      // console.log('index', index);
-      // console.log('evt', evt);
-      // TO DO research implementation of native input events
-    },
+    checkChangeEvents(evt, index) {},
     checkReturnDestination(evt, index) {
       if (document.querySelector('.homeview--return-destination-input').value === '') {
         this.destination = {
@@ -769,7 +765,6 @@ export default {
       } else if (index === 1) {
         this.sendGA4Events('freight_add_drop_location', {freight_drop_off_location: place.name});
       }
-      // this.attemptPriceRequest();
     },
     setReturnDestination(place) {
       const countryIndex = place.address_components.findIndex(countryCode => countryCode.types.includes('country'));
