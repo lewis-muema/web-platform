@@ -91,7 +91,6 @@
   overflow: visible !important;
 }
 .gm-style-iw-c{
-  min-width: 2.8% !important;
   min-width: 3.0% !important;
 }
 .freight-tracking-header{
@@ -101,4 +100,15 @@
 }
 .ongoing-trucks-counter{
   color: #909399 !important;
+}
+.shipment-tracking-container > div:nth-child(1) > div > div > div > div.vue-map > div > div > div:nth-child(1) > div:nth-child(3) > div > div:nth-child(4) > div > div > div{
+  bottom: 77px !important;
+}
+.location-marker{
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #000000 !important;
+}
+.truck-location-address{
+  margin-bottom: 2%;
 }
