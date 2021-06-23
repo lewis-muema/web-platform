@@ -29,7 +29,7 @@ const EventsMixin = {
         // ...
       }
       try {
-        if (analyticsEnv === 'production' || analyticsEnv === 'development' || analyticsEnv === 'testing') {
+        if (analyticsEnv === 'production') {
           gtag('event', payload.name, payload.parameters);
         }
       } catch (er) {

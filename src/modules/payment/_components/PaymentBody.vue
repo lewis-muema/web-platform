@@ -11,9 +11,11 @@
 <script>
 import { mapGetters } from 'vuex';
 import PayMethod from './PayMethod.vue';
+import EventsMixin from '../../../mixins/events_mixin';
 
 export default {
   name: 'PaymentBody',
+  mixins: [EventsMixin],
   components: { PayMethod },
   computed: {
     ...mapGetters({
@@ -26,6 +28,18 @@ export default {
         return session[session.default].default_currency;
       }
       return this.getDefaultCurrency;
+    },
+  },
+  mounted() {
+    this.sendGA4Events('open_payment_page');
+  },
+  methods: {
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
     },
   },
 };

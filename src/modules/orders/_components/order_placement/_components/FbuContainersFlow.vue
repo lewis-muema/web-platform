@@ -444,6 +444,7 @@ import paymentsModuleStore from '../../../../payment/_store';
 import SessionMxn from '../../../../../mixins/session_mixin';
 import PaymentOptions from './PaymentOptions.vue';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
+import EventsMixin from '../../../../../mixins/events_mixin';
 
 library.add(
   faPlus,
@@ -466,7 +467,7 @@ export default {
     'no-ssr': NoSSR,
     PaymentOptions,
   },
-  mixins: [SessionMxn, NotificationMxn],
+  mixins: [SessionMxn, NotificationMxn, EventsMixin],
   data() {
     return {
       dueDatePickerOptions: {
@@ -644,6 +645,14 @@ export default {
       requestFreightProductCategories: '$_orders/$_home/requestFreightProductCategories',
     }),
 
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
+
     checkChangeEvents(evt, index) {
       // console.log('index', index);
       // console.log('evt', evt);
@@ -756,6 +765,9 @@ export default {
       this.set_location_name(locationNamePayload);
       if (index === 0) {
         this.setPickupFilled(true);
+        this.sendGA4Events('freight_add_pick_up_location', {freight_pick_up_location: place.name});
+      } else if (index === 1) {
+        this.sendGA4Events('freight_add_drop_location', {freight_drop_off_location: place.name});
       }
       // this.attemptPriceRequest();
     },
@@ -785,6 +797,7 @@ export default {
       } else {
         this.deleteLocationInModel(2);
       }
+      this.sendGA4Events('freight_add_empty_container_destination', {freight_return_location: place.name});
     },
     attemptPriceRequest() {
       if (
@@ -876,9 +889,11 @@ export default {
         this.schedule_time = new Date();
       }
       this.setScheduleTime(this.schedule_time);
+      this.sendGA4Events('freight_select_pickup_time');
     },
     initiateUpload() {
       this.$root.$emit('Upload status', true);
+      this.sendGA4Events('freight_upload_file');
     },
     addContainer() {
       this.containers.push({
@@ -888,6 +903,12 @@ export default {
         container_size_feet: this.size,
         container_weight_tonnes: this.cont_weight,
         consignee: this.consignee,
+      });
+      this.sendGA4Events('freight_add_container_details', {
+        container_number: this.cont_no,
+        container_weight: this.cont_weight,
+        consignee_name: this.consignee,
+        empty_container_return_destination: this.destination.name,
       });
       this.cont_no = '';
       this.cont_weight = '';

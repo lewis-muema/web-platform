@@ -17,11 +17,13 @@ import firebase from 'firebase/app';
 import { mapGetters } from 'vuex';
 import VeeValidate, { Validator }  from 'vee-validate';
 import fr from 'vee-validate/dist/locale/fr';
+import EventsMixin from './mixins/events_mixin';
 
 const ENV = process.env.CONFIGS_ENV;
 
 export default {
   name: 'App',
+  mixins: [EventsMixin],
   data() {
     return {
       fcmToken: '',
@@ -144,6 +146,7 @@ export default {
               'Cop Id': session[session.default].cop_id,
               'User Id': session[session.default].user_id,
             });
+            this.sendGA4Events('notification_received.');
           }
 
           if (logAction === 'click') {
@@ -153,6 +156,7 @@ export default {
               'Cop Id': session[session.default].cop_id,
               'User Id': session[session.default].user_id,
             });
+            this.sendGA4Events('notification_open');
           }
         } else {
           // no session
@@ -161,6 +165,7 @@ export default {
             this.trackMixpanelEvent('FCM Notification Recieved - Web', {
               'Order No': logData.order_no,
             });
+            this.sendGA4Events('notification_received.');
           }
 
           if (logAction === 'click') {
@@ -172,6 +177,7 @@ export default {
             this.trackMixpanelEvent('FCM Notification Clicked - Web', {
               'Order No': logData.order_no,
             });
+            this.sendGA4Events('notification_open');
           }
         }
       });
@@ -196,6 +202,13 @@ export default {
       if (Object.prototype.hasOwnProperty.call(this.notificationData.data, 'scheduled') && JSON.parse(this.notificationData.data.scheduled)) {
         this.$root.$emit('Show reschedule dialogue', this.notificationData);
       }
+    },
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
     },
     updateFirebaseToken() {
       const session = this.getSession;

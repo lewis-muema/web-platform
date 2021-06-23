@@ -74,6 +74,7 @@ export default {
   },
   created() {
     this.registerOrderPlacementModule();
+    this.sendGA4Events('select_multi_destination');
   },
   methods: {
     switchMode(route) {
@@ -92,6 +93,13 @@ export default {
         'Client name': accDefault.user_name,
       });
       this.trackGAEvent(name);
+    },
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
     },
     trackGAEvent(eventLabel) {
       const eventPayload = {
