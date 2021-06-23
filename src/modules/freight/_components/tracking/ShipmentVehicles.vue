@@ -55,6 +55,8 @@ export default {
   methods: {
     ...mapMutations({
       clearTruckMarkers: '$_freight/clearTruckMarkers',
+      clearTruckId: '$_freight/clearTruckId',
+      clearTruckDetailsToStore: '$_freight/clearTruckDetailsToStore',
       setTruckMarkers: '$_freight/setTruckMarkers',
       setTruckId: '$_freight/setTruckId',
       setTruckDetailsToStore: '$_freight/setTruckDetailsToStore',
@@ -66,9 +68,14 @@ export default {
       return false;
     },
     trackShipment(shipment) {
-      this.clearTruckMarkers();
+      this.clearFreightMarkers();
       this.set_truck_id = shipment.vehicle_id;
       this.setTruckLastLocationToStore(shipment);
+    },
+    clearFreightMarkers() {
+      this.clearTruckMarkers();
+      this.clearTruckDetailsToStore();
+      this.clearTruckId();
     },
     setTruckLastLocationToStore(shipment) {
       this.clearTruckMarkers();
