@@ -63,6 +63,7 @@ export default {
       infoWinOpen: false,
       infoContent: '',
       extraNotificationInfo: '',
+      location_address: 'Unknown Road',
     };
   },
   computed: {
@@ -84,22 +85,34 @@ export default {
     setTrackingData(data) {
       if (data !== undefined && Object.keys(data).length > 0) {
         const truckDatalocation = data[this.truckId].position;
+        const latlng = new google.maps.LatLng(truckDatalocation.lat, truckDatalocation.lng);
+        const geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({ latLng: latlng }, (results, status) => {
+          if (status !== google.maps.GeocoderStatus.OK) {
+            this.location_address = 'Unknown Road';
+          }
+          if (status === google.maps.GeocoderStatus.OK) {
+            this.location_address = results[0].formatted_address;
+          }
+        });
+
+        this.mapCentreLocation.lat = truckDatalocation.lat;
+        this.mapCentreLocation.lng = truckDatalocation.lng;
 
         this.checkTruckDelay(data[this.truckId]);
         this.infoContent = this.getInfoWindowContent(
           data[this.truckId],
           this.getTruckDetailsFromStore,
         );
-        this.mapCentreLocation.lat = truckDatalocation.lat;
-        this.mapCentreLocation.lng = truckDatalocation.lng;
         this.infoWindowPos = truckDatalocation;
         this.infoWinOpen = true;
       }
     },
     truck_icon() {
       return {
-        url: 'https://images.sendyit.com/web_platform/vendor_type/top/25_freight.png',
-        scaledSize: new google.maps.Size(60, 35),
+        url: 'https://images.sendyit.com/web_platform/vendor_type/top/freight.png',
+        scaledSize: new google.maps.Size(60, 60),
       };
     },
     checkTruckDelay(details) {
@@ -126,6 +139,9 @@ export default {
                    <div class ="set-extra-tracking-details">${truckDetails.carrier_type}</div>
                    <div class="freight-tracking-divider"></div>
                    <div class ="set-extra-tracking-details">${truckDetails.cargo_type}</div>
+                   </div>
+                   <div class="truck-location-address">
+                    <span class="location-marker">Location : </span>${this.location_address}
                    </div>
                    <div class="freight_info_window_trackers_extra">${
   this.extraNotificationInfo
