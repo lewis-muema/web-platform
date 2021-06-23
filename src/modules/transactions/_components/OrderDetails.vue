@@ -329,6 +329,7 @@ import { mapActions, mapGetters } from 'vuex';
 import numeral from 'numeral';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import EventsMixin from '../../../mixins/events_mixin';
 
 const moment = require('moment');
 
@@ -339,7 +340,7 @@ export default {
       return moment(date).format('MMM Do YYYY, h:mm a');
     },
   },
-  mixins: [TimezoneMxn, NotificationMxn],
+  mixins: [TimezoneMxn, NotificationMxn, EventsMixin],
   data() {
     return {
       order_id: '',
@@ -360,6 +361,13 @@ export default {
       requestDisputeDeliveryDocs: '$_transactions/requestDisputeDeliveryDocs',
       requestDisputeStatus: '$_transactions/requestDisputeStatus',
     }),
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
     createStaticMapUrl(path) {
       // TODO:get google_key from configs
       const googleKey = process.env.CONFIGS_ENV.GOOGLE_API_KEY;
@@ -383,6 +391,7 @@ export default {
       this.show_rating = false;
     },
     trackOrder(order_no) {
+      this.sendGA4Events('select_track_order', {order_number: order_no});
       this.$router.push({
         name: 'tracking',
         params: {

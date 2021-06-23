@@ -450,7 +450,7 @@ export default {
       if (this.order_is_scheduled) {
         text = this.$t('general.schedule');
       }
-      return text + this.$t('general.order');
+      return `${text} ${this.$t('general.order')}`;
     },
     pay_order_text() {
       let text = this.$t('general.payment_options');
@@ -879,6 +879,14 @@ export default {
       });
     },
 
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
+
     individual_order_cost(row) {
       let cost = 0;
       cost = row.cost - row.discountAmount;
@@ -1078,6 +1086,7 @@ export default {
               eventLabel: 'Order Confirmed - Order Placement - Web App',
             };
             this.fireGAEvent(eventPayload);
+            this.sendGA4Events('select_schedule_order');
             this.setPickupFilled(false);
             this.$root.$emit('Order Placement Force Update');
             let order = '';

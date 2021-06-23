@@ -79,11 +79,12 @@
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
+import EventsMixin from '../../../../../mixins/events_mixin';
 
 export default {
   name: 'InviteComponent',
   components: {},
-  mixins: [NotificationMxn],
+  mixins: [NotificationMxn, EventsMixin],
   data() {
     return {
       value: '',
@@ -141,6 +142,13 @@ export default {
       inviteNewUsers: '$_admin/inviteNewUsers',
       createInviteLink: '$_admin/createInviteLink',
     }),
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
     populate() {
       const set = this.getInvites;
       for (let i = 0; i < set.length; i += 1) {
@@ -257,6 +265,7 @@ export default {
         cop_id = session[session.default].cop_id;
         cop_id = cop_id.toString();
       }
+      this.sendGA4Events('share_invite_page');
       const payload = {
         cop_id,
       };

@@ -95,7 +95,7 @@ export default {
     ...mapActions({
       authSignIn: '$_auth/requestSignIn',
     }),
-    sendSignupGAEvents(label, params) {
+    sendGA4Events(label, params) {
       const eventPayload = {
         name: label,
         parameters: params,
@@ -208,7 +208,7 @@ export default {
                         'Client Type': 'Web Platform',
                       });
                     }
-                    this.sendSignupGAEvents('login');
+                    this.sendGA4Events('login');
                   }
                   // check for redirect status before push
                   const redirectStatus = this.$store.getters.getRedirectStatus;

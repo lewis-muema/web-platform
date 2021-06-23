@@ -44,6 +44,7 @@
         name="sendy_coupon"
         :placeholder="$t('general.promo_code')"
         class="input-control paymentbody--input"
+        @blur="sendGA4Events('enter_promo_code', {promo_code: promocode_payment_data.sendy_coupon})"
       >
     </div>
     <div class="paymentbody--input-wrap">
@@ -72,10 +73,10 @@ import { mapActions } from 'vuex';
 import NotificationMxn from '../../../mixins/notification_mixin';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
 import promocodesMxn from '../../../mixins/promocodes_mixin';
-
+import EventsMixin from '../../../mixins/events_mixin';
 
 export default {
-  mixins: [NotificationMxn, TimezoneMxn, promocodesMxn],
+  mixins: [NotificationMxn, TimezoneMxn, promocodesMxn, EventsMixin],
   data() {
     return {
       promocode_payment_data: {
@@ -98,12 +99,21 @@ export default {
   },
   mounted() {
     this.requestPromoCodes();
+    this.sendGA4Events('Open_promotions');
   },
   methods: {
     ...mapActions(['$_payment/requestPromoCodePayment']),
 
     redeem_coupon() {
       this.requestPromoPayment(this.promocode_payment_data.sendy_coupon);
+      this.sendGA4Events('redeem_promo_code');
+    },
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
     },
   },
 };
