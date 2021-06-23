@@ -75,10 +75,22 @@ export default {
   clearTruckMarkers(state) {
     state.freight_shipment.trucks = {};
   },
+  clearTruckId(state) {
+    state.truck_id = '';
+  },
+  clearTrackingVehicles(state) {
+    state.tracked_vehicles = [];
+  },
+  clearTruckDetailsToStore(state) {
+    state.truck_details = {};
+  },
   setTruckId(state, val) {
     state.truck_id = val;
   },
   setTrackingVehicles(state, val) {
     state.tracked_vehicles = val;
+  },
+  setTruckDetailsToStore(state, val) {
+    state.truck_details = val;
   },
 };

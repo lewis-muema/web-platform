@@ -3,7 +3,7 @@
     <div class="freight-vehicles-inner">
       <span
         class="ongoing-trucks-label"
-      >TRUCKS <a>{{ `(${vehicles.length})` }}</a>
+      >TRUCKS <a class="ongoing-trucks-counter">{{ `(${vehicles.length})` }}</a>
       </span>
       <div
         v-for="val in vehicles"
@@ -43,6 +43,10 @@ export default {
   watch: {
     getAllocatedTrucks(val) {
       this.vehicles = val;
+      if (this.set_truck_id !== '') {
+        const shipment = val.find(location => location.vehicle_id === this.set_truck_id);
+        this.setTruckLastLocationToStore(shipment);
+      }
     },
   },
   mounted() {
@@ -51,8 +55,11 @@ export default {
   methods: {
     ...mapMutations({
       clearTruckMarkers: '$_freight/clearTruckMarkers',
+      clearTruckId: '$_freight/clearTruckId',
+      clearTruckDetailsToStore: '$_freight/clearTruckDetailsToStore',
       setTruckMarkers: '$_freight/setTruckMarkers',
       setTruckId: '$_freight/setTruckId',
+      setTruckDetailsToStore: '$_freight/setTruckDetailsToStore',
     }),
     active_shipment(truckId) {
       if (this.set_truck_id === truckId) {
@@ -61,12 +68,18 @@ export default {
       return false;
     },
     trackShipment(shipment) {
-      this.clearTruckMarkers();
+      this.clearFreightMarkers();
       this.set_truck_id = shipment.vehicle_id;
       this.setTruckLastLocationToStore(shipment);
     },
+    clearFreightMarkers() {
+      this.clearTruckMarkers();
+      this.clearTruckDetailsToStore();
+      this.clearTruckId();
+    },
     setTruckLastLocationToStore(shipment) {
       this.clearTruckMarkers();
+      this.setTruckDetailsToStore(shipment);
       const partnerLocation = {
         lat: shipment.lat,
         lng: shipment.long,
