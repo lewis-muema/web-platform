@@ -28,7 +28,7 @@
       *.www.googletagmanager.com wss://*.hotjar.com 'unsafe-inline' 'unsafe-eval';
       child-src 'none';
       font-src 'self' *.googleapis.com *.gstatic.com data:;
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com *.verygoodproxy.com *.verygoodvault.com
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com *.verygoodproxy.com *.verygoodvault.com *.googletagmanager.com
       *.gstatic.com *.google-analytics.com https://optimize.google.com
       *.stats.g.doubleclick.net *.amazonaws.com/ *.mixpanel.com/
       *.helpscout.net cdn4.mxpnl.com *.hotjar.com *.www.google-analytics.com *.www.googletagmanager.com
@@ -118,6 +118,15 @@
     <noscript>
       Please enable Javascript to enjoy using this site
     </noscript>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5CN51T7B9C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-5CN51T7B9C');
+    </script>
     <!--vue-ssr-outlet-->
     <script type="text/javascript">
       !(function(e, t, n) {

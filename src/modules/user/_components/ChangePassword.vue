@@ -13,6 +13,7 @@
           name="old_password"
           type="password"
           class="form-control profile-dimen"
+          @blur="sendGA4Events('enter_old_password')"
         >
       </p>
       <p style="margin-bottom: 20px;">
@@ -24,6 +25,7 @@
           type="password"
           name="new_password"
           class="form-control profile-dimen"
+          @blur="sendGA4Events('enter_new_password')"
         >
       </p>
       <p style="margin-bottom: 20px;">
@@ -35,6 +37,7 @@
           type="password"
           name="confirm_password"
           class="form-control profile-dimen"
+          @blur="sendGA4Events('confirm_new_password')"
         >
       </p>
       <p>
@@ -54,10 +57,11 @@
 import { mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import EventsMixin from '../../../mixins/events_mixin';
 
 export default {
   name: 'ChangePassword',
-  mixins: [SessionMxn, NotificationMxn],
+  mixins: [SessionMxn, NotificationMxn, EventsMixin],
   data() {
     return {
       old_password: '',
@@ -92,6 +96,13 @@ export default {
       } catch (er) {
         // ...
       }
+    },
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
     },
     update_password() {
       if (this.old_password !== '' && this.new_password !== '' && this.confirm_password !== '') {
@@ -193,6 +204,7 @@ export default {
         const notification = { title: '', level, message: this.message };
         this.displayNotification(notification);
       }
+      this.sendGA4Events('update_password');
     },
   },
 };
