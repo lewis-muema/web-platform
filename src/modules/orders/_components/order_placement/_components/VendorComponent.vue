@@ -2079,8 +2079,7 @@ export default {
       this.setOuterActiveVendorDetails(vendorObject);
       this.reCheckCarrierType();
       this.trackMixpanelEvent(`Select Vendor: ${vendorObject.vendor_name}`);
-      this.sendGA4Events(`select_${vendorObject.vendor_name.replace(' ', '_').toLowerCase()}`);
-      this.sendGA4Events(`vendor_${vendorObject.vendor_name.replace(' ', '_')}`);
+      this.sendGA4Events('select_vehicle_type', {vehicle_type: vendorObject.vendor_name});
     },
 
     reCheckCarrierType() {
@@ -2135,8 +2134,7 @@ export default {
       const activeVendorName = this.getOuterActiveVendorDetails;
       const activeVendorClass = this.getOuterActivePackageClass;
       this.sendGA4Events(`${activeVendorClass}_size_load`);
-      this.sendGA4Events(`select_${this.activeVendorPriceData.vendor_name.replace(' ', '_').toLowerCase()}`);
-      this.sendGA4Events(`vendor_${this.activeVendorPriceData.vendor_name.replace(' ', '_')}`);
+      this.sendGA4Events('select_vehicle_type', {vehicle_type: this.activeVendorPriceData.vendor_name});
       if ('vendor_name' in activeVendorName && activeVendorClass !== '') {
         this.setActiveVendorName(activeVendorName.vendor_name);
         this.setActivePackageClass(activeVendorClass);

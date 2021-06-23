@@ -1049,7 +1049,7 @@ export default {
           row.price_tiers[index].price_tiers_index = index;
         }
       });
-      this.sendGA4Events(`select_${vendorObject.vendor_name.replace(' ', '_').toLowerCase()}`);
+      this.sendGA4Events('select_vehicle_type', {vehicle_type: vendorObject.vendor_name});
       this.sendGA4Events('add_number_vehicles', {vehicle_type: vendorObject.vendor_name, number_of_vehicles: vendorObject.tally});
       this.setOuterPriceRequestObject(this.getPriceRequestObject);
       this.setActivePackageClass('');
@@ -1066,7 +1066,7 @@ export default {
           row.price_tiers[index].price_tiers_index = index;
         }
       });
-      this.sendGA4Events(`select_${vendorObject.vendor_name.replace(' ', '_').toLowerCase()}`);
+      this.sendGA4Events('select_vehicle_type', {vehicle_type: vendorObject.vendor_name});
       this.sendGA4Events('add_number_vehicles', {vehicle_type: vendorObject.vendor_name, number_of_vehicles: vendorObject.tally})
       this.setOuterPriceRequestObject(this.getPriceRequestObject);
       this.setActivePackageClass('');
