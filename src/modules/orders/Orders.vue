@@ -1758,7 +1758,7 @@ export default {
     selectCard(tab, code, type) {
       this.activeTab = tab;
       this.primary_business_unit = code;
-      this.sendGA4Events('select_delivery_options', {vehicle_type : type});
+      this.sendGA4Events('select_vehicle_type', {vehicle_type : type});
     },
     getVendorIcon(id) {
       return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
