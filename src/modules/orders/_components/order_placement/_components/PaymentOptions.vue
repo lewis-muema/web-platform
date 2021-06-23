@@ -954,6 +954,14 @@ export default {
       requestPaymentOptionsAction: '$_payment/requestPaymentOptions',
     }),
 
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
+
     loadVeryGoodSecurityScript() {
       const script = document.createElement('script');
       script.async = true;
@@ -1543,6 +1551,7 @@ export default {
                 eventLabel: 'Order Confirmed - Order Placement - Web App',
               };
               this.fireGAEvent(eventPayload);
+              this.sendGA4Events('select_confirm_order');
               let order_no;
               this.setPickupFilled(false);
               // eslint-disable-next-line camelcase
@@ -1567,6 +1576,7 @@ export default {
 
               if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
                 this.doNotification(1, this.$t('general.successfull_placed_freight_order'), '');
+                this.sendGA4Events('freight_place_order');
               }
               this.shouldDestroy = true;
               this.should_destroy = true;

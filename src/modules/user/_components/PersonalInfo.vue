@@ -13,6 +13,7 @@
           type="text"
           name="user_name"
           class="form-control profile1-dimen"
+          @blur="sendGA4Events('edit_name', {name: user_name})"
         >
       </p>
       <p class="personal-info-padding">
@@ -24,6 +25,7 @@
           type="text"
           name="user_email"
           class="form-control profile1-dimen"
+          @blur="sendGA4Events('edit_email_address', {email_address: user_email})"
         >
       </p>
       <p class="personal-info-padding">
@@ -101,13 +103,14 @@
 import { mapGetters, mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import EventsMixin from '../../../mixins/events_mixin';
 import InputValidationMixin from '../../../mixins/fields_validations_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'PersonalInfo',
-  mixins: [SessionMxn, NotificationMxn, InputValidationMixin],
+  mixins: [SessionMxn, NotificationMxn, EventsMixin, InputValidationMixin],
   data() {
     return {
       user_name: '',
@@ -155,6 +158,7 @@ export default {
   },
   mounted() {
     this.set_data();
+    this.sendGA4Events('open_edit_profile');
   },
 
   methods: {
@@ -166,8 +170,16 @@ export default {
         this.phone = session[session.default].user_phone;
       }
     },
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
     validate_phone() {
       this.$validator.validate();
+      this.sendGA4Events('edit_phone_number', {phone_number: this.phone});
     },
     ...mapActions({
       requestPersonalInfo: '$_user/requestPersonalInfo',
@@ -228,6 +240,7 @@ export default {
         this.$store.commit('setNotification', notification);
         this.$store.commit('setNotificationStatus', true);
       }
+      this.sendGA4Events('submit_edits');
     },
     phoneVerificationCancel() {
       this.proceed_update = false;

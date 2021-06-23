@@ -568,6 +568,14 @@ export default {
       this.$root.$emit('Upload status', true);
     },
 
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
+
     addFocusListener() {
       document.addEventListener('focus', this.focusedInput, true);
       document.addEventListener('blur', this.blurredInput, true);
@@ -703,9 +711,28 @@ export default {
         index,
         name: pathObj.name,
       };
-      if (type === 2) {
-        this.trackMixpanelEvent(`Populate ${index === 0 ? 'pickup' : 'destination'} input with location suggestion`, pathObj);
-        this.fireGAEvent(`Populate ${index === 0 ? 'pickup' : 'destination'} input with location suggestion`);
+      if (this.$route.path === '/orders/dedicated/multi-destination') {
+        if (index === 0) {
+          this.sendGA4Events('add_pick_up_location', {multi_destination_pick_up: place.name});
+        } else if (index === 1) {
+          this.sendGA4Events('add_drop_off_location', {multi_destination_drop_off: place.name});
+        } else {
+          this.sendGA4Events('add_destination', {multi_destination_drop_off: place.name});
+        }
+      } else {
+        if (type === 2) {
+          this.trackMixpanelEvent(`Populate ${index === 0 ? 'pickup' : 'destination'} input with location suggestion`, pathObj);
+          this.sendGA4Events('select_saved_location', {pick_up_location: place.name});
+          this.fireGAEvent(`Populate ${index === 0 ? 'pickup' : 'destination'} input with location suggestion`);
+        }
+        if (index === 0) {
+          this.sendGA4Events('add_pickup', {pick_up_location: place.name});
+        } else if (index === 1) {
+          this.sendGA4Events('add_destination', {drop_off_location: place.name});
+          this.sendGA4Events('add_location', {drop_off_location: place.name});
+        } else {
+          this.sendGA4Events('add_extra_destination', {extra_destination: place.name});
+        }
       }
       this.hiddenSuggestionsStatus = true;
       this.resetPathLocation(index);

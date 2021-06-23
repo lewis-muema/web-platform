@@ -93,10 +93,11 @@
 <script>
 import { mapMutations, mapActions } from 'vuex';
 import NpsMixin from '../../mixins/nps_mixin';
+import EventsMixin from '../../mixins/events_mixin';
 
 export default {
   name: 'NPSFooter',
-  mixins: [NpsMixin],
+  mixins: [NpsMixin, EventsMixin],
   data() {
     return {
       scores: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -140,6 +141,13 @@ export default {
       verifyNpsUser: 'verifyNpsUser',
       storeNpsSurvey: 'storeNpsSurvey',
     }),
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
     validateUser() {
       const userDetails = {
         respondent_type: this.respondentType,
@@ -156,6 +164,9 @@ export default {
         (response) => {
           const { valid } = response.data;
           this.isValid = valid;
+          if (this.isValid) {
+            this.sendGA4Events('select_NPS');
+          }
         },
         (error) => {
           this.trackMixpanelEvent('Place Order', {
@@ -170,6 +181,7 @@ export default {
     onChange(event, score) {
       this.score = score;
       this.heading = this.$t('NPSFooter.like_most');
+      this.sendGA4Events('rate_NPS', {rate_value: this.score});
     },
     dismiss() {
       this.disableClass = 'disabled';
@@ -204,6 +216,7 @@ export default {
       );
     },
     submitSurvey() {
+      this.sendGA4Events('select_complete');
       this.disableClass = 'disabled';
       this.isDisabled = true;
       const userDetails = {
