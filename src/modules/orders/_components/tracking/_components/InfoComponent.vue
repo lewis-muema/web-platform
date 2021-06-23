@@ -772,6 +772,7 @@
                             rows="5"
                             class="textarea-control add-notes"
                             :placeholder="$t('general.instructions_word')"
+                            @blur="sendGA4Events(storedNotes.waypoint_type === 'PICKUP'? 'add_pick_up_instructions': 'add_drop_off_instructions', {delivery_notes: editedNotes})"
                           />
                         </div>
                       </div>
@@ -1303,6 +1304,7 @@ export default {
     getScheduleTimeDialog(value) {
       this.editScheduledTimeOption = value;
       this.default_value = this.moment(this.getPickUpTime).format('HH:mm:ss');
+      this.sendGA4Events('select_reschedule_order');
     },
     editInstructionsOption(val) {
       if (!val) {
@@ -1348,6 +1350,9 @@ export default {
       if (val !== 2) {
         this.addCardStatus = false;
       }
+      this.sendGA4Events('select_payment_option', {payment_option: this.payment_methods.filter(
+        data => data.payment_method_id === val,
+      )[0].name});
     },
     savedCardsTally(val) {
       if (val === 0) {
@@ -1371,6 +1376,11 @@ export default {
         }
       },
       deep: true,
+    },
+    send_sms(val) {
+      if (val) {
+        this.sendGA4Events('select_sms_notification');
+      }
     },
   },
   mounted() {
@@ -1427,12 +1437,21 @@ export default {
     }),
     dispatchScheduleTime(){
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
+      this.sendGA4Events('add_time');
     },
     loadVeryGoodSecurityScript() {
       const script = document.createElement('script');
       script.async = true;
       script.src = 'https://js.verygoodvault.com/vgs-collect/2.0/vgs-collect.js';
       document.head.appendChild(script);
+    },
+
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
     },
 
     setForm() {
@@ -1699,6 +1718,7 @@ export default {
     },
     maximiseInfoDetails() {
       this.setTrackMoreInfo(true);
+      this.sendGA4Events('select_expand_information');
     },
     checkVendorName() {
       if (
@@ -1765,6 +1785,7 @@ export default {
           this.cancel_reason = '';
         },
       );
+      this.sendGA4Events('select_cancel_order');
     },
     calculateCancellationFee(reason) {
       const payload = {
@@ -2716,6 +2737,11 @@ export default {
           this.fireGAEvent(eventPayload);
         }
       }
+      if (index === 1) {
+        this.sendGA4Events('edit_destination', {new_destination: place.name});
+      } else if (index > 1) {
+        this.sendGA4Events('add_destination');
+      }
       this.attemptPriceRequest();
     },
     updateLocations(){
@@ -2726,6 +2752,7 @@ export default {
       } else {
         this.payment_type = 'prepay';
       }
+      this.sendGA4Events('select_update_location');
       this.checkPaymentDetails();
     },
     handlePostPaidPayments() {
@@ -3045,6 +3072,7 @@ export default {
     },
     validate_phone() {
       this.$validator.validate();
+      this.sendGA4Events('add_phone_number');
     },
     editInstructionsOuterLabel() {
       let name = this.$t('general.add_drop_off_instructions');
@@ -3080,6 +3108,7 @@ export default {
           this.$t('general.provide_valid_phone_no'),
         );
       }
+      this.sendGA4Events('select_update_instruction');
     },
     initiateSaveInstructionsRequest(){
 
@@ -3218,6 +3247,7 @@ export default {
           this.$t('general.kindly_provide_pickup_time'),
         );
       }
+      this.sendGA4Events('select_schedule_order');
     },
     cancelStep(val){
       this.cancellation_step = val ;
@@ -3235,6 +3265,7 @@ export default {
       this.cancelOption = false;
       this.setTrackMoreInfo(true);
       this.setEditLocationDialog(true);
+      this.sendGA4Events('select_edit_location');
     },
     showBeacon() {
       this.cancelOption = false;

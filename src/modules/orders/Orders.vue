@@ -516,7 +516,7 @@
                     popper-append-to-body="false"
                     :placeholder="$t('general.select')"
                     class="compliance-select-final"
-                    @change="sendSignupGAEvents('select_industry', {industry : industryType[0].name})"
+                    @change="sendGA4Events('select_industry', {industry : industryType[0].name})"
                   >
                     <el-option
                       v-for="item in industriesOptions"
@@ -539,7 +539,7 @@
                     :placeholder="$t('general.select')"
                     class="compliance-select-final"
                     popper-class="business-categories-options"
-                    @change="sendSignupGAEvents('select_business_category', {business_category : businessCategory[0].name})"
+                    @change="sendGA4Events('select_business_category', {business_category : businessCategory[0].name})"
                   >
                     <el-option
                       v-for="item in businessCategories"
@@ -570,7 +570,7 @@
                     type="text"
                     placeholder="@mystore"
                     autocomplete="on"
-                    @blur="sendSignupGAEvents('add_ig_handle', {instagram_handle : ig_media_handle})"
+                    @blur="sendGA4Events('add_ig_handle', {instagram_handle : ig_media_handle})"
                   >
                 </div>
               </div>
@@ -587,7 +587,7 @@
                     type="text"
                     placeholder="www.facebook.com/pages/mystore"
                     autocomplete="on"
-                    @blur="sendSignupGAEvents('add_fb_handle', {facebook_link : facebook_media_handle})"
+                    @blur="sendGA4Events('add_fb_handle', {facebook_link : facebook_media_handle})"
                   >
                 </div>
               </div>
@@ -656,7 +656,7 @@
                       v-model="tax_compliance"
                       :placeholder="$t('general.select')"
                       class="compliance-select-final"
-                      @change="sendSignupGAEvents('select_vat_returns', {file_vat : tax_compliance ? 'Yes' : 'No'})"
+                      @change="sendGA4Events('select_vat_returns', {file_vat : tax_compliance ? 'Yes' : 'No'})"
                     >
                       <el-option
                         v-for="item in selectOptions"
@@ -1055,7 +1055,7 @@ export default {
     dispatchScheduleTime() {
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
     },
-    sendSignupGAEvents(label, params) {
+    sendGA4Events(label, params) {
       const eventPayload = {
         name: label,
         parameters: params,
@@ -1227,6 +1227,7 @@ export default {
             this.triggerGAEvent('Paired Open Destination Order With Rider', {
               'Paired Rider': plate,
             });
+            this.sendGA4Events('add_driver_name');
             this.updateData(response.data, vehicle, i);
           } else {
             this.pairing_data[i].pair_status = '1';
@@ -1604,6 +1605,11 @@ export default {
           };
           this.displayNotification(notification);
           this.trackMixpanelEvent('Save location suggestion', data);
+          if (this.waypoint_type === 'PICKUP') {
+            this.sendGA4Events('save_pick_up_location', {saved_pick_up_location : this.suggestion.name});
+          } else {
+            this.sendGA4Events('save_destination_location', {saved_destination_location : this.suggestion.name});
+          }
           this.triggerGAEvent('Save location suggestion', data);
           this.location = '';
           this.suggestion = '';
@@ -1639,6 +1645,7 @@ export default {
           };
           this.displayNotification(notification);
           this.trackMixpanelEvent('Remove location suggestion', data);
+          this.sendGA4Events('remove_saved_location', {removed_location : suggestion.name});
           this.triggerGAEvent('Remove location suggestion', data);
           this.location = '';
           this.suggestion = '';
@@ -1751,7 +1758,7 @@ export default {
     selectCard(tab, code, type) {
       this.activeTab = tab;
       this.primary_business_unit = code;
-      this.sendSignupGAEvents('select_delivery_options', {vehicle_type : type});
+      this.sendGA4Events('select_delivery_options', {vehicle_type : type});
     },
     getVendorIcon(id) {
       return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;
