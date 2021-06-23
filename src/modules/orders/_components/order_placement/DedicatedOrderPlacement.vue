@@ -491,12 +491,21 @@ export default {
       clearVendorMarkers: '$_orders/clearVendorMarkers',
     }),
 
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
+
     // eslint-disable-next-line func-names
     addRegion(place) {
       this.dropOffRegion = place.name;
       this.activeEl = '';
       this.trackLocationSelect(place.name, 2);
       this.attemptPriceRequest();
+      this.sendGA4Events('add_region', {'drop_off_region': place.name});
     },
 
     ...mapActions({
@@ -667,8 +676,11 @@ addFocusListener() {
           Address: type === 1 ? place.formatted_address : place.more.Address,
         },
       };
-      if (index === 1) {
+      if (index === 0) {
+        this.sendGA4Events('add_pick_up_location', {'pick_up_location': place.name});
+      } else if (index === 1) {
         pathObj.waypoint_type = 'RETURN';
+        this.sendGA4Events('add_return_location', {'return_location': place.name});
       }
       if (type === 2) {
         this.trackMixpanelEvent(`Populate ${index === 0 ? 'pickup' : 'destination'} input with location suggestion`, pathObj);

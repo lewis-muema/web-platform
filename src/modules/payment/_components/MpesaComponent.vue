@@ -49,11 +49,13 @@ import { mapActions, mapGetters } from 'vuex';
 import paymentLoading from './LoadingComponent.vue';
 import paymentSuccess from './SuccessComponent.vue';
 import paymentFail from './FailComponent.vue';
+import EventsMixin from '../../../mixins/events_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'MpesaComponent',
+  mixins: [EventsMixin],
   components: { paymentLoading, paymentSuccess, paymentFail },
   data() {
     return {
@@ -96,6 +98,7 @@ export default {
   },
   mounted() {
     this.prepareMpesaPayment();
+    this.sendGA4Events('select_mpesa');
   },
   methods: {
     ...mapActions({
@@ -104,6 +107,13 @@ export default {
       _completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
       _terminateMpesaPaymentRequest: '$_payment/terminateMpesaPaymentRequest',
     }),
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
     trackMixpanelEvent(name) {
       let analyticsEnv = '';
       try {
