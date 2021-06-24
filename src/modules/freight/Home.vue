@@ -10,7 +10,7 @@
 
 <script>
 import Vue from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import VeeValidate, { Validator } from 'vee-validate';
 import freightStore from './_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
@@ -53,7 +53,16 @@ export default {
   computed: {
     ...mapGetters({}),
   },
-  watch: {},
+  watch: {
+    $route(to) {
+      if (to.name !== 'freight_orders_info') {
+        this.clearTruckMarkers();
+        this.clearTruckId();
+        this.clearTrackingVehicles();
+        this.clearTruckDetailsToStore();
+      }
+    },
+  },
   mounted() {
     this.checkSessionData();
   },
@@ -66,6 +75,12 @@ export default {
   methods: {
     ...mapActions({
       requestFreightStatus: '$_freight/requestFreightStatus',
+    }),
+    ...mapMutations({
+      clearTruckMarkers: '$_freight/clearTruckMarkers',
+      clearTruckId: '$_freight/clearTruckId',
+      clearTrackingVehicles: '$_freight/clearTrackingVehicles',
+      clearTruckDetailsToStore: '$_freight/clearTruckDetailsToStore',
     }),
     checkSessionData() {
       const session = this.$store.getters.getSession;
