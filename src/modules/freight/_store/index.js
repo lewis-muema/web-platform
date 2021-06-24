@@ -21,6 +21,12 @@ const state = {
   quotation_id: '',
   reupload_dialog: false,
   reupload_data: [],
+  freight_shipment: {
+    trucks: {},
+  },
+  truck_id: '',
+  tracked_vehicles: [],
+  truck_details: {},
 };
 
 export default {

@@ -1,4 +1,3 @@
-
 const fr = {
   manage_approvers: 'Gérer les approbateurs',
   add_approver: 'Ajouter approbateur',
@@ -16,12 +15,14 @@ const fr = {
   approver_updated: 'Approbateur mis à jour!',
   approver_removed: "L'approbateur retiré avec succes",
   failed_remove_approver: "Échec de la suppression de l'approbateur!",
-  failed_remove_approver_text: 'Échoue à supprimer l’approbateur, veuillez réessayer ou contacter le support client',
+  failed_remove_approver_text:
+    'Échoue à supprimer l’approbateur, veuillez réessayer ou contacter le support client',
   approver_updated_successfully: 'Approbateur mis à jour avec succès ',
   failed_add_approver: 'Échoue d’ajouter des approbateurs!',
-  failed_add_approver_text: "Échec de l'ajout d'approbateurs. Veuillez réessayer ou contacter le service client",
-  failed_add_approver_single: "Échec de l'ajout d'approbateurs. Veuillez sélectionner un seul utilisateur",
+  failed_add_approver_text:
+    "Échec de l'ajout d'approbateurs. Veuillez réessayer ou contacter le service client",
+  failed_add_approver_single:
+    "Échec de l'ajout d'approbateurs. Veuillez sélectionner un seul utilisateur",
 };
-
 
 export default fr;
