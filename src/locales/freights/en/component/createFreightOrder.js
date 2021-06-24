@@ -51,9 +51,10 @@ const en = {
   success_freight_order: 'Successfully placed freight order',
   order_completions_failure: 'Order Completion Failure',
   order_failed: 'Order completion failed',
-  order_failed_text: 'Order completion failed. Please check your internet connection and try again.',
+  order_failed_text:
+    'Order completion failed. Please check your internet connection and try again.',
   search_by_name: 'Search by name',
-
+  create_freight_btn: 'Create Order',
 };
 
 export default en;
