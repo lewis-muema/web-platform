@@ -59,13 +59,9 @@ export default {
       }
     },
     $route(to, from) {
-      if (
-        document.querySelector('.body').id.includes('beacon-active')
-        && (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders')
-      ) {
-        this.autoPopBeacon(2);
+      if ((from.path === '/auth/sign_in' && to.path === '/orders') || to.path === '/auth/sign_in') {
+        this.initializeFreshChat(to);
       }
-      this.setFreshChatProfile(to, from);
     },
     getLanguage(val) {
       if (val === 'fr') {
@@ -121,6 +117,7 @@ export default {
       if (document.querySelector('.body').id.includes('beacon-active')) {
         this.autoPopBeacon(1);
       }
+      this.initializeFreshChat(this.$route.path);
     }
   },
   methods: {
@@ -409,21 +406,79 @@ export default {
         }, 2000);
       }
     },
-    setFreshChatProfile(to, from) {
-      const session = this.$store.getters.getSession;
-      if (session !== null && to.path !== '/auth/sign_in') {
-        window.fcWidget.user.get(function(resp) {
-        let status = resp && resp.status,
-            data = resp && resp.data;
-          if (status !== 200 || (status === 200 && data.email !== session[session.default].user_email)) {
-            window.fcWidget.user.setProperties({
-              firstName: session[session.default].user_name,
-              email: session[session.default].user_email,
-              phone: session[session.default].user_phone,
-            });
+    initializeFreshChat(to) {
+      const i = document;
+      const t = 'Freshchat-js-sdk';
+      let session = this.$store.getters.getSession;
+      session = session[session.default];
+      const restoreIds = localStorage.userRestoreIds ? JSON.parse(localStorage.userRestoreIds) : [];
+      if (document.getElementById('Freshchat-js-sdk')) {
+        window.fcWidget.user.clear();
+        window.fcWidget.destroy();
+        document.getElementById('Freshchat-js-sdk').remove();
+      }
+      setTimeout(() => {
+        if (session) {
+          const idArray = restoreIds.filter(data => data.email === session.user_email);
+          const id = idArray.length > 0 ? idArray[0].id : null;
+          this.createFreshChatScript(session.user_email, id, session);
+        } else {
+          this.createFreshChatScript();
+        }
+      }, 1000);
+    },
+    createFreshChatScript(userEmail, restoreID, session) {
+      const script = document.createElement('script');
+        script.id = 'Freshchat-js-sdk';
+        script.onload = () => {
+          const payload = {
+            token: "88605441-3539-4e90-9e64-0fb1e4b1736f",
+            host: "https://wchat.freshchat.com",
+            ...(userEmail && { externalId: userEmail }),
+            ...(restoreID && { restoreId: restoreID }),
+          };
+          if (this.$route.path === '/auth/sign_in') {
+            window.fcWidget.init(payload);
+          } else {
+            window.fcWidget.init(payload);
+            this.setFreshChatRestoreIds(session, restoreID);
           }
+        };
+        script.src = 'https://wchat.freshchat.com/js/widget.js';
+        document.head.appendChild(script);
+    },
+    setFreshChatRestoreIds(session, restoreID) {
+      if (!restoreID && session) {
+        window.fcWidget.user.setProperties({
+          firstName: session.user_name,
+          email: session.user_email,
+          phone: session.user_phone,
         });
       }
+      window.fcWidget.on('user:created', function(resp) {
+        let status = resp && resp.status,
+            data = resp && resp.data;
+        if (status === 200) {
+          if (data.restoreId) {
+            if (localStorage.userRestoreIds) {
+              const ids = JSON.parse(localStorage.userRestoreIds);
+              const states = ids.filter(info => info.id === data.restoreId);
+              if (states.length === 0) {
+                ids.push({
+                  email: session.user_email,
+                  id: data.restoreId,
+                });
+              }
+              localStorage.userRestoreIds = JSON.stringify(ids);
+            } else {
+              localStorage.userRestoreIds = JSON.stringify([{
+                email: session.user_email,
+                id: data.restoreId,
+              }]);
+            }
+          }
+        }
+      });
     },
   },
 };
