@@ -334,6 +334,13 @@ export default {
       showScheduleTimeDialog: '$_orders/$_tracking/showScheduleTimeDialog',
       updatePickUpTimeInStore: '$_orders/$_tracking/updatePickUpTimeInStore',
     }),
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
     confirmUser() {
       const session = this.$store.getters.getSession;
       if (
@@ -385,6 +392,7 @@ export default {
     showEditInstructionsDialog(val) {
       this.showNotesDialog(true);
       this.updateNotesInStore(val);
+      this.sendGA4Events('select_edit_instructions');
     },
     checkEditOption() {
       let show = false;

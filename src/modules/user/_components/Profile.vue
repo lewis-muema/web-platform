@@ -42,11 +42,24 @@
 <script>
 import NPSFooter from '../../../components/footers/NPSFooter.vue';
 import NpsMixin from '../../../mixins/nps_mixin';
+import EventsMixin from '../../../mixins/events_mixin';
 
 export default {
   name: 'Profile',
   components: { NPSFooter },
-  mixins: [NpsMixin],
+  mixins: [NpsMixin, EventsMixin],
+  created() {
+    this.sendGA4Events('open_profile_page');
+  },
+  methods: {
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
+  },
 };
 </script>
 

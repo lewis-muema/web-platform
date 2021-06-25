@@ -227,6 +227,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import numeral from 'numeral';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
+import EventsMixin from '../../../mixins/events_mixin';
 
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -270,7 +271,7 @@ export default {
       return moment(date).format('MMM Do YYYY, h:mm a');
     },
   },
-  mixins: [TimezoneMxn],
+  mixins: [TimezoneMxn, EventsMixin],
   data() {
     return {
       empty_orders_state: this.$t('general.fetching_order_history'),
@@ -336,6 +337,9 @@ export default {
       this.currencies = this.getUserCurrencies;
     },
   },
+  beforeDestroy() {
+    this.sendGA4Events('exit_order_history');
+  },
   mounted() {
     this.populateOrders();
     this.setUserDefaultCurrency();
@@ -346,6 +350,14 @@ export default {
     ...mapMutations({
       setOrderHistoryOrders: '$_transactions/setOrderHistoryOrders',
     }),
+
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
 
     trackMixpanelEvent(name) {
       let analyticsEnv = '';
@@ -496,6 +508,7 @@ export default {
           params: { id: row.order_id },
         });
       }
+      this.sendGA4Events('select_order', {order_number: row.order_no});
     },
     handleRowExpand(row) {
       // check if expand keys contains the same order_id

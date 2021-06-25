@@ -604,6 +604,8 @@ const translations = {
   new_feature_added:
     'Hello! We’ve added a new feature, the open destination orders. We’d like to give you a quick tour of this new feature.',
   get_started: 'Let’s get started!',
+  skip: 'SKIP',
+  please_enter_rating: 'Please enter a rating to proceed',
   skip_tour: 'Skip tour',
   finish_account_setup: 'Finish account set up',
   does_biz_file_vat_optional: 'Does your business file VAT returns? (optional)',
@@ -948,7 +950,9 @@ const translations = {
   update_instructions: 'Update Instructions',
   language_changed: 'Your preferred Language Changed to English',
 
-
+  // validations
+  user_name_error: 'Kindly provide the first and last name',
+  biz_name_error: 'Business name should contain atleast two names',
 };
 
 const en = {

@@ -20,10 +20,11 @@
 <script>
 import { mapMutations, mapActions, mapGetters } from 'vuex';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import EventsMixin from '../../../mixins/events_mixin';
 
 export default {
   name: 'changeLanguage',
-  mixins: [NotificationMxn],
+  mixins: [NotificationMxn, EventsMixin],
   data() {
     return {
       options: [
@@ -50,16 +51,25 @@ export default {
       localStorage.setItem('timeLocale', val);
       localStorage.setItem('language', acceptLanguage);
       this.setLanguage(val);
+      this.sendGA4Events('select_language', {language_name: this.options.filter(data => data.value === val)[0].label});
     },
   },
   mounted() {
     this.locale = localStorage.getItem('timeLocale');
+    this.sendGA4Events('select_change_language');
   },
   methods: {
     ...mapMutations(['setLanguage']),
     ...mapActions({
       requestChangeLanguage: '$_user/requestChangeLanguage',
     }),
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
     changeLanguage() {
       const session = this.getSession;
       const payload = {

@@ -31,28 +31,36 @@
         <div class="edit-holder edit-dimen">
           <input
             v-model="userDetails.email"
+            v-validate="'required|email'"
             class="input-control edit-form"
             type="text"
             name="email"
-            :placeholder="$t( 'editUser.email')"
+            :placeholder="$t('editUser.email')"
           >
+          <p class="edit-details-data-error">
+            {{ errors.first('email') }}
+          </p>
         </div>
 
         <div class="edit-holder edit-dimen">
-          <input
-            v-model="userDetails.phone"
-            class="input-control edit-form"
-            type="text"
+          <vue-tel-input
+            v-model.trim="userDetails.phone"
+            v-validate="'required|check_phone'"
+            class="form-control edit-form"
             name="phone"
-            :placeholder="$t( 'editUser.phone')"
-          >
+            value=""
+            :placeholder="$t('editUser.phone')"
+            data-vv-validate-on="blur"
+            v-bind="phoneInputProps"
+            @onBlur="validate_phone"
+          />
         </div>
 
         <div class="edit-holder">
           <el-select
             v-model="userDetails.department_id"
-            class="addUser--select edit-select"
-            :placeholder="$t( 'editUser.department')"
+            class="addUser--select edit-details-select"
+            :placeholder="$t('editUser.department')"
             filterable
           >
             <el-option
@@ -67,7 +75,7 @@
         <div class="edit-holder">
           <el-select
             v-model="userDetails.status"
-            class="addUser--select edit-select"
+            class="addUser--select edit-details-select"
             :placeholder="$t('editUser.status')"
             filterable
           >
@@ -83,7 +91,7 @@
         <div class="edit-holder">
           <el-select
             v-model="userDetails.type"
-            class="addUser--select edit-select"
+            class="addUser--select edit-details-select"
             :placeholder="$t('editUser.user_type')"
             filterable
           >
@@ -143,6 +151,27 @@ export default {
           type_name: this.$t( 'editUser.admin'),
         },
       ],
+      phoneInputProps: {
+        mode: 'international',
+        defaultCountry: 'ke',
+        disabledFetchingCountry: false,
+        disabled: false,
+        disabledFormatting: false,
+        placeholder: this.$t('general.enter_phone_number'),
+        required: false,
+        enabledCountryCode: false,
+        enabledFlags: true,
+        preferredCountries: ['ke', 'ug', 'tz'],
+        autocomplete: 'off',
+        name: 'telephone',
+        maxLen: 25,
+        dropdownOptions: {
+          disabledDialCode: false,
+        },
+        inputOptions: {
+          showDialCode: false,
+        },
+      },
     };
   },
   computed: {
@@ -166,39 +195,57 @@ export default {
     ...mapActions({
       editAdminUser: '$_admin/editAdminUser',
     }),
+    validate_phone() {
+      this.$validator.validate();
+    },
     update_edit() {
-      const payload = {};
-      payload.cop_user_id = this.userDetails.cop_user_id;
-      payload.user_name = this.userDetails.name;
-      // payload.user_email = this.userDetails.email;
-      payload.user_phone = this.userDetails.phone;
-      payload.department_id = this.userDetails.department_id;
-      payload.user_type = this.userDetails.type;
-      payload.user_email = this.userDetails.email;
-      payload.status = this.userDetails.status;
+      if (
+        this.fieldValidations('user_name', this.userDetails.name)
+        && this.userDetails.name !== ''
+        && this.userDetails.email !== ''
+        && this.userDetails.phone !== ''
+      ) {
+        const payload = {};
+        payload.cop_user_id = this.userDetails.cop_user_id;
+        payload.user_name = this.userDetails.name;
+        payload.user_phone = this.userDetails.phone;
+        payload.department_id = this.userDetails.department_id;
+        payload.user_type = this.userDetails.type;
+        payload.user_email = this.userDetails.email;
+        payload.status = this.userDetails.status;
 
-      const editUserFullPayload = {
-        values: payload,
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'update_user',
-      };
-      this.$store.dispatch('$_admin/editAdminUser', editUserFullPayload).then(
-        (response) => {
-          const level = 1; // success
-          this.message = $t( 'editUser.edit_successful');
+        const editUserFullPayload = {
+          values: payload,
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'update_user',
+        };
+        this.$store.dispatch('$_admin/editAdminUser', editUserFullPayload).then(
+          (response) => {
+            const level = 1; // success
+            this.message = this.$t('editUser.edit_successful');
 
-          const notification = { title: '', level, message: this.message }; // notification object
-          this.displayNotification(notification);
-        },
-        (error) => {
-          const level = 3;
-          this.message = $t( 'editUser.something_went_wrong');
-          const notification = { title: '', level, message: this.message }; // notification object
-          this.displayNotification(notification);
+            const notification = { title: '', level, message: this.message }; // notification object
+            this.displayNotification(notification);
+          },
+          (error) => {
+            const level = 3;
+            this.message = this.$t('editUser.something_went_wrong');
+            const notification = { title: '', level, message: this.message }; // notification object
+            this.displayNotification(notification);
 
-          // vm.one_step_back()
-        },
-      );
+            // vm.one_step_back()
+          },
+        );
+      } else {
+        const level = 3;
+
+        this.message = this.$t('general.provide_all_details');
+        if (!this.fieldValidations('user_name', this.userDetails.name)) {
+          this.message = this.fieldValidationsError('user_name');
+        }
+        const notification = { title: '', level, message: this.message }; // notification object
+        this.displayNotification(notification);
+      }
     },
     one_step_back() {
       this.$router.push('/admin/users/');
@@ -248,9 +295,9 @@ export default {
     width: 160% !important;
 }
 
-.edit-select {
+.edit-details-select {
     height: 42px !important;
-    width: 155% !important;
+    width: 149% !important;
 }
 
 .edit-back {
@@ -273,5 +320,17 @@ export default {
 .btn-edit-user{
   border-width:0px !important;
   margin-left: 15px !important;
+}
+.edit-details-data-error{
+  margin-right: 3%;
+  font-size: 13px;
+  font-family: 'Nunito', sans-serif;
+  color: #e08445;
+  text-align: left;
+  width: 112% !important;
+}
+.edit-form > .vti__dropdown >.vti__dropdown-list{
+  margin-top: 13% !important;
+  width: 385px !important;
 }
 </style>

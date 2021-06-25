@@ -3,13 +3,13 @@
     <div class="freight-vehicles-inner">
       <span
         class="ongoing-trucks-label"
-      >TRUCKS <a>{{ `(${vehicles.length})` }}</a>
+      >TRUCKS <a class="ongoing-trucks-counter">{{ `(${vehicles.length})` }}</a>
       </span>
       <div
         v-for="val in vehicles"
-        :key="val.id"
+        :key="val.vehicle_id"
         class="ongoing-trucks-card"
-        :class="{ active: active_shipment(val.id) }"
+        :class="{ active: active_shipment(val.vehicle_id) }"
         @click="trackShipment(val)"
       >
         <div class="ongoing-trucks-details-container">
@@ -25,65 +25,77 @@
 </template>
 
 <script>
+import { mapMutations, mapGetters } from 'vuex';
+
 export default {
   name: 'ShipmentVehicles',
   data() {
     return {
-      vehicles: [
-        {
-          id: 1,
-          reg_no: 'KBY 453H',
-        },
-        {
-          id: 2,
-          reg_no: 'KAY 747E',
-        },
-        {
-          id: 3,
-          reg_no: 'KCY 233G',
-        },
-        {
-          id: 4,
-          reg_no: 'KCY 234G',
-        },
-        {
-          id: 5,
-          reg_no: 'KCY 235G',
-        },
-        {
-          id: 6,
-          reg_no: 'KCY 236G',
-        },
-        {
-          id: 7,
-          reg_no: 'KCY 237G',
-        },
-        {
-          id: 8,
-          reg_no: 'KCY 238G',
-        },
-        {
-          id: 9,
-          reg_no: 'KCY 240G',
-        },
-        {
-          id: 10,
-          reg_no: 'KCY 241G',
-        },
-      ],
-      set_shipemnt_id: '',
+      vehicles: [],
+      set_truck_id: '',
     };
   },
+  computed: {
+    ...mapGetters({
+      getAllocatedTrucks: '$_freight/getAllocatedTrucks',
+    }),
+  },
+  watch: {
+    getAllocatedTrucks(val) {
+      this.vehicles = val;
+      if (this.set_truck_id !== '') {
+        const shipment = val.find(location => location.vehicle_id === this.set_truck_id);
+        this.setTruckLastLocationToStore(shipment);
+      }
+    },
+  },
+  mounted() {
+    this.vehicles = this.getAllocatedTrucks;
+  },
   methods: {
-    active_shipment(shipmentNo) {
-      if (this.set_shipemnt_id === shipmentNo) {
+    ...mapMutations({
+      clearTruckMarkers: '$_freight/clearTruckMarkers',
+      clearTruckId: '$_freight/clearTruckId',
+      clearTruckDetailsToStore: '$_freight/clearTruckDetailsToStore',
+      setTruckMarkers: '$_freight/setTruckMarkers',
+      setTruckId: '$_freight/setTruckId',
+      setTruckDetailsToStore: '$_freight/setTruckDetailsToStore',
+    }),
+    active_shipment(truckId) {
+      if (this.set_truck_id === truckId) {
         return true;
       }
       return false;
     },
     trackShipment(shipment) {
-      this.set_shipemnt_id = shipment.id;
+      this.clearFreightMarkers();
+      this.set_truck_id = shipment.vehicle_id;
+      this.setTruckLastLocationToStore(shipment);
     },
+    clearFreightMarkers() {
+      this.clearTruckMarkers();
+      this.clearTruckDetailsToStore();
+      this.clearTruckId();
+    },
+    setTruckLastLocationToStore(shipment) {
+      this.clearTruckMarkers();
+      this.setTruckDetailsToStore(shipment);
+      const partnerLocation = {
+        lat: shipment.lat,
+        lng: shipment.long,
+        vendor_type: 25,
+        vehicle_id: shipment.vehicle_id,
+        rotation: 0,
+        time: shipment.last_updated,
+        speed: 0,
+      };
+      this.setTruckId(shipment.vehicle_id);
+      this.setTruckMarkers(partnerLocation);
+      // this.initiateMQTT(shipment);
+    },
+    // initiateMQTT(val){
+    //
+    // },
   },
 };
 </script>

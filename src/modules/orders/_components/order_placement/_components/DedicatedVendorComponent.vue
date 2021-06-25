@@ -312,6 +312,7 @@
                   v-model.trim="delivery_item"
                   autocomplete="true"
                   @change="dispatchDeliveryItem"
+                  @blur="sendGA4Events('add_item_details')"
                 />
               </div>
             </div>
@@ -499,12 +500,13 @@ import _ from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PaymentOptions from './DedicatedPaymentOptions.vue';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
+import EventsMixin from '../../../../../mixins/events_mixin';
 
 export default {
   components: {
     PaymentOptions,
   },
-  mixins: [TimezoneMxn],
+  mixins: [TimezoneMxn, EventsMixin],
   data() {
     return {
       first_time: false,
@@ -725,10 +727,19 @@ export default {
         }
         this.setScheduleTime(this.time_range_from);
         this.setScheduleEndTime(this.time_range_to);
+        this.sendGA4Events('add_delivery_date', {from_date: this.moment(this.schedule_time).format('DD-MM-YYYY')});
       } else {
         this.setScheduleTime('');
         this.setScheduleEndTime('');
       }
+    },
+
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
     },
 
     formatPriceType(type) {
@@ -738,6 +749,7 @@ export default {
 
     pairWithDrivers() {
       this.$root.$emit('Pairing status', true);
+      this.sendGA4Events('select_pair_with_driver');
     },
 
     vendorOptions(id) {
@@ -751,15 +763,21 @@ export default {
       this.selectStatus = false;
       this.selectStatus = true;
       this.$root.$emit('tour class', 4, 0);
+      const carrierName = this.vendorOptions(this.expandedActiveVendorTally[index].vendor_id).filter(
+        data => data.value === option,
+      );
+      this.sendGA4Events('select_carrier_type', {vendor_id: this.expandedActiveVendorTally[index].vendor_id, carrier_type: carrierName[0].label});
     },
     setStartHours() {
       this.setScheduleTime(this.time_range_from);
+      this.sendGA4Events('add_delivery_time', {from_time: this.moment(this.time_range_from).format('HH:mm:ss')});
     },
     setEndHours() {
       this.setScheduleEndTime(this.time_range_to);
     },
     dispatchOrderNotes() {
       this.setOrderNotes(this.order_notes);
+      this.sendGA4Events('add_instruction');
     },
     goToNextStep() {
       this.activeVendorTally = [];
@@ -866,13 +884,18 @@ export default {
 
     dispatchAdditionalLoaderStatus(val) {
       this.setAdditionalLoaderStatus(val);
+      if (val === '1') {
+        this.sendGA4Events('select_loaders');
+      }
     },
 
     handleChangeInNumberOfLoaders(val) {
       this.setNOOfLoaders(val);
+      this.sendGA4Events('add_loaders', {add_loaders: val});
     },
 
     setActivePackageClassWrapper(name) {
+      this.sendGA4Events(`select_size_${name}_load`);
       this.setActivePackageClass(name);
       this.setOuterActivePackageClass(name);
       this.trackMixpanelEvent(`Switch To Size: ${name}`);
@@ -1026,9 +1049,12 @@ export default {
           row.price_tiers[index].price_tiers_index = index;
         }
       });
+      this.sendGA4Events('select_vehicle_type', {vehicle_type: vendorObject.vendor_name});
+      this.sendGA4Events('add_number_vehicles', {vehicle_type: vendorObject.vendor_name, number_of_vehicles: vendorObject.tally});
       this.setOuterPriceRequestObject(this.getPriceRequestObject);
       this.setActivePackageClass('');
       this.setActivePackageClass(tier);
+
     },
     changeTally(vendorObject, index, value) {
       vendorObject.tally = value;
@@ -1040,6 +1066,8 @@ export default {
           row.price_tiers[index].price_tiers_index = index;
         }
       });
+      this.sendGA4Events('select_vehicle_type', {vehicle_type: vendorObject.vendor_name});
+      this.sendGA4Events('add_number_vehicles', {vehicle_type: vendorObject.vendor_name, number_of_vehicles: vendorObject.tally})
       this.setOuterPriceRequestObject(this.getPriceRequestObject);
       this.setActivePackageClass('');
       this.setActivePackageClass(tier);
@@ -1077,6 +1105,7 @@ export default {
       this.priceRequestData = this.getPriceRequestObject.economy_price_tiers;
       const activeVendorName = this.getOuterActiveVendorDetails;
       const activeVendorClass = this.getOuterActivePackageClass;
+      this.sendGA4Events(`select_size_${activeVendorClass}_load`);
       this.$root.$emit('tour class', 2, 0);
       if ('vendor_name' in activeVendorName && activeVendorClass !== '') {
         this.setActiveVendorName(activeVendorName.vendor_name);

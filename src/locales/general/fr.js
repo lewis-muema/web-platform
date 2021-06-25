@@ -572,6 +572,8 @@ const translations = {
   seconds: 'SECONDES',
   new_feature_added: 'Bonjour! Nous avons ajouté une nouvelle fonctionnalité, les commandes de destination ouvertes. Nous aimerions vous présenter rapidement cette nouvelle fonctionnalité. ',
   get_started: "c'est parti!",
+  skip: 'FR_SKIP',
+  please_enter_rating: 'FR_Please enter a rating to proceed',
   skip_tour: 'Passer le tour',
   finish_account_setup: 'Terminer la configuration du compte ',
   does_biz_file_vat_optional: 'Votre entreprise produit-elle des déclarations de TVA? (optionnel) ',
@@ -895,6 +897,9 @@ const translations = {
   update_instructions: 'Instructions de mise à jour',
   language_changed: 'Votre langue est définie sur le français',
 
+  // validations
+  user_name_error: 'FR_Kindly provide the first and last name',
+  biz_name_error: 'FR_Business name should contain atleast two names',
 };
 
 const en = {
