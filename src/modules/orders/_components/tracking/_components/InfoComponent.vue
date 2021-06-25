@@ -214,7 +214,7 @@
                         <i class="el-icon-question edit-location-icon" />
                           <div>
                             {{$t('general.isssue_with_order')}}
-                            <div class="cancellation-edit-inner" @click="showBeacon()">
+                            <div class="cancellation-edit-inner" @click="showFCWidget()">
                             {{$t('general.contact_support')}}
                             </div>
                           </div>
@@ -3238,10 +3238,9 @@ export default {
       this.setTrackMoreInfo(true);
       this.setEditLocationDialog(true);
     },
-    showBeacon() {
+    showFCWidget() {
       this.cancelOption = false;
-      window.Beacon('open');
-      window.Beacon('navigate', '/ask/chat/');
+      window.fcWidget.open();
     },
     checkScheduleOption() {
       let show = false;
