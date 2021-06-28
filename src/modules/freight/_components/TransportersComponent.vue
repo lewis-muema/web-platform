@@ -557,11 +557,11 @@ export default {
       returnOptions: [
         {
           value: true,
-          label: 'Yes',
+          label: this.$t('orderDetailsComponent.valid'),
         },
         {
           value: false,
-          label: 'No',
+          label: this.$t('orderDetailsComponent.invalid'),
         },
       ],
       shipmentOffer: [
