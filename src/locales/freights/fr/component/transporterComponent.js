@@ -1,4 +1,3 @@
-
 const fr = {
   pickup_location: "L'emplacement de collecte",
   enter_pickup_location: 'Saisir un emplacement de collecte',
@@ -29,7 +28,8 @@ const fr = {
   provide_time: 'Veuillez fournir le temps de soumission du devis',
   quotations_sent: 'Les devis envoyés avec succès! ',
   quote_request_failed: 'La demande de devis a échoué ',
-  quote_request_failed_text: 'La demande de devis a échoué. Veuillez vérifier votre connexion Internet et réessayer.',
+  quote_request_failed_text:
+    'La demande de devis a échoué. Veuillez vérifier votre connexion Internet et réessayer.',
   completed_orders: 'Les commandes complétées',
   reviews: 'Commentaires ',
   contacts: ' Contacts',
@@ -73,9 +73,10 @@ const fr = {
   truck: 'Camion',
   to: 'la',
   unable_create_shipment_request: 'FR_Unable to create shipment request!',
-  Kindly_provide_time_request_submitted: 'FR_Kindly provide time for request to to submitted',
-
-
+  kindly_provide_time_request_submitted: 'FR_Kindly provide time for request to to submitted',
+  transaction_currency: 'FR_Which currency will you be transacting in?',
+  input_amount_placeholder: 'FR_Please input amount',
+  container_missing_error: 'FR_Kindly provide atleast one container value that your moving',
 };
 
 export default fr;
