@@ -1,7 +1,7 @@
 const en = {
   pickup_location: 'Pick up location',
   enter_pickup_location: 'Enter a pickup location',
-  enter_destination: 'Enter a destiantion Location',
+  enter_destination: 'Enter a destination location',
   destination: 'Destination',
   pickup_time: 'Pick up time',
   truck_type: 'Type of truck',
@@ -28,7 +28,8 @@ const en = {
   provide_time: 'Kindly provide time for quotation to to submitted',
   quotations_sent: 'Quotations sent successfully!',
   quote_request_failed: 'Quote request failed',
-  quote_request_failed_text: 'Quote request failed. Please check your internet connection and try again.',
+  quote_request_failed_text:
+    'Quote request failed. Please check your internet connection and try again.',
   completed_orders: 'completed orders',
   reviews: 'Reviews',
   contacts: 'Contacts',
@@ -72,7 +73,10 @@ const en = {
   truck: 'Truck',
   to: 'to',
   unable_create_shipment_request: 'Unable to create shipment request!',
-  Kindly_provide_time_request_submitted: 'Kindly provide time for request to to submitted',
+  kindly_provide_time_request_submitted: 'Kindly provide time for request to to submitted',
+  transaction_currency: 'Which currency will you be transacting in?',
+  input_amount_placeholder: 'Please input amount',
+  container_missing_error: 'Kindly provide atleast one container value that your moving',
 };
 
 export default en;
