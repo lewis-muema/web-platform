@@ -890,6 +890,8 @@ export default {
       if (pin !== '') {
         if (session[session.default].country_code === 'KE') {
           return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+        } if (session[session.default].country_code === 'CI') {
+          return /^[0-9]{7}[A-Z]{1}$/.test(pin);
         }
         return /^\d{10}$/.test(pin);
       }
