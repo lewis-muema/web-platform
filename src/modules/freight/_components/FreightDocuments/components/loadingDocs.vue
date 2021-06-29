@@ -6,14 +6,15 @@
     >
       <div class="freight-documents-flex">
         <div class="documents-type-label">
-          Assigned Vehicles & Loading Documents
+          {{ $t('freightDocuments.loading_docs') }}
         </div>
         <span
           v-if="doc_count > 0"
           class="notification-counter-highlight"
         >
           <i class="el-icon-warning" />
-          {{ doc_count }} {{ doc_count > 1 ? 'docs' : 'doc' }} not actioned
+          {{ doc_count }} {{ doc_count > 1 ? 'docs' : 'doc' }}
+          {{ $t('freightDocuments.not_actioned') }}
         </span>
         <div class="view-transporter-sub-documents documents-type-inner">
           <span
@@ -47,7 +48,7 @@
         >
           <div class="transporter-content documents-sub-highlight">
             <div class="documents-sub-highlight-label">
-              Vehicle Reg
+              {{ $t('freightDocuments.vehicle_reg_no') }}
             </div>
             <div class="documents-sub-highlight-inner">
               {{ val.vehicle_registration !== null ? val.vehicle_registration : 'N/A' }}
@@ -55,7 +56,7 @@
           </div>
           <div class="transporter-content documents-sub-highlight">
             <div class="documents-sub-highlight-label">
-              Trailer Number
+              {{ $t('freightDocuments.trailer_no') }}
             </div>
             <div class="documents-sub-highlight-inner">
               {{ val.trailer_no !== null ? val.trailer_no : 'N/A' }}
@@ -63,7 +64,7 @@
           </div>
           <div class="transporter-content documents-sub-highlight">
             <div class="documents-sub-highlight-label">
-              Driver Name
+              {{ $t('freightDocuments.driver_name') }}
             </div>
             <div class="documents-sub-highlight-inner">
               {{ val.driver_name !== null ? val.driver_name : 'N/A' }}
@@ -71,7 +72,7 @@
           </div>
           <div class="transporter-content documents-sub-highlight">
             <div class="documents-sub-highlight-label">
-              Driver Phone No.
+              {{ $t('freightDocuments.driver_phone_no') }}
             </div>
             <div class="documents-sub-highlight-inner">
               {{ val.driver_phone !== null ? val.driver_phone : 'N/A' }}
@@ -79,7 +80,7 @@
           </div>
           <div class="transporter-content documents-sub-highlight">
             <div class="documents-sub-highlight-label">
-              Driver ID
+              {{ $t('freightDocuments.driver_id') }}
             </div>
             <div class="documents-sub-highlight-inner">
               {{ val.driver_id_no !== null ? val.driver_id_no : 'N/A' }}
@@ -94,14 +95,14 @@
               :class="getReuploadClass(val.documents)"
               @click="viewLoadingDocs(val.documents)"
             >
-              View Document
+              {{ $t('freightDocuments.view_document') }}
             </div>
             <div
               v-if="checkValidReupload(val.documents)"
               class="re-upload-loading-docs"
               @click="reUploadloadingDoc(val.documents)"
             >
-              Re-upload doc
+              {{ $t('freightDocuments.reupload_doc') }}
             </div>
           </div>
           <div
@@ -123,14 +124,14 @@
         </div>
         <div v-else>
           <div class="transporter-content documents-sub-highlight">
-            No document available
+            {{ $t('freightDocuments.document_unavailable') }}
           </div>
         </div>
       </div>
       <div v-else>
         <div class="freight-documents--inner">
           <div class="transporter-content documents-sub-highlight">
-            No document available
+            {{ $t('freightDocuments.document_unavailable') }}
           </div>
         </div>
       </div>
@@ -158,7 +159,7 @@ export default {
   data() {
     return {
       opened: [],
-      upload_doc_text: 'Upload loading doc',
+      upload_doc_text: this.$t('freightDocuments.upload_loading_doc'),
       state: true,
       doc_count: 0,
     };
@@ -296,7 +297,7 @@ export default {
           } else {
             this.doNotification(
               2,
-              'Failed to retrieve loading documents options',
+              this.$t('freightDocuments.failed_to_retrieve_loading_docs_options'),
               response.message,
             );
             this.$router.push('/freight/orders');
@@ -306,8 +307,8 @@ export default {
         (error) => {
           this.doNotification(
             2,
-            'Loading document options retrival failure !',
-            'Failed to fetch document options , Kindly retry again or contact customer support ',
+            this.$t('freightDocuments.failed_to_retrieve_loading_docs_options'),
+            this.$t('freightDocuments.document_options_failure_support'),
           );
           this.$router.push('/freight/orders');
           this.setLoadingDocumentOptions({});

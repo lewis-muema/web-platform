@@ -6,14 +6,15 @@
     >
       <div class="freight-documents-flex">
         <div class="documents-type-label">
-          Awarding Documents
+          {{ $t('freightDocuments.awarding_docs') }}
         </div>
         <span
           v-if="doc_count > 0"
           class="notification-counter-highlight"
         >
           <i class="el-icon-warning" />
-          {{ doc_count }} {{ doc_count > 1 ? 'docs' : 'doc' }} not actioned
+          {{ doc_count }} {{ doc_count > 1 ? 'docs' : 'doc' }}
+          {{ $t('freightDocuments.not_actioned') }}
         </span>
         <div class="view-transporter-sub-documents">
           <span
@@ -55,14 +56,15 @@
             class="transporter-content view-transporter-documents documents-sub-highlight"
             @click="viewDocument(val.document_url, val.document_name)"
           >
-            View Document <i class="el-icon-arrow-right view-transporter-info" />
+            {{ $t('freightDocuments.view_document') }}
+            <i class="el-icon-arrow-right view-transporter-info" />
           </div>
           <div
             v-if="checkValidReupload(val)"
             class="transporter-content reload-transporter-documents documents-sub-highlight"
             @click="reUploadloadingDoc(val)"
           >
-            Re-upload doc <i class="el-icon-upload" />
+            {{ $t('freightDocuments.reupload_doc') }} <i class="el-icon-upload" />
           </div>
           <div
             class="freight-documents-approve flex-div transporter-content approve-freight-section documents-sub-highlight"
@@ -96,7 +98,7 @@
               "
               class="decline-document-reason"
             >
-              Decline reason : {{ val.message }}
+              {{ $t('freightDocuments.decline_reason') }}: {{ val.message }}
             </div>
             <div
               v-if="
@@ -104,20 +106,20 @@
               "
               class="approved-document-reason"
             >
-              Document has been approved
+              {{ $t('freightDocuments.document_approved') }}
             </div>
           </div>
         </div>
         <div v-else>
           <div class="transporter-content documents-sub-highlight">
-            No document available
+            {{ $t('freightDocuments.document_unavailable') }}
           </div>
         </div>
       </div>
       <div v-else>
         <div class="freight-documents--inner">
           <div class="transporter-content documents-sub-highlight">
-            No document available
+            {{ $t('freightDocuments.document_unavailable') }}
           </div>
         </div>
       </div>
@@ -145,8 +147,8 @@ export default {
   data() {
     return {
       opened: [],
-      approve_doc_text: 'Approve',
-      decline_doc_text: 'Decline',
+      approve_doc_text: this.$t('freightDocuments.approve'),
+      decline_doc_text: this.$t('freightDocuments.decline'),
       doc_count: 0,
     };
   },
@@ -237,7 +239,7 @@ export default {
           } else {
             this.doNotification(
               2,
-              'Failed to retrieve awarding documents options',
+              this.$t('freightDocuments.failed_to_retrieve_awarding_docs_options'),
               response.message,
             );
             this.$router.push('/freight/orders');
@@ -247,8 +249,8 @@ export default {
         (error) => {
           this.doNotification(
             2,
-            'Awarding document options retrival failure !',
-            'Failed to fetch document options , Kindly retry again or contact customer support ',
+            this.$t('freightDocuments.failed_to_retrieve_awarding_docs_options'),
+            this.$t('freightDocuments.document_options_failure_support'),
           );
           this.$router.push('/freight/orders');
           this.setAwardingDocumentOptions({});
@@ -347,22 +349,38 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, 'Document approval!', 'Document approved successfully');
+            this.doNotification(
+              1,
+              this.$t('freightDocuments.document_approval'),
+              this.$t('freightDocuments.document_approval_msg'),
+            );
             this.setOrderDetail(true);
           } else if (Object.prototype.hasOwnProperty.call(workingResponse, 'message')) {
-            this.doNotification(2, 'Failed to approve document!', workingResponse.message);
+            this.doNotification(
+              2,
+              this.$t('freightDocuments.failure_to_approve_document'),
+              workingResponse.message,
+            );
           } else {
-            this.doNotification(2, 'Failed to approve document!', workingResponse.reason);
+            this.doNotification(
+              2,
+              this.$t('freightDocuments.failure_to_approve_document'),
+              workingResponse.reason,
+            );
           }
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
-            this.doNotification(2, 'Failed to approve document!', error.response.data.reason);
+            this.doNotification(
+              2,
+              this.$t('freightDocuments.failure_to_approve_document'),
+              error.response.data.reason,
+            );
           } else {
             this.doNotification(
               2,
-              'Failed to approve document!',
-              'Failed to approve document, Kindly retry again or contact customer support ',
+              this.$t('freightDocuments.failure_to_approve_document'),
+              this.$t('freightDocuments.failure_to_approve_document_support'),
             );
           }
         },
