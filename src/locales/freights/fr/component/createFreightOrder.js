@@ -1,5 +1,3 @@
-
-
 const fr = {
   create_order: 'Créer une commande',
   pickup_location: 'Lieu de collection ',
@@ -54,9 +52,9 @@ const fr = {
   success_freight_order: 'Commande de fret passée avec succès',
   order_completions_failure: "Échec de l'exécution de la commande",
   order_failed: 'La fin de la commande a échoué',
-  order_failed_text: 'La commande a échoué. Veuillez vérifier votre connexion Internet et réessayer.',
-
+  order_failed_text:
+    'La commande a échoué. Veuillez vérifier votre connexion Internet et réessayer.',
+  create_freight_btn: 'Créer une commande',
 };
-
 
 export default fr;

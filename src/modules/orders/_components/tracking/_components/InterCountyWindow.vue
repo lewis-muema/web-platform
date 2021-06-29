@@ -642,6 +642,7 @@ import {
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
+import { resolve } from 'path';
 
 library.add(faChevronDown, faPlusCircle, faArrowLeft, faTrashAlt);
 
@@ -691,7 +692,7 @@ export default {
       recipientPhone: '',
       externalTracking: false,
       setComplete: false,
-      small_vendors: [1],
+      small_vendors: [1, 28],
       setScheduled: false,
       partnerName: '',
       packageName: '',
@@ -713,7 +714,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      tracking_data: '$_orders/$_tracking/getTrackingData',
+      tracking_data: '$_orders/$_tracking/trackingData',
       tracked_order: '$_orders/$_tracking/getTrackedOrder',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
       vendors: '$_orders/getVendors',
@@ -750,9 +751,9 @@ export default {
       });
       if (this.tracking_data.confirm_status === 0 && this.tracking_data.delivery_status === 0) {
         return 1;
-      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && !logTypes.includes(10)) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] !== 10) {
         return 2;
-      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes.includes(10)) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] === 10) {
         return 3;
       } else {
         return 4;
@@ -838,7 +839,7 @@ export default {
     '$route.params.order_no': function trackedOrder(from) {
       this.order_number = from;
       this.loading = true;
-      this.$store.commit('$_orders/$_tracking/setTrackedOrder', from);
+      this.setTrackedOrder(from);
       this.poll(from);
       this.initiateOrderData();
     },
@@ -880,7 +881,7 @@ export default {
   },
   mounted() {
     this.loading = true;
-    this.$store.commit('$_orders/$_tracking/setTrackedOrder', this.$route.params.order_no);
+    this.setTrackedOrder(this.$route.params.order_no);
     this.poll(this.$route.params.order_no);
     this.checkRunningBalance();
     this.initiateOrderData();
@@ -896,11 +897,14 @@ export default {
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
       completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
       requestCancellationReasons: '$_orders/$_tracking/requestCancellationReasons',
+      getTrackingData: '$_orders/$_tracking/getTrackingData',
+      runningBalance: '$_orders/$_tracking/runningBalance',
     }),
     ...mapMutations({
       hide_vendors: '$_orders/hideVendors',
       clearVendorMarkers: '$_orders/clearVendorMarkers',
       change_page: '$_orders/setPage',
+      setTrackedOrder: '$_orders/$_tracking/setTrackedOrder',
     }),
     moment() {
       return moment();
@@ -957,8 +961,7 @@ export default {
     poll(from) {
       if (this.tracking_data !== undefined) {
         const that = this;
-        this.$store
-          .dispatch('$_orders/$_tracking/getTrackingData', { order_no: from })
+        this.getTrackingData({ order_no: from })
           .then((response) => {
             if (response) {
               if (this.tracking_data.delivery_status === 3) {
@@ -1162,7 +1165,7 @@ export default {
           cop_id: session[session.default].cop_id,
           user_phone: session[session.default].user_phone,
         };
-        this.$store.dispatch('$_orders/$_tracking/runningBalance', payload).then((response) => {
+        this.runningBalance(payload).then((response) => {
           if (response.status) {
             this.myRb = response.running_balance;
             this.accType = response.payment_plan;
@@ -1589,7 +1592,7 @@ export default {
             response = response[0];
           }
 
-          if (response.status === 200) {
+          if (response.status === 200 && response.data.status) {
             this.doNotification('0', 'M-Pesa Payment', `Request for payment sent to ${userPhone}.`);
             this.requestMpesaPaymentPoll();
           } else {
@@ -1650,7 +1653,7 @@ export default {
               that.payment_state = 0;
               that.loading_payment = false;
               that.showPaymentTab = false;
-              that.doNotification('1', this.$t('general.order_payment'), this.$t('general.payment_successful'));
+              that.doNotification('1', that.$t('general.order_payment'), that.$t('general.payment_successful'));
               that.payment_check = '';
               that.mpesa_payment = false;
               that.mpesa_payment_state = true;
@@ -1661,8 +1664,8 @@ export default {
               if (pollCount === 5 && !that.mpesa_payment_state) {
                 that.doNotification(
                   '0',
-                  this.$t('general.payment_not_recieved'),
-                  this.$t('general.will_keep_trying_checking_payment')
+                  that.$t('general.payment_not_recieved'),
+                  that.$t('general.will_keep_trying_checking_payment')
                 );
                 that.payment_state = 0;
                 that.loading_payment = false;
@@ -1678,8 +1681,7 @@ export default {
     checkOrderStatus(from) {
       if (this.tracking_data !== undefined) {
         const that = this;
-        this.$store
-          .dispatch('$_orders/$_tracking/getTrackingData', { order_no: from })
+        this.getTrackingData({ order_no: from })
           .then((response) => {
             if (response) {
               if (!that.mpesa_payment_state) {

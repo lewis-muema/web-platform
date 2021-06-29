@@ -57,4 +57,7 @@ export default {
   setScheduleStatus(state, status) {
     state.schedule_status = status;
   },
+  setClosestCity(state, status) {
+    state.closest_city = status;
+  },
 };

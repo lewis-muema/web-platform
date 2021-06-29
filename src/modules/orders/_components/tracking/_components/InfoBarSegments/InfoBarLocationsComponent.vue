@@ -56,10 +56,11 @@
 <script>
 import { mapMutations, mapGetters } from 'vuex';
 import NotificationMxn from '../../../../../../mixins/notification_mixin';
+import EventsMixin from '../../../../../../mixins/events_mixin';
 
 export default {
   name: 'InfoBarLocationsComponent',
-  mixins: [NotificationMxn],
+  mixins: [NotificationMxn, EventsMixin],
   props: {
     trackingData: {
       type: Object,
@@ -93,6 +94,13 @@ export default {
     ...mapMutations({
       setEditLocationDialog: '$_orders/$_tracking/setEditLocationDialog',
     }),
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
     confirmUser() {
       const session = this.$store.getters.getSession;
       if (
@@ -111,6 +119,7 @@ export default {
     },
     showEditLocationsDialog() {
       this.setEditLocationDialog(true);
+      this.sendGA4Events('add_change_location');
     },
     checkEditOption() {
       let show = false;

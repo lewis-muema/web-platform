@@ -154,7 +154,7 @@
               <!-- Order Cancellation Dialog -->
 
               <el-dialog :visible.sync="cancelOption" class="cancelOptions">
-                <div class="cancelOptions--content-wrap" v-if="extendedDialog()">
+                <div class="cancelOptions--content-wrap">
                   <div class="" v-if="!cancellation_step">
                     <div class="cancellation-title">
                       {{$t('general.cancel_order')}} ?
@@ -214,7 +214,7 @@
                         <i class="el-icon-question edit-location-icon" />
                           <div>
                             {{$t('general.isssue_with_order')}}
-                            <div class="cancellation-edit-inner" @click="showBeacon()">
+                            <div class="cancellation-edit-inner" @click="showFCWidget()">
                             {{$t('general.contact_support')}}
                             </div>
                           </div>
@@ -304,42 +304,6 @@
 
                   </div>
 
-                </div>
-                <div class="cancelOptions--content-wrap" v-if="pop_state === 5">
-                  <div class="warning-icon-pstn">
-                    <i class="el-icon-warning warning-icon"></i>
-                  </div>
-                  <div class="cancelOptions--content-message pop-message">
-                      {{$t('general.infuture_ensure_order_ready')}}
-                  </div>
-                  <div class="cancelOptions--content-buttons">
-                    <button
-                      type="button"
-                      name="button"
-                      class="action--slide-button pop_btn"
-                      @click="disablePop()"
-                    >
-                      {{$t('general.ok_capital')}}
-                    </button>
-                  </div>
-                </div>
-                <div class="cancelOptions--content-wrap" v-if="pop_state === 13">
-                  <div class="warning-icon-pstn">
-                    <i class="el-icon-warning warning-icon"></i>
-                  </div>
-                  <div class="cancelOptions--content-message pop-message">
-                     {{$t('general.preffered_rider_offline')}}
-                  </div>
-                  <div class="cancelOptions--content-buttons">
-                    <button
-                      type="button"
-                      name="button"
-                      class="action--slide-button pop_btn"
-                      @click="disablePop()"
-                    >
-                      {{$t('general.ok_capital')}}
-                    </button>
-                  </div>
                 </div>
               </el-dialog>
 
@@ -808,6 +772,7 @@
                             rows="5"
                             class="textarea-control add-notes"
                             :placeholder="$t('general.instructions_word')"
+                            @blur="sendGA4Events(storedNotes.waypoint_type === 'PICKUP'? 'add_pick_up_instructions': 'add_drop_off_instructions', {delivery_notes: editedNotes})"
                           />
                         </div>
                       </div>
@@ -952,6 +917,7 @@ import {
   faStar,
   faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
+import { resolve } from 'path';
 
 library.add(
   faPlus,
@@ -1028,7 +994,7 @@ export default {
         },
         strictBounds: true,
       },
-      small_vendors: [1, 22, 21, 23],
+      small_vendors: [1, 22, 21, 23, 28],
       medium_vendors: [2, 3],
       large_vendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
       tier_group : '',
@@ -1094,7 +1060,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      tracking_data: '$_orders/$_tracking/getTrackingData',
+      tracking_data: '$_orders/$_tracking/trackingData',
       tracked_order: '$_orders/$_tracking/getTrackedOrder',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
       vendors: '$_orders/getVendors',
@@ -1206,9 +1172,9 @@ export default {
       });
       if (this.tracking_data.confirm_status === 0 && this.tracking_data.delivery_status === 0) {
         return 1;
-      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && !logTypes.includes(10)) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] !== 10) {
         return 2;
-      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes.includes(10)) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] === 10) {
         return 3;
       } else {
         return 4
@@ -1320,22 +1286,7 @@ export default {
     cancel_reason(value) {
       if (value !== '') {
         this.cancelChange(value);
-        this.cancelMessage = '';
-      }
-      if (value === 5) {
-        this.showEditPickUpTime();
-        this.cancelMessage = this.$t('general.we_are_sorry_the_order_is_not_ready');
-        this.rescheduleOptions = true;
-      }
-      if (value === 4) {
-        this.showEditLocationsDialog();
-        this.cancelMessage = this.$t('general.we_are_sorry_you_entered_the_wrong_locations');
-        this.locationOptions = true;
-      }
-      if (value === 7) {
-        this.cancelOption = false;
-        this.driverAllocatedOptions = true;
-        this.cancelMessage = this.$t('general.doing_our_best_to_match_your_order');
+        this.calculateCancellationFee(value);
       }
     },
     getShareOption(value) {
@@ -1354,6 +1305,7 @@ export default {
     getScheduleTimeDialog(value) {
       this.editScheduledTimeOption = value;
       this.default_value = this.moment(this.getPickUpTime).format('HH:mm:ss');
+      this.sendGA4Events('select_reschedule_order');
     },
     editInstructionsOption(val) {
       if (!val) {
@@ -1399,6 +1351,9 @@ export default {
       if (val !== 2) {
         this.addCardStatus = false;
       }
+      this.sendGA4Events('select_payment_option', {payment_option: this.payment_methods.filter(
+        data => data.payment_method_id === val,
+      )[0].name});
     },
     savedCardsTally(val) {
       if (val === 0) {
@@ -1422,6 +1377,11 @@ export default {
         }
       },
       deep: true,
+    },
+    send_sms(val) {
+      if (val) {
+        this.sendGA4Events('select_sms_notification');
+      }
     },
   },
   mounted() {
@@ -1475,16 +1435,25 @@ export default {
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
       completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
       requestCancellationReasons: '$_orders/$_tracking/requestCancellationReasons',
-
+      computeCancellationFee: '$_orders/$_tracking/computeCancellationFee',
     }),
     dispatchScheduleTime(){
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
+      this.sendGA4Events('add_time');
     },
     loadVeryGoodSecurityScript() {
       const script = document.createElement('script');
       script.async = true;
       script.src = 'https://js.verygoodvault.com/vgs-collect/2.0/vgs-collect.js';
       document.head.appendChild(script);
+    },
+
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
     },
 
     setForm() {
@@ -1539,12 +1508,58 @@ export default {
         eventLabel: 'Enter cancel reason input - Order Cancellation Page - WebApp',
       });
     }, 500),
+    timeDifference(logType) {
+      let timeDiff = '';
+      const now = this.moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+      this.tracking_data.delivery_log.forEach(log => {
+        if (log.log_type === logType) {
+          timeDiff = (this.moment(this.convertToUTC(now).utc().format('YYYY-MM-DD HH:mm:ss')) - this.moment(log.log_time)) / (60 * 1000);
+        }
+      });
+      return Math.round(timeDiff);
+    },
+    actionComparator(row, timeDiff) {
+      if (row.comparator === 0 ||
+        row.comparator === 1 && timeDiff < parseInt(row.duration, 10) ||
+        row.comparator === 2 && timeDiff > parseInt(row.duration, 10)
+      ) {
+        return true;
+      }
+      return false;
+    },
     cancelChange(reason) {
       this.more_info = false;
+      this.calculateCancellationFee(reason);
       this.cancel_desc = '';
+      this.cancelMessage = '';
       const data = this.cancellation_reasons.find(
         position => position.cancellation_reason_id === reason,
       );
+      let timeDiff = 0;
+      if (this.getCancellationOrderStatus === 1) {
+        timeDiff = this.timeDifference(1);
+      } else if (this.getCancellationOrderStatus === 2) {
+        timeDiff = this.timeDifference(2);
+      } else if (this.getCancellationOrderStatus === 3) {
+        timeDiff = this.timeDifference(10);
+      }
+      if (data.actions) {
+        data.actions.forEach(row => {
+          if (row.action_type === 1) {
+            this.showEditPickUpTime();
+            this.cancelMessage = row.message;
+            this.rescheduleOptions = true;
+          } else if (row.action_type === 4) {
+            this.showEditLocationsDialog();
+            this.cancelMessage = row.message;
+            this.locationOptions = true;
+          } else if (row.action_type === 5 && this.actionComparator(row, timeDiff)) {
+            this.cancelOption = false;
+            this.driverAllocatedOptions = true;
+            this.cancelMessage = row.message;
+          }
+        });
+      }
       if (reason === 0) {
         this.more_info = true;
       } else {
@@ -1705,6 +1720,7 @@ export default {
     },
     maximiseInfoDetails() {
       this.setTrackMoreInfo(true);
+      this.sendGA4Events('select_expand_information');
     },
     checkVendorName() {
       if (
@@ -1751,7 +1767,7 @@ export default {
       const payload = {
         order_no: this.tracking_data.order_no,
       };
-      this.$store.dispatch('$_orders/$_tracking/computeCancellationFee', payload).then(
+      this.computeCancellationFee(payload).then(
         (response) => {
           if (response.data.cancellation_fee === 0) {
             this.cancellation_fee = false;
@@ -1770,6 +1786,20 @@ export default {
           this.cancelOption = false;
           this.cancel_reason = '';
         },
+      );
+      this.sendGA4Events('select_cancel_order');
+    },
+    calculateCancellationFee(reason) {
+      const payload = {
+        order_no: this.tracking_data.order_no,
+        cancellation_reason_id: reason,
+      };
+      this.computeCancellationFee(payload).then(
+        (response) => {
+          if (response.data.cancellation_fee) {
+            this.doNotification(2, this.$t('general.cancellation_fee'), this.$t('general.You_may_be_charged_a_cancellation_fee', {fee:`${response.data.currency} ${response.data.cancellation_fee}`}));
+          }
+        }
       );
     },
     getCancellationInfo(){
@@ -2346,10 +2376,6 @@ export default {
       this.cancelToggle();
       this.pop_state = false;
     },
-    extendedDialog() {
-      return !(this.cancel_reason === 4 || this.pop_state === 5 || this.pop_state === 13);
-
-    },
     interCountyInforBar() {
       let resp = false;
       if (this.tracking_data !== undefined && Object.keys(this.tracking_data).length > 0) {
@@ -2713,6 +2739,11 @@ export default {
           this.fireGAEvent(eventPayload);
         }
       }
+      if (index === 1) {
+        this.sendGA4Events('edit_destination', {new_destination: place.name});
+      } else if (index > 1) {
+        this.sendGA4Events('add_destination');
+      }
       this.attemptPriceRequest();
     },
     updateLocations(){
@@ -2723,6 +2754,7 @@ export default {
       } else {
         this.payment_type = 'prepay';
       }
+      this.sendGA4Events('select_update_location');
       this.checkPaymentDetails();
     },
     handlePostPaidPayments() {
@@ -2892,7 +2924,7 @@ export default {
             response = response[0];
           }
 
-          if (response.status === 200) {
+          if (response.status === 200 && response.data.status) {
             this.doNotification('0', this.$t('general.mpesa_payment'),this.$t('general.request_for_payment_sent', {userPhone: userPhone}));
             this.requestMpesaPaymentPoll();
           } else {
@@ -2976,7 +3008,7 @@ export default {
               pollCount = pollLimit;
               that.payment_state = 0;
               that.loading_payment = false;
-              that.doNotification('1', this.$t('general.payment_successful'), this.$t('general.completing_your_order'));
+              that.doNotification('1', that.$t('general.payment_successful'), that.$t('general.completing_your_order'));
               that.doCompleteOrder();
               that.mpesa_payment = false;
               that.mpesa_payment_state = true;
@@ -2987,8 +3019,8 @@ export default {
               if (pollCount === 5 && !that.mpesa_payment_state) {
                 that.doNotification(
                   '0',
-                  this.$t('general.payment_not_recieved'),
-                  this.$t('general.will_keep_trying_checking_payment'),
+                  that.$t('general.payment_not_recieved'),
+                  that.$t('general.will_keep_trying_checking_payment'),
                 );
                 that.payment_state = 0;
                 that.loading_payment = false;
@@ -3042,6 +3074,7 @@ export default {
     },
     validate_phone() {
       this.$validator.validate();
+      this.sendGA4Events('add_phone_number');
     },
     editInstructionsOuterLabel() {
       let name = this.$t('general.add_drop_off_instructions');
@@ -3077,6 +3110,7 @@ export default {
           this.$t('general.provide_valid_phone_no'),
         );
       }
+      this.sendGA4Events('select_update_instruction');
     },
     initiateSaveInstructionsRequest(){
 
@@ -3215,6 +3249,7 @@ export default {
           this.$t('general.kindly_provide_pickup_time'),
         );
       }
+      this.sendGA4Events('select_schedule_order');
     },
     cancelStep(val){
       this.cancellation_step = val ;
@@ -3232,11 +3267,11 @@ export default {
       this.cancelOption = false;
       this.setTrackMoreInfo(true);
       this.setEditLocationDialog(true);
+      this.sendGA4Events('select_edit_location');
     },
-    showBeacon() {
+    showFCWidget() {
       this.cancelOption = false;
-      window.Beacon('open');
-      window.Beacon('navigate', '/ask/chat/');
+      window.fcWidget.open();
     },
     checkScheduleOption() {
       let show = false;

@@ -352,7 +352,7 @@
               </div>
 
               <div
-                v-else
+                v-else-if="activeVendorPriceData.vendor_id !== 28"
                 class="order_summary--outline"
               >
                 <label class="delivery_label">
@@ -468,7 +468,7 @@
                   :key="index"
                 >
                   <label class="delivery_label">
-                    {{ ($t('general.drop_off_instructions_at_name'), { name: data.name }) }}
+                    {{ $t('general.drop_off_instructions_at_name') }} {{ data.name }}
                   </label>
                   <div
                     v-if="data.notes !== ''"
@@ -598,7 +598,7 @@ export default {
       mpesa_payment: false,
       mpesa_payment_state: false,
       confirmFinal: false,
-      smallVendors: [1, 22, 21, 23, 12],
+      smallVendors: [1, 22, 21, 23, 12, 28],
       mediumVendors: [2, 3],
       largeVendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
       time: 15,
@@ -953,6 +953,14 @@ export default {
       requestSavedCards: '$_orders/$_home/requestSavedCards',
       requestPaymentOptionsAction: '$_payment/requestPaymentOptions',
     }),
+
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
 
     loadVeryGoodSecurityScript() {
       const script = document.createElement('script');
@@ -1543,6 +1551,7 @@ export default {
                 eventLabel: 'Order Confirmed - Order Placement - Web App',
               };
               this.fireGAEvent(eventPayload);
+              this.sendGA4Events('select_confirm_order');
               let order_no;
               this.setPickupFilled(false);
               // eslint-disable-next-line camelcase
@@ -1567,6 +1576,7 @@ export default {
 
               if (Object.prototype.hasOwnProperty.call(this.getPriceRequestObject, 'freight')) {
                 this.doNotification(1, this.$t('general.successfull_placed_freight_order'), '');
+                this.sendGA4Events('freight_place_order');
               }
               this.shouldDestroy = true;
               this.should_destroy = true;
@@ -2061,8 +2071,7 @@ export default {
             // eslint-disable-next-line no-param-reassign
             response = response[0];
           }
-
-          if (response.status === 200) {
+          if (response.status === 200 && response.data.status) {
             this.doNotification(
               '0',
               this.$t('general.mpesa_payment'),
@@ -2148,8 +2157,8 @@ export default {
               that.loading = false;
               that.doNotification(
                 '1',
-                this.$t('general.payment_successful'),
-                this.$t('general.completing_your_order'),
+                that.$t('general.payment_successful'),
+                that.$t('general.completing_your_order'),
               );
               that.doCompleteOrder();
               that.mpesa_payment = false;
@@ -2161,8 +2170,8 @@ export default {
               if (pollCount === 5 && !that.mpesa_payment_state) {
                 that.doNotification(
                   '0',
-                  this.$t('general.payment_not_recieved'),
-                  this.$t('general.will_keep_trying_checking_payment'),
+                  that.$t('general.payment_not_recieved'),
+                  that.$t('general.will_keep_trying_checking_payment'),
                 );
                 that.payment_state = 0;
                 that.loading = false;

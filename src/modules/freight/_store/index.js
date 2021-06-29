@@ -7,7 +7,7 @@ const state = {
   document_url: '',
   document_name: '',
   document_dialog: false,
-  order_id: '',
+  order_details_state: false,
   decline_doc: {},
   decline_dialog: false,
   awarding_docs_options: [],
@@ -21,6 +21,12 @@ const state = {
   quotation_id: '',
   reupload_dialog: false,
   reupload_data: [],
+  freight_shipment: {
+    trucks: {},
+  },
+  truck_id: '',
+  tracked_vehicles: [],
+  truck_details: {},
 };
 
 export default {

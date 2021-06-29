@@ -29,7 +29,7 @@
                   <div class="final-upper-padding">
                     <el-select
                       v-model="industry_type"
-                      placeholder="Select"
+                      :placeholder="$t('general.select')"
                       class="compliance-select-final"
                     >
                       <el-option
@@ -53,7 +53,7 @@
                       class="input-control upgrade-final"
                       type="text"
                       name="id_number"
-                      placeholder=""
+                      :placeholder="$t('freight.id_no_placeholder')"
                       autocomplete="on"
                     >
                   </div>
@@ -63,18 +63,18 @@
                   v-if="updateKraSection"
                   class="final-upper-padding"
                 >
-                  <label class="final-label">{{ fetchKraHeader }}</label>
+                  <label class="final-label">{{ userKraNoLabel }}</label>
                   <div class="final-upper-padding">
                     <input
                       v-model="kra_pin"
                       class="input-control upgrade-final"
                       type="text"
                       name="kra_pin"
-                      placeholder=""
+                      :placeholder="userKraNoPlaceholder"
                       autocomplete="on"
                     >
                     <span
-                      v-show="!valid_kra_pin"
+                      v-show="!kraPinValidation(kra_pin)"
                       class="invalid-kra"
                     >
                       {{ kraFailResponse }}
@@ -86,16 +86,22 @@
                   v-if="acc_type === 'biz' && updateBizRegistration"
                   class="final-upper-padding"
                 >
-                  <label class="final-label">{{ $t('freight.enter_biz_regno') }}</label>
+                  <label class="final-label">{{ userBizRgLabel }}</label>
                   <div class="final-upper-padding">
                     <input
                       v-model="biz_registration"
                       class="input-control upgrade-final"
                       type="text"
                       name="biz_registration"
-                      placeholder=""
+                      :placeholder="userBizRgPlaceholder"
                       autocomplete="on"
                     >
+                    <span
+                      v-show="!bizRegValidation(biz_registration)"
+                      class="invalid-kra"
+                    >
+                      {{ bizRegFailResponse }}
+                    </span>
                   </div>
                 </div>
 
@@ -103,7 +109,7 @@
                   <input
                     class="button-primary final-step-submit"
                     type="submit"
-                    value="Submit"
+                    :value="$t('general.submit')"
                     @click="submit"
                   >
                 </div>
@@ -121,10 +127,11 @@ import { mapMutations, mapGetters, mapActions } from 'vuex';
 import SessionMxn from '../../mixins/session_mixin';
 import NotificationMxn from '../../mixins/notification_mixin';
 import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
+import ValidationMixin from '../../mixins/validation_mixin';
 
 export default {
   name: 'Freight',
-  mixins: [SessionMxn, NotificationMxn, MixpanelMixin],
+  mixins: [SessionMxn, NotificationMxn, MixpanelMixin, ValidationMixin],
   data() {
     return {
       id_number: '',
@@ -223,9 +230,9 @@ export default {
     },
     initiatePage() {
       this.KraFrefill();
+      this.bizRegistrationFrefill();
       this.peerIdFrefill();
       this.isNewCopAcc();
-      this.bizRegistrationFrefill();
       this.industryFrefill();
     },
     KraFrefill() {
@@ -238,7 +245,10 @@ export default {
         if (session[session.default].tax_authority_pin === null) {
           this.tax_compliance = false;
           this.kra_pin = '';
-        } else if (session[session.default].tax_authority_pin !== '' && !this.valid_kra_pin) {
+        } else if (
+          session[session.default].tax_authority_pin !== ''
+          && !this.kraPinValidation(this.kra_pin)
+        ) {
           this.tax_compliance = false;
           this.kra_pin = session[session.default].tax_authority_pin;
         } else if (session[session.default].tax_authority_pin !== '') {
@@ -335,7 +345,8 @@ export default {
           if (
             session[session.default].tax_authority_pin === null
             || session[session.default].tax_authority_pin === ''
-            || (session[session.default].tax_authority_pin !== '' && !this.valid_kra_pin)
+            || (session[session.default].tax_authority_pin !== ''
+              && !this.kraPinValidation(this.kra_pin))
           ) {
             isSet = true;
             kraSection = true;
@@ -343,6 +354,8 @@ export default {
           if (
             session[session.default].company_reg_no === null
             || session[session.default].company_reg_no === ''
+            || (session[session.default].company_reg_no !== ''
+              && !this.bizRegValidation(this.biz_registration))
           ) {
             isSet = true;
             bizRegistration = true;
@@ -397,19 +410,21 @@ export default {
       }
     },
     submitBizData() {
-      let kraName = this.$t('freight.tin_no');
       const session = this.$store.getters.getSession;
-      if (session[session.default].country_code === 'KE') {
-        kraName = this.$t('freight.kra_pin');
-      }
-      if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
-        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_valid_kraname', { kraName }));
+      if (this.kra_pin === '' || (this.kra_pin !== '' && !this.kraPinValidation(this.kra_pin))) {
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.kraFailResponse);
       } else if (this.industry_type === '') {
-        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.select_industry'));
-      } else if (this.biz_registration === '') {
-        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.please_enter_biz_regno'));
+        this.doNotification(
+          2,
+          this.$t('freight.final_setup_error'),
+          this.$t('freight.select_industry'),
+        );
+      } else if (
+        this.biz_registration === ''
+        || (this.biz_registration !== '' && !this.bizRegValidation(this.biz_registration))
+      ) {
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.bizRegFailResponse);
       } else {
-        const session = this.$store.getters.getSession;
         const payload = {
           cop_id: session[session.default].cop_id,
           cop_name: session[session.default].cop_name,
@@ -429,18 +444,17 @@ export default {
       }
     },
     submitPeerData() {
-      let kraName = this.$t('freight.tin_no');
       const session = this.$store.getters.getSession;
-      if (session[session.default].country_code === 'KE') {
-        kraName = this.$t('freight.kra_pin');
-      }
 
-      if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
-        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_valid_kraname', { kraName }));
+      if (this.kra_pin === '' || (this.kra_pin !== '' && !this.kraPinValidation(this.kra_pin))) {
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.kraFailResponse);
       } else if (this.id_number === '') {
-        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_id_no'));
+        this.doNotification(
+          2,
+          this.$t('freight.final_setup_error'),
+          this.$t('freight.enter_id_no'),
+        );
       } else {
-        const session = this.$store.getters.getSession;
         const payload = {
           user_id: session[session.default].user_id,
           tax_authority_pin: this.kra_pin,

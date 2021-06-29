@@ -13,9 +13,7 @@
         v-if="!submitted"
         class="nps-info"
       >
-        <div
-          v-if="score === null"
-        >
+        <div v-if="score === null">
           <div class="btn-group">
             <button
               type="button"
@@ -33,14 +31,16 @@
                   type="button"
                   class="btn btn-secondary btn-holder"
                   @click="onChange($event, value)"
-                ><span class="score-value">{{ value }}</span></button>
+                >
+                  <span class="score-value">{{ value }}</span>
+                </button>
               </span>
             </span>
             <button
               type="button"
               class="btn btn-secondary unlikely side-btn"
             >
-            {{ $t('NPSFooter.very_likely') }}
+              {{ $t('NPSFooter.very_likely') }}
               <!-- 10 Very Likely -->
             </button>
             <button
@@ -67,11 +67,13 @@
               :class="`btn btn-primary form-control action-button ${disableClass}`"
               :disabled="isDisabled"
             >
-            {{ $t('NPSFooter.submit') }}
+              {{ $t('NPSFooter.submit') }}
               <!-- Submit -->
             </button>
             <span class="clearfix">&nbsp;</span>
-            <button :class="`btn btn-primary form-control action-button reason-dismiss ${disableClass}`">
+            <button
+              :class="`btn btn-primary form-control action-button reason-dismiss ${disableClass}`"
+            >
               <span
                 type="button"
                 class="close"
@@ -91,10 +93,11 @@
 <script>
 import { mapMutations, mapActions } from 'vuex';
 import NpsMixin from '../../mixins/nps_mixin';
+import EventsMixin from '../../mixins/events_mixin';
 
 export default {
   name: 'NPSFooter',
-  mixins: [NpsMixin],
+  mixins: [NpsMixin, EventsMixin],
   data() {
     return {
       scores: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -138,6 +141,13 @@ export default {
       verifyNpsUser: 'verifyNpsUser',
       storeNpsSurvey: 'storeNpsSurvey',
     }),
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
     validateUser() {
       const userDetails = {
         respondent_type: this.respondentType,
@@ -154,6 +164,9 @@ export default {
         (response) => {
           const { valid } = response.data;
           this.isValid = valid;
+          if (this.isValid) {
+            this.sendGA4Events('select_NPS');
+          }
         },
         (error) => {
           this.trackMixpanelEvent('Place Order', {
@@ -168,6 +181,7 @@ export default {
     onChange(event, score) {
       this.score = score;
       this.heading = this.$t('NPSFooter.like_most');
+      this.sendGA4Events('rate_NPS', {rate_value: this.score});
     },
     dismiss() {
       this.disableClass = 'disabled';
@@ -202,6 +216,7 @@ export default {
       );
     },
     submitSurvey() {
+      this.sendGA4Events('select_complete');
       this.disableClass = 'disabled';
       this.isDisabled = true;
       const userDetails = {
@@ -241,7 +256,6 @@ export default {
         this.setNPSStatus(true);
       }, 2000);
     },
-
   },
 };
 </script>
@@ -283,7 +297,7 @@ export default {
 }
 
 .btn-holder:hover {
-  background-color: #F57F20;
+  background-color: #f57f20;
   color: white;
   font-weight: 700;
   border: none;
@@ -316,7 +330,7 @@ export default {
   position: absolute;
   width: 7%;
   margin-top: 6px;
-  background: #F57F20;
+  background: #f57f20;
   color: #ffffff;
   border-radius: 4px;
   cursor: pointer;

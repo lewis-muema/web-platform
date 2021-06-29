@@ -1,8 +1,6 @@
-
-
 const fr = {
   search: 'Chercher',
-  pickup_loc: 'Lieu de collection ',
+  pickup_location: 'Lieu de collection ',
   destination: 'Destination',
   tranporter: 'Transporteur',
   amount: 'Montant',
@@ -15,15 +13,13 @@ const fr = {
   pager: 'bipeur',
   next: 'prochain',
   jumper: 'Sauteur',
-  freight_shipments: 'FR_Fetching freight shipments',
+  freight_shipments: 'Recherche des expéditions de fret',
   place_order: 'Créer une commande ',
-  not_available: 'FR_No available freight shipments',
-  type_of_load: 'FR_Type of load',
-  type_of_truck: 'FR_Type of truck',
-  pickup_date: 'FR_Pick up date',
-
-
+  not_available: 'Aucun cargaisons disponibles',
+  type_of_load: 'Type de charge',
+  type_of_truck: 'Type de camion',
+  pickup_date: 'Date de récupération',
+  create_order: 'Passer une commande',
 };
-
 
 export default fr;

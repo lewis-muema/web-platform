@@ -96,7 +96,7 @@ export default {
       extraNotificationInfo: '',
       activeStateIcon: '',
       vendorStatus: 'active',
-      small_vendors: [1, 23],
+      small_vendors: [1, 23, 28],
     };
   },
   computed: {
@@ -104,8 +104,9 @@ export default {
       markers: '$_orders/getMarkers',
       vendors: '$_orders/getVendors',
       polyline: '$_orders/getPolyline',
-      tracking_data: '$_orders/$_tracking/getTrackingData',
+      tracking_data: '$_orders/$_tracking/trackingData',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
+      closestCity: 'getClosestCity',
     }),
   },
   watch: {
@@ -124,6 +125,7 @@ export default {
       }
     },
     '$route.params.order_no': function trackedOrder(order) {
+      this.$store.commit('setClosestCity', '');
       this.$store.dispatch('$_orders/getOrderData', { order_no: order }).then((response) => {
         if (response.status) {
           this.orderStatus(response.data);
@@ -131,6 +133,9 @@ export default {
           this.infoWinOpen = false;
         }
       });
+    },
+    closestCity(val) {
+      const closeCity = val;
     },
     $route(to, from) {
       this.infoWinOpen = false;

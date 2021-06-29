@@ -380,10 +380,11 @@
   font-size: 14px;
 }
 .order-info-header{
-  font-size: 15px;
+  font-size: 17px;
   line-height: 18px;
   color: #000000;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
+  line-height: 18px;
 }
 .rider_details_wrap {
   width: 34%;
@@ -538,9 +539,6 @@
 .requestShipmentOptions > div {
   margin-top: 18vh !important;
   width: 30% !important;
-}
-.requestShipmentOptions >.el-dialog >.el-dialog__body {
-  margin: 2% !important;
 }
 .view-transporter-info{
   cursor :pointer ;
@@ -767,4 +765,21 @@ li.suggestions_solr:last-child {
 }
 .createShipmentInnerDialog{
   margin: 4% !important;
+}
+.reload-transporter-documents{
+  color: #EA7125 !important;;
+  cursor: pointer;
+}
+.shipment-id-label{
+  color: #000000;
+  font-size: 24px;
+  font-weight: 600 !important;
+}
+.shipment-tracking-container{
+  position: relative;
+}
+.vehicle-layout {
+  position: absolute;
+  top: 8%;
+  left: 1%;
 }

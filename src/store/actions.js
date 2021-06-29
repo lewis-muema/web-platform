@@ -13,12 +13,6 @@ export default {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
 
-    // add api key - if request is going to the FREIGHT APP
-    if (payload.app === 'FREIGHT_APP') {
-      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
-        state.ENV.FREIGHT_API_KEY
-      }`;
-    }
 
     let config = {};
 
@@ -51,6 +45,8 @@ export default {
       'admin_bypass',
       'request_verification',
       'token',
+      'auth/forgot-password',
+      'auth/reset-password',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -156,12 +152,6 @@ export default {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
 
-    // add api key - if request is going to the FREIGHT APP
-    if (payload.app === 'FREIGHT_APP') {
-      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
-        state.ENV.FREIGHT_API_KEY
-      }`;
-    }
 
     let config = {};
 
@@ -194,6 +184,8 @@ export default {
       'admin_bypass',
       'request_verification',
       'token',
+      'auth/forgot-password',
+      'auth/reset-password',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -298,12 +290,6 @@ export default {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
 
-    // add api key - if request is going to the FREIGHT APP
-    if (payload.app === 'FREIGHT_APP') {
-      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
-        state.ENV.FREIGHT_API_KEY
-      }`;
-    }
 
     let config = {};
 
@@ -327,6 +313,8 @@ export default {
       'request_verification',
       'token',
       'currency/get_supported_countries',
+      'auth/forgot-password',
+      'auth/reset-password',
     ];
     if (externalEndpoints.includes(requestedPayload)) {
       config = {
@@ -334,7 +322,7 @@ export default {
           'Content-Type': 'text/plain',
         },
       };
-    } else if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
+    } else if (typeof jwtToken !== 'undefined' || jwtToken !== null) {
       config = {
         headers: {
           'Content-Type': 'text/plain',
@@ -399,12 +387,6 @@ export default {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
 
-    // add api key - if request is going to the FREIGHT APP
-    if (payload.app === 'FREIGHT_APP') {
-      payload.endpoint = `${payload.endpoint}${payload.operator}authkey=${
-        state.ENV.FREIGHT_API_KEY
-      }`;
-    }
 
     let config = {};
 
@@ -437,6 +419,8 @@ export default {
       'admin_bypass',
       'request_verification',
       'token',
+      'auth/forgot-password',
+      'auth/reset-password',
     ];
     if (
       /^[\],:{}\s]*$/.test(
