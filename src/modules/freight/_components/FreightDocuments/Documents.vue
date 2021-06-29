@@ -5,7 +5,7 @@
   >
     <div v-if="freightOrderDetail.awarded_bids.length > 0">
       <div class="order-info-header align-documents-data">
-        Awarded Transporters
+        {{ $t('freightDocuments.awarded_transporters') }}
       </div>
       <div
         class=""
@@ -24,10 +24,10 @@
         </div>
         <div class="awarded-highlight">
           {{ freightOrderDetail.available_trucks }}/{{ freightOrderDetail.total_trucks }}
-          Trucks confirmed
+          {{ $t('freightDocuments.trucks_confirmed') }}
 
           <span class="align-awarded-total-sum">
-            Total cost: {{ freightOrderDetail.currency }}
+            {{ $t('freightDocuments.total_cost') }} : {{ freightOrderDetail.currency }}
             {{ freightOrderDetail.awarded_amount.toLocaleString() }}
           </span>
         </div>
@@ -52,10 +52,12 @@
               {{ getAvailableTrucks(data.trucks_available) }}
             </div>
             <div class="transporter-content transporters-name-highlight">
-              {{ freightOrderDetail.currency }} {{ data.price_per_truck }}/Truck
+              {{ freightOrderDetail.currency }} {{ data.price_per_truck }}/{{
+                $t('orderDetailsComponent.single_truck')
+              }}
             </div>
             <div class="transporter-content view-transporter-documents">
-              View document details
+              {{ $t('freightDocuments.view_document_details') }}
               <span
                 v-if="opened.includes(index)"
                 class=""
@@ -120,7 +122,7 @@
             v-if="index >= 0"
           >
             <div class="document-text-option freight-documents">
-              {{ val.document_name }} document
+              {{ val.document_name }} {{ $t('freightDocuments.document') }}
             </div>
             <div class="document-divider" />
             <div class="document-view-inner loading-docs-image">
@@ -144,13 +146,13 @@
             <div
               class="decline-text-option decline-documemt-extend request-shipment-header outline-info-value"
             >
-              Upload loading documents
+              {{ $t('freightDocuments.upload_loading_docs') }}
             </div>
           </div>
 
           <div class="loading-docs-hint">
             <div class="loading-docs-hint--inner">
-              Please upload the necessary loading document(s) required.
+              {{ $t('freightDocuments.upload_necessary_docs') }}
             </div>
           </div>
 
@@ -161,7 +163,8 @@
           >
             <div class="award-shipment-input">
               <p class="award-input--label upload-landing">
-                Upload the <span>{{ val.document_type }} document </span>
+                {{ $t('freightDocuments.upload_prefix')
+                }}<span>{{ val.document_type }} {{ $t('freightDocuments.document') }} </span>
               </p>
               <div class="document-image">
                 <div
@@ -186,7 +189,8 @@
                       {{ landing_text[index].name }}
                     </div>
                     <div v-else>
-                      Drop file here or <em>click to upload</em>
+                      {{ $t('createFreightOrder.drop_file') }}
+                      <em>{{ $t('createFreightOrder.click_upload') }}</em>
                     </div>
                   </el-upload>
                   <div
@@ -209,7 +213,7 @@
               class="quote-action--slide-button award-shipment-btn"
               @click="finalLoadingDocsUpload()"
             >
-              Upload document
+              {{ $t('freightDocuments.upload_document') }}
             </button>
           </div>
         </el-dialog>
@@ -224,13 +228,13 @@
             <div
               class="decline-text-option decline-documemt-extend request-shipment-header outline-info-value"
             >
-              Reupload documents
+              {{ $t('freightDocuments.reupload_documents') }}
             </div>
           </div>
 
           <div class="loading-docs-hint">
             <div class="loading-docs-hint--inner">
-              Documents have been marked for inconsistencies .Kindly reupload all documents.
+              {{ $t('freightDocuments.document_inconsistencies') }}
             </div>
           </div>
 
@@ -241,7 +245,8 @@
           >
             <div class="award-shipment-input">
               <p class="award-input--label upload-landing">
-                Upload the <span>{{ val.document_name }} document </span>
+                {{ $t('freightDocuments.upload_prefix')
+                }}<span>{{ val.document_name }} {{ $t('freightDocuments.document') }} </span>
               </p>
               <div class="document-image">
                 <div
@@ -266,7 +271,8 @@
                       {{ reupload_text[index].name }}
                     </div>
                     <div v-else>
-                      Drop file here or <em>click to upload</em>
+                      {{ $t('createFreightOrder.drop_file') }}
+                      <em>{{ $t('createFreightOrder.click_upload') }}</em>
                     </div>
                   </el-upload>
                   <div
@@ -287,7 +293,7 @@
               class="quote-action--slide-button award-shipment-btn"
               @click="finalReuploadDocsUpload()"
             >
-              Upload document
+              {{ $t('freightDocuments.upload_document') }}
             </button>
           </div>
         </el-dialog>
@@ -389,7 +395,7 @@ export default {
           doc_name: '',
         });
         this.landing_text.push({
-          name: 'Change',
+          name: this.$t('orderDetailsComponent.landing_text'),
         });
         this.billOfLandingData.push({
           name: {},
@@ -406,7 +412,7 @@ export default {
           document_id: '',
         });
         this.reupload_text.push({
-          name: 'Change',
+          name: this.$t('orderDetailsComponent.landing_text'),
         });
         this.reUploadData.push({
           url: {},
@@ -475,9 +481,9 @@ export default {
       return name;
     },
     getAvailableTrucks(val) {
-      let resp = `${val} Trucks`;
+      let resp = `${val} ${this.$t('orderDetailsComponent.trucks_multiple')}`;
       if (val === 1) {
-        resp = `${val} Truck`;
+        resp = `${val} ${this.$t('orderDetailsComponent.single_truck')}`;
       }
       return resp;
     },
@@ -485,7 +491,11 @@ export default {
       const isPdf = file.type === 'application/pdf';
 
       if (!isPdf) {
-        this.doNotification(2, 'Document upload error !', 'Document must be in PDF format');
+        this.doNotification(
+          2,
+          this.$t('orderDetailsComponent.document_upload_error'),
+          this.$t('orderDetailsComponent.document_upload_error_msg'),
+        );
       }
       return isPdf;
     },
@@ -493,7 +503,11 @@ export default {
       const isPdf = file.type === 'application/pdf';
 
       if (!isPdf) {
-        this.doNotification(2, 'Document upload error !', 'Document must be in PDF format');
+        this.doNotification(
+          2,
+          this.$t('orderDetailsComponent.document_upload_error'),
+          this.$t('orderDetailsComponent.document_upload_error_msg'),
+        );
       }
       return isPdf;
     },
@@ -520,23 +534,23 @@ export default {
       this.billOfLandingName[this.upload_index].doc_name = '';
       this.billOfLandingName[this.upload_index].type = '';
       this.billOfLandingData[this.upload_index].name = {};
-      this.landing_text[this.upload_index].name = 'Change';
+      this.landing_text[this.upload_index].name = this.$t('orderDetailsComponent.landing_text');
     },
     handleRemoveReupload() {
       this.reUploadName[this.upload_index].url = '';
       this.reUploadName[this.upload_index].document_id = '';
       this.reUploadData[this.upload_index].url = {};
-      this.reupload_text[this.upload_index].name = 'Change';
+      this.reupload_text[this.upload_index].name = this.$t('orderDetailsComponent.landing_text');
     },
     uploadBillOfLanding() {
       if (Object.keys(this.billOfLandingData[this.upload_index].name).length === 0) {
-        this.doNotification(2, 'Kindly upload the necessary loading document', '');
+        this.doNotification(2, this.$t('freightDocuments.missing_loading_docs'), '');
       } else {
         const imageId = `ladingImagePreview_${this.upload_index}`;
         let src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
         $(`#${imageId}`).attr('src', src);
 
-        this.landing_text[this.upload_index].name = 'Uploading ...';
+        this.landing_text[this.upload_index].name = this.$t('orderDetailsComponent.uploading');
         const { file } = this.billOfLandingData[this.upload_index].name;
         const fileType = file.type;
         const fileName = this.sanitizeFilename(file.name, 'loading_document');
@@ -553,12 +567,16 @@ export default {
           },
           (err) => {
             if (err) {
-              this.landing_text[this.upload_index].name = 'Change';
+              this.landing_text[this.upload_index].name = this.$t(
+                'orderDetailsComponent.landing_text',
+              );
               console.log('There was an error uploading your document: ', err.message);
             } else {
               src = 'https://images.sendyit.com/web_platform/freight/complete.svg';
               $(`#${imageId}`).attr('src', src);
-              this.landing_text[this.upload_index].name = 'Change';
+              this.landing_text[this.upload_index].name = this.$t(
+                'orderDetailsComponent.landing_text',
+              );
             }
             // eslint-disable-next-line comma-dangle
           }
@@ -580,13 +598,13 @@ export default {
     },
     uploadReuploadDocuments() {
       if (Object.keys(this.reUploadData[this.upload_index].url).length === 0) {
-        this.doNotification(2, 'Kindly upload the necessary loading document', '');
+        this.doNotification(2, this.$t('freightDocuments.missing_loading_docs'), '');
       } else {
         const imageId = `ladingImagePreview_${this.upload_index}`;
         let src = 'https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/grey_bg_01.jpg';
         $(`#${imageId}`).attr('src', src);
 
-        this.reupload_text[this.upload_index].name = 'Uploading ...';
+        this.reupload_text[this.upload_index].name = this.$t('orderDetailsComponent.uploading');
         const { file } = this.reUploadData[this.upload_index].url;
         const fileType = file.type;
         const fileName = this.sanitizeFilename(file.name, 'loading_document');
@@ -603,12 +621,16 @@ export default {
           },
           (err) => {
             if (err) {
-              this.reupload_text[this.upload_index].name = 'Change';
+              this.reupload_text[this.upload_index].name = this.$t(
+                'orderDetailsComponent.landing_text',
+              );
               console.log('There was an error uploading your document: ', err.message);
             } else {
               src = 'https://images.sendyit.com/web_platform/freight/complete.svg';
               $(`#${imageId}`).attr('src', src);
-              this.reupload_text[this.upload_index].name = 'Change';
+              this.reupload_text[this.upload_index].name = this.$t(
+                'orderDetailsComponent.landing_text',
+              );
             }
             // eslint-disable-next-line comma-dangle
           }
@@ -620,13 +642,13 @@ export default {
       const submittedDocsLength = this.billOfLandingName.length;
 
       if (docsOptionsLength !== submittedDocsLength) {
-        this.doNotification(2, 'Kindly upload all the necessary loading document(s)', '');
+        this.doNotification(2, this.$t('freightDocuments.upload_necessary_docs_alert'), '');
       } else {
         const filtered = this.billOfLandingName.find(location => location.name !== '');
         if (filtered !== undefined && filtered !== 'undefined') {
           this.processRequest();
         } else {
-          this.doNotification(2, 'Kindly upload all the necessary loading document(s)', '');
+          this.doNotification(2, this.$t('freightDocuments.upload_necessary_docs_alert'), '');
         }
       }
     },
@@ -635,13 +657,13 @@ export default {
       const submittedDocsLength = this.reUploadName.length;
 
       if (docsOptionsLength !== submittedDocsLength) {
-        this.doNotification(2, 'Kindly upload all the necessary loading document(s)', '');
+        this.doNotification(2, this.$t('freightDocuments.upload_necessary_docs_alert'), '');
       } else {
         const filtered = this.reUploadName.find(location => location.url !== '');
         if (filtered !== undefined && filtered !== 'undefined') {
           this.processReuploadRequest();
         } else {
-          this.doNotification(2, 'Kindly upload all the necessary loading document(s)', '');
+          this.doNotification(2, this.$t('freightDocuments.upload_necessary_docs_alert'), '');
         }
       }
     },
@@ -689,21 +711,33 @@ export default {
       this.$store.dispatch('$_freight/uploadLoadingDocuments', fullPayload).then(
         (response) => {
           if (response.status) {
-            this.doNotification(1, 'Loading documents uploaded successfully!', '');
+            this.doNotification(
+              1,
+              this.$t('freightDocuments.loading_docs_upload_successfully'),
+              '',
+            );
             this.resetUploadLoadingDocsDialog();
             this.setOrderDetail(true);
           } else {
-            this.doNotification(2, 'Unable to upload loading documernts!', response.message);
+            this.doNotification(
+              2,
+              this.$t('freightDocuments.unable_to_upload_loading_docs'),
+              response.message,
+            );
           }
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'message')) {
-            this.doNotification(2, 'Document upload failed', error.response.data.message);
+            this.doNotification(
+              2,
+              this.$t('freightDocuments.document_upload_failed'),
+              error.response.data.message,
+            );
           } else {
             this.doNotification(
               2,
-              'Document upload failed',
-              'Something went wrong.Please try again',
+              this.$t('freightDocuments.document_upload_failed'),
+              this.$t('freightDocuments.something_went_wrong'),
             );
             this.$router.push('/freight/orders');
             this.resetUploadLoadingDocsDialog();
@@ -733,21 +767,33 @@ export default {
       this.$store.dispatch('$_freight/reUploadLoadingDocuments', fullPayload).then(
         (response) => {
           if (response.status) {
-            this.doNotification(1, 'Loading documents re-uploaded successfully!', '');
+            this.doNotification(
+              1,
+              this.$t('freightDocuments.loading_docs_reupload_successfully'),
+              '',
+            );
             this.resetReUploadLoadingDocsDialog();
             this.setOrderDetail(true);
           } else {
-            this.doNotification(2, 'Unable to re-upload loading documernts!', response.message);
+            this.doNotification(
+              2,
+              this.$t('freightDocuments.unable_to_reupload_loading_docs'),
+              response.message,
+            );
           }
         },
         (error) => {
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'message')) {
-            this.doNotification(2, 'Document re-upload failed', error.response.data.message);
+            this.doNotification(
+              2,
+              this.$t('freightDocuments.document_reupload_failed'),
+              error.response.data.message,
+            );
           } else {
             this.doNotification(
               2,
-              'Document re-upload failed',
-              'Something went wrong.Please try again',
+              this.$t('freightDocuments.document_reupload_failed'),
+              this.$t('freightDocuments.something_went_wrong'),
             );
             this.$router.push('/freight/orders');
             this.resetReUploadLoadingDocsDialog();
@@ -769,7 +815,7 @@ export default {
           doc_name: '',
         });
         this.landing_text.push({
-          name: 'Change',
+          name: this.$t('orderDetailsComponent.landing_text'),
         });
         this.billOfLandingData.push({
           name: {},
@@ -792,7 +838,7 @@ export default {
           document_id: '',
         });
         this.reupload_text.push({
-          name: 'Change',
+          name: this.$t('orderDetailsComponent.landing_text'),
         });
         this.reUploadData.push({
           url: {},

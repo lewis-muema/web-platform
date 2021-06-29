@@ -54,7 +54,7 @@ const fr = {
   order_failed: 'La fin de la commande a échoué',
   order_failed_text:
     'La commande a échoué. Veuillez vérifier votre connexion Internet et réessayer.',
-  create_freight_btn: 'FR_Create Order',
+  create_freight_btn: 'Créer une commande',
 };
 
 export default fr;
