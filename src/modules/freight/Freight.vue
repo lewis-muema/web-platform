@@ -151,6 +151,40 @@ export default {
     ...mapGetters({
       get_session: 'getSession',
     }),
+    valid_kra_pin() {
+      const pin = this.kra_pin;
+      const session = this.$store.getters.getSession;
+
+      if (pin !== '') {
+        if (session[session.default].country_code === 'KE') {
+          return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+        } if (session[session.default].country_code === 'CI') {
+          return /^[0-9]{7}[A-Z]{1}$/.test(pin);
+        }
+        return /^\d{10}$/.test(pin);
+      }
+      return true;
+    },
+    fetchKraHeader() {
+      let kraName = this.$t('freight.tin_no');
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        kraName = this.$t('freight.kra_pin');
+      }
+      let resp = this.$t('freight.enter_biz') + kraName;
+      if (session.default === 'peer') {
+        resp = this.$t('freight.enter_your') + kraName;
+      }
+      return resp;
+    },
+    kraFailResponse() {
+      let resp = this.$t('freight.valid_tin_no');
+      const session = this.$store.getters.getSession;
+      if (session[session.default].country_code === 'KE') {
+        resp = this.$t('freight.valid_kra');
+      }
+      return resp;
+    },
     acc_type() {
       const session = this.$store.getters.getSession;
       return session.default;
