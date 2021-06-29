@@ -18,14 +18,14 @@
           >
             <div class="finish-setup-outer">
               <p class="crm-setup">
-                {{$t('freight.finish_freight')}}
+                {{ $t('freight.finish_freight') }}
               </p>
               <div class="">
                 <div
                   v-if="acc_type === 'biz' && updateSetIndustry"
                   class=""
                 >
-                  <label class="final-label">{{$t('freight.industry')}}</label>
+                  <label class="final-label">{{ $t('freight.industry') }}</label>
                   <div class="final-upper-padding">
                     <el-select
                       v-model="industry_type"
@@ -46,7 +46,7 @@
                   v-if="acc_type === 'peer' && updatePeerId"
                   class="final-upper-padding"
                 >
-                  <label class="final-label">{{$t('freight.id_no')}}</label>
+                  <label class="final-label">{{ $t('freight.id_no') }}</label>
                   <div class="final-upper-padding">
                     <input
                       v-model="id_number"
@@ -86,7 +86,7 @@
                   v-if="acc_type === 'biz' && updateBizRegistration"
                   class="final-upper-padding"
                 >
-                  <label class="final-label">{{$t('freight.enter_biz_regno')}}</label>
+                  <label class="final-label">{{ $t('freight.enter_biz_regno') }}</label>
                   <div class="final-upper-padding">
                     <input
                       v-model="biz_registration"
@@ -149,8 +149,10 @@ export default {
       const session = this.$store.getters.getSession;
 
       if (pin !== '') {
-         if (session[session.default].country_code === 'KE') {
+        if (session[session.default].country_code === 'KE') {
           return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+        } if (session[session.default].country_code === 'CI') {
+          return /^[0-9]{7}[A-Z]{1}$/.test(pin);
         }
         return /^\d{10}$/.test(pin);
       }
@@ -401,7 +403,7 @@ export default {
         kraName = this.$t('freight.kra_pin');
       }
       if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
-        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_valid_kraname', {kraName:kraName}));
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_valid_kraname', { kraName }));
       } else if (this.industry_type === '') {
         this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.select_industry'));
       } else if (this.biz_registration === '') {
@@ -434,7 +436,7 @@ export default {
       }
 
       if (this.kra_pin === '' || (this.kra_pin !== '' && !this.valid_kra_pin)) {
-        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_valid_kraname', {kraName:kraName}));
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_valid_kraname', { kraName }));
       } else if (this.id_number === '') {
         this.doNotification(2, this.$t('freight.final_setup_error'), this.$t('freight.enter_id_no'));
       } else {
