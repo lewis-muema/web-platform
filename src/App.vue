@@ -60,7 +60,7 @@ export default {
     },
     $route(to, from) {
       if ((from.path === '/auth/sign_in' && to.path === '/orders') || to.path === '/auth/sign_in') {
-        this.initializeFreshChat(to);
+        this.initializeFreshChat();
       }
     },
     getLanguage(val) {
@@ -112,12 +112,10 @@ export default {
       // initilize firebase on load
       this.initializeFirebase();
       this.loadFCMListeners();
-      this.detectAndroid();
-      this.detectIOS();
       if (document.querySelector('.body').id.includes('beacon-active')) {
         this.autoPopBeacon(1);
       }
-      this.initializeFreshChat(this.$route.path);
+      this.initializeFreshChat();
     }
   },
   methods: {
@@ -406,9 +404,7 @@ export default {
         }, 2000);
       }
     },
-    initializeFreshChat(to) {
-      const i = document;
-      const t = 'Freshchat-js-sdk';
+    initializeFreshChat() {
       let session = this.$store.getters.getSession;
       session = session[session.default];
       const restoreIds = localStorage.userRestoreIds ? JSON.parse(localStorage.userRestoreIds) : [];
@@ -429,23 +425,23 @@ export default {
     },
     createFreshChatScript(userEmail, restoreID, session) {
       const script = document.createElement('script');
-        script.id = 'Freshchat-js-sdk';
-        script.onload = () => {
-          const payload = {
-            token: "88605441-3539-4e90-9e64-0fb1e4b1736f",
-            host: "https://wchat.freshchat.com",
-            ...(userEmail && { externalId: userEmail }),
-            ...(restoreID && { restoreId: restoreID }),
-          };
-          if (this.$route.path === '/auth/sign_in') {
-            window.fcWidget.init(payload);
-          } else {
-            window.fcWidget.init(payload);
-            this.setFreshChatRestoreIds(session, restoreID);
-          }
+      script.id = 'Freshchat-js-sdk';
+      script.onload = () => {
+        const payload = {
+          token: "88605441-3539-4e90-9e64-0fb1e4b1736f",
+          host: "https://wchat.freshchat.com",
+          ...(userEmail && { externalId: userEmail }),
+          ...(restoreID && { restoreId: restoreID }),
         };
-        script.src = 'https://wchat.freshchat.com/js/widget.js';
-        document.head.appendChild(script);
+        if (this.$route.path === '/auth/sign_in') {
+          window.fcWidget.init(payload);
+        } else {
+          window.fcWidget.init(payload);
+          this.setFreshChatRestoreIds(session, restoreID);
+        }
+      };
+      script.src = 'https://wchat.freshchat.com/js/widget.js';
+      document.head.appendChild(script);
     },
     setFreshChatRestoreIds(session, restoreID) {
       if (!restoreID && session) {
@@ -455,9 +451,9 @@ export default {
           phone: session.user_phone,
         });
       }
-      window.fcWidget.on('user:created', function(resp) {
-        let status = resp && resp.status,
-            data = resp && resp.data;
+      window.fcWidget.on('user:created', (resp) => {
+        const status = resp && resp.status;
+        const data = resp && resp.data;
         if (status === 200) {
           if (data.restoreId) {
             if (localStorage.userRestoreIds) {
