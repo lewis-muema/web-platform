@@ -181,7 +181,7 @@ export default {
       let resp = this.$t('freight.valid_tin_no');
       const session = this.$store.getters.getSession;
       if (session[session.default].country_code === 'KE') {
-        resp = this.$t('freight.valid_kra');
+        resp = this.$t('freight.enter_valid_kra');
       }
       return resp;
     },

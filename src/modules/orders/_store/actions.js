@@ -63,7 +63,7 @@ const riderDetails = function riderDetails({ dispatch }, data) {
 };
 
 const getOrderData = function getOrderData({ dispatch }, data) {
-  data.closest_city = this.getters.getClosestCity === '' ? true : false;
+  data.closest_city = this.getters.getClosestCity === '';
   const payload = {
     app: 'NODE_PRIVATE_API',
     endpoint: 'pending_delivery',

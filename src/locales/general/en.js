@@ -890,7 +890,7 @@ const translations = {
   schedule_pick_up_time_of_order: 'Schedule pick up time of the order',
   sorry_could_not_update_location:
     'Sorry, we could not update the order because the location entered cannot be serviced by a {vendor_name} . Please try again with other locations',
-  
+
   edit_location_failure: 'Edit location failure',
   location_updated_successfully: 'Locations updated successfully',
   locations_update_failed: 'Locations update failed',
