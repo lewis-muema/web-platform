@@ -167,6 +167,7 @@ export default {
         'freight_settings',
       ],
       enabledFreightCountry: false,
+      freightPrefferedCountries: ['KE', 'TZ', 'UG', 'CI'],
     };
   },
   computed: {
@@ -371,7 +372,8 @@ export default {
     preferredFreightCountries() {
       const session = this.$store.getters.getSession;
       const country = session[session.default].country_code;
-      this.enabledFreightCountry = country === 'CI' ? false : true;
+
+      this.enabledFreightCountry = this.freightPrefferedCountries.includes(country);
     },
   },
 };
