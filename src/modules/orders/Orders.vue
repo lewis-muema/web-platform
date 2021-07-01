@@ -2232,7 +2232,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
   width: -webkit-fill-available;
 }
 .pair-button-section {
-  width: -webkit-fill-available;
+  width: BV-webkit-fill-available;
   padding: 15px 0px 5px 0px;
 }
 .pair-info-warning, .pair-info-success, .pair-info-loading {
