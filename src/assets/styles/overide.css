@@ -772,3 +772,12 @@ div.pac-container {
 .requestShipmentOptions >.el-dialog >.el-dialog__body {
   margin: 3% !important;
 }
+.freightAuthDialog >.el-dialog{
+  width: 33% !important;
+}
+.freightAuthDialog > .el-dialog::-webkit-scrollbar {
+  width: 6px !important;
+}
+.freightAuthDialog > .el-dialog::-webkit-scrollbar-thumb {
+  background-color: #527CBD;
+}

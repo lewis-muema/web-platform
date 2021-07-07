@@ -193,7 +193,7 @@ export default {
   watch: {
     get_session: {
       handler() {
-        this.$router.push('/freight');
+        this.$router.push('/freight/home');
       },
       deep: true,
     },
