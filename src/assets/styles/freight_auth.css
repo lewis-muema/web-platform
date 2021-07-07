@@ -1,0 +1,195 @@
+.freightAuthDialog{
+
+}
+.freight-signup-dialog > div > div > div.el-dialog__body{
+  padding-top: 0 !important;
+}
+.freight-sign-up-header{
+  font-weight: 600 !important;
+  font-size: 19px;
+  color: #000000;
+  font-weight: 400;
+  text-align: center;
+  margin-bottom: 2%;
+}
+.freight-sign-up-description{
+  font-size: 15px;
+  color: #000000;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 5%;
+  margin-top: 0%;
+}
+freight-signup-dialog > div > div > div.el-dialog__header{
+  padding-top: 0 !important;
+}
+.freight-auth-select{
+  width: 100% !important;
+}
+.freight-auth-input{
+  width: 100% !important;
+  margin-bottom: 2%;
+}
+.freight-auth-button{
+  margin-top: 6% !important;
+  width: 40% !important;
+  text-align: center;
+  margin: auto;
+  margin-top: 0% !important;
+  background-color: #527CBD !important;
+  border-color: #1b7fc3;
+}
+.freight-input-label{
+ font-size: 12px;
+ font-weight: 200;
+ color: #000;
+}
+.invalid-kra {
+  display: block;
+  color: #f57f20;
+  font-size: 14px;
+}
+.freight-auth-padding{
+  padding-top: 1%;
+}
+.freight-signup-outer{
+  margin-left: 6%;
+  margin-right: 6%;
+}
+.freight-terms-and-conditions{
+  font-size: 12px;
+  color: #000000;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 7%;
+  margin-top: 3%;
+}
+.freight-terms-higlight{
+  color: #527CBD !important;
+}
+.freight-login-redirect{
+  font-size: 12px;
+  color: #EA7125;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 4%;
+  margin-top: 6%;
+  cursor : pointer;
+}
+.validate-freight-phone{
+  font-weight: 600 !important;
+}
+.verification-retry-options{
+  justify-content: space-between;
+  margin-top: 0%;
+  display: flex;
+  margin-bottom: 3%;
+}
+.verification-retry-options-label{
+  font-size: 12px;
+  color: #527CBD;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 4%;
+  margin-top: 0%;
+  cursor : pointer;
+}
+.congratulations_img{
+  width: 66% !important;
+  text-align: center;
+  margin: auto;
+}
+.freight-img-logo {
+  width: 86%;
+  display: block;
+  margin: auto;
+}
+.freight-login-container{
+  border-radius: 4px;
+  margin: 1rem auto;
+  padding: 2rem;
+  font-family: 'Nunito', sans-serif;
+  width: 90% !important;
+  padding-bottom: 0;
+  margin-top: 0;
+  padding-top: 1%;
+}
+.freight-login-inner {
+ width: 96%;
+ margin: 0px auto;
+ flex-direction: column;
+ display: flex;
+ padding-top: 0%;
+}
+.freight-login-contents
+{
+  display: flex;
+  flex-direction: row !important;
+}
+.freight-classic-display{
+  -webkit-box-flex: 1;
+  flex: 2;
+  -webkit-box-orient: vertical;
+  flex-direction: column;
+  display: flex;
+  -webkit-box-direction: normal;
+  padding-right: 9%;
+}
+.freight-login-banner {
+  width: 83%;
+  display: block;
+  margin: auto;
+}
+.freight-login-card{
+  -webkit-box-flex: 2;
+  flex: 1;
+  padding-right: 11%;
+  -webkit-box-orient: vertical;
+  flex-direction: column;
+  display: flex;
+  -webkit-box-direction: normal;
+  border-right: 1px solid #d8dfe6;
+  margin-top: 2%;
+}
+.freight-login-details{
+ box-shadow: 2px 2px 24px rgba(0, 0, 0, 0.25);
+ padding-left: 9%;
+ border: 1px solid #d8dfe6;
+ border-radius: 4px;
+ margin: 4rem auto;
+ padding: 3rem;
+ font-family: 'Nunito', sans-serif;
+ width: 67% !important;
+ padding-top: 1%;
+ margin-top: 9%;
+}
+.freight-login-sub{
+  margin-top: 3%;
+}
+.freight-login-reset{
+  font-size: 12px;
+  color: #3D6CA8;
+  font-weight: 500;
+  text-align: right;
+  margin-bottom: 4%;
+  margin-top: 1%;
+  cursor: pointer;
+}
+.login-redirect-margin{
+  margin-top: 11% !important;
+  margin-bottom: 0% !important;
+
+}
+@media (max-width: 500px) {
+  .freight-login-details {
+    margin:20px auto;
+    padding: 15px;
+  }
+  .freight-login-container {
+    width: 80% !important;
+    margin: 5% auto;
+  }
+  .freight-classic-display {
+    display: none;
+  }
+}
