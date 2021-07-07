@@ -179,7 +179,7 @@ export default {
     },
     validate_phone() {
       this.$validator.validate();
-      this.sendGA4Events('edit_phone_number', {phone_number: this.phone});
+      this.sendGA4Events('edit_phone_number', { phone_number: this.phone });
     },
     ...mapActions({
       requestPersonalInfo: '$_user/requestPersonalInfo',
