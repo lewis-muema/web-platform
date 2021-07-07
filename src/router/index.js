@@ -362,7 +362,7 @@ export function createRouter() {
         ],
       },
       {
-        path: '/freight',
+        path: '/freight/home',
         component: () => import('../modules/freight/Home.vue'),
         beforeEnter: guard,
         meta: { innerTrack: 'Freight Home Page' },
@@ -485,6 +485,47 @@ export function createRouter() {
           {
             path: '/external/rating/:order_no',
             component: () => import('../modules/orders/_components/rating/Rating.vue'),
+          },
+        ],
+      },
+      {
+        path: '/freight',
+        component: () => import('../modules/freightAuth/FreightAuth.vue'),
+        children: [
+          {
+            path: '/',
+            component: () => import('../modules/freightAuth/components/Login.vue'),
+            beforeEnter: loginGuard,
+            meta: { login: 'Sign In Page' },
+          },
+          {
+            path: '/freight/login',
+            name: 'freight_login',
+            component: () => import('../modules/freightAuth/components/Login.vue'),
+            beforeEnter: loginGuard,
+            meta: { login: 'Freight Sign In Page' },
+          },
+          {
+            path: '/freight/sign_up',
+            component: () => import('../modules/freightAuth/components/SignUp.vue'),
+            beforeEnter: loginGuard,
+            meta: { login: 'Freight Sign Up Page' },
+          },
+          {
+            path: '/freight/sign_up/verification',
+            component: () => import('../modules/freightAuth/components/verification_phases/PhoneVerification.vue'),
+            beforeEnter: loginGuard,
+            meta: { login: 'Freight Sign Up Verification' },
+          },
+          {
+            path: '/freight/sign_up/congratulations',
+            component: () => import('../modules/freightAuth/components/verification_phases/SignUpCongratulations.vue'),
+            beforeEnter: loginGuard,
+            meta: { login: 'Freight Sign Up Verification' },
+          },
+          {
+            path: '/freight/forgot_password',
+            component: () => import('../modules/freightAuth/components/PassReset.vue'),
           },
         ],
       },
