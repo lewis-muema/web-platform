@@ -466,6 +466,7 @@ export default {
         firstName: session[session.default].user_name,
         email: session[session.default].user_email,
         phone: session[session.default].user_phone,
+        customerType: session.default,
       });
       window.fcWidget.on('user:created', (resp) => {
         const status = resp && resp.status;
