@@ -3,7 +3,7 @@
     class=""
   >
     <div v-if="setUpState === 1">
-      <el-row> 
+      <el-row>
         <el-select v-model="locale" placeholder="Select" class="float-right">
           <el-option
             v-for="item in options"
@@ -303,7 +303,7 @@ export default {
         {
           value: 'fr',
           label: 'Francais (FR)'
-        }, 
+        },
       ],
       locale: 'en',
     };
@@ -340,7 +340,7 @@ export default {
   mounted() {
     this.locale = localStorage.getItem('timeLocale');
     this.sendGA4Events('signup_email');
-  }, 
+  },
   methods: {
     ...mapActions({
       requestSignUpPhoneVerification: '$_auth/requestSignUpPhoneVerification',
@@ -802,7 +802,7 @@ export default {
         // ...
       }
     },
-    fetchSupportedCountries(){ 
+    fetchSupportedCountries(){
       const fullPayload = {
         app: 'AUTH',
         endpoint: 'currency/get_supported_countries',
@@ -819,7 +819,7 @@ export default {
         });
         } else {
           this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
-        }  
+        }
       })
       .catch( (error) => {
         this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
