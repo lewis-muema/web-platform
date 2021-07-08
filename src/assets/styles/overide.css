@@ -781,3 +781,12 @@ div.pac-container {
 .freightAuthDialog > .el-dialog::-webkit-scrollbar-thumb {
   background-color: #527CBD;
 }
+.el-progress__text > .el-icon-circle-close{
+  display: none ;
+}
+.el-progress-bar{
+  padding-right: 0% !important;
+}
+.el-progress-bar__inner{
+  background-color: #527CBD !important;
+}

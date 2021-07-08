@@ -36,7 +36,7 @@
         >
           <a
             class="segmentation-tab"
-            @click="linkRoute('/freight/home')"
+            @click="linkRoute('/freight/transporters')"
           >{{
             $t('mainHeader.freight')
           }}</a>

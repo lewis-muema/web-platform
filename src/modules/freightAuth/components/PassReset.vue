@@ -189,7 +189,4 @@ export default {
 
 <style lang="css" scoped>
 @import "../../../../src/assets/styles/freight_auth.css";
-.reset-freight-pass-outer{
-  margin-top: 6%;
-}
 </style>

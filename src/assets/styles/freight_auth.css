@@ -180,6 +180,34 @@ freight-signup-dialog > div > div > div.el-dialog__header{
   margin-bottom: 0% !important;
 
 }
+.reset-freight-pass-outer{
+  margin-top: 6%;
+}
+.all-done-header{
+  font-size: 22px !important;
+}
+.final-setup-progress{
+  margin-left: 9%;
+  margin-bottom: 2%;
+}
+.progress-label{
+  font-family: 'Nunito', sans-serif !important;
+  margin-left: 3% !important;
+  color: #303133 !important;
+  font-size: 16px !important;
+}
+.progress-check{
+  font-size: 22px;
+  color: #527CBD !important;
+  width: 100% !important;
+}
+.progress-description{
+  margin-bottom: 4%;
+}
+.progress-status-label{
+  margin-top: 15%;
+  text-align: center;
+}
 @media (max-width: 500px) {
   .freight-login-details {
     margin:20px auto;
