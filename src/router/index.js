@@ -369,60 +369,60 @@ export function createRouter() {
         children: [
           {
             path: '/',
-            component: () => import('../modules/freight/Home.vue'),
-            name: 'freight_home',
+            component: () => import('../modules/freight/_components/TransportersComponent.vue'),
+            name: 'freight_transporters',
           },
           {
-            path: '/freight/set-up',
-            component: () => import('../modules/freight/Freight.vue'),
-            name: 'freight_set_up',
+            path: '/freight/home/:token',
+            component: () => import('../modules/freight/_components/TransportersComponent.vue'),
+            name: 'freight_transporters',
           },
           {
-            path: '/freight/verify',
-            component: () => import('../modules/freight/VerifyComponent.vue'),
-            name: 'freight_verify',
+            path: '/freight/transporters',
+            component: () => import('../modules/freight/_components/TransportersComponent.vue'),
+            name: 'freight_transporters',
+          },
+          {
+            path: '/freight/transporters/info/:id',
+            component: () => import('../modules/freight/_components/TransportersDetailsComponent.vue'),
+            name: 'freight_transporters_details',
+          },
+          {
+            path: '/freight/orders',
+            component: () => import('../modules/freight/_components/OrdersComponent.vue'),
+            name: 'freight_orders',
           },
           {
             path: '/freight/dashboard',
-            component: () => import('../modules/freight/_components/MainComponent.vue'),
-            children: [
-              {
-                path: '/',
-                component: () => import('../modules/freight/_components/DashboardComponent.vue'),
-                name: 'freight_dashboard',
-              },
-              {
-                path: '/freight/transporters',
-                component: () => import('../modules/freight/_components/TransportersComponent.vue'),
-                name: 'freight_transporters',
-              },
-              {
-                path: '/freight/transporters/info/:id',
-                component: () => import('../modules/freight/_components/TransportersDetailsComponent.vue'),
-                name: 'freight_transporters_details',
-              },
-              {
-                path: '/freight/orders',
-                component: () => import('../modules/freight/_components/OrdersComponent.vue'),
-                name: 'freight_orders',
-              },
-              {
-                path: '/freight/orders/create',
-                component: () => import('../modules/freight/_components/CreateFreightOrder.vue'),
-                name: 'freight_create_orders',
-              },
-              {
-                path: '/freight/orders/info/:id',
-                component: () => import('../modules/freight/_components/OrdersDetailsComponent.vue'),
-                name: 'freight_orders_info',
-              },
-              {
-                path: '/freight/settings',
-                component: () => import('../modules/freight/_components/SettingsComponent.vue'),
-                name: 'freight_settings',
-              },
-            ],
+            component: () => import('../modules/freight/_components/DashboardComponent.vue'),
+            name: 'freight_dashboard',
           },
+          {
+            path: '/freight/orders/create',
+            component: () => import('../modules/freight/_components/CreateFreightOrder.vue'),
+            name: 'freight_create_orders',
+          },
+          {
+            path: '/freight/orders/info/:id',
+            component: () => import('../modules/freight/_components/OrdersDetailsComponent.vue'),
+            name: 'freight_orders_info',
+          },
+          {
+            path: '/freight/settings',
+            component: () => import('../modules/freight/_components/SettingsComponent.vue'),
+            name: 'freight_settings',
+          },
+
+          // {
+          //   path: '/freight/set-up',
+          //   component: () => import('../modules/freight/Freight.vue'),
+          //   name: 'freight_set_up',
+          // },
+          // {
+          //   path: '/freight/verify',
+          //   component: () => import('../modules/freight/VerifyComponent.vue'),
+          //   name: 'freight_verify',
+          // },
         ],
       },
 
