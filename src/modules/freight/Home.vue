@@ -3,8 +3,46 @@
     v-if="sessionData"
     class=""
   >
+    <div class="">
+      <freight-business-verification v-if="verification_stage === 'active'" />
+      <freight-business-final-setup v-if="verification_stage === 'success'" />
+    </div>
     <main-header />
-    <router-view />
+    <div
+      id="transactions_container"
+      class="container"
+    >
+      <div class="section">
+        <router-link
+          class="section__link"
+          to="/freight/transporters"
+        >
+          {{ $t('mainComponent.transporters') }}
+        </router-link>
+        <router-link
+          class="section__link"
+          to="/freight/orders"
+        >
+          {{ $t('mainComponent.shipment') }}
+        </router-link>
+        <router-link
+          class="section__link"
+          to="/freight/dashboard"
+        >
+          {{ $t('mainComponent.activity_log') }}
+        </router-link>
+        <router-link
+          v-if="copAcc"
+          class="section__link"
+          to="/freight/settings"
+        >
+          {{ $t('mainComponent.settings') }}
+        </router-link>
+      </div>
+      <div class="">
+        <router-view />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -12,11 +50,20 @@
 import Vue from 'vue';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import VeeValidate, { Validator } from 'vee-validate';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 import freightStore from './_store';
+import ordersModuleStore from '../orders/_store';
+import transactionsModuleStore from '../transactions/_store';
+import freightAuthStore from '../freightAuth/_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import SessionMxn from '../../mixins/session_mixin';
 import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
 import MainHeader from '../../components/headers/MainHeader.vue';
+import FreightBusinessVerification from './FreightBusinessVerification.vue';
+import FreightBusinessFinalSetup from './FreightBusinessFinalSetup.vue';
+
+library.add(faStar);
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
@@ -42,16 +89,24 @@ export default {
   name: 'FreightHome',
   components: {
     MainHeader,
+    FreightBusinessVerification,
+    FreightBusinessFinalSetup,
   },
   mixins: [RegisterStoreModule, SessionMxn, MixpanelMixin],
   data() {
     return {
       sessionData: false,
       status: '',
+      verification_stage: '',
     };
   },
   computed: {
     ...mapGetters({}),
+    copAcc() {
+      const session = this.$store.getters.getSession;
+      const resp = session.default === 'biz';
+      return resp;
+    },
   },
   watch: {
     $route(to) {
@@ -71,6 +126,7 @@ export default {
     if (!moduleIsRegistered) {
       this.$store.registerModule('$_freight', freightStore);
     }
+    this.registerFreightAuthModule();
   },
   methods: {
     ...mapActions({
@@ -86,7 +142,13 @@ export default {
       const session = this.$store.getters.getSession;
       if (Object.keys(session).length > 0) {
         this.sessionData = true;
-        this.checkFreightStatus();
+        const { params } = this.$route;
+        if (Object.prototype.hasOwnProperty.call(params, 'token')) {
+          this.verification_stage = 'success';
+        }
+        // this.checkFreightStatus();
+      } else {
+        this.$router.push('/freight');
       }
     },
     registerOrderModule() {
@@ -96,6 +158,10 @@ export default {
     registerTransactionsModule() {
       const STORE_KEY = '$_transactions';
       this.$store.registerModule(STORE_KEY, transactionsModuleStore);
+    },
+    registerFreightAuthModule() {
+      const STORE_KEY = '$_freightAuth';
+      this.$store.registerModule(STORE_KEY, freightAuthStore);
     },
     checkFreightStatus() {
       const session = this.$store.getters.getSession;
@@ -151,4 +217,8 @@ export default {
 };
 </script>
 
-<style lang="css"></style>
+<style lang="css">
+@import "../../assets/styles/section_headers.css";
+@import "../../assets/styles/section_filters.css";
+@import "../../assets/styles/section_pagination.css";
+</style>
