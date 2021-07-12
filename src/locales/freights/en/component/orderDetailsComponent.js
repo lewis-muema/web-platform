@@ -71,6 +71,7 @@ const en = {
   rating_successfull: 'Order rated successfully!',
   rating_failure: 'Failed to rate order!',
   rating_failure_support: 'Failed to rate order, Kindly retry again or contact customer support',
+  shipment_id: 'Shipment ID',
 };
 
 export default en;
