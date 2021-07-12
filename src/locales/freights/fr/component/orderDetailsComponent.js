@@ -73,7 +73,6 @@ const fr = {
   rating_failure: "Échec de l'évaluation de la commande !",
   rating_failure_support:
     "Échec de l'évaluation de la commande, veuillez réessayer ou contacter le service clientèle.",
-
   shipment_id: 'ID d\'expédition',
 };
 
