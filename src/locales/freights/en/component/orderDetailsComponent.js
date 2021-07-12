@@ -1,5 +1,6 @@
 const en = {
   back: 'Back',
+  shipment_id: 'Shipment ID',
   pick_up_location: 'Pick up location',
   destination: 'Destination',
   pick_up_time: 'Pick up time',

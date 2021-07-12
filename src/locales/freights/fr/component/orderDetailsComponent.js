@@ -1,6 +1,7 @@
 const fr = {
   back: 'Retour',
   pick_up_location: 'Lieu de récupération',
+  shipment_id: 'ID d\'expédition',
   destination: 'Destination',
   pick_up_time: 'Heure de récupération',
   type_of_load: 'Type de charge',
