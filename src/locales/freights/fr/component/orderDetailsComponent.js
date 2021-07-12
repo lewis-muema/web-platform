@@ -1,7 +1,6 @@
 const fr = {
   back: 'Retour',
   pick_up_location: 'Lieu de récupération',
-  shipment_id: 'ID d\'expédition',
   destination: 'Destination',
   pick_up_time: 'Heure de récupération',
   type_of_load: 'Type de charge',
@@ -74,6 +73,8 @@ const fr = {
   rating_failure: "Échec de l'évaluation de la commande !",
   rating_failure_support:
     "Échec de l'évaluation de la commande, veuillez réessayer ou contacter le service clientèle.",
+
+  shipment_id: 'ID d\'expédition',
 };
 
 export default fr;
