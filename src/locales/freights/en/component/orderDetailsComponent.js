@@ -1,6 +1,5 @@
 const en = {
   back: 'Back',
-  shipment_id: 'Shipment ID',
   pick_up_location: 'Pick up location',
   destination: 'Destination',
   pick_up_time: 'Pick up time',
@@ -72,6 +71,7 @@ const en = {
   rating_successfull: 'Order rated successfully!',
   rating_failure: 'Failed to rate order!',
   rating_failure_support: 'Failed to rate order, Kindly retry again or contact customer support',
+  shipment_id: 'Shipment ID',
 };
 
 export default en;
