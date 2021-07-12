@@ -13,7 +13,7 @@
           {{ $t('orderDetailsComponent.back') }}
         </div>
         <div class="shipment-id-label">
-          Shipment ID : {{ freightOrderDetail.transformed_id }}
+          {{ $t('orderDetailsComponent.shipment_id') }} : {{ freightOrderDetail.transformed_id }}
         </div>
         <div
           v-if="view_tracking"
