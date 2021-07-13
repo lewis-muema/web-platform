@@ -59,11 +59,8 @@ export default {
       }
     },
     $route(to, from) {
-      if (
-        document.querySelector('.body').id.includes('beacon-active')
-        && (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders')
-      ) {
-        this.autoPopBeacon(2);
+      if ((from.path === '/auth/sign_in' && to.path === '/orders') || to.path === '/auth/sign_in') {
+        this.initializeFreshChat();
       }
     },
     getLanguage(val) {
@@ -115,11 +112,10 @@ export default {
       // initilize firebase on load
       this.initializeFirebase();
       this.loadFCMListeners();
-      this.detectAndroid();
-      this.detectIOS();
       if (document.querySelector('.body').id.includes('beacon-active')) {
         this.autoPopBeacon(1);
       }
+      this.initializeFreshChat();
     }
   },
   methods: {
@@ -408,6 +404,92 @@ export default {
           });
         }, 2000);
       }
+    },
+    initializeFreshChat() {
+      let session = this.$store.getters.getSession;
+      session = session[session.default];
+      if (document.getElementById('Freshchat-js-sdk')) {
+        window.fcWidget.user.clear();
+        window.fcWidget.destroy();
+        document.getElementById('Freshchat-js-sdk').remove();
+      }
+      setTimeout(() => {
+        if (session) {
+          const payload = {
+            app: 'ADONIS_PRIVATE_API',
+            endpoint: `user-preferences?${this.$store.getters.getSession.default === 'peer' ? 'user_id' : 'cop_user_id'}=${session.user_id}`,
+          };
+          this.$store
+            .dispatch('requestAxiosGet', payload)
+            .then((response) => {
+              if (response.data.preferences.data[0].freshchat_id) {
+                this.createFreshChatScript(
+                  session.user_email,
+                  response.data.preferences.data[0].freshchat_id,
+                );
+              } else {
+                this.createFreshChatScript(session.user_email);
+              }
+            })
+            .catch(() => {
+              this.createFreshChatScript(session.user_email);
+            });
+        } else {
+          this.createFreshChatScript();
+        }
+      }, 1000);
+    },
+    createFreshChatScript(userEmail, restoreID) {
+      let session = this.$store.getters.getSession;
+      session = session[session.default];
+      const script = document.createElement('script');
+      script.id = 'Freshchat-js-sdk';
+      script.onload = () => {
+        const payload = {
+          token: '88605441-3539-4e90-9e64-0fb1e4b1736f',
+          host: 'https://wchat.freshchat.com',
+          ...(userEmail && { externalId: userEmail }),
+          ...(restoreID && { restoreId: restoreID }),
+        };
+        if (session) {
+          window.fcWidget.init(payload);
+          this.setFreshChatRestoreIds(restoreID);
+        } else {
+          window.fcWidget.init(payload);
+        }
+      };
+      script.src = 'https://wchat.freshchat.com/js/widget.js';
+      document.head.appendChild(script);
+    },
+    setFreshChatRestoreIds(restoreID) {
+      const session = this.$store.getters.getSession;
+      window.fcWidget.user.setProperties({
+        firstName: session[session.default].user_name,
+        email: session[session.default].user_email,
+        phone: session[session.default].user_phone,
+        customerType: session.default,
+      });
+      window.fcWidget.on('user:created', (resp) => {
+        const status = resp && resp.status;
+        const data = resp && resp.data;
+        if (status === 200) {
+          if (data.restoreId && restoreID !== data.restoreId) {
+            const accType = session.default === 'peer' ? 'user_id' : 'cop_user_id';
+            const payload = {
+              values: {
+                [accType]: session[session.default].user_id,
+                freshchat_id: data.restoreId,
+              },
+              app: 'ADONIS_PRIVATE_API',
+              endpoint: `user-preferences?${accType}=${session[session.default].user_id}`,
+            };
+            this.$store
+              .dispatch('requestAxiosPost', payload)
+              .then(response => response)
+              .catch(err => err);
+          }
+        }
+      });
     },
   },
 };
