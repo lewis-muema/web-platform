@@ -26,7 +26,7 @@ const fr = {
   document_upload_success: 'Le connaissement a été ajouté avec succès',
   payment_terms: 'Quelles sont vos conditions de paiement ?',
   award: 'Accorder',
-  award_verification: 'Êtes-vous sûr de vouloir attribuer {{name }}} ?',
+  award_verification: 'Êtes-vous sûr de vouloir attribuer ?',
   truck_price: 'Prix par camion',
   assigned_truck: 'Camions attribués',
   total_amount: 'Montant total',
@@ -74,6 +74,12 @@ const fr = {
   rating_failure_support:
     "Échec de l'évaluation de la commande, veuillez réessayer ou contacter le service clientèle.",
   shipment_id: 'ID de la cargaison',
+  payment_in: 'paiement en',
+  payment_days: 'jours',
+  payment_days_7: 'paiement en 7 jours',
+  payment_days_14: 'paiement en 14 jours',
+  payment_days_21: 'paiement en 7 jours',
+  payment_days_28: 'paiement en 7 jours',
 };
 
 export default fr;
