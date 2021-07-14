@@ -458,7 +458,7 @@
                   <div class="quatations-outline-info-summary">
                     {{ $t('orderDetailsComponent.payment_terms_label') }}
                     <p class="outline-info-value summary-inner-value">
-                      Payment in {{ payment_terms }} days
+                      {{ $t('orderDetailsComponent.payment_in') }} {{ payment_terms }} {{ $t('orderDetailsComponent.payment_days') }} 
                     </p>
                   </div>
 
@@ -508,6 +508,7 @@
               class="declineDocumentOptions"
             >
               <div class="">
+                testing
                 <div class="decline-text-option decline-documemt-extend">
                   {{ $t('orderDetailsComponent.decline_document') }}
                 </div>
@@ -631,19 +632,19 @@ export default {
       terms: [
         {
           value: 7,
-          label: 'Payment in 7 days',
+          label: this.$t('orderDetailsComponent.payment_days_7'),
         },
         {
           value: 14,
-          label: 'Payment in 14 days',
+          label: this.$t('orderDetailsComponent.payment_days_14'),
         },
         {
           value: 21,
-          label: 'Payment in 21 days',
+          label: this.$t('orderDetailsComponent.payment_days_21'),
         },
         {
           value: 28,
-          label: 'Payment in 28 days',
+          label: this.$t('orderDetailsComponent.payment_days_28')
         },
       ],
       opened: [],
