@@ -8,11 +8,14 @@ export default {
     const baseUrl = window.location.origin;
     const loginUrl = `${baseUrl}/sign_in`;
     const url = state.ENV[payload.app];
+    const lang = localStorage.getItem('language');
+    const countryCode = localStorage.getItem('countryCode');
+    const timeLocale = localStorage.getItem('timeLocale');
+    const freightLang = `${timeLocale}-${countryCode}`;
     // add api key - if request is going to the backend
     if (payload.app === 'BACKEND_CUSTOMERS_APP') {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
-
 
     let config = {};
 
@@ -104,8 +107,7 @@ export default {
       }
     }
 
-    const lang = localStorage.getItem('language');
-    config.headers['Accept-Language'] = lang;
+    config.headers['Accept-Language'] = payload.app === 'FREIGHT_APP' ? freightLang : lang;
     return new Promise((resolve, reject) => {
       axios
         .post(`${url}${payload.endpoint}`, payload.values, config)
@@ -146,12 +148,15 @@ export default {
     const baseUrl = window.location.origin;
     const loginUrl = `${baseUrl}/sign_in`;
     const url = state.ENV[payload.app];
+    const lang = localStorage.getItem('language');
+    const countryCode = localStorage.getItem('countryCode');
+    const timeLocale = localStorage.getItem('timeLocale');
+    const freightLang = `${timeLocale}-${countryCode}`;
 
     // add api key - if request is going to the backend
     if (payload.app === 'BACKEND_CUSTOMERS_APP') {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
-
 
     let config = {};
 
@@ -237,8 +242,8 @@ export default {
         return true;
       }
     }
-    const lang = localStorage.getItem('language');
-    config.headers['Accept-Language'] = lang;
+
+    config.headers['Accept-Language'] = payload.app === 'FREIGHT_APP' ? freightLang : lang;
     return new Promise((resolve, reject) => {
       axios
         .patch(`${url}${payload.endpoint}`, payload.values, config)
@@ -284,12 +289,15 @@ export default {
     }
     const loginUrl = `${baseUrl}/sign_in`;
     const url = state.ENV[payload.app];
+    const lang = localStorage.getItem('language');
+    const countryCode = localStorage.getItem('countryCode');
+    const timeLocale = localStorage.getItem('timeLocale');
+    const freightLang = `${timeLocale}-${countryCode}`;
 
     // add api key - if request is going to the backend
     if (payload.app === 'BACKEND_CUSTOMERS_APP') {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
-
 
     let config = {};
 
@@ -339,8 +347,8 @@ export default {
       }, 5000);
       return true;
     }
-    const lang = localStorage.getItem('language');
-    config.headers['Accept-Language'] = lang;
+
+    config.headers['Accept-Language'] = payload.app === 'FREIGHT_APP' ? freightLang : lang;
     return new Promise((resolve, reject) => {
       axios
         .get(`${url}${payload.endpoint}`, config)
@@ -381,12 +389,15 @@ export default {
     const baseUrl = window.location.origin;
     const loginUrl = `${baseUrl}/sign_in`;
     const url = state.ENV[payload.app];
+    const lang = localStorage.getItem('language');
+    const countryCode = localStorage.getItem('countryCode');
+    const timeLocale = localStorage.getItem('timeLocale');
+    const freightLang = `${timeLocale}-${countryCode}`;
 
     // add api key - if request is going to the backend
     if (payload.app === 'BACKEND_CUSTOMERS_APP') {
       payload.endpoint = `${payload.endpoint}?apikey=${state.ENV.BACKEND_API_KEY}`;
     }
-
 
     let config = {};
 
@@ -472,8 +483,8 @@ export default {
         return true;
       }
     }
-    const lang = localStorage.getItem('language');
-    config.headers['Accept-Language'] = lang;
+
+    config.headers['Accept-Language'] = payload.app === 'FREIGHT_APP' ? freightLang : lang;
     return new Promise((resolve, reject) => {
       axios
         .put(`${url}${payload.endpoint}`, payload.values, config)
@@ -575,5 +586,4 @@ export default {
       );
     });
   },
-
 };

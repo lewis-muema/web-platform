@@ -39,7 +39,6 @@
                     {{ $t('transporterComponent.completed_orders') }}
                   </div>
                 </div>
-
                 <div class="transporters-filters transporters-highlight">
                   <div class="truck-add-info truck-add-rating-align">
                     <img
@@ -1030,7 +1029,7 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, 'Shipment sent successfully!', '');
+            this.doNotification(1, `${this.$t('transporterComponent.shipment_sent')}`, '');
             this.$router.push('/freight/orders');
             this.trackMixpanelEvent('Shipment Request Placed', {
               userId: session[session.default].user_id,
