@@ -78,8 +78,8 @@ const fr = {
   payment_days: 'jours',
   payment_days_7: 'paiement en 7 jours',
   payment_days_14: 'paiement en 14 jours',
-  payment_days_21: 'paiement en 7 jours',
-  payment_days_28: 'paiement en 7 jours',
+  payment_days_21: 'paiement en 21 jours',
+  payment_days_28: 'paiement en 28 jours',
 };
 
 export default fr;
