@@ -76,7 +76,7 @@ const fr = {
   shipment_id: 'ID de la cargaison',
   payment_in: 'paiement en',
   payment_days: 'jours',
-  payment_days_7: `paiement en ${this.value} jours`,
+  payment_days_7: 'paiement en 7 jours',
   payment_days_14: 'paiement en 14 jours',
   payment_days_21: 'paiement en 7 jours',
   payment_days_28: 'paiement en 7 jours',
