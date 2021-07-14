@@ -375,7 +375,7 @@ export function createRouter() {
           {
             path: '/freight/home/:token',
             component: () => import('../modules/freight/_components/TransportersComponent.vue'),
-            name: 'freight_transporters',
+            name: 'freight_transporters_verification',
           },
           {
             path: '/freight/transporters',
