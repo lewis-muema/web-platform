@@ -48,6 +48,8 @@ export default {
       'admin_bypass',
       'request_verification',
       'token',
+      'auth/forgot-password',
+      'auth/reset-password',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -187,6 +189,8 @@ export default {
       'admin_bypass',
       'request_verification',
       'token',
+      'auth/forgot-password',
+      'auth/reset-password',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -317,6 +321,8 @@ export default {
       'request_verification',
       'token',
       'currency/get_supported_countries',
+      'auth/forgot-password',
+      'auth/reset-password',
     ];
     if (externalEndpoints.includes(requestedPayload)) {
       config = {
@@ -424,6 +430,8 @@ export default {
       'admin_bypass',
       'request_verification',
       'token',
+      'auth/forgot-password',
+      'auth/reset-password',
     ];
     if (
       /^[\],:{}\s]*$/.test(

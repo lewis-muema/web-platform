@@ -198,7 +198,7 @@ const translations = {
   package_will_be_delivered_cc_at: 'The package will be delivered to the collection centre at',
   pick_up_time_of_order: 'The pickup time of your order',
   pickup_instructions: 'Pickup instructions at {{ getInstructionNotes[0].name }}',
-  drop_off_instructions_at_name: 'Drop off instructions at {name}',
+  drop_off_instructions_at_name: 'Drop off instructions at ',
   order_will_be_placed: 'Order will be placed in',
   time_seconds: '{time} seconds',
   confirm: 'Confirm',
@@ -313,6 +313,7 @@ const translations = {
   motorbike: 'motorbike',
   medium: 'medium',
   large: 'large',
+  cyclist: 'cyclist',
   rider: 'rider',
   driver: 'driver',
   pickup_package: 'E.g Pick package at the reception …',
@@ -474,6 +475,9 @@ const translations = {
   yes_cancel: 'YES , CANCEL',
   no_cancel: "NO , DON'T CANCEL",
   dont_cancel: 'DON’T CANCEL',
+  cancellation_fee: 'Cancellation fee charge',
+  You_may_be_charged_a_cancellation_fee:
+  'You may be charged a cancellation fee of {fee} if you choose to proceed to cancel',
   call_rider_and_right_destination:
     'Did you know after your order is confirmed you can call your rider and give him the right destination? We will recalculate the cost and deliver your item.',
   ok_call_rider: "Okay, I'll call the rider",
@@ -582,6 +586,8 @@ const translations = {
   seconds: 'SECONDS',
   new_feature_added: 'Hello! We’ve added a new feature, the open destination orders. We’d like to give you a quick tour of this new feature.',
   get_started: 'Let’s get started!',
+  skip: 'SKIP',
+  please_enter_rating: 'Please enter a rating to proceed',
   skip_tour: 'Skip tour',
   finish_account_setup: 'Finish account set up',
   does_biz_file_vat_optional: 'Does your business file VAT returns? (optional)',
@@ -855,6 +861,7 @@ const translations = {
   schedule_pick_up_time_of_order: 'Schedule pick up time of the order',
   sorry_could_not_update_location:
     'Sorry, we could not update the order because the location entered cannot be serviced by a {vendor_name} . Please try again with other locations',
+  
   edit_location_failure: 'Edit location failure',
   location_updated_successfully: 'Locations updated successfully',
   locations_update_failed: 'Locations update failed',

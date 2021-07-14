@@ -17,11 +17,13 @@ import firebase from 'firebase/app';
 import { mapGetters } from 'vuex';
 import VeeValidate, { Validator }  from 'vee-validate';
 import fr from 'vee-validate/dist/locale/fr';
+import EventsMixin from './mixins/events_mixin';
 
 const ENV = process.env.CONFIGS_ENV;
 
 export default {
   name: 'App',
+  mixins: [EventsMixin],
   data() {
     return {
       fcmToken: '',
@@ -57,11 +59,8 @@ export default {
       }
     },
     $route(to, from) {
-      if (
-        document.querySelector('.body').id.includes('beacon-active')
-        && (to.path === '/auth' || to.path === '/auth/sign_in' || to.path === '/orders')
-      ) {
-        this.autoPopBeacon(2);
+      if ((from.path === '/auth/sign_in' && to.path === '/orders') || to.path === '/auth/sign_in') {
+        this.initializeFreshChat();
       }
     },
     getLanguage(val) {
@@ -113,11 +112,10 @@ export default {
       // initilize firebase on load
       this.initializeFirebase();
       this.loadFCMListeners();
-      this.detectAndroid();
-      this.detectIOS();
       if (document.querySelector('.body').id.includes('beacon-active')) {
         this.autoPopBeacon(1);
       }
+      this.initializeFreshChat();
     }
   },
   methods: {
@@ -143,6 +141,7 @@ export default {
               'Cop Id': session[session.default].cop_id,
               'User Id': session[session.default].user_id,
             });
+            this.sendGA4Events('notification_received.');
           }
 
           if (logAction === 'click') {
@@ -152,6 +151,7 @@ export default {
               'Cop Id': session[session.default].cop_id,
               'User Id': session[session.default].user_id,
             });
+            this.sendGA4Events('notification_open');
           }
         } else {
           // no session
@@ -160,6 +160,7 @@ export default {
             this.trackMixpanelEvent('FCM Notification Recieved - Web', {
               'Order No': logData.order_no,
             });
+            this.sendGA4Events('notification_received.');
           }
 
           if (logAction === 'click') {
@@ -171,6 +172,7 @@ export default {
             this.trackMixpanelEvent('FCM Notification Clicked - Web', {
               'Order No': logData.order_no,
             });
+            this.sendGA4Events('notification_open');
           }
         }
       });
@@ -195,6 +197,13 @@ export default {
       if (Object.prototype.hasOwnProperty.call(this.notificationData.data, 'scheduled') && JSON.parse(this.notificationData.data.scheduled)) {
         this.$root.$emit('Show reschedule dialogue', this.notificationData);
       }
+    },
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
     },
     updateFirebaseToken() {
       const session = this.getSession;
@@ -323,7 +332,7 @@ export default {
     },
 
     detectAndroid() {
-      if (navigator.userAgent.match(/Android/i)) {
+      if (navigator.userAgent.match(/Android/i) && !this.$route.path.includes('reset_password') && !this.$route.path.includes('external')) {
         const notification = {
           title: 'Mobile redirect',
           level: 2,
@@ -340,10 +349,12 @@ export default {
     },
     detectIOS() {
       if (
-        navigator.userAgent.match(/webOS/i)
+        (navigator.userAgent.match(/webOS/i)
         || navigator.userAgent.match(/iPhone/i)
         || navigator.userAgent.match(/iPad/i)
-        || navigator.userAgent.match(/iPod/i)
+        || navigator.userAgent.match(/iPod/i))
+        && !this.$route.path.includes('reset_password')
+        && !this.$route.path.includes('external')
       ) {
         const notification = {
           title: 'Mobile redirect',
@@ -392,6 +403,92 @@ export default {
           });
         }, 2000);
       }
+    },
+    initializeFreshChat() {
+      let session = this.$store.getters.getSession;
+      session = session[session.default];
+      if (document.getElementById('Freshchat-js-sdk')) {
+        window.fcWidget.user.clear();
+        window.fcWidget.destroy();
+        document.getElementById('Freshchat-js-sdk').remove();
+      }
+      setTimeout(() => {
+        if (session) {
+          const payload = {
+            app: 'ADONIS_PRIVATE_API',
+            endpoint: `user-preferences?${this.$store.getters.getSession.default === 'peer' ? 'user_id' : 'cop_user_id'}=${session.user_id}`,
+          };
+          this.$store
+            .dispatch('requestAxiosGet', payload)
+            .then((response) => {
+              if (response.data.preferences.data[0].freshchat_id) {
+                this.createFreshChatScript(
+                  session.user_email,
+                  response.data.preferences.data[0].freshchat_id,
+                );
+              } else {
+                this.createFreshChatScript(session.user_email);
+              }
+            })
+            .catch(() => {
+              this.createFreshChatScript(session.user_email);
+            });
+        } else {
+          this.createFreshChatScript();
+        }
+      }, 1000);
+    },
+    createFreshChatScript(userEmail, restoreID) {
+      let session = this.$store.getters.getSession;
+      session = session[session.default];
+      const script = document.createElement('script');
+      script.id = 'Freshchat-js-sdk';
+      script.onload = () => {
+        const payload = {
+          token: '88605441-3539-4e90-9e64-0fb1e4b1736f',
+          host: 'https://wchat.freshchat.com',
+          ...(userEmail && { externalId: userEmail }),
+          ...(restoreID && { restoreId: restoreID }),
+        };
+        if (session) {
+          window.fcWidget.init(payload);
+          this.setFreshChatRestoreIds(restoreID);
+        } else {
+          window.fcWidget.init(payload);
+        }
+      };
+      script.src = 'https://wchat.freshchat.com/js/widget.js';
+      document.head.appendChild(script);
+    },
+    setFreshChatRestoreIds(restoreID) {
+      const session = this.$store.getters.getSession;
+      window.fcWidget.user.setProperties({
+        firstName: session[session.default].user_name,
+        email: session[session.default].user_email,
+        phone: session[session.default].user_phone,
+        customerType: session.default,
+      });
+      window.fcWidget.on('user:created', (resp) => {
+        const status = resp && resp.status;
+        const data = resp && resp.data;
+        if (status === 200) {
+          if (data.restoreId && restoreID !== data.restoreId) {
+            const accType = session.default === 'peer' ? 'user_id' : 'cop_user_id';
+            const payload = {
+              values: {
+                [accType]: session[session.default].user_id,
+                freshchat_id: data.restoreId,
+              },
+              app: 'ADONIS_PRIVATE_API',
+              endpoint: `user-preferences?${accType}=${session[session.default].user_id}`,
+            };
+            this.$store
+              .dispatch('requestAxiosPost', payload)
+              .then(response => response)
+              .catch(err => err);
+          }
+        }
+      });
     },
   },
 };

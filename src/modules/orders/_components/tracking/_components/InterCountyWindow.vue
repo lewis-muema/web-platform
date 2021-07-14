@@ -691,7 +691,7 @@ export default {
       recipientPhone: '',
       externalTracking: false,
       setComplete: false,
-      small_vendors: [1],
+      small_vendors: [1, 28],
       setScheduled: false,
       partnerName: '',
       packageName: '',
@@ -750,9 +750,9 @@ export default {
       });
       if (this.tracking_data.confirm_status === 0 && this.tracking_data.delivery_status === 0) {
         return 1;
-      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && !logTypes.includes(10)) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] !== 10) {
         return 2;
-      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes.includes(10)) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] === 10) {
         return 3;
       } else {
         return 4;
@@ -1589,7 +1589,7 @@ export default {
             response = response[0];
           }
 
-          if (response.status === 200) {
+          if (response.status === 200 && response.data.status) {
             this.doNotification('0', 'M-Pesa Payment', `Request for payment sent to ${userPhone}.`);
             this.requestMpesaPaymentPoll();
           } else {
@@ -1650,7 +1650,7 @@ export default {
               that.payment_state = 0;
               that.loading_payment = false;
               that.showPaymentTab = false;
-              that.doNotification('1', this.$t('general.order_payment'), this.$t('general.payment_successful'));
+              that.doNotification('1', that.$t('general.order_payment'), that.$t('general.payment_successful'));
               that.payment_check = '';
               that.mpesa_payment = false;
               that.mpesa_payment_state = true;
@@ -1661,8 +1661,8 @@ export default {
               if (pollCount === 5 && !that.mpesa_payment_state) {
                 that.doNotification(
                   '0',
-                  this.$t('general.payment_not_recieved'),
-                  this.$t('general.will_keep_trying_checking_payment')
+                  that.$t('general.payment_not_recieved'),
+                  that.$t('general.will_keep_trying_checking_payment')
                 );
                 that.payment_state = 0;
                 that.loading_payment = false;

@@ -76,6 +76,7 @@ export default {
   },
   created() {
     this.registerOrderPlacementModule();
+    this.sendGA4Events('select_open_destination');
   },
   methods: {
     switchMode(route) {
@@ -102,6 +103,13 @@ export default {
         eventLabel,
       };
       this.fireGAEvent(eventPayload);
+    },
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
     },
     trackMixpanelEvent(name, event) {
       let analyticsEnv = '';

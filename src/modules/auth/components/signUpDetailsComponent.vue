@@ -21,6 +21,7 @@
           v-model="account"
           label="biz"
           border
+          @change="sendGA4Events('select_account_type', {account_type: account})"
         >
           {{$t('signUpDetails.business')}}
         </el-radio>
@@ -28,6 +29,7 @@
           v-model="account"
           label="peer"
           border
+          @change="sendGA4Events('select_account_type', {account_type: account})"
         >
           {{$t('signUpDetails.personal')}}
         </el-radio>
@@ -43,6 +45,7 @@
             type="text"
             name="name"
             value=""
+            @blur="sendGA4Events('add_name')"
           >
         </div>
         <div
@@ -58,6 +61,7 @@
             type="text"
             name="name"
             value=""
+            @blur="sendGA4Events('add_business_name')"
           >
         </div>
         <div class=" ">
@@ -71,6 +75,7 @@
             type="email"
             name="email"
             value=""
+            @blur="sendGA4Events('add_email')"
           >
           <p class="sign-up-data-error">
             {{ errors.first('email') }}
@@ -238,13 +243,14 @@ import { mapActions, mapMutations } from 'vuex';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import EventsMixin from '../../../mixins/events_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 const currencyConversion = require('country-tz-currency');
 
 export default {
   name: 'BizDetailsComponent',
-  mixins: [SessionMxn, NotificationMxn],
+  mixins: [SessionMxn, NotificationMxn, EventsMixin],
   data() {
     return {
       account: 'biz',
@@ -332,6 +338,7 @@ export default {
   },
   mounted() {
     this.locale = localStorage.getItem('timeLocale');
+    this.sendGA4Events('signup_email');
   }, 
   methods: {
     ...mapActions({
@@ -345,6 +352,14 @@ export default {
     ...mapMutations({setLanguage: 'setLanguage'}),
     validate_phone() {
       this.$validator.validate();
+      this.sendGA4Events('add_phone_number');
+    },
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
     },
     checkCountryCode(country) {
       this.localCountryCode = country.iso2;
@@ -359,6 +374,7 @@ export default {
           this.next_step = false;
           break;
       }
+      this.sendGA4Events('signup_select_country', {location: country.name});
     },
     validateDetails() {
       let valid = false;
@@ -403,6 +419,14 @@ export default {
             this.sign_up_text = this.$t('signUpDetails.sign_up_status');
             const phone = this.phone.replace(/[()\-\s]+/g, '');
             this.phone = phone;
+            this.sendGA4Events('select_sign_up');
+            this.sendGA4Events('signup_page',
+            {
+              name: this.name,
+              email: this.email,
+              phone_number: this.phone,
+              cop_name: this.cop_name,
+            });
             const values = {};
             values.phone = phone;
             values.email = this.email;
@@ -498,6 +522,7 @@ export default {
     },
     verify_code() {
       if (this.code !== '') {
+        this.sendGA4Events('signup_verification_page');
         const requestId = localStorage.getItem('request_id');
         if (requestId === '' || requestId === null) {
           this.doNotification(2, this.$t('signUpDetails.phone_verification_error'), this.$t('signUpDetails.internal_systems_error'));

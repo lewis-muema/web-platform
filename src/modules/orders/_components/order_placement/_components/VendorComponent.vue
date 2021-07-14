@@ -238,6 +238,7 @@
                     autocomplete="true"
                     :placeholder="$t('general.notes')"
                     @input="addDestinationNotes($event, path, index)"
+                    @blur="sendGA4Events('add_destination_notes')"
                   />
                 </div>
               </div>
@@ -459,6 +460,7 @@
                     v-model.trim="delivery_item"
                     autocomplete="true"
                     @change="dispatchDeliveryItem"
+                    @blur="sendGA4Events('add_delivery_item', {'delivery_item': delivery_item})"
                   />
                 </div>
               </div>
@@ -1029,7 +1031,6 @@
                 </div>
               </div>
             </div>
-
             <div class="">
               <div class="">
                 <input
@@ -1054,6 +1055,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PaymentOptions from './PaymentOptions.vue';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
+import EventsMixin from '../../../../../mixins/events_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
@@ -1061,7 +1063,7 @@ export default {
   components: {
     PaymentOptions,
   },
-  mixins: [TimezoneMxn, NotificationMxn],
+  mixins: [TimezoneMxn, NotificationMxn, EventsMixin],
   data() {
     return {
       first_time: false,
@@ -1075,6 +1077,8 @@ export default {
       discount_timed_out: false,
       customer_min_amount: '',
       vendors_with_fixed_carrier_type: [
+        'Bicycle',
+        'bicycle',
         'Standard',
         'Runner',
         'Van',
@@ -1136,7 +1140,7 @@ export default {
       schedule_time: '',
       default_value: this.moment().format('HH:mm:ss'),
       order_notes: '',
-      small_vendors: [1, 22, 21, 23, 12],
+      small_vendors: [1, 22, 21, 23, 12, 28],
       medium_vendors: [2, 3],
       large_vendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
       pair_status: '',
@@ -1409,12 +1413,7 @@ export default {
     },
 
     getVendorNameOnCarrierType() {
-      let vendorDispName = 'motorbike';
-      if (this.get_active_package_class === 'medium') {
-        vendorDispName = this.get_active_vendor_name;
-      } else if (this.get_active_package_class === 'large') {
-        vendorDispName = this.get_active_vendor_name;
-      }
+      let vendorDispName = this.get_active_vendor_name;
       return vendorDispName.toLowerCase();
     },
 
@@ -1429,7 +1428,9 @@ export default {
     },
     riderNameDisplay() {
       let displayPairName = this.$t('general.rider');
-      if (this.small_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+      if (this.activeVendorPriceData.vendor_id === 28) {
+        displayPairName = this.$t('general.cyclist');
+      } else if (this.small_vendors.includes(this.activeVendorPriceData.vendor_id)) {
         displayPairName = this.$t('general.rider');
       } else {
         displayPairName = this.$t('general.driver');
@@ -1534,8 +1535,30 @@ export default {
         data,
       );
     }, 500),
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
+    },
     dispatchCarrierType() {
       this.setCarrierType(this.carrier_type);
+      let vendor;
+      if (this.get_active_package_class === 'small') {
+        vendor = this.smallVendorOptions.filter(
+          data => data.value === this.carrier_type,
+        );
+      } else if (this.get_active_package_class === 'medium') {
+        vendor = this.mediumOptions.filter(
+          data => data.value === this.carrier_type,
+        );
+      } else {
+        vendor = this.largeOptions.filter(
+          data => data.value === this.carrier_type,
+        );
+      }
+      this.sendGA4Events(`${vendor[0].label}${this.activeVendorPriceData.vendor_id === 1 ? '' : '_'}${this.activeVendorPriceData.vendor_id === 1 ? '' : this.activeVendorPriceData.vendor_name.replace(' ', '')}`);
     },
     dispatchScheduleTime() {
       const dateTime = new Date();
@@ -1545,6 +1568,7 @@ export default {
       }
       this.setScheduleTime(this.schedule_time);
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
+      this.sendGA4Events('select_pickup_time', {'pick_up_time': this.moment(this.schedule_time).format('YYYY-MM-DD HH:mm:ss')});
     },
     addDestinationNotes(note, pathObj, i) {
       this.trackMixpanelEvent('Add A Note', { 'Destination Note': note });
@@ -1567,6 +1591,7 @@ export default {
         // pair with rider
         this.setPairWithRiderStatus(true);
         this.setPairWithRiderState(true);
+        this.sendGA4Events('select_preferred_driver');
       } else {
         // do not pair
         this.setPairWithRiderStatus(false);
@@ -1630,7 +1655,7 @@ export default {
       }
 
       if (this.vendor_id !== this.activeVendorPriceData.vendor_id) {
-        if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id)) {
+        if (this.large_vendors.includes(this.activeVendorPriceData.vendor_id) || this.activeVendorPriceData.vendor_id === 28) {
           this.carrier_type = '1';
         } else if (
           this.medium_vendors.includes(this.activeVendorPriceData.vendor_id)
@@ -1787,9 +1812,10 @@ export default {
     },
 
     dispatchAdditionalLoaderStatus(val) {
-      const track = this.additional_loader === 1
-        ? this.trackMixpanelEvent('Selected Loader For Order', { 'Number of Loaders': val })
-        : '';
+      if (this.additional_loader === '1') {
+        this.sendGA4Events('add_loaders');
+        this.trackMixpanelEvent('Selected Loader For Order', { 'Number of Loaders': val });
+      }
       this.setAdditionalLoaderStatus(val);
     },
 
@@ -1806,6 +1832,7 @@ export default {
     },
 
     setActivePackageClassWrapper(name) {
+      this.sendGA4Events(`${name}_size_load`);
       this.setActivePackageClass(name);
       this.setOuterActivePackageClass(name);
       this.reCheckCarrierType();
@@ -1883,6 +1910,7 @@ export default {
             this.trackMixpanelEvent('Paired Order With Rider', { 'Paired Rider': plate });
             this.triggerGAEvent('Paired Order With Rider', { 'Paired Rider': plate });
             this.updateData(response.data);
+            this.sendGA4Events('add_preferred_phone_number', {driver_phone: response.data.rider_phone});
           } else {
             this.pair_status = '1';
             this.failure_text = response.message;
@@ -2051,6 +2079,7 @@ export default {
       this.setOuterActiveVendorDetails(vendorObject);
       this.reCheckCarrierType();
       this.trackMixpanelEvent(`Select Vendor: ${vendorObject.vendor_name}`);
+      this.sendGA4Events('select_vehicle_type', {vehicle_type: vendorObject.vendor_name});
     },
 
     reCheckCarrierType() {
@@ -2104,6 +2133,8 @@ export default {
     initiateStoreData() {
       const activeVendorName = this.getOuterActiveVendorDetails;
       const activeVendorClass = this.getOuterActivePackageClass;
+      this.sendGA4Events(`${activeVendorClass}_size_load`);
+      this.sendGA4Events('select_vehicle_type', {vehicle_type: this.activeVendorPriceData.vendor_name});
       if ('vendor_name' in activeVendorName && activeVendorClass !== '') {
         this.setActiveVendorName(activeVendorName.vendor_name);
         this.setActivePackageClass(activeVendorClass);
@@ -2137,8 +2168,8 @@ export default {
       if (vendorObject.vendor_id === 26) {
         return this.$t('general.send_package_upcountry');
       }
-
-      return vendorObject.vendor_description;
+      const description = vendorObject.vendor_description.replace("<p>", "").replace("</p>", "");
+      return description;
     },
     getPickUpDescriptText(vendorObject) {
       if (this.standardOptions.includes(vendorObject.vendor_id) && !vendorObject.available) {
@@ -2413,6 +2444,7 @@ export default {
               }
               else {
                 this.saveInstructionNotes(this.instructions_data);
+                this.instructionType(val);
               }
 
               this.addDeliveryInfo = false;
@@ -2435,11 +2467,28 @@ export default {
           }
           else {
             this.saveInstructionNotes(this.instructions_data);
+            this.instructionType(val);
             this.addDeliveryInfo = false;
           }
         }
       }
 
+    },
+    instructionType(val) {
+      if (val === 1) {
+        this.sendGA4Events('add_pickup_notes', {'pick_up_notes': this.instructions_data[0].notes});
+        this.sendGA4Events('add_pick_up_number', {'pick_up_phone_number': this.instructions_data[0].recipient_phone});
+        if (this.instructions_data[0].notify) {
+          this.sendGA4Events('select_sms_notification');
+        }
+      } else if (val === 2) {
+        this.sendGA4Events('add_delivery_notes', {'delivery_notes': this.instructions_data[1].notes});
+        this.sendGA4Events('add_drop_off_number', {'delivery_phone_number': this.instructions_data[1].recipient_phone});
+        this.sendGA4Events('add_phone_number', {'pick_up_phone_number': this.instructions_data[0].recipient_phone, 'delivery_phone_number': this.instructions_data[1].recipient_phone});
+        if (this.instructions_data[1].notify) {
+          this.sendGA4Events('select_sms_notification');
+        }
+      }
     },
     handleIntercountyAdditionalDetails(index , val){
 

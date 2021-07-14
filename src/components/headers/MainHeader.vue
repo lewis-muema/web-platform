@@ -58,7 +58,7 @@
             <a> {{ $t('mainHeader.hi')}} {{ logged_user }}</a>
           </li>
           <li class="nav--menu-dropdown">
-            <a class="nav--menu-dropdown-link">
+            <a class="nav--menu-dropdown-link" @mouseover="sendGA4Events('select_menu')">
               {{$t('mainHeader.menu')}}
               <i class="el-icon-arrow-down" />
             </a>
@@ -265,6 +265,7 @@ export default {
           this.$router.replace({ name: 'sign_in' });
         }
       }
+      this.sendGA4Events('select_logout');
     },
     clearAuthToken() {
       const auth = process.env.CONFIGS_ENV.AUTH;
@@ -349,6 +350,12 @@ export default {
         eventLabel,
       };
       this.fireGAEvent(eventPayload);
+      if (route === '/transactions/order_history') {
+        this.sendGA4Events('select_orders');
+      }
+      if (route === '/orders/freight') {
+        this.sendGA4Events('freight_select_page');
+      }
     },
     linkPayments() {
       this.$router.push('/payment/card');
@@ -368,6 +375,13 @@ export default {
       } catch (er) {
         // ...
       }
+    },
+    sendGA4Events(label, params) {
+      const eventPayload = {
+        name: label,
+        parameters: params,
+      };
+      this.fireGA4Event(eventPayload);
     },
     preferredFreightCountries() {
       const session = this.$store.getters.getSession;

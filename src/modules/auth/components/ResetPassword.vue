@@ -145,8 +145,8 @@ export default {
         const fullPayload = {
           values: payload,
           vm: this,
-          app: 'NODE_PRIVATE_API',
-          endpoint: 'update_pass',
+          app: 'ADONIS_PRIVATE_API',
+          endpoint: 'auth/reset-password',
         };
         const that = this;
         this.requestResetPassword(fullPayload)
@@ -155,11 +155,14 @@ export default {
               response = response[0];
             }
             if (response.status) {
-              const sessionData = response.data;
-              const { user_email } = sessionData[sessionData.default];
-              const pass = this.new_password;
-
-              this.handleNewSession(user_email, pass);
+              this.doNotification(
+                1,
+                this.$t('resetPassword.password_reset_successful'),
+                this.$t('resetPassword.password_reset_successful_text'),
+              );
+              setTimeout(() => {
+                this.$router.push('/auth');
+              }, 4000);
             } else {
               this.doNotification(
                 2,
@@ -176,7 +179,7 @@ export default {
             this.doNotification(
               2,
               this.$t('resetPassword.password_reset_failed'),
-              e.response.data.reason,
+              e.response.data.message,
             );
           });
       }
@@ -267,7 +270,7 @@ export default {
           }
         },
         (error) => {
-          this.doNotification(2, this.$t('resetPassword.login_failed'), this.$t('resetPassword.login_failed_text') );
+          this.doNotification(2, this.$t('resetPassword.login_failed'), this.$t('resetPassword.login_failed_text'));
         },
       );
     },
