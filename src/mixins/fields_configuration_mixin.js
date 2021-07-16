@@ -3,7 +3,7 @@
 const validations = [
   {
     field: 'user_name',
-    rule: /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)$/,
+    rule: /^([A-Z]{1}[a-zA-Z]{2,}\s[A-Z]{1,}'?-?[a-zA-Z]{2,}?)*$/,
     required: true,
   },
   {
