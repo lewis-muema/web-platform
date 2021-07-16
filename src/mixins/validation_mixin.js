@@ -90,7 +90,8 @@ const ValidationMxn = {
     bizRegValidation(val) {
       if (val !== '') {
         if (this.acc_default.country_code === 'KE') {
-          return /^[PVT]{3}[A-Z0-9]{7}$/.test(val);
+          // return /^[PVT]{3}[A-Z0-9]{7}$/.test(val);
+          return /\w+$/.test(val);
         }
         if (this.acc_default.country_code === 'CI') {
           return /^[A-Z]{2}[-][A-Z]{3}[-][0-9]{4}[-][A-Z]{1}[-][0-9]{2,10}$/.test(val);
