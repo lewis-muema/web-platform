@@ -1530,6 +1530,14 @@ export default {
       if (orderData.values.payment_method === 12 && orderData.values.cop_id === 0) {
         this.handleOrderPlacementError(orderData.values);
       } else {
+        const transaction = this.$apm.startTransaction('Order confirmation', 'custom');
+        const httpSpan = transaction.startSpan('POST ' + process.env.ADONIS_PRIVATE_API, 'external.http');
+        const { peer, biz } = JSON.parse(localStorage.getItem('_sessionSnack'))
+        this.$apm.setUserContext({
+          id: biz.user_id || peer.user_id,
+          email: biz.user_email || peer.user_email,
+          username: biz.user_name || peer.user_name,
+        });
         const payload = {
           values: this.getCompleteOrderObject(),
           app: 'ADONIS_PRIVATE_API',
@@ -1701,7 +1709,10 @@ export default {
             }
             this.loading = false;
           },
-        );
+        ).finally(() => {
+          httpSpan.end()
+          transaction.end()
+        });
       }
     },
 
