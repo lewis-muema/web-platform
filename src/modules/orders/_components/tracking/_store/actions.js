@@ -6,7 +6,7 @@
 import mqtt from 'mqtt';
 
 const getTrackingData = function getTrackingData({ commit, dispatch, state }, data) {
-  data.closest_city = this.getters.getClosestCity === '' ? true : false;
+  data.closest_city = this.getters.getClosestCity === '';
   const payload = {
     app: 'NODE_PRIVATE_API',
     endpoint: 'pending_delivery',

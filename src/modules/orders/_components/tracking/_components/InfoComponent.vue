@@ -1060,7 +1060,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      tracking_data: '$_orders/$_tracking/getTrackingData',
+      tracking_data: '$_orders/$_tracking/trackingData',
       tracked_order: '$_orders/$_tracking/getTrackedOrder',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
       vendors: '$_orders/getVendors',
@@ -1286,6 +1286,7 @@ export default {
     cancel_reason(value) {
       if (value !== '') {
         this.cancelChange(value);
+        this.calculateCancellationFee(value);
       }
     },
     getShareOption(value) {
@@ -1434,6 +1435,7 @@ export default {
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
       completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
       requestCancellationReasons: '$_orders/$_tracking/requestCancellationReasons',
+      computeCancellationFee: '$_orders/$_tracking/computeCancellationFee',
     }),
     dispatchScheduleTime(){
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
@@ -1765,7 +1767,7 @@ export default {
       const payload = {
         order_no: this.tracking_data.order_no,
       };
-      this.$store.dispatch('$_orders/$_tracking/computeCancellationFee', payload).then(
+      this.computeCancellationFee(payload).then(
         (response) => {
           if (response.data.cancellation_fee === 0) {
             this.cancellation_fee = false;
@@ -1790,9 +1792,9 @@ export default {
     calculateCancellationFee(reason) {
       const payload = {
         order_no: this.tracking_data.order_no,
-        cancellation_reason_id: reason, 
+        cancellation_reason_id: reason,
       };
-      this.$store.dispatch('$_orders/$_tracking/computeCancellationFee', payload).then(
+      this.computeCancellationFee(payload).then(
         (response) => {
           if (response.data.cancellation_fee) {
             this.doNotification(2, this.$t('general.cancellation_fee'), this.$t('general.You_may_be_charged_a_cancellation_fee', {fee:`${response.data.currency} ${response.data.cancellation_fee}`}));

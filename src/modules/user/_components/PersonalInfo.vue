@@ -104,12 +104,13 @@ import { mapGetters, mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
 import EventsMixin from '../../../mixins/events_mixin';
+import InputValidationMixin from '../../../mixins/fields_validations_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'PersonalInfo',
-  mixins: [SessionMxn, NotificationMxn, EventsMixin],
+  mixins: [SessionMxn, NotificationMxn, EventsMixin, InputValidationMixin],
   data() {
     return {
       user_name: '',
@@ -178,7 +179,7 @@ export default {
     },
     validate_phone() {
       this.$validator.validate();
-      this.sendGA4Events('edit_phone_number', {phone_number: this.phone});
+      this.sendGA4Events('edit_phone_number', { phone_number: this.phone });
     },
     ...mapActions({
       requestPersonalInfo: '$_user/requestPersonalInfo',
@@ -186,7 +187,12 @@ export default {
       requestPhoneVerificationVerify: '$_user/requestPhoneVerificationVerify',
     }),
     save_personal() {
-      if (this.user_name !== '' && this.user_email !== '' && this.phone !== '') {
+      if (
+        this.user_name !== ''
+        && this.user_email !== ''
+        && this.phone !== ''
+        && this.fieldValidations('user_name', this.name)
+      ) {
         const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
 
         if (phoneValid) {
@@ -223,6 +229,9 @@ export default {
       } else {
         const level = 3;
         this.message = this.$t('general.provide_all_details');
+        if (!this.fieldValidations('user_name', this.name)) {
+          this.message = this.fieldValidationsError('user_name');
+        }
         const notification = {
           title: '',
           level,

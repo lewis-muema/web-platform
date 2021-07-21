@@ -866,44 +866,6 @@ export default {
         },
       );
     },
-    setBillOfLadingData() {
-      const fullPayload = {
-        app: 'FREIGHT_APP',
-        operator: '?',
-        endpoint: 'document_types/stages/1',
-      };
-      this.getDocumentOptions(fullPayload).then(
-        (response) => {
-          if (response.status) {
-            const responseData = response.data;
-            if (responseData.length > 0) {
-              const listed = responseData.find(
-                location => location.document_type === 'Bill Of Lading',
-              );
-
-              if (listed !== undefined) {
-                this.billOfLadingOptions = listed;
-              }
-            }
-          } else {
-            this.doNotification(
-              2,
-              'Failed to retrieve awarding documents options',
-              response.message,
-            );
-            this.$router.push('/freight/orders');
-          }
-        },
-        (error) => {
-          this.doNotification(
-            2,
-            'Awarding document options retrival failure !',
-            'Failed to fetch document options , Kindly retry again or contact customer support ',
-          );
-          this.$router.push('/freight/orders');
-        },
-      );
-    },
     backToTransporters() {
       this.$router.push('/freight/transporters');
     },
