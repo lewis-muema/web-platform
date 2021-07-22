@@ -104,7 +104,13 @@ export default {
     ...mapGetters({}),
     copAcc() {
       const session = this.$store.getters.getSession;
-      const resp = session.default === 'biz';
+      let resp = false;
+      if (session.default === 'biz') {
+        // Admin
+        if (session[session.default].user_type === 2) {
+          resp = true;
+        }
+      }
       return resp;
     },
   },
