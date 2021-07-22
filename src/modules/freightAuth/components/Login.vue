@@ -14,7 +14,7 @@
         </div>
         <div class="freight-login-card freight-login-details">
           <p class="freight-sign-up-header">
-            Welcome Back!
+            Hello!
           </p>
           <p class="freight-sign-up-description freight-login-sub">
             Please login to continue
@@ -75,7 +75,10 @@
               </div>
             </div>
 
-            <p class="freight-login-reset">
+            <p
+              class="freight-login-reset"
+              @click="forgetPassword"
+            >
               Forgot Password?
             </p>
 
@@ -88,7 +91,10 @@
               >
             </div>
 
-            <p class="freight-login-redirect login-redirect-margin">
+            <p
+              class="freight-login-redirect login-redirect-margin"
+              @click="createAccount"
+            >
               Don’t have a Sendy Freight account? Get Started
             </p>
           </div>
@@ -173,6 +179,7 @@ export default {
   methods: {
     ...mapActions({
       getSupportedCountries: '$_freightAuth/getSupportedCountries',
+      freightLogin: '$_freightAuth/freightLogin',
     }),
 
     ...mapMutations({}),
@@ -269,8 +276,62 @@ export default {
         this.doNotification(2, 'Login Error', 'Kindly provide a valid email');
       }
     },
-    processLoginRequest(payload) {
-      console.log('payload', payload);
+    processLoginRequest(val) {
+      const fullPayload = {
+        values: val,
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'freight/login',
+      };
+
+      this.freightLogin(fullPayload)
+        .then((response) => {
+          if (Object.prototype.hasOwnProperty.call(response, 'status')) {
+            this.doNotification(2, 'Login Failure', response.message);
+          } else {
+            let partsOfToken = '';
+            if (Array.isArray(response)) {
+              const res = response[1];
+              localStorage.setItem('jwtToken', res);
+              localStorage.setItem('jwtToken', res.access_token);
+              localStorage.setItem('refreshToken', res.refresh_token);
+              partsOfToken = res.access_token.toString().split('.');
+            } else {
+              localStorage.setItem('jwtToken', response);
+              localStorage.setItem('jwtToken', response.access_token);
+              localStorage.setItem('refreshToken', response.refresh_token);
+              partsOfToken = response.access_token.split('.');
+            }
+            const middleString = partsOfToken[1];
+            const data = atob(middleString);
+            const { payload } = JSON.parse(data);
+
+            const sessionData = payload;
+            const locale = sessionData[sessionData.default].preferred_language === null
+              ? 'en'
+              : sessionData[sessionData.default].preferred_language;
+            const countryCode = sessionData[sessionData.default].country_code === null
+              ? 'KE'
+              : sessionData[sessionData.default].country_code;
+            localStorage.setItem('countryCode', countryCode);
+            this.$i18n.locale = locale;
+            const acceptLanguageHeader = `${locale}-${countryCode}`;
+            localStorage.setItem('language', acceptLanguageHeader);
+            const jsonSession = JSON.stringify(sessionData);
+            this.setSession(jsonSession);
+            this.$store.commit('setSession', sessionData);
+
+            this.$router.push('/freight/transporters');
+          }
+        })
+        .catch(() => {
+          this.doNotification(2, 'Login Failure', 'Something went wrong , kindly retry again');
+        });
+    },
+    forgetPassword() {
+      this.$router.push('/freight/forgot_password');
+    },
+    createAccount() {
+      this.$router.push('/freight/sign_up');
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };
@@ -282,11 +343,4 @@ export default {
 
 <style lang="css" scoped>
 @import "../../../../src/assets/styles/freight_auth.css";
-.freight-data-error {
-  font-size: 13px;
-  font-family: 'Nunito', sans-serif;
-  color: #e08445;
-  text-align: left;
-  margin-top: 0;
-}
 </style>

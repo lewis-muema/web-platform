@@ -208,6 +208,16 @@ freight-signup-dialog > div > div > div.el-dialog__header{
   margin-top: 15%;
   text-align: center;
 }
+.freight-input-error{
+  border: 1px solid #FF0000 !important;
+}
+.freight-data-error {
+  font-size: 13px;
+  font-family: 'Nunito', sans-serif;
+  color: #e08445;
+  text-align: left;
+  margin-top: 0;
+}
 @media (max-width: 500px) {
   .freight-login-details {
     margin:20px auto;
