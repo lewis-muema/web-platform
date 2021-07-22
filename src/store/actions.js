@@ -50,6 +50,8 @@ export default {
       'token',
       'auth/forgot-password',
       'auth/reset-password',
+      'freight/login',
+      'freight/sign-up',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -191,6 +193,8 @@ export default {
       'token',
       'auth/forgot-password',
       'auth/reset-password',
+      'freight/login',
+      'freight/sign-up',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -323,6 +327,8 @@ export default {
       'currency/get_supported_countries',
       'auth/forgot-password',
       'auth/reset-password',
+      'freight/login',
+      'freight/sign-up',
     ];
     if (externalEndpoints.includes(requestedPayload)) {
       config = {
@@ -432,6 +438,8 @@ export default {
       'token',
       'auth/forgot-password',
       'auth/reset-password',
+      'freight/login',
+      'freight/sign-up',
     ];
     if (
       /^[\],:{}\s]*$/.test(

@@ -53,20 +53,23 @@
                 </div>
 
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Phone Number</label>
+                  <label class="freight-input-label">Email Address</label>
                   <div class="freight-auth-padding">
-                    <vue-tel-input
-                      v-model.trim="phone"
-                      v-validate="'required|check_phone'"
-                      class="input-control sign-up-form"
-                      type="number"
-                      name="phone"
-                      value=""
-                      data-vv-validate-on="blur"
-                      v-bind="phoneInputProps"
-                      @onBlur="validate_phone"
-                      @country-changed="checkCountryCode"
-                    />
+                    <input
+                      v-model="email"
+                      v-validate="'required|email'"
+                      class="input-control freight-auth-input"
+                      placeholder="Enter your email "
+                      autocomplete="on"
+                      type="email"
+                      name="email"
+                    >
+                    <p
+                      v-if="email !== ''"
+                      class="freight-data-error"
+                    >
+                      {{ errors.first('email') }}
+                    </p>
                   </div>
                 </div>
 
@@ -79,11 +82,22 @@
                       type="password"
                       placeholder="Enter your password"
                       autocomplete="on"
+                      :class="!pass_validation && password !== '' ? 'freight-input-error' : ''"
+                      @keyup="validate_pass"
                     >
+                    <p
+                      v-if="!pass_validation && password !== ''"
+                      class="freight-data-error"
+                    >
+                      {{ pass_msg }}
+                    </p>
                   </div>
                 </div>
 
-                <div class="freight-auth-padding">
+                <div
+                  v-if="password !== '' && pass_validation"
+                  class="freight-auth-padding"
+                >
                   <label class="freight-input-label">Confirm Password</label>
                   <div class="freight-auth-padding">
                     <input
@@ -92,7 +106,15 @@
                       type="password"
                       placeholder="Re-enter your password"
                       autocomplete="on"
+                      :class="!pass_confirm_validation && confirm_password !== '' ? 'freight-input-error' : ''"
+                      @keyup="validate_confirm_pass"
                     >
+                    <p
+                      v-if="!pass_confirm_validation && confirm_password !== ''"
+                      class="freight-data-error"
+                    >
+                      {{ confirm_pass_msg }}
+                    </p>
                   </div>
                 </div>
 
@@ -129,7 +151,7 @@ import NotificationMxn from '../../../mixins/notification_mixin';
 import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 import ValidationMixin from '../../../mixins/validation_mixin';
 
-// const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 const currencyConversion = require('country-tz-currency');
 
 export default {
@@ -142,7 +164,7 @@ export default {
       business_name: '',
       password: '',
       confirm_password: '',
-      phone: '',
+      email: '',
       phoneInputProps: {
         mode: 'international',
         defaultCountry: 'ke',
@@ -167,6 +189,10 @@ export default {
       valid_country: false,
       countryNotSupported: '',
       preferredCountries: [],
+      pass_validation: false,
+      pass_msg: '',
+      pass_confirm_validation: false,
+      confirm_pass_msg: '',
     };
   },
   computed: {
@@ -178,11 +204,11 @@ export default {
 
   created() {},
   mounted() {
-    this.fetchSupportedCountries();
   },
   methods: {
     ...mapActions({
       getSupportedCountries: '$_freightAuth/getSupportedCountries',
+      freightSignUp: '$_freightAuth/freightSignUp',
     }),
 
     ...mapMutations({}),
@@ -224,7 +250,62 @@ export default {
           break;
       }
     },
-    submit() {},
+    validate_pass() {
+      const patt = new RegExp('^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9@#$%^&+=]*$');
+      const res = patt.test(this.password);
+      if (!res) {
+        this.pass_msg = this.$t('signUpDetails.password_error');
+        this.pass_validation = false;
+      } else {
+        this.pass_msg = '';
+        this.pass_validation = true;
+      }
+    },
+    validate_confirm_pass() {
+      if (this.password === this.confirm_password) {
+        this.confirm_pass_msg = '';
+        this.pass_confirm_validation = true;
+      } else {
+        this.confirm_pass_msg = 'Please ensure that this matches the password you entered earlier';
+        this.pass_confirm_validation = false;
+      }
+    },
+    submit() {
+      let emailValid = true;
+      for (let i = 0; i < this.errors.items.length; i++) {
+        if (this.errors.items[i].field === 'email') {
+          emailValid = false;
+          break;
+        }
+      }
+      if (this.user_name !== '' && this.business_name !== '' && emailValid && this.pass_validation && this.pass_confirm_validation) {
+        const payload = {
+          email: this.email,
+          name: this.user_name,
+          business_name: this.business_name,
+          password: this.password,
+          preferred_language: 'en',
+        };
+        this.processSignUpRequest(payload);
+      } else {
+        this.doNotification(2, 'Sign up failure', 'Kindly provide all valid details');
+      }
+    },
+    processSignUpRequest(payload) {
+      const fullPayload = {
+        values: payload,
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'freight/sign-up',
+      };
+
+      this.freightSignUp(fullPayload)
+        .then((response) => {
+          console.log('response', response);
+        })
+        .catch(() => {
+          console.log('error');
+        });
+    },
     doNotification(level, title, message) {
       const notification = { title, level, message };
       this.displayNotification(notification);
