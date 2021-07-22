@@ -25,24 +25,26 @@
               class="freight-signup-outer"
             >
               <div class="">
-                <i class="el-icon-back" />
+                <i
+                  class="el-icon-back"
+                  @click="redirectToLogin"
+                />
               </div>
               <p class="freight-sign-up-header">
                 Don’t Worry
               </p>
               <p class="freight-sign-up-description">
-                You’ll be back in no time. Just provide your email or phone number and we will do
-                the rest
+                You’ll be back in no time. Just provide your email and we will do the rest
               </p>
               <div class="">
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Email or phone number</label>
+                  <label class="freight-input-label">Email</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="input"
                       class="input-control freight-auth-input"
                       type="text"
-                      placeholder="Enter your email or phone number"
+                      placeholder="Enter your email address"
                       autocomplete="on"
                     >
                   </div>
@@ -53,11 +55,14 @@
                     class="button-primary freight-auth-button"
                     type="submit"
                     value="Continue"
-                    @click="verifyPhone"
+                    @click="passwordReset"
                   >
                 </div>
 
-                <p class="freight-login-redirect">
+                <p
+                  class="freight-login-redirect"
+                  @click="redirectToLogin"
+                >
                   I know my password, let me login instead
                 </p>
               </div>
@@ -70,15 +75,18 @@
               class="freight-signup-outer"
             >
               <div class="">
-                <i class="el-icon-back" />
+                <i
+                  class="el-icon-back"
+                  @click="oneStepBack(1)"
+                />
               </div>
 
               <p class="freight-sign-up-header">
                 Good News!
               </p>
               <p class="freight-sign-up-description">
-                Your account is still intact and we have sent an email to f*******a@gmail.com for
-                you to recover your password
+                Your account is still intact and we have sent an email to {{ input }}for you to
+                recover your password
               </p>
               <p class="freight-sign-up-description">
                 Please check your email
@@ -89,7 +97,7 @@
                     class="button-primary freight-auth-button"
                     type="submit"
                     value="Okay , Got it"
-                    @click="verifyPhone"
+                    @click="openNewTab"
                   >
                 </div>
 
@@ -106,7 +114,10 @@
               class="freight-signup-outer"
             >
               <div class="">
-                <i class="el-icon-back" />
+                <i
+                  class="el-icon-back"
+                  @click="oneStepBack(1)"
+                />
               </div>
               <p class="freight-sign-up-header">
                 Oops!
@@ -119,13 +130,13 @@
               </p>
               <div class="">
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Email or phone number</label>
+                  <label class="freight-input-label">Email</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="input"
                       class="input-control freight-auth-input"
                       type="text"
-                      placeholder="Enter your email or phone number"
+                      placeholder="Enter your email"
                       autocomplete="on"
                     >
                   </div>
@@ -136,7 +147,7 @@
                     class="button-primary freight-auth-button"
                     type="submit"
                     value="Try Again"
-                    @click="verifyPhone"
+                    @click="passwordReset"
                   >
                 </div>
               </div>
@@ -162,7 +173,7 @@ export default {
     return {
       updateCrmData: true,
       input: '',
-      reset_stage: 3,
+      reset_stage: 1,
     };
   },
   computed: {
@@ -178,7 +189,16 @@ export default {
     ...mapActions({}),
 
     ...mapMutations({}),
-    verifyPhone() {},
+    redirectToLogin() {
+      this.$router.push('/freight/login');
+    },
+    openNewTab() {
+      window.open();
+    },
+    oneStepBack(val) {
+      this.reset_stage = val;
+    },
+    passwordReset() {},
     doNotification(level, title, message) {
       const notification = { title, level, message };
       this.displayNotification(notification);
