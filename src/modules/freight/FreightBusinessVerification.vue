@@ -25,7 +25,7 @@
               class="freight-signup-outer"
             >
               <p class="freight-sign-up-header">
-                Amini Movers Limited
+                {{ businessName }}
               </p>
               <p class="freight-sign-up-description">
                 Business Details
@@ -34,39 +34,59 @@
                 <div class="freight-auth-padding">
                   <label class="freight-input-label">Country</label>
                   <div class="freight-auth-padding">
-                    <input
-                      v-model="input"
-                      class="input-control freight-auth-input"
-                      type="text"
-                      placeholder=""
-                      autocomplete="on"
-                    >
+                    <vue-tel-input
+                      class="input-control sign-up-form business-country-select"
+                      type="number"
+                      name="phone"
+                      value=""
+                      data-vv-validate-on="blur"
+                      v-bind="phoneInputProps"
+                      @country-changed="checkBizCountryCode"
+                    />
                   </div>
                 </div>
 
-                <div class="freight-auth-padding">
-                  <label class="freight-input-label">Business Registration Number</label>
+                <div
+                  v-if="checkBizRegistration()"
+                  class="freight-auth-padding"
+                >
+                  <label class="freight-input-label">{{ userBizRgLabel }}</label>
                   <div class="freight-auth-padding">
                     <input
-                      v-model="input"
+                      v-model="biz_registration"
                       class="input-control freight-auth-input"
                       type="text"
-                      placeholder="Enter your business registration number"
+                      :placeholder="userBizRgPlaceholder"
                       autocomplete="on"
                     >
+                    <span
+                      v-show="!bizRegValidation(biz_registration)"
+                      class="invalid-kra"
+                    >
+                      {{ bizRegFailResponse }}
+                    </span>
                   </div>
                 </div>
 
-                <div class="freight-auth-padding">
-                  <label class="freight-input-label">Business KRA pin</label>
+                <div
+                  v-if="checkTaxAuthorityPin()"
+                  class="freight-auth-padding"
+                >
+                  <label class="freight-input-label">{{ userKraNoLabel }}</label>
                   <div class="freight-auth-padding">
                     <input
-                      v-model="input"
+                      v-model="kra_pin"
                       class="input-control freight-auth-input"
                       type="text"
-                      placeholder="Enter your business KRA pin"
+                      :placeholder="userKraNoPlaceholder"
                       autocomplete="on"
                     >
+                    <span
+                      v-show="!kraPinValidation(kra_pin)"
+                      class="invalid-kra"
+                    >
+                      {{ kraFailResponse }}
+                    </span>
                   </div>
                 </div>
 
@@ -80,7 +100,7 @@
                     class="button-primary freight-auth-button"
                     type="submit"
                     value="Next"
-                    @click="verifyPhone"
+                    @click="verifyBusinessDetails"
                   >
                 </div>
               </div>
@@ -273,9 +293,12 @@ export default {
   mixins: [SessionMxn, NotificationMxn, MixpanelMixin, ValidationMixin],
   data() {
     return {
-      updateCrmData: true,
+      businessName: '',
+      updateCrmData: false,
       input: '',
-      biz_setup_stage: 4,
+      kra_pin: '',
+      biz_registration: '',
+      biz_setup_stage: 0,
       radio: '',
       phone: '',
       phoneInputProps: {
@@ -302,17 +325,33 @@ export default {
       valid_country: false,
       countryNotSupported: '',
       preferredCountries: [],
+      valid_biz_country: true,
+      country: '',
     };
   },
   computed: {
     ...mapGetters({
       get_session: 'getSession',
+      getVerificationStep: '$_freight/getVerificationStep',
     }),
   },
-  watch: {},
+  watch: {
+    getVerificationStep(val) {
+      if (val === 0) {
+        this.updateCrmData = false;
+      }
+      this.biz_setup_stage = val;
+    },
+  },
 
   created() {},
   mounted() {
+    this.updateCrmData = false;
+    this.checkSessionData();
+    if (this.getVerificationStep > 0) {
+      this.biz_setup_stage = this.getVerificationStep;
+      this.updateCrmData = true;
+    }
     this.fetchSupportedCountries();
   },
   methods: {
@@ -323,6 +362,28 @@ export default {
     ...mapMutations({}),
     validate_phone() {
       this.$validator.validate();
+    },
+    checkSessionData() {
+      const session = this.$store.getters.getSession;
+      if (Object.keys(session).length > 0) {
+        this.businessName = session[session.default].user_name;
+        this.kra_pin = session[session.default].tax_authority_pin;
+        this.biz_registration = session[session.default].company_reg_no;
+      } else {
+        this.$router.push('/freight');
+      }
+    },
+    checkBizCountryCode(country) {
+      this.country = country.iso2;
+      this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
+      switch (true) {
+        case this.phoneInputProps.preferredCountries.includes(this.country.toLowerCase()):
+          this.valid_biz_country = true;
+          break;
+        default:
+          this.valid_biz_country = false;
+          break;
+      }
     },
     fetchSupportedCountries() {
       const fullPayload = {
@@ -359,6 +420,60 @@ export default {
           break;
       }
     },
+    checkBizRegistration() {
+      const session = this.$store.getters.getSession;
+      let resp = false;
+      if (
+        session[session.default].company_reg_no === ''
+        || !this.bizRegValidation(session[session.default].company_reg_no)
+      ) {
+        resp = true;
+      }
+      return resp;
+    },
+    checkTaxAuthorityPin() {
+      const session = this.$store.getters.getSession;
+      let resp = false;
+      if (
+        session[session.default].tax_authority_pin === ''
+        || !this.kraPinValidation(session[session.default].tax_authority_pin)
+      ) {
+        resp = true;
+      }
+      return resp;
+    },
+    verifyBusinessDetails() {
+      const session = this.$store.getters.getSession;
+
+      if (this.country === '' && !this.valid_biz_country) {
+        this.doNotification(
+          2,
+          this.$t('freight.final_setup_error'),
+          'Kindly select supported country',
+        );
+      } else if (
+        this.kra_pin === ''
+        || (this.kra_pin !== '' && !this.kraPinValidation(this.kra_pin))
+      ) {
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.kraFailResponse);
+      } else if (
+        this.biz_registration === ''
+        || (this.biz_registration !== '' && !this.bizRegValidation(this.biz_registration))
+      ) {
+        this.doNotification(2, this.$t('freight.final_setup_error'), this.bizRegFailResponse);
+      } else {
+        const payload = {
+          tax_authority_pin: this.kra_pin,
+          company_reg_no: this.biz_registration,
+          country_code: this.country,
+          cop_id: session[session.default].cop_id,
+        };
+        this.initiateBusinessInfoUpdate(payload);
+      }
+    },
+    initiateBusinessInfoUpdate(val) {
+      console.log('val', val);
+    },
     verifyPhone() {},
     doNotification(level, title, message) {
       const notification = { title, level, message };
@@ -370,4 +485,9 @@ export default {
 
 <style lang="css" scoped>
 @import "../../../src/assets/styles/freight_auth.css";
+.invalid-kra {
+  display: block;
+  color: #f57f20;
+  font-size: 14px;
+}
 </style>

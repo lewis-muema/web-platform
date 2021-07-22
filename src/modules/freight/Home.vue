@@ -4,8 +4,8 @@
     class=""
   >
     <div class="">
-      <freight-business-verification v-if="verification_stage === 'active'" />
-      <freight-business-final-setup v-if="verification_stage === 'success'" />
+      <freight-business-verification v-if="getVerificationStage === 'active'" />
+      <freight-business-final-setup v-if="getVerificationStage === 'success'" />
     </div>
     <main-header />
     <div
@@ -97,11 +97,12 @@ export default {
     return {
       sessionData: false,
       status: '',
-      verification_stage: '',
     };
   },
   computed: {
-    ...mapGetters({}),
+    ...mapGetters({
+      getVerificationStage: '$_freight/getVerificationStage',
+    }),
     copAcc() {
       const session = this.$store.getters.getSession;
       let resp = false;
@@ -143,6 +144,8 @@ export default {
       clearTruckId: '$_freight/clearTruckId',
       clearTrackingVehicles: '$_freight/clearTrackingVehicles',
       clearTruckDetailsToStore: '$_freight/clearTruckDetailsToStore',
+      setVerificationStep: '$_freight/setVerificationStep',
+      setVerificationStage: '$_freight/setVerificationStage',
     }),
     checkSessionData() {
       const session = this.$store.getters.getSession;
@@ -152,9 +155,35 @@ export default {
         if (Object.prototype.hasOwnProperty.call(params, 'token')) {
           this.verification_stage = 'success';
         }
-        // this.checkFreightStatus();
+        this.checkFreightVerificationStages();
       } else {
         this.$router.push('/freight');
+      }
+    },
+    checkFreightVerificationStages() {
+      const session = this.$store.getters.getSession;
+      if (session.default === 'biz') {
+        this.verifyBusinessDetails(session);
+      }
+    },
+    verifyBusinessDetails(session) {
+      const invoiceReceivers = session[session.default].invoice_receivers;
+      if (
+        session[session.default].country_code === ''
+        || session[session.default].company_reg_no === ''
+        || session[session.default].tax_authority_pin === ''
+      ) {
+        this.setVerificationStep(1);
+        this.setVerificationStage('active');
+      } else if (Object.keys(session[session.default].director_details).length === 0) {
+        this.setVerificationStep(2);
+        this.setVerificationStage('active');
+      } else if (JSON.parse(invoiceReceivers).length === 0) {
+        this.setVerificationStep(3);
+        this.setVerificationStage('active');
+      } else {
+        this.setVerificationStep(0);
+        this.setVerificationStage('');
       }
     },
     registerOrderModule() {
