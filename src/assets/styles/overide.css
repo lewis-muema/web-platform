@@ -778,6 +778,20 @@ div.pac-container {
 .freightAuthDialog > .el-dialog::-webkit-scrollbar {
   width: 6px !important;
 }
+.business-country-select >.vti__input{
+  display: none !important;
+}
+.business-country-select >.vti__dropdown{
+  width: 100% !important;
+}
+.business-country-select >.vti__dropdown > .vti__selection{
+  justify-content: space-between !important;
+}
+.business-country-select >.vti__dropdown > .vti__dropdown-list{
+  top: 100% !important;
+  margin-left: 0% !important;
+  width: 100% !important;
+}
 .freightAuthDialog > .el-dialog::-webkit-scrollbar-thumb {
   background-color: #527CBD;
 }

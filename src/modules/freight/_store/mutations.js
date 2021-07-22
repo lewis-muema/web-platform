@@ -93,4 +93,10 @@ export default {
   setTruckDetailsToStore(state, val) {
     state.truck_details = val;
   },
+  setVerificationStep(state, val) {
+    state.verification_step = val;
+  },
+  setVerificationStage(state, val) {
+    state.verification_stage = val;
+  },
 };
