@@ -512,13 +512,13 @@ export function createRouter() {
             meta: { login: 'Freight Sign Up Page' },
           },
           {
-            path: '/freight/sign_up/verification',
+            path: '/freight/verify_email',
             component: () => import('../modules/freightAuth/components/verification_phases/PhoneVerification.vue'),
             beforeEnter: loginGuard,
             meta: { login: 'Freight Sign Up Verification' },
           },
           {
-            path: '/freight/sign_up/congratulations',
+            path: '/freight/info_verification',
             component: () => import('../modules/freightAuth/components/verification_phases/SignUpCongratulations.vue'),
             beforeEnter: loginGuard,
             meta: { login: 'Freight Sign Up Verification' },
