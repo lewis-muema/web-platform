@@ -41,7 +41,7 @@
                       value=""
                       data-vv-validate-on="blur"
                       v-bind="phoneInputProps"
-                      @country-changed="checkCountryCode"
+                      @country-changed="checkBizCountryCode"
                     />
                   </div>
                 </div>
@@ -373,7 +373,7 @@ export default {
         this.$router.push('/freight');
       }
     },
-    checkCountryCode(country) {
+    checkBizCountryCode(country) {
       this.country = country.iso2;
       this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
       switch (true) {
