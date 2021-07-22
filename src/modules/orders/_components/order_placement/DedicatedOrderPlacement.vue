@@ -301,6 +301,7 @@ import {
   faHistory,
 } from '@fortawesome/free-solid-svg-icons';
 import orderPlacementStore from './_store';
+import orderStore from '../../_store';
 import paymentsModuleStore from '../../../payment/_store';
 import VendorComponent from './_components/DedicatedVendorComponent.vue';
 import SessionMxn from '../../../../mixins/session_mixin';
@@ -725,8 +726,10 @@ addFocusListener() {
       this.locations[index] = name;
       const activeElement = this.activeEl;
       setTimeout(() => {
-        if (!document.getElementById(activeElement).value) {
-          document.getElementById(activeElement).value = name;
+        if (document.getElementById(activeElement) !== null) {
+          if (!document.getElementById(activeElement).value) {
+            document.getElementById(activeElement).value = name;
+          }
         }
       }, 100);
     },
@@ -945,6 +948,7 @@ addFocusListener() {
       }
 
       if (!moduleIsRegistered) {
+        this.$store.registerModule('$_orders', orderStore);
         this.$store.registerModule(['$_orders', '$_home'], orderPlacementStore);
       }
     },

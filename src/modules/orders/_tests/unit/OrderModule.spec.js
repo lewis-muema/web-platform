@@ -12,24 +12,34 @@ import VueI18n from 'vue-i18n';
 import VueRouter from 'vue-router';
 import moment from 'moment';
 import ElementUI from 'element-ui';
+import { ApmVuePlugin } from '@elastic/apm-rum-vue';
 import './localstorage';
 import messages from './messages';
+import * as VueGoogleMaps from 'vue2-google-maps';
 import trackingMutations from '../../_components/tracking/_store/mutations';
 import trackingstore from '../../_components/tracking/_store/actions';
+import trackingstates from '../../_components/tracking/_store/index';
 import homeMutations from '../../_components/order_placement/_store/mutations';
 import homestore from '../../_components/order_placement/_store/actions';
+import homestates from '../../_components/order_placement/_store/index';
 import paymentMutations from '../../../payment/_store/mutations';
 import paymentstore from '../../../payment/_store/actions';
+import paymentstates from '../../../payment/_store/index';
 import globalMutations from '../../../../store/mutations';
 import globalstore from '../../../../store/actions';
 import globals from '../../../../store/global';
 import orderStore from '../../_store/actions';
 import orderMutations from '../../_store/mutations';
+import orderstates from '../../_store/index';
 import TimezoneMxn from '../../../../mixins/timezone_mixin';
+import Orders from '../../Orders.vue';
+import OrderPlacement from '../../_components/order_placement/OrderPlacement.vue'
+import DedicatedOrderPlacement from '../../_components/order_placement/DedicatedOrderPlacement.vue'
 import FBUTracking from '../../_components/tracking/FBUTracking.vue';
 import infoComponent from '../../_components/tracking/_components/InfoComponent.vue';
 import InterCountyWindow from '../../_components/tracking/_components/InterCountyWindow.vue';
 import mutations from '../../../../store/mutations.js';
+import { wrap } from 'lodash';
 
 Vue.use(VueI18n);
 const i18n = new VueI18n({
@@ -44,8 +54,714 @@ localVue.use(VueRouter);
 localVue.use(ElementUI);
 Vue.prototype.moment = moment;
 const router = new VueRouter();
+localVue.use(VueGoogleMaps, {
+  load: {
+    libraries: ['places', 'geometry'],
+    key: process.env.CONFIGS_ENV.GOOGLE_API_KEY,
+  },
+});
+Vue.use(ApmVuePlugin, {
+  router,
+  config: {
+    serviceName: process.env.CONFIGS_ENV.ELASTIC_APM_SERVICE_NAME,
+    // agent configuration
+    serverUrl: process.env.ELASTIC_APM_SERVER_URL,
+    serviceVersion: process.env.CONFIGS_ENV.ELASTIC_APM_SERVICE_VERSION,
+    environment: process.env.CONFIGS_ENV.ELASTIC_APM_ENVIRONMENT,
+    distributedTracingOrigins: [process.env.CONFIGS_ENV.ELASTIC_APM_DISTRIBUTED_TRACING_ORIGINS],
+  },
+});
+
 describe('Order.vue', () => {
-  it('checks the order module', () => {});
+  let state;
+  let actions;
+  let getters;
+  let mutations;
+  let store;
+  const url = 'about:blank#/';
+  delete global.window.location;
+  global.window = Object.create(window);
+  global.window.location = {
+    origin: url,
+    href: url,
+  };
+  let wrapper;
+  beforeEach(() => {
+    actions = {
+      requestAxiosPost: globalstore.requestAxiosPost,
+      requestAxiosGet: globalstore.requestAxiosGet,
+      verifyNpsUser: globalstore.verifyNpsUser,
+      storeNpsSurvey: globalstore.storeNpsSurvey,
+      '$_orders/requestIndustries': orderStore.requestIndustries,
+      '$_orders/fetchSuggestions': orderStore.fetchSuggestions,
+      '$_orders/saveSuggestions': orderStore.saveSuggestions,
+      '$_orders/removeSuggestions': orderStore.removeSuggestions,
+      '$_orders/requestEditOrder': orderStore.requestEditOrder,
+      '$_orders/requestCopInfo': orderStore.requestCopInfo,
+      '$_orders/requestCountryCode': orderStore.requestCountryCode,
+    };
+    getters = {
+      '$_orders/$_tracking/trackingData': () => localStorage.tracking_data,
+      '$_orders/$_tracking/getIsMQTTConnected': () => '',
+      getClosestCity: () => '',
+      getDedicatedAccessStatus: () => '',
+      getNPSStatus: () => '',
+      getCountryCode: () => '',
+      getRunningBalance: () => '',
+      '$_orders/$_home/getSavedCards': ()=> [],
+      '$_payment/getCardPaymentStatus': () => '',
+      getSession: ()=> localStorage.session,
+      '$_orders/$_tracking/getAmountDue': () => '',
+      getLanguage: () => 'en',
+      '$_orders/getExpandedActiveVendorTally': () => [],
+      '$_orders/getSuggestions': () => localStorage.suggestions,
+      '$_orders/getMarkers': () => [],
+      '$_orders/getVendors': () => [],
+      '$_orders/getPolyline': () => {},
+    };
+    mutations = {
+      '$_orders/$_tracking/setTrackedOrder': trackingMutations.setTrackedOrder,
+      '$_orders/clearVendorMarkers': orderMutations.clearVendorMarkers,
+      '$_orders/removePolyline': orderMutations.removePolyline,
+      '$_orders/removeMarkers': orderMutations.removeMarkers,
+      setDedicatedAccessStatus: globalMutations.setDedicatedAccessStatus,
+      '$_orders/$_home/setPairWithRiderStatus': homeMutations.setPairWithRiderStatus,
+      '$_orders/$_home/setPairWithRiderState': homeMutations.setPairWithRiderState,
+      '$_orders/$_home/setPairSerialNumber': homeMutations.setPairSerialNumber,
+      '$_orders/$_home/setPairRiderPhone': homeMutations.setPairRiderPhone,
+      '$_orders/$_home/setVehicleDetails': homeMutations.setVehicleDetails,
+      '$_orders/$_home/setPairErrorMessage': homeMutations.setPairErrorMessage,
+      '$_orders/setExpandedActiveVendorTally': orderMutations.setExpandedActiveVendorTally,
+      '$_orders/setPairedDriversTally': orderMutations.setPairedDriversTally,
+      '$_orders/$_tracking/setTrackingData': trackingMutations.setTrackingData,
+      setScheduleStatus: globalMutations.setScheduleStatus,
+      setNPSStatus: globalMutations.setNPSStatus,
+    };
+    state = Object.assign(orderstates.state(), globals.state);
+    state['$_orders'] = localStorage.tracking;
+    state.map = localStorage.map;
+    state.session = localStorage.session;
+    store = new Vuex.Store({
+      actions,
+      getters,
+      mutations,
+      state,
+    });
+    console.error = () => {};
+    moxios.install(axios);
+    wrapper = mount(Orders, {
+      i18n,
+      store,
+      mixins: [TimezoneMxn],
+      localVue,
+      router,
+      sync: false,
+    });
+    wrapper.vm.moment = moment;
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+  it('Check if saved location suggestions are fetched for the pick up waypoint', () => {
+    wrapper.vm.waypoint_type = 'PICKUP';
+    expect(wrapper.vm.suggestions.length).to.equal(2);
+  });
+  it('Check if saved location suggestions are fetched for the drop off waypoint', () => {
+    wrapper.vm.waypoint_type = 'DROPOFF';
+    expect(wrapper.vm.suggestions.length).to.equal(1);
+  });
+  it('Check if correct label is returned based on waypoint type', () => {
+    wrapper.vm.waypoint_type = 'PICKUP';
+    expect(wrapper.vm.waypointType).to.equal('pick up');
+    wrapper.vm.waypoint_type = 'DROPOFF';
+    expect(wrapper.vm.waypointType).to.equal('drop off');
+  });
+  it('Check if the saveLocation method returns the correct response on success', done => {
+    wrapper.vm.waypoint_type = 'PICKUP';
+    wrapper.vm.suggestion = localStorage.suggestion;
+    wrapper.vm.saveLocation();
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request
+        .respondWith({
+          status: 200,
+          response: {
+            code: 200,
+            message: 'Location added successfully',
+            status: true
+          },
+        })
+        .then((response) => {
+          expect(response.data.message).to.equal('Location added successfully');
+          expect(wrapper.vm.location).to.equal('');
+          expect(wrapper.vm.locationSavingStatus).to.equal(true);
+          done();
+        })
+        .catch(error => {
+          console.log('caught', error.message);
+        });
+    });
+  });
+  it('Check if the saveLocation method returns the correct response on fail', done => {
+    wrapper.vm.waypoint_type = 'PICKUP';
+    wrapper.vm.suggestion = localStorage.suggestion;
+    wrapper.vm.saveLocation();
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request
+        .respondWith({
+          status: 200,
+          response: {
+            code: 400,
+            message: 'Location could not be saved',
+            status: false
+          },
+        })
+        .then((response) => {
+          expect(response.data.message).to.equal('Location could not be saved');
+          expect(wrapper.vm.location).to.equal('');
+          expect(wrapper.vm.locationSavingStatus).to.equal(true);
+          done();
+        })
+        .catch(error => {
+          console.log('caught', error.message);
+        });
+    });
+  });
+  it('Check if the removeLocation method returns the correct response on success', done => {
+    wrapper.vm.waypoint_type = 'PICKUP';
+    wrapper.vm.removeLocation(localStorage.suggestions[0]);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request
+        .respondWith({
+          status: 200,
+          response: {
+            code: 200,
+            message: 'Location deleted successfully',
+            status: false
+          },
+        })
+        .then((response) => {
+          expect(response.data.message).to.equal('Location deleted successfully');
+          expect(wrapper.vm.location).to.equal('');
+          done();
+        })
+        .catch(error => {
+          console.log('caught', error.message);
+        });
+    });
+  });
+  it('Check if the removeLocation method returns the correct response on fail', done => {
+    wrapper.vm.waypoint_type = 'PICKUP';
+    wrapper.vm.removeLocation(localStorage.suggestions[0]);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request
+        .respondWith({
+          status: 200,
+          response: {
+            code: 400,
+            message: 'Location could not be deleted',
+            status: false
+          },
+        })
+        .then((response) => {
+          expect(response.data.message).to.equal('Location could not be deleted');
+          expect(wrapper.vm.location).to.equal('');
+          done();
+        })
+        .catch(error => {
+          console.log('caught', error.message);
+        });
+    });
+  });
+  it('Check if the triggerFetchsuggestions method returns location suggestions from backend', done => {
+    wrapper.vm.triggerFetchsuggestions();
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request
+        .respondWith({
+          status: 200,
+          response: {
+            code: 200,
+            user_id: 1,
+            cop_id: 669,
+            saved_locations: [
+              {
+                country_code: 'KE',
+                waypoint_type: 'PICKUP',
+                city_name: 'Nairobi County',
+                more: {
+                  Otherdescription: '',
+                  Typed: '',
+                  Address: 'Ngong Road,Marsabit Plaza,Office no.212, Nairobi, Kenya',
+                  FlatName: '',
+                  Estate: '',
+                  viewport: {
+                    southwest: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                    northeast: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                  },
+                  Road: '',
+                  Vicinity: '',
+                  Label: '',
+                  HouseDoor: '',
+                  place_idcustom: 'ChIJnXFhGegbLxgRG5E1Lrd8JvY',
+                  landmark: '',
+                },
+                waypoint_details_status: true,
+                name: 'Marsabit Plaza',
+                coordinates: '-1.3273119,36.780982',
+                locality: {
+                  name: 'Ngong Road,Marsabit Plaza,Office no.212',
+                  coordinates: '-1.3273119,36.780982',
+                },
+                type: 'coordinates',
+                location_id: 1478984,
+              },
+            ],
+            frequent_locations: [
+              {
+                waypoint_type: 'PICKUP',
+                more: {
+                  Otherdescription: '',
+                  Typed: '',
+                  Address: 'Ngong Rd, Nairobi, Kenya',
+                  FlatName: '',
+                  Estate: '',
+                  viewport: {
+                    southwest: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                    northeast: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                  },
+                  Road: '',
+                  Vicinity: '',
+                  Label: '',
+                  HouseDoor: '',
+                  place_idcustom: 'ChIJnXFhGegbLxgRG5E1Lrd8JvY',
+                  landmark: '',
+                },
+                name: 'Marsabit Plaza',
+                coordinates: '-1.3000089,36.77288960000001',
+                location_id: 1439492,
+              },
+              {
+                waypoint_type: 'DROPOFF',
+                more: {
+                  Otherdescription: '',
+                  Typed: '',
+                  Address: 'Unnamed Road, Nairobi, Kenya',
+                  FlatName: '',
+                  Estate: '',
+                  viewport: {
+                    southwest: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                    northeast: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                  },
+                  Road: '',
+                  Vicinity: '',
+                  Label: '',
+                  HouseDoor: '',
+                  place_idcustom: 'ChIJWYzzUWAZLxgR-5PQnI0BmVE',
+                  landmark: '',
+                },
+                name: 'Pioneer Heights',
+                coordinates: '-1.2798383,36.7196238',
+                location_id: 1439494,
+              },
+              {
+                waypoint_type: 'DROPOFF',
+                more: {
+                  Otherdescription: '',
+                  Typed: '',
+                  Address: 'Junction Mall Parking Hall, Ngong Rd, Nairobi, Kenya',
+                  FlatName: '',
+                  Estate: '',
+                  viewport: {
+                    southwest: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                    northeast: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                  },
+                  Road: '',
+                  Vicinity: '',
+                  Label: '',
+                  HouseDoor: '',
+                  place_idcustom: 'ChIJcbhbs2saLxgRP6vWzb7XVbM',
+                  landmark: '',
+                },
+                name: 'Junction Mall Parking Hall',
+                coordinates: '-1.2987826,36.7631807',
+                location_id: 1439493,
+              },
+              {
+                waypoint_type: 'PICKUP',
+                more: {
+                  Otherdescription: '',
+                  Typed: '',
+                  Address: 'Icipe Rd, Nairobi, Kenya',
+                  FlatName: '',
+                  Estate: '',
+                  viewport: {
+                    southwest: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                    northeast: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                  },
+                  Road: '',
+                  Vicinity: 'Not Indicated',
+                  Label: '',
+                  HouseDoor: '',
+                  place_idcustom: 'EhhJY2lwZSBSZCwgTmFpcm9iaSwgS2VueWEiLiosChQKEgnHwIJljhUvGBGA7AyiiXnKDhIUChIJp0lN2HIRLxgRTJKXslQCz_c',
+                  landmark: '',
+                },
+                locality: {
+                  coordinates: '-1.222458,36.895618',
+                  name: 'Kasarani Constituency',
+                },
+                name: 'Icipe Road',
+                coordinates: '-1.2225819,36.895653',
+                location_id: 1439491,
+              },
+              {
+                waypoint_type: 'DROPOFF',
+                more: {
+                  Otherdescription: '',
+                  Typed: '',
+                  Address: 'Icipe Rd, Nairobi, Kenya',
+                  FlatName: '',
+                  Estate: '',
+                  viewport: {
+                    southwest: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                    northeast: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                  },
+                  Road: '',
+                  Vicinity: 'Not Indicated',
+                  Label: '',
+                  HouseDoor: '',
+                  place_idcustom: 'EhhJY2lwZSBSZCwgTmFpcm9iaSwgS2VueWEiLiosChQKEgnHwIJljhUvGBGA7AyiiXnKDhIUChIJp0lN2HIRLxgRTJKXslQCz_c',
+                  landmark: '',
+                },
+                locality: {
+                  coordinates: '-1.222458,36.895618',
+                  name: 'Kasarani Constituency',
+                },
+                name: 'Icipe Road',
+                coordinates: '-1.2225819,36.895653',
+                location_id: 1439495,
+              },
+              {
+                waypoint_type: 'PICKUP',
+                more: {
+                  Otherdescription: '',
+                  Typed: '',
+                  Address: 'Road, Nairobi, Kenya',
+                  FlatName: '',
+                  Estate: '',
+                  viewport: {
+                    southwest: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                    northeast: {
+                      lng: 0,
+                      lat: 0,
+                    },
+                  },
+                  Road: '',
+                  Vicinity: 'Not Indicated',
+                  Label: '',
+                  HouseDoor: '',
+                  place_idcustom: 'ChIJQdYk8zc_LxgR2Hgw9V7Dsg0',
+                  landmark: '',
+                },
+                name: 'Bethel Plaza',
+                coordinates: '-1.2152329,36.90215620000001',
+                location_id: 1439490,
+              },
+            ],
+          },
+        })
+        .then((response) => {
+          expect(response.data.saved_locations.length).to.equal(1);
+          expect(response.data.frequent_locations.length).to.equal(6);
+          done();
+        })
+        .catch(error => {
+          console.log('caught', error.message);
+        });
+    });
+  });
+});
+describe('OrderPlacement.vue', () => {
+  let state;
+  let actions;
+  let getters;
+  let mutations;
+  let store;
+  const url = 'about:blank#/';
+  delete global.window.location;
+  global.window = Object.create(window);
+  global.window.location = {
+    origin: url,
+    href: url,
+  };
+  let wrapper;
+  beforeEach(() => {
+    actions = {
+      requestAxiosPost: globalstore.requestAxiosPost,
+      requestAxiosGet: globalstore.requestAxiosGet,
+      '$_orders/$_home/requestPriceQuote': homestore.requestPriceQuote,
+      '$_orders/fetchSuggestions': orderStore.fetchSuggestions,
+    };
+    getters = {
+      '$_orders/$_home/getMaxDestinations': () => 24,
+      '$_orders/$_home/getOrderPath': () => [],
+      '$_orders/$_home/getLocationNames': () => [],
+      '$_orders/$_home/getExtraDestinations': () => 0,
+      '$_orders/$_home/getOrderNotes': () => '',
+      getCountryCode: () => 'ke',
+      '$_orders/$_home/getPriceRequestObject': () => {},
+      '$_orders/$_home/getActivePackageClass': ()=> '',
+      '$_orders/$_home/getActiveVendorName': () => '',
+      getSession: ()=> localStorage.session,
+      '$_orders/$_home/getPickupFilled': () => false,
+      getLanguage: () => 'en',
+      '$_orders/$_home/getExtendedOptions': () => false,
+      'getDefaultCurrency': () => 'ksh',
+      '$_orders/getSuggestions': () => localStorage.suggestions,
+      '$_orders/getMarkers': () => [],
+      '$_orders/getHomeLocations': () => [],
+      '$_orders/getStorePath': () => {},
+      '$_orders/getOuterPriceRequestData': () => '',
+    };
+    mutations = {
+      '$_orders/setLocationMarker': orderMutations.setLocationMarker,
+      '$_orders/unsetLocationMarker': orderMutations.unsetLocationMarker,
+      '$_orders/setPolyline': orderMutations.setPolyline,
+      '$_orders/removePolyline': orderMutations.removePolyline,
+      '$_orders/$_home/setOrderPath': homeMutations.setOrderPath,
+      '$_orders/$_home/unsetOrderPath': homeMutations.unsetOrderPath,
+      '$_orders/unsetStorePath': orderMutations.unsetStorePath,
+      '$_orders/$_home/setLocationName': homeMutations.setLocationName,
+      '$_orders/$_home/unsetLocationName': homeMutations.unsetLocationName,
+      '$_orders/$_home/setPickUpFilled': homeMutations.setPickUpFilled,
+      'setPickUpFilledStatus': globalMutations.setPickUpFilledStatus,
+      '$_orders/$_home/addExtraDestination': homeMutations.addExtraDestination,
+      '$_orders/$_home/removeExtraDestination': homeMutations.removeExtraDestination,
+      '$_orders/$_home/setActivePackageClass': homeMutations.setActivePackageClass,
+      '$_orders/$_home/setActiveVendorName': homeMutations.setActiveVendorName,
+      '$_orders/$_home/setActiveVendorDetails': homeMutations.setActiveVendorDetails,
+      '$_orders/removeMarkers': orderMutations.removeMarkers,
+      '$_orders/removePolyline': orderMutations.removePolyline,
+      '$_orders/$_home/clearOrderPath': homeMutations.clearOrderPath,
+      '$_orders/$_home/clearLocationNames': homeMutations.clearLocationNames,
+      '$_orders/$_home/clearPriceRequestObject': homeMutations.clearPriceRequestObject,
+      '$_orders/$_home/clearExtraDestination': homeMutations.clearExtraDestinations,
+      '$_orders/$_home/resetState': homeMutations.resetState,
+      '$_orders/$_home/setCountryCode': homeMutations.setCountryCode,
+      '$_orders/$_home/setDefaultCurrency': homeMutations.setDefaultCurrency,
+      '$_orders/setHomeLocations': orderMutations.setHomeLocations,
+      '$_orders/setStorePath': orderMutations.setStorePath,
+      '$_orders/clearStorePath': orderMutations.clearStorePath,
+      '$_orders/clearOuterPriceRequestObject': orderMutations.clearOuterPriceRequestObject,
+      '$_orders/clearOuterActiveVendorDetails': orderMutations.clearOuterActiveVendorDetails,
+      '$_orders/setOuterPriceRequestObject': orderMutations.setOuterPriceRequestObject,
+      '$_orders/$_home/setOrderState': homeMutations.setOrderState,
+      '$_orders/$_home/setExtendOptions': homeMutations.setExtendOptions,
+      '$_orders/$_tracking/setTrackingData': trackingMutations.setTrackingData,
+      '$_orders/clearVendorMarkers': orderMutations.clearVendorMarkers,
+    };
+    state = Object.assign(homestates.state(), globals.state);
+    state['$_orders'] = localStorage.tracking;
+    state.map = localStorage.map;
+    state.session = localStorage.session;
+    store = new Vuex.Store({
+      actions,
+      getters,
+      mutations,
+      state,
+    });
+    moxios.install(axios);
+    wrapper = mount(OrderPlacement, {
+      i18n,
+      store,
+      mixins: [TimezoneMxn],
+      localVue,
+      router,
+      sync: false,
+    });
+    wrapper.vm.moment = moment;
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+  it('Check whether suggetions are fetched on load (On demand)', () => {
+    wrapper.vm.triggerFetchsuggestions();
+    expect(wrapper.vm.getSuggestions.length).to.equal(6);
+    expect(wrapper.vm.getSuggestions[0].name).to.equal('Bethel Plaza');
+    expect(wrapper.vm.getSuggestions[5].coordinates).to.equal('-1.3000089,36.77288960000001');
+  });
+  it('Check whether suggestions are set as locations when clicked on for the pick up (On demand)', () => {
+    wrapper.vm.setLocation(wrapper.vm.pickUpSuggestions[0], 0, 2);
+    expect(state.location_names[0]).to.equal('Bethel Plaza');
+    expect(state.order_path[0].coordinates).to.equal('-1.2152329,36.90215620000001');
+  });
+  it('Check whether suggestions are set as locations when clicked on for the destination (On demand)', () => {
+    wrapper.vm.setLocation(wrapper.vm.pickUpSuggestions[1], 1, 2);
+    expect(state.location_names[0]).to.equal('Icipe Road');
+    expect(state.order_path[0].coordinates).to.equal('-1.2225819,36.895653');
+  });
+});
+describe('DedicatedOrderPlacement.vue', () => {
+  let state;
+  let actions;
+  let getters;
+  let mutations;
+  let store;
+  const url = 'about:blank#/';
+  delete global.window.location;
+  global.window = Object.create(window);
+  global.window.location = {
+    origin: url,
+    href: url,
+  };
+  let wrapper;
+  beforeEach(() => {
+    actions = {
+      requestAxiosPost: globalstore.requestAxiosPost,
+      requestAxiosGet: globalstore.requestAxiosGet,
+      '$_orders/$_home/requestPriceQuote': homestore.requestPriceQuote,
+      '$_orders/fetchSuggestions': orderStore.fetchSuggestions,
+    };
+    getters = {
+      '$_orders/$_home/getMaxDestinations': () => 24,
+      '$_orders/$_home/getOrderPath': () => [],
+      '$_orders/$_home/getLocationNames': () => [],
+      '$_orders/$_home/getExtraDestinations': () => 0,
+      '$_orders/$_home/getOrderNotes': () => '',
+      getCountryCode: () => 'ke',
+      '$_orders/$_home/getPriceRequestObject': () => {},
+      '$_orders/$_home/getActivePackageClass': ()=> '',
+      '$_orders/$_home/getActiveVendorName': () => '',
+      getSession: ()=> localStorage.session,
+      '$_orders/$_home/getPickupFilled': () => false,
+      getLanguage: () => 'en',
+      '$_orders/$_home/getExtendedOptions': () => false,
+      'getDefaultCurrency': () => 'ksh',
+      '$_orders/getSuggestions': () => localStorage.suggestions,
+      '$_orders/getMarkers': () => [],
+      '$_orders/getHomeLocations': () => [],
+      '$_orders/getStorePath': () => {},
+      '$_orders/getOuterPriceRequestData': () => '',
+    };
+    mutations = {
+      '$_orders/setLocationMarker': orderMutations.setLocationMarker,
+      '$_orders/unsetLocationMarker': orderMutations.unsetLocationMarker,
+      '$_orders/setPolyline': orderMutations.setPolyline,
+      '$_orders/removePolyline': orderMutations.removePolyline,
+      '$_orders/$_home/setOrderPath': homeMutations.setOrderPath,
+      '$_orders/$_home/unsetOrderPath': homeMutations.unsetOrderPath,
+      '$_orders/unsetStorePath': orderMutations.unsetStorePath,
+      '$_orders/$_home/setLocationName': homeMutations.setLocationName,
+      '$_orders/$_home/unsetLocationName': homeMutations.unsetLocationName,
+      '$_orders/$_home/setPickUpFilled': homeMutations.setPickUpFilled,
+      'setPickUpFilledStatus': globalMutations.setPickUpFilledStatus,
+      '$_orders/$_home/addExtraDestination': homeMutations.addExtraDestination,
+      '$_orders/$_home/removeExtraDestination': homeMutations.removeExtraDestination,
+      '$_orders/$_home/setActivePackageClass': homeMutations.setActivePackageClass,
+      '$_orders/$_home/setActiveVendorName': homeMutations.setActiveVendorName,
+      '$_orders/$_home/setActiveVendorDetails': homeMutations.setActiveVendorDetails,
+      '$_orders/removeMarkers': orderMutations.removeMarkers,
+      '$_orders/removePolyline': orderMutations.removePolyline,
+      '$_orders/$_home/clearOrderPath': homeMutations.clearOrderPath,
+      '$_orders/$_home/clearLocationNames': homeMutations.clearLocationNames,
+      '$_orders/$_home/clearPriceRequestObject': homeMutations.clearPriceRequestObject,
+      '$_orders/$_home/clearExtraDestination': homeMutations.clearExtraDestinations,
+      '$_orders/$_home/resetState': homeMutations.resetState,
+      '$_orders/$_home/setCountryCode': homeMutations.setCountryCode,
+      '$_orders/$_home/setDefaultCurrency': homeMutations.setDefaultCurrency,
+      '$_orders/setHomeLocations': orderMutations.setHomeLocations,
+      '$_orders/setStorePath': orderMutations.setStorePath,
+      '$_orders/clearStorePath': orderMutations.clearStorePath,
+      '$_orders/clearOuterPriceRequestObject': orderMutations.clearOuterPriceRequestObject,
+      '$_orders/clearOuterActiveVendorDetails': orderMutations.clearOuterActiveVendorDetails,
+      '$_orders/setOuterPriceRequestObject': orderMutations.setOuterPriceRequestObject,
+      '$_orders/$_home/setOrderState': homeMutations.setOrderState,
+      '$_orders/$_home/setExtendOptions': homeMutations.setExtendOptions,
+      '$_orders/$_tracking/setTrackingData': trackingMutations.setTrackingData,
+      '$_orders/clearVendorMarkers': orderMutations.clearVendorMarkers,
+    };
+    state = Object.assign(homestates.state(), globals.state);
+    state['$_orders'] = localStorage.tracking;
+    state.map = localStorage.map;
+    state.session = localStorage.session;
+    store = new Vuex.Store({
+      actions,
+      getters,
+      mutations,
+      state,
+    });
+    moxios.install(axios);
+    wrapper = mount(DedicatedOrderPlacement, {
+      i18n,
+      store,
+      mixins: [TimezoneMxn],
+      localVue,
+      router,
+      sync: false,
+    });
+    wrapper.vm.moment = moment;
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+  it('Check whether suggetions are fetched on load (Dedicated)', () => {
+    wrapper.vm.triggerFetchsuggestions();
+    expect(wrapper.vm.getSuggestions.length).to.equal(6);
+    expect(wrapper.vm.getSuggestions[0].name).to.equal('Bethel Plaza');
+    expect(wrapper.vm.getSuggestions[5].coordinates).to.equal('-1.3000089,36.77288960000001');
+  });
+  it('Check whether suggestions are set as locations when clicked on for the pick up (Dedicated)', () => {
+    wrapper.vm.setLocation(wrapper.vm.pickUpSuggestions[0], 0, 2);
+    expect(state.location_names[0]).to.equal('Bethel Plaza');
+    expect(state.order_path[0].coordinates).to.equal('-1.2152329,36.90215620000001');
+  });
+  it('Check whether suggestions are set as locations when clicked on for the destination (Dedicated)', () => {
+    wrapper.vm.setLocation(wrapper.vm.pickUpSuggestions[1], 1, 2);
+    expect(state.location_names[0]).to.equal('Icipe Road');
+    expect(state.order_path[0].coordinates).to.equal('-1.2225819,36.895653');
+  });
 });
 describe('InfoComponent.vue', () => {
   let state;
@@ -136,7 +852,7 @@ describe('InfoComponent.vue', () => {
       '$_orders/$_tracking/setExtraDestination': trackingMutations.setExtraDestination,
       '$_orders/$_tracking/setAmountDue': trackingMutations.setAmountDue,
     };
-    state = globals.state;
+    state = Object.assign(trackingstates.state, globals.state, paymentstates.state);
     state['$_orders'] = localStorage.tracking;
     state.map = localStorage.map;
     store = new Vuex.Store({
@@ -292,7 +1008,7 @@ describe('FBUTracking.vue', () => {
       '$_orders/clearVendorMarkers': orderMutations.clearVendorMarkers,
       '$_orders/setParentOrder': orderMutations.setParentOrder,
     };
-    state = globals.state;
+    state = Object.assign(trackingstates.state, globals.state);
     state['$_orders'] = localStorage.tracking;
     state.map = localStorage.map;
     store = new Vuex.Store({
@@ -365,7 +1081,7 @@ describe('InterCountyWindow.vue', () => {
       '$_orders/clearVendorMarkers': orderMutations.clearVendorMarkers,
       '$_orders/$_tracking/setTrackedOrder': trackingMutations.setTrackedOrder,
     };
-    state = globals.state;
+    state = Object.assign(trackingstates.state, globals.state, paymentstates.state);
     state['$_orders'] = localStorage.tracking;
     state.map = localStorage.map;
     store = new Vuex.Store({
