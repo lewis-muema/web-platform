@@ -19,48 +19,25 @@
             :close-on-click-modal="false"
           >
             <div class="freight-signup-outer">
+              <div class="congratulations_img">
+                <img
+                  src="https://images.sendyit.com/web_platform/freight/verification-email-sent.png"
+                  class="freight-img-logo"
+                >
+              </div>
               <p class="freight-sign-up-header">
-                Verify Phone Number
+                Check Your Email
               </p>
               <p class="freight-sign-up-description">
-                Please enter the verification code we have sent to
-                <span class="validate-freight-phone">{{ phone }}</span>
+                We’ve sent a link to fatmamoha@gmail.com Please click the link to proceed
               </p>
-              <div class="">
-                <div class="freight-auth-padding">
-                  <label class="freight-input-label">Verfication code</label>
-                  <div class="freight-auth-padding">
-                    <input
-                      v-model="code"
-                      class="input-control freight-auth-input"
-                      type="text"
-                      placeholder="Enter Code"
-                      autocomplete="on"
-                    >
-                  </div>
-                </div>
-
-                <div class="verification-retry-options">
-                  <p class="verification-retry-options-label">
-                    Change Phone Number
-                  </p>
-                  <p class="verification-retry-options-label">
-                    Receive a call instead
-                  </p>
-                </div>
-
-                <div class="">
-                  <input
-                    class="button-primary freight-auth-button"
-                    type="submit"
-                    value="Verify Phone Number"
-                    @click="verifyPhone"
-                  >
-                </div>
-
-                <!-- <p class="freight-login-redirect">
-                  Already have an account? Login
-                </p> -->
+              <div class="verification-retry-options">
+                <p class="verification-retry-options-label">
+                  Change email address
+                </p>
+                <p class="verification-retry-options-label">
+                  Resend the link
+                </p>
               </div>
             </div>
           </el-dialog>
