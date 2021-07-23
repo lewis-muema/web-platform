@@ -69,36 +69,50 @@ export default {
   mixins: [SessionMxn, NotificationMxn, MixpanelMixin, ValidationMixin],
   data() {
     return {
-      updateCrmData: true,
+      updateCrmData: false,
       smooth_rate: 0,
     };
   },
   computed: {
     ...mapGetters({
       get_session: 'getSession',
+      getVerificationStage: '$_freight/getVerificationStage',
     }),
   },
   watch: {},
 
   created() {},
   mounted() {
-    this.displayProgressRate();
+    if (this.getVerificationStage === 'success') {
+      this.updateCrmData = true;
+      this.displayProgressRate();
+    } else {
+      this.$router.push('/freight/transporters');
+    }
   },
   methods: {
     ...mapActions({}),
 
-    ...mapMutations({}),
+    ...mapMutations({
+      setVerificationStep: '$_freight/setVerificationStep',
+      setVerificationStage: '$_freight/setVerificationStage',
+    }),
     displayProgressRate() {
       const percentage = 82;
       let current = this.smooth_rate;
       const interval = setInterval(() => {
         if (current === percentage) {
           clearInterval(interval);
+          setTimeout(() => {
+            this.updateCrmData = false;
+            this.setVerificationStep(0);
+            this.setVerificationStage('');
+            this.$router.push('/freight/transporters');
+          }, 800);
         }
         this.smooth_rate = current++;
-      }, 15);
+      }, 50);
     },
-    verifyPhone() {},
     doNotification(level, title, message) {
       const notification = { title, level, message };
       this.displayNotification(notification);
