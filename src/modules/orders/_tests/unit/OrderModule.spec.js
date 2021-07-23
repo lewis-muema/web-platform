@@ -99,6 +99,7 @@ describe('Order.vue', () => {
       '$_orders/requestEditOrder': orderStore.requestEditOrder,
       '$_orders/requestCopInfo': orderStore.requestCopInfo,
       '$_orders/requestCountryCode': orderStore.requestCountryCode,
+      '$_orders/$_home/requestPairRider': homestore.requestPairRider,
     };
     getters = {
       '$_orders/$_tracking/trackingData': () => localStorage.tracking_data,
@@ -113,7 +114,7 @@ describe('Order.vue', () => {
       getSession: ()=> localStorage.session,
       '$_orders/$_tracking/getAmountDue': () => '',
       getLanguage: () => 'en',
-      '$_orders/getExpandedActiveVendorTally': () => [],
+      '$_orders/getExpandedActiveVendorTally': () => localStorage.getExpandedActiveVendorTally,
       '$_orders/getSuggestions': () => localStorage.suggestions,
       '$_orders/getMarkers': () => [],
       '$_orders/getVendors': () => [],
@@ -521,6 +522,104 @@ describe('Order.vue', () => {
           console.log('caught', error.message);
         });
     });
+  });
+  it('Check if the root listener for pairing prompts the pairing pop up to display', () => {
+    wrapper.vm.rootListener();
+    wrapper.vm.$root.$emit('Pairing status', true);
+    expect(wrapper.vm.pairing_status).to.equal(true);
+  });
+  it('Check if the pairing data object is populated with the necessary keys required before pairing', () => {
+    wrapper.vm.rootListener();
+    wrapper.vm.$root.$emit('Pairing status', true);
+    expect(wrapper.vm.pairing_data[0].vehicle_plate).to.equal('');
+    expect(wrapper.vm.pairing_data[0].pair_status).to.equal('');
+    expect(wrapper.vm.pairing_data[0].failure_text).to.equal('');
+    expect(wrapper.vm.pairing_data[0].pair_rider_image).to.equal('');
+    expect(wrapper.vm.pairing_data[0].pair_rider_name).to.equal('');
+    expect(wrapper.vm.pairing_data[0].pair_rider_rating).to.equal('');
+    expect(wrapper.vm.pairing_data[0].pair_rider_make).to.equal('');
+    expect(wrapper.vm.pairing_data[0].pair_rider_model).to.equal('');
+    expect(wrapper.vm.pairing_data[0].pair_rider_plate).to.equal('');
+    expect(wrapper.vm.pairing_data[0].pair_rider_sim_card_sn).to.equal('');
+    expect(wrapper.vm.pairing_data[0].pair_rider_phone).to.equal('');
+  });
+  it('Check position of the order being paired using the pair tally', () => {
+    expect(wrapper.vm.pairTally()).to.equal(0);
+  });
+  it('Check if the pairing pop up can be minimized', () => {
+    wrapper.vm.closePairingPopup();
+    expect(wrapper.vm.pairing_status).to.equal(false);
+  });
+  it('Check if pairing data is updated in the compnenet during pairing', () => {
+    wrapper.vm.rootListener();
+    wrapper.vm.$root.$emit('Pairing status', true);
+    wrapper.vm.updateData(localStorage.pair_response, '', 0);
+    expect(wrapper.vm.pairing_data[0].vehicle_plate).to.equal('');
+    expect(wrapper.vm.pairing_data[0].pair_status).to.equal('2');
+    expect(wrapper.vm.pairing_data[0].failure_text).to.equal('');
+    expect(wrapper.vm.pairing_data[0].pair_rider_image).to.equal('https://s3-eu-west-1.amazonaws.com/sendy-partner-docs/photo/c75e9xqfts-kratos.jpg');
+    expect(wrapper.vm.pairing_data[0].pair_rider_name).to.equal('Lewis Muema');
+    expect(wrapper.vm.pairing_data[0].pair_rider_rating).to.equal(5);
+    expect(wrapper.vm.pairing_data[0].pair_rider_make).to.equal('Isuzu');
+    expect(wrapper.vm.pairing_data[0].pair_rider_model).to.equal('FRR');
+    expect(wrapper.vm.pairing_data[0].pair_rider_plate).to.equal('KAT 293P');
+    expect(wrapper.vm.pairing_data[0].pair_rider_sim_card_sn).to.equal('89254021084146138595');
+    expect(wrapper.vm.pairing_data[0].pair_rider_phone).to.equal('+254795510441');
+  });
+  it('Check if clearing vehicle details works', () => {
+    wrapper.vm.rootListener();
+    wrapper.vm.$root.$emit('Pairing status', true);
+    wrapper.vm.updateData(localStorage.pair_response, '', 0);
+    expect(wrapper.vm.pairing_data[0].pair_status).to.equal('2');
+    wrapper.vm.clearVehicleDetails('', 0);
+    expect(wrapper.vm.pairing_data[0].pair_status).to.equal('');
+  });
+  it('Check if pairing details are sent over to the API', done => {
+    wrapper.vm.rootListener();
+    wrapper.vm.$root.$emit('Pairing status', true);
+    wrapper.vm.updateData(localStorage.pair_response, '', 0);
+    wrapper.vm.handlePairRequest(wrapper.vm.pairing_data[0].pair_rider_plate, wrapper.vm.pairing_data[0], 0);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request
+        .respondWith({
+          status: 200,
+          response: localStorage.pair_response,
+        })
+        .then((response) => {
+          expect(response.data.registration_no).to.equal('KAT 293P');
+          expect(wrapper.vm.pairing_data[0].pair_rider_plate).to.equal('KAT 293P');
+          done();
+        })
+        .catch(error => {
+          console.log('caught', error.message);
+        });
+      });
+  });
+  it('Check if app responds with correct error when pairing fails', done => {
+    wrapper.vm.rootListener();
+    wrapper.vm.$root.$emit('Pairing status', true);
+    wrapper.vm.updateData(localStorage.pair_response, '', 0);
+    wrapper.vm.handlePairRequest(wrapper.vm.pairing_data[0].pair_rider_plate, wrapper.vm.pairing_data[0], 0);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request
+        .respondWith({
+          status: 400,
+          response: {
+            status: false,
+            message: 'Could not pair rider to the 0rder'
+          },
+        })
+        .then((response) => {
+          expect(wrapper.vm.pairing_data[0].pair_status).to.equal('1');
+          expect(wrapper.vm.pairing_data[0].failure_text).to.equal(response.data.message);
+          done();
+        })
+        .catch(error => {
+          console.log('caught', error.message);
+        });
+      });
   });
 });
 describe('OrderPlacement.vue', () => {
