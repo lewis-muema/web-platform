@@ -579,11 +579,13 @@ export default {
       const session = this.$store.getters.getSession;
       if (this.director_option === '1') {
         singleDirector = {
-          phone: session[session.default].user_phone,
           name: session[session.default].user_name,
           cop_id: session[session.default].cop_id,
           national_id: this.director_id,
         };
+        if (session[session.default].user_phone !== '') {
+          singleDirector.phone = session[session.default].user_phone;
+        }
       } else {
         singleDirector = {
           phone: this.director_phone.replace(/[()\-\s]+/g, ''),
