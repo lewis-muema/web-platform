@@ -112,12 +112,8 @@
               v-if="biz_setup_stage === 2"
               class="freight-signup-outer"
             >
-              <div class="">
-                <i class="el-icon-back" />
-              </div>
-
               <p class="freight-sign-up-header">
-                Amini Movers Limited
+                {{ businessName }}
               </p>
               <p class="freight-sign-up-description">
                 Director(s)
@@ -126,16 +122,16 @@
                 <div class="freight-auth-padding">
                   <label
                     class="freight-input-label"
-                  >Are you a director at Amini Movers Limited?</label>
+                  >Are you a director at {{ businessName }}?</label>
                   <div class="freight-auth-padding">
                     <el-radio
-                      v-model="radio"
+                      v-model="director_option"
                       label="1"
                     >
                       Yes
                     </el-radio>
                     <el-radio
-                      v-model="radio"
+                      v-model="director_option"
                       label="2"
                     >
                       No
@@ -143,14 +139,14 @@
                   </div>
                 </div>
                 <div
-                  v-if="radio === '2'"
+                  v-if="director_option === '2'"
                   class=""
                 >
                   <div class="freight-auth-padding">
                     <label class="freight-input-label">Name</label>
                     <div class="freight-auth-padding">
                       <input
-                        v-model="input"
+                        v-model="director_name"
                         class="input-control freight-auth-input"
                         type="text"
                         placeholder="Enter the name of the director"
@@ -163,7 +159,7 @@
                     <label class="freight-input-label">Phone Number</label>
                     <div class="freight-auth-padding">
                       <vue-tel-input
-                        v-model.trim="phone"
+                        v-model.trim="director_phone"
                         v-validate="'required|check_phone'"
                         class="input-control sign-up-form"
                         type="number"
@@ -179,13 +175,13 @@
                 </div>
 
                 <div
-                  v-if="radio !== ''"
+                  v-if="director_option !== ''"
                   class="freight-auth-padding"
                 >
                   <label class="freight-input-label">ID</label>
                   <div class="freight-auth-padding">
                     <input
-                      v-model="input"
+                      v-model="director_id"
                       class="input-control freight-auth-input"
                       type="text"
                       placeholder="Enter the identification number of the director"
@@ -198,7 +194,7 @@
                     class="button-primary freight-auth-button"
                     type="submit"
                     value="Next"
-                    @click="verifyPhone"
+                    @click="verifyDirectorDetails"
                   >
                 </div>
               </div>
@@ -210,26 +206,28 @@
               v-if="biz_setup_stage === 3"
               class="freight-signup-outer"
             >
-              <div class="">
-                <i class="el-icon-back" />
-              </div>
               <p class="freight-sign-up-header">
                 One Last Thing
               </p>
               <p class="freight-sign-up-description">
-                We need your email for transporters to send you invoices
+                We need your phone number for transporters to notify you of sent invoices
               </p>
               <div class="">
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Email Address</label>
+                  <label class="freight-input-label">Phone Number </label>
                   <div class="freight-auth-padding">
-                    <input
-                      v-model="input"
-                      class="input-control freight-auth-input"
-                      type="email"
-                      placeholder="Enter your email"
-                      autocomplete="on"
-                    >
+                    <vue-tel-input
+                      v-model.trim="invoice_phone"
+                      v-validate="'required|check_phone'"
+                      class="input-control sign-up-form"
+                      type="number"
+                      name="phone"
+                      value=""
+                      data-vv-validate-on="blur"
+                      v-bind="phoneInputProps"
+                      @onBlur="validate_phone"
+                      @country-changed="checkCountryCode"
+                    />
                   </div>
                 </div>
 
@@ -237,38 +235,57 @@
                   <input
                     class="button-primary freight-auth-button"
                     type="submit"
-                    value="Verify Email"
-                    @click="verifyPhone"
+                    value="Verify Phone Number"
+                    @click="verifyInvoicePhone"
                   >
                 </div>
               </div>
             </div>
 
-            <!-- Email Verification -->
+            <!-- Phone Verification -->
 
             <div
               v-if="biz_setup_stage === 4"
               class="freight-signup-outer"
             >
-              <div class="congratulations_img">
-                <img
-                  src="https://images.sendyit.com/web_platform/freight/verification-email-sent.png"
-                  class="freight-img-logo"
-                >
-              </div>
               <p class="freight-sign-up-header">
-                Check Your Email
+                Verify Phone Number
               </p>
               <p class="freight-sign-up-description">
-                We’ve sent a link to fatmamoha@gmail.com Please click the link to proceed
+                Please enter the verification code we have sent to
+                <span class="validate-freight-phone">{{ invoice_phone }}</span>
               </p>
-              <div class="verification-retry-options">
-                <p class="verification-retry-options-label">
-                  Change email address
-                </p>
-                <p class="verification-retry-options-label">
-                  Resend the link
-                </p>
+              <div class="">
+                <div class="freight-auth-padding">
+                  <label class="freight-input-label">Verfication code</label>
+                  <div class="freight-auth-padding">
+                    <input
+                      v-model="verification_code"
+                      class="input-control freight-auth-input"
+                      type="text"
+                      placeholder="Enter Code"
+                      autocomplete="on"
+                    >
+                  </div>
+                </div>
+
+                <!-- <div class="verification-retry-options">
+                  <p class="verification-retry-options-label">
+                    Change Phone Number
+                  </p>
+                  <p class="verification-retry-options-label">
+                    Receive a call instead
+                  </p>
+                </div> -->
+
+                <div class="">
+                  <input
+                    class="button-primary freight-auth-button"
+                    type="submit"
+                    value="Verify Phone Number"
+                    @click="verifyPhone"
+                  >
+                </div>
               </div>
             </div>
           </el-dialog>
@@ -285,7 +302,7 @@ import NotificationMxn from '../../mixins/notification_mixin';
 import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
 import ValidationMixin from '../../mixins/validation_mixin';
 
-// const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 const currencyConversion = require('country-tz-currency');
 
 export default {
@@ -299,8 +316,13 @@ export default {
       kra_pin: '',
       biz_registration: '',
       biz_setup_stage: 0,
-      radio: '',
+      director_option: '',
+      director_name: '',
+      director_phone: '',
+      director_id: '',
       phone: '',
+      invoice_phone: '',
+      verification_code: '',
       phoneInputProps: {
         mode: 'international',
         defaultCountry: 'ke',
@@ -357,9 +379,16 @@ export default {
   methods: {
     ...mapActions({
       getSupportedCountries: '$_freightAuth/getSupportedCountries',
+      freightBusinessUpdate: '$_freightAuth/freightBusinessUpdate',
+      requestSignUpPhoneVerification: '$_auth/requestSignUpPhoneVerification',
+      requestSignUpVerificationVerify: '$_auth/requestSignUpVerificationVerify',
+      requestPersonalInfo: '$_user/requestPersonalInfo',
     }),
 
-    ...mapMutations({}),
+    ...mapMutations({
+      setVerificationStep: '$_freight/setVerificationStep',
+      setVerificationStage: '$_freight/setVerificationStage',
+    }),
     validate_phone() {
       this.$validator.validate();
     },
@@ -472,9 +501,282 @@ export default {
       }
     },
     initiateBusinessInfoUpdate(val) {
-      console.log('val', val);
+      const session = this.$store.getters.getSession;
+
+      const fullPayload = {
+        values: val,
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'freight/business-details',
+      };
+      this.freightBusinessUpdate(fullPayload)
+        .then((response) => {
+          if (response.status) {
+            const updatedSession = session;
+            updatedSession[session.default].tax_authority_pin = this.kra_pin;
+            updatedSession[session.default].company_reg_no = this.biz_registration;
+
+            const newSession = JSON.stringify(updatedSession);
+            this.setSession(newSession);
+            this.doNotification(
+              2,
+              'Business setup success',
+              'Account details have been updated successfully',
+            );
+            this.checkBusinessSteps();
+          } else {
+            this.doNotification(2, 'Business setup error', response.message);
+          }
+        })
+        .catch(() => {
+          this.doNotification(
+            2,
+            'Business setup failure',
+            'Something went wrong , kindly retry again',
+          );
+        });
     },
-    verifyPhone() {},
+    checkBusinessSteps() {
+      const session = this.$store.getters.getSession;
+
+      if (Object.keys(session[session.default].director_details).length === 0) {
+        this.setVerificationStep(2);
+      } else if (session[session.default].user_phone === '') {
+        this.setVerificationStep(3);
+      } else {
+        this.setVerificationStep(0);
+        this.updateCrmData = false;
+      }
+    },
+    verifyDirectorDetails() {
+      let phoneValid = false;
+      if (this.director_phone !== '') {
+        phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.director_phone));
+      }
+      if (this.director_option === '') {
+        this.doNotification(2, 'Directors update error', 'Kindly select radio button to proceed');
+      } else if (this.director_option === '1' && this.director_id === '') {
+        this.doNotification(
+          2,
+          'Directors update error',
+          'Kindly provide director identification number',
+        );
+      } else if (
+        this.director_option === '2'
+        && (this.director_id === '' || !phoneValid || this.director_name === '')
+      ) {
+        this.doNotification(
+          2,
+          'Directors update error',
+          'Kindly provide all valid director details',
+        );
+      } else {
+        this.structureDirectorsPayload();
+      }
+    },
+    structureDirectorsPayload() {
+      const directorsArray = [];
+      let singleDirector = {};
+      const session = this.$store.getters.getSession;
+      if (this.director_option === '1') {
+        singleDirector = {
+          phone: session[session.default].user_phone,
+          name: session[session.default].user_name,
+          cop_id: session[session.default].cop_id,
+          national_id: this.director_id,
+        };
+      } else {
+        singleDirector = {
+          phone: this.director_phone.replace(/[()\-\s]+/g, ''),
+          name: this.director_name,
+          cop_id: session[session.default].cop_id,
+          national_id: this.director_id,
+        };
+      }
+      directorsArray.push(singleDirector);
+      if (directorsArray.length > 0) {
+        this.directorsUpdateRequest(directorsArray);
+      }
+    },
+    directorsUpdateRequest(val) {
+      const session = this.$store.getters.getSession;
+      const payload = {
+        business_directors: val,
+      };
+      const fullPayload = {
+        values: payload,
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'freight/business-directors',
+      };
+      this.freightBusinessUpdate(fullPayload)
+        .then((response) => {
+          if (response.status) {
+            const updatedSession = session;
+            updatedSession[session.default].director_details = response.businessDirectors;
+
+            const newSession = JSON.stringify(updatedSession);
+            this.setSession(newSession);
+            this.doNotification(
+              2,
+              'Director setup success',
+              'Director details have been updated successfully',
+            );
+            this.checkBusinessSteps();
+          } else {
+            this.doNotification(2, 'Directors setup error', response.message);
+          }
+        })
+        .catch(() => {
+          this.doNotification(
+            2,
+            'Directors setup failure',
+            'Something went wrong , kindly retry again',
+          );
+        });
+    },
+    verifyInvoicePhone() {
+      let phoneValid = false;
+
+      if (this.invoice_phone !== '' && this.invoice_phone.length > 5) {
+        phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.invoice_phone));
+      }
+
+      if (phoneValid) {
+        this.initiateVerificationRequest(this.invoice_phone);
+      } else {
+        this.doNotification(
+          2,
+          'Invoice number setup failure',
+          'Kindly provide a valid phone number',
+        );
+      }
+    },
+    initiateVerificationRequest() {
+      const phone = this.invoice_phone.replace(/[()\-\s]+/g, '');
+      const values = {};
+      values.number = phone;
+      const fullPayload = {
+        values,
+        vm: this,
+        app: 'CUSTOMERS_APP',
+        endpoint: 'request_verification',
+      };
+      this.requestSignUpPhoneVerification(fullPayload).then(
+        (response) => {
+          if (response.status) {
+            localStorage.setItem('request_id', response.request_id);
+            this.doNotification(
+              1,
+              this.$t('signUpDetails.phone_verification'),
+              this.$t('signUpDetails.code_send'),
+            );
+            this.setVerificationStep(4);
+          } else {
+            this.doNotification(2, 'Phone Verification', response.message);
+          }
+        },
+        (error) => {
+          this.doNotification(
+            2,
+            this.$t('signUpDetails.phone_verification_error'),
+            this.$t('signUpDetails.unable_connect_server_text'),
+          );
+        },
+      );
+    },
+    verifyPhone() {
+      const session = this.$store.getters.getSession;
+      if (this.verification_code !== '') {
+        const requestId = localStorage.getItem('request_id');
+        if (requestId === '' || requestId === null) {
+          this.doNotification(
+            2,
+            this.$t('signUpDetails.phone_verification_error'),
+            this.$t('signUpDetails.internal_systems_error'),
+          );
+          setTimeout(() => {
+            this.clearAuthToken();
+          }, 2000);
+        } else {
+          const values = {};
+          values.code = this.verification_code;
+          values.request_id = requestId;
+          const fullPayload = {
+            values,
+            vm: this,
+            app: 'CUSTOMERS_APP',
+            endpoint: 'check_verification',
+          };
+          this.requestSignUpVerificationVerify(fullPayload).then(
+            (response) => {
+              if (response.status) {
+                this.doNotification(
+                  1,
+                  this.$t('signUpDetails.phone_verification'),
+                  this.$t('signUpDetails.phone_verification_successful'),
+                );
+                const phone = this.invoice_phone.replace(/[()\-\s]+/g, '');
+                this.updatePhoneInfo(phone);
+                const updatedSession = session;
+                updatedSession[session.default].user_phone = phone;
+                this.updateCrmData = false;
+                this.setVerificationStage('success');
+                this.setVerificationStep(0);
+              } else {
+                this.doNotification(
+                  2,
+                  this.$t('signUpDetails.phone_verification'),
+                  response.message,
+                );
+              }
+            },
+            (error) => {
+              this.doNotification(
+                2,
+                this.$t('signUpDetails.phone_verification_error'),
+                error.response.data.message,
+              );
+            },
+          );
+        }
+      } else {
+        this.doNotification(
+          2,
+          this.$t('signUpDetails.missing_verification_code'),
+          this.$t('signUpDetails.enter_verification_code'),
+        );
+      }
+    },
+    updatePhoneInfo(phone) {
+      const session = this.$store.getters.getSession;
+      const values = {
+        cop_user_id: session[session.default].user_id,
+        user_name: session[session.default].user_name,
+        user_email: session[session.default].user_email,
+        user_phone: phone,
+      };
+      const fullPayload = {
+        values,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'update_user',
+      };
+      this.requestPersonalInfo(fullPayload).then(() => {}, () => {});
+    },
+    clearAuthToken() {
+      try {
+        localStorage.removeItem('request_id');
+        localStorage.removeItem('_sessionSnack');
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('refreshToken');
+        this.$store.commit('deleteSession');
+
+        this.$store.unregisterModule('$_freight');
+        this.$store.unregisterModule('$_freightAuth');
+      } catch (er) {
+        // freight was not registered
+      } finally {
+        this.$router.push('/freight/login');
+      }
+    },
     doNotification(level, title, message) {
       const notification = { title, level, message };
       this.displayNotification(notification);

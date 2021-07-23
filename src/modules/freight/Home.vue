@@ -56,6 +56,8 @@ import freightStore from './_store';
 import ordersModuleStore from '../orders/_store';
 import transactionsModuleStore from '../transactions/_store';
 import freightAuthStore from '../freightAuth/_store';
+import authModuleStore from '../auth/_store';
+import userModuleStore from '../user/_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import SessionMxn from '../../mixins/session_mixin';
 import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
@@ -134,6 +136,8 @@ export default {
       this.$store.registerModule('$_freight', freightStore);
     }
     this.registerFreightAuthModule();
+    this.registerAuthModule();
+    this.registerUserModule();
   },
   methods: {
     ...mapActions({
@@ -167,7 +171,6 @@ export default {
       }
     },
     verifyBusinessDetails(session) {
-      const invoiceReceivers = session[session.default].invoice_receivers;
       if (
         session[session.default].country_code === ''
         || session[session.default].company_reg_no === ''
@@ -178,7 +181,7 @@ export default {
       } else if (Object.keys(session[session.default].director_details).length === 0) {
         this.setVerificationStep(2);
         this.setVerificationStage('active');
-      } else if (JSON.parse(invoiceReceivers).length === 0) {
+      } else if (session[session.default].user_phone === '') {
         this.setVerificationStep(3);
         this.setVerificationStage('active');
       } else {
@@ -195,8 +198,22 @@ export default {
       this.$store.registerModule(STORE_KEY, transactionsModuleStore);
     },
     registerFreightAuthModule() {
-      const STORE_KEY = '$_freightAuth';
-      this.$store.registerModule(STORE_KEY, freightAuthStore);
+      const moduleIsRegistered = this.$store._modules.root._children.$_freightAuth !== undefined;
+      if (!moduleIsRegistered) {
+        this.$store.registerModule('$_freightAuth', freightAuthStore);
+      }
+    },
+    registerAuthModule() {
+      const moduleIsRegistered = this.$store._modules.root._children.$_auth !== undefined;
+      if (!moduleIsRegistered) {
+        this.$store.registerModule('$_auth', authModuleStore);
+      }
+    },
+    registerUserModule() {
+      const moduleIsRegistered = this.$store._modules.root._children.$_user !== undefined;
+      if (!moduleIsRegistered) {
+        this.$store.registerModule('$_user', userModuleStore);
+      }
     },
     checkFreightStatus() {
       const session = this.$store.getters.getSession;
