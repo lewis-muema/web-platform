@@ -33,11 +33,11 @@
                   >
                 </div>
                 <p class="freight-sign-up-header">
-                  Congratulations Fatma !
+                  Congratulations {{ cop_name }} !
                 </p>
                 <p class="freight-sign-up-description">
                   We are excited to have you. Next, tell us more about
-                  <span class="validate-freight-phone"> {{ acc_name }}</span>for us to customize your experience
+                  <span class="validate-freight-phone"> {{ user_name }}</span>for us to customize your experience
                 </p>
                 <div class="">
                   <div class="">
@@ -71,7 +71,8 @@ export default {
   data() {
     return {
       updateCrmData: true,
-      acc_name: '',
+      cop_name: '',
+      user_name: '',
       login_acc: false,
     };
   },
