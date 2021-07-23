@@ -19,33 +19,36 @@
             :close-on-click-modal="false"
           >
             <div class="freight-signup-outer">
-              <div class="congratulations_img">
-                <img
-                  src="https://images.sendyit.com/web_platform/freight/freight-final-setup.png"
-                  class="freight-img-logo"
-                >
+              <div v-if="!login_acc">
+                <p class="freight-sign-up-header">
+                  Verifying account information ...
+                </p>
+                <div class="verify-freight-info-loader " />
               </div>
-              <p class="freight-sign-up-header">
-                Congratulations Fatma !
-              </p>
-              <p class="freight-sign-up-description">
-                We are excited to have you. Next, tell us more about
-                <span class="validate-freight-phone"> Amini Movers Limited </span>for us to
-                customize your experience
-              </p>
-              <div class="">
-                <div class="">
-                  <input
-                    class="button-primary freight-auth-button"
-                    type="submit"
-                    value="Let's go"
-                    @click="loginUser"
+              <div v-else>
+                <div class="congratulations_img">
+                  <img
+                    src="https://images.sendyit.com/web_platform/freight/freight-final-setup.png"
+                    class="freight-img-logo"
                   >
                 </div>
-
-                <!-- <p class="freight-login-redirect">
-                  Already have an account? Login
-                </p> -->
+                <p class="freight-sign-up-header">
+                  Congratulations {{ cop_name }} !
+                </p>
+                <p class="freight-sign-up-description">
+                  We are excited to have you. Next, tell us more about
+                  <span class="validate-freight-phone"> {{ user_name }}</span>for us to customize your experience
+                </p>
+                <div class="">
+                  <div class="">
+                    <input
+                      class="button-primary freight-auth-button"
+                      type="submit"
+                      value="Let's go"
+                      @click="loginUser"
+                    >
+                  </div>
+                </div>
               </div>
             </div>
           </el-dialog>
@@ -68,8 +71,9 @@ export default {
   data() {
     return {
       updateCrmData: true,
-      code: '',
-      phone: '+254700536660',
+      cop_name: '',
+      user_name: '',
+      login_acc: false,
     };
   },
   computed: {
@@ -80,11 +84,36 @@ export default {
   watch: {},
 
   created() {},
-  mounted() {},
+  mounted() {
+    this.login_acc = false;
+    this.checkTokenValidity();
+  },
   methods: {
-    ...mapActions({}),
+    ...mapActions({
+      freightVerifyEmail: '$_freightAuth/resendInvitationLink',
+    }),
 
     ...mapMutations({}),
+    checkTokenValidity() {
+      const token = this.$route.params.content;
+      const values = {};
+      values.token = token;
+      const fullPayload = {
+        values,
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'freight/verify-email',
+      };
+      this.freightVerifyEmail(fullPayload)
+        .then((response) => {
+          // this.login_acc = true;
+          // show username and business name on the UI
+          console.log('response', response);
+        })
+        .catch((error) => {
+          this.$router.push('/freight/sign-up');
+          this.doNotification(2, 'Email Verification Error', error.response.data.message);
+        });
+    },
     loginUser() {},
     doNotification(level, title, message) {
       const notification = { title, level, message };
@@ -96,4 +125,45 @@ export default {
 
 <style lang="css" scoped>
 @import "../../../../../src/assets/styles/freight_auth.css";
+.verify-freight-info-loader ,
+.verify-freight-info-loader :after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+.verify-freight-info-loader  {
+  margin: 60px auto;
+  font-size: 8px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 1.1em solid #2c82c5;
+  border-right: 1.1em solid #f3f3f3;
+  border-bottom: 1.1em solid #f3f3f3;
+  border-left: 1.1em solid #f3f3f3;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
 </style>

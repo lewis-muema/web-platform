@@ -508,20 +508,14 @@ export function createRouter() {
           {
             path: '/freight/sign_up',
             component: () => import('../modules/freightAuth/components/SignUp.vue'),
-            beforeEnter: loginGuard,
-            meta: { login: 'Freight Sign Up Page' },
           },
           {
             path: '/freight/verify_email',
-            component: () => import('../modules/freightAuth/components/verification_phases/PhoneVerification.vue'),
-            beforeEnter: loginGuard,
-            meta: { login: 'Freight Sign Up Verification' },
+            component: () => import('../modules/freightAuth/components/verification_phases/EmailVerification.vue'),
           },
           {
-            path: '/freight/info_verification',
+            path: '/freight/info_verification/:content',
             component: () => import('../modules/freightAuth/components/verification_phases/SignUpCongratulations.vue'),
-            beforeEnter: loginGuard,
-            meta: { login: 'Freight Sign Up Verification' },
           },
           {
             path: '/freight/forgot_password',

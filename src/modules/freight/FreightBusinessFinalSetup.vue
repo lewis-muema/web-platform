@@ -20,7 +20,7 @@
           >
             <div class="freight-signup-outer">
               <p class="freight-sign-up-header all-done-header">
-                All Done, Fatma!
+                All Done, {{ userName }}
               </p>
               <p class="freight-sign-up-header progress-description">
                 Now getting you ready to move cargo...
@@ -71,6 +71,7 @@ export default {
     return {
       updateCrmData: false,
       smooth_rate: 0,
+      userName: '',
     };
   },
   computed: {
@@ -83,7 +84,10 @@ export default {
 
   created() {},
   mounted() {
+    const session = this.$store.getters.getSession;
+
     if (this.getVerificationStage === 'success') {
+      this.userName = session[session.default].user_name;
       this.updateCrmData = true;
       this.displayProgressRate();
     } else {
