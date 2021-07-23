@@ -715,9 +715,13 @@ export default {
                   this.$t('signUpDetails.phone_verification_successful'),
                 );
                 const phone = this.invoice_phone.replace(/[()\-\s]+/g, '');
-                this.updatePhoneInfo(phone);
                 const updatedSession = session;
                 updatedSession[session.default].user_phone = phone;
+                const newSession = JSON.stringify(updatedSession);
+                this.setSession(newSession);
+
+                this.updatePhoneInfo(phone);
+
                 this.updateCrmData = false;
                 this.setVerificationStage('success');
                 this.setVerificationStep(0);
