@@ -115,6 +115,9 @@
           <div v-if="loader">
             <loading-component />
           </div>
+          <div v-else-if="inactive_user">
+            <static-component />
+          </div>
           <div v-else>
             <div v-if="ownersListing.length === 0">
               <img
@@ -500,13 +503,14 @@ import VueTypeahead from 'vue-typeahead';
 import Axios from 'axios';
 import NotificationMxn from '../../../mixins/notification_mixin';
 import LoadingComponent from './LoadingComponent.vue';
+import StaticComponent from './StaticComponent.vue';
 import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 Vue.prototype.$http = Axios;
 
 export default {
   name: 'Transporters',
-  components: { LoadingComponent },
+  components: { LoadingComponent, StaticComponent },
   extends: VueTypeahead,
   mixins: [NotificationMxn, MixpanelMixin],
   data() {
@@ -579,7 +583,7 @@ export default {
       shipment_offer: '',
       negotiability: '',
       bid_amount: '',
-      loader: true,
+      loader: false,
       DOM: '',
       pickup_value: '',
       destination_value: '',
@@ -594,10 +598,13 @@ export default {
           currency_code: 'USD',
         },
       ],
+      inactive_user: false,
     };
   },
   computed: {
-    ...mapGetters({}),
+    ...mapGetters({
+      getVerificationStage: '$_freight/getVerificationStage',
+    }),
     query_string() {
       return this.query;
     },
@@ -650,12 +657,16 @@ export default {
     this.DOM = process;
   },
   mounted() {
-    this.loader = true;
-    this.fetchOwnersListing();
+    const session = this.$store.getters.getSession;
+    if (session[session.default].freight_status === 2 && this.getVerificationStage === '') {
+      this.loader = true;
+      this.fetchOwnersListing();
+    } else {
+      this.inactive_user = true;
+    }
     this.fetchGoodsTypes();
     this.fetchCarrierTypes();
     this.fetchCurrencies();
-    const session = this.$store.getters.getSession;
     this.trackMixpanelEvent('Transporters Page Viewed', {
       'User Id': session[session.default].user_id,
       Email: session[session.default].user_email,
@@ -891,6 +902,7 @@ export default {
       }
     },
     doFilterOwners() {
+      this.loader = true;
       const payload = {
         cargo_type: parseInt(this.goods, 10),
         carrier_type: parseInt(this.truck_type, 10),
@@ -918,9 +930,10 @@ export default {
         app: 'PARTNERS_APP',
         endpoint: 'transporters',
       };
-
+      this.inactive_user = false;
       this.getFilteredOwnersListing(fullPayload).then(
         (response) => {
+          this.loader = false;
           let workingResponse = response;
           /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
           if (response.length > 1) {
@@ -954,6 +967,7 @@ export default {
           this.processing = false;
         },
         (error) => {
+          this.loader = false;
           this.fetchOwnersListing();
           this.processing = false;
         },
