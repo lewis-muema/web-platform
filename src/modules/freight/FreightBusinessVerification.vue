@@ -518,7 +518,7 @@ export default {
             const newSession = JSON.stringify(updatedSession);
             this.setSession(newSession);
             this.doNotification(
-              2,
+              1,
               'Business setup success',
               'Account details have been updated successfully',
             );
@@ -618,7 +618,7 @@ export default {
             const newSession = JSON.stringify(updatedSession);
             this.setSession(newSession);
             this.doNotification(
-              2,
+              1,
               'Director setup success',
               'Director details have been updated successfully',
             );

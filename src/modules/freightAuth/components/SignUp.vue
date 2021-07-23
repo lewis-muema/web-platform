@@ -211,7 +211,9 @@ export default {
       freightSignUp: '$_freightAuth/freightSignUp',
     }),
 
-    ...mapMutations({}),
+    ...mapMutations({
+      setVerificationEmail: '$_freightAuth/setVerificationEmail',
+    }),
     validate_phone() {
       this.$validator.validate();
     },
@@ -300,10 +302,16 @@ export default {
 
       this.freightSignUp(fullPayload)
         .then((response) => {
-          console.log('response', response);
+          if (response.status) {
+            this.setVerificationEmail(payload.email);
+            this.doNotification(1, 'Sucess freight sign up', 'Account details saved successfully');
+            this.$router.push('/freight/verify_email');
+          } else {
+            this.doNotification(2, 'Freight Sign up error', response.message);
+          }
         })
-        .catch(() => {
-          console.log('error');
+        .catch((error) => {
+          this.doNotification(2, 'Freight Sign up error', error.response.data.message);
         });
     },
     doNotification(level, title, message) {
