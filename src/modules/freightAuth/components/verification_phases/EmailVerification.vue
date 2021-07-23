@@ -29,13 +29,16 @@
                 Check Your Email
               </p>
               <p class="freight-sign-up-description">
-                We’ve sent a link to fatmamoha@gmail.com Please click the link to proceed
+                We’ve sent a link to {{ getVerificationEmail }} Please click the link to proceed
               </p>
               <div class="verification-retry-options">
                 <p class="verification-retry-options-label">
-                  Change email address
+                  <!-- Change email address -->
                 </p>
-                <p class="verification-retry-options-label">
+                <p
+                  class="verification-retry-options-label"
+                  @click="resendLink"
+                >
                   Resend the link
                 </p>
               </div>
@@ -55,29 +58,66 @@ import MixpanelMixin from '../../../../mixins/mixpanel_events_mixin';
 import ValidationMixin from '../../../../mixins/validation_mixin';
 
 export default {
-  name: 'PhoneVerification',
+  name: 'EmailVerification',
   mixins: [SessionMxn, NotificationMxn, MixpanelMixin, ValidationMixin],
   data() {
     return {
-      updateCrmData: true,
-      code: '',
-      phone: '+254700536660',
+      updateCrmData: false,
     };
   },
   computed: {
     ...mapGetters({
       get_session: 'getSession',
+      getVerificationEmail: '$_freightAuth/getVerificationEmail',
     }),
   },
   watch: {},
 
   created() {},
-  mounted() {},
+  mounted() {
+    if (this.getVerificationEmail === '') {
+      this.$router.push('/freight/sign-up');
+    } else {
+      this.updateCrmData = true;
+    }
+  },
   methods: {
-    ...mapActions({}),
+    ...mapActions({
+      resendInvitationLink: '$_freightAuth/resendInvitationLink',
+    }),
 
     ...mapMutations({}),
-    verifyPhone() {},
+    resendLink() {
+      if (this.getVerificationEmail !== '') {
+        const values = {};
+        values.email = this.getVerificationEmail;
+        const fullPayload = {
+          values,
+          app: 'ADONIS_PRIVATE_API',
+          endpoint: 'freight/verification-link',
+        };
+        this.resendInvitationLink(fullPayload)
+          .then((response) => {
+            if (response.status) {
+              this.doNotification(
+                1,
+                'Email Verification',
+                'Email Address verification link sent successfully',
+              );
+            } else {
+              this.doNotification(2, 'Email Verification Error', response.message);
+            }
+          })
+          .catch((error) => {
+            this.doNotification(2, 'Email Verification Error', error.response.data.message);
+            this.$router.push('/freight/sign-up');
+            this.updateCrmData = false;
+          });
+      } else {
+        this.$router.push('/freight/sign-up');
+        this.updateCrmData = false;
+      }
+    },
     doNotification(level, title, message) {
       const notification = { title, level, message };
       this.displayNotification(notification);

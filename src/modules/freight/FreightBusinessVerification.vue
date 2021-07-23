@@ -395,7 +395,7 @@ export default {
     checkSessionData() {
       const session = this.$store.getters.getSession;
       if (Object.keys(session).length > 0) {
-        this.businessName = session[session.default].user_name;
+        this.businessName = session[session.default].cop_name;
         this.kra_pin = session[session.default].tax_authority_pin;
         this.biz_registration = session[session.default].company_reg_no;
       } else {
@@ -518,7 +518,7 @@ export default {
             const newSession = JSON.stringify(updatedSession);
             this.setSession(newSession);
             this.doNotification(
-              2,
+              1,
               'Business setup success',
               'Account details have been updated successfully',
             );
@@ -618,7 +618,7 @@ export default {
             const newSession = JSON.stringify(updatedSession);
             this.setSession(newSession);
             this.doNotification(
-              2,
+              1,
               'Director setup success',
               'Director details have been updated successfully',
             );
