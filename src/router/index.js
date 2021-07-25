@@ -118,6 +118,124 @@ function loginGuard(to, from, next) {
   });
 }
 
+function freightGuard(to, from, next) {
+  return new Promise((resolve) => {
+    let { session } = store.state;
+    if (isEmpty(session)) {
+      if (process.browser) {
+        // read ls here
+        const _sessionSnack = localStorage.getItem('_sessionSnack');
+        let userState = true;
+        let freightState = true;
+        if (typeof _sessionSnack === 'string') {
+          userState = _sessionSnack.includes('biz');
+          freightState = _sessionSnack.includes('freight_user');
+        }
+
+        if (isEmpty(_sessionSnack) || _sessionSnack === null || !userState || !freightState) {
+          resolve(next('/freight/login'));
+        } else {
+          session = JSON.parse(_sessionSnack);
+          store.state.session = session;
+          let analyticsEnv = '';
+          try {
+            analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+          } catch (er) {
+            // empty
+          }
+          if ('default' in session && analyticsEnv === 'production') {
+            const acc = session[session.default];
+            mixpanel.identify(acc.user_email);
+          }
+          resolve(next());
+          // if (session.freight_user) {
+          //   resolve(next());
+          // } else {
+          //   localStorage.removeItem('_sessionSnack');
+          //   localStorage.removeItem('jwtToken');
+          //   resolve(next('/freight/login'));
+          // }
+        }
+      } else {
+        resolve(next());
+      }
+    } else {
+      resolve(next());
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // empty
+      }
+      if (analyticsEnv === 'production') {
+        if ('innerTrack' in to.meta) {
+          const details = to.meta.innerTrack;
+          if (details !== 'undefined') {
+            mixpanel.track(details, {
+              'Client Type': 'Web Platform',
+              'Account Type': session.default === 'peer' ? 'Personal' : 'Business',
+            });
+          }
+        }
+      }
+    }
+  });
+}
+
+function freightLoginGuard(to, from, next) {
+  return new Promise((resolve) => {
+    let { session } = store.state;
+
+    if (isEmpty(session)) {
+      if (process.browser) {
+        // read ls here
+        const _sessionSnack = localStorage.getItem('_sessionSnack');
+        let userState = true;
+        let freightState = true;
+        if (typeof _sessionSnack === 'string') {
+          userState = _sessionSnack.includes('biz');
+          freightState = _sessionSnack.includes('freight_user');
+        }
+        if (isEmpty(_sessionSnack) || _sessionSnack === null || !userState || !freightState) {
+          resolve(next());
+          if ('login' in to.meta) {
+            const details = to.meta.login;
+            if (details !== 'undefined') {
+              let analyticsEnv = '';
+              try {
+                analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+              } catch (er) {
+                // empty
+              }
+              // let path = window.location.href;
+              if (analyticsEnv === 'production') {
+                mixpanel.track(details, {
+                  'Client Type': 'Web Platform',
+                });
+              }
+            }
+          }
+        } else {
+          session = JSON.parse(_sessionSnack);
+          store.state.session = session;
+          resolve(next('/freight/transporters'));
+          // if (session.freight_user) {
+          //   resolve(next('/freight/transporters'));
+          // } else {
+          //   localStorage.removeItem('_sessionSnack');
+          //   localStorage.removeItem('jwtToken');
+          //   resolve(next('/freight/login'));
+          // }
+        }
+      } else {
+        resolve(next());
+      }
+    } else {
+      resolve(next());
+    }
+  });
+}
+
 export function createRouter() {
   const router = new Router({
     mode: 'history',
@@ -361,10 +479,11 @@ export function createRouter() {
           },
         ],
       },
+      // Freight Auth modules
       {
         path: '/freight/home',
         component: () => import('../modules/freight/Home.vue'),
-        beforeEnter: guard,
+        beforeEnter: freightGuard,
         meta: { innerTrack: 'Freight Home Page' },
         children: [
           {
@@ -488,6 +607,7 @@ export function createRouter() {
           },
         ],
       },
+      // Freight modules
       {
         path: '/freight',
         component: () => import('../modules/freightAuth/FreightAuth.vue'),
@@ -495,14 +615,14 @@ export function createRouter() {
           {
             path: '/',
             component: () => import('../modules/freightAuth/components/Login.vue'),
-            beforeEnter: loginGuard,
-            meta: { login: 'Sign In Page' },
+            beforeEnter: freightLoginGuard,
+            meta: { login: 'Freight Sign In Page' },
           },
           {
             path: '/freight/login',
             name: 'freight_login',
             component: () => import('../modules/freightAuth/components/Login.vue'),
-            beforeEnter: loginGuard,
+            beforeEnter: freightLoginGuard,
             meta: { login: 'Freight Sign In Page' },
           },
           {
