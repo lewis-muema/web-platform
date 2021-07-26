@@ -311,7 +311,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.doNotification(2, 'Freight Sign up error', error.response.data.message);
+          this.doNotification(2, 'Freight Sign up error', error.response.data[0].message);
         });
     },
     doNotification(level, title, message) {

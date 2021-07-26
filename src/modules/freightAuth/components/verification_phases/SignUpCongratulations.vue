@@ -110,7 +110,7 @@ export default {
           console.log('response', response);
         })
         .catch((error) => {
-          this.$router.push('/freight/sign-up');
+          this.$router.push('/freight/sign_up');
           this.doNotification(2, 'Email Verification Error', error.response.data.message);
         });
     },
