@@ -8,7 +8,7 @@
       No Shipment Found
     </div>
     <div class="no-activity-label">
-      Looks like you are yet to do a do your first shipment on the platform
+      Looks like you are yet to do your first shipment on the platform
     </div>
     <div class="static-component-label static-content-margin">
       <button
