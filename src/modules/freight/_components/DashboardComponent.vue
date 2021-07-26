@@ -5,13 +5,7 @@
     </div>
     <div v-else>
       <div v-if="logs.length === 0">
-        <img
-          src="https://s3-eu-west-1.amazonaws.com/images.sendyit.com/web_platform/freight/unavailable.svg"
-          class="no-activity-img"
-        >
-        <div class="no-activity-label">
-          {{$t('dashboardComponent.no_activity')}}
-        </div>
+        <no-activity-component />
       </div>
       <div
         v-else
@@ -143,10 +137,11 @@ import NotificationMxn from '../../../mixins/notification_mixin';
 import TimeZoneMxn from '../../../mixins/timezone_mixin';
 import LoadingComponent from './LoadingComponent.vue';
 import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
+import NoActivityComponent from './StaticDisplay/NoActivityComponent.vue';
 
 export default {
   name: 'Dashboard',
-  components: { LoadingComponent },
+  components: { LoadingComponent, NoActivityComponent },
   mixins: [SessionMxn, NotificationMxn, TimeZoneMxn, MixpanelMixin],
   data() {
     return {
@@ -389,9 +384,6 @@ export default {
   width: 35%;
   display: block;
   margin: auto;
-}
-.no-activity-label{
-  text-align: center;
 }
 .freight-dashboard-outer{
   width: 64%;

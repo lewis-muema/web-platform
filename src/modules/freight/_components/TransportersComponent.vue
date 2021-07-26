@@ -116,7 +116,7 @@
             <loading-component />
           </div>
           <div v-else-if="inactive_user">
-            <static-component />
+            <no-transporters-component />
           </div>
           <div v-else>
             <div v-if="ownersListing.length === 0">
@@ -503,14 +503,14 @@ import VueTypeahead from 'vue-typeahead';
 import Axios from 'axios';
 import NotificationMxn from '../../../mixins/notification_mixin';
 import LoadingComponent from './LoadingComponent.vue';
-import StaticComponent from './StaticComponent.vue';
+import NoTransportersComponent from './StaticDisplay/NoTransportersComponent.vue';
 import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 Vue.prototype.$http = Axios;
 
 export default {
   name: 'Transporters',
-  components: { LoadingComponent, StaticComponent },
+  components: { LoadingComponent, NoTransportersComponent },
   extends: VueTypeahead,
   mixins: [NotificationMxn, MixpanelMixin],
   data() {
