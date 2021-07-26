@@ -772,3 +772,6 @@ div.pac-container {
 .requestShipmentOptions >.el-dialog >.el-dialog__body {
   margin: 3% !important;
 }
+.personal-info-phone-validation >.el-dialog >.el-dialog__body{
+  margin: 4% !important;
+}
