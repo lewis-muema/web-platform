@@ -76,7 +76,7 @@ export default {
   created() {},
   mounted() {
     if (this.getVerificationEmail === '') {
-      this.$router.push('/freight/sign-up');
+      this.$router.push('/freight/sign_up');
     } else {
       this.updateCrmData = true;
     }
@@ -110,11 +110,11 @@ export default {
           })
           .catch((error) => {
             this.doNotification(2, 'Email Verification Error', error.response.data.message);
-            this.$router.push('/freight/sign-up');
+            this.$router.push('/freight/sign_up');
             this.updateCrmData = false;
           });
       } else {
-        this.$router.push('/freight/sign-up');
+        this.$router.push('/freight/sign_up');
         this.updateCrmData = false;
       }
     },

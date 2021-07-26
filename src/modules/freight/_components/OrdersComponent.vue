@@ -1,95 +1,102 @@
 <template lang="html">
   <div class="transporters-main">
-    <div class="freight-orders--filter-wrap">
-      <div class="section--filter-input-wrap">
-        <el-input
-          v-model="search"
-          :placeholder="$t('ordersComponent.search')"
-          class="freight-orders-search"
-        >
-          <i
-            slot="prefix"
-            class="el-input__icon el-icon-search"
-          />
-        </el-input>
-      </div>
+    <div v-if="no_shipment_data">
+      <no-shipment-component />
     </div>
-    <el-table
-      v-loading="loading"
-      :data="order_history_data"
-      style="width: 100%;"
-      :border="true"
-      :stripe="true"
-      :row-key="getRowKey"
-    >
-      <template slot="empty">
-        {{ empty_orders_state }}
-      </template>
-      <el-table-column
-        :label="$t('ordersComponent.pickup_location')"
-        prop="order_date"
-      >
-        <template slot-scope="scope">
-          {{ order_history_data[scope.$index]['pickup'] }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('ordersComponent.destination')"
-        prop="order_date"
-      >
-        <template slot-scope="scope">
-          {{ order_history_data[scope.$index]['destination'] }}
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        key="1"
-        :label="$t('ordersComponent.type_of_load')"
-        prop="cargo_type"
-        width="200"
-      />
-      <el-table-column
-        :label="$t('ordersComponent.type_of_truck')"
-        prop="carrier_type"
-        width="200"
-      />
-      <el-table-column
-        :label="$t('ordersComponent.pickup_date')"
-        prop="order_date"
-      >
-        <template slot-scope="props">
-          {{ getFormattedDate(order_history_data[props.$index]['pickup_time']) }}
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        :label="$t('ordersComponent.status')"
-        prop="path"
-        header-align="center"
-        align="center"
-      >
-        <template slot-scope="props">
-          <div
-            class="view-orders-transporter-info"
-            @click="viewOrdersInfo(order_history_data[props.$index]['id'])"
+    <div v-else>
+      <div class="freight-orders--filter-wrap">
+        <div class="section--filter-input-wrap">
+          <el-input
+            v-model="search"
+            :placeholder="$t('ordersComponent.search')"
+            class="freight-orders-search"
           >
-            {{ $t('ordersComponent.view') }} <i class="el-icon-arrow-right view-transporter-info" />
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
+            <i
+              slot="prefix"
+              class="el-input__icon el-icon-search"
+            />
+          </el-input>
+        </div>
+      </div>
 
-    <div class="section--pagination-wrap">
-      <el-pagination
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="order_history_total"
-        :page-size="pagination_limit"
-        :current-page.sync="pagination_page"
-        :page-sizes="[5, 10, 20, 50, 100]"
-        class="section--pagination-item"
-        @current-change="changePage"
-        @size-change="changeSize"
-      />
+      <el-table
+        v-loading="loading"
+        :data="order_history_data"
+        style="width: 100%;"
+        :border="true"
+        :stripe="true"
+        :row-key="getRowKey"
+      >
+        <template slot="empty">
+          {{ empty_orders_state }}
+        </template>
+        <el-table-column
+          :label="$t('ordersComponent.pickup_location')"
+          prop="order_date"
+        >
+          <template slot-scope="scope">
+            {{ order_history_data[scope.$index]['pickup'] }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          :label="$t('ordersComponent.destination')"
+          prop="order_date"
+        >
+          <template slot-scope="scope">
+            {{ order_history_data[scope.$index]['destination'] }}
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          key="1"
+          :label="$t('ordersComponent.type_of_load')"
+          prop="cargo_type"
+          width="200"
+        />
+        <el-table-column
+          :label="$t('ordersComponent.type_of_truck')"
+          prop="carrier_type"
+          width="200"
+        />
+        <el-table-column
+          :label="$t('ordersComponent.pickup_date')"
+          prop="order_date"
+        >
+          <template slot-scope="props">
+            {{ getFormattedDate(order_history_data[props.$index]['pickup_time']) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          :label="$t('ordersComponent.status')"
+          prop="path"
+          header-align="center"
+          align="center"
+        >
+          <template slot-scope="props">
+            <div
+              class="view-orders-transporter-info"
+              @click="viewOrdersInfo(order_history_data[props.$index]['id'])"
+            >
+              {{ $t('ordersComponent.view') }}
+              <i class="el-icon-arrow-right view-transporter-info" />
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div class="section--pagination-wrap">
+        <el-pagination
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="order_history_total"
+          :page-size="pagination_limit"
+          :current-page.sync="pagination_page"
+          :page-sizes="[5, 10, 20, 50, 100]"
+          class="section--pagination-item"
+          @current-change="changePage"
+          @size-change="changeSize"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -97,12 +104,15 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import numeral from 'numeral';
+import NoShipmentComponent from './StaticDisplay/NoShipmentComponent.vue';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
 import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 
 const moment = require('moment');
 
 export default {
+  name: 'Orders',
+  components: { NoShipmentComponent },
   filters: {
     moment(date) {
       return moment(date).format('MMM Do YYYY, h:mm a');
@@ -118,6 +128,7 @@ export default {
       create_order_text: this.$t('ordersComponent.create_order'),
       loading: false,
       sessionData: {},
+      no_shipment_data: false,
     };
   },
   computed: {
