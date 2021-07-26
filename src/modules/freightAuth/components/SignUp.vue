@@ -273,6 +273,7 @@ export default {
       }
     },
     submit() {
+      localStorage.removeItem('verificationEmail');
       let emailValid = true;
       for (let i = 0; i < this.errors.items.length; i++) {
         if (this.errors.items[i].field === 'email') {
@@ -303,7 +304,7 @@ export default {
       this.freightSignUp(fullPayload)
         .then((response) => {
           if (response.status) {
-            this.setVerificationEmail(payload.email);
+            localStorage.setItem('verificationEmail', payload.email);
             this.doNotification(1, 'Sucess freight sign up', 'Account details saved successfully');
             this.$router.push('/freight/verify_email');
           } else {

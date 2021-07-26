@@ -29,7 +29,7 @@
                 Check Your Email
               </p>
               <p class="freight-sign-up-description">
-                We’ve sent a link to {{ getVerificationEmail }} Please click the link to proceed
+                We’ve sent a link to {{ email }} Please click the link to proceed
               </p>
               <div class="verification-retry-options">
                 <p class="verification-retry-options-label">
@@ -63,6 +63,7 @@ export default {
   data() {
     return {
       updateCrmData: false,
+      email: '',
     };
   },
   computed: {
@@ -88,9 +89,16 @@ export default {
 
     ...mapMutations({}),
     resendLink() {
-      if (this.getVerificationEmail !== '') {
+      const verificationEmail = localStorage.getItem('verificationEmail');
+      this.email = '';
+
+      if (typeof verificationEmail === 'string') {
+        this.email = verificationEmail;
+      }
+
+      if (this.email !== '' || verificationEmail === null) {
         const values = {};
-        values.email = this.getVerificationEmail;
+        values.email = this.email;
         const fullPayload = {
           values,
           app: 'ADONIS_PRIVATE_API',
