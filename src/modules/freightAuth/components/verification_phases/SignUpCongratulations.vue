@@ -108,6 +108,7 @@ export default {
           // this.login_acc = true;
           // show username and business name on the UI
           console.log('response', response);
+          localStorage.removeItem('verificationEmail');
         })
         .catch((error) => {
           this.$router.push('/freight/sign_up');
