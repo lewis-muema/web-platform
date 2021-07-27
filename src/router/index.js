@@ -479,7 +479,7 @@ export function createRouter() {
           },
         ],
       },
-      // Freight Auth modules
+      // Freight modules
       {
         path: '/freight/home',
         component: () => import('../modules/freight/Home.vue'),
@@ -606,7 +606,7 @@ export function createRouter() {
           },
         ],
       },
-      // Freight modules
+      // Freight auth modules
       {
         path: '/freight',
         component: () => import('../modules/freightAuth/FreightAuth.vue'),
@@ -639,6 +639,10 @@ export function createRouter() {
           {
             path: '/freight/forgot_password',
             component: () => import('../modules/freightAuth/components/PassReset.vue'),
+          },
+          {
+            path: '/freight/reset_password/:content',
+            component: () => import('../modules/freightAuth/components/ConfirmPassword.vue'),
           },
         ],
       },
