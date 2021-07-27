@@ -13,6 +13,7 @@
 import Vue from 'vue';
 import VeeValidate, { Validator } from 'vee-validate';
 import freightAuthStore from './_store';
+import authModuleStore from '../auth/_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import ExternalHeader from '../../components/headers/freight/ExternalHeader.vue';
 import FreightBackground from './components/FreightBackground.vue';
@@ -57,7 +58,19 @@ export default {
     },
   },
   created() {
-    this.$store.registerModule('$_freightAuth', freightAuthStore);
+    const moduleIsRegistered = this.$store._modules.root._children.$_freightAuth !== undefined;
+    if (!moduleIsRegistered) {
+      this.$store.registerModule('$_freightAuth', freightAuthStore);
+    }
+    this.registerAuthModule();
+  },
+  methods: {
+    registerAuthModule() {
+      const moduleIsRegistered = this.$store._modules.root._children.$_auth !== undefined;
+      if (!moduleIsRegistered) {
+        this.$store.registerModule('$_auth', authModuleStore);
+      }
+    },
   },
 };
 </script>
