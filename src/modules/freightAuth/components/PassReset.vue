@@ -145,10 +145,13 @@
                   <div class="freight-auth-padding">
                     <input
                       v-model="email"
+                      v-validate="'required|email'"
+                      <input
                       class="input-control freight-auth-input"
-                      type="text"
-                      placeholder="Enter your email"
+                      placeholder="Enter your email address"
                       autocomplete="on"
+                      type="email"
+                      name="email"
                     >
                     <p
                       v-if="email !== ''"
