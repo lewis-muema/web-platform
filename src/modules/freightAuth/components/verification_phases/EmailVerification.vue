@@ -76,11 +76,21 @@ export default {
 
   created() {},
   mounted() {
-    if (this.getVerificationEmail === '') {
-      this.$router.push('/freight/sign_up');
-    } else {
-      this.updateCrmData = true;
-    }
+    const verificationEmail = localStorage.getItem('verificationEmail');
+
+    setTimeout(() => {
+      this.email = '';
+
+      if (typeof verificationEmail === 'string') {
+        this.email = verificationEmail;
+      }
+
+      if (this.email === '' || verificationEmail === null) {
+        this.$router.push('/freight/sign_up');
+      } else {
+        this.updateCrmData = true;
+      }
+    }, 800);
   },
   methods: {
     ...mapActions({
@@ -96,7 +106,7 @@ export default {
         this.email = verificationEmail;
       }
 
-      if (this.email !== '' || verificationEmail === null) {
+      if (this.email !== '' || verificationEmail !== null) {
         const values = {};
         values.email = this.email;
         const fullPayload = {

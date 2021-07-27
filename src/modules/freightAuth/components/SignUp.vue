@@ -306,7 +306,9 @@ export default {
           if (response.status) {
             localStorage.setItem('verificationEmail', payload.email);
             this.doNotification(1, 'Sucess freight sign up', 'Account details saved successfully');
-            this.$router.push('/freight/verify_email');
+            setTimeout(() => {
+              this.$router.push('/freight/verify_email');
+            }, 800);
           } else {
             this.doNotification(2, 'Freight Sign up error', response.message);
           }
