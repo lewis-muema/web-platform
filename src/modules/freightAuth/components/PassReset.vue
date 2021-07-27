@@ -41,12 +41,20 @@
                   <label class="freight-input-label">Email</label>
                   <div class="freight-auth-padding">
                     <input
-                      v-model="input"
+                      v-model="email"
+                      v-validate="'required|email'"
                       class="input-control freight-auth-input"
-                      type="text"
                       placeholder="Enter your email address"
                       autocomplete="on"
+                      type="email"
+                      name="email"
                     >
+                    <p
+                      v-if="email !== ''"
+                      class="freight-data-error"
+                    >
+                      {{ errors.first('email') }}
+                    </p>
                   </div>
                 </div>
 
@@ -55,7 +63,7 @@
                     class="button-primary freight-auth-button"
                     type="submit"
                     value="Continue"
-                    @click="passwordReset"
+                    @click="passwordReset(1)"
                   >
                 </div>
 
@@ -85,7 +93,7 @@
                 Good News!
               </p>
               <p class="freight-sign-up-description">
-                Your account is still intact and we have sent an email to {{ input }}for you to
+                Your account is still intact and we have sent an email to {{ email }} for you to
                 recover your password
               </p>
               <p class="freight-sign-up-description">
@@ -101,7 +109,10 @@
                   >
                 </div>
 
-                <p class="freight-login-redirect">
+                <p
+                  class="freight-login-redirect"
+                  @click="passwordReset(2)"
+                >
                   Resend the link
                 </p>
               </div>
@@ -133,12 +144,21 @@
                   <label class="freight-input-label">Email</label>
                   <div class="freight-auth-padding">
                     <input
-                      v-model="input"
+                      v-model="email"
+                      v-validate="'required|email'"
+                      <input
                       class="input-control freight-auth-input"
-                      type="text"
-                      placeholder="Enter your email"
+                      placeholder="Enter your email address"
                       autocomplete="on"
+                      type="email"
+                      name="email"
                     >
+                    <p
+                      v-if="email !== ''"
+                      class="freight-data-error"
+                    >
+                      {{ errors.first('email') }}
+                    </p>
                   </div>
                 </div>
 
@@ -147,7 +167,7 @@
                     class="button-primary freight-auth-button"
                     type="submit"
                     value="Try Again"
-                    @click="passwordReset"
+                    @click="passwordReset(1)"
                   >
                 </div>
               </div>
@@ -172,7 +192,7 @@ export default {
   data() {
     return {
       updateCrmData: true,
-      input: '',
+      email: '',
       reset_stage: 1,
     };
   },
@@ -186,7 +206,9 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    ...mapActions({}),
+    ...mapActions({
+      freightForgotPassword: '$_freightAuth/freightSignUp',
+    }),
 
     ...mapMutations({}),
     redirectToLogin() {
@@ -198,7 +220,55 @@ export default {
     oneStepBack(val) {
       this.reset_stage = val;
     },
-    passwordReset() {},
+    passwordReset(val) {
+      if (this.email === '') {
+        this.doNotification(
+          2,
+          'Password Reset Error',
+          'Kindly provide a valid email address to proceed',
+        );
+      } else {
+        let emailValid = true;
+        for (let i = 0; i < this.errors.items.length; i++) {
+          if (this.errors.items[i].field === 'email') {
+            emailValid = false;
+            break;
+          }
+        }
+        if (emailValid) {
+          const payload = {
+            email: this.email,
+          };
+          const fullPayload = {
+            values: payload,
+            app: 'ADONIS_PRIVATE_API',
+            endpoint: 'freight/forgot-password',
+          };
+          this.freightForgotPassword(fullPayload)
+            .then((response) => {
+              if (response.status) {
+                this.reset_stage = 2;
+                if (val === 2) {
+                  this.doNotification(2, 'Password Reset', 'New password reset link has been sent');
+                }
+              } else {
+                this.reset_stage = 3;
+                this.doNotification(2, 'Password Reset Error', response.message);
+              }
+            })
+            .catch((error) => {
+              this.reset_stage = 3;
+              this.doNotification(2, 'Password Reset Error', error.response.data[0].message);
+            });
+        } else {
+          this.doNotification(
+            2,
+            'Password Reset Error',
+            'Kindly provide a valid email address to proceed',
+          );
+        }
+      }
+    },
     doNotification(level, title, message) {
       const notification = { title, level, message };
       this.displayNotification(notification);
