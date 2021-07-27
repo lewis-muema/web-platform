@@ -19,6 +19,21 @@
             :close-on-click-modal="false"
           >
             <div class="freight-signup-outer">
+              <el-row>
+                <el-select
+                  v-model="locale"
+                  placeholder="Select"
+                  class="set_freight_locale"
+                >
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-row>
+
               <p class="freight-sign-up-header">
                 Welcome !
               </p>
@@ -132,7 +147,10 @@
                   >
                 </div>
 
-                <p class="freight-login-redirect">
+                <p
+                  class="freight-login-redirect"
+                  @click="redirectToLogin"
+                >
                   Already have an account? Login
                 </p>
               </div>
@@ -151,7 +169,7 @@ import NotificationMxn from '../../../mixins/notification_mixin';
 import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
 import ValidationMixin from '../../../mixins/validation_mixin';
 
-const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+// const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 const currencyConversion = require('country-tz-currency');
 
 export default {
@@ -193,6 +211,17 @@ export default {
       pass_msg: '',
       pass_confirm_validation: false,
       confirm_pass_msg: '',
+      options: [
+        {
+          value: 'en',
+          label: 'English (EN)',
+        },
+        {
+          value: 'fr',
+          label: 'Francais (FR)',
+        },
+      ],
+      locale: 'en',
     };
   },
   computed: {
@@ -200,7 +229,16 @@ export default {
       get_session: 'getSession',
     }),
   },
-  watch: {},
+  watch: {
+    locale(val) {
+      this.$i18n.locale = val;
+      const countryCode = localStorage.getItem('countryCode');
+      const acceptLanguage = `${val}-${countryCode}`;
+      this.setLanguage(val);
+      localStorage.setItem('timeLocale', val);
+      localStorage.setItem('language', acceptLanguage);
+    },
+  },
 
   created() {},
   mounted() {
@@ -213,6 +251,7 @@ export default {
 
     ...mapMutations({
       setVerificationEmail: '$_freightAuth/setVerificationEmail',
+      setLanguage: 'setLanguage',
     }),
     validate_phone() {
       this.$validator.validate();
@@ -287,7 +326,7 @@ export default {
           name: this.user_name,
           business_name: this.business_name,
           password: this.password,
-          preferred_language: 'en',
+          preferred_language: this.locale,
         };
         this.processSignUpRequest(payload);
       } else {
@@ -317,6 +356,9 @@ export default {
           this.doNotification(2, 'Freight Sign up error', error.response.data[0].message);
         });
     },
+    redirectToLogin() {
+      this.$router.push('/freight/login');
+    },
     doNotification(level, title, message) {
       const notification = { title, level, message };
       this.displayNotification(notification);
@@ -327,4 +369,9 @@ export default {
 
 <style lang="css" scoped>
 @import "../../../../src/assets/styles/freight_auth.css";
+.set_freight_locale {
+  float: right;
+  height: 32px;
+  width: 27%;
+}
 </style>

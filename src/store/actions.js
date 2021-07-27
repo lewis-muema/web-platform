@@ -54,6 +54,7 @@ export default {
       'freight/sign-up',
       'freight/verification-link',
       'freight/verify-email',
+      'freight/forgot-password',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -199,6 +200,7 @@ export default {
       'freight/sign-up',
       'freight/verification-link',
       'freight/verify-email',
+      'freight/forgot-password',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -335,6 +337,7 @@ export default {
       'freight/sign-up',
       'freight/verification-link',
       'freight/verify-email',
+      'freight/forgot-password',
     ];
     if (externalEndpoints.includes(requestedPayload)) {
       config = {
@@ -448,6 +451,7 @@ export default {
       'freight/sign-up',
       'freight/verification-link',
       'freight/verify-email',
+      'freight/forgot-password',
     ];
     if (
       /^[\],:{}\s]*$/.test(
