@@ -105,10 +105,55 @@ export default {
       };
       this.freightVerifyEmail(fullPayload)
         .then((response) => {
-          // this.login_acc = true;
-          // show username and business name on the UI
-          console.log('response', response);
-          localStorage.removeItem('verificationEmail');
+          if (Object.prototype.hasOwnProperty.call(response, 'status')) {
+            this.$router.push('/freight/login');
+            this.doNotification(2, 'Email Verification Error', response.message);
+          } else {
+            let partsOfToken = '';
+            if (Array.isArray(response)) {
+              const res = response[1];
+              localStorage.setItem('jwtToken', res);
+              localStorage.setItem('jwtToken', res.access_token);
+              localStorage.setItem('refreshToken', res.refresh_token);
+              partsOfToken = res.access_token.toString().split('.');
+            } else {
+              localStorage.setItem('jwtToken', response);
+              localStorage.setItem('jwtToken', response.access_token);
+              localStorage.setItem('refreshToken', response.refresh_token);
+              partsOfToken = response.access_token.split('.');
+            }
+            const middleString = partsOfToken[1];
+            const data = atob(middleString);
+            const { payload } = JSON.parse(data);
+
+            const sessionData = payload;
+            this.cop_name = sessionData[sessionData.default].cop_name;
+            this.user_name = sessionData[sessionData.default].user_name;
+            this.login_acc = true;
+
+            const locale = sessionData[sessionData.default].preferred_language === null
+              ? 'en'
+              : sessionData[sessionData.default].preferred_language;
+            const countryCode = sessionData[sessionData.default].country_code === null
+              ? 'KE'
+              : sessionData[sessionData.default].country_code;
+            localStorage.setItem('countryCode', countryCode);
+            this.$i18n.locale = locale;
+            const acceptLanguageHeader = `${locale}-${countryCode}`;
+            localStorage.setItem('language', acceptLanguageHeader);
+            const jsonSession = JSON.stringify(sessionData);
+            this.setSession(jsonSession);
+            this.$store.commit('setSession', sessionData);
+            localStorage.removeItem('verificationEmail');
+            this.doNotification(
+              1,
+              'Email verification successful',
+              'You will be automatically signed in ',
+            );
+            setTimeout(() => {
+              this.$router.push('/freight/transporters');
+            }, 5000);
+          }
         })
         .catch((error) => {
           this.$router.push('/freight/sign_up');
