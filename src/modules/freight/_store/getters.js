@@ -20,6 +20,7 @@ const getAllocatedTrucks = state => state.tracked_vehicles;
 const getTruckDetailsFromStore = state => state.truck_details;
 const getVerificationStep = state => state.verification_step;
 const getVerificationStage = state => state.verification_stage;
+const getBusinessCountry = state => state.biz_country;
 
 export default {
   getFreightOrders,
@@ -44,4 +45,5 @@ export default {
   getTruckDetailsFromStore,
   getVerificationStep,
   getVerificationStage,
+  getBusinessCountry,
 };

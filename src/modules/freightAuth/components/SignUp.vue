@@ -81,7 +81,7 @@
                     >
                     <p
                       v-if="email !== ''"
-                      class="freight-data-error"
+                      class="freight-error-msg"
                     >
                       {{ errors.first('email') }}
                     </p>
@@ -102,7 +102,7 @@
                     >
                     <p
                       v-if="!pass_validation && password !== ''"
-                      class="freight-data-error"
+                      class="freight-error-msg"
                     >
                       {{ pass_msg }}
                     </p>
@@ -126,7 +126,7 @@
                     >
                     <p
                       v-if="!pass_confirm_validation && confirm_password !== ''"
-                      class="freight-data-error"
+                      class="freight-error-msg"
                     >
                       {{ confirm_pass_msg }}
                     </p>
