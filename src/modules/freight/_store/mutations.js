@@ -99,4 +99,7 @@ export default {
   setVerificationStage(state, val) {
     state.verification_stage = val;
   },
+  setBusinessCountry(state, val) {
+    state.biz_country = val;
+  },
 };

@@ -51,7 +51,7 @@
                     >
                     <p
                       v-if="email !== ''"
-                      class="freight-data-error"
+                      class="freight-error-msg"
                     >
                       {{ errors.first('email') }}
                     </p>

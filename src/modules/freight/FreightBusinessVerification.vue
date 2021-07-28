@@ -61,7 +61,7 @@
                     >
                     <span
                       v-show="!bizRegValidation(biz_registration)"
-                      class="invalid-kra"
+                      class="freight-error-msg"
                     >
                       {{ bizRegFailResponse }}
                     </span>
@@ -83,7 +83,7 @@
                     >
                     <span
                       v-show="!kraPinValidation(kra_pin)"
-                      class="invalid-kra"
+                      class="freight-error-msg"
                     >
                       {{ kraFailResponse }}
                     </span>
@@ -364,6 +364,9 @@ export default {
       }
       this.biz_setup_stage = val;
     },
+    country(val) {
+      this.setBusinessCountry(val);
+    },
   },
 
   created() {},
@@ -388,6 +391,7 @@ export default {
     ...mapMutations({
       setVerificationStep: '$_freight/setVerificationStep',
       setVerificationStage: '$_freight/setVerificationStage',
+      setBusinessCountry: '$_freight/setBusinessCountry',
     }),
     validate_phone() {
       this.$validator.validate();

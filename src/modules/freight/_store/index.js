@@ -29,6 +29,7 @@ const state = {
   truck_details: {},
   verification_step: 0,
   verification_stage: '',
+  biz_country: 'KE',
 };
 
 export default {
