@@ -403,7 +403,7 @@ export default {
       };
       this.loadingStatus = true;
       this.form.submit(
-        '/customers/collect_card_details/',
+        '/customers/collect_card_details',
         {
           data: newCardPayload,
           headers: {
