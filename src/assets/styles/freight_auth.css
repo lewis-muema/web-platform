@@ -218,6 +218,13 @@ freight-signup-dialog > div > div > div.el-dialog__header{
   text-align: left;
   margin-top: 0;
 }
+.freight-error-msg {
+  font-size: 13px;
+  font-family: 'Nunito', sans-serif;
+  color: #B71F25;
+  text-align: left;
+  margin-top: 0;
+}
 @media (max-width: 500px) {
   .freight-login-details {
     margin:20px auto;

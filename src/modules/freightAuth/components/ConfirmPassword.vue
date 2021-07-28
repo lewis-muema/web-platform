@@ -80,7 +80,7 @@
                   <input
                     class="button-primary freight-auth-button"
                     type="submit"
-                    value="Confirm and Login"
+                    value="Confirm"
                     @click="updatePassword"
                   >
                 </div>
