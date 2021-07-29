@@ -2098,7 +2098,7 @@ export default {
           save: this.saveCardState,
         };
         this.form.submit(
-          '/customers/collect_card_details/',
+          '/customers/collect_card_details',
           {
             data: newCardPayload,
             headers: {
