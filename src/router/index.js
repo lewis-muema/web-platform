@@ -536,11 +536,6 @@ export function createRouter() {
           //   component: () => import('../modules/freight/Freight.vue'),
           //   name: 'freight_set_up',
           // },
-          // {
-          //   path: '/freight/verify',
-          //   component: () => import('../modules/freight/VerifyComponent.vue'),
-          //   name: 'freight_verify',
-          // },
         ],
       },
 
@@ -643,6 +638,10 @@ export function createRouter() {
           {
             path: '/freight/reset_password/:content',
             component: () => import('../modules/freightAuth/components/ConfirmPassword.vue'),
+          },
+          {
+            path: '/freight/terms_and_conditions',
+            component: () => import('../modules/freight/VerifyComponent.vue'),
           },
         ],
       },
