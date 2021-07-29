@@ -60,6 +60,7 @@ import authModuleStore from '../auth/_store';
 import userModuleStore from '../user/_store';
 import RegisterStoreModule from '../../mixins/register_store_module';
 import SessionMxn from '../../mixins/session_mixin';
+import NotificationMxn from '../../mixins/notification_mixin';
 import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
 import MainHeader from '../../components/headers/freight/MainHeader.vue';
 import FreightBusinessVerification from './FreightBusinessVerification.vue';
