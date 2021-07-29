@@ -95,13 +95,13 @@ const ValidationMxn = {
     bizRegValidation(val) {
       if (val !== '') {
         if (this.getBusinessCountry === 'KE') {
-          return /^[PVT]{3}[A-Z0-9]{7}$/.test(val);
+          return /^[PVT]{3}[A-Z0-9]{7}|[A-Z]{3}[/][0-9]{4}[/][0-9]{5,}$/.test(val);
         }
         if (this.getBusinessCountry === 'CI') {
           return /^[A-Z]{2}[-][A-Z]{3}[-][0-9]{4}[-][A-Z]{1}[-][0-9]{2,10}$/.test(val);
         }
 
-        return /^[0-9]{5}$/.test(val);
+        return /^[0-9]{5,}$/.test(val);
       }
       return true;
     },
