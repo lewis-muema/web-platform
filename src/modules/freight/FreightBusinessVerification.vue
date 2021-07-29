@@ -41,6 +41,7 @@
                       value=""
                       data-vv-validate-on="blur"
                       v-bind="phoneInputProps"
+                      :enabled-country-code="true"
                       @country-changed="checkBizCountryCode"
                     />
                   </div>
@@ -331,7 +332,6 @@ export default {
         disabledFormatting: false,
         placeholder: this.$t('signUpDetails.enter_phone_number'),
         required: false,
-        enabledCountryCode: false,
         enabledFlags: true,
         preferredCountries: [],
         autocomplete: 'off',
@@ -348,7 +348,7 @@ export default {
       countryNotSupported: '',
       preferredCountries: [],
       valid_biz_country: true,
-      country: '',
+      country_code: '',
     };
   },
   computed: {
@@ -407,10 +407,11 @@ export default {
       }
     },
     checkBizCountryCode(country) {
-      this.country = country.iso2;
+      document.getElementsByClassName('vti__country-code')[0].innerHTML = country.name;
+      this.country_code = country.iso2;
       this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
       switch (true) {
-        case this.phoneInputProps.preferredCountries.includes(this.country.toLowerCase()):
+        case this.phoneInputProps.preferredCountries.includes(this.country_code.toLowerCase()):
           this.valid_biz_country = true;
           break;
         default:
@@ -478,7 +479,7 @@ export default {
     verifyBusinessDetails() {
       const session = this.$store.getters.getSession;
 
-      if (this.country === '' && !this.valid_biz_country) {
+      if (this.country_code === '' && !this.valid_biz_country) {
         this.doNotification(
           2,
           this.$t('freight.final_setup_error'),
@@ -498,7 +499,7 @@ export default {
         const payload = {
           tax_authority_pin: this.kra_pin,
           company_reg_no: this.biz_registration,
-          country_code: this.country,
+          country_code: this.country_code,
           cop_id: session[session.default].cop_id,
         };
         this.initiateBusinessInfoUpdate(payload);

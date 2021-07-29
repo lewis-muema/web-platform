@@ -135,7 +135,10 @@
 
                 <p class="freight-terms-and-conditions">
                   By creating a Sendy account you are agreeing to our
-                  <span class="freight-terms-higlight">terms and conditions</span>
+                  <span
+                    class="freight-terms-higlight"
+                    @click="termsAndConditions"
+                  >terms and conditions</span>
                 </p>
 
                 <div class="">
@@ -358,6 +361,11 @@ export default {
     },
     redirectToLogin() {
       this.$router.push('/freight/login');
+    },
+    termsAndConditions() {
+      window.open(
+        'https://sendyit.com/terms', '_blank',
+      );
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };

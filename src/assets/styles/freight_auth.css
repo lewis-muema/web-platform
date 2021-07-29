@@ -66,6 +66,7 @@ freight-signup-dialog > div > div > div.el-dialog__header{
 }
 .freight-terms-higlight{
   color: #527CBD !important;
+  cursor: pointer;
 }
 .freight-login-redirect{
   font-size: 12px;
