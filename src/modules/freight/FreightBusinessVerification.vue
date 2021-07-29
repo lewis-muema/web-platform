@@ -364,7 +364,7 @@ export default {
       }
       this.biz_setup_stage = val;
     },
-    country(val) {
+    country_code(val) {
       this.setBusinessCountry(val);
     },
   },
@@ -402,6 +402,9 @@ export default {
         this.businessName = session[session.default].cop_name;
         this.kra_pin = session[session.default].tax_authority_pin;
         this.biz_registration = session[session.default].company_reg_no;
+        if (session[session.default].country_code !== '') {
+          this.phoneInputProps.defaultCountry = session[session.default].country_code.toLowerCase();
+        }
       } else {
         this.$router.push('/freight');
       }
