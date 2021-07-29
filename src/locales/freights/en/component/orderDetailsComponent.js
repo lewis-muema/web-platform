@@ -71,6 +71,13 @@ const en = {
   rating_successfull: 'Order rated successfully!',
   rating_failure: 'Failed to rate order!',
   rating_failure_support: 'Failed to rate order, Kindly retry again or contact customer support',
+  shipment_id: 'Shipment ID',
+  payment_in: 'Payment in',
+  payment_days: 'days',
+  payment_days_7: 'Payment in 7 days',
+  payment_days_14: 'Payment in 14 days',
+  payment_days_21: 'Payment in 21 days',
+  payment_days_28: 'Payment in 28 days',
 };
 
 export default en;

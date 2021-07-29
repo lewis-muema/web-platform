@@ -185,14 +185,14 @@ export default {
       this.$store.dispatch('$_admin/editAdminUser', editUserFullPayload).then(
         (response) => {
           const level = 1; // success
-          this.message = $t( 'editUser.edit_successful');
+          this.message = this.$t('editUser.edit_successful');
 
           const notification = { title: '', level, message: this.message }; // notification object
           this.displayNotification(notification);
         },
         (error) => {
           const level = 3;
-          this.message = $t( 'editUser.something_went_wrong');
+          this.message = this.$t('editUser.something_went_wrong');
           const notification = { title: '', level, message: this.message }; // notification object
           this.displayNotification(notification);
 

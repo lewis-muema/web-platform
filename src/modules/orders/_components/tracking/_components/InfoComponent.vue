@@ -214,7 +214,7 @@
                         <i class="el-icon-question edit-location-icon" />
                           <div>
                             {{$t('general.isssue_with_order')}}
-                            <div class="cancellation-edit-inner" @click="showBeacon()">
+                            <div class="cancellation-edit-inner" @click="showFCWidget()">
                             {{$t('general.contact_support')}}
                             </div>
                           </div>
@@ -2096,7 +2096,7 @@ export default {
           save: this.saveCardState,
         };
         this.form.submit(
-          '/customers/collect_card_details/',
+          '/customers/collect_card_details',
           {
             data: newCardPayload,
             headers: {
@@ -3267,10 +3267,9 @@ export default {
       this.setEditLocationDialog(true);
       this.sendGA4Events('select_edit_location');
     },
-    showBeacon() {
+    showFCWidget() {
       this.cancelOption = false;
-      window.Beacon('open');
-      window.Beacon('navigate', '/ask/chat/');
+      window.fcWidget.open();
     },
     checkScheduleOption() {
       let show = false;

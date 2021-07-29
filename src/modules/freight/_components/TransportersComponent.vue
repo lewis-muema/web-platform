@@ -245,7 +245,7 @@
                             alt=""
                             class="transporters-img highlight-icon"
                           >
-                          {{ ownersListing[index].complete_orders }} completed orders
+                          {{ ownersListing[index].complete_orders }} {{ $t('transporterComponent.completed_orders') }}
                         </div>
                         <div
                           class="truck-add-info view-transporter-info"
@@ -263,7 +263,7 @@
                             class="transporters-img highlight-icon"
                           >
                           {{ ownersListing[index].avg_rating }} (
-                          {{ ownersListing[index].avg_rating }} Reviews)
+                          {{ ownersListing[index].avg_rating }} {{ $t('transporterComponent.reviews') }})
                         </div>
                       </div>
                     </el-checkbox>
@@ -1130,7 +1130,7 @@ export default {
           }
 
           if (workingResponse.status) {
-            this.doNotification(1, 'Shipment sent successfully!', '');
+            this.doNotification(1, `${this.$t('transporterComponent.shipment_sent')}`, '');
             this.$router.push('/freight/orders');
             this.trackMixpanelEvent('Shipment Request Placed', {
               userId: session[session.default].user_id,
@@ -1189,10 +1189,10 @@ export default {
       this.negotiability = '';
     },
     returnCount(val) {
-      let resp = `${val} Trucks`;
+      let resp = `${val} ${this.$t('transporterComponent.trucks')}`;
 
       if (val === 1) {
-        resp = `${val} Truck`;
+        resp = `${val} ${this.$t('transporterComponent.truck')}`;
       }
       return resp;
     },
