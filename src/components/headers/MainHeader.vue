@@ -36,8 +36,10 @@
         >
           <a
             class="segmentation-tab"
-            @click="linkRoute('/freight')"
-          >{{ $t('mainHeader.freight') }}</a>
+            @click="linkRoute('/freight/transporters')"
+          >{{
+            $t('mainHeader.freight')
+          }}</a>
           <div
             :class="
               freightPages.includes(route_path)
@@ -306,7 +308,7 @@ export default {
         });
       }
 
-      if (route === '/freight') {
+      if (route === '/freight/home') {
         const session = this.$store.getters.getSession;
         this.trackMixpanelEvent('Freight Tab Navigated', {
           userId: session[session.default].user_id,

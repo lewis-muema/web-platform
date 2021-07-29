@@ -12,7 +12,7 @@ const en = {
   redirected: 'You will be redirected to the login page within 5 seconds.',
   final_setup_error: 'Final set up error !',
   select_industry: 'Please select industry preference',
-  please_enter_biz_regno: 'Please enter business registration',
+  please_enter_biz_regno: 'Please enter a valid business registration number',
   please_enter_ci_no: 'EN_Please enter a valid CI',
   enter_id_no: 'Please enter your ID number',
   info_accepted: 'Account information accepted!',

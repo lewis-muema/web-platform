@@ -239,6 +239,9 @@ a.menu--last-child-link {
   color: #fff !important;
   text-transform: uppercase;
 }
+.freight-header{
+  background-color: #527CBD !important;
+}
 @media only screen and (max-width: 1294px) {
   .helpline-contact {
     display: none !important;

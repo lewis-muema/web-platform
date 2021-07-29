@@ -50,6 +50,12 @@ export default {
       'token',
       'auth/forgot-password',
       'auth/reset-password',
+      'freight/login',
+      'freight/sign-up',
+      'freight/verification-link',
+      'freight/verify-email',
+      'freight/forgot-password',
+      'freight/validate-token',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -191,6 +197,12 @@ export default {
       'token',
       'auth/forgot-password',
       'auth/reset-password',
+      'freight/login',
+      'freight/sign-up',
+      'freight/verification-link',
+      'freight/verify-email',
+      'freight/forgot-password',
+      'freight/validate-token',
     ];
     if (
       /^[\],:{}\s]*$/.test(
@@ -323,6 +335,12 @@ export default {
       'currency/get_supported_countries',
       'auth/forgot-password',
       'auth/reset-password',
+      'freight/login',
+      'freight/sign-up',
+      'freight/verification-link',
+      'freight/verify-email',
+      'freight/forgot-password',
+      'freight/validate-token',
     ];
     if (externalEndpoints.includes(requestedPayload)) {
       config = {
@@ -432,6 +450,12 @@ export default {
       'token',
       'auth/forgot-password',
       'auth/reset-password',
+      'freight/login',
+      'freight/sign-up',
+      'freight/verification-link',
+      'freight/verify-email',
+      'freight/forgot-password',
+      'freight/validate-token',
     ];
     if (
       /^[\],:{}\s]*$/.test(
