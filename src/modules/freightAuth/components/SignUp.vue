@@ -380,6 +380,6 @@ export default {
 .set_freight_locale {
   float: right;
   height: 32px;
-  width: 27%;
+  width: 38%;
 }
 </style>
