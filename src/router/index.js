@@ -118,6 +118,124 @@ function loginGuard(to, from, next) {
   });
 }
 
+function freightGuard(to, from, next) {
+  return new Promise((resolve) => {
+    let { session } = store.state;
+    if (isEmpty(session)) {
+      if (process.browser) {
+        // read ls here
+        const _sessionSnack = localStorage.getItem('_sessionSnack');
+        let userState = true;
+        let freightState = true;
+        if (typeof _sessionSnack === 'string') {
+          userState = _sessionSnack.includes('biz');
+          freightState = _sessionSnack.includes('freight_user');
+        }
+
+        if (isEmpty(_sessionSnack) || _sessionSnack === null || !userState || !freightState) {
+          resolve(next('/freight/login'));
+        } else {
+          session = JSON.parse(_sessionSnack);
+          store.state.session = session;
+          let analyticsEnv = '';
+          try {
+            analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+          } catch (er) {
+            // empty
+          }
+          if ('default' in session && analyticsEnv === 'production') {
+            const acc = session[session.default];
+            mixpanel.identify(acc.user_email);
+          }
+          resolve(next());
+          // if (session.freight_user) {
+          //   resolve(next());
+          // } else {
+          //   localStorage.removeItem('_sessionSnack');
+          //   localStorage.removeItem('jwtToken');
+          //   resolve(next('/freight/login'));
+          // }
+        }
+      } else {
+        resolve(next());
+      }
+    } else {
+      resolve(next());
+      let analyticsEnv = '';
+      try {
+        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+      } catch (er) {
+        // empty
+      }
+      if (analyticsEnv === 'production') {
+        if ('innerTrack' in to.meta) {
+          const details = to.meta.innerTrack;
+          if (details !== 'undefined') {
+            mixpanel.track(details, {
+              'Client Type': 'Web Platform',
+              'Account Type': session.default === 'peer' ? 'Personal' : 'Business',
+            });
+          }
+        }
+      }
+    }
+  });
+}
+
+function freightLoginGuard(to, from, next) {
+  return new Promise((resolve) => {
+    let { session } = store.state;
+
+    if (isEmpty(session)) {
+      if (process.browser) {
+        // read ls here
+        const _sessionSnack = localStorage.getItem('_sessionSnack');
+        let userState = true;
+        let freightState = true;
+        if (typeof _sessionSnack === 'string') {
+          userState = _sessionSnack.includes('biz');
+          freightState = _sessionSnack.includes('freight_user');
+        }
+        if (isEmpty(_sessionSnack) || _sessionSnack === null || !userState || !freightState) {
+          resolve(next());
+          if ('login' in to.meta) {
+            const details = to.meta.login;
+            if (details !== 'undefined') {
+              let analyticsEnv = '';
+              try {
+                analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
+              } catch (er) {
+                // empty
+              }
+              // let path = window.location.href;
+              if (analyticsEnv === 'production') {
+                mixpanel.track(details, {
+                  'Client Type': 'Web Platform',
+                });
+              }
+            }
+          }
+        } else {
+          session = JSON.parse(_sessionSnack);
+          store.state.session = session;
+          resolve(next('/freight/transporters'));
+          // if (session.freight_user) {
+          //   resolve(next('/freight/transporters'));
+          // } else {
+          //   localStorage.removeItem('_sessionSnack');
+          //   localStorage.removeItem('jwtToken');
+          //   resolve(next('/freight/login'));
+          // }
+        }
+      } else {
+        resolve(next());
+      }
+    } else {
+      resolve(next());
+    }
+  });
+}
+
 export function createRouter() {
   const router = new Router({
     mode: 'history',
@@ -361,68 +479,63 @@ export function createRouter() {
           },
         ],
       },
+      // Freight modules
       {
-        path: '/freight',
+        path: '/freight/home',
         component: () => import('../modules/freight/Home.vue'),
-        beforeEnter: guard,
+        beforeEnter: freightGuard,
         meta: { innerTrack: 'Freight Home Page' },
         children: [
           {
             path: '/',
-            component: () => import('../modules/freight/Home.vue'),
-            name: 'freight_home',
+            component: () => import('../modules/freight/_components/TransportersComponent.vue'),
           },
           {
-            path: '/freight/set-up',
-            component: () => import('../modules/freight/Freight.vue'),
-            name: 'freight_set_up',
+            path: '/freight/home/:token',
+            component: () => import('../modules/freight/_components/TransportersComponent.vue'),
+            name: 'freight_transporters_verification',
           },
           {
-            path: '/freight/verify',
-            component: () => import('../modules/freight/VerifyComponent.vue'),
-            name: 'freight_verify',
+            path: '/freight/transporters',
+            component: () => import('../modules/freight/_components/TransportersComponent.vue'),
+            name: 'freight_transporters',
+          },
+          {
+            path: '/freight/transporters/info/:id',
+            component: () => import('../modules/freight/_components/TransportersDetailsComponent.vue'),
+            name: 'freight_transporters_details',
+          },
+          {
+            path: '/freight/orders',
+            component: () => import('../modules/freight/_components/OrdersComponent.vue'),
+            name: 'freight_orders',
           },
           {
             path: '/freight/dashboard',
-            component: () => import('../modules/freight/_components/MainComponent.vue'),
-            children: [
-              {
-                path: '/',
-                component: () => import('../modules/freight/_components/DashboardComponent.vue'),
-                name: 'freight_dashboard',
-              },
-              {
-                path: '/freight/transporters',
-                component: () => import('../modules/freight/_components/TransportersComponent.vue'),
-                name: 'freight_transporters',
-              },
-              {
-                path: '/freight/transporters/info/:id',
-                component: () => import('../modules/freight/_components/TransportersDetailsComponent.vue'),
-                name: 'freight_transporters_details',
-              },
-              {
-                path: '/freight/orders',
-                component: () => import('../modules/freight/_components/OrdersComponent.vue'),
-                name: 'freight_orders',
-              },
-              {
-                path: '/freight/orders/create',
-                component: () => import('../modules/freight/_components/CreateFreightOrder.vue'),
-                name: 'freight_create_orders',
-              },
-              {
-                path: '/freight/orders/info/:id',
-                component: () => import('../modules/freight/_components/OrdersDetailsComponent.vue'),
-                name: 'freight_orders_info',
-              },
-              {
-                path: '/freight/settings',
-                component: () => import('../modules/freight/_components/SettingsComponent.vue'),
-                name: 'freight_settings',
-              },
-            ],
+            component: () => import('../modules/freight/_components/DashboardComponent.vue'),
+            name: 'freight_dashboard',
           },
+          {
+            path: '/freight/orders/create',
+            component: () => import('../modules/freight/_components/CreateFreightOrder.vue'),
+            name: 'freight_create_orders',
+          },
+          {
+            path: '/freight/orders/info/:id',
+            component: () => import('../modules/freight/_components/OrdersDetailsComponent.vue'),
+            name: 'freight_orders_info',
+          },
+          {
+            path: '/freight/settings',
+            component: () => import('../modules/freight/_components/SettingsComponent.vue'),
+            name: 'freight_settings',
+          },
+
+          // {
+          //   path: '/freight/set-up',
+          //   component: () => import('../modules/freight/Freight.vue'),
+          //   name: 'freight_set_up',
+          // },
         ],
       },
 
@@ -485,6 +598,50 @@ export function createRouter() {
           {
             path: '/external/rating/:order_no',
             component: () => import('../modules/orders/_components/rating/Rating.vue'),
+          },
+        ],
+      },
+      // Freight auth modules
+      {
+        path: '/freight',
+        component: () => import('../modules/freightAuth/FreightAuth.vue'),
+        children: [
+          {
+            path: '/',
+            component: () => import('../modules/freightAuth/components/Login.vue'),
+            beforeEnter: freightLoginGuard,
+            meta: { login: 'Freight Sign In Page' },
+          },
+          {
+            path: '/freight/login',
+            name: 'freight_login',
+            component: () => import('../modules/freightAuth/components/Login.vue'),
+            beforeEnter: freightLoginGuard,
+            meta: { login: 'Freight Sign In Page' },
+          },
+          {
+            path: '/freight/sign_up',
+            component: () => import('../modules/freightAuth/components/SignUp.vue'),
+          },
+          {
+            path: '/freight/verify_email',
+            component: () => import('../modules/freightAuth/components/verification_phases/EmailVerification.vue'),
+          },
+          {
+            path: '/freight/info_verification/:content',
+            component: () => import('../modules/freightAuth/components/verification_phases/SignUpCongratulations.vue'),
+          },
+          {
+            path: '/freight/forgot_password',
+            component: () => import('../modules/freightAuth/components/PassReset.vue'),
+          },
+          {
+            path: '/freight/reset_password/:content',
+            component: () => import('../modules/freightAuth/components/ConfirmPassword.vue'),
+          },
+          {
+            path: '/freight/terms_and_conditions',
+            component: () => import('../modules/freight/VerifyComponent.vue'),
           },
         ],
       },

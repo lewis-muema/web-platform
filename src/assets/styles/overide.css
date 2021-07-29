@@ -774,4 +774,38 @@ div.pac-container {
 }
 .personal-info-phone-validation >.el-dialog >.el-dialog__body{
   margin: 4% !important;
+.freightAuthDialog >.el-dialog{
+  width: 33% !important;
+}
+.freightAuthDialog > .el-dialog::-webkit-scrollbar {
+  width: 6px !important;
+}
+.business-country-select >.vti__input{
+  display: none !important;
+}
+.business-country-select >.vti__dropdown{
+  width: 100% !important;
+}
+.business-country-select >.vti__dropdown > .vti__selection{
+  justify-content: space-between !important;
+}
+.business-country-select >.vti__dropdown > .vti__dropdown-list{
+  top: 100% !important;
+  margin-left: 0% !important;
+  width: 100% !important;
+}
+.freightAuthDialog > .el-dialog::-webkit-scrollbar-thumb {
+  background-color: #527CBD;
+}
+.el-progress__text > .el-icon-circle-close{
+  display: none ;
+}
+.el-progress-bar{
+  padding-right: 0% !important;
+}
+.el-progress-bar__inner{
+  background-color: #527CBD !important;
+}
+.freightTransportersDialog >.el-dialog > .el-dialog__body{
+  padding-top: 0% !important;
 }
