@@ -142,6 +142,7 @@
                           <input
                             v-model="quote_text"
                             class="request-shipment-btn-color"
+                            :class="{ disable_quote_btn: checkActiveUser }"
                             type="submit"
                             @click="showQuoteDialog"
                           >
@@ -273,225 +274,264 @@
           </div>
         </div>
       </div>
-      <transition
-        name="fade"
-        mode="out-in"
-      >
-        <div class="">
-          <el-dialog
-            :visible.sync="quoteDialogVisible"
-            class="requestShipmentOptions"
-          >
-            <div class="">
-              <div class="decline-text-option decline-documemt-extend request-shipment-header">
-                {{ $t('transporterComponent.create_shipment_request') }}
-              </div>
-            </div>
-
-            <div class="decline-documemt-extend decline-documemt-input">
-              <p class="shipment-input--label">
-                {{ $t('transporterComponent.where_pickup_facility') }} {{ locations[0] }}
-              </p>
-              <div class="block">
-                <el-input
-                  v-model="facility_location"
-                  type="textarea"
-                  :rows="2"
-                  :placeholder="$t('transporterComponent.please_input')"
-                />
-              </div>
-            </div>
-
-            <div
-              v-for="(val, index) in carrier_options"
-              v-if="goods === 1 && carrier_options.length > 0"
-              :key="val.id"
-              class=""
+      <div class="">
+        <transition
+          name="fade"
+          mode="out-in"
+        >
+          <div class="">
+            <!-- New User Dialog  -->
+            <el-dialog
+              :visible.sync="newUserDialog"
+              width="30%"
+              class="freightAuthDialog freightTransportersDialog"
+              :modal-append-to-body="false"
+              :show-close="false"
+              :close-on-press-escape="false"
+              :close-on-click-modal="false"
             >
-              <div class="decline-documemt-extend decline-documemt-input">
-                <p class="shipment-input--label">
-                  {{ val.description }}
-                </p>
-                <div
-                  v-if="val.data_type === 'boolean'"
-                  class="block"
-                >
-                  <el-select
-                    v-model="carrier_option_value[index]"
-                    placeholder=""
-                    class="transporters-element-inputs"
-                    filterable
-                    @change="setCarrierOptionValue(index)"
-                  >
-                    <el-option
-                      v-for="item in returnOptions"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
-                </div>
-                <div
-                  v-else
-                  class="block"
-                >
-                  <el-input-number
-                    v-model.trim="carrier_option_value[index]"
-                    :min="0"
-                    @change="setCarrierOptionValue(index)"
-                  />
+              <div class="freight-signup-outer">
+                <div>
+                  <p class="freight-sign-up-header">
+                    A few more hours ...
+                  </p>
+                  <p class="freight-sign-up-description freight-notification-alert">
+                    Sorry, your account is being verified by independent verification partners. You
+                    will be able to create a shipment request once verification is complete
+                  </p>
+                  <p class="freight-sign-up-description freight-notification-alert">
+                    Meanwhile, go to settings to add more people from your company to your account
+                  </p>
+                  <div class="">
+                    <div class="">
+                      <input
+                        class="button-primary freight-auth-button"
+                        type="submit"
+                        value="Go to settings"
+                        @click="directToSettings"
+                      >
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </el-dialog>
 
-            <div class="decline-documemt-extend decline-documemt-input">
-              <p class="shipment-input--label">
-                {{ $t('transporterComponent.how_many_trucks_need') }}
-              </p>
-              <div class="block">
-                <el-input-number
-                  v-model="trucks_no"
-                  :min="1"
-                />
+            <!-- Shipemnt Dialog -->
+            <el-dialog
+              :visible.sync="quoteDialogVisible"
+              class="requestShipmentOptions"
+            >
+              <div class="">
+                <div class="decline-text-option decline-documemt-extend request-shipment-header">
+                  {{ $t('transporterComponent.create_shipment_request') }}
+                </div>
               </div>
-            </div>
 
-            <div class="decline-documemt-extend decline-documemt-input">
-              <p class="shipment-input--label">
-                {{ $t('transporterComponent.tonnes_truck_carry_per_move') }}
-              </p>
-              <div class="block">
-                <el-input-number
-                  v-model="load_weight"
-                  class="freight-load-weight"
-                  :min="1"
-                />
-                <span class="tonage-value-text">Tonnes</span>
-              </div>
-            </div>
-
-            <div class="decline-documemt-extend decline-documemt-input">
-              <p class="shipment-input--label">
-                {{ $t('transporterComponent.transaction_currency') }}
-              </p>
-              <div class="block">
-                <el-select
-                  v-model="currency"
-                  placeholder=""
-                  class="transporters-element-inputs"
-                  filterable
-                >
-                  <el-option
-                    v-for="item in supported_currencies"
-                    :key="item.code"
-                    :label="item.currency_code"
-                    :value="item.currency_code"
-                  />
-                </el-select>
-              </div>
-            </div>
-
-            <div class="decline-documemt-extend decline-documemt-input">
-              <p class="shipment-input--label">
-                {{ $t('transporterComponent.make_offer') }}
-              </p>
-              <div class="block">
-                <el-select
-                  v-model="shipment_offer"
-                  placeholder=""
-                  class="transporters-element-inputs"
-                  filterable
-                >
-                  <el-option
-                    v-for="item in shipmentOffer"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-            </div>
-
-            <div v-if="shipment_offer">
               <div class="decline-documemt-extend decline-documemt-input">
                 <p class="shipment-input--label">
-                  {{ $t('transporterComponent.how_much_pay_per_truck') }}
+                  {{ $t('transporterComponent.where_pickup_facility') }} {{ locations[0] }}
                 </p>
                 <div class="block">
-                  <input
-                    v-model="bid_amount"
-                    class="input-control freight-load-weight"
-                    type="number"
-                    :placeholder="$t('transporterComponent.input_amount_placeholder')"
-                    autocomplete="on"
-                    min="0"
-                  >
-                  <span class="tonage-value-text" />
+                  <el-input
+                    v-model="facility_location"
+                    type="textarea"
+                    :rows="2"
+                    :placeholder="$t('transporterComponent.please_input')"
+                  />
                 </div>
               </div>
 
-              <div class="decline-documemt-extend decline-documemt-input">
-                <p class="shipment-input--label">
-                  {{ $t('transporterComponent.is_this_price_negotiable') }}
-                </p>
-                <div class="block">
-                  <el-select
-                    v-model="negotiability"
-                    placeholder=""
-                    class="transporters-element-inputs"
-                    filterable
-                  >
-                    <el-option
-                      v-for="item in returnOptions"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
-                </div>
-              </div>
-            </div>
-
-            <div class="decline-documemt-extend decline-documemt-input">
-              <p class="shipment-input--label">
-                {{ $t('transporterComponent.when_bids_submitted') }}
-              </p>
-              <div class="block">
-                <el-date-picker
-                  v-model="quotation_time"
-                  class="transporters-element-inputs"
-                  type="datetime"
-                  format="dd-MM-yyyy h:mm a"
-                  :placeholder="$t('transporterComponent.select_time')"
-                  prefix-icon="el-icon-date"
-                  :default-time="default_value"
-                  :picker-options="dueDatePickerOptions"
-                />
-              </div>
-            </div>
-
-            <div
-              v-if="process_shipment"
-              v-loading="process_shipment"
-              class="freight-loading-container"
-            />
-
-            <div
-              v-if="!process_shipment"
-              class="decline-documemt-extend decline-button-align"
-            >
-              <button
-                type="button"
-                name="button"
-                class="quote-action--slide-button"
-                @click="sendFinalQuote()"
+              <div
+                v-for="(val, index) in carrier_options"
+                v-if="goods === 1 && carrier_options.length > 0"
+                :key="val.id"
+                class=""
               >
-                {{ $t('transporterComponent.submit') }}
-              </button>
-            </div>
-          </el-dialog>
-        </div>
-      </transition>
+                <div class="decline-documemt-extend decline-documemt-input">
+                  <p class="shipment-input--label">
+                    {{ val.description }}
+                  </p>
+                  <div
+                    v-if="val.data_type === 'boolean'"
+                    class="block"
+                  >
+                    <el-select
+                      v-model="carrier_option_value[index]"
+                      placeholder=""
+                      class="transporters-element-inputs"
+                      filterable
+                      @change="setCarrierOptionValue(index)"
+                    >
+                      <el-option
+                        v-for="item in returnOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                  <div
+                    v-else
+                    class="block"
+                  >
+                    <el-input-number
+                      v-model.trim="carrier_option_value[index]"
+                      :min="0"
+                      @change="setCarrierOptionValue(index)"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="decline-documemt-extend decline-documemt-input">
+                <p class="shipment-input--label">
+                  {{ $t('transporterComponent.how_many_trucks_need') }}
+                </p>
+                <div class="block">
+                  <el-input-number
+                    v-model="trucks_no"
+                    :min="1"
+                  />
+                </div>
+              </div>
+
+              <div class="decline-documemt-extend decline-documemt-input">
+                <p class="shipment-input--label">
+                  {{ $t('transporterComponent.tonnes_truck_carry_per_move') }}
+                </p>
+                <div class="block">
+                  <el-input-number
+                    v-model="load_weight"
+                    class="freight-load-weight"
+                    :min="1"
+                  />
+                  <span class="tonage-value-text">Tonnes</span>
+                </div>
+              </div>
+
+              <div class="decline-documemt-extend decline-documemt-input">
+                <p class="shipment-input--label">
+                  {{ $t('transporterComponent.transaction_currency') }}
+                </p>
+                <div class="block">
+                  <el-select
+                    v-model="currency"
+                    placeholder=""
+                    class="transporters-element-inputs"
+                    filterable
+                  >
+                    <el-option
+                      v-for="item in supported_currencies"
+                      :key="item.code"
+                      :label="item.currency_code"
+                      :value="item.currency_code"
+                    />
+                  </el-select>
+                </div>
+              </div>
+
+              <div class="decline-documemt-extend decline-documemt-input">
+                <p class="shipment-input--label">
+                  {{ $t('transporterComponent.make_offer') }}
+                </p>
+                <div class="block">
+                  <el-select
+                    v-model="shipment_offer"
+                    placeholder=""
+                    class="transporters-element-inputs"
+                    filterable
+                  >
+                    <el-option
+                      v-for="item in shipmentOffer"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
+              </div>
+
+              <div v-if="shipment_offer">
+                <div class="decline-documemt-extend decline-documemt-input">
+                  <p class="shipment-input--label">
+                    {{ $t('transporterComponent.how_much_pay_per_truck') }}
+                  </p>
+                  <div class="block">
+                    <input
+                      v-model="bid_amount"
+                      class="input-control freight-load-weight"
+                      type="number"
+                      :placeholder="$t('transporterComponent.input_amount_placeholder')"
+                      autocomplete="on"
+                      min="0"
+                    >
+                    <span class="tonage-value-text" />
+                  </div>
+                </div>
+
+                <div class="decline-documemt-extend decline-documemt-input">
+                  <p class="shipment-input--label">
+                    {{ $t('transporterComponent.is_this_price_negotiable') }}
+                  </p>
+                  <div class="block">
+                    <el-select
+                      v-model="negotiability"
+                      placeholder=""
+                      class="transporters-element-inputs"
+                      filterable
+                    >
+                      <el-option
+                        v-for="item in returnOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="decline-documemt-extend decline-documemt-input">
+                <p class="shipment-input--label">
+                  {{ $t('transporterComponent.when_bids_submitted') }}
+                </p>
+                <div class="block">
+                  <el-date-picker
+                    v-model="quotation_time"
+                    class="transporters-element-inputs"
+                    type="datetime"
+                    format="dd-MM-yyyy h:mm a"
+                    :placeholder="$t('transporterComponent.select_time')"
+                    prefix-icon="el-icon-date"
+                    :default-time="default_value"
+                    :picker-options="dueDatePickerOptions"
+                  />
+                </div>
+              </div>
+
+              <div
+                v-if="process_shipment"
+                v-loading="process_shipment"
+                class="freight-loading-container"
+              />
+
+              <div
+                v-if="!process_shipment"
+                class="decline-documemt-extend decline-button-align"
+              >
+                <button
+                  type="button"
+                  name="button"
+                  class="quote-action--slide-button"
+                  @click="sendFinalQuote()"
+                >
+                  {{ $t('transporterComponent.submit') }}
+                </button>
+              </div>
+            </el-dialog>
+          </div>
+        </transition>
+      </div>
     </div>
   </div>
 </template>
@@ -599,6 +639,7 @@ export default {
         },
       ],
       inactive_user: false,
+      newUserDialog: false,
     };
   },
   computed: {
@@ -685,6 +726,13 @@ export default {
       getFilteredOwnersListing: '$_freight/getFilteredOwnersListing',
       sendCustomerQuote: '$_freight/sendCustomerQuote',
     }),
+    checkActiveUser() {
+      const session = this.$store.getters.getSession;
+      if (session[session.default].freight_status === 2 && this.getVerificationStage === '') {
+        return false;
+      }
+      return true;
+    },
     fetchCurrencies() {
       this.$store.dispatch('$_freight/requestSupportedCountries').then(
         (response) => {
@@ -974,7 +1022,9 @@ export default {
       );
     },
     showQuoteDialog() {
-      if (this.checkedOwners.length > 0) {
+      if (this.checkActiveUser) {
+        this.newUserDialog = true;
+      } else if (this.checkedOwners.length > 0) {
         this.filteredCheckedOwners = [];
         for (let i = 0; i < this.checkedOwners.length; i++) {
           this.filteredCheckedOwners.push(this.checkedOwners[i].id);
@@ -1146,6 +1196,10 @@ export default {
       }
       return resp;
     },
+    directToSettings() {
+      this.$router.push('/freight/settings');
+      this.newUserDialog = false;
+    },
     doNotification(level, title, message) {
       const notification = { title, level, message };
       this.displayNotification(notification);
@@ -1277,5 +1331,12 @@ export default {
 }
 .freight-search{
   color : #1782c5;
+}
+.disable_quote_btn{
+  border-color: #C0C4CC !important;
+  background: #C0C4CC !important;
+}
+.freight-notification-alert{
+  margin-bottom: 6% !important;
 }
 </style>

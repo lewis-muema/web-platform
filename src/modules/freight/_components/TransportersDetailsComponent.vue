@@ -193,7 +193,7 @@
           </div>
 
           <div class="transporters-quote-section">
-            <div class="">
+            <div v-if="checkActiveUser">
               <p class="transporters-quotes-input--label">
                 {{ $t('transporterComponent.engage_transporter') }}
               </p>
@@ -634,7 +634,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({}),
+    ...mapGetters({
+      getVerificationStage: '$_freight/getVerificationStage',
+    }),
   },
   watch: {
     quoteDialog(val) {
@@ -690,6 +692,13 @@ export default {
       sendCustomerQuote: '$_freight/sendCustomerQuote',
       getOwnersDetail: '$_freight/getOwnersDetail',
     }),
+    checkActiveUser() {
+      const session = this.$store.getters.getSession;
+      if (session[session.default].freight_status === 2 && this.getVerificationStage === '') {
+        return false;
+      }
+      return true;
+    },
     fetchOwnerDetail() {
       this.loading = true;
       const payload = {

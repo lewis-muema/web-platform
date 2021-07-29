@@ -804,3 +804,6 @@ div.pac-container {
 .el-progress-bar__inner{
   background-color: #527CBD !important;
 }
+.freightTransportersDialog >.el-dialog > .el-dialog__body{
+  padding-top: 0% !important;
+}
