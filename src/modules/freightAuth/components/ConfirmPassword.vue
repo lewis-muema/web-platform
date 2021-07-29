@@ -137,13 +137,12 @@ export default {
     checkContent() {
       const token = this.$route.params.content;
 
-      const values = {};
-      values.token = token;
+      const payload = {};
+      payload.token = token;
       const fullPayload = {
-        values,
-        vm: this,
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'forgot_token',
+        values: payload,
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'freight/validate-token',
       };
       this.requestCheckToken(fullPayload).then(
         (response) => {
