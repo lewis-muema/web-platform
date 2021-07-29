@@ -774,6 +774,7 @@ div.pac-container {
 }
 .personal-info-phone-validation >.el-dialog >.el-dialog__body{
   margin: 4% !important;
+}
 .freightAuthDialog >.el-dialog{
   width: 33% !important;
 }
