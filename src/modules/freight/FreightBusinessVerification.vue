@@ -93,7 +93,10 @@
 
                 <p class="freight-terms-and-conditions">
                   By continuing you are agreeing to Sendy Freight
-                  <span class="freight-terms-higlight">shipper terms and conditions</span>
+                  <span
+                    class="freight-terms-higlight"
+                    @click="shipperTerms"
+                  >shipper terms and conditions</span>
                 </p>
 
                 <div class="reset-freight-pass-outer">
@@ -790,6 +793,10 @@ export default {
       } finally {
         this.$router.push('/freight/login');
       }
+    },
+    shipperTerms() {
+      const route = this.$router.resolve({ path: '/freight/terms_and_conditions' });
+      window.open(route.href, '_blank');
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };

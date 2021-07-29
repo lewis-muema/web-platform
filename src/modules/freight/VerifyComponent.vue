@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="terms-main">
-    <div v-if="checkFreightStatus() === 0">
+    <div>
       <div class="terms-header">
         {{ $t('verifyComponent.terms_of_service') }}
       </div>
@@ -12,181 +12,13 @@
           height="100%"
         />
       </div>
-      <div class="freight-terms">
-        <input
-          v-model="u_terms"
-          type="checkbox"
-          name="u_terms"
-          class="hiddeny"
-        >
-        <span class="sign-holder__smaller">
-          {{ $t('verifyComponent.acknowledge') }}
-        </span>
-      </div>
-      <div class="next-terms-holder-btn">
-        <input
-          :placeholder="$t('general.submit')"
-          class="button-primary terms-btn-color next-freight-submit"
-          type="submit"
-          name="login_text"
-          @click="submit"
-        >
-      </div>
-    </div>
-    <div v-if="checkFreightStatus() === 1">
-      <div class="approval-card">
-        <div class="">
-          <div class="warning-icon-pstn">
-            <i class="el-icon-success warning-icon" />
-          </div>
-          <div class="cancelOptions--content-message verification-header">
-            {{ $t('verifyComponent.application_submitted') }}
-          </div>
-          <div class="cancelOptions--content-message verification-description">
-            <!-- Thanks {{ logged_user }} we have received your registration. -->
-            {{ $t('verifyComponent.thanks',{logged_user: logged_user}) }}
-          </div>
-          <div class="cancelOptions--content-message verification-description">
-            {{ $t('verifyComponent.customer_rep') }}
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import SessionMxn from '../../mixins/session_mixin';
-import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
-import NotificationMxn from '../../mixins/notification_mixin';
-
 export default {
   name: 'TermsAndCondition',
-  mixins: [SessionMxn, NotificationMxn, MixpanelMixin],
-
-  data() {
-    return {
-      u_terms: false,
-      terms: true,
-      logged_user: '',
-    };
-  },
-  mounted() {
-    this.loggedUser();
-  },
-  methods: {
-    ...mapActions({
-      updateFreightStatus: '$_freight/updateFreightStatus',
-    }),
-    loggedUser() {
-      const session = this.$store.getters.getSession;
-      if (Object.keys(session).length > 0) {
-        const fullName = session[session.default].user_name.split(' ');
-        const firstName = fullName[0];
-        this.logged_user = firstName;
-      }
-    },
-    checkFreightStatus() {
-      const session = this.$store.getters.getSession;
-      let resp = 0;
-      if (Object.prototype.hasOwnProperty.call(session[session.default], 'freight_status')) {
-        if (session[session.default].freight_status === 2) {
-          this.$router.push('/freight/transporters');
-        } else {
-          resp = session[session.default].freight_status;
-        }
-      } else {
-        resp = 0;
-      }
-      return resp;
-    },
-    submit() {
-      if (this.u_terms) {
-        const session = this.$store.getters.getSession;
-        let fullPayload = {};
-        if (session.default === 'biz') {
-          const bizPayload = {
-            cop_id: session[session.default].cop_id,
-            cop_name: session[session.default].cop_name,
-            cop_contact_person: session[session.default].cop_contact_person,
-            cop_email: session[session.default].cop_biz_email,
-            cop_phone: session[session.default].cop_biz_phone,
-            freight_status: 1,
-          };
-          fullPayload = {
-            values: bizPayload,
-            app: 'NODE_PRIVATE_API',
-            endpoint: 'update_cop',
-          };
-        } else {
-          const peerPayload = {
-            user_id: session[session.default].user_id,
-            freight_status: 1,
-          };
-          fullPayload = {
-            values: peerPayload,
-            app: 'NODE_PRIVATE_API',
-            endpoint: 'update_user',
-          };
-        }
-        this.updateFreightStatus(fullPayload).then(
-          (response) => {
-            let workingResponse = response;
-            if (response.length > 1) {
-              workingResponse = response[0];
-            }
-
-            if (workingResponse.status) {
-              const updatedSession = session;
-              updatedSession[session.default].freight_status = 1;
-
-              const newSession = JSON.stringify(updatedSession);
-              this.setSession(newSession);
-              this.$router.push('/freight/verify');
-              const level = 1; // success
-              this.message = this.$t('verifyComponent.terms_conditions_accepted');
-              const notification = {
-                title: '',
-                level,
-                message: this.message,
-              }; // notification object
-              this.displayNotification(notification);
-            } else {
-              const level = 3;
-              this.message = this.$t('verifyComponent.something_went_wrong');
-              const notification = {
-                title: '',
-                level,
-                message: this.message,
-              }; // notification object
-              this.displayNotification(notification);
-            }
-          },
-          () => {
-            const level = 3;
-            this.message = this.$t('verifyComponent.something_went_wrong');
-            const notification = {
-              title: '',
-              level,
-              message: this.message,
-            }; // notification object
-            this.displayNotification(notification);
-          },
-        );
-      } else {
-        this.doNotification(2, this.$t('verifyComponent.freight_final_setup'), this.$t('verifyComponent.agree_terms_condition'));
-      }
-    },
-    doNotification(level, title, message) {
-      const notification = {
-        title,
-        level,
-        message,
-      };
-      this.displayNotification(notification);
-    },
-  },
 };
 </script>
 
@@ -203,7 +35,7 @@ export default {
   margin: 2rem auto;
   padding: 2rem;
   font-family: 'Nunito', sans-serif;
-  height: 25rem;
+  height: 30rem;
 }
 
 .terms-header {
