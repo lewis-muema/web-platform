@@ -95,7 +95,7 @@ export default {
     FreightBusinessVerification,
     FreightBusinessFinalSetup,
   },
-  mixins: [RegisterStoreModule, SessionMxn, MixpanelMixin],
+  mixins: [RegisterStoreModule, SessionMxn, MixpanelMixin, NotificationMxn],
   data() {
     return {
       sessionData: false,
@@ -172,6 +172,25 @@ export default {
       }
     },
     verifyBusinessDetails(session) {
+      if ('freight_user' in session && 'director_details' in session[session.default]) {
+        if (session.freight_user) {
+          this.handleFreightBusinessUpdate(session);
+        } else {
+          this.notFreightUser();
+        }
+      } else {
+        this.notFreightUser();
+      }
+    },
+    notFreightUser() {
+      this.doNotification(
+        2,
+        'Freight Redirect',
+        'Unable to access freight customer service . Kindly login again',
+      );
+      this.clearFreightToken();
+    },
+    handleFreightBusinessUpdate(session) {
       if (
         session[session.default].country_code === ''
         || session[session.default].company_reg_no === ''
@@ -254,6 +273,26 @@ export default {
           // error
         },
       );
+    },
+    clearFreightToken() {
+      try {
+        localStorage.removeItem('request_id');
+        localStorage.removeItem('_sessionSnack');
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('refreshToken');
+        this.$store.commit('deleteSession');
+
+        this.$store.unregisterModule('$_freight');
+        this.$store.unregisterModule('$_freightAuth');
+      } catch (er) {
+        // freight was not registered
+      } finally {
+        this.$router.push('/freight/login');
+      }
+    },
+    doNotification(level, title, message) {
+      const notification = { title, level, message };
+      this.displayNotification(notification);
     },
     handleFreightRoute(val) {
       if (val === 0) {
