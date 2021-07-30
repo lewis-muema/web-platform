@@ -111,7 +111,7 @@
             v-if="order_details.extra_distance_amount > 0"
             class="order_details_desc_item"
           >
-           {{$t('general.distance_bill')}} : {{ order_details.extra_distance_amount }}
+            {{$t('general.distance_bill')}} : {{ order_details.extra_distance_amount }}
           </div>
           <div
             v-if="order_details.waiting_time_amount > 0"
@@ -169,12 +169,40 @@
             class="rider_details_actions_ongoing"
           >
             <div class="rider_details_action">
+              <div
+                v-if="disputeImageStatus === 2"
+                class="order_details_dispute_status_label order_details_dispute_label_red"
+              >
+                <i class="el-icon-warning warning-icon-override" />
+                {{$t('general.doc_disputed')}}
+              </div>
+              <div
+                v-if="disputeImageStatus === 3"
+                class="order_details_dispute_status_label order_details_dispute_label_orange"
+              >
+                <i class="el-icon-warning warning-icon-override" />
+                {{$t('general.doc_resubmitted')}}
+              </div>
+              <div
+                v-if="disputeImageStatus === 4"
+                class="order_details_dispute_status_label order_details_dispute_label_blue"
+              >
+                <i class="el-icon-warning warning-icon-override" />
+                {{$t('general.doc_resolved')}}
+              </div>
               <button
                 class="button-primary rider_details_action_btn rider_details--view-delivery-docs-btn"
                 type="button"
-                @click="dialogVisible = true"
+                @click="viewDeliveryDoc"
               >
                 {{$t('general.view_delivery_doc')}}
+              </button>
+              <button
+                class="button-primary rider_details_action_btn rider_details--view-delivery-docs-btn order_details_dispute_delivery_docs_override"
+                type="button"
+                @click="disputeDocsOption"
+              >
+                {{$t('general.dispute_extra_charges')}}
               </button>
             </div>
             <el-dialog
@@ -232,11 +260,73 @@
                   </div>
                 </div>
               </template>
-              <div class="rider_details_action">
+              <div
+                v-if="disputeImageStatus === 3"
+                class="order_details_dispute_modal_section"
+              >
+                <div>
+                  <el-radio
+                    v-model="doc_status"
+                    label="1"
+                  >
+                    {{$t('general.accept_driver_documents')}}
+                  </el-radio>
+                  <el-radio
+                    v-model="doc_status"
+                    label="2"
+                  >
+                    {{$t('general.reject_driver_documents')}}
+                  </el-radio>
+                </div>
+                <div
+                  v-if="doc_status === '2'"
+                  class="order_details_dialog_override order_details_dialog_override_inner"
+                >
+                  <div>
+                    <select
+                      v-model="disputeReason"
+                      class="dispute_type_select"
+                    >
+                      <option
+                        value=""
+                        disabled
+                        selected
+                      >
+                        {{$t('general.dispute_reason')}}
+                      </option>
+
+                      <option
+                        v-for="(reason, index) in dispute_reasons"
+                        :key="index"
+                        :value="index + 1">
+                        {{ reason }}
+                      </option>
+                    </select>
+                  </div>
+                  <textarea
+                    v-model="disputeDescription"
+                    :placeholder="$t('general.description')"
+                    class="form-control dispute_description"
+                  />
+                  <div class="rider_details_action">
+                    <button
+                      class="button-primary order_details_button_override"
+                      type="button"
+                      @click="disputeDeliveryImages"
+                    >
+                      {{$t('general.submitCapital')}}
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-if="doc_status === '1'"
+                class="rider_details_action"
+              >
                 <button
                   class="button-primary dispute-delivery-button"
                   type="button"
-                  @click="disputeDocsOption"
+                  @click="disputeButton"
                 >
                   {{$t('general.dispute_delivery_docs')}}
                 </button>
@@ -267,7 +357,7 @@
                       {{$t('general.waiting_time')}}
                     </option>
                     <option value="2">
-                     {{$t('general.extra_distance')}}
+                      {{$t('general.extra_distance')}}
                     </option>
                   </select>
                 </div>
@@ -283,7 +373,6 @@
                     >
                       {{$t('general.dispute_reason')}}
                     </option>
-
                     <option value="1">
                       {{$t('general.was_overcharge_order')}}
                     </option>
@@ -310,6 +399,52 @@
                     @click="disputeDeliveryDocs"
                   >
                     {{$t('general.submit')}}
+                  </button>
+                </div>
+              </div>
+            </el-dialog>
+            <el-dialog
+              class="dispute_delivery_dialog"
+              :visible.sync="disputeImageVisible"
+              @close="closeImageDialog()"
+            >
+              <div class="title title-override">
+                {{$t('general.dispute_delivery_docs_order')}} {{ order_details.order_no }}
+              </div>
+              <div class="order_details_dialog_override">
+                <div>
+                  <select
+                    v-model="disputeReason"
+                    class="dispute_type_select"
+                  >
+                    <option
+                      value=""
+                      disabled
+                      selected
+                    >
+                      {{$t('general.dispute_reason')}}
+                    </option>
+
+                    <option
+                      v-for="(reason, index) in dispute_reasons"
+                      :key="index"
+                      :value="index + 1">
+                      {{ reason }}
+                    </option>
+                  </select>
+                </div>
+                <textarea
+                  v-model="disputeDescription"
+                  :placeholder="$t('general.description')"
+                  class="form-control dispute_description"
+                />
+                <div class="rider_details_action">
+                  <button
+                    class="button-primary order_details_button_override"
+                    type="button"
+                    @click="disputeDeliveryImages"
+                  >
+                    {{$t('general.submitCapital')}}
                   </button>
                 </div>
               </div>
@@ -347,10 +482,18 @@ export default {
       show_rating: false,
       dialogVisible: false,
       dialogFormVisible: false,
+      disputeImageVisible: false,
       disputeType: '',
       disputeReason: '',
       disputeDescription: '',
       default_currency: '',
+      dispute_reasons: [
+        this.$t('general.a_delivery_document_is_missing'),
+        this.$t('general.the_delivery_document_is_not_clear'),
+        this.$t('general.the_delivery_document_is_not_valid'),
+      ],
+      disputeImageStatus: 0,
+      doc_status: '1',
     };
   },
   methods: {
@@ -360,6 +503,7 @@ export default {
     ...mapActions({
       requestDisputeDeliveryDocs: '$_transactions/requestDisputeDeliveryDocs',
       requestDisputeStatus: '$_transactions/requestDisputeStatus',
+      requestDisputeDocStatus: '$_transactions/requestDisputeDocStatus',
     }),
     sendGA4Events(label, params) {
       const eventPayload = {
@@ -419,6 +563,12 @@ export default {
       this.disputeDescription = '';
       this.dialogFormVisible = false;
     },
+    closeImageDialog() {
+      this.disputeType = '';
+      this.disputeReason = '';
+      this.disputeDescription = '';
+      this.disputeImageVisible = false;
+    },
     deliverySignaturePath(path) {
       return `https://s3-eu-west-1.amazonaws.com/sendy-delivery-signatures/${path}`;
     },
@@ -426,7 +576,13 @@ export default {
     deliveryImagePath(path) {
       return `https://s3-eu-west-1.amazonaws.com/sendy-delivery-signatures/rider_delivery_image//${path}`;
     },
-
+    disputeButton() {
+      if (this.disputeImageStatus !== 3) {
+        this.disputeImageVisible = true;
+      } else {
+        this.disputeDeliveryImages();
+      }
+    },
     disputeDocsOption() {
       if (
         this.order_details.extra_distance_amount > 0
@@ -461,8 +617,61 @@ export default {
         this.doNotification(
           2,
           this.$t('general.dispute_delivery_docs'),
-         this.$t('general.sorry_no_extra_charges'),
+          this.$t('general.sorry_no_extra_charges'),
         );
+      }
+    },
+    checkDisputeStatus() {
+      const fullPayload = {
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: `orders/${this.order_details.order_no}`,
+      };
+      this.disputeImageStatus = 0;
+      this.requestDisputeDocStatus(fullPayload).then(
+        (response) => {
+          this.disputeImageStatus = response.order_details.dispute_delivery_doc_status;
+          this.doc_status = '1';
+        },
+        (error) => {
+          this.disputeImageStatus = 0;
+        },
+      );
+    },
+    viewDeliveryDoc() {
+      this.dialogVisible = true;
+      this.requestOrderHistory();
+      this.checkDisputeStatus();
+    },
+    requestOrderHistory() {
+      const sessionData = this.$store.getters.getSession;
+      if (Object.keys(sessionData).length > 0) {
+        this.sessionData = sessionData;
+        let ordersPayload = {};
+        if (sessionData.default === 'biz' && sessionData.biz.user_type === 2) {
+          // create cop admin payload
+          ordersPayload = {
+            cop_id: sessionData.biz.cop_id,
+            user_type: sessionData.biz.user_type,
+            user_id: '-1',
+          };
+        } else if (sessionData.default === 'biz') {
+          ordersPayload = {
+            cop_id: sessionData.biz.cop_id,
+            user_type: sessionData.biz.user_type,
+            user_id: sessionData.biz.user_id,
+          };
+        } else {
+          // create peer payload
+          ordersPayload = {
+            user_id: sessionData[sessionData.default].user_id,
+          };
+        }
+        const fullPayload = {
+          values: ordersPayload,
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'order_history',
+        };
+        this.$store.dispatch('$_transactions/requestOrderHistoryOrders', fullPayload);
       }
     },
     disputeDeliveryDocs() {
@@ -496,8 +705,49 @@ export default {
           },
         );
       } else {
-        this.message = this.$t('general.please_provide_all_details'); 
-        this.doNotification(2, this.$t('general.delivery_dispute_failed'), this.$t('general.Provide all details'));
+        this.message = this.$t('general.please_provide_all_details');
+        this.doNotification(2, this.$t('general.delivery_dispute_failed'), this.$t('general.provide_all_details'));
+      }
+    },
+    disputeDeliveryImages() {
+      if ((this.disputeReason !== '' && this.disputeDescription !== '') || (this.disputeImageStatus > 0 && this.disputeImageStatus < 4)) {
+        const session = this.$store.getters.getSession;
+        const values = {
+          admin_id: 0,
+          biz_name: session.default === 'biz' ? session[session.default].user_name : '',
+          cop_name: session.default === 'biz' ? session[session.default].cop_name : '',
+          customer_email: session[session.default].user_email,
+          customer_name: session[session.default].user_name,
+          customer_phone: session[session.default].user_phone,
+          description: this.disputeDescription,
+          dispute_delivery_doc_status: this.disputeImageStatus > 0 && this.disputeImageStatus < 4 ? this.delivery_doc_status : 2,
+          dispute_docs_reason_id: this.disputeReason,
+          order_no: this.order_details.order_no,
+          rider_id: this.order_details.rider.rider_id,
+          source: 'Customer Web',
+        };
+        const fullPayload = {
+          values,
+          app: 'ORDERS_APP',
+          endpoint: 'dispute_delivery_docs',
+        };
+        this.requestDisputeDeliveryDocs(fullPayload).then(
+          (response) => {
+            if (response.status) {
+              this.doNotification(2, this.$t('general.delivery_dispute'), this.$t('general.delivery_dispute_successful'));
+              this.closeImageDialog();
+              this.checkDisputeStatus();
+            } else {
+              this.doNotification(2, this.$t('general.delivery_dispute'), response.message);
+            }
+          },
+          (error) => {
+            this.doNotification(2, this.$t('general.delivery_dispute'), this.$t('general.something_went_wrong_please_try'));
+          },
+        );
+      } else {
+        this.message = this.$t('general.please_provide_all_details');
+        this.doNotification(2, this.$t('general.delivery_dispute_failed'), this.$t('general.provide_all_details'));
       }
     },
     doNotification(level, title, message) {
@@ -525,9 +775,21 @@ export default {
         order => order.order_id === parseInt(this.$route.params.id, 10),
       );
     },
+    delivery_doc_status() {
+      return this.doc_status === '1' ? 4 : 2;
+    },
   },
   mounted() {
     this.setUserDefaultCurrency();
+    this.checkDisputeStatus();
+  },
+  watch: {
+    // eslint-disable-next-line func-names
+    'order_details.order_id': function (val) {
+      if (this.order_details.order_id === val) {
+        this.checkDisputeStatus();
+      }
+    },
   },
   created() {
     this.order_id = this.$route.params.id;

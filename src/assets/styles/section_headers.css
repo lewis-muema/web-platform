@@ -9,6 +9,11 @@
 .title__text{
     font-weight: 300;
 }
+.title-override {
+    color: #0c0c0c;
+    text-align: center;
+    border: 0px !important;
+}
 .section{
     padding-top: 20px;
     margin-bottom: 22px;
