@@ -772,7 +772,7 @@ export default {
       const fullPayload = {
         values: payload,
         app: 'ADONIS_PRIVATE_API',
-        endpoint: 'freight/business-directors',
+        endpoint: 'freight/phone',
       };
       this.requestPersonalInfo(fullPayload).then(() => {}, () => {});
     },
