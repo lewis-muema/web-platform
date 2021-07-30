@@ -95,6 +95,49 @@ padding: 10px 0 10px 0;
 .rider_details--view-delivery-docs-btn{
 margin-top: 20px;
 }
+.order_details_dispute_delivery_docs_override {
+    background-color: #ecf0f1;
+    color: #1782c5;
+    border-color: #1782c5;
+    border-width: 1px !important;
+}
+.order_details_dialog_override {
+    width: 90%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+.order_details_dialog_override_inner {
+    padding: 20px 0px 0px 0px;
+}
+.order_details_button_override {
+    width: 100%;
+    margin: 16px 0px;
+}
+.order_details_dispute_modal_section {
+    margin: 3%;
+}
+.order_details_dispute_status_label {
+    background: #D6D3D3;
+    height: 40px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 20px;
+}
+.warning-icon-override {
+    padding-right: 10px;
+}
+.order_details_dispute_label_red {
+    color: #CB0000;
+}
+.order_details_dispute_label_blue {
+    color: #3B7EBE;
+}
+.order_details_dispute_label_orange {
+    color: #E6843B;
+}
 .recepient-padded
 {
   padding: 5px 0px 0px 20px;
