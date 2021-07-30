@@ -142,7 +142,7 @@
                           <input
                             v-model="quote_text"
                             class="request-shipment-btn-color"
-                            :class="{ disable_quote_btn: checkActiveUser }"
+                            :class="{ disable_quote_btn: checkActiveUser() }"
                             type="submit"
                             @click="showQuoteDialog"
                           >
