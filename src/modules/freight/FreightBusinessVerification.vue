@@ -765,16 +765,14 @@ export default {
     },
     updatePhoneInfo(phone) {
       const session = this.$store.getters.getSession;
-      const values = {
+      const payload = {
         cop_user_id: session[session.default].user_id,
-        user_name: session[session.default].user_name,
-        user_email: session[session.default].user_email,
-        user_phone: phone,
+        phone,
       };
       const fullPayload = {
-        values,
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'update_user',
+        values: payload,
+        app: 'ADONIS_PRIVATE_API',
+        endpoint: 'freight/business-directors',
       };
       this.requestPersonalInfo(fullPayload).then(() => {}, () => {});
     },
