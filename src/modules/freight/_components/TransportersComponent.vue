@@ -142,7 +142,7 @@
                           <input
                             v-model="quote_text"
                             class="request-shipment-btn-color"
-                            :class="{ disable_quote_btn: checkActiveUser() }"
+                            :class="{ disable_quote_btn: checkActiveUser }"
                             type="submit"
                             @click="showQuoteDialog"
                           >
@@ -672,6 +672,13 @@ export default {
         && this.destination_value !== ''
       );
     },
+    checkActiveUser() {
+      const session = this.$store.getters.getSession;
+      if (session[session.default].freight_status === 2 && this.getVerificationStage === '') {
+        return false;
+      }
+      return true;
+    },
   },
   watch: {
     DOM: {
@@ -726,13 +733,6 @@ export default {
       getFilteredOwnersListing: '$_freight/getFilteredOwnersListing',
       sendCustomerQuote: '$_freight/sendCustomerQuote',
     }),
-    checkActiveUser() {
-      const session = this.$store.getters.getSession;
-      if (session[session.default].freight_status === 2 && this.getVerificationStage === '') {
-        return false;
-      }
-      return true;
-    },
     fetchCurrencies() {
       this.$store.dispatch('$_freight/requestSupportedCountries').then(
         (response) => {
