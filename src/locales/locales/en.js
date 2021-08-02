@@ -46,6 +46,8 @@ import freight from '../freights/en/freight';
 import verifyComponent from '../freights/en/verifyComponent';
 import orderDetailsComponent from '../freights/en/component/orderDetailsComponent';
 import freightDocuments from '../freights/en/component/freightDocuments';
+import freightAuth from '../freights/en/freightAuth';
+import freightDetailsUpdate from '../freights/en/freightDetailsUpdate';
 
 import genTranslationsEnglish from '../general/en';
 
@@ -96,6 +98,8 @@ const translations = {
   verifyComponent,
   orderDetailsComponent,
   freightDocuments,
+  freightAuth,
+  freightDetailsUpdate,
 
   general: genTranslationsEnglish,
 };
