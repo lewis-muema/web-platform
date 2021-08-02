@@ -48,6 +48,7 @@ import verifyComponent from '../freights/fr/verifyComponent';
 import orderDetailsComponent from '../freights/fr/component/orderDetailsComponent';
 import freightDocuments from '../freights/fr/component/freightDocuments';
 import freightAuth from '../freights/fr/freightAuth';
+import freightDetailsUpdate from '../freights/fr/freightDetailsUpdate';
 
 import genFrenchTranslations from '../general/fr';
 
@@ -99,6 +100,7 @@ const translations = {
   orderDetailsComponent,
   freightDocuments,
   freightAuth,
+  freightDetailsUpdate,
 
   general: genFrenchTranslations,
 };
