@@ -15,6 +15,7 @@ const translations = {
   delivery_doc_for: 'Delivery Documents for',
   delivery_at: 'Delivery at',
   delivery_signature: 'Delivery signature by',
+  no_signature_uploaded: 'No Signature uploaded',
   dispute_delivery_docs: 'Dispute Delivery Docs',
   dispute_delivery_docs_order: 'Dispute Delivery Documents - Order',
   doc_disputed: 'Delivery doc disputed.',
