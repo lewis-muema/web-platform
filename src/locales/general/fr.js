@@ -13,6 +13,7 @@ const translations = {
   delivery_doc_for: 'Documents de livraison pour ',
   delivery_at: 'Livraison à ',
   delivery_signature: 'Signature de livraison par :',
+  no_signature_uploaded: 'FR_No Signature uploaded',
   dispute_delivery_docs: 'Contester les documents de livraison ',
   dispute_delivery_docs_order: 'Contestation des documents de livraison - La commande ',
   doc_disputed: 'FR_Delivery doc disputed.',
