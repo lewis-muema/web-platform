@@ -33,7 +33,7 @@
         </div>
 
         <div class="order_details_desc_item">
-          {{$t('general.distance')}}: {{ order_details.order_details.distance }} KMs
+          {{ $t('general.distance') }}: {{ order_details.order_details.distance }} KMs
         </div>
         <!-- TODO: add this in later with the duration the order took -->
         <!-- <div class="order_details_desc_item">
@@ -41,20 +41,20 @@
               </div>-->
         <div class="order_details_desc_item--wrapper">
           <div class="order_details_desc_item">
-            {{$t('general.date')}} : {{ convertToUTCToLocal(order_details.order_date) | moment }}
+            {{ $t('general.date') }} : {{ convertToUTCToLocal(order_details.order_date) | moment }}
           </div>
           <span v-for="j in order_details.logs">
             <div
               v-if="j.log_type === 3"
               class="order_details_desc_item"
             >
-              {{$t('general.picked')}} : {{ j.log_time | moment }}
+              {{ $t('general.picked') }} : {{ j.log_time | moment }}
             </div>
             <div
               v-if="j.log_type === 4"
               class="order_details_desc_item"
             >
-              {{$t('general.delivered')}} : {{ j.log_time | moment }}
+              {{ $t('general.delivered') }} : {{ j.log_time | moment }}
             </div>
           </span>
         </div>
@@ -90,13 +90,13 @@
               "
               class="recepient-padded"
             >
-              {{$t('general.recieved_by')}} {{ order_details.rider_deliver_img[index - 1].name }}
+              {{ $t('general.recieved_by') }} {{ order_details.rider_deliver_img[index - 1].name }}
             </div>
             <div
               v-if="order_details.path[index].reference_number"
               class="reference-number"
             >
-              <span class="reference-number-title">{{$t('general.notes')}}:</span> The order number is {{ order_details.path[index].reference_number }}
+              <span class="reference-number-title">{{ $t('general.notes') }}:</span> The order number is {{ order_details.path[index].reference_number }}
             </div>
             <div
               v-if="order_details.path[index].reference_number"
@@ -111,13 +111,13 @@
             v-if="order_details.extra_distance_amount > 0"
             class="order_details_desc_item"
           >
-            {{$t('general.distance_bill')}} : {{ order_details.extra_distance_amount }}
+            {{ $t('general.distance_bill') }} : {{ order_details.extra_distance_amount }}
           </div>
           <div
             v-if="order_details.waiting_time_amount > 0"
             class="order_details_desc_item"
           >
-            {{$t('general.waiting_charges')}}: {{ order_details.waiting_time_amount }}
+            {{ $t('general.waiting_charges') }}: {{ order_details.waiting_time_amount }}
           </div>
         </div>
       </div>
@@ -160,7 +160,7 @@
                 type="button"
                 @click="trackOrder(order_details.order_no)"
               >
-                {{$t('general.track')}}
+                {{ $t('general.track') }}
               </button>
             </div>
           </div>
@@ -174,35 +174,35 @@
                 class="order_details_dispute_status_label order_details_dispute_label_red"
               >
                 <i class="el-icon-warning warning-icon-override" />
-                {{$t('general.doc_disputed')}}
+                {{ $t('general.doc_disputed') }}
               </div>
               <div
                 v-if="disputeImageStatus === 3"
                 class="order_details_dispute_status_label order_details_dispute_label_orange"
               >
                 <i class="el-icon-warning warning-icon-override" />
-                {{$t('general.doc_resubmitted')}}
+                {{ $t('general.doc_resubmitted') }}
               </div>
               <div
                 v-if="disputeImageStatus === 4"
                 class="order_details_dispute_status_label order_details_dispute_label_blue"
               >
                 <i class="el-icon-warning warning-icon-override" />
-                {{$t('general.doc_resolved')}}
+                {{ $t('general.doc_resolved') }}
               </div>
               <button
                 class="button-primary rider_details_action_btn rider_details--view-delivery-docs-btn"
                 type="button"
                 @click="viewDeliveryDoc"
               >
-                {{$t('general.view_delivery_doc')}}
+                {{ $t('general.view_delivery_doc') }}
               </button>
               <button
                 class="button-primary rider_details_action_btn rider_details--view-delivery-docs-btn order_details_dispute_delivery_docs_override"
                 type="button"
                 @click="disputeDocsOption"
               >
-                {{$t('general.dispute_extra_charges')}}
+                {{ $t('general.dispute_extra_charges') }}
               </button>
             </div>
             <el-dialog
@@ -210,14 +210,14 @@
               class="delivery_image_dialog"
               :visible.sync="dialogVisible"
             >
-              <span slot="title"> {{$t('general.delivery_doc_for')}}{{ order_details.order_no }} </span><br>
+              <span slot="title"> {{ $t('general.delivery_doc_for') }}{{ order_details.order_no }} </span><br>
               <template
                 v-for="(locations, index) in order_details.path"
                 v-if="index >= 1"
               >
                 <div class="delivery_documents_info">
                   <div class="delivery_image_details">
-                    {{$t('general.delivery_at')}} {{ order_details.path[index].name }}
+                    {{ $t('general.delivery_at') }} {{ order_details.path[index].name }}
                   </div>
 
                   <template
@@ -244,10 +244,17 @@
 
                   <div class="delivery_documents_sign">
                     <img
-                      v-if="index <= order_details.rider_deliver_img.length"
+                      v-if="index <= order_details.rider_deliver_img.length && signaturePresent"
                       class="delivery-image-content"
                       :src="deliverySignaturePath(order_details.rider_deliver_img[index - 1].img)"
+                      :onerror="signaturePresent = false"
                     >
+                    <div
+                      v-else
+                      class="delivery-image-content-absent"
+                    >
+                      {{ $t('general.no_signature_uploaded') }}
+                    </div>
                   </div>
                   <div
                     v-if="
@@ -256,7 +263,7 @@
                     "
                     class="delivery_image_details"
                   >
-                    {{$t('general.delivery_signature')}}: {{ order_details.rider_deliver_img[index - 1].name }}
+                    {{ $t('general.delivery_signature') }}: {{ order_details.rider_deliver_img[index - 1].name }}
                   </div>
                 </div>
               </template>
@@ -269,13 +276,13 @@
                     v-model="doc_status"
                     label="1"
                   >
-                    {{$t('general.accept_driver_documents')}}
+                    {{ $t('general.accept_driver_documents') }}
                   </el-radio>
                   <el-radio
                     v-model="doc_status"
                     label="2"
                   >
-                    {{$t('general.reject_driver_documents')}}
+                    {{ $t('general.reject_driver_documents') }}
                   </el-radio>
                 </div>
                 <div
@@ -292,13 +299,14 @@
                         disabled
                         selected
                       >
-                        {{$t('general.dispute_reason')}}
+                        {{ $t('general.dispute_reason') }}
                       </option>
 
                       <option
                         v-for="(reason, index) in dispute_reasons"
                         :key="index"
-                        :value="index + 1">
+                        :value="index + 1"
+                      >
                         {{ reason }}
                       </option>
                     </select>
@@ -314,7 +322,7 @@
                       type="button"
                       @click="disputeDeliveryImages"
                     >
-                      {{$t('general.submitCapital')}}
+                      {{ $t('general.submitCapital') }}
                     </button>
                   </div>
                 </div>
@@ -328,7 +336,7 @@
                   type="button"
                   @click="disputeButton"
                 >
-                  {{$t('general.dispute_delivery_docs')}}
+                  {{ $t('general.dispute_delivery_docs') }}
                 </button>
               </div>
             </el-dialog>
@@ -338,7 +346,7 @@
               @close="closeDialog()"
             >
               <span slot="title">
-                {{$t('general.dispute_delivery_docs_order')}} {{ order_details.order_no }} </span><br>
+                {{ $t('general.dispute_delivery_docs_order') }} {{ order_details.order_no }} </span><br>
               <div class="dispute_documents_body">
                 <div>
                   <select
@@ -350,14 +358,14 @@
                       disabled
                       selected
                     >
-                      {{$t('general.dispute_type')}}
+                      {{ $t('general.dispute_type') }}
                     </option>
 
                     <option value="1">
-                      {{$t('general.waiting_time')}}
+                      {{ $t('general.waiting_time') }}
                     </option>
                     <option value="2">
-                      {{$t('general.extra_distance')}}
+                      {{ $t('general.extra_distance') }}
                     </option>
                   </select>
                 </div>
@@ -371,19 +379,19 @@
                       disabled
                       selected
                     >
-                      {{$t('general.dispute_reason')}}
+                      {{ $t('general.dispute_reason') }}
                     </option>
                     <option value="1">
-                      {{$t('general.was_overcharge_order')}}
+                      {{ $t('general.was_overcharge_order') }}
                     </option>
                     <option value="2">
-                      {{$t('general.driver_took_too_long')}}
+                      {{ $t('general.driver_took_too_long') }}
                     </option>
                     <option value="3">
-                      {{$t('general.driver_went_wrong_location')}}
+                      {{ $t('general.driver_went_wrong_location') }}
                     </option>
                     <option value="4">
-                      {{$t('general.different_issue')}}
+                      {{ $t('general.different_issue') }}
                     </option>
                   </select>
                 </div>
@@ -398,7 +406,7 @@
                     type="button"
                     @click="disputeDeliveryDocs"
                   >
-                    {{$t('general.submit')}}
+                    {{ $t('general.submit') }}
                   </button>
                 </div>
               </div>
@@ -409,7 +417,7 @@
               @close="closeImageDialog()"
             >
               <div class="title title-override">
-                {{$t('general.dispute_delivery_docs_order')}} {{ order_details.order_no }}
+                {{ $t('general.dispute_delivery_docs_order') }} {{ order_details.order_no }}
               </div>
               <div class="order_details_dialog_override">
                 <div>
@@ -422,13 +430,14 @@
                       disabled
                       selected
                     >
-                      {{$t('general.dispute_reason')}}
+                      {{ $t('general.dispute_reason') }}
                     </option>
 
                     <option
                       v-for="(reason, index) in dispute_reasons"
                       :key="index"
-                      :value="index + 1">
+                      :value="index + 1"
+                    >
                       {{ reason }}
                     </option>
                   </select>
@@ -444,7 +453,7 @@
                     type="button"
                     @click="disputeDeliveryImages"
                   >
-                    {{$t('general.submitCapital')}}
+                    {{ $t('general.submitCapital') }}
                   </button>
                 </div>
               </div>
@@ -494,6 +503,7 @@ export default {
       ],
       disputeImageStatus: 0,
       doc_status: '1',
+      signaturePresent: true,
     };
   },
   methods: {
@@ -535,7 +545,7 @@ export default {
       this.show_rating = false;
     },
     trackOrder(order_no) {
-      this.sendGA4Events('select_track_order', {order_number: order_no});
+      this.sendGA4Events('select_track_order', { order_number: order_no });
       this.$router.push({
         name: 'tracking',
         params: {
@@ -720,7 +730,7 @@ export default {
           customer_name: session[session.default].user_name,
           customer_phone: session[session.default].user_phone,
           description: this.disputeDescription,
-          dispute_delivery_doc_status: this.disputeImageStatus > 0 && this.disputeImageStatus < 4 ? this.delivery_doc_status : 2,
+          dispute_delivery_doc_status: this.disputeImageStatus === 3 && this.disputeImageStatus < 4 ? this.delivery_doc_status : 2,
           dispute_docs_reason_id: this.disputeReason,
           order_no: this.order_details.order_no,
           rider_id: this.order_details.rider.rider_id,
@@ -779,10 +789,6 @@ export default {
       return this.doc_status === '1' ? 4 : 2;
     },
   },
-  mounted() {
-    this.setUserDefaultCurrency();
-    this.checkDisputeStatus();
-  },
   watch: {
     // eslint-disable-next-line func-names
     'order_details.order_id': function (val) {
@@ -790,6 +796,10 @@ export default {
         this.checkDisputeStatus();
       }
     },
+  },
+  mounted() {
+    this.setUserDefaultCurrency();
+    this.checkDisputeStatus();
   },
   created() {
     this.order_id = this.$route.params.id;
@@ -879,5 +889,11 @@ export default {
 }
 .reference-number-title {
   font-weight: 500;
+}
+.delivery-image-content-absent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40% 0%;
 }
 </style>
