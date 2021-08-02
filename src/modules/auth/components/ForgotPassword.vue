@@ -157,7 +157,7 @@ export default {
             }
           },
           (error) => {
-            this.message = `${this.$t('forgotPassword.reset_failed')}`;
+            this.message = `${error.response.data.message}`;
             const level = 3;
             const notification = { title: '', level, message: error.response.data.message };
             this.displayNotification(notification);
