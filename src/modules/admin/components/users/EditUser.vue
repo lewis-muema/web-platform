@@ -13,7 +13,7 @@
       </div>
 
       <div class="admin-edit2-details">
-       {{$t( 'editUser.edit_user')}}
+        {{ $t( 'editUser.edit_user') }}
       </div>
       <div class="edit-position">
         <div class="edit-holder edit-dimen">
@@ -111,7 +111,7 @@
             type="submit"
             @click="update_edit"
           >
-            {{$t( 'editUser.update')}}
+            {{ $t( 'editUser.update') }}
           </button>
         </div>
       </div>
@@ -134,21 +134,21 @@ export default {
       statuses: [
         {
           status: 1,
-          status_label: this.$t( 'editUser.active'),
+          status_label: this.$t('editUser.active'),
         },
         {
           status: 2,
-          status_label: this.$t( 'editUser.deactivate'),
+          status_label: this.$t('editUser.deactivate'),
         },
       ],
       types: [
         {
           type: 1,
-          type_name: this.$t( 'editUser.normal'),
+          type_name: this.$t('editUser.normal'),
         },
         {
           type: 2,
-          type_name: this.$t( 'editUser.admin'),
+          type_name: this.$t('editUser.admin'),
         },
       ],
       phoneInputProps: {
