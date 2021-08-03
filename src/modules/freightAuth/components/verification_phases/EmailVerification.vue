@@ -26,10 +26,10 @@
                 >
               </div>
               <p class="freight-sign-up-header">
-                Check Your Email
+                {{ $t('freightAuth.check_email') }}
               </p>
               <p class="freight-sign-up-description">
-                We’ve sent a link to {{ email }} Please click the link to proceed
+                {{ $t('freightAuth.link_sent_to_email', { email: email }) }}
               </p>
               <div class="verification-retry-options">
                 <p class="verification-retry-options-label">
@@ -39,7 +39,7 @@
                   class="verification-retry-options-label"
                   @click="resendLink"
                 >
-                  Resend the link
+                  {{ $t('freightAuth.check_email') }}
                 </p>
               </div>
             </div>
@@ -119,15 +119,23 @@ export default {
             if (response.status) {
               this.doNotification(
                 1,
-                'Email Verification',
-                'Email Address verification link sent successfully',
+                this.$t('freightAuth.email_verification'),
+                this.$t('freightAuth.email_verification_sent'),
               );
             } else {
-              this.doNotification(2, 'Email Verification Error', response.message);
+              this.doNotification(
+                2,
+                this.$t('freightAuth.email_verification_error'),
+                response.message,
+              );
             }
           })
           .catch((error) => {
-            this.doNotification(2, 'Email Verification Error', error.response.data.message);
+            this.doNotification(
+              2,
+              this.$t('freightAuth.email_verification_error'),
+              error.response.data.message,
+            );
             this.$router.push('/freight/sign_up');
             this.updateCrmData = false;
           });

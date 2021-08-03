@@ -19,7 +19,8 @@ const en = {
   confirm_password_message: 'Please ensure that this matches the password you entered earlier',
   sign_up_failure: 'Sign up failure',
   provide_valid_details: 'Kindly provide all valid details',
-  sin_up_success: 'Sucess freight sign up',
+  details_saved: 'Account details saved successfully',
+  sign_up_success: 'Success freight sign up',
   sign_up_error: 'Freight Sign up error',
 
   // Password Reset
@@ -76,7 +77,7 @@ const en = {
 
   // Sign Up Congratulations
   verifying_account: 'Verifying account information ...',
-  congratulations: 'Congratulations {{ cop_name }} !',
+  congratulations: 'Congratulations',
   next_step: 'We are excited to have you. Next, tell us more about',
   customization: 'for us to customize your experience',
   lets_go: "Let's go",
