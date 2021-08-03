@@ -20,7 +20,7 @@ const en = {
   sign_up_failure: 'Sign up failure',
   provide_valid_details: 'Kindly provide all valid details',
   details_saved: 'Account details saved successfully',
-  sign_up_success: 'Sucess freight sign up',
+  sign_up_success: 'Success freight sign up',
   sign_up_error: 'Freight Sign up error',
 
   // Password Reset
