@@ -20,28 +20,34 @@
           >
             <div class="freight-signup-outer">
               <p class="freight-sign-up-header all-done-header">
-                All Done, {{ userName }}
+                {{ $t('freightDetailsUpdate.all_done') }}, {{ userName }}
               </p>
               <p class="freight-sign-up-header progress-description">
-                Now getting you ready to move cargo...
+                {{ $t('freightDetailsUpdate.getting_ready') }}
               </p>
               <div class="">
                 <div class="freight-auth-padding freight-input-label final-setup-progress">
                   <i class="el-icon-success progress-check">
-                    <span class="progress-label">Setting up your business account</span></i>
+                    <span class="progress-label">{{
+                      $t('freightDetailsUpdate.setting_your_business')
+                    }}</span></i>
                 </div>
                 <div class="freight-auth-padding freight-input-label final-setup-progress">
                   <i class="el-icon-success progress-check">
-                    <span class="progress-label">Sending your details for verification</span></i>
+                    <span class="progress-label">{{
+                      $t('freightDetailsUpdate.verify_details')
+                    }}</span></i>
                 </div>
                 <div class="freight-auth-padding freight-input-label final-setup-progress">
                   <i class="el-icon-success progress-check">
-                    <span class="progress-label">Customizing your Sendy Freight experience</span></i>
+                    <span class="progress-label">{{
+                      $t('freightDetailsUpdate.customization')
+                    }}</span></i>
                 </div>
               </div>
 
               <p class="progress-status-label">
-                Almost there... {{ smooth_rate }}%
+                {{ $t('freightDetailsUpdate.almost_there') }}{{ smooth_rate }}%
               </p>
               <el-progress
                 :text-inside="false"

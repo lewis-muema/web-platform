@@ -5,11 +5,10 @@
       class="no-activity-img"
     >
     <div class="static-component-label">
-      For your peace of mind and trust, we verify everyone we onboard on our platform. We have sent
-      your details to independent verification partners and we will get back to you in 48hours.
+      {{ $t('freightDetailsUpdate.no_transporters') }}
     </div>
     <div class="static-component-label static-content-margin">
-      In the meantime, you can try to find transporters on our platform
+      {{ $t('freightDetailsUpdate.no_transporters_info') }}
     </div>
   </div>
 </template>
