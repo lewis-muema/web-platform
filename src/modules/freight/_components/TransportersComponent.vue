@@ -1047,7 +1047,7 @@ export default {
         payload.is_negotiable = this.negotiability;
       }
       if (this.goods === 1) {
-        const cargoOption = [{}];
+        const cargoOption = [];
         for (let i = 0; i < this.carrier_options.length; i++) {
           cargoOption.push({
             id: this.carrier_options[i].id,
