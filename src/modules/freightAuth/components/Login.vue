@@ -14,14 +14,14 @@
         </div>
         <div class="freight-login-card freight-login-details">
           <p class="freight-sign-up-header">
-            Hello!
+            {{ $t('freightAuth.hello') }}
           </p>
           <p class="freight-sign-up-description freight-login-sub">
-            Please login to continue
+            {{ $t('freightAuth.login_label') }}
           </p>
           <div class="">
             <div class="freight-auth-padding">
-              <label class="freight-input-label">Email or phone number</label>
+              <label class="freight-input-label">{{ $t('freightAuth.email_or_phone') }}</label>
               <div class="freight-auth-padding">
                 <div
                   v-if="type === 'phone'"
@@ -47,7 +47,7 @@
                   v-model="input"
                   v-validate="'required|email'"
                   class="input-control freight-auth-input"
-                  placeholder="Enter your email or phone number"
+                  :placeholder="$t('freightAuth.email_or_phone_placeholder')"
                   autocomplete="on"
                   type="email"
                   name="email"
@@ -62,14 +62,14 @@
             </div>
 
             <div class="freight-auth-padding">
-              <label class="freight-input-label">Password</label>
+              <label class="freight-input-label">{{ $t('freightAuth.password') }}</label>
               <div class="freight-auth-padding">
                 <input
                   id="password"
                   v-model="password"
                   class="input-control freight-auth-input"
                   type="password"
-                  placeholder="Enter your password"
+                  :placeholder="$t('freightAuth.password_placeholder')"
                   autocomplete="on"
                 >
               </div>
@@ -79,14 +79,14 @@
               class="freight-login-reset"
               @click="forgetPassword"
             >
-              Forgot Password?
+              {{ $t('freightAuth.forgot_password') }}
             </p>
 
             <div class="reset-freight-pass-outer">
               <input
                 class="button-primary freight-auth-button"
                 type="submit"
-                value="Login"
+                :value="$t('freightAuth.login')"
                 @click="login"
               >
             </div>
@@ -95,7 +95,7 @@
               class="freight-login-redirect login-redirect-margin"
               @click="createAccount"
             >
-              Don’t have a Sendy Freight account? Get Started
+              {{ $t('freightAuth.get_started') }}
             </p>
           </div>
         </div>
@@ -243,7 +243,11 @@ export default {
           this.verifyEmail();
         }
       } else {
-        this.doNotification(2, 'Login Error', 'Kindly provide all values');
+        this.doNotification(
+          2,
+          this.$t('freightAuth.login_error'),
+          this.$t('freightAuth.provide_all_values'),
+        );
       }
     },
     verifyPhone(val) {
@@ -255,7 +259,11 @@ export default {
         };
         this.processLoginRequest(payload);
       } else {
-        this.doNotification(2, 'Login Error', 'Kindly provide a valid phone number');
+        this.doNotification(
+          2,
+          this.$t('freightAuth.login_error'),
+          this.$t('freightAuth.valid_phone'),
+        );
       }
     },
     verifyEmail() {
@@ -273,7 +281,11 @@ export default {
         };
         this.processLoginRequest(payload);
       } else {
-        this.doNotification(2, 'Login Error', 'Kindly provide a valid email');
+        this.doNotification(
+          2,
+          this.$t('freightAuth.login_error'),
+          this.$t('freightAuth.valid_email'),
+        );
       }
     },
     processLoginRequest(val) {
@@ -286,7 +298,7 @@ export default {
       this.freightLogin(fullPayload)
         .then((response) => {
           if (Object.prototype.hasOwnProperty.call(response, 'status')) {
-            this.doNotification(2, 'Login Failure', response.message);
+            this.doNotification(2, this.$t('freightAuth.login_failure'), response.message);
           } else {
             let partsOfToken = '';
             if (Array.isArray(response)) {
@@ -324,7 +336,11 @@ export default {
           }
         })
         .catch(() => {
-          this.doNotification(2, 'Login Failure', 'Something went wrong , kindly retry again');
+          this.doNotification(
+            2,
+            this.$t('freightAuth.login_failure'),
+            this.$t('freightAuth.something_went_wrong'),
+          );
         });
     },
     forgetPassword() {
