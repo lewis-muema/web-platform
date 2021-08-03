@@ -28,11 +28,13 @@
                 {{ businessName }}
               </p>
               <p class="freight-sign-up-description">
-                Business Details
+                {{ $t('freightDetailsUpdate.business_details') }}
               </p>
               <div class="">
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Country</label>
+                  <label class="freight-input-label">{{
+                    $t('freightDetailsUpdate.country')
+                  }}</label>
                   <div class="freight-auth-padding">
                     <vue-tel-input
                       class="input-control sign-up-form business-country-select"
@@ -92,18 +94,20 @@
                 </div>
 
                 <p class="freight-terms-and-conditions">
-                  By continuing you are agreeing to Sendy Freight
+                  {{ $t('freightDetailsUpdate.shipper_terms') }}
                   <span
                     class="freight-terms-higlight"
                     @click="shipperTerms"
-                  >shipper terms and conditions</span>
+                  >{{
+                    $t('freightDetailsUpdate.terms_and_conditions')
+                  }}</span>
                 </p>
 
                 <div class="reset-freight-pass-outer">
                   <input
                     class="button-primary freight-auth-button"
                     type="submit"
-                    value="Next"
+                    :value="$t('freightDetailsUpdate.next')"
                     @click="verifyBusinessDetails"
                   >
                 </div>
@@ -120,25 +124,25 @@
                 {{ businessName }}
               </p>
               <p class="freight-sign-up-description">
-                Director(s)
+                {{ $t('freightDetailsUpdate.directors') }}
               </p>
               <div class="">
                 <div class="freight-auth-padding">
                   <label
                     class="freight-input-label"
-                  >Are you a director at {{ businessName }}?</label>
+                  >{{ $t('freightDetailsUpdate.check_director') }} {{ businessName }}?</label>
                   <div class="freight-auth-padding">
                     <el-radio
                       v-model="director_option"
                       label="1"
                     >
-                      Yes
+                      {{ $t('freightDetailsUpdate.yes') }}
                     </el-radio>
                     <el-radio
                       v-model="director_option"
                       label="2"
                     >
-                      No
+                      {{ $t('freightDetailsUpdate.no') }}
                     </el-radio>
                   </div>
                 </div>
@@ -147,20 +151,22 @@
                   class=""
                 >
                   <div class="freight-auth-padding">
-                    <label class="freight-input-label">Name</label>
+                    <label class="freight-input-label">{{ $t('freightDetailsUpdate.name') }}</label>
                     <div class="freight-auth-padding">
                       <input
                         v-model="director_name"
                         class="input-control freight-auth-input"
                         type="text"
-                        placeholder="Enter the name of the director"
+                        :placeholder="$t('freightDetailsUpdate.director_name_placeholder')"
                         autocomplete="on"
                       >
                     </div>
                   </div>
 
                   <div class="freight-auth-padding">
-                    <label class="freight-input-label">Phone Number</label>
+                    <label class="freight-input-label">{{
+                      $t('freightDetailsUpdate.phone_number')
+                    }}</label>
                     <div class="freight-auth-padding">
                       <vue-tel-input
                         v-model.trim="director_phone"
@@ -182,13 +188,13 @@
                   v-if="director_option !== ''"
                   class="freight-auth-padding"
                 >
-                  <label class="freight-input-label">ID</label>
+                  <label class="freight-input-label">{{ $t('freightDetailsUpdate.id') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="director_id"
                       class="input-control freight-auth-input"
                       type="text"
-                      placeholder="Enter the identification number of the director"
+                      :placeholder="$t('freightDetailsUpdate.id_placeholder')"
                       autocomplete="on"
                     >
                   </div>
@@ -197,7 +203,7 @@
                   <input
                     class="button-primary freight-auth-button"
                     type="submit"
-                    value="Next"
+                    :value="$t('freightDetailsUpdate.next')"
                     @click="verifyDirectorDetails"
                   >
                 </div>
@@ -211,14 +217,15 @@
               class="freight-signup-outer"
             >
               <p class="freight-sign-up-header">
-                One Last Thing
+                {{ $t('freightDetailsUpdate.last_thing') }}
               </p>
               <p class="freight-sign-up-description">
-                We need your phone number for transporters to notify you of sent invoices
+                {{ $t('freightDetailsUpdate.phone_validation') }}
               </p>
               <div class="">
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Phone Number </label>
+                  <label class="freight-input-label">
+                    {{ $t('freightDetailsUpdate.phone_number') }}</label>
                   <div class="freight-auth-padding">
                     <vue-tel-input
                       v-model.trim="invoice_phone"
@@ -239,7 +246,7 @@
                   <input
                     class="button-primary freight-auth-button"
                     type="submit"
-                    value="Verify Phone Number"
+                    :value="$t('freightDetailsUpdate.verify_phone')"
                     @click="verifyInvoicePhone"
                   >
                 </div>
@@ -253,21 +260,23 @@
               class="freight-signup-outer"
             >
               <p class="freight-sign-up-header">
-                Verify Phone Number
+                {{ $t('freightDetailsUpdate.verify_phone') }}
               </p>
               <p class="freight-sign-up-description">
-                Please enter the verification code we have sent to
+                {{ $t('freightDetailsUpdate.enter_verification_code') }}
                 <span class="validate-freight-phone">{{ invoice_phone }}</span>
               </p>
               <div class="">
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Verfication code</label>
+                  <label class="freight-input-label">{{
+                    $t('freightDetailsUpdate.verification_code')
+                  }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="verification_code"
                       class="input-control freight-auth-input"
                       type="text"
-                      placeholder="Enter Code"
+                      :placeholder="$t('freightDetailsUpdate.enter_code')"
                       autocomplete="on"
                     >
                   </div>
@@ -286,7 +295,7 @@
                   <input
                     class="button-primary freight-auth-button"
                     type="submit"
-                    value="Verify Phone Number"
+                    :value="$t('freightDetailsUpdate.verify_phone')"
                     @click="verifyPhone"
                   >
                 </div>
@@ -489,7 +498,7 @@ export default {
         this.doNotification(
           2,
           this.$t('freight.final_setup_error'),
-          'Kindly select supported country',
+          this.$t('freightDetailsUpdate.supported_country'),
         );
       } else if (
         this.kra_pin === ''
@@ -530,19 +539,23 @@ export default {
             this.setSession(newSession);
             this.doNotification(
               1,
-              'Business setup success',
-              'Account details have been updated successfully',
+              this.$t('freightDetailsUpdate.biz_set_up_success'),
+              this.$t('freightDetailsUpdate.biz_set_up_success_response'),
             );
             this.checkBusinessSteps();
           } else {
-            this.doNotification(2, 'Business setup error', response.message);
+            this.doNotification(
+              2,
+              this.$t('freightDetailsUpdate.biz_set_up_error'),
+              response.message,
+            );
           }
         })
         .catch(() => {
           this.doNotification(
             2,
-            'Business setup failure',
-            'Something went wrong , kindly retry again',
+            this.$t('freightDetailsUpdate.biz_set_up_failure'),
+            this.$t('freightDetailsUpdate.something_went_wrong'),
           );
         });
     },
@@ -564,12 +577,16 @@ export default {
         phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.director_phone));
       }
       if (this.director_option === '') {
-        this.doNotification(2, 'Directors update error', 'Kindly select radio button to proceed');
+        this.doNotification(
+          2,
+          this.$t('freightDetailsUpdate.directors_update_error'),
+          this.$t('freightDetailsUpdate.select_radio_option'),
+        );
       } else if (this.director_option === '1' && this.director_id === '') {
         this.doNotification(
           2,
-          'Directors update error',
-          'Kindly provide director identification number',
+          this.$t('freightDetailsUpdate.directors_update_error'),
+          this.$t('freightDetailsUpdate.provide_director_id'),
         );
       } else if (
         this.director_option === '2'
@@ -577,8 +594,8 @@ export default {
       ) {
         this.doNotification(
           2,
-          'Directors update error',
-          'Kindly provide all valid director details',
+          this.$t('freightDetailsUpdate.directors_update_error'),
+          this.$t('freightDetailsUpdate.provide_all_director_details'),
         );
       } else {
         this.structureDirectorsPayload();
@@ -630,19 +647,23 @@ export default {
             this.setSession(newSession);
             this.doNotification(
               1,
-              'Director setup success',
-              'Director details have been updated successfully',
+              this.$t('freightDetailsUpdate.director_success_update'),
+              this.$t('freightDetailsUpdate.director_success_update_msg'),
             );
             this.checkBusinessSteps();
           } else {
-            this.doNotification(2, 'Directors setup error', response.message);
+            this.doNotification(
+              2,
+              this.$t('freightDetailsUpdate.directors_update_error'),
+              response.message,
+            );
           }
         })
         .catch(() => {
           this.doNotification(
             2,
-            'Directors setup failure',
-            'Something went wrong , kindly retry again',
+            this.$t('freightDetailsUpdate.directors_update_error'),
+            this.$t('freightDetailsUpdate.something_went_wrong'),
           );
         });
     },
@@ -658,8 +679,8 @@ export default {
       } else {
         this.doNotification(
           2,
-          'Invoice number setup failure',
-          'Kindly provide a valid phone number',
+          this.$t('freightDetailsUpdate.invoice_no_failure'),
+          this.$t('freightDetailsUpdate.valid_phone_number'),
         );
       }
     },
@@ -684,7 +705,11 @@ export default {
             );
             this.setVerificationStep(4);
           } else {
-            this.doNotification(2, 'Phone Verification', response.message);
+            this.doNotification(
+              2,
+              this.$t('freightDetailsUpdate.phone_verification'),
+              response.message,
+            );
           }
         },
         (error) => {
