@@ -21,7 +21,7 @@
             <div class="freight-signup-outer">
               <div v-if="!login_acc">
                 <p class="freight-sign-up-header">
-                  Verifying account information ...
+                  {{ $t('freightAuth.verifying_account') }}
                 </p>
                 <div class="verify-freight-info-loader " />
               </div>
@@ -33,18 +33,18 @@
                   >
                 </div>
                 <p class="freight-sign-up-header">
-                  Congratulations {{ cop_name }} !
+                  {{ $t('freightAuth.congratulations') }} {{ cop_name }} !
                 </p>
                 <p class="freight-sign-up-description">
-                  We are excited to have you. Next, tell us more about
-                  <span class="validate-freight-phone"> {{ user_name }}</span>for us to customize your experience
+                  {{ $t('freightAuth.next_step') }}
+                  <span class="validate-freight-phone"> {{ user_name }}</span>{{ $t('freightAuth.customization') }}
                 </p>
                 <div class="">
                   <div class="">
                     <input
                       class="button-primary freight-auth-button"
                       type="submit"
-                      value="Let's go"
+                      :value="$t('freightAuth.lets_go')"
                       @click="loginUser"
                     >
                   </div>
@@ -107,7 +107,11 @@ export default {
         .then((response) => {
           if (Object.prototype.hasOwnProperty.call(response, 'status')) {
             this.$router.push('/freight/login');
-            this.doNotification(2, 'Email Verification Error', response.message);
+            this.doNotification(
+              2,
+              this.$t('freightAuth.email_verification_error'),
+              response.message,
+            );
           } else {
             let partsOfToken = '';
             if (Array.isArray(response)) {
@@ -147,8 +151,8 @@ export default {
             localStorage.removeItem('verificationEmail');
             this.doNotification(
               1,
-              'Email verification successful',
-              'You will be automatically signed in ',
+              this.$t('freightAuth.successful_verification'),
+              this.$t('freightAuth.automatic_login'),
             );
             setTimeout(() => {
               this.$router.push('/freight/transporters');
@@ -157,7 +161,11 @@ export default {
         })
         .catch((error) => {
           this.$router.push('/freight/sign_up');
-          this.doNotification(2, 'Email Verification Error', error.response.data.message);
+          this.doNotification(
+            2,
+            this.$t('freightAuth.email_verification_error'),
+            error.response.data.message,
+          );
         });
     },
     loginUser() {},

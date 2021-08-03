@@ -19,7 +19,8 @@ const fr = {
   confirm_password_message: 'FR_Please ensure that this matches the password you entered earlier',
   sign_up_failure: 'FR_Sign up failure',
   provide_valid_details: 'FR_Kindly provide all valid details',
-  sin_up_success: 'FR_Sucess freight sign up',
+  details_saved: 'FR_Account details saved successfully',
+  sign_up_success: 'FR_Sucess freight sign up',
   sign_up_error: 'FR_Freight Sign up error',
 
   // Password Reset
@@ -76,7 +77,7 @@ const fr = {
 
   // Sign Up Congratulations
   verifying_account: 'FR_Verifying account information ...',
-  congratulations: 'FR_Congratulations {{ cop_name }} !',
+  congratulations: 'FR_Congratulations',
   next_step: 'FR_We are excited to have you. Next, tell us more about',
   customization: 'FR_for us to customize your experience',
   lets_go: "FR_Let's go",
