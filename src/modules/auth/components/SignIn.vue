@@ -200,12 +200,20 @@ export default {
 
                       // login identify
                       mixpanel.identify(acc.user_email);
+                      analytics.identify(`${sessionData.default}_${acc.user_id}`, {
+                        name: `${acc.user_name}`,
+                        email: `${acc.user_email}`,
+                      });
 
                       // track login
                       mixpanel.track('User Login', {
                         'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
                         'Last Login': new Date(),
                         'Client Type': 'Web Platform',
+                      });
+                      analytics.identify(`${sessionData.default}_${acc.user_id}`, {
+                        name: `${acc.user_name}`,
+                        email: `${acc.user_email}`,
                       });
                     }
                     this.sendGA4Events('login');

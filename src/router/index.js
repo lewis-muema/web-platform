@@ -44,6 +44,10 @@ function guard(to, from, next) {
           if ('default' in session && analyticsEnv === 'production') {
             const acc = session[session.default];
             mixpanel.identify(acc.user_email);
+            analytics.identify(`${session.default}_${acc.user_id}`, {
+              name: `${acc.user_name}`,
+              email: `${acc.user_email}`,
+            });
           }
           resolve(next());
         }
@@ -146,6 +150,10 @@ function freightGuard(to, from, next) {
           if ('default' in session && analyticsEnv === 'production') {
             const acc = session[session.default];
             mixpanel.identify(acc.user_email);
+            analytics.identify(`${session.default}_${acc.user_id}`, {
+              name: `${acc.user_name}`,
+              email: `${acc.user_email}`,
+            });
           }
           resolve(next());
           // if (session.freight_user) {

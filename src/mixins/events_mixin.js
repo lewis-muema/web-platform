@@ -31,6 +31,7 @@ const EventsMixin = {
       try {
         if (analyticsEnv === 'production') {
           gtag('event', payload.name, payload.parameters);
+          analytics.track(payload.name, payload.parameters);
         }
       } catch (er) {
         // ...
