@@ -440,9 +440,9 @@ export default {
       quote_text: this.$t('createFreightOrder.request_quote'),
       locations: [],
       map_options: {
-        componentRestrictions: {
-          country: ['ke', 'ug', 'tz'],
-        },
+        // componentRestrictions: {
+        //   country: ['ke', 'ug', 'tz', 'ss', 'rw'], //ci
+        // },
         bounds: {
           north: 35.6,
           east: 59.4,
