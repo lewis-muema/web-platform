@@ -566,9 +566,9 @@ export default {
       main_order_path: [],
       order_path: [],
       map_options: {
-        componentRestrictions: {
-          country: ['ke', 'ug', 'tz', 'ss', 'rw'],
-        },
+        // componentRestrictions: {
+        //   country: ['ke', 'ug', 'tz', 'ss', 'rw'], //ci
+        // },
         bounds: {
           north: 35.6,
           east: 59.4,
