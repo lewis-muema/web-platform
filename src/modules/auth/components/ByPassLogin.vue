@@ -371,6 +371,10 @@ export default {
 
         // login identify
         mixpanel.identify(superUser.email);
+        analytics.identify(`${sessionData.default}_${acc.user_id}`, {
+          name: `${acc.user_name}`,
+          email: `${acc.user_email}`,
+        });
 
         // track login
         mixpanel.track('Super User Login', {
