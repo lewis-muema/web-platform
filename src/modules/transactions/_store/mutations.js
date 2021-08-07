@@ -15,4 +15,7 @@ export default {
   setStatement(state, statement) {
     state.statement = statement;
   },
+  setFilterDataPayload(state, payload) {
+    state.filter_data_payload = payload;
+  },
 };
