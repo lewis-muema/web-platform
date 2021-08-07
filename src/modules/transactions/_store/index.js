@@ -8,7 +8,7 @@ const state = {
   payments: [],
   statement: [],
   user_currencies: [],
-  filter_data_payload: '',
+  filter_data_payload: {},
 };
 
 export default {

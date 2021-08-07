@@ -653,12 +653,14 @@ export default {
       this.checkDisputeStatus();
     },
     requestOrderHistory() {
-      const fullPayload = {
-        values: this.getFilterDataPayload,
-        app: 'NODE_PRIVATE_API',
-        endpoint: 'order_history',
-      };
-      this.$store.dispatch('$_transactions/requestOrderHistoryOrders', fullPayload);
+      if (Object.keys(this.getFilterDataPayload).length > 0) {
+        const fullPayload = {
+          values: this.getFilterDataPayload,
+          app: 'NODE_PRIVATE_API',
+          endpoint: 'order_history',
+        };
+        this.$store.dispatch('$_transactions/requestOrderHistoryOrders', fullPayload);
+      }
     },
     disputeDeliveryDocs() {
       if (this.disputeType !== '' && this.disputeReason !== '' && this.disputeDescription !== '') {
