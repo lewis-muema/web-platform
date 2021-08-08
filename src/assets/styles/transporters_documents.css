@@ -298,3 +298,84 @@
 .reupload-unavailable{
   margin-top: 6% !important;
 }
+.counter{
+  width: 90%;
+  margin:auto;
+  padding:0;
+}
+.counter-title{
+  font-size: 18px;
+  color:#000;
+  padding-top:30px;
+}
+.counter-label{
+   font-size: 13px;
+   color:#000;
+   margin:0;
+   padding-bottom:8px;
+   letter-spacing: .2px;
+}
+.counter-value{
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  padding-bottom:12px;
+  margin:0;
+}
+.counter-redirect{
+  font-size:12px;
+  color:#1B7FC3;
+  cursor:pointer;
+}
+.counter-counter{
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.counter-trucks{
+  display:flex; 
+  flex-direction:row;
+  justify-content:space-between; 
+  align-items: center;
+}
+.counter-btn{
+  width: 30px;
+  height: 30px;
+  border-radius: 50px;
+  border:none;
+  background:#67B7F8;
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+}
+.counter-truck{
+  padding:0px 20px;
+}
+.counter-submit{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+ 
+}
+.counter-submit-btn{
+  width: 50%;
+  padding: 14px 0px;
+  margin: 2px 10px;
+  border:none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 12px;
+  background: #EA7125;
+  cursor: pointer;
+}
+.counter-submit-btn__clear{
+  background: none;
+  border: 1px solid #000000;
+  color: #3C3939;
+}
+.el-dialog__body{
+  padding:0 !important;
+}
