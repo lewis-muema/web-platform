@@ -316,13 +316,13 @@ export default {
       this.selectedCountry = val;
     },
     preferredCountries(val) {
-       switch (true){
+      switch (true) {
         case (val.includes(this.localCountryCode.toLowerCase())):
           this.countryNotSupported = '';
           this.next_step = true;
           break;
         default:
-           this.countryNotSupported = this.$t('signUpDetails.country_not_supported');
+          this.countryNotSupported = this.$t('signUpDetails.country_not_supported');
           this.next_step = false;
           break;
       }
@@ -364,13 +364,13 @@ export default {
     checkCountryCode(country) {
       this.localCountryCode = country.iso2;
       this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
-      switch (true){
+      switch (true) {
         case (this.phoneInputProps.preferredCountries.includes(this.localCountryCode.toLowerCase())):
           this.countryNotSupported = '';
           this.next_step = true;
           break;
         default:
-           this.countryNotSupported = this.$t('signUpDetails.country_not_supported');
+          this.countryNotSupported = this.$t('signUpDetails.country_not_supported');
           this.next_step = false;
           break;
       }
@@ -421,12 +421,12 @@ export default {
             this.phone = phone;
             this.sendGA4Events('select_sign_up');
             this.sendGA4Events('signup_page',
-            {
-              name: this.name,
-              email: this.email,
-              phone_number: this.phone,
-              cop_name: this.cop_name,
-            });
+              {
+                name: this.name,
+                email: this.email,
+                phone_number: this.phone,
+                cop_name: this.cop_name,
+              });
             const values = {};
             values.phone = phone;
             values.email = this.email;
@@ -624,6 +624,10 @@ export default {
 
               // login identify
               mixpanel.identify(acc.user_email);
+              analytics.identify(`${sessionData.default}_${acc.user_id}`, {
+                name: `${acc.user_name}`,
+                email: `${acc.user_email}`,
+              });
 
               // track New Account
               mixpanel.track('New Account Created', {
@@ -737,6 +741,10 @@ export default {
 
                   // login identify
                   mixpanel.identify(acc.user_email);
+                  analytics.identify(`${sessionData.default}_${acc.user_id}`, {
+                    name: `${acc.user_name}`,
+                    email: `${acc.user_email}`,
+                  });
 
                   // track login
                   mixpanel.track('User Login', {
@@ -774,7 +782,7 @@ export default {
         // ...
       }
     },
-    fetchSupportedCountries(){ 
+    fetchSupportedCountries() {
       const fullPayload = {
         app: 'AUTH',
         endpoint: 'currency/get_supported_countries',
@@ -783,22 +791,22 @@ export default {
       this.phoneInputProps.preferredCountries = [];
 
       this.performGetActions(fullPayload)
-      .then((response) => {
-        if (response.request_status) {
-          response.countries.forEach((country) => {
-          this.phoneInputProps.preferredCountries.push(country.country_code.toLowerCase());
-          this.preferredCountries.push(country.country_code.toLowerCase());
-        });
-        } else {
+        .then((response) => {
+          if (response.request_status) {
+            response.countries.forEach((country) => {
+              this.phoneInputProps.preferredCountries.push(country.country_code.toLowerCase());
+              this.preferredCountries.push(country.country_code.toLowerCase());
+            });
+          } else {
+            this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
+          }
+        })
+        .catch( (error) => {
           this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
-        }  
-      })
-      .catch( (error) => {
-        this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
-      })
+        })
     },
   },
-  created(){
+  created() {
     this.fetchSupportedCountries();
   },
 };
