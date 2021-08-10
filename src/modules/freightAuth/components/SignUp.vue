@@ -22,7 +22,7 @@
               <el-row>
                 <el-select
                   v-model="locale"
-                  placeholder= {{ $t('freightAuth.select') }}
+                  :placeholder="$t('freightAuth.select')"
                   class="set_freight_locale"
                 >
                   <el-option
@@ -48,7 +48,7 @@
                       v-model="user_name"
                       class="input-control freight-auth-input"
                       type="text"
-                      placeholder= {{ $t('freightAuth.name_placeholder') }}
+                      :placeholder="$t('freightAuth.name_placeholder')"
                       autocomplete="on"
                     >
                   </div>
@@ -61,7 +61,7 @@
                       v-model="business_name"
                       class="input-control freight-auth-input"
                       type="text"
-                      placeholder= {{ $t('freightAuth.business_name_placeholder') }}
+                      :placeholder="$t('freightAuth.business_name_placeholder')"
                       autocomplete="on"
                     >
                   </div>
@@ -74,7 +74,7 @@
                       v-model="email"
                       v-validate="'required|email'"
                       class="input-control freight-auth-input"
-                      placeholder= {{ $t('freightAuth.email_placeholder') }}
+                      :placeholder="$t('freightAuth.email_placeholder')"
                       autocomplete="on"
                       type="email"
                       name="email"
@@ -95,7 +95,7 @@
                       v-model="password"
                       class="input-control freight-auth-input"
                       type="password"
-                      placeholder= {{ $t('freightAuth.password_placeholder') }}
+                      :placeholder="$t('freightAuth.password_placeholder')"
                       autocomplete="on"
                       :class="!pass_validation && password !== '' ? 'freight-input-error' : ''"
                       @keyup="validate_pass"
@@ -145,7 +145,7 @@
                   <input
                     class="button-primary freight-auth-button"
                     type="submit"
-                    value="Sign up"
+                    :value="$t('freightAuth.sign_up')"
                     @click="submit"
                   >
                 </div>

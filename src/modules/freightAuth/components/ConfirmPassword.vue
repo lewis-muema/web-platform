@@ -40,7 +40,7 @@
                     <input
                       v-model="password"
                       class="input-control freight-auth-input"
-                      placeholder="Enter your new password"
+                      :placeholder="$t('freightAuth.new_password_placeholder')"
                       autocomplete="on"
                       type="password"
                       :class="!pass_validation && password !== '' ? 'freight-input-error' : ''"
@@ -61,7 +61,7 @@
                     <input
                       v-model="confirm_password"
                       class="input-control freight-auth-input"
-                      placeholder={{ $t('freightAuth.confirm_password_placeholder') }}
+                      :placeholder="$t('freightAuth.confirm_password_placeholder')"
                       autocomplete="on"
                       type="password"
                       :class="!pass_confirm_validation && confirm_password !== '' ? 'freight-input-error' : ''"
@@ -80,7 +80,7 @@
                   <input
                     class="button-primary freight-auth-button"
                     type="submit"
-                    value="Confirm"
+                    :value="$t('freightAuth.confirm_btn')"
                     @click="updatePassword"
                   >
                 </div>

@@ -44,7 +44,7 @@
                     <input
                       class="button-primary freight-auth-button"
                       type="submit"
-                      value="Let's go"
+                      :value="$t('freightAuth.lets_go')"
                       @click="loginUser"
                     >
                   </div>

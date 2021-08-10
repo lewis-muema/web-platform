@@ -44,7 +44,7 @@
                       v-model="email"
                       v-validate="'required|email'"
                       class="input-control freight-auth-input"
-                      placeholder={{ $t('freightAuth.email_placeholder') }}
+                      :placeholder="$t('freightAuth.email_placeholder')"
                       autocomplete="on"
                       type="email"
                       name="email"
@@ -62,7 +62,7 @@
                   <input
                     class="button-primary freight-auth-button"
                     type="submit"
-                    value="Continue"
+                    :value="$t('freightAuth.reset_continue')"
                     @click="passwordReset(1)"
                   >
                 </div>
@@ -103,7 +103,7 @@
                   <input
                     class="button-primary freight-auth-button"
                     type="submit"
-                    value="Okay , Got it"
+                    :value="$t('freightAuth.accept_verification')"
                     @click="openNewTab"
                   >
                 </div>
@@ -147,7 +147,7 @@
                       v-validate="'required|email'"
                       <input
                       class="input-control freight-auth-input"
-                      placeholder={{ $t('freightAuth.email_placeholder') }}
+                      :placeholder="$t('freightAuth.email_placeholder')"
                       autocomplete="on"
                       type="email"
                       name="email"
@@ -165,7 +165,7 @@
                   <input
                     class="button-primary freight-auth-button"
                     type="submit"
-                    value="Try Again"
+                    :value="$t('freightAuth.try_again')"
                     @click="passwordReset(1)"
                   >
                 </div>

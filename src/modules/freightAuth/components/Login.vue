@@ -47,7 +47,7 @@
                   v-model="input"
                   v-validate="'required|email'"
                   class="input-control freight-auth-input"
-                  placeholder="Enter your email or phone number"
+                  :placeholder="$t('freightAuth.email_or_phone_placeholder')"
                   autocomplete="on"
                   type="email"
                   name="email"
@@ -69,7 +69,7 @@
                   v-model="password"
                   class="input-control freight-auth-input"
                   type="password"
-                  placeholder="Enter your password"
+                  :placeholder="$t('freightAuth.password_placeholder')"
                   autocomplete="on"
                 >
               </div>
@@ -86,7 +86,7 @@
               <input
                 class="button-primary freight-auth-button"
                 type="submit"
-                value="Login"
+                :value="$t('freightAuth.login')"
                 @click="login"
               >
             </div>
