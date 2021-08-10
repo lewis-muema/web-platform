@@ -22,7 +22,7 @@
               <el-row>
                 <el-select
                   v-model="locale"
-                  placeholder="Select"
+                  :placeholder="$t('freightAuth.select')"
                   class="set_freight_locale"
                 >
                   <el-option
@@ -35,7 +35,7 @@
               </el-row>
 
               <p class="freight-sign-up-header">
-                {{ $t('freightAuth.welcome') }}
+               {{ $t('freightAuth.welcome') }}
               </p>
               <p class="freight-sign-up-description">
                 {{ $t('freightAuth.final_details') }}
