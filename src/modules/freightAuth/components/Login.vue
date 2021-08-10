@@ -14,7 +14,7 @@
         </div>
         <div class="freight-login-card freight-login-details">
           <p class="freight-sign-up-header">
-           {{ $t('freightAuth.hello') }}
+            {{ $t('freightAuth.hello') }}
           </p>
           <p class="freight-sign-up-description freight-login-sub">
             {{ $t('freightAuth.login_label') }}
@@ -243,7 +243,11 @@ export default {
           this.verifyEmail();
         }
       } else {
-        this.doNotification(2, 'Login Error', 'Kindly provide all values');
+        this.doNotification(
+          2,
+          this.$t('freightAuth.login_error'),
+          this.$t('freightAuth.provide_all_values'),
+        );
       }
     },
     verifyPhone(val) {
@@ -255,7 +259,11 @@ export default {
         };
         this.processLoginRequest(payload);
       } else {
-        this.doNotification(2, 'Login Error', 'Kindly provide a valid phone number');
+        this.doNotification(
+          2,
+          this.$t('freightAuth.login_error'),
+          this.$t('freightAuth.valid_phone'),
+        );
       }
     },
     verifyEmail() {
@@ -273,7 +281,11 @@ export default {
         };
         this.processLoginRequest(payload);
       } else {
-        this.doNotification(2, 'Login Error', 'Kindly provide a valid email');
+        this.doNotification(
+          2,
+          this.$t('freightAuth.login_error'),
+          this.$t('freightAuth.valid_email'),
+        );
       }
     },
     processLoginRequest(val) {
@@ -286,7 +298,7 @@ export default {
       this.freightLogin(fullPayload)
         .then((response) => {
           if (Object.prototype.hasOwnProperty.call(response, 'status')) {
-            this.doNotification(2, 'Login Failure', response.message);
+            this.doNotification(2, this.$t('freightAuth.login_failure'), response.message);
           } else {
             let partsOfToken = '';
             if (Array.isArray(response)) {
@@ -324,7 +336,11 @@ export default {
           }
         })
         .catch(() => {
-          this.doNotification(2, 'Login Failure', 'Something went wrong , kindly retry again');
+          this.doNotification(
+            2,
+            this.$t('freightAuth.login_failure'),
+            this.$t('freightAuth.something_went_wrong'),
+          );
         });
     },
     forgetPassword() {

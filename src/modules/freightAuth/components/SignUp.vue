@@ -119,7 +119,7 @@
                       v-model="confirm_password"
                       class="input-control freight-auth-input"
                       type="password"
-                      placeholder= {{ $t('freightAuth.confirm_password_placeholder') }}
+                      :placeholder="$t('freightAuth.confirm_password_placeholder')"
                       autocomplete="on"
                       :class="!pass_confirm_validation && confirm_password !== '' ? 'freight-input-error' : ''"
                       @keyup="validate_confirm_pass"
@@ -310,7 +310,7 @@ export default {
         this.confirm_pass_msg = '';
         this.pass_confirm_validation = true;
       } else {
-        this.confirm_pass_msg = 'Please ensure that this matches the password you entered earlier';
+        this.confirm_pass_msg = this.$t('freightAuth.confirm_password_message');
         this.pass_confirm_validation = false;
       }
     },
@@ -333,7 +333,7 @@ export default {
         };
         this.processSignUpRequest(payload);
       } else {
-        this.doNotification(2, 'Sign up failure', 'Kindly provide all valid details');
+        this.doNotification(2, this.$t('freightAuth.sign_up_failure'), this.$t('freightAuth.provide_valid_details'));
       }
     },
     processSignUpRequest(payload) {
@@ -347,12 +347,12 @@ export default {
         .then((response) => {
           if (response.status) {
             localStorage.setItem('verificationEmail', payload.email);
-            this.doNotification(1, 'Sucess freight sign up', 'Account details saved successfully');
+            this.doNotification(1, this.$t('freightAuth.sign_up_success'), this.$t('freightAuth.details_saved'));
             setTimeout(() => {
               this.$router.push('/freight/verify_email');
             }, 800);
           } else {
-            this.doNotification(2, 'Freight Sign up error', response.message);
+            this.doNotification(2, this.$t('freightAuth.sign_up_error'), response.message);
           }
         })
         .catch((error) => {

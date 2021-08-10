@@ -61,7 +61,7 @@
                     <input
                       v-model="confirm_password"
                       class="input-control freight-auth-input"
-                      :placeholder="$t('freightAuth.confirm_password_placeholder')"
+                      :placeholder="$t('freightAuth.reenter_password')"
                       autocomplete="on"
                       type="password"
                       :class="!pass_confirm_validation && confirm_password !== '' ? 'freight-input-error' : ''"
@@ -186,7 +186,7 @@ export default {
         this.confirm_pass_msg = '';
         this.pass_confirm_validation = true;
       } else {
-        this.confirm_pass_msg = 'Please ensure that this matches the password you entered earlier';
+        this.confirm_pass_msg = this.$t('freightAuth.confirm_password_message');
         this.pass_confirm_validation = false;
       }
     },
@@ -236,7 +236,7 @@ export default {
             this.$router.push('/freight/login');
           });
       } else {
-        this.doNotification(2, 'Password Reset Error', 'Kindly provide all values');
+        this.doNotification(2, this.$t('freightAuth.password_reset_error'), this.$t('freightAuth.provide_all_values'));
       }
     },
     doNotification(level, title, message) {

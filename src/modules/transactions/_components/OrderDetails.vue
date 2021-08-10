@@ -653,31 +653,9 @@ export default {
       this.checkDisputeStatus();
     },
     requestOrderHistory() {
-      const sessionData = this.$store.getters.getSession;
-      if (Object.keys(sessionData).length > 0) {
-        this.sessionData = sessionData;
-        let ordersPayload = {};
-        if (sessionData.default === 'biz' && sessionData.biz.user_type === 2) {
-          // create cop admin payload
-          ordersPayload = {
-            cop_id: sessionData.biz.cop_id,
-            user_type: sessionData.biz.user_type,
-            user_id: '-1',
-          };
-        } else if (sessionData.default === 'biz') {
-          ordersPayload = {
-            cop_id: sessionData.biz.cop_id,
-            user_type: sessionData.biz.user_type,
-            user_id: sessionData.biz.user_id,
-          };
-        } else {
-          // create peer payload
-          ordersPayload = {
-            user_id: sessionData[sessionData.default].user_id,
-          };
-        }
+      if (Object.keys(this.getFilterDataPayload).length > 0) {
         const fullPayload = {
-          values: ordersPayload,
+          values: this.getFilterDataPayload,
           app: 'NODE_PRIVATE_API',
           endpoint: 'order_history',
         };
@@ -779,6 +757,7 @@ export default {
   computed: {
     ...mapGetters({
       getOrderDetails: '$_transactions/getOrderHistoryOrders',
+      getFilterDataPayload: '$_transactions/getFilterDataPayload',
     }),
     order_details() {
       return this.getOrderDetails.find(

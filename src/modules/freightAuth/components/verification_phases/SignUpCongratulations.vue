@@ -33,11 +33,11 @@
                   >
                 </div>
                 <p class="freight-sign-up-header">
-                 {{ $t('freightAuth.congratulations') }}
+                  {{ $t('freightAuth.congratulations') }} {{ cop_name }} !
                 </p>
                 <p class="freight-sign-up-description">
                   {{ $t('freightAuth.next_step') }}
-                  <span class="validate-freight-phone"> {{ user_name }}</span>for us to customize your experience
+                  <span class="validate-freight-phone"> {{ user_name }}</span>{{ $t('freightAuth.customization') }}
                 </p>
                 <div class="">
                   <div class="">
@@ -107,7 +107,11 @@ export default {
         .then((response) => {
           if (Object.prototype.hasOwnProperty.call(response, 'status')) {
             this.$router.push('/freight/login');
-            this.doNotification(2, 'Email Verification Error', response.message);
+            this.doNotification(
+              2,
+              this.$t('freightAuth.email_verification_error'),
+              response.message,
+            );
           } else {
             let partsOfToken = '';
             if (Array.isArray(response)) {
@@ -147,8 +151,8 @@ export default {
             localStorage.removeItem('verificationEmail');
             this.doNotification(
               1,
-              'Email verification successful',
-              'You will be automatically signed in ',
+              this.$t('freightAuth.successful_verification'),
+              this.$t('freightAuth.automatic_login'),
             );
             setTimeout(() => {
               this.$router.push('/freight/transporters');
@@ -157,7 +161,11 @@ export default {
         })
         .catch((error) => {
           this.$router.push('/freight/sign_up');
-          this.doNotification(2, 'Email Verification Error', error.response.data.message);
+          this.doNotification(
+            2,
+            this.$t('freightAuth.email_verification_error'),
+            error.response.data.message,
+          );
         });
     },
     loginUser() {},
