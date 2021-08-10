@@ -21,7 +21,7 @@
             <div class="freight-signup-outer">
               <div v-if="!login_acc">
                 <p class="freight-sign-up-header">
-                  Verifying account information ...
+                  {{ $t('freightAuth.verifying_account') }}
                 </p>
                 <div class="verify-freight-info-loader " />
               </div>
@@ -33,10 +33,10 @@
                   >
                 </div>
                 <p class="freight-sign-up-header">
-                  Congratulations {{ cop_name }} !
+                 {{ $t('freightAuth.congratulations') }}
                 </p>
                 <p class="freight-sign-up-description">
-                  We are excited to have you. Next, tell us more about
+                  {{ $t('freightAuth.next_step') }}
                   <span class="validate-freight-phone"> {{ user_name }}</span>for us to customize your experience
                 </p>
                 <div class="">

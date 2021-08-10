@@ -26,10 +26,10 @@
                 >
               </div>
               <p class="freight-sign-up-header">
-                Check Your Email
+                {{ $t('freightAuth.check_email') }}
               </p>
               <p class="freight-sign-up-description">
-                We’ve sent a link to {{ email }} Please click the link to proceed
+                {{ $t('freightAuth.link_sent_to_email') }}
               </p>
               <div class="verification-retry-options">
                 <p class="verification-retry-options-label">
@@ -39,7 +39,7 @@
                   class="verification-retry-options-label"
                   @click="resendLink"
                 >
-                  Resend the link
+                  {{ $t('freightAuth.resend_link') }}
                 </p>
               </div>
             </div>

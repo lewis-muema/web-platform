@@ -21,6 +21,7 @@ const en = {
   provide_valid_details: 'Kindly provide all valid details',
   sin_up_success: 'Sucess freight sign up',
   sign_up_error: 'Freight Sign up error',
+  select: 'Select',
 
   // Password Reset
   reset_alert: 'Don’t Worry',

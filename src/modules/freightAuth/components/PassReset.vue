@@ -31,20 +31,20 @@
                 />
               </div>
               <p class="freight-sign-up-header">
-                Don’t Worry
+                {{ $t('freightAuth.reset_alert') }}
               </p>
               <p class="freight-sign-up-description">
-                You’ll be back in no time. Just provide your email and we will do the rest
+                {{ $t('freightAuth.reset_alert_msg') }}
               </p>
               <div class="">
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Email</label>
+                  <label class="freight-input-label">{{ $t('freightAuth.reset_email') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="email"
                       v-validate="'required|email'"
                       class="input-control freight-auth-input"
-                      placeholder="Enter your email address"
+                      placeholder={{ $t('freightAuth.email_placeholder') }}
                       autocomplete="on"
                       type="email"
                       name="email"
@@ -71,7 +71,7 @@
                   class="freight-login-redirect"
                   @click="redirectToLogin"
                 >
-                  I know my password, let me login instead
+                  {{ $t('freightAuth.reset_redirect') }}
                 </p>
               </div>
             </div>
@@ -90,14 +90,13 @@
               </div>
 
               <p class="freight-sign-up-header">
-                Good News!
+                {{ $t('freightAuth.good_news') }}
               </p>
               <p class="freight-sign-up-description">
-                Your account is still intact and we have sent an email to {{ email }} for you to
-                recover your password
+                {{ $t('freightAuth.reset_confirmation') }}
               </p>
               <p class="freight-sign-up-description">
-                Please check your email
+                {{ $t('freightAuth.verify_email') }}
               </p>
               <div class="">
                 <div class="reset-freight-pass-outer">
@@ -113,7 +112,7 @@
                   class="freight-login-redirect"
                   @click="passwordReset(2)"
                 >
-                  Resend the link
+                  {{ $t('freightAuth.resend_link') }}
                 </p>
               </div>
             </div>
@@ -131,24 +130,24 @@
                 />
               </div>
               <p class="freight-sign-up-header">
-                Oops!
+                {{ $t('freightAuth.oops') }}
               </p>
               <p class="freight-sign-up-description">
-                Looks like there was an issue trying to send the password reset link to your email
+                {{ $t('freightAuth.verfication_error') }}
               </p>
               <p class="freight-sign-up-description">
-                Is this email accurate?
+                {{ $t('freightAuth.confirm_email') }}
               </p>
               <div class="">
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Email</label>
+                  <label class="freight-input-label">{{ $t('freightAuth.reset_email') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="email"
                       v-validate="'required|email'"
                       <input
                       class="input-control freight-auth-input"
-                      placeholder="Enter your email address"
+                      placeholder={{ $t('freightAuth.email_placeholder') }}
                       autocomplete="on"
                       type="email"
                       name="email"

@@ -14,14 +14,14 @@
         </div>
         <div class="freight-login-card freight-login-details">
           <p class="freight-sign-up-header">
-            Hello!
+           {{ $t('freightAuth.hello') }}
           </p>
           <p class="freight-sign-up-description freight-login-sub">
-            Please login to continue
+            {{ $t('freightAuth.login_label') }}
           </p>
           <div class="">
             <div class="freight-auth-padding">
-              <label class="freight-input-label">Email or phone number</label>
+              <label class="freight-input-label">{{ $t('freightAuth.email_or_phone') }}</label>
               <div class="freight-auth-padding">
                 <div
                   v-if="type === 'phone'"
@@ -62,7 +62,7 @@
             </div>
 
             <div class="freight-auth-padding">
-              <label class="freight-input-label">Password</label>
+              <label class="freight-input-label">{{ $t('freightAuth.password') }}</label>
               <div class="freight-auth-padding">
                 <input
                   id="password"
@@ -79,7 +79,7 @@
               class="freight-login-reset"
               @click="forgetPassword"
             >
-              Forgot Password?
+              {{ $t('freightAuth.forgot_password') }}
             </p>
 
             <div class="reset-freight-pass-outer">
@@ -95,7 +95,7 @@
               class="freight-login-redirect login-redirect-margin"
               @click="createAccount"
             >
-              Don’t have a Sendy Freight account? Get Started
+              {{ $t('freightAuth.get_started') }}
             </p>
           </div>
         </div>

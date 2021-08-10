@@ -28,14 +28,14 @@
                 />
               </div>
               <p class="freight-sign-up-header">
-                Welcome Back {{ user_name }}
+               {{ $t('freightAuth.welcome_back') }}
               </p>
               <p class="freight-sign-up-description">
-                Please set your new password
+                {{ $t('freightAuth.set_new_password') }}
               </p>
               <div class="">
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">New password</label>
+                  <label class="freight-input-label">{{ $t('freightAuth.new_password') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="password"
@@ -56,12 +56,12 @@
                 </div>
 
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Confirm Password</label>
+                  <label class="freight-input-label">{{ $t('freightAuth.confirm_password') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="confirm_password"
                       class="input-control freight-auth-input"
-                      placeholder="Re-enter your password"
+                      placeholder={{ $t('freightAuth.confirm_password_placeholder') }}
                       autocomplete="on"
                       type="password"
                       :class="!pass_confirm_validation && confirm_password !== '' ? 'freight-input-error' : ''"
