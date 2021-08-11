@@ -328,7 +328,7 @@
                 </div>
               </div>
               <div
-                v-if="doc_status === '1'"
+                v-if="doc_status === '1' && disputeImageStatus !== 4"
                 class="rider_details_action"
               >
                 <button
