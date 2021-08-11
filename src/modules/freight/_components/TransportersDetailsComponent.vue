@@ -1020,7 +1020,15 @@ export default {
         payload.is_negotiable = this.negotiability;
       }
       if (this.goods === 1) {
-        payload.cargo_type_options = this.carrier_options;
+        const cargoOption = [];
+        for (let i = 0; i < this.carrier_options.length; i++) {
+          cargoOption.push({
+            id: this.carrier_options[i].id,
+            group_id: this.carrier_options[i].group_id,
+            value: this.carrier_options[i].value,
+          });
+        }
+        payload.cargo_type_options = cargoOption;
       }
 
       const fullPayload = {

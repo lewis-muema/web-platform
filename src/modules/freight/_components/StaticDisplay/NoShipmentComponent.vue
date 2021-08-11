@@ -5,10 +5,10 @@
       class="no-shipment-img"
     >
     <div class="static-component-label">
-      No Shipment Found
+      {{ $t('freightDetailsUpdate.no_shipment') }}
     </div>
     <div class="no-activity-label">
-      Looks like you are yet to do your first shipment on the platform
+      {{ $t('freightDetailsUpdate.no_shipment_info') }}
     </div>
     <div class="static-component-label static-content-margin">
       <button
@@ -16,7 +16,7 @@
         class="button-primary manage-approvers align-static-btn"
         @click="directToTransporters"
       >
-        Find Transporters
+        {{ $t('freightDetailsUpdate.find_transporters') }}
       </button>
     </div>
   </div>

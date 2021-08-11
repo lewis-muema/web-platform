@@ -5,10 +5,10 @@
       class="no-shipment-img"
     >
     <div class="static-component-label">
-      No Activity Yet
+      {{ $t('freightDetailsUpdate.no_activity') }}
     </div>
     <div class="no-activity-label">
-      Once you start actioning shipments, we will keep track everything here for your peace of mind
+      {{ $t('freightDetailsUpdate.no_activity_info') }}
     </div>
     <div class="static-component-label static-content-margin">
       <button
@@ -16,7 +16,7 @@
         class="button-primary manage-approvers align-static-btn"
         @click="directToTransporters"
       >
-        Find Transporters
+        {{ $t('freightDetailsUpdate.find_transporters') }}
       </button>
     </div>
   </div>

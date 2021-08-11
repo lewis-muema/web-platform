@@ -90,7 +90,8 @@ const translations = {
   you_owe: 'You Owe',
   your_balance: 'Your Balance',
   insufficient_balance: 'Insufficient balance',
-  amount_charge_not_sufficient: 'The amount charge is not sufficient to place the order, please try again',
+  amount_charge_not_sufficient:
+    'The amount charge is not sufficient to place the order, please try again',
   failed_to_charge_card: 'Failed to charge card',
   enter_card_details_try_again: 'Please enter all the card details and try again',
   select_one_of_your_saved_cards: 'Please select one of your saved cards',
@@ -117,11 +118,14 @@ const translations = {
   closed: 'Closed',
   required: 'Required',
   mpesa_payment: 'M-Pesa Payment',
-  mpesa_request_failed: ' M-Pesa request to {userPhone} failed. Use paybill 848450 account number {referenceNumber} amount KES',
-  mpesa_request_failed_userphone: ' M-Pesa request to {userPhone} failed. Use paybill 848450 account number {userPhone} amount KES',
+  mpesa_request_failed:
+    ' M-Pesa request to {userPhone} failed. Use paybill 848450 account number {referenceNumber} amount KES',
+  mpesa_request_failed_userphone:
+    ' M-Pesa request to {userPhone} failed. Use paybill 848450 account number {userPhone} amount KES',
   payment_succesful: 'Payment successful',
   payment_not_recieved: 'Payment not received',
-  will_keep_trying_checking_payment: "We'll keep retrying to check your payment status and complete your order once the payment is received.",
+  will_keep_trying_checking_payment:
+    "We'll keep retrying to check your payment status and complete your order once the payment is received.",
   mpsesa_payment_cancelled: 'M-Pesa Payment cancelled',
   mpsesa_payment_cancelled_text: 'M-Pesa payment has been cancelled, please try again.',
   customer_app_price_request: 'Customer App Price Request',
@@ -150,7 +154,8 @@ const translations = {
   instructions: 'Instructions..',
 
   no_vendor_selected: 'No vendors have been selected',
-  select_no_of_vehicles_per_vendor: 'Please select the number of vehicles you would like per vendor',
+  select_no_of_vehicles_per_vendor:
+    'Please select the number of vehicles you would like per vendor',
   shedule_for_tommorrow: 'Schedule for tommorow',
   shedudule_for_monday: 'Schedule for Monday 8:00 AM',
   shedule_for_eight: 'Schedule for 8:00 AM',
@@ -213,7 +218,8 @@ const translations = {
   time_seconds: '{time} seconds',
   confirm: 'Confirm',
   missing_minimum_amount: 'Missing Minimum Order Amount',
-  minimum_order_amount_missing: 'The minimum order amount is missing, please fill it to enable the drivers bid effectively.',
+  minimum_order_amount_missing:
+    'The minimum order amount is missing, please fill it to enable the drivers bid effectively.',
   delivery_item_not_set: 'The delivery item is not set',
   enter_delivery_item: 'Please enter what you want delivered',
   order_has_been_rescheduled: 'Your order has been rescheduled',
@@ -232,7 +238,8 @@ const translations = {
   select_payment_method_try_again: 'Please select a payment method and try again.',
   successfull_placed_freight_order: 'Successfully placed freight order',
   order_placement_force_update: 'Order Placement Force Update',
-  order_completion_failed_text: 'Order completion failed. Please check your internet connection and try again.',
+  order_completion_failed_text:
+    'Order completion failed. Please check your internet connection and try again.',
   mpesa: 'Mpesa',
   card: 'Card',
   promo_code: 'Promo code',
@@ -247,7 +254,8 @@ const translations = {
   standard_option_is_unavailable_right_now: 'Standard option is unavailable right now',
   kindly_schedule_for_eight: 'Kindly schedule for 8AM',
   kindly_schedule_for_tommorow_eight: 'Kindly schedule for tommorow 8AM',
-  sendy_rider_will_pick_packege: 'A sendy rider will pick the package and deliver to the nearest collection centre ',
+  sendy_rider_will_pick_packege:
+    'A sendy rider will pick the package and deliver to the nearest collection centre ',
   take_to_nearest_collection_center: "I'll take it to the nearest collection centre",
   flatbed_skeleton: 'Flatbed/Skeleton',
   tipper: 'Tipper',
@@ -270,7 +278,8 @@ const translations = {
   how_delivered: 'How do you want your package delivered from the collection centre?',
   will_be_delivered_to_cc_at: 'The package will be delivered to the collection centre at',
   delivery_estimate: 'Delivery Estimate',
-  notified_of_actual_cost: '(You will be notified of the actual order cost once the package is weighed at our collection center)',
+  notified_of_actual_cost:
+    '(You will be notified of the actual order cost once the package is weighed at our collection center)',
   bike_type: 'What type of bike do you want?',
   truck_type: 'What type of truck do you want?',
   carrier_type: 'What type of {getVendorNameOnCarrierType} do you want?',
@@ -285,7 +294,8 @@ const translations = {
   have_preffered: 'Do you have a preferred',
   at_your_location: 'at your pick up location ?',
   enter_phone_number_pair: 'Enter their phone number to pair',
-  enter_phone_number_pair_text: "Enter their phone number or the {getVendorNameOnCarrierType}'s number",
+  enter_phone_number_pair_text:
+    "Enter their phone number or the {getVendorNameOnCarrierType}'s number",
   rider_name_not_displayed: '{ riderNameDisplay } not found',
   add_inter_county_pickup_instructions: 'Add inter-county pickup instructions',
   add_inter_recipient_instruction: 'Add inter-county recepient instruction',
@@ -311,7 +321,8 @@ const translations = {
   documents: 'Documents',
   by_a_sendy: 'by a Sendy',
   delivery_fee_charged: '(Delivery fee will be Charged.)',
-  like_vendor_to_pick_it_up_at: 'I’d like a {vendor_name} to pick it at {name} (Pick up fee will be charged)',
+  like_vendor_to_pick_it_up_at:
+    'I’d like a {vendor_name} to pick it at {name} (Pick up fee will be charged)',
   enter_load_weight: 'Please enter the weight of your load',
   load_weight_limits: 'The input should be between 18.00 and 33.00 Tonnes',
   // vendor component
@@ -438,8 +449,10 @@ const translations = {
   price_has_been_confirmed_to_be: 'Price has been confirmed to be',
   choose_payment_option_below: 'Choose payment option below',
   mpessa: 'M-Pesa',
-  matched_parter_to_package: 'We have matched a {getTrackPartnerName} to your {getTrackPackageName}',
-  finding_partner_to_package: 'We are finding a {getTrackPartnerName} for your {getTrackPackageName}',
+  matched_parter_to_package:
+    'We have matched a {getTrackPartnerName} to your {getTrackPackageName}',
+  finding_partner_to_package:
+    'We are finding a {getTrackPartnerName} for your {getTrackPackageName}',
   your: 'Your',
   has_picked: 'has picked',
   has_picked_your: 'has picked your',
@@ -452,8 +465,8 @@ const translations = {
   choose_payment_option: 'Choose a Payment Option.',
   at: 'at',
 
-
-  order_status_mustache: 'Order Status: {{ statusName(orderData.freight_order_details.freight_status) }}',
+  order_status_mustache:
+    'Order Status: {{ statusName(orderData.freight_order_details.freight_status) }}',
   pick_up: 'Pick Up',
   pick_up_: 'Pick-up',
   order_type: 'Order type',
@@ -499,13 +512,15 @@ const translations = {
   package_one_the_way: 'Your package is on the way to ',
   package_delivered: 'Your package has been delivered',
   incur_cancellation_fee_of: 'You will incur a cancellation fee of',
-  ensure_order_details_ready: 'please ensure you check order details and your order is ready before placing an order',
+  ensure_order_details_ready:
+    'please ensure you check order details and your order is ready before placing an order',
   note_you_will_be_charged: 'Please note you will be charged',
   for_cancelling_order: 'for cancelling this order',
   order_cancellation_failed: 'Order cancellation failed',
   provide_reason_for_cancellation: 'Please provide reason for cancellation',
   enter_cancel_reason: 'Enter cancel reason',
-  not_cancel_order_contact_support: 'Could not cancel the order. Please contact Customer Care at 0709779779.',
+  not_cancel_order_contact_support:
+    'Could not cancel the order. Please contact Customer Care at 0709779779.',
   select_cancellation_reason: 'Please select cancellation reason.',
   order_details_save_successfully: 'Order Details saved successfully.',
   save_details_failed: 'Save Details failed',
@@ -558,13 +573,15 @@ const translations = {
 
   ready_to_deliver_your_order: 'is ready to deliver your order',
   has_arrived_at_destination: 'has arrived and is waiting at the destination.',
-  delivery_still_inprogress: "Your delivery is still in progress. We are working to restore the {vendor_name}'s location.`",
+  delivery_still_inprogress:
+    "Your delivery is still in progress. We are working to restore the {vendor_name}'s location.`",
   destination: 'Destination',
   location: 'location',
   delivery_in_progress: 'Your delivery is in progress.',
   order_arrival_time: 'Order arrival time ',
   order_arrived: 'Your {vendor_name} has arrived and is waiting at the pickup location.',
-  order_still_on_the_way: "Your {vendor_name} is still on the way. We are working to restore the {vendor_name}'s location",
+  order_still_on_the_way:
+    "Your {vendor_name} is still on the way. We are working to restore the {vendor_name}'s location",
   your_driver_on_the_way: 'Your {vendor_name} is on the way.',
   order_pickup_time: 'Order pickup time {pickUpEta}',
   matching_order_with: 'We are matching your order with a {vendor_name}.',
@@ -594,7 +611,8 @@ const translations = {
   hours: 'HOURS',
   minutes: 'MINUTES',
   seconds: 'SECONDS',
-  new_feature_added: 'Hello! We’ve added a new feature, the open destination orders. We’d like to give you a quick tour of this new feature.',
+  new_feature_added:
+    'Hello! We’ve added a new feature, the open destination orders. We’d like to give you a quick tour of this new feature.',
   get_started: 'Let’s get started!',
   skip: 'SKIP',
   please_enter_rating: 'Please enter a rating to proceed',
@@ -609,10 +627,13 @@ const translations = {
   biz_insta_handle: 'What is your business instragram handle?',
   link_business_face_book_page: 'What is the link to your business facebook page?',
   order_type_dedicated_vehicles: 'Order Type: Dedicated vehicles',
-  get_truck_whole_day: 'Get a truck for a whole day to do all your deliveries. We handle your logistics while you focus on your core business',
+  get_truck_whole_day:
+    'Get a truck for a whole day to do all your deliveries. We handle your logistics while you focus on your core business',
   order_type_no_destination: 'Order Type: No Destination',
-  skip_adding_destination: 'With no destination vehicles you can skip adding a destination or add a general region to deliver in and the driver will check off each delivery stop. Enter the pick up location input to continue',
-  select_multiple_vehicle: 'Select multiple vehicle types and multiple vehicles of the same vehicle type',
+  skip_adding_destination:
+    'With no destination vehicles you can skip adding a destination or add a general region to deliver in and the driver will check off each delivery stop. Enter the pick up location input to continue',
+  select_multiple_vehicle:
+    'Select multiple vehicle types and multiple vehicles of the same vehicle type',
   select_open_or_closed_vehicles: 'Select open or closed vehicles for pick ups and bikes',
   shedule: 'Schedule',
   select_date_for_delivery: 'Select the date for your deliveries',
@@ -637,7 +658,8 @@ const translations = {
   card_num: 'cardno',
   card_expiration_date: 'card-expiration-date',
   cvv: 'CVV',
-  tree_digit_code: 'A three or four digit code on your credit or debit card. You can find this at the back of your card.',
+  tree_digit_code:
+    'A three or four digit code on your credit or debit card. You can find this at the back of your card.',
   add_card: 'Add Card',
   adding_new_card: 'Adding a new card',
   add_card_success: 'Add Card Success',
@@ -651,8 +673,10 @@ const translations = {
   Back: 'Back',
   save_card_details: 'Save your card details for easier payment in future',
   dear_username: 'Dear {{ user_name }},',
-  card_payments_momentarity_unavailable: 'card_Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using M-Pesa, or pay cash upon delivery. Contact Support on +254709779779 for any queries.',
-  card_payments_momentarity_unavailable_conact_support: 'Card payments will be momentarily unavailable as we undergo technical maintenance. Contact Support on +256393239706 for any queries.',
+  card_payments_momentarity_unavailable:
+    'card_Card payments will be momentarily unavailable as we undergo technical maintenance. You can still pay for your Sendy deliveries using M-Pesa, or pay cash upon delivery. Contact Support on +254709779779 for any queries.',
+  card_payments_momentarity_unavailable_conact_support:
+    'Card payments will be momentarily unavailable as we undergo technical maintenance. Contact Support on +256393239706 for any queries.',
   card_expiry: 'Card Expiry (MM/YYYY)',
   amount_to_topup: 'Amount to top-up',
   top_up: 'Top up',
@@ -661,7 +685,8 @@ const translations = {
 
   help: 'Help',
   ok: 'Ok',
-  sorry_safaricom: 'Sorry, Safaricom cannot be reached. Instead, please pay to Pay Bill no. 848450 with Account Number.',
+  sorry_safaricom:
+    'Sorry, Safaricom cannot be reached. Instead, please pay to Pay Bill no. 848450 with Account Number.',
 
   cancel: 'Cancel',
   please_follow_mpesa_instructions: 'Please follow the M-Pesa instructions on your phone screen',
@@ -669,7 +694,6 @@ const translations = {
   amount: 'Amount',
   safaricom_phone_number: 'Safaricom Phone Number',
   mpesa_payment_not_inititated: 'Mpesa Payment Not Initiated',
-
 
   redeem: 'Redeem',
   promo_code_redeemed: 'Promocode Redeem Success',
@@ -685,7 +709,6 @@ const translations = {
   waiting_time_charges: 'Waiting Time Charges :',
   view_delivery_docs: 'View Delivery Docs',
   delivery_docs_for: 'Delivery Documents for',
-
 
   was_overcharge_order: 'I was overcharged for this order',
   sorry_extra_chargers_for_order: 'Sorry there were no extra charges for this order',
@@ -739,14 +762,17 @@ const translations = {
   new_password: 'New Password',
   confirm_apassword: 'Confirm Password',
   password_not_match: 'Password does not match. Please try again',
-  password_changed_redirected: 'Password Changed. You will be redirected to the login page within 5 seconds',
+  password_changed_redirected:
+    'Password Changed. You will be redirected to the login page within 5 seconds',
   password_change: 'Password Change',
 
   free_delivery: 'Free delivery',
   get_free_deliveries: 'GET FREE DELIVERIES',
-  send_a_friend_free_delivery: 'Send a friend a free delivery and you will get one too, up to KES 500.',
+  send_a_friend_free_delivery:
+    'Send a friend a free delivery and you will get one too, up to KES 500.',
   more_details: 'More details',
-  invite_a_friend: 'Every time you invite a friend, they will receive a free delivery up to KES 500. Once they complete their first order, you will automatically get a similar free delivery credit into your account.',
+  invite_a_friend:
+    'Every time you invite a friend, they will receive a free delivery up to KES 500. Once they complete their first order, you will automatically get a similar free delivery credit into your account.',
   share_link_below: 'Share the link below or use code 39HNBP',
   copy: 'Copy',
   mail: 'Mail',
@@ -759,7 +785,8 @@ const translations = {
 
   email: 'Email',
   phone_number: 'Phone Number',
-  sendy_security_sms: "For your security, Sendy wants to make sure it's really you. We will send a message with your verification code.",
+  sendy_security_sms:
+    "For your security, Sendy wants to make sure it's really you. We will send a message with your verification code.",
   verify: 'Verify',
   phone_verification: 'Phone Verification',
   phone_verification_sent: 'Phone verification code sent !',
@@ -809,7 +836,8 @@ const translations = {
 
   phone_number_not_valid: 'The phone number not valid',
 
-  three_or_four_card_digit_code: 'A three or four digit code on your credit or debit card. You can find this at the back of your card',
+  three_or_four_card_digit_code:
+    'A three or four digit code on your credit or debit card. You can find this at the back of your card',
   rider_on_the_way: 'Your rider is on the way',
   truck_gated_in: 'Your truck has Gated-In',
   gated_in: 'gated_in',
@@ -819,7 +847,8 @@ const translations = {
   cargo_on_the_way_to_destination: 'Your cargo is on the way to the destination',
   cargo_arrived_at_destination: 'Your cargo has arrived at the destination',
   cargo_delivered_offloaded: 'Your cargo has been delivered and offloaded',
-  empty_container_in_transit_return: 'The empty container is in-transit to the empty container destination',
+  empty_container_in_transit_return:
+    'The empty container is in-transit to the empty container destination',
   empty_container_delivered: 'The empty container has been delivered',
   the_empty_container_destination: 'the empty container destination',
   the_destination: 'the destination',
@@ -871,12 +900,13 @@ const translations = {
   schedule_pick_up_time_of_order: 'Schedule pick up time of the order',
   sorry_could_not_update_location:
     'Sorry, we could not update the order because the location entered cannot be serviced by a {vendor_name} . Please try again with other locations',
-  
+
   edit_location_failure: 'Edit location failure',
   location_updated_successfully: 'Locations updated successfully',
   locations_update_failed: 'Locations update failed',
   edit_instructions_error: 'Edit instructions error',
-  kindly_provide_valid_phone_number_notify_recipient: 'Kindly provide a valid phone number for the recipient to be notified',
+  kindly_provide_valid_phone_number_notify_recipient:
+    'Kindly provide a valid phone number for the recipient to be notified',
   additional_instructions_updated_successfully: 'Additional instructions updated successfully',
   additonal_instructions_update_failed: 'Additional instructions update failed',
   something_went_wrong_please_try_again: 'Something went wrong . Please try again',
@@ -896,13 +926,15 @@ const translations = {
   saving: 'Saving',
   saved_locations: 'Saved locations',
   no_saved_locations: 'No saved {waypointType} locations',
-  enter_phone_number_vehicle_to_pair: "Enter their phone number or the vehicle's number plate to pair",
+  enter_phone_number_vehicle_to_pair:
+    "Enter their phone number or the vehicle's number plate to pair",
   pair_with_driver_single: 'Pair with driver',
   finding_driver_details: 'Finding the driver details',
   driver_not_found: 'driver not found',
   enter_your_business: 'Enter your business',
   pin: 'PIN',
-  business_man_trades_facebook: '(FR_A business that mainly trades through facebook and instagram e.g. An online shoe store)',
+  business_man_trades_facebook:
+    '(FR_A business that mainly trades through facebook and instagram e.g. An online shoe store)',
   tin_number: 'TIN number',
   enter_your: 'Enter your',
   pickup_lowercase: 'pick up',
@@ -928,7 +960,9 @@ const translations = {
   update_instructions: 'Update Instructions',
   language_changed: 'Your preferred Language Changed to English',
 
-
+  // validations
+  user_name_error: 'Kindly provide the first and last name',
+  biz_name_error: 'Business name should contain atleast two names',
 };
 
 const en = {
