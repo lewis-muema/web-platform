@@ -130,7 +130,7 @@ export default {
     ...mapActions({
       freightForgotPassword: '$_freightAuth/freightSignUp',
       requestResetPassword: '$_auth/requestResetPassword',
-      requestCheckToken: '$_auth/requestCheckToken',
+      requestCheckToken: '$_freightAuth/freightSignUp',
     }),
 
     ...mapMutations({}),
