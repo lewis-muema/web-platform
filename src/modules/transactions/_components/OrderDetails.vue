@@ -328,7 +328,7 @@
                 </div>
               </div>
               <div
-                v-if="doc_status === '1'"
+                v-if="doc_status === '1' && disputeImageStatus !== 4"
                 class="rider_details_action"
               >
                 <button
@@ -336,7 +336,7 @@
                   type="button"
                   @click="disputeButton"
                 >
-                  {{ $t('general.dispute_delivery_docs') }}
+                  {{ disputeImageStatus === 3 ? $t('general.submitCapital') : $t('general.dispute_delivery_docs') }}
                 </button>
               </div>
             </el-dialog>
