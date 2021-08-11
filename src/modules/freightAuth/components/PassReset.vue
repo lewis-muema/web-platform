@@ -93,7 +93,7 @@
                 {{ $t('freightAuth.good_news') }}
               </p>
               <p class="freight-sign-up-description">
-                {{ $t('freightAuth.reset_confirmation') }}
+                {{ $t('freightAuth.reset_confirmation', { email: email }) }}
               </p>
               <p class="freight-sign-up-description">
                 {{ $t('freightAuth.verify_email') }}
@@ -133,7 +133,7 @@
                 {{ $t('freightAuth.oops') }}
               </p>
               <p class="freight-sign-up-description">
-                {{ $t('freightAuth.verfication_error') }}
+                {{ $t('freightAuth.verification_error') }}
               </p>
               <p class="freight-sign-up-description">
                 {{ $t('freightAuth.confirm_email') }}
@@ -223,8 +223,8 @@ export default {
       if (this.email === '') {
         this.doNotification(
           2,
-          'Password Reset Error',
-          'Kindly provide a valid email address to proceed',
+          this.$t('freightAuth.password_reset_error'),
+          this.$t('freightAuth.provide_valid_email'),
         );
       } else {
         let emailValid = true;
@@ -248,22 +248,34 @@ export default {
               if (response.status) {
                 this.reset_stage = 2;
                 if (val === 2) {
-                  this.doNotification(2, 'Password Reset', 'New password reset link has been sent');
+                  this.doNotification(
+                    2,
+                    this.$t('freightAuth.password_reset_error'),
+                    this.$t('freightAuth.new_link_sent'),
+                  );
                 }
               } else {
                 this.reset_stage = 3;
-                this.doNotification(2, 'Password Reset Error', response.message);
+                this.doNotification(
+                  2,
+                  this.$t('freightAuth.password_reset_error'),
+                  response.message,
+                );
               }
             })
             .catch((error) => {
               this.reset_stage = 3;
-              this.doNotification(2, 'Password Reset Error', error.response.data[0].message);
+              this.doNotification(
+                2,
+                this.$t('freightAuth.password_reset_error'),
+                error.response.data[0].message,
+              );
             });
         } else {
           this.doNotification(
             2,
-            'Password Reset Error',
-            'Kindly provide a valid email address to proceed',
+            this.$t('freightAuth.password_reset_error'),
+            this.$t('freightAuth.provide_valid_email'),
           );
         }
       }
