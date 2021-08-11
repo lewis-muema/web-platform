@@ -28,7 +28,7 @@
                 />
               </div>
               <p class="freight-sign-up-header">
-                {{ $t('freightAuth.welcome_back') }} {{ user_name }}
+               {{ $t('freightAuth.welcome_back') }} {{ user_name }}
               </p>
               <p class="freight-sign-up-description">
                 {{ $t('freightAuth.set_new_password') }}

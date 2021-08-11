@@ -38,7 +38,7 @@
               </p>
               <div class="">
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label"> {{ $t('freightAuth.reset_email') }}</label>
+                  <label class="freight-input-label">{{ $t('freightAuth.reset_email') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="email"
@@ -274,8 +274,8 @@ export default {
         } else {
           this.doNotification(
             2,
-            'Password Reset Error',
-            'Kindly provide a valid email address to proceed',
+            this.$t('freightAuth.password_reset_error'),
+            this.$t('freightAuth.provide_valid_email'),
           );
         }
       }
