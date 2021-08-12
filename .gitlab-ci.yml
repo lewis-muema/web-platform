@@ -4,6 +4,8 @@ stages:
   # also create a tests stage
   - test
   - lint
+  - buildfeaturebranch
+  - deployforqa
 
 # Lets name our Job eslint, because that's what it's doing.
 eslint:
@@ -32,3 +34,24 @@ unitTest:
     - npm i mocha-webpack
     # Run tests
     - npm run test
+
+variables:
+  FEATURE_BRANCH: sendy-docker-local.jfrog.io/vue-webplatform-$CI_COMMIT_BRANCH:latest
+
+# build the image and give it the  matching feature 
+# TODO how devs name their branches, what triggers a build vs normal push 
+buildpushfeaturebranch:
+  tags:
+    - qa-ready
+  stage: buildfeaturebranch
+  script: 
+    - docker build --pull -t $FEATURE_BRANCH -f Dockerfile . 
+    - docker push $FEATURE_BRANCH
+  rules:
+    - if: $CI_COMMIT_BRANCH ~= "master" && $CI_COMMIT_BRANCH != "staging" && $CI_COMMIT_BRANCH != "dev"
+
+deployfor-qa-tests:
+  tags:
+    - qa-ready
+  stage: deployforqa
+    - ssh -v -f -o StrictHostKeyChecking=no -l admin kubetest-master.sendyit.com "kubectl set image deploy vue-web-platform  vue-web-platform=$FEATURE_BRANCH"
