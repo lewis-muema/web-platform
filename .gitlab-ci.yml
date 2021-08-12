@@ -45,8 +45,6 @@ buildpushfeaturebranch:
   script: 
     - docker build --pull -t $FEATURE_BRANCH -f Dockerfile . 
     - docker push $FEATURE_BRANCH
-  rules:
-    - if: $CI_COMMIT_BRANCH ~= "master" 
 
 deployfor-qa-tests:
   tags:
