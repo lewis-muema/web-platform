@@ -38,8 +38,6 @@ unitTest:
 variables:
   FEATURE_BRANCH: sendy-docker-local.jfrog.io/vue-webplatform-$CI_COMMIT_BRANCH:latest
 
-# build the image and give it the  matching feature 
-# TODO how devs name their branches, what triggers a build vs normal push 
 buildpushfeaturebranch:
   tags:
     - qa-ready
@@ -48,7 +46,7 @@ buildpushfeaturebranch:
     - docker build --pull -t $FEATURE_BRANCH -f Dockerfile . 
     - docker push $FEATURE_BRANCH
   rules:
-    - if: $CI_COMMIT_BRANCH ~= "master" && $CI_COMMIT_BRANCH != "staging" && $CI_COMMIT_BRANCH != "dev"
+    - if: $CI_COMMIT_BRANCH ~= "master" 
 
 deployfor-qa-tests:
   tags:
