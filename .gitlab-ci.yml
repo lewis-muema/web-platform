@@ -39,16 +39,16 @@ variables:
   FEATURE_BRANCH: sendy-docker-local.jfrog.io/vue-webplatform-$CI_COMMIT_BRANCH:latest
 
 buildpushfeaturebranch:
-  tags:
-    - qa-ready
+  only:
+    - /^qa-ready-/
   stage: buildfeaturebranch
   script: 
     - docker build --pull -t $FEATURE_BRANCH -f Dockerfile . 
     - docker push $FEATURE_BRANCH
 
 deployfor-qa-tests:
-  tags:
-    - qa-ready
+  only:
+    - /^qa-ready-/    
   stage: deployforqa
   script:
     - ssh -v -f -o StrictHostKeyChecking=no -l admin kubetest-master.sendyit.com "kubectl set image deploy vue-web-platform  vue-web-platform=$FEATURE_BRANCH"
