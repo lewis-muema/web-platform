@@ -28,7 +28,7 @@
                 />
               </div>
               <p class="freight-sign-up-header">
-                Welcome Back {{ user_name }}
+                Welcome Back
               </p>
               <p class="freight-sign-up-description">
                 Please set your new password
@@ -130,7 +130,7 @@ export default {
     ...mapActions({
       freightForgotPassword: '$_freightAuth/freightSignUp',
       requestResetPassword: '$_auth/requestResetPassword',
-      requestCheckToken: '$_auth/requestCheckToken',
+      requestCheckToken: '$_freightAuth/freightSignUp',
     }),
 
     ...mapMutations({}),
