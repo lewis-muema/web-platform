@@ -28,7 +28,7 @@
                 />
               </div>
               <p class="freight-sign-up-header">
-                Welcome Back {{ user_name }}
+                Welcome Back
               </p>
               <p class="freight-sign-up-description">
                 Please set your new password
