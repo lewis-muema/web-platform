@@ -349,6 +349,7 @@ export default {
   methods: {
     ...mapMutations({
       setOrderHistoryOrders: '$_transactions/setOrderHistoryOrders',
+      setFilterDataPayload: '$_transactions/setFilterDataPayload',
     }),
 
     sendGA4Events(label, params) {
@@ -404,7 +405,7 @@ export default {
             user_id: sessionData[sessionData.default].user_id,
           };
         }
-
+        this.setFilterDataPayload(ordersPayload);
         this.requestOrderHistory(ordersPayload);
         if (sessionData.default === 'biz') {
           this.requestCopUsers();
@@ -466,6 +467,7 @@ export default {
         };
       }
       this.order_history_text = this.$t('general.searching');
+      this.setFilterDataPayload(payload);
       this.requestOrderHistory(payload);
       this.loading = false;
     },
