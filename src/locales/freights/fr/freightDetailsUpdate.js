@@ -10,7 +10,7 @@ const fr = {
   terms_and_conditions: 'conditions générales de l’expéditeur',
   next: 'Suivant',
   directors: 'Directeur(rice)(s)',
-  check_director: 'Êtes-vous directeur(rice(s) chez {{ businessName }} ?',
+  check_director: 'Êtes-vous directeur(rice(s) chez',
   yes: 'Oui',
   no: 'Non',
   name: 'Nom',

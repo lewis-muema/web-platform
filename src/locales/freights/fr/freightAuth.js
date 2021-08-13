@@ -21,7 +21,7 @@ const fr = {
   provide_valid_details: 'Veuillez fournir tous les détails valides',
   sin_up_success: 'Succès de l’inscription du fret',
   sign_up_error: 'Erreur d’inscription au fret',
-  select: 'sélectionner',
+  select: 'Sélectionner',
 
   // Password Reset
   reset_alert: 'Ne vous inquiétez pas',
@@ -59,7 +59,7 @@ const fr = {
   something_went_wrong: 'Une erreur s’est produite, veuillez réessayer',
 
   // Confirm Password
-  welcome_back: 'FBienvenue {{ nom d’utilisateur }}',
+  welcome_back: 'FBienvenue {{ name }}',
   set_new_password: 'Veuillez définir votre nouveau mot de passe',
   new_password: 'Nouveau mot de passe',
   new_password_placeholder: 'Saisissez votre nouveau mot de passe.',
@@ -75,7 +75,7 @@ const fr = {
 
   // Sign Up Congratulations
   verifying_account: 'Vérification des coordonnées du compte ...',
-  congratulations: 'Félicitations {{ cop_name }} !',
+  congratulations: 'Félicitations',
   next_step: 'Nous sommes ravis de vous accueillir. Ensuite, parlez-nous de',
   customization: 'pour nous de personnaliser votre expérience',
   lets_go: 'Allons-y',

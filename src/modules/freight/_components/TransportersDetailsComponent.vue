@@ -567,7 +567,8 @@ export default {
       order_path: [],
       map_options: {
         componentRestrictions: {
-          country: ['ke', 'ug', 'tz', 'ss', 'rw'],
+        //   country: ['ke', 'ug', 'tz', 'ss', 'rw'], //ci
+          country: [],
         },
         bounds: {
           north: 35.6,
