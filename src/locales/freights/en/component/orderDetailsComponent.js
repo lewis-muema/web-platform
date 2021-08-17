@@ -78,6 +78,17 @@ const en = {
   payment_days_14: 'Payment in 14 days',
   payment_days_21: 'Payment in 21 days',
   payment_days_28: 'Payment in 28 days',
+  counter_offers: 'Counter Offers ',
+  accept: 'Accept ',
+  counter_truck_price: 'Counter price per truck  ',
+  counter_available_trucks: 'Trucks available ',
+  counter_fewer_trucks: 'Need fewer trucks? ',
+  counter_offer_accept: 'Accept {{awardedTransporter.name}}s\' counter offer?',
+  counter_offer_decline: 'Decline {{ val.name }}s\' Counter offer',
+  accept_counter: 'Accept Counter Offer',
+  decline_counter: 'Decline Counter Offer',
+  counter_sure: 'Are you sure you want to decline this counter offer?',
+  
 };
 
 export default en;

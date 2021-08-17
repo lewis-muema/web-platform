@@ -208,6 +208,82 @@
 
         <DocumentsSection :freight-order-detail="freightOrderDetail" />
 
+        <!-- Counter offers section  -->
+        <div
+          v-if="Object.prototype.hasOwnProperty.call(freightOrderDetail, 'quotations')"
+          class=""
+        >
+          <div v-if="freightOrderDetail.counter_offers.length > 0">
+            <div class="order-info-header align-documents-data">
+              {{ $t('orderDetailsComponent.counter_offers') }}
+              ({{ freightOrderDetail.counter_offers.length }})
+            </div>
+            <div class="">
+              <div class="order_details_desc_item ">
+                <img
+                  src="../../../assets/img/freight/truck_type.png"
+                  class="order_details_desc_image"
+                >
+                <span
+                  class="freight-documents-date trucks-listing"
+                >{{
+                  getTrucksNeeded(
+                    freightOrderDetail.available_trucks,
+                    freightOrderDetail.total_trucks
+                  )
+                }}
+                </span>
+              </div>
+            </div>
+            <div class="transporter-listing order-order-documents">
+              <div
+                v-for="(val, index) in freightOrderDetail.counter_offers"
+                :key="index"
+                class="doc-detail"
+                :class="getItemPosition(freightOrderDetail.counter_offers, index)"
+              >
+                <div class="transporters-filters documents-highlight orders-freight-documents ">
+                  <div class="freight-documents-title">
+                    {{ val.name }}
+                  </div>
+                  <div class=" freight-documents-date order-info-header">
+                    {{ val.trucks_available }}
+                    {{ $t('orderDetailsComponent.trucks_multiple') }}
+                  </div>
+                  <div class=" freight-documents-date">
+                    {{ freightOrderDetail.currency }}
+                    {{ val.price_per_truck }} /{{
+                      $t('orderDetailsComponent.single_truck')
+                    }}
+                  </div>
+
+                  <div
+                    v-if="checkActionableBtnState"
+                    class="freight-documents-approve flex-div"
+                  >
+                    <button
+                      type="button"
+                      class="button-primary section--filter-action freight-approve-doc"
+                      name="create_order_text"
+                      @click="awardBid(freightOrderDetail.counter_offers[index],2)"
+                    >
+                      {{ accept }}
+                    </button>
+                    <button
+                      type="button"
+                      class="section--filter-action freight-decline-doc"
+                      name="create_order_text"
+                      @click="declineCounter()"
+                    >
+                      {{ decline_quatation_text }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Quatations List -->
 
         <div
@@ -300,97 +376,6 @@
           </div>
         </div>
 
-        <!-- Counter offers section  -->
-        <div
-          v-if="Object.prototype.hasOwnProperty.call(freightOrderDetail, 'quotations')"
-          class=""
-        >
-          <div class="order-info-header align-documents-data">
-            <!-- {{ $t('orderDetailsComponent.quotations') }} -->
-            Counter offers
-            {{
-              freightOrderDetail.quotations.length > 0
-                ? `(${freightOrderDetail.quotations.length})`
-                : ''
-            }}
-          </div>
-          <div class="">
-            <div class="order_details_desc_item ">
-              <img
-                src="../../../assets/img/freight/truck_type.png"
-                class="order_details_desc_image"
-              >
-              <span
-                class="freight-documents-date trucks-listing"
-              >{{
-                getTrucksNeeded(
-                  freightOrderDetail.available_trucks,
-                  freightOrderDetail.total_trucks
-                )
-              }}
-              </span>
-            </div>
-          </div>
-          <div class="transporter-listing order-order-documents">
-            <div v-if="freightOrderDetail.quotations.length > 0">
-              <div
-                v-for="(val, index) in freightOrderDetail.quotations"
-                v-if="index >= 0"
-                class="doc-detail"
-                :class="getItemPosition(freightOrderDetail.quotations, index)"
-              >
-                <div class="transporters-filters documents-highlight orders-freight-documents ">
-                  <div class="freight-documents-title">
-                    {{ freightOrderDetail.quotations[index].name }}
-                  </div>
-                  <div class=" freight-documents-date order-info-header">
-                    {{ freightOrderDetail.quotations[index].trucks_available }}
-                    {{ $t('orderDetailsComponent.trucks_multiple') }}
-                  </div>
-                  <div class=" freight-documents-date">
-                    {{ freightOrderDetail.currency }}
-                    {{ freightOrderDetail.quotations[index].price_per_truck }} /{{
-                      $t('orderDetailsComponent.single_truck')
-                    }}
-                  </div>
-
-                  <div
-                    v-if="checkActionableBtnState"
-                    class="freight-documents-approve flex-div"
-                  >
-                    <button
-                      type="button"
-                      class="button-primary section--filter-action freight-approve-doc"
-                      name="create_order_text"
-                      @click="awardBid(freightOrderDetail.quotations[index],2)"
-                    >
-                      <!-- {{ approve_quatation_text }} -->Accept
-                    </button>
-                    <button
-                      type="button"
-                      class="section--filter-action freight-decline-doc"
-                      name="create_order_text"
-                      @click="declineBid(freightOrderDetail.quotations[index])"
-                    >
-                      {{ decline_quatation_text }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div v-else>
-              <div class="doc-detail waiting-quatation">
-                <img
-                  src="../../../assets/img/freight/no_quatations.svg"
-                  class="no-quatations-img "
-                >
-                <div class="no-transporters-label">
-                  {{ $t('orderDetailsComponent.awaiting_quotations') }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <transition
           name="fade"
           mode="out-in"
@@ -401,48 +386,76 @@
               class="requestShipmentOptions"
             >
               <div v-if="!verification_stage">
-                <div class="counter" v-if="counter">
+                <div
+                  v-if="counter"
+                  class="counter"
+                >
                   <h1
                     class="counter-title"
                   >
-                    Accept Umoja Transporters counter offer?
+                    Accept {{ awardedTransporter.name }}s' counter offer?
                   </h1>
-                  <p class="counter-label">Counter price per truck</p>
-                  <p class="counter-value">USD 800</p>
-                  <p class="counter-label">Trucks available</p>
+                  <p class="counter-label">
+                    {{ $t('orderDetailsComponent.counter_truck_price') }}
+                  </p>
+                  <p class="counter-value">
+                    USD {{ awardedTransporter.price_per_truck }}
+                  </p>
+                  <p class="counter-label">
+                    {{ $t('orderDetailsComponent.counter_available_trucks') }}
+                  </p>
 
-                  <div v-if="fewerTrucks" class="counter-counter">
-                    <!-- <el-input-number
-                      v-model="num"
-                      :max="10"
-                      :min="1"
-                      @change="handleChange"
-                      class="counter-counter"
-                    /> -->
-                    <button class="counter-btn"> -</button>
-                    <p class="counter-value counter-truck">3</p>
-                    <button class="counter-btn">+</button>
+                  <div
+                    v-if="fewerTrucks"
+                    class="counter-counter"
+                  >
+                    <button
+                      class="counter-btn"
+                      :disabled="trucks_no === 1"
+                      @click="trucks_no--"
+                    >
+                      -
+                    </button>
+                    <p
+                      class="counter-value counter-input counter-truck"
+                      type="text"
+                    >
+                      {{ trucks_no }}
+                    </p>
+                    <button
+                      class="counter-btn"
+                      :disabled="awardedTransporter.trucks"
+                      @click="trucks_no++"
+                    >
+                      +
+                    </button>
                   </div>
                   <div
                     v-else
                     class="counter-trucks"
                   >
-                    <p class="counter-value">3</p>
+                    <p class="counter-value">
+                      {{ awardedTransporter.trucks_available }}
+                    </p>
                     <p
                       class="counter-redirect"
                       @click="fewerTrucks=true"
                     >
-                      Need fewer trucks?
+                      {{ $t('orderDetailsComponent.counter_fewer_trucks') }}
                     </p>
                   </div>
-                  <p class="counter-label">Total amount</p>
-                  <p class="counter-value">USD 2,400</p>
+                  <p class="counter-label">
+                    {{ $t('orderDetailsComponent.total_amount') }}
+                  </p>
+                  <p class="counter-value">
+                    USD {{ trucks_no * awardedTransporter.price_per_truck }}
+                  </p>
                 </div>
 
                 <div v-else>
                   <div class="">
                     <div
-                      class="decline-text-option decline-documemt-extend 
+                      class="decline-text-option decline-documemt-extend
                       request-shipment-header outline-info-value"
                     >
                       {{ $t('orderDetailsComponent.available_trucks') }}
@@ -547,12 +560,15 @@
                 </div>
 
                 <div class="decline-button-align">
-                  <div v-if="counter" class="counter-submit">
+                  <div
+                    v-if="counter"
+                    class="counter-submit"
+                  >
                     <button
                       type="button"
                       name="button"
                       class="counter-submit-btn counter-submit-btn__clear"
-                      @click="awardDocument()"
+                      @click="closeCounter(1)"
                     >
                       Cancel
                     </button>
@@ -562,7 +578,7 @@
                       class="counter-submit-btn"
                       @click="awardDocument()"
                     >
-                      Accept Counter Offer
+                      {{ $t('orderDetailsComponent.accept_counter') }}
                     </button>
                   </div>
                   <button
@@ -634,6 +650,37 @@
                 </div>
               </div>
             </el-dialog>
+            <el-dialog
+              :visible.sync="declineCounterDialog"
+              class="counter-dialog"
+            >
+              <div
+                v-for="(val, index) in freightOrderDetail.counter_offers"
+                :key="index"
+                class="counter-dialog-decline"
+              >
+                <h2 class="outline-info-value">
+                  Decline {{ val.name }}s' Counter offer
+                </h2>
+                <p class="counter-dialog-label">
+                  {{ $t('orderDetailsComponent.counter_sure') }}
+                </p>
+                <div class="counter-decline-btn">
+                  <button
+                    class="counter-submit-btn counter-submit-btn__clear"
+                    @click="closeCounter(2)"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    class="counter-submit-btn"
+                    @click="declineBid(freightOrderDetail.counter_offers[index])"
+                  >
+                    {{ $t('orderDetailsComponent.decline_counter') }}
+                  </button>
+                </div>
+              </div>
+            </el-dialog>
 
             <el-dialog
               :visible.sync="viewDocumentOption"
@@ -659,7 +706,6 @@
               class="declineDocumentOptions"
             >
               <div class="">
-                testing
                 <div class="decline-text-option decline-documemt-extend">
                   {{ $t('orderDetailsComponent.decline_document') }}
                 </div>
@@ -760,6 +806,7 @@ export default {
       rating: 5.0,
       loading: true,
       approve_quatation_text: this.$t('orderDetailsComponent.award'),
+      accept: 'Accept',
       decline_quatation_text: this.$t('orderDetailsComponent.decline'),
       viewDocumentOption: false,
       src_link: '',
@@ -782,6 +829,7 @@ export default {
       verification_stage: false,
       counter: false,
       fewerTrucks: false,
+      declineCounterDialog: false,
       terms: [
         {
           value: 7,
@@ -921,7 +969,6 @@ export default {
       this.getFreightOrderDetail(fullPayload).then(
         (response) => {
           /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-
           let workingResponse = response;
           if (response.length > 1) {
             workingResponse = response[0];
@@ -1150,13 +1197,27 @@ export default {
 
       return tempName;
     },
-    awardCounterOffer() {
-      this.awardDialogVisible = true;
-    },
     awardBid(val, num) {
-      this.awardedTransporter = val;
       this.awardDialogVisible = true;
-      num === 2 ? this.counter = true : this.counter = false, this.fewerTrucks = false
+      this.awardedTransporter = val;
+
+      if (num === 1) {
+        this.counter = false;
+      } else if (num === 2) { // counter offer dialog
+        this.counter = true;
+        this.trucks_no = this.awardedTransporter.trucks_available;
+      }
+      this.fewerTrucks = false;
+    },
+    closeCounter(num) {
+      if (num === 1) {
+        this.awardDialogVisible = false;
+      } else if (num === 2) {
+        this.declineCounterDialog = false;
+      }
+    },
+    declineCounter() {
+      this.declineCounterDialog = true;
     },
     declineBid(val) {
       let acc = {};
@@ -1186,7 +1247,7 @@ export default {
       this.$store.dispatch('$_freight/declineShipment', fullPayload).then(
         (response) => {
           /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: true}}] */
-
+          this.declineCounterDialog = false;
           let workingResponse = response;
           if (response.length > 1) {
             workingResponse = response[0];
