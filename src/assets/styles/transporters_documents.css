@@ -357,6 +357,10 @@
   font-size: 16px;
   cursor: pointer;
 }
+.counter-btn:disabled{
+  background: rgba(103, 183, 248, 0.4);
+  ;
+}
 .counter-submit{
   display: flex;
   flex-direction: row;
