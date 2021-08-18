@@ -1040,7 +1040,7 @@ export default {
             const responseData = response.data;
             if (responseData.length > 0) {
               const listed = responseData.find(
-                location => location.document_type === 'Bill Of Lading' || 'Connaissement',
+                location => location.document_type === this.$t('createFreightOrder.bol'),
               );
 
               if (listed !== undefined) {
