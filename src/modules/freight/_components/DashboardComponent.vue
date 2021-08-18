@@ -189,7 +189,6 @@ export default {
         app: 'FREIGHT_APP',
         endpoint: `activity_log/${user_id}/${user_type}`,
       };
-      console.log(fullPayload);
       this.requestActivity(fullPayload).then(
         (response) => {
           let workingResponse = response;
