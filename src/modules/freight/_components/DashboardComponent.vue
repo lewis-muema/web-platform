@@ -201,11 +201,6 @@ export default {
       approveDocument: '$_freight/approveDocument',
     }),
     fetchDashboardData() {
-      let acc = {};
-      const session = this.$store.getters.getSession;
-      if ('default' in session) {
-        acc = session[session.default];
-      }
       const fullPayload = {
         app: 'FREIGHT_APP',
         endpoint: `activity_log/${this.userId}/${this.userType}`,
