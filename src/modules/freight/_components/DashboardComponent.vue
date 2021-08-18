@@ -14,7 +14,7 @@
         <div
           v-for="(val, index) in logs"
           :key="index"
-          class="-detail transporters-segment"
+          class="dashboard-detail transporters-segment"
         >
           <div
             v-if="index === 0"
