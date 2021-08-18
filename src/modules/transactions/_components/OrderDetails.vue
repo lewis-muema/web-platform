@@ -336,7 +336,7 @@
                   type="button"
                   @click="disputeButton"
                 >
-                  {{ $t('general.dispute_delivery_docs') }}
+                  {{ disputeImageStatus === 3 ? $t('general.submitCapital') : $t('general.dispute_delivery_docs') }}
                 </button>
               </div>
             </el-dialog>
