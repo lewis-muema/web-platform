@@ -88,6 +88,8 @@ const en = {
   accept_counter: 'Accept Counter Offer',
   decline_counter: 'Decline Counter Offer',
   counter_sure: 'Are you sure you want to decline this counter offer?',
+  counter_cancel: 'Cancel',
+  award_counter_error: 'Award Counter Offer Error',
   
 };
 
