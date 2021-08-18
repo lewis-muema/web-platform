@@ -1331,10 +1331,6 @@ export default {
         },
       );
     },
-    awardCounter() {
-      this.awardDocument();
-      this.awardFinal();
-    },
     awardDocument() {
       if (this.billOfLandingName !== '' && this.trucks_no !== '' && this.payment_terms !== '') {
         if (this.counter) {
