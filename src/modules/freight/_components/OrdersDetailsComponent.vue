@@ -1039,6 +1039,7 @@ export default {
           if (response.status) {
             const responseData = response.data;
             if (responseData.length > 0) {
+              console.log(responseData);
               const listed = responseData.find(
                 location => location.document_type === this.$t('createFreightOrder.bol'),
               );
@@ -1078,7 +1079,7 @@ export default {
             const responseData = response.data;
             if (responseData.length > 0) {
               const listed = responseData.find(
-                location => location.document_type === 'Bill Of Lading',
+                location => location.document_type === this.$t('createFreightOrder.bol'),
               );
 
               if (listed !== undefined) {
