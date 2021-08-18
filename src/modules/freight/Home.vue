@@ -185,8 +185,8 @@ export default {
     notFreightUser() {
       this.doNotification(
         2,
-        'Freight Redirect',
-        'Unable to access freight customer service . Kindly login again',
+        this.$t('freightDetailsUpdate.freight_redirect'),
+        this.$t('freightDetailsUpdate.freight_redirect_error'),
       );
       this.clearFreightToken();
     },

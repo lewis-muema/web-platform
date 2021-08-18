@@ -22,7 +22,7 @@
               <el-row>
                 <el-select
                   v-model="locale"
-                  placeholder="Select"
+                  :placeholder="$t('freightAuth.select')"
                   class="set_freight_locale"
                 >
                   <el-option
@@ -35,46 +35,46 @@
               </el-row>
 
               <p class="freight-sign-up-header">
-                Welcome !
+                {{ $t('freightAuth.welcome') }}
               </p>
               <p class="freight-sign-up-description">
-                Just a few details and your cargo will be on it’s way
+                {{ $t('freightAuth.final_details') }}
               </p>
               <div class="">
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Name</label>
+                  <label class="freight-input-label">{{ $t('freightAuth.name') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="user_name"
                       class="input-control freight-auth-input"
                       type="text"
-                      placeholder="Enter your name"
+                      :placeholder="$t('freightAuth.name_placeholder')"
                       autocomplete="on"
                     >
                   </div>
                 </div>
 
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Business name</label>
+                  <label class="freight-input-label">{{ $t('freightAuth.business_name') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="business_name"
                       class="input-control freight-auth-input"
                       type="text"
-                      placeholder="Enter the name of your business"
+                      :placeholder="$t('freightAuth.business_name_placeholder')"
                       autocomplete="on"
                     >
                   </div>
                 </div>
 
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Email Address</label>
+                  <label class="freight-input-label">{{ $t('freightAuth.email') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="email"
                       v-validate="'required|email'"
                       class="input-control freight-auth-input"
-                      placeholder="Enter your email "
+                      :placeholder="$t('freightAuth.email_placeholder')"
                       autocomplete="on"
                       type="email"
                       name="email"
@@ -89,13 +89,13 @@
                 </div>
 
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Password</label>
+                  <label class="freight-input-label">{{ $t('freightAuth.password') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="password"
                       class="input-control freight-auth-input"
                       type="password"
-                      placeholder="Enter your password"
+                      :placeholder="$t('freightAuth.password_placeholder')"
                       autocomplete="on"
                       :class="!pass_validation && password !== '' ? 'freight-input-error' : ''"
                       @keyup="validate_pass"
@@ -113,13 +113,13 @@
                   v-if="password !== '' && pass_validation"
                   class="freight-auth-padding"
                 >
-                  <label class="freight-input-label">Confirm Password</label>
+                  <label class="freight-input-label">{{ $t('freightAuth.confirm_password') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="confirm_password"
                       class="input-control freight-auth-input"
                       type="password"
-                      placeholder="Re-enter your password"
+                      :placeholder="$t('freightAuth.confirm_password_placeholder')"
                       autocomplete="on"
                       :class="!pass_confirm_validation && confirm_password !== '' ? 'freight-input-error' : ''"
                       @keyup="validate_confirm_pass"
@@ -134,18 +134,18 @@
                 </div>
 
                 <p class="freight-terms-and-conditions">
-                  By creating a Sendy account you are agreeing to our
+                  {{ $t('freightAuth.terms_highlight') }}
                   <span
                     class="freight-terms-higlight"
                     @click="termsAndConditions"
-                  >terms and conditions</span>
+                  >{{ $t('freightAuth.terms_span') }}</span>
                 </p>
 
                 <div class="">
                   <input
                     class="button-primary freight-auth-button"
                     type="submit"
-                    value="Sign up"
+                    :value="$t('freightAuth.sign_up')"
                     @click="submit"
                   >
                 </div>
@@ -154,7 +154,7 @@
                   class="freight-login-redirect"
                   @click="redirectToLogin"
                 >
-                  Already have an account? Login
+                  {{ $t('freightAuth.login_redirect') }}
                 </p>
               </div>
             </div>
@@ -310,7 +310,7 @@ export default {
         this.confirm_pass_msg = '';
         this.pass_confirm_validation = true;
       } else {
-        this.confirm_pass_msg = 'Please ensure that this matches the password you entered earlier';
+        this.confirm_pass_msg = this.$t('freightAuth.confirm_password_message');
         this.pass_confirm_validation = false;
       }
     },
@@ -333,7 +333,7 @@ export default {
         };
         this.processSignUpRequest(payload);
       } else {
-        this.doNotification(2, 'Sign up failure', 'Kindly provide all valid details');
+        this.doNotification(2, this.$t('freightAuth.sign_up_failure'), this.$t('freightAuth.provide_valid_details'));
       }
     },
     processSignUpRequest(payload) {
@@ -347,12 +347,12 @@ export default {
         .then((response) => {
           if (response.status) {
             localStorage.setItem('verificationEmail', payload.email);
-            this.doNotification(1, 'Sucess freight sign up', 'Account details saved successfully');
+            this.doNotification(1, this.$t('freightAuth.sign_up_success'), this.$t('freightAuth.details_saved'));
             setTimeout(() => {
               this.$router.push('/freight/verify_email');
             }, 800);
           } else {
-            this.doNotification(2, 'Freight Sign up error', response.message);
+            this.doNotification(2, this.$t('freightAuth.sign_up_error'), response.message);
           }
         })
         .catch((error) => {

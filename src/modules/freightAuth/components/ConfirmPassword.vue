@@ -28,19 +28,19 @@
                 />
               </div>
               <p class="freight-sign-up-header">
-                Welcome Back
+                {{ $t('freightAuth.welcome_back') }} {{ user_name }}
               </p>
               <p class="freight-sign-up-description">
-                Please set your new password
+                {{ $t('freightAuth.set_new_password') }}
               </p>
               <div class="">
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">New password</label>
+                  <label class="freight-input-label">{{ $t('freightAuth.new_password') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="password"
                       class="input-control freight-auth-input"
-                      placeholder="Enter your new password"
+                      :placeholder="$t('freightAuth.new_password_placeholder')"
                       autocomplete="on"
                       type="password"
                       :class="!pass_validation && password !== '' ? 'freight-input-error' : ''"
@@ -56,12 +56,12 @@
                 </div>
 
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label">Confirm Password</label>
+                  <label class="freight-input-label">{{ $t('freightAuth.confirm_password') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="confirm_password"
                       class="input-control freight-auth-input"
-                      placeholder="Re-enter your password"
+                      :placeholder="$t('freightAuth.reenter_password')"
                       autocomplete="on"
                       type="password"
                       :class="!pass_confirm_validation && confirm_password !== '' ? 'freight-input-error' : ''"
@@ -80,7 +80,7 @@
                   <input
                     class="button-primary freight-auth-button"
                     type="submit"
-                    value="Confirm"
+                    :value="$t('freightAuth.confirm_btn')"
                     @click="updatePassword"
                   >
                 </div>
@@ -186,7 +186,7 @@ export default {
         this.confirm_pass_msg = '';
         this.pass_confirm_validation = true;
       } else {
-        this.confirm_pass_msg = 'Please ensure that this matches the password you entered earlier';
+        this.confirm_pass_msg = this.$t('freightAuth.confirm_password_message');
         this.pass_confirm_validation = false;
       }
     },
@@ -236,7 +236,7 @@ export default {
             this.$router.push('/freight/login');
           });
       } else {
-        this.doNotification(2, 'Password Reset Error', 'Kindly provide all values');
+        this.doNotification(2, this.$t('freightAuth.password_reset_error'), this.$t('freightAuth.provide_all_values'));
       }
     },
     doNotification(level, title, message) {
