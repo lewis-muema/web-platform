@@ -14,4 +14,7 @@ export default {
   getCopUsers(state) {
     return state.cop_users;
   },
+  getFilterDataPayload(state) {
+    return state.filter_data_payload;
+  },
 };
