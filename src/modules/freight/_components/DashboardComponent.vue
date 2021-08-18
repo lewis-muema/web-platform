@@ -155,29 +155,6 @@ export default {
       reason: '',
     };
   },
-  computed:{
-    ...mapGetters({getSession:'getSession'}),
-    accA(){
-      let acc = {}
-      if ('default' in this.getSession) {
-        return acc = this.getSession[this.getSession.default];
-      }
-    },
-
-    userId(){
-      return 'cop_id' in this.accA ? this.accA.cop_id : this.accA.user_id;
-    },
-    userType(){
-      if(this.getSession.default === 'biz'){
-       return 1
-      }
-      else
-      {
-        return 3
-      }
-      
-    }
-  },
   watch: {
     viewDocumentOption(val) {
       if (!val) {
@@ -201,10 +178,18 @@ export default {
       approveDocument: '$_freight/approveDocument',
     }),
     fetchDashboardData() {
+      let acc = {};
+      const session = this.$store.getters.getSession;
+      if ('default' in session) {
+        acc = session[session.default];
+      }
+       const user_id = session.default === 'biz' ? acc.cop_id  : acc.user_id;
+       const user_type = session.default === 'biz' ? 1 : 3;
       const fullPayload = {
         app: 'FREIGHT_APP',
-        endpoint: `activity_log/${this.userId}/${this.userType}`,
+        endpoint: `activity_log/${user_id}/${user_type}`,
       };
+      console.log(fullPayload);
       this.requestActivity(fullPayload).then(
         (response) => {
           let workingResponse = response;
