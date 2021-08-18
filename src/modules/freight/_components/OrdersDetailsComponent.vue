@@ -483,9 +483,7 @@
 
                   <div class="award-shipment-input">
                     <p class="award-input--label">
-                      How many of
-                      {{ awardedTransporter.name }}’s available trucks do you want to assign to this
-                      shipment?
+                      {{ $t('orderDetail.availabe_trucks_assign', { business_name: awardedTransporter.name }) }}
                     </p>
                     <div class="block">
                       <el-input-number
@@ -1312,7 +1310,7 @@ export default {
           this.$t('orderDetailsComponent.award_shipment_error'),
           this.$t('orderDetailsComponent.provide_all_values'),
         );
-      }
+      } 
     },
     goBack() {
       this.verification_stage = false;
