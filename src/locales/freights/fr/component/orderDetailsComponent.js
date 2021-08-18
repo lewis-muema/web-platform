@@ -90,6 +90,8 @@ const fr = {
   accept_counter: 'FR_Accept Counter Offer',
   decline_counter: 'FR_Decline Counter Offer',
   counter_sure: 'FR_Are you sure you want to decline this counter offer?',
+  counter_cancel: 'FR_Cancel',
+  award_counter_error: 'FR_Award Counter Offer Error',
 };
 
 export default fr;

@@ -425,7 +425,7 @@
                     </p>
                     <button
                       class="counter-btn"
-                      :disabled="awardedTransporter.trucks"
+                      :disabled="trucks_no === awardedTransporter.trucks_available"
                       @click="trucks_no++"
                     >
                       +
@@ -566,7 +566,7 @@
                       class="counter-submit-btn counter-submit-btn__clear"
                       @click="closeCounter(1)"
                     >
-                      Cancel
+                      {{ $t('orderDetailsComponent.counter_cancel') }}
                     </button>
                     <button
                       type="button"
@@ -1331,9 +1331,23 @@ export default {
         },
       );
     },
+    awardCounter() {
+      this.awardDocument();
+      this.awardFinal();
+    },
     awardDocument() {
       if (this.billOfLandingName !== '' && this.trucks_no !== '' && this.payment_terms !== '') {
-        this.verification_stage = true;
+        if (this.counter) {
+          this.awardFinal();
+        } else {
+          this.verification_stage = true;
+        }
+      } else if (this.counter) {
+        this.doNotification(
+          2,
+          this.$t('orderDetailsComponent.award_counter_error'),
+          this.$t('orderDetailsComponent.provide_all_values'),
+        );
       } else {
         this.doNotification(
           2,
