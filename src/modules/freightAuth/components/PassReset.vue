@@ -274,8 +274,8 @@ export default {
         } else {
           this.doNotification(
             2,
-            'Password Reset Error',
-            'Kindly provide a valid email address to proceed',
+            this.$t('freightAuth.password_reset_error'),
+            this.$t('freightAuth.provide_valid_email'),
           );
         }
       }

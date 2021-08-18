@@ -22,7 +22,7 @@
               <el-row>
                 <el-select
                   v-model="locale"
-                  placeholder="Select"
+                  :placeholder="$t('freightAuth.select')"
                   class="set_freight_locale"
                 >
                   <el-option
