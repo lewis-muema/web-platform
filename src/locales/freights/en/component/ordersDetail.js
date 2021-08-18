@@ -50,7 +50,7 @@ const en = {
   available_trucks: 'Available trucks',
   rate_per_truck: 'Rate per truck',
   how_many_of: 'How many of',
-  availabe_trucks_assign: 'available trucks do you want to assign to this shipment?',
+  availabe_trucks_assign: 'How many of {business_name}\'s available trucks do you want to assign to this shipment?',
   upload_bill_of_lading: 'Upload the bill of lading',
   drop_files_here: 'Drop file here or',
   click_to_upload: 'click to upload',
