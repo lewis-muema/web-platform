@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
 import TimeZoneMxn from '../../../mixins/timezone_mixin';
@@ -183,14 +183,11 @@ export default {
       if ('default' in session) {
         acc = session[session.default];
       }
-      const payload = {
-        user_id: 'cop_id' in acc ? acc.cop_id : acc.user_id,
-        user_type: session.default === 'biz' ? 1 : 3,
-      };
+       const user_id = session.default === 'biz' ? acc.cop_id  : acc.user_id;
+       const user_type = session.default === 'biz' ? 1 : 3;
       const fullPayload = {
-        values: payload,
-        app: 'ORDERS_APP',
-        endpoint: 'v2/freight/activity_log',
+        app: 'FREIGHT_APP',
+        endpoint: `activity_log/${user_id}/${user_type}`,
       };
       this.requestActivity(fullPayload).then(
         (response) => {
