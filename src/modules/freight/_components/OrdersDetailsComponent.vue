@@ -839,7 +839,7 @@ export default {
             const responseData = response.data;
             if (responseData.length > 0) {
               const listed = responseData.find(
-                location => location.document_type === 'Bill Of Lading',
+                location => location.document_type === 'Bill Of Lading' || 'Connaissement',
               );
 
               if (listed !== undefined) {
