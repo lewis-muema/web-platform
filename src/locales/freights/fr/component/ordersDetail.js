@@ -54,7 +54,7 @@ const fr = {
   available_trucks: 'Camions disponibles',
   rate_per_truck: 'Tarif par camion',
   how_many_of: 'Combien de',
-  availabe_trucks_assign: 'available trucks do you want to assign to this shipment?',
+  availabe_trucks_assign: 'Combien de camions disponibles de {business_name}\'s souhaitez-vous affecter à cet envoi ?',
   upload_bill_of_lading: 'Téléchargez la facture de chargement ',
   drop_files_here: 'Déposer le fichier ici ou ',
   click_to_upload: 'cliquez pour télécharger',
