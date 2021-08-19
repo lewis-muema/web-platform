@@ -305,6 +305,7 @@
           mode="out-in"
         >
           <div class="">
+
             <el-dialog
               :visible.sync="awardDialogVisible"
               class="requestShipmentOptions"
@@ -337,16 +338,20 @@
                   </div>
                 </div>
 
-                  <div class="award-shipment-input">
-                    <p class="award-input--label">
-                      {{ $t('orderDetail.availabe_trucks_assign', { business_name: awardedTransporter.name }) }}
-                    </p>
-                    <div class="block">
-                      <el-input-number
-                        v-model="trucks_no"
-                        :min="1"
-                      />
-                    </div>
+                <div class="award-shipment-input">
+                  <p class="award-input--label">
+                    {{
+                      $t('orderDetail.availabe_trucks_assign', {
+                        business_name: awardedTransporter.name,
+                      })
+                    }}
+                  </p>
+                  <div class="block">
+                    <el-input-number
+                      v-model="trucks_no"
+                      :min="1"
+                      :max="awardedTransporter.trucks_available"
+                    />
                   </div>
                 </div>
 
@@ -398,11 +403,6 @@
                       class="transporters-element-inputs"
                       filterable
                     >
-                      <!-- <div class="payment-terms-hint">
-                        <div class="hint--inner">
-                          Hint: The longer your payment period is, the higher your interest
-                        </div>
-                      </div> -->
                       <el-option
                         v-for="item in terms"
                         :key="item.value"
@@ -457,7 +457,8 @@
                   <div class="quatations-outline-info-summary">
                     {{ $t('orderDetailsComponent.payment_terms_label') }}
                     <p class="outline-info-value summary-inner-value">
-                      {{ $t('orderDetailsComponent.payment_in') }} {{ payment_terms }} {{ $t('orderDetailsComponent.payment_days') }} 
+                      {{ $t('orderDetailsComponent.payment_in') }} {{ payment_terms }}
+                      {{ $t('orderDetailsComponent.payment_days') }}
                     </p>
                   </div>
 
@@ -502,12 +503,13 @@
                 </div>
               </div>
             </el-dialog>
+
+
             <el-dialog
               :visible.sync="showDeclineDialog"
               class="declineDocumentOptions"
             >
               <div class="">
-                testing
                 <div class="decline-text-option decline-documemt-extend">
                   {{ $t('orderDetailsComponent.decline_document') }}
                 </div>
@@ -532,6 +534,8 @@
                 </button>
               </div>
             </el-dialog>
+
+
             <el-dialog
               :visible.sync="showRatingDialog"
               class="declineDocumentOptions"
@@ -643,7 +647,7 @@ export default {
         },
         {
           value: 28,
-          label: this.$t('orderDetailsComponent.payment_days_28')
+          label: this.$t('orderDetailsComponent.payment_days_28'),
         },
       ],
       opened: [],
@@ -1121,7 +1125,7 @@ export default {
           this.$t('orderDetailsComponent.award_shipment_error'),
           this.$t('orderDetailsComponent.provide_all_values'),
         );
-      } 
+      }
     },
     goBack() {
       this.verification_stage = false;
