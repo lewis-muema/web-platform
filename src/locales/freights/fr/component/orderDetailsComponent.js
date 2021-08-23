@@ -80,6 +80,18 @@ const fr = {
   payment_days_14: 'paiement en 14 jours',
   payment_days_21: 'paiement en 21 jours',
   payment_days_28: 'paiement en 28 jours',
+  counter_offers: 'Contre-offres',
+  accept: 'Accepter',
+  counter_truck_price: 'Contre-prix par camion',
+  counter_available_trucks: 'Camions disponibles',
+  counter_fewer_trucks: 'Vous avez besoin moins de camions ?',
+  counter_offer_accept: 'FR_Accept {{ awardedTransporter.name }}s\' counter offer?',
+  counter_offer_decline: 'FR_Decline {{ val.name }}s\' Counter offer',
+  accept_counter: 'FR_Accept Counter Offer',
+  decline_counter: 'FR_Decline Counter Offer',
+  counter_sure: 'FR_Are you sure you want to decline this counter offer?',
+  counter_cancel: 'FR_Cancel',
+  award_counter_error: 'FR_Award Counter Offer Error',
 };
 
 export default fr;
