@@ -17,7 +17,7 @@ const en = {
   click_upload: 'click to upload',
   terms_of_delivery_uploaded: 'Terms of delivery uploaded successfully .',
   upload_bill_lading: 'Upload the bill of lading',
-  bill_lading_successfully: 'Bill of lading successfully .',
+  bill_lading_successfully: 'Bill of lading added successfully .',
   document: 'document',
   name_document_upload: 'document uploaded successfully .',
   add_document: 'Add document',
