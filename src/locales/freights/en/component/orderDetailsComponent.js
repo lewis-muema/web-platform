@@ -89,8 +89,9 @@ const en = {
   decline_counter: 'Decline Counter Offer',
   counter_sure: 'Are you sure you want to decline this counter offer?',
   counter_cancel: 'Cancel',
-  award_counter_error: 'Award Counter Offer Error',
-  
+  award_counter_error: 'Error awarding counter offer',
+  provide_bill_lading: 'Please upload bill of lading',
+  provide_payment_terms: 'Please provide the payment terms',
 };
 
 export default en;

@@ -1302,7 +1302,7 @@ export default {
         this.doNotification(
           2,
           this.$t('orderDetailsComponent.award_counter_error'),
-          this.$t('orderDetailsComponent.provide_all_values'),
+          this.billOfLandingName === '' ? this.$t('orderDetailsComponent.provide_bill_lading') : this.$t('orderDetailsComponent.provide_payment_terms'),
         );
       } else {
         this.doNotification(
