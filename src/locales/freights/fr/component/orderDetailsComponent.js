@@ -85,13 +85,15 @@ const fr = {
   counter_truck_price: 'Contre-prix par camion',
   counter_available_trucks: 'Camions disponibles',
   counter_fewer_trucks: 'Vous avez besoin moins de camions ?',
-  counter_offer_accept: 'FR_Accept {{ awardedTransporter.name }}s\' counter offer?',
-  counter_offer_decline: 'FR_Decline {{ val.name }}s\' Counter offer',
-  accept_counter: 'FR_Accept Counter Offer',
-  decline_counter: 'FR_Decline Counter Offer',
-  counter_sure: 'FR_Are you sure you want to decline this counter offer?',
-  counter_cancel: 'FR_Cancel',
-  award_counter_error: 'FR_Award Counter Offer Error',
+  counter_offer_accept: 'Accepter la contre-offre de {{awardedTransporter.name}}s\' ?',
+  counter_offer_decline: 'Refuser la contre-offre de {{val.name }}s\'',
+  accept_counter: 'Accepter la contre-offre',
+  decline_counter: 'Refuser la contre-offre',
+  counter_sure: 'Êtes-vous sûr de vouloir refuser cette contre-offre ?',
+  counter_cancel: 'Annuler',
+  award_counter_error: 'Erreur d\'attribution de la contre-offre',
+  provide_bill_lading: 'Veuillez mettre en ligne le connaissement.',
+  provide_payment_terms: 'Veuillez indiquer les conditions de paiement.',
 };
 
 export default fr;
