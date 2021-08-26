@@ -806,7 +806,7 @@ export default {
       rating: 5.0,
       loading: true,
       approve_quatation_text: this.$t('orderDetailsComponent.award'),
-      accept: 'Accept',
+      accept: this.$t('orderDetailsComponent.accept'),
       decline_quatation_text: this.$t('orderDetailsComponent.decline'),
       viewDocumentOption: false,
       src_link: '',
