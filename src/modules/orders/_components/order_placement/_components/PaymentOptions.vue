@@ -93,10 +93,6 @@
             > 
               <div 
                 class="payment-options-cards-container"
-                v-loading="loading"
-                :element-loading-text="transactionText"
-                element-loading-spinner="el-icon-loading"
-                element-loading-background="rgba(0, 0, 0, 0.8)"
               >
                 <div v-if="!addCardStatus && get_saved_cards.length > 0">
                   <div v-if="deletedCardIndex === ''">
@@ -211,6 +207,13 @@
                   </div>
                 </form>
               </div>
+            </div>
+            <div
+              v-loading="loading"
+              :element-loading-text="transactionText"
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(0, 0, 0, 0.8)"
+            > 
             </div>
             <div v-if="!getCardPaymentStatus">
               <p
@@ -1047,7 +1050,7 @@ export default {
           save: this.saveCardState,
         };
         this.loading = true;
-        this.transactionText = 'Proccessing card payment';
+        this.transactionText = 'Initializing card payment...';
         this.form.submit(
           '/customers/collect_card_details',
           {
@@ -1119,13 +1122,12 @@ export default {
         this.loading = true;
         this.requestSavedCards(savedCardPayload).then(
           (response) => {
-            console.log(response);
             this.transaction_id = response.transaction_id;
             if (response.status) {
               this.transactionPoll();
             } else {
               this.loading = false;
-              this.transaction_id = response.reason;
+              this.transactionText = response.reason;
               this.doNotification(2, this.$t('general.failed_to_charge_card'), response.message);
             }
           },
@@ -1153,12 +1155,12 @@ export default {
 
             that.updateTransactionStatus(); 
             if (poll_count === 5) {
-              that.transactionText = 'card payment Failed'
+              that.transactionText = 'card payment Failed';
+              that.loading = false;
               const notification = {
                 title: that.$t('general.failed_to_charge_card'),
                 level: 2,
               };
-              that.clearInputs();
               that.displayNotification(notification);
               return;
             }
@@ -1179,29 +1181,37 @@ export default {
       this.requestSavedCards(fullPayload).then((res) => {
         let level = 1;
         if (res.status) { 
-          this.transactionText = res.transaction_status;
+          this.transactionText = res.message;
           switch (res.transaction_status) {
             case 'success':
               this.poll_count = this.poll_limit;
               this.loading = false;
               this.doCompleteOrder();
+              this.$store.commit('setRunningBalance', res.running_balance);
+              const notification1 = {
+                title: res.transaction_status,
+                level: level,
+                message: res.message,
+              };
+              this.displayNotification(notification1);
               break;
             case 'failed':
               this.poll_count = this.poll_limit;
               this.loading = false;
               level = 2;
+              const notification2 = {
+                title: res.transaction_status,
+                level: level,
+                message: res.message,
+              };
+              this.displayNotification(notification2);
               break;
             case 'pending':
               break;
             default:
               break;
             }
-          const notification = {
-            title: res.transaction_status,
-            level: level,
-            message: res.message,
-          };
-          this.displayNotification(notification);
+
           return res;
         }
 

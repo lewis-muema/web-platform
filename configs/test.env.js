@@ -25,7 +25,7 @@ module.exports = {
   OWNER_SEARCH: '"https://gate.sendyit.com/solr/ownerstaging/"',
   PARTNERS_APP: '"https://authtest.sendyit.com/partners/"',
   FREIGHT_APP: '"https://authtest.sendyit.com/freight-service/"',
-  VGS_VAULT_ID: '"tnts91uunnd"',
+  VGS_VAULT_ID: '"tnt4d8qyodm"',
   VGS_ENVIRONMENT: '"sandbox"',
   EXTREME_IP_KEY: '"dmmw1HciGEhld0FiG2ID"',
 };
