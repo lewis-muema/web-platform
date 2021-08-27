@@ -914,12 +914,13 @@
                     <vue-tel-input
                       v-model.trim="contact[0]"
                       v-validate="'required|check_phone'"
-                      class="input-control sign-up-form"
+                      class="input-control sign-up-form phone-input-display"
                       type="number"
                       name="phone"
                       value=""
                       data-vv-validate-on="blur"
-                      v-bind="phoneInputProps"
+                      v-bind="sendyPhoneProps"
+                      :input-options="vueTelInputProps"
                     />
                   </div>
                 </div>
@@ -961,12 +962,13 @@
                     <vue-tel-input
                       v-model.trim="sender_phone"
                       v-validate="'required|check_phone'"
-                      class="input-control sign-up-form"
+                      class="input-control sign-up-form phone-input-display"
                       type="number"
                       name="phone"
                       value=""
                       data-vv-validate-on="blur"
-                      v-bind="phoneInputProps"
+                      v-bind="sendyPhoneProps"
+                      :input-options="vueTelInputProps"
                     />
                   </div>
                 </div>
@@ -1008,12 +1010,13 @@
                     <vue-tel-input
                       v-model.trim="contact[index + 1]"
                       v-validate="'required|check_phone'"
-                      class="input-control sign-up-form"
+                      class="input-control sign-up-form phone-input-display"
                       type="number"
                       name="phone"
                       value=""
                       data-vv-validate-on="blur"
-                      v-bind="phoneInputProps"
+                      v-bind="sendyPhoneProps"
+                      :input-options="vueTelInputProps"
                     />
                   </div>
                 </div>
@@ -1180,9 +1183,13 @@ export default {
       instructions_data: [],
       notes: [],
       contact: [],
-      phoneInputProps: {
+      sendyPhoneProps: {
+       mode: 'international',
+       defaultCountry: 'ke',
+       preferredCountries: ['ke', 'ug', 'tz'],
+       },
+      vueTelInputProps: {
         mode: 'international',
-        defaultCountry: 'ke',
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
@@ -1190,7 +1197,6 @@ export default {
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
-        preferredCountries: ['ke', 'ug', 'tz'],
         autocomplete: 'off',
         name: 'telephone',
         maxLen: 25,

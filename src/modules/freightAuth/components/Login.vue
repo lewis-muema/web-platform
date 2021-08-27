@@ -31,12 +31,13 @@
                     ref="phoneInput"
                     v-model.trim="phone"
                     v-validate="'required|check_phone'"
-                    class="input-control sign-up-form"
+                    class="input-control sign-up-form phone-input-display"
                     type="number"
                     name="phone"
                     value=""
                     data-vv-validate-on="blur"
-                    v-bind="phoneInputProps"
+                    v-bind="sendyPhoneProps"
+                    :input-options="vueTelInputProps"
                     @onBlur="validate_phone"
                     @country-changed="checkCountryCode"
                   />
@@ -123,9 +124,12 @@ export default {
       phone: '',
       password: '',
       type: '',
-      phoneInputProps: {
-        mode: 'international',
-        defaultCountry: 'ke',
+      sendyPhoneProps: {
+              mode: 'international',
+              preferredCountries: [],
+                      defaultCountry: 'ke',
+            },
+      vueTelInputProps: {
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
@@ -133,7 +137,6 @@ export default {
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
-        preferredCountries: [],
         autocomplete: 'off',
         name: 'telephone',
         maxLen: 25,
@@ -192,28 +195,28 @@ export default {
         endpoint: 'currency/get_supported_countries',
       };
 
-      this.phoneInputProps.preferredCountries = [];
+      this.sendyPhoneProps.preferredCountries = [];
 
       this.getSupportedCountries(fullPayload)
         .then((response) => {
           if (response.request_status) {
             response.countries.forEach((country) => {
-              this.phoneInputProps.preferredCountries.push(country.country_code.toLowerCase());
+              this.sendyPhoneProps.preferredCountries.push(country.country_code.toLowerCase());
               this.preferredCountries.push(country.country_code.toLowerCase());
             });
           } else {
-            this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
+            this.sendyPhoneProps.preferredCountries = ['ke', 'tz', 'ug'];
           }
         })
         .catch(() => {
-          this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
+          this.sendyPhoneProps.preferredCountries = ['ke', 'tz', 'ug'];
         });
     },
     checkCountryCode(country) {
       this.localCountryCode = country.iso2;
       this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
       switch (true) {
-        case this.phoneInputProps.preferredCountries.includes(this.localCountryCode.toLowerCase()):
+        case this.sendyPhoneProps.preferredCountries.includes(this.localCountryCode.toLowerCase()):
           this.submit_step = true;
           break;
         default:

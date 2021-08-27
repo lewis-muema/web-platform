@@ -53,11 +53,12 @@
           <vue-tel-input
             v-model="phone"
             v-validate="'required|check_phone'"
-            class="form-control"
+            class="form-control phone-input-display"
             name="phone"
             value=""
             data-vv-validate-on="blur"
-            v-bind="phoneInputProps"
+            v-bind="sendyPhoneProps"
+            :input-options="vueTelInputProps"
             @onBlur="validate_phone"
             @focus="setCurrentStep(3)"
           />
@@ -149,9 +150,12 @@ export default {
       phoneVerification: false,
       code: '',
       requestId: '',
-      phoneInputProps: {
+      sendyPhoneProps: {
         mode: 'international',
         defaultCountry: 'ke',
+        preferredCountries: ['ke', 'ug', 'tz'],
+      },
+      vueTelInputProps: {
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
@@ -159,7 +163,6 @@ export default {
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
-        preferredCountries: ['ke', 'ug', 'tz'],
         autocomplete: 'off',
         name: 'telephone',
         maxLen: 25,

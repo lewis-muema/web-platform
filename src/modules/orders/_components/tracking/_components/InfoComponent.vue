@@ -787,12 +787,13 @@
                           <vue-tel-input
                             v-model.trim="editedContact"
                             v-validate="'required|check_phone'"
-                            class="input-control sign-up-form"
+                            class="input-control sign-up-form phone-input-display"
                             type="number"
                             name="phone"
                             value=""
                             data-vv-validate-on="blur"
-                            v-bind="phoneInputProps"
+                            v-bind="sendyPhoneProps"
+                            :input-options="vueTelInputProps"
                             @onBlur="validate_phone"
                           />
                         </div>
@@ -1021,9 +1022,12 @@ export default {
       mpesa_valid: false,
       mpesa_payment: false,
       mpesa_payment_state: false,
-      phoneInputProps: {
-        mode: 'international',
-        defaultCountry: 'ke',
+      sendyPhoneProps: {
+       mode: 'international',
+       defaultCountry: 'ke',
+       preferredCountries: ['ke', 'ug', 'tz'],
+      },
+      vueTelInputProps: {
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
@@ -1031,7 +1035,6 @@ export default {
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
-        preferredCountries: ['ke', 'ug', 'tz'],
         autocomplete: 'off',
         name: 'telephone',
         maxLen: 25,

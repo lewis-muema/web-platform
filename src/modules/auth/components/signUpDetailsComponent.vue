@@ -88,12 +88,13 @@
           <vue-tel-input
             v-model.trim="phone"
             v-validate="'required|check_phone'"
-            class="input-control sign-up-form"
+            class="input-control sign-up-form phone-input-display"
             type="number"
             name="phone"
             value=""
             data-vv-validate-on="blur"
-            v-bind="phoneInputProps"
+            v-bind="sendyPhoneProps"
+            :input-options="vueTelInputProps"
             @onBlur="validate_phone"
             @country-changed="checkCountryCode"
           />
@@ -272,9 +273,12 @@ export default {
       selectedCountry: '',
       countryNotSupported: '',
       preferredCountries: [],
-      phoneInputProps: {
+      sendyPhoneProps: {
         mode: 'international',
+        preferredCountries: [],
         defaultCountry: 'ke',
+      },
+      vueTelInputProps: {
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
@@ -282,7 +286,6 @@ export default {
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
-        preferredCountries: [],
         autocomplete: 'off',
         name: 'telephone',
         maxLen: 25,
@@ -366,7 +369,7 @@ export default {
       this.localCountryCode = country.iso2;
       this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
       switch (true) {
-        case (this.phoneInputProps.preferredCountries.includes(this.localCountryCode.toLowerCase())):
+        case (this.sendyPhoneProps.preferredCountries.includes(this.localCountryCode.toLowerCase())):
           this.countryNotSupported = '';
           this.next_step = true;
           break;
@@ -413,7 +416,7 @@ export default {
       const phoneTrim = this.phone.replace(/[()\-\s]+/g, '');
       const trimcode = phoneTrim.includes('+225', 0) ? phoneTrim.split('+225')[1] : phoneTrim;
       const othernumbers = trimcode.length === 10 ? trimcode.slice(2) : trimcode;
-      const phone = '+225' + othernumbers;
+      const phone = `+225${othernumbers}`;
       const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(phone));
       return phoneValid;
     },
@@ -816,22 +819,22 @@ export default {
         endpoint: 'currency/get_supported_countries',
       }
 
-      this.phoneInputProps.preferredCountries = [];
+      this.sendyPhoneProps.preferredCountries = [];
 
       this.performGetActions(fullPayload)
         .then((response) => {
           if (response.request_status) {
             response.countries.forEach((country) => {
-              this.phoneInputProps.preferredCountries.push(country.country_code.toLowerCase());
+              this.vueTelInputProps.preferredCountries.push(country.country_code.toLowerCase());
               this.preferredCountries.push(country.country_code.toLowerCase());
             });
           } else {
-            this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
+            this.sendyPhoneProps.preferredCountries = ['ke', 'tz', 'ug'];
           }
         })
-        .catch( (error) => {
-          this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
-        })
+        .catch((error) => {
+          this.sendyPhoneProps.preferredCountries = ['ke', 'tz', 'ug'];
+        });
     },
   },
   created() {
