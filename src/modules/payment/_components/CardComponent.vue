@@ -2,10 +2,6 @@
   <div
     v-if="getCardPaymentStatus"
     class="paymentbody--form"
-    v-loading="loadingStatus"
-    :element-loading-text="transactionText"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
   >
     <div
       v-if="deleteCardIndex !== ''"
@@ -171,9 +167,9 @@
       <div
         v-loading="loadingStatus"
         class="orders-loading-container orders-loading-container--completion loader-height-override"
+        :element-loading-text="transactionText"
+        element-loading-spinner="el-icon-loading"
       >
-
-
         <button
           type="submit"
           :class="
@@ -190,7 +186,7 @@
       <p
         v-if="country === 'KE'"
         class="card-payment-disabled-notification"
-      v-html="$t('general.technical_mantainance_still_pay', {user_name: user_name})">
+        v-html="$t('general.technical_mantainance_still_pay', {user_name: user_name})">
       </p>
       <p
         v-if="country === 'UG'"
@@ -434,6 +430,8 @@ export default {
                 this.transactionPoll();
               } else {
                 this.transactionText = res.message;
+                this.loadingStatus = false;
+                this.clearInputs();
                 const notification = {
                   title: this.$t('general.failed_to_charge_card'),
                   level: 2,
@@ -484,12 +482,13 @@ export default {
       this.loadingStatus = true;
       this.requestSavedCards(savedCardPayload).then(
         (response) => {
-          this.loadingStatus = false;
           // decrypt response here
           if (response.status) {
             this.transactionPoll();
           } else {
             this.transaction_id = response.reason;
+            this.loadingStatus = false;
+            this.clearInputs();
             const notification = {
               title: this.$t('general.top_up'),
               level: 2,
