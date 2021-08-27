@@ -810,6 +810,12 @@ div.pac-container {
 .freightTransportersDialog >.el-dialog > .el-dialog__body{
   padding-top: 0% !important;
 }
+.phone-input-display{
+  display: flex !important;
+}
+.vti__dropdown-list.below {
+  top: 100% !important;
+}
 .freight-signup-dialog > div > div > div.el-dialog__body {
     padding-bottom: 5 !important;
 }
