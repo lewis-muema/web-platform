@@ -32,7 +32,7 @@ const en = {
   reset_redirect: 'I know my password, let me login instead',
   good_news: 'Good News!',
   reset_confirmation:
-    'Your account is still intact and we have sent an email to {{ email }} for you to recover your password',
+    'Your account is still intact and we have sent an email to {email} for you to recover your password',
   verify_email: 'Please check your email',
   accept_verification: 'Okay , Got it',
   resend_link: 'Resend the link',
@@ -62,7 +62,7 @@ const en = {
   something_went_wrong: 'Something went wrong , kindly retry again',
 
   // Confirm Password
-  welcome_back: 'Welcome Back {{ user_name }}',
+  welcome_back: 'Welcome Back {user_name}',
   set_new_password: 'Please set your new password',
   new_password: 'New password',
   new_password_placeholder: 'Enter your new password',
@@ -71,7 +71,7 @@ const en = {
 
   // Email Verification
   check_email: 'Check Your Email',
-  link_sent_to_email: 'We’ve sent a link to {{ email }} Please click the link to proceed',
+  link_sent_to_email: 'We’ve sent a link to {email} Please click the link to proceed',
   email_verification: 'Email Verification',
   email_verification_sent: 'Email Address verification link sent successfully',
   email_verification_error: 'Email Verification Error',

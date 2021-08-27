@@ -1,7 +1,8 @@
 const fr = {
   // Home
   freight_redirect: 'Redirection du frêt',
-  freight_redirect_error: 'Impossible d’accéder au service clientèle du frêt. Veuillez vous connecter à nouveau',
+  freight_redirect_error:
+    'Impossible d’accéder au service clientèle du frêt. Veuillez vous connecter à nouveau',
 
   // BusinessVerification
   business_details: 'Détails du commerce',
@@ -19,17 +20,18 @@ const fr = {
   id: 'NUMÉRO D’IDENTIFICATION',
   id_placeholder: 'Saisissez le numéro d’identification du directeur(rice)',
   last_thing: 'Une dernière chose',
-  phone_validation: 'Nous avons besoin de votre numéro de téléphone pour que les transporteurs puissent vous informer de l’envoi des factures.',
+  phone_validation:
+    'Nous avons besoin de votre numéro de téléphone pour que les transporteurs puissent vous informer de l’envoi des factures.',
   verify_phone: 'Vérifier le numéro de téléphone',
   enter_verification_code: 'Veuillez saisir le code de vérification que nous vous avons envoyé.',
   verification_code: 'Code de vérification',
   enter_code: 'Saisissez le code',
-  supported_country: 'FR_Kindly select supported country',
+  supported_country: 'Veuillez sélectionner le pays pris en charge',
   biz_set_up_success: 'Succès de la configuration de compte du commerce',
   biz_set_up_success_response: 'Les détails du compte ont été mis à jour avec succès',
   biz_set_up_error: 'Erreur de configuration de commerce',
   biz_set_up_failure: 'Échec de la configuration du commerce',
-  something_went_wrong: 'FR_Something went wrong , kindly retry again',
+  something_went_wrong: "Une erreur s'est produite, veuillez réessayer",
   directors_update_error: 'Erreur de mise à jour des directeurs',
   select_radio_option: 'Veuillez sélectionner le bouton radio pour continuer',
   provide_director_id: 'Veuillez fournir le numéro d’identification du directeur',
@@ -54,10 +56,12 @@ const fr = {
     'Une fois que vous commencez à traiter les envois, nous garderons le suivi de tout ici pour votre tranquillité d’esprit',
   find_transporters: 'Trouver des transporteurs',
   no_shipment: 'Aucun expédition trouvée',
-  no_shipment_info: 'Il semble que vous n’ayez pas encore effectué votre premier envoi sur la plateforme.',
+  no_shipment_info:
+    'Il semble que vous n’ayez pas encore effectué votre premier envoi sur la plateforme.',
   no_transporters:
-  'Pour votre tranquillité d’esprit et votre confiance, nous vérifions toutes les personnes que nous embarquons sur notre plateforme. Nous avons envoyé vos coordonnées à des partenaires de vérification indépendants et nous vous contacterons dans les 48 heures.',
-  no_transporters_info: 'En attendant, vous pouvez essayer de trouver des transporteurs sur notre plateforme',
+    'Pour votre tranquillité d’esprit et votre confiance, nous vérifions toutes les personnes que nous embarquons sur notre plateforme. Nous avons envoyé vos coordonnées à des partenaires de vérification indépendants et nous vous contacterons dans les 48 heures.',
+  no_transporters_info:
+    'En attendant, vous pouvez essayer de trouver des transporteurs sur notre plateforme',
 };
 
 export default fr;

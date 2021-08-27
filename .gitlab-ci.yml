@@ -4,6 +4,8 @@ stages:
   # also create a tests stage
   - test
   - lint
+  - buildfeaturebranch
+  - deployforqa
 
 # Lets name our Job eslint, because that's what it's doing.
 eslint:
@@ -32,3 +34,22 @@ unitTest:
     - npm i mocha-webpack
     # Run tests
     - npm run test
+
+variables:
+  FEATURE_BRANCH: sendy-docker-local.jfrog.io/vue-webplatform-$CI_COMMIT_BRANCH:latest
+
+buildpushfeaturebranch:
+  stage: buildfeaturebranch
+  script: 
+    - docker build --pull -t $FEATURE_BRANCH -f Dockerfile . 
+    - docker push $FEATURE_BRANCH
+  rules:
+    - if: $CI_COMMIT_TAG == "qa-ready"
+
+deployfor-qa-tests:
+  stage: deployforqa
+  script:
+    - ssh -v -f -o StrictHostKeyChecking=no -l admin kubetest-master.sendyit.com "kubectl set image deploy vue-web-platform  vue-web-platform=$FEATURE_BRANCH"
+  rules:
+    - if: $CI_COMMIT_TAG == "qa-ready"
+

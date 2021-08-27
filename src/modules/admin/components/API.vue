@@ -110,7 +110,7 @@
         </span>
         {{$t('api.head_over')}}
         <a
-          href="http://docs.sendypublicapi.apiary.io/#"
+          href="https://api.sendyit.com/v2/documentation"
           target="_blank"
         > {{$t('api.developer_site')}} </a>&nbsp;{{$t('api.complete_doc')}}
       </p>

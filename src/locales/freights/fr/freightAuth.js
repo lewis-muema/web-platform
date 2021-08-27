@@ -16,7 +16,8 @@ const fr = {
   terms_span: 'conditions générales',
   sign_up: 'Inscrivez-vous',
   login_redirect: 'Vous avez déjà un compte ? Se connecter',
-  confirm_password_message: 'Veuillez vous assurer que ce mot de passe correspond à celui que vous avez saisi précédemment',
+  confirm_password_message:
+    'Veuillez vous assurer que ce mot de passe correspond à celui que vous avez saisi précédemment',
   sign_up_failure: 'Échec de l’inscription',
   provide_valid_details: 'Veuillez fournir tous les détails valides',
   sin_up_success: 'Succès de l’inscription du fret',
@@ -25,17 +26,20 @@ const fr = {
 
   // Password Reset
   reset_alert: 'Ne vous inquiétez pas',
-  reset_alert_msg: 'Vous serez de retour en un rien de temps. Indiquez simplement votre adresse e-mail et nous ferons le reste.',
+  reset_alert_msg:
+    'Vous serez de retour en un rien de temps. Indiquez simplement votre adresse e-mail et nous ferons le reste.',
   reset_email: 'Adresse e-mail',
   reset_continue: 'Continuer',
   reset_redirect: 'Je connais mon mot de passe, laissez-moi me connecter',
   good_news: 'Bonne nouvelle !',
-  reset_confirmation: 'Votre compte est toujours intact et nous avons envoyé un e-mail à {{ email }} pour que vous puissiez récupérer votre mot de passe',
+  reset_confirmation:
+    'Votre compte est toujours intact et nous avons envoyé un e-mail à {email} pour que vous puissiez récupérer votre mot de passe',
   verify_email: 'Veuillez vérifier votre e-mail',
   accept_verification: 'D’accord, j’ai compris',
   resend_link: 'Renvoyez le lien',
   oops: 'Oups !',
-  verification_error: 'Il semble qu’il y ait eu un problème lors de l’envoi du lien de réinitialisation du mot de passe à votre adresse e-mail.',
+  verification_error:
+    'Il semble qu’il y ait eu un problème lors de l’envoi du lien de réinitialisation du mot de passe à votre adresse e-mail.',
   confirm_email: 'Cet e-mail est-il correct ?',
   try_again: 'Réessayer',
   password_reset_error: 'Erreur de réinitialisation du mot de passe',
@@ -59,7 +63,7 @@ const fr = {
   something_went_wrong: 'Une erreur s’est produite, veuillez réessayer',
 
   // Confirm Password
-  welcome_back: 'FBienvenue {{ name }}',
+  welcome_back: 'FBienvenue',
   set_new_password: 'Veuillez définir votre nouveau mot de passe',
   new_password: 'Nouveau mot de passe',
   new_password_placeholder: 'Saisissez votre nouveau mot de passe.',
@@ -68,7 +72,8 @@ const fr = {
 
   // Email Verification
   check_email: 'Vérifiez votre e-mail',
-  link_sent_to_email: 'Nous avons envoyé un lien à {{ email }}. Veuillez appuyer sur le lien pour continuer',
+  link_sent_to_email:
+    'Nous avons envoyé un lien à {email}. Veuillez appuyer sur le lien pour continuer',
   email_verification: 'Vérification de l’adresse e-mail',
   email_verification_sent: 'Le lien de vérification de l’adresse e-mail a été envoyé avec succès',
   email_verification_error: 'Erreur de vérification de l’adresse e-mail',
