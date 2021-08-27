@@ -198,10 +198,11 @@
               </div>
             </div>
             <div
+              class="my-5"
+              v-if="loading"
               v-loading="loading"
               :element-loading-text="transactionText"
               element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(0, 0, 0, 0.8)"
             > 
             </div>
             <div v-if="!getCardPaymentStatus">
