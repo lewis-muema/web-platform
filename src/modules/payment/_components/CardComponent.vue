@@ -412,6 +412,7 @@ export default {
         vendor_type: 1,
       };
       this.loadingStatus = true;
+      this.transactionText = 'Initializing card payment...';
       this.form.submit(
         '/customers/collect_card_details',
         {
@@ -474,6 +475,7 @@ export default {
         cop_id: session.default === 'biz' ? accData.cop_id : 0,
         vendor_type: 1,
       };
+      this.transactionText = 'Initializing card payment...';
       const savedCardPayload = {
         values: payload,
         app: 'AUTH',
@@ -514,6 +516,8 @@ export default {
             that.updateTransactionStatus(); 
             if (poll_count === 5) {
               that.transactionText = 'Failed'
+              that.loadingStatus = false;
+
               const notification = {
                 title: that.$t('general.failed_to_charge_card'),
                 level: 2,
@@ -539,30 +543,38 @@ export default {
       this.requestSavedCards(fullPayload).then((res) => {
         let level = 1;
         if (res.status) { 
-          this.transactionText = res.transaction_status;
+          this.transactionText = res.message;
           switch (res.transaction_status) {
             case 'success':
               this.poll_count = this.poll_limit;
               this.clearInputs();
               this.loadingStatus = false;
+              this.$store.commit('setRunningBalance', res.running_balance);
+              const notification1 = {
+                title: res.transaction_status,
+                level: level,
+                message: res.message,
+              };
+              this.displayNotification(notification1);
               break;
             case 'failed':
               this.poll_count = this.poll_limit;
               this.loadingStatus = false;
               level = 2;
               this.clearInputs();
+              const notification2 = {
+                title: res.transaction_status,
+                level: level,
+                message: res.message,
+              };
+              this.displayNotification(notification2);
               break;
             case 'pending':
               break;
             default:
               break;
             }
-          const notification = {
-            title: res.transaction_status,
-            level: level,
-            message: res.message,
-          };
-          this.displayNotification(notification);
+          
           return res;
         }
 
