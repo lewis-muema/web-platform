@@ -707,7 +707,7 @@
                                 </div>
                               </div>
                               <div
-                                class="my-5"
+                                class="loading-margin"
                                 v-if="loading_payment"
                                 v-loading="loading_payment"
                                 :element-loading-text="transactionText"
