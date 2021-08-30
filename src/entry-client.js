@@ -1,5 +1,6 @@
 /* eslint no-underscore-dangle: 0 */
 import Vue from 'vue';
+import 'vue-tel-input/dist/vue-tel-input.css';
 import * as VueGoogleMaps from 'vue2-google-maps';
 import VueTelInput from 'vue-tel-input';
 import { createApp } from './app';
