@@ -83,6 +83,8 @@
       <div
         v-loading="loadingStatus"
         class="orders-loading-container orders-loading-container--completion loader-height-override"
+        :element-loading-text="transactionText"
+        element-loading-spinner="el-icon-loading"
       >
         <button
           :class="
@@ -483,10 +485,11 @@ export default {
       this.requestSavedCards(savedCardPayload).then(
         (response) => {
           // decrypt response here
+          this.transaction_id = response.transaction_id;
           if (response.status) {
             this.transactionPoll();
           } else {
-            this.transaction_id = response.reason;
+            this.transactionText = response.reason;
             this.loadingStatus = false;
             this.clearInputs();
             const notification = {
