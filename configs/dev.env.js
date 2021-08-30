@@ -29,7 +29,7 @@ module.exports = merge(prodEnv, {
   OWNER_SEARCH: '"https://gate.sendyit.com/solr/ownerstaging/"',
   ORDERS_APP: '"https://authtest.sendyit.com/orders/"',
   CUSTOMERS_APP: '"https://authtest.sendyit.com/customers/"',
-  VGS_VAULT_ID: '"tnts91uunnd"',
+  VGS_VAULT_ID: '"tnt4d8qyodm"',
   VGS_ENVIRONMENT: '"sandbox"',
   EXTREME_IP_KEY: '"dmmw1HciGEhld0FiG2ID"',
 

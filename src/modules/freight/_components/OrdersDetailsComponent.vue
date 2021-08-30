@@ -381,6 +381,7 @@
           mode="out-in"
         >
           <div class="">
+
             <el-dialog
               :visible.sync="awardDialogVisible"
               class="requestShipmentOptions"
@@ -542,11 +543,6 @@
                       class="transporters-element-inputs"
                       filterable
                     >
-                      <!-- <div class="payment-terms-hint">
-                        <div class="hint--inner">
-                          Hint: The longer your payment period is, the higher your interest
-                        </div>
-                      </div> -->
                       <el-option
                         v-for="item in terms"
                         :key="item.value"
@@ -699,6 +695,8 @@
                 </div>
               </div>
             </el-dialog>
+
+
             <el-dialog
               :visible.sync="showDeclineDialog"
               class="declineDocumentOptions"
@@ -728,6 +726,8 @@
                 </button>
               </div>
             </el-dialog>
+
+
             <el-dialog
               :visible.sync="showRatingDialog"
               class="declineDocumentOptions"
@@ -1302,7 +1302,7 @@ export default {
         this.doNotification(
           2,
           this.$t('orderDetailsComponent.award_counter_error'),
-          this.$t('orderDetailsComponent.provide_all_values'),
+          this.billOfLandingName === '' ? this.$t('orderDetailsComponent.provide_bill_lading') : this.$t('orderDetailsComponent.provide_payment_terms'),
         );
       } else {
         this.doNotification(
@@ -1310,7 +1310,7 @@ export default {
           this.$t('orderDetailsComponent.award_shipment_error'),
           this.$t('orderDetailsComponent.provide_all_values'),
         );
-      } 
+      }
     },
     goBack() {
       this.verification_stage = false;

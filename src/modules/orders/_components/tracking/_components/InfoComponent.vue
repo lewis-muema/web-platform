@@ -706,7 +706,14 @@
                                   </form>
                                 </div>
                               </div>
-
+                              <div
+                                class="loading-margin"
+                                v-if="loading_payment"
+                                v-loading="loading_payment"
+                                :element-loading-text="transactionText"
+                                element-loading-spinner="el-icon-loading"
+                              > 
+                              </div>
                             </span>
                           </div>
                           <span v-else-if="getOrderPaymentMethod === 2">
@@ -787,12 +794,13 @@
                           <vue-tel-input
                             v-model.trim="editedContact"
                             v-validate="'required|check_phone'"
-                            class="input-control sign-up-form"
+                            class="input-control sign-up-form phone-input-display"
                             type="number"
                             name="phone"
                             value=""
                             data-vv-validate-on="blur"
-                            v-bind="phoneInputProps"
+                            v-bind="sendyPhoneProps"
+                            :input-options="vueTelInputProps"
                             @onBlur="validate_phone"
                           />
                         </div>
@@ -1021,9 +1029,12 @@ export default {
       mpesa_valid: false,
       mpesa_payment: false,
       mpesa_payment_state: false,
-      phoneInputProps: {
-        mode: 'international',
-        defaultCountry: 'ke',
+      sendyPhoneProps: {
+       mode: 'international',
+       defaultCountry: 'ke',
+       preferredCountries: ['ke', 'ug', 'tz'],
+      },
+      vueTelInputProps: {
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
@@ -1031,7 +1042,6 @@ export default {
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
-        preferredCountries: ['ke', 'ug', 'tz'],
         autocomplete: 'off',
         name: 'telephone',
         maxLen: 25,
@@ -1056,6 +1066,10 @@ export default {
       },
       cancellation_step : false,
       price_request_object : {},
+      transaction_id: null,
+      poll_count: 0,
+      poll_limit: 6,
+      transactionText: 'loading ....',
     };
   },
   computed: {
@@ -2110,23 +2124,15 @@ export default {
               const newSavedCardPayload = {
                 values: response.data,
                 app: 'AUTH',
-                endpoint: 'customers/charge_new_card',
+                endpoint: 'customers/charge_new_card_v2',
               };
               this.requestSavedCards(newSavedCardPayload).then((res) => {
+                this.transaction_id = res.transaction_id;
                 if (res.status) {
-                  if (res.running_balance >= parseInt(this.getAmountDue, 10)) {
-                    this.doCompleteOrder();
-                  } else {
-                    this.doNotification(
-                      2,
-                      this.$t('general.insufficient_balance'),
-                      this.$t('general.amount_charge_not_sufficient'),
-                    );
-                    this.loading_payment = false;
-                  }
+                  this.transactionPoll();
                 } else {
-                  this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
-                  this.loading_payment = false;
+                    this.loading_payment = false;
+                    this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
                 }
               });
             } else {
@@ -2169,24 +2175,17 @@ export default {
         const savedCardPayload = {
           values: payload,
           app: 'AUTH',
-          endpoint: 'customers/charge_saved_card',
+          endpoint: 'customers/charge_saved_card_v2',
         };
         this.loading_payment = true;
         this.requestSavedCards(savedCardPayload).then(
           (response) => {
+            this.transaction_id = response.transaction_id;
             if (response.status) {
-              if (response.running_balance >= parseInt(this.getAmountDue, 10)) {
-                this.doCompleteOrder();
-              } else {
-                this.loading_payment = false;
-                this.doNotification(
-                  2,
-                  this.$t('general.insufficient_balance'),
-                  this.$t('general.amount_charge_not_sufficient'),
-                );
-              }
+              this.transactionPoll();
             } else {
               this.loading_payment = false;
+              this.transactionText = response.reason;
               this.doNotification(2, this.$t('general.failed_to_charge_card'), response.message);
             }
           },
@@ -2196,6 +2195,89 @@ export default {
         this.loading = false;
         this.doNotification(2, this.$t('general.failed_to_charge_card'), this.$t('general.select_one_of_your_saved_cards'));
       }
+    },
+    
+    transactionPoll() {
+      const poll_limit = 6;
+      for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
+        const that = this;
+        (function (poll_count) {
+          setTimeout(() => {
+            if (that.poll_count === poll_limit) {
+              poll_count = poll_limit;
+              return;
+            }
+
+            that.updateTransactionStatus(); 
+            if (poll_count === 5) {
+              that.transactionText = 'card payment Failed';
+              that.loading_payment = false;
+              const notification = {
+                title: that.$t('general.failed_to_charge_card'),
+                level: 2,
+              };
+              that.displayNotification(notification);
+              return;
+            }
+          }, 10000 * poll_count);
+        }(poll_count));
+      }
+    },
+
+    updateTransactionStatus() {
+      const payload = {
+        transaction_id: this.transaction_id,
+      }
+      const fullPayload = {
+        values: payload,
+        app: 'AUTH',
+        endpoint: 'customers/card_payment_status_v2',
+      }
+      this.requestSavedCards(fullPayload).then((res) => {
+        let level = 1;
+        if (res.status) { 
+          this.transactionText = res.message;
+          switch (res.transaction_status) {
+            case 'success':
+              this.poll_count = this.poll_limit;
+              this.loading_payment = false;
+              this.doCompleteOrder();
+              this.$store.commit('setRunningBalance', res.running_balance);
+              const notification1 = {
+                title: res.transaction_status,
+                level: level,
+                message: res.message,
+              };
+              this.displayNotification(notification1);
+              break;
+            case 'failed':
+              this.poll_count = this.poll_limit;
+              this.loading_payment = false;
+              level = 2;
+              const notification2 = {
+                title: res.transaction_status,
+                level: level,
+                message: res.message,
+              };
+              this.displayNotification(notification2);
+              break;
+            case 'pending':
+              break;
+            default:
+              break;
+            }
+
+          return res;
+        }
+
+        const notification = {
+          title: this.$t('general.failed_to_charge_card'),
+          level: 2,
+          message: res.message
+        };
+        this.displayNotification(notification);
+      })
+        
     },
 
     shareETASms() {

@@ -18,7 +18,7 @@ const fr = {
   click_upload: 'cliquez pour télécharger',
   terms_of_delivery_uploaded: 'Téléchargez les conditions de livraison. ',
   upload_bill_lading: 'Téléchargez la facture de chargement',
-  bill_lading_successfully: 'Bill of lading successfully .',
+  bill_lading_successfully: 'Le connaissement a été ajouté avec succès .',
   document: ' document',
   name_document_upload: ' document téléchargé avec succès. ',
   add_document: 'Ajouter un document',
