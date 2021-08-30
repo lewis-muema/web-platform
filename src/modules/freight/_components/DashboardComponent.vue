@@ -197,14 +197,14 @@ export default {
             workingResponse = response[0];
           }
           if (workingResponse.status) {
-            this.logs = workingResponse.log;
+            this.logs = workingResponse.data;
           } else {
             this.logs = [];
           }
           this.loading = false;
         },
         (error) => {
-          this.log = [];
+          this.logs = [];
           this.loading = false;
         },
       );
