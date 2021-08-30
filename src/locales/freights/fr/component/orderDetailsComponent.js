@@ -21,7 +21,7 @@ const fr = {
   available_trucks: 'Camions disponibles',
   rate_per_truck: 'Tarif par camion',
   assignment_label:
-  'Combien de camions disponibles de {{ name }} souhaitez-vous attribuer à cette expédition ?',
+  'Combien de camions disponibles de {{name}} souhaitez-vous attribuer à cette expédition ?',
   bill_of_lading_upload: 'Mettre en ligne le connaissement',
   document_upload_success: 'Le connaissement a été ajouté avec succès',
   payment_terms: 'Quelles sont vos conditions de paiement ?',
