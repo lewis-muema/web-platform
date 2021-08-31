@@ -568,7 +568,6 @@ export default {
   },
   requestAxiosPostPublicApi({ state }, payload) {
     let config = {};
-    console.log(payload);
     const url = payload.environment ? `https://api${payload.environment === 'Sandbox' ? 'test' : ''}.sendyit.com/v2/${payload.endpoint}` : `${state.ENV[payload.app]}${payload.endpoint}`;
     if (process.browser && localStorage.api_token) {
       config = {
@@ -591,7 +590,6 @@ export default {
   },
   requestAxiosPatchPublicApi({ state }, payload) {
     let config = {};
-    console.log(payload);
     const url = payload.environment ? `https://api${payload.environment === 'Sandbox' ? 'test' : ''}.sendyit.com/v2/${payload.endpoint}` : `${state.ENV[payload.app]}${payload.endpoint}`;
     if (process.browser && localStorage.api_token) {
       config = {
