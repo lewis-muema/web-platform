@@ -1,119 +1,164 @@
 <template lang="html">
-  <div class="">
-    <div class="section--filter-wrap">
-      <div class="section--filter-input-wrap" />
-      <div class="section--filter-action-wrap">
-        <button
-          v-if="registered"
-          v-model="update_api_text"
-          type="button"
-          class="button-primary section--filter-action btn-api"
-          name="update_api_text"
-          @click="updateApiKey"
-        >
-          {{ update_api_text }}
-        </button>
-        <button
-          v-if="!registered"
-          v-model="generate_api_text"
-          type="button"
-          class="button-primary section--filter-action btn-api"
-          name="generate_api_text"
-          @click="generateAPIKey"
-        >
-          {{ generate_api_text }}
-        </button>
+  <div>
+    <div
+      v-if="migrated_banner"
+      class="section--new-api-banner-container"
+    >
+      <div class="section--new-api-banner">
+        <i class="el-icon-warning section--new-api-banner-icon" />
+        <p class="section--new-api-banner-title">
+          {{ $t('api.api_v2') }}
+        </p>
+        <p class="section--new-api-banner-body">
+          {{ $t('api.migrated_to_new_api_1') }} <b>{{ $t('api.migrated_to_new_api_2') }}</b> {{ $t('api.and') }} <b>{{ $t('api.migrated_to_new_api_3') }}</b> {{ $t('api.migrated_to_new_api_4') }}
+        </p>
+        <div class="section--new-api-banner-buttons">
+          <button
+            class="section--new-api-banner-cancel"
+            @click="migrated_banner = false"
+          >
+            {{ $t('api.cancel') }}
+          </button>
+          <button
+            class="section--new-api-banner-new-api"
+            @click="$router.push('/admin/apiv2')"
+          >
+            {{ $t('api.new_api') }}
+          </button>
+        </div>
       </div>
     </div>
-    <el-table
-      :data="fetchedData.sandbox"
-      :border="true"
-      :stripe="true"
-      class="fetchedDataLayout"
+    <div
+      v-else
+      class=""
     >
-      <template slot="empty">
-        {{ empty_payments_state }}
-      </template>
-
-      <el-table-column
-        :label="$t('api.username')"
-        prop="api_username"
-      />
-      <el-table-column
-        :label="$t('api.api_key')"
-        prop="api_key"
-      />
-      <el-table-column
-        :label="$t('api.created_updated')"
-        prop="api_date_created"
-      />
-      <el-table-column :label="$t('api.api_status')">
-        <template slot-scope="scope">
-          <span>{{ get_api_status(scope.$index, 'sandbox') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('api.account_status')">
-        <template slot-scope="scope">
-          <span>{{ get_account_status(scope.$index, 'sandbox') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('api.api_environment')">
-        <template slot-scope="scope">
-          <span>{{$t('api.sandbox')}}</span>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-table
-      v-if="fetchedData.live"
-      :data="fetchedData.live"
-      style="width: 100%"
-      :border="true"
-      :stripe="true"
-    >
-      <template slot="empty">
-        {{ empty_payments_state }}
-      </template>
-
-      <el-table-column
-        :label="$t('api.username')"
-        prop="api_username"
-      />
-      <el-table-column
-        :label="$t('api.api_key')"
-        prop="api_key"
-      />
-      <el-table-column
-        :label="$t('api.created_updated')"
-        prop="api_date_created"
-      />
-      <el-table-column :label="$t('api.api_status')">
-        <template slot-scope="scope">
-          <span>{{ get_api_status(scope.$index, 'live') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('api.account_status')">
-        <template slot-scope="scope">
-          <span>{{ get_account_status(scope.$index, 'live') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('api.api_environment')">
-        <template slot-scope="scope">
-          <span>{{$t('api.live')}}</span>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <div class="api--help-content">
-      <p>
-        <span class="content--bold">
-         {{$t('api.ready_to_start')}}
-        </span>
-        {{$t('api.head_over')}}
-        <a
-          href="https://api.sendyit.com/v2/documentation"
-          target="_blank"
-        > {{$t('api.developer_site')}} </a>&nbsp;{{$t('api.complete_doc')}}
+      <div class="section--filter-wrap">
+        <div class="section--filter-input-wrap" />
+        <div class="section--filter-action-wrap">
+          <button
+            v-if="registered"
+            v-model="update_api_text"
+            type="button"
+            class="button-primary section--filter-action btn-api"
+            name="update_api_text"
+            @click="updateApiKey"
+          >
+            {{ update_api_text }}
+          </button>
+          <button
+            v-if="!registered"
+            v-model="generate_api_text"
+            type="button"
+            class="button-primary section--filter-action btn-api"
+            name="generate_api_text"
+            @click="generateAPIKey"
+          >
+            {{ generate_api_text }}
+          </button>
+        </div>
+      </div>
+      <p
+        v-if="fetchedData.sandbox"
+        class="section--table-title"
+      >
+        {{ $t('api.staging_env') }}
       </p>
+      <el-table
+        :data="fetchedData.sandbox"
+        :border="true"
+        :stripe="true"
+        class="fetchedDataLayout"
+      >
+        <template slot="empty">
+          {{ empty_payments_state }}
+        </template>
+
+        <el-table-column
+          :label="$t('api.username')"
+          prop="api_username"
+        />
+        <el-table-column
+          :label="$t('api.api_key')"
+          prop="api_key"
+        />
+        <el-table-column
+          :label="$t('api.created_updated')"
+          prop="api_date_created"
+        />
+        <el-table-column :label="$t('api.api_status')">
+          <template slot-scope="scope">
+            <span>{{ get_api_status(scope.$index, 'sandbox') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('api.account_status')">
+          <template slot-scope="scope">
+            <span>{{ get_account_status(scope.$index, 'sandbox') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('api.api_environment')">
+          <template slot-scope="scope">
+            <span>{{$t('api.sandbox')}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <p
+        v-if="fetchedData.live"
+        class="section--table-title"
+      >
+        {{ $t('api.live_env') }}
+      </p>
+      <el-table
+        v-if="fetchedData.live"
+        :data="fetchedData.live"
+        style="width: 100%"
+        :border="true"
+        :stripe="true"
+      >
+        <template slot="empty">
+          {{ empty_payments_state }}
+        </template>
+
+        <el-table-column
+          :label="$t('api.username')"
+          prop="api_username"
+        />
+        <el-table-column
+          :label="$t('api.api_key')"
+          prop="api_key"
+        />
+        <el-table-column
+          :label="$t('api.created_updated')"
+          prop="api_date_created"
+        />
+        <el-table-column :label="$t('api.api_status')">
+          <template slot-scope="scope">
+            <span>{{ get_api_status(scope.$index, 'live') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('api.account_status')">
+          <template slot-scope="scope">
+            <span>{{ get_account_status(scope.$index, 'live') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('api.api_environment')">
+          <template slot-scope="scope">
+            <span>{{$t('api.live')}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div class="api--help-content">
+        <p>
+          <span class="content--bold">
+            {{$t('api.ready_to_start')}}
+          </span>
+          {{$t('api.head_over')}}
+          <a
+            href="http://docs.sendypublicapi.apiary.io/#"
+            target="_blank"
+          > {{$t('api.developer_site')}} </a>&nbsp;{{$t('api.complete_doc')}}
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -134,6 +179,7 @@ export default {
       update_api_text: this.$t('api.update_key'),
       generate_api_text: this.$t('api.generate_api_key'),
       button_name: '',
+      migrated_banner: true,
     };
   },
   computed: {
