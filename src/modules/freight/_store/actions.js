@@ -82,7 +82,8 @@ const getFreightOrderDetail = function getFreightOrderDetail({ dispatch }, paylo
   });
 };
 const getOwnersListing = function getOwnersListing({ dispatch }) {
-  const country = this.getters.getSession.biz.country_code;
+  const session = this.getters.getSession;
+  const country = session[session.default].country_code;
   const payload = {
     app: 'PARTNERS_APP',
     endpoint: `transporters?country_code=${country}`,
