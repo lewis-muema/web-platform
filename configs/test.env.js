@@ -28,4 +28,5 @@ module.exports = {
   VGS_VAULT_ID: '"tnt4d8qyodm"',
   VGS_ENVIRONMENT: '"sandbox"',
   EXTREME_IP_KEY: '"dmmw1HciGEhld0FiG2ID"',
+  PUBLICAPI: '"https://apitest.sendyit.com/v2/"',
 };
