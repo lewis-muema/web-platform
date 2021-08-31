@@ -58,4 +58,13 @@ export default {
   updateType(state, n) {
     state.type = n;
   },
+  setWebHookEvents(state, n) {
+    state.webhook_events = n;
+  },
+  setAPIPassword(state, n) {
+    state.api_password = n;
+  },
+  setAPIToken(state, n) {
+    state.api_token = n;
+  },
 };
