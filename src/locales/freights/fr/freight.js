@@ -28,7 +28,7 @@ const fr = {
   default_biz_reg_placeholder: 'Saisissez votre numéro de Registre du commerce et du crédit mobilier',
   ci_biz_reg_placeholder: 'Entrez votre numéro de registre de Commerce',
   enter_valid_kraname: 'Veuillez saisir une valeur valide {kraName}',
-  loading_data: 'chargement des données',
+  loading_data: 'Chargement des données',
 };
 
 export default fr;

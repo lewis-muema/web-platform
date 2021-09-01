@@ -1190,8 +1190,9 @@ export default {
         tempName = `bill_of_landing_${values}_${new Date().getTime()}.${name.split('.').pop()}`;
       } else if (type === 'other') {
         tempName = `add_new_document_${values}_${new Date().getTime()}.${name.split('.').pop()}`;
+      } else {
+        tempName = `terms_of_delivery_${values}_${new Date().getTime()}.${name.split('.').pop()}`;
       }
-      tempName = `terms_of_delivery_${values}_${new Date().getTime()}.${name.split('.').pop()}`;
 
       return tempName;
     },
