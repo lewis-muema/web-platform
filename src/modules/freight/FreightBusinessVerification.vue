@@ -427,7 +427,6 @@ export default {
       }
     },
     checkBizCountryCode(country) {
-      document.getElementsByClassName('vti__country-code')[0].innerHTML = country.name;
       this.country_code = country.iso2;
       this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
       switch (true) {
