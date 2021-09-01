@@ -378,6 +378,8 @@ export default {
         type: 'card-expiration-date',
         name: 'expiry_date',
         fontSize: '13px',
+        errorColor: '#D8000C',
+        successColor: '#4F8A10',
         placeholder: this.$t('general.card_expiry'),
         serializers: [{ name: 'replace', options: { old: ' ', new: '' } }],
         validations: ['required', 'validCardExpirationDate'],
