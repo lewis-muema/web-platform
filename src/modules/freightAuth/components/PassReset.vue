@@ -38,7 +38,7 @@
               </p>
               <div class="">
                 <div class="freight-auth-padding">
-                  <label class="freight-input-label"> {{ $t('freightAuth.reset_email') }}</label>
+                  <label class="freight-input-label">{{ $t('freightAuth.reset_email') }}</label>
                   <div class="freight-auth-padding">
                     <input
                       v-model="email"

@@ -22,6 +22,7 @@ const en = {
   details_saved: 'Account details saved successfully',
   sign_up_success: 'Success freight sign up',
   sign_up_error: 'Freight Sign up error',
+  select: 'Select',
 
   // Password Reset
   reset_alert: 'Don’t Worry',

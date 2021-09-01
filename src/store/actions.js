@@ -348,7 +348,7 @@ export default {
           'Content-Type': 'text/plain',
         },
       };
-    } else if (typeof jwtToken !== 'undefined' && jwtToken !== null) {
+    } else if (typeof jwtToken !== 'undefined' || jwtToken !== null) {
       config = {
         headers: {
           'Content-Type': 'text/plain',
@@ -540,6 +540,72 @@ export default {
             return true;
           }
           reject(error);
+          return false;
+        });
+    });
+  },
+  requestAxiosGetPublicApi({ state }, payload) {
+    let config = {};
+    const url = payload.environment ? `https://api${payload.environment === 'Sandbox' ? 'test' : ''}.sendyit.com/v2/${payload.endpoint}` : `${state.ENV[payload.app]}${payload.endpoint}`;
+    if (process.browser && localStorage.api_token) {
+      config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.api_token}`,
+        },
+      };
+    }
+    return new Promise((resolve) => {
+      axios
+        .get(url, config)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          resolve(error.response);
+          return false;
+        });
+    });
+  },
+  requestAxiosPostPublicApi({ state }, payload) {
+    let config = {};
+    const url = payload.environment ? `https://api${payload.environment === 'Sandbox' ? 'test' : ''}.sendyit.com/v2/${payload.endpoint}` : `${state.ENV[payload.app]}${payload.endpoint}`;
+    if (process.browser && localStorage.api_token) {
+      config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.api_token}`,
+        },
+      };
+    }
+    return new Promise((resolve) => {
+      axios
+        .post(url, payload.payload, config)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          resolve(error.response);
+          return false;
+        });
+    });
+  },
+  requestAxiosPatchPublicApi({ state }, payload) {
+    let config = {};
+    const url = payload.environment ? `https://api${payload.environment === 'Sandbox' ? 'test' : ''}.sendyit.com/v2/${payload.endpoint}` : `${state.ENV[payload.app]}${payload.endpoint}`;
+    if (process.browser && localStorage.api_token) {
+      config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.api_token}`,
+        },
+      };
+    }
+    return new Promise((resolve) => {
+      axios
+        .patch(url, payload.payload, config)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          resolve(error.response);
           return false;
         });
     });

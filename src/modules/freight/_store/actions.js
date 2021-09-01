@@ -82,9 +82,11 @@ const getFreightOrderDetail = function getFreightOrderDetail({ dispatch }, paylo
   });
 };
 const getOwnersListing = function getOwnersListing({ dispatch }) {
+  const session = this.getters.getSession;
+  const country = session[session.default].country_code;
   const payload = {
     app: 'PARTNERS_APP',
-    endpoint: 'transporters',
+    endpoint: `transporters?country_code=${country}`,
   };
   return new Promise((resolve, reject) => {
     dispatch('requestAxiosGet', payload, {
@@ -196,7 +198,7 @@ const sendCustomerQuote = function sendCustomerQuote({ dispatch }, payload) {
 
 const requestActivity = function requestActivity({ dispatch }, payload) {
   return new Promise((resolve, reject) => {
-    dispatch('requestAxiosPost', payload, { root: true }).then(
+    dispatch('requestAxiosGet', payload, { root: true }).then(
       (response) => {
         resolve(response.data);
       },

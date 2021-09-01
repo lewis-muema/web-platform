@@ -197,6 +197,14 @@
                 </form>
               </div>
             </div>
+            <div
+              class="loading-margin"
+              v-if="loading"
+              v-loading="loading"
+              :element-loading-text="transactionText"
+              element-loading-spinner="el-icon-loading"
+            > 
+            </div>
             <div v-if="!getCardPaymentStatus">
               <p
                 v-if="country === 'KE'"
@@ -342,6 +350,10 @@ export default {
       activeSavedCard: '',
       saveCardState: false,
       deletedCardIndex: '',
+      transaction_id: null,
+      poll_count: 0,
+      poll_limit: 6,
+      transactionText: 'loading ....',
     };
   },
 
@@ -756,22 +768,15 @@ export default {
               const newSavedCardPayload = {
                 values: response.data,
                 app: 'AUTH',
-                endpoint: 'customers/charge_new_card',
+                endpoint: 'customers/charge_new_card_v2',
               };
               this.requestSavedCards(newSavedCardPayload).then((res) => {
+                this.transaction_id = res.transaction_id;
                 if (res.status) {
-                  if (res.running_balance >= parseInt(this.pending_amount.replace(',', ''), 10)) {
-                    this.doCompleteOrder();
-                  } else {
-                    this.loading = false;
-                    this.doNotification(
-                      2,
-                      this.$t('general.insufficient_balance'),
-                      this.$t('general.amount_charge_not_sufficient'),
-                    );
-                  }
+                  this.transactionPoll();
                 } else {
                   this.loading = false;
+                  this.transactionText = res.reason;
                   this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
                 }
               });
@@ -821,21 +826,19 @@ export default {
         const savedCardPayload = {
           values: payload,
           app: 'AUTH',
-          endpoint: 'customers/charge_saved_card',
+          endpoint: 'customers/charge_saved_card_v2',
         };
         this.loading = true;
         this.requestSavedCards(savedCardPayload).then(
           (response) => {
             if (response.status) {
-              if (response.running_balance >= parseInt(this.pending_amount.replace(',', ''), 10)) {
-                this.doCompleteOrder();
+              this.transaction_id = response.transaction_id;
+              if (response.status) {
+                this.transactionPoll();
               } else {
                 this.loading = false;
-                this.doNotification(
-                  2,
-                  this.$t('general.insufficient_balance'),
-                  this.$t('general.ammount_charge_not_sufficient'),
-                );
+                this.transactionText = response.reason;
+                this.doNotification(2, this.$t('general.failed_to_charge_card'), response.message);
               }
             } else {
               this.loading = false;
@@ -850,6 +853,90 @@ export default {
       }
     },
 
+    transactionPoll() {
+      this.poll_count = 0;
+      const poll_limit = 6;
+      for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
+        const that = this;
+        (function (poll_count) {
+          setTimeout(() => {
+            if (that.poll_count === poll_limit) {
+              poll_count = poll_limit;
+              return;
+            }
+
+            that.updateTransactionStatus(); 
+            if (poll_count === 5) {
+              that.transactionText = 'card payment Failed';
+              that.loading = false;
+              const notification = {
+                title: that.$t('general.failed_to_charge_card'),
+                level: 2,
+              };
+              that.displayNotification(notification);
+              return;
+            }
+          }, 10000 * poll_count);
+        }(poll_count));
+      }
+    },
+
+    updateTransactionStatus() {
+      const payload = {
+        transaction_id: this.transaction_id,
+      }
+      const fullPayload = {
+        values: payload,
+        app: 'AUTH',
+        endpoint: 'customers/card_payment_status_v2',
+      }
+      this.requestSavedCards(fullPayload).then((res) => {
+        let level = 1;
+        if (res.status) { 
+          this.transactionText = res.message;
+          switch (res.transaction_status) {
+            case 'success':
+              this.poll_count = this.poll_limit;
+              this.loading = false;
+              this.doCompleteOrder();
+              this.$store.commit('setRunningBalance', res.running_balance);
+              const notification1 = {
+                title: res.transaction_status,
+                level: level,
+                message: res.message,
+              };
+              this.displayNotification(notification1);
+              break;
+            case 'failed':
+              this.poll_count = this.poll_limit;
+              this.loading = false;
+              level = 2;
+              const notification2 = {
+                title: res.transaction_status,
+                level: level,
+                message: res.message,
+              };
+              this.displayNotification(notification2);
+              break;
+            case 'pending':
+              break;
+            default:
+              break;
+            }
+
+          return res;
+        }
+
+        const notification = {
+          title: this.$t('general.failed_to_charge_card'),
+          level: 2,
+          message: res.message
+        };
+        this.displayNotification(notification);
+      })
+        
+    },
+
     deleteSavedCard(index) {
       const session = this.$store.getters.getSession;
       const accData = session[session.default];
@@ -861,7 +948,7 @@ export default {
       const deleteCardPayload = {
         values: payload,
         app: 'AUTH',
-        endpoint: 'customers/delete_saved_card',
+        endpoint: 'customers/delete_saved_card_v2',
       };
       this.deletedCardIndex = '';
       this.loading = true;

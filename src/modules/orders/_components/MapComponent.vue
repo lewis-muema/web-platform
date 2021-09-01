@@ -104,7 +104,7 @@ export default {
       markers: '$_orders/getMarkers',
       vendors: '$_orders/getVendors',
       polyline: '$_orders/getPolyline',
-      tracking_data: '$_orders/$_tracking/getTrackingData',
+      tracking_data: '$_orders/$_tracking/trackingData',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
       closestCity: 'getClosestCity',
     }),

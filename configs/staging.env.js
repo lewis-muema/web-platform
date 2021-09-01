@@ -24,7 +24,8 @@ module.exports = {
   ORDERS_APP: '"https://auth.sendyit.com/orders/"',
   OWNER_SEARCH: '"https://gate.sendyit.com/solr/owner/"',
   CUSTOMERS_APP: '"https://auth.sendyit.com/customers/"',
-  VGS_VAULT_ID: '"tntr6hr8zz0"',
+  VGS_VAULT_ID: '"tnt4d8qyodm"',
   VGS_ENVIRONMENT: '"live"',
   EXTREME_IP_KEY: '"dmmw1HciGEhld0FiG2ID"',
+  PUBLICAPI: '"https://apitest.sendyit.com/v2/"',
 };
