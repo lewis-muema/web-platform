@@ -2195,6 +2195,7 @@ export default {
     },
     
     transactionPoll() {
+      this.poll_count = 0;
       const poll_limit = 6;
       for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
         const that = this;
