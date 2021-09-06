@@ -554,13 +554,13 @@ export default {
               this.poll_count = this.poll_limit;
               this.clearInputs();
               this.loadingStatus = false;
-              this.$store.commit('setRunningBalance', res.running_balance);
               const notification1 = {
                 title: res.transaction_status,
                 level: level,
                 message: res.message,
               };
               this.displayNotification(notification1);
+              this.requestRB();
               break;
             case 'failed':
               this.poll_count = this.poll_limit;
