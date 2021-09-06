@@ -545,6 +545,7 @@ import NotificationMxn from '../../../mixins/notification_mixin';
 import LoadingComponent from './LoadingComponent.vue';
 import NoTransportersComponent from './StaticDisplay/NoTransportersComponent.vue';
 import MixpanelMixin from '../../../mixins/mixpanel_events_mixin';
+import EventsMixin from '../../../mixins/events_mixin';
 
 Vue.prototype.$http = Axios;
 
@@ -552,7 +553,7 @@ export default {
   name: 'Transporters',
   components: { LoadingComponent, NoTransportersComponent },
   extends: VueTypeahead,
-  mixins: [NotificationMxn, MixpanelMixin],
+  mixins: [NotificationMxn, MixpanelMixin, EventsMixin],
   data() {
     return {
       submit_text: this.$t('transporterComponent.find_transporter'),
@@ -1159,6 +1160,12 @@ export default {
               clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
               device: 'Desktop',
             });
+        const eventPayload = {
+        eventCategory: 'Form submission',
+        eventAction: 'Submit shipment request',
+        eventLabel : 'Shipment request order',
+      };
+      this.fireGAEvent(eventPayload);
           } else {
             this.doNotification(
               2,
