@@ -24,7 +24,7 @@ module.exports = {
   FREIGHT_APP: '"https://auth.sendyit.com/freight-service/"',
   OWNER_SEARCH: '"https://gate.sendyit.com/solr/owner/"',
   CUSTOMERS_APP: '"https://auth.sendyit.com/customers/"',
-  VGS_VAULT_ID: '"tntr6hr8zz0"',
+  VGS_VAULT_ID: '"tntrt5wb0ic"',
   VGS_ENVIRONMENT: '"live"',
   EXTREME_IP_KEY: '"dmmw1HciGEhld0FiG2ID"',
   PUBLICAPI: '"https://api.sendyit.com/v2/"',
