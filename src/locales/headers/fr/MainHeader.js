@@ -2,7 +2,7 @@ const fr = {
   transportation: 'TRANSPORTATION',
   freight: 'Fret',
   helpline: 'Assistance téléphonique',
-  hi: 'Salut',
+  hi: 'Bonjour',
   menu: 'Carte',
   switch_to: 'Passer à to',
   personal: 'Personnel',
