@@ -484,7 +484,8 @@
 
                   <div class="award-shipment-input">
                     <p class="award-input--label">
-                      {{ $t('orderDetail.availabe_trucks_assign', { business_name: awardedTransporter.name }) }}
+                      {{ $t('orderDetail.how_many_of') }}
+                      {{ awardedTransporter.name }}’s {{ $t('orderDetail.availabe_trucks_assign') }}
                     </p>
                     <div class="block">
                       <el-input-number

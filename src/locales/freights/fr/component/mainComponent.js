@@ -3,7 +3,7 @@ const fr = {
   transporters: 'transporteurs',
   orders: 'Les commandes',
   settings: 'Parametres',
-  shipment: 'Les expéditions',
+  shipment: 'Expéditions',
   activity_log: "Journal d'activité",
 };
 
