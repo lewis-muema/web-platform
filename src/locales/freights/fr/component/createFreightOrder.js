@@ -11,7 +11,7 @@ const fr = {
   cost_order: 'Quel est le coût de cette commande? ',
   select_tranporter: 'Sélectionnez le transporteur pour attribuer cette commande',
   search_by_name: 'Chercher pas nom',
-  no_details: 'Aucun detail troiver',
+  no_details: 'Pas de résultats',
   container_return: 'Le conteneur sera-t-il retourné?',
   upload_terms: 'Télécharger les conditions de livraison ',
   drop_file: 'Déposer le fichier ici ou ',
