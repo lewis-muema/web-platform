@@ -15,9 +15,10 @@ import * as Sentry from '@sentry/browser';
 import Vue from 'vue';
 import firebase from 'firebase/app';
 import { mapGetters } from 'vuex';
-import VeeValidate, { Validator }  from 'vee-validate';
+import VeeValidate, { Validator } from 'vee-validate';
 import fr from 'vee-validate/dist/locale/fr';
 import EventsMixin from './mixins/events_mixin';
+import freightRoutes from './mixins/freight_routes_mixin';
 
 const ENV = process.env.CONFIGS_ENV;
 
@@ -61,6 +62,9 @@ export default {
     $route(to, from) {
       if ((from.path === '/auth/sign_in' && to.path === '/orders') || to.path === '/auth/sign_in') {
         this.initializeFreshChat();
+      }
+      if (freightRoutes.includes(to.name)) {
+        window.location = ENV.FREIGHT_NEW_APP;
       }
     },
     getLanguage(val) {
