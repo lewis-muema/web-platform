@@ -22,6 +22,7 @@ module.exports = {
   ORDERS_APP: '"https://auth.sendyit.com/orders/"',
   PARTNERS_APP: '"https://auth.sendyit.com/partners/"',
   FREIGHT_APP: '"https://auth.sendyit.com/freight-service/"',
+  FREIGHT_NEW_APP: '"https://freight.sendyit.com/"',
   OWNER_SEARCH: '"https://gate.sendyit.com/solr/owner/"',
   CUSTOMERS_APP: '"https://auth.sendyit.com/customers/"',
   VGS_VAULT_ID: '"tntrt5wb0ic"',

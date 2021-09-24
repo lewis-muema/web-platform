@@ -21,6 +21,7 @@ module.exports = {
   ADONIS_PRIVATE_API: '"https://auth.staging.sendyit.com/adonis/"',
   PARTNERS_APP: '"https://auth.sendyit.com/partners/"',
   FREIGHT_APP: '"https://auth.sendyit.com/freight-service/"',
+  FREIGHT_NEW_APP: '"https://freight-beta.sendyit.com/"',
   ORDERS_APP: '"https://auth.sendyit.com/orders/"',
   OWNER_SEARCH: '"https://gate.sendyit.com/solr/owner/"',
   CUSTOMERS_APP: '"https://auth.sendyit.com/customers/"',
