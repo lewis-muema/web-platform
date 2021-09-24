@@ -10,6 +10,7 @@ module.exports = merge(prodEnv, {
   PRIVATE_API: '"https://authtest.sendyit.com/parcel/"',
   PARTNERS_APP: '"https://authtest.sendyit.com/partners/"',
   FREIGHT_APP: '"https://authtest.sendyit.com/freight-service/"',
+  FREIGHT_NEW_APP: '"https://freight-test.sendyit.com/"',
   BACKEND_CUSTOMERS_APP: '"https://customerstest.sendyit.com/customers/"',
   PAYMENT_SERVICE: '"https://authtest.sendyit.com/localisation/"',
   BACKEND_API_KEY: '"4RNNeyATKN6B6S6XiOyJdPMEJ3oLRKBT"',
@@ -32,6 +33,5 @@ module.exports = merge(prodEnv, {
   VGS_VAULT_ID: '"tnt4d8qyodm"',
   VGS_ENVIRONMENT: '"sandbox"',
   EXTREME_IP_KEY: '"dmmw1HciGEhld0FiG2ID"',
-  FREIGHT_NEW_APP: '"https://freight-test.sendyit.com/"',
 
 });
