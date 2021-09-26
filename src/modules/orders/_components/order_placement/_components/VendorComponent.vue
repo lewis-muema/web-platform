@@ -2316,6 +2316,7 @@ export default {
           data = {};
         } else {
           data = {
+            waypoint_id: pathObj.waypoint_id,
             coordinates: pathObj.coordinates,
             name: pathObj.name,
             notes: this.notes[i] === undefined ? '' : this.notes[i],
@@ -2336,6 +2337,7 @@ export default {
         data = {};
       } else {
         data = {
+          waypoint_id: pathObj.waypoint_id,
           coordinates: pathObj.coordinates,
           name: pathObj.name,
           notes: this.notes[i],
@@ -2359,6 +2361,7 @@ export default {
           data = {};
         } else {
           data = {
+            waypoint_id: pathObj.waypoint_id,
             coordinates: pathObj.coordinates,
             name: pathObj.name,
             notes: this.notes[i],
@@ -2374,6 +2377,7 @@ export default {
       if (phoneValid) {
         this.validPhone = true;
         data = {
+          waypoint_id: pathObj.waypoint_id,
           coordinates: pathObj.coordinates,
           name: pathObj.name,
           notes: this.notes[i] === undefined ? '' : this.notes[i],
