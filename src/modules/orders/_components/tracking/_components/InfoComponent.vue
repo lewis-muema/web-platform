@@ -905,6 +905,7 @@ import NotificationMxn from '../../../../../mixins/notification_mixin';
 import InterCountyWindow from './InterCountyWindow.vue';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
+import WaypointMxn from '../../../../../mixins/waypoint_mixin';
 import FooterSection from './InfoBarSegments/InfoBarFooterComponent.vue';
 import HeaderSection from './InfoBarSegments/InfoBarHeaderComponent.vue';
 import LocationsSection from './InfoBarSegments/InfoBarLocationsComponent.vue';
@@ -926,7 +927,6 @@ import {
   faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
 import { resolve } from 'path';
-import { generateWaypointId } from '../../../../../store';
 
 library.add(
   faPlus,
@@ -956,7 +956,7 @@ export default {
     InstructionsSection,
     OrderTimelineSection,
   },
-  mixins: [TimezoneMxn, EventsMixin, NotificationMxn, Mcrypt, PaymentMxn],
+  mixins: [TimezoneMxn, EventsMixin, NotificationMxn, Mcrypt, PaymentMxn, WaypointMxn],
   data() {
     return {
       loading: true,
@@ -2766,7 +2766,7 @@ export default {
       }
       const countryIndex = place.address_components.findIndex(country_code => country_code.types.includes('country'));
       const pathObj = {
-        waypoint_id: generateWaypointId(),
+        waypoint_id: this.generateWaypointId(),
         name: place.name,
         coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
         waypoint_details_status: true,
