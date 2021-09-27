@@ -712,7 +712,7 @@
                                 v-loading="loading_payment"
                                 :element-loading-text="transactionText"
                                 element-loading-spinner="el-icon-loading"
-                              > 
+                              >
                               </div>
                             </span>
                           </div>
@@ -905,6 +905,7 @@ import NotificationMxn from '../../../../../mixins/notification_mixin';
 import InterCountyWindow from './InterCountyWindow.vue';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
+import WaypointMxn from '../../../../../mixins/waypoint_mixin';
 import FooterSection from './InfoBarSegments/InfoBarFooterComponent.vue';
 import HeaderSection from './InfoBarSegments/InfoBarHeaderComponent.vue';
 import LocationsSection from './InfoBarSegments/InfoBarLocationsComponent.vue';
@@ -955,7 +956,7 @@ export default {
     InstructionsSection,
     OrderTimelineSection,
   },
-  mixins: [TimezoneMxn, EventsMixin, NotificationMxn, Mcrypt, PaymentMxn],
+  mixins: [TimezoneMxn, EventsMixin, NotificationMxn, Mcrypt, PaymentMxn, WaypointMxn],
   data() {
     return {
       loading: true,
@@ -1615,6 +1616,7 @@ export default {
           for (let i = 0; i < this.tracking_data.path.length; i++) {
             this.locations[i] = this.tracking_data.path[i].name ;
             const pathObj = {
+              waypoint_id: this.tracking_data.path[i].waypoint_id,
               name: this.tracking_data.path[i].name,
               coordinates: this.tracking_data.path[i].coordinates,
               waypoint_details_status: true,
@@ -2196,7 +2198,7 @@ export default {
         this.doNotification(2, this.$t('general.failed_to_charge_card'), this.$t('general.select_one_of_your_saved_cards'));
       }
     },
-    
+
     transactionPoll() {
       this.poll_count = 0;
       const poll_limit = 6;
@@ -2209,7 +2211,7 @@ export default {
               return;
             }
 
-            that.updateTransactionStatus(); 
+            that.updateTransactionStatus();
             if (poll_count === 5) {
               that.transactionText = 'card payment Failed';
               that.loading_payment = false;
@@ -2236,7 +2238,7 @@ export default {
       }
       this.requestSavedCards(fullPayload).then((res) => {
         let level = 1;
-        if (res.status) { 
+        if (res.status) {
           this.transactionText = res.message;
           switch (res.transaction_status) {
             case 'success':
@@ -2278,7 +2280,7 @@ export default {
         };
         this.displayNotification(notification);
       })
-        
+
     },
 
     shareETASms() {
@@ -2766,6 +2768,7 @@ export default {
       }
       const countryIndex = place.address_components.findIndex(country_code => country_code.types.includes('country'));
       const pathObj = {
+        waypoint_id: this.generateWaypointId(),
         name: place.name,
         coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
         waypoint_details_status: true,
@@ -3199,6 +3202,7 @@ export default {
 
       let newData = [
         {
+           waypoint_id : this.storedNotes.waypoint_id,
            coordinates : this.storedNotes.coordinates,
            name : this.storedNotes.name,
            notes : this.editedNotes === '' ? null : this.editedNotes ,
@@ -3210,6 +3214,7 @@ export default {
       for (let i = 0; i < this.tracking_data.path.length; i++) {
         if (this.tracking_data.path[i].name !== this.storedNotes.name) {
           newData.push({
+            waypoint_id : this.tracking_data.path[i].waypoint_id,
             coordinates : this.tracking_data.path[i].coordinates,
             name: this.tracking_data.path[i].name,
             notes : this.tracking_data.path[i].notes === '' ? null : this.tracking_data.path[i].notes,
