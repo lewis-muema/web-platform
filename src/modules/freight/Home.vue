@@ -66,6 +66,8 @@ import MainHeader from '../../components/headers/freight/MainHeader.vue';
 import FreightBusinessVerification from './FreightBusinessVerification.vue';
 import FreightBusinessFinalSetup from './FreightBusinessFinalSetup.vue';
 
+const ENV = process.env.CONFIGS_ENV;
+
 library.add(faStar);
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
@@ -130,6 +132,7 @@ export default {
   },
   mounted() {
     this.checkSessionData();
+    window.location = ENV.FREIGHT_NEW_APP;
   },
   created() {
     const moduleIsRegistered = this.$store._modules.root._children.$_freight !== undefined;
