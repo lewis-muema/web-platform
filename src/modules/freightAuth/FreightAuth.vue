@@ -18,6 +18,8 @@ import RegisterStoreModule from '../../mixins/register_store_module';
 import ExternalHeader from '../../components/headers/freight/ExternalHeader.vue';
 import FreightBackground from './components/FreightBackground.vue';
 
+const ENV = process.env.CONFIGS_ENV;
+
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 Vue.use(VeeValidate);
@@ -63,6 +65,9 @@ export default {
       this.$store.registerModule('$_freightAuth', freightAuthStore);
     }
     this.registerAuthModule();
+  },
+  mounted() {
+    window.location = ENV.FREIGHT_NEW_APP;
   },
   methods: {
     registerAuthModule() {

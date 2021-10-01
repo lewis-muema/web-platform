@@ -493,6 +493,7 @@ export function createRouter() {
         component: () => import('../modules/freight/Home.vue'),
         beforeEnter: freightGuard,
         meta: { innerTrack: 'Freight Home Page' },
+        name: 'freight_home',
         children: [
           {
             path: '/',
@@ -538,12 +539,6 @@ export function createRouter() {
             component: () => import('../modules/freight/_components/SettingsComponent.vue'),
             name: 'freight_settings',
           },
-
-          // {
-          //   path: '/freight/set-up',
-          //   component: () => import('../modules/freight/Freight.vue'),
-          //   name: 'freight_set_up',
-          // },
         ],
       },
 
@@ -613,6 +608,7 @@ export function createRouter() {
       {
         path: '/freight',
         component: () => import('../modules/freightAuth/FreightAuth.vue'),
+        name: 'freight_auth',
         children: [
           {
             path: '/',
@@ -630,26 +626,32 @@ export function createRouter() {
           {
             path: '/freight/sign_up',
             component: () => import('../modules/freightAuth/components/SignUp.vue'),
+            name: 'freight_signup',
           },
           {
             path: '/freight/verify_email',
             component: () => import('../modules/freightAuth/components/verification_phases/EmailVerification.vue'),
+            name: 'freight_email_verification',
           },
           {
             path: '/freight/info_verification/:content',
             component: () => import('../modules/freightAuth/components/verification_phases/SignUpCongratulations.vue'),
+            name: 'freight_congratulation_page',
           },
           {
             path: '/freight/forgot_password',
             component: () => import('../modules/freightAuth/components/PassReset.vue'),
+            name: 'freight_reset_password',
           },
           {
             path: '/freight/reset_password/:content',
             component: () => import('../modules/freightAuth/components/ConfirmPassword.vue'),
+            name: 'freight_confirm_password',
           },
           {
             path: '/freight/terms_and_conditions',
             component: () => import('../modules/freight/VerifyComponent.vue'),
+            name: 'freight_terms_and_conditions',
           },
         ],
       },
