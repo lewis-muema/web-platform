@@ -2316,6 +2316,7 @@ export default {
           data = {};
         } else {
           data = {
+            waypoint_id: pathObj.waypoint_id,
             coordinates: pathObj.coordinates,
             name: pathObj.name,
             notes: this.notes[i] === undefined ? '' : this.notes[i],
@@ -2336,6 +2337,7 @@ export default {
         data = {};
       } else {
         data = {
+          waypoint_id: pathObj.waypoint_id,
           coordinates: pathObj.coordinates,
           name: pathObj.name,
           notes: this.notes[i],
@@ -2359,6 +2361,7 @@ export default {
           data = {};
         } else {
           data = {
+            waypoint_id: pathObj.waypoint_id,
             coordinates: pathObj.coordinates,
             name: pathObj.name,
             notes: this.notes[i],
@@ -2374,6 +2377,7 @@ export default {
       if (phoneValid) {
         this.validPhone = true;
         data = {
+          waypoint_id: pathObj.waypoint_id,
           coordinates: pathObj.coordinates,
           name: pathObj.name,
           notes: this.notes[i] === undefined ? '' : this.notes[i],
@@ -2490,7 +2494,11 @@ export default {
       } else if (val === 2) {
         this.sendGA4Events('add_delivery_notes', {'delivery_notes': this.instructions_data[1].notes});
         this.sendGA4Events('add_drop_off_number', {'delivery_phone_number': this.instructions_data[1].recipient_phone});
-        this.sendGA4Events('add_phone_number', {'pick_up_phone_number': this.instructions_data[0].recipient_phone, 'delivery_phone_number': this.instructions_data[1].recipient_phone});
+        let recipient_phone;
+        if (this.instructions_data[0]) {
+          recipient_phone = this.instructions_data[0].recipient_phone
+        }
+        this.sendGA4Events('add_phone_number', {'pick_up_phone_number': recipient_phone , 'delivery_phone_number': this.instructions_data[1].recipient_phone});
         if (this.instructions_data[1].notify) {
           this.sendGA4Events('select_sms_notification');
         }
