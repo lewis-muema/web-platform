@@ -250,6 +250,32 @@ const PaymentMxn = {
         },
       );
     },
+    requestRB() {
+      const session = this.$store.getters.getSession;
+      let copId = 0;
+      if (session.default === 'biz') {
+        copId = session.biz.cop_id;
+      }
+      const runningBalancePayload = {
+        cop_id: copId,
+        phone: session[session.default].user_phone,
+        default_currency: session[session.default].default_currency,
+        rb_currency: session[session.default].default_currency,
+      };
+      const payload = {
+        values: runningBalancePayload,
+        vm: this,
+        app: 'NODE_PRIVATE_API',
+        endpoint: 'running_balance',
+      };
+      this.$store.dispatch('requestRunningBalance', payload, { root: true }).then(
+        (response) => {
+          const resp = response.data;
+          const balance = resp.data.running_balance;
+          this.$store.commit('setRunningBalance', balance);
+        },
+      );
+    },
   },
 };
 export default PaymentMxn;

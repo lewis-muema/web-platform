@@ -54,7 +54,7 @@ const fr = {
   email_or_phone_placeholder: 'Saisissez votre adresse e-mail ou votre numéro de téléphone.',
   forgot_password: 'Mot de passe oublié?',
   login: 'Se connecter',
-  get_started: 'Vous n’avez pas de compte Sendy Fret ? Démarrer',
+  get_started: 'Vous n’avez pas de compte Sendy Freight ? Démarrer',
   login_error: 'Erreur de connexion',
   provide_all_values: 'Veuillez fournir toutes les valeurs',
   valid_phone: 'Veuillez fournir un numéro de téléphone valide.',
