@@ -914,12 +914,13 @@
                     <vue-tel-input
                       v-model.trim="contact[0]"
                       v-validate="'required|check_phone'"
-                      class="input-control sign-up-form"
+                      class="input-control sign-up-form phone-input-display"
                       type="number"
                       name="phone"
                       value=""
                       data-vv-validate-on="blur"
-                      v-bind="phoneInputProps"
+                      v-bind="sendyPhoneProps"
+                      :input-options="vueTelInputProps"
                     />
                   </div>
                 </div>
@@ -961,12 +962,13 @@
                     <vue-tel-input
                       v-model.trim="sender_phone"
                       v-validate="'required|check_phone'"
-                      class="input-control sign-up-form"
+                      class="input-control sign-up-form phone-input-display"
                       type="number"
                       name="phone"
                       value=""
                       data-vv-validate-on="blur"
-                      v-bind="phoneInputProps"
+                      v-bind="sendyPhoneProps"
+                      :input-options="vueTelInputProps"
                     />
                   </div>
                 </div>
@@ -1008,12 +1010,13 @@
                     <vue-tel-input
                       v-model.trim="contact[index + 1]"
                       v-validate="'required|check_phone'"
-                      class="input-control sign-up-form"
+                      class="input-control sign-up-form phone-input-display"
                       type="number"
                       name="phone"
                       value=""
                       data-vv-validate-on="blur"
-                      v-bind="phoneInputProps"
+                      v-bind="sendyPhoneProps"
+                      :input-options="vueTelInputProps"
                     />
                   </div>
                 </div>
@@ -1180,9 +1183,13 @@ export default {
       instructions_data: [],
       notes: [],
       contact: [],
-      phoneInputProps: {
+      sendyPhoneProps: {
+       mode: 'international',
+       defaultCountry: 'ke',
+       preferredCountries: ['ke', 'ug', 'tz'],
+       },
+      vueTelInputProps: {
         mode: 'international',
-        defaultCountry: 'ke',
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
@@ -1190,7 +1197,6 @@ export default {
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
-        preferredCountries: ['ke', 'ug', 'tz'],
         autocomplete: 'off',
         name: 'telephone',
         maxLen: 25,
@@ -2310,6 +2316,7 @@ export default {
           data = {};
         } else {
           data = {
+            waypoint_id: pathObj.waypoint_id,
             coordinates: pathObj.coordinates,
             name: pathObj.name,
             notes: this.notes[i] === undefined ? '' : this.notes[i],
@@ -2330,6 +2337,7 @@ export default {
         data = {};
       } else {
         data = {
+          waypoint_id: pathObj.waypoint_id,
           coordinates: pathObj.coordinates,
           name: pathObj.name,
           notes: this.notes[i],
@@ -2353,6 +2361,7 @@ export default {
           data = {};
         } else {
           data = {
+            waypoint_id: pathObj.waypoint_id,
             coordinates: pathObj.coordinates,
             name: pathObj.name,
             notes: this.notes[i],
@@ -2368,6 +2377,7 @@ export default {
       if (phoneValid) {
         this.validPhone = true;
         data = {
+          waypoint_id: pathObj.waypoint_id,
           coordinates: pathObj.coordinates,
           name: pathObj.name,
           notes: this.notes[i] === undefined ? '' : this.notes[i],
@@ -2484,7 +2494,11 @@ export default {
       } else if (val === 2) {
         this.sendGA4Events('add_delivery_notes', {'delivery_notes': this.instructions_data[1].notes});
         this.sendGA4Events('add_drop_off_number', {'delivery_phone_number': this.instructions_data[1].recipient_phone});
-        this.sendGA4Events('add_phone_number', {'pick_up_phone_number': this.instructions_data[0].recipient_phone, 'delivery_phone_number': this.instructions_data[1].recipient_phone});
+        let recipient_phone;
+        if (this.instructions_data[0]) {
+          recipient_phone = this.instructions_data[0].recipient_phone
+        }
+        this.sendGA4Events('add_phone_number', {'pick_up_phone_number': recipient_phone , 'delivery_phone_number': this.instructions_data[1].recipient_phone});
         if (this.instructions_data[1].notify) {
           this.sendGA4Events('select_sms_notification');
         }

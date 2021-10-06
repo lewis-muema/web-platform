@@ -706,7 +706,14 @@
                                   </form>
                                 </div>
                               </div>
-
+                              <div
+                                class="loading-margin"
+                                v-if="loading_payment"
+                                v-loading="loading_payment"
+                                :element-loading-text="transactionText"
+                                element-loading-spinner="el-icon-loading"
+                              >
+                              </div>
                             </span>
                           </div>
                           <span v-else-if="getOrderPaymentMethod === 2">
@@ -787,12 +794,13 @@
                           <vue-tel-input
                             v-model.trim="editedContact"
                             v-validate="'required|check_phone'"
-                            class="input-control sign-up-form"
+                            class="input-control sign-up-form phone-input-display"
                             type="number"
                             name="phone"
                             value=""
                             data-vv-validate-on="blur"
-                            v-bind="phoneInputProps"
+                            v-bind="sendyPhoneProps"
+                            :input-options="vueTelInputProps"
                             @onBlur="validate_phone"
                           />
                         </div>
@@ -897,6 +905,7 @@ import NotificationMxn from '../../../../../mixins/notification_mixin';
 import InterCountyWindow from './InterCountyWindow.vue';
 import Mcrypt from '../../../../../mixins/mcrypt_mixin';
 import PaymentMxn from '../../../../../mixins/payment_mixin';
+import WaypointMxn from '../../../../../mixins/waypoint_mixin';
 import FooterSection from './InfoBarSegments/InfoBarFooterComponent.vue';
 import HeaderSection from './InfoBarSegments/InfoBarHeaderComponent.vue';
 import LocationsSection from './InfoBarSegments/InfoBarLocationsComponent.vue';
@@ -947,7 +956,7 @@ export default {
     InstructionsSection,
     OrderTimelineSection,
   },
-  mixins: [TimezoneMxn, EventsMixin, NotificationMxn, Mcrypt, PaymentMxn],
+  mixins: [TimezoneMxn, EventsMixin, NotificationMxn, Mcrypt, PaymentMxn, WaypointMxn],
   data() {
     return {
       loading: true,
@@ -1021,9 +1030,12 @@ export default {
       mpesa_valid: false,
       mpesa_payment: false,
       mpesa_payment_state: false,
-      phoneInputProps: {
-        mode: 'international',
-        defaultCountry: 'ke',
+      sendyPhoneProps: {
+       mode: 'international',
+       defaultCountry: 'ke',
+       preferredCountries: ['ke', 'ug', 'tz'],
+      },
+      vueTelInputProps: {
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
@@ -1031,7 +1043,6 @@ export default {
         required: false,
         enabledCountryCode: false,
         enabledFlags: true,
-        preferredCountries: ['ke', 'ug', 'tz'],
         autocomplete: 'off',
         name: 'telephone',
         maxLen: 25,
@@ -1056,6 +1067,10 @@ export default {
       },
       cancellation_step : false,
       price_request_object : {},
+      transaction_id: null,
+      poll_count: 0,
+      poll_limit: 6,
+      transactionText: 'loading ....',
     };
   },
   computed: {
@@ -1599,6 +1614,7 @@ export default {
           for (let i = 0; i < this.tracking_data.path.length; i++) {
             this.locations[i] = this.tracking_data.path[i].name ;
             const pathObj = {
+              waypoint_id: this.tracking_data.path[i].waypoint_id,
               name: this.tracking_data.path[i].name,
               coordinates: this.tracking_data.path[i].coordinates,
               waypoint_details_status: true,
@@ -1790,7 +1806,7 @@ export default {
     calculateCancellationFee(reason) {
       const payload = {
         order_no: this.tracking_data.order_no,
-        cancellation_reason_id: reason, 
+        cancellation_reason_id: reason,
       };
       this.$store.dispatch('$_orders/$_tracking/computeCancellationFee', payload).then(
         (response) => {
@@ -2108,23 +2124,15 @@ export default {
               const newSavedCardPayload = {
                 values: response.data,
                 app: 'AUTH',
-                endpoint: 'customers/charge_new_card',
+                endpoint: 'customers/charge_new_card_v2',
               };
               this.requestSavedCards(newSavedCardPayload).then((res) => {
+                this.transaction_id = res.transaction_id;
                 if (res.status) {
-                  if (res.running_balance >= parseInt(this.getAmountDue, 10)) {
-                    this.doCompleteOrder();
-                  } else {
-                    this.doNotification(
-                      2,
-                      this.$t('general.insufficient_balance'),
-                      this.$t('general.amount_charge_not_sufficient'),
-                    );
-                    this.loading_payment = false;
-                  }
+                  this.transactionPoll();
                 } else {
-                  this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
-                  this.loading_payment = false;
+                    this.loading_payment = false;
+                    this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
                 }
               });
             } else {
@@ -2167,24 +2175,17 @@ export default {
         const savedCardPayload = {
           values: payload,
           app: 'AUTH',
-          endpoint: 'customers/charge_saved_card',
+          endpoint: 'customers/charge_saved_card_v2',
         };
         this.loading_payment = true;
         this.requestSavedCards(savedCardPayload).then(
           (response) => {
+            this.transaction_id = response.transaction_id;
             if (response.status) {
-              if (response.running_balance >= parseInt(this.getAmountDue, 10)) {
-                this.doCompleteOrder();
-              } else {
-                this.loading_payment = false;
-                this.doNotification(
-                  2,
-                  this.$t('general.insufficient_balance'),
-                  this.$t('general.amount_charge_not_sufficient'),
-                );
-              }
+              this.transactionPoll();
             } else {
               this.loading_payment = false;
+              this.transactionText = response.reason;
               this.doNotification(2, this.$t('general.failed_to_charge_card'), response.message);
             }
           },
@@ -2194,6 +2195,90 @@ export default {
         this.loading = false;
         this.doNotification(2, this.$t('general.failed_to_charge_card'), this.$t('general.select_one_of_your_saved_cards'));
       }
+    },
+
+    transactionPoll() {
+      this.poll_count = 0;
+      const poll_limit = 6;
+      for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
+        const that = this;
+        (function (poll_count) {
+          setTimeout(() => {
+            if (that.poll_count === poll_limit) {
+              poll_count = poll_limit;
+              return;
+            }
+
+            that.updateTransactionStatus();
+            if (poll_count === 5) {
+              that.transactionText = 'card payment Failed';
+              that.loading_payment = false;
+              const notification = {
+                title: that.$t('general.failed_to_charge_card'),
+                level: 2,
+              };
+              that.displayNotification(notification);
+              return;
+            }
+          }, 10000 * poll_count);
+        }(poll_count));
+      }
+    },
+
+    updateTransactionStatus() {
+      const payload = {
+        transaction_id: this.transaction_id,
+      }
+      const fullPayload = {
+        values: payload,
+        app: 'AUTH',
+        endpoint: 'customers/card_payment_status_v2',
+      }
+      this.requestSavedCards(fullPayload).then((res) => {
+        let level = 1;
+        if (res.status) {
+          this.transactionText = res.message;
+          switch (res.transaction_status) {
+            case 'success':
+              this.poll_count = this.poll_limit;
+              this.loading_payment = false;
+              this.doCompleteOrder();
+              const notification1 = {
+                title: res.transaction_status,
+                level: level,
+                message: res.message,
+              };
+              this.displayNotification(notification1);
+              this.requestRB();
+              break;
+            case 'failed':
+              this.poll_count = this.poll_limit;
+              this.loading_payment = false;
+              level = 2;
+              const notification2 = {
+                title: res.transaction_status,
+                level: level,
+                message: res.message,
+              };
+              this.displayNotification(notification2);
+              break;
+            case 'pending':
+              break;
+            default:
+              break;
+            }
+
+          return res;
+        }
+
+        const notification = {
+          title: this.$t('general.failed_to_charge_card'),
+          level: 2,
+          message: res.message
+        };
+        this.displayNotification(notification);
+      })
+
     },
 
     shareETASms() {
@@ -2681,6 +2766,7 @@ export default {
       }
       const countryIndex = place.address_components.findIndex(country_code => country_code.types.includes('country'));
       const pathObj = {
+        waypoint_id: this.generateWaypointId(),
         name: place.name,
         coordinates: `${place.geometry.location.lat()},${place.geometry.location.lng()}`,
         waypoint_details_status: true,
@@ -3114,6 +3200,7 @@ export default {
 
       let newData = [
         {
+           waypoint_id : this.storedNotes.waypoint_id,
            coordinates : this.storedNotes.coordinates,
            name : this.storedNotes.name,
            notes : this.editedNotes === '' ? null : this.editedNotes ,
@@ -3125,6 +3212,7 @@ export default {
       for (let i = 0; i < this.tracking_data.path.length; i++) {
         if (this.tracking_data.path[i].name !== this.storedNotes.name) {
           newData.push({
+            waypoint_id : this.tracking_data.path[i].waypoint_id,
             coordinates : this.tracking_data.path[i].coordinates,
             name: this.tracking_data.path[i].name,
             notes : this.tracking_data.path[i].notes === '' ? null : this.tracking_data.path[i].notes,

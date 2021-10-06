@@ -37,12 +37,13 @@
                   }}</label>
                   <div class="freight-auth-padding">
                     <vue-tel-input
-                      class="input-control sign-up-form business-country-select"
+                      class="input-control sign-up-form business-country-select phone-input-display"
                       type="number"
                       name="phone"
                       value=""
                       data-vv-validate-on="blur"
-                      v-bind="phoneInputProps"
+                      v-bind="sendyPhoneProps"
+                      :input-options="vueTelInputProps"
                       :enabled-country-code="true"
                       @country-changed="checkBizCountryCode"
                     />
@@ -171,12 +172,13 @@
                       <vue-tel-input
                         v-model.trim="director_phone"
                         v-validate="'required|check_phone'"
-                        class="input-control sign-up-form"
+                        class="input-control sign-up-form phone-input-display"
                         type="number"
                         name="phone"
                         value=""
                         data-vv-validate-on="blur"
-                        v-bind="phoneInputProps"
+                        v-bind="sendyPhoneProps"
+                        :input-options="vueTelInputProps"
                         @onBlur="validate_phone"
                         @country-changed="checkCountryCode"
                       />
@@ -230,12 +232,13 @@
                     <vue-tel-input
                       v-model.trim="invoice_phone"
                       v-validate="'required|check_phone'"
-                      class="input-control sign-up-form"
+                      class="input-control sign-up-form phone-input-display"
                       type="number"
                       name="phone"
                       value=""
                       data-vv-validate-on="blur"
-                      v-bind="phoneInputProps"
+                      v-bind="sendyPhoneProps"
+                      :input-options="vueTelInputProps"
                       @onBlur="validate_phone"
                       @country-changed="checkCountryCode"
                     />
@@ -336,16 +339,18 @@ export default {
       phone: '',
       invoice_phone: '',
       verification_code: '',
-      phoneInputProps: {
+      sendyPhoneProps: {
         mode: 'international',
+        preferredCountries: [],
         defaultCountry: 'ke',
+      },
+      vueTelInputProps: {
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
         placeholder: this.$t('signUpDetails.enter_phone_number'),
         required: false,
         enabledFlags: true,
-        preferredCountries: [],
         autocomplete: 'off',
         name: 'telephone',
         maxLen: 25,
@@ -415,18 +420,17 @@ export default {
         this.kra_pin = session[session.default].tax_authority_pin;
         this.biz_registration = session[session.default].company_reg_no;
         if (session[session.default].country_code !== '') {
-          this.phoneInputProps.defaultCountry = session[session.default].country_code.toLowerCase();
+          this.sendyPhoneProps.defaultCountry = session[session.default].country_code.toLowerCase();
         }
       } else {
         this.$router.push('/freight');
       }
     },
     checkBizCountryCode(country) {
-      document.getElementsByClassName('vti__country-code')[0].innerHTML = country.name;
       this.country_code = country.iso2;
       this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
       switch (true) {
-        case this.phoneInputProps.preferredCountries.includes(this.country_code.toLowerCase()):
+        case this.sendyPhoneProps.preferredCountries.includes(this.country_code.toLowerCase()):
           this.valid_biz_country = true;
           break;
         default:
@@ -440,28 +444,28 @@ export default {
         endpoint: 'currency/get_supported_countries',
       };
 
-      this.phoneInputProps.preferredCountries = [];
+      this.sendyPhoneProps.preferredCountries = [];
 
       this.getSupportedCountries(fullPayload)
         .then((response) => {
           if (response.request_status) {
             response.countries.forEach((country) => {
-              this.phoneInputProps.preferredCountries.push(country.country_code.toLowerCase());
+              this.sendyPhoneProps.preferredCountries.push(country.country_code.toLowerCase());
               this.preferredCountries.push(country.country_code.toLowerCase());
             });
           } else {
-            this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
+            this.sendyPhoneProps.preferredCountries = ['ke', 'tz', 'ug'];
           }
         })
         .catch(() => {
-          this.phoneInputProps.preferredCountries = ['ke', 'tz', 'ug'];
+          this.sendyPhoneProps.preferredCountries = ['ke', 'tz', 'ug'];
         });
     },
     checkCountryCode(country) {
       this.localCountryCode = country.iso2;
       this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
       switch (true) {
-        case this.phoneInputProps.preferredCountries.includes(this.localCountryCode.toLowerCase()):
+        case this.sendyPhoneProps.preferredCountries.includes(this.localCountryCode.toLowerCase()):
           this.valid_country = true;
           break;
         default:
