@@ -164,7 +164,7 @@
               class="homeview--input-suggetions-link"
               @click="triggerLocationsManagementPopUp(true, 'DROPOFF')"
             >
-              {{$t('general.add_remove_saved_loc')}} > 
+              {{$t('general.add_remove_saved_loc')}} >
             </div>
           </div>
         </div>
@@ -361,6 +361,7 @@ import VendorComponent from './_components/VendorComponent.vue';
 import SessionMxn from '../../../../mixins/session_mixin';
 import EventsMixin from '../../../../mixins/events_mixin';
 import NotificationMxn from '../../../../mixins/notification_mixin';
+import WaypointMxn from '../../../../mixins/waypoint_mixin';
 
 library.add(
   faPlus,
@@ -383,7 +384,7 @@ export default {
     'no-ssr': NoSSR,
     'vendor-view': VendorComponent,
   },
-  mixins: [SessionMxn, EventsMixin, NotificationMxn],
+  mixins: [SessionMxn, EventsMixin, NotificationMxn, WaypointMxn],
   data() {
     return {
       show_destinations: false,
@@ -687,6 +688,7 @@ export default {
       }
       const countryIndex = type === 1 ? place.address_components.findIndex(country_code => country_code.types.includes('country')) : '';
       const pathObj = {
+        waypoint_id: this.generateWaypointId(),
         name: place.name,
         coordinates: type === 1 ? `${place.geometry.location.lat()},${place.geometry.location.lng()}` : place.coordinates,
         waypoint_details_status: true,
