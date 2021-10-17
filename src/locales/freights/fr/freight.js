@@ -7,7 +7,7 @@ const fr = {
   pin_peer_label: 'Votre',
   valid_tin_no: "Veuillez entrer un numéro d'identification fiscale valide.",
   valid_kra: "Veuillez entrer un numéro d'identification fiscale de KRA valide",
-  valid_ci_pin: 'Veuillez saisir un Numéro de Compte Contribuable valide',
+  valid_ci_pin: 'Veuillez saisir un Numéro de Compte Contribuable valide ',
   session_expired: 'Votre session a expiré! ',
   redirected: 'Vous serez redirigé vers la page de connexion dans les 5 secondes.',
   final_setup_error: 'Erreur de configuration finale !',

@@ -35,7 +35,7 @@
               </el-row>
 
               <p class="freight-sign-up-header">
-                {{ $t('freightAuth.welcome') }}
+               {{ $t('freightAuth.welcome') }}
               </p>
               <p class="freight-sign-up-description">
                 {{ $t('freightAuth.final_details') }}

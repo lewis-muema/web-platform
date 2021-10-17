@@ -484,9 +484,8 @@
 
                   <div class="award-shipment-input">
                     <p class="award-input--label">
-                      How many of
-                      {{ awardedTransporter.name }}’s available trucks do you want to assign to this
-                      shipment?
+                      {{ $t('orderDetail.how_many_of') }}
+                      {{ awardedTransporter.name }}’s {{ $t('orderDetail.availabe_trucks_assign') }}
                     </p>
                     <div class="block">
                       <el-input-number
@@ -806,7 +805,7 @@ export default {
       rating: 5.0,
       loading: true,
       approve_quatation_text: this.$t('orderDetailsComponent.award'),
-      accept: this.$t('orderDetailsComponent.accept'),
+      accept: 'Accept',
       decline_quatation_text: this.$t('orderDetailsComponent.decline'),
       viewDocumentOption: false,
       src_link: '',
@@ -1061,44 +1060,6 @@ export default {
             2,
             this.$t('orderDetailsComponent.failure_to_retrieve_options'),
             this.$t('orderDetailsComponent.failure_options_support'),
-          );
-          this.$router.push('/freight/orders');
-        },
-      );
-    },
-    setBillOfLadingData() {
-      const fullPayload = {
-        app: 'FREIGHT_APP',
-        operator: '?',
-        endpoint: 'document_types/stages/1',
-      };
-      this.getDocumentOptions(fullPayload).then(
-        (response) => {
-          if (response.status) {
-            const responseData = response.data;
-            if (responseData.length > 0) {
-              const listed = responseData.find(
-                location => location.document_type === this.$t('createFreightOrder.bol'),
-              );
-
-              if (listed !== undefined) {
-                this.billOfLadingOptions = listed;
-              }
-            }
-          } else {
-            this.doNotification(
-              2,
-              'Failed to retrieve awarding documents options',
-              response.message,
-            );
-            this.$router.push('/freight/orders');
-          }
-        },
-        (error) => {
-          this.doNotification(
-            2,
-            'Awarding document options retrival failure !',
-            'Failed to fetch document options , Kindly retry again or contact customer support ',
           );
           this.$router.push('/freight/orders');
         },
