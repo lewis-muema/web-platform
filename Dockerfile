@@ -17,7 +17,7 @@ ENV DOCKER_ENV=$DOCKER_ENV
 
 USER sendy:sendy
 
-COPY package*.json ./
+COPY package.json ./
 
 RUN npm install 
 
