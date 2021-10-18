@@ -6,7 +6,7 @@
 import mqtt from 'mqtt';
 
 const getTrackingData = function getTrackingData({ commit, dispatch, state }, data) {
-  data.closest_city = this.getters.getClosestCity === '';
+  data.closest_city = this.getters.getClosestCity === '' ? true : false;
   const payload = {
     app: 'NODE_PRIVATE_API',
     endpoint: 'pending_delivery',
@@ -45,8 +45,8 @@ const getTrackingData = function getTrackingData({ commit, dispatch, state }, da
 
 const cancelOrder = function cancelOrder({ dispatch }, data) {
   const payload = {
-    app: 'ADONIS_PRIVATE_API',
-    endpoint: 'orders/cancel-order',
+    app: 'PRIVATE_API',
+    endpoint: 'cancel_order',
     values: data,
   };
 
