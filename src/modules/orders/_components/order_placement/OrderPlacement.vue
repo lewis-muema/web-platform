@@ -18,7 +18,7 @@
             />
             <gmap-autocomplete
               id="pickup"
-              v-model="locations[0]"
+              :value="locations[0]"
               :options="map_options"
               :placeholder="$t('general.enter_pickup_location')"
               :select-first-on-enter="true"
@@ -98,7 +98,7 @@
               />
               <gmap-autocomplete
                 id="destination"
-                v-model="locations[1]"
+                :value="locations[1]"
                 :options="map_options"
                 :placeholder="$t('general.enter_destination_location')"
                 :select-first-on-enter="true"
@@ -184,7 +184,7 @@
               />
               <gmap-autocomplete
                 :id="`destination${n}`"
-                v-model="locations[n + 1]"
+                :value="locations[n + 1]"
                 :options="map_options"
                 :placeholder="$t('general.enter_destination_location')"
                 :select-first-on-enter="true"

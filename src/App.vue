@@ -398,6 +398,7 @@ export default {
         window.Beacon('close');
         window.Beacon('open');
         window.Beacon('navigate', '/answers/');
+
         setTimeout(() => {
           window.Beacon('suggest', ['59d5e11f2c7d3a40f0ed34fe']);
           this.trackMixpanelEvent('Auto pop up helpscout beacon for order placement', {
