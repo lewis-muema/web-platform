@@ -368,6 +368,7 @@ export default {
     checkCountryCode(country) {
       this.localCountryCode = country.iso2;
       this.localCountry = currencyConversion.getCountryByCode(country.iso2).currencyCode;
+
       switch (true) {
         case (this.sendyPhoneProps.preferredCountries.includes(this.localCountryCode.toLowerCase())):
           this.countryNotSupported = '';
@@ -824,10 +825,13 @@ export default {
       this.performGetActions(fullPayload)
         .then((response) => {
           if (response.request_status) {
+            const preferredCountries = [];
             response.countries.forEach((country) => {
-              this.vueTelInputProps.preferredCountries.push(country.country_code.toLowerCase());
-              this.preferredCountries.push(country.country_code.toLowerCase());
+              preferredCountries.push(country.country_code.toLowerCase());
             });
+            this.sendyPhoneProps.preferredCountries = preferredCountries ;
+            this.vueTelInputProps.preferredCountries = preferredCountries ;
+            this.preferredCountries = preferredCountries;
           } else {
             this.sendyPhoneProps.preferredCountries = ['ke', 'tz', 'ug'];
           }
