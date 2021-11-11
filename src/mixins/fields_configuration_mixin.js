@@ -8,7 +8,7 @@ const validations = [
   },
   {
     field: 'biz_name',
-    rule: /^\w/,
+    rule: /^([\w\s*+-_@&$#%()]+)$/,
     required: true,
   },
 ];
