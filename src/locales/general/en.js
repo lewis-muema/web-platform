@@ -927,8 +927,9 @@ const translations = {
   tommorow: 'Tommorrow',
   update_instructions: 'Update Instructions',
   language_changed: 'Your preferred Language Changed to English',
-
-
+  // validation
+  user_name_error: 'Kindly provide the first and last name',
+  biz_name_error: 'Business name should contain atleast two names',
 };
 
 const en = {
