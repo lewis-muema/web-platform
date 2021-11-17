@@ -12,7 +12,10 @@ const fr = {
   head_over: 'aller à la',
   developer_site: 'site développeur ',
   complete_doc: 'site développeur ',
-
+  no_data: 'FR_No Data',
+  access_sandbox_1: 'FR_To access the sandbox environment please click',
+  here: 'FR_here',
+  access_sandbox_2: 'FR_to sign up, Then follow the same steps.',
   api_credentials: "Récupération des identifiants d'IPA (interface de programmation d'application)",
   update: "Mise à jour de la clé d'IPA",
   generate_api_key: "Générer une clé d'IPA",

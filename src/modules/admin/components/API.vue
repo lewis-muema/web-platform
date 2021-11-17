@@ -57,14 +57,8 @@
           </button>
         </div>
       </div>
-      <p
-        v-if="fetchedData.sandbox"
-        class="section--table-title"
-      >
-        {{ $t('api.staging_env') }}
-      </p>
       <el-table
-        :data="fetchedData.sandbox"
+        :data="fetchedData[env.APIENV]"
         :border="true"
         :stripe="true"
         class="fetchedDataLayout"
@@ -87,62 +81,17 @@
         />
         <el-table-column :label="$t('api.api_status')">
           <template slot-scope="scope">
-            <span>{{ get_api_status(scope.$index, 'sandbox') }}</span>
+            <span>{{ get_api_status(scope.$index, env.APIENV) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('api.account_status')">
           <template slot-scope="scope">
-            <span>{{ get_account_status(scope.$index, 'sandbox') }}</span>
+            <span>{{ get_account_status(scope.$index, env.APIENV) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('api.api_environment')">
           <template slot-scope="scope">
-            <span>{{$t('api.sandbox')}}</span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <p
-        v-if="fetchedData.live"
-        class="section--table-title"
-      >
-        {{ $t('api.live_env') }}
-      </p>
-      <el-table
-        v-if="fetchedData.live"
-        :data="fetchedData.live"
-        style="width: 100%"
-        :border="true"
-        :stripe="true"
-      >
-        <template slot="empty">
-          {{ empty_payments_state }}
-        </template>
-
-        <el-table-column
-          :label="$t('api.username')"
-          prop="api_username"
-        />
-        <el-table-column
-          :label="$t('api.api_key')"
-          prop="api_key"
-        />
-        <el-table-column
-          :label="$t('api.created_updated')"
-          prop="api_date_created"
-        />
-        <el-table-column :label="$t('api.api_status')">
-          <template slot-scope="scope">
-            <span>{{ get_api_status(scope.$index, 'live') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('api.account_status')">
-          <template slot-scope="scope">
-            <span>{{ get_account_status(scope.$index, 'live') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('api.api_environment')">
-          <template slot-scope="scope">
-            <span>{{$t('api.live')}}</span>
+            <span>{{ env.APIENV }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -185,6 +134,7 @@ export default {
   computed: {
     ...mapGetters({
       fetchedData: '$_admin/getKeysList',
+      env: 'getENV',
     }),
   },
   mounted() {
