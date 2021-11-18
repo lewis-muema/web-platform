@@ -32,19 +32,6 @@
             />
           </button>
         </div>
-        <div
-          v-if="envmnt.APIENV === 'live'"
-          class="sandbox-inf"
-        >
-          {{ $t('api.access_sandbox_1') }}
-          <a
-            href="https://webapptest.sendyit.com/auth/sign_up"
-            target="_blank"
-          >
-            {{ $t('api.here') }}
-          </a>
-          {{ $t('api.access_sandbox_2') }}
-        </div>
       </div>
     </div>
     <div
@@ -67,7 +54,7 @@
       <p
         class="section--table-title"
       >
-        {{ capitalize(envmnt.APIENV) }} {{ $t('api.api_env') }}
+        {{ environment }} {{ $t('api.api_env') }}
       </p>
       <el-table
         :data="webhooks"
@@ -231,7 +218,6 @@ export default {
   computed: {
     ...mapGetters({
       fetchedData: '$_admin/getKeysList',
-      envmnt: 'getENV',
     }),
   },
   mounted() {
@@ -245,9 +231,6 @@ export default {
       addWebHooks: '$_admin/addWebHooks',
       updateWebHooks: '$_admin/updateWebHooks',
     }),
-    capitalize(env) {
-      return env.charAt(0).toUpperCase() + env.slice(1);
-    },
     requestWebhooks() {
       if (!this.token) {
         const level = 2;
@@ -264,7 +247,6 @@ export default {
             this.getUserWebHooks().then((res) => {
               this.loading = false;
               this.webhooks = res.status ? res.data : [];
-              this.empty_payments_state = this.webhooks.length === 0 ? this.$t('api.no_data') : this.$t('api.api_credentials');
               this.api_token = this.token;
             });
           } else {
@@ -375,11 +357,5 @@ export default {
 .fetchedDataLayout{
   width: 100%;
   margin-bottom: 2%;
-}
-.sandbox-inf {
-  margin: 25px 0px;
-  width: 300px;
-  text-align: center;
-  font-size: 14px;
 }
 </style>

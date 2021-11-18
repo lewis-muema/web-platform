@@ -79,19 +79,6 @@
             {{ $t('api.set_password') }}
           </span>
         </p>
-        <div
-          v-if="envmnt.APIENV === 'live'"
-          class="sandbox-info"
-        >
-          {{ $t('api.access_sandbox_1') }}
-          <a
-            href="https://webapptest.sendyit.com/auth/sign_up"
-            target="_blank"
-          >
-            {{ $t('api.here') }}
-          </a>
-          {{ $t('api.access_sandbox_2') }}
-        </div>
       </div>
     </div>
     <div
@@ -190,7 +177,6 @@ export default {
   computed: {
     ...mapGetters({
       fetchedData: '$_admin/getKeysList',
-      envmnt: 'getENV',
     }),
   },
   mounted() {
@@ -320,11 +306,5 @@ export default {
 .fetchedDataLayout{
   width: 100%;
   margin-bottom: 2%;
-}
-.sandbox-info {
-  width: 300px;
-  text-align: center;
-  font-size: 14px;
-  color: #BDBDBD;
 }
 </style>
