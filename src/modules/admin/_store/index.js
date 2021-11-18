@@ -20,6 +20,9 @@ const state = {
   type: '',
   invites: {},
   added_status: '',
+  webhook_events: [],
+  api_password: '',
+  api_token: '',
 };
 
 export default {
