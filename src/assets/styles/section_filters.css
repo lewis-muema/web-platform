@@ -10,11 +10,226 @@
   float: left;
 }
 
+.section--new-api-banner-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 50px 0px;
+}
+
+.section--new-api-banner-icon {
+    margin-bottom: 10px;
+    color: #1682c5;
+    font-size: 25px;
+}
+
+.section--new-api-banner-title {
+    font-weight: 600;
+    color: #303133;
+}
+
+.section--new-api-banner-body {
+    color: #303133;
+    text-align: center;
+}
+
+.section--new-api-banner-buttons {
+    width: 100%;
+    height: 40px;
+    margin: 25px 0px;
+}
+
+.section--new-api-banner-cancel {
+    color: #007ECB;
+    background-color: white;
+    cursor: pointer;
+    border: 1px solid #007ECB;
+    border-radius: 4px;
+    height: 40px;
+    font-size: 14px;
+    width: 150px;
+    margin-right: auto;
+}
+.section--new-api-banner-new-api {
+    background: #007ECB;
+    color: white;
+    cursor: pointer;
+    border: 1px solid #007ECB;
+    border-radius: 4px;
+    height: 40px;
+    font-size: 14px;
+    width: 150px;
+    margin-right: auto;
+    float: right;
+}
+
+.section--new-api-banner {
+    width: 450px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #C4C4C4;
+    padding: 0px 100px;
+}
+
+.section--table-title {
+    font-weight: 600;
+}
+
 .section--filter-input-wrap {
     width: 70%;
     display: inline-block;
     float: left;
 }
+
+.section--filter-api-data-section {
+    display: grid;
+    grid-template-rows: 40px 40px 40px 40px 40px 40px;
+    width: 50%;
+    margin-bottom: 10px;
+}
+
+.section--filter-api-data-section p {
+    margin: 0px;
+    overflow: auto;
+}
+
+.section--filter-api-data {
+    display: flex;
+    width: 100%;
+}
+
+.webhook-edit-icon {
+    cursor: pointer;
+    float: right;
+}
+
+.banner-override {
+    height: 550px !important;
+}
+
+.section--filter-input-password {
+    width: 300px;
+    color: #828282;
+}
+
+.section--filter-input-label {
+    margin: 20px 0px 10px 0px;
+    font-size: 14px;
+}
+
+.section--filter-input-new {
+    height: 40px;
+    width: -webkit-fill-available;
+    padding: 0px 0px 0px 15px;
+    border: 1px solid #C4C4C4;
+    border-radius: 5px;
+}
+
+.section--filter-input-new ::placeholder {
+    color: #BDBDBD;
+}
+
+.section--filter-password-toggle {
+    font-size: 14px;
+}
+
+.section--filter-password-toggle-left {
+    color: #BDBDBD;
+}
+
+.section--filter-password-toggle-right {
+    color: #007ecb;
+    cursor: pointer;
+}
+
+.add-webhooks-button-active {
+    background: #007ECB;
+    color: white;
+    cursor: pointer;
+    border: 1px solid #007ECB;
+    border-radius: 4px;
+    height: 40px;
+    font-size: 14px;
+    margin: 25px 0px 35px 0px;
+    width: 175px;
+}
+
+.add-webhooks-button-inactive {
+    background: #E0E0E0;
+    color: white;
+    cursor: pointer;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    height: 40px;
+    font-size: 14px;
+    margin: 25px 0px 35px 0px;
+    width: 175px;
+}
+
+.add-webhooks-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-webhooks-environments {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+}
+
+.add-webhooks-title {
+    font-weight: 600;
+    font-size: 20px;
+    margin: 10px 0px;
+}
+
+.add-webhooks-description {
+    color: #828282;
+    font-size: 16px;
+}
+
+.add-webhooks-envs {
+    margin: 10px 0px;
+    color: #333333;
+    margin-left: 0px !important;
+}
+
+.add-webhooks-envs .el-radio__label {
+    font-size: 15px !important;
+}
+
+.add-webhooks-inputs-container {
+    width: 250px;
+}
+
+.add-webhooks-inputs-events {
+    width: 100%;
+}
+
+.section--filter-generate {
+    height: 40px;
+    margin: 25px 0px;
+    width: 300px;
+}
+
+.section--filter-generate-button {
+    background: #007ECB;
+    color: white;
+    cursor: pointer;
+    border: 1px solid #007ECB;
+    border-radius: 4px;
+    height: 40px;
+    font-size: 14px;
+    width: 100%;
+    margin-right: auto;
+    float: right;
+}
+
 .section--filter-input {
     margin-right: 20px;
     width: 30% !important;
