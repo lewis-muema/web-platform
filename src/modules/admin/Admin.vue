@@ -11,31 +11,19 @@ n-container"
           class="section__link"
           to="/admin/users"
         >
-          {{ $t('admin.user') }}
+        {{ $t('admin.user')}}
         </router-link>
         <router-link
           class="section__link"
           to="/admin/department"
         >
-          {{ $t('admin.department') }}
+          {{ $t('admin.department')}}
         </router-link>
         <router-link
           class="section__link"
           to="/admin/api"
         >
-          {{ $t('admin.old_api') }}
-        </router-link>
-        <router-link
-          class="section__link"
-          to="/admin/apiv2"
-        >
-          {{ $t('admin.new_api') }}
-        </router-link>
-        <router-link
-          class="section__link"
-          to="/admin/webhooks"
-        >
-          {{ $t('admin.webhooks') }}
+          {{ $t('admin.api')}}
         </router-link>
         <router-link
           class="section__link"

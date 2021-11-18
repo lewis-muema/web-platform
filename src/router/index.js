@@ -378,14 +378,6 @@ export function createRouter() {
             component: () => import('../modules/admin/components/API.vue'),
           },
           {
-            path: '/admin/apiv2',
-            component: () => import('../modules/admin/components/APIV2.vue'),
-          },
-          {
-            path: '/admin/webhooks',
-            component: () => import('../modules/admin/components/Webhooks.vue'),
-          },
-          {
             path: '/admin/company_details',
             component: () => import('../modules/admin/components/CompanyDetails.vue'),
           },

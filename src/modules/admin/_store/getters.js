@@ -14,9 +14,6 @@ const getCopUserId = state => state.cop_user_id;
 const getUserName = state => state.user_name;
 const getUserEmail = state => state.user_email;
 const getUserPhone = state => state.user_phone;
-const getWebHooksEvents = state => state.webhook_events;
-const getAPIPassword = state => state.api_password;
-const setAPIToken = state => state.api_token;
 
 export default {
   getViewState,
@@ -35,7 +32,4 @@ export default {
   getUserName,
   getUserEmail,
   getUserPhone,
-  getWebHooksEvents,
-  getAPIPassword,
-  setAPIToken,
 };
