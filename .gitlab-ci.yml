@@ -1,4 +1,4 @@
-image: node
+image: node:12.22.0
 
 stages:
   # also create a tests stage
