@@ -1,0 +1,15 @@
+phrase:
+  access_token: c85e7e4996c0a7b28afcff9555a03fe4906df162bfb0406381d8d027a0fa2370
+  project_id: 8c7c8be729dc8334cd7b9229d1d97c2e
+  push:
+    sources:
+    - file: src/locales/auth/en/components/signIn.json
+      params:
+        file_format: node_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+  pull:
+    targets:
+    - file: src/locales/auth/en/components/signIn.json
+      params:
+        file_format: node_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
