@@ -3,13 +3,13 @@ phrase:
   project_id: 8c7c8be729dc8334cd7b9229d1d97c2e
   push:
     sources:
-    - file: src/locales/auth/en/components/signIn.json
+    - file: src/locales/locales/en.json
       params:
         file_format: simple_json
         locale_id: 183a41c3b5a83e3f3fdec0436881aca6
   pull:
     targets:
-    - file: src/locales/auth/en/components/signIn.json
+    - file: src/locales/ocales/en.json
       params:
         file_format: simple_json
         locale_id: 183a41c3b5a83e3f3fdec0436881aca6
