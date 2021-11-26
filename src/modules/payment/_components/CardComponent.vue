@@ -98,92 +98,106 @@
         </button>
       </div>
     </div>
+
     <form
       v-if="addCardStatus"
-      @submit.prevent="onSubmit"
-    >
-      <div
-        v-if="get_saved_cards.length > 0"
-        class="card-payment-back-arrow"
-        @click="addCardStatus = !addCardStatus"
-      >
-        <span>
-          <font-awesome-icon
-            icon="arrow-left"
-            class="card-payment-add-card-icon"
-          />
-        </span>
-        <span class="card-payment-back-option">
-        {{$t('general.back')}}
-        </span>
-      </div>
-      <div
-        id="cc-number"
-        class="form-group"
-      >
-        <div class="form-control-static">
-          <span class="fake-input" />
-        </div>
-      </div>
-      <div class="cvv-expire-fields">
+      @submit.prevent="onSubmit2"
+    > 
+      <PaymentLoading 
+        payMethod="card" 
+        :transactionText="transactionText" 
+        :count="count" 
+        v-if="loadingStatus"
+      />
+      <div v-else>
         <div
-          id="cc-expiration-date"
+          v-if="get_saved_cards.length > 0"
+          class="card-payment-back-arrow"
+          @click="addCardStatus = !addCardStatus"
+        >
+          <span>
+            <font-awesome-icon
+              icon="arrow-left"
+              class="card-payment-add-card-icon"
+            />
+          </span>
+          <span class="card-payment-back-option">
+          {{$t('general.back')}}
+          </span>
+        </div>
+
+        <div
+          id="cc-number"
           class="form-group"
         >
           <div class="form-control-static">
             <span class="fake-input" />
           </div>
         </div>
-        <div
-          id="cc-cvc"
-          class="form-group"
-        >
-          <div class="form-control-static">
-            <span class="fake-input" />
-          </div>
-        </div>
-      </div>
-      <div
-        id="cc-save-card"
-        class="form-group"
-      >
-        <div class="form-control-static">
-          <input
-            v-model="saveCardState"
-            type="checkbox"
+
+        <div class="cvv-expire-fields">
+          <div
+            id="cc-expiration-date"
+            class="form-group"
           >
-          <span
-            class="fake-checkbox-label"
-          >{{$t('general.save_card_details')}}</span>
+            <div class="form-control-static">
+              <span class="fake-input" />
+            </div>
+          </div>
+          <div
+            id="cc-cvc"
+            class="form-group"
+          >
+            <div class="form-control-static">
+              <span class="fake-input" />
+            </div>
+          </div>
         </div>
-      </div>
-      <div
-        id="cc-amount"
-        class="form-group"
-      >
-        <div class="form-control-static amount-input">
-          <span class="prepend-currency">{{ getActiveCurrency }}</span>
-          <span class="fake-input" />
-        </div>
-      </div>
-      <div
-        v-loading="loadingStatus"
-        class="orders-loading-container orders-loading-container--completion loader-height-override"
-        :element-loading-text="transactionText"
-        element-loading-spinner="el-icon-loading"
-      >
-        <button
-          type="submit"
-          :class="
-            vgs_valid_payment && !loadingStatus
-              ? 'button-primary paymentbody--input-button'
-              : '.paymentbody--input-button card--input button--primary-inactive inactive-payment-button'
-          "
+
+        <div
+          id="cc-save-card"
+          class="form-group"
         >
-          {{$t('general.make_payment_capital')}}
-        </button>
+          <div class="form-control-static">
+            <input
+              v-model="saveCardState"
+              type="checkbox"
+            >
+            <span
+              class="fake-checkbox-label"
+            >{{$t('general.save_card_details')}}</span>
+          </div>
+        </div>
+        <div
+          id="cc-amount"
+          class="form-group"
+        >
+          <div class="form-control-static amount-input">
+            <span class="prepend-currency">{{ getActiveCurrency }}</span>
+            <span class="fake-input" />
+          </div>
+        </div>
+
+        <div
+          v-loading="loading"
+          class="orders-loading-container orders-loading-container--completion loader-height-override"
+          :element-loading-text="transactionText"
+          element-loading-spinner="el-icon-loading"
+        >
+          <button
+            type="submit"
+            :class="
+              vgs_valid_payment && !loadingStatus
+                ? 'button-primary paymentbody--input-button'
+                : '.paymentbody--input-button card--input button--primary-inactive inactive-payment-button'
+            "
+          >
+            {{$t('general.make_payment_capital')}}
+          </button>
+        </div>
       </div>
     </form>
+
     <div v-if="!getCardPaymentStatus">
       <p
         v-if="country === 'KE'"
@@ -209,7 +223,7 @@ import {
   faCreditCard,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import payment_loading from './LoadingComponent.vue';
+// import payment_loading from './LoadingComponent.vue';
 import payment_success from './SuccessComponent.vue';
 import payment_fail from './FailComponent.vue';
 import addCard from './AddCard.vue';
@@ -222,7 +236,7 @@ library.add(faChevronDown, faPlusCircle, faArrowLeft, faCreditCard, faTrashAlt);
 export default {
   name: 'CardComponent',
   components: {
-    payment_loading,
+    PaymentLoading: () => import('./LoadingComponent.vue'),
     payment_success,
     payment_fail,
     addCard,
@@ -254,7 +268,14 @@ export default {
       transaction_id: null,
       poll_count: 0,
       poll_limit: 6,
-      transactionText: 'loading ....',
+      transactionText: 'Loading...',
+      showAdditionalCardFields: false,
+      additionalData: null,
+      is3DS: false,
+      twoFACompleted: false,
+      transactionStatus: null,
+      count: false,
+      loading: false,
     };
   },
   computed: {
@@ -331,6 +352,7 @@ export default {
     ...mapActions({
       requestSavedCards: '$_payment/requestSavedCards',
       removeSavedCard: '$_payment/deleteSavedCard',
+      paymentAxiosPost: '$_payment/paymentAxiosPost',
     }),
     ...mapMutations({
       setSavedCards: '$_payment/setSavedCards',
@@ -437,10 +459,11 @@ export default {
                 this.loadingStatus = false;
                 this.clearInputs();
                 const notification = {
-                  title: this.$t('general.failed_to_charge_card'),
+                  title: res.transaction_status,
                   level: 2,
                   message: res.message,
                 };
+                
                 this.displayNotification(notification);
               }
             });
@@ -454,6 +477,125 @@ export default {
             this.displayNotification(notification);
           }
         },
+      );
+    },
+    onSubmit2() {
+      const session = this.$store.getters.getSession;
+      const accData = session[session.default];
+      const firstName = accData.user_name.split(' ')[0];
+      const lastName = accData.user_name.split(' ').length > 1 ? accData.user_name.split(' ')[1] : '';
+     
+      const newCardPayload = {
+        currency: this.getActiveCurrency,
+        country: accData.country_code,
+        email: accData.user_email,
+        phonenumber: accData.user_phone,
+        firstname: firstName,
+        lastname: lastName,
+        txRef: `${Date.now()}`,
+        user_id: accData.user_id,
+        cop_id: session.default === 'biz' ? accData.cop_id : 0,
+        // save: this.saveCardState,
+        // vendor_type: 1,
+        company_code: 'SKML',
+      };
+
+      this.loading = true;
+      this.transactionText = 'Initializing card payment...';
+      this.form.submit(
+          '/customers/collect_card_details',
+          {
+            data: newCardPayload,
+            headers: {
+              Authorization: localStorage.jwtToken,
+            },
+          },
+          (status, response) => {
+            console.log(response);
+            this.loading = false;
+            if (response.status) {
+              this.LoadingStatus = true;
+              
+              const payload = {
+                values: response.data,
+                app: 'PAYMENT_SERVICE_V2',
+                endpoint: '/api/v2/save',
+              }
+              
+
+              this.paymentAxiosPost(payload).then((res)=> {
+                this.transaction_id = res.transaction_id;
+
+                if (res.status) {
+                  this.transactionStatus = res.transaction_status;
+
+                  if(res.additional_data) {
+                    this.additionalData = res.additional_data;
+                    this.is3DS = res.tds;
+                    if (res.tds) {
+                      this.init3DS(res.additional_data);
+                      return;
+                    }
+                    this.showAdditionalCardFields = true;
+                    this.showProcessing = false;
+                    return;
+                  }
+
+                  switch (res.transaction_status) {
+                    case 'pending':
+                      this.transactionPoll();
+                      break;
+                    case 'success':
+                      this.transactionText = res.message;
+                      this.loadingStatus = false;
+                      this.clearInputs();
+                      const notification = {
+                        title: this.$t('general.failed_to_charge_card'),
+                        level: 1,
+                        message: res.message,
+                      };
+                      this.displayNotification(notification);
+                      break;
+                    default:
+                      break;
+                  }
+
+                } else {
+                  this.transactionText = res.message;
+                  this.loadingStatus = false;
+                  this.clearInputs();
+                  const notification = {
+                    title: this.$t('general.failed_to_charge_card'),
+                    level: 2,
+                    message: res.message,
+                  };
+
+                  this.displayNotification(notification);
+                  }
+
+              }).catch(err => {
+                this.transactionText = this.$t('general.failed_to_delete_saved_card_text');
+                this.loadingStatus = false;
+                this.clearInputs();
+                const notification = {
+                  title: this.$t('general.failed_to_charge_card'),
+                  level: 2,
+                  message: this.$t('general.failed_to_delete_saved_card_text'),
+                };
+
+                this.displayNotification(notification);
+              });
+            
+            } else {
+              this.loadingStatus = false;
+              const notification = {
+                title: this.$t('general.failed_to_charge_card'),
+                level: 2,
+                message: response.message,
+              };
+              this.displayNotification(notification);
+            }
+          },
       );
     },
 
@@ -508,55 +650,48 @@ export default {
 
     transactionPoll() {
       this.poll_count = 0;
-      const poll_limit = 6;
-      for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
+      for (let poll_count = 0; poll_count < this.poll_limit; poll_count++) {
         const that = this;
         (function (poll_count) {
           setTimeout(() => {
-            if (that.poll_count === poll_limit) {
-              poll_count = poll_limit;
+            if (that.poll_count === that.poll_limit) {
+              poll_count = that.poll_limit;
               return;
             }
-
+            
             that.updateTransactionStatus(); 
-            if (poll_count === 5) {
-              that.transactionText = 'Failed'
-              that.loadingStatus = false;
+            if (poll_count === (that.poll_limit - 1)) {
+                that.transactionText = 'Failed'
+                that.loadingStatus = false;
 
-              const notification = {
-                title: that.$t('general.failed_to_charge_card'),
-                level: 2,
-              };
-              that.clearInputs();
-              that.displayNotification(notification);
+                const notification = {
+                  title: that.$t('general.failed_to_charge_card'),
+                  level: 2,
+                };
+                that.clearInputs();
+                that.displayNotification(notification);
               return;
             }
           }, 10000 * poll_count);
         }(poll_count));
       }
     },
-
     updateTransactionStatus() {
-      const payload = {
-        transaction_id: this.transaction_id,
-      }
       const fullPayload = {
-        values: payload,
-        app: 'AUTH',
-        endpoint: 'customers/card_payment_status_v2',
+        app: 'PAYMENT_SERVICE_V2',
+        endpoint: `/api/v2/process/status/${this.transaction_id}`,
       }
-      this.requestSavedCards(fullPayload).then((res) => {
+      this.paymentAxiosGet(fullPayload).then((res) => {
         let level = 1;
         if (res.status) { 
           this.transactionText = res.message;
           switch (res.transaction_status) {
             case 'success':
-              this.poll_count = this.poll_limit;
               this.clearInputs();
               this.loadingStatus = false;
               const notification1 = {
                 title: res.transaction_status,
-                level: level,
+                level: 1,
                 message: res.message,
               };
               this.displayNotification(notification1);
@@ -578,8 +713,7 @@ export default {
               break;
             default:
               break;
-            }
-          
+          }
           return res;
         }
 
@@ -667,6 +801,73 @@ export default {
         },
         error => false,
       );
+    },
+
+    init3DS(additionalData) {
+      const res = additionalData[0];
+      const url = res.field;
+      const urlWindow = window.open(url, '');
+
+      const timer = setInterval(() => {
+			  if (urlWindow.closed) {
+          this.init3dsPoll();
+          clearInterval(timer);
+        }
+	  	}, 500);
+
+    },
+    init3dsPoll() {
+      this.loadingStatus = true;
+      const payload = {
+        transaction_id: this.transaction_id,
+        tds: true,
+      }
+
+      const fullPayload = {
+        values: payload,
+        app: 'PAYMENT_SERVICE_V2',
+        endpoint: '/api/v2/submit_info'
+      }
+
+      this.paymentAxiosPost(fullPayload).then((res) => {
+        this.loadingStatus = false;
+        if (response.status) {
+          switch (response.transaction_status) {
+              case 'pending':
+                this.transactionPoll();
+                this.count = true;
+                break;
+              case 'success':
+                this.poll_count = this.poll_limit;
+                this.clearInputs();
+                this.loadingStatus = false;
+                const notification1 = {
+                  title: response.transaction_status,
+                  level: 1,
+                  message: response.message,
+                };
+                this.displayNotification(notification1);
+                this.requestRB();
+                break;
+              default:
+                break;
+          };
+          return;
+        }
+      }).catch((error) => {
+        console.log(error);
+        this.transactionText = res.message;
+        this.loadingStatus = false;
+        this.clearInputs();
+        const notification = {
+        title: this.$t('general.failed_to_charge_card'),
+        level: 2,
+        message: res.message,
+        };
+        this.displayNotification(notification);
+      });
+      
+
     },
   },
 };
