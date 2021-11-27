@@ -1,10 +1,10 @@
 {
-  "connect": "Connectez votre compte Sendy personnel",
-  "personal_email": "adresse e-mail personnelle ",
-  "email": "vous@adressee-mail.com",
   "back": "Retour",
-  "skip": "Sauter",
+  "connect": "Connectez votre compte Sendy personnel",
+  "email": "vous@adressee-mail.com",
   "next": "Suivant",
+  "personal_email": "adresse e-mail personnelle ",
   "provide": "Fournir un courriel personnel",
-  "provide_valid": "Fournir un e-mail valide "
+  "provide_valid": "Fournir un e-mail valide ",
+  "skip": "Sauter"
 }
