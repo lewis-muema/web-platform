@@ -9,7 +9,7 @@ phrase:
         locale_id: 183a41c3b5a83e3f3fdec0436881aca6
   pull:
     targets:
-    - file: src/locales/ocales/en.json
+    - file: src/locales/locales/fr.json
       params:
         file_format: simple_json
-        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        locale_id: e8f9427353191aa2135b0f713a303589
