@@ -213,7 +213,7 @@ export default {
         root: true,
       }).then(
         (response) => {
-          resolve(response);
+          resolve(response.data);
         },
         (error) => {
           reject(error);
@@ -227,7 +227,7 @@ export default {
         root: true,
       }).then(
         (response) => {
-          resolve(response);
+          resolve(response.data);
         },
         (error) => {
           reject(error);

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     v-if="getCardPaymentStatus"
     class="paymentbody--form"
@@ -32,70 +32,79 @@
       v-if="!addCardStatus"
       class="saved-cards-container"
     >
-      <p class="card-payment-saved-cards-title">
-        {{$t('general.cards')}}
-      </p>
-      <p class="card-payment-saved-cards-label">
-        {{$t('general.select_card')}}
-      </p>
-      <div
-        v-for="(cards, index) in get_saved_cards"
-        :key="index"
-        class="card-payment-saved-cards-row"
-      >
-        <span class="card-payment-saved-cards-icon">
-          <font-awesome-icon icon="credit-card" />
-        </span>
-        <input
-          v-model="selectedSavedCard"
-          type="radio"
-          class="card-payment-saved-card-radio"
-          :value="index"
+      <PaymentLoading 
+        payMethod="card" 
+        :transactionText="transactionText" 
+        :count="count" 
+        v-if="loadingStatus"
+      />
+
+      <div v-else>
+        <p class="card-payment-saved-cards-title">
+          {{$t('general.cards')}}
+        </p>
+        <p class="card-payment-saved-cards-label">
+          {{$t('general.select_card')}}
+        </p>
+        <div
+          v-for="(cards, index) in get_saved_cards"
+          :key="index"
+          class="card-payment-saved-cards-row"
         >
-        {{ formatCardNumber(cards.card) }}
-        <span
-          class="card-payment-remove-cards-icon"
-          @click="deleteCardIndex = index"
+          <span class="card-payment-saved-cards-icon">
+            <font-awesome-icon icon="credit-card" />
+          </span>
+          <input
+            v-model="selectedSavedCard"
+            type="radio"
+            class="card-payment-saved-card-radio"
+            :value="index"
+          >
+          {{ formatCardNumber(cards.pay_method_details) }}
+          <span
+            class="card-payment-remove-cards-icon"
+            @click="deleteCardIndex = index"
+          >
+            <font-awesome-icon icon="trash-alt" />
+          </span>
+        </div>
+        <div class="card-payment-add-card-holder">
+          <span>
+            <font-awesome-icon
+              icon="plus-circle"
+              class="card-payment-add-card-icon"
+            />
+          </span>
+          <span
+            class="card-payment-add-card"
+            @click="addCardStatus = !addCardStatus"
+          >{{$t('general.add_a_new_card')}}</span>
+        </div>
+        <div class="card-payment-flex">
+          <span class="prepend-currency">{{ getActiveCurrency }}</span>
+          <input
+            v-model="savedCardAmount"
+            type="number"
+            class="card-payment-amount-input"
+          >
+        </div>
+        <div
+          v-loading="loadingStatus"
+          class="orders-loading-container orders-loading-container--completion loader-height-override"
+          :element-loading-text="transactionText"
+          element-loading-spinner="el-icon-loading"
         >
-          <font-awesome-icon icon="trash-alt" />
-        </span>
-      </div>
-      <div class="card-payment-add-card-holder">
-        <span>
-          <font-awesome-icon
-            icon="plus-circle"
-            class="card-payment-add-card-icon"
-          />
-        </span>
-        <span
-          class="card-payment-add-card"
-          @click="addCardStatus = !addCardStatus"
-        >{{$t('general.add_a_new_card')}}</span>
-      </div>
-      <div class="card-payment-flex">
-        <span class="prepend-currency">{{ getActiveCurrency }}</span>
-        <input
-          v-model="savedCardAmount"
-          type="number"
-          class="card-payment-amount-input"
-        >
-      </div>
-      <div
-        v-loading="loadingStatus"
-        class="orders-loading-container orders-loading-container--completion loader-height-override"
-        :element-loading-text="transactionText"
-        element-loading-spinner="el-icon-loading"
-      >
-        <button
-          :class="
-            valid_saved_vgs_payment && !loadingStatus
-              ? 'button-primary paymentbody--input-button'
-              : 'paymentbody--input-button card--input button--primary-inactive inactive-payment-button'
-          "
-          @click="chargeSavedCard()"
-        >
-          {{$t('general.make_payment')}}
-        </button>
+          <button
+            :class="
+              valid_saved_vgs_payment && !loadingStatus
+                ? 'button-primary paymentbody--input-button'
+                : 'paymentbody--input-button card--input button--primary-inactive inactive-payment-button'
+            "
+            @click="chargeSavedCard()"
+          >
+            {{$t('general.make_payment')}}
+          </button>
+        </div>
       </div>
     </div>
 
@@ -109,7 +118,14 @@
         :count="count" 
         v-if="loadingStatus"
       />
-      <div v-else>
+      <AdditionalCardFields 
+        :additionalData="additionalData" 
+        :transaction_id="transaction_id" 
+        v-if="!loadingStatus && showAdditionalCardFields" 
+        @continue="handleContinue"
+      />
+
+      <div v-if="!loadingStatus && !showAdditionalCardFields" >
         <div
           v-if="get_saved_cards.length > 0"
           class="card-payment-back-arrow"
@@ -223,7 +239,6 @@ import {
   faCreditCard,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
-// import payment_loading from './LoadingComponent.vue';
 import payment_success from './SuccessComponent.vue';
 import payment_fail from './FailComponent.vue';
 import addCard from './AddCard.vue';
@@ -237,6 +252,7 @@ export default {
   name: 'CardComponent',
   components: {
     PaymentLoading: () => import('./LoadingComponent.vue'),
+    AdditionalCardFields: () => import('./AdditionalCardFields.vue'),
     payment_success,
     payment_fail,
     addCard,
@@ -308,7 +324,7 @@ export default {
       }
     },
     addCardStatus(val) {
-      if (val) {
+      if (val && !this.showAdditionalCardFields ) {
         setTimeout(() => {
           this.setForm();
         }, 500);
@@ -320,7 +336,7 @@ export default {
           Object.prototype.hasOwnProperty.call(val.state, 'cardno')
           && val.state.cardno.isValid
           && val.state.cvv.isValid
-          && val.state.expiry_date.isValid
+          && val.state.expirydate.isValid
           && val.state.amount.isValid
           && this.addCardStatus
         ) {
@@ -353,6 +369,7 @@ export default {
       requestSavedCards: '$_payment/requestSavedCards',
       removeSavedCard: '$_payment/deleteSavedCard',
       paymentAxiosPost: '$_payment/paymentAxiosPost',
+      paymentAxiosGet: '$_payment/paymentAxiosGet',
     }),
     ...mapMutations({
       setSavedCards: '$_payment/setSavedCards',
@@ -398,7 +415,7 @@ export default {
 
       this.form.field('#cc-expiration-date .fake-input', {
         type: 'card-expiration-date',
-        name: 'expiry_date',
+        name: 'expirydate',
         fontSize: '13px',
         errorColor: '#D8000C',
         successColor: '#4F8A10',
@@ -415,70 +432,70 @@ export default {
       });
     },
 
-    onSubmit() {
-      const session = this.$store.getters.getSession;
-      const accData = session[session.default];
-      const firstName = accData.user_name.split(' ')[0];
-      const lastName = accData.user_name.split(' ').length > 1 ? accData.user_name.split(' ')[1] : '';
-      const newCardPayload = {
-        currency: this.getActiveCurrency,
-        country: accData.country_code,
-        email: accData.user_email,
-        phonenumber: accData.user_phone,
-        firstname: firstName,
-        lastname: lastName,
-        txRef: `${Date.now()}`,
-        user_id: accData.user_id,
-        cop_id: session.default === 'biz' ? accData.cop_id : 0,
-        save: this.saveCardState,
-        vendor_type: 1,
-      };
-      this.loadingStatus = true;
-      this.transactionText = 'Initializing card payment...';
-      this.form.submit(
-        '/customers/collect_card_details',
-        {
-          data: newCardPayload,
-          headers: {
-            Authorization: localStorage.jwtToken,
-          },
-        },
-        (status, response) => {
-          if (response.status) {
-            const newSavedCardPayload = {
-              values: response.data,
-              app: 'AUTH',
-              endpoint: 'customers/charge_new_card_v2',
-            };
-            this.requestSavedCards(newSavedCardPayload).then((res) => {
-              this.transaction_id = res.transaction_id;
-              if (res.status) {
-                this.transactionPoll();
-              } else {
-                this.transactionText = res.message;
-                this.loadingStatus = false;
-                this.clearInputs();
-                const notification = {
-                  title: res.transaction_status,
-                  level: 2,
-                  message: res.message,
-                };
+    // onSubmit() {
+    //   const session = this.$store.getters.getSession;
+    //   const accData = session[session.default];
+    //   const firstName = accData.user_name.split(' ')[0];
+    //   const lastName = accData.user_name.split(' ').length > 1 ? accData.user_name.split(' ')[1] : '';
+    //   const newCardPayload = {
+    //     currency: this.getActiveCurrency,
+    //     country: accData.country_code,
+    //     email: accData.user_email,
+    //     phonenumber: accData.user_phone,
+    //     firstname: firstName,
+    //     lastname: lastName,
+    //     txRef: `${Date.now()}`,
+    //     user_id: accData.user_id,
+    //     cop_id: session.default === 'biz' ? accData.cop_id : 0,
+    //     save: this.saveCardState,
+    //     vendor_type: 1,
+    //   };
+    //   this.loadingStatus = true;
+    //   this.transactionText = 'Initializing card payment...';
+    //   this.form.submit(
+    //     '/customers/collect_card_details',
+    //     {
+    //       data: newCardPayload,
+    //       headers: {
+    //         Authorization: localStorage.jwtToken,
+    //       },
+    //     },
+    //     (status, response) => {
+    //       if (response.status) {
+    //         const newSavedCardPayload = {
+    //           values: response.data,
+    //           app: 'AUTH',
+    //           endpoint: 'customers/charge_new_card_v2',
+    //         };
+    //         this.requestSavedCards(newSavedCardPayload).then((res) => {
+    //           this.transaction_id = res.transaction_id;
+    //           if (res.status) {
+    //             this.transactionPoll();
+    //           } else {
+    //             this.transactionText = res.message;
+    //             this.loadingStatus = false;
+    //             this.clearInputs();
+    //             const notification = {
+    //               title: res.transaction_status,
+    //               level: 2,
+    //               message: res.message,
+    //             };
                 
-                this.displayNotification(notification);
-              }
-            });
-          } else {
-            this.loadingStatus = false;
-            const notification = {
-              title: this.$t('general.failed_to_charge_card'),
-              level: 2,
-              message: response.message,
-            };
-            this.displayNotification(notification);
-          }
-        },
-      );
-    },
+    //             this.displayNotification(notification);
+    //           }
+    //         });
+    //       } else {
+    //         this.loadingStatus = false;
+    //         const notification = {
+    //           title: this.$t('general.failed_to_charge_card'),
+    //           level: 2,
+    //           message: response.message,
+    //         };
+    //         this.displayNotification(notification);
+    //       }
+    //     },
+    //   );
+    // },
     onSubmit2() {
       const session = this.$store.getters.getSession;
       const accData = session[session.default];
@@ -488,16 +505,19 @@ export default {
       const newCardPayload = {
         currency: this.getActiveCurrency,
         country: accData.country_code,
-        email: accData.user_email,
+        // email: accData.user_email,
+        email: 'hope@gmail.com',
         phonenumber: accData.user_phone,
         firstname: firstName,
         lastname: lastName,
-        txRef: `${Date.now()}`,
-        user_id: accData.user_id,
-        cop_id: session.default === 'biz' ? accData.cop_id : 0,
-        // save: this.saveCardState,
-        // vendor_type: 1,
-        company_code: 'SKML',
+        txref: `${Date.now()}`,
+        userid: accData.user_id,
+        copid: session.default === 'biz' ? accData.cop_id : 0,
+        save: this.saveCardState,
+        company_code: 'FFKE',
+        paymethod: 2,
+        bulk: false,
+        entity: 3,
       };
 
       this.loading = true;
@@ -511,21 +531,22 @@ export default {
             },
           },
           (status, response) => {
-            console.log(response);
             this.loading = false;
             if (response.status) {
-              this.LoadingStatus = true;
+              this.loadingStatus = true;
               
+              const payloadData = response.data;
+              delete payloadData['language'];
               const payload = {
-                values: response.data,
-                app: 'PAYMENT_SERVICE_V2',
-                endpoint: '/api/v2/save',
+                values: payloadData,
+                app: 'CUSTOMERS_APP',
+                endpoint: 'charge_card_v3',
               }
               
 
               this.paymentAxiosPost(payload).then((res)=> {
                 this.transaction_id = res.transaction_id;
-
+                
                 if (res.status) {
                   this.transactionStatus = res.transaction_status;
 
@@ -537,7 +558,7 @@ export default {
                       return;
                     }
                     this.showAdditionalCardFields = true;
-                    this.showProcessing = false;
+                    this.loadingStatus = false;
                     return;
                   }
 
@@ -574,13 +595,13 @@ export default {
                   }
 
               }).catch(err => {
-                this.transactionText = this.$t('general.failed_to_delete_saved_card_text');
+                this.transactionText = this.$t('general.failed_to_charge_card');
                 this.loadingStatus = false;
                 this.clearInputs();
                 const notification = {
                   title: this.$t('general.failed_to_charge_card'),
                   level: 2,
-                  message: this.$t('general.failed_to_delete_saved_card_text'),
+                  message: this.$t('general.failed_to_charge_card_text'),
                 };
 
                 this.displayNotification(notification);
@@ -599,31 +620,49 @@ export default {
       );
     },
 
+    handleContinue(val) {
+      if (val) {
+
+        this.loadingStatus = true;
+        this.pollCard();
+        return;
+      }
+      this.loadingStatus = false;
+      this.showAdditionalCardFields = false;
+      this.clearInputs();
+      const notification = {
+        title: this.$t('general.failed_to_charge_card'),
+        level: 2,
+        message: this.$t('general.failed_to_charge_card_text'),
+      };
+      this.displayNotification(notification);
+    },
+
     chargeSavedCard() {
       const session = this.$store.getters.getSession;
       const accData = session[session.default];
       const firstName = accData.user_name.split(' ')[0];
       const payload = {
-        txRef: `${Date.now()}`,
-        card:
+        txref: `${Date.now()}`,
+        cardno:
           this.get_saved_cards.length > 0 && this.selectedSavedCard !== ''
-            ? this.get_saved_cards[this.selectedSavedCard].card
+            ? this.get_saved_cards[this.selectedSavedCard].pay_method_details
             : '',
         currency: this.getActiveCurrency,
         amount: this.savedCardAmount,
         country: accData.country_code,
-        email: accData.user_email,
         phonenumber: accData.user_phone,
-        firstname: firstName,
-        user_id: accData.user_id,
-        cop_id: session.default === 'biz' ? accData.cop_id : 0,
-        vendor_type: 1,
+        userid: accData.user_id,
+        copid: session.default === 'biz' ? accData.cop_id : 0,
+        bulk: false,
+        entity: 3,
+        company_code: "FFKE"
       };
       this.transactionText = 'Initializing card payment...';
       const savedCardPayload = {
         values: payload,
         app: 'AUTH',
-        endpoint: 'customers/charge_saved_card_v2',
+        endpoint: 'customers/charge_saved_card_v3',
       };
       this.loadingStatus = true;
       this.requestSavedCards(savedCardPayload).then(
@@ -632,6 +671,7 @@ export default {
           this.transaction_id = response.transaction_id;
           if (response.status) {
             this.transactionPoll();
+            this.count = true;
           } else {
             this.transactionText = response.reason;
             this.loadingStatus = false;
@@ -678,8 +718,8 @@ export default {
     },
     updateTransactionStatus() {
       const fullPayload = {
-        app: 'PAYMENT_SERVICE_V2',
-        endpoint: `/api/v2/process/status/${this.transaction_id}`,
+        app: 'CUSTOMERS_APP',
+        endpoint: `transaction_status/?id=${this.transaction_id}`,
       }
       this.paymentAxiosGet(fullPayload).then((res) => {
         let level = 1;
@@ -739,14 +779,14 @@ export default {
       const session = this.$store.getters.getSession;
       const accData = session[session.default];
       const payload = {
-        card: this.get_saved_cards[index].card,
+        cardno: this.get_saved_cards[index].pay_method_details,
         user_id: accData.user_id,
         cop_id: session.default === 'biz' ? accData.cop_id : 0,
       };
       const deleteCardPayload = {
         values: payload,
-        app: 'AUTH',
-        endpoint: 'customers/delete_saved_card_v2',
+        app: 'PAYMENT_GATEWAY',
+        endpoint: '/api/v1/card/delete',
       };
       this.deleteCardIndex = '';
       this.loading = true;
@@ -780,21 +820,24 @@ export default {
       const cardPayload = {
         user_id,
         cop_id,
+        entity_id: 3,
+        country_code: session[session.default].country_code,
       };
 
       // encrypt card payload here
 
       const fullPayload = {
         values: cardPayload,
-        app: 'AUTH',
-        endpoint: 'customers/get_saved_cards',
+        app: 'PAYMENT_GATEWAY',
+        endpoint: '/payment_methods',
       };
 
       this.requestSavedCards(fullPayload).then(
         (response) => {
           // decrypt response here
           if (response.status) {
-            this.setSavedCards(response.cards);
+            const cards = response.saved_payment_methods.filter(el => el.pay_method_id === 2)
+            this.setSavedCards(cards);
           } else {
             this.setSavedCards([]);
           }
@@ -825,14 +868,13 @@ export default {
 
       const fullPayload = {
         values: payload,
-        app: 'PAYMENT_SERVICE_V2',
-        endpoint: '/api/v2/submit_info'
+        app: 'CUSTOMERS_APP',
+        endpoint: 'submit_info'
       }
 
       this.paymentAxiosPost(fullPayload).then((res) => {
-        this.loadingStatus = false;
-        if (response.status) {
-          switch (response.transaction_status) {
+        if (res.status) {
+          switch (res.transaction_status) {
               case 'pending':
                 this.transactionPoll();
                 this.count = true;
@@ -842,9 +884,9 @@ export default {
                 this.clearInputs();
                 this.loadingStatus = false;
                 const notification1 = {
-                  title: response.transaction_status,
+                  title: res.transaction_status,
                   level: 1,
-                  message: response.message,
+                  message: res.message,
                 };
                 this.displayNotification(notification1);
                 this.requestRB();
@@ -855,8 +897,7 @@ export default {
           return;
         }
       }).catch((error) => {
-        console.log(error);
-        this.transactionText = res.message;
+        this.transactionText = this.$t('general.failed_to_charge_card');
         this.loadingStatus = false;
         this.clearInputs();
         const notification = {

@@ -15,7 +15,7 @@
         {{ transactionText}}
       </span> 
     </div>
-    <div class="paymemt--mpesa-loader-actions" v-else>
+    <div class="paymemt--mpesa-loader-actions" v-if="payMethod !== 'card'">
       <button
         type="button"
         class="button-primary paymentbody--input-button"

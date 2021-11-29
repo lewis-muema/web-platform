@@ -92,6 +92,7 @@ const translations = {
   insufficient_balance: 'Insufficient balance',
   amount_charge_not_sufficient: 'The amount charge is not sufficient to place the order, please try again',
   failed_to_charge_card: 'Failed to charge card',
+  failed_to_charge_card_text: 'Failed to charge card please try again',
   enter_card_details_try_again: 'Please enter all the card details and try again',
   select_one_of_your_saved_cards: 'Please select one of your saved cards',
   failed_to_delete_saved_card: 'Failed to delete saved card',
