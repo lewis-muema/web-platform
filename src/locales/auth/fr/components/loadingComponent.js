@@ -1,8 +1,4 @@
 
+import * as fr from './loadingComponent.json';
 
-const fr = {
-  verify: 'Adresse e-mail non valide fournie',
-};
-
-
-export default fr;
+export default fr.default;

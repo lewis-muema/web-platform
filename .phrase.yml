@@ -10,6 +10,62 @@ phrase:
         update_translations: true
         tags: signIn
 
+    - file: src/locales/auth/en/components/byPassLogin.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: byPassLogin
+
+   - file: src/locales/auth/en/components/forgetPassword.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: forgetPassword
+
+   - file: src/locales/auth/en/components/loadingComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: loadingComponent
+
+   - file: src/locales/auth/en/components/resetPassword.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: resetPassword
+
+   - file: src/locales/auth/en/components/signUp.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: signUp
+
+   - file: src/locales/auth/en/components/signUpDetails.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: signUpDetails
+
+   - file: src/locales/auth/en/components/signUpVerification.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: signUpVerification
+
+   - file: src/locales/auth/en/components/successComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: successComponent
+  
     - file: src/locales/external/en/components/completeComponent.json
       params:
         file_format: simple_json
@@ -60,6 +116,62 @@ phrase:
         locale_id: e8f9427353191aa2135b0f713a303589
         tags: signIn
 
+      - file: src/locales/auth/fr/components/byPassLogin.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: byPassLogin
+
+   - file: src/locales/auth/fr/components/forgetPassword.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: forgetPassword
+
+   - file: src/locales/auth/fr/components/loadingComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: loadingComponent
+
+   - file: src/locales/auth/fr/components/resetPassword.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: resetPassword
+
+   - file: src/locales/auth/fr/components/signUp.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: signUp
+
+   - file: src/locales/auth/fr/components/signUpDetails.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: signUpDetails
+
+   - file: src/locales/auth/fr/components/signUpVerification.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: signUpVerification
+
+   - file: src/locales/auth/fr/components/successComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: successComponent
+  
     - file: src/locales/external/fr/components/completeComponent.json
       params:
         file_format: simple_json
