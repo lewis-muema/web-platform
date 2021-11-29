@@ -1,6 +1,3 @@
-const en = {
-  report: 'Report',
-};
+import * as en from './analytics.json';
 
-
-export default en;
+export default en.default;

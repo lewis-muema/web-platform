@@ -3,6 +3,13 @@ phrase:
   project_id: 8c7c8be729dc8334cd7b9229d1d97c2e
   push:
     sources:
+    - file: src/locales/analytics/en/analytics.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: analytics
+  
     - file: src/locales/auth/en/components/signIn.json
       params:
         file_format: simple_json
@@ -17,49 +24,49 @@ phrase:
         update_translations: true
         tags: byPassLogin
 
-   - file: src/locales/auth/en/components/forgetPassword.json
+    - file: src/locales/auth/en/components/forgetPassword.json
       params:
         file_format: simple_json
         locale_id: 183a41c3b5a83e3f3fdec0436881aca6
         update_translations: true
         tags: forgetPassword
 
-   - file: src/locales/auth/en/components/loadingComponent.json
+    - file: src/locales/auth/en/components/loadingComponent.json
       params:
         file_format: simple_json
         locale_id: 183a41c3b5a83e3f3fdec0436881aca6
         update_translations: true
         tags: loadingComponent
 
-   - file: src/locales/auth/en/components/resetPassword.json
+    - file: src/locales/auth/en/components/resetPassword.json
       params:
         file_format: simple_json
         locale_id: 183a41c3b5a83e3f3fdec0436881aca6
         update_translations: true
         tags: resetPassword
 
-   - file: src/locales/auth/en/components/signUp.json
+    - file: src/locales/auth/en/components/signUp.json
       params:
         file_format: simple_json
         locale_id: 183a41c3b5a83e3f3fdec0436881aca6
         update_translations: true
         tags: signUp
 
-   - file: src/locales/auth/en/components/signUpDetails.json
+    - file: src/locales/auth/en/components/signUpDetails.json
       params:
         file_format: simple_json
         locale_id: 183a41c3b5a83e3f3fdec0436881aca6
         update_translations: true
         tags: signUpDetails
 
-   - file: src/locales/auth/en/components/signUpVerification.json
+    - file: src/locales/auth/en/components/signUpVerification.json
       params:
         file_format: simple_json
         locale_id: 183a41c3b5a83e3f3fdec0436881aca6
         update_translations: true
         tags: signUpVerification
 
-   - file: src/locales/auth/en/components/successComponent.json
+    - file: src/locales/auth/en/components/successComponent.json
       params:
         file_format: simple_json
         locale_id: 183a41c3b5a83e3f3fdec0436881aca6
@@ -116,59 +123,59 @@ phrase:
         locale_id: e8f9427353191aa2135b0f713a303589
         tags: signIn
 
-      - file: src/locales/auth/fr/components/byPassLogin.json
+    - file: src/locales/auth/fr/components/byPassLogin.json
       params:
         file_format: simple_json
-        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        locale_id: e8f9427353191aa2135b0f713a303589
         update_translations: true
         tags: byPassLogin
 
-   - file: src/locales/auth/fr/components/forgetPassword.json
+    - file: src/locales/auth/fr/components/forgetPassword.json
       params:
         file_format: simple_json
-        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        locale_id: e8f9427353191aa2135b0f713a303589
         update_translations: true
         tags: forgetPassword
 
-   - file: src/locales/auth/fr/components/loadingComponent.json
+    - file: src/locales/auth/fr/components/loadingComponent.json
       params:
         file_format: simple_json
-        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        locale_id: e8f9427353191aa2135b0f713a303589
         update_translations: true
         tags: loadingComponent
 
-   - file: src/locales/auth/fr/components/resetPassword.json
+    - file: src/locales/auth/fr/components/resetPassword.json
       params:
         file_format: simple_json
-        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        locale_id: e8f9427353191aa2135b0f713a303589
         update_translations: true
         tags: resetPassword
 
-   - file: src/locales/auth/fr/components/signUp.json
+    - file: src/locales/auth/fr/components/signUp.json
       params:
         file_format: simple_json
-        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        locale_id: e8f9427353191aa2135b0f713a303589
         update_translations: true
         tags: signUp
 
-   - file: src/locales/auth/fr/components/signUpDetails.json
+    - file: src/locales/auth/fr/components/signUpDetails.json
       params:
         file_format: simple_json
-        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        locale_id: e8f9427353191aa2135b0f713a303589
         update_translations: true
         tags: signUpDetails
 
-   - file: src/locales/auth/fr/components/signUpVerification.json
+    - file: src/locales/auth/fr/components/signUpVerification.json
       params:
         file_format: simple_json
-        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        locale_id: e8f9427353191aa2135b0f713a303589
         update_translations: true
         tags: signUpVerification
 
-   - file: src/locales/auth/fr/components/successComponent.json
+    - file: src/locales/auth/fr/components/successComponent.json
       params:
         file_format: simple_json
-        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        locale_id: e8f9427353191aa2135b0f713a303589
         update_translations: true
         tags: successComponent
   
