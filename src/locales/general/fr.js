@@ -90,6 +90,7 @@ const translations = {
   insufficient_balance: 'Solde insuffisant ',
   amount_charge_not_sufficient: "Le montant facturé n'est pas suffisant pour passer la commande, veuillez réessayer ",
   failed_to_charge_card: 'Échec du paiement par carte ',
+  failed_to_charge_card_text: 'Échec du paiement par carte, veuillez réessayer ',
   enter_card_details_try_again: 'Veuillez saisir tous les détails de la carte et réessayer ',
   select_one_of_your_saved_cards: "Veuillez sélectionner l'une de vos cartes enregistrées ",
   failed_to_delete_saved_card: 'Échec de la suppression de la carte enregistrée ',
