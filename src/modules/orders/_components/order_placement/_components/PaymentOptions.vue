@@ -1091,120 +1091,6 @@ export default {
         );
       }
     },
-    onSubmit2() {
-      const session = this.$store.getters.getSession;
-      const accData = session[session.default];
-      const firstName = accData.user_name.split(' ')[0];
-      const lastName = accData.user_name.split(' ').length > 1 ? accData.user_name.split(' ')[1] : '';
-     
-      const newCardPayload = {
-        currency: this.getActiveCurrency,
-        country: accData.country_code,
-        email: accData.user_email,
-        phonenumber: accData.user_phone,
-        firstname: firstName,
-        lastname: lastName,
-        txRef: `${Date.now()}`,
-        user_id: accData.user_id,
-        cop_id: session.default === 'biz' ? accData.cop_id : 0,
-        // save: this.saveCardState,
-        // vendor_type: 1,
-        company_code: 'SKML',
-      };
-
-      this.loading = true;
-      this.transactionText = 'Initializing card payment...';
-      this.form.submit(
-          '/customers/collect_card_details',
-          {
-            data: newCardPayload,
-            headers: {
-              Authorization: localStorage.jwtToken,
-            },
-          },
-          (status, response) => {
-            this.loading = false;
-            if (response.status) {
-              this.LoadingStatus = true;
-              
-              const payload = {
-                values: response.data,
-                app: 'PAYMENT_SERVICE_V2',
-                endpoint: '/api/v2/save',
-              }
-              
-              this.paymentAxiosPost(payload).then((res)=> {
-                this.transaction_id = res.transaction_id;
-
-                if (res.status) {
-                  this.transactionStatus = res.transaction_status;
-
-                  if(res.additional_data) {
-                    this.additionalData = res.additional_data;
-                    this.is3DS = res.tds;
-                    if (res.tds) {
-                      this.init3DS(res.additional_data);
-                      return;
-                    }
-                    this.showAdditionalCardFields = true;
-                    this.showProcessing = false;
-                    return;
-                  }
-
-                  switch (res.transaction_status) {
-                    case 'pending':
-                      this.transactionPoll();
-                      break;
-                    case 'success':
-                      this.transactionText = res.message;
-                      this.loading = false;
-                      const notification = {
-                        title: this.$t('general.failed_to_charge_card'),
-                        level: 1,
-                        message: res.message,
-                      };
-                      this.displayNotification(notification);
-                      break;
-                    default:
-                      break;
-                  }
-
-                } else {
-                  this.transactionText = res.message;
-                  this.loading = false;
-                  const notification = {
-                    title: this.$t('general.failed_to_charge_card'),
-                    level: 2,
-                    message: res.message,
-                  };
-
-                  this.displayNotification(notification);
-                  }
-
-              }).catch(err => {
-                this.transactionText = this.$t('general.failed_to_delete_saved_card_text');
-                this.loading = false;
-                const notification = {
-                  title: this.$t('general.failed_to_charge_card'),
-                  level: 2,
-                  message: this.$t('general.failed_to_delete_saved_card_text'),
-                };
-
-                this.displayNotification(notification);
-              });
-            
-            } else {
-              this.loading = false;
-              const notification = {
-                title: this.$t('general.failed_to_charge_card'),
-                level: 2,
-                message: response.message,
-              };
-              this.displayNotification(notification);
-            }
-          },
-      );
-    },
 
     chargeSavedCard() {
       if (this.valid_vgs_saved_card) {
@@ -1257,48 +1143,56 @@ export default {
         );
       }
     },
+    
     transactionPoll() {
       this.poll_count = 0;
-      for (let poll_count = 0; poll_count < this.poll_limit; poll_count++) {
+      const poll_limit = 6;
+      for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
         const that = this;
         (function (poll_count) {
           setTimeout(() => {
-            if (that.poll_count === that.poll_limit) {
-              poll_count = that.poll_limit;
+            if (that.poll_count === poll_limit) {
+              poll_count = poll_limit;
               return;
             }
-            
-            that.updateTransactionStatus(); 
-            if (poll_count === (that.poll_limit - 1)) {
-                that.transactionText = 'Failed'
-                that.loading = false;
 
-                const notification = {
-                  title: that.$t('general.failed_to_charge_card'),
-                  level: 2,
-                };
-                that.displayNotification(notification);
+            that.updateTransactionStatus(); 
+            if (poll_count === 5) {
+              that.transactionText = 'card payment Failed';
+              that.loading = false;
+              const notification = {
+                title: that.$t('general.failed_to_charge_card'),
+                level: 2,
+              };
+              that.displayNotification(notification);
               return;
             }
           }, 10000 * poll_count);
         }(poll_count));
       }
     },
+
     updateTransactionStatus() {
-      const fullPayload = {
-        app: 'PAYMENT_SERVICE_V2',
-        endpoint: `/api/v2/process/status/${this.transaction_id}`,
+      const payload = {
+        transaction_id: this.transaction_id,
       }
-      this.paymentAxiosGet(fullPayload).then((res) => {
+      const fullPayload = {
+        values: payload,
+        app: 'AUTH',
+        endpoint: 'customers/card_payment_status_v2',
+      }
+      this.requestSavedCards(fullPayload).then((res) => {
         let level = 1;
         if (res.status) { 
           this.transactionText = res.message;
           switch (res.transaction_status) {
             case 'success':
+              this.poll_count = this.poll_limit;
               this.loading = false;
+              this.doCompleteOrder();
               const notification1 = {
                 title: res.transaction_status,
-                level: 1,
+                level: level,
                 message: res.message,
               };
               this.displayNotification(notification1);
@@ -1320,6 +1214,7 @@ export default {
             default:
               break;
           }
+
           return res;
         }
 
@@ -1331,68 +1226,6 @@ export default {
         this.displayNotification(notification);
       })
         
-    },
-    init3DS(additionalData) {
-      const res = additionalData[0];
-      const url = res.field;
-      const urlWindow = window.open(url, '');
-
-      const timer = setInterval(() => {
-			  if (urlWindow.closed) {
-          this.init3dsPoll();
-          clearInterval(timer);
-        }
-	  	}, 500);
-
-    },
-    init3dsPoll() {
-      this.loading = true;
-      const payload = {
-        transaction_id: this.transaction_id,
-        tds: true,
-      }
-
-      const fullPayload = {
-        values: payload,
-        app: 'PAYMENT_SERVICE_V2',
-        endpoint: '/api/v2/submit_info'
-      }
-
-      this.paymentAxiosPost(fullPayload).then((res) => {
-        this.loading = false;
-        if (response.status) {
-          switch (response.transaction_status) {
-              case 'pending':
-                this.transactionPoll();
-                this.count = true;
-                break;
-              case 'success':
-                this.poll_count = this.poll_limit;
-                this.loading = false;
-                const notification1 = {
-                  title: response.transaction_status,
-                  level: 1,
-                  message: response.message,
-                };
-                this.displayNotification(notification1);
-                this.requestRB();
-                break;
-              default:
-                break;
-          };
-          return;
-        }
-      }).catch((error) => {
-        console.log(error);
-        this.transactionText = res.message;
-        this.loading = false;
-        const notification = {
-        title: this.$t('general.failed_to_charge_card'),
-        level: 2,
-        message: res.message,
-        };
-        this.displayNotification(notification);
-      });
     },
 
     deleteSavedCard(index) {
