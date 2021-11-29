@@ -1,6 +1,3 @@
+import * as fr from './loadingComponent.json';
 
-const fr = {
-  loading_Data: 'chargement des données',
-};
-
-export default fr;
+export default fr.default;

@@ -1,0 +1,16 @@
+{
+  "account_deactivated": "Compte désactivé ",
+  "enter_email": "Saisir votre e-mail ",
+  "forgot_password": "mot de passe oublié? ",
+  "have_account": "Vous n'avez pas de compte?",
+  "login": "Se connecter",
+  "login_failed": "connexion a échoué",
+  "login_failed_text": "La connexion a échoué. Veuillez réessayer",
+  "login_sendy": "Connectez-vous à Sendy ",
+  "login_status": "Se connecter ...",
+  "password": "Mot de passe ",
+  "provide_all": "Fournir toutes les valeurs ",
+  "sign_up": "S'inscrire ",
+  "view": "Afficher la page - Connexion - Plateforme Web ",
+  "wrong_password": "Mot de passe ou e-mail incorrect. "
+}

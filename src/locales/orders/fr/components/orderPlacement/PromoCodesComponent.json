@@ -1,0 +1,11 @@
+{
+  "apply": "APPLIQUER",
+  "apply_discount": "Appliquer un rabais ",
+  "apply_discount_promocode": "Appliquer un rabais à partir d’un code promo",
+  "enter_promocode_below": "Veuillez saisir votre code promo ci-dessous",
+  "expiry": "Expiration",
+  "have_new_promocode": "Avez-vous un nouveau code promo?",
+  "loading": "Chargement en course...",
+  "max": "Max.",
+  "off": "DÉSACTIVER"
+}

@@ -1,0 +1,22 @@
+{
+  "account": "Personnel",
+  "analytics": "Analytique",
+  "business": "Entreprise",
+  "business_acc": "Compte d'affaires",
+  "create_business_account": "Créer un compte d'affaires",
+  "freight": "Fret",
+  "freight_small": "Fret",
+  "helpline": "Assistance téléphonique",
+  "hi": "Bonjour",
+  "logout": "Déconnecter",
+  "menu": "Carte",
+  "new_delivery": "Nouvelle livraison",
+  "orders": "Commandes",
+  "payment": "Paiement",
+  "personal": "Personnel",
+  "personal_acc": "Compte personnel",
+  "profile": "Profil",
+  "settings": "Parametres",
+  "switch_to": "Passer à to",
+  "transportation": "TRANSPORTATION"
+}
