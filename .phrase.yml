@@ -3,6 +3,91 @@ phrase:
   project_id: 8c7c8be729dc8334cd7b9229d1d97c2e
   push:
     sources:
+
+    - file: src/locales/admin/en/admin.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: admin
+
+    - file: src/locales/admin/en/components/addDepartment.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: addDepartment
+
+    - file: src/locales/admin/en/components/api.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: api
+
+    - file: src/locales/admin/en/components/companyDetails.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: companyDetails
+
+    - file: src/locales/admin/en/components/department.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: department
+
+    - file: src/locales/admin/en/components/editDepartment.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: editDepartment
+
+    - file: src/locales/admin/en/components/preferences.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: preferences
+
+    - file: src/locales/admin/en/components/users/editUser.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: editUser
+
+    - file: src/locales/admin/en/components/users/listUser.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: listUser
+
+    - file: src/locales/admin/en/components/users/invite_users/EndComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: EndComponent
+
+    - file: src/locales/admin/en/components/users/invite_users/inviteComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: inviteComponent
+
+    - file: src/locales/admin/en/components/users/invite_users/linkComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: linkComponent
+
     - file: src/locales/analytics/en/analytics.json
       params:
         file_format: simple_json
@@ -117,6 +202,13 @@ phrase:
 
   pull:
     targets:
+    - file: src/locales/analytics/fr/analytics.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        update_translations: true
+        tags: analytics
+  
     - file: src/locales/auth/fr/components/signIn.json
       params:
         file_format: simple_json
