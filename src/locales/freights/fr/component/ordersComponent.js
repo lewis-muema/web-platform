@@ -1,25 +1,3 @@
-const fr = {
-  search: 'Chercher',
-  pickup_location: 'Lieu de collection ',
-  destination: 'Destination',
-  tranporter: 'Transporteur',
-  amount: 'Montant',
-  date: 'Montant',
-  status: 'état',
-  view: 'Vues',
-  total: 'Total',
-  sizes: 'Tailles',
-  prev: 'précédent',
-  pager: 'bipeur',
-  next: 'prochain',
-  jumper: 'Sauteur',
-  freight_shipments: 'Recherche des expéditions de fret',
-  place_order: 'Créer une commande ',
-  not_available: 'Aucun cargaisons disponibles',
-  type_of_load: 'Type de charge',
-  type_of_truck: 'Type de camion',
-  pickup_date: 'Date de récupération',
-  create_order: 'Passer une commande',
-};
+import * as fr from './ordersComponent.json';
 
-export default fr;
+export default fr.default;

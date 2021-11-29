@@ -1,5 +1,3 @@
-const en = {
-  loading_Data: 'Loading Data',
-};
+import * as en from './loadingComponent.json';
 
-export default en;
+export default en.default;

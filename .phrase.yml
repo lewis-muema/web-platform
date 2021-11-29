@@ -52,6 +52,132 @@ phrase:
         update_translations: true
         tags: MainHeader
 
+    - file: src/locales/footers/en/NPSFooter.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: NPSFooter
+    
+    - file: src/locales/freights/en/component/createFreightOrder.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: createFreightOrder
+
+    - file: src/locales/freights/en/component/dashboardComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: dashboardComponent
+
+    - file: src/locales/freights/en/component/freightDocuments.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: freightDocuments
+
+    - file: src/locales/freights/en/component/loadingComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: loadingComponent
+
+    - file: src/locales/freights/en/component/mainComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: mainComponent
+
+    - file: src/locales/freights/en/component/orderDetailsComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: orderDetailsComponent
+
+    - file: src/locales/freights/en/component/ordersComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: ordersComponent
+
+    - file: src/locales/freights/en/component/ordersDetail.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: ordersDetail
+
+    - file: src/locales/freights/en/component/settingsComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: settingsComponent
+
+    - file: src/locales/freights/en/component/transporterComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: transporterComponent
+
+    - file: src/locales/freights/en/freight.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: freight
+
+    - file: src/locales/freights/en/freightAuth.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: freightAuth
+
+    - file: src/locales/freights/en/freightDetailsUpdate.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: freightDetailsUpdate
+
+    - file: src/locales/freights/en/verifyComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: verifyComponent
+
+    - file: src/locales/general/en.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: general
+
+    - file: src/locales/orders/en/components/orderPlacement/PromoCodesComponent.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: PromoCodesComponent
+
+    - file: src/locales/orders/en/components/social_media/approvalDialogue.json
+      params:
+        file_format: simple_json
+        locale_id: 183a41c3b5a83e3f3fdec0436881aca6
+        update_translations: true
+        tags: approvalDialogue
+
   pull:
     targets:
     - file: src/locales/auth/fr/components/signIn.json
@@ -95,3 +221,112 @@ phrase:
         file_format: simple_json
         locale_id: e8f9427353191aa2135b0f713a303589
         tags: MainHeader
+
+    - file: src/locales/footers/fr/NPSFooter.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: NPSFooter
+
+    - file: src/locales/freights/fr/component/createFreightOrder.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: createFreightOrder
+
+    - file: src/locales/freights/fr/component/dashboardComponent.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: dashboardComponent
+
+    - file: src/locales/freights/fr/component/freightDocuments.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: freightDocuments
+
+    - file: src/locales/freights/fr/component/loadingComponent.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: loadingComponent
+
+    - file: src/locales/freights/fr/component/mainComponent.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: mainComponent
+
+    - file: src/locales/freights/fr/component/orderDetailsComponent.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: orderDetailsComponent
+
+    - file: src/locales/freights/fr/component/ordersComponent.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: ordersComponent
+
+    - file: src/locales/freights/fr/component/ordersDetail.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: ordersDetail
+
+    - file: src/locales/freights/fr/component/settingsComponent.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: settingsComponent
+
+    - file: src/locales/freights/fr/component/transporterComponent.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: transporterComponent
+
+    - file: src/locales/freights/fr/freight.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: freight
+
+    - file: src/locales/freights/fr/freightAuth.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: freightAuth
+
+    - file: src/locales/freights/fr/freightDetailsUpdate.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: freightDetailsUpdate
+
+    - file: src/locales/freights/fr/verifyComponent.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: verifyComponent
+
+    - file: src/locales/general/fr.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: general
+
+    - file: src/locales/orders/fr/components/orderPlacement/PromoCodesComponent.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: PromoCodesComponent
+
+    - file: src/locales/orders/fr/components/social_media/approvalDialogue.json
+      params:
+        file_format: simple_json
+        locale_id: e8f9427353191aa2135b0f713a303589
+        tags: approvalDialogue
+

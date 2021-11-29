@@ -1,0 +1,17 @@
+{
+  "approve": "Approuver ",
+  "decline": "Refuser ",
+  "decline_doc_text": "Échec du refus du document, veuillez réessayer ou contacter le service client ",
+  "decline_document": "Refuser le document",
+  "decline_document_title": "Échec du refus du document!",
+  "doc_appoved": "Document a approuvé avec succès",
+  "doc_approval": "approbation du document",
+  "doc_declined_successfully": "Le document a ete refusé avec succès",
+  "failed_approve": "Échec de l’approbation du document !",
+  "failed_approve_text": "N’a pas approuvé le document, veuillez réessayer ou contacter le support client",
+  "name_doc": "document {src_nom}",
+  "no_activity": "Aucune activité pour le moment",
+  "reason_decline": "Veuillez indiquer la raison du refus.",
+  "recent_activity": "Activité récente ",
+  "view_document": "Afficher le document "
+}
