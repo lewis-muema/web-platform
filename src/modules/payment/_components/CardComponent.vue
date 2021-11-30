@@ -449,10 +449,8 @@ export default {
         userid: accData.user_id,
         copid: session.default === 'biz' ? accData.cop_id : 0,
         save: this.saveCardState,
-        company_code: 'FFKE',
         paymethod: 2,
         bulk: false,
-        entity: 4,
       };
 
       this.loading = true;
