@@ -505,8 +505,7 @@ export default {
       const newCardPayload = {
         currency: this.getActiveCurrency,
         country: accData.country_code,
-        // email: accData.user_email,
-        email: 'hope@gmail.com',
+        email: accData.user_email,
         phonenumber: accData.user_phone,
         firstname: firstName,
         lastname: lastName,
@@ -517,7 +516,7 @@ export default {
         company_code: 'FFKE',
         paymethod: 2,
         bulk: false,
-        entity: 3,
+        entity: 4,
       };
 
       this.loading = true;
@@ -571,7 +570,7 @@ export default {
                       this.loadingStatus = false;
                       this.clearInputs();
                       const notification = {
-                        title: this.$t('general.failed_to_charge_card'),
+                        title: this.$t('general.top_up'),
                         level: 1,
                         message: res.message,
                       };
@@ -586,8 +585,8 @@ export default {
                   this.loadingStatus = false;
                   this.clearInputs();
                   const notification = {
-                    title: this.$t('general.failed_to_charge_card'),
-                    level: 2,
+                    title: res.transaction_status,
+                    level: 1,
                     message: res.message,
                   };
 
@@ -655,8 +654,6 @@ export default {
         userid: accData.user_id,
         copid: session.default === 'biz' ? accData.cop_id : 0,
         bulk: false,
-        entity: 3,
-        company_code: "FFKE"
       };
       this.transactionText = 'Initializing card payment...';
       const savedCardPayload = {
@@ -677,8 +674,8 @@ export default {
             this.loadingStatus = false;
             this.clearInputs();
             const notification = {
-              title: this.$t('general.top_up'),
-              level: 2,
+              title: response.transaction_status,
+              level: 1,
               message: response.message,
             };
             this.displayNotification(notification);
@@ -727,6 +724,7 @@ export default {
           this.transactionText = res.message;
           switch (res.transaction_status) {
             case 'success':
+              this.poll_count = this.poll_limit;
               this.clearInputs();
               this.loadingStatus = false;
               const notification1 = {
@@ -736,6 +734,7 @@ export default {
               };
               this.displayNotification(notification1);
               this.requestRB();
+              this.getUserCards();
               break;
             case 'failed':
               this.poll_count = this.poll_limit;
@@ -780,8 +779,7 @@ export default {
       const accData = session[session.default];
       const payload = {
         cardno: this.get_saved_cards[index].pay_method_details,
-        user_id: accData.user_id,
-        cop_id: session.default === 'biz' ? accData.cop_id : 0,
+        userid: accData.user_id,
       };
       const deleteCardPayload = {
         values: payload,
