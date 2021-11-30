@@ -619,7 +619,7 @@ export default {
           Object.prototype.hasOwnProperty.call(val.state, 'cardno')
           && val.state.cardno.isValid
           && val.state.cvv.isValid
-          && val.state.expiry_date.isValid
+          && val.state.expirydate.isValid
           && this.addCardStatus
         ) {
           this.vgs_valid_payment = true;
@@ -771,6 +771,7 @@ export default {
           save: this.saveCardState,
         };
         this.loading = true;
+        this.transactionText = 'Initializing card payment...';
         this.form.submit(
           '/customers/collect_card_details',
           {
@@ -844,7 +845,7 @@ export default {
         this.doNotification(
           2,
           this.$t('general.failed_to_charge_card'),
-          this.$t('general.please'),
+          this.$t('general.please_try_again'),
         );
       }
     },
@@ -853,13 +854,7 @@ export default {
       if (this.valid_vgs_saved_card) {
         const session = this.$store.getters.getSession;
         const accData = session[session.default];
-        const firstName = accData.user_name.split(' ')[0];
-        const order_no = Object.prototype.hasOwnProperty.call(
-          this.getExpandedActiveVendorTally[0],
-          'order_no',
-        )
-          ? this.getExpandedActiveVendorTally[0].order_no
-          : this.getExpandedActiveVendorTally[0].id;
+       
         const payload = {
           txref: `${Date.now()}`,
           cardno:

@@ -1059,8 +1059,9 @@ export default {
           currency: this.activeVendorPriceData.currency,
           country: this.getCountryCode,
           amount: 1,
-          email: accData.user_email,
-          // email: 'kimau.augustine@gmail.com',
+          // amount: amountToPay,
+          // email: accData.user_email,
+          email: 'beatrice@sendyit.com',
           phonenumber: accData.user_phone,
           firstname: firstName,
           lastname: lastName,
@@ -1167,17 +1168,20 @@ export default {
               : '',
           currency: this.activeVendorPriceData.currency,
           amount: 1,
+          // amount: amountToPay,
           country: this.getCountryCode,
           phonenumber: accData.user_phone,
           userid: accData.user_id,
           copid: session.default === 'biz' ? accData.cop_id : 0,
           bulk: false,
         };
+
         const savedCardPayload = {
           values: payload,
           app: 'AUTH',
           endpoint: 'customers/charge_saved_card_v3',
         };
+
         this.loading = true;
         this.requestSavedCards(savedCardPayload).then(
           (response) => {
