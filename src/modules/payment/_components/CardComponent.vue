@@ -110,7 +110,7 @@
 
     <form
       v-if="addCardStatus"
-      @submit.prevent="onSubmit2"
+      @submit.prevent="onSubmit"
     > 
       <PaymentLoading 
         payMethod="card" 
@@ -432,71 +432,7 @@ export default {
       });
     },
 
-    // onSubmit() {
-    //   const session = this.$store.getters.getSession;
-    //   const accData = session[session.default];
-    //   const firstName = accData.user_name.split(' ')[0];
-    //   const lastName = accData.user_name.split(' ').length > 1 ? accData.user_name.split(' ')[1] : '';
-    //   const newCardPayload = {
-    //     currency: this.getActiveCurrency,
-    //     country: accData.country_code,
-    //     email: accData.user_email,
-    //     phonenumber: accData.user_phone,
-    //     firstname: firstName,
-    //     lastname: lastName,
-    //     txRef: `${Date.now()}`,
-    //     user_id: accData.user_id,
-    //     cop_id: session.default === 'biz' ? accData.cop_id : 0,
-    //     save: this.saveCardState,
-    //     vendor_type: 1,
-    //   };
-    //   this.loadingStatus = true;
-    //   this.transactionText = 'Initializing card payment...';
-    //   this.form.submit(
-    //     '/customers/collect_card_details',
-    //     {
-    //       data: newCardPayload,
-    //       headers: {
-    //         Authorization: localStorage.jwtToken,
-    //       },
-    //     },
-    //     (status, response) => {
-    //       if (response.status) {
-    //         const newSavedCardPayload = {
-    //           values: response.data,
-    //           app: 'AUTH',
-    //           endpoint: 'customers/charge_new_card_v2',
-    //         };
-    //         this.requestSavedCards(newSavedCardPayload).then((res) => {
-    //           this.transaction_id = res.transaction_id;
-    //           if (res.status) {
-    //             this.transactionPoll();
-    //           } else {
-    //             this.transactionText = res.message;
-    //             this.loadingStatus = false;
-    //             this.clearInputs();
-    //             const notification = {
-    //               title: res.transaction_status,
-    //               level: 2,
-    //               message: res.message,
-    //             };
-                
-    //             this.displayNotification(notification);
-    //           }
-    //         });
-    //       } else {
-    //         this.loadingStatus = false;
-    //         const notification = {
-    //           title: this.$t('general.failed_to_charge_card'),
-    //           level: 2,
-    //           message: response.message,
-    //         };
-    //         this.displayNotification(notification);
-    //       }
-    //     },
-    //   );
-    // },
-    onSubmit2() {
+    onSubmit() {
       const session = this.$store.getters.getSession;
       const accData = session[session.default];
       const firstName = accData.user_name.split(' ')[0];
