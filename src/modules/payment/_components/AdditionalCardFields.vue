@@ -133,7 +133,6 @@ export default {
 
       this.paymentAxiosPost(fullPayload)
       .then(response => {
-        console.log(response);
         if (response.status) {
 
           if (response.additional_data) {
@@ -176,5 +175,9 @@ export default {
   border: 0.5px solid #C0C4CC !important;
   text-align: left;
   height: 40px;
+}
+.paymentbody--input-wrap-saved-cards{
+  min-height: 4rem;
+  margin: .5em;
 }
 </style>
