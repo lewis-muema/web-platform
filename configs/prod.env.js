@@ -30,6 +30,6 @@ module.exports = {
   EXTREME_IP_KEY: '"dmmw1HciGEhld0FiG2ID"',
   PUBLICAPI: '"https://api.sendyit.com/v2/"',
   APIENV: '"live"',
-  PAYMENT_GATEWAY: '"https://payment-gateway-dev.sendyit.com/payment-gateway"',
+  PAYMENT_GATEWAY: '"https://auth.sendyit.com/payment-gateway"',
 
 };
