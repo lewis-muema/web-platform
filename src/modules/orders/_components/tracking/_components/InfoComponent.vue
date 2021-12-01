@@ -1467,6 +1467,7 @@ export default {
       requestCancellationReasons: '$_orders/$_tracking/requestCancellationReasons',
       computeCancellationFee: '$_orders/$_tracking/computeCancellationFee',
       paymentAxiosGet: '$_payment/paymentAxiosGet',
+      paymentAxiosPost: '$_payment/paymentAxiosPost',
     }),
     dispatchScheduleTime(){
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
