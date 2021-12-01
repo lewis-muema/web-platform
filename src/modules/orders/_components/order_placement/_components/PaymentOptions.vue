@@ -1059,8 +1059,7 @@ export default {
         const newCardPayload = {
           currency: this.activeVendorPriceData.currency,
           country: this.getCountryCode,
-          // amount: amountToPay,
-          amount: 10,
+          amount: amountToPay,
           email: accData.user_email,
           phonenumber: accData.user_phone,
           firstname: firstName,
@@ -1168,8 +1167,7 @@ export default {
               ? this.get_saved_cards[this.activeSavedCard].pay_method_details
               : '',
           currency: this.activeVendorPriceData.currency,
-          // amount: amountToPay,
-          amount: 10,
+          amount: amountToPay,
           country: this.getCountryCode,
           phonenumber: accData.user_phone,
           userid: accData.user_id,
