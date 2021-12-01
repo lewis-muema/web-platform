@@ -105,7 +105,6 @@ export default {
   watch: {
     additionalData(val) {
       this.fields = val;
-      console.log(this.fields);
     }
   },
   methods: {

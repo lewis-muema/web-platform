@@ -1058,10 +1058,8 @@ export default {
         const newCardPayload = {
           currency: this.activeVendorPriceData.currency,
           country: this.getCountryCode,
-          amount: 1,
-          // amount: amountToPay,
-          // email: accData.user_email,
-          email: 'beatrice@sendyit.com',
+          amount: amountToPay,
+          email: accData.user_email,
           phonenumber: accData.user_phone,
           firstname: firstName,
           lastname: lastName,
@@ -1074,6 +1072,7 @@ export default {
         };
         this.loading = true;
         this.transactionText = 'Initializing card payment...';
+        
         this.form.submit(
           '/customers/collect_card_details',
           {
@@ -1124,6 +1123,7 @@ export default {
                     default:
                       break;
                   }
+
                 } else {
                   this.loading = false;
                   this.clearInputs();
@@ -1159,7 +1159,6 @@ export default {
 
         const session = this.$store.getters.getSession;
         const accData = session[session.default];
-        const firstName = accData.user_name.split(' ')[0];
         const payload = {
           txref: `${Date.now()}`,
           cardno:
@@ -1168,7 +1167,7 @@ export default {
               : '',
           currency: this.activeVendorPriceData.currency,
           amount: 1,
-          // amount: amountToPay,
+          amount: amountToPay,
           country: this.getCountryCode,
           phonenumber: accData.user_phone,
           userid: accData.user_id,
@@ -1187,7 +1186,38 @@ export default {
           (response) => {
             this.transaction_id = response.transaction_id;
             if (response.status) {
-              this.transactionPoll();
+
+              if(response.additional_data) {
+                this.additionalData = response.additional_data;
+                this.is3DS = response.tds;
+                if (response.tds) {
+                  this.init3DS(response.additional_data);
+                  return;
+                }
+                this.showAdditionalCardFields = true;
+                this.loading = false;
+                return;
+              }
+
+              switch (response.transaction_status) {
+                case 'pending':
+                  this.transactionPoll();
+                  break;
+                case 'success':
+                  this.transactionText = response.message;
+                  this.loading = false;
+                  this.clearInputs();
+                  const notification = {
+                    title: response.transaction_status,
+                    level: 1,
+                    message: response.message,
+                  };
+                  this.displayNotification(notification);
+                  break;
+                default:
+                  break;
+              }
+
             } else {
               this.loading = false;
               this.transactionText = response.reason;
@@ -2495,7 +2525,6 @@ export default {
           // decrypt response here
           if (response.status) {
             const cards = response.saved_payment_methods.filter(el => el.pay_method_id === 2)
-            console.log(cards, 'Cards');
             this.setSavedCards(cards);
           } else {
             this.setSavedCards([]);
