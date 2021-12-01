@@ -1,7 +1,3 @@
+import * as fr from './analytics.json';
 
-const fr = {
-  report: 'Signaler',
-};
-
-
-export default fr;
+export default fr.default;
