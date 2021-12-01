@@ -941,7 +941,7 @@ export default {
         (function (poll_count) {
           setTimeout(() => {
             if (that.poll_count === that.poll_limit) {
-              poll_count = poll_limit;
+              poll_count = that.poll_limit;
               return;
             }
 
@@ -1018,7 +1018,7 @@ export default {
     handleContinue(val) {
       if (val) {
         this.loading = true;
-        this.pollCard();
+        this.transactionPoll();
         return;
       }
       this.loading = false;

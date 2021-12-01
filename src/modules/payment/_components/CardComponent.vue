@@ -557,7 +557,7 @@ export default {
       if (val) {
 
         this.loadingStatus = true;
-        this.pollCard();
+        this.transactionPoll();
         return;
       }
       this.loadingStatus = false;

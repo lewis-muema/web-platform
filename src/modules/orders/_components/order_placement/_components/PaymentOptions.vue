@@ -1059,7 +1059,8 @@ export default {
         const newCardPayload = {
           currency: this.activeVendorPriceData.currency,
           country: this.getCountryCode,
-          amount: amountToPay,
+          // amount: amountToPay,
+          amount: 10,
           email: accData.user_email,
           phonenumber: accData.user_phone,
           firstname: firstName,
@@ -1167,8 +1168,8 @@ export default {
               ? this.get_saved_cards[this.activeSavedCard].pay_method_details
               : '',
           currency: this.activeVendorPriceData.currency,
-          amount: 1,
-          amount: amountToPay,
+          // amount: amountToPay,
+          amount: 10,
           country: this.getCountryCode,
           phonenumber: accData.user_phone,
           userid: accData.user_id,
@@ -1244,7 +1245,7 @@ export default {
         (function (poll_count) {
           setTimeout(() => {
             if (that.poll_count === that.poll_limit) {
-              poll_count = poll_limit;
+              poll_count = that.poll_limit;
               return;
             }
 
@@ -1319,9 +1320,8 @@ export default {
 
     handleContinue(val) {
       if (val) {
-
         this.loading = true;
-        this.pollCard();
+        this.transactionPoll();
         return;
       }
       this.loading = false;
