@@ -2,6 +2,7 @@
 module.exports = {
   ENVIRONMENT: '"staging"',
   DEBUG_MODE: true,
+  AUTH: '"https://authtest.sendyit.com/"',
   NODE_PRIVATE_API: '"https://auth.staging.sendyit.com/v1/"',
   PRIVATE_API: '"https://auth.sendyit.com/parcel/"',
   BACKEND_CUSTOMERS_APP: '"https://customers.staging.sendyit.com/customers/"',
@@ -30,5 +31,5 @@ module.exports = {
   EXTREME_IP_KEY: '"dmmw1HciGEhld0FiG2ID"',
   PUBLICAPI: '"https://apitest.sendyit.com/v2/"',
   APIENV: '"sandbox"',
-  PAYMENT_GATEWAY: '"https://payment-gateway-dev.sendyit.com/payment-gateway"',
+  PAYMENT_GATEWAY: '"https://authtest.sendyit.com/payment-gateway"',
 };
