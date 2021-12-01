@@ -574,7 +574,6 @@ export default {
     chargeSavedCard() {
       const session = this.$store.getters.getSession;
       const accData = session[session.default];
-      const firstName = accData.user_name.split(' ')[0];
       const payload = {
         txref: `${Date.now()}`,
         cardno:
@@ -601,8 +600,39 @@ export default {
           // decrypt response here
           this.transaction_id = response.transaction_id;
           if (response.status) {
-            this.transactionPoll();
-            this.count = true;
+
+            if(response.additional_data) {
+              this.additionalData = response.additional_data;
+              this.is3DS = res.tds;
+              if (response.tds) {
+                this.init3DS(response.additional_data);
+                return;
+              }
+              this.showAdditionalCardFields = true;
+              this.loadingStatus = false;
+              return;
+            }
+
+            switch (response.transaction_status) {
+              case 'pending':
+                this.count = true;
+                this.transactionPoll();
+                break;
+              case 'success':
+                this.transactionText = response.message;
+                this.loadingStatus = false;
+                this.clearInputs();
+                const notification = {
+                  title: this.$t('general.top_up'),
+                  level: 1,
+                  message: response.message,
+                };
+                this.displayNotification(notification);
+                break;
+              default:
+                break;
+            }
+
           } else {
             this.transactionText = response.reason;
             this.loadingStatus = false;

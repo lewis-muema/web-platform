@@ -2203,10 +2203,9 @@ export default {
         const newCardPayload = {
           currency: this.order_currency,
           country: this.getCountryCode,
-          // amount: this.getAmountDue,
+          amount: this.getAmountDue,
           amount: 1,
           email: accData.user_email,
-          // email: 'kimau.augustine@gmail.com',
           phonenumber: accData.user_phone,
           firstname: firstName,
           lastname: lastName,
@@ -2270,6 +2269,7 @@ export default {
                     default:
                       break;
                   }
+
                 } else {
                   this.loading_payment = false;
                   this.clearInputs();
@@ -2309,8 +2309,7 @@ export default {
               ? this.get_saved_cards[this.activeSavedCard].pay_method_details
               : '',
           currency: order_currency,
-          // amount: this.getAmountDue,
-          amount: 1,
+          amount: this.getAmountDue,
           country: this.getCountryCode,
           phonenumber: accData.user_phone,
           userid: accData.user_id,
@@ -2329,7 +2328,37 @@ export default {
           (response) => {
             this.transaction_id = response.transaction_id;
             if (response.status) {
-              this.transactionPoll();
+              if(response.additional_data) {
+                this.additionalData = res.additional_data;
+                this.is3DS = res.tds;
+                if (response.tds) {
+                  this.init3DS(response.additional_data);
+                  return;
+                }
+                this.showAdditionalCardFields = true;
+                this.loading_payment = false;
+                return;
+              }
+
+              switch (response.transaction_status) {
+                case 'pending':
+                  this.transactionPoll();
+                  break;
+                case 'success':
+                  this.transactionText = response.message;
+                  this.loading_payment = false;
+                  this.clearInputs();
+                  const notification = {
+                    title: response.transaction_status,
+                    level: 1,
+                    message: response.message,
+                  };
+                  this.displayNotification(notification);
+                  break;
+                default:
+                  break;
+              }
+
             } else {
               this.loading_payment = false;
               this.transactionText = response.reason;

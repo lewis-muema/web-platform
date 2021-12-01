@@ -822,6 +822,7 @@ export default {
                     default:
                       break;
                   }
+
                 } else {
                   this.loading = false;
                   this.clearInputs();
@@ -878,9 +879,42 @@ export default {
         this.requestSavedCards(savedCardPayload).then(
           (response) => {
             if (response.status) {
+
               this.transaction_id = response.transaction_id;
+
               if (response.status) {
-                this.transactionPoll();
+
+                if(response.additional_data) {
+                  this.additionalData = response.additional_data;
+                  this.is3DS = response.tds;
+                  if (response.tds) {
+                    this.init3DS(response.additional_data);
+                    return;
+                  }
+                  this.showAdditionalCardFields = true;
+                  this.loading = false;
+                  return;
+                }
+
+                switch (response.transaction_status) {
+                  case 'pending':
+                    this.transactionPoll();
+                    break;
+                  case 'success':
+                    this.transactionText = response.message;
+                    this.loading = false;
+                    this.clearInputs();
+                    const notification = {
+                      title: response.transaction_status,
+                      level: 1,
+                      message: response.message,
+                    };
+                    this.displayNotification(notification);
+                    break;
+                  default:
+                    break;
+                }
+
               } else {
                 this.loading = false;
                 this.transactionText = response.reason;
