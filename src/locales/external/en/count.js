@@ -1,8 +1,3 @@
-const en = {
+import * as en from './count.json';
 
-  increment: 'Increment',
-  phone: 'The phone number not valid',
-};
-
-
-export default en;
+export default en.default;

@@ -1,0 +1,16 @@
+{
+  "account_activate": "Compte désactivé",
+  "account_connected": "Vos deux comptes sont maintenant connectés et vous pouvez accéder à l'un ou l'autre compte avec le mot de passe que vous avez sélectionné.",
+  "account_created": "Votre compte a maintenant été créé et vous pouvez accéder au compte avec votre. mot de passe sélectionné.",
+  "congrats": "Toutes nos félicitations ",
+  "continue": "Continuer vers l'application ",
+  "double_convinience": "Woah - c’est le double de la commodité!",
+  "enjoy_services": "Vous pouvez maintenant profiter des services Sendy au travail et à la maison!",
+  "login_account": "Connectez-vous à tout moment à vos deux profils de compte en utilisant les e-mails ci-dessous.",
+  "login_any_time": "Connectez-vous à tout moment à votre profil de compte en utilisant le courriel ci-dessous.",
+  "login_failed": "connexion a échoué",
+  "login_failed_text": "La connexion a échoué. Veuillez réessayer",
+  "login_in": "Se connecter ...",
+  "personal": "Personnel",
+  "selected_password": "mot de passe sélectionné."
+}

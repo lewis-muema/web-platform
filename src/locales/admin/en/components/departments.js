@@ -1,21 +1,3 @@
-const en = {
-  search_department: 'Search Department',
-  search: 'Search',
-  add_department: 'Add Department',
-  name: 'Name',
-  admin: 'Admin',
-  action: 'Action',
-  edit: 'Edit',
-  total: 'total',
-  sizes: 'sizes',
-  prev: 'prev',
-  pager: 'pager',
-  next: 'next',
-  jumper: 'jumper',
-  fetch_department: 'Fetching Departments',
-  no_department: 'No Departments For Account',
+import * as en from './department.json';
 
-};
-
-
-export default en;
+export default en.default;

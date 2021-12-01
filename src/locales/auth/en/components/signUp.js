@@ -1,8 +1,4 @@
-const en = {
-  join: 'Join',
-  customers: '5000+ Customers',
-  trust: 'who trust Sendy',
-};
 
+import * as en from './signUp.json';
 
-export default en;
+export default en.default;
