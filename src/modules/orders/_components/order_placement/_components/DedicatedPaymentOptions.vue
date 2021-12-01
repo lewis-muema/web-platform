@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     class=""
     style="width:150% "
@@ -97,7 +97,7 @@
                         type="radio"
                         class="payment-options-saved-card-radio"
                       >
-                      {{ formatCardNumber(cards.card) }}
+                      {{ formatCardNumber(cards.pay_method_details) }}
                       <font-awesome-icon
                         icon="trash-alt"
                         class="payment-options-delete-card-icon"
@@ -123,7 +123,7 @@
                   >
                     <p class="delete-saved-card-dialogue-label">
                       {{$t('general.sure_delete_card')}}
-                      <strong>{{ get_saved_cards[deletedCardIndex].card }}</strong>?
+                      <strong>{{ get_saved_cards[deletedCardIndex].pay_method_details }}</strong>?
                     </p>
                     <p class="delete-saved-card-dialogue-label">
                       <span
@@ -142,56 +142,64 @@
                   class="VGS-form"
                   @submit.prevent="onSubmit"
                 >
-                  <span
-                    v-if="get_saved_cards.length > 0"
-                    class="payment-options-cards-title back-option"
-                    @click="addCardStatus = !addCardStatus"
-                  >
-                    <font-awesome-icon
-                      icon="arrow-left"
-                      class="payment-options-add-card-icon"
-                    />
-                    {{$t('general.back')}}
-                  </span>
-                  <p class="payment-options-cards-title">{{$t('general.add_new_card')}}</p>
-                  <div
-                    id="cc-number"
-                    class="form-group"
-                  >
-                    <div class="form-control-static">
-                      <span class="fake-input-1" />
-                    </div>
-                  </div>
-                  <div class="cvv-expire-fields">
-                    <div
-                      id="cc-expiration-date"
-                      class="form-group"
+                  <AdditionalCardFields 
+                    :additionalData="additionalData" 
+                    :transaction_id="transaction_id" 
+                    v-if="!loading && showAdditionalCardFields" 
+                    @continue="handleContinue"
+                  />
+                  <div v-else>
+                    <span
+                      v-if="get_saved_cards.length > 0"
+                      class="payment-options-cards-title back-option"
+                      @click="addCardStatus = !addCardStatus"
                     >
-                      <div class="form-control-static">
-                        <span class="fake-input-1" />
-                      </div>
-                    </div>
-                    <div
-                      id="cc-cvc"
-                      class="form-group"
-                    >
-                      <div class="form-control-static">
-                        <span class="fake-input-1" />
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    id="cc-save-card-1"
-                    class="form-group"
-                  >
-                    <div class="form-control-static">
-                      <input
-                        v-model="saveCardState"
-                        type="checkbox"
+                      <font-awesome-icon
+                        icon="arrow-left"
+                        class="payment-options-add-card-icon"
+                      />
+                      {{$t('general.back')}}
+                      </span>
+                      <p class="payment-options-cards-title">{{$t('general.add_new_card')}}</p>
+                      <div
+                        id="cc-number"
+                        class="form-group"
                       >
-                      <span
-                        class="fake-checkbox-label-1"
-                      >{{$t('general.save_card_for_future_orders')}}</span>
+                        <div class="form-control-static">
+                          <span class="fake-input-1" />
+                        </div>
+                      </div>
+                      <div class="cvv-expire-fields">
+                        <div
+                          id="cc-expiration-date"
+                          class="form-group"
+                        >
+                          <div class="form-control-static">
+                            <span class="fake-input-1" />
+                          </div>
+                        </div>
+                        <div
+                          id="cc-cvc"
+                          class="form-group"
+                        >
+                          <div class="form-control-static">
+                            <span class="fake-input-1" />
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                      id="cc-save-card-1"
+                      class="form-group"
+                    >
+                      <div class="form-control-static">
+                        <input
+                          v-model="saveCardState"
+                          type="checkbox"
+                        >
+                        <span
+                          class="fake-checkbox-label-1"
+                        >{{$t('general.save_card_for_future_orders')}}</span>
+                      </div>
                     </div>
                   </div>
                 </form>
@@ -300,7 +308,9 @@ const TRUCK_VENDORS = [20, 25];
 
 export default {
   name: 'OrderOptions',
-  components: {},
+  components: {
+    AdditionalCardFields: () => import('../../../../payment/_components/AdditionalCardFields.vue'),
+  },
   mixins: [Mcrypt, PaymentMxn, TimezoneMxn, EventsMixin],
   data() {
     return {
@@ -354,6 +364,12 @@ export default {
       poll_count: 0,
       poll_limit: 6,
       transactionText: 'loading ....',
+      showAdditionalCardFields: false,
+      additionalData: null,
+      is3DS: false,
+      twoFACompleted: false,
+      transactionStatus: null,
+      count: false
     };
   },
 
@@ -603,7 +619,7 @@ export default {
           Object.prototype.hasOwnProperty.call(val.state, 'cardno')
           && val.state.cardno.isValid
           && val.state.cvv.isValid
-          && val.state.expiry_date.isValid
+          && val.state.expirydate.isValid
           && this.addCardStatus
         ) {
           this.vgs_valid_payment = true;
@@ -671,6 +687,7 @@ export default {
       requestDedicatedOrderCompletion: '$_orders/$_home/requestDedicatedOrderCompletion',
       requestSavedCards: '$_orders/$_home/requestSavedCards',
       requestPaymentOptionsAction: '$_payment/requestPaymentOptions',
+      paymentAxiosGet: '$_payment/paymentAxiosGet',
     }),
 
     loadVeryGoodSecurityScript() {
@@ -714,7 +731,7 @@ export default {
 
       this.form.field('#cc-expiration-date .fake-input-1', {
         type: 'card-expiration-date',
-        name: 'expiry_date',
+        name: 'expirydate',
         fontSize: '11px',
         css: {
           'letter-spacing': '0.03em',
@@ -748,13 +765,13 @@ export default {
           phonenumber: accData.user_phone,
           firstname: firstName,
           lastname: lastName,
-          txRef: `${Date.now()}`,
-          user_id: accData.user_id,
-          cop_id: session.default === 'biz' ? accData.cop_id : 0,
-          vendor_type: this.getExpandedActiveVendorTally[0].vendor_id,
+          txref: `${Date.now()}`,
+          userid: accData.user_id,
+          copid: session.default === 'biz' ? accData.cop_id : 0,
           save: this.saveCardState,
         };
         this.loading = true;
+        this.transactionText = 'Initializing card payment...';
         this.form.submit(
           '/customers/collect_card_details',
           {
@@ -768,30 +785,68 @@ export default {
               const newSavedCardPayload = {
                 values: response.data,
                 app: 'AUTH',
-                endpoint: 'customers/charge_new_card_v2',
+                endpoint: 'customers/charge_card_v3',
               };
               this.requestSavedCards(newSavedCardPayload).then((res) => {
                 this.transaction_id = res.transaction_id;
                 if (res.status) {
-                  this.transactionPoll();
+                  this.transactionStatus = res.transaction_status;
+
+                  if(res.additional_data) {
+                    this.additionalData = res.additional_data;
+                    this.is3DS = res.tds;
+                    if (res.tds) {
+                      this.init3DS(res.additional_data);
+                      return;
+                    }
+                    this.showAdditionalCardFields = true;
+                    this.loading = false;
+                    return;
+                  }
+
+                  switch (res.transaction_status) {
+                    case 'pending':
+                      this.transactionPoll();
+                      break;
+                    case 'success':
+                      this.transactionText = res.message;
+                      this.loading = false;
+                      this.clearInputs();
+                      const notification = {
+                        title: res.transaction_status,
+                        level: 1,
+                        message: res.message,
+                      };
+                      this.displayNotification(notification);
+                      break;
+                    default:
+                      break;
+                  }
+
                 } else {
                   this.loading = false;
-                  this.transactionText = res.reason;
+                  this.clearInputs();
                   this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
                 }
+              }).catch(err => {
+                  this.loading = false;
+                  this.clearInputs();
+                  this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
               });
             } else {
               this.loading = false;
-              this.doNotification(2, this.$t('general.enter_card_details_try_again'), response.message);
+              this.clearInputs();
+              this.doNotification(2, this.$t('general.failed_to_charge_card'), response.message);
             }
           },
         );
       } else {
         this.loading = false;
+        this.clearInputs();
         this.doNotification(
           2,
           this.$t('general.failed_to_charge_card'),
-          this.$t('general.please'),
+          this.$t('general.please_try_again'),
         );
       }
     },
@@ -800,28 +855,20 @@ export default {
       if (this.valid_vgs_saved_card) {
         const session = this.$store.getters.getSession;
         const accData = session[session.default];
-        const firstName = accData.user_name.split(' ')[0];
-        const order_no = Object.prototype.hasOwnProperty.call(
-          this.getExpandedActiveVendorTally[0],
-          'order_no',
-        )
-          ? this.getExpandedActiveVendorTally[0].order_no
-          : this.getExpandedActiveVendorTally[0].id;
+       
         const payload = {
-          txRef: `${Date.now()}`,
-          card:
+          txref: `${Date.now()}`,
+          cardno:
             this.activeSavedCard !== '' && this.get_saved_cards.length > 0
-              ? this.get_saved_cards[this.activeSavedCard].card
+              ? this.get_saved_cards[this.activeSavedCard].pay_method_details
               : '',
           currency: this.getExpandedActiveVendorTally[0].currency,
           amount: this.pending_amount.replace(',', ''),
           country: this.getCountryCode,
-          email: accData.user_email,
           phonenumber: accData.user_phone,
-          firstname: firstName,
-          user_id: accData.user_id,
-          cop_id: session.default === 'biz' ? accData.cop_id : 0,
-          vendor_type: this.getExpandedActiveVendorTally[0].vendor_id,
+          userid: accData.user_id,
+          copid: session.default === 'biz' ? accData.cop_id : 0,
+          bulk: false,
         };
         const savedCardPayload = {
           values: payload,
@@ -832,9 +879,42 @@ export default {
         this.requestSavedCards(savedCardPayload).then(
           (response) => {
             if (response.status) {
+
               this.transaction_id = response.transaction_id;
+
               if (response.status) {
-                this.transactionPoll();
+
+                if(response.additional_data) {
+                  this.additionalData = response.additional_data;
+                  this.is3DS = response.tds;
+                  if (response.tds) {
+                    this.init3DS(response.additional_data);
+                    return;
+                  }
+                  this.showAdditionalCardFields = true;
+                  this.loading = false;
+                  return;
+                }
+
+                switch (response.transaction_status) {
+                  case 'pending':
+                    this.transactionPoll();
+                    break;
+                  case 'success':
+                    this.transactionText = response.message;
+                    this.loading = false;
+                    this.clearInputs();
+                    const notification = {
+                      title: response.transaction_status,
+                      level: 1,
+                      message: response.message,
+                    };
+                    this.displayNotification(notification);
+                    break;
+                  default:
+                    break;
+                }
+
               } else {
                 this.loading = false;
                 this.transactionText = response.reason;
@@ -855,24 +935,24 @@ export default {
 
     transactionPoll() {
       this.poll_count = 0;
-      const poll_limit = 6;
-      for (let poll_count = 0; poll_count < poll_limit; poll_count++) {
+      for (let poll_count = 0; poll_count < this.poll_limit; poll_count++) {
         const that = this;
         (function (poll_count) {
           setTimeout(() => {
-            if (that.poll_count === poll_limit) {
+            if (that.poll_count === that.poll_limit) {
               poll_count = poll_limit;
               return;
             }
 
             that.updateTransactionStatus(); 
-            if (poll_count === 5) {
+            if (poll_count === (that.poll_limit - 1)) {
               that.transactionText = 'card payment Failed';
               that.loading = false;
               const notification = {
                 title: that.$t('general.failed_to_charge_card'),
                 level: 2,
               };
+              that.clearInputs();
               that.displayNotification(notification);
               return;
             }
@@ -882,15 +962,12 @@ export default {
     },
 
     updateTransactionStatus() {
-      const payload = {
-        transaction_id: this.transaction_id,
-      }
+     
       const fullPayload = {
-        values: payload,
         app: 'AUTH',
-        endpoint: 'customers/card_payment_status_v2',
+        endpoint: `customers/transaction_status?id=${this.transaction_id}`,
       }
-      this.requestSavedCards(fullPayload).then((res) => {
+      this.paymentAxiosGet(fullPayload).then((res) => {
         let level = 1;
         if (res.status) { 
           this.transactionText = res.message;
@@ -905,12 +982,12 @@ export default {
                 message: res.message,
               };
               this.displayNotification(notification1);
-              this.requestRB();
               break;
             case 'failed':
               this.poll_count = this.poll_limit;
               this.loading = false;
               level = 2;
+              this.clearInput();
               const notification2 = {
                 title: res.transaction_status,
                 level: level,
@@ -923,6 +1000,7 @@ export default {
             default:
               break;
           }
+
           return res;
         }
 
@@ -936,35 +1014,119 @@ export default {
         
     },
 
+    handleContinue(val) {
+      if (val) {
+        this.loading = true;
+        this.pollCard();
+        return;
+      }
+      this.loading = false;
+      this.showAdditionalCardFields = false;
+      this.clearInputs();
+      const notification = {
+        title: this.$t('general.failed_to_charge_card'),
+        level: 2,
+        message: this.$t('general.failed_to_charge_card_text'),
+      };
+      this.displayNotification(notification);
+    },
+
+    init3DS(additionalData) {
+      const res = additionalData[0];
+      const url = res.field;
+      const urlWindow = window.open(url, '');
+
+      const timer = setInterval(() => {
+			  if (urlWindow.closed) {
+          this.init3dsPoll();
+          clearInterval(timer);
+        }
+	  	}, 500);
+
+    },
+    init3dsPoll() {
+      this.loading = true;
+      const payload = {
+        transaction_id: this.transaction_id,
+        tds: true,
+      }
+
+      const fullPayload = {
+        values: payload,
+        app: 'AUTH',
+        endpoint: 'customers/submit_info'
+      }
+
+      this.paymentAxiosPost(fullPayload).then((res) => {
+        if (res.status) {
+          switch (res.transaction_status) {
+              case 'pending':
+                this.transactionPoll();
+                this.count = true;
+                break;
+              case 'success':
+                this.poll_count = this.poll_limit;
+                this.clearInputs();
+                this.loading = false;
+                const notification1 = {
+                  title: res.transaction_status,
+                  level: 1,
+                  message: res.message,
+                };
+                this.displayNotification(notification1);
+                break;
+              default:
+                break;
+          };
+          return;
+        }
+      }).catch((error) => {
+        this.transactionText = this.$t('general.failed_to_charge_card');
+        this.loading = false;
+        this.clearInputs();
+        const notification = {
+        title: this.$t('general.failed_to_charge_card'),
+        level: 2,
+        message: res.message,
+        };
+        this.displayNotification(notification);
+      });
+    },
     deleteSavedCard(index) {
       const session = this.$store.getters.getSession;
       const accData = session[session.default];
       const payload = {
-        card: this.get_saved_cards[index].card,
-        user_id: accData.user_id,
-        cop_id: session.default === 'biz' ? accData.cop_id : 0,
+        cardno: this.get_saved_cards[index].pay_method_details,
+        userid: accData.user_id,
       };
       const deleteCardPayload = {
         values: payload,
-        app: 'AUTH',
-        endpoint: 'customers/delete_saved_card_v2',
+        app: 'PAYMENT_GATEWAY',
+        endpoint: '/api/v1/card/delete',
       };
-      this.deletedCardIndex = '';
+      this.deleteCardIndex = '';
       this.loading = true;
       this.requestSavedCards(deleteCardPayload).then((response) => {
         this.loading = false;
         if (response.status) {
           this.getUserCards();
         } else {
-          this.doNotification(
-            2,
-            this.$t('general.failed_to_delete_saved_card'),
-            this.$t('general.failed_to_delete_saved_card_text'),
-          );
+          const notification = {
+            title: this.$t('general.failed_to_delete_saved_card'),
+            level: 2,
+            message: this.$t('general.try_again_later'),
+          };
+          this.displayNotification(notification);
         }
       });
     },
 
+    clearInputs() {
+      
+      setTimeout(() => {
+        this.form.reset();
+      }, 100);
+    },
     sendGA4Events(label, params) {
       const eventPayload = {
         name: label,
