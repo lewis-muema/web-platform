@@ -273,6 +273,7 @@
   "extra_distance_bill": "Facture de distance supplémentaire: ",
   "extra_time": "Distance supplémentaire",
   "failed_to_charge_card": "Échec du paiement par carte ",
+  "failed_to_charge_card_text": "Échec du paiement par carte. Veuillez réessayer plus tard",
   "failed_to_delete_saved_card": "Échec de la suppression de la carte enregistrée ",
   "failed_to_delete_saved_card_text": "Échec de la suppression de la carte enregistrée. Veuillez réessayer plus tard ",
   "failed_to_fetch_child_orders": "Les ordres enfants ont été échoué à récupérer",

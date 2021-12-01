@@ -273,6 +273,7 @@
   "extra_distance_bill": "Extra Distance Bill :",
   "extra_time": "Extra distance",
   "failed_to_charge_card": "Failed to charge card",
+  "failed_to_charge_card_text": "Failed to charge card. Please try again later",
   "failed_to_delete_saved_card": "Failed to delete saved card",
   "failed_to_delete_saved_card_text": "Failed to delete saved card. Please try again later",
   "failed_to_fetch_child_orders": "Failed to fetch child orders",

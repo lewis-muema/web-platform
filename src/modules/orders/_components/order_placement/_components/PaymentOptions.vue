@@ -985,6 +985,7 @@ export default {
       requestSavedCards: '$_orders/$_home/requestSavedCards',
       requestPaymentOptionsAction: '$_payment/requestPaymentOptions',
       paymentAxiosGet: '$_payment/paymentAxiosGet',
+      paymentAxiosPost: '$_payment/paymentAxiosPost',
     }),
 
     sendGA4Events(label, params) {
