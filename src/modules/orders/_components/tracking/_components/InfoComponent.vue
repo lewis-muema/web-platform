@@ -2119,7 +2119,7 @@ export default {
     handleContinue(val) {
       if (val) {
         this.loading_payment = true;
-        this.pollCard();
+        this.transactionPoll();
         return;
       }
       this.loading_payment = false;
@@ -2206,7 +2206,6 @@ export default {
           currency: this.order_currency,
           country: this.getCountryCode,
           amount: this.getAmountDue,
-          amount: 1,
           email: accData.user_email,
           phonenumber: accData.user_phone,
           firstname: firstName,
@@ -2310,7 +2309,7 @@ export default {
             this.activeSavedCard !== '' && this.get_saved_cards.length > 0
               ? this.get_saved_cards[this.activeSavedCard].pay_method_details
               : '',
-          currency: order_currency,
+          currency: this.order_currency,
           amount: this.getAmountDue,
           country: this.getCountryCode,
           phonenumber: accData.user_phone,
@@ -2382,7 +2381,7 @@ export default {
         (function (poll_count) {
           setTimeout(() => {
             if (that.poll_count === that.poll_limit) {
-              poll_count = poll_limit;
+              poll_count = that.poll_limit;
               return;
             }
 
