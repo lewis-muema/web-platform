@@ -84,57 +84,65 @@
             >
               <div class="payment-options-cards-container">
                 <div v-if="!addCardStatus && get_saved_cards.length > 0">
-                  <div v-if="deletedCardIndex === ''">
-                    <p class="payment-options-cards-title">{{$t('general.saved_cards')}}</p>
-                    <div
-                      v-for="(cards, index) in get_saved_cards"
-                      :key="index"
-                      class="payment-options-saved-cards-row"
-                    >
-                      <input
-                        v-model="activeSavedCard"
-                        :value="index"
-                        type="radio"
-                        class="payment-options-saved-card-radio"
+                  <AdditionalCardFields 
+                    :additionalData="additionalData" 
+                    :transaction_id="transaction_id" 
+                    v-if="showAdditionalCardFields" 
+                    @continue="handleContinue"
+                  />
+                  <div v-else>
+                    <div v-if="deletedCardIndex === ''">
+                      <p class="payment-options-cards-title">{{$t('general.saved_cards')}}</p>
+                      <div
+                        v-for="(cards, index) in get_saved_cards"
+                        :key="index"
+                        class="payment-options-saved-cards-row"
                       >
-                      {{ formatCardNumber(cards.pay_method_details) }}
-                      <font-awesome-icon
-                        icon="trash-alt"
-                        class="payment-options-delete-card-icon"
-                        @click="deletedCardIndex = index"
-                      />
+                        <input
+                          v-model="activeSavedCard"
+                          :value="index"
+                          type="radio"
+                          class="payment-options-saved-card-radio"
+                        >
+                        {{ formatCardNumber(cards.pay_method_details) }}
+                        <font-awesome-icon
+                          icon="trash-alt"
+                          class="payment-options-delete-card-icon"
+                          @click="deletedCardIndex = index"
+                        />
+                      </div>
+                      <div
+                        class="payment-options-add-card-holder"
+                        @click="addCardStatus = !addCardStatus"
+                      >
+                        <span>
+                          <font-awesome-icon
+                            icon="plus-circle"
+                            class="payment-options-add-card-icon"
+                          />
+                        </span>
+                        <span class="payment-options-add-card">{{$t('general.add_new_card')}}</span>
+                      </div>
                     </div>
                     <div
-                      class="payment-options-add-card-holder"
-                      @click="addCardStatus = !addCardStatus"
+                      v-else
+                      class="delete-saved-card-dialogue"
                     >
-                      <span>
-                        <font-awesome-icon
-                          icon="plus-circle"
-                          class="payment-options-add-card-icon"
-                        />
-                      </span>
-                      <span class="payment-options-add-card">{{$t('general.add_new_card')}}</span>
+                      <p class="delete-saved-card-dialogue-label">
+                        {{$t('general.sure_delete_card')}}
+                        <strong>{{ get_saved_cards[deletedCardIndex].pay_method_details }}</strong>?
+                      </p>
+                      <p class="delete-saved-card-dialogue-label">
+                        <span
+                          class="delete-saved-card-dialogue-buttons"
+                          @click="deleteSavedCard(deletedCardIndex)"
+                        >{{$t('general.yes')}}</span>
+                        <span
+                          class="delete-saved-card-dialogue-buttons"
+                          @click="deletedCardIndex = ''"
+                        >{{$t('general.no')}}</span>
+                      </p>
                     </div>
-                  </div>
-                  <div
-                    v-else
-                    class="delete-saved-card-dialogue"
-                  >
-                    <p class="delete-saved-card-dialogue-label">
-                      {{$t('general.sure_delete_card')}}
-                      <strong>{{ get_saved_cards[deletedCardIndex].pay_method_details }}</strong>?
-                    </p>
-                    <p class="delete-saved-card-dialogue-label">
-                      <span
-                        class="delete-saved-card-dialogue-buttons"
-                        @click="deleteSavedCard(deletedCardIndex)"
-                      >{{$t('general.yes')}}</span>
-                      <span
-                        class="delete-saved-card-dialogue-buttons"
-                        @click="deletedCardIndex = ''"
-                      >{{$t('general.no')}}</span>
-                    </p>
                   </div>
                 </div>
                 <form
