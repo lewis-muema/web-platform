@@ -40,70 +40,78 @@
       />
 
       <div v-else>
-        <p class="card-payment-saved-cards-title">
-          {{$t('general.cards')}}
-        </p>
-        <p class="card-payment-saved-cards-label">
-          {{$t('general.select_card')}}
-        </p>
-        <div
-          v-for="(cards, index) in get_saved_cards"
-          :key="index"
-          class="card-payment-saved-cards-row"
-        >
-          <span class="card-payment-saved-cards-icon">
-            <font-awesome-icon icon="credit-card" />
-          </span>
-          <input
-            v-model="selectedSavedCard"
-            type="radio"
-            class="card-payment-saved-card-radio"
-            :value="index"
+        <AdditionalCardFields 
+        :additionalData="additionalData" 
+        :transaction_id="transaction_id" 
+          v-if="showAdditionalCardFields" 
+          @continue="handleContinue"
+        />
+        <div v-else>
+          <p class="card-payment-saved-cards-title">
+            {{$t('general.cards')}}
+          </p>
+          <p class="card-payment-saved-cards-label">
+            {{$t('general.select_card')}}
+          </p>
+          <div
+            v-for="(cards, index) in get_saved_cards"
+            :key="index"
+            class="card-payment-saved-cards-row"
           >
-          {{ formatCardNumber(cards.pay_method_details) }}
-          <span
-            class="card-payment-remove-cards-icon"
-            @click="deleteCardIndex = index"
+            <span class="card-payment-saved-cards-icon">
+              <font-awesome-icon icon="credit-card" />
+            </span>
+            <input
+              v-model="selectedSavedCard"
+              type="radio"
+              class="card-payment-saved-card-radio"
+              :value="index"
+            >
+            {{ formatCardNumber(cards.pay_method_details) }}
+            <span
+              class="card-payment-remove-cards-icon"
+              @click="deleteCardIndex = index"
+            >
+              <font-awesome-icon icon="trash-alt" />
+            </span>
+          </div>
+          <div class="card-payment-add-card-holder">
+            <span>
+              <font-awesome-icon
+                icon="plus-circle"
+                class="card-payment-add-card-icon"
+              />
+            </span>
+            <span
+              class="card-payment-add-card"
+              @click="addCardStatus = !addCardStatus"
+            >{{$t('general.add_a_new_card')}}</span>
+          </div>
+          <div class="card-payment-flex">
+            <span class="prepend-currency">{{ getActiveCurrency }}</span>
+            <input
+              v-model="savedCardAmount"
+              type="number"
+              class="card-payment-amount-input"
+            >
+          </div>
+          <div
+            v-loading="loadingStatus"
+            class="orders-loading-container orders-loading-container--completion loader-height-override"
+            :element-loading-text="transactionText"
+            element-loading-spinner="el-icon-loading"
           >
-            <font-awesome-icon icon="trash-alt" />
-          </span>
-        </div>
-        <div class="card-payment-add-card-holder">
-          <span>
-            <font-awesome-icon
-              icon="plus-circle"
-              class="card-payment-add-card-icon"
-            />
-          </span>
-          <span
-            class="card-payment-add-card"
-            @click="addCardStatus = !addCardStatus"
-          >{{$t('general.add_a_new_card')}}</span>
-        </div>
-        <div class="card-payment-flex">
-          <span class="prepend-currency">{{ getActiveCurrency }}</span>
-          <input
-            v-model="savedCardAmount"
-            type="number"
-            class="card-payment-amount-input"
-          >
-        </div>
-        <div
-          v-loading="loadingStatus"
-          class="orders-loading-container orders-loading-container--completion loader-height-override"
-          :element-loading-text="transactionText"
-          element-loading-spinner="el-icon-loading"
-        >
-          <button
-            :class="
-              valid_saved_vgs_payment && !loadingStatus
-                ? 'button-primary paymentbody--input-button'
-                : 'paymentbody--input-button card--input button--primary-inactive inactive-payment-button'
-            "
-            @click="chargeSavedCard()"
-          >
-            {{$t('general.make_payment')}}
-          </button>
+            <button
+              :class="
+                valid_saved_vgs_payment && !loadingStatus
+                  ? 'button-primary paymentbody--input-button'
+                  : 'paymentbody--input-button card--input button--primary-inactive inactive-payment-button'
+              "
+              @click="chargeSavedCard()"
+            >
+              {{$t('general.make_payment')}}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -603,13 +611,13 @@ export default {
 
             if(response.additional_data) {
               this.additionalData = response.additional_data;
-              this.is3DS = res.tds;
+              this.is3DS = response.tds;
               if (response.tds) {
                 this.init3DS(response.additional_data);
                 return;
               }
-              this.showAdditionalCardFields = true;
               this.loadingStatus = false;
+              this.showAdditionalCardFields = true;  
               return;
             }
 
