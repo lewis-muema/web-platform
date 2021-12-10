@@ -1,10 +1,9 @@
 <template>
   <div class="paymentbody--form">
     <span v-if="!is3DS">
-
-    <div v-for="(item, index) in fields" :key="index">
+    <form @submit.prevent="submit">
+      <div v-for="(item, index) in fields" :key="index">
         <div class="textfield mt-5" v-if="item.type === 'phone'" >
-          <label for="" class="normal-text"> {{ capitalize(item.field) }}</label>
           <vue-tel-input 
             autoFormat 
             :defaultCountry="getBupayload.country_code"
@@ -12,20 +11,10 @@
             mode="national"
             invalidMsg="Phone number is Invalid"
             @validate="validatePhone"
+            required
           >
           </vue-tel-input>
         </div>
-        <!-- <div class="textfield mt-5" v-if="item.type === 'date'" >
-          <birth-datepicker
-            placeholder="Enter Date of birth"
-            v-model="form[item.field_id]"
-            :valueIsString="true"
-            delimiter="-"
-            :yearFirst="true"
-            class="phone-input"
-          />
-        </div> -->
-
         <div class="paymentbody--input-wrap mt-5" v-if="item.type === 'date'" >
           <input
             type="text"
@@ -43,23 +32,25 @@
             required
             v-model="form[item.field_id]"
             class="input-control paymentbody--input"
-          >
+          />
         </div>
-    </div>
+      </div>
 
-    <button
-      type="button"
-      name="button"
-      :disabled="loading"
-      class="button-primary paymentbody--input-button"
-      @click="submit"
-    >
-      {{$t('general.submit')}}
-      <i
-        v-if="loading"
-        class="el-icon-loading tracking-loading-spinner promocode-spinner"
-      />
-    </button>
+      <button
+        type="submit"
+        name="button"
+        :disabled="loading"
+        class="button-primary paymentbody--input-button"
+      >
+        {{$t('general.submit')}}
+        <i
+          v-if="loading"
+          class="el-icon-loading tracking-loading-spinner promocode-spinner"
+        />
+      </button>
+    </form>
+
+    
 
     </span>
     <span v-else>
@@ -72,13 +63,11 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { VueTelInput } from 'vue-tel-input';
-// import birthDatepicker from 'vue-birth-datepicker/src/birth-datepicker';
 
 export default {
   name: 'AdditionalCardFields',
   components: {
     VueTelInput,
-    // birthDatepicker,
   },
   props: ['additionalData', 'transaction_id', 'is3DS'],
   data() {
@@ -97,10 +86,8 @@ export default {
       formattedPhone: null,
       form: {},
       fields: this.additionalData,
+      errors: {},
     }
-  },
-  computed: {
-    ...mapGetters(['getBupayload']),
   },
   watch: {
     additionalData(val) {
@@ -119,6 +106,7 @@ export default {
     },
     submit() {
       this.loading = true;
+      
       const payload = {
         transaction_id: this.transaction_id,
         ...this.form,
