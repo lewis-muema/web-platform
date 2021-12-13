@@ -100,6 +100,7 @@
                     :transaction_id="transaction_id" 
                     v-if="showAdditionalCardFields" 
                     @continue="handleContinue"
+                    @continue3DS="handleContinue3DS"
                   />
                   <div v-else>
                     <div v-if="deletedCardIndex === ''">
@@ -166,6 +167,7 @@
                     :transaction_id="transaction_id" 
                     v-if="!loading && showAdditionalCardFields" 
                     @continue="handleContinue"
+                    @continue3DS="handleContinue3DS"
                   />
 
                   <div v-else>
@@ -1280,6 +1282,7 @@ export default {
       this.paymentAxiosGet(fullPayload).then((res) => {
         let level = 1;
         if (res.status) { 
+          this.showAdditionalCardFields = false;
           this.transactionText = res.message;
           switch (res.transaction_status) {
             case 'success':
@@ -1339,6 +1342,12 @@ export default {
         message: this.$t('general.failed_to_charge_card_text'),
       };
       this.displayNotification(notification);
+    },
+
+    handleContinue3DS(val) {
+      this.showAdditionalCardFields = false;
+      const data = val.additionalData.filter(element => element.field_id === 'url');
+      this.init3DS(data);
     },
 
     init3DS(additionalData) {
