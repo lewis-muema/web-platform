@@ -598,6 +598,7 @@
                                       :transaction_id="transaction_id" 
                                       v-if="showAdditionalCardFields" 
                                       @continue="handleContinue"
+                                      @continue3DS="handleContinue3DS"
                                     />
                                     <div v-else>
                                       <div v-if="deletedCardIndex === ''">
@@ -664,6 +665,7 @@
                                       :transaction_id="transaction_id" 
                                       v-if="!loading_payment && showAdditionalCardFields" 
                                       @continue="handleContinue"
+                                      @continue3DS="handleContinue3DS"
                                     />
                                     <div v-else>
 
@@ -2124,13 +2126,13 @@ export default {
     },
 
     handleContinue(val) {
+      this.showAdditionalCardFields = false;
       if (val) {
         this.loading_payment = true;
         this.transactionPoll();
         return;
       }
       this.loading_payment = false;
-      this.showAdditionalCardFields = false;
       this.clearInputs();
       const notification = {
         title: this.$t('general.failed_to_charge_card'),
@@ -2138,6 +2140,12 @@ export default {
         message: this.$t('general.failed_to_charge_card_text'),
       };
       this.displayNotification(notification);
+    },
+    
+    handleContinue3DS(val) {
+      this.showAdditionalCardFields = false;
+      const data = val.additionalData.filter(element => element.field_id === 'url');
+      this.init3DS(data);
     },
 
     init3DS(additionalData) {
