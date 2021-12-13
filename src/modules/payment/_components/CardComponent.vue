@@ -45,6 +45,7 @@
         :transaction_id="transaction_id" 
           v-if="showAdditionalCardFields" 
           @continue="handleContinue"
+          @continue3DS="handleContinue3DS"
         />
         <div v-else>
           <p class="card-payment-saved-cards-title">
@@ -559,15 +560,17 @@ export default {
             }
           },
       );
+      
+      this.showAdditionalCardFields = false;
     },
 
     handleContinue(val) {
       if (val) {
-
         this.loadingStatus = true;
         this.transactionPoll();
         return;
       }
+
       this.loadingStatus = false;
       this.showAdditionalCardFields = false;
       this.clearInputs();
@@ -577,6 +580,12 @@ export default {
         message: this.$t('general.failed_to_charge_card_text'),
       };
       this.displayNotification(notification);
+    },
+
+    handleContinue3DS(val) {
+      this.showAdditionalCardFields = false;
+      const data = val.additionalData.filter(element => element.field_id === 'url');
+      this.init3DS(data);
     },
 
     chargeSavedCard() {
@@ -611,11 +620,6 @@ export default {
 
             if(response.additional_data) {
               this.additionalData = response.additional_data;
-              this.is3DS = response.tds;
-              if (response.tds) {
-                this.init3DS(response.additional_data);
-                return;
-              }
               this.loadingStatus = false;
               this.showAdditionalCardFields = true;  
               return;
@@ -692,6 +696,7 @@ export default {
       }
       this.paymentAxiosGet(fullPayload).then((res) => {
         let level = 1;
+        this.showAdditionalCardFields = false;
         if (res.status) { 
           this.transactionText = res.message;
           switch (res.transaction_status) {
@@ -811,6 +816,7 @@ export default {
           } else {
             this.setSavedCards([]);
           }
+
         },
         error => false,
       );

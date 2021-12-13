@@ -89,6 +89,7 @@
                     :transaction_id="transaction_id" 
                     v-if="showAdditionalCardFields" 
                     @continue="handleContinue"
+                    @continue3DS="handleContinue3DS"
                   />
                   <div v-else>
                     <div v-if="deletedCardIndex === ''">
@@ -155,6 +156,7 @@
                     :transaction_id="transaction_id" 
                     v-if="!loading && showAdditionalCardFields" 
                     @continue="handleContinue"
+                    @continue3DS="handleContinue3DS"
                   />
                   <div v-else>
                     <span
@@ -980,6 +982,7 @@ export default {
         let level = 1;
         if (res.status) { 
           this.transactionText = res.message;
+          this.showAdditionalCardFields = false;
           switch (res.transaction_status) {
             case 'success':
               this.poll_count = this.poll_limit;
@@ -1040,6 +1043,12 @@ export default {
       this.displayNotification(notification);
     },
 
+    handleContinue3DS(val) {
+      this.showAdditionalCardFields = false;
+      const data = val.additionalData.filter(element => element.field_id === 'url');
+      this.init3DS(data);
+    },
+    
     init3DS(additionalData) {
       const res = additionalData[0];
       const url = res.field;
