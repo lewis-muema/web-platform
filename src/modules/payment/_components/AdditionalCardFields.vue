@@ -145,10 +145,6 @@ export default {
   },
   methods: {
     ...mapMutations(['setTwoFACompleted']),
-    getDefaultPayment() {
-      const defaultMethod = this.getSavedPayMethods ? this.getSavedPayMethods.filter(method => method.default === 1)[0] : [];
-      return defaultMethod;
-    },
     ...mapActions({
       paymentAxiosPost: '$_payment/paymentAxiosPost',
     }),
@@ -232,15 +228,8 @@ export default {
           if (res.status) {
             const values = res.data;
             delete values.language;
-
-            const session = this.$store.getters.getSession;
-            const accData = session[session.default];
-            const defaulMethod = this.getDefaultPayment();
-
             const payload = {
               transaction_id: this.transaction_id,
-              email: accData.user_email,
-              card_id: defaulMethod.pay_detail_id,
               ...values,
             }
 
